@@ -1,0 +1,17 @@
+{
+  "name": "Casa ORÁCULA",
+  "short_name": "ORÁCULA",
+  "description": "Formação simbólica para terapeutas e mentoras de mulheres",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0d14",
+  "theme_color": "#c9a227",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}
