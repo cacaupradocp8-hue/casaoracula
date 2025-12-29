@@ -1,16 +1,16 @@
-export type PortalLevel = 1 | 2 | 3 | 4;
+export type PortalType = 'visitante' | 'pre_iniciada' | 'iniciada' | 'admin';
 
 export interface User {
   id: string;
   email: string;
   name: string;
-  portalLevel: PortalLevel;
+  portal: PortalType;
   createdAt: Date;
   avatarUrl?: string;
 }
 
 export interface Portal {
-  level: PortalLevel;
+  type: PortalType;
   name: string;
   description: string;
   features: string[];
@@ -19,7 +19,7 @@ export interface Portal {
 
 export const PORTALS: Portal[] = [
   {
-    level: 1,
+    type: 'visitante',
     name: 'Visitante / Buscadora',
     description: 'Acesso inicial à Casa ORÁCULA',
     features: [
@@ -30,7 +30,7 @@ export const PORTALS: Portal[] = [
     caseLimit: 0,
   },
   {
-    level: 2,
+    type: 'pre_iniciada',
     name: 'Pré-Iniciada',
     description: 'Início da jornada formativa',
     features: [
@@ -43,7 +43,7 @@ export const PORTALS: Portal[] = [
     caseLimit: 3,
   },
   {
-    level: 3,
+    type: 'iniciada',
     name: 'Iniciada ORÁCULA',
     description: 'Formação completa nas 4 Travessias',
     features: [
@@ -56,7 +56,7 @@ export const PORTALS: Portal[] = [
     caseLimit: 'unlimited',
   },
   {
-    level: 4,
+    type: 'admin',
     name: 'Admin / Guardiã',
     description: 'Guardiã da Casa ORÁCULA',
     features: [
@@ -70,10 +70,22 @@ export const PORTALS: Portal[] = [
   },
 ];
 
-export const getPortal = (level: PortalLevel): Portal => {
-  return PORTALS.find(p => p.level === level) || PORTALS[0];
+const PORTAL_HIERARCHY: Record<PortalType, number> = {
+  visitante: 1,
+  pre_iniciada: 2,
+  iniciada: 3,
+  admin: 4,
 };
 
-export const canAccessFeature = (userLevel: PortalLevel, requiredLevel: PortalLevel): boolean => {
-  return userLevel >= requiredLevel;
+export const getPortal = (type: PortalType): Portal => {
+  return PORTALS.find(p => p.type === type) || PORTALS[0];
+};
+
+export const canAccessFeature = (userPortal: PortalType, requiredPortal: PortalType): boolean => {
+  return PORTAL_HIERARCHY[userPortal] >= PORTAL_HIERARCHY[requiredPortal];
+};
+
+export const getCaseLimit = (portal: PortalType): number | 'unlimited' => {
+  const portalData = getPortal(portal);
+  return portalData.caseLimit;
 };

@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Logo } from './Logo';
-import { getPortal, canAccessFeature } from '@/types/portal';
+import { getPortal, canAccessFeature, PortalType } from '@/types/portal';
 import {
   Home,
   BookOpen,
@@ -26,14 +26,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-const navItems = [
-  { path: '/dashboard', label: 'Início', icon: Home, minPortal: 1 },
-  { path: '/travessias', label: 'Travessias', icon: BookOpen, minPortal: 2 },
-  { path: '/metodo', label: 'Método', icon: Compass, minPortal: 2 },
-  { path: '/biblioteca', label: 'Biblioteca', icon: Library, minPortal: 2 },
-  { path: '/casos', label: 'Casos', icon: FolderOpen, minPortal: 2 },
-  { path: '/leitura-oracular', label: 'Leitura Oracular', icon: Sparkles, minPortal: 3 },
-  { path: '/admin', label: 'Admin', icon: Settings, minPortal: 4 },
+const navItems: { path: string; label: string; icon: typeof Home; minPortal: PortalType }[] = [
+  { path: '/dashboard', label: 'Início', icon: Home, minPortal: 'visitante' },
+  { path: '/travessias', label: 'Travessias', icon: BookOpen, minPortal: 'pre_iniciada' },
+  { path: '/metodo', label: 'Método', icon: Compass, minPortal: 'pre_iniciada' },
+  { path: '/biblioteca', label: 'Biblioteca', icon: Library, minPortal: 'pre_iniciada' },
+  { path: '/casos', label: 'Casos', icon: FolderOpen, minPortal: 'pre_iniciada' },
+  { path: '/leitura-oracular', label: 'Leitura Oracular', icon: Sparkles, minPortal: 'iniciada' },
+  { path: '/admin', label: 'Admin', icon: Settings, minPortal: 'admin' },
 ];
 
 export function Navigation() {
@@ -42,7 +42,7 @@ export function Navigation() {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const portal = user ? getPortal(user.portalLevel) : null;
+  const portal = user ? getPortal(user.portal) : null;
 
   const handleLogout = () => {
     logout();
@@ -50,7 +50,7 @@ export function Navigation() {
   };
 
   const accessibleItems = navItems.filter(item => 
-    user && canAccessFeature(user.portalLevel, item.minPortal as 1 | 2 | 3 | 4)
+    user && canAccessFeature(user.portal, item.minPortal)
   );
 
   return (
@@ -90,9 +90,6 @@ export function Navigation() {
           <div className="flex items-center gap-2">
             {user && portal && (
               <div className="hidden sm:flex items-center gap-2 mr-2">
-                <span className="text-xs text-muted-foreground">
-                  Portal {user.portalLevel}
-                </span>
                 <span className="px-2 py-0.5 text-xs bg-gold/20 text-gold rounded-full font-medium">
                   {portal.name.split('/')[0].trim()}
                 </span>

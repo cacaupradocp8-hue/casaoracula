@@ -1,30 +1,30 @@
-import { PortalLevel, getPortal } from '@/types/portal';
+import { PortalType, getPortal } from '@/types/portal';
 import { cn } from '@/lib/utils';
 import { Crown, Eye, Flame, Star } from 'lucide-react';
 
 interface PortalBadgeProps {
-  level: PortalLevel;
+  portal: PortalType;
   size?: 'sm' | 'md' | 'lg';
   showName?: boolean;
 }
 
-const portalIcons = {
-  1: Eye,
-  2: Flame,
-  3: Star,
-  4: Crown,
+const portalIcons: Record<PortalType, typeof Eye> = {
+  visitante: Eye,
+  pre_iniciada: Flame,
+  iniciada: Star,
+  admin: Crown,
 };
 
-const portalColors = {
-  1: 'bg-muted text-muted-foreground',
-  2: 'bg-burgundy/30 text-burgundy-light',
-  3: 'bg-gold/20 text-gold',
-  4: 'bg-accent text-accent-foreground',
+const portalColors: Record<PortalType, string> = {
+  visitante: 'bg-muted text-muted-foreground',
+  pre_iniciada: 'bg-burgundy/30 text-burgundy-light',
+  iniciada: 'bg-gold/20 text-gold',
+  admin: 'bg-accent text-accent-foreground',
 };
 
-export function PortalBadge({ level, size = 'md', showName = false }: PortalBadgeProps) {
-  const portal = getPortal(level);
-  const Icon = portalIcons[level];
+export function PortalBadge({ portal, size = 'md', showName = false }: PortalBadgeProps) {
+  const portalData = getPortal(portal);
+  const Icon = portalIcons[portal];
 
   const sizes = {
     sm: 'h-6 px-2 text-xs gap-1',
@@ -41,14 +41,14 @@ export function PortalBadge({ level, size = 'md', showName = false }: PortalBadg
   return (
     <div className={cn(
       'inline-flex items-center rounded-full font-medium transition-all',
-      portalColors[level],
+      portalColors[portal],
       sizes[size]
     )}>
       <Icon className={iconSizes[size]} />
-      <span>Portal {level}</span>
+      <span>{portalData.name.split('/')[0].trim()}</span>
       {showName && (
         <span className="text-muted-foreground">
-          • {portal.name.split('/')[0].trim()}
+          • {portalData.description}
         </span>
       )}
     </div>
