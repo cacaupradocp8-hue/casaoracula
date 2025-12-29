@@ -19,8 +19,10 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-function ProtectedRoute({ children, minPortal = 1 }: { children: React.ReactNode; minPortal?: number }) {
-  const { user, isLoading, isAuthenticated } = useAuth();
+import { PortalType } from '@/types/portal';
+
+function ProtectedRoute({ children, minPortal = 'visitante' }: { children: React.ReactNode; minPortal?: PortalType }) {
+  const { user, isLoading, isAuthenticated, canAccess } = useAuth();
   
   if (isLoading) {
     return (
@@ -34,7 +36,7 @@ function ProtectedRoute({ children, minPortal = 1 }: { children: React.ReactNode
     return <Navigate to="/auth" replace />;
   }
   
-  if (user && user.portalLevel < minPortal) {
+  if (!canAccess(minPortal)) {
     return <Navigate to="/dashboard" replace />;
   }
   
@@ -68,12 +70,12 @@ function AppRoutes() {
       
       {/* Protected Routes */}
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-      <Route path="/travessias" element={<ProtectedRoute minPortal={2}><Travessias /></ProtectedRoute>} />
-      <Route path="/metodo" element={<ProtectedRoute minPortal={2}><Metodo /></ProtectedRoute>} />
-      <Route path="/biblioteca" element={<ProtectedRoute minPortal={2}><Biblioteca /></ProtectedRoute>} />
-      <Route path="/casos" element={<ProtectedRoute minPortal={2}><Casos /></ProtectedRoute>} />
-      <Route path="/leitura-oracular" element={<ProtectedRoute minPortal={3}><LeituraOracular /></ProtectedRoute>} />
-      <Route path="/admin" element={<ProtectedRoute minPortal={4}><Admin /></ProtectedRoute>} />
+      <Route path="/travessias" element={<ProtectedRoute minPortal="pre_iniciada"><Travessias /></ProtectedRoute>} />
+      <Route path="/metodo" element={<ProtectedRoute minPortal="pre_iniciada"><Metodo /></ProtectedRoute>} />
+      <Route path="/biblioteca" element={<ProtectedRoute minPortal="pre_iniciada"><Biblioteca /></ProtectedRoute>} />
+      <Route path="/casos" element={<ProtectedRoute minPortal="pre_iniciada"><Casos /></ProtectedRoute>} />
+      <Route path="/leitura-oracular" element={<ProtectedRoute minPortal="iniciada"><LeituraOracular /></ProtectedRoute>} />
+      <Route path="/admin" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       
       {/* Catch-all */}
       <Route path="*" element={<NotFound />} />

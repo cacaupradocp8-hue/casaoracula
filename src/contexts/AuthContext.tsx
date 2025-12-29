@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, PortalLevel } from '@/types/portal';
+import { User, PortalType, canAccessFeature, getCaseLimit } from '@/types/portal';
 
 interface AuthContextType {
   user: User | null;
@@ -8,32 +8,45 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signup: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
-  updatePortalLevel: (userId: string, level: PortalLevel) => void;
+  updatePortal: (userId: string, portal: PortalType) => void;
+  canAccess: (requiredPortal: PortalType) => boolean;
+  canCreateCase: (currentCaseCount: number) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock users for MVP (will be replaced with Supabase)
-const MOCK_USERS: User[] = [
+// Mock users for MVP (will be replaced with backend)
+const MOCK_USERS: (User & { password: string })[] = [
   {
     id: '1',
     email: 'admin@casaoracula.com',
+    password: 'admin123',
     name: 'Guardiã Principal',
-    portalLevel: 4,
+    portal: 'admin',
     createdAt: new Date(),
   },
   {
     id: '2',
     email: 'iniciada@casaoracula.com',
+    password: 'iniciada123',
     name: 'Maria Iniciada',
-    portalLevel: 3,
+    portal: 'iniciada',
     createdAt: new Date(),
   },
   {
     id: '3',
     email: 'pre@casaoracula.com',
+    password: 'pre123',
     name: 'Ana Pré-Iniciada',
-    portalLevel: 2,
+    portal: 'pre_iniciada',
+    createdAt: new Date(),
+  },
+  {
+    id: '4',
+    email: 'visitante@casaoracula.com',
+    password: 'visitante123',
+    name: 'Clara Visitante',
+    portal: 'visitante',
     createdAt: new Date(),
   },
 ];
@@ -43,7 +56,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored session
     const storedUser = localStorage.getItem('casaoracula_user');
     if (storedUser) {
       try {
@@ -59,37 +71,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     setIsLoading(true);
-    
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    const foundUser = MOCK_USERS.find(u => u.email.toLowerCase() === email.toLowerCase());
+    const foundUser = MOCK_USERS.find(
+      u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
+    );
     
     if (foundUser) {
-      setUser(foundUser);
-      localStorage.setItem('casaoracula_user', JSON.stringify(foundUser));
+      const { password: _, ...userWithoutPassword } = foundUser;
+      setUser(userWithoutPassword);
+      localStorage.setItem('casaoracula_user', JSON.stringify(userWithoutPassword));
       setIsLoading(false);
       return { success: true };
     }
     
-    // For MVP: create new user as Portal 1
-    const newUser: User = {
-      id: Date.now().toString(),
-      email,
-      name: email.split('@')[0],
-      portalLevel: 1,
-      createdAt: new Date(),
-    };
-    
-    setUser(newUser);
-    localStorage.setItem('casaoracula_user', JSON.stringify(newUser));
     setIsLoading(false);
-    return { success: true };
+    return { success: false, error: 'Email ou senha incorretos.' };
   };
 
   const signup = async (email: string, password: string, name: string): Promise<{ success: boolean; error?: string }> => {
     setIsLoading(true);
-    
     await new Promise(resolve => setTimeout(resolve, 800));
     
     const exists = MOCK_USERS.find(u => u.email.toLowerCase() === email.toLowerCase());
@@ -102,7 +103,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       id: Date.now().toString(),
       email,
       name,
-      portalLevel: 1,
+      portal: 'visitante',
       createdAt: new Date(),
     };
     
@@ -117,12 +118,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('casaoracula_user');
   };
 
-  const updatePortalLevel = (userId: string, level: PortalLevel) => {
+  const updatePortal = (userId: string, portal: PortalType) => {
     if (user && user.id === userId) {
-      const updatedUser = { ...user, portalLevel: level };
+      const updatedUser = { ...user, portal };
       setUser(updatedUser);
       localStorage.setItem('casaoracula_user', JSON.stringify(updatedUser));
     }
+  };
+
+  const canAccess = (requiredPortal: PortalType): boolean => {
+    if (!user) return false;
+    return canAccessFeature(user.portal, requiredPortal);
+  };
+
+  const canCreateCase = (currentCaseCount: number): boolean => {
+    if (!user) return false;
+    if (user.portal === 'visitante') return false;
+    const limit = getCaseLimit(user.portal);
+    if (limit === 'unlimited') return true;
+    return currentCaseCount < limit;
   };
 
   return (
@@ -133,7 +147,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login,
       signup,
       logout,
-      updatePortalLevel,
+      updatePortal,
+      canAccess,
+      canCreateCase,
     }}>
       {children}
     </AuthContext.Provider>

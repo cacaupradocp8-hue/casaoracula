@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { getPortal } from '@/types/portal';
+import { getPortal, getCaseLimit } from '@/types/portal';
 import { FolderOpen, Plus, Calendar, Tag, ChevronRight, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
@@ -61,8 +61,8 @@ export default function Casos() {
 
   if (!user) return null;
 
-  const portal = getPortal(user.portalLevel);
-  const caseLimit = portal.caseLimit;
+  const portal = getPortal(user.portal);
+  const caseLimit = getCaseLimit(user.portal);
   const canCreateMore = caseLimit === 'unlimited' || cases.length < caseLimit;
 
   const handleCreateCase = () => {

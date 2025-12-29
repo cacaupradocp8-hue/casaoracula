@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { PortalBadge } from '@/components/shared/PortalBadge';
 import { useToast } from '@/hooks/use-toast';
-import { PORTALS, PortalLevel } from '@/types/portal';
+import { PORTALS, PortalType, getPortal } from '@/types/portal';
 import { Settings, Users, Search, UserCog, Eye, Crown, Flame, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
@@ -18,7 +18,7 @@ interface AdminUser {
   id: string;
   name: string;
   email: string;
-  portalLevel: PortalLevel;
+  portal: PortalType;
   createdAt: Date;
   casesCount: number;
   lastActive: Date;
@@ -29,7 +29,7 @@ const MOCK_USERS: AdminUser[] = [
     id: '1',
     name: 'Maria Iniciada',
     email: 'maria@email.com',
-    portalLevel: 3,
+    portal: 'iniciada',
     createdAt: new Date('2023-06-15'),
     casesCount: 12,
     lastActive: new Date('2024-01-20'),
@@ -38,7 +38,7 @@ const MOCK_USERS: AdminUser[] = [
     id: '2',
     name: 'Ana Pré-Iniciada',
     email: 'ana@email.com',
-    portalLevel: 2,
+    portal: 'pre_iniciada',
     createdAt: new Date('2023-11-01'),
     casesCount: 3,
     lastActive: new Date('2024-01-22'),
@@ -47,7 +47,7 @@ const MOCK_USERS: AdminUser[] = [
     id: '3',
     name: 'Carla Buscadora',
     email: 'carla@email.com',
-    portalLevel: 1,
+    portal: 'visitante',
     createdAt: new Date('2024-01-10'),
     casesCount: 0,
     lastActive: new Date('2024-01-18'),
@@ -56,7 +56,7 @@ const MOCK_USERS: AdminUser[] = [
     id: '4',
     name: 'Julia Estudante',
     email: 'julia@email.com',
-    portalLevel: 1,
+    portal: 'visitante',
     createdAt: new Date('2024-01-19'),
     casesCount: 0,
     lastActive: new Date('2024-01-21'),
@@ -69,17 +69,17 @@ export default function Admin() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterPortal, setFilterPortal] = useState<string>('all');
 
-  const handlePortalChange = (userId: string, newLevel: PortalLevel) => {
+  const handlePortalChange = (userId: string, newPortal: PortalType) => {
     setUsers(prev => prev.map(user => 
-      user.id === userId ? { ...user, portalLevel: newLevel } : user
+      user.id === userId ? { ...user, portal: newPortal } : user
     ));
     
     const user = users.find(u => u.id === userId);
-    const portal = PORTALS.find(p => p.level === newLevel);
+    const portalData = getPortal(newPortal);
     
     toast({
       title: 'Portal atualizado',
-      description: `${user?.name} agora está no Portal ${newLevel}: ${portal?.name}`,
+      description: `${user?.name} agora está no ${portalData.name}`,
     });
   };
 
@@ -88,17 +88,17 @@ export default function Admin() {
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesPortal = filterPortal === 'all' || user.portalLevel.toString() === filterPortal;
+    const matchesPortal = filterPortal === 'all' || user.portal === filterPortal;
     
     return matchesSearch && matchesPortal;
   });
 
   const stats = {
     total: users.length,
-    portal1: users.filter(u => u.portalLevel === 1).length,
-    portal2: users.filter(u => u.portalLevel === 2).length,
-    portal3: users.filter(u => u.portalLevel === 3).length,
-    portal4: users.filter(u => u.portalLevel === 4).length,
+    visitante: users.filter(u => u.portal === 'visitante').length,
+    pre_iniciada: users.filter(u => u.portal === 'pre_iniciada').length,
+    iniciada: users.filter(u => u.portal === 'iniciada').length,
+    admin: users.filter(u => u.portal === 'admin').length,
   };
 
   return (
@@ -123,28 +123,28 @@ export default function Admin() {
           <Card>
             <CardContent className="p-4 text-center">
               <Eye className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
-              <p className="text-2xl font-display font-bold text-foreground">{stats.portal1}</p>
+              <p className="text-2xl font-display font-bold text-foreground">{stats.visitante}</p>
               <p className="text-xs text-muted-foreground">Visitantes</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <Flame className="w-6 h-6 mx-auto mb-2 text-burgundy-light" />
-              <p className="text-2xl font-display font-bold text-foreground">{stats.portal2}</p>
+              <p className="text-2xl font-display font-bold text-foreground">{stats.pre_iniciada}</p>
               <p className="text-xs text-muted-foreground">Pré-Iniciadas</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <Star className="w-6 h-6 mx-auto mb-2 text-gold" />
-              <p className="text-2xl font-display font-bold text-foreground">{stats.portal3}</p>
+              <p className="text-2xl font-display font-bold text-foreground">{stats.iniciada}</p>
               <p className="text-xs text-muted-foreground">Iniciadas</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <Crown className="w-6 h-6 mx-auto mb-2 text-accent-foreground" />
-              <p className="text-2xl font-display font-bold text-foreground">{stats.portal4}</p>
+              <p className="text-2xl font-display font-bold text-foreground">{stats.admin}</p>
               <p className="text-xs text-muted-foreground">Admin</p>
             </CardContent>
           </Card>
@@ -168,10 +168,10 @@ export default function Admin() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos os Portais</SelectItem>
-                <SelectItem value="1">Portal 1 - Visitante</SelectItem>
-                <SelectItem value="2">Portal 2 - Pré-Iniciada</SelectItem>
-                <SelectItem value="3">Portal 3 - Iniciada</SelectItem>
-                <SelectItem value="4">Portal 4 - Admin</SelectItem>
+                <SelectItem value="visitante">Visitante</SelectItem>
+                <SelectItem value="pre_iniciada">Pré-Iniciada</SelectItem>
+                <SelectItem value="iniciada">Iniciada</SelectItem>
+                <SelectItem value="admin">Admin</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -203,18 +203,18 @@ export default function Admin() {
                   </div>
                   
                   <div className="flex items-center gap-4">
-                    <PortalBadge level={user.portalLevel} />
+                    <PortalBadge portal={user.portal} />
                     <Select
-                      value={user.portalLevel.toString()}
-                      onValueChange={(v) => handlePortalChange(user.id, parseInt(v) as PortalLevel)}
+                      value={user.portal}
+                      onValueChange={(v) => handlePortalChange(user.id, v as PortalType)}
                     >
                       <SelectTrigger className="w-40">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         {PORTALS.map((portal) => (
-                          <SelectItem key={portal.level} value={portal.level.toString()}>
-                            Portal {portal.level}
+                          <SelectItem key={portal.type} value={portal.type}>
+                            {portal.name.split('/')[0].trim()}
                           </SelectItem>
                         ))}
                       </SelectContent>

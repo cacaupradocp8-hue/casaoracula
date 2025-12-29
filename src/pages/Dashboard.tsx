@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { PortalBadge } from '@/components/shared/PortalBadge';
 import { SectionHeader } from '@/components/shared/SectionHeader';
-import { getPortal, canAccessFeature } from '@/types/portal';
+import { getPortal, canAccessFeature, PortalType } from '@/types/portal';
 import { Link } from 'react-router-dom';
 import {
   BookOpen,
@@ -22,43 +22,43 @@ export default function Dashboard() {
   
   if (!user) return null;
 
-  const portal = getPortal(user.portalLevel);
+  const portal = getPortal(user.portal);
 
-  const quickActions = [
+  const quickActions: { title: string; description: string; icon: typeof BookOpen; path: string; minPortal: PortalType }[] = [
     {
       title: 'Travessias',
       description: 'Formação simbólica em 4 jornadas',
       icon: BookOpen,
       path: '/travessias',
-      minPortal: 2,
+      minPortal: 'pre_iniciada',
     },
     {
       title: 'Leitura em 5 Camadas',
       description: 'Ferramenta central do método',
       icon: Compass,
       path: '/metodo',
-      minPortal: 2,
+      minPortal: 'pre_iniciada',
     },
     {
       title: 'Biblioteca Simbólica',
       description: 'Contos, arquétipos e rituais',
       icon: Library,
       path: '/biblioteca',
-      minPortal: 2,
+      minPortal: 'pre_iniciada',
     },
     {
       title: 'Meus Casos',
       description: 'Gestão de casos clínicos',
       icon: FolderOpen,
       path: '/casos',
-      minPortal: 2,
+      minPortal: 'pre_iniciada',
     },
     {
       title: 'Leitura Oracular',
       description: 'Portal de supervisão profunda',
       icon: Sparkles,
       path: '/leitura-oracular',
-      minPortal: 3,
+      minPortal: 'iniciada',
     },
   ];
 
@@ -76,7 +76,7 @@ export default function Dashboard() {
                 A Casa ORÁCULA te recebe para mais uma jornada.
               </p>
             </div>
-            <PortalBadge level={user.portalLevel} size="lg" showName />
+            <PortalBadge portal={user.portal} size="lg" showName />
           </div>
 
           {/* Portal Info Card */}
@@ -133,7 +133,7 @@ export default function Dashboard() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {quickActions.map((action) => {
             const Icon = action.icon;
-            const hasAccess = canAccessFeature(user.portalLevel, action.minPortal as 1 | 2 | 3 | 4);
+            const hasAccess = canAccessFeature(user.portal, action.minPortal);
             
             return (
               <Card 
@@ -183,7 +183,7 @@ export default function Dashboard() {
         </div>
 
         {/* Visitor Message */}
-        {user.portalLevel === 1 && (
+        {user.portal === 'visitante' && (
           <Card className="mt-12 bg-secondary/30 border-border/50">
             <CardContent className="p-8 text-center">
               <Sparkles className="w-12 h-12 mx-auto mb-4 text-gold" />
