@@ -1,5 +1,16 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, PortalType, canAccessFeature, getCaseLimit } from '@/types/portal';
+import { User as SupabaseUser, Session } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
+import { PortalType, canAccessFeature, getCaseLimit } from '@/types/portal';
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  portal: PortalType;
+  createdAt: Date;
+  avatarUrl?: string;
+}
 
 interface AuthContextType {
   user: User | null;
@@ -7,123 +18,132 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signup: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string }>;
-  logout: () => void;
-  updatePortal: (userId: string, portal: PortalType) => void;
+  logout: () => Promise<void>;
   canAccess: (requiredPortal: PortalType) => boolean;
   canCreateCase: (currentCaseCount: number) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock users for MVP (will be replaced with backend)
-const MOCK_USERS: (User & { password: string })[] = [
-  {
-    id: '1',
-    email: 'admin@casaoracula.com',
-    password: 'admin123',
-    name: 'Guardiã Principal',
-    portal: 'admin',
-    createdAt: new Date(),
-  },
-  {
-    id: '2',
-    email: 'iniciada@casaoracula.com',
-    password: 'iniciada123',
-    name: 'Maria Iniciada',
-    portal: 'iniciada',
-    createdAt: new Date(),
-  },
-  {
-    id: '3',
-    email: 'pre@casaoracula.com',
-    password: 'pre123',
-    name: 'Ana Pré-Iniciada',
-    portal: 'pre_iniciada',
-    createdAt: new Date(),
-  },
-  {
-    id: '4',
-    email: 'visitante@casaoracula.com',
-    password: 'visitante123',
-    name: 'Clara Visitante',
-    portal: 'visitante',
-    createdAt: new Date(),
-  },
-];
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('casaoracula_user');
-    if (storedUser) {
-      try {
-        const parsed = JSON.parse(storedUser);
-        parsed.createdAt = new Date(parsed.createdAt);
-        setUser(parsed);
-      } catch {
-        localStorage.removeItem('casaoracula_user');
+  const fetchUserProfile = async (userId: string) => {
+    try {
+      // Fetch profile
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      // Fetch role
+      const { data: role } = await supabase
+        .from('user_roles')
+        .select('portal')
+        .eq('user_id', userId)
+        .single();
+
+      if (profile) {
+        setUser({
+          id: userId,
+          email: profile.email || '',
+          name: profile.nome || '',
+          portal: (role?.portal as PortalType) || 'visitante',
+          createdAt: new Date(profile.created_at),
+          avatarUrl: profile.avatar_url || undefined,
+        });
       }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
     }
-    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        
+        if (session?.user) {
+          // Defer Supabase calls with setTimeout to prevent deadlock
+          setTimeout(() => {
+            fetchUserProfile(session.user.id);
+          }, 0);
+        } else {
+          setUser(null);
+        }
+        
+        setIsLoading(false);
+      }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session?.user) {
+        fetchUserProfile(session.user.id);
+      }
+      setIsLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
-    setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    const foundUser = MOCK_USERS.find(
-      u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
-    );
-    
-    if (foundUser) {
-      const { password: _, ...userWithoutPassword } = foundUser;
-      setUser(userWithoutPassword);
-      localStorage.setItem('casaoracula_user', JSON.stringify(userWithoutPassword));
-      setIsLoading(false);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        if (error.message === 'Invalid login credentials') {
+          return { success: false, error: 'Email ou senha incorretos.' };
+        }
+        return { success: false, error: error.message };
+      }
+
       return { success: true };
+    } catch (error) {
+      return { success: false, error: 'Erro ao fazer login. Tente novamente.' };
     }
-    
-    setIsLoading(false);
-    return { success: false, error: 'Email ou senha incorretos.' };
   };
 
   const signup = async (email: string, password: string, name: string): Promise<{ success: boolean; error?: string }> => {
-    setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    const exists = MOCK_USERS.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if (exists) {
-      setIsLoading(false);
-      return { success: false, error: 'Este email já está cadastrado.' };
+    try {
+      const redirectUrl = `${window.location.origin}/`;
+      
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            nome: name,
+          },
+        },
+      });
+
+      if (error) {
+        if (error.message.includes('already registered')) {
+          return { success: false, error: 'Este email já está cadastrado.' };
+        }
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: 'Erro ao criar conta. Tente novamente.' };
     }
-    
-    const newUser: User = {
-      id: Date.now().toString(),
-      email,
-      name,
-      portal: 'visitante',
-      createdAt: new Date(),
-    };
-    
-    setUser(newUser);
-    localStorage.setItem('casaoracula_user', JSON.stringify(newUser));
-    setIsLoading(false);
-    return { success: true };
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
-    localStorage.removeItem('casaoracula_user');
-  };
-
-  const updatePortal = (userId: string, portal: PortalType) => {
-    if (user && user.id === userId) {
-      const updatedUser = { ...user, portal };
-      setUser(updatedUser);
-      localStorage.setItem('casaoracula_user', JSON.stringify(updatedUser));
-    }
+    setSession(null);
   };
 
   const canAccess = (requiredPortal: PortalType): boolean => {
@@ -143,11 +163,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider value={{
       user,
       isLoading,
-      isAuthenticated: !!user,
+      isAuthenticated: !!user && !!session,
       login,
       signup,
       logout,
-      updatePortal,
       canAccess,
       canCreateCase,
     }}>
