@@ -144,8 +144,7 @@ export default function Auth() {
 
               <div className="mt-6 p-4 rounded-lg bg-secondary/50 border border-border">
                 <p className="text-xs text-muted-foreground text-center">
-                  <strong>Para testar:</strong> Use admin@casaoracula.com para acesso Admin, 
-                  ou qualquer email para acesso Visitante.
+                  Novo por aqui? Crie uma conta na aba "Criar Conta".
                 </p>
               </div>
             </TabsContent>

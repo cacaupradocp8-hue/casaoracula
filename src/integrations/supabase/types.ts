@@ -14,16 +14,70 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          id: string
+          nome: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          id: string
+          nome?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          nome?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          portal: Database["public"]["Enums"]["portal_type"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          portal?: Database["public"]["Enums"]["portal_type"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          portal?: Database["public"]["Enums"]["portal_type"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_portal: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["portal_type"]
+      }
+      has_portal_access: {
+        Args: {
+          _min_portal: Database["public"]["Enums"]["portal_type"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      portal_type: "visitante" | "pre_iniciada" | "iniciada" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +204,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      portal_type: ["visitante", "pre_iniciada", "iniciada", "admin"],
+    },
   },
 } as const
