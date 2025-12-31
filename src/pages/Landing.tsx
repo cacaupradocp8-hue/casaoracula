@@ -16,7 +16,7 @@ export default function Landing() {
       <div className="relative z-10 text-center px-6 max-w-2xl mx-auto">
         {/* Logo */}
         <div className="animate-fade-in mb-10">
-          <Logo size="lg" className="justify-center" />
+          <Logo size="lg" variant="combined" className="justify-center" />
         </div>
 
         {/* Título */}
