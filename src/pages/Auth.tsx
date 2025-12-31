@@ -81,6 +81,7 @@ export default function Auth() {
   return (
     <div className="min-h-screen bg-background pattern-geometric flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-hero-radial" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" />
       
       <div className="relative w-full max-w-md">
         <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8">
@@ -89,7 +90,7 @@ export default function Auth() {
         </Link>
 
         <div className="text-center mb-8">
-          <Logo size="lg" className="justify-center mb-4" />
+          <Logo size="lg" variant="combined" className="justify-center mb-4" />
           <p className="text-muted-foreground font-display italic">
             "A mulher de alma antiga encontra aqui sua linguagem"
           </p>
