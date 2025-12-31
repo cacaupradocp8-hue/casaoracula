@@ -90,7 +90,7 @@ export default function Auth() {
         </Link>
 
         <div className="text-center mb-8">
-          <Logo size="lg" variant="combined" className="justify-center mb-4" />
+          <Logo size="lg" variant="vertical" className="justify-center mb-4" />
           <p className="text-muted-foreground font-display italic">
             "A mulher de alma antiga encontra aqui sua linguagem"
           </p>
