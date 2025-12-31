@@ -14,6 +14,199 @@ export type Database = {
   }
   public: {
     Tables: {
+      agente_conversas: {
+        Row: {
+          agente_id: string
+          created_at: string
+          id: string
+          titulo: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          agente_id: string
+          created_at?: string
+          id?: string
+          titulo?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          agente_id?: string
+          created_at?: string
+          id?: string
+          titulo?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agente_conversas_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "agentes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agente_mensagens: {
+        Row: {
+          content: string
+          conversa_id: string
+          created_at: string
+          id: string
+          role: string
+        }
+        Insert: {
+          content: string
+          conversa_id: string
+          created_at?: string
+          id?: string
+          role: string
+        }
+        Update: {
+          content?: string
+          conversa_id?: string
+          created_at?: string
+          id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agente_mensagens_conversa_id_fkey"
+            columns: ["conversa_id"]
+            isOneToOne: false
+            referencedRelation: "agente_conversas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agentes: {
+        Row: {
+          created_at: string
+          descricao: string
+          icone: string | null
+          id: string
+          instrucoes_base: string
+          nome: string
+          portal_minimo: Database["public"]["Enums"]["portal_type"]
+          status: Database["public"]["Enums"]["agente_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          descricao: string
+          icone?: string | null
+          id?: string
+          instrucoes_base?: string
+          nome: string
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          status?: Database["public"]["Enums"]["agente_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          descricao?: string
+          icone?: string | null
+          id?: string
+          instrucoes_base?: string
+          nome?: string
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          status?: Database["public"]["Enums"]["agente_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      big5_registros: {
+        Row: {
+          abertura: number
+          amabilidade: number
+          caso_id: string | null
+          conscienciosidade: number
+          created_at: string
+          extroversao: number
+          id: string
+          impacto_clinico: string | null
+          neuroticismo: number
+          notas: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          abertura: number
+          amabilidade: number
+          caso_id?: string | null
+          conscienciosidade: number
+          created_at?: string
+          extroversao: number
+          id?: string
+          impacto_clinico?: string | null
+          neuroticismo: number
+          notas?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          abertura?: number
+          amabilidade?: number
+          caso_id?: string | null
+          conscienciosidade?: number
+          created_at?: string
+          extroversao?: number
+          id?: string
+          impacto_clinico?: string | null
+          neuroticismo?: number
+          notas?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      eneagrama_registros: {
+        Row: {
+          armadilhas: string | null
+          asa: number | null
+          caso_id: string | null
+          created_at: string
+          defesas: string | null
+          id: string
+          instinto: string | null
+          pratica_sugerida: string | null
+          tipo_principal: number
+          updated_at: string
+          user_id: string
+          virtude: string | null
+        }
+        Insert: {
+          armadilhas?: string | null
+          asa?: number | null
+          caso_id?: string | null
+          created_at?: string
+          defesas?: string | null
+          id?: string
+          instinto?: string | null
+          pratica_sugerida?: string | null
+          tipo_principal: number
+          updated_at?: string
+          user_id: string
+          virtude?: string | null
+        }
+        Update: {
+          armadilhas?: string | null
+          asa?: number | null
+          caso_id?: string | null
+          created_at?: string
+          defesas?: string | null
+          id?: string
+          instinto?: string | null
+          pratica_sugerida?: string | null
+          tipo_principal?: number
+          updated_at?: string
+          user_id?: string
+          virtude?: string | null
+        }
+        Relationships: []
+      }
       exercise_responses: {
         Row: {
           created_at: string
@@ -164,6 +357,163 @@ export type Database = {
         }
         Relationships: []
       }
+      oraculo_aplicacoes: {
+        Row: {
+          caso_id: string | null
+          contexto: string | null
+          created_at: string
+          devolutiva: string | null
+          id: string
+          pergunta_id: string
+          resposta: string | null
+          sessao_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          caso_id?: string | null
+          contexto?: string | null
+          created_at?: string
+          devolutiva?: string | null
+          id?: string
+          pergunta_id: string
+          resposta?: string | null
+          sessao_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          caso_id?: string | null
+          contexto?: string | null
+          created_at?: string
+          devolutiva?: string | null
+          id?: string
+          pergunta_id?: string
+          resposta?: string | null
+          sessao_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_aplicacoes_pergunta_id_fkey"
+            columns: ["pergunta_id"]
+            isOneToOne: false
+            referencedRelation: "oraculo_perguntas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oraculo_favoritos: {
+        Row: {
+          created_at: string
+          id: string
+          pergunta_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          pergunta_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          pergunta_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_favoritos_pergunta_id_fkey"
+            columns: ["pergunta_id"]
+            isOneToOne: false
+            referencedRelation: "oraculo_perguntas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oraculo_perguntas: {
+        Row: {
+          created_at: string
+          id: string
+          pergunta: string
+          portal_minimo: Database["public"]["Enums"]["portal_type"]
+          status: Database["public"]["Enums"]["agente_status"]
+          tags: string[] | null
+          tema: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          pergunta: string
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          status?: Database["public"]["Enums"]["agente_status"]
+          tags?: string[] | null
+          tema: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          pergunta?: string
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          status?: Database["public"]["Enums"]["agente_status"]
+          tags?: string[] | null
+          tema?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      posts_mentoria: {
+        Row: {
+          anexo_url: string | null
+          caso_id: string | null
+          created_at: string
+          created_by: string | null
+          data_evento: string | null
+          id: string
+          link_evento: string | null
+          portal_minimo: Database["public"]["Enums"]["portal_type"]
+          status: Database["public"]["Enums"]["post_status"]
+          texto: string
+          tipo: Database["public"]["Enums"]["mentoria_tipo"]
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          anexo_url?: string | null
+          caso_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_evento?: string | null
+          id?: string
+          link_evento?: string | null
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          status?: Database["public"]["Enums"]["post_status"]
+          texto: string
+          tipo?: Database["public"]["Enums"]["mentoria_tipo"]
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          anexo_url?: string | null
+          caso_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_evento?: string | null
+          id?: string
+          link_evento?: string | null
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          status?: Database["public"]["Enums"]["post_status"]
+          texto?: string
+          tipo?: Database["public"]["Enums"]["mentoria_tipo"]
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -187,6 +537,36 @@ export type Database = {
           email?: string | null
           id?: string
           nome?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      text_models: {
+        Row: {
+          categoria: string
+          chave: string
+          conteudo: string
+          created_at: string
+          id: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          categoria?: string
+          chave: string
+          conteudo: string
+          created_at?: string
+          id?: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          categoria?: string
+          chave?: string
+          conteudo?: string
+          created_at?: string
+          id?: string
+          titulo?: string
           updated_at?: string
         }
         Relationships: []
@@ -318,7 +698,10 @@ export type Database = {
       }
     }
     Enums: {
+      agente_status: "ativo" | "inativo"
+      mentoria_tipo: "aviso" | "evento" | "supervisao"
       portal_type: "visitante" | "pre_iniciada" | "iniciada" | "admin"
+      post_status: "rascunho" | "publicado" | "arquivado"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -446,7 +829,10 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      agente_status: ["ativo", "inativo"],
+      mentoria_tipo: ["aviso", "evento", "supervisao"],
       portal_type: ["visitante", "pre_iniciada", "iniciada", "admin"],
+      post_status: ["rascunho", "publicado", "arquivado"],
     },
   },
 } as const
