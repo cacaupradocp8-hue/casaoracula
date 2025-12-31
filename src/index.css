@@ -6,95 +6,102 @@
 
 @layer base {
   :root {
-    /* Casa ORÁCULA - Midnight & Gold Theme */
-    --background: 222 47% 6%;
-    --foreground: 45 30% 92%;
+    /* Casa ORÁCULA - Nova Paleta */
+    /* Fundo principal: #0E1A24 */
+    --background: 206 44% 10%;
+    --foreground: 210 29% 94%;
 
-    --card: 222 40% 9%;
-    --card-foreground: 45 30% 92%;
+    /* Fundo cards: #142634 */
+    --card: 206 43% 14%;
+    --card-foreground: 210 29% 94%;
 
-    --popover: 222 40% 8%;
-    --popover-foreground: 45 30% 92%;
+    --popover: 206 43% 14%;
+    --popover-foreground: 210 29% 94%;
 
-    --primary: 45 70% 55%;
-    --primary-foreground: 222 47% 6%;
+    /* Dourado principal: #C9A45C */
+    --primary: 42 49% 58%;
+    --primary-foreground: 206 44% 10%;
 
-    --secondary: 222 30% 15%;
-    --secondary-foreground: 45 30% 92%;
+    /* Fundo secundário */
+    --secondary: 206 35% 18%;
+    --secondary-foreground: 210 29% 94%;
 
-    --muted: 222 25% 18%;
-    --muted-foreground: 222 15% 55%;
+    --muted: 206 30% 20%;
+    /* Texto secundário: #A9B6C3 */
+    --muted-foreground: 210 18% 71%;
 
-    --accent: 280 35% 25%;
-    --accent-foreground: 45 30% 92%;
+    /* Acento simbólico: #6F85A6 */
+    --accent: 216 25% 54%;
+    --accent-foreground: 210 29% 94%;
 
     --destructive: 0 62% 45%;
-    --destructive-foreground: 45 30% 92%;
+    --destructive-foreground: 210 29% 94%;
 
-    --border: 222 25% 18%;
-    --input: 222 25% 15%;
-    --ring: 45 70% 55%;
+    --border: 206 30% 22%;
+    --input: 206 35% 18%;
+    /* Dourado principal para ring */
+    --ring: 42 49% 58%;
 
     --radius: 0.75rem;
 
     /* Custom Colors */
-    --gold: 45 70% 55%;
-    --gold-light: 45 65% 70%;
-    --gold-dark: 45 75% 40%;
-    --midnight: 222 47% 6%;
-    --midnight-light: 222 40% 12%;
-    --burgundy: 345 45% 30%;
-    --burgundy-light: 345 40% 45%;
-    --sage: 150 20% 35%;
-    --sage-light: 150 25% 50%;
+    /* Dourado principal: #C9A45C */
+    --gold: 42 49% 58%;
+    /* Dourado suave: #E2C98B */
+    --gold-light: 42 55% 72%;
+    --gold-dark: 42 55% 45%;
+    
+    /* Fundo principal: #0E1A24 */
+    --midnight: 206 44% 10%;
+    --midnight-light: 206 43% 14%;
 
-    /* Gradients */
-    --gradient-gold: linear-gradient(135deg, hsl(45 70% 55%), hsl(35 65% 45%));
-    --gradient-midnight: linear-gradient(180deg, hsl(222 47% 8%), hsl(222 47% 4%));
-    --gradient-mystical: linear-gradient(135deg, hsl(280 35% 20%), hsl(222 47% 10%));
-    --gradient-hero: radial-gradient(ellipse at top, hsl(222 40% 15%), hsl(222 47% 6%));
+    /* Gradients - simplificados */
+    --gradient-gold: linear-gradient(135deg, hsl(42 49% 58%), hsl(42 55% 45%));
+    --gradient-midnight: linear-gradient(180deg, hsl(206 43% 14%), hsl(206 44% 8%));
+    --gradient-mystical: linear-gradient(135deg, hsl(216 25% 35%), hsl(206 44% 10%));
+    --gradient-hero: radial-gradient(ellipse at top, hsl(206 43% 18%), hsl(206 44% 10%));
 
     /* Shadows */
-    --shadow-gold: 0 4px 30px -5px hsl(45 70% 55% / 0.25);
+    --shadow-gold: 0 4px 30px -5px hsl(42 49% 58% / 0.25);
     --shadow-soft: 0 8px 32px -8px hsl(0 0% 0% / 0.4);
-    --shadow-glow: 0 0 60px -10px hsl(45 70% 55% / 0.3);
+    --shadow-glow: 0 0 60px -10px hsl(42 49% 58% / 0.3);
 
     /* Typography */
     --font-display: 'Cormorant Garamond', serif;
     --font-body: 'DM Sans', sans-serif;
 
     /* Sidebar */
-    --sidebar-background: 222 40% 8%;
-    --sidebar-foreground: 45 30% 92%;
-    --sidebar-primary: 45 70% 55%;
-    --sidebar-primary-foreground: 222 47% 6%;
-    --sidebar-accent: 222 30% 15%;
-    --sidebar-accent-foreground: 45 30% 92%;
-    --sidebar-border: 222 25% 18%;
-    --sidebar-ring: 45 70% 55%;
+    --sidebar-background: 206 43% 12%;
+    --sidebar-foreground: 210 29% 94%;
+    --sidebar-primary: 42 49% 58%;
+    --sidebar-primary-foreground: 206 44% 10%;
+    --sidebar-accent: 206 35% 18%;
+    --sidebar-accent-foreground: 210 29% 94%;
+    --sidebar-border: 206 30% 22%;
+    --sidebar-ring: 42 49% 58%;
   }
 
   .dark {
     /* Same as root - this is a dark-first theme */
-    --background: 222 47% 6%;
-    --foreground: 45 30% 92%;
-    --card: 222 40% 9%;
-    --card-foreground: 45 30% 92%;
-    --popover: 222 40% 8%;
-    --popover-foreground: 45 30% 92%;
-    --primary: 45 70% 55%;
-    --primary-foreground: 222 47% 6%;
-    --secondary: 222 30% 15%;
-    --secondary-foreground: 45 30% 92%;
-    --muted: 222 25% 18%;
-    --muted-foreground: 222 15% 55%;
-    --accent: 280 35% 25%;
-    --accent-foreground: 45 30% 92%;
+    --background: 206 44% 10%;
+    --foreground: 210 29% 94%;
+    --card: 206 43% 14%;
+    --card-foreground: 210 29% 94%;
+    --popover: 206 43% 14%;
+    --popover-foreground: 210 29% 94%;
+    --primary: 42 49% 58%;
+    --primary-foreground: 206 44% 10%;
+    --secondary: 206 35% 18%;
+    --secondary-foreground: 210 29% 94%;
+    --muted: 206 30% 20%;
+    --muted-foreground: 210 18% 71%;
+    --accent: 216 25% 54%;
+    --accent-foreground: 210 29% 94%;
     --destructive: 0 62% 45%;
-    --destructive-foreground: 45 30% 92%;
-    --border: 222 25% 18%;
-    --input: 222 25% 15%;
-    --ring: 45 70% 55%;
+    --destructive-foreground: 210 29% 94%;
+    --border: 206 30% 22%;
+    --input: 206 35% 18%;
+    --ring: 42 49% 58%;
   }
 }
 
@@ -173,7 +180,7 @@
   }
 
   .pattern-geometric {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a227' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a45c' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 }
 
