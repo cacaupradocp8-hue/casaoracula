@@ -12,13 +12,24 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
+type AgenteStatus = 'ativo' | 'inativo';
+type PortalType = 'visitante' | 'pre_iniciada' | 'iniciada' | 'admin';
+
 interface Agente {
   id: string;
   nome: string;
   descricao: string;
   instrucoes_base: string;
-  status: string;
-  portal_minimo: string;
+  status: AgenteStatus;
+  portal_minimo: PortalType;
+}
+
+interface FormState {
+  nome: string;
+  descricao: string;
+  instrucoes_base: string;
+  status: AgenteStatus;
+  portal_minimo: PortalType;
 }
 
 export function AdminAgentesTab() {
@@ -26,7 +37,7 @@ export function AdminAgentesTab() {
   const [isLoading, setIsLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<Agente | null>(null);
-  const [form, setForm] = useState({ nome: '', descricao: '', instrucoes_base: '', status: 'ativo', portal_minimo: 'pre_iniciada' });
+  const [form, setForm] = useState<FormState>({ nome: '', descricao: '', instrucoes_base: '', status: 'ativo', portal_minimo: 'pre_iniciada' });
   const { toast } = useToast();
 
   useEffect(() => { fetch(); }, []);
@@ -86,8 +97,8 @@ export function AdminAgentesTab() {
             <div><Label>Descrição</Label><Textarea value={form.descricao} onChange={e => setForm(p => ({ ...p, descricao: e.target.value }))} rows={2} /></div>
             <div><Label>Instruções Base (System Prompt)</Label><Textarea value={form.instrucoes_base} onChange={e => setForm(p => ({ ...p, instrucoes_base: e.target.value }))} rows={4} /></div>
             <div className="grid grid-cols-2 gap-4">
-              <div><Label>Status</Label><Select value={form.status} onValueChange={v => setForm(p => ({ ...p, status: v }))}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="ativo">Ativo</SelectItem><SelectItem value="inativo">Inativo</SelectItem></SelectContent></Select></div>
-              <div><Label>Portal Mínimo</Label><Select value={form.portal_minimo} onValueChange={v => setForm(p => ({ ...p, portal_minimo: v }))}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="visitante">Visitante</SelectItem><SelectItem value="pre_iniciada">Pré-Iniciada</SelectItem><SelectItem value="iniciada">Iniciada</SelectItem></SelectContent></Select></div>
+              <div><Label>Status</Label><Select value={form.status} onValueChange={v => setForm(p => ({ ...p, status: v as AgenteStatus }))}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="ativo">Ativo</SelectItem><SelectItem value="inativo">Inativo</SelectItem></SelectContent></Select></div>
+              <div><Label>Portal Mínimo</Label><Select value={form.portal_minimo} onValueChange={v => setForm(p => ({ ...p, portal_minimo: v as PortalType }))}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="visitante">Visitante</SelectItem><SelectItem value="pre_iniciada">Pré-Iniciada</SelectItem><SelectItem value="iniciada">Iniciada</SelectItem></SelectContent></Select></div>
             </div>
             <Button onClick={save} variant="gold" className="w-full">Salvar</Button>
           </div>

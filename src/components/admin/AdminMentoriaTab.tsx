@@ -12,14 +12,26 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
+type PostTipo = 'aviso' | 'evento' | 'supervisao';
+type PostStatus = 'rascunho' | 'publicado' | 'arquivado';
+
 interface Post {
   id: string;
-  tipo: string;
+  tipo: PostTipo;
   titulo: string;
   texto: string;
-  status: string;
+  status: PostStatus;
   data_evento?: string;
   link_evento?: string;
+}
+
+interface FormState {
+  tipo: PostTipo;
+  titulo: string;
+  texto: string;
+  status: PostStatus;
+  data_evento: string;
+  link_evento: string;
 }
 
 export function AdminMentoriaTab() {
@@ -27,7 +39,7 @@ export function AdminMentoriaTab() {
   const [isLoading, setIsLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<Post | null>(null);
-  const [form, setForm] = useState({ tipo: 'aviso', titulo: '', texto: '', status: 'rascunho', data_evento: '', link_evento: '' });
+  const [form, setForm] = useState<FormState>({ tipo: 'aviso', titulo: '', texto: '', status: 'rascunho', data_evento: '', link_evento: '' });
   const { toast } = useToast();
 
   useEffect(() => { fetchPosts(); }, []);
@@ -110,8 +122,8 @@ export function AdminMentoriaTab() {
           <DialogHeader><DialogTitle>{editingPost ? 'Editar Post' : 'Novo Post'}</DialogTitle></DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div><Label>Tipo</Label><Select value={form.tipo} onValueChange={v => setForm(p => ({ ...p, tipo: v }))}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="aviso">Aviso</SelectItem><SelectItem value="evento">Evento</SelectItem><SelectItem value="supervisao">Supervisão</SelectItem></SelectContent></Select></div>
-              <div><Label>Status</Label><Select value={form.status} onValueChange={v => setForm(p => ({ ...p, status: v }))}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="rascunho">Rascunho</SelectItem><SelectItem value="publicado">Publicado</SelectItem><SelectItem value="arquivado">Arquivado</SelectItem></SelectContent></Select></div>
+              <div><Label>Tipo</Label><Select value={form.tipo} onValueChange={v => setForm(p => ({ ...p, tipo: v as PostTipo }))}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="aviso">Aviso</SelectItem><SelectItem value="evento">Evento</SelectItem><SelectItem value="supervisao">Supervisão</SelectItem></SelectContent></Select></div>
+              <div><Label>Status</Label><Select value={form.status} onValueChange={v => setForm(p => ({ ...p, status: v as PostStatus }))}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="rascunho">Rascunho</SelectItem><SelectItem value="publicado">Publicado</SelectItem><SelectItem value="arquivado">Arquivado</SelectItem></SelectContent></Select></div>
             </div>
             <div><Label>Título</Label><Input value={form.titulo} onChange={e => setForm(p => ({ ...p, titulo: e.target.value }))} /></div>
             <div><Label>Texto</Label><Textarea value={form.texto} onChange={e => setForm(p => ({ ...p, texto: e.target.value }))} rows={4} /></div>
