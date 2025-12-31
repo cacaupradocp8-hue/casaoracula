@@ -58,7 +58,7 @@ export function Navigation() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to={user ? '/dashboard' : '/'}>
-            <Logo size="md" variant="horizontal" />
+            <Logo size="lg" variant="horizontal" />
           </Link>
 
           {/* Desktop Navigation */}
