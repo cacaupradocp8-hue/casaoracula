@@ -153,6 +153,39 @@ export type Database = {
         }
         Relationships: []
       }
+      big5_questionario: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          dimensao: Database["public"]["Enums"]["big5_dimensao"]
+          id: string
+          ordem: number
+          texto_pergunta: string
+          tipo: Database["public"]["Enums"]["big5_tipo_pergunta"]
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          dimensao: Database["public"]["Enums"]["big5_dimensao"]
+          id?: string
+          ordem?: number
+          texto_pergunta: string
+          tipo?: Database["public"]["Enums"]["big5_tipo_pergunta"]
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          dimensao?: Database["public"]["Enums"]["big5_dimensao"]
+          id?: string
+          ordem?: number
+          texto_pergunta?: string
+          tipo?: Database["public"]["Enums"]["big5_tipo_pergunta"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       big5_registros: {
         Row: {
           abertura: number
@@ -165,6 +198,7 @@ export type Database = {
           impacto_clinico: string | null
           neuroticismo: number
           notas: string | null
+          therapist_id: string | null
           updated_at: string
           user_id: string
         }
@@ -179,6 +213,7 @@ export type Database = {
           impacto_clinico?: string | null
           neuroticismo: number
           notas?: string | null
+          therapist_id?: string | null
           updated_at?: string
           user_id: string
         }
@@ -193,6 +228,7 @@ export type Database = {
           impacto_clinico?: string | null
           neuroticismo?: number
           notas?: string | null
+          therapist_id?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -807,6 +843,13 @@ export type Database = {
     }
     Enums: {
       agente_status: "ativo" | "inativo"
+      big5_dimensao:
+        | "abertura"
+        | "conscienciosidade"
+        | "extroversao"
+        | "amabilidade"
+        | "neuroticismo"
+      big5_tipo_pergunta: "escala_1_5" | "texto"
       mentoria_tipo: "aviso" | "evento" | "supervisao"
       portal_type: "visitante" | "pre_iniciada" | "iniciada" | "admin"
       post_status: "rascunho" | "publicado" | "arquivado"
@@ -938,6 +981,14 @@ export const Constants = {
   public: {
     Enums: {
       agente_status: ["ativo", "inativo"],
+      big5_dimensao: [
+        "abertura",
+        "conscienciosidade",
+        "extroversao",
+        "amabilidade",
+        "neuroticismo",
+      ],
+      big5_tipo_pergunta: ["escala_1_5", "texto"],
       mentoria_tipo: ["aviso", "evento", "supervisao"],
       portal_type: ["visitante", "pre_iniciada", "iniciada", "admin"],
       post_status: ["rascunho", "publicado", "arquivado"],
