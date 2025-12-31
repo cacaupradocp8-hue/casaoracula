@@ -1,13 +1,14 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, BookOpen, Library, Megaphone, Bot, FileText } from 'lucide-react';
+import { Settings, Users, BookOpen, Library, Megaphone, Bot, FileText, Wrench } from 'lucide-react';
 import { AdminUsersTab } from '@/components/admin/AdminUsersTab';
 import { AdminTravessiasTab } from '@/components/admin/AdminTravessiasTab';
 import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
 import { AdminMentoriaTab } from '@/components/admin/AdminMentoriaTab';
 import { AdminAgentesTab } from '@/components/admin/AdminAgentesTab';
 import { AdminModelosTab } from '@/components/admin/AdminModelosTab';
+import { AdminFerramentasTab } from '@/components/admin/AdminFerramentasTab';
 
 export default function Admin() {
   return (
@@ -46,6 +47,10 @@ export default function Admin() {
               <FileText className="w-4 h-4" />
               Modelos
             </TabsTrigger>
+            <TabsTrigger value="ferramentas" className="gap-2">
+              <Wrench className="w-4 h-4" />
+              Ferramentas
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -70,6 +75,10 @@ export default function Admin() {
 
           <TabsContent value="modelos">
             <AdminModelosTab />
+          </TabsContent>
+
+          <TabsContent value="ferramentas">
+            <AdminFerramentasTab />
           </TabsContent>
         </Tabs>
       </div>

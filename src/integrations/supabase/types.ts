@@ -117,6 +117,42 @@ export type Database = {
         }
         Relationships: []
       }
+      big5_dimensoes: {
+        Row: {
+          ativo: boolean
+          chave: string
+          created_at: string
+          descricao: string
+          id: string
+          nome: string
+          ordem: number
+          perguntas_reflexao: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          chave: string
+          created_at?: string
+          descricao: string
+          id?: string
+          nome: string
+          ordem?: number
+          perguntas_reflexao?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          chave?: string
+          created_at?: string
+          descricao?: string
+          id?: string
+          nome?: string
+          ordem?: number
+          perguntas_reflexao?: string[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       big5_registros: {
         Row: {
           abertura: number
@@ -162,6 +198,36 @@ export type Database = {
         }
         Relationships: []
       }
+      eneagrama_instintos: {
+        Row: {
+          ativo: boolean
+          chave: string
+          created_at: string
+          descricao: string
+          id: string
+          nome: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          chave: string
+          created_at?: string
+          descricao: string
+          id?: string
+          nome: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          chave?: string
+          created_at?: string
+          descricao?: string
+          id?: string
+          nome?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       eneagrama_registros: {
         Row: {
           armadilhas: string | null
@@ -203,6 +269,45 @@ export type Database = {
           tipo_principal?: number
           updated_at?: string
           user_id?: string
+          virtude?: string | null
+        }
+        Relationships: []
+      }
+      eneagrama_tipos: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          descricao: string
+          fixacao: string | null
+          id: string
+          nome: string
+          numero: number
+          palavras_chave: string[] | null
+          updated_at: string
+          virtude: string | null
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          descricao: string
+          fixacao?: string | null
+          id?: string
+          nome: string
+          numero: number
+          palavras_chave?: string[] | null
+          updated_at?: string
+          virtude?: string | null
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string
+          fixacao?: string | null
+          id?: string
+          nome?: string
+          numero?: number
+          palavras_chave?: string[] | null
+          updated_at?: string
           virtude?: string | null
         }
         Relationships: []
@@ -437,6 +542,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          nivel_intensidade: number | null
           pergunta: string
           portal_minimo: Database["public"]["Enums"]["portal_type"]
           status: Database["public"]["Enums"]["agente_status"]
@@ -447,6 +553,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          nivel_intensidade?: number | null
           pergunta: string
           portal_minimo?: Database["public"]["Enums"]["portal_type"]
           status?: Database["public"]["Enums"]["agente_status"]
@@ -457,6 +564,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          nivel_intensidade?: number | null
           pergunta?: string
           portal_minimo?: Database["public"]["Enums"]["portal_type"]
           status?: Database["public"]["Enums"]["agente_status"]
