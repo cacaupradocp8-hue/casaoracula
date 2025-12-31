@@ -16,6 +16,9 @@ import {
   Menu,
   X,
   User,
+  Users,
+  Bot,
+  Wrench,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -32,6 +35,9 @@ const navItems: { path: string; label: string; icon: typeof Home; minPortal: Por
   { path: '/metodo', label: 'Método', icon: Compass, minPortal: 'pre_iniciada' },
   { path: '/biblioteca', label: 'Biblioteca', icon: Library, minPortal: 'pre_iniciada' },
   { path: '/casos', label: 'Casos', icon: FolderOpen, minPortal: 'pre_iniciada' },
+  { path: '/mentoria', label: 'Mentoria', icon: Users, minPortal: 'pre_iniciada' },
+  { path: '/agentes', label: 'Agentes IA', icon: Bot, minPortal: 'pre_iniciada' },
+  { path: '/salas', label: 'Salas', icon: Wrench, minPortal: 'pre_iniciada' },
   { path: '/leitura-oracular', label: 'Leitura Oracular', icon: Sparkles, minPortal: 'iniciada' },
   { path: '/admin', label: 'Admin', icon: Settings, minPortal: 'admin' },
 ];

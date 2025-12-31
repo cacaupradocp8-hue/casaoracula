@@ -14,6 +14,12 @@ import Metodo from "./pages/Metodo";
 import Biblioteca from "./pages/Biblioteca";
 import Casos from "./pages/Casos";
 import LeituraOracular from "./pages/LeituraOracular";
+import Mentoria from "./pages/Mentoria";
+import Agentes from "./pages/Agentes";
+import Salas from "./pages/Salas";
+import Big5 from "./pages/salas/Big5";
+import Eneagrama from "./pages/salas/Eneagrama";
+import OraculoPerguntas from "./pages/salas/OraculoPerguntas";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
@@ -74,6 +80,12 @@ function AppRoutes() {
       <Route path="/metodo" element={<ProtectedRoute minPortal="pre_iniciada"><Metodo /></ProtectedRoute>} />
       <Route path="/biblioteca" element={<ProtectedRoute minPortal="pre_iniciada"><Biblioteca /></ProtectedRoute>} />
       <Route path="/casos" element={<ProtectedRoute minPortal="pre_iniciada"><Casos /></ProtectedRoute>} />
+      <Route path="/mentoria" element={<ProtectedRoute minPortal="pre_iniciada"><Mentoria /></ProtectedRoute>} />
+      <Route path="/agentes" element={<ProtectedRoute minPortal="pre_iniciada"><Agentes /></ProtectedRoute>} />
+      <Route path="/salas" element={<ProtectedRoute minPortal="pre_iniciada"><Salas /></ProtectedRoute>} />
+      <Route path="/salas/big5" element={<ProtectedRoute minPortal="pre_iniciada"><Big5 /></ProtectedRoute>} />
+      <Route path="/salas/eneagrama" element={<ProtectedRoute minPortal="pre_iniciada"><Eneagrama /></ProtectedRoute>} />
+      <Route path="/salas/oraculo-perguntas" element={<ProtectedRoute minPortal="pre_iniciada"><OraculoPerguntas /></ProtectedRoute>} />
       <Route path="/leitura-oracular" element={<ProtectedRoute minPortal="iniciada"><LeituraOracular /></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       
