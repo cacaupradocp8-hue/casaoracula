@@ -7,7 +7,7 @@ import logoVertical from '@/assets/logo-vertical.png';
 
 interface LogoProps {
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   variant?: 'full' | 'icon' | 'text' | 'combined' | 'horizontal' | 'vertical';
 }
 
@@ -16,30 +16,35 @@ export function Logo({ className, size = 'md', variant = 'full' }: LogoProps) {
     sm: 'h-10',
     md: 'h-14',
     lg: 'h-20',
+    xl: 'h-24',
   };
 
   const fullSizes = {
     sm: 'h-14',
     md: 'h-20',
     lg: 'h-36',
+    xl: 'h-40',
   };
 
   const textSizes = {
     sm: 'h-8',
     md: 'h-12',
     lg: 'h-16',
+    xl: 'h-20',
   };
 
   const horizontalSizes = {
     sm: 'h-10',
     md: 'h-14',
     lg: 'h-20',
+    xl: 'h-24',
   };
 
   const verticalSizes = {
     sm: 'h-20',
     md: 'h-28',
     lg: 'h-40',
+    xl: 'h-48',
   };
 
   // Horizontal variant - logo lado a lado (para header do portal)
