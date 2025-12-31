@@ -60,14 +60,6 @@ export default {
           DEFAULT: "hsl(var(--midnight))",
           light: "hsl(var(--midnight-light))",
         },
-        burgundy: {
-          DEFAULT: "hsl(var(--burgundy))",
-          light: "hsl(var(--burgundy-light))",
-        },
-        sage: {
-          DEFAULT: "hsl(var(--sage))",
-          light: "hsl(var(--sage-light))",
-        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
