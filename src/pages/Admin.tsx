@@ -1,7 +1,7 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, BookOpen, Library, Megaphone, Bot, FileText, Wrench } from 'lucide-react';
+import { Settings, Users, BookOpen, Library, Megaphone, Bot, FileText, Wrench, DoorOpen } from 'lucide-react';
 import { AdminUsersTab } from '@/components/admin/AdminUsersTab';
 import { AdminTravessiasTab } from '@/components/admin/AdminTravessiasTab';
 import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
@@ -9,6 +9,7 @@ import { AdminMentoriaTab } from '@/components/admin/AdminMentoriaTab';
 import { AdminAgentesTab } from '@/components/admin/AdminAgentesTab';
 import { AdminModelosTab } from '@/components/admin/AdminModelosTab';
 import { AdminFerramentasTab } from '@/components/admin/AdminFerramentasTab';
+import { AdminSalasTab } from '@/components/admin/AdminSalasTab';
 
 export default function Admin() {
   return (
@@ -51,6 +52,10 @@ export default function Admin() {
               <Wrench className="w-4 h-4" />
               Ferramentas
             </TabsTrigger>
+            <TabsTrigger value="salas" className="gap-2">
+              <DoorOpen className="w-4 h-4" />
+              Salas
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -79,6 +84,10 @@ export default function Admin() {
 
           <TabsContent value="ferramentas">
             <AdminFerramentasTab />
+          </TabsContent>
+
+          <TabsContent value="salas">
+            <AdminSalasTab />
           </TabsContent>
         </Tabs>
       </div>

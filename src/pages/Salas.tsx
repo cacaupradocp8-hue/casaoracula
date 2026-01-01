@@ -1,15 +1,47 @@
+import { useState, useEffect } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Wrench, Brain, Compass, HelpCircle } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { DoorOpen, Lock, Unlock, Loader2, Brain, Compass, HelpCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
+type NivelSala = 'NIVEL_0' | 'NIVEL_1' | 'NIVEL_2' | 'NIVEL_3';
+
+interface Sala {
+  id: string;
+  nivel_minimo: NivelSala;
+  nome_exibicao: string;
+  texto_entrada: string;
+  texto_bloqueio: string;
+  ativa: boolean;
+  ordem: number;
+}
+
+const NIVEL_HIERARCHY: Record<NivelSala, number> = {
+  NIVEL_0: 0,
+  NIVEL_1: 1,
+  NIVEL_2: 2,
+  NIVEL_3: 3,
+};
+
+const PORTAL_TO_NIVEL: Record<string, NivelSala> = {
+  visitante: 'NIVEL_0',
+  pre_iniciada: 'NIVEL_1',
+  iniciada: 'NIVEL_2',
+  admin: 'NIVEL_3',
+};
+
+// Ferramentas mantidas para a sala atual do usuário
 const ferramentas = [
   {
     id: 'big5',
     title: 'Big Five (OCEAN)',
-    description: 'Avalie as cinco grandes dimensões da personalidade: Abertura, Conscienciosidade, Extroversão, Amabilidade e Neuroticismo.',
+    description: 'Avalie as cinco grandes dimensões da personalidade.',
     icon: Brain,
     path: '/salas/big5',
     color: 'from-purple-500/20 to-purple-600/10',
@@ -17,15 +49,15 @@ const ferramentas = [
   {
     id: 'eneagrama',
     title: 'Eneagrama',
-    description: 'Explore os 9 tipos de personalidade, asas e instintos. Compreenda padrões de defesa e virtudes a cultivar.',
+    description: 'Explore os 9 tipos de personalidade, asas e instintos.',
     icon: Compass,
     path: '/salas/eneagrama',
     color: 'from-blue-500/20 to-blue-600/10',
   },
   {
     id: 'oraculo',
-    title: 'Oráculo das Perguntas Desafiadoras',
-    description: 'Acesse um banco de perguntas poderosas para usar em sessões. Sorteie, favorite e registre aplicações.',
+    title: 'Oráculo das Perguntas',
+    description: 'Banco de perguntas poderosas para sessões.',
     icon: HelpCircle,
     path: '/salas/oraculo-perguntas',
     color: 'from-gold/20 to-amber-600/10',
@@ -33,42 +65,196 @@ const ferramentas = [
 ];
 
 export default function Salas() {
+  const { user } = useAuth();
+  const [salas, setSalas] = useState<Sala[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedSala, setSelectedSala] = useState<Sala | null>(null);
+  const [showBlockedDialog, setShowBlockedDialog] = useState(false);
+
+  const userNivel = user?.portal ? PORTAL_TO_NIVEL[user.portal] : 'NIVEL_0';
+  const userNivelNum = NIVEL_HIERARCHY[userNivel];
+
+  const canAccessSala = (sala: Sala): boolean => {
+    const salaMinNivel = NIVEL_HIERARCHY[sala.nivel_minimo];
+    return userNivelNum >= salaMinNivel;
+  };
+
+  useEffect(() => {
+    const fetchSalas = async () => {
+      const { data, error } = await supabase
+        .from('salas')
+        .select('*')
+        .eq('ativa', true)
+        .order('ordem');
+
+      if (error) {
+        toast.error('Erro ao carregar salas');
+        console.error(error);
+      } else {
+        setSalas(data as Sala[]);
+      }
+      setLoading(false);
+    };
+
+    fetchSalas();
+  }, []);
+
+  const handleSalaClick = (sala: Sala) => {
+    if (canAccessSala(sala)) {
+      setSelectedSala(sala);
+    } else {
+      setSelectedSala(sala);
+      setShowBlockedDialog(true);
+    }
+  };
+
+  if (loading) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <Loader2 className="w-8 h-8 animate-spin text-gold" />
+        </div>
+      </AppLayout>
+    );
+  }
+
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20">
         <SectionHeader
-          title="Salas & Ferramentas"
-          subtitle="Recursos práticos para enriquecer sua atuação clínica"
-          icon={<Wrench className="w-5 h-5" />}
+          title="Salas da Casa ORÁCULA"
+          subtitle="Explore as salas de acordo com seu nível na jornada"
+          icon={<DoorOpen className="w-5 h-5" />}
           className="mb-8"
         />
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {ferramentas.map(tool => {
-            const Icon = tool.icon;
+        {/* Salas por nível */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-12">
+          {salas.map((sala) => {
+            const isAccessible = canAccessSala(sala);
             return (
               <Card
-                key={tool.id}
-                className={`glass hover:border-gold/50 transition-all bg-gradient-to-br ${tool.color}`}
+                key={sala.id}
+                className={`glass transition-all cursor-pointer ${
+                  isAccessible
+                    ? 'hover:border-gold/50 hover:shadow-gold/10 hover:shadow-lg'
+                    : 'opacity-60 hover:opacity-80'
+                }`}
+                onClick={() => handleSalaClick(sala)}
               >
-                <CardHeader>
-                  <div className="w-14 h-14 rounded-xl bg-background/50 flex items-center justify-center mb-3">
-                    <Icon className="w-7 h-7 text-gold" />
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <div
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                        isAccessible
+                          ? 'bg-gold/20 text-gold'
+                          : 'bg-muted text-muted-foreground'
+                      }`}
+                    >
+                      {isAccessible ? (
+                        <Unlock className="w-6 h-6" />
+                      ) : (
+                        <Lock className="w-6 h-6" />
+                      )}
+                    </div>
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full ${
+                        isAccessible
+                          ? 'bg-gold/20 text-gold'
+                          : 'bg-muted text-muted-foreground'
+                      }`}
+                    >
+                      {sala.nivel_minimo.replace('NIVEL_', 'Nível ')}
+                    </span>
                   </div>
-                  <CardTitle className="text-xl">{tool.title}</CardTitle>
-                  <CardDescription className="text-sm">{tool.description}</CardDescription>
+                  <CardTitle className="text-lg">{sala.nome_exibicao}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Link to={tool.path}>
-                    <Button variant="gold" className="w-full">
-                      Acessar Ferramenta
-                    </Button>
-                  </Link>
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {isAccessible ? sala.texto_entrada : 'Sala bloqueada'}
+                  </p>
                 </CardContent>
               </Card>
             );
           })}
         </div>
+
+        {/* Ferramentas disponíveis na sala atual */}
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <DoorOpen className="w-5 h-5 text-gold" />
+            Ferramentas da sua Sala
+          </h2>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {ferramentas.map((tool) => {
+              const Icon = tool.icon;
+              return (
+                <Card
+                  key={tool.id}
+                  className={`glass hover:border-gold/50 transition-all bg-gradient-to-br ${tool.color}`}
+                >
+                  <CardHeader>
+                    <div className="w-14 h-14 rounded-xl bg-background/50 flex items-center justify-center mb-3">
+                      <Icon className="w-7 h-7 text-gold" />
+                    </div>
+                    <CardTitle className="text-xl">{tool.title}</CardTitle>
+                    <CardDescription className="text-sm">{tool.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Link to={tool.path}>
+                      <Button variant="gold" className="w-full">
+                        Acessar Ferramenta
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Dialog para sala bloqueada */}
+        <Dialog open={showBlockedDialog} onOpenChange={setShowBlockedDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Lock className="w-5 h-5 text-muted-foreground" />
+                Sala Bloqueada
+              </DialogTitle>
+              <DialogDescription className="pt-4">
+                {selectedSala?.texto_bloqueio}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex justify-end pt-4">
+              <Button variant="outline" onClick={() => setShowBlockedDialog(false)}>
+                Entendi
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Dialog para sala desbloqueada */}
+        <Dialog
+          open={selectedSala !== null && !showBlockedDialog && canAccessSala(selectedSala!)}
+          onOpenChange={(open) => !open && setSelectedSala(null)}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Unlock className="w-5 h-5 text-gold" />
+                {selectedSala?.nome_exibicao}
+              </DialogTitle>
+              <DialogDescription className="pt-4">
+                {selectedSala?.texto_entrada}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex justify-end pt-4">
+              <Button variant="gold" onClick={() => setSelectedSala(null)}>
+                Explorar
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </AppLayout>
   );
