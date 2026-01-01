@@ -19,6 +19,7 @@ import {
   Users,
   Bot,
   Wrench,
+  GraduationCap,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -31,6 +32,7 @@ import {
 
 const navItems: { path: string; label: string; icon: typeof Home; minPortal: PortalType }[] = [
   { path: '/dashboard', label: 'Início', icon: Home, minPortal: 'visitante' },
+  { path: '/formacao', label: 'Formação', icon: GraduationCap, minPortal: 'visitante' },
   { path: '/travessias', label: 'Travessias', icon: BookOpen, minPortal: 'pre_iniciada' },
   { path: '/metodo', label: 'Método', icon: Compass, minPortal: 'pre_iniciada' },
   { path: '/biblioteca', label: 'Biblioteca', icon: Library, minPortal: 'pre_iniciada' },
