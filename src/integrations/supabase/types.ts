@@ -685,6 +685,42 @@ export type Database = {
         }
         Relationships: []
       }
+      salas: {
+        Row: {
+          ativa: boolean
+          created_at: string
+          id: string
+          nivel_minimo: Database["public"]["Enums"]["nivel_sala"]
+          nome_exibicao: string
+          ordem: number
+          texto_bloqueio: string
+          texto_entrada: string
+          updated_at: string
+        }
+        Insert: {
+          ativa?: boolean
+          created_at?: string
+          id?: string
+          nivel_minimo?: Database["public"]["Enums"]["nivel_sala"]
+          nome_exibicao: string
+          ordem?: number
+          texto_bloqueio?: string
+          texto_entrada?: string
+          updated_at?: string
+        }
+        Update: {
+          ativa?: boolean
+          created_at?: string
+          id?: string
+          nivel_minimo?: Database["public"]["Enums"]["nivel_sala"]
+          nome_exibicao?: string
+          ordem?: number
+          texto_bloqueio?: string
+          texto_entrada?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       text_models: {
         Row: {
           categoria: string
@@ -829,6 +865,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_access_sala: {
+        Args: {
+          _nivel_minimo: Database["public"]["Enums"]["nivel_sala"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      get_user_nivel_sala: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["nivel_sala"]
+      }
       get_user_portal: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["portal_type"]
@@ -851,6 +898,7 @@ export type Database = {
         | "neuroticismo"
       big5_tipo_pergunta: "escala_1_5" | "texto"
       mentoria_tipo: "aviso" | "evento" | "supervisao"
+      nivel_sala: "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3"
       portal_type: "visitante" | "pre_iniciada" | "iniciada" | "admin"
       post_status: "rascunho" | "publicado" | "arquivado"
     }
@@ -990,6 +1038,7 @@ export const Constants = {
       ],
       big5_tipo_pergunta: ["escala_1_5", "texto"],
       mentoria_tipo: ["aviso", "evento", "supervisao"],
+      nivel_sala: ["NIVEL_0", "NIVEL_1", "NIVEL_2", "NIVEL_3"],
       portal_type: ["visitante", "pre_iniciada", "iniciada", "admin"],
       post_status: ["rascunho", "publicado", "arquivado"],
     },
