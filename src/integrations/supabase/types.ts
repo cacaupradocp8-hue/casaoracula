@@ -685,6 +685,56 @@ export type Database = {
         }
         Relationships: []
       }
+      sala_ferramentas: {
+        Row: {
+          ativa: boolean
+          created_at: string
+          ferramenta_chave: string
+          ferramenta_descricao: string | null
+          ferramenta_nome: string
+          icone: string | null
+          id: string
+          ordem: number
+          rota: string
+          sala_id: string
+          updated_at: string
+        }
+        Insert: {
+          ativa?: boolean
+          created_at?: string
+          ferramenta_chave: string
+          ferramenta_descricao?: string | null
+          ferramenta_nome: string
+          icone?: string | null
+          id?: string
+          ordem?: number
+          rota: string
+          sala_id: string
+          updated_at?: string
+        }
+        Update: {
+          ativa?: boolean
+          created_at?: string
+          ferramenta_chave?: string
+          ferramenta_descricao?: string | null
+          ferramenta_nome?: string
+          icone?: string | null
+          id?: string
+          ordem?: number
+          rota?: string
+          sala_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sala_ferramentas_sala_id_fkey"
+            columns: ["sala_id"]
+            isOneToOne: false
+            referencedRelation: "salas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       salas: {
         Row: {
           ativa: boolean

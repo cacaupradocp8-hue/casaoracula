@@ -4,7 +4,8 @@ import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { DoorOpen, Lock, Unlock, Loader2, Brain, Compass, HelpCircle } from 'lucide-react';
+import { DoorOpen, Lock, Unlock, Loader2 } from 'lucide-react';
+import { icons } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -22,6 +23,18 @@ interface Sala {
   ordem: number;
 }
 
+interface Ferramenta {
+  id: string;
+  sala_id: string;
+  ferramenta_chave: string;
+  ferramenta_nome: string;
+  ferramenta_descricao: string;
+  icone: string;
+  rota: string;
+  ordem: number;
+  ativa: boolean;
+}
+
 const NIVEL_HIERARCHY: Record<NivelSala, number> = {
   NIVEL_0: 0,
   NIVEL_1: 1,
@@ -36,37 +49,22 @@ const PORTAL_TO_NIVEL: Record<string, NivelSala> = {
   admin: 'NIVEL_3',
 };
 
-// Ferramentas mantidas para a sala atual do usuário
-const ferramentas = [
-  {
-    id: 'big5',
-    title: 'Big Five (OCEAN)',
-    description: 'Avalie as cinco grandes dimensões da personalidade.',
-    icon: Brain,
-    path: '/salas/big5',
-    color: 'from-purple-500/20 to-purple-600/10',
-  },
-  {
-    id: 'eneagrama',
-    title: 'Eneagrama',
-    description: 'Explore os 9 tipos de personalidade, asas e instintos.',
-    icon: Compass,
-    path: '/salas/eneagrama',
-    color: 'from-blue-500/20 to-blue-600/10',
-  },
-  {
-    id: 'oraculo',
-    title: 'Oráculo das Perguntas',
-    description: 'Banco de perguntas poderosas para sessões.',
-    icon: HelpCircle,
-    path: '/salas/oraculo-perguntas',
-    color: 'from-gold/20 to-amber-600/10',
-  },
-];
+// Dynamic icon component
+function DynamicIcon({ name, className }: { name: string; className?: string }) {
+  const iconName = name.charAt(0).toUpperCase() + name.slice(1).replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+  const LucideIcon = icons[iconName as keyof typeof icons];
+  
+  if (!LucideIcon) {
+    return <DoorOpen className={className} />;
+  }
+  
+  return <LucideIcon className={className} />;
+}
 
 export default function Salas() {
   const { user } = useAuth();
   const [salas, setSalas] = useState<Sala[]>([]);
+  const [ferramentas, setFerramentas] = useState<Ferramenta[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSala, setSelectedSala] = useState<Sala | null>(null);
   const [showBlockedDialog, setShowBlockedDialog] = useState(false);
@@ -80,23 +78,29 @@ export default function Salas() {
   };
 
   useEffect(() => {
-    const fetchSalas = async () => {
-      const { data, error } = await supabase
-        .from('salas')
-        .select('*')
-        .eq('ativa', true)
-        .order('ordem');
+    const fetchData = async () => {
+      const [salasRes, ferramentasRes] = await Promise.all([
+        supabase.from('salas').select('*').eq('ativa', true).order('ordem'),
+        supabase.from('sala_ferramentas').select('*').eq('ativa', true).order('ordem'),
+      ]);
 
-      if (error) {
+      if (salasRes.error) {
         toast.error('Erro ao carregar salas');
-        console.error(error);
+        console.error(salasRes.error);
       } else {
-        setSalas(data as Sala[]);
+        setSalas(salasRes.data as Sala[]);
       }
+
+      if (ferramentasRes.error) {
+        console.error(ferramentasRes.error);
+      } else {
+        setFerramentas(ferramentasRes.data as Ferramenta[]);
+      }
+
       setLoading(false);
     };
 
-    fetchSalas();
+    fetchData();
   }, []);
 
   const handleSalaClick = (sala: Sala) => {
@@ -107,6 +111,10 @@ export default function Salas() {
       setShowBlockedDialog(true);
     }
   };
+
+  // Get ferramentas for accessible salas
+  const accessibleSalaIds = salas.filter(canAccessSala).map((s) => s.id);
+  const availableFerramentas = ferramentas.filter((f) => accessibleSalaIds.includes(f.sala_id));
 
   if (loading) {
     return (
@@ -179,39 +187,45 @@ export default function Salas() {
           })}
         </div>
 
-        {/* Ferramentas disponíveis na sala atual */}
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-            <DoorOpen className="w-5 h-5 text-gold" />
-            Ferramentas da sua Sala
-          </h2>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {ferramentas.map((tool) => {
-              const Icon = tool.icon;
-              return (
+        {/* Ferramentas disponíveis baseadas nas salas acessíveis */}
+        {availableFerramentas.length > 0 && (
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <DoorOpen className="w-5 h-5 text-gold" />
+              Ferramentas Disponíveis
+            </h2>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {availableFerramentas.map((tool) => (
                 <Card
                   key={tool.id}
-                  className={`glass hover:border-gold/50 transition-all bg-gradient-to-br ${tool.color}`}
+                  className="glass hover:border-gold/50 transition-all bg-gradient-to-br from-gold/10 to-background"
                 >
                   <CardHeader>
-                    <div className="w-14 h-14 rounded-xl bg-background/50 flex items-center justify-center mb-3">
-                      <Icon className="w-7 h-7 text-gold" />
+                    <div className="w-14 h-14 rounded-xl bg-gold/20 flex items-center justify-center mb-3">
+                      <DynamicIcon name={tool.icone} className="w-7 h-7 text-gold" />
                     </div>
-                    <CardTitle className="text-xl">{tool.title}</CardTitle>
-                    <CardDescription className="text-sm">{tool.description}</CardDescription>
+                    <CardTitle className="text-xl">{tool.ferramenta_nome}</CardTitle>
+                    <CardDescription className="text-sm">{tool.ferramenta_descricao}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <Link to={tool.path}>
+                    <Link to={tool.rota}>
                       <Button variant="gold" className="w-full">
                         Acessar Ferramenta
                       </Button>
                     </Link>
                   </CardContent>
                 </Card>
-              );
-            })}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
+        {availableFerramentas.length === 0 && (
+          <div className="text-center py-12 text-muted-foreground">
+            <DoorOpen className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            <p>Nenhuma ferramenta disponível no momento.</p>
+          </div>
+        )}
 
         {/* Dialog para sala bloqueada */}
         <Dialog open={showBlockedDialog} onOpenChange={setShowBlockedDialog}>
