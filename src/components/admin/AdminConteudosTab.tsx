@@ -8,7 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Pencil, Trash2, ChevronDown, ChevronRight, BookOpen, Video, DoorOpen } from 'lucide-react';
+import { Plus, Pencil, Trash2, ChevronDown, ChevronRight, BookOpen, Video, DoorOpen, Music, FileText, Type } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { Database } from '@/integrations/supabase/types';
 
@@ -34,8 +35,11 @@ interface Aula {
   travessia_id: string;
   titulo: string;
   descricao_curta: string;
+  texto_aula: string | null;
   ordem: number;
-  video_embed_url: string | null;
+  video_url: string | null;
+  audio_url: string | null;
+  pdf_url: string | null;
   materiais_url: string | null;
   portal_minimo: PortalType;
 }
@@ -72,8 +76,11 @@ export function AdminConteudosTab() {
     travessia_id: '',
     titulo: '',
     descricao_curta: '',
+    texto_aula: '',
     ordem: 0,
-    video_embed_url: '',
+    video_url: '',
+    audio_url: '',
+    pdf_url: '',
     materiais_url: '',
     portal_minimo: 'visitante' as PortalType,
   });
@@ -214,8 +221,11 @@ export function AdminConteudosTab() {
         travessia_id: aula.travessia_id,
         titulo: aula.titulo,
         descricao_curta: aula.descricao_curta,
+        texto_aula: aula.texto_aula || '',
         ordem: aula.ordem,
-        video_embed_url: aula.video_embed_url || '',
+        video_url: aula.video_url || '',
+        audio_url: aula.audio_url || '',
+        pdf_url: aula.pdf_url || '',
         materiais_url: aula.materiais_url || '',
         portal_minimo: aula.portal_minimo,
       });
@@ -226,8 +236,11 @@ export function AdminConteudosTab() {
         travessia_id: travessiaId,
         titulo: '',
         descricao_curta: '',
+        texto_aula: '',
         ordem: currentAulas.length,
-        video_embed_url: '',
+        video_url: '',
+        audio_url: '',
+        pdf_url: '',
         materiais_url: '',
         portal_minimo: 'visitante',
       });
@@ -242,9 +255,16 @@ export function AdminConteudosTab() {
     }
 
     const dataToSave = {
-      ...aulaForm,
-      video_embed_url: aulaForm.video_embed_url || null,
+      travessia_id: aulaForm.travessia_id,
+      titulo: aulaForm.titulo,
+      descricao_curta: aulaForm.descricao_curta,
+      texto_aula: aulaForm.texto_aula || null,
+      ordem: aulaForm.ordem,
+      video_url: aulaForm.video_url || null,
+      audio_url: aulaForm.audio_url || null,
+      pdf_url: aulaForm.pdf_url || null,
       materiais_url: aulaForm.materiais_url || null,
+      portal_minimo: aulaForm.portal_minimo,
     };
 
     if (editingAula) {
@@ -423,11 +443,15 @@ export function AdminConteudosTab() {
                             </TableCell>
                             <TableCell>{PORTAL_LABELS[aula.portal_minimo]}</TableCell>
                             <TableCell>
-                              {aula.video_embed_url ? (
-                                <Video className="w-4 h-4 text-primary" />
-                              ) : (
-                                <span className="text-muted-foreground">—</span>
-                              )}
+                              <div className="flex gap-1">
+                                {aula.video_url && <Video className="w-4 h-4 text-primary" />}
+                                {aula.audio_url && <Music className="w-4 h-4 text-purple-500" />}
+                                {aula.pdf_url && <FileText className="w-4 h-4 text-orange-500" />}
+                                {aula.texto_aula && <Type className="w-4 h-4 text-blue-500" />}
+                                {!aula.video_url && !aula.audio_url && !aula.pdf_url && !aula.texto_aula && (
+                                  <span className="text-muted-foreground">—</span>
+                                )}
+                              </div>
                             </TableCell>
                             <TableCell>
                               <div className="flex gap-1">
@@ -537,64 +561,136 @@ export function AdminConteudosTab() {
           <DialogHeader>
             <DialogTitle>{editingAula ? 'Editar Aula' : 'Nova Aula'}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Título *</label>
-              <Input
-                value={aulaForm.titulo}
-                onChange={(e) => setAulaForm({ ...aulaForm, titulo: e.target.value })}
-                placeholder="Ex: Aula 1 - Fundamentos"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Descrição Curta</label>
-              <Textarea
-                value={aulaForm.descricao_curta}
-                onChange={(e) => setAulaForm({ ...aulaForm, descricao_curta: e.target.value })}
-                placeholder="Breve descrição da aula..."
-                rows={2}
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">URL do Vídeo (embed)</label>
-              <Input
-                value={aulaForm.video_embed_url}
-                onChange={(e) => setAulaForm({ ...aulaForm, video_embed_url: e.target.value })}
-                placeholder="https://youtube.com/embed/..."
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">URL dos Materiais</label>
-              <Input
-                value={aulaForm.materiais_url}
-                onChange={(e) => setAulaForm({ ...aulaForm, materiais_url: e.target.value })}
-                placeholder="https://drive.google.com/..."
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+            {/* Informações Básicas */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Informações Básicas</h4>
               <div>
-                <label className="text-sm font-medium">Ordem</label>
+                <label className="text-sm font-medium">Título *</label>
                 <Input
-                  type="number"
-                  value={aulaForm.ordem}
-                  onChange={(e) => setAulaForm({ ...aulaForm, ordem: parseInt(e.target.value) || 0 })}
+                  value={aulaForm.titulo}
+                  onChange={(e) => setAulaForm({ ...aulaForm, titulo: e.target.value })}
+                  placeholder="Ex: Aula 1 - Fundamentos"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Portal Mínimo</label>
-                <Select
-                  value={aulaForm.portal_minimo}
-                  onValueChange={(value: PortalType) => setAulaForm({ ...aulaForm, portal_minimo: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="visitante">Visitante</SelectItem>
-                    <SelectItem value="pre_iniciada">Pré-Iniciada</SelectItem>
-                    <SelectItem value="iniciada">Iniciada ORÁCULA</SelectItem>
-                  </SelectContent>
-                </Select>
+                <label className="text-sm font-medium">Descrição Curta</label>
+                <Textarea
+                  value={aulaForm.descricao_curta}
+                  onChange={(e) => setAulaForm({ ...aulaForm, descricao_curta: e.target.value })}
+                  placeholder="Breve descrição da aula..."
+                  rows={2}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium">Ordem</label>
+                  <Input
+                    type="number"
+                    value={aulaForm.ordem}
+                    onChange={(e) => setAulaForm({ ...aulaForm, ordem: parseInt(e.target.value) || 0 })}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Portal Mínimo</label>
+                  <Select
+                    value={aulaForm.portal_minimo}
+                    onValueChange={(value: PortalType) => setAulaForm({ ...aulaForm, portal_minimo: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="visitante">Visitante</SelectItem>
+                      <SelectItem value="pre_iniciada">Pré-Iniciada</SelectItem>
+                      <SelectItem value="iniciada">Iniciada ORÁCULA</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Conteúdo Escrito */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                <Type className="w-4 h-4" />
+                Conteúdo Escrito
+              </h4>
+              <div>
+                <label className="text-sm font-medium">Texto da Aula (Markdown)</label>
+                <Textarea
+                  value={aulaForm.texto_aula}
+                  onChange={(e) => setAulaForm({ ...aulaForm, texto_aula: e.target.value })}
+                  placeholder="Escreva o conteúdo principal da aula aqui. Suporta Markdown..."
+                  rows={6}
+                  className="font-mono text-sm"
+                />
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Vídeo */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                <Video className="w-4 h-4" />
+                Vídeo
+              </h4>
+              <div>
+                <label className="text-sm font-medium">URL do Vídeo (embed)</label>
+                <Input
+                  value={aulaForm.video_url}
+                  onChange={(e) => setAulaForm({ ...aulaForm, video_url: e.target.value })}
+                  placeholder="https://youtube.com/embed/... ou https://player.vimeo.com/..."
+                />
+                <p className="text-xs text-muted-foreground mt-1">Cole a URL de embed do YouTube ou Vimeo</p>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Áudio */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                <Music className="w-4 h-4" />
+                Áudio
+              </h4>
+              <div>
+                <label className="text-sm font-medium">URL do Áudio</label>
+                <Input
+                  value={aulaForm.audio_url}
+                  onChange={(e) => setAulaForm({ ...aulaForm, audio_url: e.target.value })}
+                  placeholder="https://soundcloud.com/... ou URL de MP3"
+                />
+                <p className="text-xs text-muted-foreground mt-1">URL de embed do SoundCloud ou link direto para MP3</p>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Materiais (PDF) */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                <FileText className="w-4 h-4" />
+                Materiais
+              </h4>
+              <div>
+                <label className="text-sm font-medium">URL do PDF</label>
+                <Input
+                  value={aulaForm.pdf_url}
+                  onChange={(e) => setAulaForm({ ...aulaForm, pdf_url: e.target.value })}
+                  placeholder="https://drive.google.com/... ou link direto para PDF"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium">URL de Materiais Extras</label>
+                <Input
+                  value={aulaForm.materiais_url}
+                  onChange={(e) => setAulaForm({ ...aulaForm, materiais_url: e.target.value })}
+                  placeholder="Link para pasta com materiais complementares"
+                />
               </div>
             </div>
           </div>
