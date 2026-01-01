@@ -1048,6 +1048,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_access_agent: {
+        Args: { _agent_id: string; _user_id: string }
+        Returns: boolean
+      }
       can_access_sala: {
         Args: {
           _nivel_minimo: Database["public"]["Enums"]["nivel_sala"]
