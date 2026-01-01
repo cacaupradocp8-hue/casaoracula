@@ -288,6 +288,7 @@ export type Database = {
           id: string
           ordem: number
           portal_minimo: Database["public"]["Enums"]["portal_type"]
+          sala_id: string | null
           titulo: string
           updated_at: string
         }
@@ -297,6 +298,7 @@ export type Database = {
           id?: string
           ordem?: number
           portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          sala_id?: string | null
           titulo: string
           updated_at?: string
         }
@@ -306,10 +308,19 @@ export type Database = {
           id?: string
           ordem?: number
           portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          sala_id?: string | null
           titulo?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "conteudo_travessias_sala_id_fkey"
+            columns: ["sala_id"]
+            isOneToOne: false
+            referencedRelation: "salas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       eneagrama_instintos: {
         Row: {

@@ -4,13 +4,20 @@ import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, BookOpen, Video, FileText, Lock, ChevronDown, ChevronRight, ExternalLink } from 'lucide-react';
+import { GraduationCap, BookOpen, Video, FileText, Lock, ChevronDown, ChevronRight, ExternalLink, DoorOpen } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Database } from '@/integrations/supabase/types';
 import { cn } from '@/lib/utils';
 
 type PortalType = Database['public']['Enums']['portal_type'];
+type NivelSala = Database['public']['Enums']['nivel_sala'];
+
+interface Sala {
+  id: string;
+  nome_exibicao: string;
+  nivel_minimo: NivelSala;
+}
 
 interface Travessia {
   id: string;
@@ -18,6 +25,7 @@ interface Travessia {
   descricao: string;
   ordem: number;
   portal_minimo: PortalType;
+  sala_id: string | null;
 }
 
 interface Aula {
@@ -38,6 +46,20 @@ const PORTAL_HIERARCHY: Record<PortalType, number> = {
   admin: 4,
 };
 
+const NIVEL_SALA_HIERARCHY: Record<NivelSala, number> = {
+  NIVEL_0: 0,
+  NIVEL_1: 1,
+  NIVEL_2: 2,
+  NIVEL_3: 3,
+};
+
+const PORTAL_TO_NIVEL: Record<PortalType, NivelSala> = {
+  visitante: 'NIVEL_0',
+  pre_iniciada: 'NIVEL_1',
+  iniciada: 'NIVEL_2',
+  admin: 'NIVEL_3',
+};
+
 const PORTAL_LABELS: Record<PortalType, string> = {
   visitante: 'Visitante',
   pre_iniciada: 'Pré-Iniciada',
@@ -48,34 +70,57 @@ const PORTAL_LABELS: Record<PortalType, string> = {
 export default function Formacao() {
   const { user } = useAuth();
   const [travessias, setTravessias] = useState<Travessia[]>([]);
+  const [salas, setSalas] = useState<Sala[]>([]);
   const [aulas, setAulas] = useState<Record<string, Aula[]>>({});
   const [loading, setLoading] = useState(true);
   const [expandedTravessia, setExpandedTravessia] = useState<string | null>(null);
   const [selectedAula, setSelectedAula] = useState<Aula | null>(null);
 
   const userPortalLevel = user?.portal ? PORTAL_HIERARCHY[user.portal] : 0;
+  const userNivelSala = user?.portal ? NIVEL_SALA_HIERARCHY[PORTAL_TO_NIVEL[user.portal]] : 0;
 
-  const canAccessContent = (portalMinimo: PortalType): boolean => {
+  const canAccessPortal = (portalMinimo: PortalType): boolean => {
     return userPortalLevel >= PORTAL_HIERARCHY[portalMinimo];
   };
 
+  const canAccessSala = (sala: Sala | undefined): boolean => {
+    if (!sala) return true; // Se não tem sala vinculada, acesso liberado
+    return userNivelSala >= NIVEL_SALA_HIERARCHY[sala.nivel_minimo];
+  };
+
+  const canAccessTravessia = (travessia: Travessia): boolean => {
+    const hasPortalAccess = canAccessPortal(travessia.portal_minimo);
+    if (!travessia.sala_id) return hasPortalAccess;
+    
+    const sala = salas.find(s => s.id === travessia.sala_id);
+    return hasPortalAccess && canAccessSala(sala);
+  };
+
   useEffect(() => {
-    fetchTravessias();
+    fetchData();
   }, []);
 
-  const fetchTravessias = async () => {
+  const fetchData = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('conteudo_travessias')
-      .select('*')
-      .order('ordem', { ascending: true });
+    
+    // Fetch salas and travessias in parallel
+    const [salasResult, travessiasResult] = await Promise.all([
+      supabase.from('salas').select('id, nome_exibicao, nivel_minimo').eq('ativa', true),
+      supabase.from('conteudo_travessias').select('*').order('ordem', { ascending: true }),
+    ]);
 
-    if (error) {
-      console.error('Erro ao carregar travessias:', error);
+    if (salasResult.error) {
+      console.error('Erro ao carregar salas:', salasResult.error);
     } else {
-      // Filter travessias based on user portal - show all but mark locked ones
-      setTravessias(data || []);
+      setSalas(salasResult.data || []);
     }
+
+    if (travessiasResult.error) {
+      console.error('Erro ao carregar travessias:', travessiasResult.error);
+    } else {
+      setTravessias(travessiasResult.data || []);
+    }
+    
     setLoading(false);
   };
 
@@ -94,7 +139,7 @@ export default function Formacao() {
   };
 
   const handleExpandTravessia = (travessia: Travessia) => {
-    if (!canAccessContent(travessia.portal_minimo)) {
+    if (!canAccessTravessia(travessia)) {
       return; // Don't expand locked travessias
     }
 
@@ -111,10 +156,23 @@ export default function Formacao() {
   };
 
   const handleSelectAula = (aula: Aula) => {
-    if (!canAccessContent(aula.portal_minimo)) {
+    if (!canAccessPortal(aula.portal_minimo)) {
       return; // Don't select locked aulas
     }
     setSelectedAula(aula);
+  };
+
+  const getTravessiaLockReason = (travessia: Travessia): string | null => {
+    if (!canAccessPortal(travessia.portal_minimo)) {
+      return `Requer portal ${PORTAL_LABELS[travessia.portal_minimo]}`;
+    }
+    if (travessia.sala_id) {
+      const sala = salas.find(s => s.id === travessia.sala_id);
+      if (sala && !canAccessSala(sala)) {
+        return `Requer acesso à sala "${sala.nome_exibicao}"`;
+      }
+    }
+    return null;
   };
 
   if (loading) {
@@ -153,9 +211,11 @@ export default function Formacao() {
             {/* Sidebar with Travessias and Aulas */}
             <div className="lg:col-span-1 space-y-4">
               {travessias.map((travessia) => {
-                const isLocked = !canAccessContent(travessia.portal_minimo);
+                const isLocked = !canAccessTravessia(travessia);
+                const lockReason = getTravessiaLockReason(travessia);
                 const isExpanded = expandedTravessia === travessia.id;
                 const travessiaAulas = aulas[travessia.id] || [];
+                const linkedSala = travessia.sala_id ? salas.find(s => s.id === travessia.sala_id) : null;
 
                 return (
                   <Card
@@ -189,11 +249,17 @@ export default function Formacao() {
                                 {travessia.descricao}
                               </CardDescription>
                             )}
+                            {linkedSala && !isLocked && (
+                              <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
+                                <DoorOpen className="w-3 h-3" />
+                                {linkedSala.nome_exibicao}
+                              </div>
+                            )}
                           </div>
                         </div>
                         {isLocked && (
                           <Badge variant="secondary" className="shrink-0 text-xs">
-                            {PORTAL_LABELS[travessia.portal_minimo]}
+                            Bloqueado
                           </Badge>
                         )}
                       </div>
@@ -208,7 +274,7 @@ export default function Formacao() {
                         ) : (
                           <div className="space-y-1 pt-3">
                             {travessiaAulas.map((aula) => {
-                              const isAulaLocked = !canAccessContent(aula.portal_minimo);
+                              const isAulaLocked = !canAccessPortal(aula.portal_minimo);
                               const isSelected = selectedAula?.id === aula.id;
 
                               return (
@@ -253,7 +319,7 @@ export default function Formacao() {
                         <div className="bg-muted/50 rounded-md p-3 text-center">
                           <Lock className="w-5 h-5 mx-auto mb-2 text-muted-foreground" />
                           <p className="text-xs text-muted-foreground">
-                            Conteúdo disponível para nível {PORTAL_LABELS[travessia.portal_minimo]}
+                            {lockReason}
                           </p>
                         </div>
                       </CardContent>

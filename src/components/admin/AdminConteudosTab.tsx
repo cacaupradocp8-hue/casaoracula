@@ -8,11 +8,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Pencil, Trash2, ChevronDown, ChevronRight, BookOpen, Video } from 'lucide-react';
+import { Plus, Pencil, Trash2, ChevronDown, ChevronRight, BookOpen, Video, DoorOpen } from 'lucide-react';
 import { toast } from 'sonner';
 import { Database } from '@/integrations/supabase/types';
 
 type PortalType = Database['public']['Enums']['portal_type'];
+
+interface Sala {
+  id: string;
+  nome_exibicao: string;
+  nivel_minimo: string;
+}
 
 interface Travessia {
   id: string;
@@ -20,6 +26,7 @@ interface Travessia {
   descricao: string;
   ordem: number;
   portal_minimo: PortalType;
+  sala_id: string | null;
 }
 
 interface Aula {
@@ -42,6 +49,7 @@ const PORTAL_LABELS: Record<PortalType, string> = {
 
 export function AdminConteudosTab() {
   const [travessias, setTravessias] = useState<Travessia[]>([]);
+  const [salas, setSalas] = useState<Sala[]>([]);
   const [aulas, setAulas] = useState<Record<string, Aula[]>>({});
   const [loading, setLoading] = useState(true);
   const [expandedTravessia, setExpandedTravessia] = useState<string | null>(null);
@@ -54,6 +62,7 @@ export function AdminConteudosTab() {
     descricao: '',
     ordem: 0,
     portal_minimo: 'visitante' as PortalType,
+    sala_id: '' as string | null,
   });
 
   // Aula dialog state
@@ -75,6 +84,7 @@ export function AdminConteudosTab() {
 
   useEffect(() => {
     fetchTravessias();
+    fetchSalas();
   }, []);
 
   const fetchTravessias = async () => {
@@ -91,6 +101,20 @@ export function AdminConteudosTab() {
       setTravessias(data || []);
     }
     setLoading(false);
+  };
+
+  const fetchSalas = async () => {
+    const { data, error } = await supabase
+      .from('salas')
+      .select('id, nome_exibicao, nivel_minimo')
+      .eq('ativa', true)
+      .order('ordem', { ascending: true });
+
+    if (error) {
+      console.error('Erro ao carregar salas:', error);
+    } else {
+      setSalas(data || []);
+    }
   };
 
   const fetchAulas = async (travessiaId: string) => {
@@ -128,6 +152,7 @@ export function AdminConteudosTab() {
         descricao: travessia.descricao,
         ordem: travessia.ordem,
         portal_minimo: travessia.portal_minimo,
+        sala_id: travessia.sala_id || '',
       });
     } else {
       setEditingTravessia(null);
@@ -136,6 +161,7 @@ export function AdminConteudosTab() {
         descricao: '',
         ordem: travessias.length,
         portal_minimo: 'visitante',
+        sala_id: '',
       });
     }
     setTravessiaDialogOpen(true);
@@ -147,10 +173,15 @@ export function AdminConteudosTab() {
       return;
     }
 
+    const dataToSave = {
+      ...travessiaForm,
+      sala_id: travessiaForm.sala_id || null,
+    };
+
     if (editingTravessia) {
       const { error } = await supabase
         .from('conteudo_travessias')
-        .update(travessiaForm)
+        .update(dataToSave)
         .eq('id', editingTravessia.id);
 
       if (error) {
@@ -163,7 +194,7 @@ export function AdminConteudosTab() {
     } else {
       const { error } = await supabase
         .from('conteudo_travessias')
-        .insert(travessiaForm);
+        .insert(dataToSave);
 
       if (error) {
         toast.error('Erro ao criar travessia');
@@ -173,7 +204,6 @@ export function AdminConteudosTab() {
         fetchTravessias();
       }
     }
-    setTravessiaDialogOpen(false);
   };
 
   // Aula CRUD
@@ -333,6 +363,11 @@ export function AdminConteudosTab() {
                       <CardTitle className="text-base">{travessia.titulo}</CardTitle>
                       <p className="text-sm text-muted-foreground">
                         Ordem: {travessia.ordem} | Portal: {PORTAL_LABELS[travessia.portal_minimo]}
+                        {travessia.sala_id && (
+                          <span className="ml-2">
+                            | <DoorOpen className="w-3 h-3 inline" /> {salas.find(s => s.id === travessia.sala_id)?.nome_exibicao || 'Sala'}
+                          </span>
+                        )}
                       </p>
                     </div>
                   </div>
@@ -465,6 +500,28 @@ export function AdminConteudosTab() {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Sala (opcional)</label>
+              <Select
+                value={travessiaForm.sala_id || 'none'}
+                onValueChange={(value) => setTravessiaForm({ ...travessiaForm, sala_id: value === 'none' ? null : value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sem sala vinculada" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Sem sala vinculada</SelectItem>
+                  {salas.map((sala) => (
+                    <SelectItem key={sala.id} value={sala.id}>
+                      {sala.nome_exibicao}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground mt-1">
+                Se vinculada, usuária precisa ter acesso à sala para ver a travessia.
+              </p>
             </div>
           </div>
           <DialogFooter>
