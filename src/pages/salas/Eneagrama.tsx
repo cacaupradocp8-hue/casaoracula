@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Compass, Save, ArrowLeft } from 'lucide-react';
+import { Compass, Save, ArrowLeft, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -19,25 +19,27 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-const tipos = [
-  { num: 1, nome: 'O Perfeccionista', desc: 'Íntegro, ordenado, autocontrolado' },
-  { num: 2, nome: 'O Prestativo', desc: 'Generoso, afetuoso, possessivo' },
-  { num: 3, nome: 'O Realizador', desc: 'Ambicioso, adaptável, orientado ao sucesso' },
-  { num: 4, nome: 'O Individualista', desc: 'Sensível, expressivo, dramático' },
-  { num: 5, nome: 'O Investigador', desc: 'Analítico, reservado, perspicaz' },
-  { num: 6, nome: 'O Legalista', desc: 'Leal, cauteloso, ansioso' },
-  { num: 7, nome: 'O Entusiasta', desc: 'Espontâneo, versátil, disperso' },
-  { num: 8, nome: 'O Desafiador', desc: 'Poderoso, dominante, autoconfiante' },
-  { num: 9, nome: 'O Pacificador', desc: 'Receptivo, tranquilo, complacente' },
-];
+interface EneagramaTipo {
+  id: string;
+  numero: number;
+  nome: string;
+  descricao: string;
+  virtude: string | null;
+  fixacao: string | null;
+}
 
-const instintos = [
-  { key: 'SP', label: 'Autopreservação (SP)', desc: 'Foco em segurança, saúde, recursos' },
-  { key: 'SO', label: 'Social (SO)', desc: 'Foco em grupos, status, pertencimento' },
-  { key: 'SX', label: 'Sexual/Intimidade (SX)', desc: 'Foco em conexões intensas, química' },
-];
+interface EneagramaInstinto {
+  id: string;
+  chave: string;
+  nome: string;
+  descricao: string;
+}
 
 export default function Eneagrama() {
+  const [tipos, setTipos] = useState<EneagramaTipo[]>([]);
+  const [instintos, setInstintos] = useState<EneagramaInstinto[]>([]);
+  const [loading, setLoading] = useState(true);
+  
   const [tipoPrincipal, setTipoPrincipal] = useState<number | null>(null);
   const [asa, setAsa] = useState<string>('');
   const [instinto, setInstinto] = useState<string>('');
@@ -49,6 +51,29 @@ export default function Eneagrama() {
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const [tiposRes, instintosRes] = await Promise.all([
+      supabase
+        .from('eneagrama_tipos')
+        .select('*')
+        .eq('ativo', true)
+        .order('numero'),
+      supabase
+        .from('eneagrama_instintos')
+        .select('*')
+        .eq('ativo', true)
+        .order('chave')
+    ]);
+
+    if (tiposRes.data) setTipos(tiposRes.data);
+    if (instintosRes.data) setInstintos(instintosRes.data);
+    setLoading(false);
+  };
 
   const getAsasDisponiveis = () => {
     if (!tipoPrincipal) return [];
@@ -85,6 +110,16 @@ export default function Eneagrama() {
     setSaving(false);
   };
 
+  if (loading) {
+    return (
+      <AppLayout>
+        <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-[50vh]">
+          <Loader2 className="w-8 h-8 animate-spin text-gold" />
+        </div>
+      </AppLayout>
+    );
+  }
+
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
@@ -109,20 +144,20 @@ export default function Eneagrama() {
             <div className="grid gap-2 grid-cols-3 md:grid-cols-3">
               {tipos.map(tipo => (
                 <button
-                  key={tipo.num}
+                  key={tipo.id}
                   onClick={() => {
-                    setTipoPrincipal(tipo.num);
+                    setTipoPrincipal(tipo.numero);
                     setAsa('');
                   }}
                   className={`p-3 rounded-lg border text-left transition-all ${
-                    tipoPrincipal === tipo.num
+                    tipoPrincipal === tipo.numero
                       ? 'border-gold bg-gold/10'
                       : 'border-border hover:border-gold/50'
                   }`}
                 >
-                  <div className="text-2xl font-display text-gold mb-1">{tipo.num}</div>
+                  <div className="text-2xl font-display text-gold mb-1">{tipo.numero}</div>
                   <div className="text-sm font-medium">{tipo.nome}</div>
-                  <div className="text-xs text-muted-foreground">{tipo.desc}</div>
+                  <div className="text-xs text-muted-foreground">{tipo.descricao}</div>
                 </button>
               ))}
             </div>
@@ -142,11 +177,14 @@ export default function Eneagrama() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="">Nenhuma</SelectItem>
-                    {getAsasDisponiveis().map(a => (
-                      <SelectItem key={a} value={a.toString()}>
-                        Asa {a} - {tipos.find(t => t.num === a)?.nome}
-                      </SelectItem>
-                    ))}
+                    {getAsasDisponiveis().map(a => {
+                      const tipoAsa = tipos.find(t => t.numero === a);
+                      return (
+                        <SelectItem key={a} value={a.toString()}>
+                          Asa {a} - {tipoAsa?.nome || `Tipo ${a}`}
+                        </SelectItem>
+                      );
+                    })}
                   </SelectContent>
                 </Select>
               ) : (
@@ -162,11 +200,11 @@ export default function Eneagrama() {
             <CardContent>
               <RadioGroup value={instinto} onValueChange={setInstinto}>
                 {instintos.map(inst => (
-                  <div key={inst.key} className="flex items-start space-x-2">
-                    <RadioGroupItem value={inst.key} id={inst.key} />
-                    <Label htmlFor={inst.key} className="cursor-pointer">
-                      <span className="font-medium">{inst.label}</span>
-                      <span className="block text-xs text-muted-foreground">{inst.desc}</span>
+                  <div key={inst.id} className="flex items-start space-x-2">
+                    <RadioGroupItem value={inst.chave} id={inst.chave} />
+                    <Label htmlFor={inst.chave} className="cursor-pointer">
+                      <span className="font-medium">{inst.nome}</span>
+                      <span className="block text-xs text-muted-foreground">{inst.descricao}</span>
                     </Label>
                   </div>
                 ))}

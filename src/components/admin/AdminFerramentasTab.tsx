@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Edit, Trash2, Brain, Compass, HelpCircle, Save } from 'lucide-react';
+import { Plus, Edit, Trash2, Brain, Compass, HelpCircle, Save, ClipboardList } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -19,6 +19,15 @@ interface Big5Dimensao {
   nome: string;
   descricao: string;
   perguntas_reflexao: string[];
+  ativo: boolean;
+  ordem: number;
+}
+
+interface Big5Pergunta {
+  id: string;
+  dimensao: 'abertura' | 'conscienciosidade' | 'extroversao' | 'amabilidade' | 'neuroticismo';
+  texto_pergunta: string;
+  tipo: 'escala_1_5' | 'texto';
   ativo: boolean;
   ordem: number;
 }
@@ -63,6 +72,10 @@ export function AdminFerramentasTab() {
           <Brain className="w-4 h-4" />
           Big Five
         </TabsTrigger>
+        <TabsTrigger value="big5-questionario" className="gap-2">
+          <ClipboardList className="w-4 h-4" />
+          Big5 Questionário
+        </TabsTrigger>
         <TabsTrigger value="eneagrama" className="gap-2">
           <Compass className="w-4 h-4" />
           Eneagrama
@@ -77,6 +90,10 @@ export function AdminFerramentasTab() {
         <Big5Section />
       </TabsContent>
 
+      <TabsContent value="big5-questionario">
+        <Big5QuestionarioSection />
+      </TabsContent>
+
       <TabsContent value="eneagrama">
         <EneagramaSection />
       </TabsContent>
@@ -88,7 +105,7 @@ export function AdminFerramentasTab() {
   );
 }
 
-// Big5 Section
+// Big5 Dimensões Section
 function Big5Section() {
   const [dimensoes, setDimensoes] = useState<Big5Dimensao[]>([]);
   const [loading, setLoading] = useState(true);
@@ -245,6 +262,282 @@ function Big5EditForm({ dimensao, onSave, onChange }: {
         />
       </div>
       <Button onClick={() => onSave(dimensao)} className="w-full gap-2">
+        <Save className="w-4 h-4" />
+        Salvar
+      </Button>
+    </div>
+  );
+}
+
+// Big5 Questionário Section - CRUD completo
+function Big5QuestionarioSection() {
+  const [perguntas, setPerguntas] = useState<Big5Pergunta[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editingPergunta, setEditingPergunta] = useState<Big5Pergunta | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchPerguntas();
+  }, []);
+
+  const fetchPerguntas = async () => {
+    const { data, error } = await supabase
+      .from('big5_questionario')
+      .select('*')
+      .order('dimensao')
+      .order('ordem');
+    
+    if (error) {
+      toast({ title: 'Erro ao carregar perguntas', variant: 'destructive' });
+    } else {
+      setPerguntas(data || []);
+    }
+    setLoading(false);
+  };
+
+  const handleSave = async (pergunta: Big5Pergunta) => {
+    if (isCreating) {
+      const { error } = await supabase
+        .from('big5_questionario')
+        .insert([{
+          dimensao: pergunta.dimensao,
+          texto_pergunta: pergunta.texto_pergunta,
+          tipo: pergunta.tipo,
+          ativo: pergunta.ativo,
+          ordem: pergunta.ordem
+        }]);
+
+      if (error) {
+        toast({ title: 'Erro ao criar pergunta', variant: 'destructive' });
+      } else {
+        toast({ title: 'Pergunta criada' });
+        fetchPerguntas();
+        setDialogOpen(false);
+        setIsCreating(false);
+      }
+    } else {
+      const { error } = await supabase
+        .from('big5_questionario')
+        .update({
+          dimensao: pergunta.dimensao,
+          texto_pergunta: pergunta.texto_pergunta,
+          tipo: pergunta.tipo,
+          ativo: pergunta.ativo,
+          ordem: pergunta.ordem
+        })
+        .eq('id', pergunta.id);
+
+      if (error) {
+        toast({ title: 'Erro ao salvar', variant: 'destructive' });
+      } else {
+        toast({ title: 'Pergunta atualizada' });
+        fetchPerguntas();
+        setDialogOpen(false);
+      }
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Tem certeza que deseja excluir esta pergunta?')) return;
+    
+    const { error } = await supabase.from('big5_questionario').delete().eq('id', id);
+    
+    if (error) {
+      toast({ title: 'Erro ao excluir', variant: 'destructive' });
+    } else {
+      toast({ title: 'Pergunta excluída' });
+      fetchPerguntas();
+    }
+  };
+
+  const openCreateDialog = () => {
+    setEditingPergunta({
+      id: '',
+      dimensao: 'abertura',
+      texto_pergunta: '',
+      tipo: 'escala_1_5',
+      ativo: true,
+      ordem: perguntas.length + 1
+    });
+    setIsCreating(true);
+    setDialogOpen(true);
+  };
+
+  const toggleAtivo = async (pergunta: Big5Pergunta) => {
+    const { error } = await supabase
+      .from('big5_questionario')
+      .update({ ativo: !pergunta.ativo })
+      .eq('id', pergunta.id);
+
+    if (error) {
+      toast({ title: 'Erro ao alterar status', variant: 'destructive' });
+    } else {
+      fetchPerguntas();
+    }
+  };
+
+  const dimensaoLabels: Record<string, string> = {
+    abertura: 'Abertura',
+    conscienciosidade: 'Conscienciosidade',
+    extroversao: 'Extroversão',
+    amabilidade: 'Amabilidade',
+    neuroticismo: 'Neuroticismo'
+  };
+
+  if (loading) return <div className="text-muted-foreground">Carregando...</div>;
+
+  // Agrupar perguntas por dimensão
+  const perguntasPorDimensao = perguntas.reduce((acc, p) => {
+    if (!acc[p.dimensao]) acc[p.dimensao] = [];
+    acc[p.dimensao].push(p);
+    return acc;
+  }, {} as Record<string, Big5Pergunta[]>);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold">Perguntas do Questionário Big5</h3>
+        <Button onClick={openCreateDialog} className="gap-2">
+          <Plus className="w-4 h-4" />
+          Nova Pergunta
+        </Button>
+      </div>
+
+      <Dialog open={dialogOpen} onOpenChange={(open) => {
+        setDialogOpen(open);
+        if (!open) {
+          setEditingPergunta(null);
+          setIsCreating(false);
+        }
+      }}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{isCreating ? 'Nova Pergunta' : 'Editar Pergunta'}</DialogTitle>
+          </DialogHeader>
+          {editingPergunta && (
+            <Big5PerguntaForm 
+              pergunta={editingPergunta} 
+              onSave={handleSave}
+              onChange={setEditingPergunta}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {Object.entries(dimensaoLabels).map(([key, label]) => (
+        <div key={key} className="space-y-2">
+          <h4 className="font-medium text-primary">{label}</h4>
+          <div className="grid gap-2">
+            {(perguntasPorDimensao[key] || []).map((p) => (
+              <Card key={p.id} className={!p.ativo ? 'opacity-50' : ''}>
+                <CardContent className="py-3">
+                  <div className="flex justify-between items-center gap-4">
+                    <div className="flex-1">
+                      <p className="text-sm">{p.texto_pergunta}</p>
+                      <div className="flex gap-2 mt-1 text-xs text-muted-foreground">
+                        <span>Tipo: {p.tipo === 'escala_1_5' ? 'Escala 1-5' : 'Texto'}</span>
+                        <span>•</span>
+                        <span>Ordem: {p.ordem}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Switch
+                        checked={p.ativo}
+                        onCheckedChange={() => toggleAtivo(p)}
+                      />
+                      <Button variant="ghost" size="icon" onClick={() => {
+                        setEditingPergunta(p);
+                        setIsCreating(false);
+                        setDialogOpen(true);
+                      }}>
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => handleDelete(p.id)}>
+                        <Trash2 className="w-4 h-4 text-destructive" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+            {(!perguntasPorDimensao[key] || perguntasPorDimensao[key].length === 0) && (
+              <p className="text-sm text-muted-foreground italic">Nenhuma pergunta cadastrada</p>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Big5PerguntaForm({ pergunta, onSave, onChange }: { 
+  pergunta: Big5Pergunta; 
+  onSave: (p: Big5Pergunta) => void;
+  onChange: (p: Big5Pergunta) => void;
+}) {
+  return (
+    <div className="space-y-4">
+      <div>
+        <Label>Pergunta</Label>
+        <Textarea 
+          value={pergunta.texto_pergunta} 
+          onChange={(e) => onChange({ ...pergunta, texto_pergunta: e.target.value })}
+          rows={3}
+        />
+      </div>
+      <div>
+        <Label>Dimensão</Label>
+        <Select 
+          value={pergunta.dimensao} 
+          onValueChange={(v) => onChange({ ...pergunta, dimensao: v as Big5Pergunta['dimensao'] })}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="abertura">Abertura</SelectItem>
+            <SelectItem value="conscienciosidade">Conscienciosidade</SelectItem>
+            <SelectItem value="extroversao">Extroversão</SelectItem>
+            <SelectItem value="amabilidade">Amabilidade</SelectItem>
+            <SelectItem value="neuroticismo">Neuroticismo</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label>Tipo</Label>
+          <Select 
+            value={pergunta.tipo} 
+            onValueChange={(v) => onChange({ ...pergunta, tipo: v as Big5Pergunta['tipo'] })}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="escala_1_5">Escala 1-5</SelectItem>
+              <SelectItem value="texto">Texto</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>Ordem</Label>
+          <Input 
+            type="number" 
+            value={pergunta.ordem} 
+            onChange={(e) => onChange({ ...pergunta, ordem: parseInt(e.target.value) || 0 })}
+          />
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <Switch 
+          checked={pergunta.ativo} 
+          onCheckedChange={(checked) => onChange({ ...pergunta, ativo: checked })}
+        />
+        <Label>Ativo</Label>
+      </div>
+      <Button onClick={() => onSave(pergunta)} className="w-full gap-2">
         <Save className="w-4 h-4" />
         Salvar
       </Button>
