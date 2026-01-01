@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Compass, Save, ArrowLeft, Loader2 } from 'lucide-react';
+import { Compass, Save, ArrowLeft, Loader2, Users } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { z } from 'zod';
 
 interface EneagramaTipo {
   id: string;
@@ -35,9 +36,25 @@ interface EneagramaInstinto {
   descricao: string;
 }
 
+interface ClienteOption {
+  id: string;
+  nome: string;
+  email: string;
+}
+
+// Validation schema
+const eneagramaSchema = z.object({
+  tipo_principal: z.number().int().min(1).max(9),
+  defesas: z.string().max(5000).optional(),
+  virtude: z.string().max(5000).optional(),
+  armadilhas: z.string().max(5000).optional(),
+  pratica_sugerida: z.string().max(5000).optional(),
+});
+
 export default function Eneagrama() {
   const [tipos, setTipos] = useState<EneagramaTipo[]>([]);
   const [instintos, setInstintos] = useState<EneagramaInstinto[]>([]);
+  const [clientes, setClientes] = useState<ClienteOption[]>([]);
   const [loading, setLoading] = useState(true);
   
   const [tipoPrincipal, setTipoPrincipal] = useState<number | null>(null);
@@ -48,16 +65,22 @@ export default function Eneagrama() {
   const [armadilhas, setArmadilhas] = useState('');
   const [praticaSugerida, setPraticaSugerida] = useState('');
   const [saving, setSaving] = useState(false);
+  const [selectedClienteId, setSelectedClienteId] = useState<string>('self');
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  // Check if user is a therapist (has clients linked)
+  const isTerapeuta = clientes.length > 0;
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [user]);
 
   const fetchData = async () => {
-    const [tiposRes, instintosRes] = await Promise.all([
+    if (!user) return;
+
+    const [tiposRes, instintosRes, clientesRes] = await Promise.all([
       supabase
         .from('eneagrama_tipos')
         .select('*')
@@ -67,11 +90,29 @@ export default function Eneagrama() {
         .from('eneagrama_instintos')
         .select('*')
         .eq('ativo', true)
-        .order('chave')
+        .order('chave'),
+      // Fetch clients linked to current user as therapist
+      supabase
+        .from('terapeuta_clientes')
+        .select('cliente_id')
+        .eq('terapeuta_id', user.id)
+        .eq('ativo', true)
     ]);
 
     if (tiposRes.data) setTipos(tiposRes.data);
     if (instintosRes.data) setInstintos(instintosRes.data);
+
+    // If user has clients, fetch their profiles
+    if (clientesRes.data && clientesRes.data.length > 0) {
+      const clienteIds = clientesRes.data.map(c => c.cliente_id);
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, nome, email')
+        .in('id', clienteIds);
+      
+      if (profiles) setClientes(profiles);
+    }
+
     setLoading(false);
   };
 
@@ -88,18 +129,43 @@ export default function Eneagrama() {
       return;
     }
 
-    setSaving(true);
-
-    const { error } = await supabase.from('eneagrama_registros').insert({
-      user_id: user?.id,
+    // Validate input
+    const validation = eneagramaSchema.safeParse({
       tipo_principal: tipoPrincipal,
-      asa: asa ? parseInt(asa) : null,
-      instinto: instinto || null,
       defesas,
       virtude,
       armadilhas,
       pratica_sugerida: praticaSugerida,
     });
+
+    if (!validation.success) {
+      toast({ 
+        title: 'Erro de validação', 
+        description: validation.error.errors[0].message, 
+        variant: 'destructive' 
+      });
+      return;
+    }
+
+    setSaving(true);
+
+    // Determine if self-assessment or client assessment
+    const isSelfAssessment = selectedClienteId === 'self';
+
+    const insertData = {
+      user_id: isSelfAssessment ? user?.id : selectedClienteId,
+      terapeuta_id: (!isSelfAssessment && isTerapeuta) ? user?.id : null,
+      cliente_id: (!isSelfAssessment && isTerapeuta) ? selectedClienteId : null,
+      tipo_principal: tipoPrincipal,
+      asa: asa ? parseInt(asa) : null,
+      instinto: instinto || null,
+      defesas: defesas || null,
+      virtude: virtude || null,
+      armadilhas: armadilhas || null,
+      pratica_sugerida: praticaSugerida || null,
+    };
+
+    const { error } = await supabase.from('eneagrama_registros').insert(insertData);
 
     if (error) {
       toast({ title: 'Erro ao salvar', description: error.message, variant: 'destructive' });
@@ -135,6 +201,40 @@ export default function Eneagrama() {
             icon={<Compass className="w-5 h-5" />}
           />
         </div>
+
+        {/* Client Selection (for therapists) */}
+        {isTerapeuta && (
+          <Card className="glass mb-6">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Users className="w-5 h-5" />
+                Para quem é esta avaliação?
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Select value={selectedClienteId} onValueChange={setSelectedClienteId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="self">
+                    Para mim (autoavaliação)
+                  </SelectItem>
+                  {clientes.map(c => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.nome || 'Sem nome'} ({c.email})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {selectedClienteId !== 'self' && (
+                <p className="text-sm text-muted-foreground mt-2">
+                  O registro será vinculado à cliente selecionada.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         <Card className="glass mb-6">
           <CardHeader>
@@ -225,7 +325,9 @@ export default function Eneagrama() {
                 onChange={e => setDefesas(e.target.value)}
                 placeholder="Quais mecanismos de defesa são mais evidentes?"
                 rows={3}
+                maxLength={5000}
               />
+              <p className="text-xs text-muted-foreground mt-1">{defesas.length}/5000</p>
             </div>
             <div>
               <Label>Virtude a cultivar</Label>
@@ -234,6 +336,7 @@ export default function Eneagrama() {
                 onChange={e => setVirtude(e.target.value)}
                 placeholder="Qual qualidade pode contrabalançar a fixação do tipo?"
                 rows={2}
+                maxLength={5000}
               />
             </div>
             <div>
@@ -243,6 +346,7 @@ export default function Eneagrama() {
                 onChange={e => setArmadilhas(e.target.value)}
                 placeholder="O que evitar ao trabalhar com este tipo?"
                 rows={3}
+                maxLength={5000}
               />
             </div>
             <div>
@@ -252,6 +356,7 @@ export default function Eneagrama() {
                 onChange={e => setPraticaSugerida(e.target.value)}
                 placeholder="Exercícios, reflexões ou tarefas recomendadas"
                 rows={3}
+                maxLength={5000}
               />
             </div>
           </CardContent>

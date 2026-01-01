@@ -1,7 +1,7 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, BookOpen, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap } from 'lucide-react';
+import { Settings, Users, BookOpen, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2 } from 'lucide-react';
 import { AdminUsersTab } from '@/components/admin/AdminUsersTab';
 import { AdminTravessiasTab } from '@/components/admin/AdminTravessiasTab';
 import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
@@ -11,6 +11,7 @@ import { AdminModelosTab } from '@/components/admin/AdminModelosTab';
 import { AdminFerramentasTab } from '@/components/admin/AdminFerramentasTab';
 import { AdminSalasTab } from '@/components/admin/AdminSalasTab';
 import { AdminConteudosTab } from '@/components/admin/AdminConteudosTab';
+import { AdminVinculosTab } from '@/components/admin/AdminVinculosTab';
 
 export default function Admin() {
   return (
@@ -61,6 +62,10 @@ export default function Admin() {
               <GraduationCap className="w-4 h-4" />
               Conteúdos
             </TabsTrigger>
+            <TabsTrigger value="vinculos" className="gap-2">
+              <Link2 className="w-4 h-4" />
+              Vínculos
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -97,6 +102,10 @@ export default function Admin() {
 
           <TabsContent value="conteudos">
             <AdminConteudosTab />
+          </TabsContent>
+
+          <TabsContent value="vinculos">
+            <AdminVinculosTab />
           </TabsContent>
         </Tabs>
       </div>
