@@ -1,7 +1,7 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, BookOpen, Library, Megaphone, Bot, FileText, Wrench, DoorOpen } from 'lucide-react';
+import { Settings, Users, BookOpen, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap } from 'lucide-react';
 import { AdminUsersTab } from '@/components/admin/AdminUsersTab';
 import { AdminTravessiasTab } from '@/components/admin/AdminTravessiasTab';
 import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
@@ -10,6 +10,7 @@ import { AdminAgentesTab } from '@/components/admin/AdminAgentesTab';
 import { AdminModelosTab } from '@/components/admin/AdminModelosTab';
 import { AdminFerramentasTab } from '@/components/admin/AdminFerramentasTab';
 import { AdminSalasTab } from '@/components/admin/AdminSalasTab';
+import { AdminConteudosTab } from '@/components/admin/AdminConteudosTab';
 
 export default function Admin() {
   return (
@@ -56,6 +57,10 @@ export default function Admin() {
               <DoorOpen className="w-4 h-4" />
               Salas
             </TabsTrigger>
+            <TabsTrigger value="conteudos" className="gap-2">
+              <GraduationCap className="w-4 h-4" />
+              Conteúdos
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -88,6 +93,10 @@ export default function Admin() {
 
           <TabsContent value="salas">
             <AdminSalasTab />
+          </TabsContent>
+
+          <TabsContent value="conteudos">
+            <AdminConteudosTab />
           </TabsContent>
         </Tabs>
       </div>

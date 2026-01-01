@@ -234,6 +234,83 @@ export type Database = {
         }
         Relationships: []
       }
+      conteudo_aulas: {
+        Row: {
+          created_at: string
+          descricao_curta: string
+          id: string
+          materiais_url: string | null
+          ordem: number
+          portal_minimo: Database["public"]["Enums"]["portal_type"]
+          titulo: string
+          travessia_id: string
+          updated_at: string
+          video_embed_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          descricao_curta?: string
+          id?: string
+          materiais_url?: string | null
+          ordem?: number
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          titulo: string
+          travessia_id: string
+          updated_at?: string
+          video_embed_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          descricao_curta?: string
+          id?: string
+          materiais_url?: string | null
+          ordem?: number
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          titulo?: string
+          travessia_id?: string
+          updated_at?: string
+          video_embed_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conteudo_aulas_travessia_id_fkey"
+            columns: ["travessia_id"]
+            isOneToOne: false
+            referencedRelation: "conteudo_travessias"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conteudo_travessias: {
+        Row: {
+          created_at: string
+          descricao: string
+          id: string
+          ordem: number
+          portal_minimo: Database["public"]["Enums"]["portal_type"]
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string
+          id?: string
+          ordem?: number
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          descricao?: string
+          id?: string
+          ordem?: number
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       eneagrama_instintos: {
         Row: {
           ativo: boolean
