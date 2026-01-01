@@ -22,6 +22,7 @@ import Big5 from "./pages/salas/Big5";
 import Eneagrama from "./pages/salas/Eneagrama";
 import OraculoPerguntas from "./pages/salas/OraculoPerguntas";
 import Admin from "./pages/Admin";
+import MinhasClientes from "./pages/MinhasClientes";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
@@ -91,6 +92,7 @@ function AppRoutes() {
       <Route path="/salas/eneagrama" element={<ProtectedRoute minPortal="pre_iniciada"><Eneagrama /></ProtectedRoute>} />
       <Route path="/salas/oraculo-perguntas" element={<ProtectedRoute minPortal="pre_iniciada"><OraculoPerguntas /></ProtectedRoute>} />
       <Route path="/leitura-oracular" element={<ProtectedRoute minPortal="iniciada"><LeituraOracular /></ProtectedRoute>} />
+      <Route path="/minhas-clientes" element={<ProtectedRoute minPortal="pre_iniciada"><MinhasClientes /></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       
       {/* Catch-all */}

@@ -20,6 +20,7 @@ import {
   Bot,
   Wrench,
   GraduationCap,
+  Heart,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -40,6 +41,7 @@ const navItems: { path: string; label: string; icon: typeof Home; minPortal: Por
   { path: '/mentoria', label: 'Mentoria', icon: Users, minPortal: 'pre_iniciada' },
   { path: '/agentes', label: 'Agentes IA', icon: Bot, minPortal: 'pre_iniciada' },
   { path: '/salas', label: 'Salas', icon: Wrench, minPortal: 'pre_iniciada' },
+  { path: '/minhas-clientes', label: 'Clientes', icon: Heart, minPortal: 'pre_iniciada' },
   { path: '/leitura-oracular', label: 'Leitura Oracular', icon: Sparkles, minPortal: 'iniciada' },
   { path: '/admin', label: 'Admin', icon: Settings, minPortal: 'admin' },
 ];
