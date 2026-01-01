@@ -191,6 +191,7 @@ export type Database = {
           abertura: number
           amabilidade: number
           caso_id: string | null
+          cliente_id: string | null
           conscienciosidade: number
           created_at: string
           extroversao: number
@@ -198,7 +199,7 @@ export type Database = {
           impacto_clinico: string | null
           neuroticismo: number
           notas: string | null
-          therapist_id: string | null
+          terapeuta_id: string | null
           updated_at: string
           user_id: string
         }
@@ -206,6 +207,7 @@ export type Database = {
           abertura: number
           amabilidade: number
           caso_id?: string | null
+          cliente_id?: string | null
           conscienciosidade: number
           created_at?: string
           extroversao: number
@@ -213,7 +215,7 @@ export type Database = {
           impacto_clinico?: string | null
           neuroticismo: number
           notas?: string | null
-          therapist_id?: string | null
+          terapeuta_id?: string | null
           updated_at?: string
           user_id: string
         }
@@ -221,6 +223,7 @@ export type Database = {
           abertura?: number
           amabilidade?: number
           caso_id?: string | null
+          cliente_id?: string | null
           conscienciosidade?: number
           created_at?: string
           extroversao?: number
@@ -228,7 +231,7 @@ export type Database = {
           impacto_clinico?: string | null
           neuroticismo?: number
           notas?: string | null
-          therapist_id?: string | null
+          terapeuta_id?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -366,11 +369,13 @@ export type Database = {
           armadilhas: string | null
           asa: number | null
           caso_id: string | null
+          cliente_id: string | null
           created_at: string
           defesas: string | null
           id: string
           instinto: string | null
           pratica_sugerida: string | null
+          terapeuta_id: string | null
           tipo_principal: number
           updated_at: string
           user_id: string
@@ -380,11 +385,13 @@ export type Database = {
           armadilhas?: string | null
           asa?: number | null
           caso_id?: string | null
+          cliente_id?: string | null
           created_at?: string
           defesas?: string | null
           id?: string
           instinto?: string | null
           pratica_sugerida?: string | null
+          terapeuta_id?: string | null
           tipo_principal: number
           updated_at?: string
           user_id: string
@@ -394,11 +401,13 @@ export type Database = {
           armadilhas?: string | null
           asa?: number | null
           caso_id?: string | null
+          cliente_id?: string | null
           created_at?: string
           defesas?: string | null
           id?: string
           instinto?: string | null
           pratica_sugerida?: string | null
+          terapeuta_id?: string | null
           tipo_principal?: number
           updated_at?: string
           user_id?: string
@@ -868,6 +877,33 @@ export type Database = {
         }
         Relationships: []
       }
+      terapeuta_clientes: {
+        Row: {
+          ativo: boolean
+          cliente_id: string
+          created_at: string
+          id: string
+          terapeuta_id: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          cliente_id: string
+          created_at?: string
+          id?: string
+          terapeuta_id: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          cliente_id?: string
+          created_at?: string
+          id?: string
+          terapeuta_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       text_models: {
         Row: {
           categoria: string
@@ -1032,6 +1068,10 @@ export type Database = {
           _min_portal: Database["public"]["Enums"]["portal_type"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_terapeuta_of_cliente: {
+        Args: { _cliente_id: string; _terapeuta_id: string }
         Returns: boolean
       }
     }

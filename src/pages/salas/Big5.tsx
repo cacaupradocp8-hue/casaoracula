@@ -8,11 +8,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input';
-import { Brain, Save, ArrowLeft, Loader2 } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Brain, Save, ArrowLeft, Loader2, Users } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { z } from 'zod';
 
 interface Big5Pergunta {
   id: string;
@@ -29,6 +37,12 @@ interface Big5Dimensao {
   descricao: string;
 }
 
+interface ClienteOption {
+  id: string;
+  nome: string;
+  email: string;
+}
+
 const dimensaoLabels: Record<string, { label: string; descricao: string }> = {
   abertura: { label: 'Abertura (Openness)', descricao: 'Curiosidade, criatividade, imaginação, interesse em experiências novas' },
   conscienciosidade: { label: 'Conscienciosidade (Conscientiousness)', descricao: 'Organização, disciplina, responsabilidade, planejamento' },
@@ -37,9 +51,21 @@ const dimensaoLabels: Record<string, { label: string; descricao: string }> = {
   neuroticismo: { label: 'Neuroticismo (Neuroticism)', descricao: 'Ansiedade, instabilidade emocional, vulnerabilidade ao estresse' },
 };
 
+// Validation schema
+const big5Schema = z.object({
+  notas: z.string().max(5000, 'Notas devem ter no máximo 5000 caracteres').optional(),
+  impacto_clinico: z.string().max(5000, 'Impacto clínico deve ter no máximo 5000 caracteres').optional(),
+  abertura: z.number().int().min(0).max(100),
+  conscienciosidade: z.number().int().min(0).max(100),
+  extroversao: z.number().int().min(0).max(100),
+  amabilidade: z.number().int().min(0).max(100),
+  neuroticismo: z.number().int().min(0).max(100),
+});
+
 export default function Big5() {
   const [perguntas, setPerguntas] = useState<Big5Pergunta[]>([]);
   const [dimensoes, setDimensoes] = useState<Big5Dimensao[]>([]);
+  const [clientes, setClientes] = useState<ClienteOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [respostas, setRespostas] = useState<Record<string, number | string>>({});
   const [valores, setValores] = useState({
@@ -52,16 +78,22 @@ export default function Big5() {
   const [notas, setNotas] = useState('');
   const [impactoClinico, setImpactoClinico] = useState('');
   const [saving, setSaving] = useState(false);
+  const [selectedClienteId, setSelectedClienteId] = useState<string>('self');
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  // Check if user is a therapist (has clients linked)
+  const isTerapeuta = clientes.length > 0;
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [user]);
 
   const fetchData = async () => {
-    const [perguntasRes, dimensoesRes] = await Promise.all([
+    if (!user) return;
+
+    const [perguntasRes, dimensoesRes, clientesRes] = await Promise.all([
       supabase
         .from('big5_questionario')
         .select('*')
@@ -72,11 +104,29 @@ export default function Big5() {
         .from('big5_dimensoes')
         .select('*')
         .eq('ativo', true)
-        .order('ordem')
+        .order('ordem'),
+      // Fetch clients linked to current user as therapist
+      supabase
+        .from('terapeuta_clientes')
+        .select('cliente_id')
+        .eq('terapeuta_id', user.id)
+        .eq('ativo', true)
     ]);
 
     if (perguntasRes.data) setPerguntas(perguntasRes.data);
     if (dimensoesRes.data) setDimensoes(dimensoesRes.data);
+
+    // If user has clients, fetch their profiles
+    if (clientesRes.data && clientesRes.data.length > 0) {
+      const clienteIds = clientesRes.data.map(c => c.cliente_id);
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, nome, email')
+        .in('id', clienteIds);
+      
+      if (profiles) setClientes(profiles);
+    }
+
     setLoading(false);
   };
 
@@ -85,15 +135,37 @@ export default function Big5() {
   };
 
   const handleSave = async () => {
-    setSaving(true);
-
-    const { error } = await supabase.from('big5_registros').insert({
-      user_id: user?.id,
-      therapist_id: user?.id,
-      ...valores,
+    // Validate input
+    const validation = big5Schema.safeParse({
       notas,
       impacto_clinico: impactoClinico,
+      ...valores,
     });
+
+    if (!validation.success) {
+      toast({ 
+        title: 'Erro de validação', 
+        description: validation.error.errors[0].message, 
+        variant: 'destructive' 
+      });
+      return;
+    }
+
+    setSaving(true);
+
+    // Determine if self-assessment or client assessment
+    const isSelfAssessment = selectedClienteId === 'self';
+
+    const insertData = {
+      user_id: isSelfAssessment ? user?.id : selectedClienteId,
+      terapeuta_id: (!isSelfAssessment && isTerapeuta) ? user?.id : null,
+      cliente_id: (!isSelfAssessment && isTerapeuta) ? selectedClienteId : null,
+      ...valores,
+      notas: notas || null,
+      impacto_clinico: impactoClinico || null,
+    };
+
+    const { error } = await supabase.from('big5_registros').insert(insertData);
 
     if (error) {
       toast({ title: 'Erro ao salvar', description: error.message, variant: 'destructive' });
@@ -139,6 +211,40 @@ export default function Big5() {
           />
         </div>
 
+        {/* Client Selection (for therapists) */}
+        {isTerapeuta && (
+          <Card className="glass mb-6">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Users className="w-5 h-5" />
+                Para quem é esta avaliação?
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Select value={selectedClienteId} onValueChange={setSelectedClienteId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="self">
+                    Para mim (autoavaliação)
+                  </SelectItem>
+                  {clientes.map(c => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.nome || 'Sem nome'} ({c.email})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {selectedClienteId !== 'self' && (
+                <p className="text-sm text-muted-foreground mt-2">
+                  O registro será vinculado à cliente selecionada.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
         {/* Questionário dinâmico se houver perguntas */}
         {temPerguntas && (
           <Card className="glass mb-6">
@@ -179,6 +285,7 @@ export default function Big5() {
                             value={String(respostas[pergunta.id] || '')}
                             onChange={(e) => handleRespostaChange(pergunta.id, e.target.value)}
                             placeholder="Sua resposta..."
+                            maxLength={1000}
                           />
                         )}
                       </div>
@@ -238,7 +345,9 @@ export default function Big5() {
                 onChange={e => setNotas(e.target.value)}
                 placeholder="Observações, contexto da avaliação, percepções..."
                 rows={4}
+                maxLength={5000}
               />
+              <p className="text-xs text-muted-foreground mt-1">{notas.length}/5000</p>
             </div>
             <div>
               <Label>Hipóteses de impacto clínico</Label>
@@ -247,7 +356,9 @@ export default function Big5() {
                 onChange={e => setImpactoClinico(e.target.value)}
                 placeholder="Como esses traços impactam a cliente? Quais padrões emergem?"
                 rows={4}
+                maxLength={5000}
               />
+              <p className="text-xs text-muted-foreground mt-1">{impactoClinico.length}/5000</p>
             </div>
           </CardContent>
         </Card>
