@@ -4,7 +4,7 @@ import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, BookOpen, Video, FileText, Lock, ChevronDown, ChevronRight, ExternalLink, DoorOpen } from 'lucide-react';
+import { GraduationCap, BookOpen, Video, FileText, Lock, ChevronDown, ChevronRight, ExternalLink, DoorOpen, Music, Type } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Database } from '@/integrations/supabase/types';
@@ -33,8 +33,11 @@ interface Aula {
   travessia_id: string;
   titulo: string;
   descricao_curta: string;
+  texto_aula: string | null;
   ordem: number;
-  video_embed_url: string | null;
+  video_url: string | null;
+  audio_url: string | null;
+  pdf_url: string | null;
   materiais_url: string | null;
   portal_minimo: PortalType;
 }
@@ -293,8 +296,12 @@ export default function Formacao() {
                                 >
                                   {isAulaLocked ? (
                                     <Lock className="w-4 h-4 shrink-0" />
-                                  ) : aula.video_embed_url ? (
+                                  ) : aula.video_url ? (
                                     <Video className="w-4 h-4 shrink-0" />
+                                  ) : aula.audio_url ? (
+                                    <Music className="w-4 h-4 shrink-0" />
+                                  ) : aula.texto_aula ? (
+                                    <Type className="w-4 h-4 shrink-0" />
                                   ) : (
                                     <BookOpen className="w-4 h-4 shrink-0" />
                                   )}
@@ -335,8 +342,10 @@ export default function Formacao() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      {selectedAula.video_embed_url ? (
+                      {selectedAula.video_url ? (
                         <Video className="w-5 h-5 text-primary" />
+                      ) : selectedAula.audio_url ? (
+                        <Music className="w-5 h-5 text-primary" />
                       ) : (
                         <BookOpen className="w-5 h-5 text-primary" />
                       )}
@@ -348,10 +357,10 @@ export default function Formacao() {
                   </CardHeader>
                   <CardContent className="space-y-6">
                     {/* Video Embed */}
-                    {selectedAula.video_embed_url && (
+                    {selectedAula.video_url && (
                       <div className="aspect-video rounded-lg overflow-hidden bg-muted">
                         <iframe
-                          src={selectedAula.video_embed_url}
+                          src={selectedAula.video_url}
                           className="w-full h-full"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                           allowFullScreen
@@ -360,12 +369,72 @@ export default function Formacao() {
                       </div>
                     )}
 
+                    {/* Audio Embed */}
+                    {selectedAula.audio_url && (
+                      <div className="bg-muted/50 rounded-lg p-4">
+                        <div className="flex items-center gap-3 mb-3">
+                          <Music className="w-5 h-5 text-primary" />
+                          <span className="font-medium text-sm">Áudio da Aula</span>
+                        </div>
+                        {selectedAula.audio_url.includes('soundcloud') ? (
+                          <iframe
+                            src={selectedAula.audio_url}
+                            className="w-full h-32 rounded"
+                            allow="autoplay"
+                            title={`Áudio: ${selectedAula.titulo}`}
+                          />
+                        ) : (
+                          <audio controls className="w-full">
+                            <source src={selectedAula.audio_url} type="audio/mpeg" />
+                            Seu navegador não suporta áudio.
+                          </audio>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Texto da Aula */}
+                    {selectedAula.texto_aula && (
+                      <div className="prose prose-sm max-w-none dark:prose-invert">
+                        <div className="flex items-center gap-2 mb-3">
+                          <Type className="w-5 h-5 text-primary" />
+                          <span className="font-medium text-sm">Conteúdo da Aula</span>
+                        </div>
+                        <div className="bg-muted/30 rounded-lg p-4 whitespace-pre-wrap">
+                          {selectedAula.texto_aula}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* PDF Link */}
+                    {selectedAula.pdf_url && (
+                      <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
+                        <FileText className="w-5 h-5 text-orange-500" />
+                        <div className="flex-1">
+                          <p className="font-medium text-sm">PDF da Aula</p>
+                          <p className="text-xs text-muted-foreground">
+                            Baixe ou visualize o PDF desta aula
+                          </p>
+                        </div>
+                        <Button size="sm" variant="outline" asChild>
+                          <a
+                            href={selectedAula.pdf_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="gap-2"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                            Abrir PDF
+                          </a>
+                        </Button>
+                      </div>
+                    )}
+
                     {/* Materials Link */}
                     {selectedAula.materiais_url && (
                       <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
                         <FileText className="w-5 h-5 text-primary" />
                         <div className="flex-1">
-                          <p className="font-medium text-sm">Materiais de Apoio</p>
+                          <p className="font-medium text-sm">Materiais Extras</p>
                           <p className="text-xs text-muted-foreground">
                             Acesse os materiais complementares desta aula
                           </p>
@@ -384,8 +453,8 @@ export default function Formacao() {
                       </div>
                     )}
 
-                    {/* No video or materials */}
-                    {!selectedAula.video_embed_url && !selectedAula.materiais_url && (
+                    {/* No content */}
+                    {!selectedAula.video_url && !selectedAula.audio_url && !selectedAula.texto_aula && !selectedAula.pdf_url && !selectedAula.materiais_url && (
                       <div className="text-center py-12 text-muted-foreground">
                         <BookOpen className="w-12 h-12 mx-auto mb-4 opacity-50" />
                         <p>Conteúdo em desenvolvimento.</p>

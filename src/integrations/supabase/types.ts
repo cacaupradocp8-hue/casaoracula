@@ -236,40 +236,49 @@ export type Database = {
       }
       conteudo_aulas: {
         Row: {
+          audio_url: string | null
           created_at: string
           descricao_curta: string
           id: string
           materiais_url: string | null
           ordem: number
+          pdf_url: string | null
           portal_minimo: Database["public"]["Enums"]["portal_type"]
+          texto_aula: string | null
           titulo: string
           travessia_id: string
           updated_at: string
-          video_embed_url: string | null
+          video_url: string | null
         }
         Insert: {
+          audio_url?: string | null
           created_at?: string
           descricao_curta?: string
           id?: string
           materiais_url?: string | null
           ordem?: number
+          pdf_url?: string | null
           portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          texto_aula?: string | null
           titulo: string
           travessia_id: string
           updated_at?: string
-          video_embed_url?: string | null
+          video_url?: string | null
         }
         Update: {
+          audio_url?: string | null
           created_at?: string
           descricao_curta?: string
           id?: string
           materiais_url?: string | null
           ordem?: number
+          pdf_url?: string | null
           portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          texto_aula?: string | null
           titulo?: string
           travessia_id?: string
           updated_at?: string
-          video_embed_url?: string | null
+          video_url?: string | null
         }
         Relationships: [
           {
