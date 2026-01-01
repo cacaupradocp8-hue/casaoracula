@@ -21,6 +21,7 @@ import Big5 from "./pages/salas/Big5";
 import Eneagrama from "./pages/salas/Eneagrama";
 import OraculoPerguntas from "./pages/salas/OraculoPerguntas";
 import Admin from "./pages/Admin";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -73,6 +74,7 @@ function AppRoutes() {
       {/* Public Routes */}
       <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
       <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       
       {/* Protected Routes */}
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
