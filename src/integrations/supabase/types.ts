@@ -701,6 +701,42 @@ export type Database = {
         }
         Relationships: []
       }
+      matriculas_pendentes: {
+        Row: {
+          created_at: string
+          curso_id: string
+          email: string
+          id: string
+          portal_destino: Database["public"]["Enums"]["portal_type"]
+          processado: boolean
+          produto_rockty: string | null
+          transaction_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          curso_id?: string
+          email: string
+          id?: string
+          portal_destino?: Database["public"]["Enums"]["portal_type"]
+          processado?: boolean
+          produto_rockty?: string | null
+          transaction_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          curso_id?: string
+          email?: string
+          id?: string
+          portal_destino?: Database["public"]["Enums"]["portal_type"]
+          processado?: boolean
+          produto_rockty?: string | null
+          transaction_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       oraculo_aplicacoes: {
         Row: {
           caso_id: string | null
