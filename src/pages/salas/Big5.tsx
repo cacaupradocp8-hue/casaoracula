@@ -8,18 +8,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Brain, Save, ArrowLeft, Loader2, Users } from 'lucide-react';
+import { Brain, Save, ArrowLeft, Loader2, FolderOpen, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { z } from 'zod';
 
 interface Big5Pergunta {
@@ -37,10 +30,11 @@ interface Big5Dimensao {
   descricao: string;
 }
 
-interface ClienteOption {
+interface CasoInfo {
   id: string;
-  nome: string;
-  email: string;
+  codinome: string;
+  cliente_id: string;
+  cliente_nome?: string;
 }
 
 const dimensaoLabels: Record<string, { label: string; descricao: string }> = {
@@ -63,10 +57,13 @@ const big5Schema = z.object({
 });
 
 export default function Big5() {
+  const [searchParams] = useSearchParams();
+  const casoId = searchParams.get('caso');
+
   const [perguntas, setPerguntas] = useState<Big5Pergunta[]>([]);
   const [dimensoes, setDimensoes] = useState<Big5Dimensao[]>([]);
-  const [clientes, setClientes] = useState<ClienteOption[]>([]);
   const [loading, setLoading] = useState(true);
+  const [caso, setCaso] = useState<CasoInfo | null>(null);
   const [respostas, setRespostas] = useState<Record<string, number | string>>({});
   const [valores, setValores] = useState({
     abertura: 50,
@@ -78,22 +75,21 @@ export default function Big5() {
   const [notas, setNotas] = useState('');
   const [impactoClinico, setImpactoClinico] = useState('');
   const [saving, setSaving] = useState(false);
-  const [selectedClienteId, setSelectedClienteId] = useState<string>('self');
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // Check if user is a therapist (has clients linked)
-  const isTerapeuta = clientes.length > 0;
+  // Determine mode: self-assessment (no caso) or therapist assessment (with caso)
+  const isSelfAssessment = !casoId;
 
   useEffect(() => {
     fetchData();
-  }, [user]);
+  }, [user, casoId]);
 
   const fetchData = async () => {
     if (!user) return;
 
-    const [perguntasRes, dimensoesRes, clientesRes] = await Promise.all([
+    const [perguntasRes, dimensoesRes] = await Promise.all([
       supabase
         .from('big5_questionario')
         .select('*')
@@ -105,26 +101,41 @@ export default function Big5() {
         .select('*')
         .eq('ativo', true)
         .order('ordem'),
-      // Fetch clients linked to current user as therapist
-      supabase
-        .from('terapeuta_clientes')
-        .select('cliente_id')
-        .eq('terapeuta_id', user.id)
-        .eq('ativo', true)
     ]);
 
     if (perguntasRes.data) setPerguntas(perguntasRes.data);
     if (dimensoesRes.data) setDimensoes(dimensoesRes.data);
 
-    // If user has clients, fetch their profiles
-    if (clientesRes.data && clientesRes.data.length > 0) {
-      const clienteIds = clientesRes.data.map(c => c.cliente_id);
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('id, nome, email')
-        .in('id', clienteIds);
-      
-      if (profiles) setClientes(profiles);
+    // If we have a caso ID, fetch caso info
+    if (casoId) {
+      const casoRes = await supabase
+        .from('casos')
+        .select('id, codinome, cliente_id')
+        .eq('id', casoId)
+        .eq('terapeuta_id', user.id)
+        .maybeSingle();
+
+      if (casoRes.data) {
+        // Fetch cliente name
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('nome')
+          .eq('id', casoRes.data.cliente_id)
+          .maybeSingle();
+
+        setCaso({
+          ...casoRes.data,
+          cliente_nome: profile?.nome || 'Sem nome',
+        });
+      } else {
+        toast({
+          title: 'Caso não encontrado',
+          description: 'O caso solicitado não existe ou você não tem permissão para acessá-lo.',
+          variant: 'destructive',
+        });
+        navigate('/casos');
+        return;
+      }
     }
 
     setLoading(false);
@@ -153,17 +164,41 @@ export default function Big5() {
 
     setSaving(true);
 
-    // Determine if self-assessment or client assessment
-    const isSelfAssessment = selectedClienteId === 'self';
+    let insertData: any;
 
-    const insertData = {
-      user_id: isSelfAssessment ? user?.id : selectedClienteId,
-      terapeuta_id: (!isSelfAssessment && isTerapeuta) ? user?.id : null,
-      cliente_id: (!isSelfAssessment && isTerapeuta) ? selectedClienteId : null,
-      ...valores,
-      notas: notas || null,
-      impacto_clinico: impactoClinico || null,
-    };
+    if (isSelfAssessment) {
+      // Self-assessment: no caso, no terapeuta, no cliente
+      insertData = {
+        user_id: user?.id,
+        terapeuta_id: null,
+        cliente_id: null,
+        caso_id: null,
+        ...valores,
+        notas: notas || null,
+        impacto_clinico: impactoClinico || null,
+      };
+    } else {
+      // Therapist assessment: requires caso
+      if (!caso) {
+        toast({ 
+          title: 'Erro', 
+          description: 'Caso não carregado corretamente.', 
+          variant: 'destructive' 
+        });
+        setSaving(false);
+        return;
+      }
+
+      insertData = {
+        user_id: caso.cliente_id,
+        terapeuta_id: user?.id,
+        cliente_id: caso.cliente_id,
+        caso_id: caso.id,
+        ...valores,
+        notas: notas || null,
+        impacto_clinico: impactoClinico || null,
+      };
+    }
 
     const { error } = await supabase.from('big5_registros').insert(insertData);
 
@@ -171,7 +206,11 @@ export default function Big5() {
       toast({ title: 'Erro ao salvar', description: error.message, variant: 'destructive' });
     } else {
       toast({ title: 'Registro Big5 salvo com sucesso!' });
-      navigate('/salas');
+      if (isSelfAssessment) {
+        navigate('/salas');
+      } else {
+        navigate('/casos');
+      }
     }
     setSaving(false);
   };
@@ -199,7 +238,7 @@ export default function Big5() {
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
         <div className="flex items-center gap-4 mb-6">
-          <Link to="/salas">
+          <Link to={isSelfAssessment ? '/salas' : '/casos'}>
             <Button variant="ghost" size="icon">
               <ArrowLeft className="w-5 h-5" />
             </Button>
@@ -211,36 +250,34 @@ export default function Big5() {
           />
         </div>
 
-        {/* Client Selection (for therapists) */}
-        {isTerapeuta && (
-          <Card className="glass mb-6">
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Users className="w-5 h-5" />
-                Para quem é esta avaliação?
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Select value={selectedClienteId} onValueChange={setSelectedClienteId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="self">
-                    Para mim (autoavaliação)
-                  </SelectItem>
-                  {clientes.map(c => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.nome || 'Sem nome'} ({c.email})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {selectedClienteId !== 'self' && (
-                <p className="text-sm text-muted-foreground mt-2">
-                  O registro será vinculado à cliente selecionada.
-                </p>
-              )}
+        {/* Caso Info Banner (for therapist assessment) */}
+        {!isSelfAssessment && caso && (
+          <Card className="glass mb-6 border-gold/30 bg-gold/5">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <FolderOpen className="w-5 h-5 text-gold" />
+                <div>
+                  <p className="font-medium">Avaliação para o caso: <span className="text-gold">{caso.codinome}</span></p>
+                  <p className="text-sm text-muted-foreground">Cliente: {caso.cliente_nome}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Self-assessment notice */}
+        {isSelfAssessment && (
+          <Card className="glass mb-6 border-blue-500/30 bg-blue-500/5">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 text-blue-500" />
+                <div>
+                  <p className="font-medium">Autoavaliação</p>
+                  <p className="text-sm text-muted-foreground">
+                    Este registro será salvo no seu próprio perfil. Para avaliar uma cliente, acesse através da página de Casos.
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         )}
