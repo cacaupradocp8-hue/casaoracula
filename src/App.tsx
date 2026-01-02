@@ -30,24 +30,22 @@ const queryClient = new QueryClient();
 
 import { PortalType } from '@/types/portal';
 
+// Loading component for auth states
+function AuthLoading() {
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="animate-pulse text-gold font-display text-xl">Carregando...</div>
+    </div>
+  );
+}
+
+// These components must be rendered inside AuthProvider
 function ProtectedRoute({ children, minPortal = 'visitante' }: { children: React.ReactNode; minPortal?: PortalType }) {
-  const { user, isLoading, isAuthenticated, canAccess } = useAuth();
+  const { isLoading, isAuthenticated, canAccess } = useAuth();
   
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-pulse text-gold font-display text-xl">Carregando...</div>
-      </div>
-    );
-  }
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/auth" replace />;
-  }
-  
-  if (!canAccess(minPortal)) {
-    return <Navigate to="/dashboard" replace />;
-  }
+  if (isLoading) return <AuthLoading />;
+  if (!isAuthenticated) return <Navigate to="/auth" replace />;
+  if (!canAccess(minPortal)) return <Navigate to="/dashboard" replace />;
   
   return <>{children}</>;
 }
@@ -55,17 +53,8 @@ function ProtectedRoute({ children, minPortal = 'visitante' }: { children: React
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
   
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-pulse text-gold font-display text-xl">Carregando...</div>
-      </div>
-    );
-  }
-  
-  if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
-  }
+  if (isLoading) return <AuthLoading />;
+  if (isAuthenticated) return <Navigate to="/dashboard" replace />;
   
   return <>{children}</>;
 }
