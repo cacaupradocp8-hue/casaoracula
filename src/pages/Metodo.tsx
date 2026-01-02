@@ -96,9 +96,9 @@ function LeituraCincoCamadas() {
     {
       key: 'layer5',
       number: 5,
-      title: 'Travessia',
-      question: 'Qual é a travessia sendo pedida? O que precisa morrer para que algo novo nasça? Qual o chamado da alma?',
-      placeholder: 'Delineie a travessia necessária...',
+      title: 'Portal',
+      question: 'Qual é o portal sendo pedido? O que precisa morrer para que algo novo nasça? Qual o chamado da alma?',
+      placeholder: 'Delineie o portal necessário...',
     },
   ];
 

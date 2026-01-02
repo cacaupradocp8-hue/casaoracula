@@ -45,7 +45,7 @@ export const PORTALS: Portal[] = [
   {
     type: 'iniciada',
     name: 'Iniciada ORÁCULA',
-    description: 'Formação completa nas 4 Travessias',
+    description: 'Formação completa nos 4 Portais',
     features: [
       'Formação completa',
       'Biblioteca simbólica profunda',

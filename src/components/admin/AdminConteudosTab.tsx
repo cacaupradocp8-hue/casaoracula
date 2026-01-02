@@ -350,17 +350,17 @@ export function AdminConteudosTab() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">Travessias Formativas</h3>
+        <h3 className="text-lg font-semibold">Portais Formativos</h3>
         <Button onClick={() => openTravessiaDialog()} className="gap-2">
           <Plus className="w-4 h-4" />
-          Nova Travessia
+          Novo Portal
         </Button>
       </div>
 
       {travessias.length === 0 ? (
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
-            Nenhuma travessia cadastrada. Clique em "Nova Travessia" para começar.
+            Nenhum portal cadastrado. Clique em "Novo Portal" para começar.
           </CardContent>
         </Card>
       ) : (
@@ -414,7 +414,7 @@ export function AdminConteudosTab() {
 
                   {!aulas[travessia.id] || aulas[travessia.id].length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-4">
-                      Nenhuma aula cadastrada nesta travessia.
+                      Nenhuma aula cadastrada neste portal.
                     </p>
                   ) : (
                     <Table>
@@ -475,11 +475,11 @@ export function AdminConteudosTab() {
         </div>
       )}
 
-      {/* Travessia Dialog */}
+      {/* Portal Dialog */}
       <Dialog open={travessiaDialogOpen} onOpenChange={setTravessiaDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editingTravessia ? 'Editar Travessia' : 'Nova Travessia'}</DialogTitle>
+            <DialogTitle>{editingTravessia ? 'Editar Portal' : 'Novo Portal'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
@@ -495,7 +495,7 @@ export function AdminConteudosTab() {
               <Textarea
                 value={travessiaForm.descricao}
                 onChange={(e) => setTravessiaForm({ ...travessiaForm, descricao: e.target.value })}
-                placeholder="Descreva a travessia..."
+                placeholder="Descreva o portal..."
                 rows={3}
               />
             </div>

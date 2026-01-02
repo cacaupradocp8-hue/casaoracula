@@ -43,7 +43,7 @@ export const TRAVESSIAS_DATA: Omit<Travessia, 'lessons'>[] = [
     number: 1,
     title: 'O Mundo sem Símbolos',
     subtitle: 'Despertar para a ausência',
-    description: 'A mulher contemporânea vive num mundo que esvaziou os símbolos de sentido. Nesta primeira travessia, reconhecemos o vazio simbólico que marca nossa época.',
+    description: 'A mulher contemporânea vive num mundo que esvaziou os símbolos de sentido. Neste primeiro portal, reconhecemos o vazio simbólico que marca nossa época.',
     closingRitual: 'Ritual do Primeiro Olhar: Reconhecer em si a sede de símbolos.',
   },
   {
@@ -51,7 +51,7 @@ export const TRAVESSIAS_DATA: Omit<Travessia, 'lessons'>[] = [
     number: 2,
     title: 'A Mulher de Alma Antiga',
     subtitle: 'Recuperar o que nunca se perdeu',
-    description: 'Toda mulher carrega uma alma que sabe mais do que a mente permite lembrar. Esta travessia reconecta a terapeuta com a sabedoria ancestral.',
+    description: 'Toda mulher carrega uma alma que sabe mais do que a mente permite lembrar. Este portal reconecta a terapeuta com a sabedoria ancestral.',
     closingRitual: 'Ritual da Memória Profunda: Honrar as guardiãs que vieram antes.',
   },
   {
@@ -67,7 +67,7 @@ export const TRAVESSIAS_DATA: Omit<Travessia, 'lessons'>[] = [
     number: 4,
     title: 'A Guardiã do Caminho',
     subtitle: 'Tornar-se aquela que conduz',
-    description: 'A travessia final prepara a terapeuta para ser guardiã de travessias alheias. Não é sobre ter respostas, mas sobre saber fazer as perguntas certas.',
+    description: 'O portal final prepara a terapeuta para ser guardiã de portais alheios. Não é sobre ter respostas, mas sobre saber fazer as perguntas certas.',
     closingRitual: 'Ritual da Iniciação: Assumir o manto de Guardiã ORÁCULA.',
   },
 ];

@@ -64,7 +64,7 @@ export default function LeituraOracular() {
     },
     {
       key: 'readiness',
-      title: 'Prontidão para Travessia',
+      title: 'Prontidão para o Portal',
       question: 'O que você está disposta a deixar morrer em você para que algo novo nasça? Qual é seu maior medo sobre essa formação? E sua maior esperança?',
       placeholder: 'Avalie sua prontidão...',
     },

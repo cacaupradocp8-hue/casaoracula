@@ -195,7 +195,7 @@ export default function Formacao() {
       <div className="container mx-auto px-4 py-8 pb-20">
         <SectionHeader
           title="Formação ORÁCULA"
-          subtitle="Sua jornada de aprendizado através das Travessias"
+          subtitle="Sua jornada de aprendizado através dos Portais"
           icon={<GraduationCap className="w-5 h-5" />}
           className="mb-8"
         />
