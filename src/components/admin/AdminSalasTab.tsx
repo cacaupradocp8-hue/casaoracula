@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -11,9 +12,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Loader2, Edit, DoorOpen, Plus, Trash2, Wrench } from 'lucide-react';
+import { Loader2, Edit, DoorOpen, Plus, Trash2, Wrench, Users } from 'lucide-react';
 
 type NivelSala = 'NIVEL_0' | 'NIVEL_1' | 'NIVEL_2' | 'NIVEL_3';
+type PortalType = 'visitante' | 'pre_iniciada' | 'iniciada' | 'admin';
 
 interface Sala {
   id: string;
@@ -37,6 +39,12 @@ interface Ferramenta {
   ativa: boolean;
 }
 
+interface PortalSala {
+  id: string;
+  portal_type: PortalType;
+  sala_id: string;
+}
+
 const NIVEL_LABELS: Record<NivelSala, string> = {
   NIVEL_0: 'Visitante (Nível 0)',
   NIVEL_1: 'Pré-Iniciada (Nível 1)',
@@ -44,20 +52,32 @@ const NIVEL_LABELS: Record<NivelSala, string> = {
   NIVEL_3: 'Guardiã (Nível 3)',
 };
 
+const PORTAL_LABELS: Record<PortalType, string> = {
+  visitante: 'Visitante',
+  pre_iniciada: 'Pré-Iniciada',
+  iniciada: 'Iniciada ORÁCULA',
+  admin: 'Admin',
+};
+
+const ALL_PORTALS: PortalType[] = ['visitante', 'pre_iniciada', 'iniciada', 'admin'];
+
 export function AdminSalasTab() {
   const [salas, setSalas] = useState<Sala[]>([]);
   const [ferramentas, setFerramentas] = useState<Ferramenta[]>([]);
+  const [portalSalas, setPortalSalas] = useState<PortalSala[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingSala, setEditingSala] = useState<Sala | null>(null);
   const [managingFerramentas, setManagingFerramentas] = useState<Sala | null>(null);
   const [editingFerramenta, setEditingFerramenta] = useState<Ferramenta | null>(null);
+  const [managingPortais, setManagingPortais] = useState<Sala | null>(null);
   const [saving, setSaving] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
-    const [salasRes, ferramentasRes] = await Promise.all([
+    const [salasRes, ferramentasRes, portalSalasRes] = await Promise.all([
       supabase.from('salas').select('*').order('ordem'),
       supabase.from('sala_ferramentas').select('*').order('ordem'),
+      supabase.from('portal_salas').select('*'),
     ]);
 
     if (salasRes.error) {
@@ -71,6 +91,12 @@ export function AdminSalasTab() {
       console.error(ferramentasRes.error);
     } else {
       setFerramentas(ferramentasRes.data as Ferramenta[]);
+    }
+
+    if (portalSalasRes.error) {
+      console.error(portalSalasRes.error);
+    } else {
+      setPortalSalas(portalSalasRes.data as PortalSala[]);
     }
 
     setLoading(false);
@@ -123,6 +149,39 @@ export function AdminSalasTab() {
 
   const getFerramentasForSala = (salaId: string) => {
     return ferramentas.filter((f) => f.sala_id === salaId).sort((a, b) => a.ordem - b.ordem);
+  };
+
+  const getPortaisForSala = (salaId: string): PortalType[] => {
+    return portalSalas
+      .filter((ps) => ps.sala_id === salaId)
+      .map((ps) => ps.portal_type);
+  };
+
+  const togglePortalForSala = async (salaId: string, portal: PortalType) => {
+    const existing = portalSalas.find((ps) => ps.sala_id === salaId && ps.portal_type === portal);
+    
+    if (existing) {
+      const { error } = await supabase.from('portal_salas').delete().eq('id', existing.id);
+      if (error) {
+        toast.error('Erro ao remover portal');
+        console.error(error);
+      } else {
+        setPortalSalas((prev) => prev.filter((ps) => ps.id !== existing.id));
+      }
+    } else {
+      const { data, error } = await supabase
+        .from('portal_salas')
+        .insert({ sala_id: salaId, portal_type: portal })
+        .select()
+        .single();
+      
+      if (error) {
+        toast.error('Erro ao adicionar portal');
+        console.error(error);
+      } else if (data) {
+        setPortalSalas((prev) => [...prev, data as PortalSala]);
+      }
+    }
   };
 
   const handleAddFerramenta = async () => {
@@ -231,6 +290,7 @@ export function AdminSalasTab() {
                 <TableHead>Ordem</TableHead>
                 <TableHead>Nome</TableHead>
                 <TableHead>Nível Mínimo</TableHead>
+                <TableHead>Portais</TableHead>
                 <TableHead>Ferramentas</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
@@ -247,6 +307,19 @@ export function AdminSalasTab() {
                     </Badge>
                   </TableCell>
                   <TableCell>
+                    <div className="flex flex-wrap gap-1">
+                      {getPortaisForSala(sala.id).length > 0 ? (
+                        getPortaisForSala(sala.id).map((portal) => (
+                          <Badge key={portal} variant="secondary" className="text-xs">
+                            {PORTAL_LABELS[portal]}
+                          </Badge>
+                        ))
+                      ) : (
+                        <span className="text-xs text-muted-foreground">—</span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>
                     <Badge variant="secondary">
                       {getFerramentasForSala(sala.id).length} ferramentas
                     </Badge>
@@ -254,11 +327,20 @@ export function AdminSalasTab() {
                   <TableCell>
                     <Switch checked={sala.ativa} onCheckedChange={() => toggleSalaAtiva(sala)} />
                   </TableCell>
-                  <TableCell className="text-right space-x-2">
+                  <TableCell className="text-right space-x-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setManagingPortais(sala)}
+                      title="Gerenciar Portais"
+                    >
+                      <Users className="w-4 h-4" />
+                    </Button>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setManagingFerramentas(sala)}
+                      title="Gerenciar Ferramentas"
                     >
                       <Wrench className="w-4 h-4" />
                     </Button>
@@ -537,6 +619,45 @@ export function AdminSalasTab() {
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Manage Portais Dialog */}
+      <Dialog open={!!managingPortais} onOpenChange={(open) => !open && setManagingPortais(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-gold" />
+              Portais: {managingPortais?.nome_exibicao}
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="py-4">
+            <p className="text-sm text-muted-foreground mb-4">
+              Selecione os portais que devem ser associados a esta sala:
+            </p>
+            <div className="space-y-3">
+              {ALL_PORTALS.map((portal) => {
+                const isChecked = managingPortais
+                  ? getPortaisForSala(managingPortais.id).includes(portal)
+                  : false;
+                return (
+                  <div key={portal} className="flex items-center space-x-3">
+                    <Checkbox
+                      id={`portal-${portal}`}
+                      checked={isChecked}
+                      onCheckedChange={() =>
+                        managingPortais && togglePortalForSala(managingPortais.id, portal)
+                      }
+                    />
+                    <Label htmlFor={`portal-${portal}`} className="cursor-pointer">
+                      {PORTAL_LABELS[portal]}
+                    </Label>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
