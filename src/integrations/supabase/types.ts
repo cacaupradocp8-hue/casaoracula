@@ -1060,6 +1060,35 @@ export type Database = {
         }
         Relationships: []
       }
+      user_aula_progress: {
+        Row: {
+          aula_id: string
+          completed_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          aula_id: string
+          completed_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          aula_id?: string
+          completed_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_aula_progress_aula_id_fkey"
+            columns: ["aula_id"]
+            isOneToOne: false
+            referencedRelation: "conteudo_aulas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_favorites: {
         Row: {
           created_at: string
