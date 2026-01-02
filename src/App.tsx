@@ -9,8 +9,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
-import Travessias from "./pages/Travessias";
-import Formacao from "./pages/Formacao";
+import Portais from "./pages/Portais";
 import Metodo from "./pages/Metodo";
 import Biblioteca from "./pages/Biblioteca";
 import Casos from "./pages/Casos";
@@ -81,18 +80,17 @@ function AppRoutes() {
       
       {/* Protected Routes */}
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-      <Route path="/travessias" element={<ProtectedRoute minPortal="pre_iniciada"><Travessias /></ProtectedRoute>} />
-      <Route path="/formacao" element={<ProtectedRoute><Formacao /></ProtectedRoute>} />
+      <Route path="/portais" element={<ProtectedRoute><Portais /></ProtectedRoute>} />
+      <Route path="/mentoria" element={<ProtectedRoute minPortal="pre_iniciada"><Mentoria /></ProtectedRoute>} />
       <Route path="/metodo" element={<ProtectedRoute minPortal="pre_iniciada"><Metodo /></ProtectedRoute>} />
       <Route path="/biblioteca" element={<ProtectedRoute minPortal="pre_iniciada"><Biblioteca /></ProtectedRoute>} />
       <Route path="/casos" element={<ProtectedRoute minPortal="pre_iniciada"><Casos /></ProtectedRoute>} />
-      <Route path="/mentoria" element={<ProtectedRoute minPortal="pre_iniciada"><Mentoria /></ProtectedRoute>} />
       <Route path="/agentes" element={<ProtectedRoute minPortal="pre_iniciada"><Agentes /></ProtectedRoute>} />
       <Route path="/salas" element={<ProtectedRoute minPortal="pre_iniciada"><Salas /></ProtectedRoute>} />
       <Route path="/salas/big5" element={<ProtectedRoute minPortal="pre_iniciada"><Big5 /></ProtectedRoute>} />
       <Route path="/salas/eneagrama" element={<ProtectedRoute minPortal="pre_iniciada"><Eneagrama /></ProtectedRoute>} />
       <Route path="/salas/oraculo-perguntas" element={<ProtectedRoute minPortal="pre_iniciada"><OraculoPerguntas /></ProtectedRoute>} />
-      <Route path="/aulas/:id" element={<ProtectedRoute minPortal="pre_iniciada"><AulaPage /></ProtectedRoute>} />
+      <Route path="/aulas/:id" element={<ProtectedRoute><AulaPage /></ProtectedRoute>} />
       <Route path="/leitura-oracular" element={<ProtectedRoute minPortal="iniciada"><LeituraOracular /></ProtectedRoute>} />
       <Route path="/minhas-clientes" element={<ProtectedRoute minPortal="pre_iniciada"><MinhasClientes /></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />

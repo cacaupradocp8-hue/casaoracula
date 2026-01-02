@@ -668,6 +668,39 @@ export type Database = {
         }
         Relationships: []
       }
+      matriculas: {
+        Row: {
+          ativa: boolean
+          created_at: string
+          curso_id: string
+          data_fim: string | null
+          data_inicio: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ativa?: boolean
+          created_at?: string
+          curso_id?: string
+          data_fim?: string | null
+          data_inicio?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ativa?: boolean
+          created_at?: string
+          curso_id?: string
+          data_fim?: string | null
+          data_inicio?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       oraculo_aplicacoes: {
         Row: {
           caso_id: string | null
@@ -1198,6 +1231,10 @@ export type Database = {
           _min_portal: Database["public"]["Enums"]["portal_type"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_matriculada: {
+        Args: { _curso_id?: string; _user_id: string }
         Returns: boolean
       }
       is_terapeuta_of_cliente: {
