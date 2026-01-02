@@ -1,9 +1,8 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, BookOpen, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2 } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck } from 'lucide-react';
 import { AdminUsersTab } from '@/components/admin/AdminUsersTab';
-import { AdminTravessiasTab } from '@/components/admin/AdminTravessiasTab';
 import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
 import { AdminMentoriaTab } from '@/components/admin/AdminMentoriaTab';
 import { AdminAgentesTab } from '@/components/admin/AdminAgentesTab';
@@ -12,6 +11,7 @@ import { AdminFerramentasTab } from '@/components/admin/AdminFerramentasTab';
 import { AdminSalasTab } from '@/components/admin/AdminSalasTab';
 import { AdminConteudosTab } from '@/components/admin/AdminConteudosTab';
 import { AdminVinculosTab } from '@/components/admin/AdminVinculosTab';
+import { AdminMatriculasTab } from '@/components/admin/AdminMatriculasTab';
 
 export default function Admin() {
   return (
@@ -30,9 +30,13 @@ export default function Admin() {
               <Users className="w-4 h-4" />
               Usuárias
             </TabsTrigger>
-            <TabsTrigger value="travessias" className="gap-2">
-              <BookOpen className="w-4 h-4" />
-              Portais
+            <TabsTrigger value="matriculas" className="gap-2">
+              <UserCheck className="w-4 h-4" />
+              Matrículas
+            </TabsTrigger>
+            <TabsTrigger value="conteudos" className="gap-2">
+              <GraduationCap className="w-4 h-4" />
+              Conteúdo
             </TabsTrigger>
             <TabsTrigger value="biblioteca" className="gap-2">
               <Library className="w-4 h-4" />
@@ -58,10 +62,6 @@ export default function Admin() {
               <DoorOpen className="w-4 h-4" />
               Salas
             </TabsTrigger>
-            <TabsTrigger value="conteudos" className="gap-2">
-              <GraduationCap className="w-4 h-4" />
-              Conteúdos
-            </TabsTrigger>
             <TabsTrigger value="vinculos" className="gap-2">
               <Link2 className="w-4 h-4" />
               Vínculos
@@ -72,8 +72,12 @@ export default function Admin() {
             <AdminUsersTab />
           </TabsContent>
 
-          <TabsContent value="travessias">
-            <AdminTravessiasTab />
+          <TabsContent value="matriculas">
+            <AdminMatriculasTab />
+          </TabsContent>
+
+          <TabsContent value="conteudos">
+            <AdminConteudosTab />
           </TabsContent>
 
           <TabsContent value="biblioteca">
@@ -98,10 +102,6 @@ export default function Admin() {
 
           <TabsContent value="salas">
             <AdminSalasTab />
-          </TabsContent>
-
-          <TabsContent value="conteudos">
-            <AdminConteudosTab />
           </TabsContent>
 
           <TabsContent value="vinculos">

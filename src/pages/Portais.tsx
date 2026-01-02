@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { BookOpen, Lock, Check, Play, ChevronRight, Loader2, AlertCircle } from 'lucide-react';
+import { BookOpen, Lock, Check, Play, Loader2, AlertCircle, GraduationCap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { canAccessFeature, PortalType } from '@/types/portal';
 
@@ -27,7 +27,7 @@ interface PortalProgress {
   completed: number;
 }
 
-export default function Travessias() {
+export default function Portais() {
   const navigate = useNavigate();
   const { user, canAccess } = useAuth();
   const [selectedPortal, setSelectedPortal] = useState<string | null>(null);
@@ -35,10 +35,38 @@ export default function Travessias() {
   const [progress, setProgress] = useState<Record<string, PortalProgress>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [nextAulas, setNextAulas] = useState<Record<string, string | null>>({});
+  const [isMatriculada, setIsMatriculada] = useState(false);
+  const [checkingMatricula, setCheckingMatricula] = useState(true);
 
   useEffect(() => {
-    fetchPortals();
+    if (user) {
+      checkMatricula();
+      fetchPortals();
+    }
   }, [user]);
+
+  const checkMatricula = async () => {
+    if (!user) return;
+    
+    setCheckingMatricula(true);
+    try {
+      const { data, error } = await supabase
+        .from('matriculas')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('curso_id', 'formacao_oracula')
+        .eq('ativa', true)
+        .maybeSingle();
+
+      if (!error) {
+        setIsMatriculada(!!data);
+      }
+    } catch (error) {
+      console.error('Error checking matricula:', error);
+    } finally {
+      setCheckingMatricula(false);
+    }
+  };
 
   const fetchPortals = async () => {
     setIsLoading(true);
@@ -104,12 +132,28 @@ export default function Travessias() {
     }
   };
 
-  const isUnlocked = (portal: Portal) => {
-    // Check if user has required portal level
+  // Check if portal is unlocked based on portal level AND sequential progress
+  const isUnlocked = (portal: Portal, index: number) => {
+    // Must have portal level access
     if (!canAccess(portal.portal_minimo)) {
-      return false;
+      return { unlocked: false, reason: 'nivel' as const };
     }
-    return true;
+    
+    // Must be matriculada to access any portal
+    if (!isMatriculada) {
+      return { unlocked: false, reason: 'matricula' as const };
+    }
+
+    // Sequential unlock: previous portal must be 100% complete
+    if (index > 0) {
+      const prevPortal = portals[index - 1];
+      const prevProgress = progress[prevPortal.id];
+      if (prevProgress && prevProgress.total > 0 && prevProgress.completed < prevProgress.total) {
+        return { unlocked: false, reason: 'sequencial' as const };
+      }
+    }
+    
+    return { unlocked: true, reason: null };
   };
 
   const handleContinue = (portalId: string) => {
@@ -119,7 +163,20 @@ export default function Travessias() {
     }
   };
 
-  if (isLoading) {
+  const getLockMessage = (reason: 'nivel' | 'matricula' | 'sequencial' | null, index: number) => {
+    switch (reason) {
+      case 'matricula':
+        return 'Disponível após matrícula. Entre em contato para iniciar sua jornada.';
+      case 'sequencial':
+        return `Complete o Portal ${index} para desbloquear este conteúdo.`;
+      case 'nivel':
+        return 'Este Portal será aberto no tempo certo da jornada.';
+      default:
+        return '';
+    }
+  };
+
+  if (isLoading || checkingMatricula) {
     return (
       <AppLayout>
         <div className="min-h-screen flex items-center justify-center">
@@ -138,6 +195,28 @@ export default function Travessias() {
           icon={<BookOpen className="w-5 h-5" />}
           className="mb-8"
         />
+
+        {/* Matricula Status Banner */}
+        {!isMatriculada && (
+          <Card className="mb-8 border-gold/30 bg-gold/5">
+            <CardContent className="py-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center shrink-0">
+                  <GraduationCap className="w-6 h-6 text-gold" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-foreground mb-1">
+                    Inicie sua jornada formativa
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Os portais estão disponíveis para alunas matriculadas. 
+                    Entre em contato para saber mais sobre a formação.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Intro Quote */}
         <div className="glass rounded-2xl p-8 mb-12 text-center">
@@ -158,9 +237,9 @@ export default function Travessias() {
           </Card>
         ) : (
           <div className="grid gap-6">
-            {portals.map((portal) => {
+            {portals.map((portal, index) => {
               const prog = progress[portal.id] || { total: 0, completed: 0 };
-              const unlocked = isUnlocked(portal);
+              const { unlocked, reason } = isUnlocked(portal, index);
               const progressPercent = prog.total > 0 ? (prog.completed / prog.total) * 100 : 0;
               const isComplete = prog.total > 0 && prog.completed === prog.total;
               const hasAulas = prog.total > 0;
@@ -290,9 +369,10 @@ export default function Travessias() {
                     )}
 
                     {!unlocked && (
-                      <p className="text-sm text-muted-foreground">
-                        Este Portal será aberto no tempo certo da jornada.
-                      </p>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Lock className="w-4 h-4 shrink-0" />
+                        <p>{getLockMessage(reason, index)}</p>
+                      </div>
                     )}
                   </CardContent>
                 </Card>

@@ -10,6 +10,7 @@ interface User {
   portal: PortalType;
   createdAt: Date;
   avatarUrl?: string;
+  isMatriculada?: boolean;
 }
 
 interface AuthContextType {
@@ -22,6 +23,7 @@ interface AuthContextType {
   canAccess: (requiredPortal: PortalType) => boolean;
   canCreateCase: (currentCaseCount: number) => boolean;
   refreshUserPortal: () => Promise<void>;
+  refreshMatricula: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -47,6 +49,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .eq('user_id', userId)
         .single();
 
+      // Check matricula
+      const { data: matricula } = await supabase
+        .from('matriculas')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('curso_id', 'formacao_oracula')
+        .eq('ativa', true)
+        .maybeSingle();
+
       if (profile) {
         setUser({
           id: userId,
@@ -55,6 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           portal: (role?.portal as PortalType) || 'visitante',
           createdAt: new Date(profile.created_at),
           avatarUrl: profile.avatar_url || undefined,
+          isMatriculada: !!matricula,
         });
       }
     } catch (error) {
@@ -74,6 +86,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     if (role && role.portal !== user.portal) {
       setUser(prev => prev ? { ...prev, portal: role.portal as PortalType } : null);
+    }
+  };
+
+  // Refresh matricula status from database
+  const refreshMatricula = async () => {
+    if (!user) return;
+    
+    const { data: matricula } = await supabase
+      .from('matriculas')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('curso_id', 'formacao_oracula')
+      .eq('ativa', true)
+      .maybeSingle();
+    
+    const isMatriculada = !!matricula;
+    if (user.isMatriculada !== isMatriculada) {
+      setUser(prev => prev ? { ...prev, isMatriculada } : null);
     }
   };
 
@@ -135,6 +165,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       supabase.removeChannel(channel);
     };
   }, [user?.id, user?.portal]);
+
+  // Real-time subscription to matriculas changes
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('user-matricula-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'matriculas',
+          filter: `user_id=eq.${user.id}`,
+        },
+        () => {
+          // Refresh matricula status when any change happens
+          setTimeout(() => {
+            refreshMatricula();
+          }, 0);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id]);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
@@ -214,6 +272,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       canAccess,
       canCreateCase,
       refreshUserPortal,
+      refreshMatricula,
     }}>
       {children}
     </AuthContext.Provider>
