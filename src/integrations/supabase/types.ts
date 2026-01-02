@@ -768,6 +768,35 @@ export type Database = {
         }
         Relationships: []
       }
+      portal_salas: {
+        Row: {
+          created_at: string
+          id: string
+          portal_type: Database["public"]["Enums"]["portal_type"]
+          sala_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          portal_type: Database["public"]["Enums"]["portal_type"]
+          sala_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          portal_type?: Database["public"]["Enums"]["portal_type"]
+          sala_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portal_salas_sala_id_fkey"
+            columns: ["sala_id"]
+            isOneToOne: false
+            referencedRelation: "salas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts_mentoria: {
         Row: {
           anexo_url: string | null

@@ -12,6 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
 type NivelSala = 'NIVEL_0' | 'NIVEL_1' | 'NIVEL_2' | 'NIVEL_3';
+type PortalType = 'visitante' | 'pre_iniciada' | 'iniciada' | 'admin';
 
 interface Sala {
   id: string;
@@ -34,6 +35,18 @@ interface Ferramenta {
   ordem: number;
   ativa: boolean;
 }
+
+interface PortalSala {
+  portal_type: PortalType;
+  sala_id: string;
+}
+
+const PORTAL_LABELS: Record<PortalType, string> = {
+  visitante: 'Visitante',
+  pre_iniciada: 'Pré-Iniciada',
+  iniciada: 'Iniciada ORÁCULA',
+  admin: 'Admin',
+};
 
 const NIVEL_HIERARCHY: Record<NivelSala, number> = {
   NIVEL_0: 0,
@@ -65,6 +78,7 @@ export default function Salas() {
   const { user } = useAuth();
   const [salas, setSalas] = useState<Sala[]>([]);
   const [ferramentas, setFerramentas] = useState<Ferramenta[]>([]);
+  const [portalSalas, setPortalSalas] = useState<PortalSala[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSala, setSelectedSala] = useState<Sala | null>(null);
   const [showBlockedDialog, setShowBlockedDialog] = useState(false);
@@ -77,11 +91,18 @@ export default function Salas() {
     return userNivelNum >= salaMinNivel;
   };
 
+  const getPortaisForSala = (salaId: string): PortalType[] => {
+    return portalSalas
+      .filter((ps) => ps.sala_id === salaId)
+      .map((ps) => ps.portal_type);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      const [salasRes, ferramentasRes] = await Promise.all([
+      const [salasRes, ferramentasRes, portalSalasRes] = await Promise.all([
         supabase.from('salas').select('*').eq('ativa', true).order('ordem'),
         supabase.from('sala_ferramentas').select('*').eq('ativa', true).order('ordem'),
+        supabase.from('portal_salas').select('portal_type, sala_id'),
       ]);
 
       if (salasRes.error) {
@@ -95,6 +116,12 @@ export default function Salas() {
         console.error(ferramentasRes.error);
       } else {
         setFerramentas(ferramentasRes.data as Ferramenta[]);
+      }
+
+      if (portalSalasRes.error) {
+        console.error(portalSalasRes.error);
+      } else {
+        setPortalSalas(portalSalasRes.data as PortalSala[]);
       }
 
       setLoading(false);
@@ -181,6 +208,19 @@ export default function Salas() {
                   <p className="text-sm text-muted-foreground line-clamp-2">
                     {isAccessible ? sala.texto_entrada : 'Sala bloqueada'}
                   </p>
+                  {/* Portais associados */}
+                  {getPortaisForSala(sala.id).length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-1">
+                      {getPortaisForSala(sala.id).map((portal) => (
+                        <span
+                          key={portal}
+                          className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary"
+                        >
+                          {PORTAL_LABELS[portal]}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             );
