@@ -21,6 +21,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   canAccess: (requiredPortal: PortalType) => boolean;
   canCreateCase: (currentCaseCount: number) => boolean;
+  refreshUserPortal: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -61,6 +62,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // Refresh user portal from database
+  const refreshUserPortal = async () => {
+    if (!user) return;
+    
+    const { data: role } = await supabase
+      .from('user_roles')
+      .select('portal')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    
+    if (role && role.portal !== user.portal) {
+      setUser(prev => prev ? { ...prev, portal: role.portal as PortalType } : null);
+    }
+  };
+
   useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -91,6 +107,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Real-time subscription to user_roles changes
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('user-role-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'user_roles',
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          const newPortal = payload.new.portal as PortalType;
+          if (newPortal && newPortal !== user.portal) {
+            setUser(prev => prev ? { ...prev, portal: newPortal } : null);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id, user?.portal]);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
@@ -169,6 +213,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logout,
       canAccess,
       canCreateCase,
+      refreshUserPortal,
     }}>
       {children}
     </AuthContext.Provider>
