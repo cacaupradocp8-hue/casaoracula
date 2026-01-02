@@ -214,6 +214,25 @@ export const big5PerguntaSchema = z.object({
   ordem: z.number().int().min(0),
 });
 
+// ===== Caso Schema =====
+export const casoSchema = z.object({
+  codinome: z.string()
+    .trim()
+    .min(1, 'Codinome é obrigatório')
+    .max(100, 'Codinome muito longo (máx. 100 caracteres)'),
+  tema_central: z.string()
+    .trim()
+    .min(1, 'Tema central é obrigatório')
+    .max(500, 'Tema muito longo (máx. 500 caracteres)'),
+  tags: z.string()
+    .max(500, 'Tags muito longas')
+    .optional(),
+  historico_breve: z.string()
+    .max(2000, 'Histórico muito longo (máx. 2000 caracteres)')
+    .optional()
+    .nullable(),
+});
+
 // ===== Leitura Oracular Schemas =====
 export const leituraOracularSchema = z.object({
   contexto: z.string()
@@ -251,6 +270,7 @@ export type AulaInput = z.infer<typeof aulaSchema>;
 export type BibliotecaItemInput = z.infer<typeof bibliotecaItemSchema>;
 export type OraculoPerguntaInput = z.infer<typeof oraculoPerguntaSchema>;
 export type Big5PerguntaInput = z.infer<typeof big5PerguntaSchema>;
+export type CasoInput = z.infer<typeof casoSchema>;
 export type LeituraOracularInput = z.infer<typeof leituraOracularSchema>;
 
 // ===== Validation Helper =====

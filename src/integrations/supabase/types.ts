@@ -235,6 +235,50 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "fk_big5_caso"
+            columns: ["caso_id"]
+            isOneToOne: false
+            referencedRelation: "casos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      casos: {
+        Row: {
+          cliente_id: string
+          codinome: string
+          created_at: string
+          historico_breve: string | null
+          id: string
+          tags: string[] | null
+          tema_central: string
+          terapeuta_id: string
+          updated_at: string
+        }
+        Insert: {
+          cliente_id: string
+          codinome: string
+          created_at?: string
+          historico_breve?: string | null
+          id?: string
+          tags?: string[] | null
+          tema_central: string
+          terapeuta_id: string
+          updated_at?: string
+        }
+        Update: {
+          cliente_id?: string
+          codinome?: string
+          created_at?: string
+          historico_breve?: string | null
+          id?: string
+          tags?: string[] | null
+          tema_central?: string
+          terapeuta_id?: string
+          updated_at?: string
+        }
         Relationships: []
       }
       conteudo_aulas: {
@@ -413,7 +457,15 @@ export type Database = {
           user_id?: string
           virtude?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_eneagrama_caso"
+            columns: ["caso_id"]
+            isOneToOne: false
+            referencedRelation: "casos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       eneagrama_tipos: {
         Row: {
@@ -1059,6 +1111,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      can_create_caso: {
+        Args: { _cliente_id: string; _terapeuta_id: string }
+        Returns: boolean
+      }
       get_user_nivel_sala: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["nivel_sala"]
@@ -1076,6 +1132,10 @@ export type Database = {
       }
       is_terapeuta_of_cliente: {
         Args: { _cliente_id: string; _terapeuta_id: string }
+        Returns: boolean
+      }
+      registro_pertence_terapeuta: {
+        Args: { _caso_id: string; _terapeuta_id: string; _user_id: string }
         Returns: boolean
       }
     }
