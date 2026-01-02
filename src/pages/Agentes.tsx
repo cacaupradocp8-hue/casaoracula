@@ -3,12 +3,14 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Bot, MessageSquare, Send, ArrowLeft, Loader2 } from 'lucide-react';
+import { Bot, MessageSquare, Send, ArrowLeft, Loader2, Lock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/contexts/AuthContext';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { canAccessFeature, PortalType } from '@/types/portal';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface Agente {
   id: string;
@@ -16,6 +18,8 @@ interface Agente {
   descricao: string;
   instrucoes_base: string;
   icone: string;
+  portal_minimo: PortalType;
+  status: 'ativo' | 'inativo';
 }
 
 interface Mensagem {
@@ -30,6 +34,13 @@ interface Conversa {
   titulo: string;
   agente_id: string;
 }
+
+const PORTAL_LABELS: Record<PortalType, string> = {
+  visitante: 'Visitante',
+  pre_iniciada: 'Pré-Iniciada',
+  iniciada: 'Iniciada ORÁCULA',
+  admin: 'Admin',
+};
 
 export default function Agentes() {
   const [agentes, setAgentes] = useState<Agente[]>([]);
@@ -51,17 +62,33 @@ export default function Agentes() {
     const { data, error } = await supabase
       .from('agentes')
       .select('*')
+      .eq('status', 'ativo')
       .order('nome');
 
     if (error) {
       toast({ title: 'Erro ao carregar agentes', variant: 'destructive' });
     } else {
-      setAgentes(data || []);
+      setAgentes((data || []) as Agente[]);
     }
     setIsLoading(false);
   };
 
+  const canAccessAgente = (agente: Agente): boolean => {
+    if (!user) return false;
+    return canAccessFeature(user.portal, agente.portal_minimo);
+  };
+
   const openAgente = async (agente: Agente) => {
+    // Validação de acesso no momento de abrir
+    if (!canAccessAgente(agente)) {
+      toast({
+        title: 'Acesso restrito',
+        description: `Este agente requer nível ${PORTAL_LABELS[agente.portal_minimo]} ou superior.`,
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setSelectedAgente(agente);
     
     // Buscar conversas existentes
@@ -258,22 +285,59 @@ export default function Agentes() {
           </Card>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {agentes.map(agente => (
-              <Card key={agente.id} className="glass hover:border-gold/50 transition-colors cursor-pointer" onClick={() => openAgente(agente)}>
-                <CardHeader>
-                  <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mb-2">
-                    <Bot className="w-6 h-6 text-gold" />
-                  </div>
-                  <CardTitle className="text-lg">{agente.nome}</CardTitle>
-                  <CardDescription>{agente.descricao}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button variant="outline" className="w-full gap-2">
-                    <MessageSquare className="w-4 h-4" /> Abrir Chat
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+            {agentes.map(agente => {
+              const hasAccess = canAccessAgente(agente);
+              
+              return (
+                <Tooltip key={agente.id}>
+                  <TooltipTrigger asChild>
+                    <Card
+                      className={`glass transition-colors ${
+                        hasAccess
+                          ? 'hover:border-gold/50 cursor-pointer'
+                          : 'opacity-60 cursor-not-allowed'
+                      }`}
+                      onClick={() => hasAccess && openAgente(agente)}
+                    >
+                      <CardHeader>
+                        <div className="relative w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mb-2">
+                          <Bot className="w-6 h-6 text-gold" />
+                          {!hasAccess && (
+                            <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-destructive flex items-center justify-center">
+                              <Lock className="w-3 h-3 text-destructive-foreground" />
+                            </div>
+                          )}
+                        </div>
+                        <CardTitle className="text-lg">{agente.nome}</CardTitle>
+                        <CardDescription>{agente.descricao}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Button
+                          variant={hasAccess ? 'outline' : 'secondary'}
+                          className="w-full gap-2"
+                          disabled={!hasAccess}
+                        >
+                          {hasAccess ? (
+                            <>
+                              <MessageSquare className="w-4 h-4" /> Abrir Chat
+                            </>
+                          ) : (
+                            <>
+                              <Lock className="w-4 h-4" /> Bloqueado
+                            </>
+                          )}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </TooltipTrigger>
+                  {!hasAccess && (
+                    <TooltipContent>
+                      <p>Requer nível {PORTAL_LABELS[agente.portal_minimo]} ou superior</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              );
+            })}
           </div>
         )}
       </div>
