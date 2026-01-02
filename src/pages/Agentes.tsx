@@ -11,6 +11,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { canAccessFeature, PortalType } from '@/types/portal';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { mensagemSchema, getValidationError } from '@/lib/validations';
 
 interface Agente {
   id: string;
@@ -135,14 +136,21 @@ export default function Agentes() {
   };
 
   const sendMessage = async () => {
-    if (!input.trim() || !selectedConversa || !selectedAgente) return;
+    if (!selectedConversa || !selectedAgente) return;
+
+    const validation = mensagemSchema.safeParse({ content: input });
+    const validationError = getValidationError(validation);
+    if (validationError) {
+      toast({ title: 'Erro de validação', description: validationError, variant: 'destructive' });
+      return;
+    }
 
     const userMessage = input.trim();
     setInput('');
     setSending(true);
 
     // Adicionar mensagem do usuário
-    const { data: userMsgData } = await supabase
+    const { data: userMsgData, error: insertError } = await supabase
       .from('agente_mensagens')
       .insert({
         conversa_id: selectedConversa.id,
@@ -151,6 +159,12 @@ export default function Agentes() {
       })
       .select()
       .single();
+
+    if (insertError) {
+      toast({ title: 'Erro ao enviar mensagem', description: insertError.message, variant: 'destructive' });
+      setSending(false);
+      return;
+    }
 
     if (userMsgData) {
       setMensagens(prev => [...prev, userMsgData as Mensagem]);

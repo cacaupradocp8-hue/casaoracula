@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { postMentoriaSchema, getValidationError } from '@/lib/validations';
 
 type PostTipo = 'aviso' | 'evento' | 'supervisao';
 type PostStatus = 'rascunho' | 'publicado' | 'arquivado';
@@ -62,12 +63,23 @@ export function AdminMentoriaTab() {
   };
 
   const savePost = async () => {
-    const payload = { ...form, data_evento: form.data_evento || null, link_evento: form.link_evento || null };
-    if (editingPost) {
-      await supabase.from('posts_mentoria').update(payload).eq('id', editingPost.id);
-    } else {
-      await supabase.from('posts_mentoria').insert(payload);
+    const validation = postMentoriaSchema.safeParse(form);
+    const error = getValidationError(validation);
+    if (error) {
+      toast({ title: 'Erro de validação', description: error, variant: 'destructive' });
+      return;
     }
+
+    const payload = { ...form, data_evento: form.data_evento || null, link_evento: form.link_evento || null };
+    const { error: dbError } = editingPost 
+      ? await supabase.from('posts_mentoria').update(payload).eq('id', editingPost.id)
+      : await supabase.from('posts_mentoria').insert(payload);
+    
+    if (dbError) {
+      toast({ title: 'Erro ao salvar', description: dbError.message, variant: 'destructive' });
+      return;
+    }
+    
     toast({ title: 'Salvo!' });
     setDialogOpen(false);
     fetchPosts();
