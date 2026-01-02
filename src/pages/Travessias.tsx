@@ -177,76 +177,71 @@ export default function Travessias() {
                     selectedPortal === portal.id ? null : portal.id
                   )}
                 >
-                  {/* Cover Image */}
-                  {portal.capa_url && (
-                    <div className="relative h-40 md:h-48 overflow-hidden">
-                      <img 
-                        src={portal.capa_url} 
-                        alt={portal.titulo}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  {/* Cover Header */}
+                  <div 
+                    className="relative h-40 md:h-48 overflow-hidden"
+                    style={portal.capa_url ? {
+                      backgroundImage: `url(${portal.capa_url})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center'
+                    } : undefined}
+                  >
+                    {/* Background image with hover zoom effect */}
+                    {portal.capa_url && (
+                      <div 
+                        className="absolute inset-0 transition-transform duration-500 group-hover:scale-110"
+                        style={{
+                          backgroundImage: `url(${portal.capa_url})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center'
+                        }}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
-                      <div className="absolute top-4 left-4">
-                        <div className={cn(
-                          'w-10 h-10 rounded-full flex items-center justify-center text-lg font-display font-bold',
-                          unlocked 
-                            ? isComplete 
-                              ? 'bg-gold text-primary-foreground' 
-                              : 'bg-background/80 text-gold border border-gold/50'
-                            : 'bg-muted text-muted-foreground'
-                        )}>
-                          {isComplete ? <Check className="w-5 h-5" /> : portal.ordem}
-                        </div>
+                    )}
+                    
+                    {/* Fallback gradient when no cover image */}
+                    {!portal.capa_url && (
+                      <div className="absolute inset-0 bg-gradient-to-br from-gold/20 via-primary/30 to-secondary/40" />
+                    )}
+                    
+                    {/* Dark overlay gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-card via-card/70 to-transparent" />
+                    
+                    {/* Lock icon for locked portals */}
+                    {!unlocked && (
+                      <div className="absolute top-4 right-4 z-10">
+                        <Lock className="w-5 h-5 text-muted-foreground drop-shadow-lg" />
                       </div>
-                      {!unlocked && (
-                        <div className="absolute top-4 right-4">
-                          <Lock className="w-5 h-5 text-muted-foreground" />
-                        </div>
+                    )}
+                    
+                    {/* Text content over the cover */}
+                    <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 z-10">
+                      <p className="text-xs uppercase tracking-widest text-gold mb-1 drop-shadow-lg">
+                        Portal {portal.ordem}
+                      </p>
+                      <h3 className="text-xl md:text-2xl font-display font-semibold text-foreground drop-shadow-lg">
+                        {portal.titulo}
+                      </h3>
+                      {portal.subtitulo && (
+                        <p className="text-sm text-foreground/80 mt-1 drop-shadow-md">
+                          {portal.subtitulo}
+                        </p>
                       )}
                     </div>
-                  )}
-
-                  <CardHeader className={cn("pb-4", portal.capa_url && "pt-4")}>
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-4">
-                        {!portal.capa_url && (
-                          <div className={cn(
-                            'w-14 h-14 rounded-full flex items-center justify-center text-2xl font-display font-bold transition-colors',
-                            unlocked 
-                              ? isComplete 
-                                ? 'bg-gold text-primary-foreground' 
-                                : 'bg-gold/20 text-gold'
-                              : 'bg-muted text-muted-foreground'
-                          )}>
-                            {isComplete ? <Check className="w-6 h-6" /> : portal.ordem}
-                          </div>
-                        )}
-                        <div>
-                          {!portal.capa_url && (
-                            <p className="text-xs uppercase tracking-widest text-gold mb-1">
-                              Portal {portal.ordem}
-                            </p>
-                          )}
-                          <CardTitle className="text-xl md:text-2xl font-display">
-                            {portal.titulo}
-                          </CardTitle>
-                          {portal.subtitulo && (
-                            <CardDescription className="mt-1">
-                              {portal.subtitulo}
-                            </CardDescription>
-                          )}
-                        </div>
+                    
+                    {/* Completion badge */}
+                    <div className="absolute top-4 left-4 z-10">
+                      <div className={cn(
+                        'w-10 h-10 rounded-full flex items-center justify-center text-lg font-display font-bold shadow-lg',
+                        unlocked 
+                          ? isComplete 
+                            ? 'bg-gold text-primary-foreground' 
+                            : 'bg-background/90 text-gold border border-gold/50'
+                          : 'bg-muted/90 text-muted-foreground'
+                      )}>
+                        {isComplete ? <Check className="w-5 h-5" /> : portal.ordem}
                       </div>
-                      {!portal.capa_url && !unlocked ? (
-                        <Lock className="w-5 h-5 text-muted-foreground" />
-                      ) : !portal.capa_url ? (
-                        <ChevronRight className={cn(
-                          'w-5 h-5 text-muted-foreground transition-transform',
-                          selectedPortal === portal.id && 'rotate-90'
-                        )} />
-                      ) : null}
                     </div>
-                  </CardHeader>
+                  </div>
 
                   <CardContent>
                     {unlocked && (
