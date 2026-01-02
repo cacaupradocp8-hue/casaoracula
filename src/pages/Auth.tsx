@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react';
+import { loginSchema, signupSchema, forgotPasswordSchema, getValidationError } from '@/lib/validations';
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +30,14 @@ export default function Auth() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    const validation = loginSchema.safeParse({ email: loginEmail, password: loginPassword });
+    const error = getValidationError(validation);
+    if (error) {
+      toast({ title: 'Erro de validação', description: error, variant: 'destructive' });
+      return;
+    }
+
     setIsLoading(true);
 
     const result = await login(loginEmail, loginPassword);
@@ -52,17 +61,19 @@ export default function Auth() {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    if (!signupName.trim()) {
-      toast({
-        title: 'Nome obrigatório',
-        description: 'Por favor, informe seu nome.',
-        variant: 'destructive',
-      });
-      setIsLoading(false);
+    
+    const validation = signupSchema.safeParse({ 
+      name: signupName, 
+      email: signupEmail, 
+      password: signupPassword 
+    });
+    const error = getValidationError(validation);
+    if (error) {
+      toast({ title: 'Erro de validação', description: error, variant: 'destructive' });
       return;
     }
+
+    setIsLoading(true);
 
     const result = await signup(signupEmail, signupPassword, signupName);
     
@@ -86,12 +97,10 @@ export default function Auth() {
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!forgotPasswordEmail.trim()) {
-      toast({
-        title: 'Email obrigatório',
-        description: 'Por favor, informe seu email.',
-        variant: 'destructive',
-      });
+    const validation = forgotPasswordSchema.safeParse({ email: forgotPasswordEmail });
+    const error = getValidationError(validation);
+    if (error) {
+      toast({ title: 'Erro de validação', description: error, variant: 'destructive' });
       return;
     }
 

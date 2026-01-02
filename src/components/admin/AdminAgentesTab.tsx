@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { agenteSchema, getValidationError } from '@/lib/validations';
 
 type AgenteStatus = 'ativo' | 'inativo';
 type PortalType = 'visitante' | 'pre_iniciada' | 'iniciada' | 'admin';
@@ -40,9 +41,9 @@ export function AdminAgentesTab() {
   const [form, setForm] = useState<FormState>({ nome: '', descricao: '', instrucoes_base: '', status: 'ativo', portal_minimo: 'pre_iniciada' });
   const { toast } = useToast();
 
-  useEffect(() => { fetch(); }, []);
+  useEffect(() => { fetchAgentes(); }, []);
 
-  const fetch = async () => {
+  const fetchAgentes = async () => {
     const { data } = await supabase.from('agentes').select('*').order('nome');
     setAgentes((data || []) as Agente[]);
     setIsLoading(false);
@@ -55,17 +56,31 @@ export function AdminAgentesTab() {
   };
 
   const save = async () => {
-    if (editing) await supabase.from('agentes').update(form).eq('id', editing.id);
-    else await supabase.from('agentes').insert(form);
+    const validation = agenteSchema.safeParse(form);
+    const error = getValidationError(validation);
+    if (error) {
+      toast({ title: 'Erro de validação', description: error, variant: 'destructive' });
+      return;
+    }
+
+    const { error: dbError } = editing 
+      ? await supabase.from('agentes').update(form).eq('id', editing.id)
+      : await supabase.from('agentes').insert(form);
+    
+    if (dbError) {
+      toast({ title: 'Erro ao salvar', description: dbError.message, variant: 'destructive' });
+      return;
+    }
+    
     toast({ title: 'Salvo!' });
     setDialogOpen(false);
-    fetch();
+    fetchAgentes();
   };
 
   const remove = async (id: string) => {
     await supabase.from('agentes').delete().eq('id', id);
     toast({ title: 'Excluído!' });
-    fetch();
+    fetchAgentes();
   };
 
   if (isLoading) return <div className="flex justify-center py-8"><Loader2 className="w-6 h-6 animate-spin" /></div>;

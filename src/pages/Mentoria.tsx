@@ -20,6 +20,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
+import { supervisionSchema, getValidationError } from '@/lib/validations';
 
 interface PostMentoria {
   id: string;
@@ -65,12 +66,14 @@ export default function Mentoria() {
   };
 
   const submitSupervision = async () => {
-    if (!supervisionForm.titulo || !supervisionForm.texto) {
-      toast({ title: 'Preencha todos os campos', variant: 'destructive' });
+    const validation = supervisionSchema.safeParse(supervisionForm);
+    const validationError = getValidationError(validation);
+    if (validationError) {
+      toast({ title: 'Erro de validação', description: validationError, variant: 'destructive' });
       return;
     }
 
-    const { error } = await supabase.from('posts_mentoria').insert({
+    const { error: dbError } = await supabase.from('posts_mentoria').insert({
       tipo: 'supervisao',
       titulo: supervisionForm.titulo,
       texto: supervisionForm.texto,
@@ -78,8 +81,8 @@ export default function Mentoria() {
       created_by: user?.id,
     });
 
-    if (error) {
-      toast({ title: 'Erro ao enviar', description: error.message, variant: 'destructive' });
+    if (dbError) {
+      toast({ title: 'Erro ao enviar', description: dbError.message, variant: 'destructive' });
     } else {
       toast({ title: 'Supervisão enviada para análise' });
       setDialogOpen(false);
