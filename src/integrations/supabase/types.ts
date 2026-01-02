@@ -291,6 +291,7 @@ export type Database = {
           ordem: number
           pdf_url: string | null
           portal_minimo: Database["public"]["Enums"]["portal_type"]
+          publicado: boolean
           texto_aula: string | null
           titulo: string
           travessia_id: string
@@ -306,6 +307,7 @@ export type Database = {
           ordem?: number
           pdf_url?: string | null
           portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          publicado?: boolean
           texto_aula?: string | null
           titulo: string
           travessia_id: string
@@ -321,6 +323,7 @@ export type Database = {
           ordem?: number
           pdf_url?: string | null
           portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          publicado?: boolean
           texto_aula?: string | null
           titulo?: string
           travessia_id?: string
@@ -339,32 +342,41 @@ export type Database = {
       }
       conteudo_travessias: {
         Row: {
+          capa_url: string | null
           created_at: string
           descricao: string
           id: string
           ordem: number
           portal_minimo: Database["public"]["Enums"]["portal_type"]
+          publicado: boolean
           sala_id: string | null
+          subtitulo: string | null
           titulo: string
           updated_at: string
         }
         Insert: {
+          capa_url?: string | null
           created_at?: string
           descricao?: string
           id?: string
           ordem?: number
           portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          publicado?: boolean
           sala_id?: string | null
+          subtitulo?: string | null
           titulo: string
           updated_at?: string
         }
         Update: {
+          capa_url?: string | null
           created_at?: string
           descricao?: string
           id?: string
           ordem?: number
           portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          publicado?: boolean
           sala_id?: string | null
+          subtitulo?: string | null
           titulo?: string
           updated_at?: string
         }

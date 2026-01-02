@@ -22,10 +22,13 @@ interface Sala {
 interface Travessia {
   id: string;
   titulo: string;
+  subtitulo: string;
   descricao: string;
   ordem: number;
   portal_minimo: PortalType;
   sala_id: string | null;
+  capa_url: string | null;
+  publicado: boolean;
 }
 
 interface Aula {
@@ -40,6 +43,7 @@ interface Aula {
   pdf_url: string | null;
   materiais_url: string | null;
   portal_minimo: PortalType;
+  publicado: boolean;
 }
 
 const PORTAL_HIERARCHY: Record<PortalType, number> = {
@@ -106,10 +110,10 @@ export default function Formacao() {
   const fetchData = async () => {
     setLoading(true);
     
-    // Fetch salas and travessias in parallel
+    // Fetch salas and travessias in parallel (only published)
     const [salasResult, travessiasResult] = await Promise.all([
       supabase.from('salas').select('id, nome_exibicao, nivel_minimo').eq('ativa', true),
-      supabase.from('conteudo_travessias').select('*').order('ordem', { ascending: true }),
+      supabase.from('conteudo_travessias').select('*').eq('publicado', true).order('ordem', { ascending: true }),
     ]);
 
     if (salasResult.error) {
@@ -119,9 +123,15 @@ export default function Formacao() {
     }
 
     if (travessiasResult.error) {
-      console.error('Erro ao carregar travessias:', travessiasResult.error);
+      console.error('Erro ao carregar portais:', travessiasResult.error);
     } else {
-      setTravessias(travessiasResult.data || []);
+      const mapped = (travessiasResult.data || []).map((item: any) => ({
+        ...item,
+        subtitulo: item.subtitulo || '',
+        capa_url: item.capa_url || null,
+        publicado: item.publicado ?? true,
+      }));
+      setTravessias(mapped);
     }
     
     setLoading(false);
@@ -132,12 +142,17 @@ export default function Formacao() {
       .from('conteudo_aulas')
       .select('*')
       .eq('travessia_id', travessiaId)
+      .eq('publicado', true)
       .order('ordem', { ascending: true });
 
     if (error) {
       console.error('Erro ao carregar aulas:', error);
     } else {
-      setAulas((prev) => ({ ...prev, [travessiaId]: data || [] }));
+      const mapped = (data || []).map((item: any) => ({
+        ...item,
+        publicado: item.publicado ?? true,
+      }));
+      setAulas((prev) => ({ ...prev, [travessiaId]: mapped }));
     }
   };
 
