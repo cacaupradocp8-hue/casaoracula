@@ -32,7 +32,7 @@ export default function Admin() {
             </TabsTrigger>
             <TabsTrigger value="travessias" className="gap-2">
               <BookOpen className="w-4 h-4" />
-              Travessias
+              Portais
             </TabsTrigger>
             <TabsTrigger value="biblioteca" className="gap-2">
               <Library className="w-4 h-4" />

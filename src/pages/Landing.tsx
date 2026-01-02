@@ -35,7 +35,7 @@ export default function Landing() {
           <p>
             Aqui, a técnica não substitui a escuta.
             O símbolo não é ornamento — é linguagem.
-            E a travessia não é metáfora — é prática.
+            E o portal não é metáfora — é prática.
           </p>
           <p>
             Você entra para aprender a ler narrativas profundas,

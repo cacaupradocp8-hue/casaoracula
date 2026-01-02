@@ -26,7 +26,7 @@ export default function Dashboard() {
 
   const quickActions: { title: string; description: string; icon: typeof BookOpen; path: string; minPortal: PortalType }[] = [
     {
-      title: 'Travessias',
+      title: 'Portais',
       description: 'Formação simbólica em 4 jornadas',
       icon: BookOpen,
       path: '/travessias',

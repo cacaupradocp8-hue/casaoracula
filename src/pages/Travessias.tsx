@@ -31,7 +31,7 @@ export default function Travessias() {
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20">
         <SectionHeader
-          title="Sala das Travessias"
+          title="Sala dos Portais"
           subtitle="Sua formação simbólica em 4 jornadas transformadoras"
           icon={<BookOpen className="w-5 h-5" />}
           className="mb-8"
@@ -40,10 +40,10 @@ export default function Travessias() {
         {/* Intro Quote */}
         <div className="glass rounded-2xl p-8 mb-12 text-center">
           <blockquote className="font-display text-xl md:text-2xl italic text-foreground/90 mb-4">
-            "Toda travessia começa quando o mundo conhecido já não oferece respostas."
+            "Todo portal se abre quando o mundo conhecido já não oferece respostas."
           </blockquote>
           <p className="text-sm text-muted-foreground">
-            Complete cada travessia para desbloquear a próxima. Cada jornada inclui aulas, 
+            Complete cada portal para desbloquear o próximo. Cada jornada inclui aulas, 
             exercícios reflexivos e um rito simbólico de fechamento.
           </p>
         </div>
@@ -83,7 +83,7 @@ export default function Travessias() {
                       </div>
                       <div>
                         <p className="text-xs uppercase tracking-widest text-gold mb-1">
-                          Travessia {travessia.number}
+                          Portal {travessia.number}
                         </p>
                         <CardTitle className="text-xl md:text-2xl font-display">
                           {travessia.title}
@@ -134,7 +134,7 @@ export default function Travessias() {
 
                           <Button variant="gold" className="w-full gap-2">
                             <Play className="w-4 h-4" />
-                            {prog.completed === 0 ? 'Iniciar Travessia' : 'Continuar'}
+                            {prog.completed === 0 ? 'Iniciar Portal' : 'Continuar'}
                           </Button>
                         </div>
                       )}
@@ -143,7 +143,7 @@ export default function Travessias() {
 
                   {!unlocked && (
                     <p className="text-sm text-muted-foreground">
-                      Complete a Travessia {travessia.number - 1} para desbloquear.
+                      Complete o Portal {travessia.number - 1} para desbloquear.
                     </p>
                   )}
                 </CardContent>

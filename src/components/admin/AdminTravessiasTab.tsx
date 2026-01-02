@@ -294,11 +294,11 @@ export function AdminTravessiasTab() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <p className="text-muted-foreground">
-          Gerencie as 4 Travessias formativas e suas aulas
+          Gerencie os 4 Portais formativos e suas aulas
         </p>
         <Button onClick={() => openTravessiaDialog()} disabled={travessias.length >= 4}>
           <Plus className="w-4 h-4 mr-2" />
-          Nova Travessia
+          Novo Portal
         </Button>
       </div>
 
@@ -306,10 +306,10 @@ export function AdminTravessiasTab() {
         <Card className="text-center py-12">
           <CardContent>
             <BookOpen className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-            <p className="text-muted-foreground mb-4">Nenhuma travessia cadastrada</p>
+            <p className="text-muted-foreground mb-4">Nenhum portal cadastrado</p>
             <Button onClick={() => openTravessiaDialog()}>
               <Plus className="w-4 h-4 mr-2" />
-              Criar primeira Travessia
+              Criar primeiro Portal
             </Button>
           </CardContent>
         </Card>
@@ -377,7 +377,7 @@ export function AdminTravessiasTab() {
 
                     {lessons[travessia.id]?.length === 0 && (
                       <p className="text-sm text-muted-foreground text-center py-4">
-                        Nenhuma aula cadastrada nesta travessia
+                        Nenhuma aula cadastrada neste portal
                       </p>
                     )}
 
@@ -427,12 +427,12 @@ export function AdminTravessiasTab() {
         </div>
       )}
 
-      {/* Travessia Dialog */}
+      {/* Portal Dialog */}
       <Dialog open={travessiaDialogOpen} onOpenChange={setTravessiaDialogOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>
-              {editingTravessia ? 'Editar Travessia' : 'Nova Travessia'}
+              {editingTravessia ? 'Editar Portal' : 'Novo Portal'}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -469,7 +469,7 @@ export function AdminTravessiasTab() {
               <Textarea
                 value={travessiaForm.description}
                 onChange={(e) => setTravessiaForm(prev => ({ ...prev, description: e.target.value }))}
-                placeholder="Descrição da travessia..."
+                placeholder="Descrição do portal..."
                 rows={3}
               />
             </div>
