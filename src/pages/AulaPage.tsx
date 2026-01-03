@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -252,7 +253,9 @@ export default function AulaPage() {
             <CardContent className="pt-6">
               <div 
                 className="prose prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ __html: aula.texto_aula.replace(/\n/g, '<br/>') }}
+                dangerouslySetInnerHTML={{ 
+                  __html: DOMPurify.sanitize(aula.texto_aula.replace(/\n/g, '<br/>')) 
+                }}
               />
             </CardContent>
           </Card>
