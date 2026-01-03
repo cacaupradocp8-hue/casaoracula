@@ -319,12 +319,12 @@ export default function Eneagrama() {
             </CardHeader>
             <CardContent>
               {tipoPrincipal ? (
-                <Select value={asa} onValueChange={setAsa}>
+                <Select value={asa} onValueChange={(val) => setAsa(val === "none" ? "" : val)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione a asa" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Nenhuma</SelectItem>
+                    <SelectItem value="none">Nenhuma</SelectItem>
                     {getAsasDisponiveis().map(a => {
                       const tipoAsa = tipos.find(t => t.numero === a);
                       return (
