@@ -7,6 +7,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { useTextModels } from '@/hooks/useTextModel';
 
 interface LockedContentModalProps {
   open: boolean;
@@ -15,22 +16,31 @@ interface LockedContentModalProps {
   description?: string;
 }
 
-const WHATSAPP_NUMBER = '5511999999999'; // Configure com número real
-const WHATSAPP_MESSAGE = encodeURIComponent('Olá! Tenho interesse em me matricular na formação da Casa ORÁCULA.');
-const MATRICULA_URL = 'https://rockty.com/formacao-oracula'; // Configure com URL real
-
 export function LockedContentModal({
   open,
   onOpenChange,
-  title = 'Conteúdo exclusivo para matriculadas',
-  description = 'Este conteúdo faz parte da formação completa. Para acessar, você precisa estar matriculada na jornada formativa da Casa ORÁCULA.',
+  title,
+  description,
 }: LockedContentModalProps) {
+  const { getText } = useTextModels();
+
+  const matriculaUrl = getText('cta_matricula_url', 'https://rockty.com/formacao-oracula');
+  const whatsappNumero = getText('cta_whatsapp_numero', '5511999999999');
+  const whatsappMensagem = getText('cta_whatsapp_mensagem', 'Olá! Tenho interesse em me matricular na formação da Casa ORÁCULA.');
+  
+  const modalTitle = title || getText('modal_bloqueio_titulo', 'Conteúdo exclusivo para matriculadas');
+  const modalDescription = description || getText('modal_bloqueio_descricao', 'Este conteúdo faz parte da formação completa. Para acessar, você precisa estar matriculada na jornada formativa da Casa ORÁCULA.');
+  const botaoMatricula = getText('modal_bloqueio_botao_matricula', 'Quero me matricular');
+  const botaoWhatsapp = getText('modal_bloqueio_botao_whatsapp', 'Falar no WhatsApp');
+  const rodape = getText('modal_bloqueio_rodape', 'Dúvidas? Entre em contato e converse conosco sobre a formação.');
+
   const handleMatricula = () => {
-    window.open(MATRICULA_URL, '_blank');
+    window.open(matriculaUrl, '_blank');
   };
 
   const handleWhatsApp = () => {
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`, '_blank');
+    const encodedMessage = encodeURIComponent(whatsappMensagem);
+    window.open(`https://wa.me/${whatsappNumero}?text=${encodedMessage}`, '_blank');
   };
 
   return (
@@ -40,9 +50,9 @@ export function LockedContentModal({
           <div className="mx-auto w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mb-4">
             <Lock className="w-8 h-8 text-gold" />
           </div>
-          <DialogTitle className="text-xl font-display">{title}</DialogTitle>
+          <DialogTitle className="text-xl font-display">{modalTitle}</DialogTitle>
           <DialogDescription className="text-center mt-2">
-            {description}
+            {modalDescription}
           </DialogDescription>
         </DialogHeader>
 
@@ -53,7 +63,7 @@ export function LockedContentModal({
             onClick={handleMatricula}
           >
             <ExternalLink className="w-4 h-4" />
-            Quero me matricular
+            {botaoMatricula}
           </Button>
           
           <Button 
@@ -62,12 +72,12 @@ export function LockedContentModal({
             onClick={handleWhatsApp}
           >
             <MessageCircle className="w-4 h-4" />
-            Falar no WhatsApp
+            {botaoWhatsapp}
           </Button>
         </div>
 
         <p className="text-xs text-muted-foreground text-center mt-4">
-          Dúvidas? Entre em contato e converse conosco sobre a formação.
+          {rodape}
         </p>
       </DialogContent>
     </Dialog>
