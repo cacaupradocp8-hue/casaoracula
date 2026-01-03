@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
+import { LockedContentModal } from '@/components/shared/LockedContentModal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -37,6 +38,9 @@ export default function Portais() {
   const [nextAulas, setNextAulas] = useState<Record<string, string | null>>({});
   const [isMatriculada, setIsMatriculada] = useState(false);
   const [checkingMatricula, setCheckingMatricula] = useState(true);
+  const [lockedModalOpen, setLockedModalOpen] = useState(false);
+
+  const isVisitante = user?.portal === 'visitante';
 
   useEffect(() => {
     if (user) {
@@ -71,12 +75,18 @@ export default function Portais() {
   const fetchPortals = async () => {
     setIsLoading(true);
     try {
-      // Fetch published portals
-      const { data: portalsData, error: portalsError } = await supabase
+      // For visitantes, fetch ALL portals (even unpublished) to show as locked preview
+      // For others, fetch only published portals
+      let query = supabase
         .from('conteudo_travessias')
         .select('*')
-        .eq('publicado', true)
         .order('ordem');
+
+      if (!isVisitante) {
+        query = query.eq('publicado', true);
+      }
+
+      const { data: portalsData, error: portalsError } = await query;
 
       if (portalsError) throw portalsError;
       setPortals(portalsData || []);
@@ -134,14 +144,14 @@ export default function Portais() {
 
   // Check if portal is unlocked based on portal level AND sequential progress
   const isUnlocked = (portal: Portal, index: number) => {
+    // Visitantes never have access - all portals are locked preview
+    if (isVisitante || !isMatriculada) {
+      return { unlocked: false, reason: 'matricula' as const };
+    }
+
     // Must have portal level access
     if (!canAccess(portal.portal_minimo)) {
       return { unlocked: false, reason: 'nivel' as const };
-    }
-    
-    // Must be matriculada to access any portal
-    if (!isMatriculada) {
-      return { unlocked: false, reason: 'matricula' as const };
     }
 
     // Sequential unlock: previous portal must be 100% complete
@@ -163,14 +173,28 @@ export default function Portais() {
     }
   };
 
+  const handlePortalClick = (portal: Portal, index: number) => {
+    const { unlocked } = isUnlocked(portal, index);
+    
+    if (!unlocked) {
+      // For visitantes or non-matriculadas, show the modal
+      if (isVisitante || !isMatriculada) {
+        setLockedModalOpen(true);
+      }
+      return;
+    }
+    
+    setSelectedPortal(selectedPortal === portal.id ? null : portal.id);
+  };
+
   const getLockMessage = (reason: 'nivel' | 'matricula' | 'sequencial' | null, index: number) => {
     switch (reason) {
       case 'matricula':
-        return 'Disponível após matrícula. Entre em contato para iniciar sua jornada.';
+        return 'Disponível após matrícula';
       case 'sequencial':
-        return `Complete o Portal ${index} para desbloquear este conteúdo.`;
+        return `Complete o Portal ${index} para desbloquear`;
       case 'nivel':
-        return 'Este Portal será aberto no tempo certo da jornada.';
+        return 'Este Portal será aberto no tempo certo da jornada';
       default:
         return '';
     }
@@ -196,7 +220,7 @@ export default function Portais() {
           className="mb-8"
         />
 
-        {/* Matricula Status Banner */}
+        {/* Matricula Status Banner - only for non-matriculadas */}
         {!isMatriculada && (
           <Card className="mb-8 border-gold/30 bg-gold/5">
             <CardContent className="py-6">
@@ -204,15 +228,22 @@ export default function Portais() {
                 <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center shrink-0">
                   <GraduationCap className="w-6 h-6 text-gold" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <h3 className="font-semibold text-foreground mb-1">
                     Inicie sua jornada formativa
                   </h3>
                   <p className="text-sm text-muted-foreground">
                     Os portais estão disponíveis para alunas matriculadas. 
-                    Entre em contato para saber mais sobre a formação.
+                    Clique em qualquer portal para saber mais.
                   </p>
                 </div>
+                <Button 
+                  variant="gold" 
+                  size="sm"
+                  onClick={() => setLockedModalOpen(true)}
+                >
+                  Matricular-se
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -224,17 +255,63 @@ export default function Portais() {
             "Todo portal se abre quando o mundo conhecido já não oferece respostas."
           </blockquote>
           <p className="text-sm text-muted-foreground">
-            Complete cada portal para avançar na jornada. Cada portal inclui aulas, 
-            exercícios reflexivos e conteúdos simbólicos.
+            {isMatriculada 
+              ? 'Complete cada portal para avançar na jornada. Cada portal inclui aulas, exercícios reflexivos e conteúdos simbólicos.'
+              : 'Conheça os portais da formação. Matricule-se para iniciar sua jornada transformadora.'
+            }
           </p>
         </div>
 
-        {/* Portals Grid */}
+        {/* Portals Grid - Always show portals, even if empty or locked */}
         {portals.length === 0 ? (
-          <Card className="p-8 text-center">
-            <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <p className="text-muted-foreground">Nenhum portal publicado ainda.</p>
-          </Card>
+          // Show placeholder cards for visitantes when no portals exist
+          isVisitante ? (
+            <div className="grid gap-6">
+              {[1, 2, 3].map((num) => (
+                <Card 
+                  key={num}
+                  className="group transition-all duration-500 overflow-hidden opacity-60 cursor-pointer"
+                  onClick={() => setLockedModalOpen(true)}
+                >
+                  <div className="relative h-40 md:h-48 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-gold/10 via-primary/20 to-secondary/30" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-card via-card/70 to-transparent" />
+                    
+                    <div className="absolute top-4 right-4 z-10">
+                      <Lock className="w-5 h-5 text-muted-foreground drop-shadow-lg" />
+                    </div>
+                    
+                    <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 z-10">
+                      <p className="text-xs uppercase tracking-widest text-gold/60 mb-1 drop-shadow-lg">
+                        Portal {num}
+                      </p>
+                      <h3 className="text-xl md:text-2xl font-display font-semibold text-foreground/60 drop-shadow-lg">
+                        Portal em breve
+                      </h3>
+                    </div>
+                    
+                    <div className="absolute top-4 left-4 z-10">
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-display font-bold shadow-lg bg-muted/90 text-muted-foreground">
+                        {num}
+                      </div>
+                    </div>
+                  </div>
+
+                  <CardContent>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Lock className="w-4 h-4 shrink-0" />
+                      <p>Disponível após matrícula</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <Card className="p-8 text-center">
+              <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+              <p className="text-muted-foreground">Nenhum portal publicado ainda.</p>
+            </Card>
+          )
         ) : (
           <div className="grid gap-6">
             {portals.map((portal, index) => {
@@ -248,13 +325,11 @@ export default function Portais() {
                 <Card 
                   key={portal.id}
                   className={cn(
-                    'group transition-all duration-500 overflow-hidden',
-                    unlocked ? 'hover:shadow-gold cursor-pointer' : 'opacity-60',
+                    'group transition-all duration-500 overflow-hidden cursor-pointer',
+                    unlocked ? 'hover:shadow-gold' : 'opacity-60',
                     selectedPortal === portal.id && 'ring-2 ring-gold/50'
                   )}
-                  onClick={() => unlocked && setSelectedPortal(
-                    selectedPortal === portal.id ? null : portal.id
-                  )}
+                  onClick={() => handlePortalClick(portal, index)}
                 >
                   {/* Cover Header */}
                   <div 
@@ -381,6 +456,11 @@ export default function Portais() {
           </div>
         )}
       </div>
+
+      <LockedContentModal 
+        open={lockedModalOpen} 
+        onOpenChange={setLockedModalOpen} 
+      />
     </AppLayout>
   );
 }

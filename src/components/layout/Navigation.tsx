@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Logo } from './Logo';
 import { getPortal, canAccessFeature, PortalType } from '@/types/portal';
+import { LockedContentModal } from '@/components/shared/LockedContentModal';
 import {
   Home,
   BookOpen,
@@ -20,6 +21,7 @@ import {
   Bot,
   Wrench,
   Heart,
+  Lock,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -49,6 +51,7 @@ export function Navigation() {
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [lockedModalOpen, setLockedModalOpen] = useState(false);
 
   const portal = user ? getPortal(user.portal) : null;
 
@@ -57,121 +60,167 @@ export function Navigation() {
     navigate('/');
   };
 
-  const accessibleItems = navItems.filter(item => 
-    user && canAccessFeature(user.portal, item.minPortal)
+  // Check if user can access this item
+  const canAccessItem = (minPortal: PortalType) => {
+    return user && canAccessFeature(user.portal, minPortal);
+  };
+
+  // Handle click on nav item
+  const handleNavClick = (item: typeof navItems[0], e: React.MouseEvent) => {
+    if (!canAccessItem(item.minPortal)) {
+      e.preventDefault();
+      setLockedModalOpen(true);
+    }
+  };
+
+  // Filter items to show - show all except admin for non-admins
+  const visibleItems = navItems.filter(item => 
+    item.minPortal !== 'admin' || canAccessItem('admin')
   );
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <Link to={user ? '/dashboard' : '/'}>
-            <Logo size="xl" variant="horizontal" />
-          </Link>
+    <>
+      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            <Link to={user ? '/dashboard' : '/'}>
+              <Logo size="xl" variant="horizontal" />
+            </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
-            {accessibleItems.map(item => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path || 
-                (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
-              
-              return (
-                <Link key={item.path} to={item.path}>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={cn(
-                      'gap-2 transition-all',
-                      isActive && 'bg-secondary text-gold'
-                    )}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span className="hidden lg:inline">{item.label}</span>
-                  </Button>
-                </Link>
-              );
-            })}
-          </div>
-
-          {/* User Menu */}
-          <div className="flex items-center gap-2">
-            {user && portal && (
-              <div className="hidden sm:flex items-center gap-2 mr-2">
-                <span className="px-2 py-0.5 text-xs bg-gold/20 text-gold rounded-full font-medium">
-                  {portal.name.split('/')[0].trim()}
-                </span>
-              </div>
-            )}
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <User className="w-5 h-5" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                {user && (
-                  <>
-                    <div className="px-2 py-1.5">
-                      <p className="text-sm font-medium">{user.name}</p>
-                      <p className="text-xs text-muted-foreground">{user.email}</p>
-                    </div>
-                    <DropdownMenuSeparator />
-                  </>
-                )}
-                <DropdownMenuItem onClick={handleLogout} className="text-destructive">
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sair
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Mobile Menu Toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden absolute top-16 left-0 right-0 bg-background border-b border-border animate-slide-up">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex flex-col gap-2">
-              {accessibleItems.map(item => {
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-1">
+              {visibleItems.map(item => {
                 const Icon = item.icon;
-                const isActive = location.pathname === item.path;
+                const isActive = location.pathname === item.path || 
+                  (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
+                const isLocked = !canAccessItem(item.minPortal);
                 
                 return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setMobileMenuOpen(false)}
+                  <Link 
+                    key={item.path} 
+                    to={isLocked ? '#' : item.path}
+                    onClick={(e) => handleNavClick(item, e)}
                   >
                     <Button
                       variant="ghost"
+                      size="sm"
                       className={cn(
-                        'w-full justify-start gap-3',
-                        isActive && 'bg-secondary text-gold'
+                        'gap-2 transition-all',
+                        isActive && !isLocked && 'bg-secondary text-gold',
+                        isLocked && 'opacity-50 cursor-not-allowed'
                       )}
                     >
-                      <Icon className="w-5 h-5" />
-                      {item.label}
+                      {isLocked ? (
+                        <Lock className="w-4 h-4" />
+                      ) : (
+                        <Icon className="w-4 h-4" />
+                      )}
+                      <span className="hidden lg:inline">{item.label}</span>
                     </Button>
                   </Link>
                 );
               })}
             </div>
+
+            {/* User Menu */}
+            <div className="flex items-center gap-2">
+              {user && portal && (
+                <div className="hidden sm:flex items-center gap-2 mr-2">
+                  <span className="px-2 py-0.5 text-xs bg-gold/20 text-gold rounded-full font-medium">
+                    {portal.name.split('/')[0].trim()}
+                  </span>
+                </div>
+              )}
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    <User className="w-5 h-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  {user && (
+                    <>
+                      <div className="px-2 py-1.5">
+                        <p className="text-sm font-medium">{user.name}</p>
+                        <p className="text-xs text-muted-foreground">{user.email}</p>
+                      </div>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
+                  <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sair
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Mobile Menu Toggle */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </Button>
+            </div>
           </div>
         </div>
-      )}
-    </nav>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden absolute top-16 left-0 right-0 bg-background border-b border-border animate-slide-up">
+            <div className="container mx-auto px-4 py-4">
+              <div className="flex flex-col gap-2">
+                {visibleItems.map(item => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.path;
+                  const isLocked = !canAccessItem(item.minPortal);
+                  
+                  return (
+                    <Link
+                      key={item.path}
+                      to={isLocked ? '#' : item.path}
+                      onClick={(e) => {
+                        if (isLocked) {
+                          e.preventDefault();
+                          setLockedModalOpen(true);
+                        }
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      <Button
+                        variant="ghost"
+                        className={cn(
+                          'w-full justify-start gap-3',
+                          isActive && !isLocked && 'bg-secondary text-gold',
+                          isLocked && 'opacity-50'
+                        )}
+                      >
+                        {isLocked ? (
+                          <Lock className="w-5 h-5" />
+                        ) : (
+                          <Icon className="w-5 h-5" />
+                        )}
+                        {item.label}
+                        {isLocked && (
+                          <span className="ml-auto text-xs text-muted-foreground">Bloqueado</span>
+                        )}
+                      </Button>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+      </nav>
+
+      <LockedContentModal 
+        open={lockedModalOpen} 
+        onOpenChange={setLockedModalOpen} 
+      />
+    </>
   );
 }
