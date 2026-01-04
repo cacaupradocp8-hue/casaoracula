@@ -27,6 +27,7 @@ interface EneagramaTipo {
   descricao: string;
   virtude: string | null;
   fixacao: string | null;
+  palavras_chave: string[] | null;
 }
 
 interface EneagramaInstinto {
@@ -64,6 +65,7 @@ export default function Eneagrama() {
   const [tipoPrincipal, setTipoPrincipal] = useState<number | null>(null);
   const [asa, setAsa] = useState<string>('');
   const [instinto, setInstinto] = useState<string>('');
+  const [evidencias, setEvidencias] = useState<string[]>([]);
   const [defesas, setDefesas] = useState('');
   const [virtude, setVirtude] = useState('');
   const [armadilhas, setArmadilhas] = useState('');
@@ -296,6 +298,7 @@ export default function Eneagrama() {
                   onClick={() => {
                     setTipoPrincipal(tipo.numero);
                     setAsa('');
+                    setEvidencias([]);
                   }}
                   className={`p-3 rounded-lg border text-left transition-all ${
                     tipoPrincipal === tipo.numero
@@ -311,6 +314,71 @@ export default function Eneagrama() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Evidências comportamentais */}
+        {tipoPrincipal && (
+          <Card className="glass mb-6">
+            <CardHeader>
+              <CardTitle className="text-lg">Evidências Comportamentais</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Selecione até 3 comportamentos que evidenciam este tipo
+              </p>
+            </CardHeader>
+            <CardContent>
+              {(() => {
+                const tipoSelecionado = tipos.find(t => t.numero === tipoPrincipal);
+                const palavrasChave = tipoSelecionado?.palavras_chave || [];
+                
+                // Generate evidence phrases based on type characteristics
+                const evidenciasDisponiveis = [
+                  `Demonstra forte tendência a ${tipoSelecionado?.fixacao?.toLowerCase() || 'padrão fixo'}`,
+                  `Busca constantemente ${tipoSelecionado?.descricao?.toLowerCase().replace('busca ', '') || 'algo'}`,
+                  ...palavrasChave.map(p => `Apresenta comportamento de ${p}`),
+                  `Dificuldade em acessar ${tipoSelecionado?.virtude?.toLowerCase() || 'virtude'}`,
+                  `Padrão defensivo relacionado ao tipo ${tipoPrincipal}`,
+                ];
+                
+                return (
+                  <div className="flex flex-wrap gap-2">
+                    {evidenciasDisponiveis.map((ev, idx) => {
+                      const isSelected = evidencias.includes(ev);
+                      const canSelect = evidencias.length < 3 || isSelected;
+                      
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => {
+                            if (isSelected) {
+                              setEvidencias(prev => prev.filter(e => e !== ev));
+                            } else if (canSelect) {
+                              setEvidencias(prev => [...prev, ev]);
+                            }
+                          }}
+                          disabled={!canSelect && !isSelected}
+                          className={`px-3 py-2 rounded-lg text-sm border transition-all ${
+                            isSelected
+                              ? 'border-gold bg-gold/20 text-gold'
+                              : canSelect
+                                ? 'border-border hover:border-gold/50'
+                                : 'border-border/50 opacity-50 cursor-not-allowed'
+                          }`}
+                        >
+                          {ev}
+                        </button>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+              {evidencias.length > 0 && (
+                <p className="text-xs text-muted-foreground mt-3">
+                  {evidencias.length}/3 evidências selecionadas
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid gap-6 md:grid-cols-2 mb-6">
           <Card className="glass">

@@ -66,11 +66,11 @@ export default function Big5() {
   const [caso, setCaso] = useState<CasoInfo | null>(null);
   const [respostas, setRespostas] = useState<Record<string, number | string>>({});
   const [valores, setValores] = useState({
-    abertura: 50,
-    conscienciosidade: 50,
-    extroversao: 50,
-    amabilidade: 50,
-    neuroticismo: 50,
+    abertura: 0,
+    conscienciosidade: 0,
+    extroversao: 0,
+    amabilidade: 0,
+    neuroticismo: 0,
   });
   const [notas, setNotas] = useState('');
   const [impactoClinico, setImpactoClinico] = useState('');
@@ -85,6 +85,38 @@ export default function Big5() {
   useEffect(() => {
     fetchData();
   }, [user, casoId]);
+
+  // Calculate scores when responses change
+  useEffect(() => {
+    if (perguntas.length === 0) return;
+    
+    const dimensaoKeys = ['abertura', 'conscienciosidade', 'extroversao', 'amabilidade', 'neuroticismo'] as const;
+    const newScores = { ...valores };
+    
+    dimensaoKeys.forEach(dim => {
+      const perguntasDim = perguntas.filter(p => p.dimensao === dim && p.tipo === 'escala_1_5');
+      if (perguntasDim.length === 0) {
+        newScores[dim] = 0;
+        return;
+      }
+      
+      const respostasValidas = perguntasDim
+        .map(p => respostas[p.id])
+        .filter((r): r is number => typeof r === 'number' && r >= 1 && r <= 5);
+      
+      if (respostasValidas.length === 0) {
+        newScores[dim] = 0;
+        return;
+      }
+      
+      // Calculate average and normalize to 0-100
+      // Formula: score = ((media - 1) / 4) * 100
+      const media = respostasValidas.reduce((a, b) => a + b, 0) / respostasValidas.length;
+      newScores[dim] = Math.round(((media - 1) / 4) * 100);
+    });
+    
+    setValores(newScores);
+  }, [respostas, perguntas]);
 
   const fetchData = async () => {
     if (!user) return;
@@ -334,35 +366,52 @@ export default function Big5() {
           </Card>
         )}
 
-        {/* Sliders para pontuação geral das dimensões */}
+        {/* Resultados calculados automaticamente */}
         <Card className="glass mb-6">
           <CardHeader>
-            <CardTitle className="text-lg">Dimensões da Personalidade</CardTitle>
+            <CardTitle className="text-lg">Resultados das Dimensões</CardTitle>
+            {temPerguntas && (
+              <p className="text-sm text-muted-foreground">
+                Os scores são calculados automaticamente com base nas suas respostas ao questionário.
+              </p>
+            )}
           </CardHeader>
-          <CardContent className="space-y-8">
+          <CardContent className="space-y-6">
             {Object.keys(valores).map(key => {
               const dimInfo = dimensoes.find(d => d.chave === key);
               const labelInfo = dimensaoLabels[key] || { label: key, descricao: '' };
+              const score = valores[key as keyof typeof valores];
+              
+              // Count answered questions for this dimension
+              const perguntasDim = perguntas.filter(p => p.dimensao === key && p.tipo === 'escala_1_5');
+              const respondidas = perguntasDim.filter(p => typeof respostas[p.id] === 'number').length;
+              const total = perguntasDim.length;
               
               return (
-                <div key={key} className="space-y-3">
+                <div key={key} className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <Label className="text-base font-medium">{dimInfo?.nome || labelInfo.label}</Label>
-                    <span className="text-gold font-bold">{valores[key as keyof typeof valores]}</span>
+                    <div>
+                      <Label className="text-base font-medium">{dimInfo?.nome || labelInfo.label}</Label>
+                      {temPerguntas && total > 0 && (
+                        <span className="text-xs text-muted-foreground ml-2">
+                          ({respondidas}/{total} perguntas)
+                        </span>
+                      )}
+                    </div>
+                    <span className={`font-bold text-lg ${score > 0 ? 'text-gold' : 'text-muted-foreground'}`}>
+                      {score > 0 ? score : '-'}
+                    </span>
                   </div>
                   <p className="text-xs text-muted-foreground">{dimInfo?.descricao || labelInfo.descricao}</p>
-                  <Slider
-                    value={[valores[key as keyof typeof valores]]}
-                    onValueChange={([val]) =>
-                      setValores(prev => ({ ...prev, [key]: val }))
-                    }
-                    max={100}
-                    step={1}
-                    className="w-full"
-                  />
+                  <div className="relative h-3 bg-secondary rounded-full overflow-hidden">
+                    <div 
+                      className="absolute left-0 top-0 h-full bg-gold transition-all duration-300"
+                      style={{ width: `${score}%` }}
+                    />
+                  </div>
                   <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>Baixo</span>
-                    <span>Alto</span>
+                    <span>Baixo (0)</span>
+                    <span>Alto (100)</span>
                   </div>
                 </div>
               );
