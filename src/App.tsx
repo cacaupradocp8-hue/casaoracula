@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import Travessias from "./pages/Travessias";
 import Portais from "./pages/Portais";
 import Metodo from "./pages/Metodo";
 import Biblioteca from "./pages/Biblioteca";
@@ -23,6 +24,7 @@ import OraculoPerguntas from "./pages/salas/OraculoPerguntas";
 import AulaPage from "./pages/AulaPage";
 import Admin from "./pages/Admin";
 import MinhasClientes from "./pages/MinhasClientes";
+import ConfirmarProfissional from "./pages/ConfirmarProfissional";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
@@ -69,8 +71,11 @@ function AppRoutes() {
       
       {/* Protected Routes */}
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path="/travessias" element={<ProtectedRoute><Travessias /></ProtectedRoute>} />
+      <Route path="/travessia/:slug" element={<ProtectedRoute><Portais /></ProtectedRoute>} />
       <Route path="/portais" element={<ProtectedRoute><Portais /></ProtectedRoute>} />
-      <Route path="/mentoria" element={<ProtectedRoute minPortal="pre_iniciada"><Mentoria /></ProtectedRoute>} />
+      <Route path="/confirmar-profissional" element={<ProtectedRoute><ConfirmarProfissional /></ProtectedRoute>} />
+      <Route path="/mentoria" element={<ProtectedRoute minPortal="iniciada"><Mentoria /></ProtectedRoute>} />
       <Route path="/metodo" element={<ProtectedRoute minPortal="pre_iniciada"><Metodo /></ProtectedRoute>} />
       <Route path="/biblioteca" element={<ProtectedRoute minPortal="pre_iniciada"><Biblioteca /></ProtectedRoute>} />
       <Route path="/casos" element={<ProtectedRoute minPortal="pre_iniciada"><Casos /></ProtectedRoute>} />
