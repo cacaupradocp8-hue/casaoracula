@@ -1,1 +1,4 @@
 project_id = "pvjiznbfwtjqmpeiqqzk"
+
+[functions.rockty-webhook]
+verify_jwt = false

@@ -117,6 +117,33 @@ export type Database = {
         }
         Relationships: []
       }
+      app_settings: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          key: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          key: string
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          key?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
       big5_dimensoes: {
         Row: {
           ativo: boolean
@@ -991,27 +1018,36 @@ export type Database = {
       }
       profiles: {
         Row: {
+          access_status: string
           avatar_url: string | null
           created_at: string
           email: string | null
           id: string
+          is_professional_verified: boolean
           nome: string | null
+          role: string
           updated_at: string
         }
         Insert: {
+          access_status?: string
           avatar_url?: string | null
           created_at?: string
           email?: string | null
           id: string
+          is_professional_verified?: boolean
           nome?: string | null
+          role?: string
           updated_at?: string
         }
         Update: {
+          access_status?: string
           avatar_url?: string | null
           created_at?: string
           email?: string | null
           id?: string
+          is_professional_verified?: boolean
           nome?: string | null
+          role?: string
           updated_at?: string
         }
         Relationships: []
@@ -1099,6 +1135,51 @@ export type Database = {
           texto_bloqueio?: string
           texto_entrada?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          current_period_end: string | null
+          current_period_start: string | null
+          external_subscription_id: string | null
+          id: string
+          last_event_at: string | null
+          next_billing_date: string | null
+          plan_id: string | null
+          provider: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          external_subscription_id?: string | null
+          id?: string
+          last_event_at?: string | null
+          next_billing_date?: string | null
+          plan_id?: string | null
+          provider?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          external_subscription_id?: string | null
+          id?: string
+          last_event_at?: string | null
+          next_billing_date?: string | null
+          plan_id?: string | null
+          provider?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1297,6 +1378,36 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_logs: {
+        Row: {
+          created_at: string
+          error: string | null
+          event_type: string
+          id: string
+          payload: Json | null
+          processed: boolean | null
+          provider: string
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          event_type: string
+          id?: string
+          payload?: Json | null
+          processed?: boolean | null
+          provider: string
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          event_type?: string
+          id?: string
+          payload?: Json | null
+          processed?: boolean | null
+          provider?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -1317,6 +1428,7 @@ export type Database = {
         Args: { _cliente_id: string; _terapeuta_id: string }
         Returns: boolean
       }
+      get_user_access_status: { Args: { _user_id: string }; Returns: string }
       get_user_nivel_sala: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["nivel_sala"]
