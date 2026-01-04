@@ -1,40 +1,40 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { Sparkles, Send, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { Sparkles, Send, Clock, CheckCircle, XCircle, AlertCircle, Loader2 } from 'lucide-react';
 
-type RequestStatus = 'pending' | 'in_review' | 'approved' | 'not_indicated';
+type RequestStatus = 'new' | 'reviewing' | 'answered';
 
-interface OracularRequest {
+interface OracularReading {
   id: string;
   status: RequestStatus;
-  createdAt: Date;
-  responses?: {
-    professional: string;
-    projection: string;
-    narrative: string;
-    readiness: string;
-  };
-  decision?: string;
+  created_at: string;
+  axes_professional: string | null;
+  projection_shadow: string | null;
+  symbolic_narrative: string | null;
+  portal_readiness: string | null;
+  admin_response: string | null;
 }
 
 const statusConfig: Record<RequestStatus, { label: string; icon: React.ReactNode; color: string }> = {
-  pending: { label: 'Aguardando', icon: <Clock className="w-4 h-4" />, color: 'bg-muted text-muted-foreground' },
-  in_review: { label: 'Em Análise', icon: <AlertCircle className="w-4 h-4" />, color: 'bg-gold/20 text-gold' },
-  approved: { label: 'Liberada', icon: <CheckCircle className="w-4 h-4" />, color: 'bg-sage/20 text-sage-light' },
-  not_indicated: { label: 'Não Indicada', icon: <XCircle className="w-4 h-4" />, color: 'bg-destructive/20 text-destructive' },
+  new: { label: 'Aguardando', icon: <Clock className="w-4 h-4" />, color: 'bg-muted text-muted-foreground' },
+  reviewing: { label: 'Em Análise', icon: <AlertCircle className="w-4 h-4" />, color: 'bg-gold/20 text-gold' },
+  answered: { label: 'Respondida', icon: <CheckCircle className="w-4 h-4" />, color: 'bg-sage/20 text-sage-light' },
 };
 
 export default function LeituraOracular() {
   const { toast } = useToast();
-  const [hasRequest, setHasRequest] = useState(false);
+  const { user } = useAuth();
+  const [existingReading, setExistingReading] = useState<OracularReading | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     professional: '',
@@ -70,7 +70,35 @@ export default function LeituraOracular() {
     },
   ];
 
-  const handleSubmit = () => {
+  useEffect(() => {
+    if (user) {
+      fetchExistingReading();
+    }
+  }, [user]);
+
+  const fetchExistingReading = async () => {
+    if (!user) return;
+    
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('oracular_readings')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Erro ao buscar leitura:', error);
+    } else if (data) {
+      setExistingReading(data as OracularReading);
+    }
+    setLoading(false);
+  };
+
+  const handleSubmit = async () => {
+    if (!user) return;
+    
     if (Object.values(formData).some(v => !v.trim())) {
       toast({
         title: 'Responda todas as questões',
@@ -80,14 +108,50 @@ export default function LeituraOracular() {
       return;
     }
 
-    setHasRequest(true);
-    toast({
-      title: 'Solicitação enviada',
-      description: 'Sua solicitação de Leitura Oracular foi enviada para análise da Guardiã.',
-    });
+    setSubmitting(true);
+    const { data, error } = await supabase
+      .from('oracular_readings')
+      .insert({
+        user_id: user.id,
+        axes_professional: formData.professional,
+        projection_shadow: formData.projection,
+        symbolic_narrative: formData.narrative,
+        portal_readiness: formData.readiness,
+        status: 'new',
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Erro ao enviar:', error);
+      toast({
+        title: 'Erro ao enviar',
+        description: 'Não foi possível enviar sua solicitação. Tente novamente.',
+        variant: 'destructive',
+      });
+    } else {
+      setExistingReading(data as OracularReading);
+      toast({
+        title: 'Solicitação enviada',
+        description: 'Sua solicitação de Leitura Oracular foi enviada para análise da Guardiã.',
+      });
+    }
+    setSubmitting(false);
   };
 
-  if (hasRequest) {
+  if (loading) {
+    return (
+      <AppLayout>
+        <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-[50vh]">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </AppLayout>
+    );
+  }
+
+  if (existingReading) {
+    const config = statusConfig[existingReading.status as RequestStatus];
+    
     return (
       <AppLayout>
         <div className="container mx-auto px-4 py-8 pb-20">
@@ -101,23 +165,35 @@ export default function LeituraOracular() {
           <Card className="max-w-2xl mx-auto">
             <CardHeader className="text-center">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gold/20 flex items-center justify-center">
-                <Clock className="w-8 h-8 text-gold" />
+                {config.icon}
               </div>
-              <CardTitle className="font-display text-2xl">Solicitação Enviada</CardTitle>
+              <CardTitle className="font-display text-2xl">
+                {existingReading.status === 'answered' ? 'Leitura Respondida' : 'Solicitação Enviada'}
+              </CardTitle>
               <CardDescription>
-                Sua solicitação está sendo analisada pela Guardiã. Você receberá uma resposta em breve.
+                {existingReading.status === 'answered' 
+                  ? 'A Guardiã respondeu sua solicitação.'
+                  : 'Sua solicitação está sendo analisada pela Guardiã.'}
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               <div className="bg-secondary/50 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-muted-foreground">Status</span>
-                  <Badge className="bg-gold/20 text-gold">Em Análise</Badge>
+                  <Badge className={config.color}>{config.label}</Badge>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  A Guardiã irá revisar suas respostas e seu histórico no app antes de tomar uma decisão.
-                </p>
               </div>
+              
+              {existingReading.admin_response && (
+                <Card className="bg-mystical border-gold/20">
+                  <CardHeader>
+                    <CardTitle className="text-sm font-medium">Resposta da Guardiã</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm whitespace-pre-wrap">{existingReading.admin_response}</p>
+                  </CardContent>
+                </Card>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -219,9 +295,10 @@ export default function LeituraOracular() {
             <Button
               variant="gold"
               onClick={handleSubmit}
+              disabled={submitting}
               className="gap-2"
             >
-              <Send className="w-4 h-4" />
+              {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
               Enviar Solicitação
             </Button>
           )}

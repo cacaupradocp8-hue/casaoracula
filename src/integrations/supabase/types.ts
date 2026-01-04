@@ -827,6 +827,45 @@ export type Database = {
         }
         Relationships: []
       }
+      oracular_readings: {
+        Row: {
+          admin_response: string | null
+          axes_professional: string | null
+          created_at: string
+          id: string
+          portal_readiness: string | null
+          projection_shadow: string | null
+          status: string
+          symbolic_narrative: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_response?: string | null
+          axes_professional?: string | null
+          created_at?: string
+          id?: string
+          portal_readiness?: string | null
+          projection_shadow?: string | null
+          status?: string
+          symbolic_narrative?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_response?: string | null
+          axes_professional?: string | null
+          created_at?: string
+          id?: string
+          portal_readiness?: string | null
+          projection_shadow?: string | null
+          status?: string
+          symbolic_narrative?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       oraculo_aplicacoes: {
         Row: {
           caso_id: string | null
