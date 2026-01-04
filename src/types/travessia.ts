@@ -1,11 +1,19 @@
+import { PortalType } from './portal';
+
 export interface Travessia {
   id: string;
   number: 1 | 2 | 3 | 4;
+  slug: string;
   title: string;
   subtitle: string;
   description: string;
   lessons: Lesson[];
   closingRitual: string;
+  icone: string;
+  corAcento: string;
+  temas: string[];
+  minPortal: PortalType;
+  requiresProfessional: boolean;
 }
 
 export interface Lesson {
@@ -41,33 +49,69 @@ export const TRAVESSIAS_DATA: Omit<Travessia, 'lessons'>[] = [
   {
     id: 'travessia-1',
     number: 1,
+    slug: 'mundo-sem-simbolos',
     title: 'O Mundo sem Símbolos',
-    subtitle: 'Despertar para a ausência',
-    description: 'A mulher contemporânea vive num mundo que esvaziou os símbolos de sentido. Neste primeiro portal, reconhecemos o vazio simbólico que marca nossa época.',
+    subtitle: 'A ética do caminho iniciático',
+    description: 'Fundamentos éticos, limites profissionais, glossário simbólico e ritos simples de abertura.',
     closingRitual: 'Ritual do Primeiro Olhar: Reconhecer em si a sede de símbolos.',
+    icone: 'Compass',
+    corAcento: 'amber',
+    temas: ['Ética', 'Limites', 'Glossário', 'Ritos Simples'],
+    minPortal: 'visitante',
+    requiresProfessional: false,
   },
   {
     id: 'travessia-2',
     number: 2,
+    slug: 'mulher-alma-antiga',
     title: 'A Mulher de Alma Antiga',
-    subtitle: 'Recuperar o que nunca se perdeu',
-    description: 'Toda mulher carrega uma alma que sabe mais do que a mente permite lembrar. Este portal reconecta a terapeuta com a sabedoria ancestral.',
+    subtitle: 'A linguagem dos arquétipos',
+    description: 'Arquétipos femininos, trabalho com a sombra (com contenção), biblioteca de contos em texto e áudio.',
     closingRitual: 'Ritual da Memória Profunda: Honrar as guardiãs que vieram antes.',
+    icone: 'Moon',
+    corAcento: 'purple',
+    temas: ['Arquétipos', 'Sombra', 'Contos', 'Biblioteca'],
+    minPortal: 'pre_iniciada',
+    requiresProfessional: false,
   },
   {
     id: 'travessia-3',
     number: 3,
+    slug: 'codigo-narrativas',
     title: 'O Código das Narrativas',
-    subtitle: 'Ler o que está escrito nas entrelinhas',
-    description: 'Cada cliente traz uma história que não é literal. Aprender a decodificar as narrativas internas é a arte central do método ORÁCULA.',
+    subtitle: 'Núcleo da prática profissional',
+    description: 'Sala de Sessão, Mapas integrados (Big5 + Eneagrama + Arquétipos), Agentes IA e ferramentas clínicas.',
     closingRitual: 'Ritual da Escuta Simbólica: Ouvir além das palavras.',
+    icone: 'BookOpen',
+    corAcento: 'gold',
+    temas: ['Sala de Sessão', 'Mapas', 'IA', 'Prática'],
+    minPortal: 'pre_iniciada',
+    requiresProfessional: true,
   },
   {
     id: 'travessia-4',
     number: 4,
+    slug: 'guardia-caminho',
     title: 'A Guardiã do Caminho',
-    subtitle: 'Tornar-se aquela que conduz',
-    description: 'O portal final prepara a terapeuta para ser guardiã de portais alheios. Não é sobre ter respostas, mas sobre saber fazer as perguntas certas.',
+    subtitle: 'Condução e supervisão',
+    description: 'Condução de grupos, ética da iniciação simbólica, supervisão e limites da facilitação.',
     closingRitual: 'Ritual da Iniciação: Assumir o manto de Guardiã ORÁCULA.',
+    icone: 'Shield',
+    corAcento: 'emerald',
+    temas: ['Condução', 'Supervisão', 'Ética Avançada', 'Grupos'],
+    minPortal: 'iniciada',
+    requiresProfessional: true,
   },
 ];
+
+export const getTravessia = (slug: string): Omit<Travessia, 'lessons'> | undefined => {
+  return TRAVESSIAS_DATA.find(t => t.slug === slug);
+};
+
+export const getTravessiaById = (id: string): Omit<Travessia, 'lessons'> | undefined => {
+  return TRAVESSIAS_DATA.find(t => t.id === id);
+};
+
+export const getTravessiaByNumber = (num: number): Omit<Travessia, 'lessons'> | undefined => {
+  return TRAVESSIAS_DATA.find(t => t.number === num);
+};

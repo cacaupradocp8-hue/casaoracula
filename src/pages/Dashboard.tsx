@@ -1,66 +1,54 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { PortalBadge } from '@/components/shared/PortalBadge';
 import { SectionHeader } from '@/components/shared/SectionHeader';
-import { getPortal, canAccessFeature, PortalType } from '@/types/portal';
-import { Link } from 'react-router-dom';
+import { getPortal, canAccessFeature } from '@/types/portal';
+import { TRAVESSIAS_DATA } from '@/types/travessia';
+import { Link, useNavigate } from 'react-router-dom';
 import {
-  BookOpen,
   Compass,
-  Library,
-  FolderOpen,
-  Sparkles,
+  Moon,
+  BookOpen,
+  Shield,
   ArrowRight,
   Lock,
   Check,
+  Sparkles,
+  AlertTriangle,
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+const ICON_MAP: Record<string, typeof Compass> = {
+  Compass,
+  Moon,
+  BookOpen,
+  Shield,
+};
+
+const COLOR_MAP: Record<string, string> = {
+  amber: 'text-amber-500 bg-amber-500/10',
+  purple: 'text-purple-500 bg-purple-500/10',
+  gold: 'text-gold bg-gold/10',
+  emerald: 'text-emerald-500 bg-emerald-500/10',
+};
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { isProfessional, isLoading: isLoadingProfessional } = useProfessionalStatus();
+  const navigate = useNavigate();
   
   if (!user) return null;
 
   const portal = getPortal(user.portal);
 
-  const quickActions: { title: string; description: string; icon: typeof BookOpen; path: string; minPortal: PortalType }[] = [
-    {
-      title: 'Portais',
-      description: 'Formação simbólica em 4 jornadas',
-      icon: BookOpen,
-      path: '/travessias',
-      minPortal: 'pre_iniciada',
-    },
-    {
-      title: 'Leitura em 5 Camadas',
-      description: 'Ferramenta central do método',
-      icon: Compass,
-      path: '/metodo',
-      minPortal: 'pre_iniciada',
-    },
-    {
-      title: 'Biblioteca Simbólica',
-      description: 'Contos, arquétipos e rituais',
-      icon: Library,
-      path: '/biblioteca',
-      minPortal: 'pre_iniciada',
-    },
-    {
-      title: 'Meus Casos',
-      description: 'Gestão de casos clínicos',
-      icon: FolderOpen,
-      path: '/casos',
-      minPortal: 'pre_iniciada',
-    },
-    {
-      title: 'Leitura Oracular',
-      description: 'Portal de supervisão profunda',
-      icon: Sparkles,
-      path: '/leitura-oracular',
-      minPortal: 'iniciada',
-    },
-  ];
+  const canAccessTravessia = (travessia: typeof TRAVESSIAS_DATA[0]) => {
+    const hasPortalAccess = canAccessFeature(user.portal, travessia.minPortal);
+    const hasProfessionalAccess = !travessia.requiresProfessional || isProfessional;
+    return hasPortalAccess && hasProfessionalAccess;
+  };
 
   return (
     <AppLayout>
@@ -73,7 +61,7 @@ export default function Dashboard() {
                 Bem-vinda, <span className="text-gold-gradient font-semibold">{user.name}</span>
               </h1>
               <p className="text-muted-foreground">
-                A Casa ORÁCULA te recebe para mais uma jornada.
+                A Casa ORÁCULA te recebe para mais uma jornada iniciática.
               </p>
             </div>
             <PortalBadge portal={user.portal} size="lg" showName />
@@ -91,7 +79,7 @@ export default function Dashboard() {
                     {portal.description}
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {portal.features.map((feature, idx) => (
+                    {portal.features.slice(0, 4).map((feature, idx) => (
                       <span 
                         key={idx}
                         className="inline-flex items-center gap-1 text-xs bg-secondary/50 px-2 py-1 rounded-full"
@@ -102,18 +90,34 @@ export default function Dashboard() {
                     ))}
                   </div>
                 </div>
-                {portal.caseLimit !== 'unlimited' && (
-                  <div className="text-right">
-                    <p className="text-sm text-muted-foreground">Limite de Casos</p>
-                    <p className="text-2xl font-display font-bold text-gold">
-                      {portal.caseLimit}
-                    </p>
-                  </div>
-                )}
               </div>
             </CardContent>
           </Card>
         </div>
+
+        {/* Professional Notice */}
+        {!isLoadingProfessional && !isProfessional && user.portal !== 'visitante' && (
+          <Card className="mb-8 bg-amber-500/5 border-amber-500/20">
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-medium text-foreground">Confirmação profissional pendente</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    A Sala de Sessão, Mapas e ferramentas avançadas requerem confirmação profissional.
+                  </p>
+                  <Button 
+                    variant="link" 
+                    className="px-0 h-auto text-gold"
+                    onClick={() => navigate('/confirmar-profissional')}
+                  >
+                    Fazer confirmação profissional →
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Tríade Quote */}
         <div className="mb-12 text-center">
@@ -123,40 +127,46 @@ export default function Dashboard() {
           <p className="text-sm text-muted-foreground mt-2">— Tríade Metodológica ORÁCULA</p>
         </div>
 
-        {/* Quick Actions */}
+        {/* 4 Travessias */}
         <SectionHeader 
-          title="Ferramentas da Casa" 
-          subtitle="Acesse as áreas disponíveis no seu Portal"
+          title="As 4 Travessias" 
+          subtitle="O caminho iniciático para profissionais"
           className="mb-6"
         />
         
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {quickActions.map((action) => {
-            const Icon = action.icon;
-            const hasAccess = canAccessFeature(user.portal, action.minPortal);
+        <div className="grid sm:grid-cols-2 gap-4 mb-12">
+          {TRAVESSIAS_DATA.map((travessia) => {
+            const Icon = ICON_MAP[travessia.icone] || Compass;
+            const colorClass = COLOR_MAP[travessia.corAcento] || COLOR_MAP.gold;
+            const isAccessible = canAccessTravessia(travessia);
             
             return (
               <Card 
-                key={action.path}
-                className={`group transition-all duration-300 ${
-                  hasAccess 
-                    ? 'hover:shadow-gold cursor-pointer' 
-                    : 'opacity-60'
-                }`}
+                key={travessia.id}
+                className={cn(
+                  'group transition-all duration-300',
+                  isAccessible && 'hover:shadow-gold cursor-pointer',
+                  !isAccessible && 'opacity-60'
+                )}
               >
-                {hasAccess ? (
-                  <Link to={action.path} className="block h-full">
+                {isAccessible ? (
+                  <Link to={`/travessia/${travessia.slug}`} className="block h-full">
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between">
-                        <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center text-gold group-hover:bg-gold/20 transition-colors">
+                        <div className={cn('w-10 h-10 rounded-lg flex items-center justify-center', colorClass)}>
                           <Icon className="w-5 h-5" />
                         </div>
-                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-gold transition-colors" />
+                        <span className="text-xs text-muted-foreground">Travessia {travessia.number}</span>
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <CardTitle className="text-lg mb-1">{action.title}</CardTitle>
-                      <CardDescription>{action.description}</CardDescription>
+                      <CardTitle className="text-lg mb-1 group-hover:text-gold transition-colors">
+                        {travessia.title}
+                      </CardTitle>
+                      <CardDescription className="text-sm">{travessia.subtitle}</CardDescription>
+                      <div className="flex items-center justify-end mt-3">
+                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-gold transition-all group-hover:translate-x-1" />
+                      </div>
                     </CardContent>
                   </Link>
                 ) : (
@@ -170,9 +180,12 @@ export default function Dashboard() {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <CardTitle className="text-lg mb-1 text-muted-foreground">{action.title}</CardTitle>
-                      <CardDescription>
-                        Disponível a partir do Portal {action.minPortal}
+                      <CardTitle className="text-lg mb-1 text-muted-foreground">{travessia.title}</CardTitle>
+                      <CardDescription className="text-sm">
+                        {travessia.requiresProfessional && !isProfessional 
+                          ? 'Requer confirmação profissional' 
+                          : `Disponível a partir do Portal ${travessia.minPortal}`
+                        }
                       </CardDescription>
                     </CardContent>
                   </div>
@@ -184,20 +197,19 @@ export default function Dashboard() {
 
         {/* Visitor Message */}
         {user.portal === 'visitante' && (
-          <Card className="mt-12 bg-secondary/30 border-border/50">
+          <Card className="bg-secondary/30 border-border/50">
             <CardContent className="p-8 text-center">
               <Sparkles className="w-12 h-12 mx-auto mb-4 text-gold" />
               <h3 className="font-display text-2xl font-semibold text-foreground mb-3">
                 Você está no Portal da Buscadora
               </h3>
               <p className="text-muted-foreground max-w-lg mx-auto mb-6">
-                As ferramentas profissionais são liberadas após a Pré-Iniciação. 
-                Por enquanto, explore os conteúdos simbólicos e as perguntas-oráculo 
-                que preparamos para você.
+                As ferramentas profissionais são liberadas após a confirmação da sua atuação. 
+                Por enquanto, explore a Travessia 1 — O Mundo sem Símbolos.
               </p>
-              <p className="text-xs text-muted-foreground">
-                O acesso aos próximos Portais é liberado manualmente pela Guardiã.
-              </p>
+              <Button onClick={() => navigate('/confirmar-profissional')}>
+                Fazer confirmação profissional
+              </Button>
             </CardContent>
           </Card>
         )}

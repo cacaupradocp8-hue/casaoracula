@@ -281,6 +281,42 @@ export type Database = {
         }
         Relationships: []
       }
+      confirmacao_profissional: {
+        Row: {
+          aceita_codigo_etico: boolean
+          anos_experiencia: number | null
+          area_formacao: string | null
+          confirmado_em: string
+          created_at: string
+          id: string
+          tipo_atuacao: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          aceita_codigo_etico?: boolean
+          anos_experiencia?: number | null
+          area_formacao?: string | null
+          confirmado_em?: string
+          created_at?: string
+          id?: string
+          tipo_atuacao: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          aceita_codigo_etico?: boolean
+          anos_experiencia?: number | null
+          area_formacao?: string | null
+          confirmado_em?: string
+          created_at?: string
+          id?: string
+          tipo_atuacao?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       conteudo_aulas: {
         Row: {
           audio_url: string | null
@@ -665,6 +701,33 @@ export type Database = {
           title?: string
           type?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      lista_espera: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          interesse: string | null
+          nome: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          interesse?: string | null
+          nome?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          interesse?: string | null
+          nome?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -1271,6 +1334,10 @@ export type Database = {
       }
       is_matriculada: {
         Args: { _curso_id?: string; _user_id: string }
+        Returns: boolean
+      }
+      is_profissional_confirmada: {
+        Args: { _user_id: string }
         Returns: boolean
       }
       is_terapeuta_of_cliente: {
