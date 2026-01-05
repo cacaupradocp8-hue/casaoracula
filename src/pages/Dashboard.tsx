@@ -20,6 +20,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 type NivelSala = 'NIVEL_0' | 'NIVEL_1' | 'NIVEL_2' | 'NIVEL_3';
 
@@ -86,7 +87,17 @@ export default function Dashboard() {
     const salaMinNivel = NIVEL_HIERARCHY[sala.nivel_minimo];
     return userNivelNum >= salaMinNivel;
   };
-  
+
+  const handleSalaClick = (sala: Sala) => {
+  if (canAccessSala(sala)) {
+    setSelectedSala(sala);
+    setShowBlockedDialog(false);
+  } else {
+    setSelectedSala(sala);
+    setShowBlockedDialog(true);
+  }
+};
+
   if (!user) return null;
 
   const portal = getPortal(user.portal);
@@ -193,7 +204,8 @@ export default function Dashboard() {
                     isAccessible && 'hover:shadow-gold cursor-pointer',
                     !isAccessible && 'opacity-60'
                   )}
-                  onClick={() => isAccessible && navigate(`/salas/${sala.id}`)}
+                  onClick={() => handleSalaClick(sala)}
+
                 >
                   <CardHeader className="pb-2">
                     <div className="flex items-start justify-between">
@@ -236,6 +248,65 @@ export default function Dashboard() {
             })}
           </div>
         )}
+{/* Dialog para sala bloqueada */}
+<Dialog open={showBlockedDialog} onOpenChange={setShowBlockedDialog}>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle className="flex items-center gap-2">
+        <Lock className="w-5 h-5 text-muted-foreground" />
+        Sala Bloqueada
+      </DialogTitle>
+      <DialogDescription className="pt-4">
+        {selectedSala?.texto_bloqueio}
+      </DialogDescription>
+    </DialogHeader>
+    <div className="flex justify-end pt-4">
+      <Button variant="outline" onClick={() => setShowBlockedDialog(false)}>
+        Entendi
+      </Button>
+    </div>
+  </DialogContent>
+</Dialog>
+
+{/* Dialog para sala desbloqueada */}
+<Dialog
+  open={!!selectedSala && !showBlockedDialog}
+  onOpenChange={(open) => !open && setSelectedSala(null)}
+>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle className="flex items-center gap-2">
+        <Unlock className="w-5 h-5 text-gold" />
+        {selectedSala?.nome_exibicao}
+      </DialogTitle>
+      <DialogDescription className="pt-4">
+        {selectedSala?.texto_entrada}
+      </DialogDescription>
+    </DialogHeader>
+    <div className="flex justify-end pt-4">
+      <Button
+        variant="gold"
+        onClick={() => {
+          if (!selectedSala) return;
+          const id = selectedSala.id;
+          setSelectedSala(null);
+          navigate(`/salas/${id}`);
+        }}
+      >
+        Explorar
+      </Button>
+    </div>
+  </DialogContent>
+</Dialog>
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
+
+import { Lock, Unlock } from 'lucide-react';
 
         {/* Visitor Message */}
         {user.portal === 'visitante' && (
@@ -255,6 +326,55 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         )}
+        <Dialog open={showBlockedDialog} onOpenChange={setShowBlockedDialog}>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle className="flex items-center gap-2">
+        <Lock className="w-5 h-5 text-muted-foreground" />
+        Sala Bloqueada
+      </DialogTitle>
+      <DialogDescription className="pt-4">
+        {selectedSala?.texto_bloqueio}
+      </DialogDescription>
+    </DialogHeader>
+    <div className="flex justify-end pt-4">
+      <Button variant="outline" onClick={() => setShowBlockedDialog(false)}>
+        Entendi
+      </Button>
+    </div>
+  </DialogContent>
+</Dialog>
+<Dialog
+  open={selectedSala !== null && !showBlockedDialog && canAccessSala(selectedSala)}
+  onOpenChange={(open) => !open && setSelectedSala(null)}
+>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle className="flex items-center gap-2">
+        <Unlock className="w-5 h-5 text-gold" />
+        {selectedSala?.nome_exibicao}
+      </DialogTitle>
+      <DialogDescription className="pt-4">
+        {selectedSala?.texto_entrada}
+      </DialogDescription>
+    </DialogHeader>
+
+    <div className="flex justify-end pt-4">
+      <Button
+        variant="gold"
+        onClick={() => {
+          if (!selectedSala) return;
+          const id = selectedSala.id;
+          setSelectedSala(null);
+          navigate(`/salas/${id}`);
+        }}
+      >
+        Explorar
+      </Button>
+    </div>
+  </DialogContent>
+</Dialog>
+
       </div>
     </AppLayout>
   );
