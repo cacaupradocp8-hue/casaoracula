@@ -1,28 +1,19 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
-import { AppLayout } from '@/components/layout/AppLayout';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { PortalBadge } from '@/components/shared/PortalBadge';
-import { SectionHeader } from '@/components/shared/SectionHeader';
-import { getPortal } from '@/types/portal';
-import { Link, useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import {
-  DoorOpen,
-  ArrowRight,
-  Lock,
-  Unlock,
-  Check,
-  Sparkles,
-  AlertTriangle,
-  Loader2,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { useEffect, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useProfessionalStatus } from "@/hooks/useProfessionalStatus";
+import { AppLayout } from "@/components/layout/AppLayout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PortalBadge } from "@/components/shared/PortalBadge";
+import { SectionHeader } from "@/components/shared/SectionHeader";
+import { getPortal } from "@/types/portal";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { DoorOpen, ArrowRight, Lock, Unlock, Check, Sparkles, AlertTriangle, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
-type NivelSala = 'NIVEL_0' | 'NIVEL_1' | 'NIVEL_2' | 'NIVEL_3';
+type NivelSala = "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3";
 
 interface Sala {
   id: string;
@@ -41,47 +32,47 @@ const NIVEL_HIERARCHY: Record<NivelSala, number> = {
 };
 
 const PORTAL_TO_NIVEL: Record<string, NivelSala> = {
-  visitante: 'NIVEL_0',
-  pre_iniciada: 'NIVEL_1',
-  iniciada: 'NIVEL_2',
-  admin: 'NIVEL_3',
+  visitante: "NIVEL_0",
+  pre_iniciada: "NIVEL_1",
+  iniciada: "NIVEL_2",
+  admin: "NIVEL_3",
 };
 
 export default function Dashboard() {
   const { user } = useAuth();
   const { isProfessional, isLoading: isLoadingProfessional } = useProfessionalStatus();
   const navigate = useNavigate();
-  
+
   const [salas, setSalas] = useState<Sala[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const userNivel = user?.portal ? PORTAL_TO_NIVEL[user.portal] : 'NIVEL_0';
+  // ✅ estados do modal
+  const [selectedSala, setSelectedSala] = useState<Sala | null>(null);
+  const [showBlockedDialog, setShowBlockedDialog] = useState(false);
+
+  const userNivel = user?.portal ? PORTAL_TO_NIVEL[user.portal] : "NIVEL_0";
   const userNivelNum = NIVEL_HIERARCHY[userNivel];
 
   useEffect(() => {
+    const fetchSalas = async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase.from("salas").select("*").eq("ativa", true).order("ordem");
+
+        if (error) {
+          console.error("Error fetching salas:", error);
+        } else {
+          setSalas((data || []) as Sala[]);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchSalas();
   }, []);
-
-  const fetchSalas = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('salas')
-        .select('*')
-        .eq('ativa', true)
-        .order('ordem');
-
-      if (error) {
-        console.error('Error fetching salas:', error);
-      } else {
-        setSalas(data || []);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const canAccessSala = (sala: Sala): boolean => {
     const salaMinNivel = NIVEL_HIERARCHY[sala.nivel_minimo];
@@ -89,14 +80,14 @@ export default function Dashboard() {
   };
 
   const handleSalaClick = (sala: Sala) => {
-  if (canAccessSala(sala)) {
-    setSelectedSala(sala);
-    setShowBlockedDialog(false);
-  } else {
-    setSelectedSala(sala);
-    setShowBlockedDialog(true);
-  }
-};
+    if (canAccessSala(sala)) {
+      setSelectedSala(sala);
+      setShowBlockedDialog(false);
+    } else {
+      setSelectedSala(sala);
+      setShowBlockedDialog(true);
+    }
+  };
 
   if (!user) return null;
 
@@ -112,9 +103,7 @@ export default function Dashboard() {
               <h1 className="font-display text-3xl md:text-4xl font-light text-foreground mb-2">
                 Bem-vinda, <span className="text-gold-gradient font-semibold">{user.name}</span>
               </h1>
-              <p className="text-muted-foreground">
-                A Casa ORÁCULA te recebe para mais uma jornada iniciática.
-              </p>
+              <p className="text-muted-foreground">A Casa ORÁCULA te recebe para mais uma jornada iniciática.</p>
             </div>
             <PortalBadge portal={user.portal} size="lg" showName />
           </div>
@@ -124,15 +113,11 @@ export default function Dashboard() {
             <CardContent className="p-6">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
                 <div className="flex-1">
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-2">
-                    {portal.name}
-                  </h3>
-                  <p className="text-muted-foreground text-sm mb-4">
-                    {portal.description}
-                  </p>
+                  <h3 className="font-display text-xl font-semibold text-foreground mb-2">{portal.name}</h3>
+                  <p className="text-muted-foreground text-sm mb-4">{portal.description}</p>
                   <div className="flex flex-wrap gap-2">
                     {portal.features.slice(0, 4).map((feature, idx) => (
-                      <span 
+                      <span
                         key={idx}
                         className="inline-flex items-center gap-1 text-xs bg-secondary/50 px-2 py-1 rounded-full"
                       >
@@ -148,7 +133,7 @@ export default function Dashboard() {
         </div>
 
         {/* Professional Notice */}
-        {!isLoadingProfessional && !isProfessional && user.portal !== 'visitante' && (
+        {!isLoadingProfessional && !isProfessional && user.portal !== "visitante" && (
           <Card className="mb-8 bg-amber-500/5 border-amber-500/20">
             <CardContent className="p-4">
               <div className="flex items-start gap-3">
@@ -158,10 +143,10 @@ export default function Dashboard() {
                   <p className="text-sm text-muted-foreground mt-1">
                     A Sala de Sessão, Mapas e ferramentas avançadas requerem confirmação profissional.
                   </p>
-                  <Button 
-                    variant="link" 
+                  <Button
+                    variant="link"
                     className="px-0 h-auto text-gold"
-                    onClick={() => navigate('/confirmar-profissional')}
+                    onClick={() => navigate("/confirmar-profissional")}
                   >
                     Fazer confirmação profissional →
                   </Button>
@@ -180,13 +165,13 @@ export default function Dashboard() {
         </div>
 
         {/* Salas Grid */}
-        <SectionHeader 
-          title="Salas da Casa ORÁCULA" 
+        <SectionHeader
+          title="Salas da Casa ORÁCULA"
           subtitle="Explore as salas de acordo com seu nível na jornada"
           icon={<DoorOpen className="w-5 h-5" />}
           className="mb-6"
         />
-        
+
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-gold" />
@@ -195,47 +180,45 @@ export default function Dashboard() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
             {salas.map((sala) => {
               const isAccessible = canAccessSala(sala);
-              
+
               return (
-                <Card 
+                <Card
                   key={sala.id}
                   className={cn(
-                    'group transition-all duration-300',
-                    isAccessible && 'hover:shadow-gold cursor-pointer',
-                    !isAccessible && 'opacity-60'
+                    "group transition-all duration-300 cursor-pointer",
+                    isAccessible && "hover:shadow-gold",
+                    !isAccessible && "opacity-60",
                   )}
                   onClick={() => handleSalaClick(sala)}
-
                 >
                   <CardHeader className="pb-2">
                     <div className="flex items-start justify-between">
-                      <div className={cn(
-                        'w-12 h-12 rounded-xl flex items-center justify-center',
-                        isAccessible ? 'bg-gold/20 text-gold' : 'bg-muted text-muted-foreground'
-                      )}>
-                        {isAccessible ? (
-                          <Unlock className="w-6 h-6" />
-                        ) : (
-                          <Lock className="w-6 h-6" />
+                      <div
+                        className={cn(
+                          "w-12 h-12 rounded-xl flex items-center justify-center",
+                          isAccessible ? "bg-gold/20 text-gold" : "bg-muted text-muted-foreground",
                         )}
+                      >
+                        {isAccessible ? <Unlock className="w-6 h-6" /> : <Lock className="w-6 h-6" />}
                       </div>
-                      <span className={cn(
-                        'text-xs px-2 py-1 rounded-full',
-                        isAccessible ? 'bg-gold/20 text-gold' : 'bg-muted text-muted-foreground'
-                      )}>
-                        {sala.nivel_minimo.replace('NIVEL_', 'Nível ')}
+                      <span
+                        className={cn(
+                          "text-xs px-2 py-1 rounded-full",
+                          isAccessible ? "bg-gold/20 text-gold" : "bg-muted text-muted-foreground",
+                        )}
+                      >
+                        {sala.nivel_minimo.replace("NIVEL_", "Nível ")}
                       </span>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <CardTitle className={cn(
-                      'text-lg mb-1',
-                      isAccessible && 'group-hover:text-gold transition-colors'
-                    )}>
+                    <CardTitle
+                      className={cn("text-lg mb-1", isAccessible && "group-hover:text-gold transition-colors")}
+                    >
                       {sala.nome_exibicao}
                     </CardTitle>
                     <CardDescription className="text-sm line-clamp-2">
-                      {isAccessible ? sala.texto_entrada : 'Sala bloqueada'}
+                      {isAccessible ? sala.texto_entrada : "Sala bloqueada"}
                     </CardDescription>
                     {isAccessible && (
                       <div className="flex items-center justify-end mt-3">
@@ -248,68 +231,9 @@ export default function Dashboard() {
             })}
           </div>
         )}
-{/* Dialog para sala bloqueada */}
-<Dialog open={showBlockedDialog} onOpenChange={setShowBlockedDialog}>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle className="flex items-center gap-2">
-        <Lock className="w-5 h-5 text-muted-foreground" />
-        Sala Bloqueada
-      </DialogTitle>
-      <DialogDescription className="pt-4">
-        {selectedSala?.texto_bloqueio}
-      </DialogDescription>
-    </DialogHeader>
-    <div className="flex justify-end pt-4">
-      <Button variant="outline" onClick={() => setShowBlockedDialog(false)}>
-        Entendi
-      </Button>
-    </div>
-  </DialogContent>
-</Dialog>
-
-{/* Dialog para sala desbloqueada */}
-<Dialog
-  open={!!selectedSala && !showBlockedDialog}
-  onOpenChange={(open) => !open && setSelectedSala(null)}
->
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle className="flex items-center gap-2">
-        <Unlock className="w-5 h-5 text-gold" />
-        {selectedSala?.nome_exibicao}
-      </DialogTitle>
-      <DialogDescription className="pt-4">
-        {selectedSala?.texto_entrada}
-      </DialogDescription>
-    </DialogHeader>
-    <div className="flex justify-end pt-4">
-      <Button
-        variant="gold"
-        onClick={() => {
-          if (!selectedSala) return;
-          const id = selectedSala.id;
-          setSelectedSala(null);
-          navigate(`/salas/${id}`);
-        }}
-      >
-        Explorar
-      </Button>
-    </div>
-  </DialogContent>
-</Dialog>
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
-
-import { Lock, Unlock } from 'lucide-react';
 
         {/* Visitor Message */}
-        {user.portal === 'visitante' && (
+        {user.portal === "visitante" && (
           <Card className="bg-secondary/30 border-border/50">
             <CardContent className="p-8 text-center">
               <Sparkles className="w-12 h-12 mx-auto mb-4 text-gold" />
@@ -317,64 +241,57 @@ import { Lock, Unlock } from 'lucide-react';
                 Você está no Portal da Buscadora
               </h3>
               <p className="text-muted-foreground max-w-lg mx-auto mb-6">
-                As ferramentas profissionais são liberadas após a confirmação da sua atuação. 
-                Por enquanto, explore as salas do Nível 0.
+                As ferramentas profissionais são liberadas após a confirmação da sua atuação. Por enquanto, explore as
+                salas do Nível 0.
               </p>
-              <Button onClick={() => navigate('/confirmar-profissional')}>
-                Fazer confirmação profissional
-              </Button>
+              <Button onClick={() => navigate("/confirmar-profissional")}>Fazer confirmação profissional</Button>
             </CardContent>
           </Card>
         )}
+
+        {/* Dialog para sala bloqueada */}
         <Dialog open={showBlockedDialog} onOpenChange={setShowBlockedDialog}>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle className="flex items-center gap-2">
-        <Lock className="w-5 h-5 text-muted-foreground" />
-        Sala Bloqueada
-      </DialogTitle>
-      <DialogDescription className="pt-4">
-        {selectedSala?.texto_bloqueio}
-      </DialogDescription>
-    </DialogHeader>
-    <div className="flex justify-end pt-4">
-      <Button variant="outline" onClick={() => setShowBlockedDialog(false)}>
-        Entendi
-      </Button>
-    </div>
-  </DialogContent>
-</Dialog>
-<Dialog
-  open={selectedSala !== null && !showBlockedDialog && canAccessSala(selectedSala)}
-  onOpenChange={(open) => !open && setSelectedSala(null)}
->
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle className="flex items-center gap-2">
-        <Unlock className="w-5 h-5 text-gold" />
-        {selectedSala?.nome_exibicao}
-      </DialogTitle>
-      <DialogDescription className="pt-4">
-        {selectedSala?.texto_entrada}
-      </DialogDescription>
-    </DialogHeader>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Lock className="w-5 h-5 text-muted-foreground" />
+                Sala Bloqueada
+              </DialogTitle>
+              <DialogDescription className="pt-4">{selectedSala?.texto_bloqueio}</DialogDescription>
+            </DialogHeader>
+            <div className="flex justify-end pt-4">
+              <Button variant="outline" onClick={() => setShowBlockedDialog(false)}>
+                Entendi
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
 
-    <div className="flex justify-end pt-4">
-      <Button
-        variant="gold"
-        onClick={() => {
-          if (!selectedSala) return;
-          const id = selectedSala.id;
-          setSelectedSala(null);
-          navigate(`/salas/${id}`);
-        }}
-      >
-        Explorar
-      </Button>
-    </div>
-  </DialogContent>
-</Dialog>
-
+        {/* Dialog para sala desbloqueada */}
+        <Dialog open={!!selectedSala && !showBlockedDialog} onOpenChange={(open) => !open && setSelectedSala(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Unlock className="w-5 h-5 text-gold" />
+                {selectedSala?.nome_exibicao}
+              </DialogTitle>
+              <DialogDescription className="pt-4">{selectedSala?.texto_entrada}</DialogDescription>
+            </DialogHeader>
+            <div className="flex justify-end pt-4">
+              <Button
+                variant="gold"
+                onClick={() => {
+                  if (!selectedSala) return;
+                  const id = selectedSala.id;
+                  setSelectedSala(null);
+                  navigate(`/salas/${id}`);
+                }}
+              >
+                Explorar
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </AppLayout>
   );
