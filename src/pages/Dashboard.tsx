@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -5,34 +6,44 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { PortalBadge } from '@/components/shared/PortalBadge';
 import { SectionHeader } from '@/components/shared/SectionHeader';
-import { getPortal, canAccessFeature } from '@/types/portal';
-import { TRAVESSIAS_DATA } from '@/types/travessia';
+import { getPortal } from '@/types/portal';
 import { Link, useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import {
-  Compass,
-  Moon,
-  BookOpen,
-  Shield,
+  DoorOpen,
   ArrowRight,
   Lock,
+  Unlock,
   Check,
   Sparkles,
   AlertTriangle,
+  Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const ICON_MAP: Record<string, typeof Compass> = {
-  Compass,
-  Moon,
-  BookOpen,
-  Shield,
+type NivelSala = 'NIVEL_0' | 'NIVEL_1' | 'NIVEL_2' | 'NIVEL_3';
+
+interface Sala {
+  id: string;
+  nivel_minimo: NivelSala;
+  nome_exibicao: string;
+  texto_entrada: string;
+  texto_bloqueio: string;
+  ordem: number;
+}
+
+const NIVEL_HIERARCHY: Record<NivelSala, number> = {
+  NIVEL_0: 0,
+  NIVEL_1: 1,
+  NIVEL_2: 2,
+  NIVEL_3: 3,
 };
 
-const COLOR_MAP: Record<string, string> = {
-  amber: 'text-amber-500 bg-amber-500/10',
-  purple: 'text-purple-500 bg-purple-500/10',
-  gold: 'text-gold bg-gold/10',
-  emerald: 'text-emerald-500 bg-emerald-500/10',
+const PORTAL_TO_NIVEL: Record<string, NivelSala> = {
+  visitante: 'NIVEL_0',
+  pre_iniciada: 'NIVEL_1',
+  iniciada: 'NIVEL_2',
+  admin: 'NIVEL_3',
 };
 
 export default function Dashboard() {
@@ -40,15 +51,45 @@ export default function Dashboard() {
   const { isProfessional, isLoading: isLoadingProfessional } = useProfessionalStatus();
   const navigate = useNavigate();
   
+  const [salas, setSalas] = useState<Sala[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const userNivel = user?.portal ? PORTAL_TO_NIVEL[user.portal] : 'NIVEL_0';
+  const userNivelNum = NIVEL_HIERARCHY[userNivel];
+
+  useEffect(() => {
+    fetchSalas();
+  }, []);
+
+  const fetchSalas = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('salas')
+        .select('*')
+        .eq('ativa', true)
+        .order('ordem');
+
+      if (error) {
+        console.error('Error fetching salas:', error);
+      } else {
+        setSalas(data || []);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const canAccessSala = (sala: Sala): boolean => {
+    const salaMinNivel = NIVEL_HIERARCHY[sala.nivel_minimo];
+    return userNivelNum >= salaMinNivel;
+  };
+  
   if (!user) return null;
 
   const portal = getPortal(user.portal);
-
-  const canAccessTravessia = (travessia: typeof TRAVESSIAS_DATA[0]) => {
-    const hasPortalAccess = canAccessFeature(user.portal, travessia.minPortal);
-    const hasProfessionalAccess = !travessia.requiresProfessional || isProfessional;
-    return hasPortalAccess && hasProfessionalAccess;
-  };
 
   return (
     <AppLayout>
@@ -127,73 +168,74 @@ export default function Dashboard() {
           <p className="text-sm text-muted-foreground mt-2">— Tríade Metodológica ORÁCULA</p>
         </div>
 
-        {/* 4 Travessias */}
+        {/* Salas Grid */}
         <SectionHeader 
-          title="As 4 Travessias" 
-          subtitle="O caminho iniciático para profissionais"
+          title="Salas da Casa ORÁCULA" 
+          subtitle="Explore as salas de acordo com seu nível na jornada"
+          icon={<DoorOpen className="w-5 h-5" />}
           className="mb-6"
         />
         
-        <div className="grid sm:grid-cols-2 gap-4 mb-12">
-          {TRAVESSIAS_DATA.map((travessia) => {
-            const Icon = ICON_MAP[travessia.icone] || Compass;
-            const colorClass = COLOR_MAP[travessia.corAcento] || COLOR_MAP.gold;
-            const isAccessible = canAccessTravessia(travessia);
-            
-            return (
-              <Card 
-                key={travessia.id}
-                className={cn(
-                  'group transition-all duration-300',
-                  isAccessible && 'hover:shadow-gold cursor-pointer',
-                  !isAccessible && 'opacity-60'
-                )}
-              >
-                {isAccessible ? (
-                  <Link to={`/travessia/${travessia.slug}`} className="block h-full">
-                    <CardHeader className="pb-2">
-                      <div className="flex items-start justify-between">
-                        <div className={cn('w-10 h-10 rounded-lg flex items-center justify-center', colorClass)}>
-                          <Icon className="w-5 h-5" />
-                        </div>
-                        <span className="text-xs text-muted-foreground">Travessia {travessia.number}</span>
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="w-8 h-8 animate-spin text-gold" />
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+            {salas.map((sala) => {
+              const isAccessible = canAccessSala(sala);
+              
+              return (
+                <Card 
+                  key={sala.id}
+                  className={cn(
+                    'group transition-all duration-300',
+                    isAccessible && 'hover:shadow-gold cursor-pointer',
+                    !isAccessible && 'opacity-60'
+                  )}
+                  onClick={() => isAccessible && navigate(`/salas/${sala.id}`)}
+                >
+                  <CardHeader className="pb-2">
+                    <div className="flex items-start justify-between">
+                      <div className={cn(
+                        'w-12 h-12 rounded-xl flex items-center justify-center',
+                        isAccessible ? 'bg-gold/20 text-gold' : 'bg-muted text-muted-foreground'
+                      )}>
+                        {isAccessible ? (
+                          <Unlock className="w-6 h-6" />
+                        ) : (
+                          <Lock className="w-6 h-6" />
+                        )}
                       </div>
-                    </CardHeader>
-                    <CardContent>
-                      <CardTitle className="text-lg mb-1 group-hover:text-gold transition-colors">
-                        {travessia.title}
-                      </CardTitle>
-                      <CardDescription className="text-sm">{travessia.subtitle}</CardDescription>
+                      <span className={cn(
+                        'text-xs px-2 py-1 rounded-full',
+                        isAccessible ? 'bg-gold/20 text-gold' : 'bg-muted text-muted-foreground'
+                      )}>
+                        {sala.nivel_minimo.replace('NIVEL_', 'Nível ')}
+                      </span>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <CardTitle className={cn(
+                      'text-lg mb-1',
+                      isAccessible && 'group-hover:text-gold transition-colors'
+                    )}>
+                      {sala.nome_exibicao}
+                    </CardTitle>
+                    <CardDescription className="text-sm line-clamp-2">
+                      {isAccessible ? sala.texto_entrada : 'Sala bloqueada'}
+                    </CardDescription>
+                    {isAccessible && (
                       <div className="flex items-center justify-end mt-3">
                         <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-gold transition-all group-hover:translate-x-1" />
                       </div>
-                    </CardContent>
-                  </Link>
-                ) : (
-                  <div className="h-full">
-                    <CardHeader className="pb-2">
-                      <div className="flex items-start justify-between">
-                        <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground">
-                          <Icon className="w-5 h-5" />
-                        </div>
-                        <Lock className="w-4 h-4 text-muted-foreground" />
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <CardTitle className="text-lg mb-1 text-muted-foreground">{travessia.title}</CardTitle>
-                      <CardDescription className="text-sm">
-                        {travessia.requiresProfessional && !isProfessional 
-                          ? 'Requer confirmação profissional' 
-                          : `Disponível a partir do Portal ${travessia.minPortal}`
-                        }
-                      </CardDescription>
-                    </CardContent>
-                  </div>
-                )}
-              </Card>
-            );
-          })}
-        </div>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        )}
 
         {/* Visitor Message */}
         {user.portal === 'visitante' && (
@@ -205,7 +247,7 @@ export default function Dashboard() {
               </h3>
               <p className="text-muted-foreground max-w-lg mx-auto mb-6">
                 As ferramentas profissionais são liberadas após a confirmação da sua atuação. 
-                Por enquanto, explore a Travessia 1 — O Mundo sem Símbolos.
+                Por enquanto, explore as salas do Nível 0.
               </p>
               <Button onClick={() => navigate('/confirmar-profissional')}>
                 Fazer confirmação profissional

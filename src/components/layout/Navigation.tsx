@@ -8,7 +8,6 @@ import { LockedContentModal } from '@/components/shared/LockedContentModal';
 import {
   Home,
   BookOpen,
-  Compass,
   Library,
   FolderOpen,
   Sparkles,
@@ -20,8 +19,8 @@ import {
   Users,
   Bot,
   Wrench,
-  Heart,
   Lock,
+  DoorOpen,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -33,12 +32,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const navItems: { path: string; label: string; icon: typeof Home; minPortal: PortalType }[] = [
-  { path: '/dashboard', label: 'Início', icon: Home, minPortal: 'visitante' },
-  { path: '/travessias', label: 'Travessias', icon: Compass, minPortal: 'visitante' },
+  { path: '/dashboard', label: 'Salas', icon: DoorOpen, minPortal: 'visitante' },
   { path: '/biblioteca', label: 'Biblioteca', icon: Library, minPortal: 'pre_iniciada' },
   { path: '/casos', label: 'Casos', icon: FolderOpen, minPortal: 'pre_iniciada' },
   { path: '/agentes', label: 'Agentes IA', icon: Bot, minPortal: 'pre_iniciada' },
-  { path: '/salas', label: 'Ferramentas', icon: Wrench, minPortal: 'pre_iniciada' },
+  { path: '/ferramentas', label: 'Ferramentas', icon: Wrench, minPortal: 'pre_iniciada' },
   { path: '/mentoria', label: 'Mentoria', icon: Users, minPortal: 'iniciada' },
   { path: '/leitura-oracular', label: 'Supervisão', icon: Sparkles, minPortal: 'iniciada' },
   { path: '/admin', label: 'Admin', icon: Settings, minPortal: 'admin' },
