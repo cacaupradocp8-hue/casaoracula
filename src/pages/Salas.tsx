@@ -242,3 +242,6 @@ export default function Salas() {
       </div>
     </AppLayout>
   );
+    </AppLayout>
+  );
+}
