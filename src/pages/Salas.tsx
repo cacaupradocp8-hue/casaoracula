@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { DoorOpen, Lock, Unlock, Loader2 } from 'lucide-react';
-import { icons } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -22,18 +21,6 @@ interface Sala {
   texto_bloqueio: string;
   ativa: boolean;
   ordem: number;
-}
-
-interface Ferramenta {
-  id: string;
-  sala_id: string;
-  ferramenta_chave: string;
-  ferramenta_nome: string;
-  ferramenta_descricao: string;
-  icone: string;
-  rota: string;
-  ordem: number;
-  ativa: boolean;
 }
 
 interface PortalSala {
@@ -62,24 +49,14 @@ const PORTAL_TO_NIVEL: Record<string, NivelSala> = {
   admin: 'NIVEL_3',
 };
 
-// Dynamic icon component
-function DynamicIcon({ name, className }: { name: string; className?: string }) {
-  const iconName = name.charAt(0).toUpperCase() + name.slice(1).replace(/-([a-z])/g, (_, c) => c.toUpperCase());
-  const LucideIcon = icons[iconName as keyof typeof icons];
-  
-  if (!LucideIcon) {
-    return <DoorOpen className={className} />;
-  }
-  
-  return <LucideIcon className={className} />;
-}
-
 export default function Salas() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+
   const [salas, setSalas] = useState<Sala[]>([]);
-  const [ferramentas, setFerramentas] = useState<Ferramenta[]>([]);
   const [portalSalas, setPortalSalas] = useState<PortalSala[]>([]);
   const [loading, setLoading] = useState(true);
+
   const [selectedSala, setSelectedSala] = useState<Sala | null>(null);
   const [showBlockedDialog, setShowBlockedDialog] = useState(false);
 
@@ -99,32 +76,30 @@ export default function Salas() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const [salasRes, ferramentasRes, portalSalasRes] = await Promise.all([
-        supabase.from('salas').select('*').eq('ativa', true).order('ordem'),
-        supabase.from('sala_ferramentas').select('*').eq('ativa', true).order('ordem'),
-        supabase.from('portal_salas').select('portal_type, sala_id'),
-      ]);
+      try {
+        const [salasRes, portalSalasRes] = await Promise.all([
+          supabase.from('salas').select('*').eq('ativa', true).order('ordem'),
+          supabase.from('portal_salas').select('portal_type, sala_id'),
+        ]);
 
-      if (salasRes.error) {
-        toast.error('Erro ao carregar salas');
-        console.error(salasRes.error);
-      } else {
-        setSalas(salasRes.data as Sala[]);
+        if (salasRes.error) {
+          toast.error('Erro ao carregar salas');
+          console.error(salasRes.error);
+        } else {
+          setSalas((salasRes.data as Sala[]) || []);
+        }
+
+        if (portalSalasRes.error) {
+          console.error(portalSalasRes.error);
+        } else {
+          setPortalSalas((portalSalasRes.data as PortalSala[]) || []);
+        }
+      } catch (e) {
+        console.error(e);
+        toast.error('Erro inesperado ao carregar salas');
+      } finally {
+        setLoading(false);
       }
-
-      if (ferramentasRes.error) {
-        console.error(ferramentasRes.error);
-      } else {
-        setFerramentas(ferramentasRes.data as Ferramenta[]);
-      }
-
-      if (portalSalasRes.error) {
-        console.error(portalSalasRes.error);
-      } else {
-        setPortalSalas(portalSalasRes.data as PortalSala[]);
-      }
-
-      setLoading(false);
     };
 
     fetchData();
@@ -133,15 +108,12 @@ export default function Salas() {
   const handleSalaClick = (sala: Sala) => {
     if (canAccessSala(sala)) {
       setSelectedSala(sala);
+      setShowBlockedDialog(false);
     } else {
       setSelectedSala(sala);
       setShowBlockedDialog(true);
     }
   };
-
-  // Get ferramentas for accessible salas
-  const accessibleSalaIds = salas.filter(canAccessSala).map((s) => s.id);
-  const availableFerramentas = ferramentas.filter((f) => accessibleSalaIds.includes(f.sala_id));
 
   if (loading) {
     return (
@@ -181,22 +153,14 @@ export default function Salas() {
                   <div className="flex items-center justify-between mb-2">
                     <div
                       className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                        isAccessible
-                          ? 'bg-gold/20 text-gold'
-                          : 'bg-muted text-muted-foreground'
+                        isAccessible ? 'bg-gold/20 text-gold' : 'bg-muted text-muted-foreground'
                       }`}
                     >
-                      {isAccessible ? (
-                        <Unlock className="w-6 h-6" />
-                      ) : (
-                        <Lock className="w-6 h-6" />
-                      )}
+                      {isAccessible ? <Unlock className="w-6 h-6" /> : <Lock className="w-6 h-6" />}
                     </div>
                     <span
                       className={`text-xs px-2 py-1 rounded-full ${
-                        isAccessible
-                          ? 'bg-gold/20 text-gold'
-                          : 'bg-muted text-muted-foreground'
+                        isAccessible ? 'bg-gold/20 text-gold' : 'bg-muted text-muted-foreground'
                       }`}
                     >
                       {sala.nivel_minimo.replace('NIVEL_', 'Nível ')}
@@ -204,11 +168,13 @@ export default function Salas() {
                   </div>
                   <CardTitle className="text-lg">{sala.nome_exibicao}</CardTitle>
                 </CardHeader>
+
                 <CardContent>
                   <p className="text-sm text-muted-foreground line-clamp-2">
                     {isAccessible ? sala.texto_entrada : 'Sala bloqueada'}
                   </p>
-                  {/* Portais associados */}
+
+                  {/* Portais associados (labels de plano) */}
                   {getPortaisForSala(sala.id).length > 0 && (
                     <div className="mt-3 flex flex-wrap gap-1">
                       {getPortaisForSala(sala.id).map((portal) => (
@@ -227,46 +193,6 @@ export default function Salas() {
           })}
         </div>
 
-        {/* Ferramentas disponíveis baseadas nas salas acessíveis */}
-        {availableFerramentas.length > 0 && (
-          <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <DoorOpen className="w-5 h-5 text-gold" />
-              Ferramentas Disponíveis
-            </h2>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {availableFerramentas.map((tool) => (
-                <Card
-                  key={tool.id}
-                  className="glass hover:border-gold/50 transition-all bg-gradient-to-br from-gold/10 to-background"
-                >
-                  <CardHeader>
-                    <div className="w-14 h-14 rounded-xl bg-gold/20 flex items-center justify-center mb-3">
-                      <DynamicIcon name={tool.icone} className="w-7 h-7 text-gold" />
-                    </div>
-                    <CardTitle className="text-xl">{tool.ferramenta_nome}</CardTitle>
-                    <CardDescription className="text-sm">{tool.ferramenta_descricao}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Link to={tool.rota}>
-                      <Button variant="gold" className="w-full">
-                        Acessar Ferramenta
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {availableFerramentas.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground">
-            <DoorOpen className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>Nenhuma ferramenta disponível no momento.</p>
-          </div>
-        )}
-
         {/* Dialog para sala bloqueada */}
         <Dialog open={showBlockedDialog} onOpenChange={setShowBlockedDialog}>
           <DialogContent>
@@ -275,9 +201,7 @@ export default function Salas() {
                 <Lock className="w-5 h-5 text-muted-foreground" />
                 Sala Bloqueada
               </DialogTitle>
-              <DialogDescription className="pt-4">
-                {selectedSala?.texto_bloqueio}
-              </DialogDescription>
+              <DialogDescription className="pt-4">{selectedSala?.texto_bloqueio}</DialogDescription>
             </DialogHeader>
             <div className="flex justify-end pt-4">
               <Button variant="outline" onClick={() => setShowBlockedDialog(false)}>
@@ -298,12 +222,18 @@ export default function Salas() {
                 <Unlock className="w-5 h-5 text-gold" />
                 {selectedSala?.nome_exibicao}
               </DialogTitle>
-              <DialogDescription className="pt-4">
-                {selectedSala?.texto_entrada}
-              </DialogDescription>
+              <DialogDescription className="pt-4">{selectedSala?.texto_entrada}</DialogDescription>
             </DialogHeader>
             <div className="flex justify-end pt-4">
-              <Button variant="gold" onClick={() => setSelectedSala(null)}>
+              <Button
+                variant="gold"
+                onClick={() => {
+                  if (!selectedSala) return;
+                  const id = selectedSala.id;
+                  setSelectedSala(null);
+                  navigate(`/salas/${id}`);
+                }}
+              >
                 Explorar
               </Button>
             </div>
@@ -312,4 +242,3 @@ export default function Salas() {
       </div>
     </AppLayout>
   );
-}
