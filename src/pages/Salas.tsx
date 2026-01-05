@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
