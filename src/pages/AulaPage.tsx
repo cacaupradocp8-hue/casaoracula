@@ -189,17 +189,22 @@ export default function AulaPage() {
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-4xl">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6 flex-wrap">
           <button 
-            onClick={() => navigate('/travessias')}
+            onClick={() => navigate('/dashboard')}
             className="hover:text-gold transition-colors"
           >
-            Portais
+            Salas
           </button>
           <span>/</span>
           {portal && (
             <>
-              <span>{portal.titulo}</span>
+              <button 
+                onClick={() => navigate(`/portal/${portal.id}`)}
+                className="hover:text-gold transition-colors"
+              >
+                {portal.titulo}
+              </button>
               <span>/</span>
             </>
           )}
@@ -313,11 +318,11 @@ export default function AulaPage() {
         <div className="flex justify-between">
           <Button
             variant="outline"
-            onClick={() => prevAula ? navigate(`/aulas/${prevAula.id}`) : navigate('/travessias')}
+            onClick={() => prevAula ? navigate(`/aulas/${prevAula.id}`) : portal ? navigate(`/portal/${portal.id}`) : navigate('/dashboard')}
             className="gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
-            {prevAula ? 'Aula Anterior' : 'Voltar aos Portais'}
+            {prevAula ? 'Aula Anterior' : 'Voltar ao Portal'}
           </Button>
           
           {nextAula ? (
@@ -332,7 +337,7 @@ export default function AulaPage() {
           ) : (
             <Button
               variant="outline"
-              onClick={() => navigate('/travessias')}
+              onClick={() => portal ? navigate(`/portal/${portal.id}`) : navigate('/dashboard')}
               className="gap-2"
             >
               Finalizar Portal

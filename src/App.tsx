@@ -8,7 +8,10 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 // Pages
 import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
+import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Dashboard";
+import SalaDetalhe from "./pages/SalaDetalhe";
+import PortalDetalhe from "./pages/PortalDetalhe";
 import Travessias from "./pages/Travessias";
 import Portais from "./pages/Portais";
 import Metodo from "./pages/Metodo";
@@ -57,7 +60,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
   
   if (isLoading) return <AuthLoading />;
-  if (isAuthenticated) return <Navigate to="/dashboard" replace />;
+  if (isAuthenticated) return <Navigate to="/welcome" replace />;
   
   return <>{children}</>;
 }
@@ -70,23 +73,30 @@ function AppRoutes() {
       <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
       <Route path="/reset-password" element={<ResetPassword />} />
       
-      {/* Protected Routes */}
+      {/* Protected Routes - New Navigation Structure */}
+      <Route path="/welcome" element={<ProtectedRoute><Welcome /></ProtectedRoute>} />
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path="/salas/:id" element={<ProtectedRoute><SalaDetalhe /></ProtectedRoute>} />
+      <Route path="/portal/:id" element={<ProtectedRoute><PortalDetalhe /></ProtectedRoute>} />
+      <Route path="/aulas/:id" element={<ProtectedRoute><AulaPage /></ProtectedRoute>} />
+      
+      {/* Legacy routes - kept for compatibility */}
       <Route path="/travessias" element={<ProtectedRoute><Travessias /></ProtectedRoute>} />
       <Route path="/travessia/:slug" element={<ProtectedRoute><Portais /></ProtectedRoute>} />
       <Route path="/portais" element={<ProtectedRoute><Portais /></ProtectedRoute>} />
+      
+      {/* Other Protected Routes */}
       <Route path="/confirmar-profissional" element={<ProtectedRoute><ConfirmarProfissional /></ProtectedRoute>} />
       <Route path="/mentoria" element={<ProtectedRoute minPortal="iniciada"><Mentoria /></ProtectedRoute>} />
       <Route path="/metodo" element={<ProtectedRoute minPortal="pre_iniciada"><Metodo /></ProtectedRoute>} />
       <Route path="/biblioteca" element={<ProtectedRoute minPortal="pre_iniciada"><Biblioteca /></ProtectedRoute>} />
       <Route path="/casos" element={<ProtectedRoute minPortal="pre_iniciada"><Casos /></ProtectedRoute>} />
       <Route path="/agentes" element={<ProtectedRoute minPortal="pre_iniciada"><Agentes /></ProtectedRoute>} />
-      <Route path="/salas" element={<ProtectedRoute minPortal="pre_iniciada"><Salas /></ProtectedRoute>} />
+      <Route path="/ferramentas" element={<ProtectedRoute minPortal="pre_iniciada"><Salas /></ProtectedRoute>} />
       <Route path="/salas/big5" element={<ProtectedRoute minPortal="pre_iniciada"><Big5 /></ProtectedRoute>} />
       <Route path="/salas/eneagrama" element={<ProtectedRoute minPortal="pre_iniciada"><Eneagrama /></ProtectedRoute>} />
       <Route path="/salas/oraculo-perguntas" element={<ProtectedRoute minPortal="pre_iniciada"><OraculoPerguntas /></ProtectedRoute>} />
       <Route path="/salas/mapa-oracula" element={<ProtectedRoute minPortal="pre_iniciada"><MapaOracula /></ProtectedRoute>} />
-      <Route path="/aulas/:id" element={<ProtectedRoute><AulaPage /></ProtectedRoute>} />
       <Route path="/leitura-oracular" element={<ProtectedRoute minPortal="iniciada"><LeituraOracular /></ProtectedRoute>} />
       <Route path="/minhas-clientes" element={<ProtectedRoute minPortal="pre_iniciada"><MinhasClientes /></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
