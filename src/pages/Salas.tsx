@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react';
-import { AppLayout } from '@/components/layout/AppLayout';
-import { SectionHeader } from '@/components/shared/SectionHeader';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { DoorOpen, Lock, Unlock, Loader2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
+import { useState, useEffect } from "react";
+import { AppLayout } from "@/components/layout/AppLayout";
+import { SectionHeader } from "@/components/shared/SectionHeader";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { DoorOpen, Lock, Unlock, Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
-type NivelSala = 'NIVEL_0' | 'NIVEL_1' | 'NIVEL_2' | 'NIVEL_3';
-type PortalType = 'visitante' | 'pre_iniciada' | 'iniciada' | 'admin';
+type NivelSala = "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3";
+type PortalType = "visitante" | "pre_iniciada" | "iniciada" | "admin";
 
 interface Sala {
   id: string;
@@ -29,10 +29,10 @@ interface PortalSala {
 }
 
 const PORTAL_LABELS: Record<PortalType, string> = {
-  visitante: 'Visitante',
-  pre_iniciada: 'Pré-Iniciada',
-  iniciada: 'Iniciada ORÁCULA',
-  admin: 'Admin',
+  visitante: "Visitante",
+  pre_iniciada: "Pré-Iniciada",
+  iniciada: "Iniciada ORÁCULA",
+  admin: "Admin",
 };
 
 const NIVEL_HIERARCHY: Record<NivelSala, number> = {
@@ -43,10 +43,10 @@ const NIVEL_HIERARCHY: Record<NivelSala, number> = {
 };
 
 const PORTAL_TO_NIVEL: Record<string, NivelSala> = {
-  visitante: 'NIVEL_0',
-  pre_iniciada: 'NIVEL_1',
-  iniciada: 'NIVEL_2',
-  admin: 'NIVEL_3',
+  visitante: "NIVEL_0",
+  pre_iniciada: "NIVEL_1",
+  iniciada: "NIVEL_2",
+  admin: "NIVEL_3",
 };
 
 export default function Salas() {
@@ -60,7 +60,7 @@ export default function Salas() {
   const [selectedSala, setSelectedSala] = useState<Sala | null>(null);
   const [showBlockedDialog, setShowBlockedDialog] = useState(false);
 
-  const userNivel = user?.portal ? PORTAL_TO_NIVEL[user.portal] : 'NIVEL_0';
+  const userNivel = user?.portal ? PORTAL_TO_NIVEL[user.portal] : "NIVEL_0";
   const userNivelNum = NIVEL_HIERARCHY[userNivel];
 
   const canAccessSala = (sala: Sala): boolean => {
@@ -69,21 +69,19 @@ export default function Salas() {
   };
 
   const getPortaisForSala = (salaId: string): PortalType[] => {
-    return portalSalas
-      .filter((ps) => ps.sala_id === salaId)
-      .map((ps) => ps.portal_type);
+    return portalSalas.filter((ps) => ps.sala_id === salaId).map((ps) => ps.portal_type);
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [salasRes, portalSalasRes] = await Promise.all([
-          supabase.from('salas').select('*').eq('ativa', true).order('ordem'),
-          supabase.from('portal_salas').select('portal_type, sala_id'),
+          supabase.from("salas").select("*").eq("ativa", true).order("ordem"),
+          supabase.from("portal_salas").select("portal_type, sala_id"),
         ]);
 
         if (salasRes.error) {
-          toast.error('Erro ao carregar salas');
+          toast.error("Erro ao carregar salas");
           console.error(salasRes.error);
         } else {
           setSalas((salasRes.data as Sala[]) || []);
@@ -96,7 +94,7 @@ export default function Salas() {
         }
       } catch (e) {
         console.error(e);
-        toast.error('Erro inesperado ao carregar salas');
+        toast.error("Erro inesperado ao carregar salas");
       } finally {
         setLoading(false);
       }
@@ -144,8 +142,8 @@ export default function Salas() {
                 key={sala.id}
                 className={`glass transition-all cursor-pointer ${
                   isAccessible
-                    ? 'hover:border-gold/50 hover:shadow-gold/10 hover:shadow-lg'
-                    : 'opacity-60 hover:opacity-80'
+                    ? "hover:border-gold/50 hover:shadow-gold/10 hover:shadow-lg"
+                    : "opacity-60 hover:opacity-80"
                 }`}
                 onClick={() => handleSalaClick(sala)}
               >
@@ -153,17 +151,17 @@ export default function Salas() {
                   <div className="flex items-center justify-between mb-2">
                     <div
                       className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                        isAccessible ? 'bg-gold/20 text-gold' : 'bg-muted text-muted-foreground'
+                        isAccessible ? "bg-gold/20 text-gold" : "bg-muted text-muted-foreground"
                       }`}
                     >
                       {isAccessible ? <Unlock className="w-6 h-6" /> : <Lock className="w-6 h-6" />}
                     </div>
                     <span
                       className={`text-xs px-2 py-1 rounded-full ${
-                        isAccessible ? 'bg-gold/20 text-gold' : 'bg-muted text-muted-foreground'
+                        isAccessible ? "bg-gold/20 text-gold" : "bg-muted text-muted-foreground"
                       }`}
                     >
-                      {sala.nivel_minimo.replace('NIVEL_', 'Nível ')}
+                      {sala.nivel_minimo.replace("NIVEL_", "Nível ")}
                     </span>
                   </div>
                   <CardTitle className="text-lg">{sala.nome_exibicao}</CardTitle>
@@ -171,17 +169,14 @@ export default function Salas() {
 
                 <CardContent>
                   <p className="text-sm text-muted-foreground line-clamp-2">
-                    {isAccessible ? sala.texto_entrada : 'Sala bloqueada'}
+                    {isAccessible ? sala.texto_entrada : "Sala bloqueada"}
                   </p>
 
                   {/* Portais associados (labels de plano) */}
                   {getPortaisForSala(sala.id).length > 0 && (
                     <div className="mt-3 flex flex-wrap gap-1">
                       {getPortaisForSala(sala.id).map((portal) => (
-                        <span
-                          key={portal}
-                          className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary"
-                        >
+                        <span key={portal} className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary">
                           {PORTAL_LABELS[portal]}
                         </span>
                       ))}
@@ -240,8 +235,6 @@ export default function Salas() {
           </DialogContent>
         </Dialog>
       </div>
-    </AppLayout>
-  );
     </AppLayout>
   );
 }
