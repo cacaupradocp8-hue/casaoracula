@@ -1091,6 +1091,228 @@ export type Database = {
         }
         Relationships: []
       }
+      quiz_opcoes: {
+        Row: {
+          categoria: string | null
+          created_at: string
+          id: string
+          ordem: number
+          pergunta_id: string
+          texto: string
+          valor_pontuacao: number
+        }
+        Insert: {
+          categoria?: string | null
+          created_at?: string
+          id?: string
+          ordem?: number
+          pergunta_id: string
+          texto: string
+          valor_pontuacao?: number
+        }
+        Update: {
+          categoria?: string | null
+          created_at?: string
+          id?: string
+          ordem?: number
+          pergunta_id?: string
+          texto?: string
+          valor_pontuacao?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_opcoes_pergunta_id_fkey"
+            columns: ["pergunta_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_perguntas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_perguntas: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          id: string
+          ordem: number
+          quiz_id: string
+          texto: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          ordem?: number
+          quiz_id: string
+          texto: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          ordem?: number
+          quiz_id?: string
+          texto?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_perguntas_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_respostas_usuario: {
+        Row: {
+          categoria_resultado: string | null
+          completed_at: string
+          created_at: string
+          id: string
+          pontuacao_total: number | null
+          quiz_id: string
+          respostas: Json | null
+          resultado_id: string | null
+          user_id: string
+        }
+        Insert: {
+          categoria_resultado?: string | null
+          completed_at?: string
+          created_at?: string
+          id?: string
+          pontuacao_total?: number | null
+          quiz_id: string
+          respostas?: Json | null
+          resultado_id?: string | null
+          user_id: string
+        }
+        Update: {
+          categoria_resultado?: string | null
+          completed_at?: string
+          created_at?: string
+          id?: string
+          pontuacao_total?: number | null
+          quiz_id?: string
+          respostas?: Json | null
+          resultado_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_respostas_usuario_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_respostas_usuario_resultado_id_fkey"
+            columns: ["resultado_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_resultados"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_resultados: {
+        Row: {
+          categoria: string | null
+          created_at: string
+          id: string
+          ordem: number
+          pontuacao_maxima: number | null
+          pontuacao_minima: number | null
+          quiz_id: string
+          texto_interpretativo: string
+          titulo_simbolico: string
+          updated_at: string
+        }
+        Insert: {
+          categoria?: string | null
+          created_at?: string
+          id?: string
+          ordem?: number
+          pontuacao_maxima?: number | null
+          pontuacao_minima?: number | null
+          quiz_id: string
+          texto_interpretativo: string
+          titulo_simbolico: string
+          updated_at?: string
+        }
+        Update: {
+          categoria?: string | null
+          created_at?: string
+          id?: string
+          ordem?: number
+          pontuacao_maxima?: number | null
+          pontuacao_minima?: number | null
+          quiz_id?: string
+          texto_interpretativo?: string
+          titulo_simbolico?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_resultados_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quizzes: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          descricao: string | null
+          id: string
+          portal_id: string | null
+          sala_id: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          portal_id?: string | null
+          sala_id?: string | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          portal_id?: string | null
+          sala_id?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quizzes_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: false
+            referencedRelation: "conteudo_travessias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quizzes_sala_id_fkey"
+            columns: ["sala_id"]
+            isOneToOne: false
+            referencedRelation: "salas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sala_ferramentas: {
         Row: {
           ativa: boolean
