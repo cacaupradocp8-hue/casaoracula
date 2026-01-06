@@ -26,6 +26,7 @@ import Eneagrama from "./pages/salas/Eneagrama";
 import OraculoPerguntas from "./pages/salas/OraculoPerguntas";
 import MapaOracula from "./pages/MapaOracula";
 import AulaPage from "./pages/AulaPage";
+import QuizPage from "./pages/QuizPage";
 import Admin from "./pages/Admin";
 import MinhasClientes from "./pages/MinhasClientes";
 import ConfirmarProfissional from "./pages/ConfirmarProfissional";
@@ -97,6 +98,7 @@ function AppRoutes() {
       <Route path="/salas/eneagrama" element={<ProtectedRoute minPortal="pre_iniciada"><Eneagrama /></ProtectedRoute>} />
       <Route path="/salas/oraculo-perguntas" element={<ProtectedRoute minPortal="pre_iniciada"><OraculoPerguntas /></ProtectedRoute>} />
       <Route path="/salas/mapa-oracula" element={<ProtectedRoute minPortal="pre_iniciada"><MapaOracula /></ProtectedRoute>} />
+      <Route path="/quiz/:quizId" element={<ProtectedRoute><QuizPage /></ProtectedRoute>} />
       <Route path="/leitura-oracular" element={<ProtectedRoute minPortal="iniciada"><LeituraOracular /></ProtectedRoute>} />
       <Route path="/minhas-clientes" element={<ProtectedRoute minPortal="pre_iniciada"><MinhasClientes /></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />

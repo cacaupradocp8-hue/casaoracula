@@ -4,11 +4,17 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ArrowRight, Lock, Loader2, BookOpen, DoorOpen } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Lock, Loader2, BookOpen, DoorOpen, ClipboardList } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature, PortalType } from '@/types/portal';
 import { cn } from '@/lib/utils';
+
+interface Quiz {
+  id: string;
+  titulo: string;
+  descricao: string;
+}
 
 interface Sala {
   id: string;
@@ -33,6 +39,7 @@ export default function SalaDetalhe() {
   
   const [sala, setSala] = useState<Sala | null>(null);
   const [portais, setPortais] = useState<Portal[]>([]);
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -72,6 +79,17 @@ export default function SalaDetalhe() {
         console.error('Error fetching portais:', portaisError);
       } else {
         setPortais(portaisData || []);
+      }
+
+      // Fetch quizzes for this sala
+      const { data: quizzesData } = await supabase
+        .from('quizzes')
+        .select('id, titulo, descricao')
+        .eq('sala_id', id)
+        .eq('ativo', true);
+
+      if (quizzesData) {
+        setQuizzes(quizzesData);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -129,6 +147,38 @@ export default function SalaDetalhe() {
           icon={<DoorOpen className="w-5 h-5" />}
           className="mb-8"
         />
+
+        {/* Quizzes Section */}
+        {quizzes.length > 0 && (
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold text-gold mb-4 flex items-center gap-2">
+              <ClipboardList className="w-5 h-5" />
+              Quiz Disponível
+            </h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              {quizzes.map((quiz) => (
+                <Card
+                  key={quiz.id}
+                  className="glass hover:border-gold/50 cursor-pointer transition-all"
+                  onClick={() => navigate(`/quiz/${quiz.id}`)}
+                >
+                  <CardHeader>
+                    <CardTitle className="text-lg">{quiz.titulo}</CardTitle>
+                    {quiz.descricao && (
+                      <CardDescription>{quiz.descricao}</CardDescription>
+                    )}
+                  </CardHeader>
+                  <CardContent>
+                    <Button variant="gold" size="sm">
+                      Iniciar Quiz
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Portais Grid */}
         {portais.length > 0 ? (
