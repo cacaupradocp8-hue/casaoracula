@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AppLayout } from '@/components/layout/AppLayout';
-import { SectionHeader } from '@/components/shared/SectionHeader';
-import { LockedContentModal } from '@/components/shared/LockedContentModal';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
-import { BookOpen, Lock, Check, Play, Loader2, AlertCircle, GraduationCap } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { canAccessFeature, PortalType } from '@/types/portal';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { AppLayout } from "@/components/layout/AppLayout";
+import { SectionHeader } from "@/components/shared/SectionHeader";
+import { LockedContentModal } from "@/components/shared/LockedContentModal";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { BookOpen, Lock, Check, Play, Loader2, AlertCircle, GraduationCap } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { PortalType } from "@/types/portal";
 
 interface Portal {
   id: string;
@@ -28,9 +28,12 @@ interface PortalProgress {
   completed: number;
 }
 
+type LockReason = "nivel" | "matricula" | "sequencial" | null;
+
 export default function Portais() {
   const navigate = useNavigate();
   const { user, canAccess } = useAuth();
+
   const [selectedPortal, setSelectedPortal] = useState<string | null>(null);
   const [portals, setPortals] = useState<Portal[]>([]);
   const [progress, setProgress] = useState<Record<string, PortalProgress>>({});
@@ -40,130 +43,148 @@ export default function Portais() {
   const [checkingMatricula, setCheckingMatricula] = useState(true);
   const [lockedModalOpen, setLockedModalOpen] = useState(false);
 
-  const isVisitante = user?.portal === 'visitante';
+  const isVisitante = user?.portal === "visitante";
+  const isAdmin = user?.portal === "admin";
 
   useEffect(() => {
-    if (user) {
-      checkMatricula();
-      fetchPortals();
-    }
-  }, [user]);
+    if (!user?.id) return;
+
+    (async () => {
+      await checkMatricula();
+      await fetchPortals(user.portal);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
 
   const checkMatricula = async () => {
     if (!user) return;
-    
+
     setCheckingMatricula(true);
     try {
       const { data, error } = await supabase
-        .from('matriculas')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('curso_id', 'formacao_oracula')
-        .eq('ativa', true)
+        .from("matriculas")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("curso_id", "formacao_oracula")
+        .eq("ativa", true)
         .maybeSingle();
 
       if (!error) {
         setIsMatriculada(!!data);
       }
     } catch (error) {
-      console.error('Error checking matricula:', error);
+      console.error("Error checking matricula:", error);
     } finally {
       setCheckingMatricula(false);
     }
   };
 
-  const fetchPortals = async () => {
+  const fetchPortals = async (portalTipo?: string) => {
     setIsLoading(true);
-    try {
-      // For visitantes, fetch ALL portals (even unpublished) to show as locked preview
-      // For others, fetch only published portals
-      let query = supabase
-        .from('conteudo_travessias')
-        .select('*')
-        .order('ordem');
 
-      if (!isVisitante) {
-        query = query.eq('publicado', true);
+    const visitante = portalTipo === "visitante";
+
+    try {
+      // Visitante: pode ver "preview" (inclui não publicados) para mostrar como bloqueado
+      // Outros: ver apenas publicados (regra de produto)
+      let query = supabase.from("conteudo_travessias").select("*").order("ordem");
+
+      if (!visitante) {
+        query = query.eq("publicado", true);
       }
 
       const { data: portalsData, error: portalsError } = await query;
 
       if (portalsError) throw portalsError;
-      setPortals(portalsData || []);
 
-      if (!portalsData || portalsData.length === 0) {
-        setIsLoading(false);
+      const safePortals = (portalsData || []) as Portal[];
+      setPortals(safePortals);
+
+      if (safePortals.length === 0) {
+        setProgress({});
+        setNextAulas({});
         return;
       }
 
-      // Fetch all published aulas
-      const { data: aulasData } = await supabase
-        .from('conteudo_aulas')
-        .select('id, travessia_id, ordem')
-        .eq('publicado', true)
-        .order('ordem');
+      // Buscar aulas publicadas
+      const { data: aulasData, error: aulasError } = await supabase
+        .from("conteudo_aulas")
+        .select("id, travessia_id, ordem")
+        .eq("publicado", true)
+        .order("ordem");
 
-      // Fetch user progress
+      if (aulasError) {
+        console.error("Error fetching aulas:", aulasError);
+      }
+
+      // Buscar progresso do usuário (se houver)
       let userProgress: { aula_id: string }[] = [];
-      if (user) {
-        const { data: progressData } = await supabase
-          .from('user_aula_progress')
-          .select('aula_id')
-          .eq('user_id', user.id);
+      if (user?.id) {
+        const { data: progressData, error: progressError } = await supabase
+          .from("user_aula_progress")
+          .select("aula_id")
+          .eq("user_id", user.id);
+
+        if (progressError) {
+          console.error("Error fetching user progress:", progressError);
+        }
         userProgress = progressData || [];
       }
 
-      const completedAulaIds = new Set(userProgress.map(p => p.aula_id));
+      const completedAulaIds = new Set(userProgress.map((p) => p.aula_id));
 
-      // Calculate progress per portal
       const progressByPortal: Record<string, PortalProgress> = {};
       const nextAulaByPortal: Record<string, string | null> = {};
 
-      for (const portal of portalsData) {
-        const portalAulas = (aulasData || []).filter(a => a.travessia_id === portal.id);
-        const completedCount = portalAulas.filter(a => completedAulaIds.has(a.id)).length;
-        
+      for (const portal of safePortals) {
+        const portalAulas = (aulasData || []).filter((a) => a.travessia_id === portal.id);
+        const completedCount = portalAulas.filter((a) => completedAulaIds.has(a.id)).length;
+
         progressByPortal[portal.id] = {
           total: portalAulas.length,
-          completed: completedCount
+          completed: completedCount,
         };
 
-        // Find next uncompleted aula
-        const nextAula = portalAulas.find(a => !completedAulaIds.has(a.id));
-        nextAulaByPortal[portal.id] = nextAula?.id || (portalAulas[0]?.id || null);
+        const nextAula = portalAulas.find((a) => !completedAulaIds.has(a.id));
+        nextAulaByPortal[portal.id] = nextAula?.id || portalAulas[0]?.id || null;
       }
 
       setProgress(progressByPortal);
       setNextAulas(nextAulaByPortal);
     } catch (error) {
-      console.error('Error fetching portals:', error);
+      console.error("Error fetching portals:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Check if portal is unlocked based on portal level AND sequential progress
+  // Desbloqueio: nível + sequencial + matrícula (admin ignora matrícula)
   const isUnlocked = (portal: Portal, index: number) => {
-    // Visitantes never have access - all portals are locked preview
-    if (isVisitante || !isMatriculada) {
-      return { unlocked: false, reason: 'matricula' as const };
+    // Visitantes nunca acessam (apenas preview bloqueado)
+    if (isVisitante) {
+      return { unlocked: false, reason: "matricula" as const };
     }
 
-    // Must have portal level access
-    if (!canAccess(portal.portal_minimo)) {
-      return { unlocked: false, reason: 'nivel' as const };
+    // Matrícula: necessário para alunas, mas admin ignora
+    if (!isMatriculada && !isAdmin) {
+      return { unlocked: false, reason: "matricula" as const };
     }
 
-    // Sequential unlock: previous portal must be 100% complete
-    if (index > 0) {
+    // Nível mínimo do portal (admin pode ignorar ou respeitar; aqui vamos respeitar canAccess, mas se quiser ignorar admin, eu ajusto)
+    if (!canAccess(portal.portal_minimo) && !isAdmin) {
+      return { unlocked: false, reason: "nivel" as const };
+    }
+
+    // Sequencial: admin pode ignorar (recomendado para gestão/teste)
+    if (!isAdmin && index > 0) {
       const prevPortal = portals[index - 1];
-      const prevProgress = progress[prevPortal.id];
+      const prevProgress = progress[prevPortal?.id];
       if (prevProgress && prevProgress.total > 0 && prevProgress.completed < prevProgress.total) {
-        return { unlocked: false, reason: 'sequencial' as const };
+        return { unlocked: false, reason: "sequencial" as const };
       }
     }
-    
-    return { unlocked: true, reason: null };
+
+    return { unlocked: true, reason: null as const };
   };
 
   const handleContinue = (portalId: string) => {
@@ -175,28 +196,32 @@ export default function Portais() {
 
   const handlePortalClick = (portal: Portal, index: number) => {
     const { unlocked } = isUnlocked(portal, index);
-    
+
     if (!unlocked) {
-      // For visitantes or non-matriculadas, show the modal
-      if (isVisitante || !isMatriculada) {
+      // visitante e não-matriculada veem o modal (admin não precisa)
+      if (isVisitante || (!isMatriculada && !isAdmin)) {
         setLockedModalOpen(true);
       }
       return;
     }
-    
-    setSelectedPortal(selectedPortal === portal.id ? null : portal.id);
+
+    setSelectedPortal((prev) => (prev === portal.id ? null : portal.id));
   };
 
-  const getLockMessage = (reason: 'nivel' | 'matricula' | 'sequencial' | null, index: number) => {
+  const getLockMessage = (reason: LockReason, index: number) => {
     switch (reason) {
-      case 'matricula':
-        return 'Disponível após matrícula';
-      case 'sequencial':
-        return `Complete o Portal ${index} para desbloquear`;
-      case 'nivel':
-        return 'Este Portal será aberto no tempo certo da jornada';
+      case "matricula":
+        return "Disponível após matrícula";
+      case "sequencial": {
+        const prev = portals[index - 1];
+        return prev
+          ? `Complete o Portal ${prev.ordem} para desbloquear`
+          : "Complete o portal anterior para desbloquear";
+      }
+      case "nivel":
+        return "Este Portal será aberto no tempo certo da jornada";
       default:
-        return '';
+        return "";
     }
   };
 
@@ -220,8 +245,8 @@ export default function Portais() {
           className="mb-8"
         />
 
-        {/* Matricula Status Banner - only for non-matriculadas */}
-        {!isMatriculada && (
+        {/* Banner de matrícula (não mostra para admin) */}
+        {!isMatriculada && !isAdmin && (
           <Card className="mb-8 border-gold/30 bg-gold/5">
             <CardContent className="py-6">
               <div className="flex items-center gap-4">
@@ -229,19 +254,12 @@ export default function Portais() {
                   <GraduationCap className="w-6 h-6 text-gold" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-foreground mb-1">
-                    Inicie sua jornada formativa
-                  </h3>
+                  <h3 className="font-semibold text-foreground mb-1">Inicie sua jornada formativa</h3>
                   <p className="text-sm text-muted-foreground">
-                    Os portais estão disponíveis para alunas matriculadas. 
-                    Clique em qualquer portal para saber mais.
+                    Os portais estão disponíveis para alunas matriculadas. Clique em qualquer portal para saber mais.
                   </p>
                 </div>
-                <Button 
-                  variant="gold" 
-                  size="sm"
-                  onClick={() => setLockedModalOpen(true)}
-                >
+                <Button variant="gold" size="sm" onClick={() => setLockedModalOpen(true)}>
                   Matricular-se
                 </Button>
               </div>
@@ -249,26 +267,26 @@ export default function Portais() {
           </Card>
         )}
 
-        {/* Intro Quote */}
+        {/* Intro */}
         <div className="glass rounded-2xl p-8 mb-12 text-center">
           <blockquote className="font-display text-xl md:text-2xl italic text-foreground/90 mb-4">
             "Todo portal se abre quando o mundo conhecido já não oferece respostas."
           </blockquote>
           <p className="text-sm text-muted-foreground">
-            {isMatriculada 
-              ? 'Complete cada portal para avançar na jornada. Cada portal inclui aulas, exercícios reflexivos e conteúdos simbólicos.'
-              : 'Conheça os portais da formação. Matricule-se para iniciar sua jornada transformadora.'
-            }
+            {isAdmin
+              ? "Você está como Admin: pode abrir portais e testar a jornada."
+              : isMatriculada
+                ? "Complete cada portal para avançar na jornada. Cada portal inclui aulas, exercícios reflexivos e conteúdos simbólicos."
+                : "Conheça os portais da formação. Matricule-se para iniciar sua jornada transformadora."}
           </p>
         </div>
 
-        {/* Portals Grid - Always show portals, even if empty or locked */}
+        {/* Portais */}
         {portals.length === 0 ? (
-          // Show placeholder cards for visitantes when no portals exist
           isVisitante ? (
             <div className="grid gap-6">
               {[1, 2, 3].map((num) => (
-                <Card 
+                <Card
                   key={num}
                   className="group transition-all duration-500 overflow-hidden opacity-60 cursor-pointer"
                   onClick={() => setLockedModalOpen(true)}
@@ -276,20 +294,18 @@ export default function Portais() {
                   <div className="relative h-40 md:h-48 overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-gold/10 via-primary/20 to-secondary/30" />
                     <div className="absolute inset-0 bg-gradient-to-t from-card via-card/70 to-transparent" />
-                    
+
                     <div className="absolute top-4 right-4 z-10">
                       <Lock className="w-5 h-5 text-muted-foreground drop-shadow-lg" />
                     </div>
-                    
+
                     <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 z-10">
-                      <p className="text-xs uppercase tracking-widest text-gold/60 mb-1 drop-shadow-lg">
-                        Portal {num}
-                      </p>
+                      <p className="text-xs uppercase tracking-widest text-gold/60 mb-1 drop-shadow-lg">Portal {num}</p>
                       <h3 className="text-xl md:text-2xl font-display font-semibold text-foreground/60 drop-shadow-lg">
                         Portal em breve
                       </h3>
                     </div>
-                    
+
                     <div className="absolute top-4 left-4 z-10">
                       <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-display font-bold shadow-lg bg-muted/90 text-muted-foreground">
                         {num}
@@ -317,57 +333,56 @@ export default function Portais() {
             {portals.map((portal, index) => {
               const prog = progress[portal.id] || { total: 0, completed: 0 };
               const { unlocked, reason } = isUnlocked(portal, index);
+
               const progressPercent = prog.total > 0 ? (prog.completed / prog.total) * 100 : 0;
               const isComplete = prog.total > 0 && prog.completed === prog.total;
               const hasAulas = prog.total > 0;
 
               return (
-                <Card 
+                <Card
                   key={portal.id}
                   className={cn(
-                    'group transition-all duration-500 overflow-hidden cursor-pointer',
-                    unlocked ? 'hover:shadow-gold' : 'opacity-60',
-                    selectedPortal === portal.id && 'ring-2 ring-gold/50'
+                    "group transition-all duration-500 overflow-hidden cursor-pointer",
+                    unlocked ? "hover:shadow-gold" : "opacity-60",
+                    selectedPortal === portal.id && "ring-2 ring-gold/50",
                   )}
                   onClick={() => handlePortalClick(portal, index)}
                 >
-                  {/* Cover Header */}
-                  <div 
+                  <div
                     className="relative h-40 md:h-48 overflow-hidden"
-                    style={portal.capa_url ? {
-                      backgroundImage: `url(${portal.capa_url})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center'
-                    } : undefined}
+                    style={
+                      portal.capa_url
+                        ? {
+                            backgroundImage: `url(${portal.capa_url})`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                          }
+                        : undefined
+                    }
                   >
-                    {/* Background image with hover zoom effect */}
                     {portal.capa_url && (
-                      <div 
+                      <div
                         className="absolute inset-0 transition-transform duration-500 group-hover:scale-110"
                         style={{
                           backgroundImage: `url(${portal.capa_url})`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center'
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
                         }}
                       />
                     )}
-                    
-                    {/* Fallback gradient when no cover image */}
+
                     {!portal.capa_url && (
                       <div className="absolute inset-0 bg-gradient-to-br from-gold/20 via-primary/30 to-secondary/40" />
                     )}
-                    
-                    {/* Dark overlay gradient */}
+
                     <div className="absolute inset-0 bg-gradient-to-t from-card via-card/70 to-transparent" />
-                    
-                    {/* Lock icon for locked portals */}
+
                     {!unlocked && (
                       <div className="absolute top-4 right-4 z-10">
                         <Lock className="w-5 h-5 text-muted-foreground drop-shadow-lg" />
                       </div>
                     )}
-                    
-                    {/* Text content over the cover */}
+
                     <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 z-10">
                       <p className="text-xs uppercase tracking-widest text-gold mb-1 drop-shadow-lg">
                         Portal {portal.ordem}
@@ -376,22 +391,21 @@ export default function Portais() {
                         {portal.titulo}
                       </h3>
                       {portal.subtitulo && (
-                        <p className="text-sm text-foreground/80 mt-1 drop-shadow-md">
-                          {portal.subtitulo}
-                        </p>
+                        <p className="text-sm text-foreground/80 mt-1 drop-shadow-md">{portal.subtitulo}</p>
                       )}
                     </div>
-                    
-                    {/* Completion badge */}
+
                     <div className="absolute top-4 left-4 z-10">
-                      <div className={cn(
-                        'w-10 h-10 rounded-full flex items-center justify-center text-lg font-display font-bold shadow-lg',
-                        unlocked 
-                          ? isComplete 
-                            ? 'bg-gold text-primary-foreground' 
-                            : 'bg-background/90 text-gold border border-gold/50'
-                          : 'bg-muted/90 text-muted-foreground'
-                      )}>
+                      <div
+                        className={cn(
+                          "w-10 h-10 rounded-full flex items-center justify-center text-lg font-display font-bold shadow-lg",
+                          unlocked
+                            ? isComplete
+                              ? "bg-gold text-primary-foreground"
+                              : "bg-background/90 text-gold border border-gold/50"
+                            : "bg-muted/90 text-muted-foreground",
+                        )}
+                      >
                         {isComplete ? <Check className="w-5 h-5" /> : portal.ordem}
                       </div>
                     </div>
@@ -414,13 +428,11 @@ export default function Portais() {
 
                         {selectedPortal === portal.id && (
                           <div className="pt-4 border-t border-border animate-fade-in">
-                            <p className="text-muted-foreground mb-4">
-                              {portal.descricao}
-                            </p>
+                            <p className="text-muted-foreground mb-4">{portal.descricao}</p>
 
                             {hasAulas ? (
-                              <Button 
-                                variant="gold" 
+                              <Button
+                                variant="gold"
                                 className="w-full gap-2"
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -428,14 +440,12 @@ export default function Portais() {
                                 }}
                               >
                                 <Play className="w-4 h-4" />
-                                {prog.completed === 0 ? 'Iniciar Portal' : isComplete ? 'Revisar' : 'Continuar'}
+                                {prog.completed === 0 ? "Iniciar Portal" : isComplete ? "Revisar" : "Continuar"}
                               </Button>
                             ) : (
                               <div className="bg-secondary/50 rounded-lg p-4 text-center">
                                 <AlertCircle className="w-5 h-5 text-muted-foreground mx-auto mb-2" />
-                                <p className="text-sm text-muted-foreground">
-                                  Nenhuma aula publicada ainda.
-                                </p>
+                                <p className="text-sm text-muted-foreground">Nenhuma aula publicada ainda.</p>
                               </div>
                             )}
                           </div>
@@ -457,10 +467,7 @@ export default function Portais() {
         )}
       </div>
 
-      <LockedContentModal 
-        open={lockedModalOpen} 
-        onOpenChange={setLockedModalOpen} 
-      />
+      <LockedContentModal open={lockedModalOpen} onOpenChange={setLockedModalOpen} />
     </AppLayout>
   );
 }
