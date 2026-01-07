@@ -184,7 +184,7 @@ export default function Portais() {
       }
     }
 
-    return { unlocked: true, reason: null as const };
+    return { unlocked: true, reason: null };
   };
 
   const handleContinue = (portalId: string) => {

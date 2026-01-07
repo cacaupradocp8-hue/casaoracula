@@ -4,11 +4,12 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Lock, Loader2, BookOpen, DoorOpen, ClipboardList } from "lucide-react";
+import { ArrowLeft, ArrowRight, Lock, Loader2, BookOpen, DoorOpen, ClipboardList, Wrench } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { canAccessFeature, PortalType } from "@/types/portal";
 import { cn } from "@/lib/utils";
+import * as LucideIcons from "lucide-react";
 
 interface Quiz {
   id: string;
@@ -16,10 +17,21 @@ interface Quiz {
   descricao: string;
 }
 
+interface Ferramenta {
+  id: string;
+  ferramenta_nome: string;
+  ferramenta_descricao: string | null;
+  icone: string | null;
+  rota: string;
+  ordem: number;
+  ativa: boolean;
+}
+
 interface Sala {
   id: string;
   nome_exibicao: string;
   texto_entrada: string;
+  nivel_minimo: string;
 }
 
 interface Portal {
@@ -32,6 +44,30 @@ interface Portal {
   ordem: number;
 }
 
+// Dynamic icon component - map common icons
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  wrench: LucideIcons.Wrench,
+  brain: LucideIcons.Brain,
+  compass: LucideIcons.Compass,
+  helpCircle: LucideIcons.HelpCircle,
+  book: LucideIcons.Book,
+  bookOpen: LucideIcons.BookOpen,
+  star: LucideIcons.Star,
+  heart: LucideIcons.Heart,
+  sparkles: LucideIcons.Sparkles,
+  lightbulb: LucideIcons.Lightbulb,
+  target: LucideIcons.Target,
+  users: LucideIcons.Users,
+  messageCircle: LucideIcons.MessageCircle,
+  pencil: LucideIcons.Pencil,
+  clipboardList: LucideIcons.ClipboardList,
+};
+
+const DynamicIcon = ({ name, className }: { name: string; className?: string }) => {
+  const IconComponent = iconMap[name] || LucideIcons.Wrench;
+  return <IconComponent className={className} />;
+};
+
 export default function SalaDetalhe() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -40,6 +76,7 @@ export default function SalaDetalhe() {
   const [sala, setSala] = useState<Sala | null>(null);
   const [portais, setPortais] = useState<Portal[]>([]);
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [ferramentas, setFerramentas] = useState<Ferramenta[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -53,44 +90,41 @@ export default function SalaDetalhe() {
 
     setLoading(true);
     try {
-      // Fetch sala info
-      const { data: salaData, error: salaError } = await supabase
-        .from("salas")
-        .select("id, nome_exibicao, texto_entrada")
-        .eq("id", id)
-        .eq("ativa", true)
-        .maybeSingle();
+      // Fetch all data in parallel
+      const [salaRes, portaisRes, quizzesRes, ferramentasRes] = await Promise.all([
+        supabase
+          .from("salas")
+          .select("id, nome_exibicao, texto_entrada, nivel_minimo")
+          .eq("id", id)
+          .eq("ativa", true)
+          .maybeSingle(),
+        supabase
+          .from("conteudo_travessias")
+          .select("*")
+          .eq("sala_id", id)
+          .eq("publicado", true)
+          .order("ordem"),
+        supabase
+          .from("quizzes")
+          .select("id, titulo, descricao")
+          .eq("sala_id", id)
+          .eq("ativo", true),
+        supabase
+          .from("sala_ferramentas")
+          .select("id, ferramenta_nome, ferramenta_descricao, icone, rota, ordem, ativa")
+          .eq("sala_id", id)
+          .eq("ativa", true)
+          .order("ordem"),
+      ]);
 
-      if (salaError || !salaData) {
+      if (salaRes.error || !salaRes.data) {
         navigate("/dashboard");
         return;
       }
-      setSala(salaData);
-
-      // Fetch portais (conteudo_travessias) for this sala
-      const { data: portaisData, error: portaisError } = await supabase
-        .from("conteudo_travessias")
-        .select("*")
-        .eq("sala_id", id)
-        .eq("publicado", true)
-        .order("ordem");
-
-      if (portaisError) {
-        console.error("Error fetching portais:", portaisError);
-      } else {
-        setPortais(portaisData || []);
-      }
-
-      // Fetch quizzes for this sala
-      const { data: quizzesData } = await supabase
-        .from("quizzes")
-        .select("id, titulo, descricao")
-        .eq("sala_id", id)
-        .eq("ativo", true);
-
-      if (quizzesData) {
-        setQuizzes(quizzesData);
-      }
+      setSala(salaRes.data);
+      setPortais(portaisRes.data || []);
+      setQuizzes(quizzesRes.data || []);
+      setFerramentas(ferramentasRes.data || []);
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -144,6 +178,43 @@ export default function SalaDetalhe() {
           icon={<DoorOpen className="w-5 h-5" />}
           className="mb-8"
         />
+
+        {/* Ferramentas Section */}
+        {ferramentas.length > 0 && (
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold text-gold mb-4 flex items-center gap-2">
+              <Wrench className="w-5 h-5" />
+              Ferramentas
+            </h3>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {ferramentas.map((ferramenta) => (
+                <Card
+                  key={ferramenta.id}
+                  className="glass hover:border-gold/50 cursor-pointer transition-all group"
+                  onClick={() => navigate(ferramenta.rota)}
+                >
+                  <CardHeader className="pb-2">
+                    <div className="w-10 h-10 rounded-lg bg-gold/20 flex items-center justify-center mb-2 group-hover:bg-gold/30 transition-colors">
+                      <DynamicIcon name={ferramenta.icone || "wrench"} className="w-5 h-5 text-gold" />
+                    </div>
+                    <CardTitle className="text-base group-hover:text-gold transition-colors">
+                      {ferramenta.ferramenta_nome}
+                    </CardTitle>
+                    {ferramenta.ferramenta_descricao && (
+                      <CardDescription className="text-sm">{ferramenta.ferramenta_descricao}</CardDescription>
+                    )}
+                  </CardHeader>
+                  <CardContent>
+                    <Button variant="ghost" size="sm" className="gap-2 text-gold">
+                      Acessar
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Quizzes Section */}
         {quizzes.length > 0 && (
