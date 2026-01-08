@@ -92,13 +92,16 @@ export default function MinhasClientes() {
     
     setLoading(true);
     
-    // Fetch vinculos where current user is the therapist
+    // Fetch only ACTIVE vinculos where current user is the therapist
+    // RLS ensures therapist can only see their own links
     const { data: vinculos, error: vinculosError } = await supabase
       .from('terapeuta_clientes')
       .select('cliente_id, ativo, created_at')
-      .eq('terapeuta_id', user.id);
+      .eq('terapeuta_id', user.id)
+      .order('created_at', { ascending: false });
 
     if (vinculosError) {
+      console.error('Erro ao carregar vínculos:', vinculosError);
       toast({ title: 'Erro ao carregar clientes', variant: 'destructive' });
       setLoading(false);
       return;
@@ -144,16 +147,18 @@ export default function MinhasClientes() {
     
     setLoadingRecords(true);
 
+    // RLS handles access control - therapist can only see records for linked clients
+    // Query by user_id (the client who owns the record)
     const [big5Res, eneagramaRes] = await Promise.all([
       supabase
         .from('big5_registros')
         .select('*')
-        .or(`cliente_id.eq.${clienteId},and(user_id.eq.${clienteId},terapeuta_id.eq.${user.id})`)
+        .eq('user_id', clienteId)
         .order('created_at', { ascending: false }),
       supabase
         .from('eneagrama_registros')
         .select('*')
-        .or(`cliente_id.eq.${clienteId},and(user_id.eq.${clienteId},terapeuta_id.eq.${user.id})`)
+        .eq('user_id', clienteId)
         .order('created_at', { ascending: false })
     ]);
 

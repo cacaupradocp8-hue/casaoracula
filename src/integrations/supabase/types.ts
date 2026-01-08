@@ -1705,6 +1705,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_linked_therapist: {
+        Args: { _cliente_id: string; _terapeuta_id: string }
+        Returns: boolean
+      }
       is_matriculada: {
         Args: { _curso_id?: string; _user_id: string }
         Returns: boolean

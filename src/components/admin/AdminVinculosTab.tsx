@@ -70,42 +70,51 @@ export function AdminVinculosTab() {
   const fetchData = async () => {
     setLoading(true);
     
-    // Fetch all vinculos
-    const { data: vinculosData, error: vinculosError } = await supabase
-      .from('terapeuta_clientes')
-      .select('*')
-      .order('created_at', { ascending: false });
+    try {
+      // Fetch all vinculos - Admin RLS policy allows this
+      const { data: vinculosData, error: vinculosError } = await supabase
+        .from('terapeuta_clientes')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-    if (vinculosError) {
-      toast({ title: 'Erro ao carregar vínculos', variant: 'destructive' });
-      setLoading(false);
-      return;
+      if (vinculosError) {
+        console.error('Erro ao carregar vínculos:', vinculosError);
+        toast({ title: 'Erro ao carregar vínculos', description: vinculosError.message, variant: 'destructive' });
+        setLoading(false);
+        return;
+      }
+
+      // Fetch all profiles for dropdowns and display - Admin RLS policy allows this
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, nome, email')
+        .order('nome', { ascending: true });
+
+      if (profilesError) {
+        console.error('Erro ao carregar perfis:', profilesError);
+        toast({ title: 'Erro ao carregar perfis', description: profilesError.message, variant: 'destructive' });
+        setLoading(false);
+        return;
+      }
+
+      const usersMap = new Map(profiles?.map(p => [p.id, p]) || []);
+      
+      // Enrich vinculos with names
+      const enrichedVinculos = (vinculosData || []).map(v => ({
+        ...v,
+        terapeuta_nome: usersMap.get(v.terapeuta_id)?.nome || 'Desconhecido',
+        terapeuta_email: usersMap.get(v.terapeuta_id)?.email || '',
+        cliente_nome: usersMap.get(v.cliente_id)?.nome || 'Desconhecido',
+        cliente_email: usersMap.get(v.cliente_id)?.email || '',
+      }));
+
+      setVinculos(enrichedVinculos);
+      setUsers(profiles || []);
+    } catch (error) {
+      console.error('Erro inesperado:', error);
+      toast({ title: 'Erro inesperado', variant: 'destructive' });
     }
-
-    // Fetch all profiles for dropdowns and display
-    const { data: profiles, error: profilesError } = await supabase
-      .from('profiles')
-      .select('id, nome, email');
-
-    if (profilesError) {
-      toast({ title: 'Erro ao carregar perfis', variant: 'destructive' });
-      setLoading(false);
-      return;
-    }
-
-    const usersMap = new Map(profiles?.map(p => [p.id, p]) || []);
     
-    // Enrich vinculos with names
-    const enrichedVinculos = (vinculosData || []).map(v => ({
-      ...v,
-      terapeuta_nome: usersMap.get(v.terapeuta_id)?.nome || 'Desconhecido',
-      terapeuta_email: usersMap.get(v.terapeuta_id)?.email || '',
-      cliente_nome: usersMap.get(v.cliente_id)?.nome || 'Desconhecido',
-      cliente_email: usersMap.get(v.cliente_id)?.email || '',
-    }));
-
-    setVinculos(enrichedVinculos);
-    setUsers(profiles || []);
     setLoading(false);
   };
 
