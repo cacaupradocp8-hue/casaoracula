@@ -453,6 +453,281 @@ export type Database = {
           },
         ]
       }
+      course_enrollments: {
+        Row: {
+          ativo: boolean
+          course_id: string
+          created_at: string
+          data_fim: string | null
+          data_inicio: string
+          id: string
+          payment_id: string | null
+          payment_provider: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ativo?: boolean
+          course_id: string
+          created_at?: string
+          data_fim?: string | null
+          data_inicio?: string
+          id?: string
+          payment_id?: string | null
+          payment_provider?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ativo?: boolean
+          course_id?: string
+          created_at?: string
+          data_fim?: string | null
+          data_inicio?: string
+          id?: string
+          payment_id?: string | null
+          payment_provider?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_enrollments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_lesson_progress: {
+        Row: {
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          id: string
+          lesson_id: string
+          progress_percent: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          lesson_id: string
+          progress_percent?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          lesson_id?: string
+          progress_percent?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_lesson_progress_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "course_lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_lessons: {
+        Row: {
+          audio_url: string | null
+          content_type: Database["public"]["Enums"]["content_type"]
+          created_at: string
+          descricao_curta: string | null
+          duracao_minutos: number | null
+          id: string
+          is_preview: boolean
+          materiais_url: string | null
+          module_id: string
+          ordem: number
+          pdf_url: string | null
+          publicado: boolean
+          texto_aula: string | null
+          titulo: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          audio_url?: string | null
+          content_type?: Database["public"]["Enums"]["content_type"]
+          created_at?: string
+          descricao_curta?: string | null
+          duracao_minutos?: number | null
+          id?: string
+          is_preview?: boolean
+          materiais_url?: string | null
+          module_id: string
+          ordem?: number
+          pdf_url?: string | null
+          publicado?: boolean
+          texto_aula?: string | null
+          titulo: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          audio_url?: string | null
+          content_type?: Database["public"]["Enums"]["content_type"]
+          created_at?: string
+          descricao_curta?: string | null
+          duracao_minutos?: number | null
+          id?: string
+          is_preview?: boolean
+          materiais_url?: string | null
+          module_id?: string
+          ordem?: number
+          pdf_url?: string | null
+          publicado?: boolean
+          texto_aula?: string | null
+          titulo?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_lessons_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "course_modules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_modules: {
+        Row: {
+          course_id: string
+          created_at: string
+          descricao: string | null
+          dias_apos_matricula: number | null
+          disponivel_em: string | null
+          id: string
+          ordem: number
+          publicado: boolean
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          descricao?: string | null
+          dias_apos_matricula?: number | null
+          disponivel_em?: string | null
+          id?: string
+          ordem?: number
+          publicado?: boolean
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          descricao?: string | null
+          dias_apos_matricula?: number | null
+          disponivel_em?: string | null
+          id?: string
+          ordem?: number
+          publicado?: boolean
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_modules_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      courses: {
+        Row: {
+          capa_url: string | null
+          created_at: string
+          descricao: string
+          descricao_publica: string | null
+          destaque: boolean
+          duracao_estimada: string | null
+          id: string
+          nivel: string | null
+          ordem: number
+          portal_minimo: Database["public"]["Enums"]["portal_type"]
+          preco: number | null
+          preco_promocional: number | null
+          pricing_model: Database["public"]["Enums"]["pricing_model"]
+          publicado: boolean
+          requer_matricula: boolean
+          stripe_price_id: string | null
+          stripe_product_id: string | null
+          subtitulo: string | null
+          tags: string[] | null
+          titulo: string
+          updated_at: string
+          video_preview_url: string | null
+        }
+        Insert: {
+          capa_url?: string | null
+          created_at?: string
+          descricao?: string
+          descricao_publica?: string | null
+          destaque?: boolean
+          duracao_estimada?: string | null
+          id?: string
+          nivel?: string | null
+          ordem?: number
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          preco?: number | null
+          preco_promocional?: number | null
+          pricing_model?: Database["public"]["Enums"]["pricing_model"]
+          publicado?: boolean
+          requer_matricula?: boolean
+          stripe_price_id?: string | null
+          stripe_product_id?: string | null
+          subtitulo?: string | null
+          tags?: string[] | null
+          titulo: string
+          updated_at?: string
+          video_preview_url?: string | null
+        }
+        Update: {
+          capa_url?: string | null
+          created_at?: string
+          descricao?: string
+          descricao_publica?: string | null
+          destaque?: boolean
+          duracao_estimada?: string | null
+          id?: string
+          nivel?: string | null
+          ordem?: number
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          preco?: number | null
+          preco_promocional?: number | null
+          pricing_model?: Database["public"]["Enums"]["pricing_model"]
+          publicado?: boolean
+          requer_matricula?: boolean
+          stripe_price_id?: string | null
+          stripe_product_id?: string | null
+          subtitulo?: string | null
+          tags?: string[] | null
+          titulo?: string
+          updated_at?: string
+          video_preview_url?: string | null
+        }
+        Relationships: []
+      }
       eneagrama_instintos: {
         Row: {
           ativo: boolean
@@ -1698,11 +1973,19 @@ export type Database = {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["portal_type"]
       }
+      has_course_access: {
+        Args: { _course_id: string; _user_id: string }
+        Returns: boolean
+      }
       has_portal_access: {
         Args: {
           _min_portal: Database["public"]["Enums"]["portal_type"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_lesson_available: {
+        Args: { _lesson_id: string; _user_id: string }
         Returns: boolean
       }
       is_linked_therapist: {
@@ -1735,10 +2018,12 @@ export type Database = {
         | "amabilidade"
         | "neuroticismo"
       big5_tipo_pergunta: "escala_1_5" | "texto"
+      content_type: "text" | "video" | "audio" | "file" | "mixed"
       mentoria_tipo: "aviso" | "evento" | "supervisao"
       nivel_sala: "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3"
       portal_type: "visitante" | "pre_iniciada" | "iniciada" | "admin"
       post_status: "rascunho" | "publicado" | "arquivado"
+      pricing_model: "free" | "one_time" | "subscription"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1875,10 +2160,12 @@ export const Constants = {
         "neuroticismo",
       ],
       big5_tipo_pergunta: ["escala_1_5", "texto"],
+      content_type: ["text", "video", "audio", "file", "mixed"],
       mentoria_tipo: ["aviso", "evento", "supervisao"],
       nivel_sala: ["NIVEL_0", "NIVEL_1", "NIVEL_2", "NIVEL_3"],
       portal_type: ["visitante", "pre_iniciada", "iniciada", "admin"],
       post_status: ["rascunho", "publicado", "arquivado"],
+      pricing_model: ["free", "one_time", "subscription"],
     },
   },
 } as const
