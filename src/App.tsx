@@ -36,6 +36,9 @@ import CursoAula from "./pages/CursoAula";
 import Big5 from "./pages/salas/Big5";
 import Eneagrama from "./pages/salas/Eneagrama";
 import OraculoPerguntas from "./pages/salas/OraculoPerguntas";
+import Syntheia from "./pages/Syntheia";
+import SyntheiaCriar from "./pages/SyntheiaCriar";
+import SyntheiaBiblioteca from "./pages/SyntheiaBiblioteca";
 
 const queryClient = new QueryClient();
 
@@ -103,6 +106,11 @@ function AppRoutes() {
       <Route path="/salas/big5" element={<ProtectedRoute><Big5 /></ProtectedRoute>} />
       <Route path="/salas/eneagrama" element={<ProtectedRoute><Eneagrama /></ProtectedRoute>} />
       <Route path="/salas/oraculo-perguntas" element={<ProtectedRoute><OraculoPerguntas /></ProtectedRoute>} />
+      
+      {/* SYNTHEIA Routes */}
+      <Route path="/syntheia" element={<ProtectedRoute minPortal="pre_iniciada"><Syntheia /></ProtectedRoute>} />
+      <Route path="/syntheia/criar" element={<ProtectedRoute minPortal="pre_iniciada"><SyntheiaCriar /></ProtectedRoute>} />
+      <Route path="/syntheia/biblioteca" element={<ProtectedRoute minPortal="pre_iniciada"><SyntheiaBiblioteca /></ProtectedRoute>} />
       
       {/* Admin Routes */}
       <Route path="/admin" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
