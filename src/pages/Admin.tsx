@@ -1,7 +1,7 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, Wand2 } from 'lucide-react';
 import { AdminUsersTab } from '@/components/admin/AdminUsersTab';
 import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
 import { AdminMentoriaTab } from '@/components/admin/AdminMentoriaTab';
@@ -16,6 +16,7 @@ import { AdminSettingsTab } from '@/components/admin/AdminSettingsTab';
 import { AdminAssinaturasTab } from '@/components/admin/AdminAssinaturasTab';
 import { AdminLeiturasTab } from '@/components/admin/AdminLeiturasTab';
 import { AdminQuizTab } from '@/components/admin/AdminQuizTab';
+import { AdminSyntheiaTab } from '@/components/admin/AdminSyntheiaTab';
 
 export default function Admin() {
   return (
@@ -82,6 +83,10 @@ export default function Admin() {
               <ClipboardList className="w-4 h-4" />
               Quiz
             </TabsTrigger>
+            <TabsTrigger value="syntheia" className="gap-2">
+              <Wand2 className="w-4 h-4" />
+              Syntheia
+            </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Cog className="w-4 h-4" />
               Configurações
@@ -138,6 +143,10 @@ export default function Admin() {
 
           <TabsContent value="quiz">
             <AdminQuizTab />
+          </TabsContent>
+
+          <TabsContent value="syntheia">
+            <AdminSyntheiaTab />
           </TabsContent>
 
           <TabsContent value="settings">
