@@ -53,14 +53,21 @@ const eneagramaSchema = z.object({
   pratica_sugerida: z.string().max(5000).optional(),
 });
 
+interface ClienteInfo {
+  id: string;
+  nome: string;
+}
+
 export default function Eneagrama() {
   const [searchParams] = useSearchParams();
   const casoId = searchParams.get('caso');
+  const clienteId = searchParams.get('cliente');
 
   const [tipos, setTipos] = useState<EneagramaTipo[]>([]);
   const [instintos, setInstintos] = useState<EneagramaInstinto[]>([]);
   const [loading, setLoading] = useState(true);
   const [caso, setCaso] = useState<CasoInfo | null>(null);
+  const [cliente, setCliente] = useState<ClienteInfo | null>(null);
   
   const [tipoPrincipal, setTipoPrincipal] = useState<number | null>(null);
   const [asa, setAsa] = useState<string>('');
@@ -75,8 +82,9 @@ export default function Eneagrama() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // Determine mode: self-assessment (no caso) or therapist assessment (with caso)
-  const isSelfAssessment = !casoId;
+  // Determine mode: self-assessment (no caso/cliente) or therapist assessment (with caso or cliente)
+  const isSelfAssessment = !casoId && !clienteId;
+  const isClienteMode = !!clienteId && !casoId;
 
   useEffect(() => {
     fetchData();
@@ -101,7 +109,43 @@ export default function Eneagrama() {
     if (tiposRes.data) setTipos(tiposRes.data);
     if (instintosRes.data) setInstintos(instintosRes.data);
 
-    // If we have a caso ID, fetch caso info
+    // If we have a cliente ID (new flow), fetch cliente info and verify access
+    if (clienteId) {
+      // Verify therapist has access to this client
+      const { data: vinculo } = await supabase
+        .from('terapeuta_clientes')
+        .select('cliente_id, ativo')
+        .eq('terapeuta_id', user.id)
+        .eq('cliente_id', clienteId)
+        .eq('ativo', true)
+        .maybeSingle();
+
+      if (!vinculo) {
+        toast({
+          title: 'Acesso negado',
+          description: 'Você não tem permissão para avaliar esta cliente.',
+          variant: 'destructive',
+        });
+        navigate('/minhas-clientes');
+        return;
+      }
+
+      // Fetch cliente name
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id, nome')
+        .eq('id', clienteId)
+        .maybeSingle();
+
+      if (profile) {
+        setCliente({
+          id: profile.id,
+          nome: profile.nome || 'Sem nome',
+        });
+      }
+    }
+
+    // If we have a caso ID (legacy flow), fetch caso info
     if (casoId) {
       const casoRes = await supabase
         .from('casos')
@@ -186,18 +230,23 @@ export default function Eneagrama() {
         armadilhas: armadilhas || null,
         pratica_sugerida: praticaSugerida || null,
       };
-    } else {
-      // Therapist assessment: requires caso
-      if (!caso) {
-        toast({ 
-          title: 'Erro', 
-          description: 'Caso não carregado corretamente.', 
-          variant: 'destructive' 
-        });
-        setSaving(false);
-        return;
-      }
-
+    } else if (isClienteMode && cliente) {
+      // New flow: direct cliente assessment (no caso)
+      insertData = {
+        user_id: cliente.id,
+        terapeuta_id: user?.id,
+        cliente_id: cliente.id,
+        caso_id: null,
+        tipo_principal: tipoPrincipal,
+        asa: asa ? parseInt(asa) : null,
+        instinto: instinto || null,
+        defesas: defesas || null,
+        virtude: virtude || null,
+        armadilhas: armadilhas || null,
+        pratica_sugerida: praticaSugerida || null,
+      };
+    } else if (caso) {
+      // Legacy flow: therapist assessment via caso
       insertData = {
         user_id: caso.cliente_id,
         terapeuta_id: user?.id,
@@ -211,6 +260,14 @@ export default function Eneagrama() {
         armadilhas: armadilhas || null,
         pratica_sugerida: praticaSugerida || null,
       };
+    } else {
+      toast({ 
+        title: 'Erro', 
+        description: 'Cliente ou caso não carregado corretamente.', 
+        variant: 'destructive' 
+      });
+      setSaving(false);
+      return;
     }
 
     const { error } = await supabase.from('eneagrama_registros').insert(insertData);
@@ -221,6 +278,8 @@ export default function Eneagrama() {
       toast({ title: 'Registro Eneagrama salvo com sucesso!' });
       if (isSelfAssessment) {
         navigate('/salas');
+      } else if (isClienteMode && cliente) {
+        navigate(`/cliente/${cliente.id}`);
       } else {
         navigate('/casos');
       }
@@ -242,7 +301,7 @@ export default function Eneagrama() {
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
         <div className="flex items-center gap-4 mb-6">
-          <Link to={isSelfAssessment ? '/salas' : '/casos'}>
+          <Link to={isSelfAssessment ? '/salas' : isClienteMode && cliente ? `/cliente/${cliente.id}` : '/casos'}>
             <Button variant="ghost" size="icon">
               <ArrowLeft className="w-5 h-5" />
             </Button>
@@ -254,8 +313,25 @@ export default function Eneagrama() {
           />
         </div>
 
-        {/* Caso Info Banner (for therapist assessment) */}
-        {!isSelfAssessment && caso && (
+        {/* Cliente Info Banner (new flow) */}
+        {isClienteMode && cliente && (
+          <Card className="glass mb-6 border-gold/30 bg-gold/5">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <FolderOpen className="w-5 h-5 text-gold" />
+                <div>
+                  <p className="font-medium">Avaliação para: <span className="text-gold">{cliente.nome}</span></p>
+                  <p className="text-sm text-muted-foreground">
+                    Este registro será vinculado à linha do tempo da cliente.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Caso Info Banner (legacy flow) */}
+        {!isSelfAssessment && !isClienteMode && caso && (
           <Card className="glass mb-6 border-gold/30 bg-gold/5">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
@@ -278,7 +354,7 @@ export default function Eneagrama() {
                 <div>
                   <p className="font-medium">Autoavaliação</p>
                   <p className="text-sm text-muted-foreground">
-                    Este registro será salvo no seu próprio perfil. Para avaliar uma cliente, acesse através da página de Casos.
+                    Este registro será salvo no seu próprio perfil. Para avaliar uma cliente, acesse através de Minhas Clientes.
                   </p>
                 </div>
               </div>
