@@ -1,17 +1,17 @@
-import { useState, useEffect, useMemo } from "react";
-import { AppLayout } from "@/components/layout/AppLayout";
-import { SectionHeader } from "@/components/shared/SectionHeader";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Bot, MessageSquare, Send, ArrowLeft, Loader2, Lock } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
-import { Textarea } from "@/components/ui/textarea";
-import { useAuth } from "@/contexts/AuthContext";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { canAccessFeature, PortalType } from "@/types/portal";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { mensagemSchema, getValidationError } from "@/lib/validations";
+import { useState, useEffect } from 'react';
+import { AppLayout } from '@/components/layout/AppLayout';
+import { SectionHeader } from '@/components/shared/SectionHeader';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Bot, MessageSquare, Send, ArrowLeft, Loader2, Lock } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import { Textarea } from '@/components/ui/textarea';
+import { useAuth } from '@/contexts/AuthContext';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { canAccessFeature, PortalType } from '@/types/portal';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { mensagemSchema, getValidationError } from '@/lib/validations';
 
 interface Agente {
   id: string;
@@ -20,12 +20,12 @@ interface Agente {
   instrucoes_base: string;
   icone: string;
   portal_minimo: PortalType;
-  status: "ativo" | "inativo";
+  status: 'ativo' | 'inativo';
 }
 
 interface Mensagem {
   id: string;
-  role: "user" | "assistant";
+  role: 'user' | 'assistant';
   content: string;
   created_at: string;
 }
@@ -34,14 +34,13 @@ interface Conversa {
   id: string;
   titulo: string;
   agente_id: string;
-  user_id?: string;
 }
 
 const PORTAL_LABELS: Record<PortalType, string> = {
-  visitante: "Visitante",
-  pre_iniciada: "Pré-Iniciada",
-  iniciada: "Iniciada ORÁCULA",
-  admin: "Admin",
+  visitante: 'Visitante',
+  pre_iniciada: 'Pré-Iniciada',
+  iniciada: 'Iniciada ORÁCULA',
+  admin: 'Admin',
 };
 
 export default function Agentes() {
@@ -51,24 +50,24 @@ export default function Agentes() {
   const [conversas, setConversas] = useState<Conversa[]>([]);
   const [selectedConversa, setSelectedConversa] = useState<Conversa | null>(null);
   const [mensagens, setMensagens] = useState<Mensagem[]>([]);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
-
   const { toast } = useToast();
   const { user } = useAuth();
 
   useEffect(() => {
     fetchAgentes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchAgentes = async () => {
-    setIsLoading(true);
-
-    const { data, error } = await supabase.from("agentes").select("*").eq("status", "ativo").order("nome");
+    const { data, error } = await supabase
+      .from('agentes')
+      .select('*')
+      .eq('status', 'ativo')
+      .order('nome');
 
     if (error) {
-      toast({ title: "Erro ao carregar agentes", description: error.message, variant: "destructive" });
+      toast({ title: 'Erro ao carregar agentes', variant: 'destructive' });
     } else {
       setAgentes((data || []) as Agente[]);
     }
@@ -81,41 +80,27 @@ export default function Agentes() {
   };
 
   const openAgente = async (agente: Agente) => {
-    if (!user) {
-      toast({ title: "Faça login para continuar", variant: "destructive" });
-      return;
-    }
-
     // Validação de acesso no momento de abrir
     if (!canAccessAgente(agente)) {
       toast({
-        title: "Acesso restrito",
+        title: 'Acesso restrito',
         description: `Este agente requer nível ${PORTAL_LABELS[agente.portal_minimo]} ou superior.`,
-        variant: "destructive",
+        variant: 'destructive',
       });
       return;
     }
 
     setSelectedAgente(agente);
-
-    // ✅ IMPORTANTÍSSIMO: filtrar por user_id para não misturar conversas entre usuárias
-    const { data: conversasData, error: convError } = await supabase
-      .from("agente_conversas")
-      .select("*")
-      .eq("agente_id", agente.id)
-      .eq("user_id", user.id)
-      .order("updated_at", { ascending: false });
-
-    if (convError) {
-      toast({ title: "Erro ao carregar conversas", description: convError.message, variant: "destructive" });
-      setConversas([]);
-      setSelectedConversa(null);
-      setMensagens([]);
-      return;
-    }
+    
+    // Buscar conversas existentes
+    const { data: conversasData } = await supabase
+      .from('agente_conversas')
+      .select('*')
+      .eq('agente_id', agente.id)
+      .order('updated_at', { ascending: false });
 
     setConversas((conversasData || []) as Conversa[]);
-
+    
     // Se não tem conversa, criar uma nova
     if (!conversasData || conversasData.length === 0) {
       await startNewConversa(agente.id);
@@ -125,156 +110,98 @@ export default function Agentes() {
   };
 
   const startNewConversa = async (agenteId: string) => {
-    if (!user) return;
-
     const { data, error } = await supabase
-      .from("agente_conversas")
-      .insert({ agente_id: agenteId, user_id: user.id, titulo: "Nova conversa" })
+      .from('agente_conversas')
+      .insert({ agente_id: agenteId, user_id: user?.id, titulo: 'Nova conversa' })
       .select()
       .single();
-
-    if (error) {
-      toast({ title: "Erro ao criar conversa", description: error.message, variant: "destructive" });
-      return;
-    }
 
     if (data) {
       setSelectedConversa(data as Conversa);
       setMensagens([]);
-      setConversas((prev) => [data as Conversa, ...prev]);
+      setConversas(prev => [data as Conversa, ...prev]);
     }
   };
 
   const loadConversa = async (conversa: Conversa) => {
     setSelectedConversa(conversa);
-
-    const { data, error } = await supabase
-      .from("agente_mensagens")
-      .select("*")
-      .eq("conversa_id", conversa.id)
-      .order("created_at");
-
-    if (error) {
-      toast({ title: "Erro ao carregar mensagens", description: error.message, variant: "destructive" });
-      setMensagens([]);
-      return;
-    }
+    
+    const { data } = await supabase
+      .from('agente_mensagens')
+      .select('*')
+      .eq('conversa_id', conversa.id)
+      .order('created_at');
 
     setMensagens((data || []) as Mensagem[]);
   };
 
-  // Mantém um histórico curto para contexto (evita custo alto e respostas longas demais)
-  const recentHistoryForLLM = useMemo(() => {
-    const last = mensagens.slice(-12);
-    return last.map((m) => ({ role: m.role, content: m.content }));
-  }, [mensagens]);
-
   const sendMessage = async () => {
-    if (!user || !selectedConversa || !selectedAgente) return;
+    if (!selectedConversa || !selectedAgente) return;
 
     const validation = mensagemSchema.safeParse({ content: input });
     const validationError = getValidationError(validation);
     if (validationError) {
-      toast({ title: "Erro de validação", description: validationError, variant: "destructive" });
+      toast({ title: 'Erro de validação', description: validationError, variant: 'destructive' });
       return;
     }
 
     const userMessage = input.trim();
-    if (!userMessage) return;
-
-    setInput("");
+    setInput('');
     setSending(true);
 
-    // 1) Persistir mensagem do usuário
+    // Adicionar mensagem do usuário
     const { data: userMsgData, error: insertError } = await supabase
-      .from("agente_mensagens")
+      .from('agente_mensagens')
       .insert({
         conversa_id: selectedConversa.id,
-        role: "user",
+        role: 'user',
         content: userMessage,
       })
       .select()
       .single();
 
     if (insertError) {
-      toast({ title: "Erro ao enviar mensagem", description: insertError.message, variant: "destructive" });
+      toast({ title: 'Erro ao enviar mensagem', description: insertError.message, variant: 'destructive' });
       setSending(false);
       return;
     }
 
     if (userMsgData) {
-      setMensagens((prev) => [...prev, userMsgData as Mensagem]);
+      setMensagens(prev => [...prev, userMsgData as Mensagem]);
     }
 
-    // 2) Gerar resposta real via Edge Function
-    try {
-      const payload = {
-        agente_id: selectedAgente.id,
-        conversa_id: selectedConversa.id,
-        system: selectedAgente.instrucoes_base,
-        messages: [...recentHistoryForLLM, { role: "user", content: userMessage }],
-      };
+    // Simular resposta do agente (MVP - mock)
+    setTimeout(async () => {
+      const mockResponses = [
+        `Obrigado por compartilhar isso comigo. ${selectedAgente.nome} está aqui para te ajudar a refletir sobre esse ponto.`,
+        `Essa é uma questão importante. Vamos explorar juntas o que isso significa para você e sua prática.`,
+        `Interessante perspectiva. Como você se sente ao olhar para isso de um novo ângulo?`,
+        `Agradeço sua confiança. Lembre-se: não há respostas erradas, apenas caminhos a serem explorados.`,
+      ];
+      
+      const randomResponse = mockResponses[Math.floor(Math.random() * mockResponses.length)];
 
-      const { data: fnData, error: fnError } = await supabase.functions.invoke("agente_chat", {
-        body: payload,
-      });
-
-      if (fnError) throw new Error(fnError.message);
-
-      const assistantText = (fnData?.reply || "").toString().trim();
-      if (!assistantText) throw new Error("Resposta vazia do servidor.");
-
-      // 3) Persistir resposta do assistente
-      const { data: assistantMsgData, error: assistantInsertError } = await supabase
-        .from("agente_mensagens")
+      const { data: assistantMsgData } = await supabase
+        .from('agente_mensagens')
         .insert({
           conversa_id: selectedConversa.id,
-          role: "assistant",
-          content: assistantText,
+          role: 'assistant',
+          content: randomResponse,
         })
         .select()
         .single();
 
-      if (assistantInsertError) throw new Error(assistantInsertError.message);
-
       if (assistantMsgData) {
-        setMensagens((prev) => [...prev, assistantMsgData as Mensagem]);
+        setMensagens(prev => [...prev, assistantMsgData as Mensagem]);
       }
-
-      // (opcional) atualizar título da conversa se ainda é "Nova conversa"
-      // sem custo alto e melhora UX
-      if (selectedConversa.titulo === "Nova conversa") {
-        const suggestedTitle = userMessage.length > 36 ? `${userMessage.slice(0, 36)}…` : userMessage;
-
-        await supabase
-          .from("agente_conversas")
-          .update({ titulo: suggestedTitle, updated_at: new Date().toISOString() })
-          .eq("id", selectedConversa.id);
-
-        setSelectedConversa((prev) => (prev ? { ...prev, titulo: suggestedTitle } : prev));
-      } else {
-        // só atualiza updated_at
-        await supabase
-          .from("agente_conversas")
-          .update({ updated_at: new Date().toISOString() })
-          .eq("id", selectedConversa.id);
-      }
-    } catch (e: any) {
-      toast({
-        title: "Erro ao gerar resposta",
-        description: e?.message || "Erro desconhecido",
-        variant: "destructive",
-      });
-    } finally {
       setSending(false);
-    }
+    }, 1500);
   };
 
   const goBack = () => {
     setSelectedAgente(null);
     setSelectedConversa(null);
     setMensagens([]);
-    setInput("");
   };
 
   if (selectedAgente) {
@@ -299,11 +226,16 @@ export default function Agentes() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {mensagens.map((msg) => (
-                    <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                  {mensagens.map(msg => (
+                    <div
+                      key={msg.id}
+                      className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
                       <div
                         className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                          msg.role === "user" ? "bg-gold/20 text-foreground" : "bg-secondary text-foreground"
+                          msg.role === 'user'
+                            ? 'bg-gold/20 text-foreground'
+                            : 'bg-secondary text-foreground'
                         }`}
                       >
                         <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
@@ -325,11 +257,11 @@ export default function Agentes() {
               <div className="flex gap-2">
                 <Textarea
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
+                  onChange={e => setInput(e.target.value)}
                   placeholder="Digite sua mensagem..."
                   className="min-h-[44px] max-h-32"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
                       sendMessage();
                     }
@@ -367,15 +299,17 @@ export default function Agentes() {
           </Card>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {agentes.map((agente) => {
+            {agentes.map(agente => {
               const hasAccess = canAccessAgente(agente);
-
+              
               return (
                 <Tooltip key={agente.id}>
                   <TooltipTrigger asChild>
                     <Card
                       className={`glass transition-colors ${
-                        hasAccess ? "hover:border-gold/50 cursor-pointer" : "opacity-60 cursor-not-allowed"
+                        hasAccess
+                          ? 'hover:border-gold/50 cursor-pointer'
+                          : 'opacity-60 cursor-not-allowed'
                       }`}
                       onClick={() => hasAccess && openAgente(agente)}
                     >
@@ -393,7 +327,7 @@ export default function Agentes() {
                       </CardHeader>
                       <CardContent>
                         <Button
-                          variant={hasAccess ? "outline" : "secondary"}
+                          variant={hasAccess ? 'outline' : 'secondary'}
                           className="w-full gap-2"
                           disabled={!hasAccess}
                         >
