@@ -34,9 +34,9 @@ import {
   FileText,
   UserCheck
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-
 interface Cliente {
   id: string;
   nome: string;
@@ -72,6 +72,7 @@ interface EneagramaRegistro {
 export default function MinhasClientes() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -169,9 +170,8 @@ export default function MinhasClientes() {
   };
 
   const handleViewCliente = (cliente: Cliente) => {
-    setSelectedCliente(cliente);
-    setDialogOpen(true);
-    fetchClienteRecords(cliente.id);
+    // Navigate to client profile instead of opening dialog
+    navigate(`/cliente/${cliente.id}`);
   };
 
   const filteredClientes = clientes.filter(c => {
@@ -288,12 +288,12 @@ export default function MinhasClientes() {
                       </div>
                       
                       <Button 
-                        variant="outline" 
+                        variant="gold" 
                         onClick={() => handleViewCliente(cliente)}
                         className="gap-2"
                       >
                         <Eye className="w-4 h-4" />
-                        Ver Registros
+                        Abrir Cliente
                       </Button>
                     </div>
                   </CardContent>

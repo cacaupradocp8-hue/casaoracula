@@ -31,6 +31,7 @@ import ConfirmarProfissional from "./pages/ConfirmarProfissional";
 import MinhasClientes from "./pages/MinhasClientes";
 import MapaOracula from "./pages/MapaOracula";
 import QuizPage from "./pages/QuizPage";
+import ClientePerfil from "./pages/ClientePerfil";
 
 // Ferramentas (salas)
 import Big5 from "./pages/salas/Big5";
@@ -272,6 +273,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="pre_iniciada">
             <MinhasClientes />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/cliente/:clienteId"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <ClientePerfil />
           </ProtectedRoute>
         }
       />
