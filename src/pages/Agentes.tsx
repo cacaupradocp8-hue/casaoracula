@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Bot, MessageSquare, Send, ArrowLeft, Loader2, Lock } from "lucide-react";
+import { Bot, MessageSquare, Send, ArrowLeft, Loader2, Lock, Settings2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
@@ -44,234 +44,18 @@ const PORTAL_LABELS: Record<PortalType, string> = {
   admin: "Admin",
 };
 
-type Nucleo = "ferramenteira" | "archetypos" | "aracne_arcano";
+// 🔥 Núcleos (modo avançado)
+type Nucleo = "auto" | "ferramenteira" | "archetypos" | "aracne_arcano";
 
 const NUCLEO_LABEL: Record<Nucleo, string> = {
+  auto: "AUTO",
   ferramenteira: "🜂 Ferramenteira",
   archetypos: "🧱 Archétypos",
   aracne_arcano: "🎭 Aracne & Arcano",
 };
 
-function extractMinutes(text: string, fallback = 50) {
-  const m = text.match(/(\d{1,3})\s*(min|mins|minuto|minutos)\b/i);
-  if (!m) return fallback;
-  const n = Number(m[1]);
-  if (Number.isFinite(n) && n >= 10 && n <= 240) return n;
-  return fallback;
-}
-
-function shorten(text: string, max = 140) {
-  const t = text.trim();
-  return t.length > max ? `${t.slice(0, max)}…` : t;
-}
-
-function detectNucleo(userText: string): Nucleo {
-  const t = userText.toLowerCase();
-
-  // Ferramenteira: ritual, roteiro, oráculo, prática, condução guiada
-  const ferr = [
-    "ritual",
-    "oráculo",
-    "oraculo",
-    "tiragem",
-    "cartas",
-    "roteiro",
-    "script",
-    "passo a passo",
-    "prática",
-    "pratica",
-    "exercício",
-    "exercicio",
-    "meditação",
-    "meditacao",
-    "respiração",
-    "respiracao",
-    "visualização",
-    "visualizacao",
-    "encerramento",
-    "abertura",
-    "vivência",
-    "vivencia",
-    "círculo",
-    "circulo",
-    "grupo",
-    "cerimônia",
-    "cerimonia",
-  ];
-
-  // Archétypos: produto, oferta, jornada, módulos, funil, serviço
-  const arch = [
-    "produto",
-    "oferta",
-    "serviço",
-    "servico",
-    "jornada",
-    "módulo",
-    "modulo",
-    "mentoria",
-    "workshop",
-    "programa",
-    "pacote",
-    "ticket",
-    "preço",
-    "preco",
-    "vsl",
-    "página",
-    "pagina",
-    "landing",
-    "funil",
-    "upsell",
-    "order bump",
-    "estrutura",
-    "posicionamento",
-    "promessa",
-  ];
-
-  // Aracne & Arcano: metáfora, mito, arquétipo, sombra, conto
-  const arac = [
-    "metáfora",
-    "metafora",
-    "mito",
-    "arquétipo",
-    "arquetipo",
-    "sombra",
-    "conto",
-    "narrativa",
-    "jornada da heroína",
-    "jornada da heroina",
-    "símbolo",
-    "simbolo",
-    "sonho",
-    "imagem",
-    "personagem",
-    "trama",
-  ];
-
-  const score = (list: string[]) => list.reduce((acc, k) => (t.includes(k) ? acc + 1 : acc), 0);
-
-  const sFerr = score(ferr);
-  const sArch = score(arch);
-  const sArac = score(arac);
-
-  // Heurística: se pediu “estruturar sessão”, tende Ferramenteira
-  if (
-    t.includes("estruturar uma sessão") ||
-    t.includes("estruturar uma sessao") ||
-    t.includes("plano de sessão") ||
-    t.includes("plano de sessao")
-  ) {
-    return "ferramenteira";
-  }
-
-  const max = Math.max(sFerr, sArch, sArac);
-  if (max === 0) return "ferramenteira"; // default útil para V1
-  if (max === sArch) return "archetypos";
-  if (max === sArac) return "aracne_arcano";
-  return "ferramenteira";
-}
-
-function buildResponse(nucleo: Nucleo, userText: string) {
-  const minutes = extractMinutes(userText, 50);
-  const tema = shorten(userText, 160);
-
-  // Respostas V1: estruturadas, aplicáveis e com “cara de ferramenta”
-  if (nucleo === "ferramenteira") {
-    return `Núcleo ativado: ${NUCLEO_LABEL[nucleo]}
-
-1) Foco simbólico
-Limites emocionais como “borda sagrada”: não é frieza — é direção.
-
-2) Intenção terapêutica
-• diferenciar responsabilidade própria vs. responsabilidade do outro
-• reduzir culpa aprendida
-• criar linguagem de “não” sem agressão
-
-3) Estrutura de sessão (${minutes} min)
-• Abertura e contrato (5 min)
-  — objetivo + segurança + o que NÃO será feito hoje
-• Mapa do padrão (15 min)
-  — 2 episódios recentes: onde o limite falhou e por quê
-• Intervenção prática (20 min)
-  — ensaio de frases-limite + respiração de ancoragem (3 ciclos)
-• Integração (10 min)
-  — 1 limite para praticar + 1 proteção emocional concreta
-• Fechamento (restante)
-  — micro-ritual: “voltar para si” (mão no peito + frase-âncora)
-
-4) Perguntas (selecione 5–7)
-• Onde você diz “sim” querendo dizer “não”?
-• Qual medo aparece quando você se protege?
-• O que você acredita que perde ao colocar limite?
-• Que parte sua tenta manter paz a qualquer custo?
-• Se você se respeitasse 10% mais, o que mudaria amanhã?
-• Qual frase simples você consegue sustentar sem explicar demais?
-
-5) Encerramento seguro
-• 1 ganho | 1 aprendizado | 1 compromisso
-Frase-âncora: “Meu limite não é ataque — é cuidado.”
-
-Se quiser refinar: (A) contexto da cliente (família/parceiro/trabalho), (B) nível de risco, (C) histórico de trauma (leve/alto).  
-Tema recebido: ${tema}`;
-  }
-
-  if (nucleo === "archetypos") {
-    return `Núcleo ativado: ${NUCLEO_LABEL[nucleo]}
-
-1) Promessa clara (sem misticismo solto)
-“Em X semanas, a terapeuta aprende a conduzir limites emocionais com método, linguagem e prática — sem se perder no cuidado.”
-
-2) Estrutura do produto (V1 enxuto)
-• Nome do módulo: “Borda Sagrada”
-• Formato: 1 aula central + 1 prática guiada + 1 checklist de aplicação
-• Entregáveis:
-  – Script de sessão (50 min)
-  – Lista de perguntas por perfil
-  – Ritual de fechamento de campo (3 min)
-  – Folha de treino de frases-limite (cliente)
-
-3) Jornada (4 etapas)
-1) Diagnóstico do padrão (mapa de repetição)
-2) Linguagem do limite (frases que não abrem debate)
-3) Corpo e sistema nervoso (ancoragem e tolerância)
-4) Manutenção (micro-hábitos e revisão semanal)
-
-4) Métrica de sucesso (pra vender e provar valor)
-• “Quantas vezes eu disse sim por culpa esta semana?”
-• “Quantas vezes eu mantive meu limite sem explicar demais?”
-• Escala 0–10 de autocontenção após conversa difícil
-
-5) Próximo passo
-Me diga: ticket desejado (baixo/médio/alto) + público (terapeutas/mentoras/psicólogas) + se isso é bônus ou módulo principal.  
-Tema recebido: ${tema}`;
-  }
-
-  // aracne_arcano
-  return `Núcleo ativado: ${NUCLEO_LABEL[nucleo]}
-
-1) Chave simbólica
-Limites = “porta”. A psique feminina sofre quando vira “casa sem porta”: todo mundo entra, ninguém paga o preço.
-
-2) Leitura arquetípica (linguagem simples)
-• A Curadora exausta confunde amor com disponibilidade
-• A Menina boa teme rejeição e usa “sim” como moeda
-• A Sombra aqui: ressentimento silencioso
-
-3) Exercício simbólico (10–12 min)
-• “A Porta e o Guardião”
-  1) Nomeie 1 situação onde você se invade
-  2) Escreva a frase-limite em 1 linha (sem justificativa)
-  3) Visualize a porta fechando com calma (3 respirações)
-  4) Repita a frase em voz baixa 3 vezes
-
-4) Perguntas de condução (5–10)
-• O que você está tentando provar quando não coloca limite?
-• De quem você precisa de permissão para se proteger?
-• Qual é o “preço oculto” do seu sim?
-• O que você tem medo que aconteça se você virar a “má” da história?
-
-5) Fechamento
-Frase: “Eu posso ser amor e ainda assim ter porta.”  
-Tema recebido: ${tema}`;
+function storageKey(agentId?: string) {
+  return agentId ? `syntheia_nucleo_${agentId}` : `syntheia_nucleo_default`;
 }
 
 export default function Agentes() {
@@ -286,8 +70,9 @@ export default function Agentes() {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
 
-  // Override opcional (se quiser forçar um núcleo). Por padrão, é automático.
-  const [forcedNucleo, setForcedNucleo] = useState<Nucleo | null>(null);
+  // ✅ opção 3: modo avançado + forçar núcleo
+  const [advancedMode, setAdvancedMode] = useState(false);
+  const [forcedNucleo, setForcedNucleo] = useState<Nucleo>("auto");
 
   const { toast } = useToast();
   const { user } = useAuth();
@@ -331,8 +116,17 @@ export default function Agentes() {
     }
 
     setSelectedAgente(agente);
-    setForcedNucleo(null); // reset override ao entrar
 
+    // carregar preferência de núcleo por agente (default auto)
+    try {
+      const saved = localStorage.getItem(storageKey(agente.id)) as Nucleo | null;
+      if (saved && NUCLEO_LABEL[saved]) setForcedNucleo(saved);
+      else setForcedNucleo("auto");
+    } catch {
+      setForcedNucleo("auto");
+    }
+
+    // filtra por user_id
     const { data: conversasData, error: convError } = await supabase
       .from("agente_conversas")
       .select("*")
@@ -396,8 +190,40 @@ export default function Agentes() {
     setMensagens((data || []) as Mensagem[]);
   };
 
+  const recentHistoryForLLM = useMemo(() => {
+    const last = mensagens.slice(-12);
+    return last.map((m) => ({ role: m.role, content: m.content }));
+  }, [mensagens]);
+
+  const persistForcedNucleo = (n: Nucleo) => {
+    setForcedNucleo(n);
+    if (selectedAgente?.id) {
+      try {
+        localStorage.setItem(storageKey(selectedAgente.id), n);
+      } catch {
+        // ignore
+      }
+    }
+  };
+
+  // ✅ Opcional: montar prompt com “roteamento”
+  // - se você já tem Edge Function, ela pode ler forcedNucleo
+  // - se não tiver, isso não quebra nada
+  const buildUserMessageWithRouting = (raw: string) => {
+    // quando está em auto, não polui a mensagem
+    if (!advancedMode || forcedNucleo === "auto") return raw;
+
+    // Marca discreta (fácil de parsear no backend)
+    // Se você não quiser isso aparecendo no histórico,
+    // a gente move para metadata quando ligar Edge Function.
+    return `[NUCLEO:${forcedNucleo}]\n${raw}`;
+  };
+
   const sendMessage = async () => {
     if (!user || !selectedConversa || !selectedAgente) return;
+
+    // ✅ trava anti-duplo-envio
+    if (sending) return;
 
     const validation = mensagemSchema.safeParse({ content: input });
     const validationError = getValidationError(validation);
@@ -413,12 +239,14 @@ export default function Agentes() {
     setSending(true);
 
     // 1) Persistir mensagem do usuário
+    const messageToStore = buildUserMessageWithRouting(userMessage);
+
     const { data: userMsgData, error: insertError } = await supabase
       .from("agente_mensagens")
       .insert({
         conversa_id: selectedConversa.id,
         role: "user",
-        content: userMessage,
+        content: messageToStore,
       })
       .select()
       .single();
@@ -433,14 +261,33 @@ export default function Agentes() {
       setMensagens((prev) => [...prev, userMsgData as Mensagem]);
     }
 
-    // 2) V1: resposta estruturada (sem Edge Function)
+    // 2) Resposta do “assistente”
+    // 👉 V1 seguro: mock
+    // 👉 quando você quiser ligar Edge Function: substitui aqui
     try {
-      await new Promise((resolve) => setTimeout(resolve, 600));
+      // Simular delay
+      await new Promise((resolve) => setTimeout(resolve, 700));
 
-      const nucleo = forcedNucleo ?? detectNucleo(userMessage);
-      const assistantText = buildResponse(nucleo, userMessage);
+      // Se você quiser deixar “sabor SYNTHEIA” no mock:
+      const nucleoAtual = advancedMode ? NUCLEO_LABEL[forcedNucleo] : "AUTO";
+      const assistantText =
+        forcedNucleo === "auto" || !advancedMode
+          ? `Núcleo ativado: ${nucleoAtual}\n\nCompreendo. Esse é um ponto significativo para sua jornada. Há algo específico que você gostaria de aprofundar?`
+          : `Núcleo ativado: ${nucleoAtual}\n\nRecebido. Vou trabalhar exatamente nesse núcleo.\n\nQual o contexto (cliente / grupo / trabalho) e qual risco (baixo/médio/alto) para eu calibrar a condução?`;
 
-      // 3) Persistir resposta do assistente
+      // ✅ Se você já tem Edge Function e quer usar, é aqui:
+      // const { data, error } = await supabase.functions.invoke("NOME_DA_SUA_FUNCAO", {
+      //   body: {
+      //     agenteId: selectedAgente.id,
+      //     conversaId: selectedConversa.id,
+      //     forcedNucleo: advancedMode ? forcedNucleo : "auto",
+      //     message: userMessage,
+      //     history: recentHistoryForLLM,
+      //   },
+      // });
+      // if (error) throw error;
+      // const assistantText = data?.content ?? "Sem resposta";
+
       const { data: assistantMsgData, error: assistantInsertError } = await supabase
         .from("agente_mensagens")
         .insert({
@@ -457,7 +304,7 @@ export default function Agentes() {
         setMensagens((prev) => [...prev, assistantMsgData as Mensagem]);
       }
 
-      // Atualizar título / updated_at
+      // 3) Atualizar título + updated_at
       if (selectedConversa.titulo === "Nova conversa") {
         const suggestedTitle = userMessage.length > 36 ? `${userMessage.slice(0, 36)}…` : userMessage;
 
@@ -489,63 +336,75 @@ export default function Agentes() {
     setSelectedConversa(null);
     setMensagens([]);
     setInput("");
-    setForcedNucleo(null);
+    setAdvancedMode(false);
+    setForcedNucleo("auto");
   };
 
   if (selectedAgente) {
     return (
       <AppLayout>
         <div className="container mx-auto px-4 py-8 pb-20">
-          <div className="flex items-center gap-4 mb-6">
-            <Button variant="ghost" size="icon" onClick={goBack}>
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div className="flex-1">
-              <h1 className="text-2xl font-display text-gold">{selectedAgente.nome}</h1>
-              <p className="text-sm text-muted-foreground">{selectedAgente.descricao}</p>
-
-              {/* Override opcional: discreto, mas dá controle */}
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Button
-                  type="button"
-                  size="sm"
-                  variant={forcedNucleo === null ? "gold" : "outline"}
-                  onClick={() => setForcedNucleo(null)}
-                >
-                  Auto
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant={forcedNucleo === "ferramenteira" ? "gold" : "outline"}
-                  onClick={() => setForcedNucleo("ferramenteira")}
-                >
-                  🜂 Ferramenteira
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant={forcedNucleo === "archetypos" ? "gold" : "outline"}
-                  onClick={() => setForcedNucleo("archetypos")}
-                >
-                  🧱 Archétypos
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant={forcedNucleo === "aracne_arcano" ? "gold" : "outline"}
-                  onClick={() => setForcedNucleo("aracne_arcano")}
-                >
-                  🎭 Aracne & Arcano
-                </Button>
+          <div className="flex items-center justify-between gap-4 mb-6">
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="icon" onClick={goBack}>
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+              <div>
+                <h1 className="text-2xl font-display text-gold">{selectedAgente.nome}</h1>
+                <p className="text-sm text-muted-foreground">{selectedAgente.descricao}</p>
               </div>
+            </div>
 
-              <p className="mt-2 text-xs text-muted-foreground">
-                Dica: deixe em <b>Auto</b> para a SYNTHEIA escolher o núcleo. Use os botões só se quiser forçar o estilo
-                de resposta.
-              </p>
+            {/* ⚙️ Modo avançado */}
+            <div className="flex items-center gap-2">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    variant={advancedMode ? "secondary" : "outline"}
+                    className="gap-2"
+                    onClick={() => setAdvancedMode((v) => !v)}
+                  >
+                    <Settings2 className="w-4 h-4" />
+                    {advancedMode ? "Modo avançado" : "Avançado"}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Forçar núcleo da SYNTHEIA (opcional)</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </div>
+
+          {/* Seletor de núcleo (só no avançado) */}
+          {advancedMode && (
+            <Card className="glass mb-4">
+              <CardContent className="p-4">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      Se quiser, force o núcleo. Se não, deixe em{" "}
+                      <span className="text-foreground font-medium">AUTO</span>.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    {(["auto", "ferramenteira", "archetypos", "aracne_arcano"] as Nucleo[]).map((n) => (
+                      <Button
+                        key={n}
+                        type="button"
+                        variant={forcedNucleo === n ? "secondary" : "outline"}
+                        onClick={() => persistForcedNucleo(n)}
+                        disabled={sending}
+                      >
+                        {NUCLEO_LABEL[n]}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           <Card className="glass h-[60vh] flex flex-col">
             <ScrollArea className="flex-1 p-4">
@@ -566,6 +425,7 @@ export default function Agentes() {
                       </div>
                     </div>
                   ))}
+
                   {sending && (
                     <div className="flex justify-start">
                       <div className="bg-secondary rounded-lg px-4 py-2">
@@ -582,9 +442,13 @@ export default function Agentes() {
                 <Textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Digite sua mensagem..."
+                  placeholder={
+                    advancedMode ? `Digite... (núcleo: ${NUCLEO_LABEL[forcedNucleo]})` : "Digite sua mensagem..."
+                  }
                   className="min-h-[44px] max-h-32"
+                  disabled={sending}
                   onKeyDown={(e) => {
+                    if (sending) return;
                     if (e.key === "Enter" && !e.shiftKey) {
                       e.preventDefault();
                       sendMessage();
@@ -594,6 +458,13 @@ export default function Agentes() {
                 <Button onClick={sendMessage} disabled={sending || !input.trim()} variant="gold">
                   <Send className="w-4 h-4" />
                 </Button>
+              </div>
+
+              <div className="mt-3 text-xs text-muted-foreground">
+                <span className="opacity-80">
+                  ⚠️ Este app não substitui supervisão clínica, psicoterapia ou psiquiatria. Conteúdo formativo e
+                  simbólico, exclusivo para profissionais.
+                </span>
               </div>
             </div>
           </Card>
@@ -624,7 +495,7 @@ export default function Agentes() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {agentes.map((agente) => {
-              const hasAccess = user ? canAccessAgente(agente) : false;
+              const hasAccess = canAccessAgente(agente);
 
               return (
                 <Tooltip key={agente.id}>
