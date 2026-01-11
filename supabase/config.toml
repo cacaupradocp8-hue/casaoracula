@@ -2,6 +2,3 @@ project_id = "pvjiznbfwtjqmpeiqqzk"
 
 [functions.rockty-webhook]
 verify_jwt = false
-
-[functions.syntheia-generate]
-verify_jwt = true

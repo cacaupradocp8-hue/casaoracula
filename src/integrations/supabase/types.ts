@@ -1719,63 +1719,6 @@ export type Database = {
         }
         Relationships: []
       }
-      syntheia_creations: {
-        Row: {
-          chave_simbolica: string | null
-          created_at: string
-          estrutura_pratica: string | null
-          fechamento_integracao: string | null
-          id: string
-          intencao_terapeutica: string | null
-          momento_jornada: string
-          publico_alvo: string
-          suporte_linguagem: string | null
-          tags: string[] | null
-          tema_principal: string
-          tempo_disponivel: string
-          tipo: string
-          titulo: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          chave_simbolica?: string | null
-          created_at?: string
-          estrutura_pratica?: string | null
-          fechamento_integracao?: string | null
-          id?: string
-          intencao_terapeutica?: string | null
-          momento_jornada: string
-          publico_alvo: string
-          suporte_linguagem?: string | null
-          tags?: string[] | null
-          tema_principal: string
-          tempo_disponivel: string
-          tipo: string
-          titulo?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          chave_simbolica?: string | null
-          created_at?: string
-          estrutura_pratica?: string | null
-          fechamento_integracao?: string | null
-          id?: string
-          intencao_terapeutica?: string | null
-          momento_jornada?: string
-          publico_alvo?: string
-          suporte_linguagem?: string | null
-          tags?: string[] | null
-          tema_principal?: string
-          tempo_disponivel?: string
-          tipo?: string
-          titulo?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       terapeuta_clientes: {
         Row: {
           ativo: boolean
