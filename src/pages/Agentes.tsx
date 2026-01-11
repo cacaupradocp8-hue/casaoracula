@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -44,15 +44,250 @@ const PORTAL_LABELS: Record<PortalType, string> = {
   admin: "Admin",
 };
 
+type Nucleo = "ferramenteira" | "archetypos" | "aracne_arcano";
+
+const NUCLEO_LABEL: Record<Nucleo, string> = {
+  ferramenteira: "🜂 Ferramenteira",
+  archetypos: "🧱 Archétypos",
+  aracne_arcano: "🎭 Aracne & Arcano",
+};
+
+function extractMinutes(text: string, fallback = 50) {
+  const m = text.match(/(\d{1,3})\s*(min|mins|minuto|minutos)\b/i);
+  if (!m) return fallback;
+  const n = Number(m[1]);
+  if (Number.isFinite(n) && n >= 10 && n <= 240) return n;
+  return fallback;
+}
+
+function shorten(text: string, max = 140) {
+  const t = text.trim();
+  return t.length > max ? `${t.slice(0, max)}…` : t;
+}
+
+function detectNucleo(userText: string): Nucleo {
+  const t = userText.toLowerCase();
+
+  // Ferramenteira: ritual, roteiro, oráculo, prática, condução guiada
+  const ferr = [
+    "ritual",
+    "oráculo",
+    "oraculo",
+    "tiragem",
+    "cartas",
+    "roteiro",
+    "script",
+    "passo a passo",
+    "prática",
+    "pratica",
+    "exercício",
+    "exercicio",
+    "meditação",
+    "meditacao",
+    "respiração",
+    "respiracao",
+    "visualização",
+    "visualizacao",
+    "encerramento",
+    "abertura",
+    "vivência",
+    "vivencia",
+    "círculo",
+    "circulo",
+    "grupo",
+    "cerimônia",
+    "cerimonia",
+  ];
+
+  // Archétypos: produto, oferta, jornada, módulos, funil, serviço
+  const arch = [
+    "produto",
+    "oferta",
+    "serviço",
+    "servico",
+    "jornada",
+    "módulo",
+    "modulo",
+    "mentoria",
+    "workshop",
+    "programa",
+    "pacote",
+    "ticket",
+    "preço",
+    "preco",
+    "vsl",
+    "página",
+    "pagina",
+    "landing",
+    "funil",
+    "upsell",
+    "order bump",
+    "estrutura",
+    "posicionamento",
+    "promessa",
+  ];
+
+  // Aracne & Arcano: metáfora, mito, arquétipo, sombra, conto
+  const arac = [
+    "metáfora",
+    "metafora",
+    "mito",
+    "arquétipo",
+    "arquetipo",
+    "sombra",
+    "conto",
+    "narrativa",
+    "jornada da heroína",
+    "jornada da heroina",
+    "símbolo",
+    "simbolo",
+    "sonho",
+    "imagem",
+    "personagem",
+    "trama",
+  ];
+
+  const score = (list: string[]) => list.reduce((acc, k) => (t.includes(k) ? acc + 1 : acc), 0);
+
+  const sFerr = score(ferr);
+  const sArch = score(arch);
+  const sArac = score(arac);
+
+  // Heurística: se pediu “estruturar sessão”, tende Ferramenteira
+  if (
+    t.includes("estruturar uma sessão") ||
+    t.includes("estruturar uma sessao") ||
+    t.includes("plano de sessão") ||
+    t.includes("plano de sessao")
+  ) {
+    return "ferramenteira";
+  }
+
+  const max = Math.max(sFerr, sArch, sArac);
+  if (max === 0) return "ferramenteira"; // default útil para V1
+  if (max === sArch) return "archetypos";
+  if (max === sArac) return "aracne_arcano";
+  return "ferramenteira";
+}
+
+function buildResponse(nucleo: Nucleo, userText: string) {
+  const minutes = extractMinutes(userText, 50);
+  const tema = shorten(userText, 160);
+
+  // Respostas V1: estruturadas, aplicáveis e com “cara de ferramenta”
+  if (nucleo === "ferramenteira") {
+    return `Núcleo ativado: ${NUCLEO_LABEL[nucleo]}
+
+1) Foco simbólico
+Limites emocionais como “borda sagrada”: não é frieza — é direção.
+
+2) Intenção terapêutica
+• diferenciar responsabilidade própria vs. responsabilidade do outro
+• reduzir culpa aprendida
+• criar linguagem de “não” sem agressão
+
+3) Estrutura de sessão (${minutes} min)
+• Abertura e contrato (5 min)
+  — objetivo + segurança + o que NÃO será feito hoje
+• Mapa do padrão (15 min)
+  — 2 episódios recentes: onde o limite falhou e por quê
+• Intervenção prática (20 min)
+  — ensaio de frases-limite + respiração de ancoragem (3 ciclos)
+• Integração (10 min)
+  — 1 limite para praticar + 1 proteção emocional concreta
+• Fechamento (restante)
+  — micro-ritual: “voltar para si” (mão no peito + frase-âncora)
+
+4) Perguntas (selecione 5–7)
+• Onde você diz “sim” querendo dizer “não”?
+• Qual medo aparece quando você se protege?
+• O que você acredita que perde ao colocar limite?
+• Que parte sua tenta manter paz a qualquer custo?
+• Se você se respeitasse 10% mais, o que mudaria amanhã?
+• Qual frase simples você consegue sustentar sem explicar demais?
+
+5) Encerramento seguro
+• 1 ganho | 1 aprendizado | 1 compromisso
+Frase-âncora: “Meu limite não é ataque — é cuidado.”
+
+Se quiser refinar: (A) contexto da cliente (família/parceiro/trabalho), (B) nível de risco, (C) histórico de trauma (leve/alto).  
+Tema recebido: ${tema}`;
+  }
+
+  if (nucleo === "archetypos") {
+    return `Núcleo ativado: ${NUCLEO_LABEL[nucleo]}
+
+1) Promessa clara (sem misticismo solto)
+“Em X semanas, a terapeuta aprende a conduzir limites emocionais com método, linguagem e prática — sem se perder no cuidado.”
+
+2) Estrutura do produto (V1 enxuto)
+• Nome do módulo: “Borda Sagrada”
+• Formato: 1 aula central + 1 prática guiada + 1 checklist de aplicação
+• Entregáveis:
+  – Script de sessão (50 min)
+  – Lista de perguntas por perfil
+  – Ritual de fechamento de campo (3 min)
+  – Folha de treino de frases-limite (cliente)
+
+3) Jornada (4 etapas)
+1) Diagnóstico do padrão (mapa de repetição)
+2) Linguagem do limite (frases que não abrem debate)
+3) Corpo e sistema nervoso (ancoragem e tolerância)
+4) Manutenção (micro-hábitos e revisão semanal)
+
+4) Métrica de sucesso (pra vender e provar valor)
+• “Quantas vezes eu disse sim por culpa esta semana?”
+• “Quantas vezes eu mantive meu limite sem explicar demais?”
+• Escala 0–10 de autocontenção após conversa difícil
+
+5) Próximo passo
+Me diga: ticket desejado (baixo/médio/alto) + público (terapeutas/mentoras/psicólogas) + se isso é bônus ou módulo principal.  
+Tema recebido: ${tema}`;
+  }
+
+  // aracne_arcano
+  return `Núcleo ativado: ${NUCLEO_LABEL[nucleo]}
+
+1) Chave simbólica
+Limites = “porta”. A psique feminina sofre quando vira “casa sem porta”: todo mundo entra, ninguém paga o preço.
+
+2) Leitura arquetípica (linguagem simples)
+• A Curadora exausta confunde amor com disponibilidade
+• A Menina boa teme rejeição e usa “sim” como moeda
+• A Sombra aqui: ressentimento silencioso
+
+3) Exercício simbólico (10–12 min)
+• “A Porta e o Guardião”
+  1) Nomeie 1 situação onde você se invade
+  2) Escreva a frase-limite em 1 linha (sem justificativa)
+  3) Visualize a porta fechando com calma (3 respirações)
+  4) Repita a frase em voz baixa 3 vezes
+
+4) Perguntas de condução (5–10)
+• O que você está tentando provar quando não coloca limite?
+• De quem você precisa de permissão para se proteger?
+• Qual é o “preço oculto” do seu sim?
+• O que você tem medo que aconteça se você virar a “má” da história?
+
+5) Fechamento
+Frase: “Eu posso ser amor e ainda assim ter porta.”  
+Tema recebido: ${tema}`;
+}
+
 export default function Agentes() {
   const [agentes, setAgentes] = useState<Agente[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
   const [selectedAgente, setSelectedAgente] = useState<Agente | null>(null);
   const [conversas, setConversas] = useState<Conversa[]>([]);
   const [selectedConversa, setSelectedConversa] = useState<Conversa | null>(null);
   const [mensagens, setMensagens] = useState<Mensagem[]>([]);
+
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+
+  // Override opcional (se quiser forçar um núcleo). Por padrão, é automático.
+  const [forcedNucleo, setForcedNucleo] = useState<Nucleo | null>(null);
 
   const { toast } = useToast();
   const { user } = useAuth();
@@ -86,7 +321,6 @@ export default function Agentes() {
       return;
     }
 
-    // Validação de acesso no momento de abrir
     if (!canAccessAgente(agente)) {
       toast({
         title: "Acesso restrito",
@@ -97,8 +331,8 @@ export default function Agentes() {
     }
 
     setSelectedAgente(agente);
+    setForcedNucleo(null); // reset override ao entrar
 
-    // ✅ IMPORTANTÍSSIMO: filtrar por user_id para não misturar conversas entre usuárias
     const { data: conversasData, error: convError } = await supabase
       .from("agente_conversas")
       .select("*")
@@ -116,7 +350,6 @@ export default function Agentes() {
 
     setConversas((conversasData || []) as Conversa[]);
 
-    // Se não tem conversa, criar uma nova
     if (!conversasData || conversasData.length === 0) {
       await startNewConversa(agente.id);
     } else {
@@ -163,12 +396,6 @@ export default function Agentes() {
     setMensagens((data || []) as Mensagem[]);
   };
 
-  // Mantém um histórico curto para contexto (evita custo alto e respostas longas demais)
-  const recentHistoryForLLM = useMemo(() => {
-    const last = mensagens.slice(-12);
-    return last.map((m) => ({ role: m.role, content: m.content }));
-  }, [mensagens]);
-
   const sendMessage = async () => {
     if (!user || !selectedConversa || !selectedAgente) return;
 
@@ -206,19 +433,12 @@ export default function Agentes() {
       setMensagens((prev) => [...prev, userMsgData as Mensagem]);
     }
 
-    // 2) V1: Mock response (Edge Function disabled)
+    // 2) V1: resposta estruturada (sem Edge Function)
     try {
-      // Simulate a brief delay for UX
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      await new Promise((resolve) => setTimeout(resolve, 600));
 
-      // Mock response based on agent context
-      const mockResponses = [
-        `Obrigada por sua mensagem. Estou aqui para apoiar sua jornada. Como ${selectedAgente.nome}, posso ajudá-la a explorar esse tema com mais profundidade.`,
-        `Essa é uma reflexão importante. Vamos explorar juntas esse aspecto da sua experiência.`,
-        `Agradeço por compartilhar isso comigo. O que mais você gostaria de explorar sobre esse tema?`,
-        `Compreendo. Esse é um ponto significativo para sua jornada. Há algo específico que você gostaria de aprofundar?`,
-      ];
-      const assistantText = mockResponses[Math.floor(Math.random() * mockResponses.length)];
+      const nucleo = forcedNucleo ?? detectNucleo(userMessage);
+      const assistantText = buildResponse(nucleo, userMessage);
 
       // 3) Persistir resposta do assistente
       const { data: assistantMsgData, error: assistantInsertError } = await supabase
@@ -237,8 +457,7 @@ export default function Agentes() {
         setMensagens((prev) => [...prev, assistantMsgData as Mensagem]);
       }
 
-      // (opcional) atualizar título da conversa se ainda é "Nova conversa"
-      // sem custo alto e melhora UX
+      // Atualizar título / updated_at
       if (selectedConversa.titulo === "Nova conversa") {
         const suggestedTitle = userMessage.length > 36 ? `${userMessage.slice(0, 36)}…` : userMessage;
 
@@ -249,7 +468,6 @@ export default function Agentes() {
 
         setSelectedConversa((prev) => (prev ? { ...prev, titulo: suggestedTitle } : prev));
       } else {
-        // só atualiza updated_at
         await supabase
           .from("agente_conversas")
           .update({ updated_at: new Date().toISOString() })
@@ -271,6 +489,7 @@ export default function Agentes() {
     setSelectedConversa(null);
     setMensagens([]);
     setInput("");
+    setForcedNucleo(null);
   };
 
   if (selectedAgente) {
@@ -281,9 +500,50 @@ export default function Agentes() {
             <Button variant="ghost" size="icon" onClick={goBack}>
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <div>
+            <div className="flex-1">
               <h1 className="text-2xl font-display text-gold">{selectedAgente.nome}</h1>
               <p className="text-sm text-muted-foreground">{selectedAgente.descricao}</p>
+
+              {/* Override opcional: discreto, mas dá controle */}
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={forcedNucleo === null ? "gold" : "outline"}
+                  onClick={() => setForcedNucleo(null)}
+                >
+                  Auto
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={forcedNucleo === "ferramenteira" ? "gold" : "outline"}
+                  onClick={() => setForcedNucleo("ferramenteira")}
+                >
+                  🜂 Ferramenteira
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={forcedNucleo === "archetypos" ? "gold" : "outline"}
+                  onClick={() => setForcedNucleo("archetypos")}
+                >
+                  🧱 Archétypos
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={forcedNucleo === "aracne_arcano" ? "gold" : "outline"}
+                  onClick={() => setForcedNucleo("aracne_arcano")}
+                >
+                  🎭 Aracne & Arcano
+                </Button>
+              </div>
+
+              <p className="mt-2 text-xs text-muted-foreground">
+                Dica: deixe em <b>Auto</b> para a SYNTHEIA escolher o núcleo. Use os botões só se quiser forçar o estilo
+                de resposta.
+              </p>
             </div>
           </div>
 
@@ -364,7 +624,7 @@ export default function Agentes() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {agentes.map((agente) => {
-              const hasAccess = canAccessAgente(agente);
+              const hasAccess = user ? canAccessAgente(agente) : false;
 
               return (
                 <Tooltip key={agente.id}>
