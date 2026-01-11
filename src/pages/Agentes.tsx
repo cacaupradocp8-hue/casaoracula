@@ -206,23 +206,19 @@ export default function Agentes() {
       setMensagens((prev) => [...prev, userMsgData as Mensagem]);
     }
 
-    // 2) Gerar resposta real via Edge Function
+    // 2) V1: Mock response (Edge Function disabled)
     try {
-      const payload = {
-        agente_id: selectedAgente.id,
-        conversa_id: selectedConversa.id,
-        system: selectedAgente.instrucoes_base,
-        messages: [...recentHistoryForLLM, { role: "user", content: userMessage }],
-      };
+      // Simulate a brief delay for UX
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
-      const { data: fnData, error: fnError } = await supabase.functions.invoke("agente_chat", {
-        body: payload,
-      });
-
-      if (fnError) throw new Error(fnError.message);
-
-      const assistantText = (fnData?.reply || "").toString().trim();
-      if (!assistantText) throw new Error("Resposta vazia do servidor.");
+      // Mock response based on agent context
+      const mockResponses = [
+        `Obrigada por sua mensagem. Estou aqui para apoiar sua jornada. Como ${selectedAgente.nome}, posso ajudá-la a explorar esse tema com mais profundidade.`,
+        `Essa é uma reflexão importante. Vamos explorar juntas esse aspecto da sua experiência.`,
+        `Agradeço por compartilhar isso comigo. O que mais você gostaria de explorar sobre esse tema?`,
+        `Compreendo. Esse é um ponto significativo para sua jornada. Há algo específico que você gostaria de aprofundar?`,
+      ];
+      const assistantText = mockResponses[Math.floor(Math.random() * mockResponses.length)];
 
       // 3) Persistir resposta do assistente
       const { data: assistantMsgData, error: assistantInsertError } = await supabase
