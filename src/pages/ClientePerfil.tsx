@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -17,7 +16,6 @@ import {
   Calendar,
   Brain,
   Compass,
-  Eye,
   History,
   Wrench,
   FileText,
@@ -30,11 +28,13 @@ import {
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
+type ClienteStatus = 'ativo' | 'pausado' | 'encerrado';
+
 interface Cliente {
   id: string;
   nome: string;
-  email: string;
-  vinculo_ativo: boolean;
+  status: ClienteStatus;
+  objetivo_terapeutico: string | null;
   created_at: string;
 }
 
@@ -95,15 +95,14 @@ export default function ClientePerfil() {
     setLoading(true);
     
     try {
-      // Verify therapist has access to this client
-      const { data: vinculo, error: vinculoError } = await supabase
-        .from('terapeuta_clientes')
-        .select('cliente_id, ativo, created_at')
-        .eq('terapeuta_id', user.id)
-        .eq('cliente_id', clienteId)
+      // Fetch client from clientes table (RLS ensures only own clients)
+      const { data: clienteData, error: clienteError } = await supabase
+        .from('clientes')
+        .select('*')
+        .eq('id', clienteId)
         .maybeSingle();
 
-      if (vinculoError || !vinculo) {
+      if (clienteError || !clienteData) {
         toast({
           title: 'Acesso negado',
           description: 'Você não tem permissão para visualizar esta cliente.',
@@ -113,34 +112,25 @@ export default function ClientePerfil() {
         return;
       }
 
-      // Fetch client profile
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('id, nome, email')
-        .eq('id', clienteId)
-        .maybeSingle();
+      setCliente({
+        id: clienteData.id,
+        nome: clienteData.nome,
+        status: clienteData.status as ClienteStatus,
+        objetivo_terapeutico: clienteData.objetivo_terapeutico,
+        created_at: clienteData.created_at,
+      });
 
-      if (profile) {
-        setCliente({
-          id: profile.id,
-          nome: profile.nome || 'Sem nome',
-          email: profile.email || '',
-          vinculo_ativo: vinculo.ativo,
-          created_at: vinculo.created_at,
-        });
-      }
-
-      // Fetch records
+      // Fetch records linked to this client
       const [big5Res, eneagramaRes] = await Promise.all([
         supabase
           .from('big5_registros')
           .select('*')
-          .eq('user_id', clienteId)
+          .eq('cliente_id', clienteId)
           .order('created_at', { ascending: false }),
         supabase
           .from('eneagrama_registros')
           .select('*')
-          .eq('user_id', clienteId)
+          .eq('cliente_id', clienteId)
           .order('created_at', { ascending: false })
       ]);
 
@@ -182,6 +172,17 @@ export default function ClientePerfil() {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getStatusBadge = (status: ClienteStatus) => {
+    switch (status) {
+      case 'ativo':
+        return <Badge variant="default" className="bg-green-600">Ativo</Badge>;
+      case 'pausado':
+        return <Badge variant="secondary">Pausado</Badge>;
+      case 'encerrado':
+        return <Badge variant="outline">Encerrado</Badge>;
     }
   };
 
@@ -228,11 +229,11 @@ export default function ClientePerfil() {
               <div>
                 <h1 className="text-2xl font-display font-bold flex items-center gap-2">
                   {cliente.nome}
-                  <Badge variant={cliente.vinculo_ativo ? 'default' : 'secondary'}>
-                    {cliente.vinculo_ativo ? 'Ativo' : 'Inativo'}
-                  </Badge>
+                  {getStatusBadge(cliente.status)}
                 </h1>
-                <p className="text-sm text-muted-foreground">{cliente.email}</p>
+                {cliente.objetivo_terapeutico && (
+                  <p className="text-sm text-muted-foreground">{cliente.objetivo_terapeutico}</p>
+                )}
               </div>
             </div>
           </div>
@@ -260,6 +261,10 @@ export default function ClientePerfil() {
               <History className="w-4 h-4" />
               Linha do Tempo
             </TabsTrigger>
+            <TabsTrigger value="sessoes" className="gap-2">
+              <Calendar className="w-4 h-4" />
+              Sessões
+            </TabsTrigger>
             <TabsTrigger value="ferramentas" className="gap-2">
               <Wrench className="w-4 h-4" />
               Ferramentas
@@ -276,7 +281,7 @@ export default function ClientePerfil() {
               <Card>
                 <CardContent className="p-6 text-center">
                   <Calendar className="w-8 h-8 mx-auto mb-2 text-gold" />
-                  <p className="text-sm text-muted-foreground">Vinculada desde</p>
+                  <p className="text-sm text-muted-foreground">Cliente desde</p>
                   <p className="font-medium">
                     {format(new Date(cliente.created_at), "dd/MM/yyyy", { locale: ptBR })}
                   </p>
@@ -410,6 +415,19 @@ export default function ClientePerfil() {
             )}
           </TabsContent>
 
+          {/* Sessões */}
+          <TabsContent value="sessoes">
+            <Card className="text-center py-12">
+              <CardContent>
+                <Calendar className="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+                <p className="text-muted-foreground">Funcionalidade de Sessões</p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Em breve você poderá registrar sessões terapêuticas aqui.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* Ferramentas */}
           <TabsContent value="ferramentas">
             <div className="grid gap-4 md:grid-cols-2">
@@ -455,43 +473,29 @@ export default function ClientePerfil() {
                 </CardContent>
               </Card>
             </div>
-
-            <Card className="mt-6 border-blue-500/30 bg-blue-500/5">
-              <CardContent className="p-4 flex items-start gap-3">
-                <Shield className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium">Sobre as ferramentas</p>
-                  <p className="text-sm text-muted-foreground">
-                    Todos os registros criados aqui são vinculados automaticamente a esta cliente. 
-                    O histórico nunca é sobrescrito — cada avaliação é um novo registro na linha do tempo.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
           </TabsContent>
 
-          {/* Observações Privadas */}
+          {/* Observações */}
           <TabsContent value="observacoes">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="text-lg flex items-center gap-2">
                   <FileText className="w-5 h-5" />
                   Observações Privadas
                 </CardTitle>
                 <CardDescription>
-                  Anotações confidenciais sobre esta cliente (apenas você pode ver)
+                  Anotações pessoais sobre esta cliente (visíveis apenas para você)
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent>
                 <Textarea
+                  placeholder="Escreva suas observações sobre a cliente aqui..."
                   value={observacoes}
                   onChange={(e) => setObservacoes(e.target.value)}
-                  placeholder="Anote aqui suas observações, hipóteses, insights sobre a cliente..."
-                  rows={8}
-                  className="resize-none"
+                  className="min-h-[200px]"
                 />
-                <p className="text-xs text-muted-foreground">
-                  ⚠️ Funcionalidade em desenvolvimento. As observações ainda não são salvas no banco de dados.
+                <p className="text-xs text-muted-foreground mt-2">
+                  Em breve: salvamento automático das observações
                 </p>
               </CardContent>
             </Card>

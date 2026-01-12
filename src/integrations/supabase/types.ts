@@ -308,6 +308,36 @@ export type Database = {
         }
         Relationships: []
       }
+      clientes: {
+        Row: {
+          created_at: string
+          id: string
+          nome: string
+          objetivo_terapeutico: string | null
+          status: Database["public"]["Enums"]["cliente_status"]
+          terapeuta_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          nome: string
+          objetivo_terapeutico?: string | null
+          status?: Database["public"]["Enums"]["cliente_status"]
+          terapeuta_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          nome?: string
+          objetivo_terapeutico?: string | null
+          status?: Database["public"]["Enums"]["cliente_status"]
+          terapeuta_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       confirmacao_profissional: {
         Row: {
           aceita_codigo_etico: boolean
@@ -2075,6 +2105,7 @@ export type Database = {
         | "amabilidade"
         | "neuroticismo"
       big5_tipo_pergunta: "escala_1_5" | "texto"
+      cliente_status: "ativo" | "pausado" | "encerrado"
       content_type: "text" | "video" | "audio" | "file" | "mixed"
       mentoria_tipo: "aviso" | "evento" | "supervisao"
       nivel_sala: "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3"
@@ -2217,6 +2248,7 @@ export const Constants = {
         "neuroticismo",
       ],
       big5_tipo_pergunta: ["escala_1_5", "texto"],
+      cliente_status: ["ativo", "pausado", "encerrado"],
       content_type: ["text", "video", "audio", "file", "mixed"],
       mentoria_tipo: ["aviso", "evento", "supervisao"],
       nivel_sala: ["NIVEL_0", "NIVEL_1", "NIVEL_2", "NIVEL_3"],
