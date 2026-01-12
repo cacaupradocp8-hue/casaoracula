@@ -12,14 +12,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -30,7 +29,9 @@ import {
   Calendar,
   UserCheck,
   Plus,
-  Eye
+  Eye,
+  AlertTriangle,
+  Infinity
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
@@ -46,6 +47,11 @@ interface Cliente {
   created_at: string;
 }
 
+interface PlanLimit {
+  portal: string;
+  max_clientes: number;
+}
+
 export default function MinhasClientes() {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -53,6 +59,11 @@ export default function MinhasClientes() {
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [userPortal, setUserPortal] = useState<string>('visitante');
+  
+  // Limits
+  const [maxClientes, setMaxClientes] = useState<number | null>(null);
+  const [limitReached, setLimitReached] = useState(false);
   
   // Create client dialog
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -61,29 +72,40 @@ export default function MinhasClientes() {
   const [novoObjetivo, setNovoObjetivo] = useState('');
 
   useEffect(() => {
-    if (user) fetchClientes();
+    if (user) {
+      fetchData();
+    }
   }, [user]);
 
-  const fetchClientes = async () => {
+  const fetchData = async () => {
     if (!user) return;
     
     setLoading(true);
+
+    // Fetch user portal
+    const { data: roleData } = await supabase
+      .from('user_roles')
+      .select('portal')
+      .eq('user_id', user.id)
+      .single();
     
-    // Fetch clients from clientes table (RLS ensures only own clients)
-    const { data, error } = await supabase
+    const portal = roleData?.portal || 'visitante';
+    setUserPortal(portal);
+    
+    // Fetch clients
+    const { data: clientesData, error: clientesError } = await supabase
       .from('clientes')
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Erro ao carregar clientes:', error);
+    if (clientesError) {
+      console.error('Erro ao carregar clientes:', clientesError);
       toast({ title: 'Erro ao carregar clientes', variant: 'destructive' });
       setLoading(false);
       return;
     }
 
-    // Map the data properly with type assertion for status
-    const clientesData: Cliente[] = (data || []).map(c => ({
+    const mappedClientes: Cliente[] = (clientesData || []).map(c => ({
       id: c.id,
       nome: c.nome,
       status: c.status as ClienteStatus,
@@ -91,13 +113,53 @@ export default function MinhasClientes() {
       created_at: c.created_at,
     }));
 
-    setClientes(clientesData);
+    setClientes(mappedClientes);
+
+    // Fetch plan limits
+    const { data: limitsData } = await supabase
+      .from('plan_limits')
+      .select('portal, max_clientes')
+      .eq('portal', portal)
+      .single();
+
+    if (limitsData) {
+      setMaxClientes(limitsData.max_clientes);
+      // -1 means unlimited, admin always unlimited
+      if (userPortal === 'admin' || limitsData.max_clientes === -1) {
+        setLimitReached(false);
+      } else {
+        setLimitReached(mappedClientes.length >= limitsData.max_clientes);
+      }
+    }
+
     setLoading(false);
+  };
+
+  const handleOpenCreateDialog = () => {
+    if (limitReached && userPortal !== 'admin') {
+      toast({ 
+        title: 'Limite atingido', 
+        description: 'Você atingiu o limite de clientes do seu nível. Para cadastrar mais, faça upgrade.',
+        variant: 'destructive' 
+      });
+      return;
+    }
+    setDialogOpen(true);
   };
 
   const handleCreateCliente = async () => {
     if (!user || !novoNome.trim()) {
       toast({ title: 'Nome é obrigatório', variant: 'destructive' });
+      return;
+    }
+
+    // Double check limit
+    if (limitReached && userPortal !== 'admin') {
+      toast({ 
+        title: 'Limite atingido', 
+        description: 'Você atingiu o limite de clientes do seu nível.',
+        variant: 'destructive' 
+      });
       return;
     }
 
@@ -124,7 +186,7 @@ export default function MinhasClientes() {
     setNovoNome('');
     setNovoObjetivo('');
     setCreating(false);
-    fetchClientes();
+    fetchData();
   };
 
   const handleViewCliente = (cliente: Cliente) => {
@@ -151,6 +213,13 @@ export default function MinhasClientes() {
     }
   };
 
+  const getLimitDisplay = () => {
+    if (userPortal === 'admin') return 'Ilimitado';
+    if (maxClientes === null) return '-';
+    if (maxClientes === -1) return 'Ilimitado';
+    return `${clientes.length}/${maxClientes}`;
+  };
+
   if (loading) {
     return (
       <AppLayout>
@@ -171,8 +240,20 @@ export default function MinhasClientes() {
           className="mb-8"
         />
 
+        {/* Limit Warning */}
+        {limitReached && userPortal !== 'admin' && (
+          <Alert className="mb-6 border-amber-500/50 bg-amber-500/10">
+            <AlertTriangle className="h-4 w-4 text-amber-500" />
+            <AlertTitle className="text-amber-500">Limite atingido</AlertTitle>
+            <AlertDescription>
+              Você atingiu o limite de clientes do seu nível ({maxClientes}). 
+              Para cadastrar mais clientes, faça upgrade do seu plano.
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
           <Card>
             <CardContent className="p-4 text-center">
               <Users className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
@@ -201,6 +282,17 @@ export default function MinhasClientes() {
               <p className="text-xs text-muted-foreground">Encerrados</p>
             </CardContent>
           </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              {(userPortal === 'admin' || maxClientes === -1) ? (
+                <Infinity className="w-6 h-6 mx-auto mb-2 text-gold" />
+              ) : (
+                <Users className="w-6 h-6 mx-auto mb-2 text-gold" />
+              )}
+              <p className="text-2xl font-display font-bold">{getLimitDisplay()}</p>
+              <p className="text-xs text-muted-foreground">Limite</p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Actions */}
@@ -214,7 +306,12 @@ export default function MinhasClientes() {
               className="pl-10"
             />
           </div>
-          <Button variant="gold" onClick={() => setDialogOpen(true)} className="gap-2">
+          <Button 
+            variant="gold" 
+            onClick={handleOpenCreateDialog} 
+            className="gap-2"
+            disabled={limitReached && userPortal !== 'admin'}
+          >
             <Plus className="w-4 h-4" />
             Criar Cliente
           </Button>
@@ -229,7 +326,12 @@ export default function MinhasClientes() {
               <p className="text-muted-foreground text-sm mb-4">
                 Crie sua primeira cliente para começar a utilizar as ferramentas.
               </p>
-              <Button variant="gold" onClick={() => setDialogOpen(true)} className="gap-2">
+              <Button 
+                variant="gold" 
+                onClick={handleOpenCreateDialog} 
+                className="gap-2"
+                disabled={limitReached && userPortal !== 'admin'}
+              >
                 <Plus className="w-4 h-4" />
                 Criar Primeira Cliente
               </Button>
@@ -290,6 +392,9 @@ export default function MinhasClientes() {
                 <Plus className="w-5 h-5" />
                 Nova Cliente
               </DialogTitle>
+              <DialogDescription>
+                Preencha os dados para criar uma nova cliente.
+              </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4 py-4">

@@ -956,6 +956,116 @@ export type Database = {
           },
         ]
       }
+      formacao_modulos: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          formacao_id: string
+          id: string
+          ordem: number
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          formacao_id: string
+          id?: string
+          ordem?: number
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          formacao_id?: string
+          id?: string
+          ordem?: number
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "formacao_modulos_formacao_id_fkey"
+            columns: ["formacao_id"]
+            isOneToOne: false
+            referencedRelation: "formacoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      formacoes: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          id: string
+          ordem: number
+          status: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          ordem?: number
+          status?: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          ordem?: number
+          status?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      lab_casos: {
+        Row: {
+          contexto: string | null
+          created_at: string
+          ferramentas_sugeridas: Json | null
+          hipoteses: string | null
+          id: string
+          nivel: string
+          perguntas: Json | null
+          status: string
+          tema: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          contexto?: string | null
+          created_at?: string
+          ferramentas_sugeridas?: Json | null
+          hipoteses?: string | null
+          id?: string
+          nivel?: string
+          perguntas?: Json | null
+          status?: string
+          tema: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          contexto?: string | null
+          created_at?: string
+          ferramentas_sugeridas?: Json | null
+          hipoteses?: string | null
+          id?: string
+          nivel?: string
+          perguntas?: Json | null
+          status?: string
+          tema?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       lessons: {
         Row: {
           content: string
@@ -1283,6 +1393,30 @@ export type Database = {
         }
         Relationships: []
       }
+      plan_limits: {
+        Row: {
+          created_at: string
+          id: string
+          max_clientes: number
+          portal: Database["public"]["Enums"]["portal_type"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          max_clientes?: number
+          portal: Database["public"]["Enums"]["portal_type"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          max_clientes?: number
+          portal?: Database["public"]["Enums"]["portal_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       portal_salas: {
         Row: {
           created_at: string
@@ -1395,6 +1529,54 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      progresso_aluna: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          formacao_id: string
+          id: string
+          modulo_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          formacao_id: string
+          id?: string
+          modulo_id: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          formacao_id?: string
+          id?: string
+          modulo_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "progresso_aluna_formacao_id_fkey"
+            columns: ["formacao_id"]
+            isOneToOne: false
+            referencedRelation: "formacoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "progresso_aluna_modulo_id_fkey"
+            columns: ["modulo_id"]
+            isOneToOne: false
+            referencedRelation: "formacao_modulos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       quiz_opcoes: {
         Row: {
