@@ -24,7 +24,7 @@ import Salas from "./pages/Salas";
 import SalaDetalhe from "./pages/SalaDetalhe";
 import PortalDetalhe from "./pages/PortalDetalhe";
 import AulaPage from "./pages/AulaPage";
-import Casos from "./pages/Casos";
+import LaboratorioLeitura from "./pages/LaboratorioLeitura";
 import Metodo from "./pages/Metodo";
 import Portais from "./pages/Portais";
 import ConfirmarProfissional from "./pages/ConfirmarProfissional";
@@ -193,10 +193,10 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/casos"
+        path="/laboratorio-leitura"
         element={
           <ProtectedRoute minPortal="pre_iniciada">
-            <Casos />
+            <LaboratorioLeitura />
           </ProtectedRoute>
         }
       />
