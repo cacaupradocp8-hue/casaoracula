@@ -9,7 +9,6 @@ import {
   Home,
   BookOpen,
   Library,
-  FolderOpen,
   Sparkles,
   Settings,
   LogOut,
@@ -33,8 +32,9 @@ import {
 
 const navItems: { path: string; label: string; icon: typeof Home; minPortal: PortalType }[] = [
   { path: '/dashboard', label: 'Salas', icon: DoorOpen, minPortal: 'visitante' },
+  { path: '/minhas-clientes', label: 'Minhas Clientes', icon: Users, minPortal: 'pre_iniciada' },
   { path: '/biblioteca', label: 'Biblioteca', icon: Library, minPortal: 'pre_iniciada' },
-  { path: '/casos', label: 'Casos', icon: FolderOpen, minPortal: 'pre_iniciada' },
+  { path: '/laboratorio-leitura', label: 'Laboratório', icon: BookOpen, minPortal: 'pre_iniciada' },
   { path: '/agentes', label: 'Agentes IA', icon: Bot, minPortal: 'pre_iniciada' },
   { path: '/ferramentas', label: 'Ferramentas', icon: Wrench, minPortal: 'pre_iniciada' },
   { path: '/mentoria', label: 'Mentoria', icon: Users, minPortal: 'iniciada' },
