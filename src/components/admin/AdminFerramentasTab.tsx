@@ -8,9 +8,28 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Edit, Trash2, Brain, Compass, HelpCircle, Save, ClipboardList } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Plus, Edit, Trash2, Brain, Compass, HelpCircle, Save, ClipboardList, Wrench } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+
+// Type for Ferramenta (from sala_ferramentas)
+interface Ferramenta {
+  id: string;
+  ferramenta_nome: string;
+  ferramenta_chave: string;
+  ferramenta_descricao: string | null;
+  rota: string | null;
+  icone: string | null;
+  sala_id: string | null;
+  ordem: number;
+  ativa: boolean;
+}
+
+interface Sala {
+  id: string;
+  nome_exibicao: string;
+}
 
 // Types
 interface Big5Dimensao {
@@ -66,8 +85,12 @@ interface OraculoPergunta {
 
 export function AdminFerramentasTab() {
   return (
-    <Tabs defaultValue="big5" className="space-y-4">
+    <Tabs defaultValue="catalogo" className="space-y-4">
       <TabsList className="w-full justify-start overflow-x-auto flex-wrap h-auto gap-1">
+        <TabsTrigger value="catalogo" className="gap-2">
+          <Wrench className="w-4 h-4" />
+          Catálogo
+        </TabsTrigger>
         <TabsTrigger value="big5" className="gap-2">
           <Brain className="w-4 h-4" />
           Big Five
@@ -86,6 +109,10 @@ export function AdminFerramentasTab() {
         </TabsTrigger>
       </TabsList>
 
+      <TabsContent value="catalogo">
+        <CatalogoFerramentasSection />
+      </TabsContent>
+
       <TabsContent value="big5">
         <Big5Section />
       </TabsContent>
@@ -102,6 +129,323 @@ export function AdminFerramentasTab() {
         <OraculoSection />
       </TabsContent>
     </Tabs>
+  );
+}
+
+// Catálogo de Ferramentas - CRUD completo
+function CatalogoFerramentasSection() {
+  const [ferramentas, setFerramentas] = useState<Ferramenta[]>([]);
+  const [salas, setSalas] = useState<Sala[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editingFerramenta, setEditingFerramenta] = useState<Ferramenta | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const [ferramentasRes, salasRes] = await Promise.all([
+      supabase.from('sala_ferramentas').select('*').order('ordem'),
+      supabase.from('salas').select('id, nome_exibicao').eq('ativa', true).order('ordem')
+    ]);
+
+    if (ferramentasRes.data) setFerramentas(ferramentasRes.data);
+    if (salasRes.data) setSalas(salasRes.data);
+    setLoading(false);
+  };
+
+  const getSalaNome = (salaId: string | null) => {
+    if (!salaId) return 'Sem sala';
+    const sala = salas.find(s => s.id === salaId);
+    return sala?.nome_exibicao || 'Sala não encontrada';
+  };
+
+  const handleSave = async (ferramenta: Ferramenta) => {
+    if (isCreating) {
+      const { error } = await supabase
+        .from('sala_ferramentas')
+        .insert([{
+          ferramenta_nome: ferramenta.ferramenta_nome,
+          ferramenta_chave: ferramenta.ferramenta_chave,
+          ferramenta_descricao: ferramenta.ferramenta_descricao,
+          rota: ferramenta.rota,
+          icone: ferramenta.icone,
+          sala_id: ferramenta.sala_id,
+          ordem: ferramenta.ordem,
+          ativa: ferramenta.ativa
+        }]);
+
+      if (error) {
+        toast({ title: 'Erro ao criar ferramenta', description: error.message, variant: 'destructive' });
+      } else {
+        toast({ title: 'Ferramenta criada com sucesso' });
+        fetchData();
+        setDialogOpen(false);
+        setIsCreating(false);
+      }
+    } else {
+      const { error } = await supabase
+        .from('sala_ferramentas')
+        .update({
+          ferramenta_nome: ferramenta.ferramenta_nome,
+          ferramenta_chave: ferramenta.ferramenta_chave,
+          ferramenta_descricao: ferramenta.ferramenta_descricao,
+          rota: ferramenta.rota,
+          icone: ferramenta.icone,
+          sala_id: ferramenta.sala_id,
+          ordem: ferramenta.ordem,
+          ativa: ferramenta.ativa
+        })
+        .eq('id', ferramenta.id);
+
+      if (error) {
+        toast({ title: 'Erro ao salvar', description: error.message, variant: 'destructive' });
+      } else {
+        toast({ title: 'Ferramenta atualizada' });
+        fetchData();
+        setDialogOpen(false);
+      }
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Tem certeza que deseja excluir esta ferramenta?')) return;
+    
+    const { error } = await supabase.from('sala_ferramentas').delete().eq('id', id);
+    
+    if (error) {
+      toast({ title: 'Erro ao excluir', description: error.message, variant: 'destructive' });
+    } else {
+      toast({ title: 'Ferramenta excluída' });
+      fetchData();
+    }
+  };
+
+  const toggleAtiva = async (ferramenta: Ferramenta) => {
+    const { error } = await supabase
+      .from('sala_ferramentas')
+      .update({ ativa: !ferramenta.ativa })
+      .eq('id', ferramenta.id);
+
+    if (error) {
+      toast({ title: 'Erro ao alterar status', variant: 'destructive' });
+    } else {
+      fetchData();
+    }
+  };
+
+  const openCreateDialog = () => {
+    setEditingFerramenta({
+      id: '',
+      ferramenta_nome: '',
+      ferramenta_chave: '',
+      ferramenta_descricao: '',
+      rota: '/ferramentas/',
+      icone: 'sparkles',
+      sala_id: salas[0]?.id || null,
+      ordem: ferramentas.length + 1,
+      ativa: false
+    });
+    setIsCreating(true);
+    setDialogOpen(true);
+  };
+
+  if (loading) return <div className="text-muted-foreground">Carregando...</div>;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <div>
+          <h3 className="text-lg font-semibold">Catálogo de Ferramentas</h3>
+          <p className="text-sm text-muted-foreground">Gerencie todas as ferramentas do sistema</p>
+        </div>
+        <Button onClick={openCreateDialog} className="gap-2">
+          <Plus className="w-4 h-4" />
+          Nova Ferramenta
+        </Button>
+      </div>
+
+      <Dialog open={dialogOpen} onOpenChange={(open) => {
+        setDialogOpen(open);
+        if (!open) {
+          setEditingFerramenta(null);
+          setIsCreating(false);
+        }
+      }}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{isCreating ? 'Nova Ferramenta' : 'Editar Ferramenta'}</DialogTitle>
+          </DialogHeader>
+          {editingFerramenta && (
+            <FerramentaForm 
+              ferramenta={editingFerramenta} 
+              salas={salas}
+              onSave={handleSave}
+              onChange={setEditingFerramenta}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Card>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-12">Ordem</TableHead>
+                <TableHead>Nome</TableHead>
+                <TableHead>Chave</TableHead>
+                <TableHead>Sala</TableHead>
+                <TableHead>Rota</TableHead>
+                <TableHead className="w-20">Status</TableHead>
+                <TableHead className="w-24">Ações</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {ferramentas.map((f) => (
+                <TableRow key={f.id} className={!f.ativa ? 'opacity-50' : ''}>
+                  <TableCell className="font-mono text-xs">{f.ordem}</TableCell>
+                  <TableCell>
+                    <div>
+                      <span className="font-medium">{f.ferramenta_nome}</span>
+                      {f.icone && (
+                        <span className="ml-2 text-xs text-muted-foreground">({f.icone})</span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="font-mono text-xs">{f.ferramenta_chave}</TableCell>
+                  <TableCell className="text-sm">{getSalaNome(f.sala_id)}</TableCell>
+                  <TableCell className="font-mono text-xs">{f.rota || '-'}</TableCell>
+                  <TableCell>
+                    <Switch
+                      checked={f.ativa}
+                      onCheckedChange={() => toggleAtiva(f)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="icon" onClick={() => {
+                        setEditingFerramenta(f);
+                        setIsCreating(false);
+                        setDialogOpen(true);
+                      }}>
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => handleDelete(f.id)}>
+                        <Trash2 className="w-4 h-4 text-destructive" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {ferramentas.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                    Nenhuma ferramenta cadastrada
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// Form para Criar/Editar Ferramenta
+function FerramentaForm({ ferramenta, salas, onSave, onChange }: { 
+  ferramenta: Ferramenta;
+  salas: Sala[];
+  onSave: (f: Ferramenta) => void;
+  onChange: (f: Ferramenta) => void;
+}) {
+  return (
+    <div className="space-y-4">
+      <div>
+        <Label>Nome da Ferramenta</Label>
+        <Input 
+          value={ferramenta.ferramenta_nome} 
+          onChange={(e) => onChange({ ...ferramenta, ferramenta_nome: e.target.value })}
+          placeholder="Ex: Chakras"
+        />
+      </div>
+      <div>
+        <Label>Chave (identificador único)</Label>
+        <Input 
+          value={ferramenta.ferramenta_chave} 
+          onChange={(e) => onChange({ ...ferramenta, ferramenta_chave: e.target.value.toLowerCase().replace(/\s/g, '_') })}
+          placeholder="Ex: chakras"
+        />
+      </div>
+      <div>
+        <Label>Descrição</Label>
+        <Textarea 
+          value={ferramenta.ferramenta_descricao || ''} 
+          onChange={(e) => onChange({ ...ferramenta, ferramenta_descricao: e.target.value })}
+          placeholder="Descrição breve da ferramenta..."
+          rows={2}
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label>Rota</Label>
+          <Input 
+            value={ferramenta.rota || ''} 
+            onChange={(e) => onChange({ ...ferramenta, rota: e.target.value })}
+            placeholder="/ferramentas/chakras"
+          />
+        </div>
+        <div>
+          <Label>Ícone (nome Lucide)</Label>
+          <Input 
+            value={ferramenta.icone || ''} 
+            onChange={(e) => onChange({ ...ferramenta, icone: e.target.value })}
+            placeholder="sparkles, brain, heart..."
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label>Sala</Label>
+          <Select 
+            value={ferramenta.sala_id || ''} 
+            onValueChange={(v) => onChange({ ...ferramenta, sala_id: v || null })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Selecione a sala" />
+            </SelectTrigger>
+            <SelectContent>
+              {salas.map(sala => (
+                <SelectItem key={sala.id} value={sala.id}>{sala.nome_exibicao}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>Ordem</Label>
+          <Input 
+            type="number" 
+            value={ferramenta.ordem} 
+            onChange={(e) => onChange({ ...ferramenta, ordem: parseInt(e.target.value) || 0 })}
+          />
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <Switch 
+          checked={ferramenta.ativa} 
+          onCheckedChange={(checked) => onChange({ ...ferramenta, ativa: checked })}
+        />
+        <Label>Ativa (visível para usuárias)</Label>
+      </div>
+      <Button onClick={() => onSave(ferramenta)} className="w-full gap-2">
+        <Save className="w-4 h-4" />
+        Salvar
+      </Button>
+    </div>
   );
 }
 
