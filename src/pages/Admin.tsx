@@ -1,7 +1,8 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video } from 'lucide-react';
+import { AdminCursosTab } from '@/components/admin/AdminCursosTab';
 import { AdminUsersTab } from '@/components/admin/AdminUsersTab';
 import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
 import { AdminMentoriaTab } from '@/components/admin/AdminMentoriaTab';
@@ -53,6 +54,10 @@ export default function Admin() {
             <TabsTrigger value="conteudos" className="gap-2">
               <GraduationCap className="w-4 h-4" />
               Conteúdo
+            </TabsTrigger>
+            <TabsTrigger value="cursos" className="gap-2">
+              <Video className="w-4 h-4" />
+              Cursos
             </TabsTrigger>
             <TabsTrigger value="biblioteca" className="gap-2">
               <Library className="w-4 h-4" />
@@ -126,6 +131,10 @@ export default function Admin() {
 
           <TabsContent value="conteudos">
             <AdminConteudosTab />
+          </TabsContent>
+
+          <TabsContent value="cursos">
+            <AdminCursosTab />
           </TabsContent>
 
           <TabsContent value="biblioteca">
