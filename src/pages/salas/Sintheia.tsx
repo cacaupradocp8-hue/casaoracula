@@ -56,6 +56,13 @@ const TEMPOS = [
   { value: 'jornada', label: 'Jornada contínua' },
 ];
 
+// Mapeamento de núcleos para labels
+const NUCLEO_LABELS: Record<string, { label: string; icon: string; color: string }> = {
+  ferramenteira: { label: 'Ferramenteira', icon: '🜂', color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
+  archetypos: { label: 'Archétypos', icon: '🧱', color: 'bg-purple-500/10 text-purple-600 border-purple-500/20' },
+  aracne_arcano: { label: 'Aracne & Arcano', icon: '🎭', color: 'bg-indigo-500/10 text-indigo-600 border-indigo-500/20' },
+};
+
 export default function Sintheia() {
   const [step, setStep] = useState<Step>('entry');
   const [tipoCriacao, setTipoCriacao] = useState<TipoCriacao | null>(null);
@@ -72,6 +79,7 @@ export default function Sintheia() {
   const [estruturaPratica, setEstruturaPratica] = useState('');
   const [suporteLinguagem, setSuporteLinguagem] = useState('');
   const [fechamentoIntegracao, setFechamentoIntegracao] = useState('');
+  const [nucleoAtivado, setNucleoAtivado] = useState<string | null>(null);
   
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -87,49 +95,46 @@ export default function Sintheia() {
   const canGenerate = publicoAlvo && momentoJornada && tempoDisponivel && temaCentral.trim();
 
   const handleGenerate = async () => {
-    if (!canGenerate) return;
+    if (!canGenerate || !tipoCriacao) return;
     
     setGenerating(true);
     
-    // Simulação de geração (aqui entraria a IA futuramente)
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Templates baseados no tipo
-    const tipoLabel = TIPO_OPTIONS.find(t => t.value === tipoCriacao)?.label || tipoCriacao;
-    const publicoLabel = PUBLICOS.find(p => p.value === publicoAlvo)?.label || publicoAlvo;
-    const momentoLabel = MOMENTOS.find(m => m.value === momentoJornada)?.label || momentoJornada;
-    
-    setChaveSimbólica(`🌙 A jornada de ${temaCentral} como portal de transformação`);
-    setIntencaoTerapeutica(`Facilitar o processo de ${temaCentral} para ${publicoLabel} no momento de ${momentoLabel}, criando espaço seguro para emergência e integração.`);
-    setEstruturaPratica(`**Abertura (10%)**
-• Acolhimento e check-in do estado atual
-• Estabelecimento do container simbólico
+    try {
+      const { data, error } = await supabase.functions.invoke('syntheia-generate', {
+        body: {
+          tipo: tipoCriacao,
+          publico: publicoAlvo,
+          momento: momentoJornada,
+          tempo: tempoDisponivel,
+          tema: temaCentral
+        }
+      });
 
-**Desenvolvimento (70%)**
-• Exploração do tema: ${temaCentral}
-• Práticas reflexivas e corporais
-• Momento de profundidade
+      if (error) {
+        throw new Error(error.message || 'Erro ao chamar a função');
+      }
 
-**Fechamento (20%)**
-• Ancoragem das percepções
-• Ritual de encerramento
-• Encaminhamentos práticos`);
-    setSuporteLinguagem(`**Perguntas-chave:**
-• "O que está pedindo para ser visto agora?"
-• "Onde você sente isso no corpo?"
-• "O que precisa ser honrado neste momento?"
+      if (data.error) {
+        throw new Error(data.error);
+      }
 
-**Frases de suporte:**
-• "Você pode ir no seu tempo..."
-• "Isso que emerge é bem-vindo aqui..."
-• "Vamos dar espaço para o que está surgindo..."`);
-    setFechamentoIntegracao(`• Respiração de ancoragem
-• Nomeação de uma palavra-síntese
-• Convite para registro pessoal
-• Orientação para os próximos dias`);
-    
-    setGenerating(false);
-    setStep('output');
+      setChaveSimbólica(data.chave_simbolica || '');
+      setIntencaoTerapeutica(data.intencao_terapeutica || '');
+      setEstruturaPratica(data.estrutura_pratica || '');
+      setSuporteLinguagem(data.suporte_linguagem || '');
+      setFechamentoIntegracao(data.fechamento_integracao || '');
+      setNucleoAtivado(data.nucleo_ativado || null);
+      setStep('output');
+    } catch (err) {
+      console.error('Erro na geração:', err);
+      toast({
+        title: 'Erro ao gerar',
+        description: err instanceof Error ? err.message : 'Erro desconhecido ao gerar conteúdo',
+        variant: 'destructive'
+      });
+    } finally {
+      setGenerating(false);
+    }
   };
 
   const handleSave = async () => {
@@ -223,6 +228,7 @@ ${fechamentoIntegracao}
     setEstruturaPratica('');
     setSuporteLinguagem('');
     setFechamentoIntegracao('');
+    setNucleoAtivado(null);
   };
 
   const handleContinuation = () => {
@@ -397,7 +403,12 @@ ${fechamentoIntegracao}
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Ajustar Contexto
               </Button>
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
+                {nucleoAtivado && NUCLEO_LABELS[nucleoAtivado] && (
+                  <Badge className={`${NUCLEO_LABELS[nucleoAtivado].color} border`}>
+                    {NUCLEO_LABELS[nucleoAtivado].icon} {NUCLEO_LABELS[nucleoAtivado].label}
+                  </Badge>
+                )}
                 <Badge variant="secondary">
                   {TIPO_OPTIONS.find(t => t.value === tipoCriacao)?.label}
                 </Badge>
