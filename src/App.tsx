@@ -253,6 +253,14 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/ferramentas/mapa-oracula"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <MapaOracula />
+          </ProtectedRoute>
+        }
+      />
       
       {/* Legacy routes /salas/ - for backwards compatibility */}
       <Route
