@@ -228,7 +228,33 @@ function AppRoutes() {
         }
       />
 
-      {/* Ferramentas */}
+      {/* Ferramentas - Rotas /ferramentas/ (principal) */}
+      <Route
+        path="/ferramentas/big5"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Big5 />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/eneagrama"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Eneagrama />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/oraculo-perguntas"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <OraculoPerguntas />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Legacy routes /salas/ - for backwards compatibility */}
       <Route
         path="/salas/big5"
         element={

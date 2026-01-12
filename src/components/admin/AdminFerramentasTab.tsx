@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Edit, Trash2, Brain, Compass, HelpCircle, Save, ClipboardList, Wrench } from 'lucide-react';
+import { Plus, Edit, Trash2, Brain, Compass, HelpCircle, Save, ClipboardList, Wrench, ExternalLink } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -327,14 +327,23 @@ function CatalogoFerramentasSection() {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={() => window.open(f.rota || '#', '_blank')}
+                        disabled={!f.rota}
+                        title="Ver página"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </Button>
                       <Button variant="ghost" size="icon" onClick={() => {
                         setEditingFerramenta(f);
                         setIsCreating(false);
                         setDialogOpen(true);
-                      }}>
+                      }} title="Editar">
                         <Edit className="w-4 h-4" />
                       </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleDelete(f.id)}>
+                      <Button variant="ghost" size="icon" onClick={() => handleDelete(f.id)} title="Excluir">
                         <Trash2 className="w-4 h-4 text-destructive" />
                       </Button>
                     </div>
