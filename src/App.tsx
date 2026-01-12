@@ -37,7 +37,18 @@ import ClientePerfil from "./pages/ClientePerfil";
 import Big5 from "./pages/salas/Big5";
 import Eneagrama from "./pages/salas/Eneagrama";
 import OraculoPerguntas from "./pages/salas/OraculoPerguntas";
-
+import Chakras from "./pages/salas/Chakras";
+import Hawkins from "./pages/salas/Hawkins";
+import Antroposofia from "./pages/salas/Antroposofia";
+import Neuroplasticidade from "./pages/salas/Neuroplasticidade";
+import Narrativas from "./pages/salas/Narrativas";
+import Radiestesia from "./pages/salas/Radiestesia";
+import Tarot from "./pages/salas/Tarot";
+import Constelacao from "./pages/salas/Constelacao";
+import Sintheia from "./pages/salas/Sintheia";
+import AgenteAnalista from "./pages/salas/AgenteAnalista";
+import AgenteCurador from "./pages/salas/AgenteCurador";
+import AgenteSimbólico from "./pages/salas/AgenteSimbólico";
 const queryClient = new QueryClient();
 
 // Loading component for auth states
@@ -247,6 +258,102 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="pre_iniciada">
             <MapaOracula />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/chakras"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Chakras />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/hawkins"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Hawkins />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/antroposofia"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Antroposofia />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/neuroplasticidade"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Neuroplasticidade />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/narrativas"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Narrativas />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/radiestesia"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Radiestesia />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/tarot"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Tarot />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/constelacao"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Constelacao />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/sintheia"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Sintheia />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/agente-analista"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <AgenteAnalista />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/agente-curador"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <AgenteCurador />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/agente-simbolico"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <AgenteSimbólico />
           </ProtectedRoute>
         }
       />
