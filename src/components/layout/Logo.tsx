@@ -48,7 +48,7 @@ export function Logo({
   // Horizontal variant - logo lado a lado (para header do portal)
   if (variant === 'horizontal') {
     return <div className={cn('flex items-center justify-center', className)}>
-        <img src={logoHorizontal} alt="Casa ORÁCULA" className="" />
+        <img src={logoHorizontal} alt="Casa ORÁCULA" className="object-scale-down border-solid rounded-xl shadow-none" />
       </div>;
   }
 
