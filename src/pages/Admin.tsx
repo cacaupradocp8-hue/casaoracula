@@ -1,7 +1,7 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine } from 'lucide-react';
 import { AdminUsersTab } from '@/components/admin/AdminUsersTab';
 import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
 import { AdminMentoriaTab } from '@/components/admin/AdminMentoriaTab';
@@ -19,6 +19,7 @@ import { AdminQuizTab } from '@/components/admin/AdminQuizTab';
 import { AdminLabCasosTab } from '@/components/admin/AdminLabCasosTab';
 import { AdminPlanosTab } from '@/components/admin/AdminPlanosTab';
 import { AdminProgressoTab } from '@/components/admin/AdminProgressoTab';
+import AdminCopyTab from '@/components/admin/AdminCopyTab';
 
 export default function Admin() {
   return (
@@ -68,6 +69,10 @@ export default function Admin() {
             <TabsTrigger value="modelos" className="gap-2">
               <FileText className="w-4 h-4" />
               Modelos
+            </TabsTrigger>
+            <TabsTrigger value="copy" className="gap-2">
+              <PenLine className="w-4 h-4" />
+              Copy & Narrativas
             </TabsTrigger>
             <TabsTrigger value="ferramentas" className="gap-2">
               <Wrench className="w-4 h-4" />
@@ -137,6 +142,10 @@ export default function Admin() {
 
           <TabsContent value="modelos">
             <AdminModelosTab />
+          </TabsContent>
+
+          <TabsContent value="copy">
+            <AdminCopyTab />
           </TabsContent>
 
           <TabsContent value="ferramentas">

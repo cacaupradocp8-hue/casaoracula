@@ -2017,29 +2017,38 @@ export type Database = {
       }
       text_models: {
         Row: {
+          ativo: boolean | null
           categoria: string
           chave: string
           conteudo: string
           created_at: string
           id: string
+          scope: string | null
+          scope_id: string | null
           titulo: string
           updated_at: string
         }
         Insert: {
+          ativo?: boolean | null
           categoria?: string
           chave: string
           conteudo: string
           created_at?: string
           id?: string
+          scope?: string | null
+          scope_id?: string | null
           titulo: string
           updated_at?: string
         }
         Update: {
+          ativo?: boolean | null
           categoria?: string
           chave?: string
           conteudo?: string
           created_at?: string
           id?: string
+          scope?: string | null
+          scope_id?: string | null
           titulo?: string
           updated_at?: string
         }
