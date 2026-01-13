@@ -21,6 +21,7 @@ import {
   Lock,
   DoorOpen,
   Layers,
+  GraduationCap,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -33,6 +34,7 @@ import {
 
 const navItems: { path: string; label: string; icon: typeof Home; minPortal: PortalType }[] = [
   { path: '/dashboard', label: 'Salas', icon: DoorOpen, minPortal: 'visitante' },
+  { path: '/cursos', label: 'Área de Membros', icon: GraduationCap, minPortal: 'visitante' },
   { path: '/oraculos', label: 'Oráculos', icon: Layers, minPortal: 'visitante' },
   { path: '/minhas-clientes', label: 'Minhas Clientes', icon: Users, minPortal: 'pre_iniciada' },
   { path: '/biblioteca', label: 'Biblioteca', icon: Library, minPortal: 'pre_iniciada' },
