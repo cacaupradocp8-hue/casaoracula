@@ -26,6 +26,7 @@ export interface Course {
   tags: string[];
   created_at: string;
   updated_at: string;
+  sala_id: string | null;
 }
 
 export interface CourseModule {

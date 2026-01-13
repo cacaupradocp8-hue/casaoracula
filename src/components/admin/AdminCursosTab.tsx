@@ -27,12 +27,19 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Course, CourseModule, CourseLesson, CourseEnrollment, PricingModel, ContentType } from '@/types/course';
 
+interface Sala {
+  id: string;
+  nome_exibicao: string;
+  ativa: boolean;
+}
+
 export function AdminCursosTab() {
   const { toast } = useToast();
   const [courses, setCourses] = useState<Course[]>([]);
   const [modules, setModules] = useState<CourseModule[]>([]);
   const [lessons, setLessons] = useState<CourseLesson[]>([]);
   const [enrollments, setEnrollments] = useState<CourseEnrollment[]>([]);
+  const [salas, setSalas] = useState<Sala[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('cursos');
 
@@ -57,17 +64,19 @@ export function AdminCursosTab() {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const [coursesRes, modulesRes, lessonsRes, enrollmentsRes] = await Promise.all([
+      const [coursesRes, modulesRes, lessonsRes, enrollmentsRes, salasRes] = await Promise.all([
         supabase.from('courses').select('*').order('ordem'),
         supabase.from('course_modules').select('*').order('ordem'),
         supabase.from('course_lessons').select('*').order('ordem'),
-        supabase.from('course_enrollments').select('*').order('created_at', { ascending: false })
+        supabase.from('course_enrollments').select('*').order('created_at', { ascending: false }),
+        supabase.from('salas').select('id, nome_exibicao, ativa').order('ordem')
       ]);
 
       if (coursesRes.data) setCourses(coursesRes.data as Course[]);
       if (modulesRes.data) setModules(modulesRes.data as CourseModule[]);
       if (lessonsRes.data) setLessons(lessonsRes.data as CourseLesson[]);
       if (enrollmentsRes.data) setEnrollments(enrollmentsRes.data as CourseEnrollment[]);
+      if (salasRes.data) setSalas(salasRes.data);
     } catch (error) {
       console.error('Error fetching data:', error);
       toast({ title: 'Erro ao carregar dados', variant: 'destructive' });
@@ -78,6 +87,7 @@ export function AdminCursosTab() {
 
   // Course CRUD
   const handleSaveCourse = async (formData: FormData) => {
+    const salaIdValue = formData.get('sala_id') as string;
     const courseData = {
       titulo: formData.get('titulo') as string,
       subtitulo: formData.get('subtitulo') as string || null,
@@ -93,6 +103,7 @@ export function AdminCursosTab() {
       destaque: formData.get('destaque') === 'true',
       duracao_estimada: formData.get('duracao_estimada') as string || null,
       nivel: formData.get('nivel') as string || null,
+      sala_id: salaIdValue && salaIdValue !== 'none' ? salaIdValue : null,
     };
 
     try {
@@ -361,6 +372,18 @@ export function AdminCursosTab() {
                         </Select>
                       </div>
                       <div>
+                        <Label htmlFor="sala_id">Sala Associada</Label>
+                        <Select name="sala_id" defaultValue={editingCourse?.sala_id || 'none'}>
+                          <SelectTrigger><SelectValue placeholder="Selecione uma sala..." /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">Nenhuma</SelectItem>
+                            {salas.filter(s => s.ativa).map(sala => (
+                              <SelectItem key={sala.id} value={sala.id}>{sala.nome_exibicao}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
                         <Label htmlFor="preco">Preço (R$)</Label>
                         <Input id="preco" name="preco" type="number" step="0.01" defaultValue={editingCourse?.preco || ''} />
                       </div>
@@ -399,6 +422,7 @@ export function AdminCursosTab() {
             <TableHeader>
               <TableRow>
                 <TableHead>Curso</TableHead>
+                <TableHead>Sala</TableHead>
                 <TableHead>Preço</TableHead>
                 <TableHead>Módulos</TableHead>
                 <TableHead>Matrículas</TableHead>
@@ -419,6 +443,11 @@ export function AdminCursosTab() {
                         <p className="text-xs text-muted-foreground">{course.subtitulo}</p>
                       </div>
                     </div>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-sm text-muted-foreground">
+                      {salas.find(s => s.id === course.sala_id)?.nome_exibicao || '-'}
+                    </span>
                   </TableCell>
                   <TableCell>
                     {course.pricing_model === 'free' ? (
