@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export default function CursoAula() {
-  const { id: courseId, lessonId } = useParams<{ id: string; lessonId: string }>();
+  const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
   const {
