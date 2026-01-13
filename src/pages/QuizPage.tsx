@@ -306,45 +306,6 @@ export default function QuizPage() {
     );
   }
 
-  // Show previous result if exists and not retaking
-  if (previousResponse && !showResult && Object.keys(answers).length === 0) {
-    return (
-      <AppLayout>
-        <div className="container mx-auto px-4 py-8 max-w-2xl">
-          <Card className="glass">
-            <CardHeader className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gold/20 flex items-center justify-center">
-                <Sparkles className="w-8 h-8 text-gold" />
-              </div>
-              <CardTitle className="text-2xl text-gold">
-                {previousResponse.resultado?.titulo_simbolico || "Seu Resultado Anterior"}
-              </CardTitle>
-              <CardDescription>Você já completou este quiz</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="prose prose-invert max-w-none">
-                <p className="text-foreground/90 leading-relaxed">
-                  {previousResponse.resultado?.texto_interpretativo}
-                </p>
-              </div>
-
-              <div className="flex gap-4 justify-center pt-4">
-                <Button variant="outline" onClick={() => navigate(-1)}>
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Voltar
-                </Button>
-                <Button onClick={handleRestart}>
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Refazer Quiz
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </AppLayout>
-    );
-  }
-
   // Fallback component for results without modular blocks
   const LegacyResultContent = ({ result }: { result: Resultado }) => {
     const hasLegacyContent = result.imagem_url || result.video_url || 
@@ -410,6 +371,68 @@ export default function QuizPage() {
       </div>
     );
   };
+
+  // Show previous result if exists and not retaking
+  if (previousResponse && !showResult && Object.keys(answers).length === 0) {
+    const prevResult = previousResponse.resultado;
+    
+    return (
+      <AppLayout>
+        <div className="container mx-auto px-4 py-8 max-w-2xl">
+          <Card className="glass">
+            <CardHeader className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gold/20 flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-gold" />
+              </div>
+              <CardTitle className="text-2xl text-gold">
+                {prevResult?.titulo_simbolico || "Seu Resultado Anterior"}
+              </CardTitle>
+              {prevResult?.categoria && (
+                <CardDescription className="text-muted-foreground">
+                  {prevResult.categoria}
+                </CardDescription>
+              )}
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Static interpretive text */}
+              <div className="prose prose-invert max-w-none">
+                <p className="text-foreground/90 leading-relaxed">
+                  {prevResult?.texto_interpretativo}
+                </p>
+              </div>
+
+              {/* MODULAR CONTENT with legacy fallback */}
+              {prevResult && (
+                <ModularPageRenderer
+                  contextType="quiz_result"
+                  contextId={prevResult.id}
+                  contextData={{
+                    arquetipo: prevResult.titulo_simbolico,
+                    categoria: prevResult.categoria,
+                  }}
+                  blockSpacing="md"
+                  showLoading={false}
+                  fallback={<LegacyResultContent result={prevResult} />}
+                />
+              )}
+
+              <div className="flex gap-4 justify-center pt-4">
+                <Button variant="outline" onClick={() => navigate(-1)}>
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Voltar
+                </Button>
+                <Button onClick={handleRestart}>
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Refazer Quiz
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </AppLayout>
+    );
+  }
+
 
   // Show result
   if (showResult && finalResult) {
