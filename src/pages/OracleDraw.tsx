@@ -61,7 +61,7 @@ export default function OracleDraw() {
   const revealNextCard = useCallback(() => {
     if (!selectedSpread) return;
     
-    const revealPacing = oracle?.voice_settings_json.revealPacing || 2;
+    const pacing = oracle?.voice_settings_json?.revealPacing || 2;
     
     if (currentRevealIndex < drawnCards.length) {
       setRevealedIndices(prev => [...prev, currentRevealIndex]);
@@ -69,7 +69,7 @@ export default function OracleDraw() {
     }
     
     if (currentRevealIndex >= drawnCards.length - 1) {
-      setTimeout(() => setStep('reveal'), revealPacing * 1000);
+      setTimeout(() => setStep('reveal'), pacing * 1000);
     }
   }, [currentRevealIndex, drawnCards.length, selectedSpread, oracle]);
 
@@ -85,7 +85,7 @@ export default function OracleDraw() {
     }
 
     // One by one reveal
-    const timer = setTimeout(revealNextCard, (oracle?.voice_settings_json.revealPacing || 2) * 1000);
+    const timer = setTimeout(revealNextCard, (oracle?.voice_settings_json?.revealPacing || 2) * 1000);
     return () => clearTimeout(timer);
   }, [step, currentRevealIndex, revealNextCard, selectedSpread, drawnCards, oracle]);
 
@@ -144,16 +144,21 @@ export default function OracleDraw() {
     return null;
   }
 
-  const theme = oracle.theme_json;
-  const voice = oracle.voice_settings_json;
+  const primaryColor = oracle.theme_json?.primaryColor || '#D4AF37';
+  const backgroundColor = oracle.theme_json?.backgroundColor || '#0F0D1A';
+  const fontFamily = oracle.theme_json?.fontFamily || 'serif';
+  const cardBackImage = oracle.theme_json?.cardBackImage || null;
+  const openingText = oracle.voice_settings_json?.openingText || null;
+  const closingText = oracle.voice_settings_json?.closingText || null;
+  const revealPacing = oracle.voice_settings_json?.revealPacing || 2;
   const publishedSpreads = spreads.filter(s => s.status === 'published');
 
   return (
     <div 
       className="min-h-screen flex flex-col"
       style={{ 
-        backgroundColor: theme.backgroundColor || '#0F0D1A',
-        fontFamily: theme.fontFamily || 'serif'
+        backgroundColor,
+        fontFamily
       }}
     >
       {/* Header */}
@@ -220,9 +225,9 @@ export default function OracleDraw() {
               <p className="text-muted-foreground mb-8 italic">
                 "{selectedSpread.opening_text}"
               </p>
-            ) : voice.openingText ? (
+            ) : openingText ? (
               <p className="text-muted-foreground mb-8 italic">
-                "{voice.openingText}"
+                "{openingText}"
               </p>
             ) : (
               <p className="text-muted-foreground mb-8">
@@ -233,7 +238,7 @@ export default function OracleDraw() {
             <Button 
               size="lg"
               onClick={drawCards}
-              style={{ backgroundColor: theme.primaryColor }}
+              style={{ backgroundColor: primaryColor }}
             >
               Iniciar Tiragem
             </Button>
@@ -275,7 +280,7 @@ export default function OracleDraw() {
                         ) : (
                           <div 
                             className="w-full h-full flex items-center justify-center"
-                            style={{ backgroundColor: theme.primaryColor + '20' }}
+                            style={{ backgroundColor: primaryColor + '20' }}
                           >
                             <Sparkles className="w-8 h-8 text-primary" />
                           </div>
@@ -286,8 +291,8 @@ export default function OracleDraw() {
                       <div 
                         className="absolute inset-0 backface-hidden rotate-y-180 flex items-center justify-center"
                         style={{ 
-                          backgroundColor: theme.primaryColor + '40',
-                          backgroundImage: theme.cardBackImage ? `url(${theme.cardBackImage})` : undefined,
+                          backgroundColor: primaryColor + '40',
+                          backgroundImage: cardBackImage ? `url(${cardBackImage})` : undefined,
                           backgroundSize: 'cover'
                         }}
                       >
@@ -337,7 +342,7 @@ export default function OracleDraw() {
                         ) : (
                           <div 
                             className="w-full aspect-[2/3] rounded-lg flex items-center justify-center"
-                            style={{ backgroundColor: theme.primaryColor + '20' }}
+                            style={{ backgroundColor: primaryColor + '20' }}
                           >
                             <Sparkles className="w-8 h-8 text-primary" />
                           </div>
@@ -480,7 +485,7 @@ export default function OracleDraw() {
                   className="flex-1"
                   onClick={handleSaveDraw}
                   disabled={isSaving}
-                  style={{ backgroundColor: theme.primaryColor }}
+                  style={{ backgroundColor: primaryColor }}
                 >
                   {isSaving ? (
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -507,9 +512,9 @@ export default function OracleDraw() {
               <p className="text-muted-foreground mb-8 italic">
                 "{selectedSpread.closing_text}"
               </p>
-            ) : voice.closingText ? (
+            ) : closingText ? (
               <p className="text-muted-foreground mb-8 italic">
-                "{voice.closingText}"
+                "{closingText}"
               </p>
             ) : (
               <p className="text-muted-foreground mb-8">
@@ -520,7 +525,7 @@ export default function OracleDraw() {
             <div className="flex flex-col gap-3">
               <Button 
                 onClick={resetDraw}
-                style={{ backgroundColor: theme.primaryColor }}
+                style={{ backgroundColor: primaryColor }}
               >
                 Fazer Nova Tiragem
               </Button>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Sparkles, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { AppLayout } from '@/components/layout/AppLayout';
 import { useOracles } from '@/hooks/useOracles';
 import { OracleDeck } from '@/types/oracle';
 
@@ -14,14 +15,16 @@ export default function Oraculos() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-background via-background to-accent/5 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
+      <AppLayout>
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </AppLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-accent/5">
+    <AppLayout>
       {/* Hero Section */}
       <section className="relative py-16 px-4 text-center">
         <div className="max-w-4xl mx-auto">
@@ -64,7 +67,7 @@ export default function Oraculos() {
           </div>
         )}
       </section>
-    </div>
+    </AppLayout>
   );
 }
 
@@ -76,14 +79,15 @@ interface OracleCardProps {
 
 function OracleCard({ oracle, hasAccess, onNavigate }: OracleCardProps) {
   const navigate = useNavigate();
-  const theme = oracle.theme_json;
+  const primaryColor = oracle.theme_json?.primaryColor || '#D4AF37';
+  const backgroundColor = oracle.theme_json?.backgroundColor || '#1a1625';
 
   return (
     <div 
       className="group relative overflow-hidden rounded-2xl bg-card border border-border/50 hover:border-primary/30 transition-all duration-500"
       style={{ 
         background: hasAccess 
-          ? `linear-gradient(135deg, ${theme.backgroundColor}22 0%, transparent 50%)`
+          ? `linear-gradient(135deg, ${backgroundColor}22 0%, transparent 50%)`
           : undefined 
       }}
     >
@@ -98,7 +102,7 @@ function OracleCard({ oracle, hasAccess, onNavigate }: OracleCardProps) {
         ) : (
           <div 
             className="w-full h-full flex items-center justify-center"
-            style={{ backgroundColor: theme.backgroundColor || '#1a1625' }}
+            style={{ backgroundColor }}
           >
             <Sparkles className="w-16 h-16 text-primary/30" />
           </div>
@@ -151,7 +155,7 @@ function OracleCard({ oracle, hasAccess, onNavigate }: OracleCardProps) {
           <Button 
             onClick={onNavigate}
             className="w-full group/btn"
-            style={{ backgroundColor: theme.primaryColor }}
+            style={{ backgroundColor: primaryColor }}
           >
             Entrar
             <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover/btn:translate-x-1" />

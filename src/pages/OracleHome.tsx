@@ -37,9 +37,11 @@ export default function OracleHome() {
   }
 
   const canAccess = hasAccess();
-  const theme = oracle.theme_json;
-  const voice = oracle.voice_settings_json;
-  const onboarding = oracle.onboarding_json;
+  const primaryColor = oracle.theme_json?.primaryColor || '#D4AF37';
+  const backgroundColor = oracle.theme_json?.backgroundColor || '#0F0D1A';
+  const fontFamily = oracle.theme_json?.fontFamily || 'serif';
+  const openingText = oracle.voice_settings_json?.openingText || null;
+  const welcomeText = oracle.onboarding_json?.welcomeText || null;
   const publishedSpreads = spreads.filter(s => s.status === 'published');
   const totalCards = cards.filter(c => c.status === 'published').length;
 
@@ -48,7 +50,7 @@ export default function OracleHome() {
     return (
       <div 
         className="min-h-screen flex flex-col items-center justify-center p-6"
-        style={{ backgroundColor: theme.backgroundColor || '#0F0D1A' }}
+        style={{ backgroundColor }}
       >
         <div className="max-w-md text-center">
           <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
@@ -67,7 +69,7 @@ export default function OracleHome() {
             <Button 
               size="lg"
               onClick={() => navigate(oracle.upgrade_cta_route)}
-              style={{ backgroundColor: theme.primaryColor }}
+              style={{ backgroundColor: primaryColor }}
             >
               {oracle.upgrade_cta_text}
             </Button>
@@ -89,8 +91,8 @@ export default function OracleHome() {
     <div 
       className="min-h-screen"
       style={{ 
-        backgroundColor: theme.backgroundColor || '#0F0D1A',
-        fontFamily: theme.fontFamily || 'serif'
+        backgroundColor,
+        fontFamily
       }}
     >
       {/* Hero Section */}
@@ -108,7 +110,7 @@ export default function OracleHome() {
         ) : (
           <div 
             className="h-[30vh] flex items-center justify-center"
-            style={{ backgroundColor: theme.backgroundColor }}
+            style={{ backgroundColor }}
           >
             <Sparkles className="w-24 h-24 text-primary/20" />
           </div>
@@ -130,7 +132,7 @@ export default function OracleHome() {
           <div className="max-w-2xl mx-auto text-center">
             <Badge 
               className="mb-4"
-              style={{ backgroundColor: `${theme.primaryColor}20`, color: theme.primaryColor }}
+              style={{ backgroundColor: `${primaryColor}20`, color: primaryColor }}
             >
               <Sparkles className="w-3 h-3 mr-1" />
               {totalCards} cartas
@@ -146,9 +148,9 @@ export default function OracleHome() {
               </p>
             )}
 
-            {onboarding.welcomeText && (
+            {welcomeText && (
               <p className="text-muted-foreground italic max-w-lg mx-auto">
-                "{onboarding.welcomeText}"
+                "{welcomeText}"
               </p>
             )}
           </div>
@@ -163,7 +165,7 @@ export default function OracleHome() {
             size="lg"
             className="w-full text-lg py-6"
             onClick={() => navigate(`/oraculos/${oracle.slug}/tirar`)}
-            style={{ backgroundColor: theme.primaryColor }}
+            style={{ backgroundColor: primaryColor }}
           >
             <Play className="w-5 h-5 mr-2" />
             Tirar Agora
