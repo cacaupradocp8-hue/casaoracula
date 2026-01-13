@@ -50,7 +50,15 @@ import {
   Bot,
   MousePointerClick,
   Loader2,
-  Search
+  Search,
+  Circle,
+  Gauge,
+  BookOpen,
+  Moon,
+  Target,
+  Layers,
+  Sparkles,
+  MessageSquare,
 } from 'lucide-react';
 
 const CONTEXT_OPTIONS: { value: BlockContextType; label: string }[] = [
@@ -70,6 +78,14 @@ const BLOCK_TYPE_ICONS: Record<ContentBlockType, React.ElementType> = {
   audio: Music,
   ai_chat: Bot,
   cta_button: MousePointerClick,
+  chakra_wheel: Circle,
+  energy_slider: Gauge,
+  pattern_diary: BookOpen,
+  lunar_calendar: Moon,
+  pendulum_map: Target,
+  ego_layers: Layers,
+  archetype_card: Sparkles,
+  reflection_prompt: MessageSquare,
 };
 
 interface ContextEntity {

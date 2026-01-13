@@ -1,8 +1,6 @@
 // ============================================
 // MODULAR PAGE RENDERER
 // ============================================
-// This is the main component that renders content blocks dynamically.
-// It's designed to be reusable across the entire application.
 
 import { ContentBlock, BlockContextType } from '@/types/modular';
 import { useContentBlocks } from '@/hooks/useContentBlocks';
@@ -16,6 +14,14 @@ import {
   AudioBlock,
   AIChatBlock,
   CTAButtonBlock,
+  ChakraWheelBlock,
+  EnergySliderBlock,
+  PatternDiaryBlock,
+  LunarCalendarBlock,
+  PendulumMapBlock,
+  EgoLayersBlock,
+  ArchetypeCardBlock,
+  ReflectionPromptBlock,
 } from './blocks';
 
 interface ModularPageRendererProps {
@@ -27,6 +33,7 @@ interface ModularPageRendererProps {
   showLoading?: boolean;
   fallback?: React.ReactNode;
   onBlockAction?: (action: string, data?: unknown) => void;
+  onSaveRegistro?: (blockId: string, data: unknown) => void;
 }
 
 const spacingClasses = {
@@ -45,6 +52,7 @@ export function ModularPageRenderer({
   showLoading = true,
   fallback,
   onBlockAction,
+  onSaveRegistro,
 }: ModularPageRendererProps) {
   const { blocks, isLoading, error } = useContentBlocks({
     contextType,
@@ -80,6 +88,7 @@ export function ModularPageRenderer({
           block={block}
           contextData={contextData}
           onAction={onBlockAction}
+          onSaveRegistro={onSaveRegistro ? (data) => onSaveRegistro(block.id, data) : undefined}
         />
       ))}
     </div>
@@ -91,9 +100,10 @@ interface BlockRendererProps {
   block: ContentBlock;
   contextData?: Record<string, unknown>;
   onAction?: (action: string, data?: unknown) => void;
+  onSaveRegistro?: (data: unknown) => void;
 }
 
-function BlockRenderer({ block, contextData, onAction }: BlockRendererProps) {
+function BlockRenderer({ block, contextData, onAction, onSaveRegistro }: BlockRendererProps) {
   switch (block.blockType) {
     case 'rich_text':
       return <RichTextBlock block={block} />;
@@ -107,11 +117,27 @@ function BlockRenderer({ block, contextData, onAction }: BlockRendererProps) {
       return <AIChatBlock block={block} contextData={contextData} />;
     case 'cta_button':
       return <CTAButtonBlock block={block} onAction={onAction} />;
+    // New interactive blocks
+    case 'chakra_wheel':
+      return <ChakraWheelBlock block={block} onSave={onSaveRegistro} />;
+    case 'energy_slider':
+      return <EnergySliderBlock block={block} onSave={onSaveRegistro} />;
+    case 'pattern_diary':
+      return <PatternDiaryBlock block={block} onSave={onSaveRegistro} />;
+    case 'lunar_calendar':
+      return <LunarCalendarBlock block={block} onSave={onSaveRegistro} />;
+    case 'pendulum_map':
+      return <PendulumMapBlock block={block} onSave={onSaveRegistro} />;
+    case 'ego_layers':
+      return <EgoLayersBlock block={block} onSave={onSaveRegistro} />;
+    case 'archetype_card':
+      return <ArchetypeCardBlock block={block} />;
+    case 'reflection_prompt':
+      return <ReflectionPromptBlock block={block} onSave={onSaveRegistro} />;
     default:
       console.warn(`Unknown block type: ${block.blockType}`);
       return null;
   }
 }
 
-// Export for external use
 export { BlockRenderer };
