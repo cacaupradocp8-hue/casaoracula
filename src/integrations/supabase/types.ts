@@ -1253,6 +1253,368 @@ export type Database = {
         }
         Relationships: []
       }
+      oracle_cards: {
+        Row: {
+          care_notes: string | null
+          category_id: string | null
+          created_at: string
+          deep_reading: string | null
+          id: string
+          image_variants_json: Json | null
+          is_sensitive: boolean | null
+          keywords_json: Json | null
+          level: Database["public"]["Enums"]["oracle_card_level"] | null
+          main_image_url: string | null
+          oracle_id: string
+          ordem: number | null
+          polarity_light_text: string | null
+          polarity_shadow_text: string | null
+          reflection_questions_json: Json | null
+          ritual_text: string | null
+          short_message: string | null
+          status: Database["public"]["Enums"]["oracle_content_status"] | null
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          care_notes?: string | null
+          category_id?: string | null
+          created_at?: string
+          deep_reading?: string | null
+          id?: string
+          image_variants_json?: Json | null
+          is_sensitive?: boolean | null
+          keywords_json?: Json | null
+          level?: Database["public"]["Enums"]["oracle_card_level"] | null
+          main_image_url?: string | null
+          oracle_id: string
+          ordem?: number | null
+          polarity_light_text?: string | null
+          polarity_shadow_text?: string | null
+          reflection_questions_json?: Json | null
+          ritual_text?: string | null
+          short_message?: string | null
+          status?: Database["public"]["Enums"]["oracle_content_status"] | null
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          care_notes?: string | null
+          category_id?: string | null
+          created_at?: string
+          deep_reading?: string | null
+          id?: string
+          image_variants_json?: Json | null
+          is_sensitive?: boolean | null
+          keywords_json?: Json | null
+          level?: Database["public"]["Enums"]["oracle_card_level"] | null
+          main_image_url?: string | null
+          oracle_id?: string
+          ordem?: number | null
+          polarity_light_text?: string | null
+          polarity_shadow_text?: string | null
+          reflection_questions_json?: Json | null
+          ritual_text?: string | null
+          short_message?: string | null
+          status?: Database["public"]["Enums"]["oracle_content_status"] | null
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oracle_cards_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "oracle_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "oracle_cards_oracle_id_fkey"
+            columns: ["oracle_id"]
+            isOneToOne: false
+            referencedRelation: "oracle_decks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oracle_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          oracle_id: string
+          ordem: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          oracle_id: string
+          ordem?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          oracle_id?: string
+          ordem?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oracle_categories_oracle_id_fkey"
+            columns: ["oracle_id"]
+            isOneToOne: false
+            referencedRelation: "oracle_decks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oracle_clients: {
+        Row: {
+          created_at: string
+          display_name: string
+          id: string
+          notes_private: string | null
+          therapist_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name: string
+          id?: string
+          notes_private?: string | null
+          therapist_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string
+          id?: string
+          notes_private?: string | null
+          therapist_user_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      oracle_decks: {
+        Row: {
+          cover_image_url: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          disclaimer_text: string | null
+          enable_journal: boolean | null
+          enable_professional_mode: boolean | null
+          id: string
+          is_sensitive_mode_available: boolean | null
+          lock_message_body: string | null
+          lock_message_title: string | null
+          minimum_portal: Database["public"]["Enums"]["portal_type"] | null
+          name: string
+          onboarding_json: Json | null
+          ordem: number | null
+          show_locked_teaser: boolean | null
+          slug: string
+          status: Database["public"]["Enums"]["oracle_content_status"] | null
+          subtitle: string | null
+          theme_json: Json | null
+          updated_at: string
+          upgrade_cta_route: string | null
+          upgrade_cta_text: string | null
+          voice_settings_json: Json | null
+        }
+        Insert: {
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          disclaimer_text?: string | null
+          enable_journal?: boolean | null
+          enable_professional_mode?: boolean | null
+          id?: string
+          is_sensitive_mode_available?: boolean | null
+          lock_message_body?: string | null
+          lock_message_title?: string | null
+          minimum_portal?: Database["public"]["Enums"]["portal_type"] | null
+          name: string
+          onboarding_json?: Json | null
+          ordem?: number | null
+          show_locked_teaser?: boolean | null
+          slug: string
+          status?: Database["public"]["Enums"]["oracle_content_status"] | null
+          subtitle?: string | null
+          theme_json?: Json | null
+          updated_at?: string
+          upgrade_cta_route?: string | null
+          upgrade_cta_text?: string | null
+          voice_settings_json?: Json | null
+        }
+        Update: {
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          disclaimer_text?: string | null
+          enable_journal?: boolean | null
+          enable_professional_mode?: boolean | null
+          id?: string
+          is_sensitive_mode_available?: boolean | null
+          lock_message_body?: string | null
+          lock_message_title?: string | null
+          minimum_portal?: Database["public"]["Enums"]["portal_type"] | null
+          name?: string
+          onboarding_json?: Json | null
+          ordem?: number | null
+          show_locked_teaser?: boolean | null
+          slug?: string
+          status?: Database["public"]["Enums"]["oracle_content_status"] | null
+          subtitle?: string | null
+          theme_json?: Json | null
+          updated_at?: string
+          upgrade_cta_route?: string | null
+          upgrade_cta_text?: string | null
+          voice_settings_json?: Json | null
+        }
+        Relationships: []
+      }
+      oracle_draws: {
+        Row: {
+          client_id: string | null
+          created_at: string
+          drawn_cards_json: Json
+          id: string
+          is_professional_session: boolean | null
+          oracle_id: string
+          spread_id: string
+          updated_at: string
+          user_id: string
+          user_notes: string | null
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string
+          drawn_cards_json?: Json
+          id?: string
+          is_professional_session?: boolean | null
+          oracle_id: string
+          spread_id: string
+          updated_at?: string
+          user_id: string
+          user_notes?: string | null
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string
+          drawn_cards_json?: Json
+          id?: string
+          is_professional_session?: boolean | null
+          oracle_id?: string
+          spread_id?: string
+          updated_at?: string
+          user_id?: string
+          user_notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oracle_draws_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "oracle_clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "oracle_draws_oracle_id_fkey"
+            columns: ["oracle_id"]
+            isOneToOne: false
+            referencedRelation: "oracle_decks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "oracle_draws_spread_id_fkey"
+            columns: ["spread_id"]
+            isOneToOne: false
+            referencedRelation: "oracle_spreads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oracle_spreads: {
+        Row: {
+          closing_text: string | null
+          created_at: string
+          description: string | null
+          id: string
+          layout_type:
+            | Database["public"]["Enums"]["oracle_spread_layout"]
+            | null
+          name: string
+          number_of_cards: number
+          opening_text: string | null
+          oracle_id: string
+          ordem: number | null
+          positions_json: Json | null
+          rules_json: Json | null
+          status: Database["public"]["Enums"]["oracle_content_status"] | null
+          updated_at: string
+        }
+        Insert: {
+          closing_text?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          layout_type?:
+            | Database["public"]["Enums"]["oracle_spread_layout"]
+            | null
+          name: string
+          number_of_cards?: number
+          opening_text?: string | null
+          oracle_id: string
+          ordem?: number | null
+          positions_json?: Json | null
+          rules_json?: Json | null
+          status?: Database["public"]["Enums"]["oracle_content_status"] | null
+          updated_at?: string
+        }
+        Update: {
+          closing_text?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          layout_type?:
+            | Database["public"]["Enums"]["oracle_spread_layout"]
+            | null
+          name?: string
+          number_of_cards?: number
+          opening_text?: string | null
+          oracle_id?: string
+          ordem?: number | null
+          positions_json?: Json | null
+          rules_json?: Json | null
+          status?: Database["public"]["Enums"]["oracle_content_status"] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oracle_spreads_oracle_id_fkey"
+            columns: ["oracle_id"]
+            isOneToOne: false
+            referencedRelation: "oracle_decks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       oracular_readings: {
         Row: {
           admin_response: string | null
@@ -2266,6 +2628,10 @@ export type Database = {
         Args: { _course_id: string; _user_id: string }
         Returns: boolean
       }
+      has_oracle_access: {
+        Args: { _oracle_id: string; _user_id: string }
+        Returns: boolean
+      }
       has_portal_access: {
         Args: {
           _min_portal: Database["public"]["Enums"]["portal_type"]
@@ -2311,6 +2677,9 @@ export type Database = {
       content_type: "text" | "video" | "audio" | "file" | "mixed"
       mentoria_tipo: "aviso" | "evento" | "supervisao"
       nivel_sala: "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3"
+      oracle_card_level: "beginner" | "intermediate" | "advanced"
+      oracle_content_status: "draft" | "published" | "archived"
+      oracle_spread_layout: "line" | "cross" | "circle" | "spiral" | "custom"
       portal_type: "visitante" | "pre_iniciada" | "iniciada" | "admin"
       post_status: "rascunho" | "publicado" | "arquivado"
       pricing_model: "free" | "one_time" | "subscription"
@@ -2454,6 +2823,9 @@ export const Constants = {
       content_type: ["text", "video", "audio", "file", "mixed"],
       mentoria_tipo: ["aviso", "evento", "supervisao"],
       nivel_sala: ["NIVEL_0", "NIVEL_1", "NIVEL_2", "NIVEL_3"],
+      oracle_card_level: ["beginner", "intermediate", "advanced"],
+      oracle_content_status: ["draft", "published", "archived"],
+      oracle_spread_layout: ["line", "cross", "circle", "spiral", "custom"],
       portal_type: ["visitante", "pre_iniciada", "iniciada", "admin"],
       post_status: ["rascunho", "publicado", "arquivado"],
       pricing_model: ["free", "one_time", "subscription"],
