@@ -700,6 +700,7 @@ export type Database = {
           pricing_model: Database["public"]["Enums"]["pricing_model"]
           publicado: boolean
           requer_matricula: boolean
+          sala_id: string | null
           stripe_price_id: string | null
           stripe_product_id: string | null
           subtitulo: string | null
@@ -724,6 +725,7 @@ export type Database = {
           pricing_model?: Database["public"]["Enums"]["pricing_model"]
           publicado?: boolean
           requer_matricula?: boolean
+          sala_id?: string | null
           stripe_price_id?: string | null
           stripe_product_id?: string | null
           subtitulo?: string | null
@@ -748,6 +750,7 @@ export type Database = {
           pricing_model?: Database["public"]["Enums"]["pricing_model"]
           publicado?: boolean
           requer_matricula?: boolean
+          sala_id?: string | null
           stripe_price_id?: string | null
           stripe_product_id?: string | null
           subtitulo?: string | null
@@ -756,7 +759,15 @@ export type Database = {
           updated_at?: string
           video_preview_url?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "courses_sala_id_fkey"
+            columns: ["sala_id"]
+            isOneToOne: false
+            referencedRelation: "salas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       eneagrama_instintos: {
         Row: {
