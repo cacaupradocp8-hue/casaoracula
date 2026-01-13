@@ -443,12 +443,12 @@ function AIChatEditor({
     <div className="space-y-4">
       <div className="space-y-2">
         <Label>Agente de IA</Label>
-        <Select value={selectedAgenteId} onValueChange={onAgenteChange}>
+        <Select value={selectedAgenteId || "none"} onValueChange={(v) => onAgenteChange(v === "none" ? "" : v)}>
           <SelectTrigger>
             <SelectValue placeholder="Selecione um agente (ou use o padrão)" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Agente Padrão</SelectItem>
+            <SelectItem value="none">Agente Padrão</SelectItem>
             {agentes.map(a => (
               <SelectItem key={a.id} value={a.id}>{a.nome}</SelectItem>
             ))}
