@@ -322,73 +322,109 @@ export default function QuizPage() {
     );
   }
 
-  // Fallback component for results without modular blocks
-  const LegacyResultContent = ({ result }: { result: Resultado }) => {
-    const hasLegacyContent = result.imagem_url || result.video_url || 
-                             result.audio_url || result.cta_texto;
+  // Helper to convert video URLs to embed format (same as AulaPage)
+  const getEmbedUrl = (url: string | null): string | null => {
+    if (!url) return null;
     
-    if (!hasLegacyContent) return null;
+    // YouTube - youtube.com/watch?v=ID
+    if (url.includes('youtube.com/watch')) {
+      const videoId = url.split('v=')[1]?.split('&')[0];
+      if (videoId) return `https://www.youtube.com/embed/${videoId}`;
+    }
+    
+    // YouTube - youtu.be/ID
+    if (url.includes('youtu.be/')) {
+      const videoId = url.split('youtu.be/')[1]?.split('?')[0];
+      if (videoId) return `https://www.youtube.com/embed/${videoId}`;
+    }
+    
+    // Vimeo - vimeo.com/ID
+    if (url.includes('vimeo.com/')) {
+      const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+      if (match) return `https://player.vimeo.com/video/${match[1]}`;
+    }
+    
+    // Already embed URL or direct video
+    return url;
+  };
 
+  // Direct Media Renderer (like AulaPage) - renders media from quiz_resultados fields
+  const DirectMediaContent = ({ result }: { result: Resultado }) => {
+    const embedUrl = getEmbedUrl(result.video_url);
+    
     return (
-      <div className="space-y-6">
-        {/* Legacy image */}
-        {result.imagem_url && (
-          <div className="flex justify-center">
-            <img 
-              src={result.imagem_url} 
-              alt={result.titulo_simbolico}
-              className="max-w-full h-auto rounded-lg"
-            />
-          </div>
-        )}
-
-        {/* Legacy video */}
-        {result.video_url && (
+      <div className="space-y-8">
+        {/* Video - always visible if exists (like AulaPage) */}
+        {embedUrl && (
           <Card className="overflow-hidden">
-            <div className="aspect-video">
+            <div className="aspect-video relative">
               <iframe
-                src={result.video_url}
-                className="w-full h-full"
+                src={embedUrl}
+                title={result.titulo_simbolico}
+                className="absolute inset-0 w-full h-full"
                 frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
               />
             </div>
           </Card>
         )}
 
-        {/* Legacy audio */}
+        {/* Audio - always visible if exists */}
         {result.audio_url && (
           <Card>
-            <CardContent className="pt-6">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                🎧 Mensagem em Áudio
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
               <audio controls className="w-full">
-                <source src={result.audio_url} />
+                <source src={result.audio_url} type="audio/mpeg" />
+                Seu navegador não suporta o elemento de áudio.
               </audio>
             </CardContent>
           </Card>
         )}
 
-        {/* Legacy CTA */}
-        {result.cta_texto && result.cta_rota && (
-          <div className="flex justify-center">
-            <Button 
-              variant="gold" 
-              size="lg"
-              onClick={() => {
-                if (result.cta_rota?.startsWith('http')) {
-                  window.open(result.cta_rota, '_blank');
-                } else {
-                  navigate(result.cta_rota || '/');
-                }
-              }}
-            >
-              {result.cta_texto}
-              {result.cta_rota?.startsWith('http') && (
-                <ExternalLink className="w-4 h-4 ml-2" />
-              )}
-            </Button>
-          </div>
+        {/* Image - always visible if exists */}
+        {result.imagem_url && (
+          <Card className="overflow-hidden">
+            <img 
+              src={result.imagem_url} 
+              alt={result.titulo_simbolico}
+              className="w-full h-auto object-cover"
+            />
+          </Card>
         )}
+      </div>
+    );
+  };
+
+  // CTA Button Component (separate for clarity)
+  const ResultCTA = ({ result }: { result: Resultado }) => {
+    if (!result.cta_texto || !result.cta_rota) return null;
+    
+    return (
+      <div className="flex justify-center pt-4">
+        <Button 
+          variant="gold" 
+          size="lg"
+          onClick={() => {
+            if (result.cta_rota?.startsWith('http')) {
+              window.open(result.cta_rota, '_blank');
+            } else {
+              navigate(result.cta_rota || '/');
+            }
+          }}
+        >
+          {result.cta_texto}
+          {result.cta_rota?.startsWith('http') && (
+            <ExternalLink className="w-4 h-4 ml-2" />
+          )}
+        </Button>
       </div>
     );
   };
@@ -479,18 +515,21 @@ export default function QuizPage() {
           maxWidth="4xl"
           showNavigation={false}
         >
-          {/* Static interpretive text */}
+          {/* 1. Texto interpretativo (igual AulaPage) */}
           <Card>
             <CardContent className="pt-6">
               <div className="prose prose-invert max-w-none">
-                <p className="text-foreground/90 leading-relaxed text-lg">
+                <p className="text-foreground/90 leading-relaxed text-lg whitespace-pre-line">
                   {prevResult.texto_interpretativo}
                 </p>
               </div>
             </CardContent>
           </Card>
 
-          {/* MODULAR CONTENT with legacy fallback */}
+          {/* 2. Mídia direta dos campos quiz_resultados (igual AulaPage) */}
+          <DirectMediaContent result={prevResult} />
+
+          {/* 3. Blocos modulares EXTRAS do Admin */}
           <ModularPageRenderer
             contextType="quiz_result"
             contextId={prevResult.id}
@@ -499,11 +538,13 @@ export default function QuizPage() {
               categoria: prevResult.categoria,
             }}
             blockSpacing="lg"
-            showLoading={true}
-            fallback={<LegacyResultContent result={prevResult} />}
+            showLoading={false}
           />
 
-          {/* Action buttons */}
+          {/* 4. CTA principal (se existir) */}
+          <ResultCTA result={prevResult} />
+
+          {/* 5. Action buttons */}
           <div className="flex gap-4 justify-center pt-4">
             <Button variant="outline" onClick={() => navigate(-1)}>
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -538,18 +579,21 @@ export default function QuizPage() {
           maxWidth="4xl"
           showNavigation={false}
         >
-          {/* Static interpretive text - always shown */}
+          {/* 1. Texto interpretativo (igual AulaPage) */}
           <Card>
             <CardContent className="pt-6">
               <div className="prose prose-invert max-w-none">
-                <p className="text-foreground/90 leading-relaxed text-lg">
+                <p className="text-foreground/90 leading-relaxed text-lg whitespace-pre-line">
                   {finalResult.texto_interpretativo}
                 </p>
               </div>
             </CardContent>
           </Card>
 
-          {/* MODULAR CONTENT: Primary multimedia renderer with legacy fallback */}
+          {/* 2. Mídia direta dos campos quiz_resultados (igual AulaPage) */}
+          <DirectMediaContent result={finalResult} />
+
+          {/* 3. Blocos modulares EXTRAS do Admin */}
           <ModularPageRenderer
             contextType="quiz_result"
             contextId={finalResult.id}
@@ -558,9 +602,11 @@ export default function QuizPage() {
               categoria: finalResult.categoria,
             }}
             blockSpacing="lg"
-            showLoading={true}
-            fallback={<LegacyResultContent result={finalResult} />}
+            showLoading={false}
           />
+
+          {/* 4. CTA principal (se existir) */}
+          <ResultCTA result={finalResult} />
 
           {saving && (
             <div className="flex items-center justify-center gap-2 text-muted-foreground">
@@ -569,7 +615,7 @@ export default function QuizPage() {
             </div>
           )}
 
-          {/* Action buttons */}
+          {/* 5. Action buttons */}
           <div className="flex gap-4 justify-center pt-4">
             <Button variant="outline" onClick={() => navigate(-1)}>
               <ArrowLeft className="w-4 h-4 mr-2" />
