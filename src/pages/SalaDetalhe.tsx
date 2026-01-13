@@ -4,12 +4,13 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Lock, Loader2, BookOpen, DoorOpen, ClipboardList, Wrench } from "lucide-react";
+import { ArrowLeft, ArrowRight, Lock, Loader2, BookOpen, DoorOpen, ClipboardList, Wrench, GraduationCap, Clock, BarChart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { canAccessFeature, PortalType } from "@/types/portal";
 import { cn } from "@/lib/utils";
 import * as LucideIcons from "lucide-react";
+import type { Course } from "@/types/course";
 
 interface Quiz {
   id: string;
@@ -77,6 +78,7 @@ export default function SalaDetalhe() {
   const [portais, setPortais] = useState<Portal[]>([]);
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [ferramentas, setFerramentas] = useState<Ferramenta[]>([]);
+  const [cursos, setCursos] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -91,7 +93,7 @@ export default function SalaDetalhe() {
     setLoading(true);
     try {
       // Fetch all data in parallel
-      const [salaRes, portaisRes, quizzesRes, ferramentasRes] = await Promise.all([
+      const [salaRes, portaisRes, quizzesRes, ferramentasRes, cursosRes] = await Promise.all([
         supabase
           .from("salas")
           .select("id, nome_exibicao, texto_entrada, nivel_minimo")
@@ -115,6 +117,12 @@ export default function SalaDetalhe() {
           .eq("sala_id", id)
           .eq("ativa", true)
           .order("ordem"),
+        supabase
+          .from("courses")
+          .select("*")
+          .eq("sala_id", id)
+          .eq("publicado", true)
+          .order("ordem"),
       ]);
 
       if (salaRes.error || !salaRes.data) {
@@ -125,6 +133,7 @@ export default function SalaDetalhe() {
       setPortais(portaisRes.data || []);
       setQuizzes(quizzesRes.data || []);
       setFerramentas(ferramentasRes.data || []);
+      setCursos((cursosRes.data as Course[]) || []);
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -207,6 +216,63 @@ export default function SalaDetalhe() {
                   <CardContent>
                     <Button variant="ghost" size="sm" className="gap-2 text-gold">
                       Acessar
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Cursos Section */}
+        {cursos.length > 0 && (
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold text-gold mb-4 flex items-center gap-2">
+              <GraduationCap className="w-5 h-5" />
+              Cursos
+            </h3>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {cursos.map((curso) => (
+                <Card
+                  key={curso.id}
+                  className="glass hover:border-gold/50 cursor-pointer transition-all group overflow-hidden"
+                  onClick={() => navigate(`/curso/${curso.id}`)}
+                >
+                  {curso.capa_url && (
+                    <div className="h-32 overflow-hidden">
+                      <img
+                        src={curso.capa_url}
+                        alt={curso.titulo}
+                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                      />
+                    </div>
+                  )}
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base group-hover:text-gold transition-colors">
+                      {curso.titulo}
+                    </CardTitle>
+                    {curso.subtitulo && (
+                      <CardDescription className="text-sm">{curso.subtitulo}</CardDescription>
+                    )}
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
+                      {curso.duracao_estimada && (
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          {curso.duracao_estimada}
+                        </span>
+                      )}
+                      {curso.nivel && (
+                        <span className="flex items-center gap-1">
+                          <BarChart className="w-3 h-3" />
+                          {curso.nivel}
+                        </span>
+                      )}
+                    </div>
+                    <Button variant="gold" size="sm" className="gap-2">
+                      Ver Curso
                       <ArrowRight className="w-4 h-4" />
                     </Button>
                   </CardContent>
