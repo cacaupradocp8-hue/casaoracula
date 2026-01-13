@@ -216,12 +216,12 @@ export function AdminAISettingsTab() {
           {/* Default Agent */}
           <div className="space-y-2">
             <Label>Agente Padrão</Label>
-            <Select value={defaultAgentId} onValueChange={setDefaultAgentId}>
+            <Select value={defaultAgentId || "none"} onValueChange={(v) => setDefaultAgentId(v === "none" ? "" : v)}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecione um agente padrão..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Nenhum (usar configurações globais)</SelectItem>
+                <SelectItem value="none">Nenhum (usar configurações globais)</SelectItem>
                 {agentes.map(a => (
                   <SelectItem key={a.id} value={a.id}>{a.nome}</SelectItem>
                 ))}
