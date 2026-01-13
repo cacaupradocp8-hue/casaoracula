@@ -6,8 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Loader2, ArrowLeft, ArrowRight, Sparkles, RefreshCw } from "lucide-react";
+import { Loader2, ArrowLeft, ArrowRight, Sparkles, RefreshCw, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
+import { ModularPageRenderer } from "@/components/modular/ModularPageRenderer";
 
 interface Quiz {
   id: string;
@@ -36,6 +37,11 @@ interface Resultado {
   pontuacao_minima: number | null;
   pontuacao_maxima: number | null;
   categoria: string | null;
+  imagem_url: string | null;
+  video_url: string | null;
+  audio_url: string | null;
+  cta_texto: string | null;
+  cta_rota: string | null;
 }
 
 interface UserResponse {
@@ -346,9 +352,19 @@ export default function QuizPage() {
         <div className="container mx-auto px-4 py-8 max-w-2xl">
           <Card className="glass">
             <CardHeader className="text-center">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/30 to-gold/10 flex items-center justify-center">
-                <Sparkles className="w-10 h-10 text-gold" />
-              </div>
+              {finalResult.imagem_url ? (
+                <div className="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden">
+                  <img 
+                    src={finalResult.imagem_url} 
+                    alt={finalResult.titulo_simbolico}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/30 to-gold/10 flex items-center justify-center">
+                  <Sparkles className="w-10 h-10 text-gold" />
+                </div>
+              )}
               <CardTitle className="text-2xl md:text-3xl text-gold">
                 {finalResult.titulo_simbolico}
               </CardTitle>
@@ -360,10 +376,65 @@ export default function QuizPage() {
                 </p>
               </div>
 
+              {/* Video embed */}
+              {finalResult.video_url && (
+                <div className="aspect-video rounded-lg overflow-hidden">
+                  <iframe
+                    src={finalResult.video_url}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              )}
+
+              {/* Audio player */}
+              {finalResult.audio_url && (
+                <div className="bg-muted/30 p-4 rounded-lg">
+                  <audio controls className="w-full">
+                    <source src={finalResult.audio_url} />
+                  </audio>
+                </div>
+              )}
+
+              {/* Modular content blocks */}
+              <ModularPageRenderer
+                contextType="quiz_result"
+                contextId={finalResult.id}
+                contextData={{
+                  arquetipo: finalResult.titulo_simbolico,
+                  categoria: finalResult.categoria,
+                }}
+                blockSpacing="md"
+                fallback={null}
+              />
+
               {saving && (
                 <div className="flex items-center justify-center gap-2 text-muted-foreground">
                   <Loader2 className="w-4 h-4 animate-spin" />
                   <span>Salvando resultado...</span>
+                </div>
+              )}
+
+              {/* CTA Button */}
+              {finalResult.cta_texto && finalResult.cta_rota && (
+                <div className="flex justify-center">
+                  <Button 
+                    variant="gold" 
+                    size="lg"
+                    onClick={() => {
+                      if (finalResult.cta_rota?.startsWith('http')) {
+                        window.open(finalResult.cta_rota, '_blank');
+                      } else {
+                        navigate(finalResult.cta_rota || '/');
+                      }
+                    }}
+                  >
+                    {finalResult.cta_texto}
+                    {finalResult.cta_rota?.startsWith('http') && (
+                      <ExternalLink className="w-4 h-4 ml-2" />
+                    )}
+                  </Button>
                 </div>
               )}
 
