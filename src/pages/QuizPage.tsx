@@ -6,14 +6,17 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Loader2, ArrowLeft, ArrowRight, Sparkles, RefreshCw, ExternalLink } from "lucide-react";
+import { Loader2, ArrowLeft, ArrowRight, Sparkles, RefreshCw, ExternalLink, Bug } from "lucide-react";
 import { toast } from "sonner";
 import { ModularPageRenderer } from "@/components/modular/ModularPageRenderer";
+import { ContentPageLayout } from "@/components/shared/ContentPageLayout";
+import { useContentBlocks } from "@/hooks/useContentBlocks";
 
 interface Quiz {
   id: string;
   titulo: string;
   descricao: string;
+  sala_id?: string;
 }
 
 interface Pergunta {
@@ -67,6 +70,19 @@ export default function QuizPage() {
   const [finalResult, setFinalResult] = useState<Resultado | null>(null);
   const [saving, setSaving] = useState(false);
   const [previousResponse, setPreviousResponse] = useState<UserResponse | null>(null);
+  const [showDebug, setShowDebug] = useState(false);
+
+  const isAdmin = user?.portal === 'admin';
+
+  // Get the current result ID for block fetching
+  const currentResultId = showResult ? finalResult?.id : previousResponse?.resultado?.id;
+
+  // Hook for content blocks with realtime
+  const { blocks, refetch: refetchBlocks } = useContentBlocks({
+    contextType: 'quiz_result',
+    contextId: currentResultId || '',
+    enabled: !!currentResultId,
+  });
 
   useEffect(() => {
     if (quizId) {
@@ -328,23 +344,28 @@ export default function QuizPage() {
 
         {/* Legacy video */}
         {result.video_url && (
-          <div className="aspect-video rounded-lg overflow-hidden">
-            <iframe
-              src={result.video_url}
-              className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
+          <Card className="overflow-hidden">
+            <div className="aspect-video">
+              <iframe
+                src={result.video_url}
+                className="w-full h-full"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </Card>
         )}
 
         {/* Legacy audio */}
         {result.audio_url && (
-          <div className="bg-muted/30 p-4 rounded-lg">
-            <audio controls className="w-full">
-              <source src={result.audio_url} />
-            </audio>
-          </div>
+          <Card>
+            <CardContent className="pt-6">
+              <audio controls className="w-full">
+                <source src={result.audio_url} />
+              </audio>
+            </CardContent>
+          </Card>
         )}
 
         {/* Legacy CTA */}
@@ -372,128 +393,196 @@ export default function QuizPage() {
     );
   };
 
+  // Debug Panel Component (Admin Only)
+  const DebugPanel = ({ resultId }: { resultId: string }) => {
+    if (!isAdmin) return null;
+
+    return (
+      <>
+        {/* Debug Toggle Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="fixed bottom-4 right-4 z-50 bg-background/80 border shadow-lg"
+          onClick={() => setShowDebug(!showDebug)}
+        >
+          <Bug className="w-4 h-4" />
+        </Button>
+
+        {/* Debug Panel */}
+        {showDebug && (
+          <div className="fixed bottom-16 right-4 z-50 bg-background/95 border rounded-lg p-4 shadow-xl text-xs w-72">
+            <h4 className="font-semibold text-gold mb-2">🔧 Debug Info (Admin)</h4>
+            <div className="space-y-2 text-muted-foreground">
+              <p>
+                <strong>Context ID:</strong>
+                <br />
+                <code className="text-[10px] bg-muted px-1 rounded break-all">{resultId}</code>
+              </p>
+              <p>
+                <strong>Context Type:</strong> quiz_result
+              </p>
+              <p>
+                <strong>Blocks Carregados:</strong> {blocks.length}
+              </p>
+              <p>
+                <strong>Tipos:</strong>{' '}
+                {blocks.length > 0 
+                  ? blocks.map(b => b.blockType).join(', ')
+                  : 'Nenhum'}
+              </p>
+            </div>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="w-full mt-3"
+              onClick={() => {
+                refetchBlocks();
+                toast.success('Blocos recarregados!');
+              }}
+            >
+              <RefreshCw className="w-3 h-3 mr-2" />
+              Recarregar Blocos
+            </Button>
+          </div>
+        )}
+      </>
+    );
+  };
+
   // Show previous result if exists and not retaking
   if (previousResponse && !showResult && Object.keys(answers).length === 0) {
     const prevResult = previousResponse.resultado;
     
+    if (!prevResult) {
+      return (
+        <AppLayout>
+          <div className="container mx-auto px-4 py-8">
+            <p className="text-center text-muted-foreground">Resultado não encontrado</p>
+          </div>
+        </AppLayout>
+      );
+    }
+
     return (
       <AppLayout>
-        <div className="container mx-auto px-4 py-8 max-w-2xl">
-          <Card className="glass">
-            <CardHeader className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gold/20 flex items-center justify-center">
-                <Sparkles className="w-8 h-8 text-gold" />
-              </div>
-              <CardTitle className="text-2xl text-gold">
-                {prevResult?.titulo_simbolico || "Seu Resultado Anterior"}
-              </CardTitle>
-              {prevResult?.categoria && (
-                <CardDescription className="text-muted-foreground">
-                  {prevResult.categoria}
-                </CardDescription>
-              )}
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Static interpretive text */}
+        <ContentPageLayout
+          breadcrumbs={[
+            { label: 'Salas', href: '/dashboard' },
+            { label: quiz.titulo, href: quiz.sala_id ? `/salas/${quiz.sala_id}` : undefined },
+            { label: 'Resultado' },
+          ]}
+          badge="Seu Arquétipo"
+          badgeIcon={<Sparkles className="w-4 h-4 text-gold" />}
+          title={prevResult.titulo_simbolico}
+          subtitle={prevResult.categoria || undefined}
+          maxWidth="4xl"
+          showNavigation={false}
+        >
+          {/* Static interpretive text */}
+          <Card>
+            <CardContent className="pt-6">
               <div className="prose prose-invert max-w-none">
-                <p className="text-foreground/90 leading-relaxed">
-                  {prevResult?.texto_interpretativo}
+                <p className="text-foreground/90 leading-relaxed text-lg">
+                  {prevResult.texto_interpretativo}
                 </p>
-              </div>
-
-              {/* MODULAR CONTENT with legacy fallback */}
-              {prevResult && (
-                <ModularPageRenderer
-                  contextType="quiz_result"
-                  contextId={prevResult.id}
-                  contextData={{
-                    arquetipo: prevResult.titulo_simbolico,
-                    categoria: prevResult.categoria,
-                  }}
-                  blockSpacing="md"
-                  showLoading={false}
-                  fallback={<LegacyResultContent result={prevResult} />}
-                />
-              )}
-
-              <div className="flex gap-4 justify-center pt-4">
-                <Button variant="outline" onClick={() => navigate(-1)}>
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Voltar
-                </Button>
-                <Button onClick={handleRestart}>
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Refazer Quiz
-                </Button>
               </div>
             </CardContent>
           </Card>
-        </div>
+
+          {/* MODULAR CONTENT with legacy fallback */}
+          <ModularPageRenderer
+            contextType="quiz_result"
+            contextId={prevResult.id}
+            contextData={{
+              arquetipo: prevResult.titulo_simbolico,
+              categoria: prevResult.categoria,
+            }}
+            blockSpacing="lg"
+            showLoading={true}
+            fallback={<LegacyResultContent result={prevResult} />}
+          />
+
+          {/* Action buttons */}
+          <div className="flex gap-4 justify-center pt-4">
+            <Button variant="outline" onClick={() => navigate(-1)}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Voltar
+            </Button>
+            <Button variant="gold" onClick={handleRestart}>
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Refazer Quiz
+            </Button>
+          </div>
+        </ContentPageLayout>
+
+        <DebugPanel resultId={prevResult.id} />
       </AppLayout>
     );
   }
-
 
   // Show result
   if (showResult && finalResult) {
     return (
       <AppLayout>
-        <div className="container mx-auto px-4 py-8 max-w-2xl">
-          <Card className="glass">
-            <CardHeader className="text-center">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/30 to-gold/10 flex items-center justify-center">
-                <Sparkles className="w-10 h-10 text-gold" />
-              </div>
-              <CardTitle className="text-2xl md:text-3xl text-gold">
-                {finalResult.titulo_simbolico}
-              </CardTitle>
-              {finalResult.categoria && (
-                <CardDescription className="text-muted-foreground">
-                  {finalResult.categoria}
-                </CardDescription>
-              )}
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Static interpretive text - always shown */}
+        <ContentPageLayout
+          breadcrumbs={[
+            { label: 'Salas', href: '/dashboard' },
+            { label: quiz.titulo, href: quiz.sala_id ? `/salas/${quiz.sala_id}` : undefined },
+            { label: 'Resultado' },
+          ]}
+          badge="Seu Arquétipo"
+          badgeIcon={<Sparkles className="w-4 h-4 text-gold" />}
+          title={finalResult.titulo_simbolico}
+          subtitle={finalResult.categoria || undefined}
+          maxWidth="4xl"
+          showNavigation={false}
+        >
+          {/* Static interpretive text - always shown */}
+          <Card>
+            <CardContent className="pt-6">
               <div className="prose prose-invert max-w-none">
                 <p className="text-foreground/90 leading-relaxed text-lg">
                   {finalResult.texto_interpretativo}
                 </p>
               </div>
-
-              {/* MODULAR CONTENT: Primary multimedia renderer with legacy fallback */}
-              <ModularPageRenderer
-                contextType="quiz_result"
-                contextId={finalResult.id}
-                contextData={{
-                  arquetipo: finalResult.titulo_simbolico,
-                  categoria: finalResult.categoria,
-                }}
-                blockSpacing="md"
-                showLoading={false}
-                fallback={<LegacyResultContent result={finalResult} />}
-              />
-
-              {saving && (
-                <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Salvando resultado...</span>
-                </div>
-              )}
-
-              <div className="flex gap-4 justify-center pt-4">
-                <Button variant="outline" onClick={() => navigate(-1)}>
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Voltar
-                </Button>
-                <Button variant="gold" onClick={handleRestart}>
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Refazer
-                </Button>
-              </div>
             </CardContent>
           </Card>
-        </div>
+
+          {/* MODULAR CONTENT: Primary multimedia renderer with legacy fallback */}
+          <ModularPageRenderer
+            contextType="quiz_result"
+            contextId={finalResult.id}
+            contextData={{
+              arquetipo: finalResult.titulo_simbolico,
+              categoria: finalResult.categoria,
+            }}
+            blockSpacing="lg"
+            showLoading={true}
+            fallback={<LegacyResultContent result={finalResult} />}
+          />
+
+          {saving && (
+            <div className="flex items-center justify-center gap-2 text-muted-foreground">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Salvando resultado...</span>
+            </div>
+          )}
+
+          {/* Action buttons */}
+          <div className="flex gap-4 justify-center pt-4">
+            <Button variant="outline" onClick={() => navigate(-1)}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Voltar
+            </Button>
+            <Button variant="gold" onClick={handleRestart}>
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Refazer
+            </Button>
+          </div>
+        </ContentPageLayout>
+
+        <DebugPanel resultId={finalResult.id} />
       </AppLayout>
     );
   }
