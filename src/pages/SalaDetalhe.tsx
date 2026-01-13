@@ -237,7 +237,7 @@ export default function SalaDetalhe() {
                 <Card
                   key={curso.id}
                   className="glass hover:border-gold/50 cursor-pointer transition-all group overflow-hidden"
-                  onClick={() => navigate(`/curso/${curso.id}`)}
+                  onClick={() => navigate(`/cursos/${curso.id}`)}
                 >
                   {curso.capa_url && (
                     <div className="h-32 overflow-hidden">
