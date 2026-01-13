@@ -83,39 +83,150 @@ export type Database = {
       }
       agentes: {
         Row: {
+          contextos_permitidos:
+            | Database["public"]["Enums"]["block_context_type"][]
+            | null
           created_at: string
           descricao: string
           icone: string | null
           id: string
           instrucoes_base: string
+          max_tokens: number | null
+          modelo_preferido: string | null
           nome: string
           portal_minimo: Database["public"]["Enums"]["portal_type"]
+          prompt_personalidade: string | null
           status: Database["public"]["Enums"]["agente_status"]
+          temperatura: number | null
           updated_at: string
         }
         Insert: {
+          contextos_permitidos?:
+            | Database["public"]["Enums"]["block_context_type"][]
+            | null
           created_at?: string
           descricao: string
           icone?: string | null
           id?: string
           instrucoes_base?: string
+          max_tokens?: number | null
+          modelo_preferido?: string | null
           nome: string
           portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          prompt_personalidade?: string | null
           status?: Database["public"]["Enums"]["agente_status"]
+          temperatura?: number | null
           updated_at?: string
         }
         Update: {
+          contextos_permitidos?:
+            | Database["public"]["Enums"]["block_context_type"][]
+            | null
           created_at?: string
           descricao?: string
           icone?: string | null
           id?: string
           instrucoes_base?: string
+          max_tokens?: number | null
+          modelo_preferido?: string | null
           nome?: string
           portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          prompt_personalidade?: string | null
           status?: Database["public"]["Enums"]["agente_status"]
+          temperatura?: number | null
           updated_at?: string
         }
         Relationships: []
+      }
+      ai_global_settings: {
+        Row: {
+          ativo: boolean
+          chave: string
+          created_at: string
+          descricao: string | null
+          id: string
+          updated_at: string
+          valor: string
+        }
+        Insert: {
+          ativo?: boolean
+          chave: string
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          updated_at?: string
+          valor: string
+        }
+        Update: {
+          ativo?: boolean
+          chave?: string
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          updated_at?: string
+          valor?: string
+        }
+        Relationships: []
+      }
+      ai_interaction_logs: {
+        Row: {
+          agente_id: string | null
+          context_id: string | null
+          context_type: Database["public"]["Enums"]["block_context_type"] | null
+          created_at: string
+          error_message: string | null
+          id: string
+          input_text: string
+          latency_ms: number | null
+          modelo_usado: string | null
+          output_text: string | null
+          success: boolean | null
+          tokens_used: number | null
+          user_id: string
+        }
+        Insert: {
+          agente_id?: string | null
+          context_id?: string | null
+          context_type?:
+            | Database["public"]["Enums"]["block_context_type"]
+            | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          input_text: string
+          latency_ms?: number | null
+          modelo_usado?: string | null
+          output_text?: string | null
+          success?: boolean | null
+          tokens_used?: number | null
+          user_id: string
+        }
+        Update: {
+          agente_id?: string | null
+          context_id?: string | null
+          context_type?:
+            | Database["public"]["Enums"]["block_context_type"]
+            | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          input_text?: string
+          latency_ms?: number | null
+          modelo_usado?: string | null
+          output_text?: string | null
+          success?: boolean | null
+          tokens_used?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_interaction_logs_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "agentes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       app_settings: {
         Row: {
@@ -373,6 +484,62 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      content_blocks: {
+        Row: {
+          agente_id: string | null
+          ativo: boolean
+          block_type: Database["public"]["Enums"]["content_block_type"]
+          content: Json
+          context_id: string
+          context_type: Database["public"]["Enums"]["block_context_type"]
+          created_at: string
+          descricao: string | null
+          id: string
+          ordem: number
+          portal_minimo: Database["public"]["Enums"]["portal_type"]
+          titulo: string | null
+          updated_at: string
+        }
+        Insert: {
+          agente_id?: string | null
+          ativo?: boolean
+          block_type: Database["public"]["Enums"]["content_block_type"]
+          content?: Json
+          context_id: string
+          context_type: Database["public"]["Enums"]["block_context_type"]
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          ordem?: number
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          titulo?: string | null
+          updated_at?: string
+        }
+        Update: {
+          agente_id?: string | null
+          ativo?: boolean
+          block_type?: Database["public"]["Enums"]["content_block_type"]
+          content?: Json
+          context_id?: string
+          context_type?: Database["public"]["Enums"]["block_context_type"]
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          ordem?: number
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          titulo?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_blocks_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "agentes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       conteudo_aulas: {
         Row: {
@@ -2080,9 +2247,14 @@ export type Database = {
       }
       quiz_resultados: {
         Row: {
+          agente_id: string | null
+          audio_url: string | null
           categoria: string | null
           created_at: string
+          cta_rota: string | null
+          cta_texto: string | null
           id: string
+          imagem_url: string | null
           ordem: number
           pontuacao_maxima: number | null
           pontuacao_minima: number | null
@@ -2090,11 +2262,17 @@ export type Database = {
           texto_interpretativo: string
           titulo_simbolico: string
           updated_at: string
+          video_url: string | null
         }
         Insert: {
+          agente_id?: string | null
+          audio_url?: string | null
           categoria?: string | null
           created_at?: string
+          cta_rota?: string | null
+          cta_texto?: string | null
           id?: string
+          imagem_url?: string | null
           ordem?: number
           pontuacao_maxima?: number | null
           pontuacao_minima?: number | null
@@ -2102,11 +2280,17 @@ export type Database = {
           texto_interpretativo: string
           titulo_simbolico: string
           updated_at?: string
+          video_url?: string | null
         }
         Update: {
+          agente_id?: string | null
+          audio_url?: string | null
           categoria?: string | null
           created_at?: string
+          cta_rota?: string | null
+          cta_texto?: string | null
           id?: string
+          imagem_url?: string | null
           ordem?: number
           pontuacao_maxima?: number | null
           pontuacao_minima?: number | null
@@ -2114,8 +2298,16 @@ export type Database = {
           texto_interpretativo?: string
           titulo_simbolico?: string
           updated_at?: string
+          video_url?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "quiz_resultados_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "agentes"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "quiz_resultados_quiz_id_fkey"
             columns: ["quiz_id"]
@@ -2615,6 +2807,52 @@ export type Database = {
         Args: { _cliente_id: string; _terapeuta_id: string }
         Returns: boolean
       }
+      get_agent_with_context: {
+        Args: {
+          _agent_id: string
+          _context_id?: string
+          _context_type?: Database["public"]["Enums"]["block_context_type"]
+        }
+        Returns: {
+          agent_descricao: string
+          agent_id: string
+          agent_nome: string
+          global_system_prompt: string
+          instrucoes_base: string
+          max_tokens: number
+          modelo_preferido: string
+          prompt_personalidade: string
+          temperatura: number
+        }[]
+      }
+      get_content_blocks: {
+        Args: {
+          _context_id: string
+          _context_type: Database["public"]["Enums"]["block_context_type"]
+          _user_id?: string
+        }
+        Returns: {
+          agente_id: string | null
+          ativo: boolean
+          block_type: Database["public"]["Enums"]["content_block_type"]
+          content: Json
+          context_id: string
+          context_type: Database["public"]["Enums"]["block_context_type"]
+          created_at: string
+          descricao: string | null
+          id: string
+          ordem: number
+          portal_minimo: Database["public"]["Enums"]["portal_type"]
+          titulo: string | null
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "content_blocks"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       get_user_access_status: { Args: { _user_id: string }; Returns: string }
       get_user_nivel_sala: {
         Args: { _user_id: string }
@@ -2673,7 +2911,22 @@ export type Database = {
         | "amabilidade"
         | "neuroticismo"
       big5_tipo_pergunta: "escala_1_5" | "texto"
+      block_context_type:
+        | "quiz_result"
+        | "portal"
+        | "ritual"
+        | "formation"
+        | "tool"
+        | "sala"
+        | "landing"
       cliente_status: "ativo" | "pausado" | "encerrado"
+      content_block_type:
+        | "rich_text"
+        | "image"
+        | "video"
+        | "audio"
+        | "ai_chat"
+        | "cta_button"
       content_type: "text" | "video" | "audio" | "file" | "mixed"
       mentoria_tipo: "aviso" | "evento" | "supervisao"
       nivel_sala: "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3"
@@ -2819,7 +3072,24 @@ export const Constants = {
         "neuroticismo",
       ],
       big5_tipo_pergunta: ["escala_1_5", "texto"],
+      block_context_type: [
+        "quiz_result",
+        "portal",
+        "ritual",
+        "formation",
+        "tool",
+        "sala",
+        "landing",
+      ],
       cliente_status: ["ativo", "pausado", "encerrado"],
+      content_block_type: [
+        "rich_text",
+        "image",
+        "video",
+        "audio",
+        "ai_chat",
+        "cta_button",
+      ],
       content_type: ["text", "video", "audio", "file", "mixed"],
       mentoria_tipo: ["aviso", "evento", "supervisao"],
       nivel_sala: ["NIVEL_0", "NIVEL_1", "NIVEL_2", "NIVEL_3"],
