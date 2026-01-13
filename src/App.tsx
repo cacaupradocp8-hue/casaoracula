@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { PortalType } from "@/types/portal";
 
@@ -85,6 +85,17 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   if (isAuthenticated) return <Navigate to="/welcome" replace />;
 
   return <>{children}</>;
+}
+
+// Legacy redirect components for old /curso/ routes
+function LegacyCursoRedirect() {
+  const { id } = useParams<{ id: string }>();
+  return <Navigate to={`/cursos/${id}`} replace />;
+}
+
+function LegacyAulaRedirect() {
+  const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
+  return <Navigate to={`/cursos/${courseId}/aula/${lessonId}`} replace />;
 }
 
 function AppRoutes() {
@@ -466,6 +477,10 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+
+        {/* Legacy redirects for old /curso/ routes */}
+        <Route path="/curso/:id" element={<LegacyCursoRedirect />} />
+        <Route path="/curso/:courseId/aula/:lessonId" element={<LegacyAulaRedirect />} />
 
         {/* Cursos Module */}
         <Route
