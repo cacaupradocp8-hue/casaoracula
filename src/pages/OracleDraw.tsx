@@ -7,10 +7,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { useOracleBySlug, useOracleDraws } from '@/hooks/useOracles';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { OracleCard, OracleSpread, DrawnCard } from '@/types/oracle';
+import { OracleCard as OracleCardType, OracleSpread, DrawnCard } from '@/types/oracle';
+import { OracleCard } from '@/components/oracle/OracleCard';
+import { MeditationPause } from '@/components/oracle/MeditationPause';
+import { AmbientSoundToggle } from '@/components/oracle/AmbientSoundToggle';
 import { cn } from '@/lib/utils';
 
-type DrawStep = 'select-spread' | 'preparation' | 'drawing' | 'reveal' | 'closing';
+type DrawStep = 'select-spread' | 'meditation' | 'drawing' | 'reveal' | 'closing';
 
 export default function OracleDraw() {
   const { oracleSlug } = useParams<{ oracleSlug: string }>();
@@ -24,12 +27,13 @@ export default function OracleDraw() {
 
   const [step, setStep] = useState<DrawStep>('select-spread');
   const [selectedSpread, setSelectedSpread] = useState<OracleSpread | null>(null);
-  const [drawnCards, setDrawnCards] = useState<OracleCard[]>([]);
+  const [drawnCards, setDrawnCards] = useState<OracleCardType[]>([]);
   const [revealedIndices, setRevealedIndices] = useState<number[]>([]);
   const [currentRevealIndex, setCurrentRevealIndex] = useState(0);
   const [userNotes, setUserNotes] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [expandedCardIndex, setExpandedCardIndex] = useState<number | null>(null);
+  const [showCardText, setShowCardText] = useState(false);
 
   // Pre-select spread from URL
   useEffect(() => {
@@ -38,7 +42,7 @@ export default function OracleDraw() {
       const spread = spreads.find(s => s.id === spreadId);
       if (spread && spread.status === 'published') {
         setSelectedSpread(spread);
-        setStep('preparation');
+        setStep('meditation');
       }
     }
   }, [searchParams, spreads]);
@@ -54,40 +58,45 @@ export default function OracleDraw() {
     setDrawnCards(drawn);
     setRevealedIndices([]);
     setCurrentRevealIndex(0);
+    setShowCardText(false);
     setStep('drawing');
   }, [selectedSpread, cards]);
 
+  // Handle meditation complete
+  const handleMeditationComplete = () => {
+    drawCards();
+  };
+
   // Reveal next card
-  const revealNextCard = useCallback(() => {
-    if (!selectedSpread) return;
-    
-    const pacing = oracle?.voice_settings_json?.revealPacing || 2;
-    
-    if (currentRevealIndex < drawnCards.length) {
-      setRevealedIndices(prev => [...prev, currentRevealIndex]);
-      setCurrentRevealIndex(prev => prev + 1);
+  const revealCard = useCallback((index: number) => {
+    if (!revealedIndices.includes(index)) {
+      setRevealedIndices(prev => [...prev, index]);
     }
-    
-    if (currentRevealIndex >= drawnCards.length - 1) {
-      setTimeout(() => setStep('reveal'), pacing * 1000);
-    }
-  }, [currentRevealIndex, drawnCards.length, selectedSpread, oracle]);
+  }, [revealedIndices]);
 
-  // Auto-reveal cards one by one
+  // Check if all cards are revealed
   useEffect(() => {
-    if (step !== 'drawing' || !selectedSpread) return;
-    
-    const rules = selectedSpread.rules_json;
-    if (rules.revealMode === 'all_at_once') {
-      setRevealedIndices(drawnCards.map((_, i) => i));
-      setTimeout(() => setStep('reveal'), 1500);
-      return;
+    if (step === 'drawing' && drawnCards.length > 0 && revealedIndices.length === drawnCards.length) {
+      // Pause before showing text
+      const timer = setTimeout(() => {
+        setShowCardText(true);
+        setTimeout(() => setStep('reveal'), 1000);
+      }, 1500);
+      return () => clearTimeout(timer);
     }
+  }, [step, drawnCards.length, revealedIndices.length]);
 
-    // One by one reveal
-    const timer = setTimeout(revealNextCard, (oracle?.voice_settings_json?.revealPacing || 2) * 1000);
-    return () => clearTimeout(timer);
-  }, [step, currentRevealIndex, revealNextCard, selectedSpread, drawnCards, oracle]);
+  // Auto-reveal for "all_at_once" mode
+  useEffect(() => {
+    if (step === 'drawing' && selectedSpread && drawnCards.length > 0) {
+      const rules = selectedSpread.rules_json;
+      if (rules?.revealMode === 'all_at_once') {
+        setTimeout(() => {
+          setRevealedIndices(drawnCards.map((_, i) => i));
+        }, 500);
+      }
+    }
+  }, [step, selectedSpread, drawnCards]);
 
   // Save draw
   const handleSaveDraw = async () => {
@@ -97,7 +106,7 @@ export default function OracleDraw() {
     try {
       const drawnCardsJson: DrawnCard[] = drawnCards.map((card, index) => ({
         cardId: card.id,
-        positionName: selectedSpread.positions_json[index]?.name || `Posição ${index + 1}`,
+        positionName: selectedSpread.positions_json?.[index]?.name || `Posição ${index + 1}`,
         positionIndex: index,
       }));
 
@@ -111,7 +120,7 @@ export default function OracleDraw() {
         client_id: null,
       });
 
-      toast({ title: 'Tiragem salva!', description: 'Você pode acessá-la no histórico.' });
+      toast({ title: 'Tiragem salva' });
       setStep('closing');
     } catch (error) {
       console.error('Error saving draw:', error);
@@ -128,13 +137,14 @@ export default function OracleDraw() {
     setCurrentRevealIndex(0);
     setUserNotes('');
     setExpandedCardIndex(null);
-    setStep('preparation');
+    setShowCardText(false);
+    setStep('meditation');
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0F0D1A]">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Sparkles className="w-8 h-8 animate-breathe text-primary" />
       </div>
     );
   }
@@ -144,195 +154,164 @@ export default function OracleDraw() {
     return null;
   }
 
-  const primaryColor = oracle.theme_json?.primaryColor || '#D4AF37';
-  const backgroundColor = oracle.theme_json?.backgroundColor || '#0F0D1A';
-  const fontFamily = oracle.theme_json?.fontFamily || 'serif';
+  const primaryColor = oracle.theme_json?.primaryColor || 'hsl(var(--gold))';
+  const backgroundColor = oracle.theme_json?.backgroundColor || 'hsl(var(--midnight))';
   const cardBackImage = oracle.theme_json?.cardBackImage || null;
-  const openingText = oracle.voice_settings_json?.openingText || null;
-  const closingText = oracle.voice_settings_json?.closingText || null;
-  const revealPacing = oracle.voice_settings_json?.revealPacing || 2;
+  const openingText = oracle.voice_settings_json?.openingText;
+  const closingText = oracle.voice_settings_json?.closingText;
   const publishedSpreads = spreads.filter(s => s.status === 'published');
 
   return (
     <div 
       className="min-h-screen flex flex-col"
-      style={{ 
-        backgroundColor,
-        fontFamily
-      }}
+      style={{ backgroundColor }}
     >
-      {/* Header */}
-      <header className="flex items-center justify-between p-4 border-b border-border/20">
+      {/* Minimal Header */}
+      <header className="flex items-center justify-between p-4">
         <Button 
           variant="ghost" 
-          size="sm"
+          size="icon"
           onClick={() => navigate(`/oraculos/${oracle.slug}`)}
+          className="text-foreground/60 hover:text-foreground"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Voltar
+          <ArrowLeft className="w-5 h-5" />
         </Button>
         
-        <h1 className="text-sm font-medium text-muted-foreground">
+        <span className="text-xs text-muted-foreground/60">
           {oracle.name}
-        </h1>
+        </span>
         
-        <div className="w-20" /> {/* Spacer */}
+        <AmbientSoundToggle />
       </header>
 
       <main className="flex-1 flex flex-col items-center justify-center p-4">
         {/* Step: Select Spread */}
         {step === 'select-spread' && (
-          <div className="w-full max-w-md">
-            <h2 className="text-2xl font-serif font-bold text-center text-foreground mb-6">
-              Escolha uma Tiragem
+          <div className="w-full max-w-sm animate-fade-in">
+            <h2 className="text-2xl font-display text-center text-foreground mb-8">
+              Escolha uma tiragem
             </h2>
             
             <div className="space-y-3">
               {publishedSpreads.map((spread) => (
-                <Card 
+                <button
                   key={spread.id}
-                  className="bg-card/50 border-border/50 hover:border-primary/50 transition-colors cursor-pointer"
                   onClick={() => {
                     setSelectedSpread(spread);
-                    setStep('preparation');
+                    setStep('meditation');
                   }}
+                  className={cn(
+                    'w-full p-5 rounded-xl text-left',
+                    'bg-card/30 hover:bg-card/50 transition-all duration-300',
+                    'border border-border/20 hover:border-border/40'
+                  )}
                 >
-                  <CardContent className="p-4">
-                    <h3 className="font-medium text-foreground">{spread.name}</h3>
-                    {spread.description && (
-                      <p className="text-sm text-muted-foreground mt-1">{spread.description}</p>
-                    )}
-                    <p className="text-xs text-primary mt-2">
-                      {spread.number_of_cards} {spread.number_of_cards === 1 ? 'carta' : 'cartas'}
-                    </p>
-                  </CardContent>
-                </Card>
+                  <h3 className="font-medium text-foreground">{spread.name}</h3>
+                  {spread.description && (
+                    <p className="text-sm text-muted-foreground/70 mt-1">{spread.description}</p>
+                  )}
+                  <p className="text-xs mt-2" style={{ color: primaryColor }}>
+                    {spread.number_of_cards} {spread.number_of_cards === 1 ? 'carta' : 'cartas'}
+                  </p>
+                </button>
               ))}
             </div>
           </div>
         )}
 
-        {/* Step: Preparation */}
-        {step === 'preparation' && selectedSpread && (
-          <div className="w-full max-w-md text-center">
-            <Sparkles className="w-16 h-16 text-primary mx-auto mb-6 animate-pulse" />
-            
-            <h2 className="text-2xl font-serif font-bold text-foreground mb-4">
-              {selectedSpread.name}
-            </h2>
-            
-            {selectedSpread.opening_text ? (
-              <p className="text-muted-foreground mb-8 italic">
-                "{selectedSpread.opening_text}"
-              </p>
-            ) : openingText ? (
-              <p className="text-muted-foreground mb-8 italic">
-                "{openingText}"
-              </p>
-            ) : (
-              <p className="text-muted-foreground mb-8">
-                Respire fundo, concentre-se na sua pergunta e deixe as cartas guiarem você.
-              </p>
-            )}
-            
-            <Button 
-              size="lg"
-              onClick={drawCards}
-              style={{ backgroundColor: primaryColor }}
-            >
-              Iniciar Tiragem
-            </Button>
-          </div>
+        {/* Step: Meditation Pause */}
+        {step === 'meditation' && selectedSpread && (
+          <MeditationPause
+            duration={4}
+            message={selectedSpread.opening_text || openingText || 'Respire fundo...'}
+            onComplete={handleMeditationComplete}
+            primaryColor={primaryColor}
+          />
         )}
 
-        {/* Step: Drawing (Card Reveal Animation) */}
+        {/* Step: Drawing (Card Reveal) */}
         {step === 'drawing' && (
-          <div className="w-full max-w-2xl">
-            <div className="flex flex-wrap justify-center gap-4">
+          <div className="w-full max-w-2xl animate-fade-in">
+            <div className="flex flex-wrap justify-center gap-4 md:gap-6">
               {drawnCards.map((card, index) => {
                 const isRevealed = revealedIndices.includes(index);
-                const position = selectedSpread?.positions_json[index];
+                const position = selectedSpread?.positions_json?.[index];
                 
                 return (
                   <div 
                     key={card.id}
                     className={cn(
-                      "relative transition-all duration-700 transform",
-                      isRevealed ? "scale-100 opacity-100" : "scale-95 opacity-50"
+                      'flex flex-col items-center',
+                      'animate-fade-in'
                     )}
-                    style={{ perspective: '1000px' }}
+                    style={{ animationDelay: `${index * 150}ms` }}
                   >
-                    <div 
-                      className={cn(
-                        "w-32 md:w-40 aspect-[2/3] rounded-lg overflow-hidden transition-transform duration-700 transform-gpu",
-                        isRevealed ? "rotate-y-0" : "rotate-y-180"
-                      )}
-                      style={{ transformStyle: 'preserve-3d' }}
-                    >
-                      {/* Card Face */}
-                      <div className="absolute inset-0 backface-hidden">
-                        {card.main_image_url ? (
-                          <img 
-                            src={card.main_image_url} 
-                            alt={card.title}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div 
-                            className="w-full h-full flex items-center justify-center"
-                            style={{ backgroundColor: primaryColor + '20' }}
-                          >
-                            <Sparkles className="w-8 h-8 text-primary" />
-                          </div>
-                        )}
-                      </div>
-                      
-                      {/* Card Back */}
-                      <div 
-                        className="absolute inset-0 backface-hidden rotate-y-180 flex items-center justify-center"
-                        style={{ 
-                          backgroundColor: primaryColor + '40',
-                          backgroundImage: cardBackImage ? `url(${cardBackImage})` : undefined,
-                          backgroundSize: 'cover'
-                        }}
-                      >
-                        <Sparkles className="w-8 h-8 text-primary/50" />
-                      </div>
-                    </div>
+                    <OracleCard
+                      frontImage={card.main_image_url}
+                      backImage={cardBackImage}
+                      title={card.title}
+                      isRevealed={isRevealed}
+                      primaryColor={primaryColor}
+                      size="lg"
+                      onClick={() => revealCard(index)}
+                      showGlow={isRevealed}
+                    />
                     
-                    {/* Position Label */}
-                    {position && isRevealed && (
-                      <p className="text-xs text-center text-muted-foreground mt-2">
+                    {/* Position label */}
+                    {position && (
+                      <p 
+                        className={cn(
+                          'text-xs text-center text-muted-foreground mt-3',
+                          'transition-opacity duration-500',
+                          isRevealed ? 'opacity-100' : 'opacity-0'
+                        )}
+                      >
                         {position.name}
+                      </p>
+                    )}
+
+                    {/* Card title hint */}
+                    {showCardText && isRevealed && (
+                      <p 
+                        className="text-sm font-display text-foreground mt-1 animate-reveal-text text-center"
+                      >
+                        {card.title}
                       </p>
                     )}
                   </div>
                 );
               })}
             </div>
+
+            {/* Tap hint */}
+            {revealedIndices.length < drawnCards.length && (
+              <p className="text-center text-xs text-muted-foreground/50 mt-8 animate-breathe">
+                Toque nas cartas para revelar
+              </p>
+            )}
           </div>
         )}
 
         {/* Step: Reveal (Full Reading) */}
         {step === 'reveal' && (
-          <div className="w-full max-w-2xl space-y-6">
-            <h2 className="text-2xl font-serif font-bold text-center text-foreground mb-8">
-              Sua Tiragem
+          <div className="w-full max-w-lg space-y-6 animate-fade-in">
+            <h2 className="text-xl font-display text-center text-foreground mb-6">
+              Sua Leitura
             </h2>
             
             {drawnCards.map((card, index) => {
-              const position = selectedSpread?.positions_json[index];
+              const position = selectedSpread?.positions_json?.[index];
               const isExpanded = expandedCardIndex === index;
               
               return (
                 <Card 
                   key={card.id}
-                  className="bg-card/30 border-border/30 overflow-hidden"
+                  className="bg-card/20 border-border/20 overflow-hidden"
                 >
                   <CardContent className="p-0">
                     <div className="flex gap-4 p-4">
                       {/* Card Image */}
-                      <div className="w-24 md:w-32 flex-shrink-0">
+                      <div className="w-20 flex-shrink-0">
                         {card.main_image_url ? (
                           <img 
                             src={card.main_image_url} 
@@ -342,9 +321,9 @@ export default function OracleDraw() {
                         ) : (
                           <div 
                             className="w-full aspect-[2/3] rounded-lg flex items-center justify-center"
-                            style={{ backgroundColor: primaryColor + '20' }}
+                            style={{ backgroundColor: `${primaryColor}20` }}
                           >
-                            <Sparkles className="w-8 h-8 text-primary" />
+                            <Sparkles className="w-6 h-6" style={{ color: primaryColor }} />
                           </div>
                         )}
                       </div>
@@ -352,23 +331,23 @@ export default function OracleDraw() {
                       {/* Card Content */}
                       <div className="flex-1 min-w-0">
                         {position && (
-                          <p className="text-xs text-primary font-medium mb-1">
+                          <p className="text-xs font-medium mb-1" style={{ color: primaryColor }}>
                             {position.name}
                           </p>
                         )}
                         
-                        <h3 className="text-lg font-serif font-bold text-foreground">
+                        <h3 className="text-lg font-display font-medium text-foreground">
                           {card.title}
                         </h3>
                         
                         {card.subtitle && (
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-xs text-muted-foreground">
                             {card.subtitle}
                           </p>
                         )}
                         
                         {card.short_message && (
-                          <p className="text-sm text-foreground mt-3">
+                          <p className="text-sm text-foreground/80 mt-3">
                             {card.short_message}
                           </p>
                         )}
@@ -376,18 +355,18 @@ export default function OracleDraw() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="mt-2 -ml-2"
+                          className="mt-2 -ml-2 text-xs text-muted-foreground"
                           onClick={() => setExpandedCardIndex(isExpanded ? null : index)}
                         >
                           {isExpanded ? (
                             <>
-                              <ChevronUp className="w-4 h-4 mr-1" />
-                              Ver menos
+                              <ChevronUp className="w-3 h-3 mr-1" />
+                              Menos
                             </>
                           ) : (
                             <>
-                              <ChevronDown className="w-4 h-4 mr-1" />
-                              Leitura completa
+                              <ChevronDown className="w-3 h-3 mr-1" />
+                              Mais
                             </>
                           )}
                         </Button>
@@ -396,10 +375,10 @@ export default function OracleDraw() {
                     
                     {/* Expanded Content */}
                     {isExpanded && (
-                      <div className="px-4 pb-4 pt-0 space-y-4 border-t border-border/20 mt-2">
+                      <div className="px-4 pb-4 space-y-4 border-t border-border/10 pt-4">
                         {card.deep_reading && (
                           <div>
-                            <h4 className="text-sm font-medium text-foreground mb-1">
+                            <h4 className="text-xs font-medium text-foreground/80 mb-1">
                               Leitura Profunda
                             </h4>
                             <p className="text-sm text-muted-foreground">
@@ -410,8 +389,8 @@ export default function OracleDraw() {
                         
                         {card.polarity_light_text && (
                           <div>
-                            <h4 className="text-sm font-medium text-foreground mb-1">
-                              ✨ Aspecto Luz
+                            <h4 className="text-xs font-medium text-foreground/80 mb-1">
+                              ✨ Luz
                             </h4>
                             <p className="text-sm text-muted-foreground">
                               {card.polarity_light_text}
@@ -421,8 +400,8 @@ export default function OracleDraw() {
                         
                         {card.polarity_shadow_text && (
                           <div>
-                            <h4 className="text-sm font-medium text-foreground mb-1">
-                              🌑 Aspecto Sombra
+                            <h4 className="text-xs font-medium text-foreground/80 mb-1">
+                              🌑 Sombra
                             </h4>
                             <p className="text-sm text-muted-foreground">
                               {card.polarity_shadow_text}
@@ -432,11 +411,11 @@ export default function OracleDraw() {
                         
                         {card.reflection_questions_json && card.reflection_questions_json.length > 0 && (
                           <div>
-                            <h4 className="text-sm font-medium text-foreground mb-2">
-                              Perguntas para Reflexão
+                            <h4 className="text-xs font-medium text-foreground/80 mb-2">
+                              Reflexões
                             </h4>
                             <ul className="space-y-1">
-                              {card.reflection_questions_json.map((q, i) => (
+                              {(card.reflection_questions_json as string[]).map((q, i) => (
                                 <li key={i} className="text-sm text-muted-foreground">
                                   • {q}
                                 </li>
@@ -447,8 +426,8 @@ export default function OracleDraw() {
                         
                         {card.ritual_text && (
                           <div>
-                            <h4 className="text-sm font-medium text-foreground mb-1">
-                              🕯️ Prática Sugerida
+                            <h4 className="text-xs font-medium text-foreground/80 mb-1">
+                              🕯️ Prática
                             </h4>
                             <p className="text-sm text-muted-foreground">
                               {card.ritual_text}
@@ -465,20 +444,20 @@ export default function OracleDraw() {
             {/* Notes & Save */}
             <div className="space-y-4 pt-4">
               <Textarea
-                placeholder="Adicione suas anotações sobre esta tiragem..."
+                placeholder="Suas anotações..."
                 value={userNotes}
                 onChange={(e) => setUserNotes(e.target.value)}
-                className="bg-card/30 border-border/30 min-h-[100px]"
+                className="bg-card/20 border-border/20 min-h-[80px] text-sm"
               />
               
               <div className="flex gap-3">
                 <Button 
                   variant="outline" 
-                  className="flex-1"
+                  className="flex-1 border-border/30"
                   onClick={resetDraw}
                 >
                   <RotateCcw className="w-4 h-4 mr-2" />
-                  Nova Tiragem
+                  Nova
                 </Button>
                 
                 <Button 
@@ -488,11 +467,13 @@ export default function OracleDraw() {
                   style={{ backgroundColor: primaryColor }}
                 >
                   {isSaving ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
-                    <Save className="w-4 h-4 mr-2" />
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Salvar
+                    </>
                   )}
-                  Salvar Tiragem
                 </Button>
               </div>
             </div>
@@ -501,24 +482,16 @@ export default function OracleDraw() {
 
         {/* Step: Closing */}
         {step === 'closing' && (
-          <div className="w-full max-w-md text-center">
-            <Sparkles className="w-16 h-16 text-primary mx-auto mb-6" />
+          <div className="w-full max-w-sm text-center animate-fade-in">
+            <Sparkles className="w-12 h-12 mx-auto mb-8 animate-float-gentle" style={{ color: primaryColor }} />
             
-            <h2 className="text-2xl font-serif font-bold text-foreground mb-4">
-              Tiragem Concluída
+            <h2 className="text-2xl font-display text-foreground mb-4">
+              Consulta Concluída
             </h2>
             
-            {selectedSpread?.closing_text ? (
-              <p className="text-muted-foreground mb-8 italic">
-                "{selectedSpread.closing_text}"
-              </p>
-            ) : closingText ? (
-              <p className="text-muted-foreground mb-8 italic">
-                "{closingText}"
-              </p>
-            ) : (
-              <p className="text-muted-foreground mb-8">
-                Que as mensagens recebidas iluminem seu caminho.
+            {(selectedSpread?.closing_text || closingText) && (
+              <p className="text-sm text-muted-foreground/80 italic mb-8">
+                "{selectedSpread?.closing_text || closingText}"
               </p>
             )}
             
@@ -527,21 +500,15 @@ export default function OracleDraw() {
                 onClick={resetDraw}
                 style={{ backgroundColor: primaryColor }}
               >
-                Fazer Nova Tiragem
-              </Button>
-              
-              <Button 
-                variant="outline"
-                onClick={() => navigate(`/oraculos/${oracle.slug}/historico`)}
-              >
-                Ver Histórico
+                Nova Consulta
               </Button>
               
               <Button 
                 variant="ghost"
-                onClick={() => navigate(`/oraculos/${oracle.slug}`)}
+                onClick={() => navigate(`/oraculos/${oracle.slug}/historico`)}
+                className="text-muted-foreground"
               >
-                Voltar ao Oráculo
+                Ver Histórico
               </Button>
             </div>
           </div>

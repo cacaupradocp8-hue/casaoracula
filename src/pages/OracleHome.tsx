@@ -1,12 +1,11 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { Sparkles, Clock, Play, History, Lock, Loader2, ArrowLeft, Shield } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent } from '@/components/ui/card';
-import { useOracleBySlug } from '@/hooks/useOracles';
 import { useState } from 'react';
+import { Sparkles, Play, History, Lock, ArrowLeft, Shield } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { useOracleBySlug } from '@/hooks/useOracles';
+import { AmbientSoundToggle } from '@/components/oracle/AmbientSoundToggle';
+import { cn } from '@/lib/utils';
 
 export default function OracleHome() {
   const { oracleSlug } = useParams<{ oracleSlug: string }>();
@@ -16,8 +15,8 @@ export default function OracleHome() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#0F0D1A' }}>
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Sparkles className="w-8 h-8 animate-breathe text-primary" />
       </div>
     );
   }
@@ -26,10 +25,9 @@ export default function OracleHome() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <h2 className="text-xl font-medium mb-2">Oráculo não encontrado</h2>
-          <Button variant="outline" onClick={() => navigate('/oraculos')}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Voltar aos Oráculos
+          <p className="text-muted-foreground mb-4">Oráculo não encontrado</p>
+          <Button variant="ghost" onClick={() => navigate('/oraculos')}>
+            Voltar
           </Button>
         </div>
       </div>
@@ -37,10 +35,8 @@ export default function OracleHome() {
   }
 
   const canAccess = hasAccess();
-  const primaryColor = oracle.theme_json?.primaryColor || '#D4AF37';
-  const backgroundColor = oracle.theme_json?.backgroundColor || '#0F0D1A';
-  const fontFamily = oracle.theme_json?.fontFamily || 'serif';
-  const openingText = oracle.voice_settings_json?.openingText || null;
+  const primaryColor = oracle.theme_json?.primaryColor || 'hsl(var(--gold))';
+  const backgroundColor = oracle.theme_json?.backgroundColor || 'hsl(var(--midnight))';
   const welcomeText = oracle.onboarding_json?.welcomeText || null;
   const publishedSpreads = spreads.filter(s => s.status === 'published');
   const totalCards = cards.filter(c => c.status === 'published').length;
@@ -52,22 +48,19 @@ export default function OracleHome() {
         className="min-h-screen flex flex-col items-center justify-center p-6"
         style={{ backgroundColor }}
       >
-        <div className="max-w-md text-center">
-          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
-            <Lock className="w-10 h-10 text-primary" />
-          </div>
+        <div className="max-w-sm text-center animate-fade-in">
+          <Lock className="w-12 h-12 text-muted-foreground/50 mx-auto mb-8" />
           
-          <h1 className="text-3xl font-serif font-bold text-foreground mb-3">
+          <h1 className="text-2xl font-display text-foreground mb-3">
             {oracle.lock_message_title}
           </h1>
           
-          <p className="text-muted-foreground mb-8">
+          <p className="text-sm text-muted-foreground mb-8">
             {oracle.lock_message_body}
           </p>
           
           <div className="flex flex-col gap-3">
             <Button 
-              size="lg"
               onClick={() => navigate(oracle.upgrade_cta_route)}
               style={{ backgroundColor: primaryColor }}
             >
@@ -77,9 +70,9 @@ export default function OracleHome() {
             <Button 
               variant="ghost" 
               onClick={() => navigate('/oraculos')}
+              className="text-muted-foreground"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar aos Oráculos
+              Voltar
             </Button>
           </div>
         </div>
@@ -89,170 +82,145 @@ export default function OracleHome() {
 
   return (
     <div 
-      className="min-h-screen"
-      style={{ 
-        backgroundColor,
-        fontFamily
-      }}
+      className="min-h-screen flex flex-col"
+      style={{ backgroundColor }}
     >
-      {/* Hero Section */}
-      <section className="relative">
+      {/* Full-screen cover */}
+      <section className="relative flex-1 flex flex-col">
         {/* Cover Image */}
-        {oracle.cover_image_url ? (
-          <div className="relative h-[40vh] md:h-[50vh]">
+        {oracle.cover_image_url && (
+          <div className="absolute inset-0">
             <img 
               src={oracle.cover_image_url} 
               alt={oracle.name}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-          </div>
-        ) : (
-          <div 
-            className="h-[30vh] flex items-center justify-center"
-            style={{ backgroundColor }}
-          >
-            <Sparkles className="w-24 h-24 text-primary/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/40" />
           </div>
         )}
 
-        {/* Back Button */}
-        <Button 
-          variant="ghost" 
-          size="sm"
-          onClick={() => navigate('/oraculos')}
-          className="absolute top-4 left-4 bg-background/50 backdrop-blur hover:bg-background/80"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Voltar
-        </Button>
+        {/* Top Bar - Minimal */}
+        <header className="relative z-10 flex items-center justify-between p-4">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => navigate('/oraculos')}
+            className="text-foreground/60 hover:text-foreground"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
+          
+          <AmbientSoundToggle />
+        </header>
 
-        {/* Content Overlay */}
-        <div className="relative -mt-20 px-4 pb-8">
-          <div className="max-w-2xl mx-auto text-center">
-            <Badge 
-              className="mb-4"
-              style={{ backgroundColor: `${primaryColor}20`, color: primaryColor }}
-            >
-              <Sparkles className="w-3 h-3 mr-1" />
-              {totalCards} cartas
-            </Badge>
-
-            <h1 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-3">
+        {/* Content - Centered */}
+        <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 pb-8">
+          <div className="text-center max-w-md animate-fade-in">
+            {/* Oracle name */}
+            <h1 className="text-4xl md:text-5xl font-display font-medium text-foreground mb-2 tracking-wide">
               {oracle.name}
             </h1>
 
             {oracle.subtitle && (
-              <p className="text-xl text-muted-foreground mb-4">
+              <p className="text-muted-foreground mb-6">
                 {oracle.subtitle}
               </p>
             )}
 
             {welcomeText && (
-              <p className="text-muted-foreground italic max-w-lg mx-auto">
+              <p className="text-sm text-muted-foreground/80 italic mb-8 max-w-xs mx-auto">
                 "{welcomeText}"
               </p>
             )}
+
+            {/* Primary CTA */}
+            <Button 
+              size="lg"
+              className="w-full max-w-xs text-base py-6 mb-4"
+              onClick={() => navigate(`/oraculos/${oracle.slug}/tirar`)}
+              style={{ backgroundColor: primaryColor }}
+            >
+              <Play className="w-4 h-4 mr-2" />
+              Iniciar Consulta
+            </Button>
+
+            {/* Card count hint */}
+            <p className="text-xs text-muted-foreground/60 mb-8">
+              {totalCards} cartas disponíveis
+            </p>
           </div>
         </div>
-      </section>
 
-      {/* Main Actions */}
-      <section className="max-w-2xl mx-auto px-4 pb-8">
-        <div className="flex flex-col gap-4">
-          {/* Primary CTA */}
-          <Button 
-            size="lg"
-            className="w-full text-lg py-6"
-            onClick={() => navigate(`/oraculos/${oracle.slug}/tirar`)}
-            style={{ backgroundColor: primaryColor }}
-          >
-            <Play className="w-5 h-5 mr-2" />
-            Tirar Agora
-          </Button>
+        {/* Bottom Actions */}
+        <div className="relative z-10 px-6 pb-8 max-w-md mx-auto w-full space-y-4">
+          {/* Spreads - Minimal list */}
+          {publishedSpreads.length > 1 && (
+            <div className="space-y-2">
+              {publishedSpreads.map((spread) => (
+                <button
+                  key={spread.id}
+                  onClick={() => navigate(`/oraculos/${oracle.slug}/tirar?spread=${spread.id}`)}
+                  className={cn(
+                    'w-full p-4 rounded-xl text-left',
+                    'bg-card/30 hover:bg-card/50 transition-colors',
+                    'border border-border/20 hover:border-border/40'
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-foreground">
+                      {spread.name}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {spread.number_of_cards} {spread.number_of_cards === 1 ? 'carta' : 'cartas'}
+                    </span>
+                  </div>
+                  {spread.description && (
+                    <p className="text-xs text-muted-foreground/70 mt-1">
+                      {spread.description}
+                    </p>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
 
-          {/* Secondary Actions */}
-          <div className="flex gap-3">
+          {/* Secondary actions */}
+          <div className="flex items-center justify-center gap-4 pt-2">
             {oracle.enable_journal && (
               <Button 
-                variant="outline"
-                className="flex-1"
+                variant="ghost"
+                size="sm"
                 onClick={() => navigate(`/oraculos/${oracle.slug}/historico`)}
+                className="text-muted-foreground hover:text-foreground"
               >
                 <History className="w-4 h-4 mr-2" />
                 Histórico
               </Button>
             )}
           </div>
+
+          {/* Sensitive mode toggle */}
+          {oracle.is_sensitive_mode_available && (
+            <div className="flex items-center justify-center gap-3 pt-4">
+              <Shield className="w-4 h-4 text-muted-foreground/50" />
+              <span className="text-xs text-muted-foreground">Modo sensível</span>
+              <Switch 
+                checked={sensitiveMode}
+                onCheckedChange={setSensitiveMode}
+                className="scale-75"
+              />
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Spreads Section */}
-      {publishedSpreads.length > 0 && (
-        <section className="max-w-2xl mx-auto px-4 pb-8">
-          <h2 className="text-lg font-semibold text-foreground mb-4">
-            Escolha uma Tiragem
-          </h2>
-          
-          <div className="grid gap-3">
-            {publishedSpreads.map((spread) => (
-              <Card 
-                key={spread.id}
-                className="bg-card/50 border-border/50 hover:border-primary/30 transition-colors cursor-pointer"
-                onClick={() => navigate(`/oraculos/${oracle.slug}/tirar?spread=${spread.id}`)}
-              >
-                <CardContent className="p-4 flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium text-foreground">{spread.name}</h3>
-                    {spread.description && (
-                      <p className="text-sm text-muted-foreground">{spread.description}</p>
-                    )}
-                  </div>
-                  <Badge variant="secondary">
-                    {spread.number_of_cards} {spread.number_of_cards === 1 ? 'carta' : 'cartas'}
-                  </Badge>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Settings */}
-      {oracle.is_sensitive_mode_available && (
-        <section className="max-w-2xl mx-auto px-4 pb-8">
-          <Card className="bg-card/30 border-border/30">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Shield className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <Label htmlFor="sensitive-mode" className="font-medium">
-                      Modo Sensível
-                    </Label>
-                    <p className="text-xs text-muted-foreground">
-                      Oculta cartas com temas delicados
-                    </p>
-                  </div>
-                </div>
-                <Switch 
-                  id="sensitive-mode"
-                  checked={sensitiveMode}
-                  onCheckedChange={setSensitiveMode}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-      )}
-
       {/* Disclaimer */}
       {oracle.disclaimer_text && (
-        <section className="max-w-2xl mx-auto px-4 pb-12">
-          <p className="text-xs text-center text-muted-foreground/70">
+        <footer className="px-6 py-4 text-center">
+          <p className="text-[10px] text-muted-foreground/50 max-w-sm mx-auto">
             {oracle.disclaimer_text}
           </p>
-        </section>
+        </footer>
       )}
     </div>
   );
