@@ -36,6 +36,9 @@ import Oraculos from "./pages/Oraculos";
 import OracleHome from "./pages/OracleHome";
 import OracleDraw from "./pages/OracleDraw";
 import OracleHistory from "./pages/OracleHistory";
+import Cursos from "./pages/Cursos";
+import CursoDetalhe from "./pages/CursoDetalhe";
+import CursoAula from "./pages/CursoAula";
 
 // Ferramentas (salas)
 import Big5 from "./pages/salas/Big5";
@@ -460,6 +463,32 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <OracleHistory />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Cursos Module */}
+        <Route
+          path="/cursos"
+          element={
+            <ProtectedRoute>
+              <Cursos />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cursos/:id"
+          element={
+            <ProtectedRoute>
+              <CursoDetalhe />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cursos/:courseId/aula/:lessonId"
+          element={
+            <ProtectedRoute>
+              <CursoAula />
             </ProtectedRoute>
           }
         />
