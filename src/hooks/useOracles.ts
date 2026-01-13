@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { OracleDeck, OracleCard, OracleSpread, OracleCategory, OracleDraw, DrawnCard } from '@/types/oracle';
 
 export function useOracles() {
-  const { user, userRole } = useAuth();
+  const { user } = useAuth();
   const [oracles, setOracles] = useState<OracleDeck[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +33,7 @@ export function useOracles() {
   }, [fetchOracles]);
 
   const hasAccess = useCallback((oracle: OracleDeck): boolean => {
-    const userPortal = userRole?.portal || 'visitante';
+    const userPortal = user?.portal || 'visitante';
     
     // Admin always has access
     if (userPortal === 'admin') return true;
@@ -46,7 +46,7 @@ export function useOracles() {
     };
 
     return portalOrder[userPortal] >= portalOrder[oracle.minimum_portal];
-  }, [userRole]);
+  }, [user]);
 
   return {
     oracles,
@@ -58,7 +58,7 @@ export function useOracles() {
 }
 
 export function useOracleBySlug(slug: string) {
-  const { userRole } = useAuth();
+  const { user } = useAuth();
   const [oracle, setOracle] = useState<OracleDeck | null>(null);
   const [cards, setCards] = useState<OracleCard[]>([]);
   const [spreads, setSpreads] = useState<OracleSpread[]>([]);
@@ -124,7 +124,7 @@ export function useOracleBySlug(slug: string) {
 
   const hasAccess = useCallback((): boolean => {
     if (!oracle) return false;
-    const userPortal = userRole?.portal || 'visitante';
+    const userPortal = user?.portal || 'visitante';
     
     if (userPortal === 'admin') return true;
 
@@ -136,7 +136,7 @@ export function useOracleBySlug(slug: string) {
     };
 
     return portalOrder[userPortal] >= portalOrder[oracle.minimum_portal];
-  }, [oracle, userRole]);
+  }, [oracle, user]);
 
   return {
     oracle,
