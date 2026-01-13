@@ -32,6 +32,10 @@ import MinhasClientes from "./pages/MinhasClientes";
 import MapaOracula from "./pages/MapaOracula";
 import QuizPage from "./pages/QuizPage";
 import ClientePerfil from "./pages/ClientePerfil";
+import Oraculos from "./pages/Oraculos";
+import OracleHome from "./pages/OracleHome";
+import OracleDraw from "./pages/OracleDraw";
+import OracleHistory from "./pages/OracleHistory";
 
 // Ferramentas (salas)
 import Big5 from "./pages/salas/Big5";
@@ -424,17 +428,52 @@ function AppRoutes() {
             <ClientePerfil />
           </ProtectedRoute>
         }
-      />
-      <Route
-        path="/admin"
-        element={
-          <ProtectedRoute minPortal="admin">
-            <Admin />
-          </ProtectedRoute>
-        }
-      />
+        />
 
-      {/* Catch-all */}
+        {/* Oráculos Module */}
+        <Route
+          path="/oraculos"
+          element={
+            <ProtectedRoute>
+              <Oraculos />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/oraculos/:oracleSlug"
+          element={
+            <ProtectedRoute>
+              <OracleHome />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/oraculos/:oracleSlug/tirar"
+          element={
+            <ProtectedRoute>
+              <OracleDraw />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/oraculos/:oracleSlug/historico"
+          element={
+            <ProtectedRoute>
+              <OracleHistory />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute minPortal="admin">
+              <Admin />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Catch-all */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
