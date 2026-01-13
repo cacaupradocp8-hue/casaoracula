@@ -345,6 +345,72 @@ export default function QuizPage() {
     );
   }
 
+  // Fallback component for results without modular blocks
+  const LegacyResultContent = ({ result }: { result: Resultado }) => {
+    const hasLegacyContent = result.imagem_url || result.video_url || 
+                             result.audio_url || result.cta_texto;
+    
+    if (!hasLegacyContent) return null;
+
+    return (
+      <div className="space-y-6">
+        {/* Legacy image */}
+        {result.imagem_url && (
+          <div className="flex justify-center">
+            <img 
+              src={result.imagem_url} 
+              alt={result.titulo_simbolico}
+              className="max-w-full h-auto rounded-lg"
+            />
+          </div>
+        )}
+
+        {/* Legacy video */}
+        {result.video_url && (
+          <div className="aspect-video rounded-lg overflow-hidden">
+            <iframe
+              src={result.video_url}
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        )}
+
+        {/* Legacy audio */}
+        {result.audio_url && (
+          <div className="bg-muted/30 p-4 rounded-lg">
+            <audio controls className="w-full">
+              <source src={result.audio_url} />
+            </audio>
+          </div>
+        )}
+
+        {/* Legacy CTA */}
+        {result.cta_texto && result.cta_rota && (
+          <div className="flex justify-center">
+            <Button 
+              variant="gold" 
+              size="lg"
+              onClick={() => {
+                if (result.cta_rota?.startsWith('http')) {
+                  window.open(result.cta_rota, '_blank');
+                } else {
+                  navigate(result.cta_rota || '/');
+                }
+              }}
+            >
+              {result.cta_texto}
+              {result.cta_rota?.startsWith('http') && (
+                <ExternalLink className="w-4 h-4 ml-2" />
+              )}
+            </Button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   // Show result
   if (showResult && finalResult) {
     return (
@@ -352,52 +418,27 @@ export default function QuizPage() {
         <div className="container mx-auto px-4 py-8 max-w-2xl">
           <Card className="glass">
             <CardHeader className="text-center">
-              {finalResult.imagem_url ? (
-                <div className="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden">
-                  <img 
-                    src={finalResult.imagem_url} 
-                    alt={finalResult.titulo_simbolico}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ) : (
-                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/30 to-gold/10 flex items-center justify-center">
-                  <Sparkles className="w-10 h-10 text-gold" />
-                </div>
-              )}
+              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/30 to-gold/10 flex items-center justify-center">
+                <Sparkles className="w-10 h-10 text-gold" />
+              </div>
               <CardTitle className="text-2xl md:text-3xl text-gold">
                 {finalResult.titulo_simbolico}
               </CardTitle>
+              {finalResult.categoria && (
+                <CardDescription className="text-muted-foreground">
+                  {finalResult.categoria}
+                </CardDescription>
+              )}
             </CardHeader>
             <CardContent className="space-y-6">
+              {/* Static interpretive text - always shown */}
               <div className="prose prose-invert max-w-none">
                 <p className="text-foreground/90 leading-relaxed text-lg">
                   {finalResult.texto_interpretativo}
                 </p>
               </div>
 
-              {/* Video embed */}
-              {finalResult.video_url && (
-                <div className="aspect-video rounded-lg overflow-hidden">
-                  <iframe
-                    src={finalResult.video_url}
-                    className="w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              )}
-
-              {/* Audio player */}
-              {finalResult.audio_url && (
-                <div className="bg-muted/30 p-4 rounded-lg">
-                  <audio controls className="w-full">
-                    <source src={finalResult.audio_url} />
-                  </audio>
-                </div>
-              )}
-
-              {/* Modular content blocks */}
+              {/* MODULAR CONTENT: Primary multimedia renderer with legacy fallback */}
               <ModularPageRenderer
                 contextType="quiz_result"
                 contextId={finalResult.id}
@@ -406,35 +447,14 @@ export default function QuizPage() {
                   categoria: finalResult.categoria,
                 }}
                 blockSpacing="md"
-                fallback={null}
+                showLoading={false}
+                fallback={<LegacyResultContent result={finalResult} />}
               />
 
               {saving && (
                 <div className="flex items-center justify-center gap-2 text-muted-foreground">
                   <Loader2 className="w-4 h-4 animate-spin" />
                   <span>Salvando resultado...</span>
-                </div>
-              )}
-
-              {/* CTA Button */}
-              {finalResult.cta_texto && finalResult.cta_rota && (
-                <div className="flex justify-center">
-                  <Button 
-                    variant="gold" 
-                    size="lg"
-                    onClick={() => {
-                      if (finalResult.cta_rota?.startsWith('http')) {
-                        window.open(finalResult.cta_rota, '_blank');
-                      } else {
-                        navigate(finalResult.cta_rota || '/');
-                      }
-                    }}
-                  >
-                    {finalResult.cta_texto}
-                    {finalResult.cta_rota?.startsWith('http') && (
-                      <ExternalLink className="w-4 h-4 ml-2" />
-                    )}
-                  </Button>
                 </div>
               )}
 
