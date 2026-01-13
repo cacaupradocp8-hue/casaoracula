@@ -1134,6 +1134,57 @@ export type Database = {
           },
         ]
       }
+      ferramenta_registros: {
+        Row: {
+          cliente_id: string | null
+          created_at: string
+          dados: Json
+          data_registro: string
+          ferramenta_id: string
+          id: string
+          notas: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cliente_id?: string | null
+          created_at?: string
+          dados?: Json
+          data_registro?: string
+          ferramenta_id: string
+          id?: string
+          notas?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cliente_id?: string | null
+          created_at?: string
+          dados?: Json
+          data_registro?: string
+          ferramenta_id?: string
+          id?: string
+          notas?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ferramenta_registros_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ferramenta_registros_ferramenta_id_fkey"
+            columns: ["ferramenta_id"]
+            isOneToOne: false
+            referencedRelation: "sala_ferramentas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       formacao_modulos: {
         Row: {
           created_at: string
@@ -2372,11 +2423,15 @@ export type Database = {
           ferramenta_chave: string
           ferramenta_descricao: string | null
           ferramenta_nome: string
+          has_blocks: boolean | null
           icone: string | null
           id: string
           ordem: number
+          portal_minimo: Database["public"]["Enums"]["portal_type"] | null
           rota: string
           sala_id: string
+          slug: string | null
+          tipo: string | null
           updated_at: string
         }
         Insert: {
@@ -2385,11 +2440,15 @@ export type Database = {
           ferramenta_chave: string
           ferramenta_descricao?: string | null
           ferramenta_nome: string
+          has_blocks?: boolean | null
           icone?: string | null
           id?: string
           ordem?: number
+          portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
           rota: string
           sala_id: string
+          slug?: string | null
+          tipo?: string | null
           updated_at?: string
         }
         Update: {
@@ -2398,11 +2457,15 @@ export type Database = {
           ferramenta_chave?: string
           ferramenta_descricao?: string | null
           ferramenta_nome?: string
+          has_blocks?: boolean | null
           icone?: string | null
           id?: string
           ordem?: number
+          portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
           rota?: string
           sala_id?: string
+          slug?: string | null
+          tipo?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -2927,6 +2990,14 @@ export type Database = {
         | "audio"
         | "ai_chat"
         | "cta_button"
+        | "chakra_wheel"
+        | "energy_slider"
+        | "pattern_diary"
+        | "lunar_calendar"
+        | "pendulum_map"
+        | "ego_layers"
+        | "archetype_card"
+        | "reflection_prompt"
       content_type: "text" | "video" | "audio" | "file" | "mixed"
       mentoria_tipo: "aviso" | "evento" | "supervisao"
       nivel_sala: "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3"
@@ -3089,6 +3160,14 @@ export const Constants = {
         "audio",
         "ai_chat",
         "cta_button",
+        "chakra_wheel",
+        "energy_slider",
+        "pattern_diary",
+        "lunar_calendar",
+        "pendulum_map",
+        "ego_layers",
+        "archetype_card",
+        "reflection_prompt",
       ],
       content_type: ["text", "video", "audio", "file", "mixed"],
       mentoria_tipo: ["aviso", "evento", "supervisao"],
