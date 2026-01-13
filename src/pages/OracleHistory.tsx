@@ -1,10 +1,11 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Sparkles, Loader2, ArrowLeft, Calendar, Layers } from 'lucide-react';
+import { Sparkles, ArrowLeft, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { useOracleBySlug, useOracleDraws } from '@/hooks/useOracles';
+import { AmbientSoundToggle } from '@/components/oracle/AmbientSoundToggle';
+import { cn } from '@/lib/utils';
 
 export default function OracleHistory() {
   const { oracleSlug } = useParams<{ oracleSlug: string }>();
@@ -16,8 +17,8 @@ export default function OracleHistory() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0F0D1A]">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Sparkles className="w-8 h-8 animate-breathe text-primary" />
       </div>
     );
   }
@@ -27,109 +28,123 @@ export default function OracleHistory() {
     return null;
   }
 
-  const theme = oracle.theme_json;
+  const primaryColor = oracle.theme_json?.primaryColor || 'hsl(var(--gold))';
+  const backgroundColor = oracle.theme_json?.backgroundColor || 'hsl(var(--midnight))';
 
   const getSpreadName = (spreadId: string) => {
     return spreads.find(s => s.id === spreadId)?.name || 'Tiragem';
   };
 
-  const getCardTitle = (cardId: string) => {
-    return cards.find(c => c.id === cardId)?.title || 'Carta';
+  const getCard = (cardId: string) => {
+    return cards.find(c => c.id === cardId);
   };
 
   return (
     <div 
-      className="min-h-screen"
-      style={{ 
-        backgroundColor: theme.backgroundColor || '#0F0D1A',
-        fontFamily: theme.fontFamily || 'serif'
-      }}
+      className="min-h-screen flex flex-col"
+      style={{ backgroundColor }}
     >
-      {/* Header */}
-      <header className="flex items-center justify-between p-4 border-b border-border/20">
+      {/* Minimal Header */}
+      <header className="flex items-center justify-between p-4">
         <Button 
           variant="ghost" 
-          size="sm"
+          size="icon"
           onClick={() => navigate(`/oraculos/${oracle.slug}`)}
+          className="text-foreground/60 hover:text-foreground"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Voltar
+          <ArrowLeft className="w-5 h-5" />
         </Button>
         
-        <h1 className="text-sm font-medium text-muted-foreground">
+        <span className="text-xs text-muted-foreground/60">
           Histórico
-        </h1>
+        </span>
         
-        <div className="w-20" />
+        <AmbientSoundToggle />
       </header>
 
-      <main className="max-w-2xl mx-auto p-4">
-        <div className="text-center mb-8">
-          <Sparkles className="w-12 h-12 text-primary mx-auto mb-4" />
-          <h1 className="text-2xl font-serif font-bold text-foreground">
-            Suas Tiragens
+      <main className="flex-1 max-w-lg mx-auto w-full p-4">
+        <div className="text-center mb-8 animate-fade-in">
+          <h1 className="text-2xl font-display text-foreground mb-1">
+            Suas Consultas
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {oracle.name}
           </p>
         </div>
 
         {draws.length === 0 ? (
-          <div className="text-center py-12">
-            <Layers className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-foreground mb-2">
-              Nenhuma tiragem ainda
-            </h3>
-            <p className="text-muted-foreground mb-6">
-              Faça sua primeira tiragem para começar seu histórico.
+          <div className="text-center py-16 animate-fade-in">
+            <Sparkles className="w-10 h-10 text-muted-foreground/30 mx-auto mb-4" />
+            <p className="text-sm text-muted-foreground mb-6">
+              Nenhuma consulta ainda
             </p>
             <Button 
               onClick={() => navigate(`/oraculos/${oracle.slug}/tirar`)}
-              style={{ backgroundColor: theme.primaryColor }}
+              style={{ backgroundColor: primaryColor }}
             >
-              Fazer Tiragem
+              Fazer Consulta
             </Button>
           </div>
         ) : (
-          <div className="space-y-4">
-            {draws.map((draw) => (
-              <Card 
+          <div className="space-y-4 animate-fade-in">
+            {draws.map((draw, index) => (
+              <div 
                 key={draw.id}
-                className="bg-card/30 border-border/30"
+                className={cn(
+                  'p-4 rounded-xl',
+                  'bg-card/20 border border-border/10',
+                  'animate-fade-in'
+                )}
+                style={{ animationDelay: `${index * 50}ms` }}
               >
-                <CardContent className="p-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h3 className="font-medium text-foreground">
-                        {getSpreadName(draw.spread_id)}
-                      </h3>
-                      <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-                        <Calendar className="w-3 h-3" />
-                        {format(new Date(draw.created_at), "d 'de' MMMM 'de' yyyy, HH:mm", { locale: ptBR })}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Cards drawn */}
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {draw.drawn_cards_json.map((drawnCard, index) => (
-                      <span 
-                        key={index}
-                        className="text-xs bg-primary/10 text-primary px-2 py-1 rounded"
-                      >
-                        {getCardTitle(drawnCard.cardId)}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Notes */}
-                  {draw.user_notes && (
-                    <p className="text-sm text-muted-foreground italic border-t border-border/20 pt-3 mt-3">
-                      "{draw.user_notes}"
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <h3 className="font-medium text-foreground text-sm">
+                      {getSpreadName(draw.spread_id)}
+                    </h3>
+                    <p className="text-xs text-muted-foreground/70 flex items-center gap-1 mt-1">
+                      <Calendar className="w-3 h-3" />
+                      {format(new Date(draw.created_at), "d MMM yyyy", { locale: ptBR })}
                     </p>
-                  )}
-                </CardContent>
-              </Card>
+                  </div>
+                </div>
+
+                {/* Cards drawn - Show images */}
+                <div className="flex gap-2 mb-3 overflow-x-auto pb-2">
+                  {draw.drawn_cards_json.map((drawnCard, i) => {
+                    const card = getCard(drawnCard.cardId);
+                    return (
+                      <div key={i} className="flex-shrink-0">
+                        {card?.main_image_url ? (
+                          <img 
+                            src={card.main_image_url} 
+                            alt={card?.title || 'Card'}
+                            className="w-12 h-18 object-cover rounded"
+                            style={{ aspectRatio: '2/3' }}
+                          />
+                        ) : (
+                          <div 
+                            className="w-12 rounded flex items-center justify-center"
+                            style={{ 
+                              aspectRatio: '2/3',
+                              backgroundColor: `${primaryColor}20` 
+                            }}
+                          >
+                            <Sparkles className="w-3 h-3" style={{ color: primaryColor }} />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Notes */}
+                {draw.user_notes && (
+                  <p className="text-xs text-muted-foreground/70 italic border-t border-border/10 pt-3">
+                    "{draw.user_notes}"
+                  </p>
+                )}
+              </div>
             ))}
           </div>
         )}
