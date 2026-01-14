@@ -1,7 +1,7 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle } from 'lucide-react';
 import { AdminCursosTab } from '@/components/admin/AdminCursosTab';
 import { AdminUsersTab } from '@/components/admin/AdminUsersTab';
 import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
@@ -25,17 +25,70 @@ import { AdminOraculosTab } from '@/components/admin/AdminOraculosTab';
 import { AdminBlocksTab } from '@/components/admin/AdminBlocksTab';
 import { AdminAISettingsTab } from '@/components/admin/AdminAISettingsTab';
 import { AdminBibliotecaTravessiasTab } from '@/components/admin/AdminBibliotecaTravessiasTab';
+import { useAdminPreview } from '@/contexts/AdminPreviewContext';
+import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { PortalType } from '@/types/portal';
+
+const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
+  { value: 'visitante', label: '👁 Visitante' },
+  { value: 'pre_iniciada', label: '👁 Pré-Iniciada' },
+  { value: 'iniciada', label: '👁 Iniciada ORÁCULA' },
+];
 
 export default function Admin() {
+  const { isPreviewMode, previewPortal, enablePreviewMode, disablePreviewMode } = useAdminPreview();
+
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20">
-        <SectionHeader
-          title="Painel da Guardiã"
-          subtitle="Gerencie usuárias, conteúdo e portais da Casa ORÁCULA"
-          icon={<Settings className="w-5 h-5" />}
-          className="mb-8"
-        />
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
+          <SectionHeader
+            title="Painel da Guardiã"
+            subtitle="Gerencie usuárias, conteúdo e portais da Casa ORÁCULA"
+            icon={<Settings className="w-5 h-5" />}
+          />
+          
+          {/* Preview Mode Control */}
+          <div className="flex items-center gap-2 shrink-0">
+            {isPreviewMode ? (
+              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-amber-500/20 border border-amber-500/50">
+                <AlertTriangle className="w-4 h-4 text-amber-500" />
+                <span className="text-sm text-amber-200">
+                  Preview: <strong>{previewPortal === 'visitante' ? 'Visitante' : previewPortal === 'pre_iniciada' ? 'Pré-Iniciada' : 'Iniciada'}</strong>
+                </span>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 px-2 text-amber-200 hover:text-amber-100 hover:bg-amber-500/30"
+                  onClick={disablePreviewMode}
+                >
+                  <EyeOff className="w-4 h-4" />
+                </Button>
+              </div>
+            ) : (
+              <Select value="" onValueChange={(value) => enablePreviewMode(value as PortalType)}>
+                <SelectTrigger className="w-48 h-9 text-sm bg-muted/50">
+                  <Eye className="w-4 h-4 mr-2 text-muted-foreground" />
+                  <SelectValue placeholder="Simular visão de..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {PREVIEW_PORTALS.map((p) => (
+                    <SelectItem key={p.value} value={p.value}>
+                      {p.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+        </div>
 
         <Tabs defaultValue="users" className="space-y-6">
           <TabsList className="w-full justify-start overflow-x-auto flex-wrap h-auto gap-1">
