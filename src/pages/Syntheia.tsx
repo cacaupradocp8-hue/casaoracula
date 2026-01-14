@@ -6,6 +6,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { 
   Send, 
   Loader2, 
   Sparkles, 
@@ -18,7 +26,9 @@ import {
   ArrowRight,
   Zap,
   Target,
-  Lightbulb
+  Lightbulb,
+  MessageSquare,
+  ClipboardList
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -68,6 +78,37 @@ const INTELLIGENCES = [
   },
 ];
 
+// Opções do formulário guiado
+const TIPO_OPTIONS = [
+  { value: 'sessao', label: 'Sessão Individual', intelligence: 'ferramenteira' },
+  { value: 'grupo', label: 'Experiência em Grupo', intelligence: 'ferramenteira' },
+  { value: 'ritual', label: 'Ritual', intelligence: 'ferramenteira' },
+  { value: 'produto', label: 'Produto/Programa', intelligence: 'archetypos' },
+  { value: 'aula', label: 'Aula/Conteúdo', intelligence: 'archetypos' },
+  { value: 'simbolico', label: 'Trabalho Simbólico', intelligence: 'aracne_arcano' },
+];
+
+const PUBLICO_OPTIONS = [
+  { value: 'individual', label: 'Mulher individual' },
+  { value: 'grupo', label: 'Grupo de mulheres' },
+  { value: 'casais', label: 'Casais' },
+  { value: 'misto', label: 'Grupo misto' },
+];
+
+const MOMENTO_OPTIONS = [
+  { value: 'inicio', label: 'Início da jornada' },
+  { value: 'crise', label: 'Crise/Transição' },
+  { value: 'integracao', label: 'Integração' },
+  { value: 'fechamento', label: 'Fechamento' },
+];
+
+const TEMPO_OPTIONS = [
+  { value: '30min', label: '30 minutos' },
+  { value: '50min', label: '50 minutos' },
+  { value: '90min', label: '90 minutos' },
+  { value: 'jornada', label: 'Jornada contínua' },
+];
+
 // Tipos
 interface Message {
   role: 'user' | 'assistant';
@@ -82,8 +123,21 @@ interface Message {
   };
 }
 
+type InputMode = 'livre' | 'guiado';
+
 export default function Syntheia() {
+  // Mode and free input state
+  const [mode, setMode] = useState<InputMode>('livre');
   const [input, setInput] = useState('');
+  
+  // Guided form state
+  const [guidedTipo, setGuidedTipo] = useState('sessao');
+  const [guidedPublico, setGuidedPublico] = useState('individual');
+  const [guidedMomento, setGuidedMomento] = useState('inicio');
+  const [guidedTempo, setGuidedTempo] = useState('50min');
+  const [guidedTema, setGuidedTema] = useState('');
+  
+  // Chat state
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [activeIntelligence, setActiveIntelligence] = useState<string | null>(null);
@@ -100,7 +154,7 @@ export default function Syntheia() {
     }
   }, [messages]);
 
-  // Detectar qual inteligência ativar baseado no input
+  // Detectar qual inteligência ativar baseado no input (modo livre)
   const detectIntelligence = (text: string): string => {
     const lower = text.toLowerCase();
     
@@ -135,14 +189,26 @@ export default function Syntheia() {
     return 'ferramenteira';
   };
 
+  // Get intelligence from guided form tipo
+  const getGuidedIntelligence = (): string => {
+    const tipoOption = TIPO_OPTIONS.find(t => t.value === guidedTipo);
+    return tipoOption?.intelligence || 'ferramenteira';
+  };
+
   const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
-    
-    const userMessage = input.trim();
-    const detectedIntelligence = detectIntelligence(userMessage);
-    setInput('');
+    if (mode === 'livre') {
+      if (!input.trim() || isLoading) return;
+      await sendRequest(input.trim(), detectIntelligence(input));
+      setInput('');
+    } else {
+      if (!guidedTema.trim() || isLoading) return;
+      await sendGuidedRequest();
+    }
+  };
+
+  const sendRequest = async (userMessage: string, intelligenceHint: string) => {
     setIsLoading(true);
-    setActiveIntelligence(detectedIntelligence);
+    setActiveIntelligence(intelligenceHint);
     
     // Adicionar mensagem do usuário
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
@@ -150,25 +216,25 @@ export default function Syntheia() {
     try {
       const { data, error } = await supabase.functions.invoke('syntheia-generate', {
         body: {
-          tipo: 'sessao', // O tipo é inferido pela inteligência
+          tipo: 'sessao',
           publico: 'individual',
           momento: 'inicio',
           tempo: '50min',
           tema: userMessage,
-          intelligence_hint: detectedIntelligence
+          intelligence_hint: intelligenceHint
         }
       });
 
       if (error) throw new Error(error.message);
       if (data.error) throw new Error(data.error);
 
-      const intelligenceData = INTELLIGENCES.find(i => i.id === (data.nucleo_ativado || detectedIntelligence));
+      const intelligenceData = INTELLIGENCES.find(i => i.id === (data.nucleo_ativado || intelligenceHint));
       
       // Construir resposta estruturada
       const structuredResponse: Message = {
         role: 'assistant',
         content: buildNaturalResponse(data, intelligenceData?.name || 'SYNTHEIA'),
-        intelligence: data.nucleo_ativado || detectedIntelligence,
+        intelligence: data.nucleo_ativado || intelligenceHint,
         structured: {
           chave_simbolica: data.chave_simbolica,
           intencao_terapeutica: data.intencao_terapeutica,
@@ -179,7 +245,71 @@ export default function Syntheia() {
       };
       
       setMessages(prev => [...prev, structuredResponse]);
-      setActiveIntelligence(data.nucleo_ativado || detectedIntelligence);
+      setActiveIntelligence(data.nucleo_ativado || intelligenceHint);
+      
+    } catch (err) {
+      console.error('Erro SYNTHEIA:', err);
+      toast({
+        title: 'Erro ao processar',
+        description: err instanceof Error ? err.message : 'Tente novamente',
+        variant: 'destructive'
+      });
+      setActiveIntelligence(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const sendGuidedRequest = async () => {
+    const intelligenceHint = getGuidedIntelligence();
+    const tipoLabel = TIPO_OPTIONS.find(t => t.value === guidedTipo)?.label || guidedTipo;
+    const publicoLabel = PUBLICO_OPTIONS.find(p => p.value === guidedPublico)?.label || guidedPublico;
+    const momentoLabel = MOMENTO_OPTIONS.find(m => m.value === guidedMomento)?.label || guidedMomento;
+    const tempoLabel = TEMPO_OPTIONS.find(t => t.value === guidedTempo)?.label || guidedTempo;
+    
+    // Criar mensagem formatada para exibição
+    const userDisplayMessage = `📋 **Solicitação Guiada**\n• **Tipo:** ${tipoLabel}\n• **Público:** ${publicoLabel}\n• **Momento:** ${momentoLabel}\n• **Tempo:** ${tempoLabel}\n• **Tema:** ${guidedTema}`;
+    
+    setIsLoading(true);
+    setActiveIntelligence(intelligenceHint);
+    
+    // Adicionar mensagem do usuário
+    setMessages(prev => [...prev, { role: 'user', content: userDisplayMessage }]);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('syntheia-generate', {
+        body: {
+          tipo: guidedTipo,
+          publico: guidedPublico,
+          momento: guidedMomento,
+          tempo: guidedTempo,
+          tema: guidedTema,
+          intelligence_hint: intelligenceHint
+        }
+      });
+
+      if (error) throw new Error(error.message);
+      if (data.error) throw new Error(data.error);
+
+      const intelligenceData = INTELLIGENCES.find(i => i.id === (data.nucleo_ativado || intelligenceHint));
+      
+      // Construir resposta estruturada
+      const structuredResponse: Message = {
+        role: 'assistant',
+        content: buildNaturalResponse(data, intelligenceData?.name || 'SYNTHEIA'),
+        intelligence: data.nucleo_ativado || intelligenceHint,
+        structured: {
+          chave_simbolica: data.chave_simbolica,
+          intencao_terapeutica: data.intencao_terapeutica,
+          estrutura_pratica: data.estrutura_pratica,
+          suporte_linguagem: data.suporte_linguagem,
+          fechamento_integracao: data.fechamento_integracao,
+        }
+      };
+      
+      setMessages(prev => [...prev, structuredResponse]);
+      setActiveIntelligence(data.nucleo_ativado || intelligenceHint);
+      setGuidedTema(''); // Limpar tema após envio
       
     } catch (err) {
       console.error('Erro SYNTHEIA:', err);
@@ -227,6 +357,7 @@ export default function Syntheia() {
     setMessages([]);
     setActiveIntelligence(null);
     setInput('');
+    setGuidedTema('');
   };
 
   const handleExport = () => {
@@ -262,6 +393,9 @@ ${lastAssistant.content}
       </Badge>
     );
   };
+
+  // Get active intelligence for guided mode preview
+  const guidedIntelligence = INTELLIGENCES.find(i => i.id === getGuidedIntelligence());
 
   return (
     <AppLayout>
@@ -300,7 +434,7 @@ ${lastAssistant.content}
           <div className="grid md:grid-cols-3 gap-4 mb-8">
             {INTELLIGENCES.map((intel) => {
               const Icon = intel.iconComponent;
-              const isActive = activeIntelligence === intel.id;
+              const isActive = activeIntelligence === intel.id || (mode === 'guiado' && getGuidedIntelligence() === intel.id);
               return (
                 <Card 
                   key={intel.id}
@@ -338,28 +472,61 @@ ${lastAssistant.content}
           {/* Chat Interface */}
           <Card className="glass border-gold/10">
             <CardHeader className="border-b border-border/50 pb-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-4">
                 <div className="flex items-center gap-3">
                   <Sparkles className="w-5 h-5 text-gold" />
                   <div>
                     <CardTitle className="text-lg">Converse com SYNTHEIA</CardTitle>
                     <CardDescription>
-                      Descreva sua necessidade. Ela decide qual inteligência ativar.
+                      {mode === 'livre' 
+                        ? 'Descreva sua necessidade. Ela decide qual inteligência ativar.'
+                        : 'Preencha o formulário para uma resposta mais precisa.'}
                     </CardDescription>
                   </div>
                 </div>
-                {messages.length > 0 && (
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={handleExport} className="gap-2">
-                      <Download className="w-3 h-3" />
-                      Exportar
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={handleReset} className="gap-2">
-                      <RotateCcw className="w-3 h-3" />
-                      Limpar
-                    </Button>
+                
+                <div className="flex items-center gap-2">
+                  {/* Mode Toggle */}
+                  <div className="flex items-center rounded-lg bg-secondary/50 p-1">
+                    <button
+                      onClick={() => setMode('livre')}
+                      className={cn(
+                        'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all',
+                        mode === 'livre' 
+                          ? 'bg-gold text-background' 
+                          : 'text-muted-foreground hover:text-foreground'
+                      )}
+                    >
+                      <MessageSquare className="w-3.5 h-3.5" />
+                      Livre
+                    </button>
+                    <button
+                      onClick={() => setMode('guiado')}
+                      className={cn(
+                        'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all',
+                        mode === 'guiado' 
+                          ? 'bg-gold text-background' 
+                          : 'text-muted-foreground hover:text-foreground'
+                      )}
+                    >
+                      <ClipboardList className="w-3.5 h-3.5" />
+                      Guiado
+                    </button>
                   </div>
-                )}
+                  
+                  {messages.length > 0 && (
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" onClick={handleExport} className="gap-2">
+                        <Download className="w-3 h-3" />
+                        <span className="hidden sm:inline">Exportar</span>
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={handleReset} className="gap-2">
+                        <RotateCcw className="w-3 h-3" />
+                        <span className="hidden sm:inline">Limpar</span>
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
             </CardHeader>
             
@@ -375,17 +542,19 @@ ${lastAssistant.content}
                     <p className="text-sm max-w-md">
                       Terapeutas têm muito conhecimento. SYNTHEIA transforma esse saber em ação estruturada.
                     </p>
-                    <div className="flex flex-wrap justify-center gap-2 mt-6">
-                      <Badge variant="outline" className="text-xs cursor-pointer hover:bg-secondary/80" onClick={() => setInput('Preciso estruturar uma sessão sobre limites')}>
-                        "Estruturar sessão sobre limites"
-                      </Badge>
-                      <Badge variant="outline" className="text-xs cursor-pointer hover:bg-secondary/80" onClick={() => setInput('Quero criar um produto de entrada sobre autoconhecimento')}>
-                        "Criar produto sobre autoconhecimento"
-                      </Badge>
-                      <Badge variant="outline" className="text-xs cursor-pointer hover:bg-secondary/80" onClick={() => setInput('Preciso de uma metáfora para trabalhar abandono')}>
-                        "Metáfora para trabalhar abandono"
-                      </Badge>
-                    </div>
+                    {mode === 'livre' && (
+                      <div className="flex flex-wrap justify-center gap-2 mt-6">
+                        <Badge variant="outline" className="text-xs cursor-pointer hover:bg-secondary/80" onClick={() => setInput('Preciso estruturar uma sessão sobre limites')}>
+                          "Estruturar sessão sobre limites"
+                        </Badge>
+                        <Badge variant="outline" className="text-xs cursor-pointer hover:bg-secondary/80" onClick={() => setInput('Quero criar um produto de entrada sobre autoconhecimento')}>
+                          "Criar produto sobre autoconhecimento"
+                        </Badge>
+                        <Badge variant="outline" className="text-xs cursor-pointer hover:bg-secondary/80" onClick={() => setInput('Preciso de uma metáfora para trabalhar abandono')}>
+                          "Metáfora para trabalhar abandono"
+                        </Badge>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -406,6 +575,9 @@ ${lastAssistant.content}
                             {msg.content.split('\n').map((line, li) => {
                               if (line.startsWith('**') && line.endsWith('**')) {
                                 return <p key={li} className="font-semibold text-gold mt-3 mb-1">{line.replace(/\*\*/g, '')}</p>;
+                              }
+                              if (line.startsWith('• **')) {
+                                return <p key={li} className="mb-0.5 text-sm">{line}</p>;
                               }
                               return <p key={li} className="mb-1">{line}</p>;
                             })}
@@ -428,24 +600,130 @@ ${lastAssistant.content}
 
               {/* Input Area */}
               <div className="border-t border-border/50 p-4">
-                <div className="flex gap-2">
-                  <Textarea
-                    ref={textareaRef}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Descreva o que você precisa estruturar, criar ou nomear..."
-                    className="min-h-[60px] max-h-[120px] resize-none bg-secondary/30"
-                    disabled={isLoading}
-                  />
-                  <Button 
-                    onClick={handleSend} 
-                    disabled={!input.trim() || isLoading}
-                    className="self-end bg-gold hover:bg-gold/90 text-background"
-                  >
-                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                  </Button>
-                </div>
+                {mode === 'livre' ? (
+                  /* Modo Livre - Textarea simples */
+                  <div className="flex gap-2">
+                    <Textarea
+                      ref={textareaRef}
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      placeholder="Descreva o que você precisa estruturar, criar ou nomear..."
+                      className="min-h-[60px] max-h-[120px] resize-none bg-secondary/30"
+                      disabled={isLoading}
+                    />
+                    <Button 
+                      onClick={handleSend} 
+                      disabled={!input.trim() || isLoading}
+                      className="self-end bg-gold hover:bg-gold/90 text-background"
+                    >
+                      {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                    </Button>
+                  </div>
+                ) : (
+                  /* Modo Guiado - Formulário */
+                  <div className="space-y-4">
+                    {/* Intelligence Preview */}
+                    {guidedIntelligence && (
+                      <div className={cn(
+                        'flex items-center gap-2 p-2 rounded-lg border',
+                        guidedIntelligence.bgColor,
+                        guidedIntelligence.borderColor
+                      )}>
+                        <span className="text-lg">{guidedIntelligence.icon}</span>
+                        <span className={cn('text-sm font-medium', guidedIntelligence.textColor)}>
+                          {guidedIntelligence.name}
+                        </span>
+                        <span className="text-xs text-muted-foreground">será ativada</span>
+                      </div>
+                    )}
+                    
+                    {/* Form Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      <div className="space-y-1.5">
+                        <Label className="text-xs text-muted-foreground">Tipo</Label>
+                        <Select value={guidedTipo} onValueChange={setGuidedTipo} disabled={isLoading}>
+                          <SelectTrigger className="bg-secondary/30">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {TIPO_OPTIONS.map(opt => (
+                              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-1.5">
+                        <Label className="text-xs text-muted-foreground">Público</Label>
+                        <Select value={guidedPublico} onValueChange={setGuidedPublico} disabled={isLoading}>
+                          <SelectTrigger className="bg-secondary/30">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {PUBLICO_OPTIONS.map(opt => (
+                              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-1.5">
+                        <Label className="text-xs text-muted-foreground">Momento</Label>
+                        <Select value={guidedMomento} onValueChange={setGuidedMomento} disabled={isLoading}>
+                          <SelectTrigger className="bg-secondary/30">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {MOMENTO_OPTIONS.map(opt => (
+                              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-1.5">
+                        <Label className="text-xs text-muted-foreground">Tempo</Label>
+                        <Select value={guidedTempo} onValueChange={setGuidedTempo} disabled={isLoading}>
+                          <SelectTrigger className="bg-secondary/30">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {TEMPO_OPTIONS.map(opt => (
+                              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    
+                    {/* Tema + Submit */}
+                    <div className="flex gap-2">
+                      <Textarea
+                        value={guidedTema}
+                        onChange={(e) => setGuidedTema(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Descreva o tema central da sua necessidade..."
+                        className="min-h-[60px] max-h-[100px] resize-none bg-secondary/30"
+                        disabled={isLoading}
+                      />
+                      <Button 
+                        onClick={handleSend} 
+                        disabled={!guidedTema.trim() || isLoading}
+                        className="self-end bg-gold hover:bg-gold/90 text-background gap-2"
+                      >
+                        {isLoading ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <>
+                            <Sparkles className="w-4 h-4" />
+                            <span className="hidden sm:inline">Gerar</span>
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
