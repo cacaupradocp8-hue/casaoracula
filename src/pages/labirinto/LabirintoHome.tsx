@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
@@ -10,13 +10,72 @@ import { useAuth } from "@/contexts/AuthContext";
 import { canAccessFeature } from "@/types/portal";
 import { cn } from "@/lib/utils";
 
+const LABIRINTO_INTRO_KEY = "labirinto-intro-seen";
+
+// Introductory screen component
+function LabirintoIntro({ onEnter }: { onEnter: () => void }) {
+  return (
+    <AppLayout>
+      <div className="min-h-[80vh] flex items-center justify-center px-4">
+        <div className="max-w-lg text-center space-y-8">
+          <DoorOpen className="w-16 h-16 text-gold mx-auto" />
+          
+          <h1 className="font-display text-3xl md:text-4xl text-gold">
+            Labirinto das 39 Portas
+          </h1>
+          
+          <div className="space-y-4 text-muted-foreground leading-relaxed font-display text-lg">
+            <p>Toda travessia pede ritmo.</p>
+            <p>O Labirinto não é para ser concluído.</p>
+            <p>Ele existe para ser atravessado.</p>
+            <p>Aqui, não se busca resposta.</p>
+            <p className="text-foreground font-medium">Sustenta-se o campo.</p>
+          </div>
+          
+          <Button
+            onClick={onEnter}
+            size="lg"
+            className="bg-gold hover:bg-gold/90 text-background gap-2"
+          >
+            <DoorOpen className="w-5 h-5" />
+            Entrar no Labirinto
+          </Button>
+        </div>
+      </div>
+    </AppLayout>
+  );
+}
+
 export default function LabirintoHome() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { data: portas, isLoading } = useLabirintoPortas();
+  const { data: leituras, isLoading: leiturasLoading } = useLabirintoLeituras();
   const oraculo = useLabirintoOraculo();
   const createLeitura = useCreateLeitura();
   const [activatingOracle, setActivatingOracle] = useState(false);
+  const [showIntro, setShowIntro] = useState<boolean | null>(null);
+
+  // Check if this is the user's first visit
+  useEffect(() => {
+    const hasSeenIntro = localStorage.getItem(LABIRINTO_INTRO_KEY);
+    
+    if (hasSeenIntro === "true") {
+      setShowIntro(false);
+    } else if (leituras && leituras.length > 0) {
+      // User already has readings, skip intro
+      setShowIntro(false);
+      localStorage.setItem(LABIRINTO_INTRO_KEY, "true");
+    } else if (leituras !== undefined && !leiturasLoading) {
+      // No readings and data is loaded - show intro
+      setShowIntro(true);
+    }
+  }, [leituras, leiturasLoading]);
+
+  const handleEnterLabirinto = () => {
+    localStorage.setItem(LABIRINTO_INTRO_KEY, "true");
+    setShowIntro(false);
+  };
 
   const handleOracleQuestion = async () => {
     setActivatingOracle(true);
@@ -44,6 +103,22 @@ export default function LabirintoHome() {
 
   const userPortal = user?.portal || "visitante";
   const canAccessProfessional = canAccessFeature(userPortal, "iniciada");
+
+  // Loading state while determining if we should show intro
+  if (showIntro === null || leiturasLoading) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <Loader2 className="w-8 h-8 animate-spin text-gold" />
+        </div>
+      </AppLayout>
+    );
+  }
+
+  // Show introductory screen on first visit
+  if (showIntro) {
+    return <LabirintoIntro onEnter={handleEnterLabirinto} />;
+  }
 
   return (
     <AppLayout>
