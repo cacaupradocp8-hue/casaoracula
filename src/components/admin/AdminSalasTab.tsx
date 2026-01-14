@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Loader2, Edit, DoorOpen, Plus, Trash2, Wrench, Users, Blocks } from "lucide-react";
+import { Loader2, Edit, DoorOpen, Plus, Trash2, Wrench, Users, Blocks, ExternalLink, LayoutGrid } from "lucide-react";
 
 type NivelSala = "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3";
 type PortalType = "visitante" | "pre_iniciada" | "iniciada" | "admin";
@@ -701,6 +701,42 @@ export function AdminSalasTab() {
                   </Label>
                 </div>
               </div>
+
+              {/* Quick Actions for Tools with Blocks */}
+              {editingFerramenta.has_blocks && (
+                <div className="bg-muted/50 rounded-lg p-4 space-y-3">
+                  <h4 className="text-sm font-medium flex items-center gap-2">
+                    <LayoutGrid className="w-4 h-4 text-gold" />
+                    Gerenciamento de Conteúdo
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    <a
+                      href={`/admin?tab=blocos&context=tool&id=${editingFerramenta.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 bg-gold/10 text-gold hover:bg-gold/20 rounded-md transition-colors"
+                    >
+                      <Blocks className="w-3 h-3" />
+                      Editar Blocos
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                    {editingFerramenta.slug && (
+                      <a
+                        href={`/ferramentas/${editingFerramenta.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 bg-primary/10 text-primary hover:bg-primary/20 rounded-md transition-colors"
+                      >
+                        Visualizar Página
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Esta ferramenta usa blocos modulares. Configure o conteúdo na aba "Blocos".
+                  </p>
+                </div>
+              )}
 
               <div className="flex justify-end gap-2 pt-4">
                 <Button variant="outline" onClick={() => setEditingFerramenta(null)}>
