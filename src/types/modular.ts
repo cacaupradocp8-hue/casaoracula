@@ -20,7 +20,8 @@ export type ContentBlockType =
   | 'pendulum_map'
   | 'ego_layers'
   | 'archetype_card'
-  | 'reflection_prompt';
+  | 'reflection_prompt'
+  | 'plasticity_map';
 
 // Context type enum - where blocks can be used
 export type BlockContextType = 
@@ -187,6 +188,19 @@ export interface ReflectionPromptContent {
 // UNION TYPE FOR ALL CONTENT TYPES
 // ============================================
 
+// Plasticity Map Content Interface
+export interface PlasticityMapContent {
+  showAgeSlider?: boolean;
+  showVisualMap?: boolean;
+  showRitual?: boolean;
+  competencies?: Array<{
+    key: string;
+    label: string;
+    description?: string;
+  }>;
+  saveToRegistros?: boolean;
+}
+
 export type BlockContent = 
   | RichTextContent
   | ImageContent
@@ -201,7 +215,8 @@ export type BlockContent =
   | PendulumMapContent
   | EgoLayersContent
   | ArchetypeCardContent
-  | ReflectionPromptContent;
+  | ReflectionPromptContent
+  | PlasticityMapContent;
 
 // ============================================
 // MAIN CONTENT BLOCK INTERFACE
@@ -316,6 +331,21 @@ export const DEFAULT_BLOCK_CONTENT: Record<ContentBlockType, BlockContent> = {
   },
   archetype_card: { title: '', subtitle: '', description: '', keywords: [], shadowAspect: '', lightAspect: '', practice: '' },
   reflection_prompt: { prompt: '', placeholder: 'Escreva sua reflexão...', minLength: 50, showAIResponse: false, saveToRegistros: true },
+  plasticity_map: { 
+    showAgeSlider: true, 
+    showVisualMap: true, 
+    showRitual: true, 
+    competencies: [
+      { key: 'autonomia', label: 'Autonomia', description: 'Capacidade de agir por conta própria' },
+      { key: 'tolerancia_frustracao', label: 'Tolerância à Frustração', description: 'Lidar com o não e o limite' },
+      { key: 'contencao_emocional', label: 'Contenção Emocional', description: 'Acolher emoções sem explodir' },
+      { key: 'limites', label: 'Limites Saudáveis', description: 'Dizer não com amor' },
+      { key: 'responsabilidade', label: 'Responsabilidade', description: 'Assumir as próprias escolhas' },
+      { key: 'espera', label: 'Capacidade de Esperar', description: 'Tolerar o tempo das coisas' },
+      { key: 'confianca', label: 'Confiança no Processo', description: 'Entregar-se ao fluxo da vida' },
+    ],
+    saveToRegistros: true 
+  },
 };
 
 // ============================================
@@ -407,6 +437,12 @@ export const BLOCK_TYPE_META: Record<ContentBlockType, { label: string; icon: st
     icon: 'MessageSquare',
     description: 'Prompt com resposta opcional de IA',
     category: 'ai'
+  },
+  plasticity_map: {
+    label: 'Mapa de Plasticidade',
+    icon: 'Brain',
+    description: 'Ferramenta de transformação neuroplástica',
+    category: 'interactive'
   },
 };
 
