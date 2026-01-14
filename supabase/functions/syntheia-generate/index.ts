@@ -146,6 +146,7 @@ interface SyntheiaRequest {
   momento: string;
   tempo: string;
   tema: string;
+  intelligence_hint?: 'ferramenteira' | 'archetypos' | 'aracne_arcano';
 }
 
 const TIPO_LABELS: Record<string, string> = {
@@ -176,6 +177,12 @@ const TEMPO_LABELS: Record<string, string> = {
   'jornada': 'Jornada contínua'
 };
 
+const INTELLIGENCE_HINTS: Record<string, string> = {
+  ferramenteira: 'ATIVE A FERRAMENTEIRA. O foco é PRÁTICA: rituais, sessões, perguntas terapêuticas, roteiros de condução.',
+  archetypos: 'ATIVE ARCHÉTYPOS. O foco é ESTRUTURA: produtos, módulos, jornadas, ofertas comerciais.',
+  aracne_arcano: 'ATIVE ARACNE & ARCANO. O foco é LINGUAGEM SIMBÓLICA: metáforas, arquétipos, contos, exercícios de imaginação.'
+};
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -188,18 +195,23 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY não está configurada');
     }
 
-    const { tipo, publico, momento, tempo, tema }: SyntheiaRequest = await req.json();
+    const { tipo, publico, momento, tempo, tema, intelligence_hint }: SyntheiaRequest = await req.json();
+
+    // Build intelligence guidance
+    const intelligenceGuidance = intelligence_hint ? INTELLIGENCE_HINTS[intelligence_hint] : '';
 
     // Build the user prompt with context
-    const userPrompt = `Crie uma estrutura terapêutica completa com as seguintes especificações:
+    const userPrompt = `${intelligenceGuidance ? `[ORIENTAÇÃO DE INTELIGÊNCIA]\n${intelligenceGuidance}\n\n` : ''}A profissional precisa de ajuda com o seguinte:
 
-TIPO DE CRIAÇÃO: ${TIPO_LABELS[tipo] || tipo}
-PÚBLICO-ALVO: ${PUBLICO_LABELS[publico] || publico}
-MOMENTO DA JORNADA: ${MOMENTO_LABELS[momento] || momento}
-TEMPO DISPONÍVEL: ${TEMPO_LABELS[tempo] || tempo}
-TEMA CENTRAL: ${tema}
+"${tema}"
 
-Gere a estrutura completa no formato JSON especificado, ativando o núcleo mais apropriado para este tipo de criação.`;
+${tipo !== 'sessao' ? `CONTEXTO ADICIONAL:
+- Tipo: ${TIPO_LABELS[tipo] || tipo}
+- Público: ${PUBLICO_LABELS[publico] || publico}
+- Momento: ${MOMENTO_LABELS[momento] || momento}
+- Tempo: ${TEMPO_LABELS[tempo] || tempo}` : ''}
+
+Analise o pedido e gere a estrutura completa no formato JSON especificado, ativando o núcleo mais apropriado.`;
 
     console.log('Calling Lovable AI Gateway with prompt:', userPrompt);
 
