@@ -6,7 +6,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { AdminPreviewProvider, useAdminPreviewOptional } from "@/contexts/AdminPreviewContext";
-import { AdminPreviewBar } from "@/components/admin/AdminPreviewBar";
 import { PortalType, canAccessFeature } from "@/types/portal";
 
 // Pages
@@ -578,10 +577,7 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <AdminPreviewProvider>
-            <AdminPreviewBar />
-            <div className="pt-0 sm:pt-12"> {/* Offset for preview bar on desktop */}
-              <AppRoutes />
-            </div>
+            <AppRoutes />
           </AdminPreviewProvider>
         </AuthProvider>
       </BrowserRouter>
