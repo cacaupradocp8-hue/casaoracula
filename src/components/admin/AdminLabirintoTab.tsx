@@ -247,7 +247,7 @@ export function AdminLabirintoTab() {
                     <Select
                       value={editingPorta.portal_minimo}
                       onValueChange={(v) =>
-                        setEditingPorta({ ...editingPorta, portal_minimo: v })
+                        setEditingPorta({ ...editingPorta, portal_minimo: v as PortalType })
                       }
                     >
                       <SelectTrigger>
@@ -278,7 +278,7 @@ export function AdminLabirintoTab() {
                     <Select
                       value={editingPorta.portal_caso_espelho}
                       onValueChange={(v) =>
-                        setEditingPorta({ ...editingPorta, portal_caso_espelho: v })
+                        setEditingPorta({ ...editingPorta, portal_caso_espelho: v as PortalType })
                       }
                     >
                       <SelectTrigger>
@@ -296,7 +296,7 @@ export function AdminLabirintoTab() {
                     <Select
                       value={editingPorta.portal_chave_facilitadora}
                       onValueChange={(v) =>
-                        setEditingPorta({ ...editingPorta, portal_chave_facilitadora: v })
+                        setEditingPorta({ ...editingPorta, portal_chave_facilitadora: v as PortalType })
                       }
                     >
                       <SelectTrigger>

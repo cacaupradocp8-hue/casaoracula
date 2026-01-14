@@ -25,6 +25,7 @@ import { AdminOraculosTab } from '@/components/admin/AdminOraculosTab';
 import { AdminBlocksTab } from '@/components/admin/AdminBlocksTab';
 import { AdminAISettingsTab } from '@/components/admin/AdminAISettingsTab';
 import { AdminBibliotecaTravessiasTab } from '@/components/admin/AdminBibliotecaTravessiasTab';
+import { AdminLabirintoTab } from '@/components/admin/AdminLabirintoTab';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -176,6 +177,10 @@ export default function Admin() {
               <Compass className="w-4 h-4" />
               Travessias
             </TabsTrigger>
+            <TabsTrigger value="labirinto" className="gap-2">
+              <DoorOpen className="w-4 h-4 text-gold" />
+              🜂 Labirinto
+            </TabsTrigger>
             <TabsTrigger value="ia-config" className="gap-2">
               <Brain className="w-4 h-4" />
               IA Config
@@ -268,6 +273,10 @@ export default function Admin() {
 
           <TabsContent value="travessias">
             <AdminBibliotecaTravessiasTab />
+          </TabsContent>
+
+          <TabsContent value="labirinto">
+            <AdminLabirintoTab />
           </TabsContent>
 
           <TabsContent value="ia-config">

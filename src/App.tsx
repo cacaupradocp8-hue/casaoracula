@@ -42,6 +42,8 @@ import CursoDetalhe from "./pages/CursoDetalhe";
 import CursoAula from "./pages/CursoAula";
 import BibliotecaDasTravessias from "./pages/BibliotecaDasTravessias";
 import BibliotecaTravessiaDetalhe from "./pages/BibliotecaTravessiaDetalhe";
+import LabirintoHome from "./pages/labirinto/LabirintoHome";
+import LabirintoPorta from "./pages/labirinto/LabirintoPorta";
 
 // Ferramentas (salas)
 import Big5 from "./pages/salas/Big5";
@@ -535,6 +537,24 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <BibliotecaTravessiaDetalhe />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Labirinto das 39 Portas */}
+        <Route
+          path="/labirinto"
+          element={
+            <ProtectedRoute minPortal="pre_iniciada">
+              <LabirintoHome />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/labirinto/porta/:portaId"
+          element={
+            <ProtectedRoute minPortal="pre_iniciada">
+              <LabirintoPorta />
             </ProtectedRoute>
           }
         />
