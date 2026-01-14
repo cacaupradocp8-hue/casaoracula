@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { User as SupabaseUser, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { PortalType, canAccessFeature, getCaseLimit } from '@/types/portal';
+import { useAdminPreviewOptional } from './AdminPreviewContext';
 
 interface User {
   id: string;
@@ -250,7 +251,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const canAccess = (requiredPortal: PortalType): boolean => {
     if (!user) return false;
+    // For preview mode, we need to check against the effective portal
+    // This will be handled at the component level via useAdminPreview hook
     return canAccessFeature(user.portal, requiredPortal);
+  };
+  
+  // Get the effective portal (considering preview mode)
+  const getEffectivePortal = (): PortalType => {
+    if (!user) return 'visitante';
+    return user.portal;
   };
 
   const canCreateCase = (currentCaseCount: number): boolean => {

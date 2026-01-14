@@ -5,7 +5,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
-import { PortalType } from "@/types/portal";
+import { AdminPreviewProvider, useAdminPreviewOptional } from "@/contexts/AdminPreviewContext";
+import { AdminPreviewBar } from "@/components/admin/AdminPreviewBar";
+import { PortalType, canAccessFeature } from "@/types/portal";
 
 // Pages
 import Landing from "./pages/Landing";
@@ -68,13 +70,23 @@ function AuthLoading() {
   );
 }
 
-// These components must be rendered inside AuthProvider
+// ProtectedRoute with preview mode support
 function ProtectedRoute({ children, minPortal = "visitante" }: { children: React.ReactNode; minPortal?: PortalType }) {
-  const { isLoading, isAuthenticated, canAccess } = useAuth();
+  const { isLoading, isAuthenticated, user } = useAuth();
+  const preview = useAdminPreviewOptional();
 
   if (isLoading) return <AuthLoading />;
   if (!isAuthenticated) return <Navigate to="/auth" replace />;
-  if (!canAccess(minPortal)) return <Navigate to="/dashboard" replace />;
+  
+  // Get effective portal considering preview mode
+  const effectivePortal = preview?.isPreviewMode && preview?.previewPortal && user?.portal === 'admin'
+    ? preview.previewPortal
+    : user?.portal || 'visitante';
+  
+  // Check access with effective portal
+  const hasAccess = canAccessFeature(effectivePortal, minPortal);
+  
+  if (!hasAccess) return <Navigate to="/dashboard" replace />;
 
   return <>{children}</>;
 }
@@ -534,7 +546,12 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <AppRoutes />
+          <AdminPreviewProvider>
+            <AdminPreviewBar />
+            <div className="pt-0"> {/* Offset for preview bar when active */}
+              <AppRoutes />
+            </div>
+          </AdminPreviewProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
