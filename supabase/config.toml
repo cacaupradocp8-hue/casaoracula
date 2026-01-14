@@ -8,3 +8,12 @@ verify_jwt = false
 
 [functions.generate-oracle-image]
 verify_jwt = false
+
+[functions.generate-labirinto-image]
+verify_jwt = false
+
+[functions.labirinto-leitura]
+verify_jwt = false
+
+[functions.ai-chat]
+verify_jwt = false
