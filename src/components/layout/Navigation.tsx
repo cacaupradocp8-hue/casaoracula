@@ -36,6 +36,7 @@ const navItems: { path: string; label: string; icon: typeof Home; minPortal: Por
   { path: '/dashboard', label: 'Salas', icon: DoorOpen, minPortal: 'visitante' },
   { path: '/cursos', label: 'Área de Membros', icon: GraduationCap, minPortal: 'visitante' },
   { path: '/oraculos', label: 'Oráculos', icon: Layers, minPortal: 'visitante' },
+  { path: '/biblioteca-das-travessias', label: 'Travessias', icon: Sparkles, minPortal: 'visitante' },
   { path: '/minhas-clientes', label: 'Minhas Clientes', icon: Users, minPortal: 'pre_iniciada' },
   { path: '/biblioteca', label: 'Biblioteca', icon: Library, minPortal: 'pre_iniciada' },
   { path: '/laboratorio-leitura', label: 'Laboratório', icon: BookOpen, minPortal: 'pre_iniciada' },

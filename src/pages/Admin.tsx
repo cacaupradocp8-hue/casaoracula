@@ -1,7 +1,7 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass } from 'lucide-react';
 import { AdminCursosTab } from '@/components/admin/AdminCursosTab';
 import { AdminUsersTab } from '@/components/admin/AdminUsersTab';
 import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
@@ -24,6 +24,7 @@ import AdminCopyTab from '@/components/admin/AdminCopyTab';
 import { AdminOraculosTab } from '@/components/admin/AdminOraculosTab';
 import { AdminBlocksTab } from '@/components/admin/AdminBlocksTab';
 import { AdminAISettingsTab } from '@/components/admin/AdminAISettingsTab';
+import { AdminBibliotecaTravessiasTab } from '@/components/admin/AdminBibliotecaTravessiasTab';
 
 export default function Admin() {
   return (
@@ -118,6 +119,10 @@ export default function Admin() {
               <LayoutGrid className="w-4 h-4" />
               Blocos
             </TabsTrigger>
+            <TabsTrigger value="travessias" className="gap-2">
+              <Compass className="w-4 h-4" />
+              Travessias
+            </TabsTrigger>
             <TabsTrigger value="ia-config" className="gap-2">
               <Brain className="w-4 h-4" />
               IA Config
@@ -206,6 +211,10 @@ export default function Admin() {
 
           <TabsContent value="blocos">
             <AdminBlocksTab />
+          </TabsContent>
+
+          <TabsContent value="travessias">
+            <AdminBibliotecaTravessiasTab />
           </TabsContent>
 
           <TabsContent value="ia-config">
