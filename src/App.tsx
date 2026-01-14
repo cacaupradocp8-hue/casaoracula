@@ -49,7 +49,7 @@ import Hawkins from "./pages/salas/Hawkins";
 import Antroposofia from "./pages/salas/Antroposofia";
 import Neuroplasticidade from "./pages/salas/Neuroplasticidade";
 import Narrativas from "./pages/salas/Narrativas";
-import Radiestesia from "./pages/salas/Radiestesia";
+// Radiestesia agora é dinâmica via FerramentaDinamica
 import Tarot from "./pages/salas/Tarot";
 import Constelacao from "./pages/salas/Constelacao";
 import Sintheia from "./pages/salas/Sintheia";
@@ -354,14 +354,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/ferramentas/radiestesia"
-        element={
-          <ProtectedRoute minPortal="pre_iniciada">
-            <Radiestesia />
-          </ProtectedRoute>
-        }
-      />
+      {/* Radiestesia agora é dinâmica via /ferramentas/:slug */}
       <Route
         path="/ferramentas/tarot"
         element={
