@@ -56,7 +56,8 @@ import Narrativas from "./pages/salas/Narrativas";
 // Radiestesia agora é dinâmica via FerramentaDinamica
 import Tarot from "./pages/salas/Tarot";
 import Constelacao from "./pages/salas/Constelacao";
-import Sintheia from "./pages/salas/Sintheia";
+import SintheiaLegacy from "./pages/salas/Sintheia";
+import Syntheia from "./pages/Syntheia";
 import AgenteAnalista from "./pages/salas/AgenteAnalista";
 import AgenteCurador from "./pages/salas/AgenteCurador";
 import AgenteSimbólico from "./pages/salas/AgenteSimbólico";
@@ -385,11 +386,21 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      {/* Syntheia - O Templo (primeiro nível) */}
+      <Route
+        path="/syntheia"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Syntheia />
+          </ProtectedRoute>
+        }
+      />
+      {/* Rota legada para /ferramentas/sintheia */}
       <Route
         path="/ferramentas/sintheia"
         element={
           <ProtectedRoute minPortal="pre_iniciada">
-            <Sintheia />
+            <SintheiaLegacy />
           </ProtectedRoute>
         }
       />
