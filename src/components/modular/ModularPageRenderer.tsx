@@ -22,6 +22,7 @@ import {
   EgoLayersBlock,
   ArchetypeCardBlock,
   ReflectionPromptBlock,
+  PlasticityMapBlock,
 } from './blocks';
 
 interface ModularPageRendererProps {
@@ -134,6 +135,8 @@ function BlockRenderer({ block, contextData, onAction, onSaveRegistro }: BlockRe
       return <ArchetypeCardBlock block={block} />;
     case 'reflection_prompt':
       return <ReflectionPromptBlock block={block} onSave={onSaveRegistro} />;
+    case 'plasticity_map':
+      return <PlasticityMapBlock block={block} onSave={onSaveRegistro} />;
     default:
       console.warn(`Unknown block type: ${block.blockType}`);
       return null;

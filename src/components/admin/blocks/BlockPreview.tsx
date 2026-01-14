@@ -14,6 +14,7 @@ import {
   Layers,
   Sparkles,
   MessageSquare,
+  Brain,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -37,6 +38,7 @@ const typeIcons: Record<ContentBlockType, React.ElementType> = {
   ego_layers: Layers,
   archetype_card: Sparkles,
   reflection_prompt: MessageSquare,
+  plasticity_map: Brain,
 };
 
 const typeLabels: Record<ContentBlockType, string> = {
@@ -54,6 +56,7 @@ const typeLabels: Record<ContentBlockType, string> = {
   ego_layers: 'Camadas do Ego',
   archetype_card: 'Card de Arquétipo',
   reflection_prompt: 'Prompt de Reflexão',
+  plasticity_map: 'Mapa de Plasticidade',
 };
 
 export function BlockPreview({ block, compact = false }: BlockPreviewProps) {

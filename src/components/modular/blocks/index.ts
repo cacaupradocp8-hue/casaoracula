@@ -13,3 +13,4 @@ export { PendulumMapBlock } from './PendulumMapBlock';
 export { EgoLayersBlock } from './EgoLayersBlock';
 export { ArchetypeCardBlock } from './ArchetypeCardBlock';
 export { ReflectionPromptBlock } from './ReflectionPromptBlock';
+export { PlasticityMapBlock } from './PlasticityMapBlock';

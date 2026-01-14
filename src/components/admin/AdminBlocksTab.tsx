@@ -59,6 +59,7 @@ import {
   Layers,
   Sparkles,
   MessageSquare,
+  Brain,
 } from 'lucide-react';
 
 const CONTEXT_OPTIONS: { value: BlockContextType; label: string }[] = [
@@ -86,6 +87,7 @@ const BLOCK_TYPE_ICONS: Record<ContentBlockType, React.ElementType> = {
   ego_layers: Layers,
   archetype_card: Sparkles,
   reflection_prompt: MessageSquare,
+  plasticity_map: Brain,
 };
 
 interface ContextEntity {
