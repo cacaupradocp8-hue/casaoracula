@@ -4,6 +4,8 @@ export { VideoBlock } from './VideoBlock';
 export { AudioBlock } from './AudioBlock';
 export { AIChatBlock } from './AIChatBlock';
 export { CTAButtonBlock } from './CTAButtonBlock';
+// Professional intro block (mandatory for tools)
+export { ProfessionalIntroBlock } from './ProfessionalIntroBlock';
 // New interactive blocks
 export { ChakraWheelBlock } from './ChakraWheelBlock';
 export { EnergySliderBlock } from './EnergySliderBlock';

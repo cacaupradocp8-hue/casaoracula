@@ -8,6 +8,7 @@ import {
   AudioContent,
   AIChatContent,
   CTAButtonContent,
+  ProfessionalIntroContent,
   DEFAULT_BLOCK_CONTENT,
   BLOCK_TYPE_META
 } from '@/types/modular';
@@ -183,6 +184,13 @@ export function BlockEditor({
         {blockType === 'cta_button' && (
           <CTAButtonEditor 
             content={content as CTAButtonContent} 
+            onChange={c => setContent(c)} 
+          />
+        )}
+
+        {blockType === 'professional_intro' && (
+          <ProfessionalIntroEditor 
+            content={content as ProfessionalIntroContent} 
             onChange={c => setContent(c)} 
           />
         )}
@@ -593,6 +601,127 @@ function CTAButtonEditor({
         />
         <span className="text-sm">Largura Total</span>
       </label>
+    </div>
+  );
+}
+
+// Professional Intro Editor
+function ProfessionalIntroEditor({ 
+  content, 
+  onChange 
+}: { 
+  content: ProfessionalIntroContent; 
+  onChange: (c: ProfessionalIntroContent) => void;
+}) {
+  const [newValue, setNewValue] = useState('');
+
+  const addProfessionalValue = () => {
+    if (newValue.trim()) {
+      onChange({ 
+        ...content, 
+        professionalValue: [...(content.professionalValue || []), newValue.trim()] 
+      });
+      setNewValue('');
+    }
+  };
+
+  const removeValue = (index: number) => {
+    const updated = [...(content.professionalValue || [])];
+    updated.splice(index, 1);
+    onChange({ ...content, professionalValue: updated });
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <Label>O que é esta ferramenta</Label>
+        <Textarea
+          value={content.whatIs || ''}
+          onChange={e => onChange({ ...content, whatIs: e.target.value })}
+          placeholder="Uma breve explicação clara da ferramenta como recurso profissional..."
+          rows={3}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Para que serve</Label>
+        <Textarea
+          value={content.whatFor || ''}
+          onChange={e => onChange({ ...content, whatFor: e.target.value })}
+          placeholder="Economia de tempo, organização, rastreio de padrões, redução de trabalho manual..."
+          rows={3}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Como usar</Label>
+        <Textarea
+          value={content.howToUse || ''}
+          onChange={e => onChange({ ...content, howToUse: e.target.value })}
+          placeholder="Antes da sessão, durante a sessão, depois da sessão..."
+          rows={3}
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label>Tipo de Ferramenta</Label>
+          <Select 
+            value={content.toolType || 'general'} 
+            onValueChange={v => onChange({ ...content, toolType: v as ProfessionalIntroContent['toolType'] })}
+          >
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="general">Geral</SelectItem>
+              <SelectItem value="diagnostic">Diagnóstico</SelectItem>
+              <SelectItem value="ritual">Ritual/Simbólico</SelectItem>
+              <SelectItem value="diary">Diário/Registro</SelectItem>
+              <SelectItem value="ai">IA Assistida</SelectItem>
+              <SelectItem value="tracking">Acompanhamento</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <label className="flex items-center gap-2 pt-6">
+          <Switch 
+            checked={content.showIcons !== false}
+            onCheckedChange={v => onChange({ ...content, showIcons: v })}
+          />
+          <span className="text-sm">Mostrar Ícones</span>
+        </label>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Valor Profissional (bullets)</Label>
+        <div className="flex gap-2">
+          <Input
+            value={newValue}
+            onChange={e => setNewValue(e.target.value)}
+            placeholder="Ex: Economia de tempo na preparação"
+            onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addProfessionalValue())}
+          />
+          <Button type="button" onClick={addProfessionalValue} variant="outline" size="sm">
+            Adicionar
+          </Button>
+        </div>
+        {content.professionalValue && content.professionalValue.length > 0 && (
+          <ul className="mt-2 space-y-1">
+            {content.professionalValue.map((value, index) => (
+              <li key={index} className="flex items-center justify-between text-sm bg-muted/50 rounded px-2 py-1">
+                <span>{value}</span>
+                <Button 
+                  type="button" 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-6 w-6 p-0"
+                  onClick={() => removeValue(index)}
+                >
+                  ×
+                </Button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

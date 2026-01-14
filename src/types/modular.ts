@@ -12,6 +12,8 @@ export type ContentBlockType =
   | 'audio'
   | 'ai_chat'
   | 'cta_button'
+  // Professional intro block (mandatory for tools)
+  | 'professional_intro'
   // New interactive block types
   | 'chakra_wheel'
   | 'energy_slider'
@@ -188,6 +190,16 @@ export interface ReflectionPromptContent {
 // UNION TYPE FOR ALL CONTENT TYPES
 // ============================================
 
+// Professional Intro Content Interface
+export interface ProfessionalIntroContent {
+  whatIs?: string;
+  whatFor?: string;
+  howToUse?: string;
+  professionalValue?: string[];
+  toolType?: 'diagnostic' | 'ritual' | 'diary' | 'ai' | 'tracking' | 'general';
+  showIcons?: boolean;
+}
+
 // Plasticity Map Content Interface
 export interface PlasticityMapContent {
   showAgeSlider?: boolean;
@@ -208,6 +220,7 @@ export type BlockContent =
   | AudioContent
   | AIChatContent
   | CTAButtonContent
+  | ProfessionalIntroContent
   | ChakraWheelContent
   | EnergySliderContent
   | PatternDiaryContent
@@ -297,6 +310,15 @@ export const DEFAULT_BLOCK_CONTENT: Record<ContentBlockType, BlockContent> = {
   audio: { url: '', title: '' },
   ai_chat: { placeholder: 'Digite sua pergunta...', showHistory: true },
   cta_button: { text: 'Saiba mais', action: 'navigate', variant: 'gold', size: 'lg' },
+  // Professional intro block
+  professional_intro: { 
+    whatIs: '', 
+    whatFor: '', 
+    howToUse: '', 
+    professionalValue: ['Economia de tempo', 'Clareza operacional', 'Organização de dados', 'Suporte à decisão clínica'],
+    toolType: 'general',
+    showIcons: true
+  },
   // New interactive blocks
   chakra_wheel: { allowMultipleSelection: true, showDescriptions: true, showObservations: true, saveToRegistros: true },
   energy_slider: { minValue: 20, maxValue: 1000, defaultValue: 200, showLabels: true, showFeedback: true, saveToRegistros: true },
@@ -357,6 +379,12 @@ export const BLOCK_TYPE_META: Record<ContentBlockType, { label: string; icon: st
     label: 'Texto Rico', 
     icon: 'FileText', 
     description: 'Texto formatado com HTML',
+    category: 'content'
+  },
+  professional_intro: {
+    label: 'Introdução Profissional',
+    icon: 'Briefcase',
+    description: 'Bloco obrigatório com valor profissional da ferramenta',
     category: 'content'
   },
   image: { 

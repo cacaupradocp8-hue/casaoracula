@@ -217,7 +217,7 @@ export function AdminSalasTab() {
     const timestamp = Date.now();
     const baseSlug = `nova-ferramenta-${timestamp}`;
 
-    const { error } = await supabase.from("sala_ferramentas").insert({
+    const { data, error } = await supabase.from("sala_ferramentas").insert({
       sala_id: managingFerramentas.id,
       ferramenta_chave: `nova_ferramenta_${timestamp}`,
       ferramenta_nome: "Nova Ferramenta",
@@ -230,13 +230,33 @@ export function AdminSalasTab() {
       portal_minimo: "pre_iniciada",
       has_blocks: true,
       slug: baseSlug,
-    });
+    }).select('id').single();
 
     if (error) {
       toast.error("Erro ao adicionar ferramenta");
       console.error(error);
     } else {
-      toast.success("Ferramenta adicionada");
+      // Auto-create professional_intro block for the new tool
+      if (data?.id) {
+        await supabase.from("content_blocks").insert({
+          context_type: "tool",
+          context_id: data.id,
+          block_type: "professional_intro",
+          ordem: 1,
+          ativo: true,
+          portal_minimo: "visitante",
+          titulo: "Sobre esta Ferramenta",
+          content: {
+            whatIs: "",
+            whatFor: "",
+            howToUse: "",
+            professionalValue: ["Economia de tempo", "Clareza operacional", "Organização de dados", "Suporte à decisão clínica"],
+            toolType: "general",
+            showIcons: true
+          }
+        });
+      }
+      toast.success("Ferramenta adicionada com bloco de introdução");
       fetchData();
     }
   };

@@ -14,6 +14,7 @@ import {
   AudioBlock,
   AIChatBlock,
   CTAButtonBlock,
+  ProfessionalIntroBlock,
   ChakraWheelBlock,
   EnergySliderBlock,
   PatternDiaryBlock,
@@ -118,6 +119,8 @@ function BlockRenderer({ block, contextData, onAction, onSaveRegistro }: BlockRe
       return <AIChatBlock block={block} contextData={contextData} />;
     case 'cta_button':
       return <CTAButtonBlock block={block} onAction={onAction} />;
+    case 'professional_intro':
+      return <ProfessionalIntroBlock block={block} />;
     // New interactive blocks
     case 'chakra_wheel':
       return <ChakraWheelBlock block={block} onSave={onSaveRegistro} />;
