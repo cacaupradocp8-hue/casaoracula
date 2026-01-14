@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Loader2, Edit, DoorOpen, Plus, Trash2, Wrench, Users } from "lucide-react";
+import { Loader2, Edit, DoorOpen, Plus, Trash2, Wrench, Users, Blocks } from "lucide-react";
 
 type NivelSala = "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3";
 type PortalType = "visitante" | "pre_iniciada" | "iniciada" | "admin";
@@ -37,6 +37,10 @@ interface Ferramenta {
   rota: string;
   ordem: number;
   ativa: boolean;
+  tipo: string | null;
+  portal_minimo: PortalType;
+  has_blocks: boolean;
+  slug: string | null;
 }
 
 interface PortalSala {
@@ -60,6 +64,23 @@ const PORTAL_LABELS: Record<PortalType, string> = {
 };
 
 const ALL_PORTALS: PortalType[] = ["visitante", "pre_iniciada", "iniciada", "admin"];
+
+const TIPO_FERRAMENTA_OPTIONS = [
+  { value: "custom", label: "Personalizada" },
+  { value: "quiz", label: "Quiz" },
+  { value: "ritual", label: "Ritual" },
+  { value: "assessment", label: "Avaliação" },
+  { value: "practice", label: "Prática" },
+];
+
+function generateSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
 
 export function AdminSalasTab() {
   const [salas, setSalas] = useState<Sala[]>([]);
@@ -193,16 +214,22 @@ export function AdminSalasTab() {
 
     const salaFerramentas = getFerramentasForSala(managingFerramentas.id);
     const novaOrdem = salaFerramentas.length > 0 ? Math.max(...salaFerramentas.map((f) => f.ordem)) + 1 : 1;
+    const timestamp = Date.now();
+    const baseSlug = `nova-ferramenta-${timestamp}`;
 
     const { error } = await supabase.from("sala_ferramentas").insert({
       sala_id: managingFerramentas.id,
-      ferramenta_chave: `nova_ferramenta_${Date.now()}`,
+      ferramenta_chave: `nova_ferramenta_${timestamp}`,
       ferramenta_nome: "Nova Ferramenta",
       ferramenta_descricao: "",
       icone: "wrench",
-      rota: "/salas/nova",
+      rota: `/ferramentas/${baseSlug}`,
       ordem: novaOrdem,
       ativa: true,
+      tipo: "custom",
+      portal_minimo: "pre_iniciada",
+      has_blocks: true,
+      slug: baseSlug,
     });
 
     if (error) {
@@ -213,11 +240,15 @@ export function AdminSalasTab() {
       fetchData();
     }
   };
-
   const handleSaveFerramenta = async () => {
     if (!editingFerramenta) return;
 
     setSavingFerramenta(true);
+    
+    // Auto-generate slug from name if not set
+    const slug = editingFerramenta.slug || generateSlug(editingFerramenta.ferramenta_nome);
+    const rota = `/ferramentas/${slug}`;
+    
     const { error } = await supabase
       .from("sala_ferramentas")
       .update({
@@ -225,9 +256,13 @@ export function AdminSalasTab() {
         ferramenta_nome: editingFerramenta.ferramenta_nome,
         ferramenta_descricao: editingFerramenta.ferramenta_descricao,
         icone: editingFerramenta.icone,
-        rota: editingFerramenta.rota,
+        rota: rota,
         ordem: editingFerramenta.ordem,
         ativa: editingFerramenta.ativa,
+        tipo: editingFerramenta.tipo,
+        portal_minimo: editingFerramenta.portal_minimo,
+        has_blocks: editingFerramenta.has_blocks,
+        slug: slug,
       })
       .eq("id", editingFerramenta.id);
 
@@ -541,16 +576,59 @@ export function AdminSalasTab() {
                 <Label>Nome</Label>
                 <Input
                   value={editingFerramenta.ferramenta_nome}
-                  onChange={(e) => setEditingFerramenta({ ...editingFerramenta, ferramenta_nome: e.target.value })}
+                  onChange={(e) => {
+                    const newName = e.target.value;
+                    const newSlug = generateSlug(newName);
+                    setEditingFerramenta({ 
+                      ...editingFerramenta, 
+                      ferramenta_nome: newName,
+                      slug: newSlug,
+                      rota: `/ferramentas/${newSlug}`,
+                    });
+                  }}
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label>Chave (identificador único)</Label>
-                <Input
-                  value={editingFerramenta.ferramenta_chave}
-                  onChange={(e) => setEditingFerramenta({ ...editingFerramenta, ferramenta_chave: e.target.value })}
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Slug (URL)</Label>
+                  <Input
+                    value={editingFerramenta.slug || ""}
+                    onChange={(e) => {
+                      const newSlug = e.target.value;
+                      setEditingFerramenta({ 
+                        ...editingFerramenta, 
+                        slug: newSlug,
+                        rota: `/ferramentas/${newSlug}`,
+                      });
+                    }}
+                    placeholder="minha-ferramenta"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Rota: {editingFerramenta.rota}
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Tipo</Label>
+                  <Select
+                    value={editingFerramenta.tipo || "custom"}
+                    onValueChange={(value) =>
+                      setEditingFerramenta({ ...editingFerramenta, tipo: value })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TIPO_FERRAMENTA_OPTIONS.map((opt) => (
+                        <SelectItem key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -562,13 +640,13 @@ export function AdminSalasTab() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label>Ícone (Lucide)</Label>
                   <Input
                     value={editingFerramenta.icone}
                     onChange={(e) => setEditingFerramenta({ ...editingFerramenta, icone: e.target.value })}
-                    placeholder="brain, compass, sparkles..."
+                    placeholder="brain, compass..."
                   />
                 </div>
                 <div className="space-y-2">
@@ -581,23 +659,47 @@ export function AdminSalasTab() {
                     }
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label>Portal Mínimo</Label>
+                  <Select
+                    value={editingFerramenta.portal_minimo}
+                    onValueChange={(value: PortalType) =>
+                      setEditingFerramenta({ ...editingFerramenta, portal_minimo: value })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {ALL_PORTALS.map((portal) => (
+                        <SelectItem key={portal} value={portal}>
+                          {PORTAL_LABELS[portal]}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label>Rota</Label>
-                <Input
-                  value={editingFerramenta.rota}
-                  onChange={(e) => setEditingFerramenta({ ...editingFerramenta, rota: e.target.value })}
-                  placeholder="/salas/big5"
-                />
-              </div>
+              <div className="flex items-center gap-6 pt-2">
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={editingFerramenta.ativa}
+                    onCheckedChange={(checked) => setEditingFerramenta({ ...editingFerramenta, ativa: checked })}
+                  />
+                  <Label>Ativa</Label>
+                </div>
 
-              <div className="flex items-center gap-2">
-                <Switch
-                  checked={editingFerramenta.ativa}
-                  onCheckedChange={(checked) => setEditingFerramenta({ ...editingFerramenta, ativa: checked })}
-                />
-                <Label>Ferramenta Ativa</Label>
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={editingFerramenta.has_blocks}
+                    onCheckedChange={(checked) => setEditingFerramenta({ ...editingFerramenta, has_blocks: checked })}
+                  />
+                  <Label className="flex items-center gap-1">
+                    <Blocks className="w-4 h-4" />
+                    Usar Blocos Modulares
+                  </Label>
+                </div>
               </div>
 
               <div className="flex justify-end gap-2 pt-4">
