@@ -1473,6 +1473,7 @@ export type Database = {
       }
       oracle_cards: {
         Row: {
+          ai_generated_image_url: string | null
           care_notes: string | null
           category_id: string | null
           created_at: string
@@ -1492,10 +1493,12 @@ export type Database = {
           short_message: string | null
           status: Database["public"]["Enums"]["oracle_content_status"] | null
           subtitle: string | null
+          symbolic_focus: string | null
           title: string
           updated_at: string
         }
         Insert: {
+          ai_generated_image_url?: string | null
           care_notes?: string | null
           category_id?: string | null
           created_at?: string
@@ -1515,10 +1518,12 @@ export type Database = {
           short_message?: string | null
           status?: Database["public"]["Enums"]["oracle_content_status"] | null
           subtitle?: string | null
+          symbolic_focus?: string | null
           title: string
           updated_at?: string
         }
         Update: {
+          ai_generated_image_url?: string | null
           care_notes?: string | null
           category_id?: string | null
           created_at?: string
@@ -1538,6 +1543,7 @@ export type Database = {
           short_message?: string | null
           status?: Database["public"]["Enums"]["oracle_content_status"] | null
           subtitle?: string | null
+          symbolic_focus?: string | null
           title?: string
           updated_at?: string
         }
@@ -1832,6 +1838,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      oracle_symbolic_focuses: {
+        Row: {
+          ativo: boolean | null
+          created_at: string
+          descricao: string | null
+          id: string
+          nome: string
+          ordem: number | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          nome: string
+          ordem?: number | null
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          nome?: string
+          ordem?: number | null
+        }
+        Relationships: []
       }
       oracular_readings: {
         Row: {

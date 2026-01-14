@@ -21,12 +21,14 @@ import {
   Layers,
   CreditCard,
   Settings,
-  Copy
+  Copy,
+  Wand2
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { OracleDeck, OracleCard, OracleSpread, OracleCategory, OracleContentStatus } from '@/types/oracle';
+import { OracleImageGenerator } from './OracleImageGenerator';
 
 const PORTAL_LABELS: Record<string, string> = {
   visitante: 'Visitante',
@@ -587,8 +589,25 @@ export function AdminOraculosTab() {
                         <Input id="subtitle" name="subtitle" defaultValue={editingCard?.subtitle || ''} />
                       </div>
                       <div className="col-span-2">
-                        <Label htmlFor="main_image_url">URL da Imagem</Label>
+                        <Label htmlFor="main_image_url">URL da Imagem (ou use o gerador abaixo)</Label>
                         <Input id="main_image_url" name="main_image_url" defaultValue={editingCard?.main_image_url || ''} />
+                      </div>
+                      
+                      {/* AI Image Generator */}
+                      <div className="col-span-2">
+                        <OracleImageGenerator
+                          cardId={editingCard?.id}
+                          currentImageUrl={editingCard?.main_image_url}
+                          currentSymbolicFocus={(editingCard as any)?.symbolic_focus}
+                          onImageGenerated={(url, focus) => {
+                            // Update the form input
+                            const imageInput = document.getElementById('main_image_url') as HTMLInputElement;
+                            if (imageInput) {
+                              imageInput.value = url;
+                            }
+                          }}
+                          previewMode={!editingCard}
+                        />
                       </div>
                       <div className="col-span-2">
                         <Label htmlFor="short_message">Mensagem Curta</Label>
