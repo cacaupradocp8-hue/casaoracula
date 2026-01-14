@@ -15,6 +15,7 @@ import {
   Sparkles,
   MessageSquare,
   Brain,
+  Briefcase,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -30,6 +31,7 @@ const typeIcons: Record<ContentBlockType, React.ElementType> = {
   audio: Music,
   ai_chat: Bot,
   cta_button: MousePointerClick,
+  professional_intro: Briefcase,
   chakra_wheel: Circle,
   energy_slider: Gauge,
   pattern_diary: BookOpen,
@@ -48,6 +50,7 @@ const typeLabels: Record<ContentBlockType, string> = {
   audio: 'Áudio',
   ai_chat: 'Chat IA',
   cta_button: 'Botão CTA',
+  professional_intro: 'Introdução Profissional',
   chakra_wheel: 'Roda de Chakras',
   energy_slider: 'Slider de Energia',
   pattern_diary: 'Diário de Padrões',

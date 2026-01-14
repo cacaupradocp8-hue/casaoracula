@@ -60,6 +60,7 @@ import {
   Sparkles,
   MessageSquare,
   Brain,
+  Briefcase,
 } from 'lucide-react';
 
 const CONTEXT_OPTIONS: { value: BlockContextType; label: string }[] = [
@@ -79,6 +80,7 @@ const BLOCK_TYPE_ICONS: Record<ContentBlockType, React.ElementType> = {
   audio: Music,
   ai_chat: Bot,
   cta_button: MousePointerClick,
+  professional_intro: Briefcase,
   chakra_wheel: Circle,
   energy_slider: Gauge,
   pattern_diary: BookOpen,
