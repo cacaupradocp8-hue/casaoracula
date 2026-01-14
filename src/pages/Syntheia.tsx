@@ -30,6 +30,7 @@ import {
   MessageSquare,
   ClipboardList
 } from 'lucide-react';
+import syntheiaHero from '@/assets/syntheia-hero.png';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -404,8 +405,17 @@ ${lastAssistant.content}
           
           {/* Hero Header */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-gold/30 via-purple-500/20 to-indigo-500/20 mb-6 border border-gold/20">
-              <Sparkles className="w-10 h-10 text-gold" />
+            <div className="relative inline-block mb-6">
+              <div className="w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden border-2 border-gold/30 shadow-xl shadow-gold/10">
+                <img 
+                  src={syntheiaHero} 
+                  alt="SYNTHEIA" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="absolute -bottom-1 -right-1 w-10 h-10 rounded-full bg-background border border-gold/30 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-gold" />
+              </div>
             </div>
             <h1 className="text-4xl md:text-5xl font-display text-gold mb-3">SYNTHEIA</h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-2">
