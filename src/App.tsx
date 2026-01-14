@@ -41,6 +41,8 @@ import OracleHistory from "./pages/OracleHistory";
 import Cursos from "./pages/Cursos";
 import CursoDetalhe from "./pages/CursoDetalhe";
 import CursoAula from "./pages/CursoAula";
+import BibliotecaDasTravessias from "./pages/BibliotecaDasTravessias";
+import BibliotecaTravessiaDetalhe from "./pages/BibliotecaTravessiaDetalhe";
 
 // Ferramentas (salas)
 import Big5 from "./pages/salas/Big5";
@@ -510,6 +512,24 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <CursoAula />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Biblioteca das Travessias */}
+        <Route
+          path="/biblioteca-das-travessias"
+          element={
+            <ProtectedRoute>
+              <BibliotecaDasTravessias />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/biblioteca-das-travessias/:slug"
+          element={
+            <ProtectedRoute>
+              <BibliotecaTravessiaDetalhe />
             </ProtectedRoute>
           }
         />

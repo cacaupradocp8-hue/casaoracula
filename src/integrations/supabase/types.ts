@@ -2682,6 +2682,121 @@ export type Database = {
         }
         Relationships: []
       }
+      travessia_library_items: {
+        Row: {
+          capa_url: string | null
+          categoria: string
+          como_atravessar: string
+          created_at: string
+          id: string
+          o_que_sustenta: string
+          ordem: number
+          portal_minimo: Database["public"]["Enums"]["portal_type"]
+          publicado: boolean
+          quando_chamada: string
+          slug: string
+          subtitulo: string | null
+          titulo_ritual: string
+          updated_at: string
+        }
+        Insert: {
+          capa_url?: string | null
+          categoria?: string
+          como_atravessar?: string
+          created_at?: string
+          id?: string
+          o_que_sustenta?: string
+          ordem?: number
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          publicado?: boolean
+          quando_chamada?: string
+          slug: string
+          subtitulo?: string | null
+          titulo_ritual: string
+          updated_at?: string
+        }
+        Update: {
+          capa_url?: string | null
+          categoria?: string
+          como_atravessar?: string
+          created_at?: string
+          id?: string
+          o_que_sustenta?: string
+          ordem?: number
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          publicado?: boolean
+          quando_chamada?: string
+          slug?: string
+          subtitulo?: string | null
+          titulo_ritual?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      travessia_library_media: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          ordem: number
+          tipo: string
+          titulo: string | null
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          ordem?: number
+          tipo: string
+          titulo?: string | null
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          ordem?: number
+          tipo?: string
+          titulo?: string | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "travessia_library_media_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "travessia_library_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      travessia_library_tags: {
+        Row: {
+          id: string
+          item_id: string
+          tag: string
+        }
+        Insert: {
+          id?: string
+          item_id: string
+          tag: string
+        }
+        Update: {
+          id?: string
+          item_id?: string
+          tag?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "travessia_library_tags_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "travessia_library_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       travessias: {
         Row: {
           closing_ritual: string
