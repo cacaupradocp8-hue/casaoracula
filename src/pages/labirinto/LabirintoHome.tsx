@@ -1,0 +1,349 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AppLayout } from "@/components/layout/AppLayout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Sparkles, DoorOpen, BookOpen, History, FileText, Loader2 } from "lucide-react";
+import { useLabirintoPortas, useLabirintoOraculo, useCreateLeitura, useLabirintoLeituras, type LabirintoPorta } from "@/hooks/useLabirinto";
+import { useAuth } from "@/contexts/AuthContext";
+import { canAccessFeature } from "@/types/portal";
+import { cn } from "@/lib/utils";
+
+export default function LabirintoHome() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { data: portas, isLoading } = useLabirintoPortas();
+  const oraculo = useLabirintoOraculo();
+  const createLeitura = useCreateLeitura();
+  const [activatingOracle, setActivatingOracle] = useState(false);
+
+  const handleOracleQuestion = async () => {
+    setActivatingOracle(true);
+    try {
+      const porta = await oraculo.mutateAsync();
+      await createLeitura.mutateAsync({
+        porta_id: porta.id,
+        metodo_ativacao: "oraculo",
+      });
+      navigate(`/labirinto/porta/${porta.id}`);
+    } catch (error) {
+      console.error("Erro ao consultar oráculo:", error);
+    } finally {
+      setActivatingOracle(false);
+    }
+  };
+
+  const handlePortaClick = async (portaId: string) => {
+    await createLeitura.mutateAsync({
+      porta_id: portaId,
+      metodo_ativacao: "manual",
+    });
+    navigate(`/labirinto/porta/${portaId}`);
+  };
+
+  const userPortal = user?.portal || "visitante";
+  const canAccessProfessional = canAccessFeature(userPortal, "iniciada");
+
+  return (
+    <AppLayout>
+      <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+        {/* Header */}
+        <div className="text-center space-y-4">
+          <div className="flex items-center justify-center gap-3">
+            <DoorOpen className="w-10 h-10 text-gold" />
+            <h1 className="font-display text-3xl md:text-4xl text-gold">
+              Labirinto das 39 Portas
+            </h1>
+          </div>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Sistema simbólico para leitura e sustentação da psique feminina.
+            Cada porta é um limiar — não há respostas, apenas presença.
+          </p>
+        </div>
+
+        {/* Oracle Question Button */}
+        <Card className="border-gold/30 bg-card/50 backdrop-blur">
+          <CardContent className="p-8 text-center">
+            <p className="text-sm text-muted-foreground mb-4">
+              Qual porta da psique feminina está ativa agora?
+            </p>
+            <Button
+              onClick={handleOracleQuestion}
+              disabled={activatingOracle}
+              className="gap-2 bg-gold hover:bg-gold/90 text-background"
+              size="lg"
+            >
+              {activatingOracle ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Consultando...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5" />
+                  Consultar o Oráculo
+                </>
+              )}
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Main Content Tabs */}
+        <Tabs defaultValue="portas" className="space-y-6">
+          <TabsList className="w-full justify-start overflow-x-auto flex-wrap h-auto gap-1 bg-muted/50">
+            <TabsTrigger value="portas" className="gap-2">
+              <DoorOpen className="w-4 h-4" />
+              Portas
+            </TabsTrigger>
+            <TabsTrigger value="historico" className="gap-2">
+              <History className="w-4 h-4" />
+              Histórico
+            </TabsTrigger>
+            {canAccessProfessional && (
+              <>
+                <TabsTrigger value="casos" className="gap-2">
+                  <BookOpen className="w-4 h-4" />
+                  Casos Espelho
+                </TabsTrigger>
+                <TabsTrigger value="manual" className="gap-2">
+                  <FileText className="w-4 h-4" />
+                  Manual
+                </TabsTrigger>
+              </>
+            )}
+          </TabsList>
+
+          {/* Portas Grid */}
+          <TabsContent value="portas" className="space-y-6">
+            {isLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="w-8 h-8 animate-spin text-gold" />
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-3">
+                {portas?.map((porta) => (
+                  <button
+                    key={porta.id}
+                    onClick={() => handlePortaClick(porta.id)}
+                    className={cn(
+                      "group relative aspect-square rounded-lg overflow-hidden",
+                      "border border-border/50 hover:border-gold/50 transition-all",
+                      "bg-card/30 hover:bg-card/50"
+                    )}
+                  >
+                    {(porta.ai_generated_image_url || porta.imagem_url) ? (
+                      <img
+                        src={porta.ai_generated_image_url || porta.imagem_url || ""}
+                        alt={porta.nome}
+                        className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <DoorOpen className="w-8 h-8 text-muted-foreground/30" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-2">
+                      <span className="font-display text-2xl text-gold/80 group-hover:text-gold transition-colors">
+                        {porta.numero}
+                      </span>
+                      <span className="text-xs text-center text-muted-foreground/70 line-clamp-2 group-hover:text-foreground/80 transition-colors">
+                        {porta.nome.replace("Porta ", "").replace("da ", "").replace("do ", "")}
+                      </span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Histórico */}
+          <TabsContent value="historico">
+            <LabirintoHistorico />
+          </TabsContent>
+
+          {/* Casos Espelho */}
+          <TabsContent value="casos">
+            <LabirintoCasosEspelho portas={portas || []} />
+          </TabsContent>
+
+          {/* Manual */}
+          <TabsContent value="manual">
+            <LabirintoManual />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </AppLayout>
+  );
+}
+
+// Sub-components
+function LabirintoHistorico() {
+  const { data: leituras, isLoading } = useLabirintoLeituras();
+  const navigate = useNavigate();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-8 h-8 animate-spin text-gold" />
+      </div>
+    );
+  }
+
+  if (!leituras || leituras.length === 0) {
+    return (
+      <Card className="border-dashed">
+        <CardContent className="p-8 text-center text-muted-foreground">
+          <History className="w-12 h-12 mx-auto mb-4 opacity-30" />
+          <p>Você ainda não consultou nenhuma porta.</p>
+          <p className="text-sm mt-2">Suas leituras aparecerão aqui.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {leituras.map((leitura) => (
+        <Card
+          key={leitura.id}
+          className="cursor-pointer hover:border-gold/30 transition-colors"
+          onClick={() => navigate(`/labirinto/porta/${leitura.porta_id}`)}
+        >
+          <CardContent className="p-4 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
+              {leitura.porta?.ai_generated_image_url || leitura.porta?.imagem_url ? (
+                <img
+                  src={leitura.porta?.ai_generated_image_url || leitura.porta?.imagem_url || ""}
+                  alt=""
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              ) : (
+                <DoorOpen className="w-6 h-6 text-muted-foreground" />
+              )}
+            </div>
+            <div className="flex-1">
+              <div className="font-medium">{leitura.porta?.nome}</div>
+              <div className="text-sm text-muted-foreground flex items-center gap-2">
+                <span className="capitalize">{leitura.metodo_ativacao}</span>
+                <span>•</span>
+                <span>
+                  {new Date(leitura.created_at).toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </span>
+              </div>
+            </div>
+            {leitura.reflexoes && (
+              <FileText className="w-4 h-4 text-gold" />
+            )}
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+function LabirintoCasosEspelho({ portas }: { portas: LabirintoPorta[] }) {
+  const navigate = useNavigate();
+  
+  const portasComCaso = portas.filter(
+    (p) => p.caso_espelho_titulo || p.caso_espelho_frase_chegada
+  );
+
+  if (portasComCaso.length === 0) {
+    return (
+      <Card className="border-dashed">
+        <CardContent className="p-8 text-center text-muted-foreground">
+          <BookOpen className="w-12 h-12 mx-auto mb-4 opacity-30" />
+          <p>Nenhum caso espelho configurado ainda.</p>
+          <p className="text-sm mt-2">Esta seção é para facilitadoras.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {portasComCaso.map((porta) => (
+        <Card
+          key={porta.id}
+          className="cursor-pointer hover:border-gold/30 transition-colors"
+          onClick={() => navigate(`/labirinto/porta/${porta.id}?tab=caso`)}
+        >
+          <CardContent className="p-4">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded bg-muted flex items-center justify-center font-display text-gold">
+                {porta.numero}
+              </div>
+              <div className="flex-1">
+                <div className="font-medium">{porta.nome}</div>
+                {porta.caso_espelho_titulo && (
+                  <div className="text-sm text-muted-foreground mt-1">
+                    {porta.caso_espelho_titulo}
+                  </div>
+                )}
+                {porta.caso_espelho_frase_chegada && (
+                  <div className="text-sm italic text-muted-foreground/70 mt-2">
+                    "{porta.caso_espelho_frase_chegada}"
+                  </div>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+function LabirintoManual() {
+  return (
+    <Card>
+      <CardContent className="p-8 space-y-6">
+        <div className="space-y-4">
+          <h2 className="font-display text-xl text-gold">Manual da Facilitadora</h2>
+          <p className="text-muted-foreground">
+            O Labirinto das 39 Portas não é um sistema de diagnóstico, interpretação
+            ou prescrição. Cada porta é um espelho simbólico — não uma resposta.
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <h3 className="font-medium">Princípios Fundamentais</h3>
+          <ul className="space-y-2 text-sm text-muted-foreground">
+            <li className="flex items-start gap-2">
+              <span className="text-gold mt-1">•</span>
+              <span>Não explique a porta. Sustente o campo.</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-gold mt-1">•</span>
+              <span>A cliente conduz a leitura — você testemunha.</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-gold mt-1">•</span>
+              <span>Silêncio é parte da técnica.</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-gold mt-1">•</span>
+              <span>Quando em dúvida, não faça nada.</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-gold mt-1">•</span>
+              <span>Cada porta tem seu tempo. Não apresse travessias.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div className="pt-4 border-t border-border/50">
+          <p className="text-xs text-muted-foreground/60">
+            Este é um material de uso profissional, destinado a facilitadoras
+            que passaram pela formação completa da Casa Orácula.
+          </p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
