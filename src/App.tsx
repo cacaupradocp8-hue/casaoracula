@@ -44,6 +44,7 @@ import BibliotecaDasTravessias from "./pages/BibliotecaDasTravessias";
 import BibliotecaTravessiaDetalhe from "./pages/BibliotecaTravessiaDetalhe";
 import LabirintoHome from "./pages/labirinto/LabirintoHome";
 import LabirintoPorta from "./pages/labirinto/LabirintoPorta";
+import InstallApp from "./pages/InstallApp";
 
 // Ferramentas (salas)
 import Big5 from "./pages/salas/Big5";
@@ -135,6 +136,7 @@ function AppRoutes() {
         }
       />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/install" element={<InstallApp />} />
 
       {/* Protected Routes - New Navigation Structure */}
       <Route
