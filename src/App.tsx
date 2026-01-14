@@ -56,6 +56,7 @@ import Sintheia from "./pages/salas/Sintheia";
 import AgenteAnalista from "./pages/salas/AgenteAnalista";
 import AgenteCurador from "./pages/salas/AgenteCurador";
 import AgenteSimbólico from "./pages/salas/AgenteSimbólico";
+import FerramentaDinamica from "./pages/FerramentaDinamica";
 const queryClient = new QueryClient();
 
 // Loading component for auth states
@@ -513,6 +514,16 @@ function AppRoutes() {
           element={
             <ProtectedRoute minPortal="admin">
               <Admin />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Dynamic Tool Route - MUST be after all static /ferramentas/ routes */}
+        <Route
+          path="/ferramentas/:slug"
+          element={
+            <ProtectedRoute>
+              <FerramentaDinamica />
             </ProtectedRoute>
           }
         />
