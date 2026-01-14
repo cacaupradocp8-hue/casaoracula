@@ -568,7 +568,7 @@ const App = () => (
         <AuthProvider>
           <AdminPreviewProvider>
             <AdminPreviewBar />
-            <div className="pt-0"> {/* Offset for preview bar when active */}
+            <div className="pt-0 sm:pt-12"> {/* Offset for preview bar on desktop */}
               <AppRoutes />
             </div>
           </AdminPreviewProvider>
