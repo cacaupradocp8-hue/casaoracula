@@ -57,6 +57,9 @@ export function AdminLabirintoTab() {
   const [editingPorta, setEditingPorta] = useState<LabirintoPorta | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [generatingImage, setGeneratingImage] = useState<string | null>(null);
+  const [generatingAllImages, setGeneratingAllImages] = useState(false);
+  const [batchProgress, setBatchProgress] = useState({ current: 0, total: 0 });
   const { toast } = useToast();
 
   useEffect(() => {
@@ -141,6 +144,79 @@ export function AdminLabirintoTab() {
     }
   };
 
+  const generateImageForPorta = async (portaId: string, portaNome: string) => {
+    setGeneratingImage(portaId);
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-labirinto-image", {
+        body: { porta_id: portaId },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data?.success && data?.image_url) {
+        toast({ title: `Imagem gerada: ${portaNome}` });
+        fetchPortas();
+        if (editingPorta?.id === portaId) {
+          setEditingPorta({
+            ...editingPorta,
+            ai_generated_image_url: data.image_url,
+          });
+        }
+        return true;
+      } else {
+        throw new Error(data?.error || "Erro desconhecido");
+      }
+    } catch (error) {
+      console.error("Error generating image:", error);
+      toast({
+        title: "Erro ao gerar imagem",
+        description: error instanceof Error ? error.message : "Erro desconhecido",
+        variant: "destructive",
+      });
+      return false;
+    } finally {
+      setGeneratingImage(null);
+    }
+  };
+
+  const generateAllImages = async () => {
+    const portasSemImagem = portas.filter((p) => !p.ai_generated_image_url && p.ativa);
+    
+    if (portasSemImagem.length === 0) {
+      toast({ title: "Todas as portas ativas já possuem imagem" });
+      return;
+    }
+
+    setGeneratingAllImages(true);
+    setBatchProgress({ current: 0, total: portasSemImagem.length });
+
+    let successCount = 0;
+    for (let i = 0; i < portasSemImagem.length; i++) {
+      const porta = portasSemImagem[i];
+      setBatchProgress({ current: i + 1, total: portasSemImagem.length });
+      
+      const success = await generateImageForPorta(porta.id, porta.nome);
+      if (success) successCount++;
+      
+      // Wait between requests to avoid rate limiting
+      if (i < portasSemImagem.length - 1) {
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+      }
+    }
+
+    setGeneratingAllImages(false);
+    setBatchProgress({ current: 0, total: 0 });
+    
+    toast({
+      title: "Geração em lote concluída",
+      description: `${successCount} de ${portasSemImagem.length} imagens geradas com sucesso`,
+    });
+    
+    fetchPortas();
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -152,7 +228,7 @@ export function AdminLabirintoTab() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <DoorOpen className="w-5 h-5 text-gold" />
@@ -162,8 +238,28 @@ export function AdminLabirintoTab() {
             Configure cada porta do sistema simbólico
           </p>
         </div>
-        <div className="text-sm text-muted-foreground">
-          {portas.filter((p) => p.ativa).length} de {portas.length} portas ativas
+        <div className="flex items-center gap-4">
+          {generatingAllImages && (
+            <div className="text-sm text-muted-foreground">
+              Gerando {batchProgress.current}/{batchProgress.total}...
+            </div>
+          )}
+          <Button
+            onClick={generateAllImages}
+            disabled={generatingAllImages || generatingImage !== null}
+            variant="outline"
+            className="gap-2"
+          >
+            {generatingAllImages ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <ImageIcon className="w-4 h-4" />
+            )}
+            Gerar Todas as Imagens
+          </Button>
+          <div className="text-sm text-muted-foreground">
+            {portas.filter((p) => p.ativa).length} de {portas.length} portas ativas
+          </div>
         </div>
       </div>
 
@@ -511,7 +607,7 @@ export function AdminLabirintoTab() {
                 {(editingPorta.ai_generated_image_url || editingPorta.imagem_url) && (
                   <div>
                     <Label>Imagem Atual</Label>
-                    <div className="mt-2 w-full max-w-md aspect-video rounded-lg overflow-hidden bg-muted">
+                    <div className="mt-2 w-full max-w-md aspect-square rounded-lg overflow-hidden bg-muted">
                       <img
                         src={editingPorta.ai_generated_image_url || editingPorta.imagem_url || ""}
                         alt={editingPorta.nome}
@@ -521,12 +617,34 @@ export function AdminLabirintoTab() {
                   </div>
                 )}
 
-                {/* Image generator note */}
-                <div className="p-4 bg-muted/50 rounded-lg">
-                  <p className="text-sm text-muted-foreground">
-                    Para gerar imagens com IA, use o gerador de imagens na aba de Oráculos
-                    com o foco simbólico configurado acima.
-                  </p>
+                {/* AI Image Generator Button */}
+                <div className="p-4 bg-muted/50 rounded-lg space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">Gerar Imagem com IA</p>
+                      <p className="text-xs text-muted-foreground">
+                        A imagem será gerada automaticamente baseada no nome da porta e foco simbólico
+                      </p>
+                    </div>
+                    <Button
+                      onClick={() => generateImageForPorta(editingPorta.id, editingPorta.nome)}
+                      disabled={generatingImage === editingPorta.id}
+                      variant="outline"
+                      className="gap-2"
+                    >
+                      {generatingImage === editingPorta.id ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Gerando...
+                        </>
+                      ) : (
+                        <>
+                          <ImageIcon className="w-4 h-4" />
+                          Gerar Imagem
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </div>
 
                 <div>
@@ -565,10 +683,11 @@ export function AdminLabirintoTab() {
               <TableRow>
                 <TableHead className="w-16">Nº</TableHead>
                 <TableHead>Nome</TableHead>
-                <TableHead className="w-24">Status</TableHead>
-                <TableHead className="w-24">Leitura</TableHead>
-                <TableHead className="w-24">Caso</TableHead>
-                <TableHead className="w-24">Chave</TableHead>
+                <TableHead className="w-20">Imagem</TableHead>
+                <TableHead className="w-20">Status</TableHead>
+                <TableHead className="w-20">Leitura</TableHead>
+                <TableHead className="w-20">Caso</TableHead>
+                <TableHead className="w-20">Chave</TableHead>
                 <TableHead className="w-20">Ações</TableHead>
               </TableRow>
             </TableHeader>
@@ -577,6 +696,7 @@ export function AdminLabirintoTab() {
                 const hasLeitura = porta.cena_narrativa || porta.eixo_psiquico;
                 const hasCaso = porta.caso_espelho_titulo || porta.caso_espelho_frase_chegada;
                 const hasChave = porta.chave_frase_ancora || porta.chave_o_que_nao_fazer;
+                const hasImage = porta.ai_generated_image_url || porta.imagem_url;
 
                 return (
                   <TableRow key={porta.id} className={!porta.ativa ? "opacity-50" : ""}>
@@ -584,14 +704,36 @@ export function AdminLabirintoTab() {
                       {porta.numero}
                     </TableCell>
                     <TableCell>
-                      <div>
-                        <span className="font-medium">{porta.nome}</span>
-                        {porta.subtitulo && (
-                          <span className="text-sm text-muted-foreground ml-2">
-                            {porta.subtitulo}
-                          </span>
+                      <div className="flex items-center gap-2">
+                        {hasImage && (
+                          <div className="w-8 h-8 rounded overflow-hidden bg-muted flex-shrink-0">
+                            <img
+                              src={porta.ai_generated_image_url || porta.imagem_url || ""}
+                              alt=""
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
                         )}
+                        <div>
+                          <span className="font-medium">{porta.nome}</span>
+                          {porta.subtitulo && (
+                            <span className="text-sm text-muted-foreground ml-2">
+                              {porta.subtitulo}
+                            </span>
+                          )}
+                        </div>
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      {generatingImage === porta.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin text-gold" />
+                      ) : (
+                        <span
+                          className={`text-xs ${hasImage ? "text-green-500" : "text-muted-foreground"}`}
+                        >
+                          {hasImage ? "✓" : "—"}
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell>
                       <Switch
