@@ -1295,6 +1295,189 @@ export type Database = {
         }
         Relationships: []
       }
+      labirinto_anotacoes: {
+        Row: {
+          anotacao: string
+          cliente_id: string | null
+          created_at: string
+          id: string
+          porta_id: string
+          tipo: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          anotacao: string
+          cliente_id?: string | null
+          created_at?: string
+          id?: string
+          porta_id: string
+          tipo?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          anotacao?: string
+          cliente_id?: string | null
+          created_at?: string
+          id?: string
+          porta_id?: string
+          tipo?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "labirinto_anotacoes_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "labirinto_anotacoes_porta_id_fkey"
+            columns: ["porta_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_portas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      labirinto_leituras: {
+        Row: {
+          cliente_id: string | null
+          contexto: string | null
+          created_at: string
+          id: string
+          metodo_ativacao: string
+          porta_id: string
+          reflexoes: string | null
+          user_id: string
+        }
+        Insert: {
+          cliente_id?: string | null
+          contexto?: string | null
+          created_at?: string
+          id?: string
+          metodo_ativacao?: string
+          porta_id: string
+          reflexoes?: string | null
+          user_id: string
+        }
+        Update: {
+          cliente_id?: string | null
+          contexto?: string | null
+          created_at?: string
+          id?: string
+          metodo_ativacao?: string
+          porta_id?: string
+          reflexoes?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "labirinto_leituras_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "labirinto_leituras_porta_id_fkey"
+            columns: ["porta_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_portas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      labirinto_portas: {
+        Row: {
+          ai_generated_image_url: string | null
+          ativa: boolean
+          caso_espelho_como_sustentar: string | null
+          caso_espelho_erro_comum: string | null
+          caso_espelho_frase_chegada: string | null
+          caso_espelho_titulo: string | null
+          cena_narrativa: string | null
+          chave_frase_ancora: string | null
+          chave_o_que_nao_fazer: string | null
+          chave_quando_parar: string | null
+          chave_sinal_maturidade: string | null
+          created_at: string
+          eixo_psiquico: string | null
+          id: string
+          imagem_url: string | null
+          nome: string
+          numero: number
+          ordem: number
+          pergunta_chave: string | null
+          portal_caso_espelho: Database["public"]["Enums"]["portal_type"]
+          portal_chave_facilitadora: Database["public"]["Enums"]["portal_type"]
+          portal_minimo: Database["public"]["Enums"]["portal_type"]
+          risco_clinico: string | null
+          subtitulo: string | null
+          symbolic_focus: string | null
+          updated_at: string
+        }
+        Insert: {
+          ai_generated_image_url?: string | null
+          ativa?: boolean
+          caso_espelho_como_sustentar?: string | null
+          caso_espelho_erro_comum?: string | null
+          caso_espelho_frase_chegada?: string | null
+          caso_espelho_titulo?: string | null
+          cena_narrativa?: string | null
+          chave_frase_ancora?: string | null
+          chave_o_que_nao_fazer?: string | null
+          chave_quando_parar?: string | null
+          chave_sinal_maturidade?: string | null
+          created_at?: string
+          eixo_psiquico?: string | null
+          id?: string
+          imagem_url?: string | null
+          nome: string
+          numero: number
+          ordem?: number
+          pergunta_chave?: string | null
+          portal_caso_espelho?: Database["public"]["Enums"]["portal_type"]
+          portal_chave_facilitadora?: Database["public"]["Enums"]["portal_type"]
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          risco_clinico?: string | null
+          subtitulo?: string | null
+          symbolic_focus?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ai_generated_image_url?: string | null
+          ativa?: boolean
+          caso_espelho_como_sustentar?: string | null
+          caso_espelho_erro_comum?: string | null
+          caso_espelho_frase_chegada?: string | null
+          caso_espelho_titulo?: string | null
+          cena_narrativa?: string | null
+          chave_frase_ancora?: string | null
+          chave_o_que_nao_fazer?: string | null
+          chave_quando_parar?: string | null
+          chave_sinal_maturidade?: string | null
+          created_at?: string
+          eixo_psiquico?: string | null
+          id?: string
+          imagem_url?: string | null
+          nome?: string
+          numero?: number
+          ordem?: number
+          pergunta_chave?: string | null
+          portal_caso_espelho?: Database["public"]["Enums"]["portal_type"]
+          portal_chave_facilitadora?: Database["public"]["Enums"]["portal_type"]
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          risco_clinico?: string | null
+          subtitulo?: string | null
+          symbolic_focus?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       lessons: {
         Row: {
           content: string
