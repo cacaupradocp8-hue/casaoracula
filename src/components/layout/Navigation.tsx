@@ -37,6 +37,7 @@ const navItems: { path: string; label: string; icon: typeof Home; minPortal: Por
   { path: '/dashboard', label: 'Salas', icon: DoorOpen, minPortal: 'visitante' },
   { path: '/cursos', label: 'Área de Membros', icon: GraduationCap, minPortal: 'visitante' },
   { path: '/syntheia', label: 'Syntheia', icon: Gem, minPortal: 'pre_iniciada' },
+  { path: '/labirinto', label: '🜂 Labirinto', icon: DoorOpen, minPortal: 'pre_iniciada' },
   { path: '/oraculos', label: 'Oráculos', icon: Layers, minPortal: 'visitante' },
   { path: '/biblioteca-das-travessias', label: 'Travessias', icon: Sparkles, minPortal: 'visitante' },
   { path: '/minhas-clientes', label: 'Minhas Clientes', icon: Users, minPortal: 'pre_iniciada' },
