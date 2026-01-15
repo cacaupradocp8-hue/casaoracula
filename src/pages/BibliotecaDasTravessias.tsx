@@ -2,14 +2,22 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { LockedContentModal } from '@/components/shared/LockedContentModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Lock, BookOpen, Compass, Sparkles } from 'lucide-react';
+import { Lock, BookOpen, Compass, Sparkles, ChevronRight } from 'lucide-react';
 import { canAccessFeature, PortalType } from '@/types/portal';
+
+interface TravessiaFamily {
+  id: string;
+  nome: string;
+  descricao: string | null;
+  icone: string | null;
+  ordem: number;
+}
 
 interface TravessiaLibraryItem {
   id: string;
@@ -21,32 +29,44 @@ interface TravessiaLibraryItem {
   capa_url: string | null;
   portal_minimo: PortalType;
   ordem: number;
+  familia_id: string | null;
 }
 
 export default function BibliotecaDasTravessias() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [families, setFamilies] = useState<TravessiaFamily[]>([]);
   const [items, setItems] = useState<TravessiaLibraryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [lockedModalOpen, setLockedModalOpen] = useState(false);
 
   useEffect(() => {
-    fetchItems();
+    fetchData();
   }, []);
 
-  const fetchItems = async () => {
+  const fetchData = async () => {
     try {
-      const { data, error } = await supabase
-        .from('travessia_library_items')
-        .select('id, slug, titulo_ritual, subtitulo, categoria, quando_chamada, capa_url, portal_minimo, ordem')
-        .eq('publicado', true)
-        .order('categoria')
+      // Fetch families
+      const { data: familiesData, error: familiesError } = await supabase
+        .from('travessia_familias')
+        .select('*')
+        .eq('ativa', true)
         .order('ordem');
 
-      if (error) throw error;
-      setItems(data || []);
+      if (familiesError) throw familiesError;
+      setFamilies(familiesData || []);
+
+      // Fetch items
+      const { data: itemsData, error: itemsError } = await supabase
+        .from('travessia_library_items')
+        .select('id, slug, titulo_ritual, subtitulo, categoria, quando_chamada, capa_url, portal_minimo, ordem, familia_id')
+        .eq('publicado', true)
+        .order('ordem');
+
+      if (itemsError) throw itemsError;
+      setItems(itemsData || []);
     } catch (error) {
-      console.error('Error fetching biblioteca items:', error);
+      console.error('Error fetching biblioteca data:', error);
     } finally {
       setLoading(false);
     }
@@ -65,14 +85,13 @@ export default function BibliotecaDasTravessias() {
     }
   };
 
-  // Group items by category
-  const groupedItems = items.reduce((acc, item) => {
-    if (!acc[item.categoria]) {
-      acc[item.categoria] = [];
-    }
-    acc[item.categoria].push(item);
-    return acc;
-  }, {} as Record<string, TravessiaLibraryItem[]>);
+  // Group items by familia_id or categoria as fallback
+  const getItemsByFamily = (familyId: string, familyName: string) => {
+    return items.filter(item => 
+      item.familia_id === familyId || 
+      (item.familia_id === null && item.categoria === familyName)
+    );
+  };
 
   const portalLabels: Record<PortalType, string> = {
     visitante: 'Visitante',
@@ -95,23 +114,28 @@ export default function BibliotecaDasTravessias() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 space-y-8">
+      <div className="container mx-auto px-4 py-8 space-y-10">
+        {/* Header */}
         <SectionHeader
           title="Biblioteca das Travessias"
-          subtitle="Um espaço de leitura, reconhecimento e escolha — onde compreendemos qual campo sustenta o que está sendo vivido"
-          icon={<BookOpen className="h-8 w-8 text-primary" />}
+          subtitle="Ferramentas para sustentar o que não cabe em protocolos"
+          icon={<BookOpen className="h-8 w-8 text-gold" />}
         />
 
-        {/* Introduction */}
-        <Card className="bg-card/50 border-primary/20">
-          <CardContent className="p-6">
-            <div className="flex items-start gap-4">
-              <Compass className="h-6 w-6 text-primary shrink-0 mt-1" />
-              <div className="space-y-2">
-                <p className="text-foreground/90">
+        {/* Manifesto Block */}
+        <Card className="bg-gradient-to-br from-card/80 to-card/40 border-gold/30 overflow-hidden relative">
+          <div className="absolute inset-0 pattern-geometric opacity-30" />
+          <CardContent className="p-8 relative">
+            <div className="flex items-start gap-6">
+              <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center shrink-0">
+                <Compass className="h-6 w-6 text-gold" />
+              </div>
+              <div className="space-y-4">
+                <blockquote className="text-xl font-display text-foreground/90 italic border-l-2 border-gold/50 pl-4">
+                  "Onde o imprevisível encontra forma, símbolo e cuidado."
+                </blockquote>
+                <p className="text-muted-foreground leading-relaxed">
                   Esta não é uma biblioteca de técnicas. É uma biblioteca de <em>passagens</em>.
-                </p>
-                <p className="text-muted-foreground text-sm">
                   Cada ferramenta aqui foi nomeada não pelo que faz, mas pelo campo que sustenta.
                   Antes de escolher, leia. Antes de aplicar, reconheça.
                 </p>
@@ -120,93 +144,167 @@ export default function BibliotecaDasTravessias() {
           </CardContent>
         </Card>
 
-        {/* Categories and Items */}
-        {Object.entries(groupedItems).map(([categoria, categoryItems]) => (
-          <section key={categoria} className="space-y-4">
+        {/* Symbolic Families */}
+        {families.map((family) => {
+          const familyItems = getItemsByFamily(family.id, family.nome);
+          
+          return (
+            <section key={family.id} className="space-y-6">
+              {/* Family Header */}
+              <Card className="bg-card/30 border-gold/20">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-3">
+                    <Sparkles className="h-5 w-5 text-gold" />
+                    <CardTitle className="font-display text-xl text-foreground">
+                      {family.nome}
+                    </CardTitle>
+                  </div>
+                  {family.descricao && (
+                    <CardDescription className="text-muted-foreground/80 mt-2 leading-relaxed">
+                      {family.descricao}
+                    </CardDescription>
+                  )}
+                </CardHeader>
+              </Card>
+
+              {/* Tools in this Family */}
+              {familyItems.length > 0 ? (
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  {familyItems.map((item) => {
+                    const isLocked = !canAccessItem(item.portal_minimo);
+
+                    return (
+                      <Card
+                        key={item.id}
+                        className={`group cursor-pointer transition-all duration-300 hover:shadow-lg ${
+                          isLocked 
+                            ? 'opacity-75 border-muted' 
+                            : 'hover:border-gold/40 hover:shadow-gold/10'
+                        }`}
+                        onClick={() => handleItemClick(item)}
+                      >
+                        {/* Cover Image */}
+                        {item.capa_url && (
+                          <div className="relative h-40 overflow-hidden rounded-t-lg">
+                            <img
+                              src={item.capa_url}
+                              alt={item.titulo_ritual}
+                              className={`w-full h-full object-cover transition-transform duration-300 ${
+                                isLocked ? 'filter blur-sm' : 'group-hover:scale-105'
+                              }`}
+                            />
+                            {isLocked && (
+                              <div className="absolute inset-0 bg-background/60 flex items-center justify-center">
+                                <Lock className="h-8 w-8 text-muted-foreground" />
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        <CardContent className="p-4 space-y-3">
+                          {/* Header */}
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="space-y-1">
+                              <h3 className="font-semibold text-foreground group-hover:text-gold transition-colors">
+                                {item.titulo_ritual}
+                              </h3>
+                              {item.subtitulo && (
+                                <p className="text-sm text-muted-foreground italic">
+                                  {item.subtitulo}
+                                </p>
+                              )}
+                            </div>
+                            {isLocked && (
+                              <Badge variant="outline" className="shrink-0 text-xs">
+                                {portalLabels[item.portal_minimo]}
+                              </Badge>
+                            )}
+                          </div>
+
+                          {/* Quando é chamada - truncated */}
+                          <p className="text-sm text-muted-foreground line-clamp-2">
+                            {item.quando_chamada}
+                          </p>
+
+                          {/* Action */}
+                          <div className="pt-2">
+                            {isLocked ? (
+                              <Button variant="outline" size="sm" className="w-full opacity-70">
+                                <Lock className="h-3 w-3 mr-2" />
+                                Disponível após {portalLabels[item.portal_minimo]}
+                              </Button>
+                            ) : (
+                              <Button variant="ghost" size="sm" className="w-full group-hover:bg-gold/10 group-hover:text-gold">
+                                Conhecer esta travessia
+                                <ChevronRight className="h-4 w-4 ml-1" />
+                              </Button>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              ) : (
+                <Card className="p-6 text-center border-dashed">
+                  <p className="text-muted-foreground text-sm">
+                    Nenhuma ferramenta publicada nesta família ainda.
+                  </p>
+                </Card>
+              )}
+            </section>
+          );
+        })}
+
+        {/* Fallback for items without family */}
+        {items.filter(item => !item.familia_id && !families.some(f => f.nome === item.categoria)).length > 0 && (
+          <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <Sparkles className="h-5 w-5 text-primary/70" />
-              <h2 className="text-xl font-semibold text-foreground">{categoria}</h2>
+              <Sparkles className="h-5 w-5 text-muted-foreground" />
+              <h2 className="text-xl font-semibold text-foreground">Outras Travessias</h2>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {categoryItems.map((item) => {
-                const isLocked = !canAccessItem(item.portal_minimo);
+              {items
+                .filter(item => !item.familia_id && !families.some(f => f.nome === item.categoria))
+                .map((item) => {
+                  const isLocked = !canAccessItem(item.portal_minimo);
 
-                return (
-                  <Card
-                    key={item.id}
-                    className={`group cursor-pointer transition-all duration-300 hover:shadow-lg ${
-                      isLocked 
-                        ? 'opacity-75 border-muted' 
-                        : 'hover:border-primary/40'
-                    }`}
-                    onClick={() => handleItemClick(item)}
-                  >
-                    {/* Cover Image */}
-                    {item.capa_url && (
-                      <div className="relative h-40 overflow-hidden rounded-t-lg">
-                        <img
-                          src={item.capa_url}
-                          alt={item.titulo_ritual}
-                          className={`w-full h-full object-cover transition-transform duration-300 ${
-                            isLocked ? 'filter blur-sm' : 'group-hover:scale-105'
-                          }`}
-                        />
-                        {isLocked && (
-                          <div className="absolute inset-0 bg-background/60 flex items-center justify-center">
-                            <Lock className="h-8 w-8 text-muted-foreground" />
+                  return (
+                    <Card
+                      key={item.id}
+                      className={`group cursor-pointer transition-all duration-300 hover:shadow-lg ${
+                        isLocked 
+                          ? 'opacity-75 border-muted' 
+                          : 'hover:border-gold/40'
+                      }`}
+                      onClick={() => handleItemClick(item)}
+                    >
+                      <CardContent className="p-4 space-y-3">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="space-y-1">
+                            <h3 className="font-semibold text-foreground group-hover:text-gold transition-colors">
+                              {item.titulo_ritual}
+                            </h3>
+                            {item.subtitulo && (
+                              <p className="text-sm text-muted-foreground italic">
+                                {item.subtitulo}
+                              </p>
+                            )}
                           </div>
-                        )}
-                      </div>
-                    )}
-
-                    <CardContent className="p-4 space-y-3">
-                      {/* Header */}
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="space-y-1">
-                          <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
-                            {item.titulo_ritual}
-                          </h3>
-                          {item.subtitulo && (
-                            <p className="text-sm text-muted-foreground italic">
-                              {item.subtitulo}
-                            </p>
-                          )}
                         </div>
-                        {isLocked && (
-                          <Badge variant="outline" className="shrink-0 text-xs">
-                            {portalLabels[item.portal_minimo]}
-                          </Badge>
-                        )}
-                      </div>
-
-                      {/* Quando é chamada - truncated */}
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {item.quando_chamada}
-                      </p>
-
-                      {/* Action */}
-                      <div className="pt-2">
-                        {isLocked ? (
-                          <Button variant="outline" size="sm" className="w-full opacity-70">
-                            <Lock className="h-3 w-3 mr-2" />
-                            Disponível após {portalLabels[item.portal_minimo]}
-                          </Button>
-                        ) : (
-                          <Button variant="ghost" size="sm" className="w-full group-hover:bg-primary/10">
-                            Conhecer esta travessia
-                          </Button>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {item.quando_chamada}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
             </div>
           </section>
-        ))}
+        )}
 
-        {items.length === 0 && (
+        {families.length === 0 && items.length === 0 && (
           <Card className="p-8 text-center">
             <p className="text-muted-foreground">
               Nenhuma travessia disponível no momento.
