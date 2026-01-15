@@ -3255,6 +3255,7 @@ export type Database = {
           icone: string | null
           id: string
           ordem: number
+          portal_id: string | null
           portal_minimo: Database["public"]["Enums"]["portal_type"] | null
           rota: string
           sala_id: string
@@ -3272,6 +3273,7 @@ export type Database = {
           icone?: string | null
           id?: string
           ordem?: number
+          portal_id?: string | null
           portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
           rota: string
           sala_id: string
@@ -3289,6 +3291,7 @@ export type Database = {
           icone?: string | null
           id?: string
           ordem?: number
+          portal_id?: string | null
           portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
           rota?: string
           sala_id?: string
@@ -3297,6 +3300,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "sala_ferramentas_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: false
+            referencedRelation: "conteudo_travessias"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "sala_ferramentas_sala_id_fkey"
             columns: ["sala_id"]
