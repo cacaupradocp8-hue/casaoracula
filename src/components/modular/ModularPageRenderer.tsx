@@ -27,6 +27,8 @@ import {
   GuidedWritingBlock,
   SymbolicPracticeBlock,
   AnchoringInputBlock,
+  ArchetypalMappingBlock,
+  NarrativeResultBlock,
 } from './blocks';
 
 interface ModularPageRendererProps {
@@ -150,6 +152,11 @@ function BlockRenderer({ block, contextData, onAction, onSaveRegistro }: BlockRe
       return <SymbolicPracticeBlock block={block} onSave={onSaveRegistro} />;
     case 'anchoring_input':
       return <AnchoringInputBlock block={block} onSave={onSaveRegistro} />;
+    // Archetypal mapping blocks
+    case 'archetypal_mapping':
+      return <ArchetypalMappingBlock block={block} onSave={onSaveRegistro} />;
+    case 'narrative_result':
+      return <NarrativeResultBlock block={block} onSave={onSaveRegistro} />;
     default:
       console.warn(`Unknown block type: ${block.blockType}`);
       return null;

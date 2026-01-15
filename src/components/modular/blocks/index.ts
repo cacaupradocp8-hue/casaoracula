@@ -20,3 +20,6 @@ export { PlasticityMapBlock } from './PlasticityMapBlock';
 export { GuidedWritingBlock } from './GuidedWritingBlock';
 export { SymbolicPracticeBlock } from './SymbolicPracticeBlock';
 export { AnchoringInputBlock } from './AnchoringInputBlock';
+// Archetypal mapping blocks
+export { ArchetypalMappingBlock } from './ArchetypalMappingBlock';
+export { NarrativeResultBlock } from './NarrativeResultBlock';

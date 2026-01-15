@@ -94,6 +94,9 @@ const BLOCK_TYPE_ICONS: Record<ContentBlockType, React.ElementType> = {
   guided_writing: FileText,
   symbolic_practice: Circle,
   anchoring_input: Target,
+  // Archetypal mapping blocks
+  archetypal_mapping: Sparkles,
+  narrative_result: BookOpen,
 };
 
 interface ContextEntity {
