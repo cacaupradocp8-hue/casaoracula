@@ -3334,6 +3334,8 @@ export type Database = {
         | "guided_writing"
         | "symbolic_practice"
         | "anchoring_input"
+        | "archetypal_mapping"
+        | "narrative_result"
       content_type: "text" | "video" | "audio" | "file" | "mixed"
       mentoria_tipo: "aviso" | "evento" | "supervisao"
       nivel_sala: "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3"
@@ -3509,6 +3511,8 @@ export const Constants = {
         "guided_writing",
         "symbolic_practice",
         "anchoring_input",
+        "archetypal_mapping",
+        "narrative_result",
       ],
       content_type: ["text", "video", "audio", "file", "mixed"],
       mentoria_tipo: ["aviso", "evento", "supervisao"],
