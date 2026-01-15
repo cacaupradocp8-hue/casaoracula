@@ -11,9 +11,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Plus, Pencil, Trash2, ChevronDown, ChevronRight, BookOpen, Video, DoorOpen, Music, FileText, Type, Eye, EyeOff, Image } from 'lucide-react';
+import { Plus, Pencil, Trash2, ChevronDown, ChevronRight, BookOpen, Video, DoorOpen, Music, FileText, Type, Eye, EyeOff, Image, Wrench, ExternalLink } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 import { Database } from '@/integrations/supabase/types';
 
 type PortalType = Database['public']['Enums']['portal_type'];
@@ -51,6 +52,16 @@ interface Aula {
   publicado: boolean;
 }
 
+interface Ferramenta {
+  id: string;
+  ferramenta_nome: string;
+  ferramenta_descricao: string;
+  icone: string | null;
+  ativa: boolean;
+  ordem: number;
+  sala_id: string;
+}
+
 const PORTAL_LABELS: Record<PortalType, string> = {
   visitante: 'Visitante',
   pre_iniciada: 'Pré-Iniciada',
@@ -59,9 +70,11 @@ const PORTAL_LABELS: Record<PortalType, string> = {
 };
 
 export function AdminConteudosTab() {
+  const navigate = useNavigate();
   const [portais, setPortais] = useState<Portal[]>([]);
   const [salas, setSalas] = useState<Sala[]>([]);
   const [aulas, setAulas] = useState<Record<string, Aula[]>>({});
+  const [ferramentas, setFerramentas] = useState<Ferramenta[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedPortal, setExpandedPortal] = useState<string | null>(null);
 
@@ -103,6 +116,7 @@ export function AdminConteudosTab() {
   useEffect(() => {
     fetchPortais();
     fetchSalas();
+    fetchFerramentas();
   }, []);
 
   const fetchPortais = async () => {
@@ -145,6 +159,24 @@ export function AdminConteudosTab() {
     } else {
       setSalas(data || []);
     }
+  };
+
+  const fetchFerramentas = async () => {
+    const { data, error } = await supabase
+      .from('sala_ferramentas')
+      .select('id, ferramenta_nome, ferramenta_descricao, icone, ativa, ordem, sala_id')
+      .order('ordem', { ascending: true });
+
+    if (error) {
+      console.error('Erro ao carregar ferramentas:', error);
+    } else {
+      setFerramentas(data || []);
+    }
+  };
+
+  const getFerramentasBySala = (salaId: string | null): Ferramenta[] => {
+    if (!salaId) return [];
+    return ferramentas.filter(f => f.sala_id === salaId);
   };
 
   const fetchAulas = async (portalId: string) => {
@@ -575,93 +607,170 @@ export function AdminConteudosTab() {
                 </CardHeader>
 
                 {isExpanded && (
-                  <CardContent className="pt-4 border-t">
-                    <div className="flex justify-between items-center mb-4">
-                      <h4 className="font-medium text-sm">Aulas deste Portal</h4>
-                      <Button size="sm" variant="outline" onClick={() => openAulaDialog(portal.id)} className="gap-1">
-                        <Plus className="w-3 h-3" />
-                        Nova Aula
-                      </Button>
-                    </div>
-
-                    {portalAulas.length === 0 ? (
-                      <p className="text-sm text-muted-foreground text-center py-6">
-                        Nenhuma aula cadastrada neste portal.
-                      </p>
-                    ) : (
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead className="w-12">Ordem</TableHead>
-                            <TableHead>Título</TableHead>
-                            <TableHead>Portal</TableHead>
-                            <TableHead className="w-24">Conteúdo</TableHead>
-                            <TableHead className="w-20">Status</TableHead>
-                            <TableHead className="w-24">Ações</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {portalAulas.map((aula) => (
-                            <TableRow key={aula.id} className={!aula.publicado ? 'opacity-60' : ''}>
-                              <TableCell>{aula.ordem}</TableCell>
-                              <TableCell>
-                                <div>
-                                  <p className="font-medium">{aula.titulo}</p>
-                                  {aula.descricao_curta && (
-                                    <p className="text-xs text-muted-foreground truncate max-w-xs">
-                                      {aula.descricao_curta}
-                                    </p>
-                                  )}
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-sm">{PORTAL_LABELS[aula.portal_minimo]}</TableCell>
-                              <TableCell>
-                                <div className="flex gap-1" title="Tipos de conteúdo">
-                                  {aula.video_url && <Video className="w-4 h-4 text-red-500" />}
-                                  {aula.audio_url && <Music className="w-4 h-4 text-purple-500" />}
-                                  {aula.pdf_url && <FileText className="w-4 h-4 text-orange-500" />}
-                                  {aula.texto_aula && <Type className="w-4 h-4 text-blue-500" />}
-                                  {!aula.video_url && !aula.audio_url && !aula.pdf_url && !aula.texto_aula && (
-                                    <span className="text-muted-foreground text-xs">—</span>
-                                  )}
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant={aula.publicado ? 'default' : 'secondary'} className="text-xs">
-                                  {aula.publicado ? 'Pub.' : 'Rasc.'}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex gap-1">
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => toggleAulaPublicado(aula)}
-                                    title={aula.publicado ? 'Despublicar' : 'Publicar'}
-                                  >
-                                    {aula.publicado ? (
-                                      <Eye className="w-3 h-3 text-primary" />
-                                    ) : (
-                                      <EyeOff className="w-3 h-3" />
+                  <CardContent className="pt-4 border-t space-y-6">
+                    {/* Ferramentas Vinculadas (via Sala) */}
+                    {portal.sala_id && (
+                      <div>
+                        <div className="flex justify-between items-center mb-3">
+                          <h4 className="font-medium text-sm flex items-center gap-2">
+                            <Wrench className="w-4 h-4" />
+                            Ferramentas da Sala
+                          </h4>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => navigate('/admin?tab=salas')}
+                            className="gap-1"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                            Gerenciar na Sala
+                          </Button>
+                        </div>
+                        {(() => {
+                          const salaFerramentas = getFerramentasBySala(portal.sala_id);
+                          if (salaFerramentas.length === 0) {
+                            return (
+                              <p className="text-sm text-muted-foreground text-center py-4 border rounded-lg bg-muted/20">
+                                Nenhuma ferramenta cadastrada na sala vinculada.
+                              </p>
+                            );
+                          }
+                          return (
+                            <div className="grid gap-2">
+                              {salaFerramentas.map((f) => (
+                                <div
+                                  key={f.id}
+                                  className={`flex items-center gap-3 p-3 border rounded-lg ${
+                                    !f.ativa ? 'opacity-50' : ''
+                                  }`}
+                                >
+                                  <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center shrink-0">
+                                    <Wrench className="w-4 h-4 text-primary" />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="font-medium text-sm">{f.ferramenta_nome}</p>
+                                    {f.ferramenta_descricao && (
+                                      <p className="text-xs text-muted-foreground truncate">
+                                        {f.ferramenta_descricao}
+                                      </p>
                                     )}
-                                  </Button>
-                                  <Button variant="ghost" size="icon" onClick={() => openAulaDialog(portal.id, aula)}>
-                                    <Pencil className="w-3 h-3" />
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => openDeleteDialog('aula', aula.id, aula.titulo)}
-                                  >
-                                    <Trash2 className="w-3 h-3 text-destructive" />
-                                  </Button>
+                                  </div>
+                                  <div className="flex items-center gap-2 shrink-0">
+                                    <Badge variant={f.ativa ? 'default' : 'secondary'} className="text-xs">
+                                      {f.ativa ? 'Ativa' : 'Inativa'}
+                                    </Badge>
+                                    <span className="text-xs text-muted-foreground">#{f.ordem}</span>
+                                  </div>
                                 </div>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                              ))}
+                            </div>
+                          );
+                        })()}
+                      </div>
                     )}
+
+                    {!portal.sala_id && (
+                      <div className="p-4 border rounded-lg bg-muted/20 text-center">
+                        <p className="text-sm text-muted-foreground">
+                          Este portal não está vinculado a uma Sala.
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Vincule a uma Sala para associar ferramentas automaticamente.
+                        </p>
+                      </div>
+                    )}
+
+                    <Separator />
+
+                    {/* Aulas */}
+                    <div>
+                      <div className="flex justify-between items-center mb-4">
+                        <h4 className="font-medium text-sm">Aulas deste Portal</h4>
+                        <Button size="sm" variant="outline" onClick={() => openAulaDialog(portal.id)} className="gap-1">
+                          <Plus className="w-3 h-3" />
+                          Nova Aula
+                        </Button>
+                      </div>
+
+                      {portalAulas.length === 0 ? (
+                        <p className="text-sm text-muted-foreground text-center py-6">
+                          Nenhuma aula cadastrada neste portal.
+                        </p>
+                      ) : (
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead className="w-12">Ordem</TableHead>
+                              <TableHead>Título</TableHead>
+                              <TableHead>Portal</TableHead>
+                              <TableHead className="w-24">Conteúdo</TableHead>
+                              <TableHead className="w-20">Status</TableHead>
+                              <TableHead className="w-24">Ações</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {portalAulas.map((aula) => (
+                              <TableRow key={aula.id} className={!aula.publicado ? 'opacity-60' : ''}>
+                                <TableCell>{aula.ordem}</TableCell>
+                                <TableCell>
+                                  <div>
+                                    <p className="font-medium">{aula.titulo}</p>
+                                    {aula.descricao_curta && (
+                                      <p className="text-xs text-muted-foreground truncate max-w-xs">
+                                        {aula.descricao_curta}
+                                      </p>
+                                    )}
+                                  </div>
+                                </TableCell>
+                                <TableCell className="text-sm">{PORTAL_LABELS[aula.portal_minimo]}</TableCell>
+                                <TableCell>
+                                  <div className="flex gap-1" title="Tipos de conteúdo">
+                                    {aula.video_url && <Video className="w-4 h-4 text-red-500" />}
+                                    {aula.audio_url && <Music className="w-4 h-4 text-purple-500" />}
+                                    {aula.pdf_url && <FileText className="w-4 h-4 text-orange-500" />}
+                                    {aula.texto_aula && <Type className="w-4 h-4 text-blue-500" />}
+                                    {!aula.video_url && !aula.audio_url && !aula.pdf_url && !aula.texto_aula && (
+                                      <span className="text-muted-foreground text-xs">—</span>
+                                    )}
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <Badge variant={aula.publicado ? 'default' : 'secondary'} className="text-xs">
+                                    {aula.publicado ? 'Pub.' : 'Rasc.'}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <div className="flex gap-1">
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={() => toggleAulaPublicado(aula)}
+                                      title={aula.publicado ? 'Despublicar' : 'Publicar'}
+                                    >
+                                      {aula.publicado ? (
+                                        <Eye className="w-3 h-3 text-primary" />
+                                      ) : (
+                                        <EyeOff className="w-3 h-3" />
+                                      )}
+                                    </Button>
+                                    <Button variant="ghost" size="icon" onClick={() => openAulaDialog(portal.id, aula)}>
+                                      <Pencil className="w-3 h-3" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={() => openDeleteDialog('aula', aula.id, aula.titulo)}
+                                    >
+                                      <Trash2 className="w-3 h-3 text-destructive" />
+                                    </Button>
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      )}
+                    </div>
                   </CardContent>
                 )}
               </Card>
