@@ -1130,113 +1130,202 @@ export type Database = {
         Row: {
           ativo: boolean
           caminho_expansao: string | null
+          cautelas_eticas: string | null
           chave: string
+          convites_integracao: string[] | null
           cor_primaria: string | null
           cor_secundaria: string | null
           created_at: string
           dom_central: string | null
+          espelhos_simbolicos: string[] | null
           essencia_simbolica: string
           expressao_sombra: string | null
           ferida_central: string | null
           icone: string | null
           id: string
+          linguagem_evitar: string | null
+          linguagem_que_abre: string | null
           nome: string
           nome_en: string | null
+          notas_leitura: string | null
           numero: number
           ordem: number
           pergunta_reflexiva: string | null
+          perguntas_abertura: string[] | null
           pratica_simbolica: string | null
+          prompts_reenquadramento: string[] | null
+          resistencias_tipicas: string | null
+          ritual_encerramento: string | null
+          transferencias_comuns: string | null
           updated_at: string
         }
         Insert: {
           ativo?: boolean
           caminho_expansao?: string | null
+          cautelas_eticas?: string | null
           chave: string
+          convites_integracao?: string[] | null
           cor_primaria?: string | null
           cor_secundaria?: string | null
           created_at?: string
           dom_central?: string | null
+          espelhos_simbolicos?: string[] | null
           essencia_simbolica: string
           expressao_sombra?: string | null
           ferida_central?: string | null
           icone?: string | null
           id?: string
+          linguagem_evitar?: string | null
+          linguagem_que_abre?: string | null
           nome: string
           nome_en?: string | null
+          notas_leitura?: string | null
           numero: number
           ordem?: number
           pergunta_reflexiva?: string | null
+          perguntas_abertura?: string[] | null
           pratica_simbolica?: string | null
+          prompts_reenquadramento?: string[] | null
+          resistencias_tipicas?: string | null
+          ritual_encerramento?: string | null
+          transferencias_comuns?: string | null
           updated_at?: string
         }
         Update: {
           ativo?: boolean
           caminho_expansao?: string | null
+          cautelas_eticas?: string | null
           chave?: string
+          convites_integracao?: string[] | null
           cor_primaria?: string | null
           cor_secundaria?: string | null
           created_at?: string
           dom_central?: string | null
+          espelhos_simbolicos?: string[] | null
           essencia_simbolica?: string
           expressao_sombra?: string | null
           ferida_central?: string | null
           icone?: string | null
           id?: string
+          linguagem_evitar?: string | null
+          linguagem_que_abre?: string | null
           nome?: string
           nome_en?: string | null
+          notas_leitura?: string | null
           numero?: number
           ordem?: number
           pergunta_reflexiva?: string | null
+          perguntas_abertura?: string[] | null
           pratica_simbolica?: string | null
+          prompts_reenquadramento?: string[] | null
+          resistencias_tipicas?: string | null
+          ritual_encerramento?: string | null
+          transferencias_comuns?: string | null
           updated_at?: string
         }
         Relationships: []
+      }
+      eneagrama_feminino_orientacoes: {
+        Row: {
+          arquetipo_id: string | null
+          ativo: boolean
+          created_at: string
+          id: string
+          ordem: number | null
+          texto: string
+          tipo: string
+          titulo: string | null
+          updated_at: string
+        }
+        Insert: {
+          arquetipo_id?: string | null
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          ordem?: number | null
+          texto: string
+          tipo: string
+          titulo?: string | null
+          updated_at?: string
+        }
+        Update: {
+          arquetipo_id?: string | null
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          ordem?: number | null
+          texto?: string
+          tipo?: string
+          titulo?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "eneagrama_feminino_orientacoes_arquetipo_id_fkey"
+            columns: ["arquetipo_id"]
+            isOneToOne: false
+            referencedRelation: "eneagrama_feminino_arquetipos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       eneagrama_feminino_registros: {
         Row: {
           arquetipo_primario: number
           arquetipo_secundario: number | null
           arquetipo_sombra: number | null
+          campo_tensao: string | null
           cliente_id: string | null
           created_at: string
           id: string
+          modo_aplicacao: string | null
           nome_simbolico: string | null
           notas: string | null
+          notas_profissionais: string | null
           reflexao_final: string | null
           respostas_json: Json | null
           terapeuta_id: string | null
           updated_at: string
           user_id: string
+          vetor_integracao: string | null
         }
         Insert: {
           arquetipo_primario: number
           arquetipo_secundario?: number | null
           arquetipo_sombra?: number | null
+          campo_tensao?: string | null
           cliente_id?: string | null
           created_at?: string
           id?: string
+          modo_aplicacao?: string | null
           nome_simbolico?: string | null
           notas?: string | null
+          notas_profissionais?: string | null
           reflexao_final?: string | null
           respostas_json?: Json | null
           terapeuta_id?: string | null
           updated_at?: string
           user_id: string
+          vetor_integracao?: string | null
         }
         Update: {
           arquetipo_primario?: number
           arquetipo_secundario?: number | null
           arquetipo_sombra?: number | null
+          campo_tensao?: string | null
           cliente_id?: string | null
           created_at?: string
           id?: string
+          modo_aplicacao?: string | null
           nome_simbolico?: string | null
           notas?: string | null
+          notas_profissionais?: string | null
           reflexao_final?: string | null
           respostas_json?: Json | null
           terapeuta_id?: string | null
           updated_at?: string
           user_id?: string
+          vetor_integracao?: string | null
         }
         Relationships: []
       }
