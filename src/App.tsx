@@ -72,6 +72,7 @@ import FerramentaDinamica from "./pages/FerramentaDinamica";
 import Big5Simbolico from "./pages/Big5Simbolico";
 import EneagramaFeminino from "./pages/EneagramaFeminino";
 import JornadaHeroina from "./pages/JornadaHeroina";
+import FormacaoOracula from "./pages/FormacaoOracula";
 const queryClient = new QueryClient();
 
 // Loading component for auth states
@@ -146,6 +147,7 @@ function AppRoutes() {
       />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/install" element={<InstallApp />} />
+      <Route path="/formacao-oracula" element={<FormacaoOracula />} />
 
       {/* Protected Routes - New Navigation Structure */}
       <Route
