@@ -2898,12 +2898,46 @@ export type Database = {
         }
         Relationships: []
       }
+      travessia_familias: {
+        Row: {
+          ativa: boolean | null
+          created_at: string
+          descricao: string | null
+          icone: string | null
+          id: string
+          nome: string
+          ordem: number | null
+          updated_at: string
+        }
+        Insert: {
+          ativa?: boolean | null
+          created_at?: string
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          nome: string
+          ordem?: number | null
+          updated_at?: string
+        }
+        Update: {
+          ativa?: boolean | null
+          created_at?: string
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          nome?: string
+          ordem?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       travessia_library_items: {
         Row: {
           capa_url: string | null
           categoria: string
           como_atravessar: string
           created_at: string
+          familia_id: string | null
           id: string
           o_que_sustenta: string
           ordem: number
@@ -2920,6 +2954,7 @@ export type Database = {
           categoria?: string
           como_atravessar?: string
           created_at?: string
+          familia_id?: string | null
           id?: string
           o_que_sustenta?: string
           ordem?: number
@@ -2936,6 +2971,7 @@ export type Database = {
           categoria?: string
           como_atravessar?: string
           created_at?: string
+          familia_id?: string | null
           id?: string
           o_que_sustenta?: string
           ordem?: number
@@ -2947,7 +2983,15 @@ export type Database = {
           titulo_ritual?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "travessia_library_items_familia_id_fkey"
+            columns: ["familia_id"]
+            isOneToOne: false
+            referencedRelation: "travessia_familias"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       travessia_library_media: {
         Row: {
