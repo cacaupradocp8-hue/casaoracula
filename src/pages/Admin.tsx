@@ -32,6 +32,7 @@ import AdminEneagramaFemininoTab from '@/components/admin/AdminEneagramaFeminino
 import { AdminJornadaHeroinaTab } from '@/components/admin/AdminJornadaHeroinaTab';
 import { AdminAudiosTab } from '@/components/admin/AdminAudiosTab';
 import { AdminComunicacaoTab } from '@/components/admin/AdminComunicacaoTab';
+import AdminFormacaoTab from '@/components/admin/AdminFormacaoTab';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -215,6 +216,10 @@ export default function Admin() {
               <MessageSquare className="w-4 h-4" />
               Comunicação
             </TabsTrigger>
+            <TabsTrigger value="formacao" className="gap-2">
+              <GraduationCap className="w-4 h-4 text-gold" />
+              Pág. Vendas
+            </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Cog className="w-4 h-4" />
               Configurações
@@ -335,6 +340,10 @@ export default function Admin() {
 
           <TabsContent value="comunicacao">
             <AdminComunicacaoTab />
+          </TabsContent>
+
+          <TabsContent value="formacao">
+            <AdminFormacaoTab />
           </TabsContent>
 
           <TabsContent value="settings">
