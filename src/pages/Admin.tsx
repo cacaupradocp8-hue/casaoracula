@@ -29,6 +29,7 @@ import { AdminLabirintoTab } from '@/components/admin/AdminLabirintoTab';
 import { AdminFamiliasTab } from '@/components/admin/AdminFamiliasTab';
 import { AdminBig5SymbolicTab } from '@/components/admin/AdminBig5SymbolicTab';
 import AdminEneagramaFemininoTab from '@/components/admin/AdminEneagramaFemininoTab';
+import { AdminJornadaHeroinaTab } from '@/components/admin/AdminJornadaHeroinaTab';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -196,6 +197,10 @@ export default function Admin() {
               <Flower2 className="w-4 h-4" />
               Eneagrama Feminino
             </TabsTrigger>
+            <TabsTrigger value="jornada-heroina" className="gap-2">
+              <Compass className="w-4 h-4 text-purple-400" />
+              Jornada da Heroína
+            </TabsTrigger>
             <TabsTrigger value="ia-config" className="gap-2">
               <Brain className="w-4 h-4" />
               IA Config
@@ -304,6 +309,10 @@ export default function Admin() {
 
           <TabsContent value="eneagrama-feminino">
             <AdminEneagramaFemininoTab />
+          </TabsContent>
+
+          <TabsContent value="jornada-heroina">
+            <AdminJornadaHeroinaTab />
           </TabsContent>
 
           <TabsContent value="ia-config">
