@@ -29,6 +29,7 @@ import {
   AnchoringInputBlock,
   ArchetypalMappingBlock,
   NarrativeResultBlock,
+  SymbolicVisualizationBlock,
 } from './blocks';
 
 interface ModularPageRendererProps {
@@ -157,6 +158,9 @@ function BlockRenderer({ block, contextData, onAction, onSaveRegistro }: BlockRe
       return <ArchetypalMappingBlock block={block} onSave={onSaveRegistro} />;
     case 'narrative_result':
       return <NarrativeResultBlock block={block} onSave={onSaveRegistro} />;
+    // Symbolic visualization block
+    case 'symbolic_visualization':
+      return <SymbolicVisualizationBlock block={block} onSave={onSaveRegistro} />;
     default:
       console.warn(`Unknown block type: ${block.blockType}`);
       return null;
