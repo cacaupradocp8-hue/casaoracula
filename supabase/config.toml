@@ -17,3 +17,9 @@ verify_jwt = false
 
 [functions.ai-chat]
 verify_jwt = false
+
+[functions.check-access-expiration]
+verify_jwt = false
+
+[functions.send-retention-emails]
+verify_jwt = false
