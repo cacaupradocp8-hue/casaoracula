@@ -69,6 +69,10 @@ const DynamicIcon = ({ name, className }: { name: string; className?: string }) 
   return <IconComponent className={className} />;
 };
 
+// Determine sala type based on nivel_minimo
+const isSalaFormacao = (nivel: string) => nivel === 'NIVEL_1';
+const isSalaVisitante = (nivel: string) => nivel === 'NIVEL_0';
+
 export default function SalaDetalhe() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -92,48 +96,63 @@ export default function SalaDetalhe() {
 
     setLoading(true);
     try {
-      // Fetch all data in parallel
-      const [salaRes, portaisRes, quizzesRes, ferramentasRes, cursosRes] = await Promise.all([
-        supabase
-          .from("salas")
-          .select("id, nome_exibicao, texto_entrada, nivel_minimo")
-          .eq("id", id)
-          .eq("ativa", true)
-          .maybeSingle(),
-        supabase
-          .from("conteudo_travessias")
-          .select("*")
-          .eq("sala_id", id)
-          .eq("publicado", true)
-          .order("ordem"),
-        supabase
-          .from("quizzes")
-          .select("id, titulo, descricao")
-          .eq("sala_id", id)
-          .eq("ativo", true),
-        supabase
-          .from("sala_ferramentas")
-          .select("id, ferramenta_nome, ferramenta_descricao, icone, rota, ordem, ativa")
-          .eq("sala_id", id)
-          .eq("ativa", true)
-          .order("ordem"),
-        supabase
-          .from("courses")
-          .select("*")
-          .eq("sala_id", id)
-          .eq("publicado", true)
-          .order("ordem"),
-      ]);
+      // Fetch sala first to determine type
+      const salaRes = await supabase
+        .from("salas")
+        .select("id, nome_exibicao, texto_entrada, nivel_minimo")
+        .eq("id", id)
+        .eq("ativa", true)
+        .maybeSingle();
 
       if (salaRes.error || !salaRes.data) {
         navigate("/dashboard");
         return;
       }
+      
       setSala(salaRes.data);
-      setPortais(portaisRes.data || []);
-      setQuizzes(quizzesRes.data || []);
-      setFerramentas(ferramentasRes.data || []);
-      setCursos((cursosRes.data as Course[]) || []);
+      const nivelMinimo = salaRes.data.nivel_minimo;
+      
+      // Sala da Formação (NIVEL_1): fetch ONLY portais
+      // Other salas: fetch ferramentas, quizzes, cursos (but NOT portais)
+      if (isSalaFormacao(nivelMinimo)) {
+        const portaisRes = await supabase
+          .from("conteudo_travessias")
+          .select("*")
+          .eq("sala_id", id)
+          .eq("publicado", true)
+          .order("ordem");
+        
+        setPortais(portaisRes.data || []);
+        setFerramentas([]);
+        setQuizzes([]);
+        setCursos([]);
+      } else {
+        // Sala Visitante, Iniciada, Orácula: fetch ferramentas, quizzes, cursos
+        const [quizzesRes, ferramentasRes, cursosRes] = await Promise.all([
+          supabase
+            .from("quizzes")
+            .select("id, titulo, descricao")
+            .eq("sala_id", id)
+            .eq("ativo", true),
+          supabase
+            .from("sala_ferramentas")
+            .select("id, ferramenta_nome, ferramenta_descricao, icone, rota, ordem, ativa")
+            .eq("sala_id", id)
+            .eq("ativa", true)
+            .order("ordem"),
+          supabase
+            .from("courses")
+            .select("*")
+            .eq("sala_id", id)
+            .eq("publicado", true)
+            .order("ordem"),
+        ]);
+
+        setPortais([]);
+        setQuizzes(quizzesRes.data || []);
+        setFerramentas(ferramentasRes.data || []);
+        setCursos((cursosRes.data as Course[]) || []);
+      }
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -312,72 +331,84 @@ export default function SalaDetalhe() {
           </div>
         )}
 
-        {/* Portais Grid */}
-        {portais.length > 0 ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {portais.map((portal) => {
-              const isAccessible = canAccessPortal(portal);
+        {/* Portais Grid - Only shown for Sala da Formação */}
+        {sala && isSalaFormacao(sala.nivel_minimo) && (
+          <>
+            {portais.length > 0 ? (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {portais.map((portal) => {
+                  const isAccessible = canAccessPortal(portal);
 
-              return (
-                <Card
-                  key={portal.id}
-                  className={cn(
-                    "group transition-all duration-300 overflow-hidden",
-                    isAccessible && "hover:shadow-gold cursor-pointer",
-                    !isAccessible && "opacity-60",
-                  )}
-                >
-                  {portal.capa_url && (
-                    <div className="h-32 overflow-hidden">
-                      <img
-                        src={portal.capa_url}
-                        alt={portal.titulo}
-                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                      />
-                    </div>
-                  )}
-                  <CardHeader className="pb-2">
-                    <div className="flex items-start justify-between">
-                      <div
-                        className={cn(
-                          "w-10 h-10 rounded-lg flex items-center justify-center",
-                          isAccessible ? "bg-gold/20 text-gold" : "bg-muted text-muted-foreground",
-                        )}
-                      >
-                        {isAccessible ? <BookOpen className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
-                      </div>
-                      <span className="text-xs text-muted-foreground">Portal {portal.ordem}</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <CardTitle
-                      className={cn("text-lg mb-1", isAccessible && "group-hover:text-gold transition-colors")}
-                    >
-                      {portal.titulo}
-                    </CardTitle>
-                    {portal.subtitulo && <p className="text-sm text-gold mb-2">{portal.subtitulo}</p>}
-                    <CardDescription className="text-sm line-clamp-2">{portal.descricao}</CardDescription>
-                    <div className="flex items-center justify-between mt-4">
-                      {isAccessible ? (
-                        <Link to={`/portal/${portal.id}`} className="w-full">
-                          <Button variant="gold" className="w-full gap-2">
-                            Entrar
-                            <ArrowRight className="w-4 h-4" />
-                          </Button>
-                        </Link>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">Requer Portal {portal.portal_minimo}</span>
+                  return (
+                    <Card
+                      key={portal.id}
+                      className={cn(
+                        "group transition-all duration-300 overflow-hidden",
+                        isAccessible && "hover:shadow-gold cursor-pointer",
+                        !isAccessible && "opacity-60",
                       )}
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        ) : (
+                    >
+                      {portal.capa_url && (
+                        <div className="h-32 overflow-hidden">
+                          <img
+                            src={portal.capa_url}
+                            alt={portal.titulo}
+                            className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                          />
+                        </div>
+                      )}
+                      <CardHeader className="pb-2">
+                        <div className="flex items-start justify-between">
+                          <div
+                            className={cn(
+                              "w-10 h-10 rounded-lg flex items-center justify-center",
+                              isAccessible ? "bg-gold/20 text-gold" : "bg-muted text-muted-foreground",
+                            )}
+                          >
+                            {isAccessible ? <BookOpen className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
+                          </div>
+                          <span className="text-xs text-muted-foreground">Portal {portal.ordem}</span>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <CardTitle
+                          className={cn("text-lg mb-1", isAccessible && "group-hover:text-gold transition-colors")}
+                        >
+                          {portal.titulo}
+                        </CardTitle>
+                        {portal.subtitulo && <p className="text-sm text-gold mb-2">{portal.subtitulo}</p>}
+                        <CardDescription className="text-sm line-clamp-2">{portal.descricao}</CardDescription>
+                        <div className="flex items-center justify-between mt-4">
+                          {isAccessible ? (
+                            <Link to={`/portal/${portal.id}`} className="w-full">
+                              <Button variant="gold" className="w-full gap-2">
+                                Entrar
+                                <ArrowRight className="w-4 h-4" />
+                              </Button>
+                            </Link>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">Requer Portal {portal.portal_minimo}</span>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-12 text-muted-foreground">
+                <BookOpen className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>Nenhum portal disponível nesta sala ainda.</p>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Empty state for salas without content */}
+        {sala && !isSalaFormacao(sala.nivel_minimo) && ferramentas.length === 0 && quizzes.length === 0 && cursos.length === 0 && (
           <div className="text-center py-12 text-muted-foreground">
-            <BookOpen className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>Nenhum portal disponível nesta sala ainda.</p>
+            <Wrench className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            <p>Nenhuma ferramenta disponível nesta sala ainda.</p>
           </div>
         )}
 
