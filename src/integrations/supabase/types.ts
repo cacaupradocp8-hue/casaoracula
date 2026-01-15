@@ -255,6 +255,51 @@ export type Database = {
         }
         Relationships: []
       }
+      audio_assets: {
+        Row: {
+          capa_url: string | null
+          categoria: string | null
+          created_at: string | null
+          descricao: string | null
+          duracao_segundos: number | null
+          file_path: string
+          id: string
+          ordem: number | null
+          portal_minimo: Database["public"]["Enums"]["portal_type"] | null
+          publicado: boolean | null
+          titulo: string
+          updated_at: string | null
+        }
+        Insert: {
+          capa_url?: string | null
+          categoria?: string | null
+          created_at?: string | null
+          descricao?: string | null
+          duracao_segundos?: number | null
+          file_path: string
+          id?: string
+          ordem?: number | null
+          portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
+          publicado?: boolean | null
+          titulo: string
+          updated_at?: string | null
+        }
+        Update: {
+          capa_url?: string | null
+          categoria?: string | null
+          created_at?: string | null
+          descricao?: string | null
+          duracao_segundos?: number | null
+          file_path?: string
+          id?: string
+          ordem?: number | null
+          portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
+          publicado?: boolean | null
+          titulo?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       big5_dimensoes: {
         Row: {
           ativo: boolean
@@ -2836,6 +2881,51 @@ export type Database = {
         }
         Relationships: []
       }
+      plans: {
+        Row: {
+          ativo: boolean | null
+          created_at: string | null
+          descricao: string | null
+          destaque: boolean | null
+          features: Json | null
+          id: string
+          max_clientes: number
+          nome: string
+          ordem: number | null
+          portal_resultante: Database["public"]["Enums"]["portal_type"]
+          preco_mensal: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string | null
+          descricao?: string | null
+          destaque?: boolean | null
+          features?: Json | null
+          id: string
+          max_clientes?: number
+          nome: string
+          ordem?: number | null
+          portal_resultante: Database["public"]["Enums"]["portal_type"]
+          preco_mensal?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string | null
+          descricao?: string | null
+          destaque?: boolean | null
+          features?: Json | null
+          id?: string
+          max_clientes?: number
+          nome?: string
+          ordem?: number | null
+          portal_resultante?: Database["public"]["Enums"]["portal_type"]
+          preco_mensal?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       portal_salas: {
         Row: {
           created_at: string
@@ -3959,6 +4049,10 @@ export type Database = {
       }
       registro_pertence_terapeuta: {
         Args: { _caso_id: string; _terapeuta_id: string; _user_id: string }
+        Returns: boolean
+      }
+      user_has_portal_access: {
+        Args: { required_portal: Database["public"]["Enums"]["portal_type"] }
         Returns: boolean
       }
     }
