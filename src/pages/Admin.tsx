@@ -1,7 +1,7 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree } from 'lucide-react';
 import { AdminCursosTab } from '@/components/admin/AdminCursosTab';
 import { AdminUsersTab } from '@/components/admin/AdminUsersTab';
 import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
@@ -26,6 +26,7 @@ import { AdminBlocksTab } from '@/components/admin/AdminBlocksTab';
 import { AdminAISettingsTab } from '@/components/admin/AdminAISettingsTab';
 import { AdminBibliotecaTravessiasTab } from '@/components/admin/AdminBibliotecaTravessiasTab';
 import { AdminLabirintoTab } from '@/components/admin/AdminLabirintoTab';
+import { AdminFamiliasTab } from '@/components/admin/AdminFamiliasTab';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -177,6 +178,10 @@ export default function Admin() {
               <Compass className="w-4 h-4" />
               Travessias
             </TabsTrigger>
+            <TabsTrigger value="familias" className="gap-2">
+              <FolderTree className="w-4 h-4" />
+              Famílias
+            </TabsTrigger>
             <TabsTrigger value="labirinto" className="gap-2">
               <DoorOpen className="w-4 h-4 text-gold" />
               🜂 Labirinto
@@ -273,6 +278,10 @@ export default function Admin() {
 
           <TabsContent value="travessias">
             <AdminBibliotecaTravessiasTab />
+          </TabsContent>
+
+          <TabsContent value="familias">
+            <AdminFamiliasTab />
           </TabsContent>
 
           <TabsContent value="labirinto">

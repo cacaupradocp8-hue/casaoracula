@@ -47,6 +47,13 @@ import {
 } from 'lucide-react';
 import { PortalType } from '@/types/portal';
 
+interface TravessiaFamily {
+  id: string;
+  nome: string;
+  descricao: string | null;
+  ordem: number;
+}
+
 interface TravessiaItem {
   id: string;
   slug: string;
@@ -60,6 +67,7 @@ interface TravessiaItem {
   portal_minimo: PortalType;
   publicado: boolean;
   ordem: number;
+  familia_id: string | null;
 }
 
 interface TravessiaMedia {
@@ -97,6 +105,7 @@ const generateSlug = (title: string): string => {
 
 export function AdminBibliotecaTravessiasTab() {
   const [items, setItems] = useState<TravessiaItem[]>([]);
+  const [families, setFamilies] = useState<TravessiaFamily[]>([]);
   const [media, setMedia] = useState<Record<string, TravessiaMedia[]>>({});
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -118,6 +127,7 @@ export function AdminBibliotecaTravessiasTab() {
     portal_minimo: 'pre_iniciada' as PortalType,
     publicado: false,
     ordem: 0,
+    familia_id: '' as string,
   });
 
   const [mediaFormData, setMediaFormData] = useState({
@@ -129,7 +139,21 @@ export function AdminBibliotecaTravessiasTab() {
 
   useEffect(() => {
     fetchItems();
+    fetchFamilies();
   }, []);
+
+  const fetchFamilies = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('travessia_familias')
+        .select('id, nome, descricao, ordem')
+        .order('ordem');
+      if (error) throw error;
+      setFamilies(data || []);
+    } catch (error) {
+      console.error('Error fetching families:', error);
+    }
+  };
 
   const fetchItems = async () => {
     try {
@@ -182,6 +206,7 @@ export function AdminBibliotecaTravessiasTab() {
         portal_minimo: item.portal_minimo,
         publicado: item.publicado,
         ordem: item.ordem,
+        familia_id: item.familia_id || '',
       });
     } else {
       setSelectedItem(null);
@@ -197,6 +222,7 @@ export function AdminBibliotecaTravessiasTab() {
         portal_minimo: 'pre_iniciada',
         publicado: false,
         ordem: items.length,
+        familia_id: '',
       });
     }
     setDialogOpen(true);
@@ -221,6 +247,7 @@ export function AdminBibliotecaTravessiasTab() {
         ...formData,
         subtitulo: formData.subtitulo || null,
         capa_url: formData.capa_url || null,
+        familia_id: formData.familia_id || null,
       };
 
       if (selectedItem) {
@@ -532,13 +559,37 @@ export function AdminBibliotecaTravessiasTab() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Categoria *</Label>
-                <Input
-                  value={formData.categoria}
-                  onChange={(e) => setFormData(prev => ({ ...prev, categoria: e.target.value }))}
-                  placeholder="Travessias do Imprevisível"
-                />
+                <Label>Família Simbólica</Label>
+                <Select
+                  value={formData.familia_id}
+                  onValueChange={(value) => {
+                    const familia = families.find(f => f.id === value);
+                    setFormData(prev => ({
+                      ...prev,
+                      familia_id: value,
+                      categoria: familia?.nome || prev.categoria,
+                    }));
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione uma família" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {families.map((f) => (
+                      <SelectItem key={f.id} value={f.id}>{f.nome}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Categoria *</Label>
+              <Input
+                value={formData.categoria}
+                onChange={(e) => setFormData(prev => ({ ...prev, categoria: e.target.value }))}
+                placeholder="Travessias do Imprevisível"
+              />
             </div>
 
             <div className="space-y-2">
