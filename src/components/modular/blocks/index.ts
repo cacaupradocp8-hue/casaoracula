@@ -16,3 +16,7 @@ export { EgoLayersBlock } from './EgoLayersBlock';
 export { ArchetypeCardBlock } from './ArchetypeCardBlock';
 export { ReflectionPromptBlock } from './ReflectionPromptBlock';
 export { PlasticityMapBlock } from './PlasticityMapBlock';
+// Formation tool blocks
+export { GuidedWritingBlock } from './GuidedWritingBlock';
+export { SymbolicPracticeBlock } from './SymbolicPracticeBlock';
+export { AnchoringInputBlock } from './AnchoringInputBlock';

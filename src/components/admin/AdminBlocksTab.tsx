@@ -90,6 +90,10 @@ const BLOCK_TYPE_ICONS: Record<ContentBlockType, React.ElementType> = {
   archetype_card: Sparkles,
   reflection_prompt: MessageSquare,
   plasticity_map: Brain,
+  // Formation tool blocks
+  guided_writing: FileText,
+  symbolic_practice: Circle,
+  anchoring_input: Target,
 };
 
 interface ContextEntity {

@@ -23,7 +23,11 @@ export type ContentBlockType =
   | 'ego_layers'
   | 'archetype_card'
   | 'reflection_prompt'
-  | 'plasticity_map';
+  | 'plasticity_map'
+  // Formation tool blocks
+  | 'guided_writing'
+  | 'symbolic_practice'
+  | 'anchoring_input';
 
 // Context type enum - where blocks can be used
 export type BlockContextType = 
@@ -213,6 +217,36 @@ export interface PlasticityMapContent {
   saveToRegistros?: boolean;
 }
 
+// ============================================
+// FORMATION TOOL BLOCK CONTENT SCHEMAS
+// ============================================
+
+export interface GuidedWritingContent {
+  prompt?: string;
+  placeholder?: string;
+  minLength?: number;
+  maxLength?: number;
+  anchorSentence?: string;
+  anchorPlaceholder?: string;
+  saveToRegistros?: boolean;
+}
+
+export interface SymbolicPracticeContent {
+  description?: string;
+  practiceSteps?: string[];
+  closingNote?: string;
+  saveToRegistros?: boolean;
+}
+
+export interface AnchoringInputContent {
+  integrationPrompt?: string;
+  integrationPlaceholder?: string;
+  finalQuestion?: string;
+  finalPlaceholder?: string;
+  saveToRegistros?: boolean;
+  generateAnchorPhrase?: boolean;
+}
+
 export type BlockContent = 
   | RichTextContent
   | ImageContent
@@ -229,7 +263,10 @@ export type BlockContent =
   | EgoLayersContent
   | ArchetypeCardContent
   | ReflectionPromptContent
-  | PlasticityMapContent;
+  | PlasticityMapContent
+  | GuidedWritingContent
+  | SymbolicPracticeContent
+  | AnchoringInputContent;
 
 // ============================================
 // MAIN CONTENT BLOCK INTERFACE
@@ -368,6 +405,30 @@ export const DEFAULT_BLOCK_CONTENT: Record<ContentBlockType, BlockContent> = {
     ],
     saveToRegistros: true 
   },
+  // Formation tool blocks
+  guided_writing: {
+    prompt: '',
+    placeholder: 'Escreva sua reflexão...',
+    minLength: 10,
+    maxLength: 500,
+    anchorSentence: '',
+    anchorPlaceholder: '',
+    saveToRegistros: true
+  },
+  symbolic_practice: {
+    description: '',
+    practiceSteps: [],
+    closingNote: '',
+    saveToRegistros: true
+  },
+  anchoring_input: {
+    integrationPrompt: '',
+    integrationPlaceholder: 'Escreva sua percepção...',
+    finalQuestion: '',
+    finalPlaceholder: 'Sua frase de poder...',
+    saveToRegistros: true,
+    generateAnchorPhrase: true
+  },
 };
 
 // ============================================
@@ -470,6 +531,25 @@ export const BLOCK_TYPE_META: Record<ContentBlockType, { label: string; icon: st
     label: 'Mapa de Plasticidade',
     icon: 'Brain',
     description: 'Ferramenta de transformação neuroplástica',
+    category: 'interactive'
+  },
+  // Formation tool blocks
+  guided_writing: {
+    label: 'Escrita Guiada',
+    icon: 'PenLine',
+    description: 'Nomeação simbólica e escrita reflexiva',
+    category: 'interactive'
+  },
+  symbolic_practice: {
+    label: 'Prática Simbólica',
+    icon: 'Compass',
+    description: 'Guia de prática contemplativa simples',
+    category: 'interactive'
+  },
+  anchoring_input: {
+    label: 'Ancoragem',
+    icon: 'Anchor',
+    description: 'Integração final e frase de poder',
     category: 'interactive'
   },
 };
