@@ -14,6 +14,38 @@ export type Database = {
   }
   public: {
     Tables: {
+      access_expiration_logs: {
+        Row: {
+          expired_at: string
+          id: string
+          previous_portal: string | null
+          reason: string | null
+          user_id: string | null
+        }
+        Insert: {
+          expired_at?: string
+          id?: string
+          previous_portal?: string | null
+          reason?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          expired_at?: string
+          id?: string
+          previous_portal?: string | null
+          reason?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "access_expiration_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agente_conversas: {
         Row: {
           agente_id: string
@@ -2887,6 +2919,7 @@ export type Database = {
           created_at: string | null
           descricao: string | null
           destaque: boolean | null
+          duracao_meses: number | null
           features: Json | null
           id: string
           max_clientes: number
@@ -2894,13 +2927,17 @@ export type Database = {
           ordem: number | null
           portal_resultante: Database["public"]["Enums"]["portal_type"]
           preco_mensal: number | null
+          preco_unico: number | null
+          tipo_cobranca: string | null
           updated_at: string | null
+          url_checkout: string | null
         }
         Insert: {
           ativo?: boolean | null
           created_at?: string | null
           descricao?: string | null
           destaque?: boolean | null
+          duracao_meses?: number | null
           features?: Json | null
           id: string
           max_clientes?: number
@@ -2908,13 +2945,17 @@ export type Database = {
           ordem?: number | null
           portal_resultante: Database["public"]["Enums"]["portal_type"]
           preco_mensal?: number | null
+          preco_unico?: number | null
+          tipo_cobranca?: string | null
           updated_at?: string | null
+          url_checkout?: string | null
         }
         Update: {
           ativo?: boolean | null
           created_at?: string | null
           descricao?: string | null
           destaque?: boolean | null
+          duracao_meses?: number | null
           features?: Json | null
           id?: string
           max_clientes?: number
@@ -2922,7 +2963,10 @@ export type Database = {
           ordem?: number | null
           portal_resultante?: Database["public"]["Enums"]["portal_type"]
           preco_mensal?: number | null
+          preco_unico?: number | null
+          tipo_cobranca?: string | null
           updated_at?: string | null
+          url_checkout?: string | null
         }
         Relationships: []
       }
@@ -3005,6 +3049,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          access_expires_at: string | null
           access_status: string
           avatar_url: string | null
           created_at: string
@@ -3012,10 +3057,13 @@ export type Database = {
           id: string
           is_professional_verified: boolean
           nome: string | null
+          portal: string | null
           role: string
+          subscription_status: string | null
           updated_at: string
         }
         Insert: {
+          access_expires_at?: string | null
           access_status?: string
           avatar_url?: string | null
           created_at?: string
@@ -3023,10 +3071,13 @@ export type Database = {
           id: string
           is_professional_verified?: boolean
           nome?: string | null
+          portal?: string | null
           role?: string
+          subscription_status?: string | null
           updated_at?: string
         }
         Update: {
+          access_expires_at?: string | null
           access_status?: string
           avatar_url?: string | null
           created_at?: string
@@ -3034,7 +3085,9 @@ export type Database = {
           id?: string
           is_professional_verified?: boolean
           nome?: string | null
+          portal?: string | null
           role?: string
+          subscription_status?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -3942,6 +3995,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      activate_fundadora_plan: {
+        Args: { user_id_param: string }
+        Returns: undefined
+      }
+      activate_mentoria_plan: {
+        Args: { user_id_param: string }
+        Returns: undefined
+      }
+      activate_subscription: {
+        Args: { user_id_param: string }
+        Returns: undefined
+      }
       can_access_agent: {
         Args: { _agent_id: string; _user_id: string }
         Returns: boolean
@@ -3957,6 +4022,11 @@ export type Database = {
         Args: { _cliente_id: string; _terapeuta_id: string }
         Returns: boolean
       }
+      cancel_subscription: {
+        Args: { user_id_param: string }
+        Returns: undefined
+      }
+      check_and_expire_access: { Args: never; Returns: number }
       get_agent_with_context: {
         Args: {
           _agent_id: string
