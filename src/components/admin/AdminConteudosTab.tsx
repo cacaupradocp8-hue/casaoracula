@@ -60,6 +60,7 @@ interface Ferramenta {
   ativa: boolean;
   ordem: number;
   sala_id: string;
+  portal_id: string | null;
 }
 
 const PORTAL_LABELS: Record<PortalType, string> = {
@@ -164,7 +165,7 @@ export function AdminConteudosTab() {
   const fetchFerramentas = async () => {
     const { data, error } = await supabase
       .from('sala_ferramentas')
-      .select('id, ferramenta_nome, ferramenta_descricao, icone, ativa, ordem, sala_id')
+      .select('id, ferramenta_nome, ferramenta_descricao, icone, ativa, ordem, sala_id, portal_id')
       .order('ordem', { ascending: true });
 
     if (error) {
@@ -174,9 +175,43 @@ export function AdminConteudosTab() {
     }
   };
 
-  const getFerramentasBySala = (salaId: string | null): Ferramenta[] => {
-    if (!salaId) return [];
-    return ferramentas.filter(f => f.sala_id === salaId);
+  const getFerramentasByPortal = (portalId: string): Ferramenta[] => {
+    return ferramentas.filter(f => f.portal_id === portalId);
+  };
+
+  const getAvailableFerramentas = (): Ferramenta[] => {
+    // Return active ferramentas not yet assigned to a portal
+    return ferramentas.filter(f => !f.portal_id && f.ativa);
+  };
+
+  const addFerramentaToPortal = async (ferramentaId: string, portalId: string) => {
+    const { error } = await supabase
+      .from('sala_ferramentas')
+      .update({ portal_id: portalId })
+      .eq('id', ferramentaId);
+
+    if (error) {
+      toast.error('Erro ao vincular ferramenta');
+      console.error(error);
+    } else {
+      toast.success('Ferramenta vinculada ao portal');
+      fetchFerramentas();
+    }
+  };
+
+  const removeFerramentaFromPortal = async (ferramentaId: string) => {
+    const { error } = await supabase
+      .from('sala_ferramentas')
+      .update({ portal_id: null })
+      .eq('id', ferramentaId);
+
+    if (error) {
+      toast.error('Erro ao desvincular ferramenta');
+      console.error(error);
+    } else {
+      toast.success('Ferramenta removida do portal');
+      fetchFerramentas();
+    }
   };
 
   const fetchAulas = async (portalId: string) => {
@@ -608,77 +643,86 @@ export function AdminConteudosTab() {
 
                 {isExpanded && (
                   <CardContent className="pt-4 border-t space-y-6">
-                    {/* Ferramentas Vinculadas (via Sala) */}
-                    {portal.sala_id && (
-                      <div>
-                        <div className="flex justify-between items-center mb-3">
-                          <h4 className="font-medium text-sm flex items-center gap-2">
-                            <Wrench className="w-4 h-4" />
-                            Ferramentas da Sala
-                          </h4>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => navigate('/admin?tab=salas')}
-                            className="gap-1"
-                          >
-                            <ExternalLink className="w-3 h-3" />
-                            Gerenciar na Sala
-                          </Button>
-                        </div>
-                        {(() => {
-                          const salaFerramentas = getFerramentasBySala(portal.sala_id);
-                          if (salaFerramentas.length === 0) {
-                            return (
+                    {/* Ferramentas Vinculadas ao Portal */}
+                    <div>
+                      <div className="flex justify-between items-center mb-3">
+                        <h4 className="font-medium text-sm flex items-center gap-2">
+                          <Wrench className="w-4 h-4" />
+                          Ferramentas do Portal
+                        </h4>
+                      </div>
+                      {(() => {
+                        const portalFerramentas = getFerramentasByPortal(portal.id);
+                        const availableFerramentas = getAvailableFerramentas();
+                        
+                        return (
+                          <div className="space-y-3">
+                            {portalFerramentas.length === 0 ? (
                               <p className="text-sm text-muted-foreground text-center py-4 border rounded-lg bg-muted/20">
-                                Nenhuma ferramenta cadastrada na sala vinculada.
+                                Nenhuma ferramenta vinculada a este portal.
                               </p>
-                            );
-                          }
-                          return (
-                            <div className="grid gap-2">
-                              {salaFerramentas.map((f) => (
-                                <div
-                                  key={f.id}
-                                  className={`flex items-center gap-3 p-3 border rounded-lg ${
-                                    !f.ativa ? 'opacity-50' : ''
-                                  }`}
+                            ) : (
+                              <div className="grid gap-2">
+                                {portalFerramentas.map((f) => (
+                                  <div
+                                    key={f.id}
+                                    className={`flex items-center gap-3 p-3 border rounded-lg ${
+                                      !f.ativa ? 'opacity-50' : ''
+                                    }`}
+                                  >
+                                    <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center shrink-0">
+                                      <Wrench className="w-4 h-4 text-primary" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <p className="font-medium text-sm">{f.ferramenta_nome}</p>
+                                      {f.ferramenta_descricao && (
+                                        <p className="text-xs text-muted-foreground truncate">
+                                          {f.ferramenta_descricao}
+                                        </p>
+                                      )}
+                                    </div>
+                                    <div className="flex items-center gap-2 shrink-0">
+                                      <Badge variant={f.ativa ? 'default' : 'secondary'} className="text-xs">
+                                        {f.ativa ? 'Ativa' : 'Inativa'}
+                                      </Badge>
+                                      <span className="text-xs text-muted-foreground">#{f.ordem}</span>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => removeFerramentaFromPortal(f.id)}
+                                        title="Remover do portal"
+                                      >
+                                        <Trash2 className="w-3 h-3 text-destructive" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            
+                            {/* Add ferramenta dropdown */}
+                            {availableFerramentas.length > 0 && (
+                              <div className="flex items-center gap-2 pt-2">
+                                <Select
+                                  onValueChange={(value) => addFerramentaToPortal(value, portal.id)}
                                 >
-                                  <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center shrink-0">
-                                    <Wrench className="w-4 h-4 text-primary" />
-                                  </div>
-                                  <div className="flex-1 min-w-0">
-                                    <p className="font-medium text-sm">{f.ferramenta_nome}</p>
-                                    {f.ferramenta_descricao && (
-                                      <p className="text-xs text-muted-foreground truncate">
-                                        {f.ferramenta_descricao}
-                                      </p>
-                                    )}
-                                  </div>
-                                  <div className="flex items-center gap-2 shrink-0">
-                                    <Badge variant={f.ativa ? 'default' : 'secondary'} className="text-xs">
-                                      {f.ativa ? 'Ativa' : 'Inativa'}
-                                    </Badge>
-                                    <span className="text-xs text-muted-foreground">#{f.ordem}</span>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          );
-                        })()}
-                      </div>
-                    )}
-
-                    {!portal.sala_id && (
-                      <div className="p-4 border rounded-lg bg-muted/20 text-center">
-                        <p className="text-sm text-muted-foreground">
-                          Este portal não está vinculado a uma Sala.
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Vincule a uma Sala para associar ferramentas automaticamente.
-                        </p>
-                      </div>
-                    )}
+                                  <SelectTrigger className="flex-1">
+                                    <SelectValue placeholder="Adicionar ferramenta..." />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {availableFerramentas.map((f) => (
+                                      <SelectItem key={f.id} value={f.id}>
+                                        {f.ferramenta_nome}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })()}
+                    </div>
 
                     <Separator />
 
