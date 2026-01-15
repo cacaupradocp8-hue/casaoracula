@@ -1646,6 +1646,225 @@ export type Database = {
         }
         Relationships: []
       }
+      jornada_heroina_fases: {
+        Row: {
+          arquetipos_sugeridos: string[] | null
+          ativo: boolean | null
+          chave: string
+          cor_primaria: string | null
+          created_at: string | null
+          descricao: string
+          icone: string | null
+          id: string
+          linguagem_contencao: string | null
+          microcopy: string | null
+          nome: string
+          nome_en: string | null
+          numero: number
+          ordem: number | null
+          pergunta_central: string | null
+          perguntas_reflexao: string[] | null
+          praticas_simbolicas: string[] | null
+          subtitulo: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          arquetipos_sugeridos?: string[] | null
+          ativo?: boolean | null
+          chave: string
+          cor_primaria?: string | null
+          created_at?: string | null
+          descricao: string
+          icone?: string | null
+          id?: string
+          linguagem_contencao?: string | null
+          microcopy?: string | null
+          nome: string
+          nome_en?: string | null
+          numero: number
+          ordem?: number | null
+          pergunta_central?: string | null
+          perguntas_reflexao?: string[] | null
+          praticas_simbolicas?: string[] | null
+          subtitulo?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          arquetipos_sugeridos?: string[] | null
+          ativo?: boolean | null
+          chave?: string
+          cor_primaria?: string | null
+          created_at?: string | null
+          descricao?: string
+          icone?: string | null
+          id?: string
+          linguagem_contencao?: string | null
+          microcopy?: string | null
+          nome?: string
+          nome_en?: string | null
+          numero?: number
+          ordem?: number | null
+          pergunta_central?: string | null
+          perguntas_reflexao?: string[] | null
+          praticas_simbolicas?: string[] | null
+          subtitulo?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      jornada_heroina_notas_profissionais: {
+        Row: {
+          created_at: string | null
+          fase_numero: number
+          id: string
+          intervencoes_sugeridas: string | null
+          observacoes: string | null
+          padroes_observados: string | null
+          proximos_passos: string | null
+          registro_id: string
+          terapeuta_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          fase_numero: number
+          id?: string
+          intervencoes_sugeridas?: string | null
+          observacoes?: string | null
+          padroes_observados?: string | null
+          proximos_passos?: string | null
+          registro_id: string
+          terapeuta_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          fase_numero?: number
+          id?: string
+          intervencoes_sugeridas?: string | null
+          observacoes?: string | null
+          padroes_observados?: string | null
+          proximos_passos?: string | null
+          registro_id?: string
+          terapeuta_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jornada_heroina_notas_profissionais_registro_id_fkey"
+            columns: ["registro_id"]
+            isOneToOne: false
+            referencedRelation: "jornada_heroina_registros"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jornada_heroina_registros: {
+        Row: {
+          cliente_id: string | null
+          created_at: string | null
+          fase_atual: number | null
+          id: string
+          intencao_inicial: string | null
+          modo: string
+          nome_simbolico: string | null
+          reflexao_final: string | null
+          status: string | null
+          terapeuta_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          cliente_id?: string | null
+          created_at?: string | null
+          fase_atual?: number | null
+          id?: string
+          intencao_inicial?: string | null
+          modo?: string
+          nome_simbolico?: string | null
+          reflexao_final?: string | null
+          status?: string | null
+          terapeuta_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          cliente_id?: string | null
+          created_at?: string | null
+          fase_atual?: number | null
+          id?: string
+          intencao_inicial?: string | null
+          modo?: string
+          nome_simbolico?: string | null
+          reflexao_final?: string | null
+          status?: string | null
+          terapeuta_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jornada_heroina_registros_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jornada_heroina_respostas: {
+        Row: {
+          arquetipo_escolhido: string | null
+          created_at: string | null
+          data_conclusao: string | null
+          data_entrada: string | null
+          fase_numero: number
+          id: string
+          notas_pessoais: string | null
+          registro_id: string
+          respostas_reflexao: Json | null
+          simbolo_pessoal: string | null
+          tom_emocional: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          arquetipo_escolhido?: string | null
+          created_at?: string | null
+          data_conclusao?: string | null
+          data_entrada?: string | null
+          fase_numero: number
+          id?: string
+          notas_pessoais?: string | null
+          registro_id: string
+          respostas_reflexao?: Json | null
+          simbolo_pessoal?: string | null
+          tom_emocional?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          arquetipo_escolhido?: string | null
+          created_at?: string | null
+          data_conclusao?: string | null
+          data_entrada?: string | null
+          fase_numero?: number
+          id?: string
+          notas_pessoais?: string | null
+          registro_id?: string
+          respostas_reflexao?: Json | null
+          simbolo_pessoal?: string | null
+          tom_emocional?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jornada_heroina_respostas_registro_id_fkey"
+            columns: ["registro_id"]
+            isOneToOne: false
+            referencedRelation: "jornada_heroina_registros"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lab_casos: {
         Row: {
           contexto: string | null
