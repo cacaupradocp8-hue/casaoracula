@@ -5,7 +5,7 @@ import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { ArrowLeft, ArrowRight, Check, Lock, Loader2, BookOpen, Play } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Lock, Loader2, BookOpen, Play, Wrench } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature, PortalType } from '@/types/portal';
@@ -34,6 +34,15 @@ interface Aula {
   portal_minimo: PortalType;
 }
 
+interface Ferramenta {
+  id: string;
+  ferramenta_nome: string;
+  ferramenta_descricao: string | null;
+  icone: string | null;
+  rota: string;
+  ativa: boolean;
+}
+
 interface AulaProgress {
   aula_id: string;
 }
@@ -46,6 +55,7 @@ export default function PortalDetalhe() {
   const [portal, setPortal] = useState<Portal | null>(null);
   const [sala, setSala] = useState<Sala | null>(null);
   const [aulas, setAulas] = useState<Aula[]>([]);
+  const [ferramentas, setFerramentas] = useState<Ferramenta[]>([]);
   const [completedAulas, setCompletedAulas] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -97,6 +107,20 @@ export default function PortalDetalhe() {
         console.error('Error fetching aulas:', aulasError);
       } else {
         setAulas(aulasData || []);
+      }
+
+      // Fetch ferramentas linked to this portal
+      const { data: ferramentasData, error: ferramentasError } = await supabase
+        .from('sala_ferramentas')
+        .select('id, ferramenta_nome, ferramenta_descricao, icone, rota, ativa')
+        .eq('portal_id', id)
+        .eq('ativa', true)
+        .order('ordem');
+
+      if (ferramentasError) {
+        console.error('Error fetching ferramentas:', ferramentasError);
+      } else {
+        setFerramentas(ferramentasData || []);
       }
 
       // Fetch user progress
@@ -208,6 +232,42 @@ export default function PortalDetalhe() {
           )}
         </div>
 
+        {/* Ferramentas do Portal */}
+        {ferramentas.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <Wrench className="w-5 h-5" />
+              Ferramentas
+            </h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {ferramentas.map((ferramenta) => (
+                <Card
+                  key={ferramenta.id}
+                  className="group transition-all duration-300 hover:shadow-gold cursor-pointer"
+                  onClick={() => navigate(ferramenta.rota)}
+                >
+                  <CardContent className="p-4 flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0">
+                      <Wrench className="w-5 h-5 text-gold" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium group-hover:text-gold transition-colors">
+                        {ferramenta.ferramenta_nome}
+                      </h3>
+                      {ferramenta.ferramenta_descricao && (
+                        <p className="text-sm text-muted-foreground truncate">
+                          {ferramenta.ferramenta_descricao}
+                        </p>
+                      )}
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-gold transition-colors" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Aulas/Travessias List */}
         {aulas.length > 0 ? (
           <div className="space-y-4">
@@ -269,12 +329,12 @@ export default function PortalDetalhe() {
               );
             })}
           </div>
-        ) : (
+        ) : ferramentas.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
             <Play className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>Nenhuma aula disponível neste portal ainda.</p>
+            <p>Nenhum conteúdo disponível neste portal ainda.</p>
           </div>
-        )}
+        ) : null}
 
         {/* Navigation */}
         <div className="mt-8 flex gap-4">
