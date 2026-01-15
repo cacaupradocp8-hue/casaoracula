@@ -1162,6 +1162,41 @@ export type Database = {
           },
         ]
       }
+      email_logs: {
+        Row: {
+          data_envio: string
+          error_message: string | null
+          id: string
+          success: boolean | null
+          tipo_email: string
+          user_id: string
+        }
+        Insert: {
+          data_envio?: string
+          error_message?: string | null
+          id?: string
+          success?: boolean | null
+          tipo_email: string
+          user_id: string
+        }
+        Update: {
+          data_envio?: string
+          error_message?: string | null
+          id?: string
+          success?: boolean | null
+          tipo_email?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       eneagrama_feminino_afirmacoes: {
         Row: {
           arquetipo_id: string
