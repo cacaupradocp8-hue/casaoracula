@@ -51,7 +51,7 @@ import Billing from "./pages/Billing";
 import CheckoutSucesso from "./pages/CheckoutSucesso";
 import CheckoutCancelado from "./pages/CheckoutCancelado";
 import Audios from "./pages/Audios";
-
+import Notificacoes from "./pages/Notificacoes";
 // Ferramentas (salas)
 import Big5 from "./pages/salas/Big5";
 import Eneagrama from "./pages/salas/Eneagrama";
@@ -628,6 +628,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <Audios />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notificacoes"
+          element={
+            <ProtectedRoute>
+              <Notificacoes />
             </ProtectedRoute>
           }
         />

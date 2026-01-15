@@ -2378,6 +2378,69 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_logs: {
+        Row: {
+          id: string
+          reference_date: string
+          sent_at: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          reference_date: string
+          sent_at?: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          reference_date?: string
+          sent_at?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string
+          created_at: string
+          cta_label: string | null
+          cta_url: string | null
+          id: string
+          is_read: boolean
+          read_at: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          cta_label?: string | null
+          cta_url?: string | null
+          id?: string
+          is_read?: boolean
+          read_at?: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          cta_label?: string | null
+          cta_url?: string | null
+          id?: string
+          is_read?: boolean
+          read_at?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       oracle_cards: {
         Row: {
           ai_generated_image_url: string | null
