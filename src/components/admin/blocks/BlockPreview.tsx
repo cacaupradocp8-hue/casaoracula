@@ -45,6 +45,9 @@ const typeIcons: Record<ContentBlockType, React.ElementType> = {
   guided_writing: FileText,
   symbolic_practice: Circle,
   anchoring_input: Target,
+  // Archetypal mapping blocks
+  archetypal_mapping: Sparkles,
+  narrative_result: BookOpen,
 };
 
 const typeLabels: Record<ContentBlockType, string> = {
@@ -68,6 +71,9 @@ const typeLabels: Record<ContentBlockType, string> = {
   guided_writing: 'Escrita Guiada',
   symbolic_practice: 'Prática Simbólica',
   anchoring_input: 'Ancoragem',
+  // Archetypal mapping blocks
+  archetypal_mapping: 'Mapeamento Arquetípico',
+  narrative_result: 'Resultado Narrativo',
 };
 
 export function BlockPreview({ block, compact = false }: BlockPreviewProps) {

@@ -27,7 +27,10 @@ export type ContentBlockType =
   // Formation tool blocks
   | 'guided_writing'
   | 'symbolic_practice'
-  | 'anchoring_input';
+  | 'anchoring_input'
+  // Archetypal mapping blocks
+  | 'archetypal_mapping'
+  | 'narrative_result';
 
 // Context type enum - where blocks can be used
 export type BlockContextType = 
@@ -247,6 +250,39 @@ export interface AnchoringInputContent {
   generateAnchorPhrase?: boolean;
 }
 
+// ============================================
+// ARCHETYPAL MAPPING BLOCK CONTENT SCHEMAS
+// ============================================
+
+export interface ArchetypeDimension {
+  archetype: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  questions: string[];
+  positioningPrompt: string;
+  keywords: string[];
+}
+
+export interface ArchetypalMappingContent {
+  dimensions?: ArchetypeDimension[];
+  instructionText?: string;
+  saveToRegistros?: boolean;
+}
+
+export interface NarrativeResultSection {
+  key: string;
+  title: string;
+  description: string;
+}
+
+export interface NarrativeResultContent {
+  introText?: string;
+  resultSections?: NarrativeResultSection[];
+  closingText?: string;
+  saveToRegistros?: boolean;
+}
+
 export type BlockContent = 
   | RichTextContent
   | ImageContent
@@ -264,6 +300,8 @@ export type BlockContent =
   | ArchetypeCardContent
   | ReflectionPromptContent
   | PlasticityMapContent
+  | ArchetypalMappingContent
+  | NarrativeResultContent
   | GuidedWritingContent
   | SymbolicPracticeContent
   | AnchoringInputContent;
@@ -429,6 +467,22 @@ export const DEFAULT_BLOCK_CONTENT: Record<ContentBlockType, BlockContent> = {
     saveToRegistros: true,
     generateAnchorPhrase: true
   },
+  // Archetypal mapping blocks
+  archetypal_mapping: {
+    dimensions: [],
+    instructionText: 'Para cada arquétipo, leia as perguntas reflexivas e escreva livremente como você se percebe.',
+    saveToRegistros: true
+  },
+  narrative_result: {
+    introText: 'A partir das suas reflexões, emerge uma narrativa simbólica.',
+    resultSections: [
+      { key: 'predominant', title: 'Arquétipo Predominante', description: 'A energia que mais pulsa em você.' },
+      { key: 'secondary', title: 'Arquétipo Secundário', description: 'A energia que te apoia.' },
+      { key: 'shadow', title: 'Arquétipo Sombrio', description: 'A energia menos integrada.' },
+    ],
+    closingText: 'Você não É nenhum desses arquétipos — você os HABITA.',
+    saveToRegistros: true
+  },
 };
 
 // ============================================
@@ -550,6 +604,19 @@ export const BLOCK_TYPE_META: Record<ContentBlockType, { label: string; icon: st
     label: 'Ancoragem',
     icon: 'Anchor',
     description: 'Integração final e frase de poder',
+    category: 'interactive'
+  },
+  // Archetypal mapping blocks
+  archetypal_mapping: {
+    label: 'Mapeamento Arquetípico',
+    icon: 'Crown',
+    description: 'Dimensões arquetípicas com perguntas reflexivas',
+    category: 'interactive'
+  },
+  narrative_result: {
+    label: 'Resultado Narrativo',
+    icon: 'Scroll',
+    description: 'Leitura narrativa com arquétipos identificados',
     category: 'interactive'
   },
 };
