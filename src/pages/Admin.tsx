@@ -1,7 +1,7 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2 } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones } from 'lucide-react';
 import { AdminCursosTab } from '@/components/admin/AdminCursosTab';
 import { AdminUsersTab } from '@/components/admin/AdminUsersTab';
 import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
@@ -30,6 +30,7 @@ import { AdminFamiliasTab } from '@/components/admin/AdminFamiliasTab';
 import { AdminBig5SymbolicTab } from '@/components/admin/AdminBig5SymbolicTab';
 import AdminEneagramaFemininoTab from '@/components/admin/AdminEneagramaFemininoTab';
 import { AdminJornadaHeroinaTab } from '@/components/admin/AdminJornadaHeroinaTab';
+import { AdminAudiosTab } from '@/components/admin/AdminAudiosTab';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -205,6 +206,10 @@ export default function Admin() {
               <Brain className="w-4 h-4" />
               IA Config
             </TabsTrigger>
+            <TabsTrigger value="audios" className="gap-2">
+              <Headphones className="w-4 h-4" />
+              Áudios
+            </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Cog className="w-4 h-4" />
               Configurações
@@ -317,6 +322,10 @@ export default function Admin() {
 
           <TabsContent value="ia-config">
             <AdminAISettingsTab />
+          </TabsContent>
+
+          <TabsContent value="audios">
+            <AdminAudiosTab />
           </TabsContent>
 
           <TabsContent value="settings">

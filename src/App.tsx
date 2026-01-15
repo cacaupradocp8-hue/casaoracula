@@ -45,6 +45,12 @@ import BibliotecaTravessiaDetalhe from "./pages/BibliotecaTravessiaDetalhe";
 import LabirintoHome from "./pages/labirinto/LabirintoHome";
 import LabirintoPorta from "./pages/labirinto/LabirintoPorta";
 import InstallApp from "./pages/InstallApp";
+import Planos from "./pages/Planos";
+import Assinatura from "./pages/Assinatura";
+import Billing from "./pages/Billing";
+import CheckoutSucesso from "./pages/CheckoutSucesso";
+import CheckoutCancelado from "./pages/CheckoutCancelado";
+import Audios from "./pages/Audios";
 
 // Ferramentas (salas)
 import Big5 from "./pages/salas/Big5";
@@ -593,6 +599,35 @@ function AppRoutes() {
           element={
             <ProtectedRoute minPortal="admin">
               <Admin />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Planos e Assinatura */}
+        <Route path="/planos" element={<Planos />} />
+        <Route
+          path="/assinatura"
+          element={
+            <ProtectedRoute>
+              <Assinatura />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/billing"
+          element={
+            <ProtectedRoute>
+              <Billing />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/checkout/sucesso" element={<ProtectedRoute><CheckoutSucesso /></ProtectedRoute>} />
+        <Route path="/checkout/cancelado" element={<ProtectedRoute><CheckoutCancelado /></ProtectedRoute>} />
+        <Route
+          path="/audios"
+          element={
+            <ProtectedRoute>
+              <Audios />
             </ProtectedRoute>
           }
         />
