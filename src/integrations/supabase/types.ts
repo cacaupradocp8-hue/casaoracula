@@ -332,6 +332,30 @@ export type Database = {
         }
         Relationships: []
       }
+      automation_settings: {
+        Row: {
+          id: string
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          id?: string
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Update: {
+          id?: string
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: []
+      }
       big5_dimensoes: {
         Row: {
           ativo: boolean
@@ -2375,6 +2399,153 @@ export type Database = {
           produto_rockty?: string | null
           transaction_id?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      message_campaigns: {
+        Row: {
+          body: string
+          channel: string
+          created_at: string
+          created_by: string | null
+          cta_label: string | null
+          cta_url: string | null
+          id: string
+          name: string
+          segment_json: Json
+          sent_at: string | null
+          status: string
+          subject: string | null
+          title: string
+          total_failed: number | null
+          total_sent: number | null
+        }
+        Insert: {
+          body: string
+          channel: string
+          created_at?: string
+          created_by?: string | null
+          cta_label?: string | null
+          cta_url?: string | null
+          id?: string
+          name: string
+          segment_json?: Json
+          sent_at?: string | null
+          status?: string
+          subject?: string | null
+          title: string
+          total_failed?: number | null
+          total_sent?: number | null
+        }
+        Update: {
+          body?: string
+          channel?: string
+          created_at?: string
+          created_by?: string | null
+          cta_label?: string | null
+          cta_url?: string | null
+          id?: string
+          name?: string
+          segment_json?: Json
+          sent_at?: string | null
+          status?: string
+          subject?: string | null
+          title?: string
+          total_failed?: number | null
+          total_sent?: number | null
+        }
+        Relationships: []
+      }
+      message_logs: {
+        Row: {
+          campaign_id: string | null
+          channel: string
+          error_message: string | null
+          id: string
+          sent_at: string
+          success: boolean
+          template_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          channel: string
+          error_message?: string | null
+          id?: string
+          sent_at?: string
+          success?: boolean
+          template_id?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string | null
+          channel?: string
+          error_message?: string | null
+          id?: string
+          sent_at?: string
+          success?: boolean
+          template_id?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_logs_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "message_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_logs_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "message_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      message_templates: {
+        Row: {
+          body: string
+          channel: string
+          cta_label: string | null
+          cta_url: string | null
+          id: string
+          is_enabled: boolean
+          subject: string | null
+          title: string
+          type: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          body: string
+          channel: string
+          cta_label?: string | null
+          cta_url?: string | null
+          id?: string
+          is_enabled?: boolean
+          subject?: string | null
+          title: string
+          type: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          body?: string
+          channel?: string
+          cta_label?: string | null
+          cta_url?: string | null
+          id?: string
+          is_enabled?: boolean
+          subject?: string | null
+          title?: string
+          type?: string
+          updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }
