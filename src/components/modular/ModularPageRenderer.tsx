@@ -24,6 +24,9 @@ import {
   ArchetypeCardBlock,
   ReflectionPromptBlock,
   PlasticityMapBlock,
+  GuidedWritingBlock,
+  SymbolicPracticeBlock,
+  AnchoringInputBlock,
 } from './blocks';
 
 interface ModularPageRendererProps {
@@ -140,6 +143,13 @@ function BlockRenderer({ block, contextData, onAction, onSaveRegistro }: BlockRe
       return <ReflectionPromptBlock block={block} onSave={onSaveRegistro} />;
     case 'plasticity_map':
       return <PlasticityMapBlock block={block} onSave={onSaveRegistro} />;
+    // Formation tool blocks
+    case 'guided_writing':
+      return <GuidedWritingBlock block={block} onSave={onSaveRegistro} />;
+    case 'symbolic_practice':
+      return <SymbolicPracticeBlock block={block} onSave={onSaveRegistro} />;
+    case 'anchoring_input':
+      return <AnchoringInputBlock block={block} onSave={onSaveRegistro} />;
     default:
       console.warn(`Unknown block type: ${block.blockType}`);
       return null;

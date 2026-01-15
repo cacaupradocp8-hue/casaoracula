@@ -41,6 +41,10 @@ const typeIcons: Record<ContentBlockType, React.ElementType> = {
   archetype_card: Sparkles,
   reflection_prompt: MessageSquare,
   plasticity_map: Brain,
+  // Formation tool blocks
+  guided_writing: FileText,
+  symbolic_practice: Circle,
+  anchoring_input: Target,
 };
 
 const typeLabels: Record<ContentBlockType, string> = {
@@ -60,6 +64,10 @@ const typeLabels: Record<ContentBlockType, string> = {
   archetype_card: 'Card de Arquétipo',
   reflection_prompt: 'Prompt de Reflexão',
   plasticity_map: 'Mapa de Plasticidade',
+  // Formation tool blocks
+  guided_writing: 'Escrita Guiada',
+  symbolic_practice: 'Prática Simbólica',
+  anchoring_input: 'Ancoragem',
 };
 
 export function BlockPreview({ block, compact = false }: BlockPreviewProps) {
