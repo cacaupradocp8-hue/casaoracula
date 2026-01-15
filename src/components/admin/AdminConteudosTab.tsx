@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Plus, Pencil, Trash2, ChevronDown, ChevronRight, BookOpen, Video, DoorOpen, Music, FileText, Type, Eye, EyeOff, Image, Wrench, ExternalLink } from 'lucide-react';
+import { ImageUpload } from './ImageUpload';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
@@ -855,25 +856,13 @@ export function AdminConteudosTab() {
                 rows={3}
               />
             </div>
-            <div>
-              <Label>URL da Capa (opcional)</Label>
-              <div className="flex gap-2">
-                <Input
-                  value={portalForm.capa_url}
-                  onChange={(e) => setPortalForm({ ...portalForm, capa_url: e.target.value })}
-                  placeholder="https://..."
-                  className="flex-1"
-                />
-                {portalForm.capa_url && (
-                  <img
-                    src={portalForm.capa_url}
-                    alt="Preview"
-                    className="w-10 h-10 rounded object-cover"
-                    onError={(e) => (e.currentTarget.style.display = 'none')}
-                  />
-                )}
-              </div>
-            </div>
+            <ImageUpload
+              value={portalForm.capa_url}
+              onChange={(url) => setPortalForm({ ...portalForm, capa_url: url })}
+              folder="portais"
+              label="Imagem de Capa"
+              aspectRatio="video"
+            />
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>Ordem</Label>
