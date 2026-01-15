@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Logo } from './Logo';
 import { getPortal, canAccessFeature, PortalType } from '@/types/portal';
 import { LockedContentModal } from '@/components/shared/LockedContentModal';
+import { NotificationBell } from '@/components/shared/NotificationBell';
 import {
   Home,
   BookOpen,
@@ -132,6 +133,8 @@ export function Navigation() {
 
             {/* User Menu */}
             <div className="flex items-center gap-2">
+              {user && <NotificationBell />}
+              
               {user && portal && (
                 <div className="hidden sm:flex items-center gap-2 mr-2">
                   <span className="px-2 py-0.5 text-xs bg-gold/20 text-gold rounded-full font-medium">
