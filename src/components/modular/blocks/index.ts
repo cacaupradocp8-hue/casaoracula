@@ -23,3 +23,5 @@ export { AnchoringInputBlock } from './AnchoringInputBlock';
 // Archetypal mapping blocks
 export { ArchetypalMappingBlock } from './ArchetypalMappingBlock';
 export { NarrativeResultBlock } from './NarrativeResultBlock';
+// Symbolic visualization block
+export { SymbolicVisualizationBlock } from './SymbolicVisualizationBlock';

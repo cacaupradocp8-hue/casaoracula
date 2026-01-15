@@ -16,6 +16,7 @@ import {
   MessageSquare,
   Brain,
   Briefcase,
+  Orbit,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -48,6 +49,8 @@ const typeIcons: Record<ContentBlockType, React.ElementType> = {
   // Archetypal mapping blocks
   archetypal_mapping: Sparkles,
   narrative_result: BookOpen,
+  // Symbolic visualization block
+  symbolic_visualization: Orbit,
 };
 
 const typeLabels: Record<ContentBlockType, string> = {
@@ -74,6 +77,8 @@ const typeLabels: Record<ContentBlockType, string> = {
   // Archetypal mapping blocks
   archetypal_mapping: 'Mapeamento Arquetípico',
   narrative_result: 'Resultado Narrativo',
+  // Symbolic visualization block
+  symbolic_visualization: 'Visualização Simbólica',
 };
 
 export function BlockPreview({ block, compact = false }: BlockPreviewProps) {

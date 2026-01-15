@@ -61,6 +61,7 @@ import {
   MessageSquare,
   Brain,
   Briefcase,
+  Orbit,
 } from 'lucide-react';
 
 const CONTEXT_OPTIONS: { value: BlockContextType; label: string }[] = [
@@ -97,6 +98,8 @@ const BLOCK_TYPE_ICONS: Record<ContentBlockType, React.ElementType> = {
   // Archetypal mapping blocks
   archetypal_mapping: Sparkles,
   narrative_result: BookOpen,
+  // Symbolic visualization block
+  symbolic_visualization: Orbit,
 };
 
 interface ContextEntity {

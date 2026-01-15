@@ -30,7 +30,9 @@ export type ContentBlockType =
   | 'anchoring_input'
   // Archetypal mapping blocks
   | 'archetypal_mapping'
-  | 'narrative_result';
+  | 'narrative_result'
+  // Symbolic visualization block
+  | 'symbolic_visualization';
 
 // Context type enum - where blocks can be used
 export type BlockContextType = 
@@ -283,6 +285,29 @@ export interface NarrativeResultContent {
   saveToRegistros?: boolean;
 }
 
+export interface SymbolicVisualizationContent {
+  visualizationType?: 'mandala' | 'radial' | 'spiral';
+  title?: string;
+  description?: string;
+  centerLabel?: string;
+  showLabels?: boolean;
+  showDescriptions?: boolean;
+  animated?: boolean;
+  interactive?: boolean;
+  glowEffect?: boolean;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  colorScheme?: 'gold' | 'purple' | 'mystical' | 'earth' | 'custom';
+  customColors?: string[];
+  elements?: Array<{
+    id: string;
+    label: string;
+    description?: string;
+    color?: string;
+    intensity?: 'low' | 'medium' | 'high' | 'dominant';
+  }>;
+  saveToRegistros?: boolean;
+}
+
 export type BlockContent = 
   | RichTextContent
   | ImageContent
@@ -304,7 +329,8 @@ export type BlockContent =
   | NarrativeResultContent
   | GuidedWritingContent
   | SymbolicPracticeContent
-  | AnchoringInputContent;
+  | AnchoringInputContent
+  | SymbolicVisualizationContent;
 
 // ============================================
 // MAIN CONTENT BLOCK INTERFACE
@@ -483,6 +509,23 @@ export const DEFAULT_BLOCK_CONTENT: Record<ContentBlockType, BlockContent> = {
     closingText: 'Você não É nenhum desses arquétipos — você os HABITA.',
     saveToRegistros: true
   },
+  // Symbolic visualization block
+  symbolic_visualization: {
+    visualizationType: 'radial',
+    title: '',
+    description: '',
+    centerLabel: '',
+    showLabels: true,
+    showDescriptions: true,
+    animated: false,
+    interactive: true,
+    glowEffect: true,
+    size: 'lg',
+    colorScheme: 'gold',
+    customColors: [],
+    elements: [],
+    saveToRegistros: false
+  },
 };
 
 // ============================================
@@ -617,6 +660,13 @@ export const BLOCK_TYPE_META: Record<ContentBlockType, { label: string; icon: st
     label: 'Resultado Narrativo',
     icon: 'Scroll',
     description: 'Leitura narrativa com arquétipos identificados',
+    category: 'interactive'
+  },
+  // Symbolic visualization block
+  symbolic_visualization: {
+    label: 'Visualização Simbólica',
+    icon: 'Orbit',
+    description: 'Mandala, radial ou espiral para resultados',
     category: 'interactive'
   },
 };
