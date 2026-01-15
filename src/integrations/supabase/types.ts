@@ -383,6 +383,155 @@ export type Database = {
           },
         ]
       }
+      big5_symbolic_afirmacoes: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          force_id: string
+          id: string
+          ordem: number
+          peso: number
+          texto_afirmacao: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          force_id: string
+          id?: string
+          ordem?: number
+          peso?: number
+          texto_afirmacao: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          force_id?: string
+          id?: string
+          ordem?: number
+          peso?: number
+          texto_afirmacao?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "big5_symbolic_afirmacoes_force_id_fkey"
+            columns: ["force_id"]
+            isOneToOne: false
+            referencedRelation: "big5_symbolic_forces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      big5_symbolic_forces: {
+        Row: {
+          ativo: boolean
+          chave: string
+          cor_primaria: string | null
+          created_at: string
+          descricao_simbolica: string
+          icone: string | null
+          id: string
+          microcopy_reflexao: string | null
+          narrativa_elevada: string | null
+          narrativa_fragil: string | null
+          nome: string
+          nome_en: string | null
+          ordem: number
+          pratica_sugerida: string | null
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          chave: string
+          cor_primaria?: string | null
+          created_at?: string
+          descricao_simbolica: string
+          icone?: string | null
+          id?: string
+          microcopy_reflexao?: string | null
+          narrativa_elevada?: string | null
+          narrativa_fragil?: string | null
+          nome: string
+          nome_en?: string | null
+          ordem?: number
+          pratica_sugerida?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          chave?: string
+          cor_primaria?: string | null
+          created_at?: string
+          descricao_simbolica?: string
+          icone?: string | null
+          id?: string
+          microcopy_reflexao?: string | null
+          narrativa_elevada?: string | null
+          narrativa_fragil?: string | null
+          nome?: string
+          nome_en?: string | null
+          ordem?: number
+          pratica_sugerida?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      big5_symbolic_registros: {
+        Row: {
+          abertura_intensidade: string | null
+          cliente_id: string | null
+          created_at: string
+          expressao_intensidade: string | null
+          id: string
+          nome_simbolico: string | null
+          notas: string | null
+          reflexao_final: string | null
+          relacional_intensidade: string | null
+          respostas_json: Json | null
+          sensibilidade_intensidade: string | null
+          suporte_intensidade: string | null
+          terapeuta_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          abertura_intensidade?: string | null
+          cliente_id?: string | null
+          created_at?: string
+          expressao_intensidade?: string | null
+          id?: string
+          nome_simbolico?: string | null
+          notas?: string | null
+          reflexao_final?: string | null
+          relacional_intensidade?: string | null
+          respostas_json?: Json | null
+          sensibilidade_intensidade?: string | null
+          suporte_intensidade?: string | null
+          terapeuta_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          abertura_intensidade?: string | null
+          cliente_id?: string | null
+          created_at?: string
+          expressao_intensidade?: string | null
+          id?: string
+          nome_simbolico?: string | null
+          notas?: string | null
+          reflexao_final?: string | null
+          relacional_intensidade?: string | null
+          respostas_json?: Json | null
+          sensibilidade_intensidade?: string | null
+          suporte_intensidade?: string | null
+          terapeuta_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       casos: {
         Row: {
           cliente_id: string
