@@ -26,6 +26,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Course, CourseModule, CourseLesson, CourseEnrollment, PricingModel, ContentType } from '@/types/course';
+import { ImageUpload } from './ImageUpload';
 
 interface Sala {
   id: string;
@@ -46,6 +47,7 @@ export function AdminCursosTab() {
   // Course form state
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [courseDialogOpen, setCourseDialogOpen] = useState(false);
+  const [courseCapaUrl, setCourseCapaUrl] = useState('');
   
   // Module form state
   const [editingModule, setEditingModule] = useState<CourseModule | null>(null);
@@ -93,7 +95,7 @@ export function AdminCursosTab() {
       subtitulo: formData.get('subtitulo') as string || null,
       descricao: formData.get('descricao') as string,
       descricao_publica: formData.get('descricao_publica') as string || null,
-      capa_url: formData.get('capa_url') as string || null,
+      capa_url: courseCapaUrl || null,
       video_preview_url: formData.get('video_preview_url') as string || null,
       pricing_model: formData.get('pricing_model') as PricingModel,
       preco: formData.get('preco') ? parseFloat(formData.get('preco') as string) : null,
@@ -122,6 +124,7 @@ export function AdminCursosTab() {
       fetchData();
       setCourseDialogOpen(false);
       setEditingCourse(null);
+      setCourseCapaUrl('');
     } catch (error) {
       console.error('Error saving course:', error);
       toast({ title: 'Erro ao salvar curso', variant: 'destructive' });
@@ -310,9 +313,18 @@ export function AdminCursosTab() {
         <TabsContent value="cursos" className="space-y-4">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Gerenciar Cursos</h3>
-            <Dialog open={courseDialogOpen} onOpenChange={setCourseDialogOpen}>
+            <Dialog open={courseDialogOpen} onOpenChange={(open) => {
+              setCourseDialogOpen(open);
+              if (!open) {
+                setEditingCourse(null);
+                setCourseCapaUrl('');
+              }
+            }}>
               <DialogTrigger asChild>
-                <Button onClick={() => setEditingCourse(null)}>
+                <Button onClick={() => {
+                  setEditingCourse(null);
+                  setCourseCapaUrl('');
+                }}>
                   <Plus className="w-4 h-4 mr-2" />
                   Novo Curso
                 </Button>
@@ -340,9 +352,14 @@ export function AdminCursosTab() {
                         <Label htmlFor="descricao_publica">Descrição Pública (Vitrine)</Label>
                         <Textarea id="descricao_publica" name="descricao_publica" defaultValue={editingCourse?.descricao_publica || ''} />
                       </div>
-                      <div>
-                        <Label htmlFor="capa_url">URL da Capa</Label>
-                        <Input id="capa_url" name="capa_url" defaultValue={editingCourse?.capa_url || ''} />
+                      <div className="col-span-2">
+                        <ImageUpload
+                          value={courseCapaUrl}
+                          onChange={setCourseCapaUrl}
+                          folder="cursos"
+                          label="Imagem de Capa"
+                          aspectRatio="video"
+                        />
                       </div>
                       <div>
                         <Label htmlFor="video_preview_url">URL do Vídeo Preview</Label>
@@ -472,7 +489,11 @@ export function AdminCursosTab() {
                       <Button 
                         size="icon" 
                         variant="ghost"
-                        onClick={() => { setEditingCourse(course); setCourseDialogOpen(true); }}
+                        onClick={() => { 
+                          setEditingCourse(course); 
+                          setCourseCapaUrl(course.capa_url || '');
+                          setCourseDialogOpen(true); 
+                        }}
                       >
                         <Pencil className="w-4 h-4" />
                       </Button>
