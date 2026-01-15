@@ -1,7 +1,7 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon } from 'lucide-react';
 import { AdminCursosTab } from '@/components/admin/AdminCursosTab';
 import { AdminUsersTab } from '@/components/admin/AdminUsersTab';
 import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
@@ -27,6 +27,7 @@ import { AdminAISettingsTab } from '@/components/admin/AdminAISettingsTab';
 import { AdminBibliotecaTravessiasTab } from '@/components/admin/AdminBibliotecaTravessiasTab';
 import { AdminLabirintoTab } from '@/components/admin/AdminLabirintoTab';
 import { AdminFamiliasTab } from '@/components/admin/AdminFamiliasTab';
+import { AdminBig5SymbolicTab } from '@/components/admin/AdminBig5SymbolicTab';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -186,6 +187,10 @@ export default function Admin() {
               <DoorOpen className="w-4 h-4 text-gold" />
               🜂 Labirinto
             </TabsTrigger>
+            <TabsTrigger value="big5-simbolico" className="gap-2">
+              <Moon className="w-4 h-4" />
+              Big5 Simbólico
+            </TabsTrigger>
             <TabsTrigger value="ia-config" className="gap-2">
               <Brain className="w-4 h-4" />
               IA Config
@@ -286,6 +291,10 @@ export default function Admin() {
 
           <TabsContent value="labirinto">
             <AdminLabirintoTab />
+          </TabsContent>
+
+          <TabsContent value="big5-simbolico">
+            <AdminBig5SymbolicTab />
           </TabsContent>
 
           <TabsContent value="ia-config">

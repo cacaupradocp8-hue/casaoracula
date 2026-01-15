@@ -63,6 +63,7 @@ import AgenteAnalista from "./pages/salas/AgenteAnalista";
 import AgenteCurador from "./pages/salas/AgenteCurador";
 import AgenteSimbólico from "./pages/salas/AgenteSimbólico";
 import FerramentaDinamica from "./pages/FerramentaDinamica";
+import Big5Simbolico from "./pages/Big5Simbolico";
 const queryClient = new QueryClient();
 
 // Loading component for auth states
@@ -270,6 +271,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="pre_iniciada">
             <Big5 />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramenta/big5-simbolico"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Big5Simbolico />
           </ProtectedRoute>
         }
       />
