@@ -1,7 +1,7 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2 } from 'lucide-react';
 import { AdminCursosTab } from '@/components/admin/AdminCursosTab';
 import { AdminUsersTab } from '@/components/admin/AdminUsersTab';
 import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
@@ -28,6 +28,7 @@ import { AdminBibliotecaTravessiasTab } from '@/components/admin/AdminBiblioteca
 import { AdminLabirintoTab } from '@/components/admin/AdminLabirintoTab';
 import { AdminFamiliasTab } from '@/components/admin/AdminFamiliasTab';
 import { AdminBig5SymbolicTab } from '@/components/admin/AdminBig5SymbolicTab';
+import AdminEneagramaFemininoTab from '@/components/admin/AdminEneagramaFemininoTab';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -191,6 +192,10 @@ export default function Admin() {
               <Moon className="w-4 h-4" />
               Big5 Simbólico
             </TabsTrigger>
+            <TabsTrigger value="eneagrama-feminino" className="gap-2">
+              <Flower2 className="w-4 h-4" />
+              Eneagrama Feminino
+            </TabsTrigger>
             <TabsTrigger value="ia-config" className="gap-2">
               <Brain className="w-4 h-4" />
               IA Config
@@ -295,6 +300,10 @@ export default function Admin() {
 
           <TabsContent value="big5-simbolico">
             <AdminBig5SymbolicTab />
+          </TabsContent>
+
+          <TabsContent value="eneagrama-feminino">
+            <AdminEneagramaFemininoTab />
           </TabsContent>
 
           <TabsContent value="ia-config">
