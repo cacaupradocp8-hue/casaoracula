@@ -1085,6 +1085,161 @@ export type Database = {
           },
         ]
       }
+      eneagrama_feminino_afirmacoes: {
+        Row: {
+          arquetipo_id: string
+          ativo: boolean
+          created_at: string
+          id: string
+          ordem: number
+          peso: number
+          texto_afirmacao: string
+          updated_at: string
+        }
+        Insert: {
+          arquetipo_id: string
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          ordem?: number
+          peso?: number
+          texto_afirmacao: string
+          updated_at?: string
+        }
+        Update: {
+          arquetipo_id?: string
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          ordem?: number
+          peso?: number
+          texto_afirmacao?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "eneagrama_feminino_afirmacoes_arquetipo_id_fkey"
+            columns: ["arquetipo_id"]
+            isOneToOne: false
+            referencedRelation: "eneagrama_feminino_arquetipos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      eneagrama_feminino_arquetipos: {
+        Row: {
+          ativo: boolean
+          caminho_expansao: string | null
+          chave: string
+          cor_primaria: string | null
+          cor_secundaria: string | null
+          created_at: string
+          dom_central: string | null
+          essencia_simbolica: string
+          expressao_sombra: string | null
+          ferida_central: string | null
+          icone: string | null
+          id: string
+          nome: string
+          nome_en: string | null
+          numero: number
+          ordem: number
+          pergunta_reflexiva: string | null
+          pratica_simbolica: string | null
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          caminho_expansao?: string | null
+          chave: string
+          cor_primaria?: string | null
+          cor_secundaria?: string | null
+          created_at?: string
+          dom_central?: string | null
+          essencia_simbolica: string
+          expressao_sombra?: string | null
+          ferida_central?: string | null
+          icone?: string | null
+          id?: string
+          nome: string
+          nome_en?: string | null
+          numero: number
+          ordem?: number
+          pergunta_reflexiva?: string | null
+          pratica_simbolica?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          caminho_expansao?: string | null
+          chave?: string
+          cor_primaria?: string | null
+          cor_secundaria?: string | null
+          created_at?: string
+          dom_central?: string | null
+          essencia_simbolica?: string
+          expressao_sombra?: string | null
+          ferida_central?: string | null
+          icone?: string | null
+          id?: string
+          nome?: string
+          nome_en?: string | null
+          numero?: number
+          ordem?: number
+          pergunta_reflexiva?: string | null
+          pratica_simbolica?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      eneagrama_feminino_registros: {
+        Row: {
+          arquetipo_primario: number
+          arquetipo_secundario: number | null
+          arquetipo_sombra: number | null
+          cliente_id: string | null
+          created_at: string
+          id: string
+          nome_simbolico: string | null
+          notas: string | null
+          reflexao_final: string | null
+          respostas_json: Json | null
+          terapeuta_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          arquetipo_primario: number
+          arquetipo_secundario?: number | null
+          arquetipo_sombra?: number | null
+          cliente_id?: string | null
+          created_at?: string
+          id?: string
+          nome_simbolico?: string | null
+          notas?: string | null
+          reflexao_final?: string | null
+          respostas_json?: Json | null
+          terapeuta_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          arquetipo_primario?: number
+          arquetipo_secundario?: number | null
+          arquetipo_sombra?: number | null
+          cliente_id?: string | null
+          created_at?: string
+          id?: string
+          nome_simbolico?: string | null
+          notas?: string | null
+          reflexao_final?: string | null
+          respostas_json?: Json | null
+          terapeuta_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       eneagrama_instintos: {
         Row: {
           ativo: boolean

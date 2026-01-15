@@ -64,6 +64,7 @@ import AgenteCurador from "./pages/salas/AgenteCurador";
 import AgenteSimbólico from "./pages/salas/AgenteSimbólico";
 import FerramentaDinamica from "./pages/FerramentaDinamica";
 import Big5Simbolico from "./pages/Big5Simbolico";
+import EneagramaFeminino from "./pages/EneagramaFeminino";
 const queryClient = new QueryClient();
 
 // Loading component for auth states
@@ -287,6 +288,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="pre_iniciada">
             <Eneagrama />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramenta/eneagrama-feminino"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <EneagramaFeminino />
           </ProtectedRoute>
         }
       />
