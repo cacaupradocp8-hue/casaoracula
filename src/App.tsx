@@ -64,6 +64,7 @@ import Narrativas from "./pages/salas/Narrativas";
 // Portal Radiestesia Oracular
 import { 
   RadiestesiaPortal, 
+  Leitura5Camadas,
   MesaRadionica, 
   CatalogoGraficos, 
   Pantaculos, 
@@ -439,6 +440,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="pre_iniciada">
             <RadiestesiaPortal />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/radiestesia/leitura"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Leitura5Camadas />
           </ProtectedRoute>
         }
       />
