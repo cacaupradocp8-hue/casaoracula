@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, Smartphone, Share, Plus, Check, Moon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useCopy } from "@/hooks/useCopy";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -14,6 +15,7 @@ const InstallApp = () => {
   const [isInstalled, setIsInstalled] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const navigate = useNavigate();
+  const { getCopyByKey } = useCopy();
 
   useEffect(() => {
     // Check if already installed
@@ -66,7 +68,7 @@ const InstallApp = () => {
           </CardHeader>
           <CardContent className="text-center">
             <Button onClick={() => navigate("/welcome")} variant="gold" className="w-full">
-              Entrar no App
+              {getCopyByKey('btn_entrar_casa', 'Entrar na Casa ORÁCULA')}
             </Button>
           </CardContent>
         </Card>

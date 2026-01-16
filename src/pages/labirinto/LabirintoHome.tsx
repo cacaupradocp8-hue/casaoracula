@@ -9,11 +9,12 @@ import { useLabirintoPortas, useLabirintoOraculo, useCreateLeitura, useLabirinto
 import { useAuth } from "@/contexts/AuthContext";
 import { canAccessFeature } from "@/types/portal";
 import { cn } from "@/lib/utils";
+import { useCopy } from "@/hooks/useCopy";
 
 const LABIRINTO_INTRO_KEY = "labirinto-intro-seen";
 
 // Introductory screen component
-function LabirintoIntro({ onEnter }: { onEnter: () => void }) {
+function LabirintoIntro({ onEnter, getCopyByKey }: { onEnter: () => void; getCopyByKey: (key: string, fallback: string) => string }) {
   return (
     <AppLayout>
       <div className="min-h-[80vh] flex items-center justify-center px-4">
@@ -38,7 +39,7 @@ function LabirintoIntro({ onEnter }: { onEnter: () => void }) {
             className="bg-gold hover:bg-gold/90 text-background gap-2"
           >
             <DoorOpen className="w-5 h-5" />
-            Entrar no Labirinto
+            {getCopyByKey('btn_atravessar_limiar', 'Atravessar o limiar')}
           </Button>
         </div>
       </div>
@@ -55,6 +56,7 @@ export default function LabirintoHome() {
   const createLeitura = useCreateLeitura();
   const [activatingOracle, setActivatingOracle] = useState(false);
   const [showIntro, setShowIntro] = useState<boolean | null>(null);
+  const { getCopyByKey } = useCopy();
 
   // Check if this is the user's first visit
   useEffect(() => {
@@ -117,7 +119,7 @@ export default function LabirintoHome() {
 
   // Show introductory screen on first visit
   if (showIntro) {
-    return <LabirintoIntro onEnter={handleEnterLabirinto} />;
+    return <LabirintoIntro onEnter={handleEnterLabirinto} getCopyByKey={getCopyByKey} />;
   }
 
   return (

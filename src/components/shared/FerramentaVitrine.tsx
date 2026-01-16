@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useTextModels } from "@/hooks/useTextModel";
+import { useCopy } from "@/hooks/useCopy";
 
 export type FerramentaStatus = "ativo" | "em_breve" | "bloqueado" | "upgrade";
 
@@ -36,7 +37,7 @@ const STATUS_CONFIG: Record<
     icon: <Sparkles className="w-8 h-8 text-gold" />,
     badgeLabel: "Disponível",
     badgeVariant: "default",
-    defaultCta: "Acessar ferramenta",
+    defaultCta: "Iniciar a travessia",
   },
   em_breve: {
     icon: <Clock className="w-8 h-8 text-muted-foreground" />,
@@ -69,7 +70,13 @@ export function FerramentaVitrine({
   ctaAcao,
 }: FerramentaVitrineProps) {
   const { getText } = useTextModels();
+  const { getCopyByKey } = useCopy();
   const config = STATUS_CONFIG[status];
+  
+  // Get dynamic CTA text
+  const dynamicDefaultCta = status === 'ativo' 
+    ? getCopyByKey('btn_acessar_ferramenta', config.defaultCta)
+    : config.defaultCta;
 
   const handleCta = () => {
     if (ctaAcao) {
@@ -138,7 +145,7 @@ export function FerramentaVitrine({
         <div className="flex flex-col gap-3 mt-4">
           {status === "ativo" && ctaAcao && (
             <Button variant="gold" className="w-full gap-2" onClick={handleCta}>
-              {ctaTexto || config.defaultCta}
+              {ctaTexto || dynamicDefaultCta}
               <ArrowRight className="w-4 h-4" />
             </Button>
           )}

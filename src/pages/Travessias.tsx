@@ -19,6 +19,7 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useCopy } from '@/hooks/useCopy';
 
 const ICON_MAP: Record<string, typeof Compass> = {
   Compass,
@@ -38,6 +39,7 @@ export default function Travessias() {
   const { user } = useAuth();
   const { isProfessional, isLoading: isLoadingProfessional } = useProfessionalStatus();
   const navigate = useNavigate();
+  const { getCopyByKey } = useCopy();
 
   if (!user) return null;
 
@@ -143,7 +145,7 @@ export default function Travessias() {
                   {isAccessible && (
                     <div className="flex justify-end pt-2">
                       <Button variant="ghost" size="sm" className="gap-2 group-hover:text-gold">
-                        Entrar
+                        {getCopyByKey('btn_atravessar', 'Atravessar')}
                         <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                       </Button>
                     </div>

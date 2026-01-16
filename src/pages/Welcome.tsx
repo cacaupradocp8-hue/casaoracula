@@ -4,10 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/layout/Logo';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { getPortal } from '@/types/portal';
+import { useCopy } from '@/hooks/useCopy';
 
 export default function Welcome() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { getCopyByKey } = useCopy();
 
   if (!user) return null;
 
@@ -34,16 +36,15 @@ export default function Welcome() {
           </h1>
           
           <p className="text-muted-foreground max-w-md mx-auto">
-            A Casa ORÁCULA te recebe para mais uma jornada iniciática. 
-            Que os símbolos iluminem seu caminho.
+            {getCopyByKey('welcome_mensagem', 'Você não entrou para consumir conteúdo. Entrou para atravessar processos com estrutura, linguagem e cuidado simbólico.')}
           </p>
         </div>
 
         {/* Quote */}
         <blockquote className="font-display text-lg italic text-foreground/60 border-l-2 border-gold/30 pl-4 text-left mx-auto max-w-sm">
-          "Ego escolhe • Neuroplasticidade sustenta • Alma dá sentido"
+          "{getCopyByKey('triade_completa', 'Ego organiza a experiência • Neuroplasticidade sustenta o processo • A Alma orienta a travessia')}"
           <footer className="text-xs text-muted-foreground mt-1 not-italic">
-            — Tríade Metodológica ORÁCULA
+            {getCopyByKey('triade_assinatura', '— Tríade Metodológica ORÁCULA')}
           </footer>
         </blockquote>
 
@@ -54,7 +55,7 @@ export default function Welcome() {
           onClick={() => navigate('/dashboard')}
           className="gap-2 text-lg px-8"
         >
-          Entrar na Casa
+          {getCopyByKey('btn_atravessar_limiar', 'Atravessar o limiar')}
           <ArrowRight className="w-5 h-5" />
         </Button>
       </div>

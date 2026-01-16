@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { DoorOpen, ArrowRight, Lock, Unlock, Check, Sparkles, AlertTriangle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { useCopy } from "@/hooks/useCopy";
 
 type NivelSala = "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3";
 
@@ -42,6 +43,7 @@ export default function Dashboard() {
   const { user } = useAuth();
   const { isProfessional, isLoading: isLoadingProfessional } = useProfessionalStatus();
   const navigate = useNavigate();
+  const { getCopyByKey } = useCopy();
 
   const [salas, setSalas] = useState<Sala[]>([]);
   const [loading, setLoading] = useState(true);
@@ -103,7 +105,7 @@ export default function Dashboard() {
               <h1 className="font-display text-3xl md:text-4xl font-light text-foreground mb-2">
                 Bem-vinda, <span className="text-gold-gradient font-semibold">{user.name}</span>
               </h1>
-              <p className="text-muted-foreground">A Casa ORÁCULA te recebe para mais uma jornada iniciática.</p>
+              <p className="text-muted-foreground">{getCopyByKey('dashboard_mensagem', 'Você não entrou para consumir conteúdo — entrou para atravessar.')}</p>
             </div>
             <PortalBadge portal={user.portal} size="lg" showName />
           </div>
@@ -159,9 +161,9 @@ export default function Dashboard() {
         {/* Tríade Quote */}
         <div className="mb-12 text-center">
           <blockquote className="font-display text-xl md:text-2xl italic text-foreground/80 max-w-2xl mx-auto">
-            "Ego escolhe • Neuroplasticidade sustenta • Alma dá sentido"
+            "{getCopyByKey('triade_completa', 'Ego organiza a experiência • Neuroplasticidade sustenta o processo • A Alma orienta a travessia')}"
           </blockquote>
-          <p className="text-sm text-muted-foreground mt-2">— Tríade Metodológica ORÁCULA</p>
+          <p className="text-sm text-muted-foreground mt-2">{getCopyByKey('triade_assinatura', '— Tríade Metodológica ORÁCULA')}</p>
         </div>
 
         {/* Salas Grid */}
