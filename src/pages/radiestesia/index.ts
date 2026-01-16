@@ -1,4 +1,5 @@
 export { default as RadiestesiaPortal } from './RadiestesiaPortal';
+export { default as Leitura5Camadas } from './Leitura5Camadas';
 export { default as MesaRadionica } from './MesaRadionica';
 export { default as CatalogoGraficos } from './CatalogoGraficos';
 export { default as Pantaculos } from './Pantaculos';

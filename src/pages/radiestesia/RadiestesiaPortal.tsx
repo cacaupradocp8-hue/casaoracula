@@ -22,7 +22,8 @@ import {
   Stethoscope,
   Sparkles,
   GraduationCap,
-  Radio
+  Radio,
+  Layers
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -38,6 +39,16 @@ interface FerramentaInterna {
 }
 
 const FERRAMENTAS: FerramentaInterna[] = [
+  {
+    id: 'leitura-5-camadas',
+    titulo: 'Leitura em 5 Camadas',
+    descricao: 'Método estruturado de leitura simbólica: Campo Atual, Origem, Bloqueio, Movimento e Integração.',
+    icon: <Layers className="w-6 h-6" />,
+    rota: '/radiestesia/leitura',
+    cor: 'from-gold/20 to-amber-600/10',
+    destaque: 'Principal',
+    categoria: 'clinico',
+  },
   {
     id: 'mesa-radionica',
     titulo: 'Mesa Radiónica Digital',
