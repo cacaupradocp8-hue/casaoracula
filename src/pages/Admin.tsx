@@ -1,7 +1,7 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target } from 'lucide-react';
 import { AdminCursosTab } from '@/components/admin/AdminCursosTab';
 import { AdminUsersTab } from '@/components/admin/AdminUsersTab';
 import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
@@ -33,6 +33,7 @@ import { AdminJornadaHeroinaTab } from '@/components/admin/AdminJornadaHeroinaTa
 import { AdminAudiosTab } from '@/components/admin/AdminAudiosTab';
 import { AdminComunicacaoTab } from '@/components/admin/AdminComunicacaoTab';
 import AdminFormacaoTab from '@/components/admin/AdminFormacaoTab';
+import { AdminRadiestesiaTab } from '@/components/admin/AdminRadiestesiaTab';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -204,6 +205,10 @@ export default function Admin() {
               <Compass className="w-4 h-4 text-purple-400" />
               Jornada da Heroína
             </TabsTrigger>
+            <TabsTrigger value="radiestesia" className="gap-2">
+              <Target className="w-4 h-4 text-purple-400" />
+              Radiestesia
+            </TabsTrigger>
             <TabsTrigger value="ia-config" className="gap-2">
               <Brain className="w-4 h-4" />
               IA Config
@@ -328,6 +333,10 @@ export default function Admin() {
 
           <TabsContent value="jornada-heroina">
             <AdminJornadaHeroinaTab />
+          </TabsContent>
+
+          <TabsContent value="radiestesia">
+            <AdminRadiestesiaTab />
           </TabsContent>
 
           <TabsContent value="ia-config">
