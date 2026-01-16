@@ -11,6 +11,7 @@ import { canAccessFeature, PortalType } from "@/types/portal";
 import { cn } from "@/lib/utils";
 import * as LucideIcons from "lucide-react";
 import type { Course } from "@/types/course";
+import { useCopy } from "@/hooks/useCopy";
 
 interface Quiz {
   id: string;
@@ -77,6 +78,7 @@ export default function SalaDetalhe() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { getCopyByKey } = useCopy();
 
   const [sala, setSala] = useState<Sala | null>(null);
   const [portais, setPortais] = useState<Portal[]>([]);
@@ -234,7 +236,7 @@ export default function SalaDetalhe() {
                   </CardHeader>
                   <CardContent>
                     <Button variant="ghost" size="sm" className="gap-2 text-gold">
-                      Acessar
+                      {getCopyByKey('btn_iniciar_travessia', 'Iniciar a travessia')}
                       <ArrowRight className="w-4 h-4" />
                     </Button>
                   </CardContent>
@@ -321,7 +323,7 @@ export default function SalaDetalhe() {
                   </CardHeader>
                   <CardContent>
                     <Button variant="gold" size="sm">
-                      Iniciar Quiz
+                      {getCopyByKey('btn_iniciar_travessia', 'Iniciar a travessia')}
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                   </CardContent>
@@ -382,7 +384,7 @@ export default function SalaDetalhe() {
                           {isAccessible ? (
                             <Link to={`/portal/${portal.id}`} className="w-full">
                               <Button variant="gold" className="w-full gap-2">
-                                Entrar
+                                {getCopyByKey('btn_atravessar', 'Atravessar')}
                                 <ArrowRight className="w-4 h-4" />
                               </Button>
                             </Link>

@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
 import { Logo } from '@/components/layout/Logo';
 import { Button } from '@/components/ui/button';
+import { useCopy } from '@/hooks/useCopy';
 
 export default function Landing() {
+  const { getCopyByKey } = useCopy();
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
       {/* Background Effects */}
@@ -21,28 +24,18 @@ export default function Landing() {
 
         {/* Título */}
         <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-foreground mb-8 animate-slide-up leading-tight" style={{ animationDelay: '0.2s' }}>
-          Bem-vinda à{' '}
-          <span className="text-gold-gradient font-semibold">Casa ORÁCULA</span>
+          {getCopyByKey('landing_titulo', 'Bem-vinda à')}{' '}
+          <span className="text-gold-gradient font-semibold">{getCopyByKey('landing_destaque', 'Casa ORÁCULA')}</span>
         </h1>
 
         {/* Texto poético */}
         <div className="space-y-4 text-foreground/90 text-lg md:text-xl leading-relaxed mb-12 animate-slide-up" style={{ animationDelay: '0.4s' }}>
-          <p>A Casa ORÁCULA não é um curso.</p>
-          <p>
-            É um espaço de formação simbólica, clínica e ética
-            para mulheres que conduzem outras mulheres.
-          </p>
-          <p>
-            Aqui, a técnica não substitui a escuta.
-            O símbolo não é ornamento — é linguagem.
-            E o portal não é metáfora — é prática.
-          </p>
-          <p>
-            Você entra para aprender a ler narrativas profundas,
-            sustentar eixo e conduzir processos reais de transformação.
-          </p>
+          <p>{getCopyByKey('landing_texto_1', 'A Casa ORÁCULA não é um curso.')}</p>
+          <p>{getCopyByKey('landing_texto_2', 'É um espaço de formação simbólica, clínica e ética para mulheres que conduzem outras mulheres.')}</p>
+          <p>{getCopyByKey('landing_texto_3', 'Aqui, a técnica não substitui a escuta. O símbolo não é ornamento — é linguagem. E o portal não é metáfora — é prática.')}</p>
+          <p>{getCopyByKey('landing_texto_4', 'Você entra para aprender a ler narrativas profundas, sustentar eixo e conduzir processos reais de transformação.')}</p>
           <p className="text-primary/80 italic mt-8 font-display text-xl md:text-2xl">
-            Sente-se. A Casa se revela passo a passo.
+            {getCopyByKey('landing_convite', 'Sente-se. A Casa se revela passo a passo.')}
           </p>
         </div>
 
@@ -50,7 +43,7 @@ export default function Landing() {
         <div className="animate-slide-up" style={{ animationDelay: '0.6s' }}>
           <Link to="/auth">
             <Button variant="gold" size="xl" className="text-lg px-10 py-6">
-              Entrar na Casa
+              {getCopyByKey('btn_entrar_casa', 'Entrar na Casa ORÁCULA')}
             </Button>
           </Link>
         </div>

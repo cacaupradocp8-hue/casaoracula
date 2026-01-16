@@ -6,12 +6,14 @@ import { Switch } from '@/components/ui/switch';
 import { useOracleBySlug } from '@/hooks/useOracles';
 import { AmbientSoundToggle } from '@/components/oracle/AmbientSoundToggle';
 import { cn } from '@/lib/utils';
+import { useCopy } from '@/hooks/useCopy';
 
 export default function OracleHome() {
   const { oracleSlug } = useParams<{ oracleSlug: string }>();
   const navigate = useNavigate();
   const { oracle, spreads, cards, isLoading, error, hasAccess } = useOracleBySlug(oracleSlug || '');
   const [sensitiveMode, setSensitiveMode] = useState(false);
+  const { getCopyByKey } = useCopy();
 
   if (isLoading) {
     return (
@@ -141,7 +143,7 @@ export default function OracleHome() {
               style={{ backgroundColor: primaryColor }}
             >
               <Play className="w-4 h-4 mr-2" />
-              Iniciar Consulta
+              {getCopyByKey('btn_iniciar_travessia', 'Iniciar a travessia')}
             </Button>
 
             {/* Card count hint */}

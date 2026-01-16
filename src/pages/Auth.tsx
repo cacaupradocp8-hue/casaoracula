@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react';
 import { loginSchema, signupSchema, forgotPasswordSchema, getValidationError } from '@/lib/validations';
+import { useCopy } from '@/hooks/useCopy';
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
@@ -27,6 +28,7 @@ export default function Auth() {
   const { login, signup } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { getCopyByKey } = useCopy();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -290,7 +292,7 @@ export default function Auth() {
                 </div>
 
                 <Button type="submit" variant="gold" className="w-full" disabled={isLoading}>
-                  {isLoading ? 'Entrando...' : 'Entrar na Casa'}
+                  {isLoading ? 'Entrando...' : getCopyByKey('btn_atravessar_limiar', 'Atravessar o limiar')}
                 </Button>
 
                 <button
