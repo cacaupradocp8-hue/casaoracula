@@ -31,6 +31,8 @@ interface Portal {
   titulo: string;
   subtitulo: string;
   descricao: string;
+  texto_introducao: string;
+  descricao_pedagogica: string;
   ordem: number;
   portal_minimo: PortalType;
   sala_id: string | null;
@@ -87,6 +89,8 @@ export function AdminConteudosTab() {
     titulo: '',
     subtitulo: '',
     descricao: '',
+    texto_introducao: '',
+    descricao_pedagogica: '',
     ordem: 0,
     portal_minimo: 'visitante' as PortalType,
     sala_id: '' as string | null,
@@ -138,6 +142,8 @@ export function AdminConteudosTab() {
         titulo: item.titulo,
         subtitulo: item.subtitulo || '',
         descricao: item.descricao,
+        texto_introducao: item.texto_introducao || '',
+        descricao_pedagogica: item.descricao_pedagogica || '',
         ordem: item.ordem,
         portal_minimo: item.portal_minimo,
         sala_id: item.sala_id,
@@ -263,6 +269,8 @@ export function AdminConteudosTab() {
         titulo: portal.titulo,
         subtitulo: portal.subtitulo,
         descricao: portal.descricao,
+        texto_introducao: portal.texto_introducao,
+        descricao_pedagogica: portal.descricao_pedagogica,
         ordem: portal.ordem,
         portal_minimo: portal.portal_minimo,
         sala_id: portal.sala_id || '',
@@ -275,6 +283,8 @@ export function AdminConteudosTab() {
         titulo: '',
         subtitulo: '',
         descricao: '',
+        texto_introducao: '',
+        descricao_pedagogica: '',
         ordem: portais.length,
         portal_minimo: 'visitante',
         sala_id: '',
@@ -295,6 +305,8 @@ export function AdminConteudosTab() {
       titulo: portalForm.titulo,
       subtitulo: portalForm.subtitulo,
       descricao: portalForm.descricao,
+      texto_introducao: portalForm.texto_introducao,
+      descricao_pedagogica: portalForm.descricao_pedagogica,
       ordem: portalForm.ordem,
       portal_minimo: portalForm.portal_minimo,
       sala_id: portalForm.sala_id || null,
@@ -826,101 +838,154 @@ export function AdminConteudosTab() {
 
       {/* Portal Dialog */}
       <Dialog open={portalDialogOpen} onOpenChange={setPortalDialogOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingPortal ? 'Editar Portal' : 'Novo Portal'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div>
-              <Label>Título *</Label>
-              <Input
-                value={portalForm.titulo}
-                onChange={(e) => setPortalForm({ ...portalForm, titulo: e.target.value })}
-                placeholder="Ex: Introdução ao Método"
-              />
-            </div>
-            <div>
-              <Label>Subtítulo</Label>
-              <Input
-                value={portalForm.subtitulo}
-                onChange={(e) => setPortalForm({ ...portalForm, subtitulo: e.target.value })}
-                placeholder="Ex: Os fundamentos da jornada"
-              />
-            </div>
-            <div>
-              <Label>Descrição</Label>
-              <Textarea
-                value={portalForm.descricao}
-                onChange={(e) => setPortalForm({ ...portalForm, descricao: e.target.value })}
-                placeholder="Descreva o portal..."
-                rows={3}
-              />
-            </div>
-            <ImageUpload
-              value={portalForm.capa_url}
-              onChange={(url) => setPortalForm({ ...portalForm, capa_url: url })}
-              folder="portais"
-              label="Imagem de Capa"
-              aspectRatio="video"
-            />
-            <div className="grid grid-cols-2 gap-4">
+            {/* Informações Básicas */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                Informações Básicas
+              </h4>
               <div>
-                <Label>Ordem</Label>
+                <Label>Título *</Label>
                 <Input
-                  type="number"
-                  value={portalForm.ordem}
-                  onChange={(e) => setPortalForm({ ...portalForm, ordem: parseInt(e.target.value) || 0 })}
+                  value={portalForm.titulo}
+                  onChange={(e) => setPortalForm({ ...portalForm, titulo: e.target.value })}
+                  placeholder="Ex: Introdução ao Método"
                 />
               </div>
               <div>
-                <Label>Portal Mínimo</Label>
+                <Label>Subtítulo</Label>
+                <Input
+                  value={portalForm.subtitulo}
+                  onChange={(e) => setPortalForm({ ...portalForm, subtitulo: e.target.value })}
+                  placeholder="Ex: Os fundamentos da jornada"
+                />
+              </div>
+              <div>
+                <Label>Descrição</Label>
+                <Textarea
+                  value={portalForm.descricao}
+                  onChange={(e) => setPortalForm({ ...portalForm, descricao: e.target.value })}
+                  placeholder="Descreva brevemente o portal..."
+                  rows={2}
+                />
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Conteúdo Pedagógico */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                Conteúdo Pedagógico
+              </h4>
+              <div>
+                <Label>Texto de Introdução</Label>
+                <Textarea
+                  value={portalForm.texto_introducao}
+                  onChange={(e) => setPortalForm({ ...portalForm, texto_introducao: e.target.value })}
+                  placeholder="Escreva o texto introdutório que a aluna verá ao entrar no portal. Suporta Markdown..."
+                  rows={4}
+                  className="font-mono text-sm"
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Este texto será exibido como introdução ao portal. Suporta formatação Markdown.
+                </p>
+              </div>
+              <div>
+                <Label>Descrição Pedagógica</Label>
+                <Textarea
+                  value={portalForm.descricao_pedagogica}
+                  onChange={(e) => setPortalForm({ ...portalForm, descricao_pedagogica: e.target.value })}
+                  placeholder="Descreva a proposta pedagógica, objetivos e o que a aluna irá aprender..."
+                  rows={4}
+                  className="font-mono text-sm"
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Descreva objetivos de aprendizagem, competências e a jornada simbólica do portal.
+                </p>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Configurações */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                Configurações
+              </h4>
+              <ImageUpload
+                value={portalForm.capa_url}
+                onChange={(url) => setPortalForm({ ...portalForm, capa_url: url })}
+                folder="portais"
+                label="Imagem de Capa"
+                aspectRatio="video"
+              />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Ordem de Exibição</Label>
+                  <Input
+                    type="number"
+                    value={portalForm.ordem}
+                    onChange={(e) => setPortalForm({ ...portalForm, ordem: parseInt(e.target.value) || 0 })}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Define a posição na lista de portais
+                  </p>
+                </div>
+                <div>
+                  <Label>Portal Mínimo</Label>
+                  <Select
+                    value={portalForm.portal_minimo}
+                    onValueChange={(value: PortalType) => setPortalForm({ ...portalForm, portal_minimo: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="visitante">Visitante</SelectItem>
+                      <SelectItem value="pre_iniciada">Pré-Iniciada</SelectItem>
+                      <SelectItem value="iniciada">Iniciada ORÁCULA</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div>
+                <Label>Sala (opcional)</Label>
                 <Select
-                  value={portalForm.portal_minimo}
-                  onValueChange={(value: PortalType) => setPortalForm({ ...portalForm, portal_minimo: value })}
+                  value={portalForm.sala_id || 'none'}
+                  onValueChange={(value) => setPortalForm({ ...portalForm, sala_id: value === 'none' ? null : value })}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Sem sala vinculada" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="visitante">Visitante</SelectItem>
-                    <SelectItem value="pre_iniciada">Pré-Iniciada</SelectItem>
-                    <SelectItem value="iniciada">Iniciada ORÁCULA</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
+                    <SelectItem value="none">Sem sala vinculada</SelectItem>
+                    {salas.map((sala) => (
+                      <SelectItem key={sala.id} value={sala.id}>
+                        {sala.nome_exibicao}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Se vinculada, usuária precisa ter acesso à sala para ver o portal.
+                </p>
               </div>
-            </div>
-            <div>
-              <Label>Sala (opcional)</Label>
-              <Select
-                value={portalForm.sala_id || 'none'}
-                onValueChange={(value) => setPortalForm({ ...portalForm, sala_id: value === 'none' ? null : value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Sem sala vinculada" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Sem sala vinculada</SelectItem>
-                  {salas.map((sala) => (
-                    <SelectItem key={sala.id} value={sala.id}>
-                      {sala.nome_exibicao}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground mt-1">
-                Se vinculada, usuária precisa ter acesso à sala para ver o portal.
-              </p>
-            </div>
-            <div className="flex items-center justify-between border rounded-lg p-3">
-              <div>
-                <Label className="text-base">Publicado</Label>
-                <p className="text-xs text-muted-foreground">Conteúdo visível para usuárias</p>
+              <div className="flex items-center justify-between border rounded-lg p-3">
+                <div>
+                  <Label className="text-base">Publicado</Label>
+                  <p className="text-xs text-muted-foreground">Conteúdo visível para usuárias</p>
+                </div>
+                <Switch
+                  checked={portalForm.publicado}
+                  onCheckedChange={(checked) => setPortalForm({ ...portalForm, publicado: checked })}
+                />
               </div>
-              <Switch
-                checked={portalForm.publicado}
-                onCheckedChange={(checked) => setPortalForm({ ...portalForm, publicado: checked })}
-              />
             </div>
           </div>
           <DialogFooter>

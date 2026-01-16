@@ -855,12 +855,14 @@ export type Database = {
           capa_url: string | null
           created_at: string
           descricao: string
+          descricao_pedagogica: string | null
           id: string
           ordem: number
           portal_minimo: Database["public"]["Enums"]["portal_type"]
           publicado: boolean
           sala_id: string | null
           subtitulo: string | null
+          texto_introducao: string | null
           titulo: string
           updated_at: string
         }
@@ -868,12 +870,14 @@ export type Database = {
           capa_url?: string | null
           created_at?: string
           descricao?: string
+          descricao_pedagogica?: string | null
           id?: string
           ordem?: number
           portal_minimo?: Database["public"]["Enums"]["portal_type"]
           publicado?: boolean
           sala_id?: string | null
           subtitulo?: string | null
+          texto_introducao?: string | null
           titulo: string
           updated_at?: string
         }
@@ -881,12 +885,14 @@ export type Database = {
           capa_url?: string | null
           created_at?: string
           descricao?: string
+          descricao_pedagogica?: string | null
           id?: string
           ordem?: number
           portal_minimo?: Database["public"]["Enums"]["portal_type"]
           publicado?: boolean
           sala_id?: string | null
           subtitulo?: string | null
+          texto_introducao?: string | null
           titulo?: string
           updated_at?: string
         }
