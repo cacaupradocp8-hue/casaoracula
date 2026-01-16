@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ContentPageLayout } from '@/components/shared/ContentPageLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useRadiestesiaConfig, Cristal } from '@/hooks/useRadiestesiaConfig';
 import { 
   Gem, 
   AlertTriangle,
@@ -16,7 +17,8 @@ import {
   Shield,
   Heart,
   Zap,
-  Info
+  Info,
+  ExternalLink
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -36,71 +38,81 @@ const ESTADOS = [
   { id: 'protecao', label: 'Proteção', descricao: 'Vulnerabilidade pedindo amparo' },
 ];
 
-interface Cristal {
-  id: string;
-  nome: string;
-  explicacaoSimbolica: string;
-  alertaExcesso: string;
-  campos: string[];
-  estados: string[];
-}
-
-const CRISTAIS: Cristal[] = [
+// Fallback crystals when DB is empty
+const CRISTAIS_FALLBACK: Cristal[] = [
   {
     id: 'ametista',
     nome: 'Ametista',
-    explicacaoSimbolica: 'Pedra da transmutação serena. Transforma densidades sem violência, como a noite que transforma o dia sem pressa. Sustenta processos de limpeza emocional com suavidade.',
-    alertaExcesso: 'Em excesso, pode criar distanciamento emocional. Se você está evitando sentir, a ametista pode amplificar esse escape.',
+    explicacao_simbolica: 'Pedra da transmutação serena. Transforma densidades sem violência, como a noite que transforma o dia sem pressa. Sustenta processos de limpeza emocional com suavidade.',
+    quando_usar: 'Para processos de transmutação emocional suave e conexão espiritual.',
+    quando_evitar: 'Em estados de desconexão excessiva ou quando evitando sentimentos.',
+    alerta_excesso: 'Em excesso, pode criar distanciamento emocional. Se você está evitando sentir, a ametista pode amplificar esse escape.',
     campos: ['emocional', 'espiritual'],
     estados: ['emocao', 'integracao'],
+    graficos_associados: [],
+    link_externo: null,
+    imagem_url: null,
+    ordem: 0,
+    ativo: true,
   },
   {
     id: 'quartzo-rosa',
     nome: 'Quartzo Rosa',
-    explicacaoSimbolica: 'Pedra do amor incondicional. Não romantiza — acolhe. Sustenta feridas de rejeição e abandono, oferecendo o colo que faltou.',
-    alertaExcesso: 'Pode criar passividade se usado como escape de confrontos necessários. Amor também é limite.',
+    explicacao_simbolica: 'Pedra do amor incondicional. Não romantiza — acolhe. Sustenta feridas de rejeição e abandono, oferecendo o colo que faltou.',
+    quando_usar: 'Para acolher feridas emocionais e trabalhar questões de autoamor.',
+    quando_evitar: 'Quando evitando confrontos necessários.',
+    alerta_excesso: 'Pode criar passividade se usado como escape de confrontos necessários. Amor também é limite.',
     campos: ['emocional'],
     estados: ['emocao', 'protecao'],
+    graficos_associados: [],
+    link_externo: null,
+    imagem_url: null,
+    ordem: 1,
+    ativo: true,
   },
   {
     id: 'turmalina-negra',
     nome: 'Turmalina Negra',
-    explicacaoSimbolica: 'Guardiã das fronteiras. Não ataca — protege. Ancora o corpo ao chão, impedindo dispersão energética.',
-    alertaExcesso: 'Em excesso, pode criar isolamento defensivo. Proteção não é muralha — é discernimento.',
+    explicacao_simbolica: 'Guardiã das fronteiras. Não ataca — protege. Ancora o corpo ao chão, impedindo dispersão energética.',
+    quando_usar: 'Para proteção e ancoragem em situações de vulnerabilidade.',
+    quando_evitar: 'Quando já isolada ou em defensiva excessiva.',
+    alerta_excesso: 'Em excesso, pode criar isolamento defensivo. Proteção não é muralha — é discernimento.',
     campos: ['protecao', 'energia'],
     estados: ['protecao'],
+    graficos_associados: [],
+    link_externo: null,
+    imagem_url: null,
+    ordem: 2,
+    ativo: true,
   },
   {
     id: 'citrino',
     nome: 'Citrino',
-    explicacaoSimbolica: 'Pedra do sol interno. Ativa vontade e clareza de propósito. Sustenta processos de ação consciente.',
-    alertaExcesso: 'Pode amplificar ansiedade e urgência se o campo já está agitado. Nem toda ação é necessária agora.',
+    explicacao_simbolica: 'Pedra do sol interno. Ativa vontade e clareza de propósito. Sustenta processos de ação consciente.',
+    quando_usar: 'Para ativar energia de ação e clareza de propósito.',
+    quando_evitar: 'Em estados de ansiedade ou agitação.',
+    alerta_excesso: 'Pode amplificar ansiedade e urgência se o campo já está agitado. Nem toda ação é necessária agora.',
     campos: ['energia'],
     estados: ['acao'],
-  },
-  {
-    id: 'lapisLazuli',
-    nome: 'Lápis Lazúli',
-    explicacaoSimbolica: 'Pedra da verdade interior. Conecta com sabedoria profunda e intuição. Sustenta processos de autoconhecimento.',
-    alertaExcesso: 'Pode intensificar insights de forma avassaladora. Verdade precisa de tempo para ser integrada.',
-    campos: ['espiritual', 'emocional'],
-    estados: ['integracao'],
-  },
-  {
-    id: 'obsidiana',
-    nome: 'Obsidiana',
-    explicacaoSimbolica: 'Espelho da sombra. Revela o que precisa ser visto, sem filtros. Pedra de confronto interior consciente.',
-    alertaExcesso: 'NÃO usar em estados de fragilidade emocional. A obsidiana não acolhe — expõe. Requer prontidão.',
-    campos: ['protecao', 'espiritual'],
-    estados: ['integracao'],
+    graficos_associados: [],
+    link_externo: null,
+    imagem_url: null,
+    ordem: 3,
+    ativo: true,
   },
 ];
 
 export default function CristaisCampos() {
   const navigate = useNavigate();
+  const { cristais: cristaisDB, isLoading } = useRadiestesiaConfig();
   const [step, setStep] = useState<'campo' | 'estado' | 'resultado'>('campo');
   const [campoSelecionado, setCampoSelecionado] = useState('');
   const [estadoSelecionado, setEstadoSelecionado] = useState('');
+
+  // Use DB data or fallback
+  const cristais = cristaisDB.length > 0 
+    ? cristaisDB.filter(c => c.ativo)
+    : CRISTAIS_FALLBACK;
 
   const handleNext = () => {
     if (step === 'campo' && campoSelecionado) setStep('estado');
@@ -113,14 +125,35 @@ export default function CristaisCampos() {
     else navigate('/radiestesia');
   };
 
-  const cristaisSugeridos = CRISTAIS.filter(
-    c => c.campos.includes(campoSelecionado) && c.estados.includes(estadoSelecionado)
+  const cristaisSugeridos = cristais.filter(
+    c => c.campos?.includes(campoSelecionado) && c.estados?.includes(estadoSelecionado)
   );
 
   // Se não houver match perfeito, mostrar cristais que batem pelo menos o campo
   const cristaisAlternativos = cristaisSugeridos.length === 0 
-    ? CRISTAIS.filter(c => c.campos.includes(campoSelecionado))
+    ? cristais.filter(c => c.campos?.includes(campoSelecionado))
     : [];
+
+  if (isLoading) {
+    return (
+      <AppLayout>
+        <ContentPageLayout
+          title="Cristais & Campos"
+          subtitle="Leitura simbólica de sustentação energética"
+          badge="Sustentação"
+          badgeIcon={<Gem className="w-4 h-4 text-gold" />}
+          onBack={() => navigate('/radiestesia')}
+          backLabel="Voltar ao Portal"
+          maxWidth="2xl"
+        >
+          <div className="space-y-4">
+            <Skeleton className="h-32 w-full" />
+            <Skeleton className="h-48 w-full" />
+          </div>
+        </ContentPageLayout>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>
@@ -245,28 +278,68 @@ export default function CristaisCampos() {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  {/* Imagem do cristal */}
+                  {cristal.imagem_url && (
+                    <img 
+                      src={cristal.imagem_url} 
+                      alt={cristal.nome}
+                      className="w-full h-32 object-cover rounded-lg"
+                    />
+                  )}
+                  
                   {/* Explicação simbólica */}
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium text-emerald-400">
+                    <p className="text-sm font-medium text-emerald-400">
                       Explicação Simbólica
-                    </Label>
+                    </p>
                     <p className="text-sm text-muted-foreground italic">
-                      {cristal.explicacaoSimbolica}
+                      {cristal.explicacao_simbolica}
                     </p>
                   </div>
 
+                  {/* Quando usar */}
+                  {cristal.quando_usar && (
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-blue-400">Quando usar</p>
+                      <p className="text-sm text-muted-foreground">{cristal.quando_usar}</p>
+                    </div>
+                  )}
+
+                  {/* Quando evitar */}
+                  {cristal.quando_evitar && (
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-rose-400">Quando evitar</p>
+                      <p className="text-sm text-muted-foreground">{cristal.quando_evitar}</p>
+                    </div>
+                  )}
+
                   {/* Alerta de excesso */}
-                  <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                    <div className="flex items-start gap-2">
-                      <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-xs font-medium text-amber-500 mb-1">Alerta de excesso</p>
-                        <p className="text-xs text-muted-foreground">
-                          {cristal.alertaExcesso}
-                        </p>
+                  {cristal.alerta_excesso && (
+                    <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                      <div className="flex items-start gap-2">
+                        <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-xs font-medium text-amber-500 mb-1">Alerta de excesso</p>
+                          <p className="text-xs text-muted-foreground">
+                            {cristal.alerta_excesso}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
+
+                  {/* Link externo */}
+                  {cristal.link_externo && (
+                    <a 
+                      href={cristal.link_externo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-sm text-gold hover:underline"
+                    >
+                      <ExternalLink className="w-3 h-3" />
+                      Saiba mais
+                    </a>
+                  )}
                 </CardContent>
               </Card>
             ))}
