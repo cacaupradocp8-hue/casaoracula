@@ -73,6 +73,8 @@ import Big5Simbolico from "./pages/Big5Simbolico";
 import EneagramaFeminino from "./pages/EneagramaFeminino";
 import JornadaHeroina from "./pages/JornadaHeroina";
 import FormacaoOracula from "./pages/FormacaoOracula";
+import MapaVivoList from "./pages/MapaVivoList";
+import MapaVivoEditor from "./pages/MapaVivoEditor";
 const queryClient = new QueryClient();
 
 // Loading component for auth states
@@ -276,6 +278,22 @@ function AppRoutes() {
       />
 
       {/* Ferramentas - Rotas /ferramentas/ (principal) */}
+      <Route
+        path="/ferramentas/mapa-vivo"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <MapaVivoList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/mapa-vivo/:id"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <MapaVivoEditor />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/ferramentas/big5"
         element={

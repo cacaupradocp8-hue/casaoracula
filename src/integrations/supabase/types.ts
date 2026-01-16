@@ -2573,6 +2573,101 @@ export type Database = {
         }
         Relationships: []
       }
+      mind_map_nodes: {
+        Row: {
+          color: string | null
+          created_at: string
+          id: string
+          map_id: string
+          notes: string | null
+          order_index: number
+          parent_id: string | null
+          position_x: number
+          position_y: number
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          map_id: string
+          notes?: string | null
+          order_index?: number
+          parent_id?: string | null
+          position_x?: number
+          position_y?: number
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          map_id?: string
+          notes?: string | null
+          order_index?: number
+          parent_id?: string | null
+          position_x?: number
+          position_y?: number
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mind_map_nodes_map_id_fkey"
+            columns: ["map_id"]
+            isOneToOne: false
+            referencedRelation: "mind_maps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mind_map_nodes_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "mind_map_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mind_maps: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          owner_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          owner_id: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          owner_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mind_maps_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notification_logs: {
         Row: {
           id: string
