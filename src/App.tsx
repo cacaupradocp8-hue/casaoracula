@@ -61,7 +61,16 @@ import Hawkins from "./pages/salas/Hawkins";
 import Antroposofia from "./pages/salas/Antroposofia";
 import Neuroplasticidade from "./pages/salas/Neuroplasticidade";
 import Narrativas from "./pages/salas/Narrativas";
-// Radiestesia agora é dinâmica via FerramentaDinamica
+// Portal Radiestesia Oracular
+import { 
+  RadiestesiaPortal, 
+  MesaRadionica, 
+  CatalogoGraficos, 
+  Pantaculos, 
+  CristaisCampos, 
+  EscalaNarrativa, 
+  DiarioPraticas 
+} from "./pages/radiestesia";
 import Tarot from "./pages/salas/Tarot";
 import Constelacao from "./pages/salas/Constelacao";
 import Syntheia from "./pages/Syntheia";
@@ -424,7 +433,64 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      {/* Radiestesia agora é dinâmica via /ferramentas/:slug */}
+      {/* Portal Radiestesia Oracular */}
+      <Route
+        path="/radiestesia"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <RadiestesiaPortal />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/radiestesia/mesa"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <MesaRadionica />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/radiestesia/graficos"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <CatalogoGraficos />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/radiestesia/pantaculos"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Pantaculos />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/radiestesia/cristais"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <CristaisCampos />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/radiestesia/escala"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <EscalaNarrativa />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/radiestesia/diario"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <DiarioPraticas />
+          </ProtectedRoute>
+        }
+      />
+      
       <Route
         path="/ferramentas/tarot"
         element={
