@@ -24,6 +24,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { PortalType } from "@/types/portal";
 
+// Tipos de Campo Psíquico permitidos
+const TIPOS_CAMPO = [
+  { value: "retencao", label: "Retenção" },
+  { value: "defesa", label: "Defesa" },
+  { value: "dissolucao", label: "Dissolução" },
+  { value: "emergencia", label: "Emergência" },
+  { value: "limiar", label: "Limiar" },
+] as const;
+
 interface LabirintoPorta {
   id: string;
   numero: number;
@@ -32,6 +41,12 @@ interface LabirintoPorta {
   imagem_url: string | null;
   ai_generated_image_url: string | null;
   symbolic_focus: string | null;
+  // Campos Método ORÁCULA
+  tipo_campo: string | null;
+  forca_ativa: string | null;
+  campo_pede: string | null;
+  nao_fazer_aqui: string | null;
+  // Campos legados
   cena_narrativa: string | null;
   eixo_psiquico: string | null;
   risco_clinico: string | null;
@@ -91,6 +106,12 @@ export function AdminLabirintoTab() {
         subtitulo: editingPorta.subtitulo,
         imagem_url: editingPorta.imagem_url,
         symbolic_focus: editingPorta.symbolic_focus,
+        // Campos Método ORÁCULA
+        tipo_campo: editingPorta.tipo_campo,
+        forca_ativa: editingPorta.forca_ativa,
+        campo_pede: editingPorta.campo_pede,
+        nao_fazer_aqui: editingPorta.nao_fazer_aqui,
+        // Campos legados
         cena_narrativa: editingPorta.cena_narrativa,
         eixo_psiquico: editingPorta.eixo_psiquico,
         risco_clinico: editingPorta.risco_clinico,
@@ -408,54 +429,112 @@ export function AdminLabirintoTab() {
                 </div>
               </TabsContent>
 
-              {/* Leitura */}
-              <TabsContent value="leitura" className="space-y-4">
-                <div>
-                  <Label>Cena Narrativa</Label>
-                  <Textarea
-                    value={editingPorta.cena_narrativa || ""}
-                    onChange={(e) =>
-                      setEditingPorta({ ...editingPorta, cena_narrativa: e.target.value })
-                    }
-                    placeholder="Uma breve cena simbólica que descreve esta porta..."
-                    rows={4}
-                  />
+              {/* Leitura - Método ORÁCULA */}
+              <TabsContent value="leitura" className="space-y-6">
+                {/* Seção Estruturada - Método ORÁCULA */}
+                <div className="border border-gold/30 rounded-lg p-4 space-y-4 bg-gold/5">
+                  <h3 className="font-medium text-gold flex items-center gap-2">
+                    <DoorOpen className="w-4 h-4" />
+                    Estrutura Método ORÁCULA
+                  </h3>
+                  
+                  {/* 1. Tipo de Campo */}
+                  <div>
+                    <Label className="text-sm">1. Tipo de Campo Psíquico</Label>
+                    <Select
+                      value={editingPorta.tipo_campo || ""}
+                      onValueChange={(v) =>
+                        setEditingPorta({ ...editingPorta, tipo_campo: v })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione o tipo de campo..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {TIPOS_CAMPO.map((tipo) => (
+                          <SelectItem key={tipo.value} value={tipo.value}>
+                            {tipo.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Ex: "Esta Porta revela um campo de Limiar."
+                    </p>
+                  </div>
+
+                  {/* 2. Força Ativa */}
+                  <div>
+                    <Label className="text-sm">2. O que está ativo nesse campo</Label>
+                    <Textarea
+                      value={editingPorta.forca_ativa || ""}
+                      onChange={(e) =>
+                        setEditingPorta({ ...editingPorta, forca_ativa: e.target.value })
+                      }
+                      placeholder="força contida, energia em suspensão, limite sendo protegido..."
+                      rows={2}
+                    />
+                  </div>
+
+                  {/* 3. Campo Pede */}
+                  <div>
+                    <Label className="text-sm">3. O que este campo pede</Label>
+                    <Textarea
+                      value={editingPorta.campo_pede || ""}
+                      onChange={(e) =>
+                        setEditingPorta({ ...editingPorta, campo_pede: e.target.value })
+                      }
+                      placeholder="sustentação, tempo, presença, contenção, limite..."
+                      rows={2}
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Máximo 2 palavras-chave. Cada uma em uma linha.
+                    </p>
+                  </div>
+
+                  {/* 4. Não Fazer Aqui */}
+                  <div>
+                    <Label className="text-sm">4. O que NÃO deve ser feito aqui</Label>
+                    <Textarea
+                      value={editingPorta.nao_fazer_aqui || ""}
+                      onChange={(e) =>
+                        setEditingPorta({ ...editingPorta, nao_fazer_aqui: e.target.value })
+                      }
+                      placeholder="interpretar, acelerar, explicar, agir, concluir..."
+                      rows={2}
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <Label>Eixo Psíquico</Label>
-                  <Textarea
-                    value={editingPorta.eixo_psiquico || ""}
-                    onChange={(e) =>
-                      setEditingPorta({ ...editingPorta, eixo_psiquico: e.target.value })
-                    }
-                    placeholder="O eixo psíquico central desta porta..."
-                    rows={2}
-                  />
-                </div>
+                {/* Campos Legados (opcionais) */}
+                <div className="border border-muted rounded-lg p-4 space-y-4">
+                  <h3 className="font-medium text-muted-foreground text-sm">
+                    Campos Adicionais (opcionais)
+                  </h3>
 
-                <div>
-                  <Label>Atenção Clínica (Risco Simbólico)</Label>
-                  <Textarea
-                    value={editingPorta.risco_clinico || ""}
-                    onChange={(e) =>
-                      setEditingPorta({ ...editingPorta, risco_clinico: e.target.value })
-                    }
-                    placeholder="Pontos de atenção para a facilitadora..."
-                    rows={2}
-                  />
-                </div>
+                  <div>
+                    <Label className="text-sm">Cena Narrativa</Label>
+                    <Textarea
+                      value={editingPorta.cena_narrativa || ""}
+                      onChange={(e) =>
+                        setEditingPorta({ ...editingPorta, cena_narrativa: e.target.value })
+                      }
+                      placeholder="Uma breve cena simbólica que descreve esta porta..."
+                      rows={3}
+                    />
+                  </div>
 
-                <div>
-                  <Label>Pergunta-Chave</Label>
-                  <Textarea
-                    value={editingPorta.pergunta_chave || ""}
-                    onChange={(e) =>
-                      setEditingPorta({ ...editingPorta, pergunta_chave: e.target.value })
-                    }
-                    placeholder="A pergunta central desta porta..."
-                    rows={2}
-                  />
+                  <div>
+                    <Label className="text-sm">Pergunta-Chave</Label>
+                    <Textarea
+                      value={editingPorta.pergunta_chave || ""}
+                      onChange={(e) =>
+                        setEditingPorta({ ...editingPorta, pergunta_chave: e.target.value })
+                      }
+                      placeholder="A pergunta central desta porta..."
+                      rows={2}
+                    />
+                  </div>
                 </div>
               </TabsContent>
 
