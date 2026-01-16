@@ -5,7 +5,10 @@ import { ContentPageLayout } from '@/components/shared/ContentPageLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
+import { useRadiestesiaConfig } from '@/hooks/useRadiestesiaConfig';
+import { Skeleton } from '@/components/ui/skeleton';
 import { 
   Target, 
   Grid3X3, 
@@ -15,7 +18,11 @@ import {
   BookOpen,
   ArrowRight,
   AlertTriangle,
-  Info
+  Info,
+  Stethoscope,
+  Sparkles,
+  GraduationCap,
+  Radio
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -27,6 +34,7 @@ interface FerramentaInterna {
   rota: string;
   cor: string;
   destaque?: string;
+  categoria: 'clinico' | 'oracular' | 'estudo';
 }
 
 const FERRAMENTAS: FerramentaInterna[] = [
@@ -38,15 +46,17 @@ const FERRAMENTAS: FerramentaInterna[] = [
     rota: '/radiestesia/mesa',
     cor: 'from-purple-500/20 to-purple-600/10',
     destaque: 'Leitura de Campo',
+    categoria: 'clinico',
   },
   {
     id: 'catalogo-graficos',
-    titulo: 'Catálogo Vivo de Gráficos',
+    titulo: 'Catálogo de Gráficos',
     descricao: 'Estudo e uso consciente de gráficos radiónicos com origem, aplicação e contraindicações.',
     icon: <Grid3X3 className="w-6 h-6" />,
     rota: '/radiestesia/graficos',
     cor: 'from-blue-500/20 to-blue-600/10',
     destaque: 'Pedagógico',
+    categoria: 'estudo',
   },
   {
     id: 'pantaculos',
@@ -56,6 +66,7 @@ const FERRAMENTAS: FerramentaInterna[] = [
     rota: '/radiestesia/pantaculos',
     cor: 'from-gold/20 to-amber-600/10',
     destaque: 'Proteção',
+    categoria: 'oracular',
   },
   {
     id: 'cristais',
@@ -65,6 +76,7 @@ const FERRAMENTAS: FerramentaInterna[] = [
     rota: '/radiestesia/cristais',
     cor: 'from-emerald-500/20 to-emerald-600/10',
     destaque: 'Sustentação',
+    categoria: 'clinico',
   },
   {
     id: 'escala-narrativa',
@@ -74,6 +86,7 @@ const FERRAMENTAS: FerramentaInterna[] = [
     rota: '/radiestesia/escala',
     cor: 'from-rose-500/20 to-rose-600/10',
     destaque: 'Autoral',
+    categoria: 'oracular',
   },
   {
     id: 'diario',
@@ -83,11 +96,65 @@ const FERRAMENTAS: FerramentaInterna[] = [
     rota: '/radiestesia/diario',
     cor: 'from-indigo-500/20 to-indigo-600/10',
     destaque: 'Registro',
+    categoria: 'clinico',
   },
+];
+
+const SECOES = [
+  { id: 'todos', label: 'Todas', icon: Radio },
+  { id: 'clinico', label: 'Clínica', icon: Stethoscope },
+  { id: 'oracular', label: 'Oracular', icon: Sparkles },
+  { id: 'estudo', label: 'Estudo', icon: GraduationCap },
 ];
 
 export default function RadiestesiaPortal() {
   const navigate = useNavigate();
+  const { config, isLoading } = useRadiestesiaConfig();
+  const [secaoAtiva, setSecaoAtiva] = useState('todos');
+
+  const intro = config.intro_pedagogica;
+  const amplificador = config.amplificador_destaque;
+  const secaoClinica = config.secao_clinica;
+  const secaoOracular = config.secao_oracular;
+  const secaoEstudo = config.secao_estudo;
+
+  const ferramentasFiltradas = secaoAtiva === 'todos' 
+    ? FERRAMENTAS 
+    : FERRAMENTAS.filter(f => f.categoria === secaoAtiva);
+
+  // Check if section is active
+  const isSecaoAtiva = (secao: string) => {
+    if (secao === 'clinico') return secaoClinica?.ativo !== false;
+    if (secao === 'oracular') return secaoOracular?.ativo !== false;
+    if (secao === 'estudo') return secaoEstudo?.ativo !== false;
+    return true;
+  };
+
+  if (isLoading) {
+    return (
+      <AppLayout>
+        <ContentPageLayout
+          title="Radiestesia Oracular"
+          subtitle="Campos Vibracionais & Práticas de Escuta"
+          badge="Portal"
+          badgeIcon={<Target className="w-4 h-4 text-gold" />}
+          onBack={() => navigate('/ferramentas')}
+          backLabel="Voltar às Ferramentas"
+          maxWidth="4xl"
+        >
+          <div className="space-y-4">
+            <Skeleton className="h-32 w-full" />
+            <Skeleton className="h-24 w-full" />
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Skeleton key={i} className="h-48" />
+              ))}
+            </div>
+          </div>
+        </ContentPageLayout>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>
@@ -100,24 +167,63 @@ export default function RadiestesiaPortal() {
         backLabel="Voltar às Ferramentas"
         maxWidth="4xl"
       >
-        {/* Introdução */}
-        <Card className="bg-gradient-to-br from-purple-900/20 to-background border-purple-500/20">
-          <CardContent className="p-6 space-y-4">
-            <div className="flex items-start gap-3">
-              <Info className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
-              <div className="space-y-2">
-                <p className="text-foreground">
-                  A radiestesia é uma arte de <strong>escuta sutil</strong>, não de medição absoluta. 
-                  Neste portal, você encontrará instrumentos para ler <em>campos</em>, não pessoas.
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Cada ferramenta aqui foi desenhada para uso profissional e ético. 
-                  Não prometemos respostas — oferecemos caminhos de percepção.
-                </p>
+        {/* Introdução Pedagógica */}
+        {intro?.ativo !== false && (
+          <Card className="bg-gradient-to-br from-purple-900/20 to-background border-purple-500/20">
+            <CardContent className="p-6 space-y-4">
+              <div className="flex items-start gap-3">
+                <Info className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
+                <div className="space-y-2">
+                  {intro?.titulo && (
+                    <h3 className="font-semibold text-foreground">{intro.titulo}</h3>
+                  )}
+                  <p className="text-foreground">
+                    {intro?.texto || 
+                      "A radiestesia é uma arte de escuta sutil, não de medição absoluta. Neste portal, você encontrará instrumentos para ler campos, não pessoas."
+                    }
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Cada ferramenta aqui foi desenhada para uso profissional e ético. 
+                    Não prometemos respostas — oferecemos caminhos de percepção.
+                  </p>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Amplificador de Sensibilidade - Destaque */}
+        {amplificador?.ativo !== false && (
+          <Card className="border-gold/30 bg-gradient-to-br from-gold/10 to-background">
+            <CardHeader className="pb-2">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-gold" />
+                <CardTitle className="text-lg text-gold">
+                  {amplificador?.titulo || "Amplificador de Sensibilidade Radiestésica"}
+                </CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                {amplificador?.descricao || 
+                  "Instrumento para calibrar e ampliar a percepção sutil antes de uma prática."
+                }
+              </p>
+              {amplificador?.uso_recomendado && (
+                <div className="text-xs text-muted-foreground">
+                  <strong className="text-foreground">Uso recomendado:</strong> {amplificador.uso_recomendado}
+                </div>
+              )}
+              {amplificador?.contexto_simbolico && (
+                <div className="p-3 rounded-lg bg-background/50 border border-gold/20">
+                  <p className="text-xs italic text-muted-foreground">
+                    {amplificador.contexto_simbolico}
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Alerta ético */}
         <Card className="border-amber-500/30 bg-amber-500/5">
@@ -133,9 +239,36 @@ export default function RadiestesiaPortal() {
           </CardContent>
         </Card>
 
+        {/* Filtro por Modalidade */}
+        <Tabs value={secaoAtiva} onValueChange={setSecaoAtiva}>
+          <TabsList className="w-full h-auto flex-wrap gap-1 bg-background/50 p-1">
+            {SECOES.filter(s => s.id === 'todos' || isSecaoAtiva(s.id)).map((secao) => (
+              <TabsTrigger 
+                key={secao.id} 
+                value={secao.id}
+                className="flex items-center gap-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold"
+              >
+                <secao.icon className="w-4 h-4" />
+                {secao.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+
+        {/* Descrição da Seção */}
+        {secaoAtiva !== 'todos' && (
+          <div className="text-center py-2">
+            <p className="text-sm text-muted-foreground">
+              {secaoAtiva === 'clinico' && (secaoClinica?.descricao || "Uso terapêutico, leitura de campo, apoio a processos.")}
+              {secaoAtiva === 'oracular' && (secaoOracular?.descricao || "Leitura simbólica, orientação narrativa, ritos e travessias.")}
+              {secaoAtiva === 'estudo' && (secaoEstudo?.descricao || "História, autores, fundamentos, comparação de métodos.")}
+            </p>
+          </div>
+        )}
+
         {/* Grid de Ferramentas */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {FERRAMENTAS.map((ferramenta) => (
+          {ferramentasFiltradas.map((ferramenta) => (
             <Card 
               key={ferramenta.id}
               className={cn(

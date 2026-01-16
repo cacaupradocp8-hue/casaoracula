@@ -3781,6 +3781,138 @@ export type Database = {
           },
         ]
       }
+      radiestesia_config: {
+        Row: {
+          ativo: boolean | null
+          chave: string
+          id: string
+          updated_at: string
+          valor: Json | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          chave: string
+          id?: string
+          updated_at?: string
+          valor?: Json | null
+        }
+        Update: {
+          ativo?: boolean | null
+          chave?: string
+          id?: string
+          updated_at?: string
+          valor?: Json | null
+        }
+        Relationships: []
+      }
+      radiestesia_cristais: {
+        Row: {
+          alerta_excesso: string | null
+          ativo: boolean | null
+          campos: string[] | null
+          created_at: string
+          estados: string[] | null
+          explicacao_simbolica: string | null
+          graficos_associados: string[] | null
+          id: string
+          imagem_url: string | null
+          link_externo: string | null
+          nome: string
+          ordem: number | null
+          quando_evitar: string | null
+          quando_usar: string | null
+          updated_at: string
+        }
+        Insert: {
+          alerta_excesso?: string | null
+          ativo?: boolean | null
+          campos?: string[] | null
+          created_at?: string
+          estados?: string[] | null
+          explicacao_simbolica?: string | null
+          graficos_associados?: string[] | null
+          id?: string
+          imagem_url?: string | null
+          link_externo?: string | null
+          nome: string
+          ordem?: number | null
+          quando_evitar?: string | null
+          quando_usar?: string | null
+          updated_at?: string
+        }
+        Update: {
+          alerta_excesso?: string | null
+          ativo?: boolean | null
+          campos?: string[] | null
+          created_at?: string
+          estados?: string[] | null
+          explicacao_simbolica?: string | null
+          graficos_associados?: string[] | null
+          id?: string
+          imagem_url?: string | null
+          link_externo?: string | null
+          nome?: string
+          ordem?: number | null
+          quando_evitar?: string | null
+          quando_usar?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      radiestesia_graficos: {
+        Row: {
+          ativo: boolean | null
+          autor: string | null
+          categoria: string | null
+          combinacoes: string[] | null
+          created_at: string
+          id: string
+          imagem_url: string | null
+          nome: string
+          observacoes_simbolicas: string | null
+          ordem: number | null
+          origem: string | null
+          para_que_serve: string | null
+          quando_nao_usar: string | null
+          tipo_leitura: string | null
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          autor?: string | null
+          categoria?: string | null
+          combinacoes?: string[] | null
+          created_at?: string
+          id?: string
+          imagem_url?: string | null
+          nome: string
+          observacoes_simbolicas?: string | null
+          ordem?: number | null
+          origem?: string | null
+          para_que_serve?: string | null
+          quando_nao_usar?: string | null
+          tipo_leitura?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean | null
+          autor?: string | null
+          categoria?: string | null
+          combinacoes?: string[] | null
+          created_at?: string
+          id?: string
+          imagem_url?: string | null
+          nome?: string
+          observacoes_simbolicas?: string | null
+          ordem?: number | null
+          origem?: string | null
+          para_que_serve?: string | null
+          quando_nao_usar?: string | null
+          tipo_leitura?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       sala_ferramentas: {
         Row: {
           ativa: boolean
