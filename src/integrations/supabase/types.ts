@@ -2173,6 +2173,7 @@ export type Database = {
         Row: {
           ai_generated_image_url: string | null
           ativa: boolean
+          campo_pede: string | null
           caso_espelho_como_sustentar: string | null
           caso_espelho_erro_comum: string | null
           caso_espelho_frase_chegada: string | null
@@ -2184,8 +2185,10 @@ export type Database = {
           chave_sinal_maturidade: string | null
           created_at: string
           eixo_psiquico: string | null
+          forca_ativa: string | null
           id: string
           imagem_url: string | null
+          nao_fazer_aqui: string | null
           nome: string
           numero: number
           ordem: number
@@ -2196,11 +2199,13 @@ export type Database = {
           risco_clinico: string | null
           subtitulo: string | null
           symbolic_focus: string | null
+          tipo_campo: string | null
           updated_at: string
         }
         Insert: {
           ai_generated_image_url?: string | null
           ativa?: boolean
+          campo_pede?: string | null
           caso_espelho_como_sustentar?: string | null
           caso_espelho_erro_comum?: string | null
           caso_espelho_frase_chegada?: string | null
@@ -2212,8 +2217,10 @@ export type Database = {
           chave_sinal_maturidade?: string | null
           created_at?: string
           eixo_psiquico?: string | null
+          forca_ativa?: string | null
           id?: string
           imagem_url?: string | null
+          nao_fazer_aqui?: string | null
           nome: string
           numero: number
           ordem?: number
@@ -2224,11 +2231,13 @@ export type Database = {
           risco_clinico?: string | null
           subtitulo?: string | null
           symbolic_focus?: string | null
+          tipo_campo?: string | null
           updated_at?: string
         }
         Update: {
           ai_generated_image_url?: string | null
           ativa?: boolean
+          campo_pede?: string | null
           caso_espelho_como_sustentar?: string | null
           caso_espelho_erro_comum?: string | null
           caso_espelho_frase_chegada?: string | null
@@ -2240,8 +2249,10 @@ export type Database = {
           chave_sinal_maturidade?: string | null
           created_at?: string
           eixo_psiquico?: string | null
+          forca_ativa?: string | null
           id?: string
           imagem_url?: string | null
+          nao_fazer_aqui?: string | null
           nome?: string
           numero?: number
           ordem?: number
@@ -2252,6 +2263,7 @@ export type Database = {
           risco_clinico?: string | null
           subtitulo?: string | null
           symbolic_focus?: string | null
+          tipo_campo?: string | null
           updated_at?: string
         }
         Relationships: []

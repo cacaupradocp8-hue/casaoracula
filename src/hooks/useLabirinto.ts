@@ -11,14 +11,22 @@ export interface LabirintoPorta {
   imagem_url: string | null;
   ai_generated_image_url: string | null;
   symbolic_focus: string | null;
+  // Campos Método ORÁCULA (estruturados)
+  tipo_campo: string | null;
+  forca_ativa: string | null;
+  campo_pede: string | null;
+  nao_fazer_aqui: string | null;
+  // Campos legados (opcionais)
   cena_narrativa: string | null;
   eixo_psiquico: string | null;
   risco_clinico: string | null;
   pergunta_chave: string | null;
+  // Caso Espelho
   caso_espelho_titulo: string | null;
   caso_espelho_frase_chegada: string | null;
   caso_espelho_erro_comum: string | null;
   caso_espelho_como_sustentar: string | null;
+  // Chave Facilitadora
   chave_frase_ancora: string | null;
   chave_o_que_nao_fazer: string | null;
   chave_quando_parar: string | null;
