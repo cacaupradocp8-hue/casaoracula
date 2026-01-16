@@ -3866,8 +3866,11 @@ export type Database = {
           categoria: string | null
           combinacoes: string[] | null
           created_at: string
+          disponivel_loja: boolean | null
           id: string
+          imagem_fisica_url: string | null
           imagem_url: string | null
+          link_loja: string | null
           nome: string
           observacoes_simbolicas: string | null
           ordem: number | null
@@ -3883,8 +3886,11 @@ export type Database = {
           categoria?: string | null
           combinacoes?: string[] | null
           created_at?: string
+          disponivel_loja?: boolean | null
           id?: string
+          imagem_fisica_url?: string | null
           imagem_url?: string | null
+          link_loja?: string | null
           nome: string
           observacoes_simbolicas?: string | null
           ordem?: number | null
@@ -3900,8 +3906,11 @@ export type Database = {
           categoria?: string | null
           combinacoes?: string[] | null
           created_at?: string
+          disponivel_loja?: boolean | null
           id?: string
+          imagem_fisica_url?: string | null
           imagem_url?: string | null
+          link_loja?: string | null
           nome?: string
           observacoes_simbolicas?: string | null
           ordem?: number | null

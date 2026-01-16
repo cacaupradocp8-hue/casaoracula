@@ -45,6 +45,10 @@ export interface Grafico {
   combinacoes: string[];
   ordem: number;
   ativo: boolean;
+  // Campos da loja
+  link_loja: string | null;
+  imagem_fisica_url: string | null;
+  disponivel_loja: boolean;
 }
 
 export interface Cristal {

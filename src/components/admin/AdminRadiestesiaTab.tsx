@@ -40,6 +40,10 @@ interface Grafico {
   combinacoes: string[];
   ordem: number;
   ativo: boolean;
+  // Campos da loja
+  link_loja: string | null;
+  imagem_fisica_url: string | null;
+  disponivel_loja: boolean;
 }
 
 interface Cristal {
@@ -108,6 +112,10 @@ export function AdminRadiestesiaTab() {
     combinacoes: '',
     ordem: 0,
     ativo: true,
+    // Campos da loja
+    link_loja: '',
+    imagem_fisica_url: '',
+    disponivel_loja: false,
   });
 
   // Cristal dialog
@@ -193,6 +201,10 @@ export function AdminRadiestesiaTab() {
         combinacoes: grafico.combinacoes?.join(', ') || '',
         ordem: grafico.ordem,
         ativo: grafico.ativo,
+        // Campos da loja
+        link_loja: grafico.link_loja || '',
+        imagem_fisica_url: grafico.imagem_fisica_url || '',
+        disponivel_loja: grafico.disponivel_loja || false,
       });
     } else {
       setEditingGrafico(null);
@@ -209,6 +221,10 @@ export function AdminRadiestesiaTab() {
         combinacoes: '',
         ordem: graficos.length,
         ativo: true,
+        // Campos da loja
+        link_loja: '',
+        imagem_fisica_url: '',
+        disponivel_loja: false,
       });
     }
     setGraficoDialogOpen(true);
@@ -234,6 +250,10 @@ export function AdminRadiestesiaTab() {
       combinacoes: graficoForm.combinacoes ? graficoForm.combinacoes.split(',').map(s => s.trim()).filter(Boolean) : [],
       ordem: graficoForm.ordem,
       ativo: graficoForm.ativo,
+      // Campos da loja
+      link_loja: graficoForm.link_loja || null,
+      imagem_fisica_url: graficoForm.imagem_fisica_url || null,
+      disponivel_loja: graficoForm.disponivel_loja,
     };
 
     if (editingGrafico) {
@@ -702,8 +722,42 @@ export function AdminRadiestesiaTab() {
               value={graficoForm.imagem_url}
               onChange={(url) => setGraficoForm({ ...graficoForm, imagem_url: url })}
               folder="radiestesia"
-              label="Imagem do Gráfico"
+              label="Imagem do Gráfico (Digital)"
             />
+
+            {/* Seção Versão Física (Loja) */}
+            <div className="border rounded-lg p-4 space-y-4 bg-muted/30">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium">📦 Versão Física (Loja)</h4>
+                  <p className="text-sm text-muted-foreground">Configure a disponibilidade na loja física</p>
+                </div>
+                <Switch
+                  checked={graficoForm.disponivel_loja}
+                  onCheckedChange={(checked) => setGraficoForm({ ...graficoForm, disponivel_loja: checked })}
+                />
+              </div>
+              
+              {graficoForm.disponivel_loja && (
+                <>
+                  <div className="space-y-2">
+                    <Label>Link do Produto na Loja</Label>
+                    <Input
+                      value={graficoForm.link_loja}
+                      onChange={(e) => setGraficoForm({ ...graficoForm, link_loja: e.target.value })}
+                      placeholder="https://casaoracula.com.br/loja/produto/..."
+                    />
+                  </div>
+                  
+                  <ImageUpload
+                    value={graficoForm.imagem_fisica_url}
+                    onChange={(url) => setGraficoForm({ ...graficoForm, imagem_fisica_url: url })}
+                    folder="radiestesia"
+                    label="Imagem do Produto Físico"
+                  />
+                </>
+              )}
+            </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
