@@ -23,7 +23,8 @@ import {
   Sparkles,
   GraduationCap,
   Radio,
-  Layers
+  Layers,
+  Moon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -46,7 +47,7 @@ const FERRAMENTAS: FerramentaInterna[] = [
     icon: <Layers className="w-6 h-6" />,
     rota: '/radiestesia/leitura',
     cor: 'from-gold/20 to-amber-600/10',
-    destaque: 'Principal',
+    destaque: 'Método Principal',
     categoria: 'clinico',
   },
   {
@@ -56,7 +57,7 @@ const FERRAMENTAS: FerramentaInterna[] = [
     icon: <Target className="w-6 h-6" />,
     rota: '/radiestesia/mesa',
     cor: 'from-purple-500/20 to-purple-600/10',
-    destaque: 'Leitura de Campo',
+    destaque: 'Leitura Livre',
     categoria: 'clinico',
   },
   {
@@ -111,46 +112,43 @@ const FERRAMENTAS: FerramentaInterna[] = [
   },
 ];
 
-const SECOES = [
-  { id: 'todos', label: 'Todas', icon: Radio },
-  { id: 'clinico', label: 'Clínica', icon: Stethoscope },
-  { id: 'oracular', label: 'Oracular', icon: Sparkles },
-  { id: 'estudo', label: 'Estudo', icon: GraduationCap },
-];
+// Textos fixos para cada modo
+const TEXTOS_MODO = {
+  clinico: {
+    titulo: '🜂 Radiestesia Clínica',
+    descricao: 'Aqui a radiestesia organiza a escuta e sustenta o campo terapêutico.',
+    uso: 'Atendimento simbólico estruturado, leitura de campo, apoio a processos.',
+  },
+  oracular: {
+    titulo: '🜁 Radiestesia Oracular',
+    descricao: 'Aqui a radiestesia lê movimentos, não destinos.',
+    uso: 'Leitura simbólica, ritualística e narrativa. Integração com arquétipos.',
+  },
+  estudo: {
+    titulo: '🜄 Radiestesia de Estudo',
+    descricao: 'Aqui a radiestesia é estudada como linguagem.',
+    uso: 'Aprendizado, pesquisa, treino, comparação de métodos e autores.',
+  },
+};
 
 export default function RadiestesiaPortal() {
   const navigate = useNavigate();
   const { config, isLoading } = useRadiestesiaConfig();
-  const [secaoAtiva, setSecaoAtiva] = useState('todos');
+  const [modoAtivo, setModoAtivo] = useState<'clinico' | 'oracular' | 'estudo'>('clinico');
 
-  const intro = config.intro_pedagogica;
-  const amplificador = config.amplificador_destaque;
-  const secaoClinica = config.secao_clinica;
-  const secaoOracular = config.secao_oracular;
-  const secaoEstudo = config.secao_estudo;
-
-  const ferramentasFiltradas = secaoAtiva === 'todos' 
-    ? FERRAMENTAS 
-    : FERRAMENTAS.filter(f => f.categoria === secaoAtiva);
-
-  // Check if section is active
-  const isSecaoAtiva = (secao: string) => {
-    if (secao === 'clinico') return secaoClinica?.ativo !== false;
-    if (secao === 'oracular') return secaoOracular?.ativo !== false;
-    if (secao === 'estudo') return secaoEstudo?.ativo !== false;
-    return true;
-  };
+  const ferramentasFiltradas = FERRAMENTAS.filter(f => f.categoria === modoAtivo);
+  const modoTexto = TEXTOS_MODO[modoAtivo];
 
   if (isLoading) {
     return (
       <AppLayout>
         <ContentPageLayout
-          title="Radiestesia Oracular"
-          subtitle="Campos Vibracionais & Práticas de Escuta"
+          title="Portal Radiestesia"
+          subtitle="Método de Leitura Simbólica"
           badge="Portal"
-          badgeIcon={<Target className="w-4 h-4 text-gold" />}
+          badgeIcon={<Moon className="w-4 h-4 text-gold" />}
           onBack={() => navigate('/ferramentas')}
-          backLabel="Voltar às Ferramentas"
+          backLabel="Voltar"
           maxWidth="4xl"
         >
           <div className="space-y-4">
@@ -170,73 +168,56 @@ export default function RadiestesiaPortal() {
   return (
     <AppLayout>
       <ContentPageLayout
-        title="Radiestesia Oracular"
-        subtitle="Campos Vibracionais & Práticas de Escuta"
-        badge="Portal"
-        badgeIcon={<Target className="w-4 h-4 text-gold" />}
+        title="Portal Radiestesia"
+        subtitle="Método de Leitura Simbólica"
+        badge="Portal 6"
+        badgeIcon={<Moon className="w-4 h-4 text-gold" />}
         onBack={() => navigate('/ferramentas')}
-        backLabel="Voltar às Ferramentas"
+        backLabel="Voltar"
         maxWidth="4xl"
       >
-        {/* Introdução Pedagógica */}
-        {intro?.ativo !== false && (
-          <Card className="bg-gradient-to-br from-purple-900/20 to-background border-purple-500/20">
-            <CardContent className="p-6 space-y-4">
-              <div className="flex items-start gap-3">
-                <Info className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
-                <div className="space-y-2">
-                  {intro?.titulo && (
-                    <h3 className="font-semibold text-foreground">{intro.titulo}</h3>
-                  )}
-                  <p className="text-foreground">
-                    {intro?.texto || 
-                      "A radiestesia é uma arte de escuta sutil, não de medição absoluta. Neste portal, você encontrará instrumentos para ler campos, não pessoas."
-                    }
+        {/* Introdução Pedagógica Principal */}
+        <Card className="bg-gradient-to-br from-purple-900/30 to-background border-purple-500/30">
+          <CardContent className="p-6 space-y-4">
+            <div className="flex items-start gap-4">
+              <div className="p-3 rounded-full bg-purple-500/20">
+                <Moon className="w-6 h-6 text-purple-400" />
+              </div>
+              <div className="space-y-3 flex-1">
+                <h3 className="font-display text-lg text-foreground">
+                  🌒 Portal Radiestesia — Introdução
+                </h3>
+                <div className="space-y-2 text-sm text-muted-foreground">
+                  <p>
+                    Este Portal sustenta a Radiestesia como <strong className="text-foreground">linguagem de leitura</strong>, 
+                    não como técnica de resposta rápida.
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    Cada ferramenta aqui foi desenhada para uso profissional e ético. 
-                    Não prometemos respostas — oferecemos caminhos de percepção.
+                  <p className="italic">
+                    Aqui, o pêndulo não decide. Ele responde à qualidade da pergunta.
+                  </p>
+                </div>
+                
+                <div className="pt-2 space-y-2">
+                  <p className="text-sm font-medium text-foreground">A Radiestesia Oracular:</p>
+                  <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                    <li>Não substitui presença</li>
+                    <li>Não promete solução imediata</li>
+                    <li>Não cria dependência</li>
+                  </ul>
+                </div>
+
+                <div className="pt-2 p-3 rounded-lg bg-background/50 border border-dashed border-purple-500/30">
+                  <p className="text-xs text-muted-foreground">
+                    <strong className="text-foreground">Use este Portal quando:</strong> O campo pede escuta antes de ação. 
+                    A leitura precisa de estrutura. O processo exige limite e clareza.
                   </p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        )}
+            </div>
+          </CardContent>
+        </Card>
 
-        {/* Amplificador de Sensibilidade - Destaque */}
-        {amplificador?.ativo !== false && (
-          <Card className="border-gold/30 bg-gradient-to-br from-gold/10 to-background">
-            <CardHeader className="pb-2">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-gold" />
-                <CardTitle className="text-lg text-gold">
-                  {amplificador?.titulo || "Amplificador de Sensibilidade Radiestésica"}
-                </CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <p className="text-sm text-muted-foreground">
-                {amplificador?.descricao || 
-                  "Instrumento para calibrar e ampliar a percepção sutil antes de uma prática."
-                }
-              </p>
-              {amplificador?.uso_recomendado && (
-                <div className="text-xs text-muted-foreground">
-                  <strong className="text-foreground">Uso recomendado:</strong> {amplificador.uso_recomendado}
-                </div>
-              )}
-              {amplificador?.contexto_simbolico && (
-                <div className="p-3 rounded-lg bg-background/50 border border-gold/20">
-                  <p className="text-xs italic text-muted-foreground">
-                    {amplificador.contexto_simbolico}
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Alerta ético */}
+        {/* Aviso Ético */}
         <Card className="border-amber-500/30 bg-amber-500/5">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
@@ -244,40 +225,58 @@ export default function RadiestesiaPortal() {
               <p className="text-sm text-muted-foreground">
                 <strong className="text-foreground">Aviso:</strong> Este portal não substitui 
                 orientação clínica, não promete curas e não oferece diagnósticos. 
-                É uma ferramenta de <em>exploração simbólica</em> para profissionais.
+                Ela organiza o campo, revela padrões e sustenta escolhas éticas.
               </p>
             </div>
           </CardContent>
         </Card>
 
-        {/* Filtro por Modalidade */}
-        <Tabs value={secaoAtiva} onValueChange={setSecaoAtiva}>
-          <TabsList className="w-full h-auto flex-wrap gap-1 bg-background/50 p-1">
-            {SECOES.filter(s => s.id === 'todos' || isSecaoAtiva(s.id)).map((secao) => (
-              <TabsTrigger 
-                key={secao.id} 
-                value={secao.id}
-                className="flex items-center gap-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold"
-              >
-                <secao.icon className="w-4 h-4" />
-                {secao.label}
-              </TabsTrigger>
-            ))}
+        {/* 3 Abas Fixas: Clínica, Oracular, Estudo */}
+        <Tabs value={modoAtivo} onValueChange={(v) => setModoAtivo(v as typeof modoAtivo)}>
+          <TabsList className="w-full h-auto grid grid-cols-3 gap-1 bg-background/50 p-1">
+            <TabsTrigger 
+              value="clinico"
+              className="flex items-center gap-2 data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400"
+            >
+              <Stethoscope className="w-4 h-4" />
+              <span className="hidden sm:inline">Clínica</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="oracular"
+              className="flex items-center gap-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span className="hidden sm:inline">Oracular</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="estudo"
+              className="flex items-center gap-2 data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-400"
+            >
+              <GraduationCap className="w-4 h-4" />
+              <span className="hidden sm:inline">Estudo</span>
+            </TabsTrigger>
           </TabsList>
+
+          {/* Descrição do Modo Ativo */}
+          <Card className={cn(
+            "mt-4 border-l-4",
+            modoAtivo === 'clinico' && "border-l-purple-500 bg-purple-500/5",
+            modoAtivo === 'oracular' && "border-l-gold bg-gold/5",
+            modoAtivo === 'estudo' && "border-l-blue-500 bg-blue-500/5"
+          )}>
+            <CardContent className="py-4">
+              <h4 className="font-medium text-foreground mb-1">{modoTexto.titulo}</h4>
+              <p className="text-sm text-muted-foreground italic mb-2">
+                "{modoTexto.descricao}"
+              </p>
+              <p className="text-xs text-muted-foreground">
+                <strong>Uso:</strong> {modoTexto.uso}
+              </p>
+            </CardContent>
+          </Card>
         </Tabs>
 
-        {/* Descrição da Seção */}
-        {secaoAtiva !== 'todos' && (
-          <div className="text-center py-2">
-            <p className="text-sm text-muted-foreground">
-              {secaoAtiva === 'clinico' && (secaoClinica?.descricao || "Uso terapêutico, leitura de campo, apoio a processos.")}
-              {secaoAtiva === 'oracular' && (secaoOracular?.descricao || "Leitura simbólica, orientação narrativa, ritos e travessias.")}
-              {secaoAtiva === 'estudo' && (secaoEstudo?.descricao || "História, autores, fundamentos, comparação de métodos.")}
-            </p>
-          </div>
-        )}
-
-        {/* Grid de Ferramentas */}
+        {/* Grid de Ferramentas Filtradas */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {ferramentasFiltradas.map((ferramenta) => (
             <Card 
@@ -286,7 +285,8 @@ export default function RadiestesiaPortal() {
                 "group cursor-pointer transition-all duration-300",
                 "hover:shadow-lg hover:shadow-gold/10 hover:border-gold/30",
                 "bg-gradient-to-br",
-                ferramenta.cor
+                ferramenta.cor,
+                ferramenta.id === 'leitura-5-camadas' && "ring-2 ring-gold/50"
               )}
               onClick={() => navigate(ferramenta.rota)}
             >
@@ -299,7 +299,13 @@ export default function RadiestesiaPortal() {
                     {ferramenta.icon}
                   </div>
                   {ferramenta.destaque && (
-                    <Badge variant="outline" className="text-xs">
+                    <Badge 
+                      variant="outline" 
+                      className={cn(
+                        "text-xs",
+                        ferramenta.id === 'leitura-5-camadas' && "bg-gold/20 text-gold border-gold/50"
+                      )}
+                    >
                       {ferramenta.destaque}
                     </Badge>
                   )}
@@ -321,6 +327,21 @@ export default function RadiestesiaPortal() {
           ))}
         </div>
 
+        {/* CTA para ver todas as ferramentas se não estiver em "todos" */}
+        {ferramentasFiltradas.length < FERRAMENTAS.length && (
+          <div className="text-center">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/radiestesia/graficos')}
+              className="text-muted-foreground hover:text-gold"
+            >
+              <Grid3X3 className="w-4 h-4 mr-2" />
+              Ver Catálogo Completo de Gráficos
+            </Button>
+          </div>
+        )}
+
         {/* Microcopy final */}
         <div className="text-center py-6">
           <p className="text-sm text-muted-foreground/60 italic">
@@ -328,7 +349,7 @@ export default function RadiestesiaPortal() {
           </p>
         </div>
 
-        <EthicalNotice toolName="Radiestesia Oracular" />
+        <EthicalNotice toolName="Portal Radiestesia" />
       </ContentPageLayout>
     </AppLayout>
   );
