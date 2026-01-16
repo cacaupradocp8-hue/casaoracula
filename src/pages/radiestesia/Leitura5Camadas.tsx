@@ -8,18 +8,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useRadiestesiaConfig, Grafico } from '@/hooks/useRadiestesiaConfig';
 import { 
   Layers, 
   Loader2, 
   Save, 
   ChevronRight,
   ChevronLeft,
-  Circle,
   CheckCircle2,
   Eye,
   Compass,
@@ -28,7 +27,10 @@ import {
   Heart,
   Sparkles,
   RotateCcw,
-  FileText
+  FileText,
+  Grid3X3,
+  ExternalLink,
+  Info
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -74,6 +76,7 @@ const CAMADAS = [
     objetivo: 'Identificar o que sustenta o travamento.',
     textoPedagogico: 'Aqui não se procura culpa. Apenas o que sustenta o padrão.',
     perguntaBase: 'O que impede o fluxo neste campo?',
+    mostrarGraficos: true, // Flag para mostrar seção de gráficos
   },
   {
     numero: 4,
@@ -110,15 +113,27 @@ type CamadaNumero = 1 | 2 | 3 | 4 | 5;
 
 interface RespostaCamada {
   anotacao: string;
-  origensSelecionadas?: string[]; // Para camada 2
+  origensSelecionadas?: string[];
+  graficosSelecionados?: string[];
   timestamp: string;
 }
+
+// Função simbólica mapping
+const FUNCOES_SIMBOLICAS: Record<string, string> = {
+  leitura: 'Leitura de Campo',
+  limpeza: 'Limpeza Energética',
+  harmonizacao: 'Harmonização',
+  amplificacao: 'Amplificação',
+  protecao: 'Proteção',
+  diagnostico: 'Diagnóstico Simbólico',
+};
 
 export default function Leitura5Camadas() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { graficos } = useRadiestesiaConfig();
   
   const clienteId = searchParams.get('cliente');
   const [clienteInfo, setClienteInfo] = useState<{ id: string; nome: string } | null>(null);
@@ -127,10 +142,14 @@ export default function Leitura5Camadas() {
   const [respostas, setRespostas] = useState<Record<number, RespostaCamada>>({});
   const [anotacaoAtual, setAnotacaoAtual] = useState('');
   const [origensSelecionadas, setOrigensSelecionadas] = useState<string[]>([]);
+  const [graficosSelecionados, setGraficosSelecionados] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [mostrarResumo, setMostrarResumo] = useState(false);
 
   const camadaConfig = CAMADAS[camadaAtual - 1];
+
+  // Gráficos sugeridos (apenas clínicos ativos)
+  const graficosSugeridos = graficos.filter(g => g.ativo && g.categoria === 'clinico').slice(0, 6);
 
   useEffect(() => {
     if (clienteId) {
@@ -144,9 +163,11 @@ export default function Leitura5Camadas() {
     if (respostaSalva) {
       setAnotacaoAtual(respostaSalva.anotacao);
       setOrigensSelecionadas(respostaSalva.origensSelecionadas || []);
+      setGraficosSelecionados(respostaSalva.graficosSelecionados || []);
     } else {
       setAnotacaoAtual('');
       setOrigensSelecionadas([]);
+      setGraficosSelecionados([]);
     }
   }, [camadaAtual, respostas]);
 
@@ -166,6 +187,7 @@ export default function Leitura5Camadas() {
       [camadaAtual]: {
         anotacao: anotacaoAtual,
         origensSelecionadas: camadaAtual === 2 ? origensSelecionadas : undefined,
+        graficosSelecionados: camadaAtual === 3 ? graficosSelecionados : undefined,
         timestamp: new Date().toISOString(),
       },
     }));
@@ -200,7 +222,6 @@ export default function Leitura5Camadas() {
     
     setSaving(true);
     try {
-      // Buscar ferramenta_id para radiestesia
       const { data: ferramenta } = await supabase
         .from('sala_ferramentas')
         .select('id')
@@ -248,6 +269,7 @@ export default function Leitura5Camadas() {
     setRespostas({});
     setAnotacaoAtual('');
     setOrigensSelecionadas([]);
+    setGraficosSelecionados([]);
     setCamadaAtual(1);
     setMostrarResumo(false);
   };
@@ -261,6 +283,12 @@ export default function Leitura5Camadas() {
       if (resposta.origensSelecionadas?.length) {
         texto += `\nOrigens: ${resposta.origensSelecionadas.join(', ')}`;
       }
+      if (resposta.graficosSelecionados?.length) {
+        const nomesGraficos = resposta.graficosSelecionados
+          .map(id => graficos.find(g => g.id === id)?.nome || id)
+          .join(', ');
+        texto += `\nGráficos: ${nomesGraficos}`;
+      }
       return texto;
     }).filter(Boolean).join('\n\n---\n\n');
   };
@@ -273,7 +301,14 @@ export default function Leitura5Camadas() {
     );
   };
 
-  // Verificar se pode avançar
+  const toggleGrafico = (graficoId: string) => {
+    setGraficosSelecionados(prev => 
+      prev.includes(graficoId) 
+        ? prev.filter(g => g !== graficoId)
+        : [...prev, graficoId]
+    );
+  };
+
   const podeAvancar = anotacaoAtual.trim().length > 0;
 
   // Tela de Resumo
@@ -290,7 +325,6 @@ export default function Leitura5Camadas() {
           showNavigation={false}
           maxWidth="2xl"
         >
-          {/* Cliente Info */}
           {clienteInfo && (
             <Card className="border-gold/30 bg-gold/5">
               <CardContent className="py-4">
@@ -301,7 +335,6 @@ export default function Leitura5Camadas() {
             </Card>
           )}
 
-          {/* Resumo das 5 Camadas */}
           <Card className="bg-gradient-to-br from-background to-muted/20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -345,13 +378,26 @@ export default function Leitura5Camadas() {
                         ))}
                       </div>
                     )}
+
+                    {resposta.graficosSelecionados && resposta.graficosSelecionados.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        <span className="text-xs text-muted-foreground mr-1">Gráficos:</span>
+                        {resposta.graficosSelecionados.map((id) => {
+                          const grafico = graficos.find(g => g.id === id);
+                          return (
+                            <Badge key={id} variant="outline" className="text-xs bg-gold/10 text-gold border-gold/30">
+                              {grafico?.nome || id}
+                            </Badge>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 );
               })}
             </CardContent>
           </Card>
 
-          {/* Aviso Ético */}
           <Card className="border-amber-500/30 bg-amber-500/5">
             <CardContent className="py-4">
               <p className="text-sm text-muted-foreground">
@@ -362,7 +408,6 @@ export default function Leitura5Camadas() {
             </CardContent>
           </Card>
 
-          {/* Ações */}
           <div className="flex flex-col sm:flex-row gap-3 pt-4">
             <Button 
               variant="outline" 
@@ -406,7 +451,6 @@ export default function Leitura5Camadas() {
         showNavigation={false}
         maxWidth="2xl"
       >
-        {/* Cliente Info */}
         {clienteInfo && (
           <Card className="border-gold/30 bg-gold/5">
             <CardContent className="py-4">
@@ -543,6 +587,65 @@ export default function Leitura5Camadas() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Seção de Gráficos Sugeridos (após Camada 3) */}
+        {'mostrarGraficos' in camadaConfig && camadaConfig.mostrarGraficos && graficosSugeridos.length > 0 && (
+          <Card className="border-gold/30 bg-gradient-to-br from-gold/5 to-background">
+            <CardHeader className="pb-2">
+              <div className="flex items-center gap-2">
+                <Grid3X3 className="w-5 h-5 text-gold" />
+                <CardTitle className="text-base">Gráficos Sugeridos para Leitura</CardTitle>
+              </div>
+              <CardDescription className="text-xs">
+                ⚠️ Não é recomendação automática. É apoio visual e organizacional.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="grid gap-2 sm:grid-cols-2">
+                {graficosSugeridos.map((grafico) => (
+                  <label
+                    key={grafico.id}
+                    className={cn(
+                      "flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all",
+                      graficosSelecionados.includes(grafico.id)
+                        ? "border-gold bg-gold/10"
+                        : "border-border hover:border-gold/30 bg-background/50"
+                    )}
+                  >
+                    <Checkbox
+                      checked={graficosSelecionados.includes(grafico.id)}
+                      onCheckedChange={() => toggleGrafico(grafico.id)}
+                      className="mt-1"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm truncate">{grafico.nome}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <Badge variant="outline" className="text-xs">
+                          {FUNCOES_SIMBOLICAS[grafico.tipo_leitura] || grafico.tipo_leitura}
+                        </Badge>
+                      </div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+
+              <div className="flex items-center justify-between pt-2">
+                <p className="text-xs text-muted-foreground italic">
+                  O app não escolhe o gráfico. Ele organiza a possibilidade de escolha.
+                </p>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate('/radiestesia/graficos')}
+                  className="text-xs text-gold"
+                >
+                  Ver Catálogo
+                  <ExternalLink className="w-3 h-3 ml-1" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Navegação */}
         <div className="flex justify-between pt-4">

@@ -5,15 +5,15 @@ import { ContentPageLayout } from '@/components/shared/ContentPageLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRadiestesiaConfig, Grafico } from '@/hooks/useRadiestesiaConfig';
 import { 
   Grid3X3, 
   Search, 
-  AlertTriangle,
   CheckCircle2,
   XCircle,
   Sparkles,
@@ -21,7 +21,10 @@ import {
   User,
   FileText,
   Eye,
-  Image as ImageIcon
+  Image as ImageIcon,
+  ShoppingBag,
+  ExternalLink,
+  Info
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -88,10 +91,13 @@ const ORIGENS = {
 };
 
 const TIPO_LEITURA = {
-  campo: 'Campo',
+  campo: 'Leitura de Campo',
   frequencia: 'Frequência',
   narrativa: 'Narrativa',
   apoio: 'Apoio',
+  limpeza: 'Limpeza',
+  harmonizacao: 'Harmonização',
+  amplificacao: 'Amplificação',
 };
 
 export default function CatalogoGraficos() {
@@ -310,6 +316,47 @@ export default function CatalogoGraficos() {
                         </div>
                       </div>
                     )}
+
+                    <Separator className="my-4" />
+
+                    {/* Seção: Versão Física */}
+                    <div className="p-4 rounded-lg bg-gradient-to-br from-gold/10 to-background border border-gold/20">
+                      <div className="flex items-start gap-3">
+                        <ShoppingBag className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
+                        <div className="flex-1 space-y-2">
+                          <h4 className="font-medium text-foreground">Versão Física</h4>
+                          <p className="text-xs text-muted-foreground italic">
+                            "O gráfico físico amplia a experiência simbólica, mas não substitui a escuta."
+                          </p>
+                          
+                          {/* Imagem do gráfico físico (se disponível) */}
+                          {grafico.imagem_url && (
+                            <div className="py-2">
+                              <img 
+                                src={grafico.imagem_url} 
+                                alt={`${grafico.nome} - Versão Física`}
+                                className="w-full max-w-[200px] rounded-lg border"
+                              />
+                            </div>
+                          )}
+
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-gold border-gold/30 hover:bg-gold/10"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // Aqui você pode adicionar um link para loja externa ou interna
+                              window.open('https://casaoracula.com.br/loja', '_blank');
+                            }}
+                          >
+                            <ShoppingBag className="w-4 h-4 mr-2" />
+                            Adquirir gráfico físico
+                            <ExternalLink className="w-3 h-3 ml-2" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
                   </CardContent>
                 )}
               </Card>
@@ -336,6 +383,23 @@ export default function CatalogoGraficos() {
             <p className="text-xs text-muted-foreground mt-3">
               O catálogo está em construção. Gráficos são adicionados pelo Admin.
             </p>
+          </CardContent>
+        </Card>
+
+        {/* Nota sobre a loja */}
+        <Card className="border-gold/20 bg-gold/5">
+          <CardContent className="py-4">
+            <div className="flex items-start gap-3">
+              <Info className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <p className="text-sm text-foreground">
+                  A loja de gráficos físicos é integrada como continuidade da prática.
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  O foco é educação + prática, não vitrine. Cada gráfico foi incluído por sua qualidade simbólica.
+                </p>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
