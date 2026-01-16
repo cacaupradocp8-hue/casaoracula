@@ -8,6 +8,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useRadiestesiaConfig, Grafico } from '@/hooks/useRadiestesiaConfig';
 import { 
   Grid3X3, 
   Search, 
@@ -15,85 +17,68 @@ import {
   CheckCircle2,
   XCircle,
   Sparkles,
-  BookOpen
+  BookOpen,
+  User,
+  FileText,
+  Eye,
+  Image as ImageIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface Grafico {
-  id: string;
-  nome: string;
-  origem: 'tradicional' | 'autoral' | 'alquimico';
-  paraQueServe: string;
-  quandoNaoUsar: string;
-  combinacoes: string[];
-  categoria: string;
-}
-
-const GRAFICOS: Grafico[] = [
+// Fallback graphics for when DB is empty
+const GRAFICOS_FALLBACK: Grafico[] = [
   {
     id: 'decagono',
     nome: 'Decágono',
+    autor: 'Tradicional',
     origem: 'tradicional',
-    paraQueServe: 'Harmonização geral de ambientes e campos. Equilibra energias dispersas e cria campo de proteção básico.',
-    quandoNaoUsar: 'Quando o campo precisa de ação direcionada específica. Não substitui trabalho terapêutico profundo.',
+    categoria: 'clinico',
+    tipo_leitura: 'campo',
+    para_que_serve: 'Harmonização geral de ambientes e campos. Equilibra energias dispersas e cria campo de proteção básico.',
+    quando_nao_usar: 'Quando o campo precisa de ação direcionada específica. Não substitui trabalho terapêutico profundo.',
+    observacoes_simbolicas: 'Gráfico de equilíbrio universal.',
+    imagem_url: null,
     combinacoes: ['Quartzo transparente', 'Ametista', 'Chakra coronário'],
-    categoria: 'harmonizacao',
+    ordem: 0,
+    ativo: true,
   },
   {
     id: 'antahkarana',
     nome: 'Antahkarana',
+    autor: 'Tradição Tibetana',
     origem: 'tradicional',
-    paraQueServe: 'Ponte entre personalidade e alma. Usado para meditação profunda e conexão com o Eu Superior.',
-    quandoNaoUsar: 'Em situações de urgência emocional. Requer estado meditativo prévio para funcionar adequadamente.',
+    categoria: 'estudo',
+    tipo_leitura: 'narrativa',
+    para_que_serve: 'Ponte entre personalidade e alma. Usado para meditação profunda e conexão com o Eu Superior.',
+    quando_nao_usar: 'Em situações de urgência emocional. Requer estado meditativo prévio para funcionar adequadamente.',
+    observacoes_simbolicas: 'Símbolo de conexão interdimensional.',
+    imagem_url: null,
     combinacoes: ['Quartzo azul', 'Lápis-lazúli', 'Chakra frontal'],
-    categoria: 'espiritual',
+    ordem: 1,
+    ativo: true,
   },
   {
     id: 'flor-vida',
     nome: 'Flor da Vida',
+    autor: 'Geometria Sagrada',
     origem: 'tradicional',
-    paraQueServe: 'Geometria sagrada de criação. Potencializa intenções, energiza cristais e alimentos.',
-    quandoNaoUsar: 'Para intenções de manipulação ou controle. A energia amplifica tudo — inclusive sombras.',
+    categoria: 'oracular',
+    tipo_leitura: 'campo',
+    para_que_serve: 'Geometria sagrada de criação. Potencializa intenções, energiza cristais e alimentos.',
+    quando_nao_usar: 'Para intenções de manipulação ou controle. A energia amplifica tudo — inclusive sombras.',
+    observacoes_simbolicas: 'Padrão da criação universal.',
+    imagem_url: null,
     combinacoes: ['Todos os cristais', 'Água', 'Chakra cardíaco'],
-    categoria: 'amplificacao',
-  },
-  {
-    id: 'sri-yantra',
-    nome: 'Sri Yantra',
-    origem: 'tradicional',
-    paraQueServe: 'Manifestação e abundância. Trabalhado em meditação para materializar intenções alinhadas.',
-    quandoNaoUsar: 'Para desejos egóicos ou materialistas puros. Requer purificação de intenção prévia.',
-    combinacoes: ['Citrino', 'Pirita', 'Chakra plexo solar'],
-    categoria: 'manifestacao',
-  },
-  {
-    id: 'merkaba',
-    nome: 'Merkaba',
-    origem: 'alquimico',
-    paraQueServe: 'Proteção energética avançada e viagens de consciência. Campo de luz tridimensional.',
-    quandoNaoUsar: 'Sem preparação prévia ou em estados alterados não controlados. Pode intensificar processos.',
-    combinacoes: ['Obsidiana', 'Turmalina negra', 'Todos os chakras'],
-    categoria: 'protecao',
-  },
-  {
-    id: 'labirinto-chartres',
-    nome: 'Labirinto de Chartres',
-    origem: 'tradicional',
-    paraQueServe: 'Jornada interior, meditação caminhante. Integração de polaridades através do movimento.',
-    quandoNaoUsar: 'Como escape de questões práticas. O labirinto revela, não resolve.',
-    combinacoes: ['Ametista', 'Selenita', 'Chakra coronário'],
-    categoria: 'jornada',
+    ordem: 2,
+    ativo: true,
   },
 ];
 
 const CATEGORIAS = [
   { id: 'todos', label: 'Todos' },
-  { id: 'harmonizacao', label: 'Harmonização' },
-  { id: 'protecao', label: 'Proteção' },
-  { id: 'espiritual', label: 'Espiritual' },
-  { id: 'manifestacao', label: 'Manifestação' },
-  { id: 'amplificacao', label: 'Amplificação' },
-  { id: 'jornada', label: 'Jornada' },
+  { id: 'clinico', label: 'Clínico' },
+  { id: 'oracular', label: 'Oracular' },
+  { id: 'estudo', label: 'Estudo' },
 ];
 
 const ORIGENS = {
@@ -102,23 +87,59 @@ const ORIGENS = {
   alquimico: { label: 'Alquímico', color: 'bg-gold/20 text-gold' },
 };
 
+const TIPO_LEITURA = {
+  campo: 'Campo',
+  frequencia: 'Frequência',
+  narrativa: 'Narrativa',
+  apoio: 'Apoio',
+};
+
 export default function CatalogoGraficos() {
   const navigate = useNavigate();
+  const { graficos: graficosDB, isLoading } = useRadiestesiaConfig();
   const [busca, setBusca] = useState('');
   const [categoriaAtiva, setCategoriaAtiva] = useState('todos');
   const [graficoExpandido, setGraficoExpandido] = useState<string | null>(null);
 
-  const graficosFiltrados = GRAFICOS.filter((g) => {
+  // Use DB data or fallback
+  const graficos = graficosDB.length > 0 ? graficosDB : GRAFICOS_FALLBACK;
+
+  const graficosFiltrados = graficos.filter((g) => {
     const matchBusca = g.nome.toLowerCase().includes(busca.toLowerCase()) ||
-                       g.paraQueServe.toLowerCase().includes(busca.toLowerCase());
+                       (g.para_que_serve?.toLowerCase().includes(busca.toLowerCase()) ?? false) ||
+                       (g.autor?.toLowerCase().includes(busca.toLowerCase()) ?? false);
     const matchCategoria = categoriaAtiva === 'todos' || g.categoria === categoriaAtiva;
-    return matchBusca && matchCategoria;
+    return matchBusca && matchCategoria && g.ativo;
   });
+
+  if (isLoading) {
+    return (
+      <AppLayout>
+        <ContentPageLayout
+          title="Catálogo de Gráficos Radiestésicos"
+          subtitle="Estudo e uso consciente de gráficos radiónicos"
+          badge="Ferramenta Pedagógica"
+          badgeIcon={<Grid3X3 className="w-4 h-4 text-gold" />}
+          onBack={() => navigate('/radiestesia')}
+          backLabel="Voltar ao Portal"
+          maxWidth="4xl"
+        >
+          <div className="space-y-4">
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-12 w-full" />
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-32 w-full" />
+            ))}
+          </div>
+        </ContentPageLayout>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>
       <ContentPageLayout
-        title="Catálogo Vivo de Gráficos"
+        title="Catálogo de Gráficos Radiestésicos"
         subtitle="Estudo e uso consciente de gráficos radiónicos"
         badge="Ferramenta Pedagógica"
         badgeIcon={<Grid3X3 className="w-4 h-4 text-gold" />}
@@ -151,7 +172,7 @@ export default function CatalogoGraficos() {
             <Input
               value={busca}
               onChange={(e) => setBusca(e.target.value)}
-              placeholder="Buscar gráfico..."
+              placeholder="Buscar gráfico por nome ou autor..."
               className="pl-10"
             />
           </div>
@@ -166,6 +187,11 @@ export default function CatalogoGraficos() {
             </TabsList>
           </Tabs>
         </div>
+
+        {/* Contador */}
+        <p className="text-sm text-muted-foreground">
+          {graficosFiltrados.length} gráfico(s) encontrado(s)
+        </p>
 
         {/* Lista de Gráficos */}
         <div className="space-y-4">
@@ -188,62 +214,130 @@ export default function CatalogoGraficos() {
                 )}
               >
                 <CardHeader className="pb-2">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-lg">{grafico.nome}</CardTitle>
-                      <div className="flex gap-2 mt-2">
-                        <Badge className={cn("text-xs", ORIGENS[grafico.origem].color)}>
-                          {ORIGENS[grafico.origem].label}
-                        </Badge>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-4">
+                      {/* Imagem ou placeholder */}
+                      {grafico.imagem_url ? (
+                        <img 
+                          src={grafico.imagem_url} 
+                          alt={grafico.nome}
+                          className="w-16 h-16 rounded-lg object-cover border"
+                        />
+                      ) : (
+                        <div className="w-16 h-16 rounded-lg bg-muted/50 flex items-center justify-center border">
+                          <ImageIcon className="w-6 h-6 text-muted-foreground" />
+                        </div>
+                      )}
+                      <div>
+                        <CardTitle className="text-lg">{grafico.nome}</CardTitle>
+                        {grafico.autor && (
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
+                            <User className="w-3 h-3" />
+                            {grafico.autor}
+                          </div>
+                        )}
+                        <div className="flex gap-2 mt-2 flex-wrap">
+                          <Badge className={cn("text-xs", ORIGENS[grafico.origem as keyof typeof ORIGENS]?.color || ORIGENS.tradicional.color)}>
+                            {ORIGENS[grafico.origem as keyof typeof ORIGENS]?.label || grafico.origem}
+                          </Badge>
+                          <Badge variant="outline" className="text-xs">
+                            {TIPO_LEITURA[grafico.tipo_leitura as keyof typeof TIPO_LEITURA] || grafico.tipo_leitura}
+                          </Badge>
+                        </div>
                       </div>
                     </div>
+                    <Eye className={cn(
+                      "w-5 h-5 transition-transform",
+                      graficoExpandido === grafico.id ? "rotate-180 text-gold" : "text-muted-foreground"
+                    )} />
                   </div>
                 </CardHeader>
                 
                 {graficoExpandido === grafico.id && (
-                  <CardContent className="space-y-4 pt-2">
+                  <CardContent className="space-y-4 pt-2 border-t mt-2">
                     {/* Para que serve */}
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-sm font-medium text-emerald-400">
-                        <CheckCircle2 className="w-4 h-4" />
-                        Para que serve
+                    {grafico.para_que_serve && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-sm font-medium text-emerald-400">
+                          <CheckCircle2 className="w-4 h-4" />
+                          Para que serve
+                        </div>
+                        <p className="text-sm text-muted-foreground pl-6">
+                          {grafico.para_que_serve}
+                        </p>
                       </div>
-                      <p className="text-sm text-muted-foreground pl-6">
-                        {grafico.paraQueServe}
-                      </p>
-                    </div>
+                    )}
 
                     {/* Quando NÃO usar */}
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-sm font-medium text-rose-400">
-                        <XCircle className="w-4 h-4" />
-                        Quando NÃO usar
+                    {grafico.quando_nao_usar && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-sm font-medium text-rose-400">
+                          <XCircle className="w-4 h-4" />
+                          Quando NÃO usar
+                        </div>
+                        <p className="text-sm text-muted-foreground pl-6">
+                          {grafico.quando_nao_usar}
+                        </p>
                       </div>
-                      <p className="text-sm text-muted-foreground pl-6">
-                        {grafico.quandoNaoUsar}
-                      </p>
-                    </div>
+                    )}
+
+                    {/* Observações Simbólicas */}
+                    {grafico.observacoes_simbolicas && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-sm font-medium text-purple-400">
+                          <FileText className="w-4 h-4" />
+                          Observações Simbólicas
+                        </div>
+                        <p className="text-sm text-muted-foreground pl-6 italic">
+                          {grafico.observacoes_simbolicas}
+                        </p>
+                      </div>
+                    )}
 
                     {/* Combinações */}
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-sm font-medium text-gold">
-                        <Sparkles className="w-4 h-4" />
-                        Possíveis combinações
+                    {grafico.combinacoes && grafico.combinacoes.length > 0 && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-sm font-medium text-gold">
+                          <Sparkles className="w-4 h-4" />
+                          Possíveis combinações
+                        </div>
+                        <div className="flex flex-wrap gap-2 pl-6">
+                          {grafico.combinacoes.map((comb, i) => (
+                            <Badge key={i} variant="outline" className="text-xs">
+                              {comb}
+                            </Badge>
+                          ))}
+                        </div>
                       </div>
-                      <div className="flex flex-wrap gap-2 pl-6">
-                        {grafico.combinacoes.map((comb, i) => (
-                          <Badge key={i} variant="outline" className="text-xs">
-                            {comb}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
+                    )}
                   </CardContent>
                 )}
               </Card>
             ))
           )}
         </div>
+
+        {/* Autores Contemplados */}
+        <Card className="bg-muted/20">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <User className="w-4 h-4" />
+              Autores Contemplados
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {['Mássimo Frizari', 'Angelo Vitale', 'Apolonius', 'La Foye', 'Antonio Rodrigues', 'Servranx', 'Giorgio Picchi'].map((autor) => (
+                <Badge key={autor} variant="outline" className="text-xs">
+                  {autor}
+                </Badge>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground mt-3">
+              O catálogo está em construção. Gráficos são adicionados pelo Admin.
+            </p>
+          </CardContent>
+        </Card>
 
         <EthicalNotice toolName="Catálogo de Gráficos" />
       </ContentPageLayout>
