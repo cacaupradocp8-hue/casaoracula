@@ -44,6 +44,9 @@ const GRAFICOS_FALLBACK: Grafico[] = [
     combinacoes: ['Quartzo transparente', 'Ametista', 'Chakra coronário'],
     ordem: 0,
     ativo: true,
+    link_loja: null,
+    imagem_fisica_url: null,
+    disponivel_loja: false,
   },
   {
     id: 'antahkarana',
@@ -59,6 +62,9 @@ const GRAFICOS_FALLBACK: Grafico[] = [
     combinacoes: ['Quartzo azul', 'Lápis-lazúli', 'Chakra frontal'],
     ordem: 1,
     ativo: true,
+    link_loja: null,
+    imagem_fisica_url: null,
+    disponivel_loja: false,
   },
   {
     id: 'flor-vida',
@@ -74,6 +80,9 @@ const GRAFICOS_FALLBACK: Grafico[] = [
     combinacoes: ['Todos os cristais', 'Água', 'Chakra cardíaco'],
     ordem: 2,
     ativo: true,
+    link_loja: null,
+    imagem_fisica_url: null,
+    disponivel_loja: false,
   },
 ];
 
@@ -319,44 +328,46 @@ export default function CatalogoGraficos() {
 
                     <Separator className="my-4" />
 
-                    {/* Seção: Versão Física */}
-                    <div className="p-4 rounded-lg bg-gradient-to-br from-gold/10 to-background border border-gold/20">
-                      <div className="flex items-start gap-3">
-                        <ShoppingBag className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
-                        <div className="flex-1 space-y-2">
-                          <h4 className="font-medium text-foreground">Versão Física</h4>
-                          <p className="text-xs text-muted-foreground italic">
-                            "O gráfico físico amplia a experiência simbólica, mas não substitui a escuta."
-                          </p>
-                          
-                          {/* Imagem do gráfico físico (se disponível) */}
-                          {grafico.imagem_url && (
-                            <div className="py-2">
-                              <img 
-                                src={grafico.imagem_url} 
-                                alt={`${grafico.nome} - Versão Física`}
-                                className="w-full max-w-[200px] rounded-lg border"
-                              />
-                            </div>
-                          )}
+                    {/* Seção: Versão Física - só mostra se disponível na loja */}
+                    {grafico.disponivel_loja && (
+                      <div className="p-4 rounded-lg bg-gradient-to-br from-gold/10 to-background border border-gold/20">
+                        <div className="flex items-start gap-3">
+                          <ShoppingBag className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
+                          <div className="flex-1 space-y-2">
+                            <h4 className="font-medium text-foreground">Versão Física</h4>
+                            <p className="text-xs text-muted-foreground italic">
+                              "O gráfico físico amplia a experiência simbólica, mas não substitui a escuta."
+                            </p>
+                            
+                            {/* Imagem do produto físico */}
+                            {(grafico.imagem_fisica_url || grafico.imagem_url) && (
+                              <div className="py-2">
+                                <img 
+                                  src={grafico.imagem_fisica_url || grafico.imagem_url || ''} 
+                                  alt={`${grafico.nome} - Versão Física`}
+                                  className="w-full max-w-[200px] rounded-lg border"
+                                />
+                              </div>
+                            )}
 
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="text-gold border-gold/30 hover:bg-gold/10"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              // Aqui você pode adicionar um link para loja externa ou interna
-                              window.open('https://casaoracula.com.br/loja', '_blank');
-                            }}
-                          >
-                            <ShoppingBag className="w-4 h-4 mr-2" />
-                            Adquirir gráfico físico
-                            <ExternalLink className="w-3 h-3 ml-2" />
-                          </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="text-gold border-gold/30 hover:bg-gold/10"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const lojaUrl = grafico.link_loja || 'https://casaoracula.com.br/loja';
+                                window.open(lojaUrl, '_blank');
+                              }}
+                            >
+                              <ShoppingBag className="w-4 h-4 mr-2" />
+                              Adquirir gráfico físico
+                              <ExternalLink className="w-3 h-3 ml-2" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
                   </CardContent>
                 )}
               </Card>
