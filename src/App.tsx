@@ -90,6 +90,7 @@ import JornadaHeroina from "./pages/JornadaHeroina";
 import FormacaoOracula from "./pages/FormacaoOracula";
 import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
+import Jornada from "./pages/Jornada";
 // Symbolic Templates
 import Big5TemplateList from "./pages/templates/Big5TemplateList";
 import Big5TemplateEditor from "./pages/templates/Big5TemplateEditor";
@@ -182,6 +183,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Welcome />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/jornada"
+        element={
+          <ProtectedRoute>
+            <Jornada />
           </ProtectedRoute>
         }
       />
