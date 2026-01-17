@@ -35,11 +35,25 @@ import { useToast } from "@/hooks/use-toast";
 
 // Mapeamento de tipos de campo para exibição
 const TIPO_CAMPO_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
+  limiar: { label: "Limiar", icon: Sparkles, color: "text-purple-400" },
   retencao: { label: "Retenção", icon: Circle, color: "text-blue-500" },
   defesa: { label: "Defesa", icon: Shield, color: "text-orange-500" },
-  dissolucao: { label: "Dissolução", icon: Droplets, color: "text-purple-500" },
-  emergencia: { label: "Emergência", icon: Flame, color: "text-red-500" },
-  limiar: { label: "Limiar", icon: Sparkles, color: "text-gold" },
+  dissolucao: { label: "Dissolução", icon: Droplets, color: "text-slate-500" },
+  emergencia: { label: "Emergência", icon: Flame, color: "text-emerald-500" },
+  reintegracao: { label: "Reintegração", icon: Layers, color: "text-gold" },
+};
+
+// Bloco fixo do Diálogo da Sombra Somática (idêntico para todos os casos)
+const DIALOGO_SOMBRA_SOMATICA = {
+  introducao: "O corpo não explica o campo. Ele registra o que a psique sustenta em silêncio.",
+  perguntas: [
+    "Onde o corpo reage primeiro ao campo desta Porta?",
+    "A reação é de contração, peso, rigidez ou ausência?",
+    "Há um impulso corporal interrompido?",
+    "O corpo pede movimento ou contenção?"
+  ],
+  registro: "Registro somático objetivo, sem interpretação.",
+  aviso: "O corpo não deve ser forçado a falar. Aqui, ele apenas é escutado."
 };
 
 // Tela de Contexto Obrigatória antes de mostrar conteúdo
@@ -457,54 +471,171 @@ export default function LabirintoPorta() {
             </div>
           </TabsContent>
 
-          {/* Caso Espelho Tab */}
+          {/* Caso Espelho Tab - Modelo Completo Método ORÁCULA */}
           <TabsContent value="caso" className="space-y-6">
-            {porta.caso_espelho_titulo || porta.caso_espelho_frase_chegada ? (
+            {/* Aviso formativo */}
+            <Card className="border-gold/30 bg-gold/5">
+              <CardContent className="p-4">
+                <p className="text-sm text-gold text-center">
+                  <strong>Uso exclusivo formativo.</strong> Este Caso-Espelho não é atendimento clínico nem exemplo interpretativo.
+                </p>
+              </CardContent>
+            </Card>
+
+            {porta.caso_espelho_titulo || porta.caso_espelho_situacao ? (
               <>
+                {/* Título do Caso */}
                 {porta.caso_espelho_titulo && (
-                  <h2 className="font-display text-xl text-gold">
+                  <h2 className="font-display text-xl text-gold text-center">
                     {porta.caso_espelho_titulo}
                   </h2>
                 )}
 
-                {porta.caso_espelho_frase_chegada && (
-                  <Card className="bg-muted/30">
+                {/* 1. Situação Simbólica */}
+                {porta.caso_espelho_situacao && (
+                  <Card>
                     <CardContent className="p-6">
-                      <h3 className="text-sm font-medium text-muted-foreground mb-2">
-                        Frase de Chegada
-                      </h3>
-                      <p className="text-lg italic">"{porta.caso_espelho_frase_chegada}"</p>
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold font-medium">1</div>
+                        <h3 className="text-sm font-medium text-gold uppercase tracking-wide">Situação Simbólica</h3>
+                      </div>
+                      <p className="text-foreground/90 leading-relaxed ml-11">
+                        {porta.caso_espelho_situacao}
+                      </p>
                     </CardContent>
                   </Card>
                 )}
 
-                {porta.caso_espelho_erro_comum && (
-                  <Card className="border-orange-500/30">
+                {/* 2. Campo Revelado */}
+                {porta.tipo_campo && (
+                  <Card className="border-muted">
                     <CardContent className="p-6">
-                      <h3 className="text-sm font-medium text-orange-500/80 mb-2">
-                        Erro Comum da Facilitadora
-                      </h3>
-                      <p className="text-muted-foreground">{porta.caso_espelho_erro_comum}</p>
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-foreground font-medium">2</div>
+                        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">Campo Revelado</h3>
+                      </div>
+                      <div className="flex items-center gap-3 ml-11">
+                        <TipoCampoIcon className={cn("w-5 h-5", tipoCampoConfig?.color)} />
+                        <p className="text-foreground/90">
+                          Esta situação revela um campo de{" "}
+                          <span className={cn("font-semibold", tipoCampoConfig?.color)}>
+                            {tipoCampoConfig?.label || porta.tipo_campo}
+                          </span>.
+                        </p>
+                      </div>
                     </CardContent>
                   </Card>
                 )}
 
-                {porta.caso_espelho_como_sustentar && (
-                  <Card className="border-gold/20">
+                {/* 3. Risco comum de erro da facilitadora */}
+                {porta.caso_espelho_erros_facilitadora && (
+                  <Card className="border-orange-500/30 bg-orange-500/5">
                     <CardContent className="p-6">
-                      <h3 className="text-sm font-medium text-gold mb-2">
-                        Como Sustentar o Campo
-                      </h3>
-                      <p className="text-muted-foreground">{porta.caso_espelho_como_sustentar}</p>
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-500 font-medium">3</div>
+                        <h3 className="text-sm font-medium text-orange-500/80 uppercase tracking-wide">Risco comum de erro da facilitadora</h3>
+                      </div>
+                      <p className="text-sm text-muted-foreground ml-11 mb-2">
+                        Diante deste campo, a facilitadora tende a errar quando tenta:
+                      </p>
+                      <ul className="space-y-1 ml-11">
+                        {formatList(porta.caso_espelho_erros_facilitadora).map((item, i) => (
+                          <li key={i} className="flex items-start gap-2 text-foreground/90">
+                            <span className="text-orange-500/60 mt-1">•</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </CardContent>
                   </Card>
                 )}
+
+                {/* 4. Postura correta da facilitadora */}
+                {porta.caso_espelho_postura_correta && (
+                  <Card className="border-gold/30 bg-gold/5">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold font-medium">4</div>
+                        <h3 className="text-sm font-medium text-gold uppercase tracking-wide">Postura correta da facilitadora</h3>
+                      </div>
+                      <p className="text-sm text-muted-foreground ml-11 mb-2">
+                        A postura correta neste campo é:
+                      </p>
+                      <ul className="space-y-1 ml-11">
+                        {formatList(porta.caso_espelho_postura_correta).map((item, i) => (
+                          <li key={i} className="flex items-start gap-2 text-foreground/90">
+                            <span className="text-gold mt-1">•</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* 5. Diálogo da Sombra Somática (Bloco Fixo) */}
+                <Card className="border-muted bg-muted/30">
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-foreground font-medium">5</div>
+                      <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">Diálogo da Sombra Somática</h3>
+                    </div>
+                    <div className="ml-11 space-y-4">
+                      <p className="text-foreground/80 italic">
+                        {DIALOGO_SOMBRA_SOMATICA.introducao}
+                      </p>
+                      
+                      <div>
+                        <p className="text-sm text-muted-foreground mb-2">Perguntas de observação:</p>
+                        <ul className="space-y-1">
+                          {DIALOGO_SOMBRA_SOMATICA.perguntas.map((pergunta, i) => (
+                            <li key={i} className="flex items-start gap-2 text-foreground/80 text-sm">
+                              <span className="text-muted-foreground mt-0.5">–</span>
+                              <span>{pergunta}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      
+                      <div className="pt-3 border-t border-border/50">
+                        <p className="text-sm text-muted-foreground mb-1">Registro permitido:</p>
+                        <p className="text-foreground/80 text-sm">{DIALOGO_SOMBRA_SOMATICA.registro}</p>
+                      </div>
+                      
+                      <div className="pt-3 border-t border-border/50 bg-muted/50 -mx-6 -mb-6 p-4 rounded-b-lg">
+                        <p className="text-sm text-muted-foreground italic flex items-center gap-2">
+                          <AlertTriangle className="w-4 h-4" />
+                          <span>{DIALOGO_SOMBRA_SOMATICA.aviso}</span>
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* 6. Encerramento ético */}
+                <Card className="border-gold/20">
+                  <CardContent className="p-6 text-center space-y-3">
+                    <div className="flex items-center justify-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold font-medium">6</div>
+                      <h3 className="text-sm font-medium text-gold uppercase tracking-wide">Encerramento Ético</h3>
+                    </div>
+                    <p className="text-foreground/80 leading-relaxed">
+                      Este Caso-Espelho não pede intervenção.
+                    </p>
+                    <p className="text-foreground font-medium">
+                      Ele pede consciência da postura da facilitadora.
+                    </p>
+                    <p className="text-muted-foreground text-sm pt-2 border-t border-border/50">
+                      A leitura retorna ao campo simbólico.
+                    </p>
+                  </CardContent>
+                </Card>
               </>
             ) : (
               <Card className="border-dashed">
                 <CardContent className="p-8 text-center text-muted-foreground">
                   <BookOpen className="w-12 h-12 mx-auto mb-4 opacity-30" />
-                  <p>Caso espelho ainda não configurado.</p>
+                  <p>Caso-Espelho ainda não configurado para esta Porta.</p>
                 </CardContent>
               </Card>
             )}
