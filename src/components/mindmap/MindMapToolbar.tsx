@@ -1,4 +1,4 @@
-import { ZoomIn, ZoomOut, Maximize, Download, FileText, Save, Check } from 'lucide-react';
+import { ZoomIn, ZoomOut, Maximize, Download, FileText, Save, Check, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 interface MindMapToolbarProps {
   title: string;
   onTitleChange: (title: string) => void;
+  onTitleBlur: () => void;
   zoom: number;
   onZoomIn: () => void;
   onZoomOut: () => void;
@@ -25,6 +26,7 @@ interface MindMapToolbarProps {
 export function MindMapToolbar({
   title,
   onTitleChange,
+  onTitleBlur,
   zoom,
   onZoomIn,
   onZoomOut,
@@ -36,18 +38,20 @@ export function MindMapToolbar({
 }: MindMapToolbarProps) {
   return (
     <div className="h-14 border-b bg-card px-4 flex items-center justify-between gap-4">
-      {/* Title */}
-      <div className="flex items-center gap-3">
+      {/* Title Section */}
+      <div className="flex items-center gap-3 flex-1 min-w-0">
+        <Map className="h-5 w-5 text-primary shrink-0" />
         <Input
           value={title}
           onChange={(e) => onTitleChange(e.target.value)}
-          className="max-w-[200px] h-8 font-medium"
-          placeholder="Nome do mapa..."
+          onBlur={onTitleBlur}
+          className="max-w-[300px] h-9 font-medium text-lg border-transparent hover:border-input focus:border-input transition-colors"
+          placeholder="Título do mapa..."
         />
         
         {/* Save indicator */}
         <div className={cn(
-          "flex items-center gap-1.5 text-xs transition-opacity",
+          "flex items-center gap-1.5 text-xs transition-opacity shrink-0",
           saving ? "opacity-100" : "opacity-60"
         )}>
           {saving ? (
@@ -65,7 +69,7 @@ export function MindMapToolbar({
       </div>
 
       {/* Controls */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 shrink-0">
         {/* Zoom controls */}
         <div className="flex items-center border rounded-md">
           <Button

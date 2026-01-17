@@ -192,6 +192,7 @@ export default function MapaVivoEditor() {
       <MindMapToolbar
         title={titleValue}
         onTitleChange={handleTitleChange}
+        onTitleBlur={handleTitleBlur}
         zoom={zoom}
         onZoomIn={handleZoomIn}
         onZoomOut={handleZoomOut}
