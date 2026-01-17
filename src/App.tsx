@@ -22,6 +22,8 @@ import Travessias from "./pages/Travessias";
 import Agentes from "./pages/Agentes";
 import LeituraOracular from "./pages/LeituraOracular";
 import Salas from "./pages/Salas";
+import SalasList from "./pages/SalasList";
+import FerramentasHub from "./pages/FerramentasHub";
 import SalaDetalhe from "./pages/SalaDetalhe";
 import PortalDetalhe from "./pages/PortalDetalhe";
 import AulaPage from "./pages/AulaPage";
@@ -291,11 +293,22 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      {/* Salas - Experiential content listing */}
+      <Route
+        path="/salas"
+        element={
+          <ProtectedRoute>
+            <SalasList />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Ferramentas - Professional tools hub */}
       <Route
         path="/ferramentas"
         element={
           <ProtectedRoute minPortal="pre_iniciada">
-            <Salas />
+            <FerramentasHub />
           </ProtectedRoute>
         }
       />
