@@ -38,6 +38,7 @@ export interface TemplateSection {
   title: string;
   description?: string;
   placeholder?: string;
+  example?: string;
 }
 
 interface SymbolicTemplateEditorProps {
@@ -306,6 +307,22 @@ export function SymbolicTemplateEditor({
                 )}
               </CardHeader>
               <CardContent className="space-y-4">
+                {section.example && (
+                  <Collapsible>
+                    <CollapsibleTrigger asChild>
+                      <Button variant="ghost" size="sm" className="text-muted-foreground mb-2 h-auto py-1">
+                        <ChevronDown className="w-4 h-4 mr-2" />
+                        Ver exemplo de preenchimento
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-md mb-3 italic border border-muted">
+                        {section.example}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                )}
+                
                 <Textarea
                   value={sectionValues[section.key] || ''}
                   onChange={(e) => handleSectionChange(section.key, e.target.value)}
