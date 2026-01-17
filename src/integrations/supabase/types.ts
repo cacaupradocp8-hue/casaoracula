@@ -2176,7 +2176,10 @@ export type Database = {
           campo_pede: string | null
           caso_espelho_como_sustentar: string | null
           caso_espelho_erro_comum: string | null
+          caso_espelho_erros_facilitadora: string | null
           caso_espelho_frase_chegada: string | null
+          caso_espelho_postura_correta: string | null
+          caso_espelho_situacao: string | null
           caso_espelho_titulo: string | null
           cena_narrativa: string | null
           chave_frase_ancora: string | null
@@ -2209,7 +2212,10 @@ export type Database = {
           campo_pede?: string | null
           caso_espelho_como_sustentar?: string | null
           caso_espelho_erro_comum?: string | null
+          caso_espelho_erros_facilitadora?: string | null
           caso_espelho_frase_chegada?: string | null
+          caso_espelho_postura_correta?: string | null
+          caso_espelho_situacao?: string | null
           caso_espelho_titulo?: string | null
           cena_narrativa?: string | null
           chave_frase_ancora?: string | null
@@ -2242,7 +2248,10 @@ export type Database = {
           campo_pede?: string | null
           caso_espelho_como_sustentar?: string | null
           caso_espelho_erro_comum?: string | null
+          caso_espelho_erros_facilitadora?: string | null
           caso_espelho_frase_chegada?: string | null
+          caso_espelho_postura_correta?: string | null
+          caso_espelho_situacao?: string | null
           caso_espelho_titulo?: string | null
           cena_narrativa?: string | null
           chave_frase_ancora?: string | null
