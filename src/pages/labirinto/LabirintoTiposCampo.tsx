@@ -1,60 +1,82 @@
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Circle, Shield, Droplets, Flame, Sparkles, Map } from "lucide-react";
+import { ArrowLeft, Circle, Shield, Droplets, Flame, Sparkles, Map, RotateCcw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 const TIPOS_CAMPO = [
   {
+    nome: "Campo de Limiar",
+    chave: "limiar",
+    icon: Sparkles,
+    color: "text-purple-400",
+    bgColor: "bg-purple-400/10",
+    borderColor: "border-purple-400/30",
+    descricao: "A psique está entre dois estados. Nada deve ser decidido.",
+    pede: "Presença sem pressa.",
+    naoPede: "Não pede decisão nem conclusão.",
+    essencia: "👉 Essência: presença sem pressa",
+  },
+  {
     nome: "Campo de Retenção",
+    chave: "retencao",
     icon: Circle,
     color: "text-blue-500",
     bgColor: "bg-blue-500/10",
     borderColor: "border-blue-500/30",
-    descricao: "Algo foi contido para sobreviver.",
-    pede: "Pede escuta, silêncio e tempo.",
+    descricao: "Algo precisou se conter para sobreviver.",
+    pede: "Escuta, silêncio e tempo.",
     naoPede: "Não pede fala forçada ou interpretação.",
+    essencia: "👉 Essência: escuta sem exigência",
   },
   {
     nome: "Campo de Defesa",
+    chave: "defesa",
     icon: Shield,
-    color: "text-orange-500",
-    bgColor: "bg-orange-500/10",
-    borderColor: "border-orange-500/30",
-    descricao: "A psique protege limites.",
-    pede: "Pede contenção e respeito.",
-    naoPede: "Não pede descarga nem moralização.",
-  },
-  {
-    nome: "Campo de Dissolução",
-    icon: Droplets,
-    color: "text-purple-500",
-    bgColor: "bg-purple-500/10",
-    borderColor: "border-purple-500/30",
-    descricao: "Algo está terminando.",
-    pede: "Pede tempo e despedida simbólica.",
-    naoPede: "Não pede conserto nem aceleração.",
-  },
-  {
-    nome: "Campo de Emergência",
-    icon: Flame,
     color: "text-red-500",
     bgColor: "bg-red-500/10",
     borderColor: "border-red-500/30",
-    descricao: "Algo novo quer nascer, ainda frágil.",
-    pede: "Pede proteção e ritmo.",
-    naoPede: "Não pede exposição nem pressão.",
+    descricao: "A psique ergueu força para não ser invadida.",
+    pede: "Contenção e respeito ao limite.",
+    naoPede: "Não pede descarga nem moralização.",
+    essencia: "👉 Essência: limite sem moralização",
   },
   {
-    nome: "Campo de Limiar",
-    icon: Sparkles,
+    nome: "Campo de Dissolução",
+    chave: "dissolucao",
+    icon: Droplets,
+    color: "text-gray-400",
+    bgColor: "bg-gray-400/10",
+    borderColor: "border-gray-400/30",
+    descricao: "Algo já terminou, mesmo que doa.",
+    pede: "Tempo e despedida simbólica.",
+    naoPede: "Não pede conserto nem aceleração.",
+    essencia: "👉 Essência: tempo sem correção",
+  },
+  {
+    nome: "Campo de Emergência",
+    chave: "emergencia",
+    icon: Flame,
+    color: "text-green-500",
+    bgColor: "bg-green-500/10",
+    borderColor: "border-green-500/30",
+    descricao: "Algo novo quer nascer, ainda frágil.",
+    pede: "Proteção e ritmo.",
+    naoPede: "Não pede exposição nem pressão.",
+    essencia: "👉 Essência: continência sem aceleração",
+  },
+  {
+    nome: "Campo de Reintegração",
+    chave: "reintegracao",
+    icon: RotateCcw,
     color: "text-gold",
     bgColor: "bg-gold/10",
     borderColor: "border-gold/30",
-    descricao: "A psique está entre dois estados.",
-    pede: "Pede presença e não-ação.",
-    naoPede: "Não pede decisão nem conclusão.",
+    descricao: "Portas raras, de volta consciente.",
+    pede: "Estabilização e presença.",
+    naoPede: "Não pede euforia nem glorificação.",
+    essencia: "👉 Essência: estabilização sem euforia",
   },
 ];
 
@@ -81,7 +103,7 @@ export default function LabirintoTiposCampo() {
             Tipos de Campo Psíquico
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Cada Porta do Labirinto revela um desses cinco tipos de campo.
+            Cada Porta do Labirinto revela um desses seis tipos de campo.
             Reconhecer o campo é o primeiro passo para sustentá-lo.
           </p>
         </div>
@@ -107,6 +129,7 @@ export default function LabirintoTiposCampo() {
                       <div className="pt-2 space-y-1 text-sm">
                         <p className="text-gold">{campo.pede}</p>
                         <p className="text-muted-foreground">{campo.naoPede}</p>
+                        <p className="text-muted-foreground/70 italic pt-1">{campo.essencia}</p>
                       </div>
                     </div>
                   </div>

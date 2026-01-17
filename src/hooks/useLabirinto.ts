@@ -16,6 +16,7 @@ export interface LabirintoPorta {
   forca_ativa: string | null;
   campo_pede: string | null;
   nao_fazer_aqui: string | null;
+  postura_facilitadora: string | null;
   // Campos legados (opcionais)
   cena_narrativa: string | null;
   eixo_psiquico: string | null;

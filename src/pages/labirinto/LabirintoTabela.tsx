@@ -10,21 +10,15 @@ import { canAccessFeature } from "@/types/portal";
 import { cn } from "@/lib/utils";
 import { Navigate } from "react-router-dom";
 
-const TIPO_CAMPO_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
-  retencao: { label: "Retenção", icon: Circle, color: "text-blue-500" },
-  defesa: { label: "Defesa", icon: Shield, color: "text-orange-500" },
-  dissolucao: { label: "Dissolução", icon: Droplets, color: "text-purple-500" },
-  emergencia: { label: "Emergência", icon: Flame, color: "text-red-500" },
-  limiar: { label: "Limiar", icon: Sparkles, color: "text-gold" },
-};
+import { RotateCcw } from "lucide-react";
 
-// Mapeamento de posturas por tipo de campo
-const POSTURAS_CAMPO: Record<string, string> = {
-  retencao: "Sustentar silêncio, escutar sem exigir fala",
-  defesa: "Conter, não descarregar, respeitar limite",
-  dissolucao: "Dar tempo, não apressar, permitir despedida",
-  emergencia: "Proteger o frágil, não expor, respeitar ritmo",
-  limiar: "Sustentar presença, evitar decisão, não concluir",
+const TIPO_CAMPO_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
+  limiar: { label: "Limiar", icon: Sparkles, color: "text-purple-400" },
+  retencao: { label: "Retenção", icon: Circle, color: "text-blue-500" },
+  defesa: { label: "Defesa", icon: Shield, color: "text-red-500" },
+  dissolucao: { label: "Dissolução", icon: Droplets, color: "text-gray-400" },
+  emergencia: { label: "Emergência", icon: Flame, color: "text-green-500" },
+  reintegracao: { label: "Reintegração", icon: RotateCcw, color: "text-gold" },
 };
 
 export default function LabirintoTabela() {
@@ -94,10 +88,9 @@ export default function LabirintoTabela() {
                   </TableHeader>
                   <TableBody>
                     {portas?.map((porta) => {
-                      const tipoCampo = porta.tipo_campo || "—";
                       const config = porta.tipo_campo ? TIPO_CAMPO_CONFIG[porta.tipo_campo] : null;
                       const Icon = config?.icon || Circle;
-                      const postura = porta.tipo_campo ? POSTURAS_CAMPO[porta.tipo_campo] : "—";
+                      const postura = porta.postura_facilitadora || "—";
                       
                       return (
                         <TableRow 
