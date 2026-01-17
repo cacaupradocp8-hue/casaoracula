@@ -2196,6 +2196,7 @@ export type Database = {
           portal_caso_espelho: Database["public"]["Enums"]["portal_type"]
           portal_chave_facilitadora: Database["public"]["Enums"]["portal_type"]
           portal_minimo: Database["public"]["Enums"]["portal_type"]
+          postura_facilitadora: string | null
           risco_clinico: string | null
           subtitulo: string | null
           symbolic_focus: string | null
@@ -2228,6 +2229,7 @@ export type Database = {
           portal_caso_espelho?: Database["public"]["Enums"]["portal_type"]
           portal_chave_facilitadora?: Database["public"]["Enums"]["portal_type"]
           portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          postura_facilitadora?: string | null
           risco_clinico?: string | null
           subtitulo?: string | null
           symbolic_focus?: string | null
@@ -2260,6 +2262,7 @@ export type Database = {
           portal_caso_espelho?: Database["public"]["Enums"]["portal_type"]
           portal_chave_facilitadora?: Database["public"]["Enums"]["portal_type"]
           portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          postura_facilitadora?: string | null
           risco_clinico?: string | null
           subtitulo?: string | null
           symbolic_focus?: string | null
