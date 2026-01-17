@@ -4,7 +4,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DoorOpen, BookOpen, History, FileText, Loader2, Compass } from "lucide-react";
+import { DoorOpen, BookOpen, History, FileText, Loader2, Compass, Map, Table, HelpCircle } from "lucide-react";
 import { useLabirintoPortas, useCreateLeitura, useLabirintoLeituras, type LabirintoPorta } from "@/hooks/useLabirinto";
 import { useAuth } from "@/contexts/AuthContext";
 import { canAccessFeature } from "@/types/portal";
@@ -126,6 +126,36 @@ export default function LabirintoHome() {
             Protocolo de leitura simbólica em 5 camadas.
             Selecione a Porta indicada pela formação.
           </p>
+        </div>
+
+        {/* Navigation Links - Legenda e Mapa */}
+        <div className="flex flex-wrap justify-center gap-3">
+          <Button
+            variant="outline"
+            onClick={() => navigate("/labirinto/como-usar")}
+            className="gap-2 border-gold/30 hover:bg-gold/10"
+          >
+            <HelpCircle className="w-4 h-4" />
+            Como usar o Labirinto
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => navigate("/labirinto/tipos-de-campo")}
+            className="gap-2 border-gold/30 hover:bg-gold/10"
+          >
+            <Map className="w-4 h-4" />
+            Tipos de Campo
+          </Button>
+          {canAccessProfessional && (
+            <Button
+              variant="outline"
+              onClick={() => navigate("/labirinto/tabela")}
+              className="gap-2 border-gold/30 hover:bg-gold/10"
+            >
+              <Table className="w-4 h-4" />
+              Tabela de Referência
+            </Button>
+          )}
         </div>
 
         {/* Aviso do Protocolo */}
@@ -406,8 +436,12 @@ function LabirintoManual() {
           </ul>
         </div>
 
-        <div className="pt-4 border-t border-border/50">
-          <p className="text-xs text-muted-foreground/60">
+        <div className="pt-4 border-t border-border/50 space-y-2">
+          <p className="text-sm text-muted-foreground italic text-center">
+            As Portas não revelam respostas.
+            Revelam campos que exigem maturidade para serem sustentados.
+          </p>
+          <p className="text-xs text-muted-foreground/60 text-center">
             Este é um material de uso profissional, destinado a facilitadoras
             que passaram pela formação completa da Casa Orácula.
           </p>

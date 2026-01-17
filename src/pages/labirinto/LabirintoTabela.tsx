@@ -1,0 +1,150 @@
+import { AppLayout } from "@/components/layout/AppLayout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ArrowLeft, TableIcon, Loader2, Shield, Circle, Droplets, Flame, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useLabirintoPortas } from "@/hooks/useLabirinto";
+import { useAuth } from "@/contexts/AuthContext";
+import { canAccessFeature } from "@/types/portal";
+import { cn } from "@/lib/utils";
+import { Navigate } from "react-router-dom";
+
+const TIPO_CAMPO_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
+  retencao: { label: "Retenção", icon: Circle, color: "text-blue-500" },
+  defesa: { label: "Defesa", icon: Shield, color: "text-orange-500" },
+  dissolucao: { label: "Dissolução", icon: Droplets, color: "text-purple-500" },
+  emergencia: { label: "Emergência", icon: Flame, color: "text-red-500" },
+  limiar: { label: "Limiar", icon: Sparkles, color: "text-gold" },
+};
+
+// Mapeamento de posturas por tipo de campo
+const POSTURAS_CAMPO: Record<string, string> = {
+  retencao: "Sustentar silêncio, escutar sem exigir fala",
+  defesa: "Conter, não descarregar, respeitar limite",
+  dissolucao: "Dar tempo, não apressar, permitir despedida",
+  emergencia: "Proteger o frágil, não expor, respeitar ritmo",
+  limiar: "Sustentar presença, evitar decisão, não concluir",
+};
+
+export default function LabirintoTabela() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { data: portas, isLoading } = useLabirintoPortas();
+
+  const userPortal = user?.portal || "visitante";
+  const canAccess = canAccessFeature(userPortal, "iniciada");
+
+  // Bloqueia acesso para não-profissionais
+  if (!canAccess) {
+    return <Navigate to="/labirinto" replace />;
+  }
+
+  return (
+    <AppLayout>
+      <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+        {/* Back button */}
+        <Button
+          variant="ghost"
+          onClick={() => navigate("/labirinto")}
+          className="gap-2 text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Voltar ao Labirinto
+        </Button>
+
+        {/* Header */}
+        <div className="text-center space-y-4">
+          <TableIcon className="w-12 h-12 text-gold mx-auto" />
+          <h1 className="font-display text-3xl text-gold">
+            Tabela de Referência
+          </h1>
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            Porta × Campo × Postura da Facilitadora
+          </p>
+        </div>
+
+        {/* Info Card */}
+        <Card className="border-gold/30 bg-gold/5">
+          <CardContent className="p-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Esta tabela é material de uso profissional, destinada a facilitadoras
+              que passaram pela formação completa.
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Table */}
+        {isLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="w-8 h-8 animate-spin text-gold" />
+          </div>
+        ) : (
+          <Card>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[200px]">Porta</TableHead>
+                      <TableHead className="w-[150px]">Tipo de Campo</TableHead>
+                      <TableHead>O que o campo revela</TableHead>
+                      <TableHead>Postura da Facilitadora</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {portas?.map((porta) => {
+                      const tipoCampo = porta.tipo_campo || "—";
+                      const config = porta.tipo_campo ? TIPO_CAMPO_CONFIG[porta.tipo_campo] : null;
+                      const Icon = config?.icon || Circle;
+                      const postura = porta.tipo_campo ? POSTURAS_CAMPO[porta.tipo_campo] : "—";
+                      
+                      return (
+                        <TableRow 
+                          key={porta.id}
+                          className="cursor-pointer hover:bg-muted/50"
+                          onClick={() => navigate(`/labirinto/porta/${porta.id}`)}
+                        >
+                          <TableCell className="font-medium">
+                            <div className="flex items-center gap-2">
+                              <span className="text-gold font-display">{porta.numero}</span>
+                              <span>{porta.nome}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            {config ? (
+                              <div className="flex items-center gap-2">
+                                <Icon className={cn("w-4 h-4", config.color)} />
+                                <span className={config.color}>{config.label}</span>
+                              </div>
+                            ) : (
+                              <span className="text-muted-foreground">—</span>
+                            )}
+                          </TableCell>
+                          <TableCell className="text-muted-foreground">
+                            {porta.forca_ativa || "—"}
+                          </TableCell>
+                          <TableCell className="text-muted-foreground">
+                            {postura}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Footer */}
+        <div className="text-center pt-4 border-t border-border/50">
+          <p className="text-xs text-muted-foreground/60">
+            As Portas não revelam respostas.
+            Revelam campos que exigem maturidade para serem sustentados.
+          </p>
+        </div>
+      </div>
+    </AppLayout>
+  );
+}
