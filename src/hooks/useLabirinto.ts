@@ -22,8 +22,12 @@ export interface LabirintoPorta {
   eixo_psiquico: string | null;
   risco_clinico: string | null;
   pergunta_chave: string | null;
-  // Caso Espelho
+  // Caso Espelho (Modelo Completo)
   caso_espelho_titulo: string | null;
+  caso_espelho_situacao: string | null;
+  caso_espelho_erros_facilitadora: string | null;
+  caso_espelho_postura_correta: string | null;
+  // Campos legados (mantidos para retrocompatibilidade)
   caso_espelho_frase_chegada: string | null;
   caso_espelho_erro_comum: string | null;
   caso_espelho_como_sustentar: string | null;
