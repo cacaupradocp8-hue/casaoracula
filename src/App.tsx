@@ -88,6 +88,16 @@ import JornadaHeroina from "./pages/JornadaHeroina";
 import FormacaoOracula from "./pages/FormacaoOracula";
 import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
+// Symbolic Templates
+import Big5TemplateList from "./pages/templates/Big5TemplateList";
+import Big5TemplateEditor from "./pages/templates/Big5TemplateEditor";
+import EnneagramTemplateList from "./pages/templates/EnneagramTemplateList";
+import EnneagramTemplateEditor from "./pages/templates/EnneagramTemplateEditor";
+import TarotTemplateList from "./pages/templates/TarotTemplateList";
+import TarotTemplateEditor from "./pages/templates/TarotTemplateEditor";
+import ConstellationTemplateList from "./pages/templates/ConstellationTemplateList";
+import ConstellationTemplateEditor from "./pages/templates/ConstellationTemplateEditor";
+
 const queryClient = new QueryClient();
 
 // Loading component for auth states
@@ -360,6 +370,72 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="pre_iniciada">
             <MapaOracula />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Symbolic Templates */}
+      <Route
+        path="/templates/big5"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Big5TemplateList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/templates/big5/:sessionId"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <Big5TemplateEditor />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/templates/enneagram"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <EnneagramTemplateList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/templates/enneagram/:sessionId"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <EnneagramTemplateEditor />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/templates/tarot"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <TarotTemplateList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/templates/tarot/:sessionId"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <TarotTemplateEditor />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/templates/constellation"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <ConstellationTemplateList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/templates/constellation/:sessionId"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <ConstellationTemplateEditor />
           </ProtectedRoute>
         }
       />

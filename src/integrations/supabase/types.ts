@@ -4099,6 +4099,50 @@ export type Database = {
         }
         Relationships: []
       }
+      symbolic_template_sessions: {
+        Row: {
+          cliente_id: string | null
+          created_at: string
+          id: string
+          notes: Json | null
+          sections: Json
+          template_type: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cliente_id?: string | null
+          created_at?: string
+          id?: string
+          notes?: Json | null
+          sections?: Json
+          template_type: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cliente_id?: string | null
+          created_at?: string
+          id?: string
+          notes?: Json | null
+          sections?: Json
+          template_type?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "symbolic_template_sessions_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       syntheia_creations: {
         Row: {
           chave_simbolica: string | null
