@@ -44,6 +44,9 @@ import BibliotecaDasTravessias from "./pages/BibliotecaDasTravessias";
 import BibliotecaTravessiaDetalhe from "./pages/BibliotecaTravessiaDetalhe";
 import LabirintoHome from "./pages/labirinto/LabirintoHome";
 import LabirintoPorta from "./pages/labirinto/LabirintoPorta";
+import LabirintoComoUsar from "./pages/labirinto/LabirintoComoUsar";
+import LabirintoTiposCampo from "./pages/labirinto/LabirintoTiposCampo";
+import LabirintoTabela from "./pages/labirinto/LabirintoTabela";
 import InstallApp from "./pages/InstallApp";
 import Planos from "./pages/Planos";
 import Assinatura from "./pages/Assinatura";
@@ -685,6 +688,30 @@ function AppRoutes() {
           element={
             <ProtectedRoute minPortal="pre_iniciada">
               <LabirintoPorta />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/labirinto/como-usar"
+          element={
+            <ProtectedRoute minPortal="pre_iniciada">
+              <LabirintoComoUsar />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/labirinto/tipos-de-campo"
+          element={
+            <ProtectedRoute minPortal="pre_iniciada">
+              <LabirintoTiposCampo />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/labirinto/tabela"
+          element={
+            <ProtectedRoute minPortal="iniciada">
+              <LabirintoTabela />
             </ProtectedRoute>
           }
         />

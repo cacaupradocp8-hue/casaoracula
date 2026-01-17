@@ -453,7 +453,7 @@ export default function LabirintoPorta() {
             {/* Rodapé Método ORÁCULA */}
             <div className="text-center text-sm text-muted-foreground border-t pt-6 mt-8">
               <p>As Portas não revelam respostas.</p>
-              <p>Revelam campos que pedem sustentação.</p>
+              <p>Revelam campos que exigem maturidade para serem sustentados.</p>
             </div>
           </TabsContent>
 
