@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { SalaLayout } from "@/components/salas/SalaLayout";
+import { AppLayout } from "@/components/layout/AppLayout";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -194,47 +194,29 @@ export default function SalaDetalhe() {
 
   if (loading) {
     return (
-      <SalaLayout
-        salaNome="Carregando..."
-        ferramentas={[]}
-        portais={[]}
-        quizzes={[]}
-        cursos={[]}
-      >
+      <AppLayout>
         <div className="flex items-center justify-center min-h-[50vh]">
           <Loader2 className="w-8 h-8 animate-spin text-gold" />
         </div>
-      </SalaLayout>
+      </AppLayout>
     );
   }
 
   if (!sala) {
     return (
-      <SalaLayout
-        salaNome="Não encontrada"
-        ferramentas={[]}
-        portais={[]}
-        quizzes={[]}
-        cursos={[]}
-      >
+      <AppLayout>
         <div className="container mx-auto px-4 py-8">
           <p className="text-center text-muted-foreground">Sala não encontrada.</p>
           <Button variant="outline" onClick={() => navigate("/salas")} className="mt-4 mx-auto block">
             Voltar às Salas
           </Button>
         </div>
-      </SalaLayout>
+      </AppLayout>
     );
   }
 
   return (
-    <SalaLayout
-      salaNome={sala.nome_exibicao}
-      ferramentas={sidebarFerramentas}
-      portais={sidebarPortais}
-      quizzes={sidebarQuizzes}
-      cursos={sidebarCursos}
-    >
+    <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20">
         <SectionHeader
           title={sala.nome_exibicao}
@@ -448,6 +430,6 @@ export default function SalaDetalhe() {
           </div>
         )}
       </div>
-    </SalaLayout>
+    </AppLayout>
   );
 }
