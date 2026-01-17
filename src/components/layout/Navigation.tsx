@@ -128,6 +128,14 @@ export function Navigation() {
       minPortal: 'visitante',
     });
 
+    // 1.5. Minha Jornada - always visible
+    items.push({
+      path: '/jornada',
+      label: 'Minha Jornada',
+      icon: Compass,
+      minPortal: 'visitante',
+    });
+
     // 2. Mentoria ORÁCULA - only if has matricula
     if (hasMentoriaAccess) {
       items.push({
