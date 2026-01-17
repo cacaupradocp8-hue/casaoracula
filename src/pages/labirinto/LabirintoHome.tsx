@@ -4,8 +4,8 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sparkles, DoorOpen, BookOpen, History, FileText, Loader2 } from "lucide-react";
-import { useLabirintoPortas, useLabirintoOraculo, useCreateLeitura, useLabirintoLeituras, type LabirintoPorta } from "@/hooks/useLabirinto";
+import { DoorOpen, BookOpen, History, FileText, Loader2, Compass } from "lucide-react";
+import { useLabirintoPortas, useCreateLeitura, useLabirintoLeituras, type LabirintoPorta } from "@/hooks/useLabirinto";
 import { useAuth } from "@/contexts/AuthContext";
 import { canAccessFeature } from "@/types/portal";
 import { cn } from "@/lib/utils";
@@ -13,33 +13,40 @@ import { useCopy } from "@/hooks/useCopy";
 
 const LABIRINTO_INTRO_KEY = "labirinto-intro-seen";
 
-// Introductory screen component
-function LabirintoIntro({ onEnter, getCopyByKey }: { onEnter: () => void; getCopyByKey: (key: string, fallback: string) => string }) {
+// Introductory screen component - PROTOCOLO (não oráculo)
+function LabirintoIntro({ onEnter }: { onEnter: () => void }) {
   return (
     <AppLayout>
       <div className="min-h-[80vh] flex items-center justify-center px-4">
-        <div className="max-w-lg text-center space-y-8">
-          <DoorOpen className="w-16 h-16 text-gold mx-auto" />
+        <div className="max-w-xl text-center space-y-8">
+          <Compass className="w-16 h-16 text-gold mx-auto" />
           
           <h1 className="font-display text-3xl md:text-4xl text-gold">
             Labirinto das 39 Portas
           </h1>
           
-          <div className="space-y-4 text-muted-foreground leading-relaxed font-display text-lg">
-            <p>Toda travessia pede ritmo.</p>
-            <p>O Labirinto não é para ser concluído.</p>
-            <p>Ele existe para ser atravessado.</p>
-            <p>Aqui, não se busca resposta.</p>
-            <p className="text-foreground font-medium">Sustenta-se o campo.</p>
-          </div>
+          <Card className="border-gold/30 bg-card/50">
+            <CardContent className="p-6 space-y-4 text-left">
+              <p className="text-foreground leading-relaxed">
+                Este módulo é um <strong>protocolo de leitura simbólica em 5 camadas</strong>.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Ele não funciona por consulta, sorteio ou intuição.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                A Porta a ser trabalhada deve ser <strong>indicada pela formação</strong> ou 
+                escolhida conscientemente pela facilitadora.
+              </p>
+            </CardContent>
+          </Card>
           
           <Button
             onClick={onEnter}
             size="lg"
             className="bg-gold hover:bg-gold/90 text-background gap-2"
           >
-            <DoorOpen className="w-5 h-5" />
-            {getCopyByKey('btn_atravessar_limiar', 'Atravessar o limiar')}
+            <Compass className="w-5 h-5" />
+            Iniciar Procedimento
           </Button>
         </div>
       </div>
@@ -52,9 +59,7 @@ export default function LabirintoHome() {
   const { user } = useAuth();
   const { data: portas, isLoading } = useLabirintoPortas();
   const { data: leituras, isLoading: leiturasLoading } = useLabirintoLeituras();
-  const oraculo = useLabirintoOraculo();
   const createLeitura = useCreateLeitura();
-  const [activatingOracle, setActivatingOracle] = useState(false);
   const [showIntro, setShowIntro] = useState<boolean | null>(null);
   const { getCopyByKey } = useCopy();
 
@@ -77,22 +82,6 @@ export default function LabirintoHome() {
   const handleEnterLabirinto = () => {
     localStorage.setItem(LABIRINTO_INTRO_KEY, "true");
     setShowIntro(false);
-  };
-
-  const handleOracleQuestion = async () => {
-    setActivatingOracle(true);
-    try {
-      const porta = await oraculo.mutateAsync();
-      await createLeitura.mutateAsync({
-        porta_id: porta.id,
-        metodo_ativacao: "oraculo",
-      });
-      navigate(`/labirinto/porta/${porta.id}`);
-    } catch (error) {
-      console.error("Erro ao consultar oráculo:", error);
-    } finally {
-      setActivatingOracle(false);
-    }
   };
 
   const handlePortaClick = async (portaId: string) => {
@@ -119,7 +108,7 @@ export default function LabirintoHome() {
 
   // Show introductory screen on first visit
   if (showIntro) {
-    return <LabirintoIntro onEnter={handleEnterLabirinto} getCopyByKey={getCopyByKey} />;
+    return <LabirintoIntro onEnter={handleEnterLabirinto} />;
   }
 
   return (
@@ -134,35 +123,19 @@ export default function LabirintoHome() {
             </h1>
           </div>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Sistema simbólico para leitura e sustentação da psique feminina.
-            Cada porta é um limiar — não há respostas, apenas presença.
+            Protocolo de leitura simbólica em 5 camadas.
+            Selecione a Porta indicada pela formação.
           </p>
         </div>
 
-        {/* Oracle Question Button */}
+        {/* Aviso do Protocolo */}
         <Card className="border-gold/30 bg-card/50 backdrop-blur">
-          <CardContent className="p-8 text-center">
-            <p className="text-sm text-muted-foreground mb-4">
-              Qual porta da psique feminina está ativa agora?
+          <CardContent className="p-6 text-center">
+            <p className="text-sm text-muted-foreground">
+              A Porta deve ser <strong>escolhida conscientemente</strong> ou indicada pelo processo formativo.
+              <br />
+              Este módulo não funciona por consulta, sorteio ou intuição.
             </p>
-            <Button
-              onClick={handleOracleQuestion}
-              disabled={activatingOracle}
-              className="gap-2 bg-gold hover:bg-gold/90 text-background"
-              size="lg"
-            >
-              {activatingOracle ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Consultando...
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-5 h-5" />
-                  Consultar o Oráculo
-                </>
-              )}
-            </Button>
           </CardContent>
         </Card>
 
@@ -272,8 +245,8 @@ function LabirintoHistorico() {
       <Card className="border-dashed">
         <CardContent className="p-8 text-center text-muted-foreground">
           <History className="w-12 h-12 mx-auto mb-4 opacity-30" />
-          <p>Você ainda não consultou nenhuma porta.</p>
-          <p className="text-sm mt-2">Suas leituras aparecerão aqui.</p>
+          <p>Você ainda não acessou nenhuma porta.</p>
+          <p className="text-sm mt-2">Suas sessões aparecerão aqui.</p>
         </CardContent>
       </Card>
     );
@@ -302,7 +275,7 @@ function LabirintoHistorico() {
             <div className="flex-1">
               <div className="font-medium">{leitura.porta?.nome}</div>
               <div className="text-sm text-muted-foreground flex items-center gap-2">
-                <span className="capitalize">{leitura.metodo_ativacao}</span>
+                <span>Sessão</span>
                 <span>•</span>
                 <span>
                   {new Date(leitura.created_at).toLocaleDateString("pt-BR", {
@@ -383,8 +356,9 @@ function LabirintoManual() {
         <div className="space-y-4">
           <h2 className="font-display text-xl text-gold">Manual da Facilitadora</h2>
           <p className="text-muted-foreground">
-            O Labirinto das 39 Portas não é um sistema de diagnóstico, interpretação
-            ou prescrição. Cada porta é um espelho simbólico — não uma resposta.
+            O Labirinto das 39 Portas é um <strong>protocolo formativo</strong>, 
+            não um sistema de diagnóstico, interpretação ou prescrição.
+            Cada porta situa um campo psíquico — não oferece respostas.
           </p>
         </div>
 
@@ -410,6 +384,24 @@ function LabirintoManual() {
             <li className="flex items-start gap-2">
               <span className="text-gold mt-1">•</span>
               <span>Cada porta tem seu tempo. Não apresse travessias.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div className="space-y-4">
+          <h3 className="font-medium">Uso Correto</h3>
+          <ul className="space-y-2 text-sm text-muted-foreground">
+            <li className="flex items-start gap-2">
+              <span className="text-gold mt-1">•</span>
+              <span>A Porta deve ser indicada pela formação ou escolhida conscientemente.</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-gold mt-1">•</span>
+              <span>Não use por "intuição" ou "sorteio" — isso quebra o protocolo.</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-gold mt-1">•</span>
+              <span>Siga as 5 camadas em ordem. Não pule etapas.</span>
             </li>
           </ul>
         </div>
