@@ -8,24 +8,16 @@ import { LockedContentModal } from '@/components/shared/LockedContentModal';
 import { NotificationBell } from '@/components/shared/NotificationBell';
 import {
   Home,
-  BookOpen,
   Library,
-  Sparkles,
   Settings,
   LogOut,
   Menu,
   X,
   User,
   Users,
-  Bot,
   Wrench,
   Lock,
   DoorOpen,
-  Layers,
-  GraduationCap,
-  Gem,
-  Headphones,
-  CreditCard,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -36,22 +28,26 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+// Simplified menu structure following Phase 3 guidelines:
+// 1. Dashboard (overview) | 2. Salas (experiential) | 3. Ferramentas (professional tools)
+// 4. Casos (protected professional space) | 5. Biblioteca (content) | 6. Admin
 const navItems: { path: string; label: string; icon: typeof Home; minPortal: PortalType }[] = [
-  { path: '/dashboard', label: 'Salas', icon: DoorOpen, minPortal: 'visitante' },
-  { path: '/cursos', label: 'Área de Membros', icon: GraduationCap, minPortal: 'visitante' },
-  { path: '/syntheia', label: 'Syntheia', icon: Gem, minPortal: 'pre_iniciada' },
-  { path: '/labirinto', label: '🜂 Labirinto', icon: DoorOpen, minPortal: 'pre_iniciada' },
-  { path: '/oraculos', label: 'Oráculos', icon: Layers, minPortal: 'visitante' },
-  { path: '/biblioteca-das-travessias', label: 'Travessias', icon: Sparkles, minPortal: 'visitante' },
-  { path: '/audios', label: 'Áudios', icon: Headphones, minPortal: 'visitante' },
-  { path: '/minhas-clientes', label: 'Minhas Clientes', icon: Users, minPortal: 'pre_iniciada' },
-  { path: '/biblioteca', label: 'Biblioteca', icon: Library, minPortal: 'pre_iniciada' },
-  { path: '/laboratorio-leitura', label: 'Laboratório', icon: BookOpen, minPortal: 'pre_iniciada' },
-  { path: '/agentes', label: 'Agentes IA', icon: Bot, minPortal: 'pre_iniciada' },
+  // 🏠 Dashboard - Visão geral
+  { path: '/dashboard', label: 'Início', icon: Home, minPortal: 'visitante' },
+  
+  // 🚪 Salas - Experiential content (Portais, Aulas, Quizzes inside)
+  { path: '/salas', label: 'Salas', icon: DoorOpen, minPortal: 'visitante' },
+  
+  // 🧰 Ferramentas - Professional practice tools
   { path: '/ferramentas', label: 'Ferramentas', icon: Wrench, minPortal: 'pre_iniciada' },
-  { path: '/mentoria', label: 'Mentoria', icon: Users, minPortal: 'iniciada' },
-  { path: '/leitura-oracular', label: 'Supervisão', icon: Sparkles, minPortal: 'iniciada' },
-  { path: '/planos', label: 'Planos', icon: CreditCard, minPortal: 'visitante' },
+  
+  // 📂 Casos - Protected professional space (therapists only)
+  { path: '/minhas-clientes', label: 'Casos', icon: Users, minPortal: 'pre_iniciada' },
+  
+  // 📚 Biblioteca - Content library
+  { path: '/biblioteca', label: 'Biblioteca', icon: Library, minPortal: 'pre_iniciada' },
+  
+  // ⚙️ Admin - System management
   { path: '/admin', label: 'Admin', icon: Settings, minPortal: 'admin' },
 ];
 
