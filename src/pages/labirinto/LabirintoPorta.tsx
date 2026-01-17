@@ -8,7 +8,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { 
   ArrowLeft, 
   DoorOpen, 
-  Eye, 
   BookOpen, 
   Key, 
   FileText,
@@ -19,7 +18,9 @@ import {
   Flame,
   Droplets,
   Sparkles,
-  Circle
+  Circle,
+  Layers,
+  AlertTriangle
 } from "lucide-react";
 import { 
   useLabirintoPorta, 
@@ -41,11 +42,52 @@ const TIPO_CAMPO_CONFIG: Record<string, { label: string; icon: React.ElementType
   limiar: { label: "Limiar", icon: Sparkles, color: "text-gold" },
 };
 
+// Tela de Contexto Obrigatória antes de mostrar conteúdo
+function TelaContextoProtocolo({ onProsseguir }: { onProsseguir: () => void }) {
+  return (
+    <div className="max-w-xl mx-auto px-4 py-16 space-y-8">
+      <div className="text-center space-y-6">
+        <AlertTriangle className="w-12 h-12 text-gold mx-auto" />
+        
+        <h2 className="font-display text-2xl text-gold">
+          Contexto da Porta
+        </h2>
+        
+        <Card className="border-gold/30 bg-card/50">
+          <CardContent className="p-6 space-y-4 text-left">
+            <p className="text-foreground leading-relaxed">
+              Esta Porta <strong>não oferece significado</strong>.
+            </p>
+            <p className="text-muted-foreground leading-relaxed">
+              Ela apenas <strong>situa um campo psíquico</strong>.
+            </p>
+            <p className="text-muted-foreground leading-relaxed">
+              Se você espera respostas, esta não é a ferramenta adequada.
+            </p>
+            <p className="text-foreground leading-relaxed font-medium">
+              Avance apenas se estiver disposta a sustentar o processo sem concluir.
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Button
+          onClick={onProsseguir}
+          size="lg"
+          className="bg-gold hover:bg-gold/90 text-background gap-2"
+        >
+          <Layers className="w-5 h-5" />
+          Prosseguir com o Protocolo
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export default function LabirintoPorta() {
   const { portaId } = useParams<{ portaId: string }>();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const initialTab = searchParams.get("tab") || "leitura";
+  const initialTab = searchParams.get("tab") || "camadas";
   
   const { user } = useAuth();
   const { toast } = useToast();
@@ -55,6 +97,7 @@ export default function LabirintoPorta() {
   const deleteAnotacao = useDeleteAnotacao();
   
   const [newNote, setNewNote] = useState("");
+  const [contextoAceito, setContextoAceito] = useState(false);
 
   const userPortal = user?.portal || "visitante";
   const canAccessCasoEspelho = canAccessFeature(userPortal, porta?.portal_caso_espelho || "iniciada");
@@ -113,6 +156,37 @@ export default function LabirintoPorta() {
             Voltar ao Labirinto
           </Button>
         </div>
+      </AppLayout>
+    );
+  }
+
+  // Mostrar tela de contexto obrigatória antes do conteúdo
+  if (!contextoAceito) {
+    return (
+      <AppLayout>
+        {/* Back button */}
+        <div className="max-w-4xl mx-auto px-4 pt-8">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/labirinto")}
+            className="gap-2 text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Voltar ao Labirinto
+          </Button>
+        </div>
+
+        {/* Door Header minimal */}
+        <div className="max-w-xl mx-auto px-4 pt-8 text-center">
+          <span className="font-display text-5xl text-gold/80">
+            {porta.numero}
+          </span>
+          <h1 className="font-display text-2xl text-foreground mt-2">
+            {porta.nome}
+          </h1>
+        </div>
+
+        <TelaContextoProtocolo onProsseguir={() => setContextoAceito(true)} />
       </AppLayout>
     );
   }
@@ -176,12 +250,12 @@ export default function LabirintoPorta() {
           </div>
         </div>
 
-        {/* Content Tabs */}
+        {/* Content Tabs - CAMADAS como foco principal */}
         <Tabs defaultValue={initialTab} className="space-y-6">
           <TabsList className="w-full justify-start overflow-x-auto flex-wrap h-auto gap-1 bg-muted/50">
-            <TabsTrigger value="leitura" className="gap-2">
-              <Eye className="w-4 h-4" />
-              Leitura
+            <TabsTrigger value="camadas" className="gap-2">
+              <Layers className="w-4 h-4" />
+              Camadas
             </TabsTrigger>
             {canAccessCasoEspelho && (
               <TabsTrigger value="caso" className="gap-2">
@@ -201,52 +275,67 @@ export default function LabirintoPorta() {
             </TabsTrigger>
           </TabsList>
 
-          {/* Leitura Tab - Método ORÁCULA */}
-          <TabsContent value="leitura" className="space-y-6">
+          {/* Camadas Tab - Foco Principal (5 camadas do protocolo) */}
+          <TabsContent value="camadas" className="space-y-6">
             {hasMetodoOracula ? (
               <>
-                {/* 1. Campo que esta Porta revela */}
+                {/* Camada 1: Campo que esta Porta revela */}
                 {porta.tipo_campo && (
                   <Card className="border-gold/30 bg-gradient-to-br from-gold/5 to-transparent">
                     <CardContent className="p-6">
                       <div className="flex items-center gap-3 mb-3">
-                        <TipoCampoIcon className={cn("w-5 h-5", tipoCampoConfig?.color)} />
+                        <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold font-medium">
+                          1
+                        </div>
                         <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
                           Campo que esta Porta revela
                         </h3>
                       </div>
-                      <p className="text-lg text-foreground">
-                        Esta Porta revela um campo de{" "}
-                        <span className={cn("font-semibold", tipoCampoConfig?.color)}>
-                          {tipoCampoConfig?.label || porta.tipo_campo}
-                        </span>.
-                      </p>
+                      <div className="flex items-center gap-3 ml-11">
+                        <TipoCampoIcon className={cn("w-5 h-5", tipoCampoConfig?.color)} />
+                        <p className="text-lg text-foreground">
+                          Esta Porta revela um campo de{" "}
+                          <span className={cn("font-semibold", tipoCampoConfig?.color)}>
+                            {tipoCampoConfig?.label || porta.tipo_campo}
+                          </span>.
+                        </p>
+                      </div>
                     </CardContent>
                   </Card>
                 )}
 
-                {/* 2. O que está ativo nesse campo */}
+                {/* Camada 2: O que está ativo nesse campo */}
                 {porta.forca_ativa && (
                   <Card>
                     <CardContent className="p-6">
-                      <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-3">
-                        O que está ativo nesse campo
-                      </h3>
-                      <p className="text-foreground/90 leading-relaxed">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-foreground font-medium">
+                          2
+                        </div>
+                        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                          O que está ativo nesse campo
+                        </h3>
+                      </div>
+                      <p className="text-foreground/90 leading-relaxed ml-11">
                         {porta.forca_ativa}
                       </p>
                     </CardContent>
                   </Card>
                 )}
 
-                {/* 3. O que este campo pede */}
+                {/* Camada 3: O que este campo pede */}
                 {porta.campo_pede && (
                   <Card className="border-gold/20">
                     <CardContent className="p-6">
-                      <h3 className="text-sm font-medium text-gold uppercase tracking-wide mb-3">
-                        O que este campo pede
-                      </h3>
-                      <ul className="space-y-1">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold font-medium">
+                          3
+                        </div>
+                        <h3 className="text-sm font-medium text-gold uppercase tracking-wide">
+                          O que este campo pede
+                        </h3>
+                      </div>
+                      <ul className="space-y-1 ml-11">
                         {formatList(porta.campo_pede).map((item, i) => (
                           <li key={i} className="flex items-center gap-2 text-foreground/90">
                             <span className="text-gold">–</span>
@@ -258,14 +347,19 @@ export default function LabirintoPorta() {
                   </Card>
                 )}
 
-                {/* 4. O que NÃO deve ser feito aqui */}
+                {/* Camada 4: O que NÃO deve ser feito aqui */}
                 {porta.nao_fazer_aqui && (
                   <Card className="border-destructive/30 bg-destructive/5">
                     <CardContent className="p-6">
-                      <h3 className="text-sm font-medium text-destructive/80 uppercase tracking-wide mb-3">
-                        O que NÃO deve ser feito aqui
-                      </h3>
-                      <ul className="space-y-1">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-8 h-8 rounded-full bg-destructive/20 flex items-center justify-center text-destructive font-medium">
+                          4
+                        </div>
+                        <h3 className="text-sm font-medium text-destructive/80 uppercase tracking-wide">
+                          O que NÃO deve ser feito aqui
+                        </h3>
+                      </div>
+                      <ul className="space-y-1 ml-11">
                         {formatList(porta.nao_fazer_aqui).map((item, i) => (
                           <li key={i} className="flex items-center gap-2 text-foreground/90">
                             <span className="text-destructive/60">–</span>
@@ -276,41 +370,78 @@ export default function LabirintoPorta() {
                     </CardContent>
                   </Card>
                 )}
-              </>
-            ) : null}
 
-            {/* Conteúdo Legado (se existir) */}
-            {hasLegacy && (
-              <div className={cn("space-y-4", hasMetodoOracula && "pt-4 border-t border-muted")}>
-                {/* Cena Narrativa */}
-                {porta.cena_narrativa && (
-                  <Card className="border-muted">
+                {/* Camada 5: Contexto Narrativo (se existir) */}
+                {hasLegacy && (
+                  <Card className="border-muted bg-muted/20">
                     <CardContent className="p-6">
-                      <p className="text-foreground/80 italic leading-relaxed">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground font-medium">
+                          5
+                        </div>
+                        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                          Contexto Narrativo
+                        </h3>
+                      </div>
+                      <div className="ml-11 space-y-4">
+                        {porta.cena_narrativa && (
+                          <p className="text-foreground/80 italic leading-relaxed">
+                            {porta.cena_narrativa}
+                          </p>
+                        )}
+                        {porta.pergunta_chave && (
+                          <div className="pt-3 border-t border-border/50">
+                            <p className="text-sm text-muted-foreground mb-1">Pergunta-Chave:</p>
+                            <p className="font-display text-lg text-gold">
+                              {porta.pergunta_chave}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </>
+            ) : hasLegacy ? (
+              // Só tem conteúdo legado - mostrar como camadas 1-2
+              <>
+                {porta.cena_narrativa && (
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-foreground font-medium">
+                          1
+                        </div>
+                        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                          Cena Narrativa
+                        </h3>
+                      </div>
+                      <p className="text-foreground/80 italic leading-relaxed ml-11">
                         {porta.cena_narrativa}
                       </p>
                     </CardContent>
                   </Card>
                 )}
-
-                {/* Pergunta Chave */}
                 {porta.pergunta_chave && (
-                  <Card className="bg-card/50">
-                    <CardContent className="p-6 text-center">
-                      <h3 className="text-sm font-medium text-muted-foreground mb-3">
-                        Pergunta-Chave
-                      </h3>
-                      <p className="font-display text-xl text-gold">
+                  <Card className="border-gold/20">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold font-medium">
+                          2
+                        </div>
+                        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                          Pergunta-Chave
+                        </h3>
+                      </div>
+                      <p className="font-display text-xl text-gold ml-11">
                         {porta.pergunta_chave}
                       </p>
                     </CardContent>
                   </Card>
                 )}
-              </div>
-            )}
-
-            {/* Empty state */}
-            {!hasMetodoOracula && !hasLegacy && (
+              </>
+            ) : (
+              // Empty state
               <Card className="border-dashed">
                 <CardContent className="p-8 text-center text-muted-foreground">
                   <p>Esta porta ainda não foi configurada.</p>
