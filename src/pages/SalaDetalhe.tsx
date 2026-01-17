@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { AppLayout } from "@/components/layout/AppLayout";
+import { SalaLayout } from "@/components/salas/SalaLayout";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Lock, Loader2, BookOpen, DoorOpen, ClipboardList, Wrench, GraduationCap, Clock, BarChart } from "lucide-react";
+import { ArrowRight, Lock, Loader2, BookOpen, DoorOpen, ClipboardList, Wrench, GraduationCap, Clock, BarChart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { canAccessFeature, PortalType } from "@/types/portal";
@@ -167,41 +167,75 @@ export default function SalaDetalhe() {
     return canAccessFeature(user.portal, portal.portal_minimo);
   };
 
+  // Prepare sidebar data with accessibility info
+  const sidebarPortais = portais.map(portal => ({
+    id: portal.id,
+    titulo: portal.titulo,
+    ordem: portal.ordem,
+    isAccessible: canAccessPortal(portal),
+  }));
+
+  const sidebarFerramentas = ferramentas.map(f => ({
+    id: f.id,
+    ferramenta_nome: f.ferramenta_nome,
+    icone: f.icone,
+    rota: f.rota,
+  }));
+
+  const sidebarQuizzes = quizzes.map(q => ({
+    id: q.id,
+    titulo: q.titulo,
+  }));
+
+  const sidebarCursos = cursos.map(c => ({
+    id: c.id,
+    titulo: c.titulo,
+  }));
+
   if (loading) {
     return (
-      <AppLayout>
+      <SalaLayout
+        salaNome="Carregando..."
+        ferramentas={[]}
+        portais={[]}
+        quizzes={[]}
+        cursos={[]}
+      >
         <div className="flex items-center justify-center min-h-[50vh]">
           <Loader2 className="w-8 h-8 animate-spin text-gold" />
         </div>
-      </AppLayout>
+      </SalaLayout>
     );
   }
 
   if (!sala) {
     return (
-      <AppLayout>
+      <SalaLayout
+        salaNome="Não encontrada"
+        ferramentas={[]}
+        portais={[]}
+        quizzes={[]}
+        cursos={[]}
+      >
         <div className="container mx-auto px-4 py-8">
           <p className="text-center text-muted-foreground">Sala não encontrada.</p>
-          <Button variant="outline" onClick={() => navigate("/dashboard")} className="mt-4 mx-auto block">
+          <Button variant="outline" onClick={() => navigate("/salas")} className="mt-4 mx-auto block">
             Voltar às Salas
           </Button>
         </div>
-      </AppLayout>
+      </SalaLayout>
     );
   }
 
   return (
-    <AppLayout>
+    <SalaLayout
+      salaNome={sala.nome_exibicao}
+      ferramentas={sidebarFerramentas}
+      portais={sidebarPortais}
+      quizzes={sidebarQuizzes}
+      cursos={sidebarCursos}
+    >
       <div className="container mx-auto px-4 py-8 pb-20">
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <button onClick={() => navigate("/dashboard")} className="hover:text-gold transition-colors">
-            Salas
-          </button>
-          <span>/</span>
-          <span className="text-foreground">{sala.nome_exibicao}</span>
-        </div>
-
         <SectionHeader
           title={sala.nome_exibicao}
           subtitle={sala.texto_entrada}
@@ -413,15 +447,7 @@ export default function SalaDetalhe() {
             <p>Nenhuma ferramenta disponível nesta sala ainda.</p>
           </div>
         )}
-
-        {/* Back Button */}
-        <div className="mt-8">
-          <Button variant="outline" onClick={() => navigate("/dashboard")} className="gap-2">
-            <ArrowLeft className="w-4 h-4" />
-            Voltar às Salas
-          </Button>
-        </div>
       </div>
-    </AppLayout>
+    </SalaLayout>
   );
 }
