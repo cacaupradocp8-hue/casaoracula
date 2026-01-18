@@ -20,6 +20,7 @@ import Biblioteca from "./pages/Biblioteca";
 import Mentoria from "./pages/Mentoria";
 import CasaTecelaAtrio from "./pages/CasaTecelaAtrio";
 import CasaTecelaInterior from "./pages/CasaTecelaInterior";
+import { CasaAtrio, CasaSustentacao, CasaLeitura, CasaCirculo } from "./pages/casa";
 import MentoriaOracular from "./pages/MentoriaOracular";
 import Travessias from "./pages/Travessias";
 import Agentes from "./pages/Agentes";
@@ -304,6 +305,40 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="iniciada">
             <CasaTecelaInterior />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Casa Orácula - 3 Room Architecture */}
+      <Route
+        path="/casa"
+        element={
+          <ProtectedRoute minPortal="iniciada">
+            <CasaAtrio />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/casa/sustentacao"
+        element={
+          <ProtectedRoute minPortal="iniciada">
+            <CasaSustentacao />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/casa/leitura"
+        element={
+          <ProtectedRoute minPortal="iniciada">
+            <CasaLeitura />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/casa/circulo"
+        element={
+          <ProtectedRoute minPortal="iniciada">
+            <CasaCirculo />
           </ProtectedRoute>
         }
       />

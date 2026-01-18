@@ -671,6 +671,140 @@ export type Database = {
           },
         ]
       }
+      casa_circulo_replies: {
+        Row: {
+          autor_id: string
+          conteudo: string
+          created_at: string
+          id: string
+          thread_id: string
+          updated_at: string
+        }
+        Insert: {
+          autor_id: string
+          conteudo: string
+          created_at?: string
+          id?: string
+          thread_id: string
+          updated_at?: string
+        }
+        Update: {
+          autor_id?: string
+          conteudo?: string
+          created_at?: string
+          id?: string
+          thread_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "casa_circulo_replies_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "casa_circulo_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      casa_circulo_threads: {
+        Row: {
+          autor_id: string
+          conteudo: string
+          created_at: string
+          fixado: boolean | null
+          id: string
+          portal_minimo: Database["public"]["Enums"]["portal_type"] | null
+          respostas_count: number | null
+          status: string | null
+          titulo: string
+          ultima_atividade: string | null
+          updated_at: string
+        }
+        Insert: {
+          autor_id: string
+          conteudo: string
+          created_at?: string
+          fixado?: boolean | null
+          id?: string
+          portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
+          respostas_count?: number | null
+          status?: string | null
+          titulo: string
+          ultima_atividade?: string | null
+          updated_at?: string
+        }
+        Update: {
+          autor_id?: string
+          conteudo?: string
+          created_at?: string
+          fixado?: boolean | null
+          id?: string
+          portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
+          respostas_count?: number | null
+          status?: string | null
+          titulo?: string
+          ultima_atividade?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      casa_posts: {
+        Row: {
+          autor_id: string | null
+          conteudo: string | null
+          created_at: string
+          descricao: string | null
+          destaque: boolean | null
+          duracao_segundos: number | null
+          id: string
+          media_type: Database["public"]["Enums"]["casa_media_type"] | null
+          media_url: string | null
+          ordem: number | null
+          portal_minimo: Database["public"]["Enums"]["portal_type"] | null
+          publicado: boolean | null
+          room: Database["public"]["Enums"]["casa_room"]
+          tags: string[] | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          autor_id?: string | null
+          conteudo?: string | null
+          created_at?: string
+          descricao?: string | null
+          destaque?: boolean | null
+          duracao_segundos?: number | null
+          id?: string
+          media_type?: Database["public"]["Enums"]["casa_media_type"] | null
+          media_url?: string | null
+          ordem?: number | null
+          portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
+          publicado?: boolean | null
+          room: Database["public"]["Enums"]["casa_room"]
+          tags?: string[] | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          autor_id?: string | null
+          conteudo?: string | null
+          created_at?: string
+          descricao?: string | null
+          destaque?: boolean | null
+          duracao_segundos?: number | null
+          id?: string
+          media_type?: Database["public"]["Enums"]["casa_media_type"] | null
+          media_url?: string | null
+          ordem?: number | null
+          portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
+          publicado?: boolean | null
+          room?: Database["public"]["Enums"]["casa_room"]
+          tags?: string[] | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       casos: {
         Row: {
           cliente_id: string
@@ -5339,6 +5473,8 @@ export type Database = {
         | "tool"
         | "sala"
         | "landing"
+      casa_media_type: "audio" | "text" | "video" | "link" | "pdf"
+      casa_room: "sustentacao" | "leitura" | "circulo"
       cliente_status: "ativo" | "pausado" | "encerrado"
       content_block_type:
         | "rich_text"
@@ -5516,6 +5652,8 @@ export const Constants = {
         "sala",
         "landing",
       ],
+      casa_media_type: ["audio", "text", "video", "link", "pdf"],
+      casa_room: ["sustentacao", "leitura", "circulo"],
       cliente_status: ["ativo", "pausado", "encerrado"],
       content_block_type: [
         "rich_text",
