@@ -81,38 +81,38 @@ export default function CasaTecelaInterior() {
   };
 
   const areaConfig = {
-    escuta: {
+    sustentacao: {
       icon: Ear,
-      title: 'Salão da Escuta',
-      subtitle: 'Sustentação profissional',
+      title: 'Sala da Sustentação',
+      subtitle: 'Conteúdos vivos, sem trilha, sem obrigatoriedade',
       color: 'text-purple-400',
       bgColor: 'bg-purple-500/10',
       borderColor: 'border-purple-500/30',
     },
-    atelie: {
+    leitura: {
       icon: BookOpen,
-      title: 'Ateliê de Leitura',
-      subtitle: 'Refinamento da prática',
+      title: 'Sala da Leitura',
+      subtitle: 'Estudos de caso e uso prático das ferramentas',
       color: 'text-gold',
       bgColor: 'bg-gold/10',
       borderColor: 'border-gold/30',
     },
     circulo: {
       icon: Users,
-      title: 'Círculo das Tecelãs',
-      subtitle: 'Comunidade profissional moderada',
+      title: 'Sala do Círculo',
+      subtitle: 'Fórum moderado para troca profissional',
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/10',
       borderColor: 'border-blue-500/30',
     },
   };
 
-  const renderSalaoEscuta = () => (
+  const renderSalaSustentacao = () => (
     <div className="space-y-6">
-      <div className={`p-4 rounded-lg ${areaConfig.escuta.bgColor} border ${areaConfig.escuta.borderColor}`}>
+      <div className={`p-4 rounded-lg ${areaConfig.sustentacao.bgColor} border ${areaConfig.sustentacao.borderColor}`}>
         <p className="text-sm text-foreground/80">
-          Encontros mensais ao vivo, reflexões em áudio curto (5-10 min) sobre limites, projeção, 
-          fadiga, ética e a solidão de quem sustenta.
+          Encontros ao vivo, áudios curtos e textos breves. Sem progresso, sem trilha, sem obrigatoriedade.
+          Sobre limites, projeção, fadiga, ética e a solidão de quem sustenta.
         </p>
       </div>
 
@@ -132,11 +132,11 @@ export default function CasaTecelaInterior() {
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
             {escutaContent.filter(c => c.tipo === 'encontro').map(item => (
-              <Card key={item.id} className={`glass ${areaConfig.escuta.borderColor}`}>
+              <Card key={item.id} className={`glass ${areaConfig.sustentacao.borderColor}`}>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">{item.titulo}</CardTitle>
                   {item.data && (
-                    <Badge variant="outline" className={areaConfig.escuta.color}>
+                    <Badge variant="outline" className={areaConfig.sustentacao.color}>
                       {format(new Date(item.data), "d MMM 'às' HH:mm", { locale: ptBR })}
                     </Badge>
                   )}
@@ -160,13 +160,13 @@ export default function CasaTecelaInterior() {
       {/* Audio Reflections */}
       <section>
         <h3 className="text-lg font-display text-gold mb-4 flex items-center gap-2">
-          <Volume2 className="w-5 h-5" /> Reflexões em Áudio
+          <Volume2 className="w-5 h-5" /> Áudios & Textos
         </h3>
         {escutaContent.filter(c => c.tipo === 'audio').length === 0 ? (
           <Card className="glass">
             <CardContent className="py-8 text-center">
               <Volume2 className="w-12 h-12 mx-auto text-muted-foreground/50 mb-4" />
-              <p className="text-muted-foreground">Reflexões em áudio serão adicionadas em breve.</p>
+              <p className="text-muted-foreground">Conteúdos vivos serão adicionados em breve.</p>
             </CardContent>
           </Card>
         ) : (
@@ -192,12 +192,12 @@ export default function CasaTecelaInterior() {
     </div>
   );
 
-  const renderAtelieLeitura = () => (
+  const renderSalaLeitura = () => (
     <div className="space-y-6">
-      <div className={`p-4 rounded-lg ${areaConfig.atelie.bgColor} border ${areaConfig.atelie.borderColor}`}>
+      <div className={`p-4 rounded-lg ${areaConfig.leitura.bgColor} border ${areaConfig.leitura.borderColor}`}>
         <p className="text-sm text-foreground/80">
-          Estudos de caso anonimizados, aplicação das ferramentas oraculares em sessões reais, 
-          erros comuns de terapeutas e refinamento de leitura simbólica.
+          Estudos de caso anonimizados, uso prático das Ferramentas Oraculares em sessões reais,
+          vídeos curtos, exemplos concretos e materiais simples.
         </p>
       </div>
 
@@ -217,7 +217,7 @@ export default function CasaTecelaInterior() {
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
             {atelieContent.filter(c => c.tipo === 'caso').map(item => (
-              <Card key={item.id} className={`glass ${areaConfig.atelie.borderColor}`}>
+              <Card key={item.id} className={`glass ${areaConfig.leitura.borderColor}`}>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">{item.titulo}</CardTitle>
                 </CardHeader>
@@ -265,11 +265,11 @@ export default function CasaTecelaInterior() {
     </div>
   );
 
-  const renderCirculoTecelas = () => (
+  const renderSalaCirculo = () => (
     <div className="space-y-6">
       <div className={`p-4 rounded-lg ${areaConfig.circulo.bgColor} border ${areaConfig.circulo.borderColor}`}>
         <p className="text-sm text-foreground/80 mb-3">
-          Espaço de troca entre profissionais. Moderação rigorosa para manter o foco na prática.
+          Fórum moderado para troca profissional. Poucos tópicos ativos. Regras claras.
         </p>
         <div className="grid grid-cols-2 gap-4 text-xs">
           <div className="space-y-1">
@@ -284,7 +284,7 @@ export default function CasaTecelaInterior() {
             <p className="font-medium text-foreground/90">Não permitido:</p>
             <ul className="text-muted-foreground space-y-0.5">
               <li>• Não é terapia</li>
-              <li>• Não é desabafo emocional</li>
+              <li>• Não é desabafo</li>
               <li>• Não é competição espiritual</li>
             </ul>
           </div>
@@ -345,7 +345,7 @@ export default function CasaTecelaInterior() {
           />
         </motion.div>
 
-        <Tabs defaultValue="escuta" className="space-y-6">
+        <Tabs defaultValue="sustentacao" className="space-y-6">
           <TabsList className="w-full grid grid-cols-3 h-auto p-1">
             {Object.entries(areaConfig).map(([key, config]) => {
               const Icon = config.icon;
@@ -362,23 +362,23 @@ export default function CasaTecelaInterior() {
             })}
           </TabsList>
 
-          <TabsContent value="escuta" className="mt-6">
+          <TabsContent value="sustentacao" className="mt-6">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
             >
-              {renderSalaoEscuta()}
+              {renderSalaSustentacao()}
             </motion.div>
           </TabsContent>
 
-          <TabsContent value="atelie" className="mt-6">
+          <TabsContent value="leitura" className="mt-6">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
             >
-              {renderAtelieLeitura()}
+              {renderSalaLeitura()}
             </motion.div>
           </TabsContent>
 
@@ -388,7 +388,7 @@ export default function CasaTecelaInterior() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
             >
-              {renderCirculoTecelas()}
+              {renderSalaCirculo()}
             </motion.div>
           </TabsContent>
         </Tabs>
