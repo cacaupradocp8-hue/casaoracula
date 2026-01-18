@@ -280,7 +280,7 @@ export default function AdminEneagramaFemininoTab() {
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
         <Flower2 className="w-6 h-6 text-gold" />
-        <h2 className="text-xl font-display">Eneagrama Feminino</h2>
+        <h2 className="text-xl font-display">O Oráculo dos Nove Arquétipos do Feminino Profundo</h2>
       </div>
 
       <Tabs value={activeMainTab} onValueChange={setActiveMainTab}>

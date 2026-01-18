@@ -377,7 +377,7 @@ export default function JornadaHeroina() {
     return (
       <AppLayout>
         <ContentPageLayout
-          title="Jornada da Heroína"
+          title="O Caminho da Mulher que se Torna Inteira"
           subtitle="Travessia concluída"
           onBack={() => navigate(-1)}
           backLabel="Voltar"
@@ -453,7 +453,7 @@ export default function JornadaHeroina() {
     return (
       <AppLayout>
         <ContentPageLayout
-          title="Jornada da Heroína"
+          title="O Caminho da Mulher que se Torna Inteira"
           subtitle="Mapa Iniciático Feminino"
           onBack={() => navigate(-1)}
           backLabel="Voltar"

@@ -156,7 +156,7 @@ export function AdminJornadaHeroinaTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold">Jornada da Heroína</h2>
+          <h2 className="text-xl font-semibold">O Caminho da Mulher que se Torna Inteira</h2>
           <p className="text-sm text-muted-foreground">Gerencie as 7 fases da Jornada Iniciática Feminina</p>
         </div>
         <Button variant="outline" size="sm" onClick={() => navigate('/ferramenta/jornada-heroina')}>

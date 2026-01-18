@@ -60,8 +60,8 @@ const journeySteps: JourneyStep[] = [
     icon: Brain,
     minPortal: 'pre_iniciada',
     items: [
-      { label: 'Big5 Simbólico', path: '/ferramentas/big5', icon: Brain, minPortal: 'pre_iniciada' },
-      { label: 'Eneagrama', path: '/ferramentas/eneagrama', icon: Target, minPortal: 'pre_iniciada' },
+      { label: 'O Mapa dos Cinco Territórios', path: '/ferramentas/big5', icon: Brain, minPortal: 'pre_iniciada' },
+      { label: 'O Oráculo dos Nove Arquétipos', path: '/ferramentas/eneagrama', icon: Target, minPortal: 'pre_iniciada' },
       { label: 'Oráculos', path: '/ferramentas/mapa-oracula', icon: Sparkles, minPortal: 'pre_iniciada' },
       { label: 'Agentes IA', path: '/agentes', icon: Bot, minPortal: 'pre_iniciada' },
     ],

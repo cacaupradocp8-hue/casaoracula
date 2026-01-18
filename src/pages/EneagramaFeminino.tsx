@@ -220,7 +220,7 @@ export default function EneagramaFeminino() {
     return (
       <AppLayout>
         <ContentPageLayout
-          title="Os Arquétipos Vivos da Psique"
+          title="O Oráculo dos Nove Arquétipos do Feminino Profundo"
           subtitle="Sua leitura simbólica"
           onBack={() => navigate('/ferramentas')}
           backLabel="Voltar"
@@ -348,7 +348,7 @@ export default function EneagramaFeminino() {
     return (
       <AppLayout>
         <ContentPageLayout
-          title="Eneagrama Feminino"
+          title="O Oráculo dos Nove Arquétipos do Feminino Profundo"
           subtitle="Os Arquétipos Vivos da Psique"
           onBack={() => navigate(-1)}
           backLabel="Voltar"
@@ -402,7 +402,7 @@ export default function EneagramaFeminino() {
     return (
       <AppLayout>
         <ContentPageLayout
-          title="Eneagrama Feminino"
+          title="O Oráculo dos Nove Arquétipos do Feminino Profundo"
           subtitle="Nomeie sua jornada"
           onBack={() => setPhase('quiz')}
           backLabel="Voltar"
@@ -472,7 +472,7 @@ export default function EneagramaFeminino() {
   return (
     <AppLayout>
       <ContentPageLayout
-        title="Eneagrama Feminino"
+        title="O Oráculo dos Nove Arquétipos do Feminino Profundo"
         subtitle="Uma leitura simbólica — não um rótulo"
         onBack={() => setPhase('intro')}
         backLabel="Voltar"

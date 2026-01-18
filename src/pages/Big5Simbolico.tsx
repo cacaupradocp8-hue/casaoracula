@@ -215,7 +215,7 @@ export default function Big5Simbolico() {
     return (
       <AppLayout>
         <ContentPageLayout
-          title="Mapa das Forças da Alma"
+          title="O Mapa dos Cinco Territórios da Psique Feminina"
           subtitle="Sua leitura simbólica"
           onBack={() => navigate('/ferramentas')}
           backLabel="Voltar"
@@ -346,7 +346,7 @@ export default function Big5Simbolico() {
   return (
     <AppLayout>
       <ContentPageLayout
-        title="Mapa das Forças da Alma"
+        title="O Mapa dos Cinco Territórios da Psique Feminina"
         subtitle="Uma leitura simbólica — não um diagnóstico"
         onBack={() => navigate(-1)}
         backLabel="Voltar"
