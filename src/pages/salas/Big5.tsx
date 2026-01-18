@@ -65,12 +65,14 @@ export default function Big5() {
   const [searchParams] = useSearchParams();
   const casoId = searchParams.get('caso');
   const clienteId = searchParams.get('cliente');
+  const sessionCaseId = searchParams.get('session_case'); // New: Session Room case
 
   const [perguntas, setPerguntas] = useState<Big5Pergunta[]>([]);
   const [dimensoes, setDimensoes] = useState<Big5Dimensao[]>([]);
   const [loading, setLoading] = useState(true);
   const [caso, setCaso] = useState<CasoInfo | null>(null);
   const [cliente, setCliente] = useState<ClienteInfo | null>(null);
+  const [sessionCase, setSessionCase] = useState<{ id: string; title: string; client_id: string; client_name: string } | null>(null);
   const [respostas, setRespostas] = useState<Record<string, number | string>>({});
   const [valores, setValores] = useState({
     abertura: 0,
@@ -87,12 +89,13 @@ export default function Big5() {
   const navigate = useNavigate();
 
   // Determine mode: self-assessment (no caso/cliente) or therapist assessment (with caso or cliente)
-  const isSelfAssessment = !casoId && !clienteId;
-  const isClienteMode = !!clienteId && !casoId;
+  const isSelfAssessment = !casoId && !clienteId && !sessionCaseId;
+  const isClienteMode = !!clienteId && !casoId && !sessionCaseId;
+  const isSessionCaseMode = !!sessionCaseId;
 
   useEffect(() => {
     fetchData();
-  }, [user, casoId]);
+  }, [user, casoId, sessionCaseId]);
 
   // Calculate scores when responses change
   useEffect(() => {
@@ -145,6 +148,38 @@ export default function Big5() {
 
     if (perguntasRes.data) setPerguntas(perguntasRes.data);
     if (dimensoesRes.data) setDimensoes(dimensoesRes.data);
+
+    // If we have a Session Room case ID (new Session Room flow)
+    if (sessionCaseId) {
+      const { data: scData, error: scError } = await supabase
+        .from('session_cases')
+        .select(`
+          id, title, client_id,
+          client:profiles!session_cases_client_id_fkey(nome)
+        `)
+        .eq('id', sessionCaseId)
+        .eq('therapist_id', user.id)
+        .single();
+
+      if (scError || !scData) {
+        toast({
+          title: 'Caso não encontrado',
+          description: 'O caso solicitado não existe ou você não tem permissão para acessá-lo.',
+          variant: 'destructive',
+        });
+        navigate('/session-room');
+        return;
+      }
+
+      setSessionCase({
+        id: scData.id,
+        title: scData.title,
+        client_id: scData.client_id,
+        client_name: scData.client?.nome || 'Sem nome',
+      });
+      setLoading(false);
+      return;
+    }
 
     // If we have a cliente ID (new flow), fetch cliente info and verify access
     if (clienteId) {
@@ -253,6 +288,17 @@ export default function Big5() {
         notas: notas || null,
         impacto_clinico: impactoClinico || null,
       };
+    } else if (isSessionCaseMode && sessionCase) {
+      // Session Room flow: assessment via session_case
+      insertData = {
+        user_id: sessionCase.client_id,
+        terapeuta_id: user?.id,
+        cliente_id: sessionCase.client_id,
+        caso_id: null, // Note: session_cases is a different table from casos
+        ...valores,
+        notas: notas || null,
+        impacto_clinico: impactoClinico || null,
+      };
     } else if (isClienteMode && cliente) {
       // New flow: direct cliente assessment (no caso)
       insertData = {
@@ -293,6 +339,8 @@ export default function Big5() {
       toast({ title: 'Registro Big5 salvo com sucesso!' });
       if (isSelfAssessment) {
         navigate('/salas');
+      } else if (isSessionCaseMode && sessionCase) {
+        navigate(`/session-room/${sessionCase.id}`);
       } else if (isClienteMode && cliente) {
         navigate(`/cliente/${cliente.id}`);
       } else {
