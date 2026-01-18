@@ -164,7 +164,7 @@ export function Navigation() {
         path: '/biblioteca',
         label: 'Biblioteca',
         icon: Library,
-        minPortal: 'visitante',
+        minPortal: 'pre_iniciada',
       },
     ];
 

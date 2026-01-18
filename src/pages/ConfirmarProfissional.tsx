@@ -9,7 +9,7 @@ export default function ConfirmarProfissional() {
 
   useEffect(() => {
     if (!isLoading && isProfessional) {
-      navigate('/travessias');
+      navigate('/ferramentas');
     }
   }, [isProfessional, isLoading, navigate]);
 
@@ -23,7 +23,7 @@ export default function ConfirmarProfissional() {
 
   return (
     <ProfessionalOnboarding
-      onComplete={() => navigate('/travessias')}
+      onComplete={() => navigate('/ferramentas')}
       onWaitingList={() => navigate('/dashboard')}
     />
   );
