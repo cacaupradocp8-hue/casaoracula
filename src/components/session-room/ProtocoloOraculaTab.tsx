@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { 
   Map, Flower2, Compass, ArrowRight, CheckCircle2, 
-  Circle, Loader2, Sparkles, FileText, Save, Book
+  Circle, Loader2, Sparkles, FileText, Save, Book, ScrollText
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useProtocoloOracula, ProtocoloStatus } from '@/hooks/useProtocoloOracula';
@@ -158,15 +158,26 @@ export function ProtocoloOraculaTab({ sessionCaseId, clienteId, clienteNome }: P
                 MAPA localiza → ORÁCULO interpreta → CAMINHO integra
               </p>
               
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="w-full mt-4 text-gold"
-                onClick={() => navigate('/session-room/manuais')}
-              >
-                <Book className="w-4 h-4 mr-2" />
-                Consultar Manuais Clínicos
-              </Button>
+              <div className="flex gap-2 mt-4">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="flex-1 text-gold"
+                  onClick={() => navigate('/session-room/manuais')}
+                >
+                  <Book className="w-4 h-4 mr-2" />
+                  Manuais
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="flex-1 text-purple-400"
+                  onClick={() => navigate('/session-room/roteiros')}
+                >
+                  <ScrollText className="w-4 h-4 mr-2" />
+                  Roteiros
+                </Button>
+              </div>
             </div>
 
             <div className="space-y-2">
