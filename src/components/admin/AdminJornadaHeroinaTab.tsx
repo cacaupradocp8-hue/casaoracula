@@ -32,6 +32,11 @@ interface Fase {
   cor_primaria: string | null;
   ativo: boolean | null;
   ordem: number | null;
+  // Clinical protocol fields
+  foco_terapeutico: string | null;
+  risco_especifico: string | null;
+  tarefa_simbolica: string | null;
+  sinal_integracao: string | null;
 }
 
 interface Registro {
@@ -105,7 +110,12 @@ export function AdminJornadaHeroinaTab() {
           icone: editingFase.icone,
           cor_primaria: editingFase.cor_primaria,
           ativo: editingFase.ativo,
-          ordem: editingFase.ordem
+          ordem: editingFase.ordem,
+          // Clinical protocol fields
+          foco_terapeutico: editingFase.foco_terapeutico,
+          risco_especifico: editingFase.risco_especifico,
+          tarefa_simbolica: editingFase.tarefa_simbolica,
+          sinal_integracao: editingFase.sinal_integracao,
         })
         .eq('id', editingFase.id);
 
@@ -401,6 +411,53 @@ export function AdminJornadaHeroinaTab() {
                       value={editingFase.ordem || editingFase.numero}
                       onChange={(e) => setEditingFase({ ...editingFase, ordem: parseInt(e.target.value) })}
                     />
+                  </div>
+                </div>
+
+                {/* Clinical Protocol Fields */}
+                <div className="border-t pt-4 mt-4">
+                  <h4 className="text-sm font-medium text-emerald-400 mb-3">Campos do Protocolo Clínico</h4>
+                  
+                  <div className="space-y-3">
+                    <div className="space-y-2">
+                      <Label>Foco Terapêutico</Label>
+                      <Textarea
+                        value={editingFase.foco_terapeutico || ''}
+                        onChange={(e) => setEditingFase({ ...editingFase, foco_terapeutico: e.target.value })}
+                        rows={2}
+                        placeholder="Qual o foco terapêutico desta fase..."
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Risco Específico</Label>
+                      <Textarea
+                        value={editingFase.risco_especifico || ''}
+                        onChange={(e) => setEditingFase({ ...editingFase, risco_especifico: e.target.value })}
+                        rows={2}
+                        placeholder="O que observar com cuidado nesta fase..."
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Tarefa Simbólica</Label>
+                      <Textarea
+                        value={editingFase.tarefa_simbolica || ''}
+                        onChange={(e) => setEditingFase({ ...editingFase, tarefa_simbolica: e.target.value })}
+                        rows={2}
+                        placeholder="Qual a tarefa simbólica a ser cumprida..."
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Sinal de Integração</Label>
+                      <Textarea
+                        value={editingFase.sinal_integracao || ''}
+                        onChange={(e) => setEditingFase({ ...editingFase, sinal_integracao: e.target.value })}
+                        rows={2}
+                        placeholder="Como saber que a fase foi integrada..."
+                      />
+                    </div>
                   </div>
                 </div>
 

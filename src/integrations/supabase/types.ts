@@ -529,6 +529,7 @@ export type Database = {
         Row: {
           ativo: boolean
           chave: string
+          conflito_recorrente: string | null
           cor_primaria: string | null
           created_at: string
           descricao_simbolica: string
@@ -540,12 +541,17 @@ export type Database = {
           nome: string
           nome_en: string | null
           ordem: number
+          padrao_emocional: string | null
+          potencial_inexplorado: string | null
           pratica_sugerida: string | null
+          repeticao_comportamental: string | null
+          risco_clinico: string | null
           updated_at: string
         }
         Insert: {
           ativo?: boolean
           chave: string
+          conflito_recorrente?: string | null
           cor_primaria?: string | null
           created_at?: string
           descricao_simbolica: string
@@ -557,12 +563,17 @@ export type Database = {
           nome: string
           nome_en?: string | null
           ordem?: number
+          padrao_emocional?: string | null
+          potencial_inexplorado?: string | null
           pratica_sugerida?: string | null
+          repeticao_comportamental?: string | null
+          risco_clinico?: string | null
           updated_at?: string
         }
         Update: {
           ativo?: boolean
           chave?: string
+          conflito_recorrente?: string | null
           cor_primaria?: string | null
           created_at?: string
           descricao_simbolica?: string
@@ -574,7 +585,11 @@ export type Database = {
           nome?: string
           nome_en?: string | null
           ordem?: number
+          padrao_emocional?: string | null
+          potencial_inexplorado?: string | null
           pratica_sugerida?: string | null
+          repeticao_comportamental?: string | null
+          risco_clinico?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -586,14 +601,19 @@ export type Database = {
           created_at: string
           expressao_intensidade: string | null
           id: string
+          narrativa_editada: boolean | null
+          narrativa_localizacao: string | null
           nome_simbolico: string | null
           notas: string | null
+          notas_terapeuta: string | null
           reflexao_final: string | null
           relacional_intensidade: string | null
           respostas_json: Json | null
           sensibilidade_intensidade: string | null
+          session_case_id: string | null
           suporte_intensidade: string | null
           terapeuta_id: string | null
+          territorio_predominante: string | null
           updated_at: string
           user_id: string
         }
@@ -603,14 +623,19 @@ export type Database = {
           created_at?: string
           expressao_intensidade?: string | null
           id?: string
+          narrativa_editada?: boolean | null
+          narrativa_localizacao?: string | null
           nome_simbolico?: string | null
           notas?: string | null
+          notas_terapeuta?: string | null
           reflexao_final?: string | null
           relacional_intensidade?: string | null
           respostas_json?: Json | null
           sensibilidade_intensidade?: string | null
+          session_case_id?: string | null
           suporte_intensidade?: string | null
           terapeuta_id?: string | null
+          territorio_predominante?: string | null
           updated_at?: string
           user_id: string
         }
@@ -620,18 +645,31 @@ export type Database = {
           created_at?: string
           expressao_intensidade?: string | null
           id?: string
+          narrativa_editada?: boolean | null
+          narrativa_localizacao?: string | null
           nome_simbolico?: string | null
           notas?: string | null
+          notas_terapeuta?: string | null
           reflexao_final?: string | null
           relacional_intensidade?: string | null
           respostas_json?: Json | null
           sensibilidade_intensidade?: string | null
+          session_case_id?: string | null
           suporte_intensidade?: string | null
           terapeuta_id?: string | null
+          territorio_predominante?: string | null
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "big5_symbolic_registros_session_case_id_fkey"
+            columns: ["session_case_id"]
+            isOneToOne: false
+            referencedRelation: "session_cases"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       casos: {
         Row: {
@@ -1278,6 +1316,7 @@ export type Database = {
           cor_primaria: string | null
           cor_secundaria: string | null
           created_at: string
+          dinamica_relacional: string | null
           dom_central: string | null
           espelhos_simbolicos: string[] | null
           essencia_simbolica: string
@@ -1298,6 +1337,8 @@ export type Database = {
           prompts_reenquadramento: string[] | null
           resistencias_tipicas: string | null
           ritual_encerramento: string | null
+          sugestoes_reenquadramento: string[] | null
+          trabalho_sombra: string | null
           transferencias_comuns: string | null
           updated_at: string
         }
@@ -1310,6 +1351,7 @@ export type Database = {
           cor_primaria?: string | null
           cor_secundaria?: string | null
           created_at?: string
+          dinamica_relacional?: string | null
           dom_central?: string | null
           espelhos_simbolicos?: string[] | null
           essencia_simbolica: string
@@ -1330,6 +1372,8 @@ export type Database = {
           prompts_reenquadramento?: string[] | null
           resistencias_tipicas?: string | null
           ritual_encerramento?: string | null
+          sugestoes_reenquadramento?: string[] | null
+          trabalho_sombra?: string | null
           transferencias_comuns?: string | null
           updated_at?: string
         }
@@ -1342,6 +1386,7 @@ export type Database = {
           cor_primaria?: string | null
           cor_secundaria?: string | null
           created_at?: string
+          dinamica_relacional?: string | null
           dom_central?: string | null
           espelhos_simbolicos?: string[] | null
           essencia_simbolica?: string
@@ -1362,6 +1407,8 @@ export type Database = {
           prompts_reenquadramento?: string[] | null
           resistencias_tipicas?: string | null
           ritual_encerramento?: string | null
+          sugestoes_reenquadramento?: string[] | null
+          trabalho_sombra?: string | null
           transferencias_comuns?: string | null
           updated_at?: string
         }
@@ -1413,63 +1460,86 @@ export type Database = {
       }
       eneagrama_feminino_registros: {
         Row: {
+          arquetipo_exilado: number | null
           arquetipo_primario: number
           arquetipo_secundario: number | null
           arquetipo_sombra: number | null
+          campo_reflexao_cliente: string | null
           campo_tensao: string | null
           cliente_id: string | null
           created_at: string
           id: string
           modo_aplicacao: string | null
+          narrativa_editada: boolean | null
+          narrativa_interpretacao: string | null
           nome_simbolico: string | null
           notas: string | null
           notas_profissionais: string | null
           reflexao_final: string | null
           respostas_json: Json | null
+          session_case_id: string | null
           terapeuta_id: string | null
           updated_at: string
           user_id: string
           vetor_integracao: string | null
         }
         Insert: {
+          arquetipo_exilado?: number | null
           arquetipo_primario: number
           arquetipo_secundario?: number | null
           arquetipo_sombra?: number | null
+          campo_reflexao_cliente?: string | null
           campo_tensao?: string | null
           cliente_id?: string | null
           created_at?: string
           id?: string
           modo_aplicacao?: string | null
+          narrativa_editada?: boolean | null
+          narrativa_interpretacao?: string | null
           nome_simbolico?: string | null
           notas?: string | null
           notas_profissionais?: string | null
           reflexao_final?: string | null
           respostas_json?: Json | null
+          session_case_id?: string | null
           terapeuta_id?: string | null
           updated_at?: string
           user_id: string
           vetor_integracao?: string | null
         }
         Update: {
+          arquetipo_exilado?: number | null
           arquetipo_primario?: number
           arquetipo_secundario?: number | null
           arquetipo_sombra?: number | null
+          campo_reflexao_cliente?: string | null
           campo_tensao?: string | null
           cliente_id?: string | null
           created_at?: string
           id?: string
           modo_aplicacao?: string | null
+          narrativa_editada?: boolean | null
+          narrativa_interpretacao?: string | null
           nome_simbolico?: string | null
           notas?: string | null
           notas_profissionais?: string | null
           reflexao_final?: string | null
           respostas_json?: Json | null
+          session_case_id?: string | null
           terapeuta_id?: string | null
           updated_at?: string
           user_id?: string
           vetor_integracao?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "eneagrama_feminino_registros_session_case_id_fkey"
+            columns: ["session_case_id"]
+            isOneToOne: false
+            referencedRelation: "session_cases"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       eneagrama_instintos: {
         Row: {
@@ -1820,6 +1890,7 @@ export type Database = {
           cor_primaria: string | null
           created_at: string | null
           descricao: string
+          foco_terapeutico: string | null
           icone: string | null
           id: string
           linguagem_contencao: string | null
@@ -1831,7 +1902,10 @@ export type Database = {
           pergunta_central: string | null
           perguntas_reflexao: string[] | null
           praticas_simbolicas: string[] | null
+          risco_especifico: string | null
+          sinal_integracao: string | null
           subtitulo: string | null
+          tarefa_simbolica: string | null
           updated_at: string | null
         }
         Insert: {
@@ -1841,6 +1915,7 @@ export type Database = {
           cor_primaria?: string | null
           created_at?: string | null
           descricao: string
+          foco_terapeutico?: string | null
           icone?: string | null
           id?: string
           linguagem_contencao?: string | null
@@ -1852,7 +1927,10 @@ export type Database = {
           pergunta_central?: string | null
           perguntas_reflexao?: string[] | null
           praticas_simbolicas?: string[] | null
+          risco_especifico?: string | null
+          sinal_integracao?: string | null
           subtitulo?: string | null
+          tarefa_simbolica?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -1862,6 +1940,7 @@ export type Database = {
           cor_primaria?: string | null
           created_at?: string | null
           descricao?: string
+          foco_terapeutico?: string | null
           icone?: string | null
           id?: string
           linguagem_contencao?: string | null
@@ -1873,7 +1952,10 @@ export type Database = {
           pergunta_central?: string | null
           perguntas_reflexao?: string[] | null
           praticas_simbolicas?: string[] | null
+          risco_especifico?: string | null
+          sinal_integracao?: string | null
           subtitulo?: string | null
+          tarefa_simbolica?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -1934,7 +2016,9 @@ export type Database = {
           intencao_inicial: string | null
           modo: string
           nome_simbolico: string | null
+          notas_progresso: Json | null
           reflexao_final: string | null
+          session_case_id: string | null
           status: string | null
           terapeuta_id: string | null
           updated_at: string | null
@@ -1948,7 +2032,9 @@ export type Database = {
           intencao_inicial?: string | null
           modo?: string
           nome_simbolico?: string | null
+          notas_progresso?: Json | null
           reflexao_final?: string | null
+          session_case_id?: string | null
           status?: string | null
           terapeuta_id?: string | null
           updated_at?: string | null
@@ -1962,7 +2048,9 @@ export type Database = {
           intencao_inicial?: string | null
           modo?: string
           nome_simbolico?: string | null
+          notas_progresso?: Json | null
           reflexao_final?: string | null
+          session_case_id?: string | null
           status?: string | null
           terapeuta_id?: string | null
           updated_at?: string | null
@@ -1974,6 +2062,13 @@ export type Database = {
             columns: ["cliente_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jornada_heroina_registros_session_case_id_fkey"
+            columns: ["session_case_id"]
+            isOneToOne: false
+            referencedRelation: "session_cases"
             referencedColumns: ["id"]
           },
         ]
@@ -3745,6 +3840,90 @@ export type Database = {
             columns: ["modulo_id"]
             isOneToOne: false
             referencedRelation: "formacao_modulos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      protocolo_oracula: {
+        Row: {
+          caminho_registro_id: string | null
+          cliente_id: string
+          created_at: string
+          id: string
+          mapa_registro_id: string | null
+          objetivo_terapeutico: string | null
+          oraculo_registro_id: string | null
+          proximos_passos: string | null
+          session_case_id: string
+          sintese_narrativa: string | null
+          status: string
+          terapeuta_id: string
+          updated_at: string
+        }
+        Insert: {
+          caminho_registro_id?: string | null
+          cliente_id: string
+          created_at?: string
+          id?: string
+          mapa_registro_id?: string | null
+          objetivo_terapeutico?: string | null
+          oraculo_registro_id?: string | null
+          proximos_passos?: string | null
+          session_case_id: string
+          sintese_narrativa?: string | null
+          status?: string
+          terapeuta_id: string
+          updated_at?: string
+        }
+        Update: {
+          caminho_registro_id?: string | null
+          cliente_id?: string
+          created_at?: string
+          id?: string
+          mapa_registro_id?: string | null
+          objetivo_terapeutico?: string | null
+          oraculo_registro_id?: string | null
+          proximos_passos?: string | null
+          session_case_id?: string
+          sintese_narrativa?: string | null
+          status?: string
+          terapeuta_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "protocolo_oracula_caminho_registro_id_fkey"
+            columns: ["caminho_registro_id"]
+            isOneToOne: false
+            referencedRelation: "jornada_heroina_registros"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "protocolo_oracula_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "protocolo_oracula_mapa_registro_id_fkey"
+            columns: ["mapa_registro_id"]
+            isOneToOne: false
+            referencedRelation: "big5_symbolic_registros"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "protocolo_oracula_oraculo_registro_id_fkey"
+            columns: ["oraculo_registro_id"]
+            isOneToOne: false
+            referencedRelation: "eneagrama_feminino_registros"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "protocolo_oracula_session_case_id_fkey"
+            columns: ["session_case_id"]
+            isOneToOne: false
+            referencedRelation: "session_cases"
             referencedColumns: ["id"]
           },
         ]

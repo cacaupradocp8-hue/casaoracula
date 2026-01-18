@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Sparkles, Layers, Map, FileText, Heart, Archive, MoreVertical, ClipboardList } from 'lucide-react';
+import { ArrowLeft, Sparkles, Layers, Map, FileText, Heart, Archive, MoreVertical, ClipboardList, Compass } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -17,6 +17,7 @@ import { NarrativeMapTab } from '@/components/session-room/NarrativeMapTab';
 import { SessionScriptTab } from '@/components/session-room/SessionScriptTab';
 import { PostSessionTab } from '@/components/session-room/PostSessionTab';
 import { TemplatesTab } from '@/components/session-room/TemplatesTab';
+import { ProtocoloOraculaTab } from '@/components/session-room/ProtocoloOraculaTab';
 
 export default function SessionRoomCase() {
   const { caseId } = useParams<{ caseId: string }>();
@@ -136,7 +137,11 @@ export default function SessionRoomCase() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 h-auto">
+          <TabsList className="grid w-full grid-cols-7 h-auto">
+            <TabsTrigger value="protocolo" className="flex flex-col gap-1 py-3">
+              <Compass className="w-4 h-4 text-gold" />
+              <span className="text-xs">Protocolo</span>
+            </TabsTrigger>
             <TabsTrigger value="oracle" className="flex flex-col gap-1 py-3">
               <Sparkles className="w-4 h-4" />
               <span className="text-xs">Oráculo</span>
@@ -162,6 +167,14 @@ export default function SessionRoomCase() {
               <span className="text-xs">Pós-Sessão</span>
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="protocolo">
+            <ProtocoloOraculaTab
+              sessionCaseId={caseData.id}
+              clienteId={caseData.client_id}
+              clienteNome={caseData.client?.nome || 'Cliente'}
+            />
+          </TabsContent>
 
           <TabsContent value="oracle">
             <OracleTab caseId={caseData.id} clientId={caseData.client_id} />
