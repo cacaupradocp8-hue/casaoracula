@@ -11,6 +11,9 @@ export interface LabirintoPorta {
   imagem_url: string | null;
   ai_generated_image_url: string | null;
   symbolic_focus: string | null;
+  // Audio contemplativo
+  audio_url: string | null;
+  audio_titulo: string | null;
   // Campos Método ORÁCULA (estruturados)
   tipo_campo: string | null;
   forca_ativa: string | null;
