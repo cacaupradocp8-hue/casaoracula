@@ -92,6 +92,7 @@ import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
 import Jornada from "./pages/Jornada";
 import Onboarding from "./pages/Onboarding";
+import SalaDeSessao from "./pages/SalaDeSessao";
 // Symbolic Templates
 import Big5TemplateList from "./pages/templates/Big5TemplateList";
 import Big5TemplateEditor from "./pages/templates/Big5TemplateEditor";
@@ -334,6 +335,14 @@ function AppRoutes() {
       />
 
       {/* Ferramentas - Rotas /ferramentas/ (principal) */}
+      <Route
+        path="/ferramentas/sala-de-sessao"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <SalaDeSessao />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/ferramentas/mapa-vivo"
         element={
