@@ -18,6 +18,9 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Biblioteca from "./pages/Biblioteca";
 import Mentoria from "./pages/Mentoria";
+import CasaTecelaAtrio from "./pages/CasaTecelaAtrio";
+import CasaTecelaInterior from "./pages/CasaTecelaInterior";
+import MentoriaOracular from "./pages/MentoriaOracular";
 import Travessias from "./pages/Travessias";
 import Agentes from "./pages/Agentes";
 import LeituraOracular from "./pages/LeituraOracular";
@@ -283,6 +286,32 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="iniciada">
             <Mentoria />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Living Territories */}
+      <Route
+        path="/casa-tecelas"
+        element={
+          <ProtectedRoute minPortal="iniciada">
+            <CasaTecelaAtrio />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/casa-tecelas/interior"
+        element={
+          <ProtectedRoute minPortal="iniciada">
+            <CasaTecelaInterior />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/mentoria-oracular"
+        element={
+          <ProtectedRoute minPortal="iniciada">
+            <MentoriaOracular />
           </ProtectedRoute>
         }
       />
