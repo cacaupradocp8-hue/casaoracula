@@ -57,15 +57,17 @@ export function Navigation() {
   const [lockedModalOpen, setLockedModalOpen] = useState(false);
   const [hasMentoriaAccess, setHasMentoriaAccess] = useState(false);
   const [hasFormacaoAccess, setHasFormacaoAccess] = useState(false);
+  const [isProfessionalVerified, setIsProfessionalVerified] = useState(false);
 
   const portal = user ? getPortal(user.portal) : null;
 
-  // Check matriculas for mentoria and formação
+  // Check matriculas for mentoria and formação, and professional status
   useEffect(() => {
-    const checkMatriculas = async () => {
+    const checkAccessAndProfessionalStatus = async () => {
       if (!user) {
         setHasMentoriaAccess(false);
         setHasFormacaoAccess(false);
+        setIsProfessionalVerified(false);
         return;
       }
 
@@ -73,10 +75,12 @@ export function Navigation() {
       if (user.portal === 'admin') {
         setHasMentoriaAccess(true);
         setHasFormacaoAccess(true);
+        setIsProfessionalVerified(true);
         return;
       }
 
       try {
+        // Check matriculas
         const { data: matriculas } = await supabase
           .from('matriculas')
           .select('curso_id')
@@ -88,12 +92,26 @@ export function Navigation() {
           setHasMentoriaAccess(cursoIds.includes('mentoria_oracula') || cursoIds.includes('mentoria'));
           setHasFormacaoAccess(cursoIds.includes('formacao_oracula') || cursoIds.includes('formacao'));
         }
+
+        // Check professional status from profile
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('is_professional_verified, role')
+          .eq('id', user.id)
+          .single();
+
+        if (profile) {
+          setIsProfessionalVerified(
+            profile.is_professional_verified === true || 
+            profile.role === 'terapeuta'
+          );
+        }
       } catch (error) {
-        console.error('Error checking matriculas:', error);
+        console.error('Error checking access:', error);
       }
     };
 
-    checkMatriculas();
+    checkAccessAndProfessionalStatus();
   }, [user]);
 
   const handleLogout = () => {
@@ -173,8 +191,8 @@ export function Navigation() {
       });
     }
 
-    // 5. Minhas Clientes - pre_iniciada+
-    if (canAccessItem('pre_iniciada')) {
+    // 5. Minhas Clientes - only for verified professionals
+    if (canAccessItem('pre_iniciada') && isProfessionalVerified) {
       items.push({
         path: '/minhas-clientes',
         label: 'Minhas Clientes',
