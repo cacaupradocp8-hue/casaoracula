@@ -2698,6 +2698,130 @@ export type Database = {
           },
         ]
       }
+      narrative_maps: {
+        Row: {
+          case_id: string
+          client_id: string
+          created_at: string
+          id: string
+          layer1_context: string | null
+          layer1_fact_event: string | null
+          layer1_trigger: string | null
+          layer2_emotion_main: string | null
+          layer2_emotion_secondary: string | null
+          layer2_intensity: number | null
+          layer3_central_element: string | null
+          layer3_climate: string | null
+          layer3_scene: string | null
+          layer4_archetype_conflict: string | null
+          layer4_archetype_main: string | null
+          layer4_protects: string | null
+          layer5_cost: string | null
+          layer5_prohibition: string | null
+          layer5_strategy: string | null
+          layer6_current_repeat: string | null
+          layer6_first_memory: string | null
+          layer6_pattern: string | null
+          layer7_ego_resistance: string | null
+          layer7_invitation: string | null
+          layer7_small_gesture: string | null
+          summary_archetype: string | null
+          summary_core: string | null
+          summary_invitation: string | null
+          summary_repetition: string | null
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          case_id: string
+          client_id: string
+          created_at?: string
+          id?: string
+          layer1_context?: string | null
+          layer1_fact_event?: string | null
+          layer1_trigger?: string | null
+          layer2_emotion_main?: string | null
+          layer2_emotion_secondary?: string | null
+          layer2_intensity?: number | null
+          layer3_central_element?: string | null
+          layer3_climate?: string | null
+          layer3_scene?: string | null
+          layer4_archetype_conflict?: string | null
+          layer4_archetype_main?: string | null
+          layer4_protects?: string | null
+          layer5_cost?: string | null
+          layer5_prohibition?: string | null
+          layer5_strategy?: string | null
+          layer6_current_repeat?: string | null
+          layer6_first_memory?: string | null
+          layer6_pattern?: string | null
+          layer7_ego_resistance?: string | null
+          layer7_invitation?: string | null
+          layer7_small_gesture?: string | null
+          summary_archetype?: string | null
+          summary_core?: string | null
+          summary_invitation?: string | null
+          summary_repetition?: string | null
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          case_id?: string
+          client_id?: string
+          created_at?: string
+          id?: string
+          layer1_context?: string | null
+          layer1_fact_event?: string | null
+          layer1_trigger?: string | null
+          layer2_emotion_main?: string | null
+          layer2_emotion_secondary?: string | null
+          layer2_intensity?: number | null
+          layer3_central_element?: string | null
+          layer3_climate?: string | null
+          layer3_scene?: string | null
+          layer4_archetype_conflict?: string | null
+          layer4_archetype_main?: string | null
+          layer4_protects?: string | null
+          layer5_cost?: string | null
+          layer5_prohibition?: string | null
+          layer5_strategy?: string | null
+          layer6_current_repeat?: string | null
+          layer6_first_memory?: string | null
+          layer6_pattern?: string | null
+          layer7_ego_resistance?: string | null
+          layer7_invitation?: string | null
+          layer7_small_gesture?: string | null
+          summary_archetype?: string | null
+          summary_core?: string | null
+          summary_invitation?: string | null
+          summary_repetition?: string | null
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "narrative_maps_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "session_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "narrative_maps_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "narrative_maps_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notification_logs: {
         Row: {
           id: string
@@ -3417,6 +3541,61 @@ export type Database = {
           },
         ]
       }
+      post_session_closures: {
+        Row: {
+          case_id: string
+          client_id: string
+          created_at: string
+          do_not_touch: string | null
+          id: string
+          left_open: string | null
+          moved: string | null
+          therapist_id: string
+        }
+        Insert: {
+          case_id: string
+          client_id: string
+          created_at?: string
+          do_not_touch?: string | null
+          id?: string
+          left_open?: string | null
+          moved?: string | null
+          therapist_id: string
+        }
+        Update: {
+          case_id?: string
+          client_id?: string
+          created_at?: string
+          do_not_touch?: string | null
+          id?: string
+          left_open?: string | null
+          moved?: string | null
+          therapist_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_session_closures_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "session_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_session_closures_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_session_closures_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts_mentoria: {
         Row: {
           anexo_url: string | null
@@ -4062,6 +4241,204 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      session_cases: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          status: string
+          therapist_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          status?: string
+          therapist_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          status?: string
+          therapist_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_cases_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_cases_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      session_oracle_draws: {
+        Row: {
+          axis_archetype: string | null
+          axis_movement: string | null
+          axis_narrative: string | null
+          case_id: string | null
+          client_id: string | null
+          created_at: string
+          id: string
+          mediator_symbol: string | null
+          mode: string
+          notes: string | null
+          oracle_image: string | null
+          suggested_rite: string | null
+          therapist_id: string
+        }
+        Insert: {
+          axis_archetype?: string | null
+          axis_movement?: string | null
+          axis_narrative?: string | null
+          case_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          mediator_symbol?: string | null
+          mode: string
+          notes?: string | null
+          oracle_image?: string | null
+          suggested_rite?: string | null
+          therapist_id: string
+        }
+        Update: {
+          axis_archetype?: string | null
+          axis_movement?: string | null
+          axis_narrative?: string | null
+          case_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          mediator_symbol?: string | null
+          mode?: string
+          notes?: string | null
+          oracle_image?: string | null
+          suggested_rite?: string | null
+          therapist_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_oracle_draws_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "session_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_oracle_draws_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_oracle_draws_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      session_scripts: {
+        Row: {
+          case_id: string
+          client_id: string
+          closing_leave_open: string | null
+          closing_name: string | null
+          closing_seal: string | null
+          created_at: string
+          exploration_questions: string | null
+          id: string
+          intervention_prompt: string | null
+          intervention_type: string | null
+          narrative_map_id: string | null
+          opening_gesture: string | null
+          opening_question: string | null
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          case_id: string
+          client_id: string
+          closing_leave_open?: string | null
+          closing_name?: string | null
+          closing_seal?: string | null
+          created_at?: string
+          exploration_questions?: string | null
+          id?: string
+          intervention_prompt?: string | null
+          intervention_type?: string | null
+          narrative_map_id?: string | null
+          opening_gesture?: string | null
+          opening_question?: string | null
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          case_id?: string
+          client_id?: string
+          closing_leave_open?: string | null
+          closing_name?: string | null
+          closing_seal?: string | null
+          created_at?: string
+          exploration_questions?: string | null
+          id?: string
+          intervention_prompt?: string | null
+          intervention_type?: string | null
+          narrative_map_id?: string | null
+          opening_gesture?: string | null
+          opening_question?: string | null
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_scripts_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "session_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_scripts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_scripts_narrative_map_id_fkey"
+            columns: ["narrative_map_id"]
+            isOneToOne: false
+            referencedRelation: "narrative_maps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_scripts_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscriptions: {
         Row: {
