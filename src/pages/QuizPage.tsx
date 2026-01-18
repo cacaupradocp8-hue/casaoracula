@@ -504,7 +504,7 @@ export default function QuizPage() {
       <AppLayout>
         <ContentPageLayout
           breadcrumbs={[
-            { label: 'Salas', href: '/dashboard' },
+            { label: 'Salas', href: '/salas' },
             { label: quiz.titulo, href: quiz.sala_id ? `/salas/${quiz.sala_id}` : undefined },
             { label: 'Resultado' },
           ]}

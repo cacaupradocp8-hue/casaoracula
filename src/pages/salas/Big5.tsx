@@ -325,7 +325,7 @@ export default function Big5() {
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
         <div className="flex items-center gap-4 mb-6">
-          <Link to={isSelfAssessment ? '/salas' : isClienteMode && cliente ? `/cliente/${cliente.id}` : '/casos'}>
+          <Link to={isSelfAssessment ? '/salas' : isClienteMode && cliente ? `/cliente/${cliente.id}` : '/minhas-clientes'}>
             <Button variant="ghost" size="icon">
               <ArrowLeft className="w-5 h-5" />
             </Button>
