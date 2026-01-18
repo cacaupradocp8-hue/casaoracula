@@ -18,7 +18,10 @@ import {
   Eye,
   BookOpen,
   Key,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Volume2,
+  Upload,
+  X
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -41,6 +44,9 @@ interface LabirintoPorta {
   imagem_url: string | null;
   ai_generated_image_url: string | null;
   symbolic_focus: string | null;
+  // Audio contemplativo
+  audio_url: string | null;
+  audio_titulo: string | null;
   // Campos Método ORÁCULA
   tipo_campo: string | null;
   forca_ativa: string | null;
@@ -106,6 +112,9 @@ export function AdminLabirintoTab() {
         subtitulo: editingPorta.subtitulo,
         imagem_url: editingPorta.imagem_url,
         symbolic_focus: editingPorta.symbolic_focus,
+        // Audio
+        audio_url: editingPorta.audio_url,
+        audio_titulo: editingPorta.audio_titulo,
         // Campos Método ORÁCULA
         tipo_campo: editingPorta.tipo_campo,
         forca_ativa: editingPorta.forca_ativa,
@@ -298,10 +307,14 @@ export function AdminLabirintoTab() {
 
           {editingPorta && (
             <Tabs defaultValue="basico" className="space-y-4">
-              <TabsList className="w-full justify-start">
+              <TabsList className="w-full justify-start flex-wrap h-auto gap-1">
                 <TabsTrigger value="basico" className="gap-2">
                   <Eye className="w-4 h-4" />
                   Básico
+                </TabsTrigger>
+                <TabsTrigger value="audio" className="gap-2">
+                  <Volume2 className="w-4 h-4" />
+                  Áudio
                 </TabsTrigger>
                 <TabsTrigger value="leitura" className="gap-2">
                   <DoorOpen className="w-4 h-4" />
@@ -426,6 +439,72 @@ export function AdminLabirintoTab() {
                       </SelectContent>
                     </Select>
                   </div>
+                </div>
+              </TabsContent>
+
+              {/* Áudio - Upload contemplativo */}
+              <TabsContent value="audio" className="space-y-6">
+                <div className="border border-gold/30 rounded-lg p-4 space-y-4 bg-gold/5">
+                  <h3 className="font-medium text-gold flex items-center gap-2">
+                    <Volume2 className="w-4 h-4" />
+                    Áudio Contemplativo
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Adicione um áudio para acompanhar a travessia desta porta. 
+                    O áudio será carregado apenas quando a usuária clicar para ouvir.
+                  </p>
+
+                  <div>
+                    <Label>Título do Áudio (opcional)</Label>
+                    <Input
+                      value={editingPorta.audio_titulo || ""}
+                      onChange={(e) =>
+                        setEditingPorta({ ...editingPorta, audio_titulo: e.target.value })
+                      }
+                      placeholder="Ex: Meditação da Porta 7"
+                    />
+                  </div>
+
+                  <div>
+                    <Label>URL do Áudio</Label>
+                    <Input
+                      value={editingPorta.audio_url || ""}
+                      onChange={(e) =>
+                        setEditingPorta({ ...editingPorta, audio_url: e.target.value })
+                      }
+                      placeholder="https://... (MP3, M4A)"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Cole a URL de um arquivo de áudio do bucket "audios" ou externo
+                    </p>
+                  </div>
+
+                  {/* Preview do áudio */}
+                  {editingPorta.audio_url && (
+                    <div className="space-y-2">
+                      <Label>Preview</Label>
+                      <div className="flex items-center gap-4 p-3 bg-muted rounded-lg">
+                        <audio
+                          src={editingPorta.audio_url}
+                          controls
+                          className="flex-1 h-10"
+                        />
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setEditingPorta({ ...editingPorta, audio_url: null, audio_titulo: null })}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="p-4 border border-dashed border-muted-foreground/30 rounded-lg text-center text-sm text-muted-foreground">
+                  <p>Para fazer upload de novos áudios, use a aba Admin &gt; Áudios.</p>
+                  <p className="mt-1">Depois, copie a URL do áudio e cole aqui.</p>
                 </div>
               </TabsContent>
 
@@ -762,20 +841,22 @@ export function AdminLabirintoTab() {
               <TableRow>
                 <TableHead className="w-16">Nº</TableHead>
                 <TableHead>Nome</TableHead>
-                <TableHead className="w-20">Imagem</TableHead>
-                <TableHead className="w-20">Status</TableHead>
-                <TableHead className="w-20">Leitura</TableHead>
-                <TableHead className="w-20">Caso</TableHead>
-                <TableHead className="w-20">Chave</TableHead>
-                <TableHead className="w-20">Ações</TableHead>
+                <TableHead className="w-16">Img</TableHead>
+                <TableHead className="w-16">Áudio</TableHead>
+                <TableHead className="w-16">Status</TableHead>
+                <TableHead className="w-16">Leitura</TableHead>
+                <TableHead className="w-16">Caso</TableHead>
+                <TableHead className="w-16">Chave</TableHead>
+                <TableHead className="w-16">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {portas.map((porta) => {
-                const hasLeitura = porta.cena_narrativa || porta.eixo_psiquico;
+                const hasLeitura = porta.tipo_campo || porta.forca_ativa || porta.cena_narrativa;
                 const hasCaso = porta.caso_espelho_titulo || porta.caso_espelho_frase_chegada;
                 const hasChave = porta.chave_frase_ancora || porta.chave_o_que_nao_fazer;
                 const hasImage = porta.ai_generated_image_url || porta.imagem_url;
+                const hasAudio = porta.audio_url;
 
                 return (
                   <TableRow key={porta.id} className={!porta.ativa ? "opacity-50" : ""}>
@@ -813,6 +894,13 @@ export function AdminLabirintoTab() {
                           {hasImage ? "✓" : "—"}
                         </span>
                       )}
+                    </TableCell>
+                    <TableCell>
+                      <span
+                        className={`text-xs ${hasAudio ? "text-green-500" : "text-muted-foreground"}`}
+                      >
+                        {hasAudio ? "✓" : "—"}
+                      </span>
                     </TableCell>
                     <TableCell>
                       <Switch

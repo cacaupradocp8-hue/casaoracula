@@ -2268,6 +2268,8 @@ export type Database = {
         Row: {
           ai_generated_image_url: string | null
           ativa: boolean
+          audio_titulo: string | null
+          audio_url: string | null
           campo_pede: string | null
           caso_espelho_como_sustentar: string | null
           caso_espelho_erro_comum: string | null
@@ -2304,6 +2306,8 @@ export type Database = {
         Insert: {
           ai_generated_image_url?: string | null
           ativa?: boolean
+          audio_titulo?: string | null
+          audio_url?: string | null
           campo_pede?: string | null
           caso_espelho_como_sustentar?: string | null
           caso_espelho_erro_comum?: string | null
@@ -2340,6 +2344,8 @@ export type Database = {
         Update: {
           ai_generated_image_url?: string | null
           ativa?: boolean
+          audio_titulo?: string | null
+          audio_url?: string | null
           campo_pede?: string | null
           caso_espelho_como_sustentar?: string | null
           caso_espelho_erro_comum?: string | null

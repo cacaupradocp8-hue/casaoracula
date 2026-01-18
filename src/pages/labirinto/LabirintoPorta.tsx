@@ -20,7 +20,8 @@ import {
   Sparkles,
   Circle,
   Layers,
-  AlertTriangle
+  AlertTriangle,
+  Volume2
 } from "lucide-react";
 import { 
   useLabirintoPorta, 
@@ -32,6 +33,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { canAccessFeature } from "@/types/portal";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { PortaAudioPlayer } from "@/components/labirinto/PortaAudioPlayer";
 
 // Mapeamento de tipos de campo para exibição
 const TIPO_CAMPO_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
@@ -263,6 +265,14 @@ export default function LabirintoPorta() {
             </div>
           </div>
         </div>
+
+        {/* Audio Player - Se tiver áudio */}
+        {porta.audio_url && (
+          <PortaAudioPlayer 
+            audioUrl={porta.audio_url} 
+            audioTitulo={porta.audio_titulo}
+          />
+        )}
 
         {/* Content Tabs - CAMADAS como foco principal */}
         <Tabs defaultValue={initialTab} className="space-y-6">
