@@ -3472,9 +3472,12 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           email: string | null
+          entry_archetype: string | null
+          entry_symbol: string | null
           id: string
           is_professional_verified: boolean
           nome: string | null
+          onboarding_completed: boolean
           portal: string | null
           role: string
           subscription_status: string | null
@@ -3486,9 +3489,12 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           email?: string | null
+          entry_archetype?: string | null
+          entry_symbol?: string | null
           id: string
           is_professional_verified?: boolean
           nome?: string | null
+          onboarding_completed?: boolean
           portal?: string | null
           role?: string
           subscription_status?: string | null
@@ -3500,9 +3506,12 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           email?: string | null
+          entry_archetype?: string | null
+          entry_symbol?: string | null
           id?: string
           is_professional_verified?: boolean
           nome?: string | null
+          onboarding_completed?: boolean
           portal?: string | null
           role?: string
           subscription_status?: string | null

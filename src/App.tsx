@@ -91,6 +91,7 @@ import FormacaoOracula from "./pages/FormacaoOracula";
 import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
 import Jornada from "./pages/Jornada";
+import Onboarding from "./pages/Onboarding";
 // Symbolic Templates
 import Big5TemplateList from "./pages/templates/Big5TemplateList";
 import Big5TemplateEditor from "./pages/templates/Big5TemplateEditor";
@@ -176,6 +177,16 @@ function AppRoutes() {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/install" element={<InstallApp />} />
       <Route path="/formacao-oracula" element={<FormacaoOracula />} />
+
+      {/* Onboarding Route - First-time experience */}
+      <Route
+        path="/onboarding"
+        element={
+          <ProtectedRoute>
+            <Onboarding />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Protected Routes - New Navigation Structure */}
       <Route

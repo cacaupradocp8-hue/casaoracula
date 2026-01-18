@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useOnboarding } from '@/hooks/useOnboarding';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/layout/Logo';
 import { Sparkles, ArrowRight } from 'lucide-react';
@@ -10,8 +12,16 @@ export default function Welcome() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { getCopyByKey } = useCopy();
+  const { onboardingCompleted, isLoading: onboardingLoading } = useOnboarding();
 
-  if (!user) return null;
+  // Redirect to onboarding if not completed
+  useEffect(() => {
+    if (!onboardingLoading && !onboardingCompleted && user) {
+      navigate('/onboarding', { replace: true });
+    }
+  }, [onboardingLoading, onboardingCompleted, user, navigate]);
+
+  if (!user || onboardingLoading) return null;
 
   const portal = getPortal(user.portal);
 

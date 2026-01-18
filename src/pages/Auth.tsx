@@ -84,7 +84,8 @@ export default function Auth() {
         title: 'Conta criada',
         description: 'Seja bem-vinda à Casa ORÁCULA.',
       });
-      navigate('/dashboard');
+      // New users go to symbolic onboarding
+      navigate('/onboarding');
     } else {
       toast({
         title: 'Erro ao criar conta',
