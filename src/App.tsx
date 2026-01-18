@@ -93,6 +93,8 @@ import MapaVivoEditor from "./pages/MapaVivoEditor";
 import Jornada from "./pages/Jornada";
 import Onboarding from "./pages/Onboarding";
 import SalaDeSessao from "./pages/SalaDeSessao";
+import SessionRoomHome from "./pages/SessionRoomHome";
+import SessionRoomCase from "./pages/SessionRoomCase";
 // Symbolic Templates
 import Big5TemplateList from "./pages/templates/Big5TemplateList";
 import Big5TemplateEditor from "./pages/templates/Big5TemplateEditor";
@@ -334,14 +336,27 @@ function AppRoutes() {
         }
       />
 
-      {/* Ferramentas - Rotas /ferramentas/ (principal) */}
+      {/* Session Room - Sala de Sessão */}
       <Route
-        path="/ferramentas/sala-de-sessao"
+        path="/session-room"
         element={
           <ProtectedRoute minPortal="pre_iniciada">
-            <SalaDeSessao />
+            <SessionRoomHome />
           </ProtectedRoute>
         }
+      />
+      <Route
+        path="/session-room/:caseId"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <SessionRoomCase />
+          </ProtectedRoute>
+        }
+      />
+      {/* Legacy redirect */}
+      <Route
+        path="/ferramentas/sala-de-sessao"
+        element={<Navigate to="/session-room" replace />}
       />
       <Route
         path="/ferramentas/mapa-vivo"

@@ -197,9 +197,9 @@ export function Navigation() {
         });
       }
 
-      // Placeholder for future Session Room
+      // Session Room
       profissionalItems.push({
-        path: '/ferramentas/sala-de-sessao',
+        path: '/session-room',
         label: 'Sessão',
         icon: Briefcase,
         minPortal: 'pre_iniciada',
