@@ -336,12 +336,12 @@ export default function MapaOracula() {
                 <User className="w-5 h-5 text-gold" />
                 <span className="font-medium">Visualizar dados de:</span>
               </div>
-              <Select value={selectedCaso} onValueChange={setSelectedCaso}>
+              <Select value={selectedCaso || 'self'} onValueChange={(val) => setSelectedCaso(val === 'self' ? '' : val)}>
                 <SelectTrigger className="w-full sm:w-64">
                   <SelectValue placeholder="Meu próprio perfil" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Meu próprio perfil</SelectItem>
+                  <SelectItem value="self">Meu próprio perfil</SelectItem>
                   {casos.map(caso => (
                     <SelectItem key={caso.id} value={caso.id}>
                       {caso.codinome}
