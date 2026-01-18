@@ -20,6 +20,8 @@ import {
   Compass,
   Sparkles,
   DoorOpen,
+  GraduationCap,
+  Flame,
   Briefcase,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -149,12 +151,6 @@ export function Navigation() {
         minPortal: 'visitante',
       },
       {
-        path: '/salas',
-        label: 'Salas',
-        icon: DoorOpen,
-        minPortal: 'visitante',
-      },
-      {
         path: '/jornada',
         label: 'Jornada',
         icon: Compass,
@@ -173,19 +169,45 @@ export function Navigation() {
       label: 'Casa',
       items: casaItems,
     });
-
+    
     // ═══════════════════════════════════════════════════════════════
-    // BLOCK 2: PROFISSIONAL (only for pre_iniciada and above)
+    // BLOCK 2: TERRITORIES (professional spaces - pre_iniciada+)
     // ═══════════════════════════════════════════════════════════════
     if (isProfessionalLevel) {
-      const profissionalItems: MenuItem[] = [
+      const territoriesItems: MenuItem[] = [
         {
           path: '/ferramentas',
           label: 'Ferramentas',
           icon: Sparkles,
           minPortal: 'pre_iniciada',
         },
+        {
+          path: '/casa-tecelas',
+          label: 'Casa das Tecelãs',
+          icon: Flame,
+          minPortal: 'iniciada',
+        },
+        {
+          path: '/mentoria-oracular',
+          label: 'Mentoria',
+          icon: GraduationCap,
+          minPortal: 'iniciada',
+          requiresMatricula: 'mentoria',
+        },
       ];
+
+      blocks.push({
+        id: 'territorios',
+        label: 'Territórios',
+        items: territoriesItems,
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // BLOCK 3: PROFISSIONAL (only for pre_iniciada and above)
+    // ═══════════════════════════════════════════════════════════════
+    if (isProfessionalLevel) {
+      const profissionalItems: MenuItem[] = [];
 
       // Only show "Minhas Clientes" for verified professionals
       if (isProfessionalVerified) {
@@ -205,15 +227,17 @@ export function Navigation() {
         minPortal: 'pre_iniciada',
       });
 
-      blocks.push({
-        id: 'profissional',
-        label: 'Profissional',
-        items: profissionalItems,
-      });
+      if (profissionalItems.length > 0) {
+        blocks.push({
+          id: 'profissional',
+          label: 'Profissional',
+          items: profissionalItems,
+        });
+      }
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // BLOCK 3: ADMIN (only for admin)
+    // BLOCK 4: ADMIN (only for admin)
     // ═══════════════════════════════════════════════════════════════
     if (isAdmin) {
       blocks.push({
