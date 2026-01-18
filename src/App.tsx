@@ -96,6 +96,7 @@ import SalaDeSessao from "./pages/SalaDeSessao";
 import SessionRoomHome from "./pages/SessionRoomHome";
 import SessionRoomCase from "./pages/SessionRoomCase";
 import ManuaisProtocolo from "./pages/ManuaisProtocolo";
+import RoteirosProtocolo from "./pages/RoteirosProtocolo";
 // Symbolic Templates
 import Big5TemplateList from "./pages/templates/Big5TemplateList";
 import Big5TemplateEditor from "./pages/templates/Big5TemplateEditor";
@@ -359,6 +360,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="pre_iniciada">
             <ManuaisProtocolo />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/session-room/roteiros"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <RoteirosProtocolo />
           </ProtectedRoute>
         }
       />
