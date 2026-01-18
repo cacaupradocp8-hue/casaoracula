@@ -607,7 +607,7 @@ export default function JornadaHeroina() {
   return (
     <AppLayout>
       <ContentPageLayout
-        title="Jornada da Heroína"
+        title="O Caminho da Mulher que se Torna Inteira"
         subtitle={currentFase?.nome || 'Navegue pela espiral'}
         onBack={() => setPhase('intro')}
         backLabel="Voltar"
