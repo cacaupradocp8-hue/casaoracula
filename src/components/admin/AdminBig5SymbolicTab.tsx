@@ -31,6 +31,12 @@ interface SymbolicForce {
   cor_primaria: string | null;
   ordem: number;
   ativo: boolean;
+  // Clinical protocol fields
+  padrao_emocional: string | null;
+  conflito_recorrente: string | null;
+  repeticao_comportamental: string | null;
+  risco_clinico: string | null;
+  potencial_inexplorado: string | null;
 }
 
 interface Afirmacao {
@@ -108,6 +114,12 @@ function ForcesSection() {
         cor_primaria: force.cor_primaria,
         ordem: force.ordem,
         ativo: force.ativo,
+        // Clinical protocol fields
+        padrao_emocional: force.padrao_emocional,
+        conflito_recorrente: force.conflito_recorrente,
+        repeticao_comportamental: force.repeticao_comportamental,
+        risco_clinico: force.risco_clinico,
+        potencial_inexplorado: force.potencial_inexplorado,
       })
       .eq('id', force.id);
 
@@ -298,6 +310,63 @@ function ForceForm({ force, onSave, onChange }: {
           rows={2}
           placeholder="Uma prática simbólica para trabalhar essa força..."
         />
+      </div>
+
+      {/* Clinical Protocol Fields */}
+      <div className="border-t pt-4 mt-4">
+        <h4 className="text-sm font-medium text-purple-400 mb-3">Campos do Protocolo Clínico</h4>
+        
+        <div className="space-y-3">
+          <div>
+            <Label>Padrão emocional</Label>
+            <Textarea 
+              value={force.padrao_emocional || ''} 
+              onChange={(e) => onChange({ ...force, padrao_emocional: e.target.value })}
+              rows={2}
+              placeholder="Qual padrão emocional caracteriza este território..."
+            />
+          </div>
+
+          <div>
+            <Label>Conflito recorrente</Label>
+            <Textarea 
+              value={force.conflito_recorrente || ''} 
+              onChange={(e) => onChange({ ...force, conflito_recorrente: e.target.value })}
+              rows={2}
+              placeholder="Que tipo de conflito tende a se repetir..."
+            />
+          </div>
+
+          <div>
+            <Label>Repetição comportamental</Label>
+            <Textarea 
+              value={force.repeticao_comportamental || ''} 
+              onChange={(e) => onChange({ ...force, repeticao_comportamental: e.target.value })}
+              rows={2}
+              placeholder="Padrões de comportamento recorrentes..."
+            />
+          </div>
+
+          <div>
+            <Label>Risco clínico (linguagem ética)</Label>
+            <Textarea 
+              value={force.risco_clinico || ''} 
+              onChange={(e) => onChange({ ...force, risco_clinico: e.target.value })}
+              rows={2}
+              placeholder="O que observar com cuidado ético..."
+            />
+          </div>
+
+          <div>
+            <Label>Potencial inexplorado</Label>
+            <Textarea 
+              value={force.potencial_inexplorado || ''} 
+              onChange={(e) => onChange({ ...force, potencial_inexplorado: e.target.value })}
+              rows={2}
+              placeholder="Recursos ainda não desenvolvidos neste território..."
+            />
+          </div>
+        </div>
       </div>
 
       <div className="flex items-center gap-2">
