@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useOnboarding, ArchetypeType } from '@/hooks/useOnboarding';
 import { CallScreen } from '@/components/onboarding/CallScreen';
 import { KeyDeliveryScreen } from '@/components/onboarding/KeyDeliveryScreen';
+import { VisitorRoomScreen } from '@/components/onboarding/VisitorRoomScreen';
 import { RiteOfPassageModal } from '@/components/onboarding/RiteOfPassageModal';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -36,7 +37,8 @@ export default function Onboarding() {
   useEffect(() => {
     if (!onboardingLoading && entryArchetype && !onboardingCompleted) {
       setSelectedArchetype(entryArchetype);
-      setStep('key');
+      // If they have an archetype, go to visitor room (they already saw the key)
+      setStep('visitor_room');
     }
   }, [onboardingLoading, entryArchetype, onboardingCompleted]);
 
@@ -52,12 +54,20 @@ export default function Onboarding() {
   };
 
   const handleKeyReceived = () => {
-    // Navigate to visitor room (dashboard with limited access)
     setStep('visitor_room');
-    // Show rite modal after a delay
-    setTimeout(() => {
-      setShowRiteModal(true);
-    }, 500);
+  };
+
+  const handleBecomeResident = () => {
+    setShowRiteModal(true);
+  };
+
+  const handleContinueAsVisitor = async () => {
+    setIsProcessing(true);
+    
+    // Mark onboarding as complete but keep as visitante
+    await completeOnboarding();
+    
+    navigate('/dashboard', { replace: true });
   };
 
   const handleAcceptRite = async () => {
@@ -93,13 +103,8 @@ export default function Onboarding() {
   };
 
   const handleDeclineRite = async () => {
-    setIsProcessing(true);
-
-    // Keep as visitor but mark onboarding as complete
-    await completeOnboarding();
-
     setShowRiteModal(false);
-    navigate('/dashboard', { replace: true });
+    // They can stay in visitor room and try again later
   };
 
   if (onboardingLoading) {
@@ -130,11 +135,11 @@ export default function Onboarding() {
       )}
 
       {step === 'visitor_room' && (
-        <div className="min-h-screen bg-background flex items-center justify-center">
-          <div className="text-center space-y-4">
-            <p className="text-muted-foreground">Entrando na Sala do Visitante...</p>
-          </div>
-        </div>
+        <VisitorRoomScreen
+          onBecomeResident={handleBecomeResident}
+          onContinueAsVisitor={handleContinueAsVisitor}
+          isLoading={isProcessing}
+        />
       )}
 
       <RiteOfPassageModal

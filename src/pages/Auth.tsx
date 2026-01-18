@@ -49,7 +49,29 @@ export default function Auth() {
         title: 'Bem-vinda de volta',
         description: 'A Casa ORÁCULA te recebe.',
       });
-      navigate('/dashboard');
+      
+      // Check if user completed onboarding
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('onboarding_completed')
+            .eq('id', user.id)
+            .single();
+          
+          if (!profile?.onboarding_completed) {
+            navigate('/onboarding');
+          } else {
+            navigate('/dashboard');
+          }
+        } else {
+          navigate('/dashboard');
+        }
+      } catch (err) {
+        console.error('Error checking onboarding status:', err);
+        navigate('/dashboard');
+      }
     } else {
       toast({
         title: 'Erro ao entrar',
