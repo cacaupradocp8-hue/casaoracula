@@ -17,14 +17,10 @@ import {
   User,
   Users,
   Lock,
-  GraduationCap,
   Compass,
   Sparkles,
-  Brain,
-  Target,
-  Bot,
-  ChevronDown,
-  BookOpen,
+  DoorOpen,
+  Briefcase,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -33,10 +29,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
-  DropdownMenuPortal,
+  DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
 
 // Types for menu items
@@ -46,7 +39,12 @@ interface MenuItem {
   icon: typeof Home;
   minPortal: PortalType;
   requiresMatricula?: 'mentoria' | 'formacao';
-  children?: MenuItem[];
+}
+
+interface MenuBlock {
+  id: string;
+  label: string;
+  items: MenuItem[];
 }
 
 export function Navigation() {
@@ -60,6 +58,8 @@ export function Navigation() {
   const [isProfessionalVerified, setIsProfessionalVerified] = useState(false);
 
   const portal = user ? getPortal(user.portal) : null;
+  const isAdmin = user?.portal === 'admin';
+  const isProfessionalLevel = user && canAccessFeature(user.portal, 'pre_iniciada');
 
   // Check matriculas for mentoria and formação, and professional status
   useEffect(() => {
@@ -134,115 +134,109 @@ export function Navigation() {
     return true;
   };
 
-  // Build menu items dynamically based on access
-  const buildMenuItems = (): MenuItem[] => {
-    const items: MenuItem[] = [];
+  // Build menu blocks based on role and portal
+  const buildMenuBlocks = (): MenuBlock[] => {
+    const blocks: MenuBlock[] = [];
 
-    // 1. Início - always visible for logged users
-    items.push({
-      path: '/dashboard',
-      label: 'Início',
-      icon: Home,
-      minPortal: 'visitante',
-    });
-
-    // 1.5. Minha Jornada - always visible
-    items.push({
-      path: '/jornada',
-      label: 'Minha Jornada',
-      icon: Compass,
-      minPortal: 'visitante',
-    });
-
-    // 2. Mentoria ORÁCULA - only if has matricula
-    if (hasMentoriaAccess) {
-      items.push({
-        path: '/mentoria',
-        label: 'Mentoria',
+    // ═══════════════════════════════════════════════════════════════
+    // BLOCK 1: CASA (visible to all authenticated users)
+    // ═══════════════════════════════════════════════════════════════
+    const casaItems: MenuItem[] = [
+      {
+        path: '/dashboard',
+        label: 'Início',
+        icon: Home,
+        minPortal: 'visitante',
+      },
+      {
+        path: '/salas',
+        label: 'Salas',
+        icon: DoorOpen,
+        minPortal: 'visitante',
+      },
+      {
+        path: '/jornada',
+        label: 'Jornada',
         icon: Compass,
-        minPortal: 'pre_iniciada',
-        requiresMatricula: 'mentoria',
+        minPortal: 'visitante',
+      },
+      {
+        path: '/biblioteca',
+        label: 'Biblioteca',
+        icon: Library,
+        minPortal: 'visitante',
+      },
+    ];
+
+    blocks.push({
+      id: 'casa',
+      label: 'Casa',
+      items: casaItems,
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // BLOCK 2: PROFISSIONAL (only for pre_iniciada and above)
+    // ═══════════════════════════════════════════════════════════════
+    if (isProfessionalLevel) {
+      const profissionalItems: MenuItem[] = [
+        {
+          path: '/ferramentas',
+          label: 'Ferramentas',
+          icon: Sparkles,
+          minPortal: 'pre_iniciada',
+        },
+      ];
+
+      // Only show "Minhas Clientes" for verified professionals
+      if (isProfessionalVerified) {
+        profissionalItems.push({
+          path: '/minhas-clientes',
+          label: 'Clientes',
+          icon: Users,
+          minPortal: 'pre_iniciada',
+        });
+      }
+
+      // Placeholder for future Session Room
+      profissionalItems.push({
+        path: '/sala-sessao',
+        label: 'Sessão',
+        icon: Briefcase,
+        minPortal: 'iniciada',
+      });
+
+      blocks.push({
+        id: 'profissional',
+        label: 'Profissional',
+        items: profissionalItems,
       });
     }
 
-    // 3. Formação ORÁCULA - only if has matricula
-    if (hasFormacaoAccess) {
-      items.push({
-        path: '/formacao',
-        label: 'Formação',
-        icon: GraduationCap,
-        minPortal: 'pre_iniciada',
-        requiresMatricula: 'formacao',
-      });
-    }
-
-    // 4. Ferramentas (with submenu) - pre_iniciada+
-    if (canAccessItem('pre_iniciada')) {
-      items.push({
-        path: '/ferramentas',
-        label: 'Ferramentas',
-        icon: Sparkles,
-        minPortal: 'pre_iniciada',
-        children: [
-          { path: '/salas/big5', label: 'Big5', icon: Brain, minPortal: 'pre_iniciada' },
-          { path: '/salas/eneagrama', label: 'Eneagrama', icon: Target, minPortal: 'pre_iniciada' },
-          { path: '/salas/mapa-oracula', label: 'Oráculos', icon: Sparkles, minPortal: 'pre_iniciada' },
+    // ═══════════════════════════════════════════════════════════════
+    // BLOCK 3: ADMIN (only for admin)
+    // ═══════════════════════════════════════════════════════════════
+    if (isAdmin) {
+      blocks.push({
+        id: 'admin',
+        label: 'Admin',
+        items: [
+          {
+            path: '/admin',
+            label: 'Admin',
+            icon: Settings,
+            minPortal: 'admin',
+          },
         ],
       });
     }
 
-    // 5. Minhas Clientes - only for verified professionals
-    if (canAccessItem('pre_iniciada') && isProfessionalVerified) {
-      items.push({
-        path: '/minhas-clientes',
-        label: 'Minhas Clientes',
-        icon: Users,
-        minPortal: 'pre_iniciada',
-      });
-    }
-
-    // 6. Biblioteca - everyone
-    items.push({
-      path: '/biblioteca',
-      label: 'Biblioteca',
-      icon: Library,
-      minPortal: 'visitante',
-    });
-
-    // 7. Casos de Estudo
-    if (canAccessItem('pre_iniciada')) {
-      items.push({
-        path: '/casos',
-        label: 'Casos de Estudo',
-        icon: BookOpen,
-        minPortal: 'pre_iniciada',
-      });
-    }
-
-    // 8. Agentes
-    if (canAccessItem('pre_iniciada')) {
-      items.push({
-        path: '/agentes',
-        label: 'Agentes',
-        icon: Bot,
-        minPortal: 'pre_iniciada',
-      });
-    }
-
-    // 9. Admin - only for admins
-    if (canAccessItem('admin')) {
-      items.push({
-        path: '/admin',
-        label: 'Admin',
-        icon: Settings,
-        minPortal: 'admin',
-      });
-    }
-
-    return items;
+    return blocks;
   };
 
-  const menuItems = buildMenuItems();
+  const menuBlocks = buildMenuBlocks();
+  
+  // Flatten all items for mobile and simple rendering
+  const allVisibleItems = menuBlocks.flatMap(block => block.items);
 
   // Handle click on nav item
   const handleNavClick = (item: MenuItem, e: React.MouseEvent) => {
@@ -259,46 +253,6 @@ export function Navigation() {
       (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
     const isLocked = !canAccessWithMatricula(item);
 
-    // Item with children (dropdown)
-    if (item.children && item.children.length > 0) {
-      return (
-        <DropdownMenu key={item.path}>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className={cn(
-                'gap-2 transition-all',
-                isActive && !isLocked && 'bg-secondary text-gold',
-                isLocked && 'opacity-50 cursor-not-allowed'
-              )}
-            >
-              <Icon className="w-4 h-4" />
-              <span className="hidden lg:inline">{item.label}</span>
-              <ChevronDown className="w-3 h-3" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            {item.children.map(child => {
-              const ChildIcon = child.icon;
-              const childActive = location.pathname === child.path;
-              return (
-                <DropdownMenuItem
-                  key={child.path}
-                  onClick={() => navigate(child.path)}
-                  className={cn(childActive && 'bg-secondary text-gold')}
-                >
-                  <ChildIcon className="w-4 h-4 mr-2" />
-                  {child.label}
-                </DropdownMenuItem>
-              );
-            })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    }
-
-    // Simple item
     return (
       <Link 
         key={item.path} 
@@ -325,6 +279,27 @@ export function Navigation() {
     );
   };
 
+  // Render desktop navigation with visual separators between blocks
+  const renderDesktopNavigation = () => {
+    return (
+      <div className="hidden md:flex items-center gap-1">
+        {menuBlocks.map((block, blockIndex) => (
+          <div key={block.id} className="flex items-center">
+            {/* Separator between blocks */}
+            {blockIndex > 0 && (
+              <div className="h-4 w-px bg-border/50 mx-2" />
+            )}
+            
+            {/* Block items */}
+            <div className="flex items-center gap-1">
+              {block.items.map(item => renderDesktopItem(item))}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   // Render mobile menu item
   const renderMobileItem = (item: MenuItem) => {
     const Icon = item.icon;
@@ -332,67 +307,57 @@ export function Navigation() {
     const isLocked = !canAccessWithMatricula(item);
 
     return (
-      <div key={item.path}>
-        <Link
-          to={isLocked ? '#' : item.path}
-          onClick={(e) => {
-            if (isLocked) {
-              e.preventDefault();
-              setLockedModalOpen(true);
-            }
-            if (!item.children) {
-              setMobileMenuOpen(false);
-            }
-          }}
+      <Link
+        key={item.path}
+        to={isLocked ? '#' : item.path}
+        onClick={(e) => {
+          if (isLocked) {
+            e.preventDefault();
+            setLockedModalOpen(true);
+          } else {
+            setMobileMenuOpen(false);
+          }
+        }}
+      >
+        <Button
+          variant="ghost"
+          className={cn(
+            'w-full justify-start gap-3',
+            isActive && !isLocked && 'bg-secondary text-gold',
+            isLocked && 'opacity-50'
+          )}
         >
-          <Button
-            variant="ghost"
-            className={cn(
-              'w-full justify-start gap-3',
-              isActive && !isLocked && 'bg-secondary text-gold',
-              isLocked && 'opacity-50'
-            )}
-          >
-            {isLocked ? (
-              <Lock className="w-5 h-5" />
-            ) : (
-              <Icon className="w-5 h-5" />
-            )}
-            {item.label}
-            {isLocked && (
-              <span className="ml-auto text-xs text-muted-foreground">Bloqueado</span>
-            )}
-          </Button>
-        </Link>
-        
-        {/* Render children as sub-items */}
-        {item.children && !isLocked && (
-          <div className="ml-6 mt-1 space-y-1">
-            {item.children.map(child => {
-              const ChildIcon = child.icon;
-              const childActive = location.pathname === child.path;
-              return (
-                <Link
-                  key={child.path}
-                  to={child.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={cn(
-                      'w-full justify-start gap-2',
-                      childActive && 'bg-secondary text-gold'
-                    )}
-                  >
-                    <ChildIcon className="w-4 h-4" />
-                    {child.label}
-                  </Button>
-                </Link>
-              );
-            })}
+          {isLocked ? (
+            <Lock className="w-5 h-5" />
+          ) : (
+            <Icon className="w-5 h-5" />
+          )}
+          {item.label}
+          {isLocked && (
+            <span className="ml-auto text-xs text-muted-foreground">Bloqueado</span>
+          )}
+        </Button>
+      </Link>
+    );
+  };
+
+  // Render mobile navigation with block labels
+  const renderMobileNavigation = () => {
+    return (
+      <div className="flex flex-col gap-4">
+        {menuBlocks.map(block => (
+          <div key={block.id}>
+            {/* Block label */}
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 px-2">
+              {block.label}
+            </p>
+            
+            {/* Block items */}
+            <div className="flex flex-col gap-1">
+              {block.items.map(item => renderMobileItem(item))}
+            </div>
           </div>
-        )}
+        ))}
       </div>
     );
   };
@@ -407,9 +372,7 @@ export function Navigation() {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-1">
-              {menuItems.map(item => renderDesktopItem(item))}
-            </div>
+            {renderDesktopNavigation()}
 
             {/* User Menu */}
             <div className="flex items-center gap-2">
@@ -463,9 +426,7 @@ export function Navigation() {
         {mobileMenuOpen && (
           <div className="md:hidden absolute top-16 left-0 right-0 bg-background border-b border-border animate-slide-up">
             <div className="container mx-auto px-4 py-4">
-              <div className="flex flex-col gap-2">
-                {menuItems.map(item => renderMobileItem(item))}
-              </div>
+              {renderMobileNavigation()}
             </div>
           </div>
         )}
