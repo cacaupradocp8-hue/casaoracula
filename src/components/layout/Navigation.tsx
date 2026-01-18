@@ -199,10 +199,10 @@ export function Navigation() {
 
       // Placeholder for future Session Room
       profissionalItems.push({
-        path: '/sala-sessao',
+        path: '/ferramentas/sala-de-sessao',
         label: 'Sessão',
         icon: Briefcase,
-        minPortal: 'iniciada',
+        minPortal: 'pre_iniciada',
       });
 
       blocks.push({
