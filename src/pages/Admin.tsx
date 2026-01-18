@@ -433,6 +433,12 @@ export default function Admin() {
             </Suspense>
           </TabsContent>
 
+          <TabsContent value="casa-oracula">
+            <Suspense fallback={<TabLoader />}>
+              <AdminCasaOraculaTab />
+            </Suspense>
+          </TabsContent>
+
           <TabsContent value="settings">
             <Suspense fallback={<TabLoader />}>
               <AdminSettingsTab />
