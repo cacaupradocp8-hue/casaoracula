@@ -131,7 +131,13 @@ export default function FerramentasHub() {
                           isAccessible && "hover:shadow-gold hover:border-gold/30",
                           !isAccessible && "opacity-60"
                         )}
-                        onClick={() => isAccessible && ferramenta.rota && navigate(ferramenta.rota)}
+                        onClick={() => {
+                          if (!isAccessible) return;
+                          if (!ferramenta.rota) {
+                            return; // No route defined
+                          }
+                          navigate(ferramenta.rota);
+                        }}
                       >
                         <CardHeader className="pb-2">
                           <div className="flex items-start justify-between">

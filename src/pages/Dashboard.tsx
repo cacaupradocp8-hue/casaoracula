@@ -283,8 +283,8 @@ export default function Dashboard() {
               <Button
                 variant="gold"
                 onClick={() => {
-                  if (!selectedSala) return;
-                  const id = selectedSala.id;
+                  const id = selectedSala?.id;
+                  if (!id) return;
                   setSelectedSala(null);
                   navigate(`/salas/${id}`);
                 }}
