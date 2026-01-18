@@ -3,7 +3,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Loader2, ArrowLeft, User, Brain, Compass, BookOpen, RefreshCw } from 'lucide-react';
+import { Sparkles, Loader2, ArrowLeft, User, Brain, Compass, BookOpen, RefreshCw, Quote } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -43,20 +43,114 @@ interface CasoInfo {
   cliente_id: string;
 }
 
-// Arquétipos baseados nos cruzamentos
-const arquetiposMap: Record<number, { nome: string; descricao: string; convite: string }> = {
-  1: { nome: 'O Reformador', descricao: 'Busca perfeição e integridade', convite: 'Aceitar a imperfeição como parte do ser' },
-  2: { nome: 'O Ajudante', descricao: 'Nutre através do amor', convite: 'Reconhecer as próprias necessidades' },
-  3: { nome: 'O Realizador', descricao: 'Busca sucesso e reconhecimento', convite: 'Descobrir o valor intrínseco além das conquistas' },
-  4: { nome: 'O Individualista', descricao: 'Busca autenticidade e profundidade', convite: 'Encontrar beleza no ordinário' },
-  5: { nome: 'O Investigador', descricao: 'Busca conhecimento e compreensão', convite: 'Participar da vida além da observação' },
-  6: { nome: 'O Lealista', descricao: 'Busca segurança e orientação', convite: 'Confiar na própria sabedoria interior' },
-  7: { nome: 'O Entusiasta', descricao: 'Busca liberdade e experiências', convite: 'Encontrar plenitude no momento presente' },
-  8: { nome: 'O Desafiador', descricao: 'Busca poder e proteção', convite: 'Permitir a vulnerabilidade como força' },
-  9: { nome: 'O Pacificador', descricao: 'Busca paz e harmonia', convite: 'Despertar a própria voz e presença' },
+// Arquétipos expandidos com campos do Phase 3
+const arquetiposMap: Record<number, { 
+  nome: string; 
+  descricao: string; 
+  defesa: string;
+  padraoNarrativo: string;
+  convite: string;
+  gesto: string;
+}> = {
+  1: { 
+    nome: 'O Reformador', 
+    descricao: 'Busca perfeição e integridade',
+    defesa: 'perfeccionismo e autocrítica',
+    padraoNarrativo: 'um ciclo de esforço constante para corrigir imperfeições',
+    convite: 'Aceitar a imperfeição como parte do ser',
+    gesto: 'permitir um erro pequeno sem tentar consertá-lo'
+  },
+  2: { 
+    nome: 'O Ajudante', 
+    descricao: 'Nutre através do amor',
+    defesa: 'negação das próprias necessidades',
+    padraoNarrativo: 'um padrão de doar-se até esvaziar',
+    convite: 'Reconhecer as próprias necessidades',
+    gesto: 'pedir algo para si mesma'
+  },
+  3: { 
+    nome: 'O Realizador', 
+    descricao: 'Busca sucesso e reconhecimento',
+    defesa: 'identificação com conquistas',
+    padraoNarrativo: 'um padrão de medir valor por resultados externos',
+    convite: 'Descobrir o valor intrínseco além das conquistas',
+    gesto: 'descansar sem produzir nada'
+  },
+  4: { 
+    nome: 'O Individualista', 
+    descricao: 'Busca autenticidade e profundidade',
+    defesa: 'interiorização e melancolia',
+    padraoNarrativo: 'um padrão de sentir-se incompreendida',
+    convite: 'Encontrar beleza no ordinário',
+    gesto: 'apreciar algo simples do cotidiano'
+  },
+  5: { 
+    nome: 'O Investigador', 
+    descricao: 'Busca conhecimento e compreensão',
+    defesa: 'isolamento e acúmulo de conhecimento',
+    padraoNarrativo: 'um padrão de observar sem participar',
+    convite: 'Participar da vida além da observação',
+    gesto: 'compartilhar algo pessoal com alguém'
+  },
+  6: { 
+    nome: 'O Lealista', 
+    descricao: 'Busca segurança e orientação',
+    defesa: 'dúvida e busca de garantias',
+    padraoNarrativo: 'um padrão de antecipar perigos invisíveis',
+    convite: 'Confiar na própria sabedoria interior',
+    gesto: 'agir sem esperar certeza absoluta'
+  },
+  7: { 
+    nome: 'O Entusiasta', 
+    descricao: 'Busca liberdade e experiências',
+    defesa: 'fuga para o próximo prazer',
+    padraoNarrativo: 'um padrão de evitar a dor através da distração',
+    convite: 'Encontrar plenitude no momento presente',
+    gesto: 'permanecer com um desconforto por alguns minutos'
+  },
+  8: { 
+    nome: 'O Desafiador', 
+    descricao: 'Busca poder e proteção',
+    defesa: 'controle e proteção excessiva',
+    padraoNarrativo: 'um padrão de confrontar antes de ser ferida',
+    convite: 'Permitir a vulnerabilidade como força',
+    gesto: 'mostrar vulnerabilidade a alguém de confiança'
+  },
+  9: { 
+    nome: 'O Pacificador', 
+    descricao: 'Busca paz e harmonia',
+    defesa: 'dormência e fusão',
+    padraoNarrativo: 'um padrão de apagar a própria voz',
+    convite: 'Despertar a própria voz e presença',
+    gesto: 'expressar uma preferência clara'
+  },
 };
 
-const getNarrativaSimbolica = (big5: Big5Registro, eneagrama: EneagramaRegistro) => {
+// Identificar o traço Big5 dominante
+const getTracoDominante = (big5: Big5Registro) => {
+  const tracos = [
+    { nome: 'Abertura', valor: big5.abertura, descricao: 'abertura ao novo' },
+    { nome: 'Conscienciosidade', valor: big5.conscienciosidade, descricao: 'organização e disciplina' },
+    { nome: 'Extroversão', valor: big5.extroversao, descricao: 'energia social' },
+    { nome: 'Amabilidade', valor: big5.amabilidade, descricao: 'empatia e cooperação' },
+    { nome: 'Neuroticismo', valor: big5.neuroticismo, descricao: 'sensibilidade emocional' }
+  ];
+  
+  return tracos.reduce((max, t) => t.valor > max.valor ? t : max);
+};
+
+// Template exato do Phase 3
+const getNarrativaEstruturada = (big5: Big5Registro, eneagrama: EneagramaRegistro) => {
+  const arquetipo = arquetiposMap[eneagrama.tipo_principal];
+  if (!arquetipo) return null;
+
+  const tracoDominante = getTracoDominante(big5);
+  
+  return `Quando a ${tracoDominante.descricao} se intensifica, a defesa do Tipo ${eneagrama.tipo_principal} (${arquetipo.defesa}) tende a dominar; isso ativa ${arquetipo.nome} e produz ${arquetipo.padraoNarrativo}. O convite da alma é ${arquetipo.convite.toLowerCase()}, e o primeiro gesto possível é ${arquetipo.gesto}.`;
+};
+
+// Narrativa poética complementar (preservada)
+const getNarrativaPoetica = (big5: Big5Registro, eneagrama: EneagramaRegistro) => {
   const arquetipo = arquetiposMap[eneagrama.tipo_principal];
   if (!arquetipo) return null;
 
@@ -208,6 +302,7 @@ export default function MapaOracula() {
 
   const hasDados = big5Registro && eneagramaRegistro;
   const arquetipo = eneagramaRegistro ? arquetiposMap[eneagramaRegistro.tipo_principal] : null;
+  const tracoDominante = big5Registro ? getTracoDominante(big5Registro) : null;
 
   const dimensoes = [
     { key: 'abertura', label: 'Abertura', value: big5Registro?.abertura || 0 },
@@ -305,6 +400,11 @@ export default function MapaOracula() {
                       Com asa {eneagramaRegistro.asa} • {eneagramaRegistro.instinto ? `Instinto ${eneagramaRegistro.instinto}` : 'Instinto não definido'}
                     </p>
                   )}
+                  {tracoDominante && (
+                    <p className="text-xs text-gold/70 mt-2">
+                      Traço dominante: {tracoDominante.nome} ({tracoDominante.valor}%)
+                    </p>
+                  )}
                 </CardHeader>
               </Card>
             )}
@@ -322,7 +422,10 @@ export default function MapaOracula() {
                   {dimensoes.map(dim => (
                     <div key={dim.key} className="space-y-1">
                       <div className="flex justify-between text-sm">
-                        <span>{dim.label}</span>
+                        <span className={tracoDominante?.nome === dim.label ? 'font-medium text-gold' : ''}>
+                          {dim.label}
+                          {tracoDominante?.nome === dim.label && ' ★'}
+                        </span>
                         <span className="font-medium text-gold">{dim.value}</span>
                       </div>
                       <div className="relative h-2 bg-secondary rounded-full overflow-hidden">
@@ -337,17 +440,36 @@ export default function MapaOracula() {
               </CardContent>
             </Card>
 
-            {/* Narrativa Simbólica */}
+            {/* Leitura Estruturada Phase 3 */}
+            <Card className="glass border-gold/40 bg-gradient-to-br from-gold/10 to-transparent">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Quote className="w-5 h-5 text-gold" />
+                  Leitura Estruturada
+                </CardTitle>
+                <p className="text-xs text-muted-foreground">Template Phase 3 — Integração Big5 + Eneagrama + Arquétipo</p>
+              </CardHeader>
+              <CardContent>
+                <blockquote className="border-l-4 border-gold/50 pl-4 py-2">
+                  <p className="text-foreground leading-relaxed font-medium">
+                    {getNarrativaEstruturada(big5Registro!, eneagramaRegistro!)}
+                  </p>
+                </blockquote>
+              </CardContent>
+            </Card>
+
+            {/* Narrativa Poética (complementar) */}
             <Card className="glass">
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
                   <BookOpen className="w-5 h-5 text-gold" />
-                  Narrativa Simbólica
+                  Narrativa Poética
                 </CardTitle>
+                <p className="text-xs text-muted-foreground">Leitura simbólica expandida</p>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground leading-relaxed italic">
-                  "{getNarrativaSimbolica(big5Registro!, eneagramaRegistro!)}"
+                  "{getNarrativaPoetica(big5Registro!, eneagramaRegistro!)}"
                 </p>
               </CardContent>
             </Card>
@@ -360,10 +482,15 @@ export default function MapaOracula() {
                   Convite da Alma
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-3">
                 <p className="text-lg font-display text-gold text-center">
                   {getConviteDaAlma(big5Registro!, eneagramaRegistro!)}
                 </p>
+                {arquetipo && (
+                  <p className="text-sm text-muted-foreground text-center pt-2 border-t border-border/50">
+                    <span className="font-medium">Primeiro gesto possível:</span> {arquetipo.gesto}
+                  </p>
+                )}
               </CardContent>
             </Card>
 
