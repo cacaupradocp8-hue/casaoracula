@@ -141,9 +141,9 @@ export function Navigation() {
     const blocks: MenuBlock[] = [];
 
     // ═══════════════════════════════════════════════════════════════
-    // BLOCK 1: CASA (visible to all authenticated users)
+    // BLOCK 1: JORNADA (visible to all authenticated users)
     // ═══════════════════════════════════════════════════════════════
-    const casaItems: MenuItem[] = [
+    const jornadaItems: MenuItem[] = [
       {
         path: '/dashboard',
         label: 'Início',
@@ -152,34 +152,55 @@ export function Navigation() {
       },
       {
         path: '/jornada',
-        label: 'Jornada',
+        label: 'Minha Jornada',
         icon: Compass,
         minPortal: 'visitante',
-      },
-      {
-        path: '/biblioteca',
-        label: 'Biblioteca',
-        icon: Library,
-        minPortal: 'pre_iniciada',
       },
     ];
 
     blocks.push({
-      id: 'casa',
-      label: 'Casa',
-      items: casaItems,
+      id: 'jornada',
+      label: 'Jornada',
+      items: jornadaItems,
     });
     
     // ═══════════════════════════════════════════════════════════════
-    // BLOCK 2: TERRITORIES (professional spaces - pre_iniciada+)
+    // BLOCK 2: FORMAÇÃO E FERRAMENTAS (pre_iniciada+)
     // ═══════════════════════════════════════════════════════════════
     if (isProfessionalLevel) {
-      const territoriesItems: MenuItem[] = [
+      const formacaoItems: MenuItem[] = [
+        {
+          path: '/salas',
+          label: 'Sala de Formação',
+          icon: GraduationCap,
+          minPortal: 'pre_iniciada',
+        },
         {
           path: '/ferramentas',
-          label: 'Ferramentas',
+          label: 'Ferramentas Oraculares',
           icon: Sparkles,
           minPortal: 'pre_iniciada',
+        },
+      ];
+
+      blocks.push({
+        id: 'formacao',
+        label: 'Formação',
+        items: formacaoItems,
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // BLOCK 3: TERRITÓRIOS VIVOS (iniciada+)
+    // ═══════════════════════════════════════════════════════════════
+    if (isProfessionalLevel) {
+      const territoriosItems: MenuItem[] = [
+        {
+          path: '/mentoria-oracular',
+          label: 'Mentoria Oracular',
+          icon: DoorOpen,
+          minPortal: 'iniciada',
+          requiresMatricula: 'mentoria',
         },
         {
           path: '/casa-tecelas',
@@ -187,24 +208,17 @@ export function Navigation() {
           icon: Flame,
           minPortal: 'iniciada',
         },
-        {
-          path: '/mentoria-oracular',
-          label: 'Mentoria',
-          icon: GraduationCap,
-          minPortal: 'iniciada',
-          requiresMatricula: 'mentoria',
-        },
       ];
 
       blocks.push({
         id: 'territorios',
         label: 'Territórios',
-        items: territoriesItems,
+        items: territoriosItems,
       });
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // BLOCK 3: PROFISSIONAL (only for pre_iniciada and above)
+    // BLOCK 4: PROFISSIONAL (only for pre_iniciada and above)
     // ═══════════════════════════════════════════════════════════════
     if (isProfessionalLevel) {
       const profissionalItems: MenuItem[] = [];
@@ -237,7 +251,7 @@ export function Navigation() {
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // BLOCK 4: ADMIN (only for admin)
+    // BLOCK 5: ADMIN (only for admin)
     // ═══════════════════════════════════════════════════════════════
     if (isAdmin) {
       blocks.push({
