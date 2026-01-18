@@ -134,9 +134,9 @@ export default function MentoriaOracular() {
         <Button variant="outline" onClick={() => navigate('/planos')}>
           Ver Planos
         </Button>
-        <Button variant="gold" onClick={() => navigate('/casa-tecelas')}>
+        <Button variant="gold" onClick={() => navigate('/casa')}>
           <Sparkles className="w-4 h-4 mr-2" />
-          Conhecer a Casa das Tecelãs
+          Conhecer a Casa Orácula
         </Button>
       </div>
     </motion.div>
@@ -151,11 +151,11 @@ export default function MentoriaOracular() {
             <div className="flex items-center gap-3">
               <Sparkles className="w-5 h-5 text-gold" />
               <p className="text-sm text-foreground/80">
-                A <span className="text-gold font-medium">Casa das Tecelãs</span> permanece 
+                A <span className="text-gold font-medium">Casa Orácula</span> permanece 
                 ativa durante toda sua jornada de mentoria.
               </p>
             </div>
-            <Button variant="outline" size="sm" onClick={() => navigate('/casa-tecelas')}>
+            <Button variant="outline" size="sm" onClick={() => navigate('/casa')}>
               Visitar Casa
             </Button>
           </div>
