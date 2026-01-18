@@ -196,17 +196,17 @@ export function Navigation() {
     if (isProfessionalLevel) {
       const territoriosItems: MenuItem[] = [
         {
+          path: '/casa',
+          label: 'Casa Orácula',
+          icon: Flame,
+          minPortal: 'iniciada',
+        },
+        {
           path: '/mentoria-oracular',
           label: 'Mentoria Oracular',
           icon: DoorOpen,
           minPortal: 'iniciada',
           requiresMatricula: 'mentoria',
-        },
-        {
-          path: '/casa-tecelas',
-          label: 'Casa das Tecelãs',
-          icon: Flame,
-          minPortal: 'iniciada',
         },
       ];
 

@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target, Flame } from 'lucide-react';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -48,6 +48,7 @@ const AdminAudiosTab = lazy(() => import('@/components/admin/AdminAudiosTab').th
 const AdminComunicacaoTab = lazy(() => import('@/components/admin/AdminComunicacaoTab').then(m => ({ default: m.AdminComunicacaoTab })));
 const AdminFormacaoTab = lazy(() => import('@/components/admin/AdminFormacaoTab'));
 const AdminRadiestesiaTab = lazy(() => import('@/components/admin/AdminRadiestesiaTab').then(m => ({ default: m.AdminRadiestesiaTab })));
+const AdminCasaOraculaTab = lazy(() => import('@/components/admin/AdminCasaOraculaTab'));
 
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
@@ -143,6 +144,10 @@ export default function Admin() {
             <TabsTrigger value="mentoria" className="gap-2">
               <Megaphone className="w-4 h-4" />
               Mentoria
+            </TabsTrigger>
+            <TabsTrigger value="casa-oracula" className="gap-2">
+              <Flame className="w-4 h-4" />
+              Casa Orácula
             </TabsTrigger>
             <TabsTrigger value="agentes" className="gap-2">
               <Bot className="w-4 h-4" />
