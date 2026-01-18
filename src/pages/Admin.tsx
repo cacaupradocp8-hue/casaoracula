@@ -1,39 +1,8 @@
+import React, { lazy, Suspense } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target } from 'lucide-react';
-import { AdminCursosTab } from '@/components/admin/AdminCursosTab';
-import { AdminUsersTab } from '@/components/admin/AdminUsersTab';
-import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
-import { AdminMentoriaTab } from '@/components/admin/AdminMentoriaTab';
-import { AdminAgentesTab } from '@/components/admin/AdminAgentesTab';
-import { AdminModelosTab } from '@/components/admin/AdminModelosTab';
-import { AdminFerramentasTab } from '@/components/admin/AdminFerramentasTab';
-import { AdminSalasTab } from '@/components/admin/AdminSalasTab';
-import { AdminConteudosTab } from '@/components/admin/AdminConteudosTab';
-import { AdminVinculosTab } from '@/components/admin/AdminVinculosTab';
-import { AdminMatriculasTab } from '@/components/admin/AdminMatriculasTab';
-import { AdminSettingsTab } from '@/components/admin/AdminSettingsTab';
-import { AdminAssinaturasTab } from '@/components/admin/AdminAssinaturasTab';
-import { AdminLeiturasTab } from '@/components/admin/AdminLeiturasTab';
-import { AdminQuizTab } from '@/components/admin/AdminQuizTab';
-import { AdminLabCasosTab } from '@/components/admin/AdminLabCasosTab';
-import { AdminPlanosTab } from '@/components/admin/AdminPlanosTab';
-import { AdminProgressoTab } from '@/components/admin/AdminProgressoTab';
-import AdminCopyTab from '@/components/admin/AdminCopyTab';
-import { AdminOraculosTab } from '@/components/admin/AdminOraculosTab';
-import { AdminBlocksTab } from '@/components/admin/AdminBlocksTab';
-import { AdminAISettingsTab } from '@/components/admin/AdminAISettingsTab';
-import { AdminBibliotecaTravessiasTab } from '@/components/admin/AdminBibliotecaTravessiasTab';
-import { AdminLabirintoTab } from '@/components/admin/AdminLabirintoTab';
-import { AdminFamiliasTab } from '@/components/admin/AdminFamiliasTab';
-import { AdminBig5SymbolicTab } from '@/components/admin/AdminBig5SymbolicTab';
-import AdminEneagramaFemininoTab from '@/components/admin/AdminEneagramaFemininoTab';
-import { AdminJornadaHeroinaTab } from '@/components/admin/AdminJornadaHeroinaTab';
-import { AdminAudiosTab } from '@/components/admin/AdminAudiosTab';
-import { AdminComunicacaoTab } from '@/components/admin/AdminComunicacaoTab';
-import AdminFormacaoTab from '@/components/admin/AdminFormacaoTab';
-import { AdminRadiestesiaTab } from '@/components/admin/AdminRadiestesiaTab';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -44,12 +13,54 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { PortalType } from '@/types/portal';
+import { Loader2 } from 'lucide-react';
+
+// Lazy load all admin tabs for better performance
+const AdminCursosTab = lazy(() => import('@/components/admin/AdminCursosTab').then(m => ({ default: m.AdminCursosTab })));
+const AdminUsersTab = lazy(() => import('@/components/admin/AdminUsersTab').then(m => ({ default: m.AdminUsersTab })));
+const AdminBibliotecaTab = lazy(() => import('@/components/admin/AdminBibliotecaTab').then(m => ({ default: m.AdminBibliotecaTab })));
+const AdminMentoriaTab = lazy(() => import('@/components/admin/AdminMentoriaTab').then(m => ({ default: m.AdminMentoriaTab })));
+const AdminAgentesTab = lazy(() => import('@/components/admin/AdminAgentesTab').then(m => ({ default: m.AdminAgentesTab })));
+const AdminModelosTab = lazy(() => import('@/components/admin/AdminModelosTab').then(m => ({ default: m.AdminModelosTab })));
+const AdminFerramentasTab = lazy(() => import('@/components/admin/AdminFerramentasTab').then(m => ({ default: m.AdminFerramentasTab })));
+const AdminSalasTab = lazy(() => import('@/components/admin/AdminSalasTab').then(m => ({ default: m.AdminSalasTab })));
+const AdminConteudosTab = lazy(() => import('@/components/admin/AdminConteudosTab').then(m => ({ default: m.AdminConteudosTab })));
+const AdminVinculosTab = lazy(() => import('@/components/admin/AdminVinculosTab').then(m => ({ default: m.AdminVinculosTab })));
+const AdminMatriculasTab = lazy(() => import('@/components/admin/AdminMatriculasTab').then(m => ({ default: m.AdminMatriculasTab })));
+const AdminSettingsTab = lazy(() => import('@/components/admin/AdminSettingsTab').then(m => ({ default: m.AdminSettingsTab })));
+const AdminAssinaturasTab = lazy(() => import('@/components/admin/AdminAssinaturasTab').then(m => ({ default: m.AdminAssinaturasTab })));
+const AdminLeiturasTab = lazy(() => import('@/components/admin/AdminLeiturasTab').then(m => ({ default: m.AdminLeiturasTab })));
+const AdminQuizTab = lazy(() => import('@/components/admin/AdminQuizTab').then(m => ({ default: m.AdminQuizTab })));
+const AdminLabCasosTab = lazy(() => import('@/components/admin/AdminLabCasosTab').then(m => ({ default: m.AdminLabCasosTab })));
+const AdminPlanosTab = lazy(() => import('@/components/admin/AdminPlanosTab').then(m => ({ default: m.AdminPlanosTab })));
+const AdminProgressoTab = lazy(() => import('@/components/admin/AdminProgressoTab').then(m => ({ default: m.AdminProgressoTab })));
+const AdminCopyTab = lazy(() => import('@/components/admin/AdminCopyTab'));
+const AdminOraculosTab = lazy(() => import('@/components/admin/AdminOraculosTab').then(m => ({ default: m.AdminOraculosTab })));
+const AdminBlocksTab = lazy(() => import('@/components/admin/AdminBlocksTab').then(m => ({ default: m.AdminBlocksTab })));
+const AdminAISettingsTab = lazy(() => import('@/components/admin/AdminAISettingsTab').then(m => ({ default: m.AdminAISettingsTab })));
+const AdminBibliotecaTravessiasTab = lazy(() => import('@/components/admin/AdminBibliotecaTravessiasTab').then(m => ({ default: m.AdminBibliotecaTravessiasTab })));
+const AdminLabirintoTab = lazy(() => import('@/components/admin/AdminLabirintoTab').then(m => ({ default: m.AdminLabirintoTab })));
+const AdminFamiliasTab = lazy(() => import('@/components/admin/AdminFamiliasTab').then(m => ({ default: m.AdminFamiliasTab })));
+const AdminBig5SymbolicTab = lazy(() => import('@/components/admin/AdminBig5SymbolicTab').then(m => ({ default: m.AdminBig5SymbolicTab })));
+const AdminEneagramaFemininoTab = lazy(() => import('@/components/admin/AdminEneagramaFemininoTab'));
+const AdminJornadaHeroinaTab = lazy(() => import('@/components/admin/AdminJornadaHeroinaTab').then(m => ({ default: m.AdminJornadaHeroinaTab })));
+const AdminAudiosTab = lazy(() => import('@/components/admin/AdminAudiosTab').then(m => ({ default: m.AdminAudiosTab })));
+const AdminComunicacaoTab = lazy(() => import('@/components/admin/AdminComunicacaoTab').then(m => ({ default: m.AdminComunicacaoTab })));
+const AdminFormacaoTab = lazy(() => import('@/components/admin/AdminFormacaoTab'));
+const AdminRadiestesiaTab = lazy(() => import('@/components/admin/AdminRadiestesiaTab').then(m => ({ default: m.AdminRadiestesiaTab })));
 
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
   { value: 'pre_iniciada', label: '👁 Pré-Iniciada' },
   { value: 'iniciada', label: '👁 Iniciada ORÁCULA' },
 ];
+
+// Tab loading fallback
+const TabLoader = () => (
+  <div className="flex items-center justify-center py-12">
+    <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+  </div>
+);
 
 export default function Admin() {
   const { isPreviewMode, previewPortal, enablePreviewMode, disablePreviewMode } = useAdminPreview();
@@ -195,15 +206,15 @@ export default function Admin() {
             </TabsTrigger>
             <TabsTrigger value="big5-simbolico" className="gap-2">
               <Moon className="w-4 h-4" />
-              Big5 Simbólico
+              Mapa 5 Territórios
             </TabsTrigger>
             <TabsTrigger value="eneagrama-feminino" className="gap-2">
               <Flower2 className="w-4 h-4" />
-              Eneagrama Feminino
+              Oráculo 9 Arquétipos
             </TabsTrigger>
             <TabsTrigger value="jornada-heroina" className="gap-2">
               <Compass className="w-4 h-4 text-purple-400" />
-              Jornada da Heroína
+              Caminho da Mulher
             </TabsTrigger>
             <TabsTrigger value="radiestesia" className="gap-2">
               <Target className="w-4 h-4 text-purple-400" />
@@ -232,131 +243,195 @@ export default function Admin() {
           </TabsList>
 
           <TabsContent value="users">
-            <AdminUsersTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminUsersTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="matriculas">
-            <AdminMatriculasTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminMatriculasTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="assinaturas">
-            <AdminAssinaturasTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminAssinaturasTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="leituras">
-            <AdminLeiturasTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminLeiturasTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="conteudos">
-            <AdminConteudosTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminConteudosTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="cursos">
-            <AdminCursosTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminCursosTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="biblioteca">
-            <AdminBibliotecaTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminBibliotecaTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="mentoria">
-            <AdminMentoriaTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminMentoriaTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="agentes">
-            <AdminAgentesTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminAgentesTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="modelos">
-            <AdminModelosTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminModelosTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="copy">
-            <AdminCopyTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminCopyTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="ferramentas">
-            <AdminFerramentasTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminFerramentasTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="salas">
-            <AdminSalasTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminSalasTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="vinculos">
-            <AdminVinculosTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminVinculosTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="quiz">
-            <AdminQuizTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminQuizTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="lab">
-            <AdminLabCasosTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminLabCasosTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="planos">
-            <AdminPlanosTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminPlanosTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="progresso">
-            <AdminProgressoTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminProgressoTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="oraculos">
-            <AdminOraculosTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminOraculosTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="blocos">
-            <AdminBlocksTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminBlocksTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="travessias">
-            <AdminBibliotecaTravessiasTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminBibliotecaTravessiasTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="familias">
-            <AdminFamiliasTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminFamiliasTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="labirinto">
-            <AdminLabirintoTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminLabirintoTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="big5-simbolico">
-            <AdminBig5SymbolicTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminBig5SymbolicTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="eneagrama-feminino">
-            <AdminEneagramaFemininoTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminEneagramaFemininoTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="jornada-heroina">
-            <AdminJornadaHeroinaTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminJornadaHeroinaTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="radiestesia">
-            <AdminRadiestesiaTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminRadiestesiaTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="ia-config">
-            <AdminAISettingsTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminAISettingsTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="audios">
-            <AdminAudiosTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminAudiosTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="comunicacao">
-            <AdminComunicacaoTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminComunicacaoTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="formacao">
-            <AdminFormacaoTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminFormacaoTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="settings">
-            <AdminSettingsTab />
+            <Suspense fallback={<TabLoader />}>
+              <AdminSettingsTab />
+            </Suspense>
           </TabsContent>
         </Tabs>
       </div>

@@ -138,10 +138,10 @@ function ForcesSection() {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <div>
+      <div>
           <h3 className="text-lg font-semibold">Forças Simbólicas</h3>
           <p className="text-sm text-muted-foreground">
-            As 5 forças do Mapa da Alma (não adicione novas — edite as existentes)
+            O Mapa dos Cinco Territórios da Psique Feminina (não adicione novas — edite as existentes)
           </p>
         </div>
         <Button variant="outline" onClick={() => window.open('/ferramenta/big5-simbolico', '_blank')}>
