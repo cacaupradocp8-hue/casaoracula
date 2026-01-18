@@ -3435,6 +3435,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          max_cases: number
           max_clientes: number
           portal: Database["public"]["Enums"]["portal_type"]
           updated_at: string
@@ -3442,6 +3443,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          max_cases?: number
           max_clientes?: number
           portal: Database["public"]["Enums"]["portal_type"]
           updated_at?: string
@@ -3449,6 +3451,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          max_cases?: number
           max_clientes?: number
           portal?: Database["public"]["Enums"]["portal_type"]
           updated_at?: string
@@ -4487,6 +4490,7 @@ export type Database = {
       }
       symbolic_template_sessions: {
         Row: {
+          case_id: string | null
           cliente_id: string | null
           created_at: string
           id: string
@@ -4498,6 +4502,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          case_id?: string | null
           cliente_id?: string | null
           created_at?: string
           id?: string
@@ -4509,6 +4514,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          case_id?: string | null
           cliente_id?: string | null
           created_at?: string
           id?: string
@@ -4520,6 +4526,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "symbolic_template_sessions_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "session_cases"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "symbolic_template_sessions_cliente_id_fkey"
             columns: ["cliente_id"]
@@ -5016,6 +5029,7 @@ export type Database = {
         Returns: undefined
       }
       check_and_expire_access: { Args: never; Returns: number }
+      check_case_limit: { Args: { _therapist_id: string }; Returns: boolean }
       get_agent_with_context: {
         Args: {
           _agent_id: string
@@ -5032,6 +5046,14 @@ export type Database = {
           modelo_preferido: string
           prompt_personalidade: string
           temperatura: number
+        }[]
+      }
+      get_case_quota: {
+        Args: { _therapist_id: string }
+        Returns: {
+          can_create: boolean
+          max_cases: number
+          used_cases: number
         }[]
       }
       get_content_blocks: {

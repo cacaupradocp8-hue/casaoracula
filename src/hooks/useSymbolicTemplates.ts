@@ -12,6 +12,7 @@ export interface SymbolicTemplateSession {
   template_type: TemplateType;
   title: string;
   cliente_id: string | null;
+  case_id: string | null;
   sections: Record<string, string>;
   notes: Record<string, string>;
   created_at: string;
@@ -71,7 +72,8 @@ export function useSymbolicTemplates(templateType?: TemplateType) {
   const createSession = async (
     type: TemplateType,
     title: string,
-    clienteId?: string
+    clienteId?: string,
+    caseId?: string
   ): Promise<string | null> => {
     if (!user) return null;
 
@@ -83,6 +85,7 @@ export function useSymbolicTemplates(templateType?: TemplateType) {
           template_type: type,
           title,
           cliente_id: clienteId || null,
+          case_id: caseId || null,
           sections: {},
           notes: {},
         })

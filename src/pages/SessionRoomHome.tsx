@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Archive, FolderOpen, Clock, User } from 'lucide-react';
+import { Plus, Archive, FolderOpen, Clock, User, AlertCircle } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Progress } from '@/components/ui/progress';
 import { useSessionRoom } from '@/hooks/useSessionRoom';
 import type { SessionCase, SessionCaseStatus } from '@/types/session-room';
 import { format } from 'date-fns';
@@ -18,12 +20,13 @@ import { ptBR } from 'date-fns/locale';
 
 export default function SessionRoomHome() {
   const navigate = useNavigate();
-  const { loading, fetchLinkedClients, fetchCases, createCase } = useSessionRoom();
+  const { loading, fetchLinkedClients, fetchCases, createCase, fetchCaseQuota } = useSessionRoom();
   
   const [cases, setCases] = useState<SessionCase[]>([]);
   const [linkedClients, setLinkedClients] = useState<{ id: string; nome: string }[]>([]);
   const [activeTab, setActiveTab] = useState<'active' | 'archived'>('active');
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [quota, setQuota] = useState<{ used: number; max: number; canCreate: boolean }>({ used: 0, max: -1, canCreate: true });
   
   // Form state for new case
   const [newCaseClientId, setNewCaseClientId] = useState('');
@@ -34,12 +37,14 @@ export default function SessionRoomHome() {
   }, [activeTab]);
 
   const loadData = async () => {
-    const [casesData, clientsData] = await Promise.all([
+    const [casesData, clientsData, quotaData] = await Promise.all([
       fetchCases(activeTab as SessionCaseStatus),
       fetchLinkedClients(),
+      fetchCaseQuota(),
     ]);
     setCases(casesData);
     setLinkedClients(clientsData);
+    setQuota(quotaData);
   };
 
   const handleCreateCase = async () => {
@@ -64,6 +69,9 @@ export default function SessionRoomHome() {
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
+  const isUnlimited = quota.max === -1;
+  const quotaPercentage = isUnlimited ? 0 : Math.min((quota.used / quota.max) * 100, 100);
+
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-5xl">
@@ -76,7 +84,7 @@ export default function SessionRoomHome() {
           
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="gap-2">
+              <Button className="gap-2" disabled={!quota.canCreate}>
                 <Plus className="w-4 h-4" />
                 Novo Caso
               </Button>
@@ -131,6 +139,29 @@ export default function SessionRoomHome() {
             </DialogContent>
           </Dialog>
         </div>
+
+        {/* Quota Display */}
+        {!isUnlimited && (
+          <Card className="mb-6">
+            <CardContent className="py-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-muted-foreground">Uso de casos</span>
+                <span className="text-sm font-medium">
+                  {quota.used} / {quota.max} casos
+                </span>
+              </div>
+              <Progress value={quotaPercentage} className="h-2" />
+              {!quota.canCreate && (
+                <Alert variant="destructive" className="mt-3">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    Você atingiu o limite de casos do seu plano. Arquive casos antigos ou faça upgrade do plano.
+                  </AlertDescription>
+                </Alert>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'active' | 'archived')}>
           <TabsList className="mb-6">

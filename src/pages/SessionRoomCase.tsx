@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Sparkles, Layers, Map, FileText, Heart, Archive, MoreVertical } from 'lucide-react';
+import { ArrowLeft, Sparkles, Layers, Map, FileText, Heart, Archive, MoreVertical, ClipboardList } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -16,6 +16,7 @@ import { SevenLayersTab } from '@/components/session-room/SevenLayersTab';
 import { NarrativeMapTab } from '@/components/session-room/NarrativeMapTab';
 import { SessionScriptTab } from '@/components/session-room/SessionScriptTab';
 import { PostSessionTab } from '@/components/session-room/PostSessionTab';
+import { TemplatesTab } from '@/components/session-room/TemplatesTab';
 
 export default function SessionRoomCase() {
   const { caseId } = useParams<{ caseId: string }>();
@@ -135,7 +136,7 @@ export default function SessionRoomCase() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 h-auto">
+          <TabsList className="grid w-full grid-cols-6 h-auto">
             <TabsTrigger value="oracle" className="flex flex-col gap-1 py-3">
               <Sparkles className="w-4 h-4" />
               <span className="text-xs">Oráculo</span>
@@ -151,6 +152,10 @@ export default function SessionRoomCase() {
             <TabsTrigger value="script" className="flex flex-col gap-1 py-3">
               <FileText className="w-4 h-4" />
               <span className="text-xs">Roteiro</span>
+            </TabsTrigger>
+            <TabsTrigger value="templates" className="flex flex-col gap-1 py-3">
+              <ClipboardList className="w-4 h-4" />
+              <span className="text-xs">Templates</span>
             </TabsTrigger>
             <TabsTrigger value="post" className="flex flex-col gap-1 py-3">
               <Heart className="w-4 h-4" />
@@ -180,6 +185,14 @@ export default function SessionRoomCase() {
               caseId={caseData.id}
               clientId={caseData.client_id}
               narrativeMap={narrativeMap}
+            />
+          </TabsContent>
+
+          <TabsContent value="templates">
+            <TemplatesTab
+              caseId={caseData.id}
+              clientId={caseData.client_id}
+              clientName={caseData.client?.nome}
             />
           </TabsContent>
 

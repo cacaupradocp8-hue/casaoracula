@@ -24,6 +24,31 @@ export function useSessionRoom() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
+  // Fetch case quota information
+  const fetchCaseQuota = useCallback(async (): Promise<{ used: number; max: number; canCreate: boolean }> => {
+    if (!user) return { used: 0, max: -1, canCreate: false };
+
+    try {
+      const { data, error } = await supabase.rpc('get_case_quota', { _therapist_id: user.id });
+      
+      if (error) throw error;
+      
+      if (data && data.length > 0) {
+        const quota = data[0];
+        return {
+          used: Number(quota.used_cases) || 0,
+          max: Number(quota.max_cases) ?? -1,
+          canCreate: Boolean(quota.can_create),
+        };
+      }
+      
+      return { used: 0, max: -1, canCreate: true };
+    } catch (error) {
+      console.error('Error fetching case quota:', error);
+      return { used: 0, max: -1, canCreate: true };
+    }
+  }, [user]);
+
   // Fetch linked clients for the therapist
   const fetchLinkedClients = useCallback(async (): Promise<LinkedClient[]> => {
     if (!user) return [];
@@ -425,6 +450,7 @@ export function useSessionRoom() {
 
   return {
     loading,
+    fetchCaseQuota,
     fetchLinkedClients,
     fetchCases,
     createCase,
