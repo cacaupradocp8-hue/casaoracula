@@ -29,9 +29,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Plus, Pencil, Trash2, Eye, EyeOff, Ear, BookOpen, Users } from 'lucide-react';
+import { Plus, Pencil, Trash2, Eye, EyeOff, Ear, BookOpen, Users, Pin, PinOff } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -59,10 +60,13 @@ interface CasaPost {
 interface Thread {
   id: string;
   titulo: string;
+  conteudo: string;
   status: string;
   fixado: boolean;
   respostas_count: number;
+  portal_minimo: PortalType;
   created_at: string;
+  autor_id: string;
 }
 
 const emptyPost: Partial<CasaPost> = {
@@ -80,15 +84,31 @@ const emptyPost: Partial<CasaPost> = {
   portal_minimo: 'iniciada',
 };
 
+const emptyThread: Partial<Thread> = {
+  titulo: '',
+  conteudo: '',
+  status: 'aberto',
+  fixado: false,
+  portal_minimo: 'iniciada',
+};
+
 export default function AdminCasaOraculaTab() {
   const [activeRoom, setActiveRoom] = useState<Room>('sustentacao');
   const [posts, setPosts] = useState<CasaPost[]>([]);
   const [threads, setThreads] = useState<Thread[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Post dialog
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<Partial<CasaPost> | null>(null);
   const [tagsInput, setTagsInput] = useState('');
+  
+  // Thread dialog
+  const [threadDialogOpen, setThreadDialogOpen] = useState(false);
+  const [editingThread, setEditingThread] = useState<Partial<Thread> | null>(null);
+  
   const { toast } = useToast();
+  const { user } = useAuth();
 
   useEffect(() => {
     if (activeRoom === 'circulo') {
@@ -124,17 +144,20 @@ export default function AdminCasaOraculaTab() {
       const { data, error } = await supabase
         .from('casa_circulo_threads')
         .select('*')
+        .order('fixado', { ascending: false })
         .order('created_at', { ascending: false });
 
       if (error) throw error;
       setThreads((data || []) as Thread[]);
     } catch (error) {
       console.error('Error fetching threads:', error);
+      toast({ title: 'Erro ao carregar tópicos', variant: 'destructive' });
     } finally {
       setIsLoading(false);
     }
   };
 
+  // === POST HANDLERS ===
   const openDialog = (post?: CasaPost) => {
     if (post) {
       setEditingPost(post);
@@ -146,7 +169,7 @@ export default function AdminCasaOraculaTab() {
     setDialogOpen(true);
   };
 
-  const handleSave = async () => {
+  const handleSavePost = async () => {
     if (!editingPost?.titulo?.trim()) {
       toast({ title: 'Título é obrigatório', variant: 'destructive' });
       return;
@@ -193,7 +216,7 @@ export default function AdminCasaOraculaTab() {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDeletePost = async (id: string) => {
     if (!confirm('Excluir este conteúdo?')) return;
 
     try {
@@ -220,6 +243,92 @@ export default function AdminCasaOraculaTab() {
       fetchPosts();
     } catch (error) {
       console.error('Error toggling publish:', error);
+    }
+  };
+
+  // === THREAD HANDLERS ===
+  const openThreadDialog = (thread?: Thread) => {
+    if (thread) {
+      setEditingThread(thread);
+    } else {
+      setEditingThread({ ...emptyThread });
+    }
+    setThreadDialogOpen(true);
+  };
+
+  const handleSaveThread = async () => {
+    if (!editingThread?.titulo?.trim() || !editingThread?.conteudo?.trim()) {
+      toast({ title: 'Título e conteúdo são obrigatórios', variant: 'destructive' });
+      return;
+    }
+
+    if (!user?.id) {
+      toast({ title: 'Usuário não autenticado', variant: 'destructive' });
+      return;
+    }
+
+    try {
+      const payload = {
+        titulo: editingThread.titulo.trim(),
+        conteudo: editingThread.conteudo.trim(),
+        status: editingThread.status || 'aberto',
+        fixado: editingThread.fixado || false,
+        portal_minimo: editingThread.portal_minimo || 'iniciada',
+        autor_id: user.id,
+      };
+
+      if (editingThread.id) {
+        // Update - don't change autor_id
+        const { error } = await supabase
+          .from('casa_circulo_threads')
+          .update({
+            titulo: payload.titulo,
+            conteudo: payload.conteudo,
+            status: payload.status,
+            fixado: payload.fixado,
+            portal_minimo: payload.portal_minimo,
+          })
+          .eq('id', editingThread.id);
+        if (error) throw error;
+        toast({ title: 'Tópico atualizado!' });
+      } else {
+        const { error } = await supabase
+          .from('casa_circulo_threads')
+          .insert(payload);
+        if (error) throw error;
+        toast({ title: 'Tópico criado!' });
+      }
+
+      setThreadDialogOpen(false);
+      fetchThreads();
+    } catch (error) {
+      console.error('Error saving thread:', error);
+      toast({ title: 'Erro ao salvar tópico', variant: 'destructive' });
+    }
+  };
+
+  const handleDeleteThread = async (id: string) => {
+    if (!confirm('Excluir este tópico e todas as respostas?')) return;
+
+    try {
+      // Delete replies first
+      await supabase
+        .from('casa_circulo_replies')
+        .delete()
+        .eq('thread_id', id);
+
+      // Then delete thread
+      const { error } = await supabase
+        .from('casa_circulo_threads')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+      
+      toast({ title: 'Tópico excluído' });
+      fetchThreads();
+    } catch (error) {
+      console.error('Error deleting thread:', error);
+      toast({ title: 'Erro ao excluir tópico', variant: 'destructive' });
     }
   };
 
@@ -259,8 +368,12 @@ export default function AdminCasaOraculaTab() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Casa Orácula</h2>
-        {activeRoom !== 'circulo' && (
+        <h2 className="text-xl font-semibold">Casa das Tecelãs</h2>
+        {activeRoom === 'circulo' ? (
+          <Button onClick={() => openThreadDialog()} className="gap-2">
+            <Plus className="w-4 h-4" /> Novo Tópico
+          </Button>
+        ) : (
           <Button onClick={() => openDialog()} className="gap-2">
             <Plus className="w-4 h-4" /> Novo Conteúdo
           </Button>
@@ -340,7 +453,7 @@ export default function AdminCasaOraculaTab() {
                           <Button variant="ghost" size="icon" onClick={() => openDialog(post)}>
                             <Pencil className="w-4 h-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" onClick={() => handleDelete(post.id)}>
+                          <Button variant="ghost" size="icon" onClick={() => handleDeletePost(post.id)}>
                             <Trash2 className="w-4 h-4 text-destructive" />
                           </Button>
                         </TableCell>
@@ -357,12 +470,13 @@ export default function AdminCasaOraculaTab() {
         <TabsContent value="circulo">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Moderação de Tópicos</CardTitle>
+              <CardTitle className="text-base">Gestão de Tópicos do Círculo</CardTitle>
             </CardHeader>
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Título</TableHead>
+                  <TableHead>Portal</TableHead>
                   <TableHead>Respostas</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Fixado</TableHead>
@@ -373,42 +487,62 @@ export default function AdminCasaOraculaTab() {
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                       Carregando...
                     </TableCell>
                   </TableRow>
                 ) : threads.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                      Nenhum tópico criado
+                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                      Nenhum tópico criado. Clique em "Novo Tópico" para começar.
                     </TableCell>
                   </TableRow>
                 ) : (
                   threads.map((thread) => (
                     <TableRow key={thread.id}>
-                      <TableCell className="font-medium">{thread.titulo}</TableCell>
-                      <TableCell>{thread.respostas_count}</TableCell>
+                      <TableCell>
+                        <div>
+                          <p className="font-medium">{thread.titulo}</p>
+                          <p className="text-xs text-muted-foreground line-clamp-1">
+                            {thread.conteudo?.substring(0, 60)}...
+                          </p>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">{thread.portal_minimo || 'iniciada'}</Badge>
+                      </TableCell>
+                      <TableCell>{thread.respostas_count || 0}</TableCell>
                       <TableCell>
                         <Badge variant={thread.status === 'aberto' ? 'default' : 'secondary'}>
-                          {thread.status}
+                          {thread.status || 'aberto'}
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <Switch
-                          checked={thread.fixado}
-                          onCheckedChange={() => toggleThreadPin(thread)}
-                        />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleThreadPin(thread)}
+                          className={thread.fixado ? 'text-amber-500' : 'text-muted-foreground'}
+                        >
+                          {thread.fixado ? <Pin className="w-4 h-4" /> : <PinOff className="w-4 h-4" />}
+                        </Button>
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {format(new Date(thread.created_at), 'dd/MM/yy', { locale: ptBR })}
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="text-right space-x-1">
+                        <Button variant="ghost" size="icon" onClick={() => openThreadDialog(thread)}>
+                          <Pencil className="w-4 h-4" />
+                        </Button>
                         <Button 
                           variant="outline" 
                           size="sm"
                           onClick={() => toggleThreadStatus(thread)}
                         >
                           {thread.status === 'aberto' ? 'Fechar' : 'Reabrir'}
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => handleDeleteThread(thread.id)}>
+                          <Trash2 className="w-4 h-4 text-destructive" />
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -420,7 +554,7 @@ export default function AdminCasaOraculaTab() {
         </TabsContent>
       </Tabs>
 
-      {/* Edit Dialog */}
+      {/* Post Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -580,7 +714,91 @@ export default function AdminCasaOraculaTab() {
             <Button variant="outline" onClick={() => setDialogOpen(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleSave}>
+            <Button onClick={handleSavePost}>
+              Salvar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Thread Edit Dialog */}
+      <Dialog open={threadDialogOpen} onOpenChange={setThreadDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {editingThread?.id ? 'Editar Tópico' : 'Novo Tópico no Círculo'}
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>Título *</Label>
+              <Input
+                value={editingThread?.titulo || ''}
+                onChange={(e) => setEditingThread(prev => ({ ...prev, titulo: e.target.value }))}
+                placeholder="Título do tópico"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Conteúdo *</Label>
+              <Textarea
+                value={editingThread?.conteudo || ''}
+                onChange={(e) => setEditingThread(prev => ({ ...prev, conteudo: e.target.value }))}
+                placeholder="Escreva o conteúdo inicial do tópico..."
+                rows={6}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Portal Mínimo</Label>
+                <Select
+                  value={editingThread?.portal_minimo || 'iniciada'}
+                  onValueChange={(v) => setEditingThread(prev => ({ ...prev, portal_minimo: v as PortalType }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pre_iniciada">Pré-iniciada</SelectItem>
+                    <SelectItem value="iniciada">Iniciada</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select
+                  value={editingThread?.status || 'aberto'}
+                  onValueChange={(v) => setEditingThread(prev => ({ ...prev, status: v }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="aberto">Aberto</SelectItem>
+                    <SelectItem value="fechado">Fechado</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={editingThread?.fixado || false}
+                onCheckedChange={(v) => setEditingThread(prev => ({ ...prev, fixado: v }))}
+              />
+              <Label>Fixar no topo</Label>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setThreadDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleSaveThread}>
               Salvar
             </Button>
           </DialogFooter>
