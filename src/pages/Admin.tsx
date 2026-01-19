@@ -147,7 +147,7 @@ export default function Admin() {
             </TabsTrigger>
             <TabsTrigger value="casa-oracula" className="gap-2">
               <Flame className="w-4 h-4" />
-              Casa Orácula
+              Casa das Tecelãs
             </TabsTrigger>
             <TabsTrigger value="agentes" className="gap-2">
               <Bot className="w-4 h-4" />
