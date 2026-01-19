@@ -83,7 +83,7 @@ export default function BibliotecaTravessiaDetalhe() {
       }
     } catch (error) {
       console.error('Error fetching travessia:', error);
-      navigate('/biblioteca-das-travessias');
+      navigate('/ferramentas');
     } finally {
       setLoading(false);
     }
@@ -216,11 +216,11 @@ export default function BibliotecaTravessiaDetalhe() {
         <div className="container mx-auto px-4 py-8 max-w-4xl space-y-6">
           <Button 
             variant="ghost" 
-            onClick={() => navigate('/biblioteca-das-travessias')}
+            onClick={() => navigate('/ferramentas')}
             className="mb-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Voltar à Biblioteca
+            Voltar às Ferramentas
           </Button>
 
           {/* Locked Hero */}
@@ -262,10 +262,10 @@ export default function BibliotecaTravessiaDetalhe() {
         {/* Back Button */}
         <Button 
           variant="ghost" 
-          onClick={() => navigate('/biblioteca-das-travessias')}
+          onClick={() => navigate('/ferramentas')}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Voltar à Biblioteca
+          Voltar às Ferramentas
         </Button>
 
         {/* Hero Section */}
