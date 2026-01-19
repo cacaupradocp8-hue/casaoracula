@@ -4597,7 +4597,7 @@ export type Database = {
             foreignKeyName: "session_cases_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
           {

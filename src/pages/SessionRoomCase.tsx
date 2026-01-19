@@ -45,7 +45,7 @@ export default function SessionRoomCase() {
         .from('session_cases')
         .select(`
           *,
-          client:profiles!session_cases_client_id_fkey(id, nome, email)
+          client:clientes!session_cases_client_id_fkey(id, nome)
         `)
         .eq('id', caseId)
         .single();
