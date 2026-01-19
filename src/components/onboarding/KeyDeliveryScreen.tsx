@@ -34,7 +34,7 @@ const SYMBOL_DATA: Record<ArchetypeType, {
     name: 'Olho da Noite',
     phrase: 'A alma vê no escuro antes de falar.',
     description: 'A visão interior que precede a palavra — o saber que ainda não tem nome.',
-    color: 'text-slate-300',
+    color: 'text-foreground',
     bgGradient: 'from-slate-800/30 via-zinc-900/20 to-background',
   },
 };

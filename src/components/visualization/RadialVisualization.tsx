@@ -85,7 +85,7 @@ export function RadialVisualization({
       >
         <Sparkles className="w-6 h-6 text-gold mb-1" />
         {config.centerLabel && (
-          <span className="text-[9px] text-muted-foreground text-center px-1 leading-tight">
+          <span className="text-xs text-muted-foreground text-center px-1 leading-tight">
             {config.centerLabel}
           </span>
         )}

@@ -29,12 +29,12 @@ export default function Landing() {
         </h1>
 
         {/* Texto poético */}
-        <div className="space-y-4 text-foreground/90 text-lg md:text-xl leading-relaxed mb-12 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+        <div className="space-y-4 text-foreground text-lg md:text-xl leading-relaxed mb-12 animate-slide-up" style={{ animationDelay: '0.4s' }}>
           <p>{getCopyByKey('landing_texto_1', 'A Casa ORÁCULA não é um curso.')}</p>
           <p>{getCopyByKey('landing_texto_2', 'É um espaço de formação simbólica, clínica e ética para mulheres que conduzem outras mulheres.')}</p>
           <p>{getCopyByKey('landing_texto_3', 'Aqui, a técnica não substitui a escuta. O símbolo não é ornamento — é linguagem. E o portal não é metáfora — é prática.')}</p>
           <p>{getCopyByKey('landing_texto_4', 'Você entra para aprender a ler narrativas profundas, sustentar eixo e conduzir processos reais de transformação.')}</p>
-          <p className="text-primary/80 italic mt-8 font-display text-xl md:text-2xl">
+          <p className="text-primary italic mt-8 font-display text-xl md:text-2xl">
             {getCopyByKey('landing_convite', 'Sente-se. A Casa se revela passo a passo.')}
           </p>
         </div>

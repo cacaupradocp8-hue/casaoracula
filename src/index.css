@@ -27,8 +27,8 @@
     --secondary-foreground: 210 29% 94%;
 
     --muted: 206 30% 20%;
-    /* Texto secundário: #A9B6C3 */
-    --muted-foreground: 210 18% 71%;
+    /* Texto secundário: Ajustado para melhor legibilidade */
+    --muted-foreground: 210 20% 78%;
 
     /* Acento simbólico: #6F85A6 */
     --accent: 216 25% 54%;
@@ -94,7 +94,7 @@
     --secondary: 206 35% 18%;
     --secondary-foreground: 210 29% 94%;
     --muted: 206 30% 20%;
-    --muted-foreground: 210 18% 71%;
+    --muted-foreground: 210 20% 78%;
     --accent: 216 25% 54%;
     --accent-foreground: 210 29% 94%;
     --destructive: 0 62% 45%;

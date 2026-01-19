@@ -24,7 +24,7 @@ export function RichTextBlock({ block }: RichTextBlockProps) {
         <h3 className="text-xl font-semibold text-foreground mb-3">{block.titulo}</h3>
       )}
       <div 
-        className="prose prose-invert max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-a:text-gold hover:prose-a:text-gold/80"
+        className="prose prose-invert max-w-none prose-headings:text-foreground prose-p:text-foreground prose-strong:text-foreground prose-a:text-gold hover:prose-a:text-gold/80"
         dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
       />
     </div>
