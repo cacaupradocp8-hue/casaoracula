@@ -155,7 +155,7 @@ export default function Big5() {
         .from('session_cases')
         .select(`
           id, title, client_id,
-          client:profiles!session_cases_client_id_fkey(nome)
+          client:clientes!session_cases_client_id_fkey(nome)
         `)
         .eq('id', sessionCaseId)
         .eq('therapist_id', user.id)
@@ -171,11 +171,12 @@ export default function Big5() {
         return;
       }
 
+      const clientData = Array.isArray(scData.client) ? scData.client[0] : scData.client;
       setSessionCase({
         id: scData.id,
         title: scData.title,
         client_id: scData.client_id,
-        client_name: scData.client?.nome || 'Sem nome',
+        client_name: clientData?.nome || 'Sem nome',
       });
       setLoading(false);
       return;

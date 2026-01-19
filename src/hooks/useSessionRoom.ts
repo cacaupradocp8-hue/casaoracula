@@ -78,7 +78,7 @@ export function useSessionRoom() {
         .from('session_cases')
         .select(`
           *,
-          client:profiles!session_cases_client_id_fkey(id, nome, email)
+          client:clientes!session_cases_client_id_fkey(id, nome)
         `)
         .eq('therapist_id', user.id)
         .order('updated_at', { ascending: false });
@@ -120,7 +120,7 @@ export function useSessionRoom() {
         })
         .select(`
           *,
-          client:profiles!session_cases_client_id_fkey(id, nome, email)
+          client:clientes!session_cases_client_id_fkey(id, nome)
         `)
         .single();
 
