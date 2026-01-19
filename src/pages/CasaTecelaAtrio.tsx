@@ -58,17 +58,17 @@ export default function CasaTecelaAtrio() {
                 transition={{ delay: 0.6, duration: 0.5 }}
                 className="glass p-8 rounded-2xl border border-gold/20 mb-8"
               >
-                <p className="text-lg text-foreground/90 leading-relaxed italic">
+                <p className="text-lg text-foreground leading-relaxed italic">
                   "Este não é um espaço de aprendizado técnico.
                 </p>
-                <p className="text-lg text-foreground/90 leading-relaxed italic mt-4">
+                <p className="text-lg text-foreground leading-relaxed italic mt-4">
                   É um espaço de sustentação, refinamento e maturação
                   para mulheres que trabalham com o invisível.
                 </p>
-                <p className="text-lg text-foreground/90 leading-relaxed italic mt-4">
+                <p className="text-lg text-foreground leading-relaxed italic mt-4">
                   Se você busca respostas rápidas, este não é o lugar.
                 </p>
-                <p className="text-lg text-foreground/90 leading-relaxed italic mt-4">
+                <p className="text-lg text-foreground leading-relaxed italic mt-4">
                   Se você busca permanecer inteira enquanto sustenta outras, bem-vinda."
                 </p>
               </motion.div>

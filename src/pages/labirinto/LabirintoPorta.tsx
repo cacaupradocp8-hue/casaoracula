@@ -38,10 +38,10 @@ import { PortaAudioPlayer } from "@/components/labirinto/PortaAudioPlayer";
 // Mapeamento de tipos de campo para exibição
 const TIPO_CAMPO_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   limiar: { label: "Limiar", icon: Sparkles, color: "text-purple-400" },
-  retencao: { label: "Retenção", icon: Circle, color: "text-blue-500" },
-  defesa: { label: "Defesa", icon: Shield, color: "text-orange-500" },
-  dissolucao: { label: "Dissolução", icon: Droplets, color: "text-slate-500" },
-  emergencia: { label: "Emergência", icon: Flame, color: "text-emerald-500" },
+  retencao: { label: "Retenção", icon: Circle, color: "text-blue-400" },
+  defesa: { label: "Defesa", icon: Shield, color: "text-orange-400" },
+  dissolucao: { label: "Dissolução", icon: Droplets, color: "text-muted-foreground" },
+  emergencia: { label: "Emergência", icon: Flame, color: "text-emerald-400" },
   reintegracao: { label: "Reintegração", icon: Layers, color: "text-gold" },
 };
 

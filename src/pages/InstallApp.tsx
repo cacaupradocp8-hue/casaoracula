@@ -92,7 +92,7 @@ const InstallApp = () => {
         <CardContent className="space-y-6">
           {isIOS ? (
             <div className="space-y-4">
-              <p className="text-sm text-foreground/70 text-center">
+              <p className="text-sm text-muted-foreground text-center">
                 Para instalar no iPhone/iPad:
               </p>
               
@@ -103,7 +103,7 @@ const InstallApp = () => {
                   </div>
                   <div>
                     <p className="font-medium text-sm">1. Toque em Compartilhar</p>
-                    <p className="text-xs text-foreground/60">Na barra do Safari</p>
+                    <p className="text-xs text-muted-foreground">Na barra do Safari</p>
                   </div>
                 </div>
 
@@ -113,7 +113,7 @@ const InstallApp = () => {
                   </div>
                   <div>
                     <p className="font-medium text-sm">2. Adicionar à Tela de Início</p>
-                    <p className="text-xs text-foreground/60">Role para encontrar a opção</p>
+                    <p className="text-xs text-muted-foreground">Role para encontrar a opção</p>
                   </div>
                 </div>
 
@@ -123,7 +123,7 @@ const InstallApp = () => {
                   </div>
                   <div>
                     <p className="font-medium text-sm">3. Confirme a instalação</p>
-                    <p className="text-xs text-foreground/60">O app aparecerá na sua tela inicial</p>
+                    <p className="text-xs text-muted-foreground">O app aparecerá na sua tela inicial</p>
                   </div>
                 </div>
               </div>
@@ -135,7 +135,7 @@ const InstallApp = () => {
             </Button>
           ) : (
             <div className="text-center space-y-4">
-              <p className="text-sm text-foreground/70">
+              <p className="text-sm text-muted-foreground">
                 Use o menu do navegador para instalar o app
               </p>
               <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/30">
@@ -144,7 +144,7 @@ const InstallApp = () => {
                 </div>
                 <div className="text-left">
                   <p className="font-medium text-sm">Menu → Instalar app</p>
-                  <p className="text-xs text-foreground/60">Ou "Adicionar à tela inicial"</p>
+                  <p className="text-xs text-muted-foreground">Ou "Adicionar à tela inicial"</p>
                 </div>
               </div>
             </div>
@@ -153,7 +153,7 @@ const InstallApp = () => {
           <div className="pt-4 border-t border-border/50">
             <Button
               variant="ghost"
-              className="w-full text-foreground/60"
+              className="w-full text-muted-foreground"
               onClick={() => navigate("/welcome")}
             >
               Continuar no navegador

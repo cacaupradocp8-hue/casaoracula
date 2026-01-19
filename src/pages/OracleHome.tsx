@@ -107,7 +107,7 @@ export default function OracleHome() {
             variant="ghost" 
             size="icon"
             onClick={() => navigate('/oraculos')}
-            className="text-foreground/60 hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>

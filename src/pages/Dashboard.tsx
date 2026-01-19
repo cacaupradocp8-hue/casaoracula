@@ -160,7 +160,7 @@ export default function Dashboard() {
 
         {/* Tríade Quote */}
         <div className="mb-12 text-center">
-          <blockquote className="font-display text-xl md:text-2xl italic text-foreground/80 max-w-2xl mx-auto">
+          <blockquote className="font-display text-xl md:text-2xl italic text-muted-foreground max-w-2xl mx-auto">
             "{getCopyByKey('triade_completa', 'Ego organiza a experiência • Neuroplasticidade sustenta o processo • A Alma orienta a travessia')}"
           </blockquote>
           <p className="text-sm text-muted-foreground mt-2">{getCopyByKey('triade_assinatura', '— Tríade Metodológica ORÁCULA')}</p>

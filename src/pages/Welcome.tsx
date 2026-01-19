@@ -51,7 +51,7 @@ export default function Welcome() {
         </div>
 
         {/* Quote */}
-        <blockquote className="font-display text-lg italic text-foreground/60 border-l-2 border-gold/30 pl-4 text-left mx-auto max-w-sm">
+        <blockquote className="font-display text-lg italic text-muted-foreground border-l-2 border-gold/30 pl-4 text-left mx-auto max-w-sm">
           "{getCopyByKey('triade_completa', 'Ego organiza a experiência • Neuroplasticidade sustenta o processo • A Alma orienta a travessia')}"
           <footer className="text-xs text-muted-foreground mt-1 not-italic">
             {getCopyByKey('triade_assinatura', '— Tríade Metodológica ORÁCULA')}

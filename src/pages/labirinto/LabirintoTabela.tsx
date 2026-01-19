@@ -14,10 +14,10 @@ import { RotateCcw } from "lucide-react";
 
 const TIPO_CAMPO_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   limiar: { label: "Limiar", icon: Sparkles, color: "text-purple-400" },
-  retencao: { label: "Retenção", icon: Circle, color: "text-blue-500" },
-  defesa: { label: "Defesa", icon: Shield, color: "text-red-500" },
-  dissolucao: { label: "Dissolução", icon: Droplets, color: "text-gray-400" },
-  emergencia: { label: "Emergência", icon: Flame, color: "text-green-500" },
+  retencao: { label: "Retenção", icon: Circle, color: "text-blue-400" },
+  defesa: { label: "Defesa", icon: Shield, color: "text-red-400" },
+  dissolucao: { label: "Dissolução", icon: Droplets, color: "text-muted-foreground" },
+  emergencia: { label: "Emergência", icon: Flame, color: "text-green-400" },
   reintegracao: { label: "Reintegração", icon: RotateCcw, color: "text-gold" },
 };
 
