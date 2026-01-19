@@ -197,7 +197,7 @@ export function Navigation() {
       const territoriosItems: MenuItem[] = [
         {
           path: '/casa',
-          label: 'Casa Orácula',
+          label: 'Casa das Tecelãs',
           icon: Flame,
           minPortal: 'iniciada',
         },
