@@ -22,7 +22,7 @@ export function ToolEthicalNote({ className }: ToolEthicalNoteProps) {
             <Sparkles className="w-5 h-5 text-gold shrink-0" />
             <p className="text-sm text-foreground/80">
               O uso ético e maduro desta ferramenta é sustentado na{' '}
-              <span className="text-gold font-medium">Casa Orácula</span>.
+              <span className="text-gold font-medium">Casa das Tecelãs</span>.
             </p>
           </div>
           <Button 
