@@ -96,6 +96,7 @@ export default function MinhasClientes() {
     const { data: clientesData, error: clientesError } = await supabase
       .from('clientes')
       .select('*')
+      .eq('terapeuta_id', user.id)
       .order('created_at', { ascending: false });
 
     if (clientesError) {
