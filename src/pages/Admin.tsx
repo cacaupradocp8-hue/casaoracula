@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, Link2, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target, Flame } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target, Flame } from 'lucide-react';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -25,7 +25,7 @@ const AdminModelosTab = lazy(() => import('@/components/admin/AdminModelosTab').
 const AdminFerramentasTab = lazy(() => import('@/components/admin/AdminFerramentasTab').then(m => ({ default: m.AdminFerramentasTab })));
 const AdminSalasTab = lazy(() => import('@/components/admin/AdminSalasTab').then(m => ({ default: m.AdminSalasTab })));
 const AdminConteudosTab = lazy(() => import('@/components/admin/AdminConteudosTab').then(m => ({ default: m.AdminConteudosTab })));
-const AdminVinculosTab = lazy(() => import('@/components/admin/AdminVinculosTab').then(m => ({ default: m.AdminVinculosTab })));
+
 const AdminMatriculasTab = lazy(() => import('@/components/admin/AdminMatriculasTab').then(m => ({ default: m.AdminMatriculasTab })));
 const AdminSettingsTab = lazy(() => import('@/components/admin/AdminSettingsTab').then(m => ({ default: m.AdminSettingsTab })));
 const AdminAssinaturasTab = lazy(() => import('@/components/admin/AdminAssinaturasTab').then(m => ({ default: m.AdminAssinaturasTab })));
@@ -168,10 +168,6 @@ export default function Admin() {
             <TabsTrigger value="salas" className="gap-2">
               <DoorOpen className="w-4 h-4" />
               Salas
-            </TabsTrigger>
-            <TabsTrigger value="vinculos" className="gap-2">
-              <Link2 className="w-4 h-4" />
-              Vínculos
             </TabsTrigger>
             <TabsTrigger value="quiz" className="gap-2">
               <ClipboardList className="w-4 h-4" />
@@ -325,11 +321,6 @@ export default function Admin() {
             </Suspense>
           </TabsContent>
 
-          <TabsContent value="vinculos">
-            <Suspense fallback={<TabLoader />}>
-              <AdminVinculosTab />
-            </Suspense>
-          </TabsContent>
 
           <TabsContent value="quiz">
             <Suspense fallback={<TabLoader />}>
