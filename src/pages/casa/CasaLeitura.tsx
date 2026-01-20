@@ -86,14 +86,14 @@ export default function CasaLeitura() {
             onClick={() => navigate('/casa')}
             className="mb-4 gap-2"
           >
-            <ArrowLeft className="w-4 h-4" /> Casa Orácula
+            <ArrowLeft className="w-4 h-4" /> Casa das Tecelãs
           </Button>
 
           <SectionHeader
             title="Sala da Leitura"
-            subtitle="Estudos de caso e uso prático das ferramentas"
+            subtitle="Estudos de caso e prática simbólica"
             icon={<BookOpen className="w-5 h-5 text-gold" />}
-            className="mb-8"
+            className="mb-6"
           />
         </motion.div>
 
@@ -102,11 +102,17 @@ export default function CasaLeitura() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="p-4 rounded-lg bg-gold/10 border border-gold/30 mb-8"
+          className="glass p-5 rounded-xl border border-gold/30 mb-8 max-w-3xl"
         >
-          <p className="text-sm text-foreground/80">
-            Estudos de caso anonimizados, uso prático das Ferramentas Oraculares em sessões reais,
-            vídeos curtos, exemplos concretos e materiais simples.
+          <p className="text-foreground/90 leading-relaxed">
+            <strong className="text-gold">Casos anonimizados e aplicação real das ferramentas.</strong>
+          </p>
+          <p className="text-foreground/80 mt-2 text-sm">
+            Exemplos concretos de uso das Ferramentas Oraculares em sessão, 
+            leituras oraculares comentadas e materiais práticos.
+          </p>
+          <p className="text-muted-foreground mt-3 text-xs italic">
+            Todos os casos são supervisionados e seguem rigoroso protocolo de anonimização.
           </p>
         </motion.div>
 
