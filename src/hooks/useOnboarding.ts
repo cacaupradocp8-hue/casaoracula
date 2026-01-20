@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -9,6 +9,7 @@ export interface OnboardingData {
   entrySymbol: string | null;
   onboardingCompleted: boolean;
   isLoading: boolean;
+  error: string | null;
 }
 
 const ARCHETYPE_SYMBOLS: Record<ArchetypeType, { symbol: string; phrase: string }> = {
@@ -33,21 +34,27 @@ export function useOnboarding() {
     entrySymbol: null,
     onboardingCompleted: false,
     isLoading: true,
+    error: null,
   });
+  
+  // Track if we've already fetched to prevent duplicate calls
+  const hasFetchedRef = useRef(false);
+  const currentUserIdRef = useRef<string | null>(null);
 
-  useEffect(() => {
-    if (!user) {
+  const fetchOnboardingStatus = useCallback(async () => {
+    if (!user?.id) {
       setData(prev => ({ ...prev, isLoading: false }));
       return;
     }
 
-    fetchOnboardingStatus();
-  }, [user?.id]);
-
-  const fetchOnboardingStatus = async () => {
-    if (!user) return;
+    // Prevent duplicate fetches for the same user
+    if (hasFetchedRef.current && currentUserIdRef.current === user.id) {
+      return;
+    }
 
     try {
+      setData(prev => ({ ...prev, isLoading: true, error: null }));
+      
       const { data: profile, error } = await supabase
         .from('profiles')
         .select('entry_archetype, entry_symbol, onboarding_completed')
@@ -56,20 +63,42 @@ export function useOnboarding() {
 
       if (error) throw error;
 
+      hasFetchedRef.current = true;
+      currentUserIdRef.current = user.id;
+
       setData({
         entryArchetype: profile?.entry_archetype as ArchetypeType | null,
         entrySymbol: profile?.entry_symbol || null,
         onboardingCompleted: profile?.onboarding_completed || false,
         isLoading: false,
+        error: null,
       });
     } catch (error) {
       console.error('Error fetching onboarding status:', error);
-      setData(prev => ({ ...prev, isLoading: false }));
+      setData(prev => ({ 
+        ...prev, 
+        isLoading: false, 
+        error: 'Erro ao carregar status. Tente novamente.' 
+      }));
     }
-  };
+  }, [user?.id]);
 
-  const saveArchetype = async (archetype: ArchetypeType): Promise<boolean> => {
-    if (!user) return false;
+  useEffect(() => {
+    // Reset fetch state when user changes
+    if (user?.id !== currentUserIdRef.current) {
+      hasFetchedRef.current = false;
+    }
+
+    if (!user?.id) {
+      setData(prev => ({ ...prev, isLoading: false }));
+      return;
+    }
+
+    fetchOnboardingStatus();
+  }, [user?.id, fetchOnboardingStatus]);
+
+  const saveArchetype = useCallback(async (archetype: ArchetypeType): Promise<boolean> => {
+    if (!user?.id) return false;
 
     const symbolData = ARCHETYPE_SYMBOLS[archetype];
 
@@ -95,10 +124,10 @@ export function useOnboarding() {
       console.error('Error saving archetype:', error);
       return false;
     }
-  };
+  }, [user?.id]);
 
-  const completeOnboarding = async (): Promise<boolean> => {
-    if (!user) return false;
+  const completeOnboarding = useCallback(async (): Promise<boolean> => {
+    if (!user?.id) return false;
 
     try {
       const { error } = await supabase
@@ -114,9 +143,9 @@ export function useOnboarding() {
       console.error('Error completing onboarding:', error);
       return false;
     }
-  };
+  }, [user?.id]);
 
-  const getSymbolData = (archetype: ArchetypeType) => ARCHETYPE_SYMBOLS[archetype];
+  const getSymbolData = useCallback((archetype: ArchetypeType) => ARCHETYPE_SYMBOLS[archetype], []);
 
   return {
     ...data,

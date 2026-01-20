@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, MessageCircle, Moon, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -38,7 +38,7 @@ const EXPERIENCES = [
     gradient: 'from-blue-500/20 to-blue-500/5',
     iconColor: 'text-blue-400',
   },
-];
+] as const;
 
 export function VisitorRoomScreen({ 
   onBecomeResident, 
@@ -48,14 +48,18 @@ export function VisitorRoomScreen({
   const [activeExperience, setActiveExperience] = useState<VisitorExperience>('hub');
   const [completedExperiences, setCompletedExperiences] = useState<Set<string>>(new Set());
 
-  const handleExperienceComplete = (experienceId: string) => {
+  const handleExperienceComplete = useCallback((experienceId: string) => {
     setCompletedExperiences(prev => new Set([...prev, experienceId]));
     setActiveExperience('hub');
-  };
+  }, []);
 
-  const handleBackToHub = () => {
+  const handleBackToHub = useCallback(() => {
     setActiveExperience('hub');
-  };
+  }, []);
+
+  const handleSelectExperience = useCallback((id: VisitorExperience) => {
+    setActiveExperience(id);
+  }, []);
 
   // Silence experience
   if (activeExperience === 'silence') {
@@ -172,7 +176,7 @@ export function VisitorRoomScreen({
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.3 + index * 0.1 }}
-                onClick={() => setActiveExperience(exp.id)}
+                onClick={() => handleSelectExperience(exp.id)}
                 className={`
                   relative group p-6 rounded-xl border transition-all duration-300
                   bg-gradient-to-r ${exp.gradient}
