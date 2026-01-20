@@ -9,20 +9,16 @@ import { NotificationBell } from '@/components/shared/NotificationBell';
 import { supabase } from '@/integrations/supabase/client';
 import {
   Home,
-  Library,
   Settings,
   LogOut,
   Menu,
   X,
   User,
-  Users,
   Lock,
   Compass,
   Sparkles,
-  DoorOpen,
   GraduationCap,
-  Flame,
-  Briefcase,
+  Heart,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -137,121 +133,61 @@ export function Navigation() {
   };
 
   // Build menu blocks based on role and portal
+  // ═══════════════════════════════════════════════════════════════
+  // MENU FIXO: 5 ITENS DEFINITIVOS
+  // 1. Casa Orácula (home/dashboard)
+  // 2. Meu Caminho (jornada)
+  // 3. Formação (salas)
+  // 4. Ferramentas do Método (ferramentas)
+  // 5. Sustentação (casa - Casa das Tecelãs)
+  // ═══════════════════════════════════════════════════════════════
   const buildMenuBlocks = (): MenuBlock[] => {
     const blocks: MenuBlock[] = [];
 
     // ═══════════════════════════════════════════════════════════════
-    // BLOCK 1: JORNADA (visible to all authenticated users)
+    // MENU PRINCIPAL (5 itens fixos)
     // ═══════════════════════════════════════════════════════════════
-    const jornadaItems: MenuItem[] = [
+    const mainItems: MenuItem[] = [
       {
         path: '/dashboard',
-        label: 'Início',
+        label: 'Casa Orácula',
         icon: Home,
         minPortal: 'visitante',
       },
       {
         path: '/jornada',
-        label: 'Minha Jornada',
+        label: 'Meu Caminho',
         icon: Compass,
         minPortal: 'visitante',
+      },
+      {
+        path: '/salas',
+        label: 'Formação',
+        icon: GraduationCap,
+        minPortal: 'pre_iniciada',
+      },
+      {
+        path: '/ferramentas',
+        label: 'Ferramentas do Método',
+        icon: Sparkles,
+        minPortal: 'pre_iniciada',
+      },
+      {
+        path: '/casa',
+        label: 'Sustentação',
+        icon: Heart,
+        minPortal: 'iniciada',
       },
     ];
 
     blocks.push({
-      id: 'jornada',
-      label: 'Jornada',
-      items: jornadaItems,
+      id: 'principal',
+      label: 'Menu',
+      items: mainItems,
     });
-    
-    // ═══════════════════════════════════════════════════════════════
-    // BLOCK 2: FORMAÇÃO E FERRAMENTAS (pre_iniciada+)
-    // ═══════════════════════════════════════════════════════════════
-    if (isProfessionalLevel) {
-      const formacaoItems: MenuItem[] = [
-        {
-          path: '/salas',
-          label: 'Sala de Formação',
-          icon: GraduationCap,
-          minPortal: 'pre_iniciada',
-        },
-        {
-          path: '/ferramentas',
-          label: 'Ferramentas Oraculares',
-          icon: Sparkles,
-          minPortal: 'pre_iniciada',
-        },
-      ];
-
-      blocks.push({
-        id: 'formacao',
-        label: 'Formação',
-        items: formacaoItems,
-      });
-    }
 
     // ═══════════════════════════════════════════════════════════════
-    // BLOCK 3: TERRITÓRIOS VIVOS (iniciada+)
-    // ═══════════════════════════════════════════════════════════════
-    if (isProfessionalLevel) {
-      const territoriosItems: MenuItem[] = [
-        {
-          path: '/casa',
-          label: 'Casa das Tecelãs',
-          icon: Flame,
-          minPortal: 'iniciada',
-        },
-        {
-          path: '/mentoria-oracular',
-          label: 'Mentoria Oracular',
-          icon: DoorOpen,
-          minPortal: 'iniciada',
-          requiresMatricula: 'mentoria',
-        },
-      ];
-
-      blocks.push({
-        id: 'territorios',
-        label: 'Territórios',
-        items: territoriosItems,
-      });
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // BLOCK 4: PROFISSIONAL (only for pre_iniciada and above)
-    // ═══════════════════════════════════════════════════════════════
-    if (isProfessionalLevel) {
-      const profissionalItems: MenuItem[] = [];
-
-      // Only show "Minhas Clientes" for verified professionals
-      if (isProfessionalVerified) {
-        profissionalItems.push({
-          path: '/minhas-clientes',
-          label: 'Clientes',
-          icon: Users,
-          minPortal: 'pre_iniciada',
-        });
-      }
-
-      // Session Room
-      profissionalItems.push({
-        path: '/session-room',
-        label: 'Sessão',
-        icon: Briefcase,
-        minPortal: 'pre_iniciada',
-      });
-
-      if (profissionalItems.length > 0) {
-        blocks.push({
-          id: 'profissional',
-          label: 'Profissional',
-          items: profissionalItems,
-        });
-      }
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // BLOCK 5: ADMIN (only for admin)
+    // ADMIN (somente para admin - separado do menu principal)
     // ═══════════════════════════════════════════════════════════════
     if (isAdmin) {
       blocks.push({
