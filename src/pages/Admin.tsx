@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target, Flame } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target, Flame, FolderOpen, Link } from 'lucide-react';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -50,6 +50,9 @@ const AdminFormacaoTab = lazy(() => import('@/components/admin/AdminFormacaoTab'
 const AdminRadiestesiaTab = lazy(() => import('@/components/admin/AdminRadiestesiaTab').then(m => ({ default: m.AdminRadiestesiaTab })));
 const AdminCasaOraculaTab = lazy(() => import('@/components/admin/AdminCasaOraculaTab'));
 const AdminAreaFormacaoTab = lazy(() => import('@/components/admin/AdminAreaFormacaoTab').then(m => ({ default: m.AdminAreaFormacaoTab })));
+const AdminSessoesTab = lazy(() => import('@/components/admin/AdminSessoesTab').then(m => ({ default: m.AdminSessoesTab })));
+const AdminVinculosTab = lazy(() => import('@/components/admin/AdminVinculosTab').then(m => ({ default: m.AdminVinculosTab })));
+const AdminGruposTab = lazy(() => import('@/components/admin/AdminGruposTab').then(m => ({ default: m.AdminGruposTab })));
 
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
@@ -149,6 +152,18 @@ export default function Admin() {
             <TabsTrigger value="casa-oracula" className="gap-2">
               <Flame className="w-4 h-4" />
               Casa das Tecelãs
+            </TabsTrigger>
+            <TabsTrigger value="sessoes" className="gap-2">
+              <FolderOpen className="w-4 h-4 text-purple-400" />
+              Sessões
+            </TabsTrigger>
+            <TabsTrigger value="vinculos" className="gap-2">
+              <Link className="w-4 h-4 text-purple-400" />
+              Vínculos
+            </TabsTrigger>
+            <TabsTrigger value="grupos" className="gap-2">
+              <Users className="w-4 h-4 text-purple-400" />
+              Grupos
             </TabsTrigger>
             <TabsTrigger value="agentes" className="gap-2">
               <Bot className="w-4 h-4" />
@@ -438,6 +453,24 @@ export default function Admin() {
           <TabsContent value="casa-oracula">
             <Suspense fallback={<TabLoader />}>
               <AdminCasaOraculaTab />
+            </Suspense>
+          </TabsContent>
+
+          <TabsContent value="sessoes">
+            <Suspense fallback={<TabLoader />}>
+              <AdminSessoesTab />
+            </Suspense>
+          </TabsContent>
+
+          <TabsContent value="vinculos">
+            <Suspense fallback={<TabLoader />}>
+              <AdminVinculosTab />
+            </Suspense>
+          </TabsContent>
+
+          <TabsContent value="grupos">
+            <Suspense fallback={<TabLoader />}>
+              <AdminGruposTab />
             </Suspense>
           </TabsContent>
 

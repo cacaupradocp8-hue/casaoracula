@@ -99,6 +99,7 @@ import Onboarding from "./pages/Onboarding";
 import SalaDeSessao from "./pages/SalaDeSessao";
 import SessionRoomHome from "./pages/SessionRoomHome";
 import SessionRoomCase from "./pages/SessionRoomCase";
+import SessionRoomGroup from "./pages/SessionRoomGroup";
 import ManuaisProtocolo from "./pages/ManuaisProtocolo";
 import RoteirosProtocolo from "./pages/RoteirosProtocolo";
 // Symbolic Templates
@@ -416,6 +417,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="pre_iniciada">
             <SessionRoomCase />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/session-room/group/:groupId"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <SessionRoomGroup />
           </ProtectedRoute>
         }
       />
