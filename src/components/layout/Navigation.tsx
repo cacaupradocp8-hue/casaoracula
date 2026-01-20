@@ -19,6 +19,8 @@ import {
   Sparkles,
   GraduationCap,
   Heart,
+  Users,
+  ClipboardList,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -185,6 +187,30 @@ export function Navigation() {
       label: 'Menu',
       items: mainItems,
     });
+
+    // ═══════════════════════════════════════════════════════════════
+    // PROFISSIONAL (para terapeutas verificadas - pre_iniciada+)
+    // ═══════════════════════════════════════════════════════════════
+    if (isProfessionalLevel && isProfessionalVerified) {
+      blocks.push({
+        id: 'profissional',
+        label: 'Profissional',
+        items: [
+          {
+            path: '/minhas-clientes',
+            label: 'Clientes',
+            icon: Users,
+            minPortal: 'pre_iniciada',
+          },
+          {
+            path: '/session-room',
+            label: 'Sala de Sessão',
+            icon: ClipboardList,
+            minPortal: 'pre_iniciada',
+          },
+        ],
+      });
+    }
 
     // ═══════════════════════════════════════════════════════════════
     // ADMIN (somente para admin - separado do menu principal)
