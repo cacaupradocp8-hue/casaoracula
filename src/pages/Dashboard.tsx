@@ -1,15 +1,59 @@
+import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { Sparkles, Heart, Shield, Compass, Moon, Eye } from "lucide-react";
+import { Sparkles, Heart, Shield, Compass, Moon, Eye, Users, ClipboardList } from "lucide-react";
 import { useCopy } from "@/hooks/useCopy";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
+import { canAccessFeature } from "@/types/portal";
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { getCopyByKey } = useCopy();
+  const [isProfessionalVerified, setIsProfessionalVerified] = useState(false);
 
   const welcomeName = user?.name?.split(' ')[0] || 'Visitante';
+  const isProfessionalLevel = user && canAccessFeature(user.portal, 'pre_iniciada');
+
+  // Check professional verification status
+  useEffect(() => {
+    const checkProfessionalStatus = async () => {
+      if (!user) {
+        setIsProfessionalVerified(false);
+        return;
+      }
+      
+      if (user.portal === 'admin') {
+        setIsProfessionalVerified(true);
+        return;
+      }
+
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('is_professional_verified, role')
+          .eq('id', user.id)
+          .single();
+
+        if (profile) {
+          setIsProfessionalVerified(
+            profile.is_professional_verified === true || 
+            profile.role === 'terapeuta'
+          );
+        }
+      } catch (error) {
+        console.error('Error checking professional status:', error);
+      }
+    };
+
+    checkProfessionalStatus();
+  }, [user]);
+
+  const showProfessionalShortcuts = isProfessionalLevel && isProfessionalVerified;
+
 
   return (
     <AppLayout>
@@ -179,6 +223,50 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Professional Shortcuts - Only for verified professionals */}
+        {showProfessionalShortcuts && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55, duration: 0.5 }}
+            className="mt-10"
+          >
+            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4 text-center">
+              Área Profissional
+            </h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              <Card 
+                className="glass border-gold/20 cursor-pointer hover:border-gold/40 transition-colors"
+                onClick={() => navigate('/minhas-clientes')}
+              >
+                <CardContent className="p-6 flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center">
+                    <Users className="w-6 h-6 text-gold" />
+                  </div>
+                  <div>
+                    <p className="font-display text-lg font-semibold text-foreground">Clientes</p>
+                    <p className="text-sm text-muted-foreground">Gerencie suas clientes</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card 
+                className="glass border-gold/20 cursor-pointer hover:border-gold/40 transition-colors"
+                onClick={() => navigate('/session-room')}
+              >
+                <CardContent className="p-6 flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center">
+                    <ClipboardList className="w-6 h-6 text-gold" />
+                  </div>
+                  <div>
+                    <p className="font-display text-lg font-semibold text-foreground">Sala de Sessão</p>
+                    <p className="text-sm text-muted-foreground">Conduza seus atendimentos</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </motion.div>
+        )}
 
         {/* Footer Note */}
         <motion.p
