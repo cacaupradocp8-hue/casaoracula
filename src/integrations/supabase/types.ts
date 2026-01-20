@@ -2088,6 +2088,86 @@ export type Database = {
         }
         Relationships: []
       }
+      group_participants: {
+        Row: {
+          ativo: boolean
+          cliente_id: string
+          group_id: string
+          id: string
+          joined_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          cliente_id: string
+          group_id: string
+          id?: string
+          joined_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          cliente_id?: string
+          group_id?: string
+          id?: string
+          joined_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_participants_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_participants_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "therapeutic_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_sessions: {
+        Row: {
+          created_at: string
+          group_id: string
+          id: string
+          notes: string | null
+          status: string
+          therapist_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          group_id: string
+          id?: string
+          notes?: string | null
+          status?: string
+          therapist_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          group_id?: string
+          id?: string
+          notes?: string | null
+          status?: string
+          therapist_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_sessions_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "therapeutic_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       jornada_heroina_fases: {
         Row: {
           arquetipos_sugeridos: string[] | null
@@ -5052,6 +5132,36 @@ export type Database = {
           scope?: string | null
           scope_id?: string | null
           titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      therapeutic_groups: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          id: string
+          nome: string
+          status: string
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          nome: string
+          status?: string
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          nome?: string
+          status?: string
+          therapist_id?: string
           updated_at?: string
         }
         Relationships: []
