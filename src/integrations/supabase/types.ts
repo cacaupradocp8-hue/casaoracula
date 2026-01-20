@@ -1924,6 +1924,78 @@ export type Database = {
           },
         ]
       }
+      formacao_area_config: {
+        Row: {
+          created_at: string
+          formacao_ativa: boolean | null
+          formacao_banner_url: string | null
+          formacao_cor: string | null
+          formacao_descricao: string | null
+          formacao_icone: string | null
+          formacao_itens: string[] | null
+          formacao_subtitulo: string | null
+          formacao_titulo: string | null
+          id: string
+          mentoria_ativa: boolean | null
+          mentoria_banner_url: string | null
+          mentoria_cor: string | null
+          mentoria_descricao: string | null
+          mentoria_icone: string | null
+          mentoria_itens: string[] | null
+          mentoria_subtitulo: string | null
+          mentoria_titulo: string | null
+          mostrar_salas_estudo: boolean | null
+          titulo_salas_estudo: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          formacao_ativa?: boolean | null
+          formacao_banner_url?: string | null
+          formacao_cor?: string | null
+          formacao_descricao?: string | null
+          formacao_icone?: string | null
+          formacao_itens?: string[] | null
+          formacao_subtitulo?: string | null
+          formacao_titulo?: string | null
+          id?: string
+          mentoria_ativa?: boolean | null
+          mentoria_banner_url?: string | null
+          mentoria_cor?: string | null
+          mentoria_descricao?: string | null
+          mentoria_icone?: string | null
+          mentoria_itens?: string[] | null
+          mentoria_subtitulo?: string | null
+          mentoria_titulo?: string | null
+          mostrar_salas_estudo?: boolean | null
+          titulo_salas_estudo?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          formacao_ativa?: boolean | null
+          formacao_banner_url?: string | null
+          formacao_cor?: string | null
+          formacao_descricao?: string | null
+          formacao_icone?: string | null
+          formacao_itens?: string[] | null
+          formacao_subtitulo?: string | null
+          formacao_titulo?: string | null
+          id?: string
+          mentoria_ativa?: boolean | null
+          mentoria_banner_url?: string | null
+          mentoria_cor?: string | null
+          mentoria_descricao?: string | null
+          mentoria_icone?: string | null
+          mentoria_itens?: string[] | null
+          mentoria_subtitulo?: string | null
+          mentoria_titulo?: string | null
+          mostrar_salas_estudo?: boolean | null
+          titulo_salas_estudo?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       formacao_modulos: {
         Row: {
           created_at: string
