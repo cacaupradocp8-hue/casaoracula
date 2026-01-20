@@ -49,6 +49,7 @@ const AdminComunicacaoTab = lazy(() => import('@/components/admin/AdminComunicac
 const AdminFormacaoTab = lazy(() => import('@/components/admin/AdminFormacaoTab'));
 const AdminRadiestesiaTab = lazy(() => import('@/components/admin/AdminRadiestesiaTab').then(m => ({ default: m.AdminRadiestesiaTab })));
 const AdminCasaOraculaTab = lazy(() => import('@/components/admin/AdminCasaOraculaTab'));
+const AdminAreaFormacaoTab = lazy(() => import('@/components/admin/AdminAreaFormacaoTab').then(m => ({ default: m.AdminAreaFormacaoTab })));
 
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
@@ -237,6 +238,10 @@ export default function Admin() {
               <GraduationCap className="w-4 h-4 text-gold" />
               Pág. Vendas
             </TabsTrigger>
+            <TabsTrigger value="area-formacao" className="gap-2">
+              <DoorOpen className="w-4 h-4 text-purple-400" />
+              Área Formação
+            </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Cog className="w-4 h-4" />
               Configurações
@@ -421,6 +426,12 @@ export default function Admin() {
           <TabsContent value="formacao">
             <Suspense fallback={<TabLoader />}>
               <AdminFormacaoTab />
+            </Suspense>
+          </TabsContent>
+
+          <TabsContent value="area-formacao">
+            <Suspense fallback={<TabLoader />}>
+              <AdminAreaFormacaoTab />
             </Suspense>
           </TabsContent>
 

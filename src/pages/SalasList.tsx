@@ -42,6 +42,40 @@ interface MatriculaInfo {
   hasFormacao: boolean;
 }
 
+interface FormacaoAreaConfig {
+  mentoria_banner_url: string | null;
+  mentoria_titulo: string;
+  mentoria_subtitulo: string;
+  mentoria_descricao: string;
+  mentoria_itens: string[];
+  mentoria_ativa: boolean;
+  formacao_banner_url: string | null;
+  formacao_titulo: string;
+  formacao_subtitulo: string;
+  formacao_descricao: string;
+  formacao_itens: string[];
+  formacao_ativa: boolean;
+  mostrar_salas_estudo: boolean;
+  titulo_salas_estudo: string;
+}
+
+const defaultConfig: FormacaoAreaConfig = {
+  mentoria_banner_url: null,
+  mentoria_titulo: 'Mentoria Orácula',
+  mentoria_subtitulo: 'Jornada pessoal simbólica',
+  mentoria_descricao: 'Sua jornada pessoal de autoconhecimento e transformação interior.',
+  mentoria_itens: ['Jornada pessoal de autodescoberta', 'Práticas simbólicas guiadas', 'Sem aplicação profissional'],
+  mentoria_ativa: true,
+  formacao_banner_url: null,
+  formacao_titulo: 'Formação Orácula',
+  formacao_subtitulo: 'Capacitação profissional',
+  formacao_descricao: 'Formação completa para se tornar uma facilitadora do método ORÁCULA.',
+  formacao_itens: ['Currículo estruturado', 'Ensino do método', 'Certificação profissional'],
+  formacao_ativa: true,
+  mostrar_salas_estudo: true,
+  titulo_salas_estudo: 'Salas de Estudo',
+};
+
 const NIVEL_HIERARCHY: Record<NivelSala, number> = {
   NIVEL_0: 0,
   NIVEL_1: 1,
@@ -62,6 +96,7 @@ export default function SalasList() {
   const [salas, setSalas] = useState<Sala[]>([]);
   const [loading, setLoading] = useState(true);
   const [matriculas, setMatriculas] = useState<MatriculaInfo>({ hasMentoria: false, hasFormacao: false });
+  const [config, setConfig] = useState<FormacaoAreaConfig>(defaultConfig);
   const [selectedSala, setSelectedSala] = useState<Sala | null>(null);
   const [showBlockedDialog, setShowBlockedDialog] = useState(false);
 
@@ -75,34 +110,34 @@ export default function SalasList() {
       setLoading(true);
       
       try {
-        // Fetch salas
-        const { data: salasData } = await supabase
-          .from("salas")
-          .select("*")
-          .eq("ativa", true)
-          .order("ordem");
+        // Fetch salas, matriculas and config in parallel
+        const [salasRes, configRes, matriculasRes] = await Promise.all([
+          supabase.from("salas").select("*").eq("ativa", true).order("ordem"),
+          supabase.from("formacao_area_config").select("*").limit(1).maybeSingle(),
+          isAdmin ? Promise.resolve({ data: null }) : supabase.from('matriculas').select('curso_id').eq('user_id', user.id).eq('ativa', true)
+        ]);
 
-        if (salasData) {
-          setSalas(salasData as Sala[]);
+        if (salasRes.data) {
+          setSalas(salasRes.data as Sala[]);
         }
 
-        // Check matriculas for access
+        if (configRes.data) {
+          setConfig({
+            ...defaultConfig,
+            ...configRes.data,
+            mentoria_itens: configRes.data.mentoria_itens || defaultConfig.mentoria_itens,
+            formacao_itens: configRes.data.formacao_itens || defaultConfig.formacao_itens,
+          });
+        }
+
         if (isAdmin) {
           setMatriculas({ hasMentoria: true, hasFormacao: true });
-        } else {
-          const { data: matriculasData } = await supabase
-            .from('matriculas')
-            .select('curso_id')
-            .eq('user_id', user.id)
-            .eq('ativa', true);
-
-          if (matriculasData) {
-            const cursoIds = matriculasData.map(m => m.curso_id);
-            setMatriculas({
-              hasMentoria: cursoIds.some(id => id.includes('mentoria')),
-              hasFormacao: cursoIds.some(id => id.includes('formacao'))
-            });
-          }
+        } else if (matriculasRes.data) {
+          const cursoIds = matriculasRes.data.map((m: { curso_id: string }) => m.curso_id);
+          setMatriculas({
+            hasMentoria: cursoIds.some((id: string) => id.includes('mentoria')),
+            hasFormacao: cursoIds.some((id: string) => id.includes('formacao'))
+          });
         }
       } catch (error) {
         console.error("Error:", error);
@@ -152,170 +187,170 @@ export default function SalasList() {
         {/* Two Main Paths */}
         <div className="grid md:grid-cols-2 gap-6 mb-12">
           {/* MENTORIA ORÁCULA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <Card 
-              className={cn(
-                "h-full border-2 transition-all duration-300 cursor-pointer group",
-                matriculas.hasMentoria 
-                  ? "border-purple-500/50 bg-purple-500/5 hover:border-purple-500 hover:bg-purple-500/10" 
-                  : "border-border/50 bg-card/50 hover:border-purple-500/30"
-              )}
-              onClick={() => matriculas.hasMentoria ? navigate('/mentoria-oracular') : navigate('/planos')}
+          {config.mentoria_ativa && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
             >
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-14 h-14 rounded-2xl bg-purple-500/20 flex items-center justify-center">
-                    <Moon className="w-7 h-7 text-purple-400" />
+              <Card 
+                className={cn(
+                  "h-full border-2 transition-all duration-300 cursor-pointer group overflow-hidden",
+                  matriculas.hasMentoria 
+                    ? "border-purple-500/50 bg-purple-500/5 hover:border-purple-500 hover:bg-purple-500/10" 
+                    : "border-border/50 bg-card/50 hover:border-purple-500/30"
+                )}
+                onClick={() => matriculas.hasMentoria ? navigate('/mentoria-oracular') : navigate('/planos')}
+              >
+                {/* Banner Image */}
+                {config.mentoria_banner_url && (
+                  <div className="w-full aspect-[3/1] overflow-hidden">
+                    <img 
+                      src={config.mentoria_banner_url} 
+                      alt={config.mentoria_titulo}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  {matriculas.hasMentoria ? (
-                    <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">
-                      <Unlock className="w-3 h-3 mr-1" /> Ativo
-                    </Badge>
-                  ) : (
-                    <Badge variant="secondary">
-                      <Lock className="w-3 h-3 mr-1" /> Requer Matrícula
-                    </Badge>
-                  )}
-                </div>
-                <CardTitle className="text-xl font-display text-foreground group-hover:text-purple-400 transition-colors">
-                  Mentoria Orácula
-                </CardTitle>
-                <CardDescription className="text-base">
-                  Jornada simbólica pessoal
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Um caminho de autoconhecimento profundo através da linguagem simbólica. 
-                  Aqui você atravessa seus próprios processos, sem foco em aplicação profissional.
-                </p>
+                )}
                 
-                <div className="space-y-2 pt-2">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Heart className="w-4 h-4 text-purple-400" />
-                    <span>Jornada pessoal de transformação</span>
+                <CardHeader className="pb-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-14 h-14 rounded-2xl bg-purple-500/20 flex items-center justify-center">
+                      <Moon className="w-7 h-7 text-purple-400" />
+                    </div>
+                    {matriculas.hasMentoria ? (
+                      <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">
+                        <Unlock className="w-3 h-3 mr-1" /> Ativo
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary">
+                        <Lock className="w-3 h-3 mr-1" /> Requer Matrícula
+                      </Badge>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Sparkles className="w-4 h-4 text-purple-400" />
-                    <span>Práticas simbólicas individuais</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Compass className="w-4 h-4 text-purple-400" />
-                    <span>Acompanhamento e orientação</span>
-                  </div>
-                </div>
-
-                <Separator className="my-4" />
-
-                <div className="bg-purple-500/10 rounded-lg p-3 border border-purple-500/20">
-                  <p className="text-xs text-purple-300 italic">
-                    "A Mentoria é o espaço onde você se torna a própria cliente — 
-                    onde a travessia pessoal acontece antes de qualquer aplicação."
+                  <CardTitle className="text-xl font-display text-foreground group-hover:text-purple-400 transition-colors">
+                    {config.mentoria_titulo}
+                  </CardTitle>
+                  <CardDescription className="text-base">
+                    {config.mentoria_subtitulo}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {config.mentoria_descricao}
                   </p>
-                </div>
+                  
+                  <div className="space-y-2 pt-2">
+                    {config.mentoria_itens.map((item, index) => (
+                      <div key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
+                        {index === 0 && <Heart className="w-4 h-4 text-purple-400 shrink-0" />}
+                        {index === 1 && <Sparkles className="w-4 h-4 text-purple-400 shrink-0" />}
+                        {index === 2 && <Compass className="w-4 h-4 text-purple-400 shrink-0" />}
+                        {index > 2 && <Moon className="w-4 h-4 text-purple-400 shrink-0" />}
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
 
-                <div className="flex items-center justify-end pt-2">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="gap-1 text-purple-400 hover:text-purple-300"
-                  >
-                    {matriculas.hasMentoria ? 'Acessar' : 'Ver planos'}
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+                  <div className="flex items-center justify-end pt-2">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="gap-1 text-purple-400 hover:text-purple-300"
+                    >
+                      {matriculas.hasMentoria ? 'Acessar' : 'Ver planos'}
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
 
           {/* FORMAÇÃO ORÁCULA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Card 
-              className={cn(
-                "h-full border-2 transition-all duration-300 cursor-pointer group",
-                matriculas.hasFormacao 
-                  ? "border-gold/50 bg-gold/5 hover:border-gold hover:bg-gold/10" 
-                  : "border-border/50 bg-card/50 hover:border-gold/30"
-              )}
-              onClick={() => matriculas.hasFormacao ? navigate('/formacao-oracula') : navigate('/planos')}
+          {config.formacao_ativa && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
             >
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gold/20 flex items-center justify-center">
-                    <Star className="w-7 h-7 text-gold" />
+              <Card 
+                className={cn(
+                  "h-full border-2 transition-all duration-300 cursor-pointer group overflow-hidden",
+                  matriculas.hasFormacao 
+                    ? "border-gold/50 bg-gold/5 hover:border-gold hover:bg-gold/10" 
+                    : "border-border/50 bg-card/50 hover:border-gold/30"
+                )}
+                onClick={() => matriculas.hasFormacao ? navigate('/formacao-oracula') : navigate('/planos')}
+              >
+                {/* Banner Image */}
+                {config.formacao_banner_url && (
+                  <div className="w-full aspect-[3/1] overflow-hidden">
+                    <img 
+                      src={config.formacao_banner_url} 
+                      alt={config.formacao_titulo}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  {matriculas.hasFormacao ? (
-                    <Badge className="bg-gold/20 text-gold border-gold/30">
-                      <Unlock className="w-3 h-3 mr-1" /> Ativo
-                    </Badge>
-                  ) : (
-                    <Badge variant="secondary">
-                      <Lock className="w-3 h-3 mr-1" /> Requer Matrícula
-                    </Badge>
-                  )}
-                </div>
-                <CardTitle className="text-xl font-display text-foreground group-hover:text-gold transition-colors">
-                  Formação Orácula
-                </CardTitle>
-                <CardDescription className="text-base">
-                  Treinamento profissional estruturado
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  O caminho para quem deseja conduzir processos simbólicos com outras pessoas. 
-                  Aqui você aprende o método, as ferramentas e a ética da prática oracular.
-                </p>
+                )}
                 
-                <div className="space-y-2 pt-2">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <BookOpen className="w-4 h-4 text-gold" />
-                    <span>Currículo estruturado e progressivo</span>
+                <CardHeader className="pb-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-14 h-14 rounded-2xl bg-gold/20 flex items-center justify-center">
+                      <Star className="w-7 h-7 text-gold" />
+                    </div>
+                    {matriculas.hasFormacao ? (
+                      <Badge className="bg-gold/20 text-gold border-gold/30">
+                        <Unlock className="w-3 h-3 mr-1" /> Ativo
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary">
+                        <Lock className="w-3 h-3 mr-1" /> Requer Matrícula
+                      </Badge>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <GraduationCap className="w-4 h-4 text-gold" />
-                    <span>Ensino do método completo</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Users className="w-4 h-4 text-gold" />
-                    <span>Ferramentas para aplicação com clientes</span>
-                  </div>
-                </div>
-
-                <Separator className="my-4" />
-
-                <div className="bg-gold/10 rounded-lg p-3 border border-gold/20">
-                  <p className="text-xs text-gold italic">
-                    "A Formação prepara você para sustentar travessias alheias — 
-                    com estrutura, linguagem e cuidado simbólico."
+                  <CardTitle className="text-xl font-display text-foreground group-hover:text-gold transition-colors">
+                    {config.formacao_titulo}
+                  </CardTitle>
+                  <CardDescription className="text-base">
+                    {config.formacao_subtitulo}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {config.formacao_descricao}
                   </p>
-                </div>
+                  
+                  <div className="space-y-2 pt-2">
+                    {config.formacao_itens.map((item, index) => (
+                      <div key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
+                        {index === 0 && <BookOpen className="w-4 h-4 text-gold shrink-0" />}
+                        {index === 1 && <GraduationCap className="w-4 h-4 text-gold shrink-0" />}
+                        {index === 2 && <Users className="w-4 h-4 text-gold shrink-0" />}
+                        {index > 2 && <Star className="w-4 h-4 text-gold shrink-0" />}
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
 
-                <div className="flex items-center justify-end pt-2">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="gap-1 text-gold hover:text-gold/80"
-                  >
-                    {matriculas.hasFormacao ? 'Acessar' : 'Ver planos'}
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+                  <div className="flex items-center justify-end pt-2">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="gap-1 text-gold hover:text-gold/80"
+                    >
+                      {matriculas.hasFormacao ? 'Acessar' : 'Ver planos'}
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
         </div>
 
-        {/* Salas Section - Only show if there are salas */}
-        {salas.length > 0 && (
+        {/* Salas Section - Only show if configured and has salas */}
+        {config.mostrar_salas_estudo && salas.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -325,7 +360,7 @@ export default function SalasList() {
             
             <h2 className="text-lg font-display text-foreground mb-6 flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-muted-foreground" />
-              Salas de Estudo
+              {config.titulo_salas_estudo}
             </h2>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
