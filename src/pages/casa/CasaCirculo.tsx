@@ -211,41 +211,58 @@ export default function CasaCirculo() {
             className="mb-4 gap-2"
           >
             <ArrowLeft className="w-4 h-4" /> 
-            {selectedThread ? 'Voltar aos tópicos' : 'Casa Orácula'}
+            {selectedThread ? 'Voltar aos tópicos' : 'Casa das Tecelãs'}
           </Button>
 
           <SectionHeader
             title="Sala do Círculo"
             subtitle="Fórum moderado para troca profissional"
             icon={<Users className="w-5 h-5 text-blue-400" />}
-            className="mb-8"
+            className="mb-6"
           />
+        </motion.div>
+
+        {/* Description */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.15 }}
+          className="glass p-5 rounded-xl border border-blue-500/30 mb-6 max-w-3xl"
+        >
+          <p className="text-foreground/90 leading-relaxed">
+            <strong className="text-blue-400">Espaço moderado de troca entre pares.</strong>
+          </p>
+          <p className="text-foreground/80 mt-2 text-sm">
+            Poucos tópicos ativos, regras claras, linguagem profissional. 
+            Compartilhe práticas, dúvidas clínicas e reflexões de campo.
+          </p>
+          <p className="text-muted-foreground mt-3 text-xs italic">
+            Isso não é terapia. Não é desabafo. Não é competição espiritual.
+          </p>
         </motion.div>
 
         {/* Rules */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="p-4 rounded-lg bg-blue-500/10 border border-blue-500/30 mb-8"
+          transition={{ delay: 0.25 }}
+          className="grid grid-cols-2 gap-4 text-sm p-4 rounded-lg bg-blue-500/10 border border-blue-500/20 mb-8"
         >
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <p className="font-medium text-foreground/90 mb-1">Permitido:</p>
-              <ul className="text-muted-foreground space-y-0.5 text-xs">
-                <li>• Troca de práticas</li>
-                <li>• Perguntas clínicas</li>
-                <li>• Reflexões de campo</li>
-              </ul>
-            </div>
-            <div>
-              <p className="font-medium text-foreground/90 mb-1">Não permitido:</p>
-              <ul className="text-muted-foreground space-y-0.5 text-xs">
-                <li>• Não é terapia</li>
-                <li>• Não é desabafo</li>
-                <li>• Não é competição espiritual</li>
-              </ul>
-            </div>
+          <div>
+            <p className="font-medium text-foreground/90 mb-1">Permitido:</p>
+            <ul className="text-muted-foreground space-y-0.5 text-xs">
+              <li>• Troca de práticas</li>
+              <li>• Perguntas clínicas</li>
+              <li>• Reflexões de campo</li>
+            </ul>
+          </div>
+          <div>
+            <p className="font-medium text-foreground/90 mb-1">Não permitido:</p>
+            <ul className="text-muted-foreground space-y-0.5 text-xs">
+              <li>• Desabafos pessoais</li>
+              <li>• Promoção de serviços</li>
+              <li>• Competição espiritual</li>
+            </ul>
           </div>
         </motion.div>
 
