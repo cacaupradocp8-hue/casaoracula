@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, RefreshCw, ArrowLeft, Check } from 'lucide-react';
+import { Sparkles, RefreshCw, ArrowLeft, Check, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
@@ -22,23 +22,23 @@ export function OnboardingQuiz({ onComplete, onBack }: OnboardingQuizProps) {
   const [currentQuestion, setCurrentQuestion] = useState<Pergunta | null>(null);
   const [reflection, setReflection] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showComplete, setShowComplete] = useState(false);
 
-  useEffect(() => {
-    fetchPerguntas();
-  }, []);
-
-  const fetchPerguntas = async () => {
+  const fetchPerguntas = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    
     try {
       // Fetch level 1 questions (gentlest)
-      const { data, error } = await supabase
+      const { data, error: fetchError } = await supabase
         .from('oraculo_perguntas')
         .select('id, pergunta, tema, tags')
         .eq('status', 'ativo')
         .eq('nivel_intensidade', 1)
         .limit(20);
 
-      if (error) throw error;
+      if (fetchError) throw fetchError;
 
       const questions = data || [];
       setPerguntas(questions);
@@ -48,14 +48,19 @@ export function OnboardingQuiz({ onComplete, onBack }: OnboardingQuizProps) {
         const random = questions[Math.floor(Math.random() * questions.length)];
         setCurrentQuestion(random);
       }
-    } catch (error) {
-      console.error('Error fetching questions:', error);
+    } catch (err) {
+      console.error('Error fetching questions:', err);
+      setError('Erro ao carregar perguntas. Tente novamente.');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const sortearNova = () => {
+  useEffect(() => {
+    fetchPerguntas();
+  }, [fetchPerguntas]);
+
+  const sortearNova = useCallback(() => {
     if (perguntas.length === 0) return;
     
     // Pick different question if possible
@@ -64,15 +69,16 @@ export function OnboardingQuiz({ onComplete, onBack }: OnboardingQuizProps) {
     const random = pool[Math.floor(Math.random() * pool.length)];
     setCurrentQuestion(random);
     setReflection('');
-  };
+  }, [perguntas, currentQuestion?.id]);
 
-  const handleComplete = () => {
+  const handleComplete = useCallback(() => {
     setShowComplete(true);
     setTimeout(() => {
       onComplete();
     }, 2000);
-  };
+  }, [onComplete]);
 
+  // Loading state
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -84,6 +90,29 @@ export function OnboardingQuiz({ onComplete, onBack }: OnboardingQuizProps) {
     );
   }
 
+  // Error state with retry
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-6">
+        <div className="text-center space-y-4 max-w-md">
+          <AlertCircle className="w-12 h-12 text-destructive/60 mx-auto" />
+          <p className="text-destructive text-sm">{error}</p>
+          <div className="flex gap-3 justify-center">
+            <Button variant="ghost" onClick={onBack}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Voltar
+            </Button>
+            <Button variant="outline" onClick={fetchPerguntas}>
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Tentar novamente
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // No questions available
   if (!currentQuestion) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">

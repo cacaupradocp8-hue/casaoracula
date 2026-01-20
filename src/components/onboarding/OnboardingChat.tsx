@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, ArrowLeft, Send, Loader2 } from 'lucide-react';
+import { MessageCircle, ArrowLeft, Send, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { supabase } from '@/integrations/supabase/client';
@@ -9,6 +9,7 @@ interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
+  isError?: boolean;
 }
 
 interface OnboardingChatProps {
@@ -26,22 +27,42 @@ const INITIAL_MESSAGE: Message = {
 
 const CLOSING_MESSAGE = 'A Voz se recolhe agora. O silêncio que fica também é linguagem. Leve consigo o que foi tocado.';
 
+const FALLBACK_RESPONSES = [
+  'O véu se adensa... às vezes o silêncio é a resposta que buscamos.',
+  'Há mistérios que pedem tempo. Continue caminhando.',
+  'A Voz contempla em silêncio. O que você trouxe já reverbera.',
+];
+
 export function OnboardingChat({ onComplete, onBack }: OnboardingChatProps) {
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isEnded, setIsEnded] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, scrollToBottom]);
 
-  const handleSend = async () => {
+  // Focus input on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      inputRef.current?.focus();
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const getFallbackResponse = useCallback(() => {
+    return FALLBACK_RESPONSES[Math.floor(Math.random() * FALLBACK_RESPONSES.length)];
+  }, []);
+
+  const handleSend = useCallback(async () => {
     if (!input.trim() || isLoading || isEnded) return;
 
     const userMessage: Message = {
@@ -73,11 +94,14 @@ export function OnboardingChat({ onComplete, onBack }: OnboardingChatProps) {
         return;
       }
 
-      // Call AI
+      // Call AI with timeout
       const conversationHistory = [...messages, userMessage].map(m => ({
         role: m.role,
         content: m.content,
       }));
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
 
       const { data, error } = await supabase.functions.invoke('ai-chat', {
         body: {
@@ -100,34 +124,41 @@ Você não é uma terapeuta. Você é um espelho simbólico.`,
         },
       });
 
+      clearTimeout(timeoutId);
+
       if (error) throw error;
 
       const aiResponse: Message = {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
-        content: data?.response || 'O silêncio às vezes é a melhor resposta...',
+        content: data?.response || getFallbackResponse(),
       };
 
       setMessages(prev => [...prev, aiResponse]);
+      setRetryCount(0);
     } catch (error) {
       console.error('Error in chat:', error);
+      
+      // Use fallback response on error
       const fallbackMessage: Message = {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
-        content: 'O véu se adensa... às vezes o silêncio é a resposta que buscamos.',
+        content: getFallbackResponse(),
+        isError: retryCount >= 2, // Mark as error only after multiple failures
       };
       setMessages(prev => [...prev, fallbackMessage]);
+      setRetryCount(prev => prev + 1);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [input, isLoading, isEnded, messages, getFallbackResponse, retryCount]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
-  };
+  }, [handleSend]);
 
   return (
     <motion.div
@@ -173,11 +204,18 @@ Você não é uma terapeuta. Você é um espelho simbólico.`,
                       ? 'bg-gold/20 text-foreground rounded-br-md'
                       : 'bg-purple-500/10 text-foreground rounded-bl-md border border-purple-500/20'
                     }
+                    ${message.isError ? 'border-destructive/30' : ''}
                   `}
                 >
                   <p className={`text-sm leading-relaxed ${message.role === 'assistant' ? 'italic' : ''}`}>
                     {message.content}
                   </p>
+                  {message.isError && (
+                    <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      Resposta alternativa
+                    </p>
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -218,6 +256,7 @@ Você não é uma terapeuta. Você é um espelho simbólico.`,
           ) : (
             <div className="flex gap-3">
               <Input
+                ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
