@@ -1,371 +1,404 @@
-import { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { 
+  User, 
+  GraduationCap, 
+  Compass, 
+  CheckCircle2, 
+  XCircle,
+  BookOpen,
+  Users,
+  Sparkles,
+  ArrowRight,
+  Calendar
+} from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { SectionHeader } from '@/components/shared/SectionHeader';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/contexts/AuthContext';
+import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
-import { canAccessFeature, PortalType } from '@/types/portal';
-import {
-  Home,
-  Sparkles,
-  Users,
-  GraduationCap,
-  Library,
-  Lock,
-  CheckCircle2,
-  MapPin,
-  ArrowRight,
-  Bot,
-  BookOpen,
-  Brain,
-  Target,
-  Compass,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
-interface JourneyStep {
+interface ActiveMatricula {
   id: string;
-  title: string;
-  description: string;
-  icon: typeof Home;
-  items: {
-    label: string;
-    path: string;
-    icon: typeof Home;
-    minPortal: PortalType;
-    requiresMatricula?: 'mentoria' | 'formacao';
-  }[];
-  minPortal: PortalType;
+  curso_id: string;
+  data_inicio: string;
+  data_fim: string | null;
+  nome_curso?: string;
+  tipo: 'mentoria' | 'formacao' | 'curso';
 }
 
-const journeySteps: JourneyStep[] = [
-  {
-    id: 'chegada',
-    title: 'Chegada',
-    description: 'Seu ponto de partida na Casa ORÁCULA',
-    icon: Home,
-    minPortal: 'visitante',
-    items: [
-      { label: 'Dashboard', path: '/dashboard', icon: Home, minPortal: 'visitante' },
-      { label: 'Explorar Salas', path: '/salas', icon: Compass, minPortal: 'visitante' },
-    ],
-  },
-  {
-    id: 'organizacao',
-    title: 'Organização Interna',
-    description: 'Ferramentas para autoconhecimento e prática',
-    icon: Brain,
-    minPortal: 'pre_iniciada',
-    items: [
-      { label: 'O Mapa dos Cinco Territórios', path: '/ferramentas/big5', icon: Brain, minPortal: 'pre_iniciada' },
-      { label: 'O Oráculo dos Nove Arquétipos', path: '/ferramentas/eneagrama', icon: Target, minPortal: 'pre_iniciada' },
-      { label: 'Oráculos', path: '/ferramentas/mapa-oracula', icon: Sparkles, minPortal: 'pre_iniciada' },
-      { label: 'Agentes IA', path: '/agentes', icon: Bot, minPortal: 'pre_iniciada' },
-    ],
-  },
-  {
-    id: 'pratica',
-    title: 'Prática Profissional',
-    description: 'Gerencie clientes e estude casos reais',
-    icon: Users,
-    minPortal: 'pre_iniciada',
-    items: [
-      { label: 'Minhas Clientes', path: '/minhas-clientes', icon: Users, minPortal: 'pre_iniciada' },
-      { label: 'Casos de Estudo', path: '/casos', icon: BookOpen, minPortal: 'pre_iniciada' },
-    ],
-  },
-  {
-    id: 'formacao',
-    title: 'Formação',
-    description: 'Aprofunde sua jornada com mentoria e formação',
-    icon: GraduationCap,
-    minPortal: 'pre_iniciada',
-    items: [
-      { label: 'Mentoria ORÁCULA', path: '/mentoria', icon: Compass, minPortal: 'iniciada', requiresMatricula: 'mentoria' },
-      { label: 'Formação ORÁCULA', path: '/formacao', icon: GraduationCap, minPortal: 'pre_iniciada', requiresMatricula: 'formacao' },
-    ],
-  },
-  {
-    id: 'integracao',
-    title: 'Integração',
-    description: 'Acesse a biblioteca completa e conteúdos avançados',
-    icon: Library,
-    minPortal: 'pre_iniciada',
-    items: [
-      { label: 'Biblioteca', path: '/biblioteca', icon: Library, minPortal: 'pre_iniciada' },
-      { label: 'Áudios', path: '/audios', icon: Sparkles, minPortal: 'pre_iniciada' },
-    ],
-  },
-];
+interface SubscriptionInfo {
+  active: boolean;
+  status: string | null;
+  expiresAt: string | null;
+}
 
 export default function Jornada() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [hasMentoriaAccess, setHasMentoriaAccess] = useState(false);
-  const [hasFormacaoAccess, setHasFormacaoAccess] = useState(false);
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [matriculas, setMatriculas] = useState<ActiveMatricula[]>([]);
+  const [subscription, setSubscription] = useState<SubscriptionInfo>({ active: false, status: null, expiresAt: null });
 
-  // Check matriculas
   useEffect(() => {
-    const checkMatriculas = async () => {
+    const loadUserData = async () => {
       if (!user) return;
-
-      if (user.portal === 'admin') {
-        setHasMentoriaAccess(true);
-        setHasFormacaoAccess(true);
-        return;
-      }
-
+      
+      setLoading(true);
+      
       try {
-        const { data: matriculas } = await supabase
+        // Fetch active matriculas
+        const { data: matriculasData } = await supabase
           .from('matriculas')
-          .select('curso_id')
+          .select('id, curso_id, data_inicio, data_fim')
           .eq('user_id', user.id)
           .eq('ativa', true);
 
-        if (matriculas) {
-          const cursoIds = matriculas.map(m => m.curso_id);
-          setHasMentoriaAccess(cursoIds.includes('mentoria_oracula') || cursoIds.includes('mentoria'));
-          setHasFormacaoAccess(cursoIds.includes('formacao_oracula') || cursoIds.includes('formacao'));
+        if (matriculasData) {
+          const processed: ActiveMatricula[] = matriculasData.map(m => {
+            let tipo: 'mentoria' | 'formacao' | 'curso' = 'curso';
+            let nome = m.curso_id;
+            
+            if (m.curso_id.includes('mentoria')) {
+              tipo = 'mentoria';
+              nome = 'Mentoria Oracular';
+            } else if (m.curso_id.includes('formacao')) {
+              tipo = 'formacao';
+              nome = 'Formação ORÁCULA';
+            }
+            
+            return {
+              ...m,
+              tipo,
+              nome_curso: nome
+            };
+          });
+          setMatriculas(processed);
+        }
+
+        // Fetch subscription status from profile
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('subscription_status, access_expires_at')
+          .eq('id', user.id)
+          .maybeSingle();
+
+        if (profile) {
+          setSubscription({
+            active: profile.subscription_status === 'active' || profile.subscription_status === 'trialing',
+            status: profile.subscription_status,
+            expiresAt: profile.access_expires_at
+          });
         }
       } catch (error) {
-        console.error('Error checking matriculas:', error);
+        console.error('Error loading user data:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    checkMatriculas();
+    loadUserData();
   }, [user]);
 
-  // Determine current step based on user access
-  useEffect(() => {
-    if (!user) return;
+  const activeMentoria = matriculas.find(m => m.tipo === 'mentoria');
+  const activeFormacao = matriculas.find(m => m.tipo === 'formacao');
+  const otherCursos = matriculas.filter(m => m.tipo === 'curso');
 
-    // Find the highest unlocked step
-    let highestUnlocked = 0;
-    
-    for (let i = 0; i < journeySteps.length; i++) {
-      const step = journeySteps[i];
-      if (canAccessStep(step)) {
-        highestUnlocked = i;
-      }
-    }
+  const hasAnyActive = activeMentoria || activeFormacao || subscription.active;
 
-    setCurrentStepIndex(highestUnlocked);
-  }, [user, hasMentoriaAccess, hasFormacaoAccess]);
-
-  const canAccessStep = (step: JourneyStep): boolean => {
-    if (!user) return false;
-    return canAccessFeature(user.portal, step.minPortal);
-  };
-
-  const canAccessItem = (item: JourneyStep['items'][0]): boolean => {
-    if (!user) return false;
-    if (!canAccessFeature(user.portal, item.minPortal)) return false;
-    
-    if (item.requiresMatricula === 'mentoria') return hasMentoriaAccess;
-    if (item.requiresMatricula === 'formacao') return hasFormacaoAccess;
-    
-    return true;
-  };
-
-  const getStepStatus = (index: number): 'completed' | 'current' | 'locked' => {
-    if (index < currentStepIndex) return 'completed';
-    if (index === currentStepIndex) return 'current';
-    return 'locked';
-  };
-
-  const getNextRecommendedStep = (): JourneyStep['items'][0] | null => {
-    const currentStep = journeySteps[currentStepIndex];
-    if (!currentStep) return null;
-
-    // Find first accessible item in current step that user might not have explored
-    for (const item of currentStep.items) {
-      if (canAccessItem(item)) {
-        return item;
-      }
-    }
-
-    // If all current step items are done, suggest next step
-    if (currentStepIndex < journeySteps.length - 1) {
-      const nextStep = journeySteps[currentStepIndex + 1];
-      if (canAccessStep(nextStep)) {
-        for (const item of nextStep.items) {
-          if (canAccessItem(item)) {
-            return item;
-          }
-        }
-      }
-    }
-
-    return null;
-  };
-
-  const nextRecommended = getNextRecommendedStep();
+  if (loading) {
+    return (
+      <AppLayout>
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <div className="animate-pulse text-gold font-display text-xl">Carregando seu caminho...</div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20">
-        <SectionHeader
-          title="Minha Jornada"
-          subtitle="Sua travessia pela Casa ORÁCULA"
-        />
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        {/* Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-10"
+        >
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gold/10 flex items-center justify-center">
+            <User className="w-8 h-8 text-gold" />
+          </div>
+          <h1 className="text-3xl md:text-4xl font-display text-foreground mb-2">
+            Meu Caminho
+          </h1>
+          <p className="text-muted-foreground">
+            Seu organizador pessoal na Casa ORÁCULA
+          </p>
+        </motion.div>
 
-        {/* Current Position Banner */}
-        <Card className="mb-8 border-gold/30 bg-gold/5">
-          <CardContent className="py-6">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center">
-                  <MapPin className="w-6 h-6 text-gold" />
+        {/* Empty State */}
+        {!hasAnyActive && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card className="border-border/50 bg-card/50 text-center py-12">
+              <CardContent>
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-muted/30 flex items-center justify-center">
+                  <Compass className="w-10 h-10 text-muted-foreground" />
                 </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Você está na etapa</p>
-                  <h3 className="text-xl font-display text-gold">
-                    {journeySteps[currentStepIndex]?.title || 'Chegada'}
-                  </h3>
-                </div>
-              </div>
-              
-              {nextRecommended && (
-                <div className="flex items-center gap-3">
-                  <div className="text-right hidden sm:block">
-                    <p className="text-xs text-muted-foreground">Próximo passo recomendado</p>
-                    <p className="text-sm font-medium">{nextRecommended.label}</p>
-                  </div>
+                <h2 className="text-xl font-display text-foreground mb-3">
+                  Sua jornada ainda não começou
+                </h2>
+                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                  Você ainda não possui matrículas ou assinaturas ativas. 
+                  Explore a Casa ORÁCULA para conhecer as possibilidades.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Button 
-                    onClick={() => navigate(nextRecommended.path)}
-                    className="gap-2"
+                    onClick={() => navigate('/dashboard')}
+                    variant="outline"
                   >
-                    <span className="hidden sm:inline">Continuar</span>
-                    <ArrowRight className="w-4 h-4" />
+                    Conhecer a Casa
+                  </Button>
+                  <Button 
+                    onClick={() => navigate('/salas')}
+                    className="bg-gold hover:bg-gold/90 text-gold-foreground"
+                  >
+                    Explorar Formação
                   </Button>
                 </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
-        {/* Journey Timeline */}
-        <div className="space-y-6">
-          {journeySteps.map((step, index) => {
-            const StepIcon = step.icon;
-            const status = getStepStatus(index);
-            const isAccessible = canAccessStep(step);
-
-            return (
-              <div key={step.id} className="relative">
-                {/* Connector Line */}
-                {index < journeySteps.length - 1 && (
-                  <div 
-                    className={cn(
-                      "absolute left-6 top-20 w-0.5 h-full -z-10",
-                      status === 'completed' ? 'bg-gold/50' : 'bg-border'
-                    )}
-                  />
-                )}
-
-                <Card 
-                  className={cn(
-                    "transition-all duration-300",
-                    status === 'current' && 'border-gold/50 shadow-lg shadow-gold/10',
-                    status === 'locked' && 'opacity-60',
-                    status === 'completed' && 'border-gold/30'
-                  )}
-                >
-                  <CardHeader className="pb-2">
-                    <div className="flex items-start gap-4">
-                      {/* Step Number/Icon */}
-                      <div 
-                        className={cn(
-                          "w-12 h-12 rounded-full flex items-center justify-center shrink-0",
-                          status === 'completed' && 'bg-gold/20 text-gold',
-                          status === 'current' && 'bg-gold text-background',
-                          status === 'locked' && 'bg-muted text-muted-foreground'
+        {/* Active Content */}
+        {hasAnyActive && (
+          <div className="space-y-6">
+            {/* Subscription Status */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <Card className={`border-l-4 ${subscription.active ? 'border-l-emerald-500 bg-emerald-500/5' : 'border-l-border bg-card/50'}`}>
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg font-display flex items-center gap-2">
+                      {subscription.active ? (
+                        <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                      ) : (
+                        <XCircle className="w-5 h-5 text-muted-foreground" />
+                      )}
+                      Assinatura
+                    </CardTitle>
+                    <Badge variant={subscription.active ? 'default' : 'secondary'}>
+                      {subscription.active ? 'Ativa' : 'Inativa'}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {subscription.active ? (
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Status: <span className="text-foreground capitalize">{subscription.status}</span>
+                        </p>
+                        {subscription.expiresAt && (
+                          <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
+                            <Calendar className="w-3 h-3" />
+                            Válido até: {format(new Date(subscription.expiresAt), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                          </p>
                         )}
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => navigate('/assinatura')}
                       >
-                        {status === 'completed' ? (
-                          <CheckCircle2 className="w-6 h-6" />
-                        ) : status === 'locked' ? (
-                          <Lock className="w-5 h-5" />
-                        ) : (
-                          <StepIcon className="w-6 h-6" />
-                        )}
-                      </div>
+                        Gerenciar
+                      </Button>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      Você não possui uma assinatura ativa no momento.
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            </motion.div>
 
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <CardTitle className="text-lg">
-                            {step.title}
-                          </CardTitle>
-                          {status === 'current' && (
-                            <Badge variant="outline" className="border-gold text-gold text-xs">
-                              Você está aqui
-                            </Badge>
-                          )}
-                          {status === 'locked' && (
-                            <Badge variant="secondary" className="text-xs">
-                              Bloqueado
-                            </Badge>
-                          )}
-                        </div>
-                        <CardDescription>
-                          {step.description}
-                        </CardDescription>
-                      </div>
+            {/* Active Mentoria */}
+            {activeMentoria && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <Card className="border-l-4 border-l-purple-500 bg-purple-500/5 hover:bg-purple-500/10 transition-colors cursor-pointer"
+                      onClick={() => navigate('/mentoria-oracular')}>
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg font-display flex items-center gap-2">
+                        <Compass className="w-5 h-5 text-purple-500" />
+                        Mentoria Oracular
+                      </CardTitle>
+                      <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">
+                        Ativa
+                      </Badge>
                     </div>
                   </CardHeader>
-
                   <CardContent>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 ml-16">
-                      {step.items.map((item) => {
-                        const ItemIcon = item.icon;
-                        const itemAccessible = canAccessItem(item);
-
-                        return (
-                          <Button
-                            key={item.path}
-                            variant={itemAccessible ? "outline" : "ghost"}
-                            className={cn(
-                              "justify-start gap-3 h-auto py-3",
-                              !itemAccessible && 'opacity-50 cursor-not-allowed',
-                              itemAccessible && 'hover:border-gold/50 hover:bg-gold/5'
-                            )}
-                            onClick={() => itemAccessible && navigate(item.path)}
-                            disabled={!itemAccessible}
-                          >
-                            {itemAccessible ? (
-                              <ItemIcon className="w-4 h-4 text-gold" />
-                            ) : (
-                              <Lock className="w-4 h-4" />
-                            )}
-                            <span className="text-sm">{item.label}</span>
-                          </Button>
-                        );
-                      })}
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Início: {format(new Date(activeMentoria.data_inicio), "dd/MM/yyyy", { locale: ptBR })}
+                        </p>
+                        {activeMentoria.data_fim && (
+                          <p className="text-sm text-muted-foreground">
+                            Término: {format(new Date(activeMentoria.data_fim), "dd/MM/yyyy", { locale: ptBR })}
+                          </p>
+                        )}
+                      </div>
+                      <Button variant="ghost" size="sm" className="gap-1">
+                        Acessar <ArrowRight className="w-4 h-4" />
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
-              </div>
-            );
-          })}
-        </div>
+              </motion.div>
+            )}
 
-        {/* Footer CTA */}
-        <div className="mt-12 text-center">
-          <p className="text-muted-foreground mb-4">
-            Quer desbloquear mais etapas da sua jornada?
-          </p>
-          <Button 
-            variant="outline" 
-            onClick={() => navigate('/planos')}
-            className="border-gold/50 hover:bg-gold/10"
-          >
-            Ver Planos Disponíveis
-          </Button>
-        </div>
+            {/* Active Formação */}
+            {activeFormacao && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <Card className="border-l-4 border-l-gold bg-gold/5 hover:bg-gold/10 transition-colors cursor-pointer"
+                      onClick={() => navigate('/salas')}>
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg font-display flex items-center gap-2">
+                        <GraduationCap className="w-5 h-5 text-gold" />
+                        Formação ORÁCULA
+                      </CardTitle>
+                      <Badge className="bg-gold/20 text-gold border-gold/30">
+                        Ativa
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Início: {format(new Date(activeFormacao.data_inicio), "dd/MM/yyyy", { locale: ptBR })}
+                        </p>
+                        {activeFormacao.data_fim && (
+                          <p className="text-sm text-muted-foreground">
+                            Término: {format(new Date(activeFormacao.data_fim), "dd/MM/yyyy", { locale: ptBR })}
+                          </p>
+                        )}
+                      </div>
+                      <Button variant="ghost" size="sm" className="gap-1">
+                        Continuar <ArrowRight className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
+
+            {/* Other Active Courses */}
+            {otherCursos.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <Separator className="my-6" />
+                <h3 className="text-lg font-display text-foreground mb-4 flex items-center gap-2">
+                  <BookOpen className="w-5 h-5 text-muted-foreground" />
+                  Outros Cursos Ativos
+                </h3>
+                <div className="space-y-3">
+                  {otherCursos.map((curso, index) => (
+                    <Card key={curso.id} className="border-border/50 bg-card/50 hover:bg-card/80 transition-colors cursor-pointer">
+                      <CardContent className="py-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium text-foreground">{curso.nome_curso || curso.curso_id}</p>
+                            <p className="text-sm text-muted-foreground">
+                              Desde {format(new Date(curso.data_inicio), "dd/MM/yyyy", { locale: ptBR })}
+                            </p>
+                          </div>
+                          <Button variant="ghost" size="sm">
+                            <ArrowRight className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Quick Actions */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <Separator className="my-6" />
+              <h3 className="text-lg font-display text-foreground mb-4 flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-gold" />
+                Acesso Rápido
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <Button 
+                  variant="outline" 
+                  className="h-auto py-4 flex flex-col gap-2"
+                  onClick={() => navigate('/ferramentas')}
+                >
+                  <Sparkles className="w-5 h-5" />
+                  <span className="text-xs">Ferramentas</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="h-auto py-4 flex flex-col gap-2"
+                  onClick={() => navigate('/minhas-clientes')}
+                >
+                  <Users className="w-5 h-5" />
+                  <span className="text-xs">Clientes</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="h-auto py-4 flex flex-col gap-2"
+                  onClick={() => navigate('/biblioteca')}
+                >
+                  <BookOpen className="w-5 h-5" />
+                  <span className="text-xs">Biblioteca</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="h-auto py-4 flex flex-col gap-2"
+                  onClick={() => navigate('/salas')}
+                >
+                  <GraduationCap className="w-5 h-5" />
+                  <span className="text-xs">Formação</span>
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        )}
       </div>
     </AppLayout>
   );
