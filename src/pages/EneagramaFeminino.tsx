@@ -21,6 +21,7 @@ import {
   Heart, Crown, Star, Eye, Shield, Flower, Flower2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { SalvarJardimModal } from '@/components/shared/SalvarJardimModal';
 
 interface Arquetipo {
   id: string;
@@ -75,6 +76,7 @@ export default function EneagramaFeminino() {
   const [nomeSimbolico, setNomeSimbolico] = useState('');
   const [reflexaoFinal, setReflexaoFinal] = useState('');
   const [selectedArchetype, setSelectedArchetype] = useState<Arquetipo | null>(null);
+  const [showJardimModal, setShowJardimModal] = useState(false);
 
   // Group afirmacoes by archetype
   const afirmacoesByArquetipo = useMemo(() => {
@@ -181,6 +183,7 @@ export default function EneagramaFeminino() {
       if (error) throw error;
       
       setPhase('result');
+      setShowJardimModal(true); // Show Jardim modal after successful save
       toast.success('Leitura salva com sucesso');
     } catch (error: any) {
       console.error('Error saving:', error);
@@ -338,6 +341,25 @@ export default function EneagramaFeminino() {
               Refazer a Leitura
             </Button>
           </div>
+
+          {/* Jardim da Psique Modal */}
+          <SalvarJardimModal
+            open={showJardimModal}
+            onOpenChange={setShowJardimModal}
+            ferramenta_nome="Eneagrama Feminino"
+            ferramenta_chave="eneagrama_feminino"
+            conteudo={{
+              respostas: responses,
+              nome_simbolico: nomeSimbolico,
+              reflexao_final: reflexaoFinal,
+            }}
+            resultado_simbolico={{
+              arquetipo_primario: primaryArq ? { numero: primaryArq.numero, nome: primaryArq.nome } : null,
+              arquetipo_secundario: secondaryArq ? { numero: secondaryArq.numero, nome: secondaryArq.nome } : null,
+              arquetipo_sombra: shadowArq ? { numero: shadowArq.numero, nome: shadowArq.nome } : null,
+            }}
+            onSaved={() => toast.success('Guardado no Jardim da Psique')}
+          />
         </ContentPageLayout>
       </AppLayout>
     );
