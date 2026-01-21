@@ -1,11 +1,11 @@
+import { Link } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useNotifications } from '@/hooks/useNotifications';
 import { formatDistanceToNow, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Bell, Check, CheckCheck } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Bell, Check, CheckCheck, Home, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function Notificacoes() {
@@ -47,6 +47,16 @@ export default function Notificacoes() {
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/dashboard" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Notificações</span>
+        </nav>
+
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <Bell className="h-8 w-8 text-primary" />

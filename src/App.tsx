@@ -3,10 +3,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useParams, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { AdminPreviewProvider, useAdminPreviewOptional } from "@/contexts/AdminPreviewContext";
 import { PortalType, canAccessFeature } from "@/types/portal";
+import { useOnboarding } from "@/hooks/useOnboarding";
 
 // Pages
 import Landing from "./pages/Landing";
@@ -134,13 +135,25 @@ function AuthLoading() {
   );
 }
 
-// ProtectedRoute with preview mode support
+// ProtectedRoute with preview mode support AND onboarding enforcement
 function ProtectedRoute({ children, minPortal = "visitante" }: { children: React.ReactNode; minPortal?: PortalType }) {
   const { isLoading, isAuthenticated, user } = useAuth();
   const preview = useAdminPreviewOptional();
+  const location = useLocation();
+  const { onboardingCompleted, isLoading: onboardingLoading } = useOnboarding();
 
-  if (isLoading) return <AuthLoading />;
+  // Wait for both auth and onboarding status to load
+  if (isLoading || onboardingLoading) return <AuthLoading />;
   if (!isAuthenticated) return <Navigate to="/auth" replace />;
+  
+  // FORCE ONBOARDING if not completed (except if already on /onboarding)
+  const isOnboardingRoute = location.pathname === '/onboarding';
+  const isAdmin = user?.portal === 'admin';
+  
+  // Admins can skip onboarding, but regular users must complete it
+  if (!onboardingCompleted && !isOnboardingRoute && !isAdmin) {
+    return <Navigate to="/onboarding" replace />;
+  }
   
   // Get effective portal considering preview mode
   const effectivePortal = preview?.isPreviewMode && preview?.previewPortal && user?.portal === 'admin'

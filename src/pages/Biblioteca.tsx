@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
@@ -6,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Library, Search, Heart, BookOpen, Sparkles, MessageCircle, Scroll } from 'lucide-react';
+import { Library, Search, Heart, BookOpen, Sparkles, MessageCircle, Scroll, Home, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type SymbolicItemType = 'conto' | 'arquetipo' | 'pergunta' | 'ritual';
@@ -103,6 +104,16 @@ export default function Biblioteca() {
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Biblioteca Simbólica</span>
+        </nav>
+
         <SectionHeader
           title="Biblioteca Simbólica"
           subtitle="Contos, arquétipos, perguntas e rituais para sua prática"

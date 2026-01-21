@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent } from '@/components/ui/card';
@@ -31,9 +32,10 @@ import {
   Plus,
   Eye,
   AlertTriangle,
-  Infinity
+  Infinity,
+  Home,
+  ChevronRight
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -234,6 +236,16 @@ export default function MinhasClientes() {
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/dashboard" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Minhas Clientes</span>
+        </nav>
+
         <SectionHeader
           title="Minhas Clientes"
           subtitle="Gerencie suas clientes e acompanhe seu progresso terapêutico"

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -28,7 +29,9 @@ import {
   Target,
   Lightbulb,
   MessageSquare,
-  ClipboardList
+  ClipboardList,
+  Home,
+  ChevronRight
 } from 'lucide-react';
 import syntheiaHero from '@/assets/syntheia-hero.png';
 import { supabase } from '@/integrations/supabase/client';
@@ -402,6 +405,15 @@ ${lastAssistant.content}
     <AppLayout>
       <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-b from-background via-background to-background/95">
         <div className="container mx-auto px-4 py-8 pb-20 max-w-5xl">
+          {/* Breadcrumb Navigation */}
+          <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+            <Link to="/ferramentas" className="hover:text-foreground transition-colors flex items-center gap-1">
+              <Home className="w-3 h-3" />
+              Ferramentas
+            </Link>
+            <ChevronRight className="w-3 h-3" />
+            <span className="text-foreground">SYNTHEIA</span>
+          </nav>
           
           {/* Hero Header */}
           <div className="text-center mb-8">

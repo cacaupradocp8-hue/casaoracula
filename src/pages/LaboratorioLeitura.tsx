@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,7 +18,8 @@ import {
   ArrowRight,
   ChevronRight,
   AlertTriangle,
-  Loader2
+  Loader2,
+  Home
 } from 'lucide-react';
 
 type NivelCaso = 'iniciante' | 'intermediario' | 'avancado';
@@ -95,6 +97,16 @@ export default function LaboratorioLeitura() {
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/ferramentas" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Ferramentas
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Laboratório de Leitura</span>
+        </nav>
+
         <SectionHeader
           title="Laboratório de Leitura"
           subtitle="Casos-modelo para estudo e prática — sem vínculo com clientes reais"

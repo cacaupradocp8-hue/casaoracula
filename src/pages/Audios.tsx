@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent } from '@/components/ui/card';
@@ -14,7 +15,9 @@ import {
   Volume2, 
   VolumeX,
   SkipBack,
-  Music
+  Music,
+  Home,
+  ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -142,6 +145,16 @@ export default function Audios() {
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-32">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Áudios</span>
+        </nav>
+
         <SectionHeader
           title="Biblioteca de Áudios"
           subtitle="Meditações, rituais e práticas simbólicas"

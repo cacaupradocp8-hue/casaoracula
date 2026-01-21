@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Plus, Archive, FolderOpen, Clock, User, AlertCircle, Users, Wrench } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Plus, Archive, FolderOpen, Clock, User, AlertCircle, Users, Wrench, Home, ChevronRight } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
@@ -86,6 +86,16 @@ export default function SessionRoomHome() {
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-5xl">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/dashboard" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Sala de Sessão</span>
+        </nav>
+
         <div className="flex items-center justify-between mb-8">
           <SectionHeader
             title="Sala de Sessão"

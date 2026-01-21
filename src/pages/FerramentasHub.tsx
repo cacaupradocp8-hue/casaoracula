@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -17,6 +18,8 @@ import {
   Sparkles,
   Map,
   Wand2,
+  Home,
+  ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { canAccessFeature, PortalType } from "@/types/portal";
@@ -189,6 +192,16 @@ export default function FerramentasHub() {
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-6xl">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Ferramentas</span>
+        </nav>
+
         <SectionHeader
           title="Ferramentas do Método"
           subtitle="Recursos profissionais para prática simbólica e terapêutica"
