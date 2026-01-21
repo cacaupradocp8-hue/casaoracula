@@ -41,9 +41,10 @@ export default function Onboarding() {
   useEffect(() => {
     if (onboardingLoading) return;
     
-    // Redirect if already completed
+    // If already completed onboarding, redirect to Sala da Visitante (visitor home)
+    // NOT to /welcome or /dashboard - visitors stay in the visitor room
     if (onboardingCompleted) {
-      navigate('/dashboard', { replace: true });
+      navigate('/sala-da-visitante', { replace: true });
       return;
     }
 
@@ -79,8 +80,9 @@ export default function Onboarding() {
     // Mark onboarding as complete but keep as visitante
     await completeOnboarding();
     
-    // Go to Welcome page (not dashboard) after completing onboarding
-    navigate('/welcome', { replace: true });
+    // Go to Sala da Visitante - this is the visitor's HOME
+    // NOT /welcome or /dashboard - the visitor room IS the home
+    navigate('/sala-da-visitante', { replace: true });
   }, [completeOnboarding, navigate]);
 
   const handleAcceptRite = useCallback(() => {

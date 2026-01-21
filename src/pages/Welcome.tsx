@@ -16,10 +16,22 @@ export default function Welcome() {
 
   const isAdmin = user?.portal === 'admin';
 
+  // Redirect visitors to their home (Sala da Visitante)
   // Redirect to onboarding if not completed (except admins)
   useEffect(() => {
-    if (!onboardingLoading && !onboardingCompleted && user && !isAdmin) {
-      navigate('/onboarding', { replace: true });
+    if (!onboardingLoading && user) {
+      const isVisitor = user.portal === 'visitante';
+      
+      // Visitors should go to Sala da Visitante, not Welcome
+      if (isVisitor && !isAdmin) {
+        navigate('/sala-da-visitante', { replace: true });
+        return;
+      }
+      
+      // Non-completed onboarding users go to onboarding
+      if (!onboardingCompleted && !isAdmin) {
+        navigate('/onboarding', { replace: true });
+      }
     }
   }, [onboardingLoading, onboardingCompleted, user, isAdmin, navigate]);
 

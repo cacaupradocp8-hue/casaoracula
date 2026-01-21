@@ -144,16 +144,41 @@ export function Navigation() {
   // Build menu blocks based on role and portal
   // ═══════════════════════════════════════════════════════════════
   // MENU REORGANIZADO CONFORME NOVA HIERARQUIA
-  // Bloco JORNADA: Meu Caminho (Home), Sala da Visitante
-  // Bloco FORMAÇÃO: Salas condicionais
-  // Bloco RECURSOS: Biblioteca, Oráculos, etc.
-  // Bloco PROFISSIONAL: Clientes, Sessão (após formação)
+  // VISITANTES: Menu simplificado com apenas 3 itens
+  // DEMAIS: Bloco JORNADA, FORMAÇÃO, RECURSOS, PROFISSIONAL
   // ═══════════════════════════════════════════════════════════════
   const buildMenuBlocks = (): MenuBlock[] => {
     const blocks: MenuBlock[] = [];
+    const isVisitor = user?.portal === 'visitante';
 
     // ═══════════════════════════════════════════════════════════════
-    // JORNADA (entrada principal)
+    // MENU SIMPLIFICADO PARA VISITANTES
+    // ═══════════════════════════════════════════════════════════════
+    if (isVisitor && !isAdmin) {
+      blocks.push({
+        id: 'visitante',
+        label: 'Navegação',
+        items: [
+          {
+            path: '/sala-da-visitante',
+            label: 'Sala da Visitante',
+            icon: Home,
+            minPortal: 'visitante',
+          },
+          {
+            path: '/planos',
+            label: 'Caminhos Orácula',
+            icon: Compass,
+            minPortal: 'visitante',
+          },
+        ],
+      });
+      
+      return blocks;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // JORNADA (entrada principal - para não-visitantes)
     // ═══════════════════════════════════════════════════════════════
     const jornadaItems: MenuItem[] = [
       {
@@ -167,12 +192,6 @@ export function Navigation() {
         label: 'Jardim da Psique',
         icon: Leaf,
         minPortal: 'mentorada',
-      },
-      {
-        path: '/onboarding',
-        label: 'Sala da Visitante',
-        icon: Compass,
-        minPortal: 'visitante',
       },
     ];
 
@@ -494,7 +513,7 @@ export function Navigation() {
       <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <Link to={user ? '/jornada' : '/'}>
+            <Link to={user ? (user.portal === 'visitante' && !isAdmin ? '/sala-da-visitante' : '/jornada') : '/'}>
               <Logo size="xl" variant="horizontal" />
             </Link>
 

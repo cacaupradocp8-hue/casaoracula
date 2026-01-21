@@ -108,7 +108,7 @@ const STATE_CONFIGS: Record<UserState, StateConfig> = {
 const PRIMARY_ACTIONS: Record<UserState, PrimaryAction> = {
   visitante: {
     label: 'Entrar na Sala da Visitante',
-    route: '/onboarding',
+    route: '/sala-da-visitante',
     icon: DoorOpen,
   },
   mentorada: {
