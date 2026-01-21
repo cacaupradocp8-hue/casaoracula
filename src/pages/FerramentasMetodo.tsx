@@ -9,6 +9,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/hooks/use-toast';
 import { Compass, Layers, Target, Repeat, Save } from 'lucide-react';
+import {
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  ResponsiveContainer,
+  Tooltip,
+} from 'recharts';
 
 const VALID_TABS = ['5-camadas', 'radar', 'trilha'] as const;
 
@@ -183,13 +192,21 @@ function RadarDeEixo() {
   const [notes, setNotes] = useState('');
 
   const axes = [
-    { key: 'realityOrientation', label: 'Orientação da Realidade', description: 'Capacidade de diferenciar fantasia de realidade' },
-    { key: 'psychicFlexibility', label: 'Flexibilidade Psíquica', description: 'Abertura para novas perspectivas e mudanças' },
-    { key: 'emotionalRegulation', label: 'Regulação Emocional', description: 'Capacidade de modular intensidade emocional' },
-    { key: 'decisionCapacity', label: 'Capacidade de Decisão', description: 'Autonomia para fazer escolhas conscientes' },
-    { key: 'beingContinuity', label: 'Continuidade do Ser', description: 'Senso de identidade estável através do tempo' },
-    { key: 'boundariesLimits', label: 'Fronteiras e Limites', description: 'Clareza sobre onde eu termino e o outro começa' },
+    { key: 'realityOrientation', label: 'Orientação da Realidade', shortLabel: 'Realidade', description: 'Capacidade de diferenciar fantasia de realidade' },
+    { key: 'psychicFlexibility', label: 'Flexibilidade Psíquica', shortLabel: 'Flexibilidade', description: 'Abertura para novas perspectivas e mudanças' },
+    { key: 'emotionalRegulation', label: 'Regulação Emocional', shortLabel: 'Regulação', description: 'Capacidade de modular intensidade emocional' },
+    { key: 'decisionCapacity', label: 'Capacidade de Decisão', shortLabel: 'Decisão', description: 'Autonomia para fazer escolhas conscientes' },
+    { key: 'beingContinuity', label: 'Continuidade do Ser', shortLabel: 'Continuidade', description: 'Senso de identidade estável através do tempo' },
+    { key: 'boundariesLimits', label: 'Fronteiras e Limites', shortLabel: 'Fronteiras', description: 'Clareza sobre onde eu termino e o outro começa' },
   ];
+
+  // Prepare data for the radar chart
+  const radarData = axes.map((axis) => ({
+    axis: axis.shortLabel,
+    fullLabel: axis.label,
+    value: values[axis.key as keyof typeof values],
+    fullMark: 5,
+  }));
 
   const handleSave = () => {
     toast({
@@ -207,6 +224,81 @@ function RadarDeEixo() {
             Avalie cada eixo de 1 (muito baixo) a 5 (muito alto) com base em evidências observáveis, 
             não em interpretações.
           </p>
+        </CardContent>
+      </Card>
+
+      {/* Radar Chart Visualization */}
+      <Card className="overflow-hidden">
+        <CardHeader className="text-center pb-0">
+          <CardTitle className="font-display text-gold">Mapa dos Eixos</CardTitle>
+          <CardDescription>Visualização radial das 6 competências estruturais</CardDescription>
+        </CardHeader>
+        <CardContent className="p-4">
+          <div className="w-full h-[350px] sm:h-[400px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
+                <PolarGrid 
+                  stroke="hsl(var(--muted-foreground))" 
+                  strokeOpacity={0.3}
+                  gridType="polygon"
+                />
+                <PolarAngleAxis 
+                  dataKey="axis" 
+                  tick={{ 
+                    fill: 'hsl(var(--foreground))', 
+                    fontSize: 11,
+                    fontWeight: 500,
+                  }}
+                  tickLine={false}
+                />
+                <PolarRadiusAxis 
+                  angle={30} 
+                  domain={[0, 5]} 
+                  tickCount={6}
+                  tick={{ 
+                    fill: 'hsl(var(--muted-foreground))', 
+                    fontSize: 10,
+                  }}
+                  axisLine={false}
+                />
+                <Radar
+                  name="Eixos"
+                  dataKey="value"
+                  stroke="hsl(45 93% 47%)"
+                  fill="hsl(45 93% 47%)"
+                  fillOpacity={0.3}
+                  strokeWidth={2}
+                  dot={{
+                    r: 4,
+                    fill: 'hsl(45 93% 47%)',
+                    strokeWidth: 0,
+                  }}
+                  activeDot={{
+                    r: 6,
+                    fill: 'hsl(45 93% 47%)',
+                    stroke: 'hsl(var(--background))',
+                    strokeWidth: 2,
+                  }}
+                />
+                <Tooltip
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0].payload;
+                      return (
+                        <div className="bg-background/95 backdrop-blur-sm border border-gold/30 rounded-lg px-3 py-2 shadow-lg">
+                          <p className="font-display text-sm text-gold">{data.fullLabel}</p>
+                          <p className="text-muted-foreground text-xs">
+                            Nível: <span className="text-foreground font-semibold">{data.value}</span>/5
+                          </p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
         </CardContent>
       </Card>
 
