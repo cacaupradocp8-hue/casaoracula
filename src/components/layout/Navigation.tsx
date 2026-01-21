@@ -142,56 +142,67 @@ export function Navigation() {
 
   // Build menu blocks based on role and portal
   // ═══════════════════════════════════════════════════════════════
-  // MENU FIXO: 5 ITENS DEFINITIVOS
-  // 1. Casa Orácula (home/dashboard)
-  // 2. Meu Caminho (jornada)
-  // 3. Formação (salas)
-  // 4. Ferramentas do Método (ferramentas)
-  // 5. Sustentação (casa - Casa das Tecelãs)
+  // MENU REORGANIZADO CONFORME NOVA HIERARQUIA
+  // Bloco JORNADA: Meu Caminho (Home), Sala da Visitante
+  // Bloco FORMAÇÃO: Salas condicionais
+  // Bloco RECURSOS: Biblioteca, Oráculos, etc.
+  // Bloco PROFISSIONAL: Clientes, Sessão (após formação)
   // ═══════════════════════════════════════════════════════════════
   const buildMenuBlocks = (): MenuBlock[] => {
     const blocks: MenuBlock[] = [];
 
     // ═══════════════════════════════════════════════════════════════
-    // MENU PRINCIPAL (5 itens fixos)
+    // JORNADA (entrada principal)
     // ═══════════════════════════════════════════════════════════════
-    const mainItems: MenuItem[] = [
+    const jornadaItems: MenuItem[] = [
       {
-        path: '/dashboard',
-        label: 'Casa Orácula',
+        path: '/jornada',
+        label: 'Meu Caminho',
         icon: Home,
         minPortal: 'visitante',
       },
       {
-        path: '/jornada',
-        label: 'Meu Caminho',
+        path: '/onboarding',
+        label: 'Sala da Visitante',
         icon: Compass,
         minPortal: 'visitante',
       },
+    ];
+
+    blocks.push({
+      id: 'jornada',
+      label: 'Jornada',
+      items: jornadaItems,
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // FORMAÇÃO (salas condicionais)
+    // ═══════════════════════════════════════════════════════════════
+    const formacaoItems: MenuItem[] = [
       {
         path: '/salas',
-        label: 'Formação',
+        label: 'Sala da Mentoria',
         icon: GraduationCap,
         minPortal: 'mentorada',
       },
       {
         path: '/ferramentas',
-        label: 'Ferramentas do Método',
+        label: 'Sala de Treinamento',
         icon: Sparkles,
         minPortal: 'mentorada',
       },
       {
         path: '/casa',
-        label: 'Sustentação',
+        label: 'Sala da Orácula',
         icon: Heart,
         minPortal: 'oracula',
       },
     ];
 
     blocks.push({
-      id: 'principal',
-      label: 'Menu',
-      items: mainItems,
+      id: 'formacao',
+      label: 'Formação',
+      items: formacaoItems,
     });
 
     // ═══════════════════════════════════════════════════════════════
@@ -476,7 +487,7 @@ export function Navigation() {
       <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <Link to={user ? '/dashboard' : '/'}>
+            <Link to={user ? '/jornada' : '/'}>
               <Logo size="xl" variant="horizontal" />
             </Link>
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   User, 
@@ -11,7 +11,11 @@ import {
   Users,
   Sparkles,
   ArrowRight,
-  Calendar
+  Calendar,
+  DoorOpen,
+  Home as HomeIcon,
+  Star,
+  ChevronRight
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -22,6 +26,7 @@ import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { cn } from '@/lib/utils';
 
 interface ActiveMatricula {
   id: string;
@@ -37,6 +42,15 @@ interface SubscriptionInfo {
   status: string | null;
   expiresAt: string | null;
 }
+
+// Subtle divider component
+const RitualDivider = () => (
+  <div className="flex items-center justify-center py-6">
+    <div className="h-px w-12 bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
+    <span className="mx-3 text-gold/30 text-sm">✦</span>
+    <div className="h-px w-12 bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
+  </div>
+);
 
 export default function Jornada() {
   const { user } = useAuth();
@@ -124,6 +138,16 @@ export default function Jornada() {
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 max-w-4xl">
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/dashboard" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <HomeIcon className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Meu Caminho</span>
+        </div>
+
         {/* Header */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
@@ -131,7 +155,7 @@ export default function Jornada() {
           className="text-center mb-10"
         >
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gold/10 flex items-center justify-center">
-            <User className="w-8 h-8 text-gold" />
+            <Compass className="w-8 h-8 text-gold" />
           </div>
           <h1 className="text-3xl md:text-4xl font-display text-foreground mb-2">
             Meu Caminho
@@ -141,37 +165,100 @@ export default function Jornada() {
           </p>
         </motion.div>
 
-        {/* Empty State */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* SALA DA VISITANTE - DESTAQUE ABSOLUTO */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mb-8"
+        >
+          <Card 
+            className={cn(
+              "relative overflow-hidden cursor-pointer transition-all duration-500",
+              "bg-gradient-to-br from-gold/10 via-card/80 to-purple-900/10",
+              "border-2 border-gold/30 hover:border-gold/50",
+              "hover:shadow-xl hover:shadow-gold/10"
+            )}
+            onClick={() => navigate('/onboarding')}
+          >
+            {/* Top accent */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gold to-transparent" />
+            
+            <CardContent className="p-8 md:p-10">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                {/* Icon */}
+                <div className="w-20 h-20 rounded-full bg-gold/20 flex items-center justify-center shrink-0">
+                  <DoorOpen className="w-10 h-10 text-gold" />
+                </div>
+                
+                {/* Content */}
+                <div className="flex-1 text-center md:text-left">
+                  <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
+                    <Star className="w-4 h-4 text-gold" />
+                    <span className="text-xs font-medium text-gold uppercase tracking-wider">
+                      Porta Principal
+                    </span>
+                  </div>
+                  <h2 className="text-2xl md:text-3xl font-display text-foreground mb-3">
+                    Sala da Visitante
+                  </h2>
+                  <p className="text-muted-foreground leading-relaxed mb-4 max-w-xl">
+                    Este é o portal de entrada da Casa ORÁCULA. Aqui você descobrirá sua Voz dominante, 
+                    sua Porta da psique e poderá conversar com a inteligência simbólica da Casa.
+                  </p>
+                  <Button 
+                    size="lg"
+                    className="bg-gold hover:bg-gold/90 text-background rounded-full px-8"
+                  >
+                    Entrar na Sala da Visitante
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+            
+            {/* Bottom accent */}
+            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+          </Card>
+        </motion.div>
+
+        <RitualDivider />
+
+        {/* Empty State - Without Matricula */}
         {!hasAnyActive && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ delay: 0.2 }}
+            className="mb-8"
           >
-            <Card className="border-border/50 bg-card/50 text-center py-12">
+            <Card className="border-border/50 bg-card/50 text-center py-10">
               <CardContent>
-                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-muted/30 flex items-center justify-center">
-                  <Compass className="w-10 h-10 text-muted-foreground" />
-                </div>
                 <h2 className="text-xl font-display text-foreground mb-3">
-                  Sua jornada ainda não começou
+                  Sua jornada formativa ainda não começou
                 </h2>
                 <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                  Você ainda não possui matrículas ou assinaturas ativas. 
-                  Explore a Casa ORÁCULA para conhecer as possibilidades.
+                  Você pode explorar a Sala da Visitante livremente. 
+                  Quando estiver pronta, conheça os caminhos formativos da Casa.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Button 
-                    onClick={() => navigate('/dashboard')}
+                    onClick={() => navigate('/metodo')}
                     variant="outline"
+                    className="rounded-full"
                   >
+                    <HomeIcon className="w-4 h-4 mr-2" />
                     Conhecer a Casa
                   </Button>
                   <Button 
-                    onClick={() => navigate('/salas')}
-                    className="bg-gold hover:bg-gold/90 text-gold-foreground"
+                    onClick={() => navigate('/planos')}
+                    variant="outline"
+                    className="border-gold/30 text-gold hover:bg-gold/10 rounded-full"
                   >
-                    Explorar Formação
+                    <Compass className="w-4 h-4 mr-2" />
+                    Explorar Caminhos Formativos
                   </Button>
                 </div>
               </CardContent>
@@ -182,13 +269,25 @@ export default function Jornada() {
         {/* Active Content */}
         {hasAnyActive && (
           <div className="space-y-6">
+            {/* Section Title */}
+            <div className="text-center mb-4">
+              <h2 className="text-lg font-display text-foreground/80">
+                Sua Jornada Ativa
+              </h2>
+            </div>
+
             {/* Subscription Status */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
+              transition={{ delay: 0.2 }}
             >
-              <Card className={`border-l-4 ${subscription.active ? 'border-l-emerald-500 bg-emerald-500/5' : 'border-l-border bg-card/50'}`}>
+              <Card className={cn(
+                "border-l-4 transition-colors",
+                subscription.active 
+                  ? "border-l-emerald-500 bg-emerald-500/5" 
+                  : "border-l-border bg-card/50"
+              )}>
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg font-display flex items-center gap-2">
@@ -240,7 +339,7 @@ export default function Jornada() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
+                transition={{ delay: 0.3 }}
               >
                 <Card className="border-l-4 border-l-purple-500 bg-purple-500/5 hover:bg-purple-500/10 transition-colors cursor-pointer"
                       onClick={() => navigate('/mentoria-oracular')}>
@@ -281,7 +380,7 @@ export default function Jornada() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
+                transition={{ delay: 0.4 }}
               >
                 <Card className="border-l-4 border-l-gold bg-gold/5 hover:bg-gold/10 transition-colors cursor-pointer"
                       onClick={() => navigate('/salas')}>
@@ -322,7 +421,7 @@ export default function Jornada() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
+                transition={{ delay: 0.5 }}
               >
                 <Separator className="my-6" />
                 <h3 className="text-lg font-display text-foreground mb-4 flex items-center gap-2">
@@ -330,7 +429,7 @@ export default function Jornada() {
                   Outros Cursos Ativos
                 </h3>
                 <div className="space-y-3">
-                  {otherCursos.map((curso, index) => (
+                  {otherCursos.map((curso) => (
                     <Card key={curso.id} className="border-border/50 bg-card/50 hover:bg-card/80 transition-colors cursor-pointer">
                       <CardContent className="py-4">
                         <div className="flex items-center justify-between">
@@ -351,13 +450,14 @@ export default function Jornada() {
               </motion.div>
             )}
 
+            <RitualDivider />
+
             {/* Quick Actions */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.6 }}
             >
-              <Separator className="my-6" />
               <h3 className="text-lg font-display text-foreground mb-4 flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-gold" />
                 Acesso Rápido
@@ -365,7 +465,7 @@ export default function Jornada() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <Button 
                   variant="outline" 
-                  className="h-auto py-4 flex flex-col gap-2"
+                  className="h-auto py-4 flex flex-col gap-2 border-border/50 hover:border-gold/30"
                   onClick={() => navigate('/ferramentas')}
                 >
                   <Sparkles className="w-5 h-5" />
@@ -373,7 +473,7 @@ export default function Jornada() {
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="h-auto py-4 flex flex-col gap-2"
+                  className="h-auto py-4 flex flex-col gap-2 border-border/50 hover:border-gold/30"
                   onClick={() => navigate('/minhas-clientes')}
                 >
                   <Users className="w-5 h-5" />
@@ -381,7 +481,7 @@ export default function Jornada() {
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="h-auto py-4 flex flex-col gap-2"
+                  className="h-auto py-4 flex flex-col gap-2 border-border/50 hover:border-gold/30"
                   onClick={() => navigate('/biblioteca')}
                 >
                   <BookOpen className="w-5 h-5" />
@@ -389,7 +489,7 @@ export default function Jornada() {
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="h-auto py-4 flex flex-col gap-2"
+                  className="h-auto py-4 flex flex-col gap-2 border-border/50 hover:border-gold/30"
                   onClick={() => navigate('/salas')}
                 >
                   <GraduationCap className="w-5 h-5" />
@@ -399,6 +499,17 @@ export default function Jornada() {
             </motion.div>
           </div>
         )}
+
+        {/* Return link */}
+        <div className="mt-10 text-center">
+          <Link 
+            to="/dashboard" 
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
+          >
+            <ArrowRight className="w-3 h-3 rotate-180" />
+            Voltar à Casa
+          </Link>
+        </div>
       </div>
     </AppLayout>
   );
