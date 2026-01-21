@@ -36,7 +36,7 @@ export function useAdminBlocks({ contextType, contextId }: UseAdminBlocksOptions
       const { data, error: fetchError } = await supabase
         .from('content_blocks')
         .select('*')
-        .eq('context_type', contextType)
+        .eq('context_type', contextType as never)
         .eq('context_id', contextId)
         .order('ordem', { ascending: true });
 

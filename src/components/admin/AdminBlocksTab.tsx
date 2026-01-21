@@ -72,6 +72,8 @@ const CONTEXT_OPTIONS: { value: BlockContextType; label: string }[] = [
   { value: 'tool', label: 'Ferramenta' },
   { value: 'sala', label: 'Sala' },
   { value: 'landing', label: 'Landing Page' },
+  { value: 'course', label: 'Curso' },
+  { value: 'lesson', label: 'Aula de Curso' },
 ];
 
 const BLOCK_TYPE_ICONS: Record<ContentBlockType, React.ElementType> = {
@@ -189,6 +191,22 @@ export function AdminBlocksTab() {
               .select('id, ferramenta_nome')
               .order('ferramenta_nome');
             data = tools?.map(t => ({ id: t.id, label: t.ferramenta_nome })) || [];
+            break;
+          }
+          case 'course': {
+            const { data: courses } = await supabase
+              .from('courses')
+              .select('id, titulo')
+              .order('titulo');
+            data = courses?.map(c => ({ id: c.id, label: c.titulo })) || [];
+            break;
+          }
+          case 'lesson': {
+            const { data: lessons } = await supabase
+              .from('course_lessons')
+              .select('id, titulo')
+              .order('titulo');
+            data = lessons?.map(l => ({ id: l.id, label: l.titulo })) || [];
             break;
           }
           default:

@@ -40,7 +40,7 @@ export function useContentBlocks({
       const { data, error: fetchError } = await supabase
         .from('content_blocks')
         .select('*')
-        .eq('context_type', contextType)
+        .eq('context_type', contextType as never)
         .eq('context_id', contextId)
         .eq('ativo', true)
         .order('ordem', { ascending: true });

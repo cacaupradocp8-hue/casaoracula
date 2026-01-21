@@ -177,7 +177,7 @@ export async function logAIInteraction(
     await supabase.from('ai_interaction_logs').insert({
       user_id: userId,
       agente_id: context.agentId,
-      context_type: context.contextType,
+      context_type: context.contextType as never,
       context_id: context.contextId,
       input_text: inputText,
       output_text: outputText,
@@ -186,7 +186,7 @@ export async function logAIInteraction(
       latency_ms: metadata.latencyMs,
       success: metadata.success ?? true,
       error_message: metadata.errorMessage,
-    });
+    } as never);
   } catch (error) {
     console.error('Error logging AI interaction:', error);
   }
