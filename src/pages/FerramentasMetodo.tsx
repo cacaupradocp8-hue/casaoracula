@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
@@ -9,7 +10,19 @@ import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/hooks/use-toast';
 import { Compass, Layers, Target, Repeat, Save } from 'lucide-react';
 
+const VALID_TABS = ['5-camadas', 'radar', 'trilha'] as const;
+
 export default function FerramentasMetodo() {
+  const [searchParams] = useSearchParams();
+  
+  const defaultTab = useMemo(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && VALID_TABS.includes(tabParam as typeof VALID_TABS[number])) {
+      return tabParam;
+    }
+    return '5-camadas';
+  }, [searchParams]);
+
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20">
@@ -20,7 +33,7 @@ export default function FerramentasMetodo() {
           className="mb-8"
         />
 
-        <Tabs defaultValue="5-camadas" className="space-y-6">
+        <Tabs defaultValue={defaultTab} className="space-y-6">
           <TabsList className="grid w-full max-w-lg grid-cols-3">
             <TabsTrigger value="5-camadas" className="gap-2">
               <Layers className="w-4 h-4" />
