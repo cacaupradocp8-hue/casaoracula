@@ -20,6 +20,7 @@ import { Loader2, Sparkles, ArrowRight, ArrowLeft, Moon, Sun, Check } from 'luci
 import { cn } from '@/lib/utils';
 import { RadialVisualization } from '@/components/visualization/RadialVisualization';
 import { SymbolicElement } from '@/components/visualization/types';
+import { SalvarJardimModal } from '@/components/shared/SalvarJardimModal';
 
 interface SymbolicForce {
   id: string;
@@ -73,6 +74,7 @@ export default function Big5Simbolico() {
   const [nomeSimbolico, setNomeSimbolico] = useState('');
   const [reflexaoFinal, setReflexaoFinal] = useState('');
   const [savedResultId, setSavedResultId] = useState<string | null>(null);
+  const [showJardimModal, setShowJardimModal] = useState(false);
 
   // Group afirmacoes by force
   const afirmacoesByForce = useMemo(() => {
@@ -172,6 +174,7 @@ export default function Big5Simbolico() {
       
       setSavedResultId(data.id);
       setShowResult(true);
+      setShowJardimModal(true); // Show Jardim modal after successful save
       toast.success('Mapa salvo com sucesso');
     } catch (error: any) {
       console.error('Error saving:', error);
@@ -337,6 +340,28 @@ export default function Big5Simbolico() {
               Refazer o Mapa
             </Button>
           </div>
+
+          {/* Jardim da Psique Modal */}
+          <SalvarJardimModal
+            open={showJardimModal}
+            onOpenChange={setShowJardimModal}
+            ferramenta_nome="Big5 Simbólico"
+            ferramenta_chave="big5_simbolico"
+            conteudo={{
+              respostas: responses,
+              nome_simbolico: nomeSimbolico,
+              reflexao_final: reflexaoFinal,
+            }}
+            resultado_simbolico={{
+              intensidades: getIntensities(),
+              forces: forces.map(f => ({
+                chave: f.chave,
+                nome: f.nome,
+                intensidade: getIntensities()[f.chave],
+              })),
+            }}
+            onSaved={() => toast.success('Guardado no Jardim da Psique')}
+          />
         </ContentPageLayout>
       </AppLayout>
     );
