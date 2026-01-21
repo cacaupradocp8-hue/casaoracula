@@ -2168,6 +2168,54 @@ export type Database = {
           },
         ]
       }
+      jardim_psique_registros: {
+        Row: {
+          arquivado: boolean
+          conteudo: Json
+          created_at: string
+          data_aplicacao: string
+          ferramenta_chave: string
+          ferramenta_nome: string
+          id: string
+          integrado: boolean
+          reflexao_pessoal: string | null
+          resultado_simbolico: Json | null
+          tags: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          arquivado?: boolean
+          conteudo?: Json
+          created_at?: string
+          data_aplicacao?: string
+          ferramenta_chave: string
+          ferramenta_nome: string
+          id?: string
+          integrado?: boolean
+          reflexao_pessoal?: string | null
+          resultado_simbolico?: Json | null
+          tags?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          arquivado?: boolean
+          conteudo?: Json
+          created_at?: string
+          data_aplicacao?: string
+          ferramenta_chave?: string
+          ferramenta_nome?: string
+          id?: string
+          integrado?: boolean
+          reflexao_pessoal?: string | null
+          resultado_simbolico?: Json | null
+          tags?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       jornada_heroina_fases: {
         Row: {
           arquetipos_sugeridos: string[] | null

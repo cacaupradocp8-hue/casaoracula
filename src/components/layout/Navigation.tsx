@@ -27,6 +27,7 @@ import {
   ChevronDown,
   Bot,
   FlaskConical,
+  Leaf,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -160,6 +161,12 @@ export function Navigation() {
         label: 'Meu Caminho',
         icon: Home,
         minPortal: 'visitante',
+      },
+      {
+        path: '/jardim-da-psique',
+        label: 'Jardim da Psique',
+        icon: Leaf,
+        minPortal: 'mentorada',
       },
       {
         path: '/onboarding',
