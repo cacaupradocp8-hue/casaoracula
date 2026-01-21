@@ -2207,6 +2207,60 @@ export type Database = {
           },
         ]
       }
+      image_assets: {
+        Row: {
+          alt_text: string | null
+          altura: number | null
+          categoria: string | null
+          created_at: string | null
+          descricao: string | null
+          file_path: string
+          id: string
+          largura: number | null
+          ordem: number | null
+          portal_minimo: Database["public"]["Enums"]["portal_type"] | null
+          publicado: boolean | null
+          tags: string[] | null
+          tamanho_bytes: number | null
+          titulo: string
+          updated_at: string | null
+        }
+        Insert: {
+          alt_text?: string | null
+          altura?: number | null
+          categoria?: string | null
+          created_at?: string | null
+          descricao?: string | null
+          file_path: string
+          id?: string
+          largura?: number | null
+          ordem?: number | null
+          portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
+          publicado?: boolean | null
+          tags?: string[] | null
+          tamanho_bytes?: number | null
+          titulo: string
+          updated_at?: string | null
+        }
+        Update: {
+          alt_text?: string | null
+          altura?: number | null
+          categoria?: string | null
+          created_at?: string | null
+          descricao?: string | null
+          file_path?: string
+          id?: string
+          largura?: number | null
+          ordem?: number | null
+          portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
+          publicado?: boolean | null
+          tags?: string[] | null
+          tamanho_bytes?: number | null
+          titulo?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       jardim_psique_registros: {
         Row: {
           arquivado: boolean
