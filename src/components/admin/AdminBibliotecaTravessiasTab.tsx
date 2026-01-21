@@ -45,6 +45,7 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react';
+import { ImageUpload } from './ImageUpload';
 import { Database } from '@/integrations/supabase/types';
 
 type PortalType = Database['public']['Enums']['portal_type'];
@@ -627,14 +628,13 @@ export function AdminBibliotecaTravessiasTab() {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>URL da Capa</Label>
-                <Input
-                  value={formData.capa_url}
-                  onChange={(e) => setFormData(prev => ({ ...prev, capa_url: e.target.value }))}
-                  placeholder="https://..."
-                />
-              </div>
+              <ImageUpload
+                value={formData.capa_url}
+                onChange={(url) => setFormData(prev => ({ ...prev, capa_url: url }))}
+                folder="biblioteca-travessias"
+                label="Capa da Travessia"
+                aspectRatio="video"
+              />
               <div className="space-y-2">
                 <Label>Portal Mínimo</Label>
                 <Select
@@ -720,14 +720,24 @@ export function AdminBibliotecaTravessiasTab() {
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label>URL *</Label>
-              <Input
+            {mediaFormData.tipo === 'image' ? (
+              <ImageUpload
                 value={mediaFormData.url}
-                onChange={(e) => setMediaFormData(prev => ({ ...prev, url: e.target.value }))}
-                placeholder="https://..."
+                onChange={(url) => setMediaFormData(prev => ({ ...prev, url }))}
+                folder="biblioteca-travessias/media"
+                label="Imagem"
+                aspectRatio="video"
               />
-            </div>
+            ) : (
+              <div className="space-y-2">
+                <Label>URL *</Label>
+                <Input
+                  value={mediaFormData.url}
+                  onChange={(e) => setMediaFormData(prev => ({ ...prev, url: e.target.value }))}
+                  placeholder="https://..."
+                />
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label>Título</Label>

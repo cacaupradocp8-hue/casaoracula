@@ -25,11 +25,11 @@ import {
   Link as LinkIcon,
   ArrowRight,
   AlertTriangle,
-  CheckCircle2,
   Loader2,
   X,
   Info,
 } from 'lucide-react';
+import { ImageUpload } from './ImageUpload';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -62,6 +62,7 @@ export function AdminOraculosTab() {
   // Oracle form state
   const [editingOracle, setEditingOracle] = useState<OracleDeck | null>(null);
   const [oracleDialogOpen, setOracleDialogOpen] = useState(false);
+  const [oracleCoverUrl, setOracleCoverUrl] = useState('');
 
   // Card form state
   const [editingCard, setEditingCard] = useState<OracleCard | null>(null);
@@ -89,6 +90,13 @@ export function AdminOraculosTab() {
       setUrlInput('');
     }
   }, [cardDialogOpen, editingCard]);
+
+  // Reset oracle cover when dialog opens/closes
+  useEffect(() => {
+    if (oracleDialogOpen) {
+      setOracleCoverUrl(editingOracle?.cover_image_url || '');
+    }
+  }, [oracleDialogOpen, editingOracle]);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -165,7 +173,7 @@ export function AdminOraculosTab() {
       slug: slug,
       subtitle: formData.get('subtitle') as string || null,
       description: formData.get('description') as string || null,
-      cover_image_url: formData.get('cover_image_url') as string || null,
+      cover_image_url: oracleCoverUrl || null,
       minimum_portal: minPortal as 'visitante' | 'mentorada' | 'aluna_formacao' | 'assinante' | 'oracula' | 'admin',
       status: formData.get('status') as OracleContentStatus,
       disclaimer_text: formData.get('disclaimer_text') as string || 'Leitura simbólica. Não é previsão. Não substitui acompanhamento clínico.',
@@ -492,8 +500,13 @@ export function AdminOraculosTab() {
                         <Textarea id="description" name="description" defaultValue={editingOracle?.description || ''} placeholder="Qual a finalidade terapêutica deste oráculo?" />
                       </div>
                       <div className="col-span-2">
-                        <Label htmlFor="cover_image_url">URL da Capa</Label>
-                        <Input id="cover_image_url" name="cover_image_url" defaultValue={editingOracle?.cover_image_url || ''} placeholder="https://..." />
+                        <ImageUpload
+                          value={oracleCoverUrl}
+                          onChange={setOracleCoverUrl}
+                          folder="oraculos"
+                          label="Capa do Oráculo"
+                          aspectRatio="square"
+                        />
                       </div>
                       <div>
                         <Label htmlFor="minimum_portal">Portal Mínimo</Label>

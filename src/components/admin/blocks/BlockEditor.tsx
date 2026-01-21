@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { ImageUpload } from '@/components/admin/ImageUpload';
 
 const PORTAL_LABELS: Record<PortalType, string> = {
   visitante: 'Visitante',
@@ -249,14 +250,13 @@ function ImageEditor({
 }) {
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
-        <Label>URL da Imagem</Label>
-        <Input
-          value={content.url}
-          onChange={e => onChange({ ...content, url: e.target.value })}
-          placeholder="https://..."
-        />
-      </div>
+      <ImageUpload
+        value={content.url}
+        onChange={(url) => onChange({ ...content, url })}
+        folder="blocks"
+        label="Imagem do Bloco"
+        aspectRatio="video"
+      />
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label>Texto Alternativo (alt)</Label>
@@ -329,7 +329,7 @@ function VideoEditor({
           placeholder="https://youtube.com/watch?v=... ou https://vimeo.com/..."
         />
       </div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label>Provedor</Label>
           <Select 
@@ -344,14 +344,13 @@ function VideoEditor({
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2">
-          <Label>Thumbnail (opcional)</Label>
-          <Input
-            value={content.thumbnail || ''}
-            onChange={e => onChange({ ...content, thumbnail: e.target.value })}
-            placeholder="URL da thumb"
-          />
-        </div>
+        <ImageUpload
+          value={content.thumbnail || ''}
+          onChange={(url) => onChange({ ...content, thumbnail: url })}
+          folder="blocks/thumbnails"
+          label="Thumbnail (opcional)"
+          aspectRatio="video"
+        />
       </div>
       <div className="flex gap-6">
         <label className="flex items-center gap-2">
@@ -479,14 +478,13 @@ function AudioEditor({
           />
         </div>
       </div>
-      <div className="space-y-2">
-        <Label>Capa (opcional)</Label>
-        <Input
-          value={content.coverImage || ''}
-          onChange={e => onChange({ ...content, coverImage: e.target.value })}
-          placeholder="URL da imagem de capa"
-        />
-      </div>
+      <ImageUpload
+        value={content.coverImage || ''}
+        onChange={(url) => onChange({ ...content, coverImage: url })}
+        folder="blocks/audio"
+        label="Capa (opcional)"
+        aspectRatio="square"
+      />
       <div className="flex gap-6">
         <label className="flex items-center gap-2">
           <Switch 

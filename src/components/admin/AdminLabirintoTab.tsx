@@ -24,6 +24,7 @@ import {
   X
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { ImageUpload } from './ImageUpload';
 import { useToast } from "@/hooks/use-toast";
 import { Database } from '@/integrations/supabase/types';
 
@@ -808,13 +809,15 @@ export function AdminLabirintoTab() {
                 </div>
 
                 <div>
-                  <Label>Ou URL da Imagem Manual</Label>
-                  <Input
+                  <Label className="text-muted-foreground">Ou faça upload manual:</Label>
+                  <ImageUpload
                     value={editingPorta.imagem_url || ""}
-                    onChange={(e) =>
-                      setEditingPorta({ ...editingPorta, imagem_url: e.target.value })
+                    onChange={(url) =>
+                      setEditingPorta({ ...editingPorta, imagem_url: url })
                     }
-                    placeholder="https://..."
+                    folder="labirinto"
+                    label="Imagem Manual (alternativa à IA)"
+                    aspectRatio="square"
                   />
                 </div>
               </TabsContent>
