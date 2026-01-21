@@ -21,6 +21,12 @@ import {
   Heart,
   Users,
   ClipboardList,
+  Library,
+  BookOpen,
+  Music,
+  ChevronDown,
+  Bot,
+  FlaskConical,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -189,6 +195,54 @@ export function Navigation() {
     });
 
     // ═══════════════════════════════════════════════════════════════
+    // RECURSOS (dropdown com páginas complementares)
+    // ═══════════════════════════════════════════════════════════════
+    if (user) {
+      blocks.push({
+        id: 'recursos',
+        label: 'Recursos',
+        items: [
+          {
+            path: '/biblioteca',
+            label: 'Biblioteca',
+            icon: Library,
+            minPortal: 'pre_iniciada',
+          },
+          {
+            path: '/cursos',
+            label: 'Cursos',
+            icon: BookOpen,
+            minPortal: 'visitante',
+          },
+          {
+            path: '/oraculos',
+            label: 'Oráculos',
+            icon: Sparkles,
+            minPortal: 'pre_iniciada',
+          },
+          {
+            path: '/audios',
+            label: 'Áudios',
+            icon: Music,
+            minPortal: 'pre_iniciada',
+          },
+          {
+            path: '/agentes',
+            label: 'Agentes IA',
+            icon: Bot,
+            minPortal: 'pre_iniciada',
+          },
+          {
+            path: '/laboratorio-leitura',
+            label: 'Lab. Leitura',
+            icon: FlaskConical,
+            minPortal: 'iniciada',
+          },
+        ],
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
     // PROFISSIONAL (para terapeutas verificadas - pre_iniciada+)
     // ═══════════════════════════════════════════════════════════════
     if (isProfessionalLevel && isProfessionalVerified) {
@@ -279,6 +333,57 @@ export function Navigation() {
     );
   };
 
+  // Render recursos dropdown for desktop
+  const renderRecursosDropdown = (block: MenuBlock) => {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="sm" className="gap-2">
+            <Library className="w-4 h-4" />
+            <span className="hidden lg:inline">Recursos</span>
+            <ChevronDown className="w-3 h-3" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-48 bg-background border border-border">
+          <DropdownMenuLabel className="text-xs text-muted-foreground">
+            Recursos Disponíveis
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {block.items.map(item => {
+            const Icon = item.icon;
+            const isLocked = !canAccessWithMatricula(item);
+            const isActive = location.pathname === item.path;
+            
+            return (
+              <DropdownMenuItem
+                key={item.path}
+                asChild
+                disabled={isLocked}
+                className={cn(
+                  isActive && 'bg-secondary text-gold',
+                  isLocked && 'opacity-50 cursor-not-allowed'
+                )}
+              >
+                <Link 
+                  to={isLocked ? '#' : item.path}
+                  onClick={(e) => handleNavClick(item, e)}
+                  className="flex items-center gap-2"
+                >
+                  {isLocked ? (
+                    <Lock className="w-4 h-4" />
+                  ) : (
+                    <Icon className="w-4 h-4" />
+                  )}
+                  {item.label}
+                </Link>
+              </DropdownMenuItem>
+            );
+          })}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  };
+
   // Render desktop navigation with visual separators between blocks
   const renderDesktopNavigation = () => {
     return (
@@ -290,10 +395,14 @@ export function Navigation() {
               <div className="h-4 w-px bg-border/50 mx-2" />
             )}
             
-            {/* Block items */}
-            <div className="flex items-center gap-1">
-              {block.items.map(item => renderDesktopItem(item))}
-            </div>
+            {/* Block items - use dropdown for recursos */}
+            {block.id === 'recursos' ? (
+              renderRecursosDropdown(block)
+            ) : (
+              <div className="flex items-center gap-1">
+                {block.items.map(item => renderDesktopItem(item))}
+              </div>
+            )}
           </div>
         ))}
       </div>

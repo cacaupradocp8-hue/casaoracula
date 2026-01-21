@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { Sparkles, Heart, Shield, Compass, Moon, Eye, Users, ClipboardList } from "lucide-react";
+import { Sparkles, Heart, Shield, Compass, Moon, Eye, Users, ClipboardList, Library, BookOpen, Music } from "lucide-react";
 import { useCopy } from "@/hooks/useCopy";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -268,11 +268,63 @@ export default function Dashboard() {
           </motion.div>
         )}
 
+        {/* Recursos Disponíveis */}
+        {user && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            className="mt-10"
+          >
+            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4 text-center">
+              Recursos Disponíveis
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <Card 
+                className="glass border-border/20 cursor-pointer hover:border-gold/30 transition-colors"
+                onClick={() => navigate('/biblioteca')}
+              >
+                <CardContent className="p-4 text-center">
+                  <Library className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
+                  <p className="text-sm font-medium text-foreground">Biblioteca</p>
+                </CardContent>
+              </Card>
+              <Card 
+                className="glass border-border/20 cursor-pointer hover:border-gold/30 transition-colors"
+                onClick={() => navigate('/cursos')}
+              >
+                <CardContent className="p-4 text-center">
+                  <BookOpen className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
+                  <p className="text-sm font-medium text-foreground">Cursos</p>
+                </CardContent>
+              </Card>
+              <Card 
+                className="glass border-border/20 cursor-pointer hover:border-gold/30 transition-colors"
+                onClick={() => navigate('/oraculos')}
+              >
+                <CardContent className="p-4 text-center">
+                  <Sparkles className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
+                  <p className="text-sm font-medium text-foreground">Oráculos</p>
+                </CardContent>
+              </Card>
+              <Card 
+                className="glass border-border/20 cursor-pointer hover:border-gold/30 transition-colors"
+                onClick={() => navigate('/audios')}
+              >
+                <CardContent className="p-4 text-center">
+                  <Music className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
+                  <p className="text-sm font-medium text-foreground">Áudios</p>
+                </CardContent>
+              </Card>
+            </div>
+          </motion.div>
+        )}
+
         {/* Footer Note */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
           className="text-center text-muted-foreground text-sm mt-10"
         >
           Use o menu para navegar pela Casa. Cada espaço foi desenhado para um propósito.
