@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target, Flame, FolderOpen, Link } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target, Flame, FolderOpen, Link, Gift } from 'lucide-react';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -52,7 +52,7 @@ const AdminCasaOraculaTab = lazy(() => import('@/components/admin/AdminCasaOracu
 const AdminAreaFormacaoTab = lazy(() => import('@/components/admin/AdminAreaFormacaoTab').then(m => ({ default: m.AdminAreaFormacaoTab })));
 const AdminSessoesTab = lazy(() => import('@/components/admin/AdminSessoesTab').then(m => ({ default: m.AdminSessoesTab })));
 const AdminGruposTab = lazy(() => import('@/components/admin/AdminGruposTab').then(m => ({ default: m.AdminGruposTab })));
-
+const AdminDegustacaoTab = lazy(() => import('@/components/admin/AdminDegustacaoTab').then(m => ({ default: m.AdminDegustacaoTab })));
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
   { value: 'mentorada', label: '👁 Mentorada' },
@@ -125,6 +125,10 @@ export default function Admin() {
             <TabsTrigger value="matriculas" className="gap-2">
               <UserCheck className="w-4 h-4" />
               Matrículas
+            </TabsTrigger>
+            <TabsTrigger value="degustacao" className="gap-2">
+              <Gift className="w-4 h-4 text-gold" />
+              Degustação
             </TabsTrigger>
             <TabsTrigger value="assinaturas" className="gap-2">
               <CreditCard className="w-4 h-4" />
@@ -271,6 +275,12 @@ export default function Admin() {
           <TabsContent value="matriculas">
             <Suspense fallback={<TabLoader />}>
               <AdminMatriculasTab />
+            </Suspense>
+          </TabsContent>
+
+          <TabsContent value="degustacao">
+            <Suspense fallback={<TabLoader />}>
+              <AdminDegustacaoTab />
             </Suspense>
           </TabsContent>
 

@@ -1364,6 +1364,45 @@ export type Database = {
           },
         ]
       }
+      degustacao_requests: {
+        Row: {
+          admin_notes: string | null
+          aprovado_em: string | null
+          aprovado_por: string | null
+          created_at: string
+          expira_em: string | null
+          id: string
+          motivo: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          aprovado_em?: string | null
+          aprovado_por?: string | null
+          created_at?: string
+          expira_em?: string | null
+          id?: string
+          motivo?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          aprovado_em?: string | null
+          aprovado_por?: string | null
+          created_at?: string
+          expira_em?: string | null
+          id?: string
+          motivo?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       email_logs: {
         Row: {
           data_envio: string

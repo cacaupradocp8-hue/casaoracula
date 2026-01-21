@@ -23,6 +23,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 import { useOnboarding } from '@/hooks/useOnboarding';
 import { PortalType, canAccessFeature } from '@/types/portal';
+import { VisitorDashboardPanel } from '@/components/visitor/VisitorDashboardPanel';
 
 // ════════════════════════════════════════════════════════════════════════════
 // TIPOS E CONFIGURAÇÕES
@@ -484,9 +485,22 @@ export default function Jornada() {
           <StateIndicator state={userState} />
 
           {/* ═══════════════════════════════════════════════════════════════ */}
-          {/* BLOCO 2: PORTA ATIVA (AÇÃO PRINCIPAL) */}
+          {/* BLOCO ESPECIAL: PAINEL VISITANTE */}
           {/* ═══════════════════════════════════════════════════════════════ */}
-          <PrimaryActionCard state={userState} />
+          {userState === 'visitante' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <VisitorDashboardPanel />
+            </motion.div>
+          )}
+
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {/* BLOCO 2: PORTA ATIVA (AÇÃO PRINCIPAL) - Only for non-visitors */}
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {userState !== 'visitante' && <PrimaryActionCard state={userState} />}
 
           {/* ═══════════════════════════════════════════════════════════════ */}
           {/* BLOCO 3: CAMINHOS FUTUROS (ESMAECIDOS) */}
