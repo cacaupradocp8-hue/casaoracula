@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target, Flame, FolderOpen, Link, Gift } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target, Flame, FolderOpen, Link, Gift, Image as ImageIcon } from 'lucide-react';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -53,6 +53,7 @@ const AdminAreaFormacaoTab = lazy(() => import('@/components/admin/AdminAreaForm
 const AdminSessoesTab = lazy(() => import('@/components/admin/AdminSessoesTab').then(m => ({ default: m.AdminSessoesTab })));
 const AdminGruposTab = lazy(() => import('@/components/admin/AdminGruposTab').then(m => ({ default: m.AdminGruposTab })));
 const AdminDegustacaoTab = lazy(() => import('@/components/admin/AdminDegustacaoTab').then(m => ({ default: m.AdminDegustacaoTab })));
+const AdminGaleriaTab = lazy(() => import('@/components/admin/AdminGaleriaTab').then(m => ({ default: m.AdminGaleriaTab })));
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
   { value: 'mentorada', label: '👁 Mentorada' },
@@ -247,6 +248,10 @@ export default function Admin() {
             <TabsTrigger value="audios" className="gap-2">
               <Headphones className="w-4 h-4" />
               Áudios
+            </TabsTrigger>
+            <TabsTrigger value="galeria" className="gap-2">
+              <ImageIcon className="w-4 h-4" />
+              Galeria
             </TabsTrigger>
             <TabsTrigger value="comunicacao" className="gap-2">
               <MessageSquare className="w-4 h-4" />
@@ -475,6 +480,12 @@ export default function Admin() {
           <TabsContent value="grupos">
             <Suspense fallback={<TabLoader />}>
               <AdminGruposTab />
+            </Suspense>
+          </TabsContent>
+
+          <TabsContent value="galeria">
+            <Suspense fallback={<TabLoader />}>
+              <AdminGaleriaTab />
             </Suspense>
           </TabsContent>
 
