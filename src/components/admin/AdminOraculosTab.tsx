@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState, useEffect, useRef } from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   Plus, 
   Pencil, 
@@ -20,20 +21,25 @@ import {
   Sparkles,
   Layers,
   CreditCard,
-  Settings,
-  Copy,
-  Wand2
+  Upload,
+  Link as LinkIcon,
+  ArrowRight,
+  AlertTriangle,
+  CheckCircle2,
+  Loader2,
+  X,
+  Info,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { OracleDeck, OracleCard, OracleSpread, OracleCategory, OracleContentStatus } from '@/types/oracle';
-import { OracleImageGenerator } from './OracleImageGenerator';
+import { OracleDeck, OracleCard, OracleSpread, OracleContentStatus } from '@/types/oracle';
 
 const PORTAL_LABELS: Record<string, string> = {
   visitante: 'Visitante',
-  pre_iniciada: 'Pré-Iniciada',
-  iniciada: 'Iniciada',
+  mentorada: 'Mentorada',
+  aluna_formacao: 'Aluna Formação',
+  assinante: 'Assinante',
   oracula: 'Orácula',
   admin: 'Admin',
 };
@@ -61,6 +67,11 @@ export function AdminOraculosTab() {
   const [editingCard, setEditingCard] = useState<OracleCard | null>(null);
   const [cardDialogOpen, setCardDialogOpen] = useState(false);
   const [selectedOracleId, setSelectedOracleId] = useState<string>('');
+  const [cardImageUrl, setCardImageUrl] = useState('');
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [showUrlInput, setShowUrlInput] = useState(false);
+  const [urlInput, setUrlInput] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Spread form state
   const [editingSpread, setEditingSpread] = useState<OracleSpread | null>(null);
@@ -69,6 +80,15 @@ export function AdminOraculosTab() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Reset card image when dialog opens/closes
+  useEffect(() => {
+    if (cardDialogOpen) {
+      setCardImageUrl(editingCard?.main_image_url || '');
+      setShowUrlInput(false);
+      setUrlInput('');
+    }
+  }, [cardDialogOpen, editingCard]);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -90,6 +110,51 @@ export function AdminOraculosTab() {
     }
   };
 
+  // Helper functions
+  const getOracleCards = (oracleId: string) => cards.filter(c => c.oracle_id === oracleId);
+  const getOracleSpreads = (oracleId: string) => spreads.filter(s => s.oracle_id === oracleId);
+  const getPublishedCards = (oracleId: string) => cards.filter(c => c.oracle_id === oracleId && c.status === 'published');
+  
+  const canPublishOracle = (oracle: OracleDeck) => {
+    const oracleCards = getPublishedCards(oracle.id);
+    const oracleSpreads = getOracleSpreads(oracle.id).filter(s => s.status === 'published');
+    return oracleCards.length >= 1 && oracleSpreads.length >= 1;
+  };
+
+  // Image upload handler
+  const handleImageUpload = async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      toast({ title: 'Por favor, selecione uma imagem', variant: 'destructive' });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: 'A imagem deve ter no máximo 5MB', variant: 'destructive' });
+      return;
+    }
+
+    setIsUploadingImage(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `oracle-cards/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+      const { data, error } = await supabase.storage
+        .from('oracle-images')
+        .upload(fileName, file, { cacheControl: '3600', upsert: false });
+
+      if (error) throw error;
+
+      const { data: urlData } = supabase.storage.from('oracle-images').getPublicUrl(data.path);
+      setCardImageUrl(urlData.publicUrl);
+      toast({ title: 'Imagem enviada!' });
+    } catch (error) {
+      console.error('Error uploading:', error);
+      toast({ title: 'Erro ao enviar imagem', variant: 'destructive' });
+    } finally {
+      setIsUploadingImage(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
   // Oracle CRUD
   const handleSaveOracle = async (formData: FormData) => {
     const slug = (formData.get('slug') as string || '').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
@@ -101,9 +166,9 @@ export function AdminOraculosTab() {
       subtitle: formData.get('subtitle') as string || null,
       description: formData.get('description') as string || null,
       cover_image_url: formData.get('cover_image_url') as string || null,
-      minimum_portal: minPortal as 'visitante' | 'pre_iniciada' | 'iniciada' | 'admin',
+      minimum_portal: minPortal as 'visitante' | 'mentorada' | 'aluna_formacao' | 'assinante' | 'oracula' | 'admin',
       status: formData.get('status') as OracleContentStatus,
-      disclaimer_text: formData.get('disclaimer_text') as string || null,
+      disclaimer_text: formData.get('disclaimer_text') as string || 'Leitura simbólica. Não é previsão. Não substitui acompanhamento clínico.',
       lock_message_title: formData.get('lock_message_title') as string || 'Oráculo Bloqueado',
       lock_message_body: formData.get('lock_message_body') as string || null,
       upgrade_cta_text: formData.get('upgrade_cta_text') as string || 'Quero me inscrever',
@@ -117,10 +182,7 @@ export function AdminOraculosTab() {
 
     try {
       if (editingOracle) {
-        const { error } = await supabase
-          .from('oracle_decks')
-          .update(oracleData)
-          .eq('id', editingOracle.id);
+        const { error } = await supabase.from('oracle_decks').update(oracleData).eq('id', editingOracle.id);
         if (error) throw error;
         toast({ title: 'Oráculo atualizado!' });
       } else {
@@ -157,13 +219,22 @@ export function AdminOraculosTab() {
 
   const toggleOracleStatus = async (oracle: OracleDeck) => {
     const newStatus = oracle.status === 'published' ? 'draft' : 'published';
+    
+    // Check if can publish
+    if (newStatus === 'published' && !canPublishOracle(oracle)) {
+      toast({ 
+        title: 'Não é possível publicar', 
+        description: 'O oráculo precisa ter pelo menos 1 carta e 1 tiragem publicadas.',
+        variant: 'destructive' 
+      });
+      return;
+    }
+
     try {
-      const { error } = await supabase
-        .from('oracle_decks')
-        .update({ status: newStatus })
-        .eq('id', oracle.id);
+      const { error } = await supabase.from('oracle_decks').update({ status: newStatus }).eq('id', oracle.id);
       if (error) throw error;
       fetchData();
+      toast({ title: newStatus === 'published' ? 'Oráculo publicado!' : 'Oráculo despublicado' });
     } catch (error) {
       console.error('Error toggling status:', error);
       toast({ title: 'Erro ao alterar status', variant: 'destructive' });
@@ -172,14 +243,26 @@ export function AdminOraculosTab() {
 
   // Card CRUD
   const handleSaveCard = async (formData: FormData) => {
+    const oracleId = formData.get('oracle_id') as string;
+    
+    if (!oracleId) {
+      toast({ title: 'Selecione um oráculo', variant: 'destructive' });
+      return;
+    }
+    
+    if (!cardImageUrl) {
+      toast({ title: 'A imagem é obrigatória', description: 'Faça upload de uma imagem para a carta.', variant: 'destructive' });
+      return;
+    }
+
     const keywordsRaw = formData.get('keywords') as string || '';
     const questionsRaw = formData.get('reflection_questions') as string || '';
     
     const cardData = {
-      oracle_id: formData.get('oracle_id') as string,
+      oracle_id: oracleId,
       title: formData.get('title') as string,
       subtitle: formData.get('subtitle') as string || null,
-      main_image_url: formData.get('main_image_url') as string || null,
+      main_image_url: cardImageUrl,
       short_message: formData.get('short_message') as string || null,
       deep_reading: formData.get('deep_reading') as string || null,
       polarity_light_text: formData.get('polarity_light_text') as string || null,
@@ -195,10 +278,7 @@ export function AdminOraculosTab() {
 
     try {
       if (editingCard) {
-        const { error } = await supabase
-          .from('oracle_cards')
-          .update(cardData)
-          .eq('id', editingCard.id);
+        const { error } = await supabase.from('oracle_cards').update(cardData).eq('id', editingCard.id);
         if (error) throw error;
         toast({ title: 'Carta atualizada!' });
       } else {
@@ -209,6 +289,7 @@ export function AdminOraculosTab() {
       fetchData();
       setCardDialogOpen(false);
       setEditingCard(null);
+      setCardImageUrl('');
     } catch (error) {
       console.error('Error saving card:', error);
       toast({ title: 'Erro ao salvar carta', variant: 'destructive' });
@@ -231,6 +312,13 @@ export function AdminOraculosTab() {
 
   // Spread CRUD
   const handleSaveSpread = async (formData: FormData) => {
+    const oracleId = formData.get('oracle_id') as string;
+    
+    if (!oracleId) {
+      toast({ title: 'Selecione um oráculo', variant: 'destructive' });
+      return;
+    }
+
     const positionsRaw = formData.get('positions') as string || '';
     const positions = positionsRaw.split('\n').map((line, index) => {
       const [name, meaning] = line.split('|').map(s => s.trim());
@@ -238,7 +326,7 @@ export function AdminOraculosTab() {
     }).filter(p => p.name);
 
     const spreadData = {
-      oracle_id: formData.get('oracle_id') as string,
+      oracle_id: oracleId,
       name: formData.get('name') as string,
       description: formData.get('description') as string || null,
       number_of_cards: parseInt(formData.get('number_of_cards') as string) || 1,
@@ -251,10 +339,7 @@ export function AdminOraculosTab() {
 
     try {
       if (editingSpread) {
-        const { error } = await supabase
-          .from('oracle_spreads')
-          .update(spreadData)
-          .eq('id', editingSpread.id);
+        const { error } = await supabase.from('oracle_spreads').update(spreadData).eq('id', editingSpread.id);
         if (error) throw error;
         toast({ title: 'Tiragem atualizada!' });
       } else {
@@ -285,11 +370,38 @@ export function AdminOraculosTab() {
     }
   };
 
-  const getOracleCards = (oracleId: string) => cards.filter(c => c.oracle_id === oracleId);
-  const getOracleSpreads = (oracleId: string) => spreads.filter(s => s.oracle_id === oracleId);
+  // Navigate to cards/spreads for a specific oracle
+  const navigateToOracleCards = (oracleId: string) => {
+    setSelectedOracleId(oracleId);
+    setActiveTab('cards');
+  };
+
+  const navigateToOracleSpreads = (oracleId: string) => {
+    setSelectedOracleId(oracleId);
+    setActiveTab('spreads');
+  };
 
   return (
     <div className="space-y-6">
+      {/* Guided Flow Banner */}
+      <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
+        <CardContent className="p-4">
+          <div className="flex items-center gap-4 text-sm">
+            <Info className="w-5 h-5 text-primary shrink-0" />
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-medium">Fluxo recomendado:</span>
+              <Badge variant="outline" className="gap-1">1. Criar Oráculo</Badge>
+              <ArrowRight className="w-4 h-4 text-muted-foreground" />
+              <Badge variant="outline" className="gap-1">2. Criar Cartas</Badge>
+              <ArrowRight className="w-4 h-4 text-muted-foreground" />
+              <Badge variant="outline" className="gap-1">3. Criar Tiragens</Badge>
+              <ArrowRight className="w-4 h-4 text-muted-foreground" />
+              <Badge variant="outline" className="gap-1">4. Publicar</Badge>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
@@ -376,8 +488,8 @@ export function AdminOraculosTab() {
                         <Input id="subtitle" name="subtitle" defaultValue={editingOracle?.subtitle || ''} />
                       </div>
                       <div className="col-span-2">
-                        <Label htmlFor="description">Descrição</Label>
-                        <Textarea id="description" name="description" defaultValue={editingOracle?.description || ''} />
+                        <Label htmlFor="description">Descrição Simbólica</Label>
+                        <Textarea id="description" name="description" defaultValue={editingOracle?.description || ''} placeholder="Qual a finalidade terapêutica deste oráculo?" />
                       </div>
                       <div className="col-span-2">
                         <Label htmlFor="cover_image_url">URL da Capa</Label>
@@ -385,7 +497,7 @@ export function AdminOraculosTab() {
                       </div>
                       <div>
                         <Label htmlFor="minimum_portal">Portal Mínimo</Label>
-                        <Select name="minimum_portal" defaultValue={editingOracle?.minimum_portal || 'pre_iniciada'}>
+                        <Select name="minimum_portal" defaultValue={editingOracle?.minimum_portal || 'mentorada'}>
                           <SelectTrigger><SelectValue /></SelectTrigger>
                           <SelectContent>
                             {Object.entries(PORTAL_LABELS).map(([value, label]) => (
@@ -407,7 +519,11 @@ export function AdminOraculosTab() {
                       </div>
                       <div className="col-span-2">
                         <Label htmlFor="disclaimer_text">Aviso Legal</Label>
-                        <Textarea id="disclaimer_text" name="disclaimer_text" defaultValue={editingOracle?.disclaimer_text || ''} />
+                        <Textarea 
+                          id="disclaimer_text" 
+                          name="disclaimer_text" 
+                          defaultValue={editingOracle?.disclaimer_text || 'Leitura simbólica. Não é previsão. Não substitui acompanhamento clínico.'} 
+                        />
                       </div>
                       
                       {/* Lock Screen Settings */}
@@ -419,39 +535,37 @@ export function AdminOraculosTab() {
                         <Input id="lock_message_title" name="lock_message_title" defaultValue={editingOracle?.lock_message_title || 'Oráculo Bloqueado'} />
                       </div>
                       <div>
-                        <Label htmlFor="upgrade_cta_text">Texto do CTA</Label>
+                        <Label htmlFor="upgrade_cta_text">Texto do Botão</Label>
                         <Input id="upgrade_cta_text" name="upgrade_cta_text" defaultValue={editingOracle?.upgrade_cta_text || 'Quero me inscrever'} />
                       </div>
                       <div className="col-span-2">
                         <Label htmlFor="lock_message_body">Mensagem do Bloqueio</Label>
                         <Textarea id="lock_message_body" name="lock_message_body" defaultValue={editingOracle?.lock_message_body || ''} />
                       </div>
-                      <div className="col-span-2">
-                        <Label htmlFor="upgrade_cta_route">Rota do CTA</Label>
+                      <div>
+                        <Label htmlFor="upgrade_cta_route">Rota do Botão</Label>
                         <Input id="upgrade_cta_route" name="upgrade_cta_route" defaultValue={editingOracle?.upgrade_cta_route || '/welcome'} />
                       </div>
+                      <div className="flex items-center gap-2 pt-6">
+                        <Switch id="show_locked_teaser" name="show_locked_teaser" defaultChecked={editingOracle?.show_locked_teaser ?? true} value="true" />
+                        <Label htmlFor="show_locked_teaser">Mostrar teaser quando bloqueado</Label>
+                      </div>
 
-                      {/* Toggles */}
+                      {/* Features */}
                       <div className="col-span-2 border-t pt-4 mt-2">
-                        <h4 className="font-medium mb-3">Configurações</h4>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="flex items-center gap-2">
-                            <Switch id="show_locked_teaser" name="show_locked_teaser" defaultChecked={editingOracle?.show_locked_teaser ?? true} value="true" />
-                            <Label htmlFor="show_locked_teaser">Mostrar teaser bloqueado</Label>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Switch id="enable_journal" name="enable_journal" defaultChecked={editingOracle?.enable_journal ?? true} value="true" />
-                            <Label htmlFor="enable_journal">Habilitar histórico</Label>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Switch id="enable_professional_mode" name="enable_professional_mode" defaultChecked={editingOracle?.enable_professional_mode ?? false} value="true" />
-                            <Label htmlFor="enable_professional_mode">Modo profissional</Label>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Switch id="is_sensitive_mode_available" name="is_sensitive_mode_available" defaultChecked={editingOracle?.is_sensitive_mode_available ?? false} value="true" />
-                            <Label htmlFor="is_sensitive_mode_available">Modo sensível disponível</Label>
-                          </div>
-                        </div>
+                        <h4 className="font-medium mb-3">Funcionalidades</h4>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Switch id="enable_journal" name="enable_journal" defaultChecked={editingOracle?.enable_journal ?? true} value="true" />
+                        <Label htmlFor="enable_journal">Diário pessoal</Label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Switch id="enable_professional_mode" name="enable_professional_mode" defaultChecked={editingOracle?.enable_professional_mode ?? false} value="true" />
+                        <Label htmlFor="enable_professional_mode">Modo profissional</Label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Switch id="is_sensitive_mode_available" name="is_sensitive_mode_available" defaultChecked={editingOracle?.is_sensitive_mode_available ?? false} value="true" />
+                        <Label htmlFor="is_sensitive_mode_available">Modo sensível disponível</Label>
                       </div>
                     </div>
                     <div className="flex justify-end gap-2 pt-4">
@@ -464,100 +578,135 @@ export function AdminOraculosTab() {
             </Dialog>
           </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Oráculo</TableHead>
-                <TableHead>Portal</TableHead>
-                <TableHead>Cartas</TableHead>
-                <TableHead>Tiragens</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="w-[120px]">Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {oracles.map(oracle => (
-                <TableRow key={oracle.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      {oracle.cover_image_url ? (
-                        <img src={oracle.cover_image_url} alt="" className="w-10 h-10 object-cover rounded" />
-                      ) : (
-                        <div className="w-10 h-10 bg-primary/10 rounded flex items-center justify-center">
-                          <Sparkles className="w-5 h-5 text-primary" />
+          {/* Oracle Cards Grid */}
+          <div className="grid gap-4">
+            {oracles.map(oracle => {
+              const oracleCards = getOracleCards(oracle.id);
+              const oracleSpreads = getOracleSpreads(oracle.id);
+              const publishedCards = oracleCards.filter(c => c.status === 'published').length;
+              const publishedSpreads = oracleSpreads.filter(s => s.status === 'published').length;
+              const canPublish = publishedCards >= 1 && publishedSpreads >= 1;
+
+              return (
+                <Card key={oracle.id} className={oracle.status === 'published' ? 'border-green-500/30' : ''}>
+                  <CardHeader className="pb-2">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-3">
+                        {oracle.cover_image_url ? (
+                          <img src={oracle.cover_image_url} alt="" className="w-12 h-12 rounded-lg object-cover" />
+                        ) : (
+                          <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center">
+                            <Sparkles className="w-6 h-6 text-primary" />
+                          </div>
+                        )}
+                        <div>
+                          <CardTitle className="text-lg">{oracle.name}</CardTitle>
+                          {oracle.subtitle && <p className="text-sm text-muted-foreground">{oracle.subtitle}</p>}
                         </div>
-                      )}
-                      <div>
-                        <p className="font-medium">{oracle.name}</p>
-                        <p className="text-xs text-muted-foreground">/{oracle.slug}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge 
+                          className={oracle.status === 'published' ? 'bg-green-500/20 text-green-400' : ''}
+                          variant={oracle.status === 'published' ? 'default' : 'secondary'}
+                        >
+                          {STATUS_LABELS[oracle.status]}
+                        </Badge>
+                        <Badge variant="outline">{PORTAL_LABELS[oracle.minimum_portal]}</Badge>
                       </div>
                     </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{PORTAL_LABELS[oracle.minimum_portal]}</Badge>
-                  </TableCell>
-                  <TableCell>{getOracleCards(oracle.id).length}</TableCell>
-                  <TableCell>{getOracleSpreads(oracle.id).length}</TableCell>
-                  <TableCell>
-                    <Badge 
-                      className={oracle.status === 'published' ? 'bg-green-500/20 text-green-400' : ''}
-                      variant={oracle.status === 'published' ? 'default' : 'secondary'}
-                    >
-                      {STATUS_LABELS[oracle.status]}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-1">
-                      <Button 
-                        size="icon" 
-                        variant="ghost"
-                        onClick={() => toggleOracleStatus(oracle)}
-                        title={oracle.status === 'published' ? 'Despublicar' : 'Publicar'}
-                      >
+                  </CardHeader>
+                  <CardContent>
+                    {oracle.description && (
+                      <p className="text-sm text-muted-foreground mb-4">{oracle.description}</p>
+                    )}
+                    
+                    {/* Counters */}
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="flex items-center gap-2">
+                        <CreditCard className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm">
+                          <strong>{oracleCards.length}</strong> cartas ({publishedCards} publicadas)
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Layers className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm">
+                          <strong>{oracleSpreads.length}</strong> tiragens ({publishedSpreads} publicadas)
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Warning if cannot publish */}
+                    {oracle.status === 'draft' && !canPublish && (
+                      <Alert variant="destructive" className="mb-4 py-2">
+                        <AlertTriangle className="w-4 h-4" />
+                        <AlertDescription className="text-xs">
+                          Para publicar, adicione pelo menos 1 carta e 1 tiragem publicadas.
+                        </AlertDescription>
+                      </Alert>
+                    )}
+
+                    {/* Actions */}
+                    <div className="flex flex-wrap gap-2">
+                      <Button size="sm" variant="outline" onClick={() => navigateToOracleCards(oracle.id)}>
+                        <CreditCard className="w-4 h-4 mr-1" />
+                        Gerenciar Cartas
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => navigateToOracleSpreads(oracle.id)}>
+                        <Layers className="w-4 h-4 mr-1" />
+                        Gerenciar Tiragens
+                      </Button>
+                      <div className="flex-1" />
+                      <Button size="sm" variant="ghost" onClick={() => toggleOracleStatus(oracle)} title={oracle.status === 'published' ? 'Despublicar' : 'Publicar'}>
                         {oracle.status === 'published' ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </Button>
-                      <Button 
-                        size="icon" 
-                        variant="ghost"
-                        onClick={() => { setEditingOracle(oracle); setOracleDialogOpen(true); }}
-                      >
+                      <Button size="sm" variant="ghost" onClick={() => { setEditingOracle(oracle); setOracleDialogOpen(true); }}>
                         <Pencil className="w-4 h-4" />
                       </Button>
-                      <Button 
-                        size="icon" 
-                        variant="ghost"
-                        onClick={() => handleDeleteOracle(oracle.id)}
-                      >
+                      <Button size="sm" variant="ghost" onClick={() => handleDeleteOracle(oracle.id)}>
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                  </CardContent>
+                </Card>
+              );
+            })}
+
+            {oracles.length === 0 && (
+              <Card className="border-dashed">
+                <CardContent className="py-12 text-center">
+                  <Sparkles className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground mb-4">Nenhum oráculo criado ainda.</p>
+                  <Button onClick={() => { setEditingOracle(null); setOracleDialogOpen(true); }}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Criar Primeiro Oráculo
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </div>
         </TabsContent>
 
         {/* Cards Tab */}
         <TabsContent value="cards" className="space-y-4">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center flex-wrap gap-4">
             <div className="flex items-center gap-4">
               <h3 className="text-lg font-semibold">Gerenciar Cartas</h3>
-              <Select value={selectedOracleId} onValueChange={setSelectedOracleId}>
+              <Select value={selectedOracleId || 'all'} onValueChange={(v) => setSelectedOracleId(v === 'all' ? '' : v)}>
                 <SelectTrigger className="w-[250px]">
                   <SelectValue placeholder="Filtrar por oráculo..." />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todos os oráculos</SelectItem>
                   {oracles.map(o => (
-                    <SelectItem key={o.id} value={o.id}>{o.name}</SelectItem>
+                    <SelectItem key={o.id} value={o.id}>{o.name} ({getOracleCards(o.id).length})</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <Dialog open={cardDialogOpen} onOpenChange={setCardDialogOpen}>
               <DialogTrigger asChild>
-                <Button onClick={() => setEditingCard(null)}>
+                <Button onClick={() => setEditingCard(null)} disabled={oracles.length === 0}>
                   <Plus className="w-4 h-4 mr-2" />
                   Nova Carta
                 </Button>
@@ -579,6 +728,76 @@ export function AdminOraculosTab() {
                         </SelectContent>
                       </Select>
                     </div>
+                    
+                    {/* Image Upload - REQUIRED */}
+                    <div className="space-y-2">
+                      <Label>Imagem da Carta *</Label>
+                      {cardImageUrl ? (
+                        <div className="relative group">
+                          <div className="aspect-[3/4] max-w-[200px] rounded-lg overflow-hidden border bg-muted">
+                            <img src={cardImageUrl} alt="Preview" className="w-full h-full object-cover" />
+                          </div>
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => setCardImageUrl('')}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="aspect-[3/4] max-w-[200px] rounded-lg border-2 border-dashed bg-muted/50 flex flex-col items-center justify-center gap-2 p-4">
+                          {isUploadingImage ? (
+                            <>
+                              <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                              <p className="text-sm text-muted-foreground">Enviando...</p>
+                            </>
+                          ) : showUrlInput ? (
+                            <div className="w-full space-y-2">
+                              <Input
+                                placeholder="https://..."
+                                value={urlInput}
+                                onChange={(e) => setUrlInput(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), setCardImageUrl(urlInput), setShowUrlInput(false))}
+                              />
+                              <div className="flex gap-2">
+                                <Button type="button" size="sm" onClick={() => { setCardImageUrl(urlInput); setShowUrlInput(false); }} className="flex-1">
+                                  Salvar
+                                </Button>
+                                <Button type="button" size="sm" variant="outline" onClick={() => setShowUrlInput(false)}>
+                                  Cancelar
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <>
+                              <Upload className="w-8 h-8 text-muted-foreground" />
+                              <p className="text-xs text-muted-foreground text-center">Imagem obrigatória</p>
+                              <div className="flex gap-2">
+                                <Button type="button" size="sm" variant="secondary" onClick={() => fileInputRef.current?.click()}>
+                                  <Upload className="w-4 h-4 mr-1" />
+                                  Upload
+                                </Button>
+                                <Button type="button" size="sm" variant="outline" onClick={() => setShowUrlInput(true)}>
+                                  <LinkIcon className="w-4 h-4 mr-1" />
+                                  URL
+                                </Button>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      )}
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => e.target.files?.[0] && handleImageUpload(e.target.files[0])}
+                      />
+                    </div>
+
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="title">Título *</Label>
@@ -589,57 +808,27 @@ export function AdminOraculosTab() {
                         <Input id="subtitle" name="subtitle" defaultValue={editingCard?.subtitle || ''} />
                       </div>
                       <div className="col-span-2">
-                        <Label htmlFor="main_image_url">URL da Imagem (ou use o gerador abaixo)</Label>
-                        <Input id="main_image_url" name="main_image_url" defaultValue={editingCard?.main_image_url || ''} />
-                      </div>
-                      
-                      {/* AI Image Generator */}
-                      <div className="col-span-2">
-                        <OracleImageGenerator
-                          cardId={editingCard?.id}
-                          currentImageUrl={editingCard?.main_image_url}
-                          currentSymbolicFocus={(editingCard as any)?.symbolic_focus}
-                          onImageGenerated={(url, focus) => {
-                            // Update the form input
-                            const imageInput = document.getElementById('main_image_url') as HTMLInputElement;
-                            if (imageInput) {
-                              imageInput.value = url;
-                            }
-                          }}
-                          previewMode={!editingCard}
-                        />
-                      </div>
-                      <div className="col-span-2">
                         <Label htmlFor="short_message">Mensagem Curta</Label>
-                        <Textarea id="short_message" name="short_message" defaultValue={editingCard?.short_message || ''} />
+                        <Textarea id="short_message" name="short_message" defaultValue={editingCard?.short_message || ''} placeholder="Uma frase de impacto..." />
                       </div>
                       <div className="col-span-2">
                         <Label htmlFor="deep_reading">Leitura Profunda</Label>
-                        <Textarea id="deep_reading" name="deep_reading" rows={4} defaultValue={editingCard?.deep_reading || ''} />
+                        <Textarea id="deep_reading" name="deep_reading" rows={4} defaultValue={editingCard?.deep_reading || ''} placeholder="Texto expandido para reflexão..." />
                       </div>
                       <div>
-                        <Label htmlFor="polarity_light_text">Aspecto Luz</Label>
+                        <Label htmlFor="polarity_light_text">Aspecto Luz ☀️</Label>
                         <Textarea id="polarity_light_text" name="polarity_light_text" defaultValue={editingCard?.polarity_light_text || ''} />
                       </div>
                       <div>
-                        <Label htmlFor="polarity_shadow_text">Aspecto Sombra</Label>
+                        <Label htmlFor="polarity_shadow_text">Aspecto Sombra 🌙</Label>
                         <Textarea id="polarity_shadow_text" name="polarity_shadow_text" defaultValue={editingCard?.polarity_shadow_text || ''} />
                       </div>
                       <div className="col-span-2">
-                        <Label htmlFor="reflection_questions">Perguntas para Reflexão (uma por linha)</Label>
-                        <Textarea 
-                          id="reflection_questions" 
-                          name="reflection_questions" 
-                          rows={3}
-                          defaultValue={editingCard?.reflection_questions_json?.join('\n') || ''} 
-                        />
-                      </div>
-                      <div className="col-span-2">
-                        <Label htmlFor="ritual_text">Prática/Ritual</Label>
+                        <Label htmlFor="ritual_text">Prática/Ritual (opcional)</Label>
                         <Textarea id="ritual_text" name="ritual_text" defaultValue={editingCard?.ritual_text || ''} />
                       </div>
                       <div>
-                        <Label htmlFor="keywords">Palavras-chave (separadas por vírgula)</Label>
+                        <Label htmlFor="keywords">Palavras-chave (vírgula)</Label>
                         <Input id="keywords" name="keywords" defaultValue={editingCard?.keywords_json?.join(', ') || ''} />
                       </div>
                       <div>
@@ -679,19 +868,27 @@ export function AdminOraculosTab() {
             </Dialog>
           </div>
 
+          {oracles.length === 0 && (
+            <Alert>
+              <AlertTriangle className="w-4 h-4" />
+              <AlertDescription>
+                Crie um oráculo primeiro antes de adicionar cartas.
+              </AlertDescription>
+            </Alert>
+          )}
+
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Carta</TableHead>
                 <TableHead>Oráculo</TableHead>
-                <TableHead>Nível</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="w-[100px]">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {cards
-                .filter(c => !selectedOracleId || selectedOracleId === 'all' || c.oracle_id === selectedOracleId)
+                .filter(c => !selectedOracleId || c.oracle_id === selectedOracleId)
                 .map(card => (
                   <TableRow key={card.id}>
                     <TableCell>
@@ -700,22 +897,18 @@ export function AdminOraculosTab() {
                           <img src={card.main_image_url} alt="" className="w-10 h-14 object-cover rounded" />
                         ) : (
                           <div className="w-10 h-14 bg-muted rounded flex items-center justify-center">
-                            <CreditCard className="w-5 h-5 text-muted-foreground" />
+                            <AlertTriangle className="w-4 h-4 text-destructive" />
                           </div>
                         )}
                         <div>
                           <p className="font-medium">{card.title}</p>
                           {card.subtitle && <p className="text-xs text-muted-foreground">{card.subtitle}</p>}
+                          {!card.main_image_url && <p className="text-xs text-destructive">Sem imagem</p>}
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
                       {oracles.find(o => o.id === card.oracle_id)?.name || '-'}
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">
-                        {card.level === 'beginner' ? 'Iniciante' : card.level === 'intermediate' ? 'Intermediário' : 'Avançado'}
-                      </Badge>
                     </TableCell>
                     <TableCell>
                       <Badge 
@@ -727,18 +920,10 @@ export function AdminOraculosTab() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        <Button 
-                          size="icon" 
-                          variant="ghost"
-                          onClick={() => { setEditingCard(card); setCardDialogOpen(true); }}
-                        >
+                        <Button size="icon" variant="ghost" onClick={() => { setEditingCard(card); setCardDialogOpen(true); }}>
                           <Pencil className="w-4 h-4" />
                         </Button>
-                        <Button 
-                          size="icon" 
-                          variant="ghost"
-                          onClick={() => handleDeleteCard(card.id)}
-                        >
+                        <Button size="icon" variant="ghost" onClick={() => handleDeleteCard(card.id)}>
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
@@ -751,11 +936,33 @@ export function AdminOraculosTab() {
 
         {/* Spreads Tab */}
         <TabsContent value="spreads" className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold">Gerenciar Tiragens</h3>
+          {/* Explanatory note */}
+          <Alert className="bg-muted/50">
+            <Info className="w-4 h-4" />
+            <AlertDescription>
+              <strong>A tiragem organiza a leitura. O sentido nasce do símbolo.</strong><br />
+              Tiragens apenas definem número de cartas, posições e texto de abertura — não criam conteúdo novo.
+            </AlertDescription>
+          </Alert>
+
+          <div className="flex justify-between items-center flex-wrap gap-4">
+            <div className="flex items-center gap-4">
+              <h3 className="text-lg font-semibold">Gerenciar Tiragens</h3>
+              <Select value={selectedOracleId || 'all'} onValueChange={(v) => setSelectedOracleId(v === 'all' ? '' : v)}>
+                <SelectTrigger className="w-[250px]">
+                  <SelectValue placeholder="Filtrar por oráculo..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os oráculos</SelectItem>
+                  {oracles.map(o => (
+                    <SelectItem key={o.id} value={o.id}>{o.name} ({getOracleSpreads(o.id).length})</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <Dialog open={spreadDialogOpen} onOpenChange={setSpreadDialogOpen}>
               <DialogTrigger asChild>
-                <Button onClick={() => setEditingSpread(null)}>
+                <Button onClick={() => setEditingSpread(null)} disabled={oracles.length === 0}>
                   <Plus className="w-4 h-4 mr-2" />
                   Nova Tiragem
                 </Button>
@@ -768,11 +975,11 @@ export function AdminOraculosTab() {
                   <form onSubmit={e => { e.preventDefault(); handleSaveSpread(new FormData(e.currentTarget)); }} className="space-y-4 p-1">
                     <div>
                       <Label htmlFor="oracle_id">Oráculo *</Label>
-                      <Select name="oracle_id" defaultValue={editingSpread?.oracle_id || ''} required>
+                      <Select name="oracle_id" defaultValue={editingSpread?.oracle_id || selectedOracleId || ''} required>
                         <SelectTrigger><SelectValue placeholder="Selecione o oráculo" /></SelectTrigger>
                         <SelectContent>
                           {oracles.map(o => (
-                            <SelectItem key={o.id} value={o.id}>{o.name}</SelectItem>
+                            <SelectItem key={o.id} value={o.id}>{o.name} ({getOracleCards(o.id).length} cartas)</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -780,18 +987,18 @@ export function AdminOraculosTab() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="name">Nome *</Label>
-                        <Input id="name" name="name" defaultValue={editingSpread?.name} required />
+                        <Input id="name" name="name" defaultValue={editingSpread?.name} required placeholder="Ex: Tiragem da Encruzilhada" />
                       </div>
                       <div>
                         <Label htmlFor="number_of_cards">Número de Cartas *</Label>
                         <Input id="number_of_cards" name="number_of_cards" type="number" min="1" defaultValue={editingSpread?.number_of_cards || 1} required />
                       </div>
                       <div className="col-span-2">
-                        <Label htmlFor="description">Descrição</Label>
-                        <Textarea id="description" name="description" defaultValue={editingSpread?.description || ''} />
+                        <Label htmlFor="description">Descrição / Finalidade</Label>
+                        <Textarea id="description" name="description" defaultValue={editingSpread?.description || ''} placeholder="Para que serve esta tiragem?" />
                       </div>
                       <div>
-                        <Label htmlFor="layout_type">Layout</Label>
+                        <Label htmlFor="layout_type">Layout Visual</Label>
                         <Select name="layout_type" defaultValue={editingSpread?.layout_type || 'line'}>
                           <SelectTrigger><SelectValue /></SelectTrigger>
                           <SelectContent>
@@ -815,7 +1022,7 @@ export function AdminOraculosTab() {
                         </Select>
                       </div>
                       <div className="col-span-2">
-                        <Label htmlFor="positions">Posições (formato: nome|significado, uma por linha)</Label>
+                        <Label htmlFor="positions">Posições Simbólicas (formato: nome|significado, uma por linha)</Label>
                         <Textarea 
                           id="positions" 
                           name="positions" 
@@ -826,11 +1033,11 @@ export function AdminOraculosTab() {
                       </div>
                       <div className="col-span-2">
                         <Label htmlFor="opening_text">Texto de Abertura</Label>
-                        <Textarea id="opening_text" name="opening_text" defaultValue={editingSpread?.opening_text || ''} />
+                        <Textarea id="opening_text" name="opening_text" defaultValue={editingSpread?.opening_text || ''} placeholder="Texto exibido antes da tiragem..." />
                       </div>
                       <div className="col-span-2">
                         <Label htmlFor="closing_text">Texto de Encerramento</Label>
-                        <Textarea id="closing_text" name="closing_text" defaultValue={editingSpread?.closing_text || ''} />
+                        <Textarea id="closing_text" name="closing_text" defaultValue={editingSpread?.closing_text || ''} placeholder="Texto exibido após a tiragem..." />
                       </div>
                     </div>
                     <div className="flex justify-end gap-2 pt-4">
@@ -842,6 +1049,15 @@ export function AdminOraculosTab() {
               </DialogContent>
             </Dialog>
           </div>
+
+          {oracles.length === 0 && (
+            <Alert>
+              <AlertTriangle className="w-4 h-4" />
+              <AlertDescription>
+                Crie um oráculo primeiro antes de adicionar tiragens.
+              </AlertDescription>
+            </Alert>
+          )}
 
           <Table>
             <TableHeader>
@@ -855,47 +1071,55 @@ export function AdminOraculosTab() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {spreads.map(spread => (
-                <TableRow key={spread.id}>
-                  <TableCell>
-                    <p className="font-medium">{spread.name}</p>
-                    {spread.description && <p className="text-xs text-muted-foreground">{spread.description}</p>}
-                  </TableCell>
-                  <TableCell>
-                    {oracles.find(o => o.id === spread.oracle_id)?.name || '-'}
-                  </TableCell>
-                  <TableCell>{spread.number_of_cards}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{spread.layout_type}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge 
-                      className={spread.status === 'published' ? 'bg-green-500/20 text-green-400' : ''}
-                      variant={spread.status === 'published' ? 'default' : 'secondary'}
-                    >
-                      {STATUS_LABELS[spread.status]}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-1">
-                      <Button 
-                        size="icon" 
-                        variant="ghost"
-                        onClick={() => { setEditingSpread(spread); setSpreadDialogOpen(true); }}
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Button>
-                      <Button 
-                        size="icon" 
-                        variant="ghost"
-                        onClick={() => handleDeleteSpread(spread.id)}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {spreads
+                .filter(s => !selectedOracleId || s.oracle_id === selectedOracleId)
+                .map(spread => {
+                  const oracleCardCount = getOracleCards(spread.oracle_id).length;
+                  const hasEnoughCards = oracleCardCount >= spread.number_of_cards;
+                  
+                  return (
+                    <TableRow key={spread.id}>
+                      <TableCell>
+                        <p className="font-medium">{spread.name}</p>
+                        {spread.description && <p className="text-xs text-muted-foreground">{spread.description}</p>}
+                      </TableCell>
+                      <TableCell>
+                        {oracles.find(o => o.id === spread.oracle_id)?.name || '-'}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1">
+                          <span>{spread.number_of_cards}</span>
+                          {!hasEnoughCards && (
+                            <span title={`Oráculo tem apenas ${oracleCardCount} cartas`}>
+                              <AlertTriangle className="w-3 h-3 text-destructive" />
+                            </span>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{spread.layout_type}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge 
+                          className={spread.status === 'published' ? 'bg-green-500/20 text-green-400' : ''}
+                          variant={spread.status === 'published' ? 'default' : 'secondary'}
+                        >
+                          {STATUS_LABELS[spread.status]}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-1">
+                          <Button size="icon" variant="ghost" onClick={() => { setEditingSpread(spread); setSpreadDialogOpen(true); }}>
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button size="icon" variant="ghost" onClick={() => handleDeleteSpread(spread.id)}>
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
             </TableBody>
           </Table>
         </TabsContent>
