@@ -139,7 +139,7 @@ export function VisitorDashboardPanel() {
 
       {/* Free Features Section */}
       <div>
-        <h3 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
+        <h3 className="text-base font-semibold text-foreground mb-3 flex items-center gap-2">
           <CheckCircle className="w-4 h-4 text-emerald-400" />
           Disponível para você
         </h3>
@@ -151,8 +151,8 @@ export function VisitorDashboardPanel() {
               onClick={() => navigate(feature.route)}
             >
               <CardContent className="p-4">
-                <h4 className="font-medium text-foreground text-sm mb-1">{feature.title}</h4>
-                <p className="text-xs text-muted-foreground">{feature.description}</p>
+                <h4 className="font-semibold text-foreground mb-1">{feature.title}</h4>
+                <p className="text-sm text-muted-foreground">{feature.description}</p>
               </CardContent>
             </Card>
           ))}
@@ -161,8 +161,8 @@ export function VisitorDashboardPanel() {
 
       {/* Locked Features Section */}
       <div>
-        <h3 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
-          <Lock className="w-4 h-4 text-muted-foreground/50" />
+        <h3 className="text-base font-semibold text-foreground mb-3 flex items-center gap-2">
+          <Lock className="w-4 h-4 text-muted-foreground" />
           Requer acesso
         </h3>
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -171,19 +171,19 @@ export function VisitorDashboardPanel() {
             return (
               <div
                 key={feature.id}
-                className="flex items-center gap-3 p-3 rounded-lg bg-muted/20 border border-border/30 opacity-60"
+                className="flex items-center gap-3 p-3 rounded-lg bg-muted/20 border border-border/30"
               >
                 <div className="w-8 h-8 rounded-full bg-muted/30 flex items-center justify-center shrink-0">
-                  <Icon className="w-4 h-4 text-muted-foreground/50" />
+                  <Icon className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h4 className="font-medium text-muted-foreground text-sm truncate">
+                    <h4 className="font-medium text-muted-foreground truncate">
                       {feature.title}
                     </h4>
-                    <Lock className="w-3 h-3 text-muted-foreground/30 shrink-0" />
+                    <Lock className="w-3 h-3 text-muted-foreground shrink-0" />
                   </div>
-                  <p className="text-xs text-muted-foreground/50 truncate">
+                  <p className="text-sm text-muted-foreground truncate">
                     {feature.description}
                   </p>
                 </div>
