@@ -27,10 +27,7 @@ A Mentoria é indicada para quem:
 • Deseja integrar camadas pessoais antes de profissionalizar o método`,
     price: 'R$ 2.000',
     buttonText: 'Entrar na Mentoria Orácula',
-    checkoutUrl: null, // Will be linked to internal checkout
-    gradient: 'from-purple-900/20 to-purple-600/5',
-    borderColor: 'border-purple-500/30 hover:border-purple-400/50',
-    accentColor: 'text-purple-400',
+    checkoutUrl: null,
   },
   {
     id: 'especializacao',
@@ -49,9 +46,6 @@ A Especialização é indicada para quem:
     price: 'R$ 2.500',
     buttonText: 'Entrar na Especialização Orácula',
     checkoutUrl: null,
-    gradient: 'from-gold/10 to-amber-600/5',
-    borderColor: 'border-gold/30 hover:border-gold/50',
-    accentColor: 'text-gold',
   },
   {
     id: 'caminho-completo',
@@ -72,9 +66,6 @@ Para quem quer atravessar todas as camadas — da própria travessia à conduç�
     price: 'R$ 3.500',
     buttonText: 'Atravessar o Caminho Completo',
     checkoutUrl: null,
-    gradient: 'from-rose-900/15 via-purple-900/10 to-gold/10',
-    borderColor: 'border-rose-500/30 hover:border-rose-400/50',
-    accentColor: 'text-rose-400',
     featured: true,
   },
   {
@@ -91,18 +82,24 @@ Indicado para quem:
 • Quer aplicar o método com clientes de forma autônoma
 
 A assinatura não inclui acompanhamento ou supervisão — apenas o uso das ferramentas digitais.`,
-    price: null, // Multiple prices
+    price: null,
     prices: [
       { label: 'Mensal', value: 'R$ 49', period: '/mês' },
       { label: 'Anual', value: 'R$ 490', period: '/ano' },
     ],
     buttonText: 'Assinar',
     checkoutUrl: null,
-    gradient: 'from-slate-800/30 to-slate-700/10',
-    borderColor: 'border-muted-foreground/20 hover:border-muted-foreground/40',
-    accentColor: 'text-muted-foreground',
   },
 ];
+
+// Subtle divider component
+const RitualDivider = () => (
+  <div className="flex items-center justify-center py-8 sm:py-12">
+    <div className="h-px w-16 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+    <span className="mx-4 text-gold/40 text-lg">✦</span>
+    <div className="h-px w-16 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+  </div>
+);
 
 export default function Planos() {
   const navigate = useNavigate();
@@ -115,7 +112,6 @@ export default function Planos() {
       return;
     }
 
-    // Navigate to internal checkout or product page
     if (product.checkoutUrl) {
       window.open(product.checkoutUrl, '_blank');
     } else {
@@ -125,81 +121,90 @@ export default function Planos() {
 
   return (
     <AppLayout>
-      <div className="min-h-screen">
-        {/* Hero Section */}
-        <section className="relative py-16 sm:py-24">
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/10 via-transparent to-transparent" />
+      <div className="min-h-screen bg-background">
+        {/* Hero Section - Minimal and Ceremonial */}
+        <section className="relative py-20 sm:py-32">
+          <div className="absolute inset-0 bg-gradient-to-b from-gold/5 via-transparent to-transparent opacity-50" />
           
-          <div className="container mx-auto px-4 relative">
+          <div className="container mx-auto px-6 relative">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center max-w-3xl mx-auto"
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="text-center max-w-2xl mx-auto"
             >
-              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-4">
-                <span className="text-gold">🜂</span> CAMINHOS ORÁCULA
+              <span className="text-gold/60 text-2xl mb-6 block">🜂</span>
+              <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-foreground tracking-wide mb-6">
+                CAMINHOS ORÁCULA
               </h1>
-              <p className="text-xl text-muted-foreground">
+              <p className="text-lg text-muted-foreground font-light tracking-wide">
                 Escolha como deseja aprofundar dentro da Casa
               </p>
             </motion.div>
           </div>
         </section>
 
-        {/* Context Text */}
-        <section className="py-12 sm:py-16">
-          <div className="container mx-auto px-4">
+        <RitualDivider />
+
+        {/* Context Text - Contemplative */}
+        <section className="py-12 sm:py-20">
+          <div className="container mx-auto px-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="max-w-2xl mx-auto text-center space-y-6"
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="max-w-xl mx-auto text-center space-y-8"
             >
-              <p className="text-lg text-foreground/90 leading-relaxed">
+              <p className="text-lg sm:text-xl text-foreground/90 leading-relaxed font-light">
                 Cada mulher chega até aqui em um tempo diferente.
               </p>
-              <p className="text-lg text-foreground/90 leading-relaxed">
+              <p className="text-lg sm:text-xl text-foreground/90 leading-relaxed font-light">
                 Algumas precisam se ler antes de conduzir.<br />
                 Outras já sentem o chamado para aprender o método e sustentar travessias.
               </p>
-              <p className="text-lg text-foreground/90 leading-relaxed font-medium">
+              <p className="text-lg sm:text-xl text-foreground font-normal leading-relaxed">
                 Não há caminho melhor.<br />
                 Há o caminho adequado para agora.
               </p>
-              <p className="text-muted-foreground italic">
+              <p className="text-muted-foreground italic text-base pt-4">
                 Antes de escolher, permita-se compreender com calma.
               </p>
             </motion.div>
           </div>
         </section>
 
-        {/* Video Section */}
-        <section className="py-12 sm:py-16 bg-card/30">
-          <div className="container mx-auto px-4">
+        <RitualDivider />
+
+        {/* Video Section - Centered and Framed */}
+        <section className="py-12 sm:py-20">
+          <div className="container mx-auto px-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="max-w-3xl mx-auto"
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="max-w-2xl mx-auto"
             >
-              <h2 className="font-display text-2xl sm:text-3xl font-semibold text-center mb-8">
-                🎥 Antes de decidir, me escuta
+              <h2 className="font-display text-xl sm:text-2xl font-normal text-center text-foreground/90 mb-10">
+                <span className="text-gold/60 mr-3">🎥</span>
+                Antes de decidir, me escuta
               </h2>
               
-              {/* Video Placeholder */}
-              <div className="aspect-video bg-muted/50 rounded-xl border border-border/50 flex items-center justify-center mb-6">
-                <div className="text-center p-8">
-                  <p className="text-muted-foreground">
-                    Espaço reservado para vídeo de orientação
-                  </p>
-                  <p className="text-sm text-muted-foreground/70 mt-2">
-                    (3-5 minutos)
-                  </p>
+              {/* Video Frame - Simple and Elegant */}
+              <div className="relative">
+                <div className="absolute -inset-1 bg-gradient-to-br from-gold/10 via-transparent to-gold/5 rounded-xl blur-sm" />
+                <div className="relative aspect-video bg-card/60 rounded-lg border border-border/30 flex items-center justify-center backdrop-blur-sm">
+                  <div className="text-center p-8">
+                    <div className="w-16 h-16 rounded-full border border-gold/30 flex items-center justify-center mx-auto mb-4">
+                      <div className="w-0 h-0 border-l-[12px] border-l-gold/60 border-y-[8px] border-y-transparent ml-1" />
+                    </div>
+                    <p className="text-muted-foreground text-sm">
+                      Vídeo de orientação
+                    </p>
+                  </div>
                 </div>
               </div>
               
-              <p className="text-center text-muted-foreground italic leading-relaxed">
+              <p className="text-center text-muted-foreground/80 italic text-sm sm:text-base leading-relaxed mt-8 max-w-lg mx-auto">
                 "Se você chegou até esta sala, é porque algo em você quer aprofundar.<br />
                 Mas aprofundar pode significar duas coisas diferentes…"
               </p>
@@ -207,114 +212,136 @@ export default function Planos() {
           </div>
         </section>
 
-        {/* Products Grid */}
-        <section className="py-16 sm:py-24">
-          <div className="container mx-auto px-4">
-            <div className="grid gap-8 lg:gap-10 max-w-5xl mx-auto">
+        <RitualDivider />
+
+        {/* Products Section - Clean Cards */}
+        <section className="py-12 sm:py-24">
+          <div className="container mx-auto px-6">
+            <div className="space-y-8 sm:space-y-12 max-w-3xl mx-auto">
               {PRODUCTS.map((product, index) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.1 * index }}
+                  transition={{ duration: 0.6, delay: 0.1 * index }}
                 >
                   <Card
                     className={cn(
-                      "relative overflow-hidden transition-all duration-300",
-                      `bg-gradient-to-br ${product.gradient}`,
-                      `border ${product.borderColor}`,
-                      product.featured && "ring-1 ring-gold/30"
+                      "relative overflow-hidden transition-all duration-500",
+                      "bg-card/40 backdrop-blur-sm",
+                      "border border-border/40",
+                      "hover:border-gold/20 hover:bg-card/60",
+                      product.featured && "border-gold/30 bg-card/50"
                     )}
                   >
                     {product.featured && (
-                      <div className="absolute top-4 right-4">
-                        <span className="text-xs font-medium text-gold bg-gold/10 px-3 py-1 rounded-full border border-gold/30">
-                          Jornada Integral
-                        </span>
-                      </div>
+                      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
                     )}
                     
-                    <CardContent className="p-6 sm:p-8 lg:p-10">
-                      <div className="flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-10">
-                        {/* Product Info */}
-                        <div className="flex-1 space-y-4">
-                          <div>
-                            <span className={cn("text-2xl", product.accentColor)}>
-                              {product.symbol}
-                            </span>
-                            <h3 className="font-display text-2xl sm:text-3xl font-bold text-foreground mt-2">
-                              {product.title}
-                            </h3>
-                            <p className={cn("text-sm font-medium mt-1", product.accentColor)}>
-                              {product.subtitle}
-                            </p>
-                          </div>
-                          
-                          <div className="prose prose-sm prose-invert max-w-none">
-                            <p className="text-muted-foreground whitespace-pre-line leading-relaxed">
-                              {product.description}
-                            </p>
-                          </div>
-                        </div>
+                    <CardContent className="p-8 sm:p-10 lg:p-12">
+                      {/* Symbol and Title */}
+                      <div className="text-center mb-8">
+                        <span className="text-2xl text-gold/70 block mb-4">
+                          {product.symbol}
+                        </span>
+                        <h3 className="font-display text-2xl sm:text-3xl font-medium text-foreground tracking-wide">
+                          {product.title}
+                        </h3>
+                        <p className="text-gold/70 text-sm sm:text-base mt-3 font-light tracking-wide">
+                          {product.subtitle}
+                        </p>
                         
-                        {/* Pricing & CTA */}
-                        <div className="lg:w-64 shrink-0 space-y-4">
-                          {product.prices ? (
-                            <>
-                              <div className="flex gap-2">
-                                {product.prices.map((price) => (
-                                  <button
-                                    key={price.label}
-                                    onClick={() => setSelectedSubscription(price.label.toLowerCase() as 'mensal' | 'anual')}
-                                    className={cn(
-                                      "flex-1 py-2 px-3 rounded-lg border text-sm font-medium transition-colors",
-                                      selectedSubscription === price.label.toLowerCase()
-                                        ? "bg-gold/20 border-gold/50 text-gold"
-                                        : "bg-muted/30 border-border/50 text-muted-foreground hover:border-border"
-                                    )}
-                                  >
-                                    {price.label}
-                                  </button>
-                                ))}
-                              </div>
-                              <div className="text-center">
-                                <span className="text-3xl font-bold text-foreground">
-                                  {product.prices.find(p => p.label.toLowerCase() === selectedSubscription)?.value}
-                                </span>
-                                <span className="text-muted-foreground">
-                                  {product.prices.find(p => p.label.toLowerCase() === selectedSubscription)?.period}
-                                </span>
-                              </div>
+                        {product.featured && (
+                          <span className="inline-block mt-4 text-xs font-medium text-gold/60 bg-gold/5 px-4 py-1.5 rounded-full border border-gold/20">
+                            Jornada Integral
+                          </span>
+                        )}
+                      </div>
+                      
+                      {/* Description */}
+                      <div className="mb-10">
+                        <p className="text-muted-foreground whitespace-pre-line leading-relaxed text-sm sm:text-base font-light">
+                          {product.description}
+                        </p>
+                      </div>
+                      
+                      {/* Pricing & CTA */}
+                      <div className="border-t border-border/30 pt-8">
+                        {product.prices ? (
+                          <div className="space-y-6">
+                            {/* Subscription Toggle */}
+                            <div className="flex justify-center gap-3">
+                              {product.prices.map((price) => (
+                                <button
+                                  key={price.label}
+                                  onClick={() => setSelectedSubscription(price.label.toLowerCase() as 'mensal' | 'anual')}
+                                  className={cn(
+                                    "py-2.5 px-6 rounded-full text-sm font-medium transition-all duration-300",
+                                    selectedSubscription === price.label.toLowerCase()
+                                      ? "bg-gold/15 border border-gold/40 text-gold"
+                                      : "bg-transparent border border-border/50 text-muted-foreground hover:border-gold/30 hover:text-foreground"
+                                  )}
+                                >
+                                  {price.label}
+                                </button>
+                              ))}
+                            </div>
+                            
+                            {/* Price Display */}
+                            <div className="text-center">
+                              <span className="text-3xl sm:text-4xl font-display font-medium text-foreground">
+                                {product.prices.find(p => p.label.toLowerCase() === selectedSubscription)?.value}
+                              </span>
+                              <span className="text-muted-foreground text-base ml-1">
+                                {product.prices.find(p => p.label.toLowerCase() === selectedSubscription)?.period}
+                              </span>
+                            </div>
+                            
+                            {/* Button */}
+                            <div className="flex justify-center pt-2">
                               <Button
-                                className="w-full"
+                                size="lg"
                                 variant="outline"
+                                className="px-10 py-6 text-base border-gold/30 text-foreground hover:bg-gold/10 hover:border-gold/50 hover:text-foreground transition-all duration-300 rounded-full"
                                 onClick={() => handleSelectProduct(product, selectedSubscription)}
                               >
-                                {product.buttonText} – {selectedSubscription === 'mensal' ? 'Mensal' : 'Anual'}
+                                {product.buttonText}
                               </Button>
-                            </>
-                          ) : (
-                            <>
-                              <div className="text-center lg:text-right">
-                                <span className="text-3xl font-bold text-foreground">
-                                  {product.price}
-                                </span>
-                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="space-y-6">
+                            {/* Price Display */}
+                            <div className="text-center">
+                              <span className="text-3xl sm:text-4xl font-display font-medium text-foreground">
+                                {product.price}
+                              </span>
+                            </div>
+                            
+                            {/* Button */}
+                            <div className="flex justify-center pt-2">
                               <Button
+                                size="lg"
                                 className={cn(
-                                  "w-full",
-                                  product.featured && "bg-gold text-black hover:bg-gold/90"
+                                  "px-10 py-6 text-base transition-all duration-300 rounded-full",
+                                  product.featured
+                                    ? "bg-gold/90 text-background hover:bg-gold border-0"
+                                    : "bg-transparent border border-gold/30 text-foreground hover:bg-gold/10 hover:border-gold/50"
                                 )}
                                 variant={product.featured ? "default" : "outline"}
                                 onClick={() => handleSelectProduct(product)}
                               >
                                 {product.buttonText}
                               </Button>
-                            </>
-                          )}
-                        </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </CardContent>
+                    
+                    {product.featured && (
+                      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+                    )}
                   </Card>
                 </motion.div>
               ))}
@@ -322,24 +349,26 @@ export default function Planos() {
           </div>
         </section>
 
-        {/* Closing Section */}
-        <section className="py-16 sm:py-24 bg-gradient-to-b from-transparent to-card/30">
-          <div className="container mx-auto px-4">
+        <RitualDivider />
+
+        {/* Closing Section - Quiet and Contemplative */}
+        <section className="py-16 sm:py-24">
+          <div className="container mx-auto px-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="max-w-2xl mx-auto text-center space-y-6"
+              transition={{ duration: 0.8 }}
+              className="max-w-xl mx-auto text-center space-y-6"
             >
-              <p className="text-lg text-foreground/90 leading-relaxed">
+              <p className="text-lg sm:text-xl text-foreground/90 leading-relaxed font-light">
                 Você não precisa decidir agora.
               </p>
-              <p className="text-lg text-foreground/90 leading-relaxed">
+              <p className="text-lg sm:text-xl text-foreground/90 leading-relaxed font-light">
                 A Casa continua aberta.<br />
                 As Portas não se fecham por urgência.
               </p>
-              <p className="text-lg text-foreground/90 leading-relaxed font-medium">
+              <p className="text-lg sm:text-xl text-foreground font-normal leading-relaxed pt-4">
                 Escolha quando o corpo estiver de acordo.<br />
                 A travessia começa no ritmo certo.
               </p>
@@ -347,10 +376,10 @@ export default function Planos() {
           </div>
         </section>
 
-        {/* Ethical Footer */}
-        <section className="py-8 border-t border-border/30">
-          <div className="container mx-auto px-4">
-            <p className="text-center text-sm text-muted-foreground">
+        {/* Ethical Footer - Subtle */}
+        <section className="py-10 border-t border-border/20">
+          <div className="container mx-auto px-6">
+            <p className="text-center text-xs sm:text-sm text-muted-foreground/60 font-light">
               🔒 A Casa Orácula não substitui terapia, acompanhamento psicológico ou tratamento clínico quando necessário.
             </p>
           </div>
