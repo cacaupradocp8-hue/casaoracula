@@ -1,7 +1,7 @@
 import React from 'react';
 import { PortalType, getPortal } from '@/types/portal';
 import { cn } from '@/lib/utils';
-import { Crown, Eye, Flame, Star } from 'lucide-react';
+import { Crown, Eye, Heart, GraduationCap, Sparkles, Star } from 'lucide-react';
 
 interface PortalBadgeProps {
   portal: PortalType;
@@ -12,15 +12,19 @@ interface PortalBadgeProps {
 
 const portalIcons: Record<PortalType, typeof Eye> = {
   visitante: Eye,
-  pre_iniciada: Flame,
-  iniciada: Star,
+  mentorada: Heart,
+  aluna_formacao: GraduationCap,
+  assinante: Sparkles,
+  oracula: Star,
   admin: Crown,
 };
 
 const portalColors: Record<PortalType, string> = {
   visitante: 'bg-muted text-muted-foreground',
-  pre_iniciada: 'bg-burgundy/30 text-burgundy-light',
-  iniciada: 'bg-gold/20 text-gold',
+  mentorada: 'bg-burgundy/30 text-burgundy-light',
+  aluna_formacao: 'bg-purple-500/20 text-purple-300',
+  assinante: 'bg-emerald-500/20 text-emerald-300',
+  oracula: 'bg-gold/20 text-gold',
   admin: 'bg-accent text-accent-foreground',
 };
 
@@ -52,7 +56,7 @@ export const PortalBadge = React.forwardRef<HTMLDivElement, PortalBadgeProps>(
         )}
       >
         <Icon className={iconSizes[size]} />
-        <span>{portalData.name.split('/')[0].trim()}</span>
+        <span>{portalData.name}</span>
         {showName && (
           <span className="text-muted-foreground">
             • {portalData.description}

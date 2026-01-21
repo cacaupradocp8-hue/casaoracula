@@ -51,13 +51,14 @@ const AdminRadiestesiaTab = lazy(() => import('@/components/admin/AdminRadiestes
 const AdminCasaOraculaTab = lazy(() => import('@/components/admin/AdminCasaOraculaTab'));
 const AdminAreaFormacaoTab = lazy(() => import('@/components/admin/AdminAreaFormacaoTab').then(m => ({ default: m.AdminAreaFormacaoTab })));
 const AdminSessoesTab = lazy(() => import('@/components/admin/AdminSessoesTab').then(m => ({ default: m.AdminSessoesTab })));
-const AdminVinculosTab = lazy(() => import('@/components/admin/AdminVinculosTab').then(m => ({ default: m.AdminVinculosTab })));
 const AdminGruposTab = lazy(() => import('@/components/admin/AdminGruposTab').then(m => ({ default: m.AdminGruposTab })));
 
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
-  { value: 'pre_iniciada', label: '👁 Pré-Iniciada' },
-  { value: 'iniciada', label: '👁 Iniciada ORÁCULA' },
+  { value: 'mentorada', label: '👁 Mentorada' },
+  { value: 'aluna_formacao', label: '👁 Aluna Formação' },
+  { value: 'assinante', label: '👁 Assinante' },
+  { value: 'oracula', label: '👁 Orácula' },
 ];
 
 // Tab loading fallback
@@ -86,7 +87,7 @@ export default function Admin() {
               <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-amber-500/20 border border-amber-500/50">
                 <AlertTriangle className="w-4 h-4 text-amber-500" />
                 <span className="text-sm text-amber-200">
-                  Preview: <strong>{previewPortal === 'visitante' ? 'Visitante' : previewPortal === 'pre_iniciada' ? 'Pré-Iniciada' : 'Iniciada'}</strong>
+                  Preview: <strong>{PREVIEW_PORTALS.find(p => p.value === previewPortal)?.label?.replace('👁 ', '') || previewPortal}</strong>
                 </span>
                 <Button
                   size="sm"
@@ -157,11 +158,9 @@ export default function Admin() {
               <FolderOpen className="w-4 h-4 text-purple-400" />
               Sessões
             </TabsTrigger>
-            <TabsTrigger value="vinculos" className="gap-2">
-              <Link className="w-4 h-4 text-purple-400" />
-              Vínculos
-            </TabsTrigger>
             <TabsTrigger value="grupos" className="gap-2">
+              <Users className="w-4 h-4 text-purple-400" />
+              Grupos
               <Users className="w-4 h-4 text-purple-400" />
               Grupos
             </TabsTrigger>

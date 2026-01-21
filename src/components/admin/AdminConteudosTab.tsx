@@ -68,8 +68,10 @@ interface Ferramenta {
 
 const PORTAL_LABELS: Record<PortalType, string> = {
   visitante: 'Visitante',
-  pre_iniciada: 'Pré-Iniciada',
-  iniciada: 'Iniciada ORÁCULA',
+  mentorada: 'Mentorada',
+  aluna_formacao: 'Aluna Formação',
+  assinante: 'Assinante',
+  oracula: 'Orácula',
   admin: 'Admin',
 };
 

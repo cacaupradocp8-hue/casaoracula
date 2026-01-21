@@ -299,7 +299,7 @@ function AppRoutes() {
       <Route
         path="/casa-tecelas"
         element={
-          <ProtectedRoute minPortal="iniciada">
+          <ProtectedRoute minPortal="oracula">
             <CasaTecelaAtrio />
           </ProtectedRoute>
         }
@@ -307,7 +307,7 @@ function AppRoutes() {
       <Route
         path="/casa-tecelas/interior"
         element={
-          <ProtectedRoute minPortal="iniciada">
+          <ProtectedRoute minPortal="oracula">
             <CasaTecelaInterior />
           </ProtectedRoute>
         }
@@ -317,7 +317,7 @@ function AppRoutes() {
       <Route
         path="/casa"
         element={
-          <ProtectedRoute minPortal="iniciada">
+          <ProtectedRoute minPortal="oracula">
             <CasaAtrio />
           </ProtectedRoute>
         }
@@ -325,7 +325,7 @@ function AppRoutes() {
       <Route
         path="/casa/sustentacao"
         element={
-          <ProtectedRoute minPortal="iniciada">
+          <ProtectedRoute minPortal="oracula">
             <CasaSustentacao />
           </ProtectedRoute>
         }
@@ -333,7 +333,7 @@ function AppRoutes() {
       <Route
         path="/casa/leitura"
         element={
-          <ProtectedRoute minPortal="iniciada">
+          <ProtectedRoute minPortal="oracula">
             <CasaLeitura />
           </ProtectedRoute>
         }
@@ -341,7 +341,7 @@ function AppRoutes() {
       <Route
         path="/casa/circulo"
         element={
-          <ProtectedRoute minPortal="iniciada">
+          <ProtectedRoute minPortal="oracula">
             <CasaCirculo />
           </ProtectedRoute>
         }
@@ -349,7 +349,7 @@ function AppRoutes() {
       <Route
         path="/mentoria-oracular"
         element={
-          <ProtectedRoute minPortal="iniciada">
+          <ProtectedRoute minPortal="oracula">
             <MentoriaOracular />
           </ProtectedRoute>
         }
@@ -357,7 +357,7 @@ function AppRoutes() {
       <Route
         path="/metodo"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Metodo />
           </ProtectedRoute>
         }
@@ -365,7 +365,7 @@ function AppRoutes() {
       <Route
         path="/biblioteca"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Biblioteca />
           </ProtectedRoute>
         }
@@ -373,7 +373,7 @@ function AppRoutes() {
       <Route
         path="/laboratorio-leitura"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <LaboratorioLeitura />
           </ProtectedRoute>
         }
@@ -381,7 +381,7 @@ function AppRoutes() {
       <Route
         path="/agentes"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Agentes />
           </ProtectedRoute>
         }
@@ -400,7 +400,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <FerramentasHub />
           </ProtectedRoute>
         }
@@ -410,7 +410,7 @@ function AppRoutes() {
       <Route
         path="/session-room"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <SessionRoomHome />
           </ProtectedRoute>
         }
@@ -418,7 +418,7 @@ function AppRoutes() {
       <Route
         path="/session-room/:caseId"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <SessionRoomCase />
           </ProtectedRoute>
         }
@@ -426,7 +426,7 @@ function AppRoutes() {
       <Route
         path="/session-room/group/:groupId"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <SessionRoomGroup />
           </ProtectedRoute>
         }
@@ -434,7 +434,7 @@ function AppRoutes() {
       <Route
         path="/session-room/manuais"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <ManuaisProtocolo />
           </ProtectedRoute>
         }
@@ -442,7 +442,7 @@ function AppRoutes() {
       <Route
         path="/session-room/roteiros"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <RoteirosProtocolo />
           </ProtectedRoute>
         }
@@ -455,7 +455,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/mapa-vivo"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <MapaVivoList />
           </ProtectedRoute>
         }
@@ -463,7 +463,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/mapa-vivo/:id"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <MapaVivoEditor />
           </ProtectedRoute>
         }
@@ -471,7 +471,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/big5"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Big5 />
           </ProtectedRoute>
         }
@@ -479,7 +479,7 @@ function AppRoutes() {
       <Route
         path="/ferramenta/big5-simbolico"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Big5Simbolico />
           </ProtectedRoute>
         }
@@ -487,7 +487,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/eneagrama"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Eneagrama />
           </ProtectedRoute>
         }
@@ -495,7 +495,7 @@ function AppRoutes() {
       <Route
         path="/ferramenta/eneagrama-feminino"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <EneagramaFeminino />
           </ProtectedRoute>
         }
@@ -503,7 +503,7 @@ function AppRoutes() {
       <Route
         path="/ferramenta/jornada-heroina"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <JornadaHeroina />
           </ProtectedRoute>
         }
@@ -511,7 +511,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/oraculo-perguntas"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <OraculoPerguntas />
           </ProtectedRoute>
         }
@@ -519,7 +519,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/mapa-oracula"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <MapaOracula />
           </ProtectedRoute>
         }
@@ -529,7 +529,7 @@ function AppRoutes() {
       <Route
         path="/templates/big5"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Big5TemplateList />
           </ProtectedRoute>
         }
@@ -537,7 +537,7 @@ function AppRoutes() {
       <Route
         path="/templates/big5/:sessionId"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Big5TemplateEditor />
           </ProtectedRoute>
         }
@@ -545,7 +545,7 @@ function AppRoutes() {
       <Route
         path="/templates/enneagram"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <EnneagramTemplateList />
           </ProtectedRoute>
         }
@@ -553,7 +553,7 @@ function AppRoutes() {
       <Route
         path="/templates/enneagram/:sessionId"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <EnneagramTemplateEditor />
           </ProtectedRoute>
         }
@@ -561,7 +561,7 @@ function AppRoutes() {
       <Route
         path="/templates/tarot"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <TarotTemplateList />
           </ProtectedRoute>
         }
@@ -569,7 +569,7 @@ function AppRoutes() {
       <Route
         path="/templates/tarot/:sessionId"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <TarotTemplateEditor />
           </ProtectedRoute>
         }
@@ -577,7 +577,7 @@ function AppRoutes() {
       <Route
         path="/templates/constellation"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <ConstellationTemplateList />
           </ProtectedRoute>
         }
@@ -585,7 +585,7 @@ function AppRoutes() {
       <Route
         path="/templates/constellation/:sessionId"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <ConstellationTemplateEditor />
           </ProtectedRoute>
         }
@@ -595,7 +595,7 @@ function AppRoutes() {
       <Route
         path="/mapas-pessoais"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <PersonalMaps />
           </ProtectedRoute>
         }
@@ -603,7 +603,7 @@ function AppRoutes() {
       <Route
         path="/mapas-pessoais/:id"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <PersonalMapEditor />
           </ProtectedRoute>
         }
@@ -613,7 +613,7 @@ function AppRoutes() {
       <Route
         path="/salas/big5"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Big5 />
           </ProtectedRoute>
         }
@@ -621,7 +621,7 @@ function AppRoutes() {
       <Route
         path="/salas/eneagrama"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Eneagrama />
           </ProtectedRoute>
         }
@@ -629,7 +629,7 @@ function AppRoutes() {
       <Route
         path="/salas/oraculo-perguntas"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <OraculoPerguntas />
           </ProtectedRoute>
         }
@@ -637,7 +637,7 @@ function AppRoutes() {
       <Route
         path="/salas/mapa-oracula"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <MapaOracula />
           </ProtectedRoute>
         }
@@ -645,7 +645,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/chakras"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Chakras />
           </ProtectedRoute>
         }
@@ -653,7 +653,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/hawkins"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Hawkins />
           </ProtectedRoute>
         }
@@ -661,7 +661,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/antroposofia"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Antroposofia />
           </ProtectedRoute>
         }
@@ -669,7 +669,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/neuroplasticidade"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Neuroplasticidade />
           </ProtectedRoute>
         }
@@ -677,7 +677,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/narrativas"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Narrativas />
           </ProtectedRoute>
         }
@@ -686,7 +686,7 @@ function AppRoutes() {
       <Route
         path="/radiestesia"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <RadiestesiaPortal />
           </ProtectedRoute>
         }
@@ -694,7 +694,7 @@ function AppRoutes() {
       <Route
         path="/radiestesia/leitura"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Leitura5Camadas />
           </ProtectedRoute>
         }
@@ -702,7 +702,7 @@ function AppRoutes() {
       <Route
         path="/radiestesia/mesa"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <MesaRadionica />
           </ProtectedRoute>
         }
@@ -710,7 +710,7 @@ function AppRoutes() {
       <Route
         path="/radiestesia/graficos"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <CatalogoGraficos />
           </ProtectedRoute>
         }
@@ -718,7 +718,7 @@ function AppRoutes() {
       <Route
         path="/radiestesia/pantaculos"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Pantaculos />
           </ProtectedRoute>
         }
@@ -726,7 +726,7 @@ function AppRoutes() {
       <Route
         path="/radiestesia/cristais"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <CristaisCampos />
           </ProtectedRoute>
         }
@@ -734,7 +734,7 @@ function AppRoutes() {
       <Route
         path="/radiestesia/escala"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <EscalaNarrativa />
           </ProtectedRoute>
         }
@@ -742,7 +742,7 @@ function AppRoutes() {
       <Route
         path="/radiestesia/diario"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <DiarioPraticas />
           </ProtectedRoute>
         }
@@ -751,7 +751,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/tarot"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Tarot />
           </ProtectedRoute>
         }
@@ -759,7 +759,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/constelacao"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Constelacao />
           </ProtectedRoute>
         }
@@ -768,7 +768,7 @@ function AppRoutes() {
       <Route
         path="/syntheia"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <Syntheia />
           </ProtectedRoute>
         }
@@ -781,7 +781,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/agente-analista"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <AgenteAnalista />
           </ProtectedRoute>
         }
@@ -789,7 +789,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/agente-curador"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <AgenteCurador />
           </ProtectedRoute>
         }
@@ -797,7 +797,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/agente-simbolico"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <AgenteSimbólico />
           </ProtectedRoute>
         }
@@ -807,7 +807,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/espelho-de-consciencia"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <EspelhoConsciencia />
           </ProtectedRoute>
         }
@@ -820,7 +820,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/mapa-arquetipos-ego"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <MapaArquetiposEgo />
           </ProtectedRoute>
         }
@@ -828,7 +828,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/cartografia-torre"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <CartografiaTorre />
           </ProtectedRoute>
         }
@@ -836,7 +836,7 @@ function AppRoutes() {
       <Route
         path="/ferramentas/plasticidade-psiquica"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <PlasticidadePsiquica />
           </ProtectedRoute>
         }
@@ -854,7 +854,7 @@ function AppRoutes() {
       <Route
         path="/leitura-oracular"
         element={
-          <ProtectedRoute minPortal="iniciada">
+          <ProtectedRoute minPortal="oracula">
             <LeituraOracular />
           </ProtectedRoute>
         }
@@ -862,7 +862,7 @@ function AppRoutes() {
       <Route
         path="/minhas-clientes"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <MinhasClientes />
           </ProtectedRoute>
         }
@@ -870,7 +870,7 @@ function AppRoutes() {
       <Route
         path="/cliente/:clienteId"
         element={
-          <ProtectedRoute minPortal="pre_iniciada">
+          <ProtectedRoute minPortal="mentorada">
             <ClientePerfil />
           </ProtectedRoute>
         }
@@ -962,7 +962,7 @@ function AppRoutes() {
         <Route
           path="/labirinto"
           element={
-            <ProtectedRoute minPortal="pre_iniciada">
+            <ProtectedRoute minPortal="mentorada">
               <LabirintoHome />
             </ProtectedRoute>
           }
@@ -970,7 +970,7 @@ function AppRoutes() {
         <Route
           path="/labirinto/porta/:portaId"
           element={
-            <ProtectedRoute minPortal="pre_iniciada">
+            <ProtectedRoute minPortal="mentorada">
               <LabirintoPorta />
             </ProtectedRoute>
           }
@@ -978,7 +978,7 @@ function AppRoutes() {
         <Route
           path="/labirinto/como-usar"
           element={
-            <ProtectedRoute minPortal="pre_iniciada">
+            <ProtectedRoute minPortal="mentorada">
               <LabirintoComoUsar />
             </ProtectedRoute>
           }
@@ -986,7 +986,7 @@ function AppRoutes() {
         <Route
           path="/labirinto/tipos-de-campo"
           element={
-            <ProtectedRoute minPortal="pre_iniciada">
+            <ProtectedRoute minPortal="mentorada">
               <LabirintoTiposCampo />
             </ProtectedRoute>
           }
@@ -994,7 +994,7 @@ function AppRoutes() {
         <Route
           path="/labirinto/tabela"
           element={
-            <ProtectedRoute minPortal="iniciada">
+            <ProtectedRoute minPortal="oracula">
               <LabirintoTabela />
             </ProtectedRoute>
           }
