@@ -21,7 +21,9 @@ import {
   ArchiveRestore,
   Save,
   Sparkles,
+  FileDown,
 } from 'lucide-react';
+import { exportJardimRegistroAsPdf } from '@/lib/exportPdf';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useJardimPsique, JardimRegistro } from '@/hooks/useJardimPsique';
@@ -271,6 +273,15 @@ export default function JardimPsiqueDetalhe() {
 
           {/* Ações */}
           <div className="flex flex-wrap gap-3">
+            <Button
+              variant="outline"
+              onClick={() => exportJardimRegistroAsPdf(registro)}
+              className="gap-2"
+            >
+              <FileDown className="w-4 h-4" />
+              Exportar PDF
+            </Button>
+
             <Button
               variant={registro.integrado ? 'secondary' : 'outline'}
               onClick={handleToggleIntegrado}
