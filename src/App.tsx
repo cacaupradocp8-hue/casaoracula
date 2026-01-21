@@ -37,6 +37,7 @@ import PortalDetalhe from "./pages/PortalDetalhe";
 import AulaPage from "./pages/AulaPage";
 import LaboratorioLeitura from "./pages/LaboratorioLeitura";
 import Metodo from "./pages/Metodo";
+import FerramentasMetodo from "./pages/FerramentasMetodo";
 import Portais from "./pages/Portais";
 import ConfirmarProfissional from "./pages/ConfirmarProfissional";
 import MinhasClientes from "./pages/MinhasClientes";
@@ -357,8 +358,16 @@ function AppRoutes() {
       <Route
         path="/metodo"
         element={
-          <ProtectedRoute minPortal="mentorada">
+          <ProtectedRoute>
             <Metodo />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas-metodo"
+        element={
+          <ProtectedRoute minPortal="oracula">
+            <FerramentasMetodo />
           </ProtectedRoute>
         }
       />
