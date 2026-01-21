@@ -173,6 +173,10 @@
     animation: scale-in 0.5s ease-out forwards;
   }
 
+  .animate-flower-pulse {
+    animation: flower-pulse 12s ease-in-out infinite;
+  }
+
   .glass {
     background: hsl(var(--card) / 0.6);
     backdrop-filter: blur(12px);
@@ -257,6 +261,17 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes flower-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.03) rotate(2deg);
   }
 }
 

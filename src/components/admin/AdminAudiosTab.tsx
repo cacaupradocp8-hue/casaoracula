@@ -69,6 +69,7 @@ const CATEGORIA_OPTIONS = [
   'Formação',
   'Prática Simbólica',
   'Jornada Guiada',
+  'Onboarding',
   'Outro',
 ];
 

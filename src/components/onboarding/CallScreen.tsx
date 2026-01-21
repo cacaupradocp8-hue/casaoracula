@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Eye, Flame, Moon } from 'lucide-react';
 import { ArchetypeType } from '@/hooks/useOnboarding';
+import { FlowerOfLife } from '@/components/sacred-geometry/FlowerOfLife';
+import { AmbientPlayer } from '@/components/onboarding/AmbientPlayer';
+import { useOnboardingAudio } from '@/hooks/useOnboardingAudio';
 
 interface CallScreenProps {
   onSelectArchetype: (archetype: ArchetypeType) => void;
@@ -35,6 +38,7 @@ const ARCHETYPES = [
 export function CallScreen({ onSelectArchetype, isLoading }: CallScreenProps) {
   const [hoveredArchetype, setHoveredArchetype] = useState<ArchetypeType | null>(null);
   const [selectedArchetype, setSelectedArchetype] = useState<ArchetypeType | null>(null);
+  const { audioUrl } = useOnboardingAudio();
 
   const handleSelect = (archetype: ArchetypeType) => {
     setSelectedArchetype(archetype);
@@ -45,12 +49,27 @@ export function CallScreen({ onSelectArchetype, isLoading }: CallScreenProps) {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      {/* Subtle ambient background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-background/95" />
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+      {/* Deep gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-midnight via-background to-midnight-light" />
+      
+      {/* Flower of Life sacred geometry background */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <FlowerOfLife 
+          size={Math.min(800, typeof window !== 'undefined' ? window.innerWidth * 0.9 : 800)} 
+          opacity={0.06} 
+          animated={true}
+          className="text-gold"
+        />
       </div>
+      
+      {/* Subtle ambient glows */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
+        <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-gold/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/3 right-1/4 w-64 h-64 bg-gold/5 rounded-full blur-3xl" />
+      </div>
+      
+      {/* Ambient audio player */}
+      <AmbientPlayer audioUrl={audioUrl} autoPlay showControls />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
