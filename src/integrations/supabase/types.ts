@@ -3818,6 +3818,42 @@ export type Database = {
         }
         Relationships: []
       }
+      personal_symbolic_maps: {
+        Row: {
+          content: Json
+          created_at: string
+          description: string | null
+          id: string
+          published: boolean
+          template_key: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content?: Json
+          created_at?: string
+          description?: string | null
+          id?: string
+          published?: boolean
+          template_key: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          description?: string | null
+          id?: string
+          published?: boolean
+          template_key?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       plan_limits: {
         Row: {
           created_at: string

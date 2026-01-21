@@ -115,6 +115,9 @@ import TarotTemplateList from "./pages/templates/TarotTemplateList";
 import TarotTemplateEditor from "./pages/templates/TarotTemplateEditor";
 import ConstellationTemplateList from "./pages/templates/ConstellationTemplateList";
 import ConstellationTemplateEditor from "./pages/templates/ConstellationTemplateEditor";
+// Personal Symbolic Maps
+import PersonalMaps from "./pages/PersonalMaps";
+import PersonalMapEditor from "./pages/PersonalMapEditor";
 
 const queryClient = new QueryClient();
 
@@ -584,6 +587,24 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="pre_iniciada">
             <ConstellationTemplateEditor />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Personal Symbolic Maps - Private Reflective Space */}
+      <Route
+        path="/mapas-pessoais"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <PersonalMaps />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/mapas-pessoais/:id"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <PersonalMapEditor />
           </ProtectedRoute>
         }
       />

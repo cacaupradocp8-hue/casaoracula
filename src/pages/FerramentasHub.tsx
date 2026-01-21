@@ -15,6 +15,7 @@ import {
   Shield,
   Brain,
   Sparkles,
+  Map,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -301,6 +302,58 @@ export default function FerramentasHub() {
                 </motion.section>
               );
             })}
+
+            {/* Personal Symbolic Maps - Fixed Internal Tool */}
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: SECTIONS.length * 0.1 }}
+            >
+              <div className={cn("rounded-xl p-6 mb-6", colorClasses.gold.bg, "border", colorClasses.gold.border)}>
+                <div className="flex items-start gap-4">
+                  <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0", colorClasses.gold.icon)}>
+                    <Map className="w-6 h-6" />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className={cn("font-display text-xl font-semibold mb-1", colorClasses.gold.text)}>
+                      Mapas Reflexivos Pessoais
+                    </h2>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Espaço privado de reflexão simbólica
+                    </p>
+                    <p className="text-sm text-foreground/70 leading-relaxed">
+                      Ferramentas de autorreflexão baseadas em modelos simbólicos. Totalmente privadas — somente você tem acesso ao conteúdo.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <Card
+                  className="group transition-all duration-300 cursor-pointer hover:shadow-gold hover:border-gold/30"
+                  onClick={() => navigate('/mapas-pessoais')}
+                >
+                  <CardHeader className="pb-2">
+                    <div className="flex items-start justify-between">
+                      <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center text-lg", colorClasses.gold.icon)}>
+                        <Map className="w-5 h-5" />
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <CardTitle className="text-base mb-1 group-hover:text-gold transition-colors">
+                      Mapas Reflexivos
+                    </CardTitle>
+                    <CardDescription className="text-sm line-clamp-2">
+                      Big5, Eneagrama, Antroposofia, Constelação e Tarô — modelos de reflexão simbólica pessoal.
+                    </CardDescription>
+                    <div className="flex items-center justify-end mt-3">
+                      <ArrowRight className="w-4 h-4 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-gold" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </motion.section>
           </div>
         )}
       </div>
