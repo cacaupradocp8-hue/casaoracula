@@ -16,8 +16,10 @@ import {
   Brain,
   Sparkles,
   Map,
+  Wand2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { canAccessFeature, PortalType } from "@/types/portal";
 
 interface Ferramenta {
   id: string;
@@ -31,12 +33,7 @@ interface Ferramenta {
   ativa: boolean;
 }
 
-const PORTAL_HIERARCHY: Record<string, number> = {
-  visitante: 0,
-  pre_iniciada: 1,
-  iniciada: 2,
-  admin: 3,
-};
+// Using centralized portal hierarchy from types
 
 // Define the 4 sections with metadata
 const SECTIONS = [
@@ -143,8 +140,9 @@ export default function FerramentasHub() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const userPortalLevel = user?.portal ? PORTAL_HIERARCHY[user.portal] : 0;
-  const isAdmin = user?.portal === 'admin';
+  const userPortal = user?.portal || 'visitante';
+  const isAdmin = userPortal === 'admin';
+  const canAccessSyntheia = canAccessFeature(userPortal as PortalType, 'mentorada');
 
   // Fetch ferramentas from database
   const { data: ferramentas, isLoading } = useQuery({
@@ -163,8 +161,7 @@ export default function FerramentasHub() {
 
   const canAccess = (minPortal: string): boolean => {
     if (isAdmin) return true;
-    const requiredLevel = PORTAL_HIERARCHY[minPortal] || 0;
-    return userPortalLevel >= requiredLevel;
+    return canAccessFeature(userPortal as PortalType, minPortal as PortalType);
   };
 
   // Group ferramentas by section
@@ -198,6 +195,61 @@ export default function FerramentasHub() {
           icon={<Wrench className="w-5 h-5" />}
           className="mb-10"
         />
+
+        {/* SYNTHEIA - Destaque Principal */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="mb-12"
+        >
+          <Card
+            className={cn(
+              "relative overflow-hidden transition-all duration-300 cursor-pointer",
+              "bg-gradient-to-br from-purple-900/20 via-background to-gold/5",
+              "border border-purple-500/30 hover:border-gold/50",
+              "hover:shadow-xl hover:shadow-gold/10",
+              !canAccessSyntheia && "opacity-60"
+            )}
+            onClick={() => canAccessSyntheia && navigate('/syntheia')}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 to-gold/5 opacity-50" />
+            <CardContent className="relative p-6 sm:p-8">
+              <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600/30 to-gold/30 flex items-center justify-center shrink-0 border border-purple-500/30">
+                  <Wand2 className="w-8 h-8 text-gold" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs font-medium text-purple-400 bg-purple-500/20 px-2 py-0.5 rounded-full">
+                      ✦ Inteligência Operacional
+                    </span>
+                  </div>
+                  <h2 className="font-display text-2xl font-bold text-foreground mb-2">
+                    SYNTHEIA — O Templo
+                  </h2>
+                  <p className="text-muted-foreground mb-4 leading-relaxed">
+                    Inteligência de apoio à profissional. Transforma intenções em estrutura, linguagem e prática aplicável. 
+                    Três personalidades ativas: <span className="text-amber-400">A Ferramenteira</span>, 
+                    <span className="text-purple-400"> Archétypos</span> e 
+                    <span className="text-rose-400"> Aracne & Arcano</span>.
+                  </p>
+                  {canAccessSyntheia ? (
+                    <div className="flex items-center text-gold font-medium">
+                      <span>Acessar Syntheia</span>
+                      <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                    </div>
+                  ) : (
+                    <div className="flex items-center text-muted-foreground">
+                      <Lock className="w-4 h-4 mr-2" />
+                      <span>Disponível a partir do portal mentorada</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
         {!hasAnyTools ? (
           <div className="text-center py-12">
