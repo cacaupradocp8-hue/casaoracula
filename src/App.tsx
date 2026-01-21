@@ -25,7 +25,11 @@ import MentoriaOracular from "./pages/MentoriaOracular";
 import Travessias from "./pages/Travessias";
 import Agentes from "./pages/Agentes";
 import LeituraOracular from "./pages/LeituraOracular";
-import Salas from "./pages/Salas";
+// Novas ferramentas
+import EspelhoConsciencia from "./pages/salas/EspelhoConsciencia";
+import MapaArquetiposEgo from "./pages/salas/MapaArquetiposEgo";
+import CartografiaTorre from "./pages/salas/CartografiaTorre";
+import PlasticidadePsiquica from "./pages/salas/PlasticidadePsiquica";
 import SalasList from "./pages/SalasList";
 import FerramentasHub from "./pages/FerramentasHub";
 import SalaDetalhe from "./pages/SalaDetalhe";
@@ -96,7 +100,7 @@ import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
 import Jornada from "./pages/Jornada";
 import Onboarding from "./pages/Onboarding";
-import SalaDeSessao from "./pages/SalaDeSessao";
+// SalaDeSessao removido - usar SessionRoomHome
 import SessionRoomHome from "./pages/SessionRoomHome";
 import SessionRoomCase from "./pages/SessionRoomCase";
 import SessionRoomGroup from "./pages/SessionRoomGroup";
@@ -778,6 +782,40 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="pre_iniciada">
             <AgenteSimbólico />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Novas Ferramentas Simbólicas */}
+      <Route
+        path="/ferramentas/espelho-consciencia"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <EspelhoConsciencia />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/mapa-arquetipos-ego"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <MapaArquetiposEgo />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/cartografia-torre"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <CartografiaTorre />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/plasticidade-psiquica"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <PlasticidadePsiquica />
           </ProtectedRoute>
         }
       />
