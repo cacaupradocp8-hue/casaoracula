@@ -283,11 +283,14 @@ export function AdminBlocksTab() {
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">Selecionar Contexto</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Escolha onde os blocos serão exibidos, depois selecione o item específico.
+          </p>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label>Tipo de Contexto</Label>
+              <Label>1. Tipo de Contexto</Label>
               <Select 
                 value={selectedContext} 
                 onValueChange={(v) => {
@@ -310,7 +313,7 @@ export function AdminBlocksTab() {
 
             {selectedContext && !needsManualId && (
               <div className="space-y-2">
-                <Label>Entidade</Label>
+                <Label>2. Entidade</Label>
                 <Select 
                   value={selectedContextId} 
                   onValueChange={setSelectedContextId}
@@ -336,12 +339,17 @@ export function AdminBlocksTab() {
 
             {selectedContext && needsManualId && (
               <div className="space-y-2">
-                <Label>ID do Contexto</Label>
+                <Label>2. ID do Contexto</Label>
                 <Input
                   value={selectedContextId}
                   onChange={e => setSelectedContextId(e.target.value)}
-                  placeholder="Digite o ID único..."
+                  placeholder={selectedContext === 'landing' ? 'visitor-home' : 'Digite o ID...'}
                 />
+                {selectedContext === 'landing' && (
+                  <p className="text-xs text-muted-foreground">
+                    Use "visitor-home" para a landing da visitante.
+                  </p>
+                )}
               </div>
             )}
 
@@ -349,26 +357,43 @@ export function AdminBlocksTab() {
               <div className="flex items-end">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button className="w-full">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Adicionar Bloco
+                    <Button className="w-full gap-2">
+                      <Plus className="w-4 h-4" />
+                      3. Adicionar Bloco
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuContent align="end" className="w-56 max-h-80 overflow-y-auto">
                     {(Object.keys(BLOCK_TYPE_META) as ContentBlockType[]).map(type => {
                       const Icon = BLOCK_TYPE_ICONS[type];
+                      const meta = BLOCK_TYPE_META[type];
                       return (
                         <DropdownMenuItem 
                           key={type} 
                           onClick={() => openNewBlockDialog(type)}
+                          className="flex items-start gap-2 py-2"
                         >
-                          <Icon className="w-4 h-4 mr-2" />
-                          {BLOCK_TYPE_META[type].label}
+                          <Icon className="w-4 h-4 mt-0.5 text-primary shrink-0" />
+                          <div>
+                            <div className="font-medium">{meta.label}</div>
+                            <div className="text-xs text-muted-foreground">{meta.description}</div>
+                          </div>
                         </DropdownMenuItem>
                       );
                     })}
                   </DropdownMenuContent>
                 </DropdownMenu>
+              </div>
+            )}
+            
+            {/* Hint when no context/entity selected */}
+            {!selectedContext && (
+              <div className="md:col-span-2 flex items-center text-sm text-muted-foreground">
+                ← Comece selecionando um tipo de contexto
+              </div>
+            )}
+            {selectedContext && !selectedContextId && (
+              <div className="flex items-center text-sm text-muted-foreground">
+                ← Agora selecione a entidade
               </div>
             )}
           </div>
