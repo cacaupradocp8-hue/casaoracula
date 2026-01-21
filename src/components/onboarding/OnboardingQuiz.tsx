@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, RefreshCw, ArrowLeft, Check, AlertCircle } from 'lucide-react';
+import { Sparkles, RefreshCw, ArrowLeft, Check, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
@@ -17,17 +17,50 @@ interface OnboardingQuizProps {
   onBack: () => void;
 }
 
+// Fallback questions in case database fails or returns empty
+const FALLBACK_QUESTIONS: Pergunta[] = [
+  {
+    id: 'fallback-1',
+    pergunta: 'O que você procura ao entrar nesta Casa?',
+    tema: 'Entrada',
+    tags: ['início', 'intenção'],
+  },
+  {
+    id: 'fallback-2',
+    pergunta: 'Qual parte de você pede acolhimento agora?',
+    tema: 'Acolhimento',
+    tags: ['cuidado', 'presença'],
+  },
+  {
+    id: 'fallback-3',
+    pergunta: 'Se sua alma pudesse falar, o que ela diria neste momento?',
+    tema: 'Escuta',
+    tags: ['alma', 'voz interior'],
+  },
+  {
+    id: 'fallback-4',
+    pergunta: 'Que ciclo você sente que está encerrando?',
+    tema: 'Ciclos',
+    tags: ['transição', 'encerramento'],
+  },
+  {
+    id: 'fallback-5',
+    pergunta: 'O que você está disposta a deixar para trás para avançar?',
+    tema: 'Travessia',
+    tags: ['desapego', 'transformação'],
+  },
+];
+
 export function OnboardingQuiz({ onComplete, onBack }: OnboardingQuizProps) {
   const [perguntas, setPerguntas] = useState<Pergunta[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState<Pergunta | null>(null);
   const [reflection, setReflection] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [showComplete, setShowComplete] = useState(false);
+  const [usedFallback, setUsedFallback] = useState(false);
 
   const fetchPerguntas = useCallback(async () => {
     setIsLoading(true);
-    setError(null);
     
     try {
       // Fetch level 1 questions (gentlest)
@@ -38,19 +71,33 @@ export function OnboardingQuiz({ onComplete, onBack }: OnboardingQuizProps) {
         .eq('nivel_intensidade', 1)
         .limit(20);
 
-      if (fetchError) throw fetchError;
-
-      const questions = data || [];
-      setPerguntas(questions);
-      
-      // Pick a random question
-      if (questions.length > 0) {
-        const random = questions[Math.floor(Math.random() * questions.length)];
+      if (fetchError) {
+        console.error('Error fetching questions:', fetchError);
+        // Use fallback questions
+        setPerguntas(FALLBACK_QUESTIONS);
+        setUsedFallback(true);
+        const random = FALLBACK_QUESTIONS[Math.floor(Math.random() * FALLBACK_QUESTIONS.length)];
+        setCurrentQuestion(random);
+      } else if (!data || data.length === 0) {
+        // No questions in database, use fallback
+        console.log('No questions found, using fallback');
+        setPerguntas(FALLBACK_QUESTIONS);
+        setUsedFallback(true);
+        const random = FALLBACK_QUESTIONS[Math.floor(Math.random() * FALLBACK_QUESTIONS.length)];
+        setCurrentQuestion(random);
+      } else {
+        setPerguntas(data);
+        setUsedFallback(false);
+        const random = data[Math.floor(Math.random() * data.length)];
         setCurrentQuestion(random);
       }
     } catch (err) {
       console.error('Error fetching questions:', err);
-      setError('Erro ao carregar perguntas. Tente novamente.');
+      // Use fallback questions on any error
+      setPerguntas(FALLBACK_QUESTIONS);
+      setUsedFallback(true);
+      const random = FALLBACK_QUESTIONS[Math.floor(Math.random() * FALLBACK_QUESTIONS.length)];
+      setCurrentQuestion(random);
     } finally {
       setIsLoading(false);
     }
@@ -90,37 +137,25 @@ export function OnboardingQuiz({ onComplete, onBack }: OnboardingQuizProps) {
     );
   }
 
-  // Error state with retry
-  if (error) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-6">
-        <div className="text-center space-y-4 max-w-md">
-          <AlertCircle className="w-12 h-12 text-destructive/60 mx-auto" />
-          <p className="text-destructive text-sm">{error}</p>
-          <div className="flex gap-3 justify-center">
-            <Button variant="ghost" onClick={onBack}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar
-            </Button>
-            <Button variant="outline" onClick={fetchPerguntas}>
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Tentar novamente
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // No questions available
+  // No questions available (shouldn't happen with fallback, but just in case)
   if (!currentQuestion) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
-        <div className="text-center space-y-4">
-          <p className="text-muted-foreground">Nenhuma pergunta disponível no momento.</p>
-          <Button variant="ghost" onClick={onBack}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Voltar
+        <div className="text-center space-y-6 max-w-md">
+          <div className="w-16 h-16 bg-gold/10 rounded-full flex items-center justify-center mx-auto">
+            <Sparkles className="w-8 h-8 text-gold/60" />
+          </div>
+          <div>
+            <p className="text-lg font-display text-foreground mb-2">
+              O oráculo se revela por ciclos.
+            </p>
+            <p className="text-muted-foreground text-sm">
+              Retorne à Sala da Visitante para continuar sua exploração.
+            </p>
+          </div>
+          <Button variant="gold" onClick={onBack} className="w-full max-w-xs">
+            <Home className="w-4 h-4 mr-2" />
+            Ir para a Sala da Visitante
           </Button>
         </div>
       </div>

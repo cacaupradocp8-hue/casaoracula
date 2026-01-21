@@ -212,6 +212,22 @@ export function VisitorRoomScreen({
           })}
         </motion.div>
 
+        {/* Progress Indicator */}
+        {completedExperiences.size > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center mb-6"
+          >
+            <p className="text-sm text-muted-foreground">
+              {completedExperiences.size === EXPERIENCES.length 
+                ? "✨ Você explorou esta sala. Agora, a decisão é sua."
+                : `${completedExperiences.size} de ${EXPERIENCES.length} experiências exploradas`
+              }
+            </p>
+          </motion.div>
+        )}
+
         {/* CTAs */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
@@ -219,25 +235,30 @@ export function VisitorRoomScreen({
           transition={{ delay: 0.6 }}
           className="space-y-4 w-full max-w-md"
         >
-          <Button
-            variant="gold"
-            size="lg"
-            onClick={onBecomeResident}
-            disabled={isLoading}
-            className="w-full group"
-          >
-            {isLoading ? (
-              <>
-                <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin mr-2" />
-                Preparando seu rito...
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4 mr-2 group-hover:animate-pulse" />
-                Tornar-me Moradora desta Casa
-              </>
-            )}
-          </Button>
+          <div className="space-y-2">
+            <Button
+              variant="gold"
+              size="lg"
+              onClick={onBecomeResident}
+              disabled={isLoading}
+              className="w-full group"
+            >
+              {isLoading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin mr-2" />
+                  Carregando...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4 mr-2 group-hover:animate-pulse" />
+                  Conhecer os Caminhos para Habitar
+                </>
+              )}
+            </Button>
+            <p className="text-xs text-muted-foreground/70 text-center">
+              Você será direcionada para conhecer as opções de entrada na Casa.
+            </p>
+          </div>
           
           <Button
             variant="ghost"
@@ -256,7 +277,7 @@ export function VisitorRoomScreen({
           transition={{ delay: 1 }}
           className="text-xs text-muted-foreground/60 text-center mt-8 max-w-sm"
         >
-          Ao se tornar moradora, você terá acesso às ferramentas simbólicas e à formação completa.
+          Como moradora, você terá acesso às ferramentas simbólicas e à formação completa.
         </motion.p>
       </div>
     </motion.div>

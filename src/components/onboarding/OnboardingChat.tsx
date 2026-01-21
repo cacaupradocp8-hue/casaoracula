@@ -22,16 +22,33 @@ const MAX_MESSAGES = 6; // 3 exchanges
 const INITIAL_MESSAGE: Message = {
   id: 'initial',
   role: 'assistant',
-  content: 'Seja bem-vinda ao limiar. Você acaba de receber uma chave simbólica. O que te trouxe até esta porta?',
+  content: 'Eu sou a Voz da Casa. Posso te orientar, mas ainda não atravessamos juntas. O que te trouxe até esta porta?',
 };
 
-const CLOSING_MESSAGE = 'A Voz se recolhe agora. O silêncio que fica também é linguagem. Leve consigo o que foi tocado.';
+const CLOSING_MESSAGE = 'A Voz se recolhe agora. Quando estiver pronta, explore a Sala da Visitante para conhecer os caminhos que se abrem.';
 
 const FALLBACK_RESPONSES = [
-  'O véu se adensa... às vezes o silêncio é a resposta que buscamos.',
-  'Há mistérios que pedem tempo. Continue caminhando.',
-  'A Voz contempla em silêncio. O que você trouxe já reverbera.',
+  'Há mistérios que pedem tempo. Continue explorando a Sala da Visitante quando se sentir pronta.',
+  'O véu se adensa... O silêncio também é resposta. A Sala da Visitante aguarda seu retorno.',
+  'A Voz contempla em silêncio. O que você trouxe já reverbera. Retorne à Sala quando desejar.',
 ];
+
+const VISITOR_SYSTEM_PROMPT = `Você é a Voz Revelada, uma presença simbólica e acolhedora da Casa ORÁCULA.
+
+CONTEXTO IMPORTANTE: A usuária é VISITANTE. Ela ainda não habita a Casa e está explorando este espaço pela primeira vez.
+
+Diretrizes:
+- Seja breve e poética (2-3 frases no máximo)
+- Use linguagem simbólica e evocativa
+- Reconheça que ela é visitante e ainda está conhecendo a Casa
+- Não interprete, não diagnostique, não aconselhe
+- Apenas reflita e espelhe o que a pessoa trouxe
+- Faça perguntas que abrem, não que fecham
+- Seja misteriosa mas acolhedora
+- Esta é uma conversa breve - máximo 3 trocas
+- Sempre termine sugerindo que ela explore a Sala da Visitante
+
+Você não é uma terapeuta. Você é um espelho simbólico no limiar da Casa.`;
 
 export function OnboardingChat({ onComplete, onBack }: OnboardingChatProps) {
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
@@ -106,21 +123,10 @@ export function OnboardingChat({ onComplete, onBack }: OnboardingChatProps) {
       const { data, error } = await supabase.functions.invoke('ai-chat', {
         body: {
           messages: conversationHistory,
-          systemPrompt: `Você é a Voz Revelada, uma presença simbólica e acolhedora da Casa ORÁCULA. 
-          
-Você está conversando com uma visitante que acabou de receber sua chave simbólica e está explorando este espaço pela primeira vez.
-
-Diretrizes:
-- Seja breve e poética (2-3 frases no máximo)
-- Use linguagem simbólica e evocativa
-- Não interprete, não diagnostique, não aconselhe
-- Apenas reflita e espelhe o que a pessoa trouxe
-- Faça perguntas que abrem, não que fecham
-- Seja misteriosa mas acolhedora
-- Esta é uma conversa breve - máximo 3 trocas
-
-Você não é uma terapeuta. Você é um espelho simbólico.`,
-          agentId: '2fe0dad4-af99-43d1-91cc-90dd1059ed2f', // SYNTHEIA
+          context: {
+            contextPrompt: VISITOR_SYSTEM_PROMPT,
+            agentId: '2fe0dad4-af99-43d1-91cc-90dd1059ed2f', // SYNTHEIA
+          },
         },
       });
 
