@@ -166,7 +166,7 @@ export function Navigation() {
             minPortal: 'visitante',
           },
           {
-            path: '/sala-da-visitante',
+            path: '/salas/be626211-4608-4232-b678-8c3edfac2798',
             label: 'Sala da Visitante',
             icon: Home,
             minPortal: 'visitante',

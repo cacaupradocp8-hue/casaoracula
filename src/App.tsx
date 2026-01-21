@@ -103,7 +103,7 @@ import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
 import Jornada from "./pages/Jornada";
 import Onboarding from "./pages/Onboarding";
-import SalaDaVisitante from "./pages/SalaDaVisitante";
+// SalaDaVisitante removida - usar SalaDetalhe com ID do banco
 // SalaDeSessao removido - usar SessionRoomHome
 import SessionRoomHome from "./pages/SessionRoomHome";
 import SessionRoomCase from "./pages/SessionRoomCase";
@@ -248,12 +248,12 @@ function AppRoutes() {
         }
       />
 
-      {/* Sala da Visitante - Permanent home for visitors */}
+      {/* Sala da Visitante - Redirect to database-driven room */}
       <Route
         path="/sala-da-visitante"
         element={
           <ProtectedRoute>
-            <SalaDaVisitante />
+            <Navigate to="/salas/be626211-4608-4232-b678-8c3edfac2798" replace />
           </ProtectedRoute>
         }
       />

@@ -4,7 +4,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Lock, Loader2, BookOpen, DoorOpen, ClipboardList, Wrench, GraduationCap, Clock, BarChart } from "lucide-react";
+import { ArrowRight, Lock, Loader2, BookOpen, DoorOpen, ClipboardList, Wrench, GraduationCap, Clock, BarChart, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { canAccessFeature, PortalType } from "@/types/portal";
@@ -427,6 +427,30 @@ export default function SalaDetalhe() {
           <div className="text-center py-12 text-muted-foreground">
             <Wrench className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>Nenhuma ferramenta disponível nesta sala ainda.</p>
+          </div>
+        )}
+
+        {/* CTA for visitors - shown only in Sala da Visitante (NIVEL_0) */}
+        {sala && isSalaVisitante(sala.nivel_minimo) && (
+          <div className="mt-12 pt-8 border-t border-gold/20">
+            <div className="text-center space-y-4 max-w-xl mx-auto">
+              <Sparkles className="w-8 h-8 text-gold mx-auto" />
+              <h3 className="text-xl font-display text-gold">
+                Pronta para habitar esta Casa?
+              </h3>
+              <p className="text-muted-foreground text-sm">
+                Explore os caminhos disponíveis para aprofundar sua jornada e acessar as ferramentas completas.
+              </p>
+              <Button
+                variant="gold"
+                size="lg"
+                onClick={() => navigate('/planos')}
+                className="gap-2"
+              >
+                Conhecer os Caminhos
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         )}
       </div>
