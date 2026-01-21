@@ -119,6 +119,9 @@ import ConstellationTemplateEditor from "./pages/templates/ConstellationTemplate
 // Personal Symbolic Maps
 import PersonalMaps from "./pages/PersonalMaps";
 import PersonalMapEditor from "./pages/PersonalMapEditor";
+// Jardim da Psique - Espaço privado de registros
+import JardimPsique from "./pages/JardimPsique";
+import JardimPsiqueDetalhe from "./pages/JardimPsiqueDetalhe";
 
 const queryClient = new QueryClient();
 
@@ -883,6 +886,24 @@ function AppRoutes() {
             <ClientePerfil />
           </ProtectedRoute>
         }
+        />
+
+        {/* Jardim da Psique - Espaço 100% privado */}
+        <Route
+          path="/jardim-da-psique"
+          element={
+            <ProtectedRoute>
+              <JardimPsique />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/jardim-da-psique/:id"
+          element={
+            <ProtectedRoute>
+              <JardimPsiqueDetalhe />
+            </ProtectedRoute>
+          }
         />
 
         {/* Oráculos Module */}
