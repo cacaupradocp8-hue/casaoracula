@@ -1,4 +1,4 @@
-export type PortalType = 'visitante' | 'pre_iniciada' | 'iniciada' | 'admin';
+export type PortalType = 'visitante' | 'mentorada' | 'aluna_formacao' | 'assinante' | 'oracula' | 'admin';
 
 export interface User {
   id: string;
@@ -20,7 +20,7 @@ export interface Portal {
 export const PORTALS: Portal[] = [
   {
     type: 'visitante',
-    name: 'Visitante / Buscadora',
+    name: 'Visitante',
     description: 'Acesso inicial à Casa ORÁCULA',
     features: [
       'Conteúdos simbólicos curtos',
@@ -30,28 +30,51 @@ export const PORTALS: Portal[] = [
     caseLimit: 0,
   },
   {
-    type: 'pre_iniciada',
-    name: 'Pré-Iniciada',
-    description: 'Início da jornada formativa',
+    type: 'mentorada',
+    name: 'Mentorada',
+    description: 'Inscrita na Mentoria Orácula',
     features: [
-      'Leitura Simbólica em 5 Camadas',
-      'Radar de Eixo',
-      'Trilha de Neuroplasticidade',
+      'Acesso à Mentoria Orácula',
+      'Ferramentas básicas',
       'Biblioteca simbólica inicial',
       'Até 3 Casos',
     ],
     caseLimit: 3,
   },
   {
-    type: 'iniciada',
-    name: 'Iniciada ORÁCULA',
-    description: 'Formação completa nos 4 Portais',
+    type: 'aluna_formacao',
+    name: 'Aluna Formação',
+    description: 'Matriculada na Formação Orácula',
     features: [
-      'Formação completa',
+      'Formação completa nos 4 Portais',
+      'Ferramentas profissionais',
+      'Até 5 Casos',
+    ],
+    caseLimit: 5,
+  },
+  {
+    type: 'assinante',
+    name: 'Assinante',
+    description: 'Assinante ativa da Casa ORÁCULA',
+    features: [
+      'Acesso contínuo à plataforma',
       'Biblioteca simbólica profunda',
       'Casos ilimitados',
-      'Área de mentoria/supervisão',
+      'Atualizações e novos conteúdos',
+    ],
+    caseLimit: 'unlimited',
+  },
+  {
+    type: 'oracula',
+    name: 'Orácula',
+    description: 'Combo completo: Formação + Mentoria + Assinatura',
+    features: [
+      'Acesso total à formação',
+      'Mentoria completa',
+      'Biblioteca simbólica profunda',
+      'Casos ilimitados',
       'Portal de Leitura Oracular',
+      'Área de supervisão',
     ],
     caseLimit: 'unlimited',
   },
@@ -72,9 +95,11 @@ export const PORTALS: Portal[] = [
 
 const PORTAL_HIERARCHY: Record<PortalType, number> = {
   visitante: 1,
-  pre_iniciada: 2,
-  iniciada: 3,
-  admin: 4,
+  mentorada: 2,
+  aluna_formacao: 3,
+  assinante: 4,
+  oracula: 5,
+  admin: 6,
 };
 
 export const getPortal = (type: PortalType): Portal => {

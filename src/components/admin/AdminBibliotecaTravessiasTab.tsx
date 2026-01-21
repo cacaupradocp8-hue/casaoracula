@@ -81,8 +81,10 @@ interface TravessiaMedia {
 
 const PORTAL_OPTIONS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: 'Visitante' },
-  { value: 'pre_iniciada', label: 'Pré-Iniciada' },
-  { value: 'iniciada', label: 'Iniciada' },
+  { value: 'mentorada', label: 'Mentorada' },
+  { value: 'aluna_formacao', label: 'Aluna Formação' },
+  { value: 'assinante', label: 'Assinante' },
+  { value: 'oracula', label: 'Orácula' },
   { value: 'admin', label: 'Admin' },
 ];
 

@@ -65,7 +65,7 @@ export function Navigation() {
 
   const portal = user ? getPortal(user.portal) : null;
   const isAdmin = user?.portal === 'admin';
-  const isProfessionalLevel = user && canAccessFeature(user.portal, 'pre_iniciada');
+  const isProfessionalLevel = user && canAccessFeature(user.portal, 'mentorada');
 
   // Check matriculas for mentoria and formação, and professional status
   useEffect(() => {
@@ -172,19 +172,19 @@ export function Navigation() {
         path: '/salas',
         label: 'Formação',
         icon: GraduationCap,
-        minPortal: 'pre_iniciada',
+        minPortal: 'mentorada',
       },
       {
         path: '/ferramentas',
         label: 'Ferramentas do Método',
         icon: Sparkles,
-        minPortal: 'pre_iniciada',
+        minPortal: 'mentorada',
       },
       {
         path: '/casa',
         label: 'Sustentação',
         icon: Heart,
-        minPortal: 'iniciada',
+        minPortal: 'oracula',
       },
     ];
 
@@ -206,7 +206,7 @@ export function Navigation() {
             path: '/biblioteca',
             label: 'Biblioteca',
             icon: Library,
-            minPortal: 'pre_iniciada',
+            minPortal: 'mentorada',
           },
           {
             path: '/cursos',
@@ -218,25 +218,25 @@ export function Navigation() {
             path: '/oraculos',
             label: 'Oráculos',
             icon: Sparkles,
-            minPortal: 'pre_iniciada',
+            minPortal: 'mentorada',
           },
           {
             path: '/audios',
             label: 'Áudios',
             icon: Music,
-            minPortal: 'pre_iniciada',
+            minPortal: 'mentorada',
           },
           {
             path: '/agentes',
             label: 'Agentes IA',
             icon: Bot,
-            minPortal: 'pre_iniciada',
+            minPortal: 'mentorada',
           },
           {
             path: '/laboratorio-leitura',
             label: 'Lab. Leitura',
             icon: FlaskConical,
-            minPortal: 'iniciada',
+            minPortal: 'oracula',
           },
         ],
       });
@@ -254,13 +254,13 @@ export function Navigation() {
             path: '/minhas-clientes',
             label: 'Clientes',
             icon: Users,
-            minPortal: 'pre_iniciada',
+            minPortal: 'mentorada',
           },
           {
             path: '/session-room',
             label: 'Sala de Sessão',
             icon: ClipboardList,
-            minPortal: 'pre_iniciada',
+            minPortal: 'mentorada',
           },
         ],
       });

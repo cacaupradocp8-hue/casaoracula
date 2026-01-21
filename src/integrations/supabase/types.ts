@@ -5106,33 +5106,6 @@ export type Database = {
         }
         Relationships: []
       }
-      terapeuta_clientes: {
-        Row: {
-          ativo: boolean
-          cliente_id: string
-          created_at: string
-          id: string
-          terapeuta_id: string
-          updated_at: string
-        }
-        Insert: {
-          ativo?: boolean
-          cliente_id: string
-          created_at?: string
-          id?: string
-          terapeuta_id: string
-          updated_at?: string
-        }
-        Update: {
-          ativo?: boolean
-          cliente_id?: string
-          created_at?: string
-          id?: string
-          terapeuta_id?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       text_models: {
         Row: {
           ativo: boolean | null
@@ -5557,10 +5530,6 @@ export type Database = {
         }
         Returns: boolean
       }
-      can_create_caso: {
-        Args: { _cliente_id: string; _terapeuta_id: string }
-        Returns: boolean
-      }
       cancel_subscription: {
         Args: { user_id_param: string }
         Returns: undefined
@@ -5649,24 +5618,12 @@ export type Database = {
         Args: { _lesson_id: string; _user_id: string }
         Returns: boolean
       }
-      is_linked_therapist: {
-        Args: { _cliente_id: string; _terapeuta_id: string }
-        Returns: boolean
-      }
       is_matriculada: {
         Args: { _curso_id?: string; _user_id: string }
         Returns: boolean
       }
       is_profissional_confirmada: {
         Args: { _user_id: string }
-        Returns: boolean
-      }
-      is_terapeuta_of_cliente: {
-        Args: { _cliente_id: string; _terapeuta_id: string }
-        Returns: boolean
-      }
-      registro_pertence_terapeuta: {
-        Args: { _caso_id: string; _terapeuta_id: string; _user_id: string }
         Returns: boolean
       }
       user_has_portal_access: {

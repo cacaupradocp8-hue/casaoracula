@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { PortalBadge } from '@/components/shared/PortalBadge';
 import { useToast } from '@/hooks/use-toast';
 import { PORTALS, PortalType, getPortal } from '@/types/portal';
-import { Users, Search, Eye, Crown, Flame, Star } from 'lucide-react';
+import { Users, Search, Eye, Crown, Heart, GraduationCap, Sparkles, Star } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { supabase } from '@/integrations/supabase/client';
@@ -110,8 +110,10 @@ export function AdminUsersTab() {
   const stats = {
     total: users.length,
     visitante: users.filter(u => u.portal === 'visitante').length,
-    pre_iniciada: users.filter(u => u.portal === 'pre_iniciada').length,
-    iniciada: users.filter(u => u.portal === 'iniciada').length,
+    mentorada: users.filter(u => u.portal === 'mentorada').length,
+    aluna_formacao: users.filter(u => u.portal === 'aluna_formacao').length,
+    assinante: users.filter(u => u.portal === 'assinante').length,
+    oracula: users.filter(u => u.portal === 'oracula').length,
     admin: users.filter(u => u.portal === 'admin').length,
   };
 
@@ -126,7 +128,7 @@ export function AdminUsersTab() {
   return (
     <div className="space-y-6">
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
         <Card>
           <CardContent className="p-4 text-center">
             <Users className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
@@ -143,16 +145,30 @@ export function AdminUsersTab() {
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <Flame className="w-6 h-6 mx-auto mb-2 text-burgundy-light" />
-            <p className="text-2xl font-display font-bold text-foreground">{stats.pre_iniciada}</p>
-            <p className="text-xs text-muted-foreground">Pré-Iniciadas</p>
+            <Heart className="w-6 h-6 mx-auto mb-2 text-burgundy-light" />
+            <p className="text-2xl font-display font-bold text-foreground">{stats.mentorada}</p>
+            <p className="text-xs text-muted-foreground">Mentoradas</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <GraduationCap className="w-6 h-6 mx-auto mb-2 text-purple-400" />
+            <p className="text-2xl font-display font-bold text-foreground">{stats.aluna_formacao}</p>
+            <p className="text-xs text-muted-foreground">Aluna Formação</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <Sparkles className="w-6 h-6 mx-auto mb-2 text-emerald-400" />
+            <p className="text-2xl font-display font-bold text-foreground">{stats.assinante}</p>
+            <p className="text-xs text-muted-foreground">Assinantes</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <Star className="w-6 h-6 mx-auto mb-2 text-gold" />
-            <p className="text-2xl font-display font-bold text-foreground">{stats.iniciada}</p>
-            <p className="text-xs text-muted-foreground">Iniciadas</p>
+            <p className="text-2xl font-display font-bold text-foreground">{stats.oracula}</p>
+            <p className="text-xs text-muted-foreground">Oráculas</p>
           </CardContent>
         </Card>
         <Card>
@@ -183,8 +199,10 @@ export function AdminUsersTab() {
             <SelectContent>
               <SelectItem value="all">Todos os Portais</SelectItem>
               <SelectItem value="visitante">Visitante</SelectItem>
-              <SelectItem value="pre_iniciada">Pré-Iniciada</SelectItem>
-              <SelectItem value="iniciada">Iniciada</SelectItem>
+              <SelectItem value="mentorada">Mentorada</SelectItem>
+              <SelectItem value="aluna_formacao">Aluna Formação</SelectItem>
+              <SelectItem value="assinante">Assinante</SelectItem>
+              <SelectItem value="oracula">Orácula</SelectItem>
               <SelectItem value="admin">Admin</SelectItem>
             </SelectContent>
           </Select>
@@ -218,13 +236,13 @@ export function AdminUsersTab() {
                     value={user.portal}
                     onValueChange={(v) => handlePortalChange(user.id, v as PortalType)}
                   >
-                    <SelectTrigger className="w-40">
+                    <SelectTrigger className="w-44">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {PORTALS.map((portal) => (
                         <SelectItem key={portal.type} value={portal.type}>
-                          {portal.name.split('/')[0].trim()}
+                          {portal.name}
                         </SelectItem>
                       ))}
                     </SelectContent>

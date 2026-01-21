@@ -85,8 +85,10 @@ const NIVEL_HIERARCHY: Record<NivelSala, number> = {
 
 const PORTAL_TO_NIVEL: Record<string, NivelSala> = {
   visitante: "NIVEL_0",
-  pre_iniciada: "NIVEL_1",
-  iniciada: "NIVEL_2",
+  mentorada: "NIVEL_1",
+  aluna_formacao: "NIVEL_1",
+  assinante: "NIVEL_2",
+  oracula: "NIVEL_2",
   admin: "NIVEL_3",
 };
 

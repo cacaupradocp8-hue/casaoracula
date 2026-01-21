@@ -92,7 +92,7 @@ export default function Onboarding() {
           .from('user_roles')
           .upsert({
             user_id: user.id,
-            portal: 'pre_iniciada',
+            portal: 'mentorada',
           }, {
             onConflict: 'user_id',
           });

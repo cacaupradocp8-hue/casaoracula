@@ -16,7 +16,7 @@ export interface Course {
   preco_promocional: number | null;
   stripe_product_id: string | null;
   stripe_price_id: string | null;
-  portal_minimo: 'visitante' | 'pre_iniciada' | 'iniciada' | 'admin';
+  portal_minimo: 'visitante' | 'mentorada' | 'aluna_formacao' | 'assinante' | 'oracula' | 'admin';
   requer_matricula: boolean;
   publicado: boolean;
   destaque: boolean;
