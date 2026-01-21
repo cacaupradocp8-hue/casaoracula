@@ -3,14 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOnboarding, ArchetypeType } from '@/hooks/useOnboarding';
 import { CallScreen } from '@/components/onboarding/CallScreen';
-import { KeyDeliveryScreen } from '@/components/onboarding/KeyDeliveryScreen';
-import { VisitorRoomScreen } from '@/components/onboarding/VisitorRoomScreen';
-import { RiteOfPassageModal } from '@/components/onboarding/RiteOfPassageModal';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
 
-type OnboardingStep = 'call' | 'key' | 'visitor_room' | 'rite';
+// ID da Sala da Visitante no banco de dados
+const SALA_VISITANTE_ID = 'be626211-4608-4232-b678-8c3edfac2798';
+
+type OnboardingStep = 'call' | 'complete';
 
 export default function Onboarding() {
   const navigate = useNavigate();
@@ -26,75 +25,37 @@ export default function Onboarding() {
   } = useOnboarding();
 
   const [step, setStep] = useState<OnboardingStep>('call');
-  const [selectedArchetype, setSelectedArchetype] = useState<ArchetypeType | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [showRiteModal, setShowRiteModal] = useState(false);
 
-  // Compute initial step based on onboarding state - only run once when data is loaded
-  const initialStep = useMemo<OnboardingStep>(() => {
-    if (onboardingLoading) return 'call';
-    if (entryArchetype && !onboardingCompleted) return 'visitor_room';
-    return 'call';
-  }, [onboardingLoading, entryArchetype, onboardingCompleted]);
-
-  // Set initial step and archetype when data loads
+  // Redirect if onboarding already completed
   useEffect(() => {
     if (onboardingLoading) return;
     
-    // If already completed onboarding, go to /jornada (Meu Caminho)
-    // User should NEVER return to onboarding once completed
+    // If already completed onboarding, go to Sala da Visitante
     if (onboardingCompleted) {
-      navigate('/jornada', { replace: true });
+      navigate(`/salas/${SALA_VISITANTE_ID}`, { replace: true });
       return;
     }
 
-    // Set initial state based on saved progress
+    // If archetype already saved but not completed, complete and redirect
     if (entryArchetype) {
-      setSelectedArchetype(entryArchetype);
-      setStep('visitor_room');
+      completeOnboarding().then(() => {
+        navigate(`/salas/${SALA_VISITANTE_ID}`, { replace: true });
+      });
     }
-  }, [onboardingLoading, onboardingCompleted, entryArchetype, navigate]);
+  }, [onboardingLoading, onboardingCompleted, entryArchetype, navigate, completeOnboarding]);
 
+  // After archetype selection, save and go directly to Sala da Visitante
   const handleSelectArchetype = useCallback(async (archetype: ArchetypeType) => {
     setIsProcessing(true);
     const success = await saveArchetype(archetype);
-    setIsProcessing(false);
 
     if (success) {
-      setSelectedArchetype(archetype);
-      setStep('key');
+      await completeOnboarding();
+      navigate(`/salas/${SALA_VISITANTE_ID}`, { replace: true });
     }
-  }, [saveArchetype]);
-
-  const handleKeyReceived = useCallback(() => {
-    setStep('visitor_room');
-  }, []);
-
-  const handleBecomeResident = useCallback(() => {
-    setShowRiteModal(true);
-  }, []);
-
-  const handleContinueAsVisitor = useCallback(async () => {
-    setIsProcessing(true);
-    
-    // Mark onboarding as complete but keep as visitante
-    await completeOnboarding();
-    
-    // Go to /jornada (Meu Caminho) - the real HOME for ALL users
-    // From there, the visitor can click to go to Sala da Visitante
-    navigate('/jornada', { replace: true });
-  }, [completeOnboarding, navigate]);
-
-  const handleAcceptRite = useCallback(() => {
-    // Redirect to plans page - the actual portal upgrade happens after purchase
-    setShowRiteModal(false);
-    navigate('/planos');
-  }, [navigate]);
-
-  const handleDeclineRite = useCallback(() => {
-    setShowRiteModal(false);
-    // They can stay in visitor room and try again later
-  }, []);
+    setIsProcessing(false);
+  }, [saveArchetype, completeOnboarding, navigate]);
 
   // Loading state
   if (onboardingLoading) {
@@ -124,35 +85,9 @@ export default function Onboarding() {
   }
 
   return (
-    <>
-      {step === 'call' && (
-        <CallScreen
-          onSelectArchetype={handleSelectArchetype}
-          isLoading={isProcessing}
-        />
-      )}
-
-      {step === 'key' && selectedArchetype && (
-        <KeyDeliveryScreen
-          archetype={selectedArchetype}
-          onContinue={handleKeyReceived}
-        />
-      )}
-
-      {step === 'visitor_room' && (
-        <VisitorRoomScreen
-          onBecomeResident={handleBecomeResident}
-          onContinueAsVisitor={handleContinueAsVisitor}
-          isLoading={isProcessing}
-        />
-      )}
-
-      <RiteOfPassageModal
-        open={showRiteModal}
-        onAccept={handleAcceptRite}
-        onDecline={handleDeclineRite}
-        isLoading={isProcessing}
-      />
-    </>
+    <CallScreen
+      onSelectArchetype={handleSelectArchetype}
+      isLoading={isProcessing}
+    />
   );
 }
