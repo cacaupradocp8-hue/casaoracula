@@ -1,5 +1,14 @@
 export type PortalType = 'visitante' | 'mentorada' | 'aluna_formacao' | 'assinante' | 'oracula' | 'admin';
 
+// Database may still return legacy values - this function normalizes them
+export type DatabasePortalType = PortalType | 'pre_iniciada' | 'iniciada';
+
+export const normalizePortalType = (dbPortal: DatabasePortalType): PortalType => {
+  if (dbPortal === 'pre_iniciada') return 'mentorada';
+  if (dbPortal === 'iniciada') return 'oracula';
+  return dbPortal as PortalType;
+};
+
 export interface User {
   id: string;
   email: string;

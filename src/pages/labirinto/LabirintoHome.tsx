@@ -93,7 +93,7 @@ export default function LabirintoHome() {
   };
 
   const userPortal = user?.portal || "visitante";
-  const canAccessProfessional = canAccessFeature(userPortal, "iniciada");
+  const canAccessProfessional = canAccessFeature(userPortal, "oracula");
 
   // Loading state while determining if we should show intro
   if (showIntro === null || leiturasLoading) {

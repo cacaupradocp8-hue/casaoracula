@@ -73,6 +73,8 @@ const PORTAL_LABELS: Record<PortalType, string> = {
   assinante: 'Assinante',
   oracula: 'Orácula',
   admin: 'Admin',
+  pre_iniciada: 'Mentorada (legado)',
+  iniciada: 'Orácula (legado)',
 };
 
 export function AdminConteudosTab() {

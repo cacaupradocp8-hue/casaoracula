@@ -16,7 +16,7 @@ export default function Dashboard() {
   const [isProfessionalVerified, setIsProfessionalVerified] = useState(false);
 
   const welcomeName = user?.name?.split(' ')[0] || 'Visitante';
-  const isProfessionalLevel = user && canAccessFeature(user.portal, 'pre_iniciada');
+  const isProfessionalLevel = user && canAccessFeature(user.portal, 'mentorada');
 
   // Check professional verification status
   useEffect(() => {

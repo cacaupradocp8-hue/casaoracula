@@ -27,7 +27,7 @@ export default function LabirintoTabela() {
   const { data: portas, isLoading } = useLabirintoPortas();
 
   const userPortal = user?.portal || "visitante";
-  const canAccess = canAccessFeature(userPortal, "iniciada");
+  const canAccess = canAccessFeature(userPortal, "oracula");
 
   // Bloqueia acesso para não-profissionais
   if (!canAccess) {

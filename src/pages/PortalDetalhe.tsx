@@ -17,7 +17,7 @@ interface Portal {
   subtitulo: string | null;
   descricao: string;
   capa_url: string | null;
-  portal_minimo: PortalType;
+  portal_minimo: string;
   sala_id: string | null;
 }
 
@@ -31,7 +31,7 @@ interface Aula {
   titulo: string;
   descricao_curta: string;
   ordem: number;
-  portal_minimo: PortalType;
+  portal_minimo: string;
 }
 
 interface Ferramenta {
@@ -143,7 +143,7 @@ export default function PortalDetalhe() {
 
   const canAccessAula = (aula: Aula) => {
     if (!user) return false;
-    return canAccessFeature(user.portal, aula.portal_minimo);
+    return canAccessFeature(user.portal, aula.portal_minimo as PortalType);
   };
 
   const isAulaCompleted = (aulaId: string) => completedAulas.includes(aulaId);

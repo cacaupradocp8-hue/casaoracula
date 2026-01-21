@@ -45,10 +45,12 @@ export function AdminPreviewBar() {
                 <AlertTriangle className="w-4 h-4" />
                 <span className="text-sm font-medium">
                   Modo Preview: Visualizando como{' '}
-                  <strong>
+                <strong>
                     {previewPortal === 'visitante' && 'Visitante'}
-                    {previewPortal === 'pre_iniciada' && 'Pré-Iniciada'}
-                    {previewPortal === 'iniciada' && 'Iniciada ORÁCULA'}
+                    {previewPortal === 'mentorada' && 'Mentorada'}
+                    {previewPortal === 'aluna_formacao' && 'Aluna Formação'}
+                    {previewPortal === 'assinante' && 'Assinante'}
+                    {previewPortal === 'oracula' && 'Orácula'}
                   </strong>
                 </span>
               </>
