@@ -16,22 +16,19 @@ export default function Welcome() {
 
   const isAdmin = user?.portal === 'admin';
 
-  // Redirect visitors to their home (Sala da Visitante)
-  // Redirect to onboarding if not completed (except admins)
+  // Redirect ALL users to /jornada (Meu Caminho) - the real home
+  // Welcome page is now deprecated - users go directly to their journey
   useEffect(() => {
     if (!onboardingLoading && user) {
-      const isVisitor = user.portal === 'visitante';
-      
-      // Visitors should go to Sala da Visitante, not Welcome
-      if (isVisitor && !isAdmin) {
-        navigate('/sala-da-visitante', { replace: true });
+      // Non-completed onboarding users go to onboarding first
+      if (!onboardingCompleted && !isAdmin) {
+        navigate('/onboarding', { replace: true });
         return;
       }
       
-      // Non-completed onboarding users go to onboarding
-      if (!onboardingCompleted && !isAdmin) {
-        navigate('/onboarding', { replace: true });
-      }
+      // ALL users (including visitors) go to /jornada
+      // This page should not be a destination anymore
+      navigate('/jornada', { replace: true });
     }
   }, [onboardingLoading, onboardingCompleted, user, isAdmin, navigate]);
 
@@ -76,7 +73,7 @@ export default function Welcome() {
         <Button 
           variant="gold" 
           size="lg" 
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate('/jornada')}
           className="gap-2 text-lg px-8"
         >
           {getCopyByKey('btn_atravessar_limiar', 'Atravessar o limiar')}

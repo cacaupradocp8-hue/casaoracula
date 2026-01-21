@@ -160,6 +160,12 @@ export function Navigation() {
         label: 'Navegação',
         items: [
           {
+            path: '/jornada',
+            label: 'Meu Caminho',
+            icon: Compass,
+            minPortal: 'visitante',
+          },
+          {
             path: '/sala-da-visitante',
             label: 'Sala da Visitante',
             icon: Home,
@@ -168,7 +174,7 @@ export function Navigation() {
           {
             path: '/planos',
             label: 'Caminhos Orácula',
-            icon: Compass,
+            icon: Sparkles,
             minPortal: 'visitante',
           },
         ],
@@ -513,7 +519,7 @@ export function Navigation() {
       <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <Link to={user ? (user.portal === 'visitante' && !isAdmin ? '/sala-da-visitante' : '/jornada') : '/'}>
+            <Link to={user ? '/jornada' : '/'}>
               <Logo size="xl" variant="horizontal" />
             </Link>
 
