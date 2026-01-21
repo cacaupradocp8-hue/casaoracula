@@ -1,335 +1,170 @@
-import { useState } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { SectionHeader } from '@/components/shared/SectionHeader';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
-import { useToast } from '@/hooks/use-toast';
-import { Compass, Layers, Target, Repeat, Save } from 'lucide-react';
+import { useCopy } from '@/hooks/useCopy';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Loader2, Eye, Ear, Sparkles } from 'lucide-react';
+
+const PILAR_ICONS = [Eye, Ear, Sparkles];
+
+const RitualDivider = () => (
+  <div className="flex items-center justify-center gap-4 my-12">
+    <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold/40" />
+    <span className="text-gold/60 text-lg">✦</span>
+    <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold/40" />
+  </div>
+);
 
 export default function Metodo() {
+  const { getCopyByKey, isLoading } = useCopy();
+  const navigate = useNavigate();
+
+  if (isLoading) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <Loader2 className="w-8 h-8 animate-spin text-gold" />
+        </div>
+      </AppLayout>
+    );
+  }
+
+  const pilares = [
+    {
+      titulo: getCopyByKey('casa_pilar_1_titulo', 'Leitura Simbólica'),
+      texto: getCopyByKey('casa_pilar_1_texto', 'A arte de ler imagens e arquétipos como linguagem da alma.'),
+      Icon: PILAR_ICONS[0]
+    },
+    {
+      titulo: getCopyByKey('casa_pilar_2_titulo', 'Escuta Oracular'),
+      texto: getCopyByKey('casa_pilar_2_texto', 'A presença que sustenta o processo de travessia.'),
+      Icon: PILAR_ICONS[1]
+    },
+    {
+      titulo: getCopyByKey('casa_pilar_3_titulo', 'Travessia Iniciática'),
+      texto: getCopyByKey('casa_pilar_3_texto', 'A formação como passagem, não acúmulo.'),
+      Icon: PILAR_ICONS[2]
+    }
+  ];
+
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20">
-        <SectionHeader
-          title="Sala do Método"
-          subtitle="Ferramentas práticas para a leitura simbólica"
-          icon={<Compass className="w-5 h-5" />}
-          className="mb-8"
-        />
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        {/* Hero Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-4xl md:text-5xl font-serif text-gold mb-4">
+            {getCopyByKey('casa_titulo', 'Casa Orácula')}
+          </h1>
+          <p className="text-xl text-foreground/80 max-w-2xl mx-auto">
+            {getCopyByKey('casa_subtitulo', 'Um espaço de formação simbólica para a psique feminina')}
+          </p>
+        </motion.div>
 
-        <Tabs defaultValue="5-camadas" className="space-y-6">
-          <TabsList className="grid w-full max-w-lg grid-cols-3">
-            <TabsTrigger value="5-camadas" className="gap-2">
-              <Layers className="w-4 h-4" />
-              <span className="hidden sm:inline">5 Camadas</span>
-            </TabsTrigger>
-            <TabsTrigger value="radar" className="gap-2">
-              <Target className="w-4 h-4" />
-              <span className="hidden sm:inline">Radar de Eixo</span>
-            </TabsTrigger>
-            <TabsTrigger value="trilha" className="gap-2">
-              <Repeat className="w-4 h-4" />
-              <span className="hidden sm:inline">Neuroplasticidade</span>
-            </TabsTrigger>
-          </TabsList>
+        <RitualDivider />
 
-          <TabsContent value="5-camadas">
-            <LeituraCincoCamadas />
-          </TabsContent>
+        {/* O que é */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mb-12"
+        >
+          <h2 className="text-2xl font-serif text-gold/90 mb-4 text-center">O que é a Casa</h2>
+          <p className="text-foreground/70 text-lg leading-relaxed text-center max-w-3xl mx-auto">
+            {getCopyByKey('casa_oque_e', 'A Casa Orácula é um espaço de formação profunda, onde mulheres atravessam camadas de si mesmas através da linguagem simbólica.')}
+          </p>
+        </motion.section>
 
-          <TabsContent value="radar">
-            <RadarDeEixo />
-          </TabsContent>
+        {/* Para quem é */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mb-12"
+        >
+          <h2 className="text-2xl font-serif text-gold/90 mb-4 text-center">Para quem é</h2>
+          <p className="text-foreground/70 text-lg leading-relaxed text-center max-w-3xl mx-auto">
+            {getCopyByKey('casa_para_quem', 'Para mulheres que sentem o chamado de mergulhar em si mesmas com profundidade.')}
+          </p>
+        </motion.section>
 
-          <TabsContent value="trilha">
-            <TrilhaNeuroplasticidade />
-          </TabsContent>
-        </Tabs>
+        <RitualDivider />
+
+        {/* Fundamento */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mb-12"
+        >
+          <h2 className="text-2xl font-serif text-gold/90 mb-4 text-center">Fundamento do Método</h2>
+          <Card className="glass border-gold/20">
+            <CardContent className="p-6 md:p-8">
+              <p className="text-foreground/70 text-lg leading-relaxed text-center">
+                {getCopyByKey('casa_fundamento', 'Aqui o símbolo não é conceito. É porta. Cada arquétipo, cada carta, cada imagem que emerge no processo é tratado como linguagem viva da psique.')}
+              </p>
+            </CardContent>
+          </Card>
+        </motion.section>
+
+        {/* Pilares */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mb-12"
+        >
+          <h2 className="text-2xl font-serif text-gold/90 mb-8 text-center">Os Três Pilares</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {pilares.map((pilar, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
+              >
+                <Card className="glass border-gold/20 h-full hover:border-gold/40 transition-colors">
+                  <CardContent className="p-6 text-center">
+                    <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-4">
+                      <pilar.Icon className="w-6 h-6 text-gold" />
+                    </div>
+                    <h3 className="text-lg font-serif text-gold mb-3">{pilar.titulo}</h3>
+                    <p className="text-sm text-foreground/60 leading-relaxed">{pilar.texto}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
+
+        <RitualDivider />
+
+        {/* CTA */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+          className="text-center py-8"
+        >
+          <p className="text-xl text-foreground/70 mb-6">
+            {getCopyByKey('casa_cta_texto', 'Pronta para atravessar o limiar?')}
+          </p>
+          <Button 
+            variant="gold" 
+            size="lg"
+            onClick={() => navigate('/planos')}
+            className="text-lg px-8"
+          >
+            {getCopyByKey('casa_cta_botao', 'Explorar Caminhos')}
+          </Button>
+        </motion.section>
       </div>
     </AppLayout>
-  );
-}
-
-function LeituraCincoCamadas() {
-  const { toast } = useToast();
-  const [formData, setFormData] = useState({
-    layer1: '',
-    layer2: '',
-    layer3: '',
-    layer4: '',
-    layer5: '',
-  });
-
-  const layers = [
-    {
-      key: 'layer1',
-      number: 1,
-      title: 'Sintoma / Padrão',
-      question: 'O que a cliente apresenta como queixa principal? Qual padrão se repete em sua vida?',
-      placeholder: 'Descreva o sintoma ou padrão observado...',
-    },
-    {
-      key: 'layer2',
-      number: 2,
-      title: 'Ego / Defesa',
-      question: 'Como o ego está reagindo? Que defesas estão ativas? O que o ego está tentando proteger?',
-      placeholder: 'Analise as defesas egoicas...',
-    },
-    {
-      key: 'layer3',
-      number: 3,
-      title: 'Projeção',
-      question: 'O que está sendo projetado para fora? Quem ou o que recebe essa projeção? O que a cliente não está vendo em si mesma?',
-      placeholder: 'Identifique as projeções...',
-    },
-    {
-      key: 'layer4',
-      number: 4,
-      title: 'Arquétipo / Narrativa',
-      question: 'Qual arquétipo está constelado? Que narrativa mítica ou conto de poder ressoa com esta situação?',
-      placeholder: 'Identifique arquétipos e narrativas simbólicas...',
-    },
-    {
-      key: 'layer5',
-      number: 5,
-      title: 'Portal',
-      question: 'Qual é o portal sendo pedido? O que precisa morrer para que algo novo nasça? Qual o chamado da alma?',
-      placeholder: 'Delineie o portal necessário...',
-    },
-  ];
-
-  const handleSave = () => {
-    toast({
-      title: 'Leitura salva',
-      description: 'A Leitura em 5 Camadas foi salva com sucesso.',
-    });
-  };
-
-  return (
-    <div className="space-y-6">
-      <Card className="bg-mystical border-gold/20">
-        <CardContent className="p-6">
-          <p className="text-muted-foreground">
-            A Leitura Simbólica em 5 Camadas é a ferramenta central do método ORÁCULA. 
-            Cada camada desvela uma dimensão da experiência da cliente, partindo do sintoma 
-            visível até a travessia que a alma pede. <strong>Nunca gere diagnósticos automáticos</strong> — 
-            use as perguntas como guia reflexivo.
-          </p>
-        </CardContent>
-      </Card>
-
-      <div className="space-y-8">
-        {layers.map((layer) => (
-          <Card key={layer.key} className="relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-gold to-gold-dark" />
-            <CardHeader className="pl-6">
-              <div className="flex items-center gap-3">
-                <span className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold font-display font-bold">
-                  {layer.number}
-                </span>
-                <CardTitle className="font-display">{layer.title}</CardTitle>
-              </div>
-              <CardDescription className="italic">
-                {layer.question}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pl-6">
-              <Textarea
-                placeholder={layer.placeholder}
-                className="min-h-[120px] resize-y"
-                value={formData[layer.key as keyof typeof formData]}
-                onChange={(e) => setFormData(prev => ({ ...prev, [layer.key]: e.target.value }))}
-              />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <Button variant="gold" size="lg" onClick={handleSave} className="w-full gap-2">
-        <Save className="w-4 h-4" />
-        Salvar Leitura
-      </Button>
-    </div>
-  );
-}
-
-function RadarDeEixo() {
-  const { toast } = useToast();
-  const [values, setValues] = useState({
-    realityOrientation: 3,
-    psychicFlexibility: 3,
-    emotionalRegulation: 3,
-    decisionCapacity: 3,
-    beingContinuity: 3,
-    boundariesLimits: 3,
-  });
-  const [evidence, setEvidence] = useState('');
-  const [notes, setNotes] = useState('');
-
-  const axes = [
-    { key: 'realityOrientation', label: 'Orientação da Realidade', description: 'Capacidade de diferenciar fantasia de realidade' },
-    { key: 'psychicFlexibility', label: 'Flexibilidade Psíquica', description: 'Abertura para novas perspectivas e mudanças' },
-    { key: 'emotionalRegulation', label: 'Regulação Emocional', description: 'Capacidade de modular intensidade emocional' },
-    { key: 'decisionCapacity', label: 'Capacidade de Decisão', description: 'Autonomia para fazer escolhas conscientes' },
-    { key: 'beingContinuity', label: 'Continuidade do Ser', description: 'Senso de identidade estável através do tempo' },
-    { key: 'boundariesLimits', label: 'Fronteiras e Limites', description: 'Clareza sobre onde eu termino e o outro começa' },
-  ];
-
-  const handleSave = () => {
-    toast({
-      title: 'Radar salvo',
-      description: 'O Radar de Eixo foi salvo com sucesso.',
-    });
-  };
-
-  return (
-    <div className="space-y-6">
-      <Card className="bg-mystical border-gold/20">
-        <CardContent className="p-6">
-          <p className="text-muted-foreground">
-            O Radar de Eixo mapeia 6 competências estruturais que sustentam o funcionamento psíquico. 
-            Avalie cada eixo de 1 (muito baixo) a 5 (muito alto) com base em evidências observáveis, 
-            não em interpretações.
-          </p>
-        </CardContent>
-      </Card>
-
-      <div className="grid gap-6">
-        {axes.map((axis) => (
-          <Card key={axis.key}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-display">{axis.label}</CardTitle>
-              <CardDescription>{axis.description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-4">
-                <Slider
-                  value={[values[axis.key as keyof typeof values]]}
-                  onValueChange={(v) => setValues(prev => ({ ...prev, [axis.key]: v[0] }))}
-                  min={1}
-                  max={5}
-                  step={1}
-                  className="flex-1"
-                />
-                <span className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center text-gold font-bold">
-                  {values[axis.key as keyof typeof values]}
-                </span>
-              </div>
-              <div className="flex justify-between text-xs text-muted-foreground mt-2 px-1">
-                <span>Muito baixo</span>
-                <span>Muito alto</span>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-display">Evidências Observáveis</CardTitle>
-          <CardDescription>Descreva os comportamentos e falas que sustentam sua avaliação</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            placeholder="Quais evidências você observou para cada eixo..."
-            className="min-h-[120px]"
-            value={evidence}
-            onChange={(e) => setEvidence(e.target.value)}
-          />
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-display">Notas Clínicas</CardTitle>
-          <CardDescription>Suas reflexões e hipóteses como terapeuta</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            placeholder="Anotações privadas da terapeuta..."
-            className="min-h-[120px]"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-          />
-        </CardContent>
-      </Card>
-
-      <Button variant="gold" size="lg" onClick={handleSave} className="w-full gap-2">
-        <Save className="w-4 h-4" />
-        Salvar Radar
-      </Button>
-    </div>
-  );
-}
-
-function TrilhaNeuroplasticidade() {
-  const { toast } = useToast();
-  const [formData, setFormData] = useState({
-    trigger: '',
-    currentResponse: '',
-    desiredResponse: '',
-    microAction: '',
-    frequency: '',
-    barriers: '',
-    planB: '',
-  });
-
-  const fields = [
-    { key: 'trigger', label: 'Gatilho', question: 'Qual situação dispara a resposta automática?', placeholder: 'Descreva o gatilho...' },
-    { key: 'currentResponse', label: 'Resposta Automática Atual', question: 'O que acontece automaticamente quando o gatilho é acionado?', placeholder: 'Descreva a resposta atual...' },
-    { key: 'desiredResponse', label: 'Nova Resposta Desejada', question: 'Qual resposta a cliente deseja cultivar no lugar da automática?', placeholder: 'Descreva a nova resposta...' },
-    { key: 'microAction', label: 'Microação Diária', question: 'Qual pequena ação pode ser repetida diariamente para criar novo caminho neural?', placeholder: 'Descreva a microação...' },
-    { key: 'frequency', label: 'Frequência', question: 'Quantas vezes por dia/semana será praticada?', placeholder: 'Ex: 3x ao dia, toda manhã...' },
-    { key: 'barriers', label: 'Barreiras Prováveis', question: 'O que pode impedir a prática consistente?', placeholder: 'Liste as possíveis barreiras...' },
-    { key: 'planB', label: 'Plano B', question: 'Se a barreira aparecer, qual será a alternativa?', placeholder: 'Descreva o plano alternativo...' },
-  ];
-
-  const handleSave = () => {
-    toast({
-      title: 'Trilha salva',
-      description: 'A Trilha de Neuroplasticidade foi salva com sucesso.',
-    });
-  };
-
-  return (
-    <div className="space-y-6">
-      <Card className="bg-mystical border-gold/20">
-        <CardContent className="p-6">
-          <p className="text-muted-foreground">
-            A Trilha de Neuroplasticidade transforma insight em mudança sustentável. 
-            Toda transformação exige repetição consciente. Esta ferramenta mapeia o caminho 
-            do antigo padrão para a nova resposta desejada.
-          </p>
-        </CardContent>
-      </Card>
-
-      <div className="space-y-6">
-        {fields.map((field) => (
-          <Card key={field.key}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-display">{field.label}</CardTitle>
-              <CardDescription className="italic">{field.question}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                placeholder={field.placeholder}
-                className="min-h-[100px]"
-                value={formData[field.key as keyof typeof formData]}
-                onChange={(e) => setFormData(prev => ({ ...prev, [field.key]: e.target.value }))}
-              />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <Button variant="gold" size="lg" onClick={handleSave} className="w-full gap-2">
-        <Save className="w-4 h-4" />
-        Salvar Trilha
-      </Button>
-    </div>
   );
 }
