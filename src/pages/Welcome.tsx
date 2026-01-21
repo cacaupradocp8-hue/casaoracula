@@ -14,12 +14,14 @@ export default function Welcome() {
   const { getCopyByKey } = useCopy();
   const { onboardingCompleted, isLoading: onboardingLoading } = useOnboarding();
 
-  // Redirect to onboarding if not completed
+  const isAdmin = user?.portal === 'admin';
+
+  // Redirect to onboarding if not completed (except admins)
   useEffect(() => {
-    if (!onboardingLoading && !onboardingCompleted && user) {
+    if (!onboardingLoading && !onboardingCompleted && user && !isAdmin) {
       navigate('/onboarding', { replace: true });
     }
-  }, [onboardingLoading, onboardingCompleted, user, navigate]);
+  }, [onboardingLoading, onboardingCompleted, user, isAdmin, navigate]);
 
   if (!user || onboardingLoading) return null;
 
