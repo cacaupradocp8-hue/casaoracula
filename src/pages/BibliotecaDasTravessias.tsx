@@ -9,7 +9,7 @@ import { LockedContentModal } from '@/components/shared/LockedContentModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Lock, BookOpen, Compass, Sparkles, ChevronRight } from 'lucide-react';
-import { canAccessFeature, PortalType } from '@/types/portal';
+import { canAccessFeature, PortalType, normalizePortalType } from '@/types/portal';
 
 interface TravessiaFamily {
   id: string;
@@ -27,7 +27,7 @@ interface TravessiaLibraryItem {
   categoria: string;
   quando_chamada: string;
   capa_url: string | null;
-  portal_minimo: PortalType;
+  portal_minimo: string;
   ordem: number;
   familia_id: string | null;
 }
@@ -72,9 +72,9 @@ export default function BibliotecaDasTravessias() {
     }
   };
 
-  const canAccessItem = (portalMinimo: PortalType): boolean => {
+  const canAccessItem = (portalMinimo: string): boolean => {
     if (!user) return false;
-    return canAccessFeature(user.portal, portalMinimo);
+    return canAccessFeature(user.portal, normalizePortalType(portalMinimo as any));
   };
 
   const handleItemClick = (item: TravessiaLibraryItem) => {
@@ -95,8 +95,10 @@ export default function BibliotecaDasTravessias() {
 
   const portalLabels: Record<PortalType, string> = {
     visitante: 'Visitante',
-    pre_iniciada: 'Pré-Iniciada',
-    iniciada: 'Iniciada',
+    mentorada: 'Mentorada',
+    aluna_formacao: 'Aluna Formação',
+    assinante: 'Assinante',
+    oracula: 'Orácula',
     admin: 'Guardiã'
   };
 

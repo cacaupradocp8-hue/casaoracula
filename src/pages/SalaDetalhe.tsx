@@ -42,7 +42,7 @@ interface Portal {
   subtitulo: string | null;
   descricao: string;
   capa_url: string | null;
-  portal_minimo: PortalType;
+  portal_minimo: string;
   ordem: number;
 }
 
@@ -164,7 +164,7 @@ export default function SalaDetalhe() {
 
   const canAccessPortal = (portal: Portal) => {
     if (!user) return false;
-    return canAccessFeature(user.portal, portal.portal_minimo);
+    return canAccessFeature(user.portal, portal.portal_minimo as PortalType);
   };
 
   // Prepare sidebar data with accessibility info

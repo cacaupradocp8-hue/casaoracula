@@ -461,11 +461,6 @@ export default function Admin() {
             </Suspense>
           </TabsContent>
 
-          <TabsContent value="vinculos">
-            <Suspense fallback={<TabLoader />}>
-              <AdminVinculosTab />
-            </Suspense>
-          </TabsContent>
 
           <TabsContent value="grupos">
             <Suspense fallback={<TabLoader />}>

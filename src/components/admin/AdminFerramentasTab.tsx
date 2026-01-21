@@ -70,7 +70,9 @@ interface EneagramaInstinto {
   ativo: boolean;
 }
 
-type PortalType = 'visitante' | 'pre_iniciada' | 'iniciada' | 'admin';
+import { Database } from '@/integrations/supabase/types';
+
+type PortalType = Database['public']['Enums']['portal_type'];
 type AgenteStatus = 'ativo' | 'inativo';
 
 interface OraculoPergunta {

@@ -28,8 +28,10 @@ import {
 
 const PORTAL_LABELS: Record<PortalType, string> = {
   visitante: 'Visitante',
-  pre_iniciada: 'Pré-Iniciada',
-  iniciada: 'Iniciada',
+  mentorada: 'Mentorada',
+  aluna_formacao: 'Aluna Formação',
+  assinante: 'Assinante',
+  oracula: 'Orácula',
   admin: 'Admin',
 };
 import { supabase } from '@/integrations/supabase/client';

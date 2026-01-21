@@ -109,28 +109,9 @@ export default function Eneagrama() {
     if (tiposRes.data) setTipos(tiposRes.data);
     if (instintosRes.data) setInstintos(instintosRes.data);
 
-    // If we have a cliente ID (new flow), fetch cliente info and verify access
+    // If we have a cliente ID (new flow), fetch cliente info
     if (clienteId) {
-      // Verify therapist has access to this client
-      const { data: vinculo } = await supabase
-        .from('terapeuta_clientes')
-        .select('cliente_id, ativo')
-        .eq('terapeuta_id', user.id)
-        .eq('cliente_id', clienteId)
-        .eq('ativo', true)
-        .maybeSingle();
-
-      if (!vinculo) {
-        toast({
-          title: 'Acesso negado',
-          description: 'Você não tem permissão para avaliar esta cliente.',
-          variant: 'destructive',
-        });
-        navigate('/minhas-clientes');
-        return;
-      }
-
-      // Fetch cliente name
+      // Fetch cliente name directly from profiles
       const { data: profile } = await supabase
         .from('profiles')
         .select('id, nome')

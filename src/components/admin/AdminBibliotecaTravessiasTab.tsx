@@ -45,7 +45,9 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react';
-import { PortalType } from '@/types/portal';
+import { Database } from '@/integrations/supabase/types';
+
+type PortalType = Database['public']['Enums']['portal_type'];
 
 interface TravessiaFamily {
   id: string;
@@ -221,7 +223,7 @@ export function AdminBibliotecaTravessiasTab() {
         o_que_sustenta: '',
         como_atravessar: '',
         capa_url: '',
-        portal_minimo: 'pre_iniciada',
+        portal_minimo: 'mentorada',
         publicado: false,
         ordem: items.length,
         familia_id: '',

@@ -25,7 +25,9 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { PortalType } from "@/types/portal";
+import { Database } from '@/integrations/supabase/types';
+
+type PortalType = Database['public']['Enums']['portal_type'];
 
 // Tipos de Campo Psíquico permitidos
 const TIPOS_CAMPO = [

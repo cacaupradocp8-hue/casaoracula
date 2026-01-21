@@ -7,7 +7,10 @@ import { Badge } from '@/components/ui/badge';
 import { LockedContentModal } from '@/components/shared/LockedContentModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { canAccessFeature, PortalType } from '@/types/portal';
+import { canAccessFeature, normalizePortalType } from '@/types/portal';
+import { Database } from '@/integrations/supabase/types';
+
+type PortalType = Database['public']['Enums']['portal_type'];
 import { 
   ArrowLeft, 
   Lock, 
@@ -70,7 +73,7 @@ export default function BibliotecaTravessiaDetalhe() {
       setItem(itemData);
 
       // Fetch media if user has access
-      if (itemData && user && canAccessFeature(user.portal, itemData.portal_minimo)) {
+      if (itemData && user && canAccessFeature(user.portal, normalizePortalType(itemData.portal_minimo as any))) {
         const { data: mediaData, error: mediaError } = await supabase
           .from('travessia_library_media')
           .select('*')
@@ -89,7 +92,7 @@ export default function BibliotecaTravessiaDetalhe() {
     }
   };
 
-  const canAccess = item && user ? canAccessFeature(user.portal, item.portal_minimo) : false;
+  const canAccess = item && user ? canAccessFeature(user.portal, normalizePortalType(item.portal_minimo as any)) : false;
 
   const renderMediaItem = (mediaItem: TravessiaMedia) => {
     const iconMap = {

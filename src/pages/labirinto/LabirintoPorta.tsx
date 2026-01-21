@@ -34,6 +34,7 @@ import { canAccessFeature } from "@/types/portal";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { PortaAudioPlayer } from "@/components/labirinto/PortaAudioPlayer";
+import { PortalType } from "@/types/portal";
 
 // Mapeamento de tipos de campo para exibição
 const TIPO_CAMPO_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
@@ -116,8 +117,8 @@ export default function LabirintoPorta() {
   const [contextoAceito, setContextoAceito] = useState(false);
 
   const userPortal = user?.portal || "visitante";
-  const canAccessCasoEspelho = canAccessFeature(userPortal, porta?.portal_caso_espelho || "iniciada");
-  const canAccessChave = canAccessFeature(userPortal, porta?.portal_chave_facilitadora || "iniciada");
+  const canAccessCasoEspelho = canAccessFeature(userPortal, (porta?.portal_caso_espelho as PortalType) || "oracula");
+  const canAccessChave = canAccessFeature(userPortal, (porta?.portal_chave_facilitadora as PortalType) || "oracula");
 
   const handleSaveNote = async () => {
     if (!newNote.trim() || !portaId) return;
