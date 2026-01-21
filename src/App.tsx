@@ -8,6 +8,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { AdminPreviewProvider, useAdminPreviewOptional } from "@/contexts/AdminPreviewContext";
 import { PortalType, canAccessFeature } from "@/types/portal";
 import { useOnboarding } from "@/hooks/useOnboarding";
+import { LockedForVisitor } from "@/components/shared/LockedForVisitor";
 
 // Pages
 import Landing from "./pages/Landing";
@@ -102,6 +103,7 @@ import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
 import Jornada from "./pages/Jornada";
 import Onboarding from "./pages/Onboarding";
+import SalaDaVisitante from "./pages/SalaDaVisitante";
 // SalaDeSessao removido - usar SessionRoomHome
 import SessionRoomHome from "./pages/SessionRoomHome";
 import SessionRoomCase from "./pages/SessionRoomCase";
@@ -148,7 +150,10 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
   
   // FORCE ONBOARDING if not completed (except if already on /onboarding)
   const isOnboardingRoute = location.pathname === '/onboarding';
+  const isSalaVisitanteRoute = location.pathname === '/sala-da-visitante';
+  const isPlanosRoute = location.pathname === '/planos';
   const isAdmin = user?.portal === 'admin';
+  const isVisitor = user?.portal === 'visitante';
   
   // Admins can skip onboarding, but regular users must complete it
   if (!onboardingCompleted && !isOnboardingRoute && !isAdmin) {
@@ -163,6 +168,14 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
   // Check access with effective portal
   const hasAccess = canAccessFeature(effectivePortal, minPortal);
   
+  // VISITORS: Block access to restricted content with informative message
+  // Allow only: /sala-da-visitante, /planos, /onboarding
+  if (isVisitor && !isAdmin && !hasAccess) {
+    // Show blocking component instead of redirect
+    return <LockedForVisitor />;
+  }
+  
+  // Non-visitors without access go to dashboard
   if (!hasAccess) return <Navigate to="/dashboard" replace />;
 
   return <>{children}</>;
@@ -175,12 +188,20 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   if (isLoading || onboardingLoading) return <AuthLoading />;
   
   if (isAuthenticated) {
-    // If onboarding NOT completed → force to Sala da Visitante
-    // If onboarding completed → go to Welcome
     const isAdmin = user?.portal === 'admin';
+    const isVisitor = user?.portal === 'visitante';
+    
+    // If onboarding NOT completed → force to onboarding
     if (!onboardingCompleted && !isAdmin) {
       return <Navigate to="/onboarding" replace />;
     }
+    
+    // VISITORS always go to Sala da Visitante - this is their home
+    if (isVisitor && !isAdmin) {
+      return <Navigate to="/sala-da-visitante" replace />;
+    }
+    
+    // Non-visitors go to welcome/dashboard flow
     return <Navigate to="/welcome" replace />;
   }
 
@@ -222,12 +243,22 @@ function AppRoutes() {
       <Route path="/install" element={<InstallApp />} />
       <Route path="/formacao-oracula" element={<FormacaoOracula />} />
 
-      {/* Onboarding Route - First-time experience */}
+      {/* Onboarding Route - First-time experience (before completing) */}
       <Route
         path="/onboarding"
         element={
           <ProtectedRoute>
             <Onboarding />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Sala da Visitante - Permanent home for visitors */}
+      <Route
+        path="/sala-da-visitante"
+        element={
+          <ProtectedRoute>
+            <SalaDaVisitante />
           </ProtectedRoute>
         }
       />
