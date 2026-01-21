@@ -48,7 +48,7 @@ export const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
     if (variant === 'horizontal') {
       return (
         <div ref={ref} className={cn('flex items-center justify-center', className)} {...props}>
-          <img src={logoHorizontal} alt="Casa ORÁCULA" className="object-scale-down border-solid rounded-xl shadow-none" />
+          <img src={logoHorizontal} alt="Casa ORÁCULA" className={cn('w-auto object-contain', horizontalSizes[size])} />
         </div>
       );
     }
