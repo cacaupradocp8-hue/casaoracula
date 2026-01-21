@@ -148,14 +148,15 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
   if (isLoading || onboardingLoading) return <AuthLoading />;
   if (!isAuthenticated) return <Navigate to="/auth" replace />;
   
-  // FORCE ONBOARDING if not completed (except if already on /onboarding)
   const isOnboardingRoute = location.pathname === '/onboarding';
+  const isJornadaRoute = location.pathname === '/jornada';
   const isSalaVisitanteRoute = location.pathname === '/sala-da-visitante';
   const isPlanosRoute = location.pathname === '/planos';
   const isAdmin = user?.portal === 'admin';
   const isVisitor = user?.portal === 'visitante';
   
-  // Admins can skip onboarding, but regular users must complete it
+  // FIRST TIME ONLY: Force onboarding if not completed (except if already on /onboarding)
+  // Once completed, user NEVER goes back to onboarding
   if (!onboardingCompleted && !isOnboardingRoute && !isAdmin) {
     return <Navigate to="/onboarding" replace />;
   }
@@ -168,15 +169,14 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
   // Check access with effective portal
   const hasAccess = canAccessFeature(effectivePortal, minPortal);
   
-  // VISITORS: Block access to restricted content with informative message
-  // Allow only: /sala-da-visitante, /planos, /onboarding
+  // VISITORS: Show blocking component for restricted content (not redirect!)
+  // Allowed routes for visitors: /jornada, /sala-da-visitante, /planos, /onboarding
   if (isVisitor && !isAdmin && !hasAccess) {
-    // Show blocking component instead of redirect
     return <LockedForVisitor />;
   }
   
-  // Non-visitors without access go to dashboard
-  if (!hasAccess) return <Navigate to="/dashboard" replace />;
+  // Non-visitors without access go to jornada (their home)
+  if (!hasAccess) return <Navigate to="/jornada" replace />;
 
   return <>{children}</>;
 }
@@ -189,20 +189,15 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   
   if (isAuthenticated) {
     const isAdmin = user?.portal === 'admin';
-    const isVisitor = user?.portal === 'visitante';
     
-    // If onboarding NOT completed → force to onboarding
+    // FIRST TIME ONLY: If onboarding NOT completed → force to onboarding
     if (!onboardingCompleted && !isAdmin) {
       return <Navigate to="/onboarding" replace />;
     }
     
-    // VISITORS always go to Sala da Visitante - this is their home
-    if (isVisitor && !isAdmin) {
-      return <Navigate to="/sala-da-visitante" replace />;
-    }
-    
-    // Non-visitors go to welcome/dashboard flow
-    return <Navigate to="/welcome" replace />;
+    // ALL users (including visitors) go to /jornada (Meu Caminho) as the real home
+    // No intermediate pages, no loops, no redirects to /welcome
+    return <Navigate to="/jornada" replace />;
   }
 
   return <>{children}</>;
