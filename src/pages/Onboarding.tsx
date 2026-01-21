@@ -79,7 +79,8 @@ export default function Onboarding() {
     // Mark onboarding as complete but keep as visitante
     await completeOnboarding();
     
-    navigate('/dashboard', { replace: true });
+    // Go to Welcome page (not dashboard) after completing onboarding
+    navigate('/welcome', { replace: true });
   }, [completeOnboarding, navigate]);
 
   const handleAcceptRite = useCallback(async () => {
@@ -107,7 +108,8 @@ export default function Onboarding() {
       await completeOnboarding();
 
       setShowRiteModal(false);
-      navigate('/dashboard', { replace: true });
+      // Go to Welcome page (not dashboard) after completing rite
+      navigate('/welcome', { replace: true });
     } catch (error) {
       console.error('Error accepting rite:', error);
       setIsProcessing(false);

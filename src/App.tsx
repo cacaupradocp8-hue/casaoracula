@@ -169,10 +169,20 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
 }
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
+  const { onboardingCompleted, isLoading: onboardingLoading } = useOnboarding();
 
-  if (isLoading) return <AuthLoading />;
-  if (isAuthenticated) return <Navigate to="/welcome" replace />;
+  if (isLoading || onboardingLoading) return <AuthLoading />;
+  
+  if (isAuthenticated) {
+    // If onboarding NOT completed → force to Sala da Visitante
+    // If onboarding completed → go to Welcome
+    const isAdmin = user?.portal === 'admin';
+    if (!onboardingCompleted && !isAdmin) {
+      return <Navigate to="/onboarding" replace />;
+    }
+    return <Navigate to="/welcome" replace />;
+  }
 
   return <>{children}</>;
 }
