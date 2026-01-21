@@ -83,38 +83,11 @@ export default function Onboarding() {
     navigate('/welcome', { replace: true });
   }, [completeOnboarding, navigate]);
 
-  const handleAcceptRite = useCallback(async () => {
-    setIsProcessing(true);
-
-    try {
-      // Update user portal to initiated (pre_iniciada)
-      if (user) {
-        const { error } = await supabase
-          .from('user_roles')
-          .upsert({
-            user_id: user.id,
-            portal: 'mentorada',
-          }, {
-            onConflict: 'user_id',
-          });
-
-        if (error) throw error;
-
-        // Refresh portal in context
-        await refreshUserPortal();
-      }
-
-      // Mark onboarding as complete
-      await completeOnboarding();
-
-      setShowRiteModal(false);
-      // Go to Welcome page (not dashboard) after completing rite
-      navigate('/welcome', { replace: true });
-    } catch (error) {
-      console.error('Error accepting rite:', error);
-      setIsProcessing(false);
-    }
-  }, [user, refreshUserPortal, completeOnboarding, navigate]);
+  const handleAcceptRite = useCallback(() => {
+    // Redirect to plans page - the actual portal upgrade happens after purchase
+    setShowRiteModal(false);
+    navigate('/planos');
+  }, [navigate]);
 
   const handleDeclineRite = useCallback(() => {
     setShowRiteModal(false);
