@@ -289,11 +289,7 @@ function AppRoutes() {
       />
       <Route
         path="/mentoria"
-        element={
-          <ProtectedRoute minPortal="iniciada">
-            <Mentoria />
-          </ProtectedRoute>
-        }
+        element={<Navigate to="/mentoria-oracular" replace />}
       />
       
       {/* Living Territories */}
@@ -788,12 +784,17 @@ function AppRoutes() {
 
       {/* Novas Ferramentas Simbólicas */}
       <Route
-        path="/ferramentas/espelho-consciencia"
+        path="/ferramentas/espelho-de-consciencia"
         element={
           <ProtectedRoute minPortal="pre_iniciada">
             <EspelhoConsciencia />
           </ProtectedRoute>
         }
+      />
+      {/* Legacy redirect */}
+      <Route
+        path="/ferramentas/espelho-consciencia"
+        element={<Navigate to="/ferramentas/espelho-de-consciencia" replace />}
       />
       <Route
         path="/ferramentas/mapa-arquetipos-ego"
