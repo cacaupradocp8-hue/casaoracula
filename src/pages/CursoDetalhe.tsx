@@ -28,6 +28,7 @@ import { useCourseDetail } from '@/hooks/useCourseDetail';
 import { useCourseAccess } from '@/hooks/useCourseAccess';
 import { useAuth } from '@/contexts/AuthContext';
 import { CourseLesson } from '@/types/course';
+import { ModularPageRenderer } from '@/components/modular/ModularPageRenderer';
 
 export default function CursoDetalhe() {
   const { id } = useParams<{ id: string }>();
@@ -364,6 +365,17 @@ export default function CursoDetalhe() {
               </AccordionItem>
             ))}
           </Accordion>
+
+          {/* Modular Blocks for Course */}
+          {course && (
+            <ModularPageRenderer
+              contextType="course"
+              contextId={course.id}
+              fallback={null}
+              blockSpacing="lg"
+              className="mt-8"
+            />
+          )}
         </section>
       </div>
     </AppLayout>

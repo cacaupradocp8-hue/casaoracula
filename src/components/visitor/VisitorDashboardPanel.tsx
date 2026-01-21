@@ -29,6 +29,10 @@ import {
 } from '@/components/ui/dialog';
 import { useDegustacao } from '@/hooks/useDegustacao';
 import { cn } from '@/lib/utils';
+import { ModularPageRenderer } from '@/components/modular/ModularPageRenderer';
+
+// Landing context ID for visitor home
+const VISITOR_LANDING_ID = 'visitor-home';
 
 // Locked features for visitors
 const LOCKED_FEATURES = [
@@ -300,6 +304,14 @@ export function VisitorDashboardPanel() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Modular Blocks for Visitor Landing */}
+      <ModularPageRenderer
+        contextType="landing"
+        contextId={VISITOR_LANDING_ID}
+        fallback={null}
+        blockSpacing="lg"
+      />
     </div>
   );
 }

@@ -58,6 +58,13 @@ interface Agente {
   nome: string;
 }
 
+interface AudioAsset {
+  id: string;
+  titulo: string;
+  file_path: string;
+  capa_url: string | null;
+}
+
 export function BlockEditor({
   blockType,
   initialContent,
@@ -380,13 +387,77 @@ function AudioEditor({
   content: AudioContent; 
   onChange: (c: AudioContent) => void;
 }) {
+  const [audioAssets, setAudioAssets] = useState<AudioAsset[]>([]);
+  const [selectedAssetId, setSelectedAssetId] = useState<string>('');
+  const [isLoadingAssets, setIsLoadingAssets] = useState(true);
+
+  useEffect(() => {
+    const fetchAudios = async () => {
+      setIsLoadingAssets(true);
+      const { data } = await supabase
+        .from('audio_assets')
+        .select('id, titulo, file_path, capa_url')
+        .eq('publicado', true)
+        .order('titulo');
+      setAudioAssets(data || []);
+      setIsLoadingAssets(false);
+    };
+    fetchAudios();
+  }, []);
+
+  const handleSelectAudio = (assetId: string) => {
+    setSelectedAssetId(assetId);
+    if (assetId === 'manual') {
+      // Keep current manual URL
+      return;
+    }
+    const audio = audioAssets.find(a => a.id === assetId);
+    if (audio) {
+      const { data } = supabase.storage.from('audios').getPublicUrl(audio.file_path);
+      onChange({
+        ...content,
+        url: data.publicUrl,
+        title: audio.titulo,
+        coverImage: audio.capa_url || undefined,
+      });
+    }
+  };
+
   return (
     <div className="space-y-4">
+      {/* Audio Library Selector */}
+      <div className="space-y-2">
+        <Label>Selecionar da Biblioteca</Label>
+        <Select 
+          value={selectedAssetId} 
+          onValueChange={handleSelectAudio}
+          disabled={isLoadingAssets}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder={isLoadingAssets ? "Carregando..." : "Escolha um áudio da biblioteca..."} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="manual">📝 Inserir URL manualmente</SelectItem>
+            {audioAssets.map(audio => (
+              <SelectItem key={audio.id} value={audio.id}>
+                🎵 {audio.titulo}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <p className="text-xs text-muted-foreground">
+          Selecione um áudio cadastrado ou insira uma URL manualmente abaixo.
+        </p>
+      </div>
+
       <div className="space-y-2">
         <Label>URL do Áudio</Label>
         <Input
           value={content.url}
-          onChange={e => onChange({ ...content, url: e.target.value })}
+          onChange={e => {
+            setSelectedAssetId('manual');
+            onChange({ ...content, url: e.target.value });
+          }}
           placeholder="https://..."
         />
       </div>

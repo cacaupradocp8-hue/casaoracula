@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { CourseLesson } from '@/types/course';
 import DOMPurify from 'dompurify';
+import { ModularPageRenderer } from '@/components/modular/ModularPageRenderer';
 
 interface LessonContentProps {
   lesson: CourseLesson;
@@ -106,6 +107,14 @@ export function LessonContent({
             }}
           />
         )}
+
+        {/* Modular Blocks for Lesson */}
+        <ModularPageRenderer
+          contextType="lesson"
+          contextId={lesson.id}
+          fallback={null}
+          blockSpacing="lg"
+        />
 
         {/* PDF/Materials */}
         {(lesson.pdf_url || lesson.materiais_url) && (

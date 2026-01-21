@@ -42,7 +42,9 @@ export type BlockContextType =
   | 'formation'
   | 'tool'
   | 'sala'
-  | 'landing';
+  | 'landing'
+  | 'course'
+  | 'lesson';
 
 // ============================================
 // CONTENT SCHEMAS FOR EACH BLOCK TYPE

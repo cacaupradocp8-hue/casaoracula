@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import * as LucideIcons from "lucide-react";
 import type { Course } from "@/types/course";
 import { useCopy } from "@/hooks/useCopy";
+import { ModularPageRenderer } from "@/components/modular/ModularPageRenderer";
 
 interface Quiz {
   id: string;
@@ -428,6 +429,17 @@ export default function SalaDetalhe() {
             <Wrench className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>Nenhuma ferramenta disponível nesta sala ainda.</p>
           </div>
+        )}
+
+        {/* Modular Blocks Section */}
+        {sala && id && (
+          <ModularPageRenderer
+            contextType="sala"
+            contextId={id}
+            fallback={null}
+            blockSpacing="lg"
+            className="mt-8"
+          />
         )}
 
         {/* CTA for visitors - shown only in Sala da Visitante (NIVEL_0) */}
