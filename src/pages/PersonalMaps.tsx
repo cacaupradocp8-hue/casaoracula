@@ -5,7 +5,7 @@
 // NOT clinical records - symbolic/reflective/formative only
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent } from '@/components/ui/card';
@@ -28,6 +28,8 @@ import {
   Users,
   Sparkles,
   AlertTriangle,
+  Home,
+  ChevronRight,
 } from 'lucide-react';
 import { usePersonalMaps } from '@/hooks/usePersonalMaps';
 import { useToast } from '@/hooks/use-toast';
@@ -123,17 +125,23 @@ export default function PersonalMaps() {
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-4xl">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/ferramentas" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Ferramentas
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Mapas Reflexivos</span>
+        </nav>
+
         {/* Header */}
-        <div className="flex items-center gap-4 mb-6">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/ferramentas')}>
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <SectionHeader
-            title="Mapas Reflexivos"
-            subtitle="Espaço pessoal de reflexão simbólica"
-            icon={<Map className="w-6 h-6 text-gold" />}
-          />
-        </div>
+        <SectionHeader
+          title="Mapas Reflexivos"
+          subtitle="Espaço pessoal de reflexão simbólica"
+          icon={<Map className="w-6 h-6 text-gold" />}
+          className="mb-6"
+        />
 
         {/* Disclaimer */}
         <Card className="mb-6 border-amber-500/30 bg-amber-500/5">

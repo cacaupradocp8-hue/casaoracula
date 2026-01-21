@@ -11,7 +11,9 @@ import {
   Search, 
   BookOpen, 
   Trophy,
-  Sparkles
+  Sparkles,
+  Home,
+  ChevronRight
 } from 'lucide-react';
 import { useCourses } from '@/hooks/useCourses';
 import { useAuth } from '@/contexts/AuthContext';
@@ -51,6 +53,16 @@ export default function Cursos() {
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Cursos</span>
+        </nav>
+
         {/* Hero Section */}
         <div className="text-center mb-12">
           <SectionHeader

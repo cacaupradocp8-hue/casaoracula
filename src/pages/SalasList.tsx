@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -22,7 +22,9 @@ import {
   Users,
   Heart,
   Moon,
-  Star
+  Star,
+  Home,
+  ChevronRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -179,6 +181,16 @@ export default function SalasList() {
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-5xl">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Formação</span>
+        </nav>
+
         <SectionHeader
           title="Formação"
           subtitle="Escolha seu caminho de desenvolvimento"

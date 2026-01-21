@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Bot, MessageSquare, Send, ArrowLeft, Loader2, Lock, Settings2 } from "lucide-react";
+import { Bot, MessageSquare, Send, ArrowLeft, Loader2, Lock, Settings2, Home, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
@@ -478,6 +479,16 @@ export default function Agentes() {
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/ferramentas" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Ferramentas
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Agentes</span>
+        </nav>
+
         <SectionHeader
           title="Agentes da Casa (IA)"
           subtitle="Assistentes inteligentes para apoiar sua jornada"

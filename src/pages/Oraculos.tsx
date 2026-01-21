@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom';
-import { Sparkles, Lock, Loader2 } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Sparkles, Lock, Loader2, Home, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useOracles } from '@/hooks/useOracles';
@@ -24,8 +24,20 @@ export default function Oraculos() {
 
   return (
     <AppLayout>
+      {/* Breadcrumb Navigation */}
+      <div className="container max-w-5xl mx-auto px-4 pt-6">
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Oráculos</span>
+        </nav>
+      </div>
+
       {/* Hero Section - Minimal */}
-      <section className="relative py-12 md:py-20 px-4 text-center">
+      <section className="relative py-8 md:py-12 px-4 text-center">
         <div className="max-w-3xl mx-auto animate-fade-in">
           <Sparkles className="w-8 h-8 text-primary mx-auto mb-6 animate-float-gentle" />
           
