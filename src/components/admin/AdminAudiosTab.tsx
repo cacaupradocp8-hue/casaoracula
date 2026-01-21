@@ -34,7 +34,6 @@ import {
   Plus, 
   Loader2, 
   Headphones, 
-  Upload, 
   Trash2, 
   Edit, 
   Play,
@@ -42,6 +41,7 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react';
+import { ImageUpload } from './ImageUpload';
 
 interface AudioAsset {
   id: string;
@@ -402,14 +402,13 @@ export function AdminAudiosTab() {
                   </div>
                 </div>
 
-                <div>
-                  <Label>URL da Capa (opcional)</Label>
-                  <Input
-                    value={capaUrl}
-                    onChange={(e) => setCapaUrl(e.target.value)}
-                    placeholder="https://..."
-                  />
-                </div>
+                <ImageUpload
+                  value={capaUrl}
+                  onChange={setCapaUrl}
+                  folder="audio-capas"
+                  label="Capa (opcional)"
+                  aspectRatio="square"
+                />
 
                 <div className="flex items-center gap-3">
                   <Switch
