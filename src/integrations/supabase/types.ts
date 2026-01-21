@@ -5722,7 +5722,15 @@ export type Database = {
       oracle_card_level: "beginner" | "intermediate" | "advanced"
       oracle_content_status: "draft" | "published" | "archived"
       oracle_spread_layout: "line" | "cross" | "circle" | "spiral" | "custom"
-      portal_type: "visitante" | "pre_iniciada" | "iniciada" | "admin"
+      portal_type:
+        | "visitante"
+        | "mentorada"
+        | "aluna_formacao"
+        | "assinante"
+        | "oracula"
+        | "pre_iniciada"
+        | "iniciada"
+        | "admin"
       post_status: "rascunho" | "publicado" | "arquivado"
       pricing_model: "free" | "one_time" | "subscription"
     }
@@ -5902,7 +5910,16 @@ export const Constants = {
       oracle_card_level: ["beginner", "intermediate", "advanced"],
       oracle_content_status: ["draft", "published", "archived"],
       oracle_spread_layout: ["line", "cross", "circle", "spiral", "custom"],
-      portal_type: ["visitante", "pre_iniciada", "iniciada", "admin"],
+      portal_type: [
+        "visitante",
+        "mentorada",
+        "aluna_formacao",
+        "assinante",
+        "oracula",
+        "pre_iniciada",
+        "iniciada",
+        "admin",
+      ],
       post_status: ["rascunho", "publicado", "arquivado"],
       pricing_model: ["free", "one_time", "subscription"],
     },
