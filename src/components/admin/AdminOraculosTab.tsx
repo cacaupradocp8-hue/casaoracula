@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,12 +21,8 @@ import {
   Sparkles,
   Layers,
   CreditCard,
-  Upload,
-  Link as LinkIcon,
   ArrowRight,
   AlertTriangle,
-  Loader2,
-  X,
   Info,
   RotateCcw,
 } from 'lucide-react';
@@ -65,6 +61,7 @@ export function AdminOraculosTab() {
   const [editingOracle, setEditingOracle] = useState<OracleDeck | null>(null);
   const [oracleDialogOpen, setOracleDialogOpen] = useState(false);
   const [oracleCoverUrl, setOracleCoverUrl] = useState('');
+  const [oracleCardBackUrl, setOracleCardBackUrl] = useState('');
 
   // Card form state
   const [editingCard, setEditingCard] = useState<OracleCardData | null>(null);
@@ -72,14 +69,7 @@ export function AdminOraculosTab() {
   const [selectedOracleId, setSelectedOracleId] = useState<string>('');
   const [cardImageUrl, setCardImageUrl] = useState('');
   const [cardBackImageUrl, setCardBackImageUrl] = useState('');
-  const [isUploadingImage, setIsUploadingImage] = useState(false);
-  const [showUrlInput, setShowUrlInput] = useState(false);
-  const [urlInput, setUrlInput] = useState('');
-  const [showBackUrlInput, setShowBackUrlInput] = useState(false);
-  const [backUrlInput, setBackUrlInput] = useState('');
   const [previewFlipped, setPreviewFlipped] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const backFileInputRef = useRef<HTMLInputElement>(null);
 
   // Spread form state
   const [editingSpread, setEditingSpread] = useState<OracleSpread | null>(null);
@@ -94,18 +84,15 @@ export function AdminOraculosTab() {
     if (cardDialogOpen) {
       setCardImageUrl(editingCard?.main_image_url || '');
       setCardBackImageUrl(editingCard?.back_image_url || '');
-      setShowUrlInput(false);
-      setUrlInput('');
-      setShowBackUrlInput(false);
-      setBackUrlInput('');
       setPreviewFlipped(false);
     }
   }, [cardDialogOpen, editingCard]);
 
-  // Reset oracle cover when dialog opens/closes
+  // Reset oracle form when dialog opens/closes
   useEffect(() => {
     if (oracleDialogOpen) {
       setOracleCoverUrl(editingOracle?.cover_image_url || '');
+      setOracleCardBackUrl(editingOracle?.theme_json?.cardBackImage || '');
     }
   }, [oracleDialogOpen, editingOracle]);
 
@@ -140,46 +127,6 @@ export function AdminOraculosTab() {
     return oracleCards.length >= 1 && oracleSpreads.length >= 1;
   };
 
-  // Image upload handler
-  const handleImageUpload = async (file: File, isBackImage: boolean = false) => {
-    if (!file.type.startsWith('image/')) {
-      toast({ title: 'Por favor, selecione uma imagem', variant: 'destructive' });
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      toast({ title: 'A imagem deve ter no máximo 5MB', variant: 'destructive' });
-      return;
-    }
-
-    setIsUploadingImage(true);
-    try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `oracle-cards/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-
-      const { data, error } = await supabase.storage
-        .from('oracle-images')
-        .upload(fileName, file, { cacheControl: '3600', upsert: false });
-
-      if (error) throw error;
-
-      const { data: urlData } = supabase.storage.from('oracle-images').getPublicUrl(data.path);
-      
-      if (isBackImage) {
-        setCardBackImageUrl(urlData.publicUrl);
-      } else {
-        setCardImageUrl(urlData.publicUrl);
-      }
-      toast({ title: 'Imagem enviada!' });
-    } catch (error) {
-      console.error('Error uploading:', error);
-      toast({ title: 'Erro ao enviar imagem', variant: 'destructive' });
-    } finally {
-      setIsUploadingImage(false);
-      if (!isBackImage && fileInputRef.current) fileInputRef.current.value = '';
-      if (isBackImage && backFileInputRef.current) backFileInputRef.current.value = '';
-    }
-  };
-
   // Oracle CRUD
   const handleSaveOracle = async (formData: FormData) => {
     const slug = (formData.get('slug') as string || '').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
@@ -191,6 +138,10 @@ export function AdminOraculosTab() {
       subtitle: formData.get('subtitle') as string || null,
       description: formData.get('description') as string || null,
       cover_image_url: oracleCoverUrl || null,
+      theme_json: {
+        ...(editingOracle?.theme_json || {}),
+        cardBackImage: oracleCardBackUrl || null,
+      },
       minimum_portal: minPortal as 'visitante' | 'mentorada' | 'aluna_formacao' | 'assinante' | 'oracula' | 'admin',
       status: formData.get('status') as OracleContentStatus,
       disclaimer_text: formData.get('disclaimer_text') as string || 'Leitura simbólica. Não é previsão. Não substitui acompanhamento clínico.',
@@ -525,7 +476,21 @@ export function AdminOraculosTab() {
                           folder="oraculos"
                           label="Capa do Oráculo"
                           aspectRatio="square"
+                          showGallery={true}
                         />
+                      </div>
+                      <div className="col-span-2">
+                        <ImageUpload
+                          value={oracleCardBackUrl}
+                          onChange={setOracleCardBackUrl}
+                          folder="oracle-cards"
+                          label="Verso Padrão das Cartas"
+                          aspectRatio="square"
+                          showGallery={true}
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Imagem de verso usada como fallback para todas as cartas deste oráculo.
+                        </p>
                       </div>
                       <div>
                         <Label htmlFor="minimum_portal">Portal Mínimo</Label>
@@ -761,138 +726,29 @@ export function AdminOraculosTab() {
                       </Select>
                     </div>
                     
-                    {/* Image Upload - REQUIRED */}
-                    <div className="space-y-2">
-                      <Label>Imagem da Carta *</Label>
-                      {cardImageUrl ? (
-                        <div className="relative group">
-                          <div className="aspect-[3/4] max-w-[200px] rounded-lg overflow-hidden border bg-muted">
-                            <img src={cardImageUrl} alt="Preview" className="w-full h-full object-cover" />
-                          </div>
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={() => setCardImageUrl('')}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="aspect-[3/4] max-w-[200px] rounded-lg border-2 border-dashed bg-muted/50 flex flex-col items-center justify-center gap-2 p-4">
-                          {isUploadingImage ? (
-                            <>
-                              <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-                              <p className="text-sm text-muted-foreground">Enviando...</p>
-                            </>
-                          ) : showUrlInput ? (
-                            <div className="w-full space-y-2">
-                              <Input
-                                placeholder="https://..."
-                                value={urlInput}
-                                onChange={(e) => setUrlInput(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), setCardImageUrl(urlInput), setShowUrlInput(false))}
-                              />
-                              <div className="flex gap-2">
-                                <Button type="button" size="sm" onClick={() => { setCardImageUrl(urlInput); setShowUrlInput(false); }} className="flex-1">
-                                  Salvar
-                                </Button>
-                                <Button type="button" size="sm" variant="outline" onClick={() => setShowUrlInput(false)}>
-                                  Cancelar
-                                </Button>
-                              </div>
-                            </div>
-                          ) : (
-                            <>
-                              <Upload className="w-8 h-8 text-muted-foreground" />
-                              <p className="text-xs text-muted-foreground text-center">Imagem obrigatória</p>
-                              <div className="flex gap-2">
-                                <Button type="button" size="sm" variant="secondary" onClick={() => fileInputRef.current?.click()}>
-                                  <Upload className="w-4 h-4 mr-1" />
-                                  Upload
-                                </Button>
-                                <Button type="button" size="sm" variant="outline" onClick={() => setShowUrlInput(true)}>
-                                  <LinkIcon className="w-4 h-4 mr-1" />
-                                  URL
-                                </Button>
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      )}
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) => e.target.files?.[0] && handleImageUpload(e.target.files[0], false)}
-                      />
-                    </div>
+                    {/* Front Image Upload */}
+                    <ImageUpload
+                      value={cardImageUrl}
+                      onChange={setCardImageUrl}
+                      folder="oracle-cards"
+                      label="Imagem da Carta (Frente) *"
+                      aspectRatio="square"
+                      showGallery={true}
+                    />
 
                     {/* Back Image Upload - OPTIONAL */}
-                    <div className="space-y-2">
-                      <Label>Imagem do Verso (opcional)</Label>
-                      <p className="text-xs text-muted-foreground">Se não definida, usa o verso padrão do oráculo.</p>
-                      {cardBackImageUrl ? (
-                        <div className="relative group">
-                          <div className="aspect-[3/4] max-w-[200px] rounded-lg overflow-hidden border bg-muted">
-                            <img src={cardBackImageUrl} alt="Preview Verso" className="w-full h-full object-cover" />
-                          </div>
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={() => setCardBackImageUrl('')}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="aspect-[3/4] max-w-[200px] rounded-lg border-2 border-dashed bg-muted/50 flex flex-col items-center justify-center gap-2 p-4">
-                          {showBackUrlInput ? (
-                            <div className="w-full space-y-2">
-                              <Input
-                                placeholder="https://..."
-                                value={backUrlInput}
-                                onChange={(e) => setBackUrlInput(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), setCardBackImageUrl(backUrlInput), setShowBackUrlInput(false))}
-                              />
-                              <div className="flex gap-2">
-                                <Button type="button" size="sm" onClick={() => { setCardBackImageUrl(backUrlInput); setShowBackUrlInput(false); }} className="flex-1">
-                                  Salvar
-                                </Button>
-                                <Button type="button" size="sm" variant="outline" onClick={() => setShowBackUrlInput(false)}>
-                                  Cancelar
-                                </Button>
-                              </div>
-                            </div>
-                          ) : (
-                            <>
-                              <Upload className="w-6 h-6 text-muted-foreground" />
-                              <p className="text-xs text-muted-foreground text-center">Verso personalizado</p>
-                              <div className="flex gap-2">
-                                <Button type="button" size="sm" variant="secondary" onClick={() => backFileInputRef.current?.click()}>
-                                  <Upload className="w-4 h-4 mr-1" />
-                                  Upload
-                                </Button>
-                                <Button type="button" size="sm" variant="outline" onClick={() => setShowBackUrlInput(true)}>
-                                  <LinkIcon className="w-4 h-4 mr-1" />
-                                  URL
-                                </Button>
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      )}
-                      <input
-                        ref={backFileInputRef}
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) => e.target.files?.[0] && handleImageUpload(e.target.files[0], true)}
+                    <div className="space-y-1">
+                      <ImageUpload
+                        value={cardBackImageUrl}
+                        onChange={setCardBackImageUrl}
+                        folder="oracle-cards"
+                        label="Imagem do Verso (opcional)"
+                        aspectRatio="square"
+                        showGallery={true}
                       />
+                      <p className="text-xs text-muted-foreground">
+                        Se não definida, usa o verso padrão do oráculo.
+                      </p>
                     </div>
 
                     {/* Card Preview with 3D Flip */}
