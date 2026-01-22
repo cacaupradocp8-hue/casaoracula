@@ -23,6 +23,7 @@ import {
   DoorOpen,
   Waves,
   Castle,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { canAccessFeature, PortalType } from "@/types/portal";
@@ -291,6 +292,64 @@ export default function FerramentasHub() {
             </div>
           </div>
         </motion.div>
+
+        {/* Ferramentas Profissionais Avançadas - Torre Viva + Biblioteca */}
+        {canAccessFeature(userPortal, 'oracula') && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.02 }}
+            className="mb-12"
+          >
+            <div className="rounded-xl p-6 bg-gradient-to-br from-gold/10 via-background to-purple-900/5 border border-gold/30">
+              <div className="flex items-start gap-4 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-gold/20 flex items-center justify-center shrink-0">
+                  <Castle className="w-6 h-6 text-gold" />
+                </div>
+                <div className="flex-1">
+                  <h2 className="font-display text-xl font-semibold mb-1 text-gold">
+                    Ferramentas Profissionais
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    Recursos exclusivos para facilitadoras certificadas
+                  </p>
+                </div>
+              </div>
+              
+              <div className="grid sm:grid-cols-2 gap-3">
+                <Card
+                  className="cursor-pointer hover:border-gold/50 transition-colors"
+                  onClick={() => navigate('/ferramentas/torre-viva')}
+                >
+                  <CardContent className="flex items-center gap-3 p-4">
+                    <div className="w-10 h-10 rounded-lg bg-gold/20 flex items-center justify-center">
+                      <Castle className="w-5 h-5 text-gold" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-foreground text-sm">Torre Viva™</h3>
+                      <p className="text-xs text-muted-foreground">Leitura de estrutura psíquica</p>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card
+                  className="cursor-pointer hover:border-gold/50 transition-colors"
+                  onClick={() => navigate('/biblioteca-casos')}
+                >
+                  <CardContent className="flex items-center gap-3 p-4">
+                    <div className="w-10 h-10 rounded-lg bg-gold/20 flex items-center justify-center">
+                      <BookOpen className="w-5 h-5 text-gold" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-foreground text-sm">Biblioteca de Casos</h3>
+                      <p className="text-xs text-muted-foreground">Vinhetas clínicas para treino</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {/* SYNTHEIA - Destaque Principal */}
         <motion.div
