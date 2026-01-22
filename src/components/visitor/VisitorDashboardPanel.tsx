@@ -77,6 +77,12 @@ const LOCKED_FEATURES = [
 // Free features for visitors
 const FREE_FEATURES = [
   {
+    id: 'tour',
+    title: 'Tour pela Casa',
+    description: 'Conheça todos os cômodos e ferramentas',
+    route: '/tour',
+  },
+  {
     id: 'sala-visitante',
     title: 'Sala da Visitante',
     description: 'Quiz oracular e ferramentas de entrada',

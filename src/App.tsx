@@ -125,6 +125,8 @@ import PersonalMapEditor from "./pages/PersonalMapEditor";
 // Jardim da Psique - Espaço privado de registros
 import JardimPsique from "./pages/JardimPsique";
 import JardimPsiqueDetalhe from "./pages/JardimPsiqueDetalhe";
+// Tour da Casa
+import Tour from "./pages/Tour";
 
 const queryClient = new QueryClient();
 
@@ -237,6 +239,7 @@ function AppRoutes() {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/install" element={<InstallApp />} />
       <Route path="/formacao-oracula" element={<FormacaoOracula />} />
+      <Route path="/tour" element={<Tour />} />
 
       {/* Onboarding Route - First-time experience (before completing) */}
       <Route
