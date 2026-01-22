@@ -356,6 +356,74 @@ export type Database = {
         }
         Relationships: []
       }
+      biblioteca_casos: {
+        Row: {
+          ativa: boolean | null
+          autor_id: string | null
+          cena: string
+          created_at: string | null
+          erro_comum: string
+          fonte: string | null
+          id: string
+          leitura_oracula: string
+          ordem: number | null
+          porta_id: string | null
+          porta_nome: string | null
+          resultado: string
+          risco_tipo: string | null
+          tags: string[] | null
+          titulo: string | null
+          torre_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          ativa?: boolean | null
+          autor_id?: string | null
+          cena: string
+          created_at?: string | null
+          erro_comum: string
+          fonte?: string | null
+          id?: string
+          leitura_oracula: string
+          ordem?: number | null
+          porta_id?: string | null
+          porta_nome?: string | null
+          resultado: string
+          risco_tipo?: string | null
+          tags?: string[] | null
+          titulo?: string | null
+          torre_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          ativa?: boolean | null
+          autor_id?: string | null
+          cena?: string
+          created_at?: string | null
+          erro_comum?: string
+          fonte?: string | null
+          id?: string
+          leitura_oracula?: string
+          ordem?: number | null
+          porta_id?: string | null
+          porta_nome?: string | null
+          resultado?: string
+          risco_tipo?: string | null
+          tags?: string[] | null
+          titulo?: string | null
+          torre_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "biblioteca_casos_porta_id_fkey"
+            columns: ["porta_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_portas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       big5_dimensoes: {
         Row: {
           ativo: boolean
@@ -5367,6 +5435,7 @@ export type Database = {
           created_at: string | null
           frequencia: string | null
           id: string
+          natureza_porta: string | null
           ordem: number | null
           porta_id: string | null
           risco_conducao: string | null
@@ -5378,6 +5447,7 @@ export type Database = {
           created_at?: string | null
           frequencia?: string | null
           id?: string
+          natureza_porta?: string | null
           ordem?: number | null
           porta_id?: string | null
           risco_conducao?: string | null
@@ -5389,6 +5459,7 @@ export type Database = {
           created_at?: string | null
           frequencia?: string | null
           id?: string
+          natureza_porta?: string | null
           ordem?: number | null
           porta_id?: string | null
           risco_conducao?: string | null
