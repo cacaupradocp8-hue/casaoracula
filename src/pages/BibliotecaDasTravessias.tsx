@@ -77,12 +77,28 @@ export default function BibliotecaDasTravessias() {
     return canAccessFeature(user.portal, normalizePortalType(portalMinimo as any));
   };
 
+  // Mapeamento de itens da biblioteca que são ferramentas com rotas próprias
+  const FERRAMENTA_ROUTES: Record<string, string> = {
+    'cartografia-da-torre': '/ferramentas/cartografia-torre',
+    'cartografia-torre': '/ferramentas/cartografia-torre',
+    // Adicionar outras ferramentas conforme necessário
+  };
+
   const handleItemClick = (item: TravessiaLibraryItem) => {
-    if (canAccessItem(item.portal_minimo)) {
-      navigate(`/biblioteca-das-travessias/${item.slug}`);
-    } else {
+    if (!canAccessItem(item.portal_minimo)) {
       setLockedModalOpen(true);
+      return;
     }
+
+    // Verifica se o item é uma ferramenta com rota própria
+    const ferramentaRoute = FERRAMENTA_ROUTES[item.slug];
+    if (ferramentaRoute) {
+      navigate(ferramentaRoute);
+      return;
+    }
+
+    // Rota padrão da biblioteca
+    navigate(`/biblioteca-das-travessias/${item.slug}`);
   };
 
   // Group items by familia_id or categoria as fallback
