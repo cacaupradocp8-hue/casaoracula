@@ -98,6 +98,7 @@ import FerramentaDinamica from "./pages/FerramentaDinamica";
 import Big5Simbolico from "./pages/Big5Simbolico";
 import EneagramaFeminino from "./pages/EneagramaFeminino";
 import JornadaHeroina from "./pages/JornadaHeroina";
+import TorreViva from "./pages/TorreViva";
 import FormacaoOracula from "./pages/FormacaoOracula";
 import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
@@ -911,6 +912,16 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <QuizPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Torre Viva™ - Ferramenta profissional avançada */}
+      <Route
+        path="/ferramentas/torre-viva"
+        element={
+          <ProtectedRoute minPortal="oracula">
+            <TorreViva />
           </ProtectedRoute>
         }
       />
