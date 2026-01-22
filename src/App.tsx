@@ -99,6 +99,7 @@ import Big5Simbolico from "./pages/Big5Simbolico";
 import EneagramaFeminino from "./pages/EneagramaFeminino";
 import JornadaHeroina from "./pages/JornadaHeroina";
 import TorreViva from "./pages/TorreViva";
+import BibliotecaCasos from "./pages/BibliotecaCasos";
 import { AsPortas, OsCamposPsiquicos, AsTorres, TriadeMetodo } from "./pages/metodo";
 import FormacaoOracula from "./pages/FormacaoOracula";
 import MapaVivoList from "./pages/MapaVivoList";
@@ -923,6 +924,16 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="oracula">
             <TorreViva />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Biblioteca de Casos - Vinhetas clínicas para treino */}
+      <Route
+        path="/biblioteca-casos"
+        element={
+          <ProtectedRoute minPortal="oracula">
+            <BibliotecaCasos />
           </ProtectedRoute>
         }
       />
