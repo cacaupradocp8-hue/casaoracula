@@ -1,11 +1,13 @@
 import { ContentPageLayout } from '@/components/shared/ContentPageLayout';
 import { ModularPageRenderer } from '@/components/modular/ModularPageRenderer';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
+import { PortaFamiliasBlock } from '@/components/modular/blocks/PortaFamiliasBlock';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, Building2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ContentBlock } from '@/types/modular';
 
 export default function CartografiaTorre() {
   const navigate = useNavigate();
@@ -21,6 +23,24 @@ export default function CartografiaTorre() {
       return data;
     }
   });
+
+  // Create a mock block for the Porta Familias
+  const familiasBlock: ContentBlock = {
+    id: 'familias-block',
+    contextType: 'tool',
+    contextId: ferramenta?.id || 'cartografia-torre',
+    blockType: 'porta_familias',
+    ordem: 1,
+    ativo: true,
+    portalMinimo: 'visitante',
+    content: {
+      showRisks: true,
+      showIntegration: true,
+      compactMode: false,
+    },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
 
   if (isLoading) {
     return (
@@ -39,44 +59,17 @@ export default function CartografiaTorre() {
     >
       <EthicalNotice toolName="Cartografia da Torre" className="mb-6" />
       
-      {ferramenta?.id ? (
+      {/* Famílias Block - always visible */}
+      <div className="mb-8">
+        <PortaFamiliasBlock block={familiasBlock} />
+      </div>
+      
+      {ferramenta?.id && (
         <ModularPageRenderer
           contextType="tool"
           contextId={ferramenta.id}
-          fallback={
-            <Card className="border-dashed border-gold/30">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Building2 className="w-5 h-5 text-gold" />
-                  Ferramenta em Construção
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground">
-                  A Cartografia da Torre é uma ferramenta para mapear as estruturas
-                  de defesa psíquica e os processos de transformação pessoal.
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Conteúdo em desenvolvimento. Adicione blocos no painel de administração.
-                </p>
-              </CardContent>
-            </Card>
-          }
+          fallback={null}
         />
-      ) : (
-        <Card className="border-dashed border-gold/30">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Building2 className="w-5 h-5 text-gold" />
-              Cartografia da Torre
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">
-              Esta ferramenta ainda não foi configurada no sistema.
-            </p>
-          </CardContent>
-        </Card>
       )}
     </ContentPageLayout>
   );

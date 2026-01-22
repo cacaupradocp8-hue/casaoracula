@@ -31,6 +31,7 @@ import {
   ArchetypalMappingBlock,
   NarrativeResultBlock,
   SymbolicVisualizationBlock,
+  PortaFamiliasBlock,
 } from './blocks';
 
 interface ModularPageRendererProps {
@@ -167,6 +168,9 @@ function BlockRenderer({ block, contextData, onAction, onSaveRegistro }: BlockRe
     // Symbolic visualization block
     case 'symbolic_visualization':
       return <SymbolicVisualizationBlock block={block} onSave={onSaveRegistro} />;
+    // Porta Familias block
+    case 'porta_familias':
+      return <PortaFamiliasBlock block={block} onSave={onSaveRegistro} />;
     default:
       console.warn(`Unknown block type: ${block.blockType}`);
       return null;

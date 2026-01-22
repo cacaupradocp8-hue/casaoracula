@@ -32,7 +32,9 @@ export type ContentBlockType =
   | 'archetypal_mapping'
   | 'narrative_result'
   // Symbolic visualization block
-  | 'symbolic_visualization';
+  | 'symbolic_visualization'
+  // Porta Familias block
+  | 'porta_familias';
 
 // Context type enum - where blocks can be used
 export type BlockContextType = 
@@ -310,6 +312,13 @@ export interface SymbolicVisualizationContent {
   saveToRegistros?: boolean;
 }
 
+export interface PortaFamiliasContent {
+  showRisks?: boolean;
+  showIntegration?: boolean;
+  compactMode?: boolean;
+  highlightedFamily?: string;
+}
+
 export type BlockContent = 
   | RichTextContent
   | ImageContent
@@ -332,7 +341,8 @@ export type BlockContent =
   | GuidedWritingContent
   | SymbolicPracticeContent
   | AnchoringInputContent
-  | SymbolicVisualizationContent;
+  | SymbolicVisualizationContent
+  | PortaFamiliasContent;
 
 // ============================================
 // MAIN CONTENT BLOCK INTERFACE
@@ -528,6 +538,13 @@ export const DEFAULT_BLOCK_CONTENT: Record<ContentBlockType, BlockContent> = {
     elements: [],
     saveToRegistros: false
   },
+  // Porta Familias block
+  porta_familias: {
+    showRisks: true,
+    showIntegration: true,
+    compactMode: false,
+    highlightedFamily: undefined
+  },
 };
 
 // ============================================
@@ -669,6 +686,13 @@ export const BLOCK_TYPE_META: Record<ContentBlockType, { label: string; icon: st
     label: 'Visualização Simbólica',
     icon: 'Orbit',
     description: 'Mandala, radial ou espiral para resultados',
+    category: 'interactive'
+  },
+  // Porta Familias block
+  porta_familias: {
+    label: 'Famílias de Portas',
+    icon: 'Compass',
+    description: 'Mapa das 5 famílias do Labirinto',
     category: 'interactive'
   },
 };

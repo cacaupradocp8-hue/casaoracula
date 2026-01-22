@@ -25,3 +25,5 @@ export { ArchetypalMappingBlock } from './ArchetypalMappingBlock';
 export { NarrativeResultBlock } from './NarrativeResultBlock';
 // Symbolic visualization block
 export { SymbolicVisualizationBlock } from './SymbolicVisualizationBlock';
+// Porta Familias block
+export { PortaFamiliasBlock } from './PortaFamiliasBlock';

@@ -6016,6 +6016,7 @@ export type Database = {
         | "anchoring_input"
         | "archetypal_mapping"
         | "narrative_result"
+        | "porta_familias"
       content_type: "text" | "video" | "audio" | "file" | "mixed"
       mentoria_tipo: "aviso" | "evento" | "supervisao"
       nivel_sala: "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3"
@@ -6203,6 +6204,7 @@ export const Constants = {
         "anchoring_input",
         "archetypal_mapping",
         "narrative_result",
+        "porta_familias",
       ],
       content_type: ["text", "video", "audio", "file", "mixed"],
       mentoria_tipo: ["aviso", "evento", "supervisao"],
