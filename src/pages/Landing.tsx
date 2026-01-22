@@ -39,11 +39,16 @@ export default function Landing() {
           </p>
         </div>
 
-        {/* Botão ritual */}
-        <div className="animate-slide-up" style={{ animationDelay: '0.6s' }}>
+        {/* Botões */}
+        <div className="animate-slide-up flex flex-col sm:flex-row gap-4 justify-center" style={{ animationDelay: '0.6s' }}>
           <Link to="/auth">
-            <Button variant="gold" size="xl" className="text-lg px-10 py-6">
+            <Button variant="gold" size="xl" className="text-lg px-10 py-6 w-full sm:w-auto">
               {getCopyByKey('btn_entrar_casa', 'Entrar na Casa ORÁCULA')}
+            </Button>
+          </Link>
+          <Link to="/tour">
+            <Button variant="outline" size="xl" className="text-lg px-8 py-6 w-full sm:w-auto border-gold/30 hover:bg-gold/10">
+              Conhecer a Casa
             </Button>
           </Link>
         </div>

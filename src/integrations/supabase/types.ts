@@ -5322,6 +5322,48 @@ export type Database = {
         }
         Relationships: []
       }
+      tour_sections: {
+        Row: {
+          ativo: boolean | null
+          created_at: string | null
+          descricao: string | null
+          icone: string | null
+          id: string
+          imagem_url: string | null
+          ordem: number | null
+          secao_key: string
+          subtitulo: string | null
+          titulo: string
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string | null
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          imagem_url?: string | null
+          ordem?: number | null
+          secao_key: string
+          subtitulo?: string | null
+          titulo: string
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string | null
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          imagem_url?: string | null
+          ordem?: number | null
+          secao_key?: string
+          subtitulo?: string | null
+          titulo?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       travessia_familias: {
         Row: {
           ativa: boolean | null
