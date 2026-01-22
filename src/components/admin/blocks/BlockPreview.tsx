@@ -17,6 +17,7 @@ import {
   Brain,
   Briefcase,
   Orbit,
+  Compass,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -51,6 +52,8 @@ const typeIcons: Record<ContentBlockType, React.ElementType> = {
   narrative_result: BookOpen,
   // Symbolic visualization block
   symbolic_visualization: Orbit,
+  // Porta Familias block
+  porta_familias: Compass,
 };
 
 const typeLabels: Record<ContentBlockType, string> = {
@@ -79,6 +82,8 @@ const typeLabels: Record<ContentBlockType, string> = {
   narrative_result: 'Resultado Narrativo',
   // Symbolic visualization block
   symbolic_visualization: 'Visualização Simbólica',
+  // Porta Familias block
+  porta_familias: 'Famílias de Portas',
 };
 
 export function BlockPreview({ block, compact = false }: BlockPreviewProps) {
