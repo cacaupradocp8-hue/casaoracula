@@ -18,9 +18,12 @@ import {
   Eye,
   CheckCircle2,
   ArrowRight,
-  Quote
+  Quote,
+  BookOpen,
+  Loader2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useCasoClinico, TorreId } from "@/hooks/useTorrePortaIntegracao";
 
 // ══════════════════════════════════════════════════════════════
 // CARTOGRAFIA FIXA — 7 TORRES (NÃO EDITÁVEL)
@@ -231,7 +234,104 @@ const OBSERVACOES = [
   { id: "hipervigilancia", texto: "Hipervigilância ao ambiente", torres: ["controle", "adaptacao"] }
 ];
 
-type Step = "apresentacao" | "aviso" | "observacao" | "selecao" | "orientacao" | "pergunta" | "fechamento";
+type Step = "apresentacao" | "aviso" | "observacao" | "selecao" | "orientacao" | "caso" | "pergunta" | "fechamento";
+
+// ══════════════════════════════════════════════════════════════
+// COMPONENTE: Caso-Modelo (Vinheta Clínica)
+// ══════════════════════════════════════════════════════════════
+function CasoModeloStep({ 
+  torreId, 
+  onBack, 
+  onContinue 
+}: { 
+  torreId: TorreId | undefined; 
+  onBack: () => void; 
+  onContinue: () => void;
+}) {
+  const { data: caso, isLoading } = useCasoClinico(torreId);
+  
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!caso) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6 px-4">
+        <BookOpen className="w-12 h-12 text-muted-foreground/30" />
+        <p className="text-muted-foreground">Caso-modelo não disponível para esta Torre.</p>
+        <Button variant="outline" onClick={onBack}>Voltar às Orientações</Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-3xl mx-auto space-y-6 px-4">
+      <div className="text-center space-y-2">
+        <Badge variant="outline" className="text-xs">Vinheta Clínica</Badge>
+        <h2 className="text-2xl font-serif text-foreground">Caso-Modelo</h2>
+        <Badge className="bg-gold/20 text-gold border-gold/30">{caso.porta_ativa_nome}</Badge>
+      </div>
+
+      {/* Cena */}
+      <Card className="bg-card/50">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base text-muted-foreground">Cena</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-foreground/90 leading-relaxed">{caso.cena}</p>
+        </CardContent>
+      </Card>
+
+      {/* Leitura SEM Torre */}
+      <Card className="border-destructive/30 bg-destructive/5">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base text-destructive/80 flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4" />
+            Leitura SEM Torre
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground">{caso.leitura_sem_torre}</p>
+        </CardContent>
+      </Card>
+
+      {/* Leitura COM Torre Viva */}
+      <Card className="border-primary/30 bg-primary/5">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base text-primary flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4" />
+            Leitura COM Torre Viva™
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-foreground/90">{caso.leitura_com_torre}</p>
+        </CardContent>
+      </Card>
+
+      {/* Resultado */}
+      <Card className="border-gold/30 bg-gold/5">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base text-gold">Resultado</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-foreground/90 font-medium">{caso.resultado}</p>
+        </CardContent>
+      </Card>
+
+      <div className="flex flex-col sm:flex-row justify-center gap-3 pt-4">
+        <Button variant="ghost" onClick={onBack}>Voltar às Orientações</Button>
+        <Button onClick={onContinue}>
+          Pergunta de Reconhecimento
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  );
+}
 
 export default function TorreViva() {
   const navigate = useNavigate();
@@ -524,7 +624,16 @@ export default function TorreViva() {
               </Card>
             </div>
 
-            <div className="flex justify-center">
+            <div className="flex flex-col sm:flex-row justify-center gap-3">
+              <Button 
+                size="lg" 
+                variant="outline"
+                onClick={() => setStep("caso")}
+                className="gap-2"
+              >
+                <BookOpen className="h-4 w-4" />
+                Ver Caso-Modelo
+              </Button>
               <Button 
                 size="lg" 
                 variant="outline"
@@ -536,6 +645,12 @@ export default function TorreViva() {
             </div>
           </div>
         );
+
+      // ══════════════════════════════════════════════════════════════
+      // TELA 5.5 — CASO-MODELO (VINHETA CLÍNICA)
+      // ══════════════════════════════════════════════════════════════
+      case "caso":
+        return <CasoModeloStep torreId={torreEscolhida?.id as TorreId} onBack={() => setStep("orientacao")} onContinue={() => setStep("pergunta")} />;
 
       // ══════════════════════════════════════════════════════════════
       // TELA 6 — PERGUNTA ÚNICA

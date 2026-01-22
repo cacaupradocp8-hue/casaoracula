@@ -5322,6 +5322,89 @@ export type Database = {
         }
         Relationships: []
       }
+      torre_casos_clinicos: {
+        Row: {
+          ativa: boolean | null
+          cena: string
+          created_at: string | null
+          id: string
+          leitura_com_torre: string
+          leitura_sem_torre: string
+          porta_ativa_nome: string
+          resultado: string
+          torre_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          ativa?: boolean | null
+          cena: string
+          created_at?: string | null
+          id?: string
+          leitura_com_torre: string
+          leitura_sem_torre: string
+          porta_ativa_nome: string
+          resultado: string
+          torre_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          ativa?: boolean | null
+          cena?: string
+          created_at?: string | null
+          id?: string
+          leitura_com_torre?: string
+          leitura_sem_torre?: string
+          porta_ativa_nome?: string
+          resultado?: string
+          torre_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      torre_porta_relacao: {
+        Row: {
+          ajuste_com_torre: string | null
+          created_at: string | null
+          frequencia: string | null
+          id: string
+          ordem: number | null
+          porta_id: string | null
+          risco_conducao: string | null
+          torre_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          ajuste_com_torre?: string | null
+          created_at?: string | null
+          frequencia?: string | null
+          id?: string
+          ordem?: number | null
+          porta_id?: string | null
+          risco_conducao?: string | null
+          torre_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          ajuste_com_torre?: string | null
+          created_at?: string | null
+          frequencia?: string | null
+          id?: string
+          ordem?: number | null
+          porta_id?: string | null
+          risco_conducao?: string | null
+          torre_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "torre_porta_relacao_porta_id_fkey"
+            columns: ["porta_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_portas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tour_sections: {
         Row: {
           ativo: boolean | null
