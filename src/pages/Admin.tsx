@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target, Flame, FolderOpen, Link, Gift, Image as ImageIcon } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target, Flame, FolderOpen, Link, Gift, Image as ImageIcon, Castle } from 'lucide-react';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -54,6 +54,7 @@ const AdminSessoesTab = lazy(() => import('@/components/admin/AdminSessoesTab').
 const AdminGruposTab = lazy(() => import('@/components/admin/AdminGruposTab').then(m => ({ default: m.AdminGruposTab })));
 const AdminDegustacaoTab = lazy(() => import('@/components/admin/AdminDegustacaoTab').then(m => ({ default: m.AdminDegustacaoTab })));
 const AdminGaleriaTab = lazy(() => import('@/components/admin/AdminGaleriaTab').then(m => ({ default: m.AdminGaleriaTab })));
+const AdminTorreVivaTab = lazy(() => import('@/components/admin/AdminTorreVivaTab').then(m => ({ default: m.AdminTorreVivaTab })));
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
   { value: 'mentorada', label: '👁 Mentorada' },
@@ -264,6 +265,10 @@ export default function Admin() {
             <TabsTrigger value="area-formacao" className="gap-2">
               <DoorOpen className="w-4 h-4 text-purple-400" />
               Área Formação
+            </TabsTrigger>
+            <TabsTrigger value="torre-viva" className="gap-2">
+              <Castle className="w-4 h-4 text-gold" />
+              Torre Viva™
             </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Cog className="w-4 h-4" />
@@ -486,6 +491,12 @@ export default function Admin() {
           <TabsContent value="galeria">
             <Suspense fallback={<TabLoader />}>
               <AdminGaleriaTab />
+            </Suspense>
+          </TabsContent>
+
+          <TabsContent value="torre-viva">
+            <Suspense fallback={<TabLoader />}>
+              <AdminTorreVivaTab />
             </Suspense>
           </TabsContent>
 

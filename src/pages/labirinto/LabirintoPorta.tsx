@@ -21,7 +21,8 @@ import {
   Circle,
   Layers,
   AlertTriangle,
-  Volume2
+  Volume2,
+  Castle
 } from "lucide-react";
 import { 
   useLabirintoPorta, 
@@ -35,6 +36,7 @@ import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { PortaAudioPlayer } from "@/components/labirinto/PortaAudioPlayer";
 import { PortalType } from "@/types/portal";
+import { TorrePortaIntegracao } from "@/components/labirinto/TorrePortaIntegracao";
 
 // Mapeamento de tipos de campo para exibição
 const TIPO_CAMPO_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
@@ -119,7 +121,7 @@ export default function LabirintoPorta() {
   const userPortal = user?.portal || "visitante";
   const canAccessCasoEspelho = canAccessFeature(userPortal, (porta?.portal_caso_espelho as PortalType) || "oracula");
   const canAccessChave = canAccessFeature(userPortal, (porta?.portal_chave_facilitadora as PortalType) || "oracula");
-
+  const canAccessTorreIntegracao = canAccessFeature(userPortal, "oracula");
   const handleSaveNote = async () => {
     if (!newNote.trim() || !portaId) return;
     
@@ -292,6 +294,12 @@ export default function LabirintoPorta() {
               <TabsTrigger value="chave" className="gap-2">
                 <Key className="w-4 h-4" />
                 Chave
+              </TabsTrigger>
+            )}
+            {canAccessTorreIntegracao && (
+              <TabsTrigger value="estrutural" className="gap-2">
+                <Castle className="w-4 h-4" />
+                Estrutural
               </TabsTrigger>
             )}
             <TabsTrigger value="anotacoes" className="gap-2">
@@ -713,6 +721,19 @@ export default function LabirintoPorta() {
               </Card>
             )}
           </TabsContent>
+
+          {/* Estrutural Tab - Integração Torre Viva (uso profissional) */}
+          {canAccessTorreIntegracao && (
+            <TabsContent value="estrutural" className="space-y-6">
+              <TorrePortaIntegracao portaId={portaId!} portaNome={porta.nome} />
+              
+              {/* Rodapé explicativo */}
+              <div className="text-center text-sm text-muted-foreground border-t pt-6 mt-4">
+                <p>A Porta indica o momento da travessia.</p>
+                <p>A Torre indica como a psique está se organizando para atravessar.</p>
+              </div>
+            </TabsContent>
+          )}
 
           {/* Anotações Tab */}
           <TabsContent value="anotacoes" className="space-y-6">
