@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Sparkles } from 'lucide-react';
@@ -13,11 +14,12 @@ interface CTASectionProps {
   section?: TourSection;
 }
 
-export function CTASection({ section }: CTASectionProps) {
-  const navigate = useNavigate();
+export const CTASection = forwardRef<HTMLElement, CTASectionProps>(
+  function CTASection({ section }, ref) {
+    const navigate = useNavigate();
 
-  return (
-    <section className="py-24 px-4 relative overflow-hidden">
+    return (
+      <section ref={ref} className="py-24 px-4 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-t from-gold/5 via-background to-background" />
       
@@ -93,4 +95,5 @@ export function CTASection({ section }: CTASectionProps) {
       </div>
     </section>
   );
-}
+  }
+);

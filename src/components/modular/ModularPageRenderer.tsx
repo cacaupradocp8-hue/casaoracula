@@ -2,6 +2,7 @@
 // MODULAR PAGE RENDERER
 // ============================================
 
+import { forwardRef } from 'react';
 import { ContentBlock, BlockContextType } from '@/types/modular';
 import { useContentBlocks } from '@/hooks/useContentBlocks';
 import { cn } from '@/lib/utils';
@@ -51,57 +52,62 @@ const spacingClasses = {
   xl: 'space-y-16',
 };
 
-export function ModularPageRenderer({
-  contextType,
-  contextId,
-  contextData,
-  className,
-  blockSpacing = 'lg',
-  showLoading = true,
-  fallback,
-  onBlockAction,
-  onSaveRegistro,
-}: ModularPageRendererProps) {
-  const { blocks, isLoading, error } = useContentBlocks({
-    contextType,
-    contextId,
-    enabled: !!contextId,
-  });
+export const ModularPageRenderer = forwardRef<HTMLDivElement, ModularPageRendererProps>(
+  function ModularPageRenderer(
+    {
+      contextType,
+      contextId,
+      contextData,
+      className,
+      blockSpacing = 'lg',
+      showLoading = true,
+      fallback,
+      onBlockAction,
+      onSaveRegistro,
+    },
+    ref
+  ) {
+    const { blocks, isLoading, error } = useContentBlocks({
+      contextType,
+      contextId,
+      enabled: !!contextId,
+    });
 
-  if (isLoading && showLoading) {
+    if (isLoading && showLoading) {
+      return (
+        <div className="flex justify-center items-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin text-gold" />
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <div className="text-center py-8 text-muted-foreground">
+          <p>Erro ao carregar conteúdo.</p>
+        </div>
+      );
+    }
+
+    if (blocks.length === 0) {
+      return fallback ? <>{fallback}</> : null;
+    }
+
     return (
-      <div className="flex justify-center items-center py-12">
-        <Loader2 className="w-8 h-8 animate-spin text-gold" />
+      <div ref={ref} className={cn(spacingClasses[blockSpacing], className)}>
+        {blocks.map((block) => (
+          <BlockRenderer
+            key={block.id}
+            block={block}
+            contextData={contextData}
+            onAction={onBlockAction}
+            onSaveRegistro={onSaveRegistro ? (data) => onSaveRegistro(block.id, data) : undefined}
+          />
+        ))}
       </div>
     );
   }
-
-  if (error) {
-    return (
-      <div className="text-center py-8 text-muted-foreground">
-        <p>Erro ao carregar conteúdo.</p>
-      </div>
-    );
-  }
-
-  if (blocks.length === 0) {
-    return fallback ? <>{fallback}</> : null;
-  }
-
-  return (
-    <div className={cn(spacingClasses[blockSpacing], className)}>
-      {blocks.map((block) => (
-        <BlockRenderer
-          key={block.id}
-          block={block}
-          contextData={contextData}
-          onAction={onBlockAction}
-          onSaveRegistro={onSaveRegistro ? (data) => onSaveRegistro(block.id, data) : undefined}
-        />
-      ))}
-    </div>
-  );
-}
+);
 
 // Internal block renderer
 interface BlockRendererProps {
