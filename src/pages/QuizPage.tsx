@@ -17,6 +17,7 @@ interface Quiz {
   titulo: string;
   descricao: string;
   sala_id?: string;
+  capa_url?: string | null;
 }
 
 interface Pergunta {
@@ -349,23 +350,16 @@ export default function QuizPage() {
   };
 
   // Direct Media Renderer (like AulaPage) - renders media from quiz_resultados fields
+  // Now excludes image since it's rendered as a separate banner
   const DirectMediaContent = ({ result }: { result: Resultado }) => {
     const embedUrl = getEmbedUrl(result.video_url);
     
+    const hasMedia = embedUrl || result.audio_url;
+    if (!hasMedia) return null;
+    
     return (
       <div className="space-y-8">
-        {/* 1. IMAGE - now at the top */}
-        {result.imagem_url && (
-          <Card className="overflow-hidden">
-            <img 
-              src={result.imagem_url} 
-              alt={result.titulo_simbolico}
-              className="w-full h-auto object-cover"
-            />
-          </Card>
-        )}
-
-        {/* 2. VIDEO */}
+        {/* 1. VIDEO */}
         {embedUrl && (
           <Card className="overflow-hidden">
             <div className="aspect-video relative">
@@ -383,7 +377,7 @@ export default function QuizPage() {
           </Card>
         )}
 
-        {/* 3. AUDIO */}
+        {/* 2. AUDIO */}
         {result.audio_url && (
           <Card>
             <CardHeader>
@@ -399,6 +393,21 @@ export default function QuizPage() {
             </CardContent>
           </Card>
         )}
+      </div>
+    );
+  };
+
+  // Image Banner Component - renders the result image as a full-width banner
+  const ResultImageBanner = ({ result }: { result: Resultado }) => {
+    if (!result.imagem_url) return null;
+    
+    return (
+      <div className="rounded-xl overflow-hidden -mx-4 sm:mx-0 mb-8">
+        <img 
+          src={result.imagem_url} 
+          alt={result.titulo_simbolico}
+          className="w-full h-auto max-h-[400px] object-cover"
+        />
       </div>
     );
   };
@@ -515,7 +524,10 @@ export default function QuizPage() {
           maxWidth="4xl"
           showNavigation={false}
         >
-          {/* 1. Texto interpretativo (igual AulaPage) */}
+          {/* 1. Imagem Banner - impacto visual imediato */}
+          <ResultImageBanner result={prevResult} />
+
+          {/* 2. Texto interpretativo (igual AulaPage) */}
           <Card>
             <CardContent className="pt-6">
               <div className="prose prose-invert max-w-none">
@@ -526,7 +538,7 @@ export default function QuizPage() {
             </CardContent>
           </Card>
 
-          {/* 2. Mídia direta dos campos quiz_resultados (igual AulaPage) */}
+          {/* 3. Mídia direta (video/audio) dos campos quiz_resultados */}
           <DirectMediaContent result={prevResult} />
 
           {/* 3. Blocos modulares EXTRAS do Admin */}
@@ -579,7 +591,10 @@ export default function QuizPage() {
           maxWidth="4xl"
           showNavigation={false}
         >
-          {/* 1. Texto interpretativo (igual AulaPage) */}
+          {/* 1. Imagem Banner - impacto visual imediato */}
+          <ResultImageBanner result={finalResult} />
+
+          {/* 2. Texto interpretativo (igual AulaPage) */}
           <Card>
             <CardContent className="pt-6">
               <div className="prose prose-invert max-w-none">
@@ -590,7 +605,7 @@ export default function QuizPage() {
             </CardContent>
           </Card>
 
-          {/* 2. Mídia direta dos campos quiz_resultados (igual AulaPage) */}
+          {/* 3. Mídia direta (video/audio) dos campos quiz_resultados */}
           <DirectMediaContent result={finalResult} />
 
           {/* 3. Blocos modulares EXTRAS do Admin */}
@@ -643,6 +658,17 @@ export default function QuizPage() {
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 max-w-2xl">
+        {/* Capa do Quiz - Banner visual */}
+        {quiz.capa_url && (
+          <div className="mb-6 -mx-4 sm:mx-0 sm:rounded-xl overflow-hidden">
+            <img 
+              src={quiz.capa_url} 
+              alt={quiz.titulo}
+              className="w-full h-48 sm:h-64 object-cover"
+            />
+          </div>
+        )}
+
         {/* Header */}
         <div className="mb-6">
           <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
