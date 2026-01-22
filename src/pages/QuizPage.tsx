@@ -354,7 +354,18 @@ export default function QuizPage() {
     
     return (
       <div className="space-y-8">
-        {/* Video - always visible if exists (like AulaPage) */}
+        {/* 1. IMAGE - now at the top */}
+        {result.imagem_url && (
+          <Card className="overflow-hidden">
+            <img 
+              src={result.imagem_url} 
+              alt={result.titulo_simbolico}
+              className="w-full h-auto object-cover"
+            />
+          </Card>
+        )}
+
+        {/* 2. VIDEO */}
         {embedUrl && (
           <Card className="overflow-hidden">
             <div className="aspect-video relative">
@@ -372,7 +383,7 @@ export default function QuizPage() {
           </Card>
         )}
 
-        {/* Audio - always visible if exists */}
+        {/* 3. AUDIO */}
         {result.audio_url && (
           <Card>
             <CardHeader>
@@ -386,17 +397,6 @@ export default function QuizPage() {
                 Seu navegador não suporta o elemento de áudio.
               </audio>
             </CardContent>
-          </Card>
-        )}
-
-        {/* Image - always visible if exists */}
-        {result.imagem_url && (
-          <Card className="overflow-hidden">
-            <img 
-              src={result.imagem_url} 
-              alt={result.titulo_simbolico}
-              className="w-full h-auto object-cover"
-            />
           </Card>
         )}
       </div>
