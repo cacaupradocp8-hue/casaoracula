@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Pencil, Trash2, Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, ChevronDown, ChevronUp, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { ImageUpload } from "./ImageUpload"; // Quiz cover and result media
 
@@ -361,6 +361,7 @@ export function AdminQuizTab() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-[60px]">Capa</TableHead>
                 <TableHead>Título</TableHead>
                 <TableHead>Sala</TableHead>
                 <TableHead>Status</TableHead>
@@ -374,6 +375,19 @@ export function AdminQuizTab() {
                   className={`cursor-pointer ${selectedQuiz?.id === quiz.id ? "bg-gold/10" : ""}`}
                   onClick={() => setSelectedQuiz(quiz)}
                 >
+                  <TableCell className="w-[60px]">
+                    {quiz.capa_url ? (
+                      <img 
+                        src={quiz.capa_url} 
+                        alt={quiz.titulo}
+                        className="w-10 h-10 object-cover rounded"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 bg-muted rounded flex items-center justify-center">
+                        <ImageIcon className="w-4 h-4 text-muted-foreground" />
+                      </div>
+                    )}
+                  </TableCell>
                   <TableCell className="font-medium">{quiz.titulo}</TableCell>
                   <TableCell>{salas.find((s) => s.id === quiz.sala_id)?.nome_exibicao || "-"}</TableCell>
                   <TableCell>
@@ -593,8 +607,22 @@ export function AdminQuizTab() {
                 <div className="space-y-2">
                   {resultados.map((resultado) => (
                     <div key={resultado.id} className="border rounded-lg p-4">
-                      <div className="flex items-start justify-between">
-                        <div>
+                      <div className="flex items-start gap-4">
+                        {/* Thumbnail do resultado */}
+                        {resultado.imagem_url ? (
+                          <img 
+                            src={resultado.imagem_url} 
+                            alt={resultado.titulo_simbolico}
+                            className="w-16 h-16 object-cover rounded flex-shrink-0"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 bg-muted/50 rounded flex items-center justify-center flex-shrink-0">
+                            <ImageIcon className="w-6 h-6 text-muted-foreground" />
+                          </div>
+                        )}
+                        
+                        {/* Conteúdo textual */}
+                        <div className="flex-1 min-w-0">
                           <h4 className="font-semibold text-gold">{resultado.titulo_simbolico}</h4>
                           <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
                             {resultado.texto_interpretativo}
@@ -612,7 +640,9 @@ export function AdminQuizTab() {
                             )}
                           </div>
                         </div>
-                        <div className="flex gap-2">
+                        
+                        {/* Botões de ação */}
+                        <div className="flex gap-2 flex-shrink-0">
                           <Button
                             size="icon"
                             variant="ghost"
