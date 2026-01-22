@@ -255,7 +255,7 @@ export function Navigation() {
             path: '/biblioteca-das-travessias',
             label: 'Travessias',
             icon: Compass,
-            minPortal: 'mentorada',
+            minPortal: 'visitante',
           },
           {
             path: '/cursos',
