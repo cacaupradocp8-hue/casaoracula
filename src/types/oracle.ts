@@ -99,6 +99,7 @@ export interface OracleCard {
   title: string;
   subtitle: string | null;
   main_image_url: string | null;
+  back_image_url: string | null;
   image_variants_json: string[];
   keywords_json: string[];
   polarity_light_text: string | null;

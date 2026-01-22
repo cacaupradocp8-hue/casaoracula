@@ -3416,6 +3416,7 @@ export type Database = {
       oracle_cards: {
         Row: {
           ai_generated_image_url: string | null
+          back_image_url: string | null
           care_notes: string | null
           category_id: string | null
           created_at: string
@@ -3441,6 +3442,7 @@ export type Database = {
         }
         Insert: {
           ai_generated_image_url?: string | null
+          back_image_url?: string | null
           care_notes?: string | null
           category_id?: string | null
           created_at?: string
@@ -3466,6 +3468,7 @@ export type Database = {
         }
         Update: {
           ai_generated_image_url?: string | null
+          back_image_url?: string | null
           care_notes?: string | null
           category_id?: string | null
           created_at?: string
