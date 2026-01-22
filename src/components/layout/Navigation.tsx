@@ -252,6 +252,12 @@ export function Navigation() {
             minPortal: 'mentorada',
           },
           {
+            path: '/biblioteca-das-travessias',
+            label: 'Travessias',
+            icon: Compass,
+            minPortal: 'mentorada',
+          },
+          {
             path: '/cursos',
             label: 'Cursos',
             icon: BookOpen,
