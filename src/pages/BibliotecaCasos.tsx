@@ -170,14 +170,14 @@ export default function BibliotecaCasos() {
               
               {/* Por Torre */}
               <Select 
-                value={filtros.torre_id || ""} 
-                onValueChange={(v) => setFiltros({ ...filtros, torre_id: v as TorreId || undefined })}
+                value={filtros.torre_id || "all"} 
+                onValueChange={(v) => setFiltros({ ...filtros, torre_id: v === "all" ? undefined : v as TorreId })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Filtrar por Torre" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todas as Torres</SelectItem>
+                  <SelectItem value="all">Todas as Torres</SelectItem>
                   {TORRE_IDS.map(id => (
                     <SelectItem key={id} value={id}>
                       {TORRE_METADATA[id].nome}
@@ -188,14 +188,14 @@ export default function BibliotecaCasos() {
               
               {/* Por Porta */}
               <Select 
-                value={filtros.porta_id || ""} 
-                onValueChange={(v) => setFiltros({ ...filtros, porta_id: v || undefined })}
+                value={filtros.porta_id || "all"} 
+                onValueChange={(v) => setFiltros({ ...filtros, porta_id: v === "all" ? undefined : v })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Filtrar por Porta" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todas as Portas</SelectItem>
+                  <SelectItem value="all">Todas as Portas</SelectItem>
                   {(portas || []).sort((a, b) => a.numero - b.numero).map(p => (
                     <SelectItem key={p.id} value={p.id}>
                       {p.numero}. {p.nome}
@@ -206,14 +206,14 @@ export default function BibliotecaCasos() {
               
               {/* Por Risco */}
               <Select 
-                value={filtros.risco_tipo || ""} 
-                onValueChange={(v) => setFiltros({ ...filtros, risco_tipo: v || undefined })}
+                value={filtros.risco_tipo || "all"} 
+                onValueChange={(v) => setFiltros({ ...filtros, risco_tipo: v === "all" ? undefined : v })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Filtrar por Risco" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos os Riscos</SelectItem>
+                  <SelectItem value="all">Todos os Riscos</SelectItem>
                   {RISCO_TIPOS.map(r => (
                     <SelectItem key={r.value} value={r.value}>
                       {r.label}
