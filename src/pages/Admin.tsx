@@ -55,6 +55,7 @@ const AdminGruposTab = lazy(() => import('@/components/admin/AdminGruposTab').th
 const AdminDegustacaoTab = lazy(() => import('@/components/admin/AdminDegustacaoTab').then(m => ({ default: m.AdminDegustacaoTab })));
 const AdminGaleriaTab = lazy(() => import('@/components/admin/AdminGaleriaTab').then(m => ({ default: m.AdminGaleriaTab })));
 const AdminTorreVivaTab = lazy(() => import('@/components/admin/AdminTorreVivaTab').then(m => ({ default: m.AdminTorreVivaTab })));
+const AdminBibliotecaCasosTab = lazy(() => import('@/components/admin/AdminBibliotecaCasosTab'));
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
   { value: 'mentorada', label: '👁 Mentorada' },
@@ -269,6 +270,10 @@ export default function Admin() {
             <TabsTrigger value="torre-viva" className="gap-2">
               <Castle className="w-4 h-4 text-gold" />
               Torre Viva™
+            </TabsTrigger>
+            <TabsTrigger value="biblioteca-casos" className="gap-2">
+              <FolderOpen className="w-4 h-4 text-emerald-400" />
+              Biblioteca Casos
             </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Cog className="w-4 h-4" />
@@ -497,6 +502,12 @@ export default function Admin() {
           <TabsContent value="torre-viva">
             <Suspense fallback={<TabLoader />}>
               <AdminTorreVivaTab />
+            </Suspense>
+          </TabsContent>
+
+          <TabsContent value="biblioteca-casos">
+            <Suspense fallback={<TabLoader />}>
+              <AdminBibliotecaCasosTab />
             </Suspense>
           </TabsContent>
 
