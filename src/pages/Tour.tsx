@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { ModularPageRenderer } from '@/components/modular/ModularPageRenderer';
 import { 
   HeroSection, 
   SalasSection, 
@@ -136,16 +135,7 @@ export default function Tour() {
         {/* Recursos Exclusivos */}
         <RecursosSection section={sections?.recursos} />
 
-        {/* Blocos Modulares do Admin */}
-        <div className="py-12 px-4">
-          <div className="container mx-auto max-w-4xl">
-            <ModularPageRenderer 
-              contextType="landing" 
-              contextId="tour-page"
-              blockSpacing="lg"
-            />
-          </div>
-        </div>
+        {/* Future: Modular blocks can be added here with a proper UUID context */}
 
         {/* CTA Final */}
         <CTASection section={sections?.cta} />
