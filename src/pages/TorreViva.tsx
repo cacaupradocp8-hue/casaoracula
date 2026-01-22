@@ -20,9 +20,11 @@ import {
   ArrowRight,
   Quote,
   BookOpen,
-  Loader2
+  Loader2,
+  Copy
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 import { useCasoClinico, TorreId } from "@/hooks/useTorrePortaIntegracao";
 
 // ══════════════════════════════════════════════════════════════
@@ -234,7 +236,58 @@ const OBSERVACOES = [
   { id: "hipervigilancia", texto: "Hipervigilância ao ambiente", torres: ["controle", "adaptacao"] }
 ];
 
-type Step = "apresentacao" | "aviso" | "observacao" | "selecao" | "orientacao" | "caso" | "pergunta" | "fechamento";
+type Step = "apresentacao" | "aviso" | "observacao" | "selecao" | "orientacao" | "caso" | "pergunta" | "mapa" | "fechamento";
+
+// Síntese simbólica automática para o Mapa da Torre
+const TORRE_SINTESE: Record<TorreId, {
+  motivo_queda: string;
+  sustentava: string;
+  aprisionou: string;
+  nao_reconstruir: string;
+}> = {
+  controle: {
+    motivo_queda: "a necessidade de prever se tornou mais pesada que a vida",
+    sustentava: "a ilusão de segurança através da vigilância",
+    aprisionou: "a espontaneidade e o direito de não saber",
+    nao_reconstruir: "a vigilância como forma de amor"
+  },
+  performance: {
+    motivo_queda: "o brilho exigido se tornou mais caro que o ser",
+    sustentava: "o reconhecimento como prova de existência",
+    aprisionou: "o direito de ser comum, de falhar, de descansar",
+    nao_reconstruir: "a excelência como condição de pertencimento"
+  },
+  silencio: {
+    motivo_queda: "o recolhimento se tornou prisão, não refúgio",
+    sustentava: "a invisibilidade como única proteção",
+    aprisionou: "a voz própria e o direito de ocupar espaço",
+    nao_reconstruir: "o silêncio como único lugar seguro"
+  },
+  cuidado: {
+    motivo_queda: "cuidar do outro se tornou a única forma de existir",
+    sustentava: "o pertencimento através da doação",
+    aprisionou: "o direito de receber e de ter necessidades",
+    nao_reconstruir: "o cuidar como única moeda de amor"
+  },
+  adaptacao: {
+    motivo_queda: "ler o outro se tornou mais urgente que sentir a si",
+    sustentava: "a sobrevivência através da fluidez",
+    aprisionou: "a opinião própria e os limites autênticos",
+    nao_reconstruir: "a adaptação como identidade"
+  },
+  espiritualizacao: {
+    motivo_queda: "o sagrado se tornou fuga do encarnado",
+    sustentava: "a transcendência como anestesia",
+    aprisionou: "o corpo, a dor e a humanidade",
+    nao_reconstruir: "a elevação como escape da dor"
+  },
+  forca: {
+    motivo_queda: "a invulnerabilidade se tornou mais pesada que a armadura",
+    sustentava: "a sobrevivência através da resistência",
+    aprisionou: "a fragilidade e o direito de descansar",
+    nao_reconstruir: "a força como única identidade"
+  }
+};
 
 // ══════════════════════════════════════════════════════════════
 // COMPONENTE: Caso-Modelo (Vinheta Clínica)
@@ -682,12 +735,101 @@ export default function TorreViva() {
 
             <Button 
               size="lg" 
-              onClick={() => setStep("fechamento")}
+              onClick={() => setStep("mapa")}
               className="mt-4"
             >
-              Encerrar Leitura
+              Ver Mapa da Torre
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
+          </div>
+        );
+
+      // ══════════════════════════════════════════════════════════════
+      // TELA 6.5 — MAPA DA TORRE (SÍNTESE SIMBÓLICA)
+      // ══════════════════════════════════════════════════════════════
+      case "mapa":
+        if (!torreEscolhida) return null;
+        const sintese = TORRE_SINTESE[torreEscolhida.id as TorreId];
+        const TorreIcone = torreEscolhida.icone;
+        
+        const textoCompleto = `Esta torre caiu porque ${sintese.motivo_queda}.
+
+Sustentava ${sintese.sustentava}.
+
+Aprisionou ${sintese.aprisionou}.
+
+E pede que ${sintese.nao_reconstruir} não seja reconstruído agora.`;
+
+        const copiarTexto = () => {
+          navigator.clipboard.writeText(textoCompleto);
+          toast.success("Texto copiado para a área de transferência");
+        };
+
+        return (
+          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-8 px-4 max-w-2xl mx-auto">
+            <div className="flex items-center gap-3">
+              <div className={`p-3 rounded-full bg-gradient-to-br ${torreEscolhida.cor}`}>
+                <TorreIcone className="h-8 w-8" />
+              </div>
+              <div className="text-left">
+                <p className="text-sm text-muted-foreground uppercase tracking-wider">Mapa da Torre</p>
+                <h2 className="text-2xl font-serif text-foreground">
+                  Torre {torreEscolhida.nome}
+                </h2>
+              </div>
+            </div>
+
+            <Card className="bg-card/50 border-primary/20 w-full">
+              <CardContent className="pt-6 space-y-4">
+                <p className="text-lg text-foreground leading-relaxed text-left">
+                  Esta torre caiu porque <span className="font-medium text-primary">{sintese.motivo_queda}</span>.
+                </p>
+                <p className="text-lg text-foreground leading-relaxed text-left">
+                  Sustentava <span className="font-medium text-primary">{sintese.sustentava}</span>.
+                </p>
+                <p className="text-lg text-foreground leading-relaxed text-left">
+                  Aprisionou <span className="font-medium text-primary">{sintese.aprisionou}</span>.
+                </p>
+                <p className="text-lg text-foreground leading-relaxed text-left">
+                  E pede que <span className="font-medium text-amber-500">{sintese.nao_reconstruir}</span> não seja reconstruído agora.
+                </p>
+              </CardContent>
+            </Card>
+
+            {observacoesSelecionadas.length > 0 && (
+              <Card className="bg-muted/30 border-muted w-full">
+                <CardContent className="pt-4">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3 text-left">
+                    Observações Marcadas
+                  </p>
+                  <ul className="space-y-1 text-left">
+                    {observacoesSelecionadas.map((obs, i) => (
+                      <li key={i} className="text-sm text-foreground flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                        {obs}
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            )}
+
+            <div className="flex gap-3">
+              <Button 
+                variant="outline"
+                onClick={copiarTexto}
+              >
+                <Copy className="mr-2 h-4 w-4" />
+                Copiar Texto
+              </Button>
+              <Button 
+                size="lg" 
+                onClick={() => setStep("fechamento")}
+              >
+                Encerrar Leitura
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
           </div>
         );
 
