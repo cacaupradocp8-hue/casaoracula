@@ -99,6 +99,7 @@ import Big5Simbolico from "./pages/Big5Simbolico";
 import EneagramaFeminino from "./pages/EneagramaFeminino";
 import JornadaHeroina from "./pages/JornadaHeroina";
 import TorreViva from "./pages/TorreViva";
+import { AsPortas, OsCamposPsiquicos, AsTorres, TriadeMetodo } from "./pages/metodo";
 import FormacaoOracula from "./pages/FormacaoOracula";
 import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
@@ -922,6 +923,40 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="oracula">
             <TorreViva />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Tríade do Método Orácula - Páginas conceituais */}
+      <Route
+        path="/metodo/portas"
+        element={
+          <ProtectedRoute minPortal="mentorada">
+            <AsPortas />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/metodo/campos-psiquicos"
+        element={
+          <ProtectedRoute minPortal="mentorada">
+            <OsCamposPsiquicos />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/metodo/torres"
+        element={
+          <ProtectedRoute minPortal="mentorada">
+            <AsTorres />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/metodo/triade"
+        element={
+          <ProtectedRoute minPortal="mentorada">
+            <TriadeMetodo />
           </ProtectedRoute>
         }
       />

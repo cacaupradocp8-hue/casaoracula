@@ -20,6 +20,9 @@ import {
   Wand2,
   Home,
   ChevronRight,
+  DoorOpen,
+  Waves,
+  Castle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { canAccessFeature, PortalType } from "@/types/portal";
@@ -208,6 +211,86 @@ export default function FerramentasHub() {
           icon={<Wrench className="w-5 h-5" />}
           className="mb-10"
         />
+
+        {/* Tríade do Método Orácula - Seção Conceitual */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-12"
+        >
+          <div className="rounded-xl p-6 bg-gradient-to-br from-purple-900/10 via-background to-gold/5 border border-purple-500/20">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center shrink-0">
+                <Sparkles className="w-6 h-6 text-purple-400" />
+              </div>
+              <div className="flex-1">
+                <h2 className="font-display text-xl font-semibold mb-1 text-purple-300">
+                  A Tríade do Método Orácula
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Fundamentos conceituais da cartografia clínica
+                </p>
+              </div>
+            </div>
+            
+            <div className="grid sm:grid-cols-3 gap-3">
+              <Card
+                className="cursor-pointer hover:border-purple-500/30 transition-colors"
+                onClick={() => navigate('/metodo/portas')}
+              >
+                <CardContent className="flex items-center gap-3 p-4">
+                  <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                    <DoorOpen className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-foreground text-sm">As Portas</h3>
+                    <p className="text-xs text-muted-foreground">Onde a psique está</p>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card
+                className="cursor-pointer hover:border-purple-500/30 transition-colors"
+                onClick={() => navigate('/metodo/campos-psiquicos')}
+              >
+                <CardContent className="flex items-center gap-3 p-4">
+                  <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                    <Waves className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-foreground text-sm">Os Campos</h3>
+                    <p className="text-xs text-muted-foreground">Como sustentar</p>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card
+                className="cursor-pointer hover:border-purple-500/30 transition-colors"
+                onClick={() => navigate('/metodo/torres')}
+              >
+                <CardContent className="flex items-center gap-3 p-4">
+                  <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                    <Castle className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-foreground text-sm">As Torres</h3>
+                    <p className="text-xs text-muted-foreground">Por que se organizou</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => navigate('/metodo/triade')}
+                className="text-sm text-purple-400 hover:text-purple-300 transition-colors inline-flex items-center gap-1"
+              >
+                Ver síntese completa
+                <ArrowRight className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
+        </motion.div>
 
         {/* SYNTHEIA - Destaque Principal */}
         <motion.div
