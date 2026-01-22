@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Plus, Pencil, Trash2, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
-import { ImageUpload } from "./ImageUpload";
+import { ImageUpload } from "./ImageUpload"; // Quiz cover and result media
 
 interface Quiz {
   id: string;
