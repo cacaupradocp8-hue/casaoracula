@@ -28,12 +28,14 @@ import {
   Loader2,
   X,
   Info,
+  RotateCcw,
 } from 'lucide-react';
 import { ImageUpload } from './ImageUpload';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { OracleDeck, OracleCard, OracleSpread, OracleContentStatus } from '@/types/oracle';
+import { OracleDeck, OracleCard as OracleCardData, OracleSpread, OracleContentStatus } from '@/types/oracle';
+import { OracleCard as OracleCardPreview } from '@/components/oracle/OracleCard';
 
 const PORTAL_LABELS: Record<string, string> = {
   visitante: 'Visitante',
@@ -54,7 +56,7 @@ export function AdminOraculosTab() {
   const { toast } = useToast();
   const { user } = useAuth();
   const [oracles, setOracles] = useState<OracleDeck[]>([]);
-  const [cards, setCards] = useState<OracleCard[]>([]);
+  const [cards, setCards] = useState<OracleCardData[]>([]);
   const [spreads, setSpreads] = useState<OracleSpread[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('oracles');
@@ -65,7 +67,7 @@ export function AdminOraculosTab() {
   const [oracleCoverUrl, setOracleCoverUrl] = useState('');
 
   // Card form state
-  const [editingCard, setEditingCard] = useState<OracleCard | null>(null);
+  const [editingCard, setEditingCard] = useState<OracleCardData | null>(null);
   const [cardDialogOpen, setCardDialogOpen] = useState(false);
   const [selectedOracleId, setSelectedOracleId] = useState<string>('');
   const [cardImageUrl, setCardImageUrl] = useState('');
@@ -75,6 +77,7 @@ export function AdminOraculosTab() {
   const [urlInput, setUrlInput] = useState('');
   const [showBackUrlInput, setShowBackUrlInput] = useState(false);
   const [backUrlInput, setBackUrlInput] = useState('');
+  const [previewFlipped, setPreviewFlipped] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const backFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -86,7 +89,7 @@ export function AdminOraculosTab() {
     fetchData();
   }, []);
 
-  // Reset card image when dialog opens/closes
+  // Reset card form state when dialog opens/closes
   useEffect(() => {
     if (cardDialogOpen) {
       setCardImageUrl(editingCard?.main_image_url || '');
@@ -95,6 +98,7 @@ export function AdminOraculosTab() {
       setUrlInput('');
       setShowBackUrlInput(false);
       setBackUrlInput('');
+      setPreviewFlipped(false);
     }
   }, [cardDialogOpen, editingCard]);
 
@@ -115,7 +119,7 @@ export function AdminOraculosTab() {
       ]);
 
       if (oraclesRes.data) setOracles(oraclesRes.data as unknown as OracleDeck[]);
-      if (cardsRes.data) setCards(cardsRes.data as unknown as OracleCard[]);
+      if (cardsRes.data) setCards(cardsRes.data as unknown as OracleCardData[]);
       if (spreadsRes.data) setSpreads(spreadsRes.data as unknown as OracleSpread[]);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -293,7 +297,7 @@ export function AdminOraculosTab() {
       care_notes: formData.get('care_notes') as string || null,
       keywords_json: keywordsRaw.split(',').map(k => k.trim()).filter(Boolean),
       reflection_questions_json: questionsRaw.split('\n').map(q => q.trim()).filter(Boolean),
-      level: formData.get('level') as OracleCard['level'],
+      level: formData.get('level') as OracleCardData['level'],
       status: formData.get('status') as OracleContentStatus,
       is_sensitive: formData.get('is_sensitive') === 'true',
     };
@@ -890,6 +894,39 @@ export function AdminOraculosTab() {
                         onChange={(e) => e.target.files?.[0] && handleImageUpload(e.target.files[0], true)}
                       />
                     </div>
+
+                    {/* Card Preview with 3D Flip */}
+                    {(cardImageUrl || cardBackImageUrl) && (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <Label>Preview da Carta (Flip 3D)</Label>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setPreviewFlipped(!previewFlipped)}
+                            className="gap-2"
+                          >
+                            <RotateCcw className="w-4 h-4" />
+                            {previewFlipped ? 'Ver Frente' : 'Ver Verso'}
+                          </Button>
+                        </div>
+                        <div className="flex justify-center py-4 bg-muted/30 rounded-lg border border-dashed">
+                          <OracleCardPreview
+                            frontImage={cardImageUrl || null}
+                            backImage={cardBackImageUrl || null}
+                            title={editingCard?.title || 'Nova Carta'}
+                            isRevealed={previewFlipped}
+                            size="lg"
+                            showGlow={previewFlipped}
+                            onClick={() => setPreviewFlipped(!previewFlipped)}
+                          />
+                        </div>
+                        <p className="text-xs text-muted-foreground text-center">
+                          Clique na carta ou no botão para ver o flip 3D
+                        </p>
+                      </div>
+                    )}
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
