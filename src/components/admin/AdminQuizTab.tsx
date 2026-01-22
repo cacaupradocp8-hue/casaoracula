@@ -9,8 +9,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Plus, Pencil, Trash2, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
+import { ImageUpload } from "./ImageUpload";
 
 interface Quiz {
   id: string;
@@ -18,6 +20,7 @@ interface Quiz {
   descricao: string;
   ativo: boolean;
   sala_id: string | null;
+  capa_url: string | null;
 }
 
 interface Pergunta {
@@ -46,6 +49,9 @@ interface Resultado {
   pontuacao_maxima: number | null;
   categoria: string | null;
   ordem: number;
+  imagem_url: string | null;
+  audio_url: string | null;
+  video_url: string | null;
 }
 
 interface Sala {
@@ -62,7 +68,7 @@ export function AdminQuizTab() {
   // Quiz dialog
   const [showQuizDialog, setShowQuizDialog] = useState(false);
   const [editingQuiz, setEditingQuiz] = useState<Quiz | null>(null);
-  const [quizForm, setQuizForm] = useState({ titulo: "", descricao: "", ativo: true, sala_id: "" });
+  const [quizForm, setQuizForm] = useState({ titulo: "", descricao: "", ativo: true, sala_id: "", capa_url: "" });
 
   // Perguntas
   const [perguntas, setPerguntas] = useState<Pergunta[]>([]);
@@ -88,6 +94,9 @@ export function AdminQuizTab() {
     pontuacao_minima: "",
     pontuacao_maxima: "",
     categoria: "",
+    imagem_url: "",
+    audio_url: "",
+    video_url: "",
   });
 
   useEffect(() => {
@@ -108,7 +117,7 @@ export function AdminQuizTab() {
         supabase.from("salas").select("id, nome_exibicao").order("ordem"),
       ]);
 
-      if (quizzesRes.data) setQuizzes(quizzesRes.data);
+      if (quizzesRes.data) setQuizzes(quizzesRes.data as unknown as Quiz[]);
       if (salasRes.data) setSalas(salasRes.data);
     } catch (error) {
       console.error(error);
@@ -142,7 +151,7 @@ export function AdminQuizTab() {
       .select("*")
       .eq("quiz_id", quizId)
       .order("ordem");
-    if (data) setResultados(data);
+    if (data) setResultados(data as Resultado[]);
   };
 
   // Quiz CRUD
@@ -153,6 +162,7 @@ export function AdminQuizTab() {
         descricao: quizForm.descricao,
         ativo: quizForm.ativo,
         sala_id: quizForm.sala_id || null,
+        capa_url: quizForm.capa_url || null,
       };
 
       if (editingQuiz) {
@@ -167,7 +177,7 @@ export function AdminQuizTab() {
 
       setShowQuizDialog(false);
       setEditingQuiz(null);
-      setQuizForm({ titulo: "", descricao: "", ativo: true, sala_id: "" });
+      setQuizForm({ titulo: "", descricao: "", ativo: true, sala_id: "", capa_url: "" });
       fetchData();
     } catch (error) {
       console.error(error);
@@ -285,6 +295,9 @@ export function AdminQuizTab() {
         pontuacao_maxima: resultadoForm.pontuacao_maxima ? parseInt(resultadoForm.pontuacao_maxima) : null,
         categoria: resultadoForm.categoria || null,
         ordem: editingResultado?.ordem ?? resultados.length,
+        imagem_url: resultadoForm.imagem_url || null,
+        audio_url: resultadoForm.audio_url || null,
+        video_url: resultadoForm.video_url || null,
       };
 
       if (editingResultado) {
@@ -299,7 +312,7 @@ export function AdminQuizTab() {
 
       setShowResultadoDialog(false);
       setEditingResultado(null);
-      setResultadoForm({ titulo_simbolico: "", texto_interpretativo: "", pontuacao_minima: "", pontuacao_maxima: "", categoria: "" });
+      setResultadoForm({ titulo_simbolico: "", texto_interpretativo: "", pontuacao_minima: "", pontuacao_maxima: "", categoria: "", imagem_url: "", audio_url: "", video_url: "" });
       fetchResultados(selectedQuiz.id);
     } catch (error) {
       console.error(error);
@@ -336,7 +349,7 @@ export function AdminQuizTab() {
             size="sm"
             onClick={() => {
               setEditingQuiz(null);
-              setQuizForm({ titulo: "", descricao: "", ativo: true, sala_id: "" });
+              setQuizForm({ titulo: "", descricao: "", ativo: true, sala_id: "", capa_url: "" });
               setShowQuizDialog(true);
             }}
           >
@@ -380,6 +393,7 @@ export function AdminQuizTab() {
                             descricao: quiz.descricao,
                             ativo: quiz.ativo,
                             sala_id: quiz.sala_id || "",
+                            capa_url: quiz.capa_url || "",
                           });
                           setShowQuizDialog(true);
                         }}
@@ -564,6 +578,9 @@ export function AdminQuizTab() {
                         pontuacao_minima: "",
                         pontuacao_maxima: "",
                         categoria: "",
+                        imagem_url: "",
+                        audio_url: "",
+                        video_url: "",
                       });
                       setShowResultadoDialog(true);
                     }}
@@ -607,6 +624,9 @@ export function AdminQuizTab() {
                                 pontuacao_minima: resultado.pontuacao_minima?.toString() || "",
                                 pontuacao_maxima: resultado.pontuacao_maxima?.toString() || "",
                                 categoria: resultado.categoria || "",
+                                imagem_url: resultado.imagem_url || "",
+                                audio_url: resultado.audio_url || "",
+                                video_url: resultado.video_url || "",
                               });
                               setShowResultadoDialog(true);
                             }}
@@ -632,50 +652,60 @@ export function AdminQuizTab() {
 
       {/* Dialog Quiz */}
       <Dialog open={showQuizDialog} onOpenChange={setShowQuizDialog}>
-        <DialogContent>
+        <DialogContent className="max-w-lg max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>{editingQuiz ? "Editar Quiz" : "Novo Quiz"}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label>Título</Label>
-              <Input
-                value={quizForm.titulo}
-                onChange={(e) => setQuizForm({ ...quizForm, titulo: e.target.value })}
-                placeholder="Nome do quiz"
+          <ScrollArea className="max-h-[70vh]">
+            <div className="space-y-4 p-1">
+              <div>
+                <Label>Título</Label>
+                <Input
+                  value={quizForm.titulo}
+                  onChange={(e) => setQuizForm({ ...quizForm, titulo: e.target.value })}
+                  placeholder="Nome do quiz"
+                />
+              </div>
+              <div>
+                <Label>Descrição</Label>
+                <Textarea
+                  value={quizForm.descricao}
+                  onChange={(e) => setQuizForm({ ...quizForm, descricao: e.target.value })}
+                  placeholder="Descrição do quiz"
+                />
+              </div>
+              <ImageUpload
+                value={quizForm.capa_url}
+                onChange={(url) => setQuizForm({ ...quizForm, capa_url: url })}
+                folder="quiz"
+                label="Capa do Quiz"
+                aspectRatio="video"
+                showGallery={true}
               />
+              <div>
+                <Label>Sala</Label>
+                <select
+                  className="w-full p-2 rounded border bg-background"
+                  value={quizForm.sala_id}
+                  onChange={(e) => setQuizForm({ ...quizForm, sala_id: e.target.value })}
+                >
+                  <option value="">Nenhuma</option>
+                  {salas.map((sala) => (
+                    <option key={sala.id} value={sala.id}>
+                      {sala.nome_exibicao}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={quizForm.ativo}
+                  onCheckedChange={(checked) => setQuizForm({ ...quizForm, ativo: checked })}
+                />
+                <Label>Ativo</Label>
+              </div>
             </div>
-            <div>
-              <Label>Descrição</Label>
-              <Textarea
-                value={quizForm.descricao}
-                onChange={(e) => setQuizForm({ ...quizForm, descricao: e.target.value })}
-                placeholder="Descrição do quiz"
-              />
-            </div>
-            <div>
-              <Label>Sala</Label>
-              <select
-                className="w-full p-2 rounded border bg-background"
-                value={quizForm.sala_id}
-                onChange={(e) => setQuizForm({ ...quizForm, sala_id: e.target.value })}
-              >
-                <option value="">Nenhuma</option>
-                {salas.map((sala) => (
-                  <option key={sala.id} value={sala.id}>
-                    {sala.nome_exibicao}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex items-center gap-2">
-              <Switch
-                checked={quizForm.ativo}
-                onCheckedChange={(checked) => setQuizForm({ ...quizForm, ativo: checked })}
-              />
-              <Label>Ativo</Label>
-            </div>
-          </div>
+          </ScrollArea>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowQuizDialog(false)}>
               Cancelar
@@ -758,57 +788,82 @@ export function AdminQuizTab() {
         </DialogContent>
       </Dialog>
 
-      {/* Dialog Resultado */}
       <Dialog open={showResultadoDialog} onOpenChange={setShowResultadoDialog}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>{editingResultado ? "Editar Resultado" : "Novo Resultado"}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label>Título Simbólico</Label>
-              <Input
-                value={resultadoForm.titulo_simbolico}
-                onChange={(e) => setResultadoForm({ ...resultadoForm, titulo_simbolico: e.target.value })}
-                placeholder="Ex: A Guardiã Interior"
-              />
-            </div>
-            <div>
-              <Label>Texto Interpretativo</Label>
-              <Textarea
-                value={resultadoForm.texto_interpretativo}
-                onChange={(e) => setResultadoForm({ ...resultadoForm, texto_interpretativo: e.target.value })}
-                placeholder="Descrição do resultado"
-                rows={4}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+          <ScrollArea className="max-h-[70vh]">
+            <div className="space-y-4 p-1">
               <div>
-                <Label>Pontuação Mínima</Label>
+                <Label>Título Simbólico</Label>
                 <Input
-                  type="number"
-                  value={resultadoForm.pontuacao_minima}
-                  onChange={(e) => setResultadoForm({ ...resultadoForm, pontuacao_minima: e.target.value })}
+                  value={resultadoForm.titulo_simbolico}
+                  onChange={(e) => setResultadoForm({ ...resultadoForm, titulo_simbolico: e.target.value })}
+                  placeholder="Ex: A Guardiã Interior"
                 />
               </div>
               <div>
-                <Label>Pontuação Máxima</Label>
+                <Label>Texto Interpretativo</Label>
+                <Textarea
+                  value={resultadoForm.texto_interpretativo}
+                  onChange={(e) => setResultadoForm({ ...resultadoForm, texto_interpretativo: e.target.value })}
+                  placeholder="Descrição do resultado"
+                  rows={4}
+                />
+              </div>
+              <ImageUpload
+                value={resultadoForm.imagem_url}
+                onChange={(url) => setResultadoForm({ ...resultadoForm, imagem_url: url })}
+                folder="quiz-resultados"
+                label="Imagem do Resultado"
+                aspectRatio="video"
+                showGallery={true}
+              />
+              <div>
+                <Label>URL do Vídeo (opcional)</Label>
                 <Input
-                  type="number"
-                  value={resultadoForm.pontuacao_maxima}
-                  onChange={(e) => setResultadoForm({ ...resultadoForm, pontuacao_maxima: e.target.value })}
+                  value={resultadoForm.video_url}
+                  onChange={(e) => setResultadoForm({ ...resultadoForm, video_url: e.target.value })}
+                  placeholder="https://youtube.com/..."
+                />
+              </div>
+              <div>
+                <Label>URL do Áudio (opcional)</Label>
+                <Input
+                  value={resultadoForm.audio_url}
+                  onChange={(e) => setResultadoForm({ ...resultadoForm, audio_url: e.target.value })}
+                  placeholder="https://..."
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Pontuação Mínima</Label>
+                  <Input
+                    type="number"
+                    value={resultadoForm.pontuacao_minima}
+                    onChange={(e) => setResultadoForm({ ...resultadoForm, pontuacao_minima: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>Pontuação Máxima</Label>
+                  <Input
+                    type="number"
+                    value={resultadoForm.pontuacao_maxima}
+                    onChange={(e) => setResultadoForm({ ...resultadoForm, pontuacao_maxima: e.target.value })}
+                  />
+                </div>
+              </div>
+              <div>
+                <Label>Categoria (alternativa a pontuação)</Label>
+                <Input
+                  value={resultadoForm.categoria}
+                  onChange={(e) => setResultadoForm({ ...resultadoForm, categoria: e.target.value })}
+                  placeholder="Ex: introvertido"
                 />
               </div>
             </div>
-            <div>
-              <Label>Categoria (alternativa a pontuação)</Label>
-              <Input
-                value={resultadoForm.categoria}
-                onChange={(e) => setResultadoForm({ ...resultadoForm, categoria: e.target.value })}
-                placeholder="Ex: introvertido"
-              />
-            </div>
-          </div>
+          </ScrollArea>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowResultadoDialog(false)}>
               Cancelar

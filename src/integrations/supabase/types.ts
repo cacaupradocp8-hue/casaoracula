@@ -4602,6 +4602,7 @@ export type Database = {
       quizzes: {
         Row: {
           ativo: boolean
+          capa_url: string | null
           created_at: string
           descricao: string | null
           id: string
@@ -4612,6 +4613,7 @@ export type Database = {
         }
         Insert: {
           ativo?: boolean
+          capa_url?: string | null
           created_at?: string
           descricao?: string | null
           id?: string
@@ -4622,6 +4624,7 @@ export type Database = {
         }
         Update: {
           ativo?: boolean
+          capa_url?: string | null
           created_at?: string
           descricao?: string | null
           id?: string
