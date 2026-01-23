@@ -224,6 +224,12 @@ export function Navigation() {
         minPortal: 'mentorada',
       },
       {
+        path: '/ferramentas-metodo',
+        label: 'Ferramentas do Método',
+        icon: Compass,
+        minPortal: 'aluna_formacao',
+      },
+      {
         path: '/ferramentas',
         label: 'Ferramentas Práticas',
         icon: Sparkles,

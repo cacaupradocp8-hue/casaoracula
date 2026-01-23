@@ -378,49 +378,26 @@ export default function SalasList() {
             Espaços Formativos
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-4 mb-8">
-            {/* Labirinto das 39 Portas */}
+          <div className="grid gap-4 mb-8">
+            {/* Ferramentas do Método - Hub Unificado */}
             <Card 
-              className="cursor-pointer hover:border-amber-500/50 hover:shadow-lg transition-all group"
-              onClick={() => navigate('/labirinto')}
+              className="cursor-pointer hover:border-gold/50 hover:shadow-lg transition-all group"
+              onClick={() => navigate('/ferramentas-metodo')}
             >
               <CardContent className="p-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-amber-500/20 flex items-center justify-center text-3xl shrink-0">
-                    <MapPin className="w-7 h-7 text-amber-400" />
+                  <div className="w-14 h-14 rounded-2xl bg-gold/20 flex items-center justify-center shrink-0">
+                    <Compass className="w-7 h-7 text-gold" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-display text-lg group-hover:text-amber-400 transition-colors">
-                      Labirinto das 39 Portas
+                    <h3 className="font-display text-lg group-hover:text-gold transition-colors">
+                      Ferramentas do Método Orácula
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                      Protocolo de leitura simbólica em 5 camadas
+                      Labirinto das 39 Portas • Torre Viva™ • Cartografia das Torres
                     </p>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-amber-400 group-hover:translate-x-1 transition-all shrink-0" />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Cartografia das Torres */}
-            <Card 
-              className="cursor-pointer hover:border-indigo-500/50 hover:shadow-lg transition-all group"
-              onClick={() => navigate('/ferramentas/cartografia-torre')}
-            >
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-indigo-500/20 flex items-center justify-center shrink-0">
-                    <Building2 className="w-7 h-7 text-indigo-400" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-display text-lg group-hover:text-indigo-400 transition-colors">
-                      Cartografia das Torres
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      Mapeamento das estruturas de defesa
-                    </p>
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-indigo-400 group-hover:translate-x-1 transition-all shrink-0" />
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-gold group-hover:translate-x-1 transition-all shrink-0" />
                 </div>
               </CardContent>
             </Card>
