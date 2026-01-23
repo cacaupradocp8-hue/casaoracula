@@ -40,6 +40,7 @@ import AulaPage from "./pages/AulaPage";
 import LaboratorioLeitura from "./pages/LaboratorioLeitura";
 import Metodo from "./pages/Metodo";
 import FerramentasMetodo from "./pages/FerramentasMetodo";
+import FerramentasMetodoHub from "./pages/FerramentasMetodoHub";
 import Portais from "./pages/Portais";
 import ConfirmarProfissional from "./pages/ConfirmarProfissional";
 import MinhasClientes from "./pages/MinhasClientes";
@@ -426,6 +427,14 @@ function AppRoutes() {
       />
       <Route
         path="/ferramentas-metodo"
+        element={
+          <ProtectedRoute minPortal="aluna_formacao">
+            <FerramentasMetodoHub />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/sala-do-metodo"
         element={
           <ProtectedRoute minPortal="oracula">
             <FerramentasMetodo />
