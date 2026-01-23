@@ -117,6 +117,7 @@ interface TravessiaSection {
 
 // Mapeamento de quais famílias aparecem em cada travessia
 const TRAVESSIA_FAMILIAS_MAP: Record<string, string[]> = {
+  'travessia-zero-o-limiar-da-casa': [], // Travessia 0 - Visitantes
   'mundo-sem-simbolos': [], // Travessia 1 - Fundamentos
   'mulher-alma-antiga': ['e76ee4f5-3694-4a93-be7a-a9f84b9c312a'], // Identidade Feminina
   'codigo-narrativas': [
@@ -131,6 +132,22 @@ const TRAVESSIA_FAMILIAS_MAP: Record<string, string[]> = {
 };
 
 const TRAVESSIA_CONTEUDO: Record<string, TravessiaSection[]> = {
+  // TRAVESSIA ZERO - Conteúdo para visitantes
+  'travessia-zero-o-limiar-da-casa': [
+    {
+      title: 'Onde estou antes de tentar mudar?',
+      description: '7 dias para mapear seu ponto de partida',
+      items: [
+        { title: 'Dia 1 — O Silêncio', description: 'O que acontece quando paro de buscar resposta?', route: '#dia1', icon: Moon },
+        { title: 'Dia 2 — O Mapa', description: 'Onde realmente estou neste momento?', route: '#dia2', icon: Compass },
+        { title: 'Dia 3 — O Eco', description: 'O que repito sem perceber?', route: '#dia3', icon: Waves },
+        { title: 'Dia 4 — A Pausa', description: 'O que emerge quando não há pressa?', route: '#dia4', icon: Heart },
+        { title: 'Dia 5 — O Corpo', description: 'Onde meu corpo guarda tensão?', route: '#dia5', icon: Sparkles },
+        { title: 'Dia 6 — O Limiar', description: 'O que preciso soltar para atravessar?', route: '#dia6', icon: DoorOpen },
+        { title: 'Dia 7 — A Decisão', description: 'Estou pronta para habitar?', route: '#dia7', icon: Castle },
+      ],
+    },
+  ],
   'mundo-sem-simbolos': [
     {
       title: 'Fundamentos Éticos',
@@ -451,14 +468,17 @@ export default function TravessiaDetalhe() {
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {section.items.map((item, itemIndex) => {
                     const ItemIcon = item.icon;
+                    const isClickable = !item.route.startsWith('#'); // Travessia Zero items não são clicáveis
+                    
                     return (
                       <Card
                         key={itemIndex}
                         className={cn(
-                          "group cursor-pointer transition-all duration-300",
-                          "hover:shadow-lg hover:border-gold/40"
+                          "transition-all duration-300",
+                          isClickable && "group cursor-pointer hover:shadow-lg hover:border-gold/40",
+                          !isClickable && "bg-card/50"
                         )}
-                        onClick={() => navigate(item.route)}
+                        onClick={() => isClickable && navigate(item.route)}
                       >
                         <CardHeader className="pb-2">
                           <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center", colors.icon)}>
@@ -466,15 +486,20 @@ export default function TravessiaDetalhe() {
                           </div>
                         </CardHeader>
                         <CardContent>
-                          <CardTitle className="text-base mb-1 group-hover:text-gold transition-colors">
+                          <CardTitle className={cn(
+                            "text-base mb-1",
+                            isClickable && "group-hover:text-gold transition-colors"
+                          )}>
                             {item.title}
                           </CardTitle>
                           <CardDescription className="text-sm line-clamp-2">
                             {item.description}
                           </CardDescription>
-                          <div className="flex items-center justify-end mt-3">
-                            <ArrowRight className="w-4 h-4 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-gold" />
-                          </div>
+                          {isClickable && (
+                            <div className="flex items-center justify-end mt-3">
+                              <ArrowRight className="w-4 h-4 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-gold" />
+                            </div>
+                          )}
                         </CardContent>
                       </Card>
                     );

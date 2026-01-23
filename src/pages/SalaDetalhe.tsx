@@ -13,6 +13,7 @@ import * as LucideIcons from "lucide-react";
 import type { Course } from "@/types/course";
 import { useCopy } from "@/hooks/useCopy";
 import { ModularPageRenderer } from "@/components/modular/ModularPageRenderer";
+import { VisitorSalaContent } from "@/components/visitor/VisitorSalaContent";
 
 interface Quiz {
   id: string;
@@ -431,8 +432,15 @@ export default function SalaDetalhe() {
           </div>
         )}
 
-        {/* Modular Blocks Section */}
-        {sala && id && (
+        {/* Visitor Sala Content - Special blocks for visitors */}
+        {sala && isSalaVisitante(sala.nivel_minimo) && (
+          <div className="mt-8">
+            <VisitorSalaContent />
+          </div>
+        )}
+
+        {/* Modular Blocks Section - only for non-visitor salas */}
+        {sala && id && !isSalaVisitante(sala.nivel_minimo) && (
           <ModularPageRenderer
             contextType="sala"
             contextId={id}
@@ -440,30 +448,6 @@ export default function SalaDetalhe() {
             blockSpacing="lg"
             className="mt-8"
           />
-        )}
-
-        {/* CTA for visitors - shown only in Sala da Visitante (NIVEL_0) */}
-        {sala && isSalaVisitante(sala.nivel_minimo) && (
-          <div className="mt-12 pt-8 border-t border-gold/20">
-            <div className="text-center space-y-4 max-w-xl mx-auto">
-              <Sparkles className="w-8 h-8 text-gold mx-auto" />
-              <h3 className="text-xl font-display text-gold">
-                Pronta para habitar esta Casa?
-              </h3>
-              <p className="text-muted-foreground text-sm">
-                Explore os caminhos disponíveis para aprofundar sua jornada e acessar as ferramentas completas.
-              </p>
-              <Button
-                variant="gold"
-                size="lg"
-                onClick={() => navigate('/planos')}
-                className="gap-2"
-              >
-                Conhecer os Caminhos
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
         )}
       </div>
     </AppLayout>
