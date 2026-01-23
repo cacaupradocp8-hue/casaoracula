@@ -4,12 +4,13 @@ import { ArrowRight, Play, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useCopy } from '@/hooks/useCopy';
+import { useAppSettings } from '@/hooks/useAppSettings';
 
 /**
  * VisitorSalaContent - Conteúdo da Sala de Visita (Plano Gratuito)
  * 
  * Blocos fixos (ordem obrigatória):
- * 1. Vídeo de Boas-Vindas
+ * 1. Vídeo de Boas-Vindas (gerenciável via Admin > Configurações)
  * 2. Texto curto de acolhimento (sem CTA comercial)
  * 3. Convite para a Travessia 00 (texto explicativo + botão)
  * 
@@ -18,10 +19,14 @@ import { useCopy } from '@/hooks/useCopy';
 export function VisitorSalaContent() {
   const navigate = useNavigate();
   const { getCopyByKey } = useCopy();
+  const { getSetting } = useAppSettings();
+
+  // URL do vídeo configurada pelo Admin
+  const videoUrl = getSetting('sala_visita_video_url', '');
 
   const handleIniciarTravessia = () => {
-    // Navega para a Travessia Zero (slug correto do banco)
-    navigate('/travessias/travessia-zero-o-limiar-da-casa');
+    // Navega para a Travessia Zero (rota correta: singular)
+    navigate('/travessia/travessia-zero-o-limiar-da-casa');
   };
 
   return (
@@ -34,17 +39,31 @@ export function VisitorSalaContent() {
       >
         <Card className="overflow-hidden bg-card/50 border-gold/20">
           <CardContent className="p-0">
-            {/* Placeholder para vídeo - será substituído por embed real via Admin */}
-            <div className="aspect-video bg-gradient-to-br from-gold/10 to-background flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
-                  <Play className="w-8 h-8 text-gold ml-1" />
-                </div>
-                <p className="text-muted-foreground text-sm">
-                  Vídeo de Boas-Vindas
-                </p>
+            {videoUrl ? (
+              <div className="aspect-video">
+                <iframe
+                  src={videoUrl}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  title="Vídeo de Boas-Vindas"
+                />
               </div>
-            </div>
+            ) : (
+              <div className="aspect-video bg-gradient-to-br from-gold/10 to-background flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
+                    <Play className="w-8 h-8 text-gold ml-1" />
+                  </div>
+                  <p className="text-muted-foreground text-sm">
+                    Vídeo de Boas-Vindas
+                  </p>
+                  <p className="text-xs text-muted-foreground/60 mt-1">
+                    (Configure em Admin → Configurações)
+                  </p>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       </motion.div>
