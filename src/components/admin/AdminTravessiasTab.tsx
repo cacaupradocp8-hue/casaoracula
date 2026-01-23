@@ -10,10 +10,12 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { toast } from 'sonner';
-import { Plus, Pencil, Trash2, GripVertical, Compass, Moon, BookOpen, Shield, Sparkles, Eye, EyeOff, ChevronUp, ChevronDown } from 'lucide-react';
+import { Plus, Pencil, Trash2, GripVertical, Compass, Moon, BookOpen, Shield, Sparkles, Eye, EyeOff, ChevronUp, ChevronDown, ChevronRight, Layers } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PortalType } from '@/types/portal';
+import { TravessiaLicoesManager } from './TravessiaLicoesManager';
 
 interface Travessia {
   id: string;
@@ -70,6 +72,7 @@ export function AdminTravessiasTab() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingTravessia, setEditingTravessia] = useState<Travessia | null>(null);
   const [temasInput, setTemasInput] = useState('');
+  const [expandedTravessia, setExpandedTravessia] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     number: 1,
@@ -549,124 +552,143 @@ export function AdminTravessiasTab() {
       <div className="space-y-3">
         {travessias?.map((travessia, index) => {
           const Icon = ICON_MAP[travessia.icone] || Compass;
+          const isExpanded = expandedTravessia === travessia.id;
+          
           return (
-            <Card
+            <Collapsible
               key={travessia.id}
-              className={cn(
-                'transition-opacity',
-                !travessia.ativa && 'opacity-60'
-              )}
+              open={isExpanded}
+              onOpenChange={(open) => setExpandedTravessia(open ? travessia.id : null)}
             >
-              <CardContent className="p-4">
-                <div className="flex items-center gap-4">
-                  <div className="flex flex-col gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => handleMoveUp(travessia, index)}
-                      disabled={index === 0}
-                    >
-                      <ChevronUp className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => handleMoveDown(travessia, index)}
-                      disabled={index === (travessias?.length || 0) - 1}
-                    >
-                      <ChevronDown className="w-4 h-4" />
-                    </Button>
-                  </div>
-
-                  <div
-                    className={cn(
-                      'w-12 h-12 rounded-xl flex items-center justify-center border',
-                      `text-${travessia.cor_acento}-500 bg-${travessia.cor_acento}-500/10 border-${travessia.cor_acento}-500/20`
-                    )}
-                    style={{
-                      color: `var(--${travessia.cor_acento}, var(--gold))`,
-                      backgroundColor: `color-mix(in srgb, var(--${travessia.cor_acento}, var(--gold)) 10%, transparent)`,
-                      borderColor: `color-mix(in srgb, var(--${travessia.cor_acento}, var(--gold)) 20%, transparent)`,
-                    }}
-                  >
-                    <Icon className="w-6 h-6" />
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="text-xs">
-                        #{travessia.number}
-                      </Badge>
-                      <h3 className="font-medium truncate">{travessia.title}</h3>
-                      {!travessia.ativa && (
-                        <Badge variant="secondary" className="text-xs">
-                          Inativa
-                        </Badge>
-                      )}
-                      {travessia.requer_profissional && (
-                        <Badge variant="outline" className="text-xs text-amber-500 border-amber-500/30">
-                          Profissional
-                        </Badge>
-                      )}
+              <Card
+                className={cn(
+                  'transition-opacity',
+                  !travessia.ativa && 'opacity-60'
+                )}
+              >
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-4">
+                    <div className="flex flex-col gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={() => handleMoveUp(travessia, index)}
+                        disabled={index === 0}
+                      >
+                        <ChevronUp className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={() => handleMoveDown(travessia, index)}
+                        disabled={index === (travessias?.length || 0) - 1}
+                      >
+                        <ChevronDown className="w-4 h-4" />
+                      </Button>
                     </div>
-                    {travessia.subtitle && (
-                      <p className="text-sm text-muted-foreground truncate">
-                        {travessia.subtitle}
-                      </p>
-                    )}
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      <Badge variant="secondary" className="text-xs">
-                        {travessia.portal_minimo}
-                      </Badge>
-                      {travessia.temas?.slice(0, 3).map((tema) => (
-                        <span
-                          key={tema}
-                          className="text-xs px-1.5 py-0.5 bg-secondary/50 rounded text-muted-foreground"
-                        >
-                          {tema}
-                        </span>
-                      ))}
-                      {(travessia.temas?.length || 0) > 3 && (
-                        <span className="text-xs text-muted-foreground">
-                          +{(travessia.temas?.length || 0) - 3}
-                        </span>
-                      )}
-                    </div>
-                  </div>
 
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => toggleAtivaMutation.mutate({ id: travessia.id, ativa: !travessia.ativa })}
-                    >
-                      {travessia.ativa ? (
-                        <Eye className="w-4 h-4" />
-                      ) : (
-                        <EyeOff className="w-4 h-4" />
+                    <div
+                      className={cn(
+                        'w-12 h-12 rounded-xl flex items-center justify-center border',
+                        `text-${travessia.cor_acento}-500 bg-${travessia.cor_acento}-500/10 border-${travessia.cor_acento}-500/20`
                       )}
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleEdit(travessia)}>
-                      <Pencil className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-destructive"
-                      onClick={() => {
-                        if (confirm(`Excluir travessia "${travessia.title}"?`)) {
-                          deleteMutation.mutate(travessia.id);
-                        }
+                      style={{
+                        color: `var(--${travessia.cor_acento}, var(--gold))`,
+                        backgroundColor: `color-mix(in srgb, var(--${travessia.cor_acento}, var(--gold)) 10%, transparent)`,
+                        borderColor: `color-mix(in srgb, var(--${travessia.cor_acento}, var(--gold)) 20%, transparent)`,
                       }}
                     >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                      <Icon className="w-6 h-6" />
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="text-xs">
+                          #{travessia.number}
+                        </Badge>
+                        <h3 className="font-medium truncate">{travessia.title}</h3>
+                        {!travessia.ativa && (
+                          <Badge variant="secondary" className="text-xs">
+                            Inativa
+                          </Badge>
+                        )}
+                        {travessia.requer_profissional && (
+                          <Badge variant="outline" className="text-xs text-amber-500 border-amber-500/30">
+                            Profissional
+                          </Badge>
+                        )}
+                      </div>
+                      {travessia.subtitle && (
+                        <p className="text-sm text-muted-foreground truncate">
+                          {travessia.subtitle}
+                        </p>
+                      )}
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        <Badge variant="secondary" className="text-xs">
+                          {travessia.portal_minimo}
+                        </Badge>
+                        {travessia.temas?.slice(0, 3).map((tema) => (
+                          <span
+                            key={tema}
+                            className="text-xs px-1.5 py-0.5 bg-secondary/50 rounded text-muted-foreground"
+                          >
+                            {tema}
+                          </span>
+                        ))}
+                        {(travessia.temas?.length || 0) > 3 && (
+                          <span className="text-xs text-muted-foreground">
+                            +{(travessia.temas?.length || 0) - 3}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <CollapsibleTrigger asChild>
+                        <Button variant="ghost" size="icon" className="text-gold">
+                          <Layers className="w-4 h-4" />
+                        </Button>
+                      </CollapsibleTrigger>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => toggleAtivaMutation.mutate({ id: travessia.id, ativa: !travessia.ativa })}
+                      >
+                        {travessia.ativa ? (
+                          <Eye className="w-4 h-4" />
+                        ) : (
+                          <EyeOff className="w-4 h-4" />
+                        )}
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => handleEdit(travessia)}>
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-destructive"
+                        onClick={() => {
+                          if (confirm(`Excluir travessia "${travessia.title}"?`)) {
+                            deleteMutation.mutate(travessia.id);
+                          }
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+
+                  <CollapsibleContent>
+                    <TravessiaLicoesManager 
+                      travessiaId={travessia.id}
+                      travessiaTitle={travessia.title}
+                    />
+                  </CollapsibleContent>
+                </CardContent>
+              </Card>
+            </Collapsible>
           );
         })}
 
