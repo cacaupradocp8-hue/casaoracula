@@ -287,6 +287,66 @@ export type Database = {
         }
         Relationships: []
       }
+      atlas_arquetipos_femininos: {
+        Row: {
+          ativo: boolean | null
+          chave: string
+          cor_acento: string | null
+          created_at: string | null
+          descricao_clinica: string
+          icone: string | null
+          id: string
+          manifestacoes_frequentes: string[] | null
+          nome: string
+          ordem: number | null
+          perguntas_sessao: string[] | null
+          posicao_x: number | null
+          posicao_y: number | null
+          riscos_projecao: string[] | null
+          territorio: string
+          trabalhar_forca_sem_reforcar_ferida: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          chave: string
+          cor_acento?: string | null
+          created_at?: string | null
+          descricao_clinica: string
+          icone?: string | null
+          id?: string
+          manifestacoes_frequentes?: string[] | null
+          nome: string
+          ordem?: number | null
+          perguntas_sessao?: string[] | null
+          posicao_x?: number | null
+          posicao_y?: number | null
+          riscos_projecao?: string[] | null
+          territorio: string
+          trabalhar_forca_sem_reforcar_ferida?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          chave?: string
+          cor_acento?: string | null
+          created_at?: string | null
+          descricao_clinica?: string
+          icone?: string | null
+          id?: string
+          manifestacoes_frequentes?: string[] | null
+          nome?: string
+          ordem?: number | null
+          perguntas_sessao?: string[] | null
+          posicao_x?: number | null
+          posicao_y?: number | null
+          riscos_projecao?: string[] | null
+          territorio?: string
+          trabalhar_forca_sem_reforcar_ferida?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       audio_assets: {
         Row: {
           capa_url: string | null
@@ -1428,6 +1488,69 @@ export type Database = {
             columns: ["sala_id"]
             isOneToOne: false
             referencedRelation: "salas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      decodificacao_onirica: {
+        Row: {
+          arquetipos_sugeridos: string[] | null
+          cliente_id: string | null
+          created_at: string | null
+          forca_psiquica: string | null
+          id: string
+          imagem_central: string | null
+          mensagem_viva: string | null
+          movimento_interrompido: string | null
+          notas_terapeuta: string | null
+          session_case_id: string | null
+          sonho_bruto: string
+          terapeuta_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          arquetipos_sugeridos?: string[] | null
+          cliente_id?: string | null
+          created_at?: string | null
+          forca_psiquica?: string | null
+          id?: string
+          imagem_central?: string | null
+          mensagem_viva?: string | null
+          movimento_interrompido?: string | null
+          notas_terapeuta?: string | null
+          session_case_id?: string | null
+          sonho_bruto: string
+          terapeuta_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          arquetipos_sugeridos?: string[] | null
+          cliente_id?: string | null
+          created_at?: string | null
+          forca_psiquica?: string | null
+          id?: string
+          imagem_central?: string | null
+          mensagem_viva?: string | null
+          movimento_interrompido?: string | null
+          notas_terapeuta?: string | null
+          session_case_id?: string | null
+          sonho_bruto?: string
+          terapeuta_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "decodificacao_onirica_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "decodificacao_onirica_session_case_id_fkey"
+            columns: ["session_case_id"]
+            isOneToOne: false
+            referencedRelation: "session_cases"
             referencedColumns: ["id"]
           },
         ]
@@ -5390,6 +5513,41 @@ export type Database = {
         }
         Relationships: []
       }
+      torre_arquetipo_sugestao: {
+        Row: {
+          arquetipo_id: string | null
+          frequencia: string | null
+          id: string
+          nota_clinica: string | null
+          ordem: number | null
+          torre_id: string
+        }
+        Insert: {
+          arquetipo_id?: string | null
+          frequencia?: string | null
+          id?: string
+          nota_clinica?: string | null
+          ordem?: number | null
+          torre_id: string
+        }
+        Update: {
+          arquetipo_id?: string | null
+          frequencia?: string | null
+          id?: string
+          nota_clinica?: string | null
+          ordem?: number | null
+          torre_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "torre_arquetipo_sugestao_arquetipo_id_fkey"
+            columns: ["arquetipo_id"]
+            isOneToOne: false
+            referencedRelation: "atlas_arquetipos_femininos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       torre_casos_clinicos: {
         Row: {
           ativa: boolean | null
@@ -5981,6 +6139,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
       is_lesson_available: {
         Args: { _lesson_id: string; _user_id: string }
         Returns: boolean
