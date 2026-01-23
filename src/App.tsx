@@ -99,6 +99,7 @@ import Big5Simbolico from "./pages/Big5Simbolico";
 import EneagramaFeminino from "./pages/EneagramaFeminino";
 import JornadaHeroina from "./pages/JornadaHeroina";
 import TorreViva from "./pages/TorreViva";
+import AtlasArquetiposFemininos from "./pages/AtlasArquetiposFemininos";
 import BibliotecaCasos from "./pages/BibliotecaCasos";
 import { AsPortas, OsCamposPsiquicos, AsTorres, TriadeMetodo } from "./pages/metodo";
 import FormacaoOracula from "./pages/FormacaoOracula";
@@ -513,6 +514,15 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="mentorada">
             <RoteirosProtocolo />
+          </ProtectedRoute>
+        }
+      />
+      {/* Atlas de Arquétipos Femininos - Clinical Tool */}
+      <Route
+        path="/atlas-arquetipos"
+        element={
+          <ProtectedRoute minPortal="oracula">
+            <AtlasArquetiposFemininos />
           </ProtectedRoute>
         }
       />
