@@ -130,6 +130,8 @@ import JardimPsique from "./pages/JardimPsique";
 import JardimPsiqueDetalhe from "./pages/JardimPsiqueDetalhe";
 // Tour da Casa
 import Tour from "./pages/Tour";
+// Travessia Detalhe
+import TravessiaDetalhe from "./pages/TravessiaDetalhe";
 
 const queryClient = new QueryClient();
 
@@ -327,7 +329,7 @@ function AppRoutes() {
         path="/travessia/:slug"
         element={
           <ProtectedRoute>
-            <Portais />
+            <TravessiaDetalhe />
           </ProtectedRoute>
         }
       />
