@@ -2,12 +2,13 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { getTravessia, TRAVESSIAS_DATA } from '@/types/travessia';
 import { canAccessFeature } from '@/types/portal';
+import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 import { 
   Compass, 
   Moon, 
@@ -27,6 +28,7 @@ import {
   Heart,
   Home,
   ChevronRight,
+  Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
@@ -36,6 +38,12 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Moon,
   BookOpen,
   Shield,
+  Sparkles,
+  DoorOpen,
+  Waves,
+  Castle,
+  Wand2,
+  Heart,
 };
 
 const COLOR_MAP: Record<string, { bg: string; border: string; icon: string; text: string }> = {
@@ -78,6 +86,21 @@ interface TravessiaSection {
   description: string;
   items: TravessiaItem[];
 }
+
+// Mapeamento de quais famílias aparecem em cada travessia
+const TRAVESSIA_FAMILIAS_MAP: Record<string, string[]> = {
+  'mundo-sem-simbolos': [], // Travessia 1 - Fundamentos
+  'mulher-alma-antiga': ['e76ee4f5-3694-4a93-be7a-a9f84b9c312a'], // Identidade Feminina
+  'codigo-narrativas': [
+    '88b4d98f-677b-4229-a05d-75bd04583e32', // Ruptura & Desorganização
+    '35e6a963-ce42-42da-835e-fdec06e5bc0c', // Corpo
+  ],
+  'guardia-caminho': [
+    '88b4d98f-677b-4229-a05d-75bd04583e32', // Ruptura & Desorganização
+    '35e6a963-ce42-42da-835e-fdec06e5bc0c', // Corpo
+    'e76ee4f5-3694-4a93-be7a-a9f84b9c312a', // Identidade Feminina
+  ],
+};
 
 const TRAVESSIA_CONTEUDO: Record<string, TravessiaSection[]> = {
   'mundo-sem-simbolos': [
@@ -149,11 +172,78 @@ const TRAVESSIA_CONTEUDO: Record<string, TravessiaSection[]> = {
   ],
 };
 
+interface TravessiaFamilia {
+  id: string;
+  nome: string;
+  descricao: string;
+  icone: string;
+  ordem: number;
+  ativa: boolean;
+}
+
+interface TravessiaLibraryItem {
+  id: string;
+  titulo_ritual: string;
+  subtitulo: string | null;
+  slug: string;
+  categoria: string | null;
+  familia_id: string | null;
+  quando_chamada: string | null;
+  o_que_sustenta: string | null;
+  como_atravessar: string | null;
+  portal_minimo: string | null;
+  publicado: boolean;
+  ordem: number;
+}
+
 export default function TravessiaDetalhe() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { isProfessional, isLoading: isLoadingProfessional } = useProfessionalStatus();
+
+  // Fetch famílias simbólicas
+  const { data: familias = [], isLoading: isLoadingFamilias } = useQuery({
+    queryKey: ['travessia-familias', slug],
+    queryFn: async () => {
+      const familiaIds = TRAVESSIA_FAMILIAS_MAP[slug || ''] || [];
+      if (familiaIds.length === 0) return [];
+      
+      const { data, error } = await supabase
+        .from('travessia_familias')
+        .select('*')
+        .eq('ativa', true)
+        .in('id', familiaIds)
+        .order('ordem');
+      
+      if (error) throw error;
+      return (data || []) as TravessiaFamilia[];
+    },
+    enabled: !!slug && !!user,
+  });
+
+  // Fetch library items
+  const { data: libraryItems = [], isLoading: isLoadingItems } = useQuery({
+    queryKey: ['travessia-library-items', slug],
+    queryFn: async () => {
+      const familiaIds = TRAVESSIA_FAMILIAS_MAP[slug || ''] || [];
+      
+      // Also fetch items without familia_id that match the travessia
+      const { data, error } = await supabase
+        .from('travessia_library_items')
+        .select('*')
+        .eq('publicado', true)
+        .order('ordem');
+      
+      if (error) throw error;
+      
+      // Filter items that belong to any of the mapped familias
+      return (data || []).filter((item: TravessiaLibraryItem) => 
+        familiaIds.includes(item.familia_id || '')
+      ) as TravessiaLibraryItem[];
+    },
+    enabled: !!slug && !!user,
+  });
 
   if (!user || !slug) return null;
 
@@ -187,6 +277,16 @@ export default function TravessiaDetalhe() {
   const canAccessNextTravessia = nextTravessia 
     ? canAccessFeature(user.portal, nextTravessia.minPortal) && (!nextTravessia.requiresProfessional || isProfessional)
     : false;
+
+  // Group library items by familia
+  const itemsByFamilia = libraryItems.reduce((acc, item) => {
+    const key = item.familia_id || 'other';
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(item);
+    return acc;
+  }, {} as Record<string, TravessiaLibraryItem[]>);
+
+  const isLoadingData = isLoadingFamilias || isLoadingItems;
 
   return (
     <AppLayout>
@@ -307,6 +407,80 @@ export default function TravessiaDetalhe() {
                 </div>
               </section>
             ))}
+
+            {/* Famílias Simbólicas Section - from database */}
+            {familias.length > 0 && (
+              <section className="pt-6 border-t border-border/50">
+                <div className="mb-6">
+                  <h2 className="font-display text-xl font-semibold text-foreground mb-1">
+                    Famílias Simbólicas
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    Travessias temáticas para acompanhamento profundo
+                  </p>
+                </div>
+
+                {isLoadingData ? (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+                  </div>
+                ) : (
+                  <div className="space-y-8">
+                    {familias.map((familia) => {
+                      const FamiliaIcon = ICON_MAP[familia.icone] || Sparkles;
+                      const familiaItems = itemsByFamilia[familia.id] || [];
+                      
+                      return (
+                        <div key={familia.id} className="space-y-4">
+                          <div className="flex items-start gap-4">
+                            <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center", colors.icon)}>
+                              <FamiliaIcon className="w-5 h-5" />
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="font-medium text-foreground">{familia.nome}</h3>
+                              <p className="text-sm text-muted-foreground mt-1">{familia.descricao}</p>
+                            </div>
+                          </div>
+
+                          {familiaItems.length > 0 ? (
+                            <div className="grid sm:grid-cols-2 gap-4 ml-14">
+                              {familiaItems.map((item) => (
+                                <Card
+                                  key={item.id}
+                                  className={cn(
+                                    "group cursor-pointer transition-all duration-300",
+                                    "hover:shadow-lg hover:border-gold/40"
+                                  )}
+                                  onClick={() => navigate(`/biblioteca-das-travessias/${item.slug}`)}
+                                >
+                                  <CardContent className="p-4">
+                                    <CardTitle className="text-base mb-1 group-hover:text-gold transition-colors">
+                                      {item.titulo_ritual}
+                                    </CardTitle>
+                                    <CardDescription className="text-sm line-clamp-2">
+                                      {item.subtitulo || item.quando_chamada}
+                                    </CardDescription>
+                                    <div className="flex items-center justify-end mt-3">
+                                      <ArrowRight className="w-4 h-4 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-gold" />
+                                    </div>
+                                  </CardContent>
+                                </Card>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="ml-14">
+                              <p className="text-sm text-muted-foreground/60 italic">
+                                Conteúdos em desenvolvimento...
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </section>
+            )}
           </div>
         )}
 
