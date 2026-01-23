@@ -39,6 +39,7 @@ const AdminOraculosTab = lazy(() => import('@/components/admin/AdminOraculosTab'
 const AdminBlocksTab = lazy(() => import('@/components/admin/AdminBlocksTab').then(m => ({ default: m.AdminBlocksTab })));
 const AdminAISettingsTab = lazy(() => import('@/components/admin/AdminAISettingsTab').then(m => ({ default: m.AdminAISettingsTab })));
 const AdminBibliotecaTravessiasTab = lazy(() => import('@/components/admin/AdminBibliotecaTravessiasTab').then(m => ({ default: m.AdminBibliotecaTravessiasTab })));
+const AdminTravessiasTab = lazy(() => import('@/components/admin/AdminTravessiasTab').then(m => ({ default: m.AdminTravessiasTab })));
 const AdminLabirintoTab = lazy(() => import('@/components/admin/AdminLabirintoTab').then(m => ({ default: m.AdminLabirintoTab })));
 const AdminFamiliasTab = lazy(() => import('@/components/admin/AdminFamiliasTab').then(m => ({ default: m.AdminFamiliasTab })));
 const AdminBig5SymbolicTab = lazy(() => import('@/components/admin/AdminBig5SymbolicTab').then(m => ({ default: m.AdminBig5SymbolicTab })));
@@ -218,6 +219,10 @@ export default function Admin() {
             <TabsTrigger value="travessias" className="gap-2">
               <Compass className="w-4 h-4" />
               Travessias
+            </TabsTrigger>
+            <TabsTrigger value="travessias-conteudo" className="gap-2">
+              <BookOpen className="w-4 h-4" />
+              Conteúdo Travessias
             </TabsTrigger>
             <TabsTrigger value="familias" className="gap-2">
               <FolderTree className="w-4 h-4" />
@@ -403,6 +408,12 @@ export default function Admin() {
           </TabsContent>
 
           <TabsContent value="travessias">
+            <Suspense fallback={<TabLoader />}>
+              <AdminTravessiasTab />
+            </Suspense>
+          </TabsContent>
+
+          <TabsContent value="travessias-conteudo">
             <Suspense fallback={<TabLoader />}>
               <AdminBibliotecaTravessiasTab />
             </Suspense>

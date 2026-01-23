@@ -5679,32 +5679,56 @@ export type Database = {
       }
       travessias: {
         Row: {
+          ativa: boolean | null
           closing_ritual: string
+          cor_acento: string | null
           created_at: string
           description: string
+          icone: string | null
           id: string
           number: number
+          ordem: number | null
+          portal_minimo: Database["public"]["Enums"]["portal_type"] | null
+          requer_profissional: boolean | null
+          slug: string | null
           subtitle: string
+          temas: string[] | null
           title: string
           updated_at: string
         }
         Insert: {
+          ativa?: boolean | null
           closing_ritual: string
+          cor_acento?: string | null
           created_at?: string
           description: string
+          icone?: string | null
           id?: string
           number: number
+          ordem?: number | null
+          portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
+          requer_profissional?: boolean | null
+          slug?: string | null
           subtitle: string
+          temas?: string[] | null
           title: string
           updated_at?: string
         }
         Update: {
+          ativa?: boolean | null
           closing_ritual?: string
+          cor_acento?: string | null
           created_at?: string
           description?: string
+          icone?: string | null
           id?: string
           number?: number
+          ordem?: number | null
+          portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
+          requer_profissional?: boolean | null
+          slug?: string | null
           subtitle?: string
+          temas?: string[] | null
           title?: string
           updated_at?: string
         }

@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -6,8 +7,8 @@ import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TRAVESSIAS_DATA } from '@/types/travessia';
-import { canAccessFeature } from '@/types/portal';
+import { canAccessFeature, PortalType } from '@/types/portal';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   Compass, 
   Moon, 
@@ -17,6 +18,7 @@ import {
   ArrowRight,
   Sparkles,
   AlertTriangle,
+  Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCopy } from '@/hooks/useCopy';
@@ -26,6 +28,7 @@ const ICON_MAP: Record<string, typeof Compass> = {
   Moon,
   BookOpen,
   Shield,
+  Sparkles,
 };
 
 const COLOR_MAP: Record<string, string> = {
@@ -33,7 +36,25 @@ const COLOR_MAP: Record<string, string> = {
   purple: 'text-purple-500 bg-purple-500/10 border-purple-500/20',
   gold: 'text-gold bg-gold/10 border-gold/20',
   emerald: 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20',
+  rose: 'text-rose-500 bg-rose-500/10 border-rose-500/20',
+  blue: 'text-blue-500 bg-blue-500/10 border-blue-500/20',
 };
+
+interface Travessia {
+  id: string;
+  number: number;
+  slug: string;
+  title: string;
+  subtitle: string | null;
+  description: string | null;
+  icone: string;
+  cor_acento: string;
+  temas: string[];
+  portal_minimo: PortalType;
+  requer_profissional: boolean;
+  ativa: boolean;
+  ordem: number;
+}
 
 export default function Travessias() {
   const { user } = useAuth();
@@ -41,32 +62,62 @@ export default function Travessias() {
   const navigate = useNavigate();
   const { getCopyByKey } = useCopy();
 
+  const { data: travessias, isLoading } = useQuery({
+    queryKey: ['travessias-list'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('travessias')
+        .select('*')
+        .order('ordem', { ascending: true });
+
+      if (error) throw error;
+      return data as Travessia[];
+    },
+  });
+
   if (!user) return null;
 
-  const canAccessTravessia = (travessia: typeof TRAVESSIAS_DATA[0]) => {
-    const hasPortalAccess = canAccessFeature(user.portal, travessia.minPortal);
-    const hasProfessionalAccess = !travessia.requiresProfessional || isProfessional;
+  const isAdmin = user.portal === 'admin';
+
+  const canAccessTravessia = (travessia: Travessia) => {
+    // Admin has full access
+    if (isAdmin) return true;
+    
+    const hasPortalAccess = canAccessFeature(user.portal, travessia.portal_minimo);
+    const hasProfessionalAccess = !travessia.requer_profissional || isProfessional;
     return hasPortalAccess && hasProfessionalAccess;
   };
 
-  const handleTravessiaClick = (travessia: typeof TRAVESSIAS_DATA[0]) => {
+  const handleTravessiaClick = (travessia: Travessia) => {
     if (!canAccessTravessia(travessia)) {
       return;
     }
     navigate(`/travessia/${travessia.slug}`);
   };
 
+  if (isLoading) {
+    return (
+      <AppLayout>
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="w-8 h-8 animate-spin text-gold" />
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20">
         <SectionHeader
-          title="As 4 Travessias"
+          title="As Travessias"
           subtitle="O caminho iniciático da Casa ORÁCULA"
           className="mb-8"
         />
 
         {/* Professional Notice */}
-        {!isLoadingProfessional && !isProfessional && (
+        {!isLoadingProfessional && !isProfessional && !isAdmin && (
           <Card className="mb-8 bg-amber-500/5 border-amber-500/20">
             <CardContent className="p-4">
               <div className="flex items-start gap-3">
@@ -74,7 +125,7 @@ export default function Travessias() {
                 <div>
                   <p className="font-medium text-foreground">Confirmação profissional pendente</p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    A Travessia 3 (Código das Narrativas) e 4 (Guardiã do Caminho) requerem confirmação profissional.
+                    Algumas travessias requerem confirmação profissional para acesso completo.
                   </p>
                   <Button 
                     variant="link" 
@@ -90,11 +141,11 @@ export default function Travessias() {
         )}
 
         <div className="grid md:grid-cols-2 gap-6">
-          {TRAVESSIAS_DATA.map((travessia) => {
+          {travessias?.map((travessia) => {
             const Icon = ICON_MAP[travessia.icone] || Compass;
-            const colorClass = COLOR_MAP[travessia.corAcento] || COLOR_MAP.gold;
+            const colorClass = COLOR_MAP[travessia.cor_acento] || COLOR_MAP.gold;
             const isAccessible = canAccessTravessia(travessia);
-            const needsProfessional = travessia.requiresProfessional && !isProfessional;
+            const needsProfessional = travessia.requer_profissional && !isProfessional && !isAdmin;
 
             return (
               <Card
@@ -119,21 +170,27 @@ export default function Travessias() {
                     </div>
                   </div>
                   <CardTitle className="font-display text-xl mt-3">{travessia.title}</CardTitle>
-                  <CardDescription className="text-sm">{travessia.subtitle}</CardDescription>
+                  {travessia.subtitle && (
+                    <CardDescription className="text-sm">{travessia.subtitle}</CardDescription>
+                  )}
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-sm text-muted-foreground">{travessia.description}</p>
+                  {travessia.description && (
+                    <p className="text-sm text-muted-foreground">{travessia.description}</p>
+                  )}
                   
-                  <div className="flex flex-wrap gap-1.5">
-                    {travessia.temas.map((tema) => (
-                      <span
-                        key={tema}
-                        className="text-xs px-2 py-0.5 bg-secondary/50 rounded-full text-muted-foreground"
-                      >
-                        {tema}
-                      </span>
-                    ))}
-                  </div>
+                  {travessia.temas && travessia.temas.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {travessia.temas.map((tema) => (
+                        <span
+                          key={tema}
+                          className="text-xs px-2 py-0.5 bg-secondary/50 rounded-full text-muted-foreground"
+                        >
+                          {tema}
+                        </span>
+                      ))}
+                    </div>
+                  )}
 
                   {needsProfessional && (
                     <div className="flex items-center gap-2 text-xs text-amber-500">
@@ -155,6 +212,15 @@ export default function Travessias() {
             );
           })}
         </div>
+
+        {(!travessias || travessias.length === 0) && (
+          <Card className="border-dashed">
+            <CardContent className="py-12 text-center">
+              <Compass className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
+              <p className="text-muted-foreground">Nenhuma travessia disponível</p>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </AppLayout>
   );
