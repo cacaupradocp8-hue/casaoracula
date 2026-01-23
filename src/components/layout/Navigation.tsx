@@ -212,6 +212,12 @@ export function Navigation() {
     // ═══════════════════════════════════════════════════════════════
     const formacaoItems: MenuItem[] = [
       {
+        path: '/travessias',
+        label: 'As 4 Travessias',
+        icon: Compass,
+        minPortal: 'visitante',
+      },
+      {
         path: '/salas',
         label: 'Sala da Mentoria',
         icon: GraduationCap,
@@ -219,7 +225,7 @@ export function Navigation() {
       },
       {
         path: '/ferramentas',
-        label: 'Sala de Treinamento',
+        label: 'Ferramentas Práticas',
         icon: Sparkles,
         minPortal: 'mentorada',
       },

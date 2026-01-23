@@ -1,0 +1,356 @@
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
+import { AppLayout } from '@/components/layout/AppLayout';
+import { SectionHeader } from '@/components/shared/SectionHeader';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { getTravessia, TRAVESSIAS_DATA } from '@/types/travessia';
+import { canAccessFeature } from '@/types/portal';
+import { 
+  Compass, 
+  Moon, 
+  BookOpen, 
+  Shield, 
+  Lock, 
+  ArrowLeft,
+  ArrowRight,
+  Sparkles,
+  DoorOpen,
+  Waves,
+  Castle,
+  Wand2,
+  ClipboardList,
+  Brain,
+  Users,
+  Heart,
+  Home,
+  ChevronRight,
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { LucideIcon } from 'lucide-react';
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  Compass,
+  Moon,
+  BookOpen,
+  Shield,
+};
+
+const COLOR_MAP: Record<string, { bg: string; border: string; icon: string; text: string }> = {
+  amber: {
+    bg: 'bg-amber-500/10',
+    border: 'border-amber-500/20',
+    icon: 'bg-amber-500/20 text-amber-400',
+    text: 'text-amber-400',
+  },
+  purple: {
+    bg: 'bg-purple-500/10',
+    border: 'border-purple-500/20',
+    icon: 'bg-purple-500/20 text-purple-400',
+    text: 'text-purple-400',
+  },
+  gold: {
+    bg: 'bg-gold/10',
+    border: 'border-gold/20',
+    icon: 'bg-gold/20 text-gold',
+    text: 'text-gold',
+  },
+  emerald: {
+    bg: 'bg-emerald-500/10',
+    border: 'border-emerald-500/20',
+    icon: 'bg-emerald-500/20 text-emerald-400',
+    text: 'text-emerald-400',
+  },
+};
+
+// Conteúdo exclusivo de cada Travessia
+interface TravessiaItem {
+  title: string;
+  description: string;
+  route: string;
+  icon: LucideIcon;
+}
+
+interface TravessiaSection {
+  title: string;
+  description: string;
+  items: TravessiaItem[];
+}
+
+const TRAVESSIA_CONTEUDO: Record<string, TravessiaSection[]> = {
+  'mundo-sem-simbolos': [
+    {
+      title: 'Fundamentos Éticos',
+      description: 'A base do caminho iniciático',
+      items: [
+        { title: 'Biblioteca das Travessias', description: 'Famílias simbólicas e ferramentas integradas', route: '/biblioteca-das-travessias', icon: BookOpen },
+        { title: 'Cursos Disponíveis', description: 'Formação estruturada e guiada', route: '/cursos', icon: Sparkles },
+      ],
+    },
+  ],
+  'mulher-alma-antiga': [
+    {
+      title: 'A Tríade do Método Orácula',
+      description: 'Fundamentos conceituais da cartografia clínica',
+      items: [
+        { title: 'As Portas', description: 'Onde a psique está operando agora', route: '/metodo/portas', icon: DoorOpen },
+        { title: 'Os Campos Psíquicos', description: 'Como sustentar cada campo', route: '/metodo/campos-psiquicos', icon: Waves },
+        { title: 'As Torres', description: 'Por que a psique se organizou assim', route: '/metodo/torres', icon: Castle },
+      ],
+    },
+    {
+      title: 'Recursos Complementares',
+      description: 'Conteúdos de apoio à formação',
+      items: [
+        { title: 'Síntese da Tríade', description: 'Visão integrada do método', route: '/metodo/triade', icon: Compass },
+        { title: 'Biblioteca de Contos', description: 'Narrativas simbólicas em texto e áudio', route: '/biblioteca', icon: BookOpen },
+      ],
+    },
+  ],
+  'codigo-narrativas': [
+    {
+      title: 'Ferramentas de Escuta',
+      description: 'Instrumentos para prática profissional',
+      items: [
+        { title: 'Labirinto das 39 Portas', description: 'Protocolo formativo de leitura psíquica', route: '/labirinto', icon: DoorOpen },
+        { title: 'SYNTHEIA — O Templo', description: 'Inteligência operacional de apoio à profissional', route: '/syntheia', icon: Wand2 },
+        { title: 'Radiestesia Oracular', description: 'Leitura em 5 camadas de escuta profissional', route: '/radiestesia', icon: Waves },
+      ],
+    },
+    {
+      title: 'Sala de Trabalho',
+      description: 'Espaço de prática clínica',
+      items: [
+        { title: 'Sala de Sessão', description: 'Condução estruturada com casos e grupos', route: '/session-room', icon: ClipboardList },
+        { title: 'Mapas Integrados', description: 'Big5 + Eneagrama + Arquétipos', route: '/ferramentas', icon: Brain },
+      ],
+    },
+  ],
+  'guardia-caminho': [
+    {
+      title: 'Ferramentas Avançadas',
+      description: 'Recursos exclusivos para facilitadoras certificadas',
+      items: [
+        { title: 'Torre Viva™', description: 'Leitura de estrutura psíquica e sobrevivência', route: '/ferramentas/torre-viva', icon: Castle },
+        { title: 'Biblioteca de Casos', description: 'Vinhetas clínicas para treino de postura', route: '/biblioteca-casos', icon: BookOpen },
+        { title: 'Cartografia da Torre', description: 'Mapeamento das 39 portas e 5 famílias', route: '/ferramentas/cartografia-torre', icon: Compass },
+      ],
+    },
+    {
+      title: 'Condução e Supervisão',
+      description: 'Trabalho com grupos e iniciação simbólica',
+      items: [
+        { title: 'Sala da Orácula', description: 'Espaço sagrado da facilitadora certificada', route: '/casa', icon: Heart },
+        { title: 'Mentoria Oracular', description: 'Supervisão e aprofundamento', route: '/mentoria-oracular', icon: Users },
+      ],
+    },
+  ],
+};
+
+export default function TravessiaDetalhe() {
+  const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { isProfessional, isLoading: isLoadingProfessional } = useProfessionalStatus();
+
+  if (!user || !slug) return null;
+
+  const travessia = getTravessia(slug);
+  if (!travessia) {
+    return (
+      <AppLayout>
+        <div className="container mx-auto px-4 py-8">
+          <p className="text-muted-foreground">Travessia não encontrada.</p>
+          <Button variant="ghost" onClick={() => navigate('/travessias')} className="mt-4">
+            Voltar às Travessias
+          </Button>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  const Icon = ICON_MAP[travessia.icone] || Compass;
+  const colors = COLOR_MAP[travessia.corAcento] || COLOR_MAP.gold;
+  const sections = TRAVESSIA_CONTEUDO[slug] || [];
+
+  const hasPortalAccess = canAccessFeature(user.portal, travessia.minPortal);
+  const hasProfessionalAccess = !travessia.requiresProfessional || isProfessional;
+  const hasFullAccess = hasPortalAccess && hasProfessionalAccess;
+
+  // Navigate between travessias
+  const currentIndex = TRAVESSIAS_DATA.findIndex(t => t.slug === slug);
+  const prevTravessia = currentIndex > 0 ? TRAVESSIAS_DATA[currentIndex - 1] : null;
+  const nextTravessia = currentIndex < TRAVESSIAS_DATA.length - 1 ? TRAVESSIAS_DATA[currentIndex + 1] : null;
+
+  const canAccessNextTravessia = nextTravessia 
+    ? canAccessFeature(user.portal, nextTravessia.minPortal) && (!nextTravessia.requiresProfessional || isProfessional)
+    : false;
+
+  return (
+    <AppLayout>
+      <div className="container mx-auto px-4 py-8 pb-20 max-w-5xl">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <Link to="/travessias" className="hover:text-foreground transition-colors">
+            Travessias
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Travessia {travessia.number}</span>
+        </nav>
+
+        {/* Header */}
+        <div className={cn("rounded-2xl p-8 mb-8", colors.bg, "border", colors.border)}>
+          <div className="flex items-start gap-6">
+            <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center shrink-0", colors.icon)}>
+              <Icon className="w-8 h-8" />
+            </div>
+            <div className="flex-1">
+              <Badge variant="outline" className="mb-3">Travessia {travessia.number}</Badge>
+              <h1 className={cn("font-display text-3xl font-bold mb-2", colors.text)}>
+                {travessia.title}
+              </h1>
+              <p className="text-lg text-muted-foreground mb-4">{travessia.subtitle}</p>
+              <p className="text-foreground/80 leading-relaxed">{travessia.description}</p>
+              
+              <div className="flex flex-wrap gap-2 mt-4">
+                {travessia.temas.map((tema) => (
+                  <span
+                    key={tema}
+                    className="text-xs px-3 py-1 bg-secondary/50 rounded-full text-muted-foreground"
+                  >
+                    {tema}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Access Warning */}
+        {!hasFullAccess && (
+          <Card className="mb-8 bg-amber-500/5 border-amber-500/20">
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                <Lock className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-medium text-foreground">Acesso restrito</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {!hasPortalAccess 
+                      ? `Esta travessia requer o portal ${travessia.minPortal}.`
+                      : 'Esta travessia requer confirmação profissional.'}
+                  </p>
+                  {!hasProfessionalAccess && (
+                    <Button 
+                      variant="link" 
+                      className="px-0 h-auto text-gold"
+                      onClick={() => navigate('/confirmar-profissional')}
+                    >
+                      Fazer confirmação profissional →
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Content Sections */}
+        {hasFullAccess && (
+          <div className="space-y-10">
+            {sections.map((section, sectionIndex) => (
+              <section key={sectionIndex}>
+                <div className="mb-6">
+                  <h2 className="font-display text-xl font-semibold text-foreground mb-1">
+                    {section.title}
+                  </h2>
+                  <p className="text-sm text-muted-foreground">{section.description}</p>
+                </div>
+
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {section.items.map((item, itemIndex) => {
+                    const ItemIcon = item.icon;
+                    return (
+                      <Card
+                        key={itemIndex}
+                        className={cn(
+                          "group cursor-pointer transition-all duration-300",
+                          "hover:shadow-lg hover:border-gold/40"
+                        )}
+                        onClick={() => navigate(item.route)}
+                      >
+                        <CardHeader className="pb-2">
+                          <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center", colors.icon)}>
+                            <ItemIcon className="w-5 h-5" />
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <CardTitle className="text-base mb-1 group-hover:text-gold transition-colors">
+                            {item.title}
+                          </CardTitle>
+                          <CardDescription className="text-sm line-clamp-2">
+                            {item.description}
+                          </CardDescription>
+                          <div className="flex items-center justify-end mt-3">
+                            <ArrowRight className="w-4 h-4 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-gold" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
+          </div>
+        )}
+
+        {/* Navigation Between Travessias */}
+        <div className="flex items-center justify-between mt-12 pt-8 border-t border-border/50">
+          {prevTravessia ? (
+            <Button
+              variant="ghost"
+              className="gap-2"
+              onClick={() => navigate(`/travessia/${prevTravessia.slug}`)}
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">Travessia {prevTravessia.number}</span>
+              <span className="sm:hidden">Anterior</span>
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              className="gap-2"
+              onClick={() => navigate('/travessias')}
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Todas as Travessias
+            </Button>
+          )}
+
+          {nextTravessia && (
+            <Button
+              variant={canAccessNextTravessia ? "default" : "ghost"}
+              className={cn("gap-2", !canAccessNextTravessia && "opacity-50")}
+              onClick={() => canAccessNextTravessia && navigate(`/travessia/${nextTravessia.slug}`)}
+              disabled={!canAccessNextTravessia}
+            >
+              <span className="hidden sm:inline">Travessia {nextTravessia.number}</span>
+              <span className="sm:hidden">Próxima</span>
+              {canAccessNextTravessia ? (
+                <ArrowRight className="w-4 h-4" />
+              ) : (
+                <Lock className="w-4 h-4" />
+              )}
+            </Button>
+          )}
+        </div>
+      </div>
+    </AppLayout>
+  );
+}
