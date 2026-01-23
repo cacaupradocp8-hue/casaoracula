@@ -873,13 +873,16 @@ E pede que ${sintese.nao_reconstruir} não seja reconstruído agora.`;
     }
   };
 
-  const handleBack = () => navigate('/ferramentas');
-
   return (
     <ContentPageLayout
       title=""
-      onBack={handleBack}
-      backLabel="Ferramentas"
+      onBack={() => navigate('/ferramentas-metodo')}
+      backLabel="Voltar às Ferramentas do Método"
+      breadcrumbs={[
+        { label: 'Casa', href: '/jornada' },
+        { label: 'Ferramentas do Método', href: '/ferramentas-metodo' },
+        { label: 'Torre Viva™' },
+      ]}
     >
       <div className="py-8">
         {renderStep()}

@@ -2,15 +2,12 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, TableIcon, Loader2, Shield, Circle, Droplets, Flame, Sparkles } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { ArrowLeft, TableIcon, Loader2, Shield, Circle, Droplets, Flame, Sparkles, Home, ChevronRight, RotateCcw } from "lucide-react";
+import { useNavigate, Link, Navigate } from "react-router-dom";
 import { useLabirintoPortas } from "@/hooks/useLabirinto";
 import { useAuth } from "@/contexts/AuthContext";
 import { canAccessFeature } from "@/types/portal";
 import { cn } from "@/lib/utils";
-import { Navigate } from "react-router-dom";
-
-import { RotateCcw } from "lucide-react";
 
 const TIPO_CAMPO_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   limiar: { label: "Limiar", icon: Sparkles, color: "text-purple-400" },
@@ -46,6 +43,24 @@ export default function LabirintoTabela() {
           <ArrowLeft className="w-4 h-4" />
           Voltar ao Labirinto
         </Button>
+
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <Link to="/ferramentas-metodo" className="hover:text-foreground transition-colors">
+            Ferramentas
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <Link to="/labirinto" className="hover:text-foreground transition-colors">
+            Labirinto
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Tabela de Referência</span>
+        </nav>
 
         {/* Header */}
         <div className="text-center space-y-4">
