@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Sparkles, Layers, Map, FileText, Heart, Archive, MoreVertical, ClipboardList, Compass, Wrench } from 'lucide-react';
+import { RefinamentoLeituraButton } from '@/components/session-room/RefinamentoLeituraPanel';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -121,6 +122,10 @@ export default function SessionRoomCase() {
           </div>
 
           <div className="flex items-center gap-2">
+            <RefinamentoLeituraButton 
+              sessionCaseId={caseId} 
+              clienteId={caseData.client_id} 
+            />
             <Button variant="outline" onClick={() => navigate('/ferramentas')} className="gap-2">
               <Wrench className="w-4 h-4" />
               Ferramentas
