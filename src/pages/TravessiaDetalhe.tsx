@@ -5,8 +5,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { getTravessia, TRAVESSIAS_DATA } from '@/types/travessia';
-import { canAccessFeature } from '@/types/portal';
+import { canAccessFeature, PortalType } from '@/types/portal';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import { 
@@ -71,7 +70,36 @@ const COLOR_MAP: Record<string, { bg: string; border: string; icon: string; text
     icon: 'bg-emerald-500/20 text-emerald-400',
     text: 'text-emerald-400',
   },
+  rose: {
+    bg: 'bg-rose-500/10',
+    border: 'border-rose-500/20',
+    icon: 'bg-rose-500/20 text-rose-400',
+    text: 'text-rose-400',
+  },
+  blue: {
+    bg: 'bg-blue-500/10',
+    border: 'border-blue-500/20',
+    icon: 'bg-blue-500/20 text-blue-400',
+    text: 'text-blue-400',
+  },
 };
+
+interface Travessia {
+  id: string;
+  number: number;
+  slug: string;
+  title: string;
+  subtitle: string | null;
+  description: string | null;
+  closing_ritual: string | null;
+  icone: string;
+  cor_acento: string;
+  temas: string[];
+  portal_minimo: PortalType;
+  requer_profissional: boolean;
+  ativa: boolean;
+  ordem: number;
+}
 
 // Conteúdo exclusivo de cada Travessia
 interface TravessiaItem {
@@ -202,6 +230,36 @@ export default function TravessiaDetalhe() {
   const { user } = useAuth();
   const { isProfessional, isLoading: isLoadingProfessional } = useProfessionalStatus();
 
+  // Fetch travessia from database
+  const { data: travessia, isLoading: isLoadingTravessia } = useQuery({
+    queryKey: ['travessia-detail', slug],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('travessias')
+        .select('*')
+        .eq('slug', slug)
+        .single();
+
+      if (error) throw error;
+      return data as Travessia;
+    },
+    enabled: !!slug,
+  });
+
+  // Fetch all travessias for navigation
+  const { data: allTravessias = [] } = useQuery({
+    queryKey: ['travessias-all'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('travessias')
+        .select('*')
+        .order('ordem', { ascending: true });
+
+      if (error) throw error;
+      return data as Travessia[];
+    },
+  });
+
   // Fetch famílias simbólicas
   const { data: familias = [], isLoading: isLoadingFamilias } = useQuery({
     queryKey: ['travessia-familias', slug],
@@ -228,7 +286,6 @@ export default function TravessiaDetalhe() {
     queryFn: async () => {
       const familiaIds = TRAVESSIA_FAMILIAS_MAP[slug || ''] || [];
       
-      // Also fetch items without familia_id that match the travessia
       const { data, error } = await supabase
         .from('travessia_library_items')
         .select('*')
@@ -237,7 +294,6 @@ export default function TravessiaDetalhe() {
       
       if (error) throw error;
       
-      // Filter items that belong to any of the mapped familias
       return (data || []).filter((item: TravessiaLibraryItem) => 
         familiaIds.includes(item.familia_id || '')
       ) as TravessiaLibraryItem[];
@@ -247,7 +303,18 @@ export default function TravessiaDetalhe() {
 
   if (!user || !slug) return null;
 
-  const travessia = getTravessia(slug);
+  if (isLoadingTravessia) {
+    return (
+      <AppLayout>
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="w-8 h-8 animate-spin text-gold" />
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
   if (!travessia) {
     return (
       <AppLayout>
@@ -261,21 +328,23 @@ export default function TravessiaDetalhe() {
     );
   }
 
+  const isAdmin = user.portal === 'admin';
   const Icon = ICON_MAP[travessia.icone] || Compass;
-  const colors = COLOR_MAP[travessia.corAcento] || COLOR_MAP.gold;
+  const colors = COLOR_MAP[travessia.cor_acento] || COLOR_MAP.gold;
   const sections = TRAVESSIA_CONTEUDO[slug] || [];
 
-  const hasPortalAccess = canAccessFeature(user.portal, travessia.minPortal);
-  const hasProfessionalAccess = !travessia.requiresProfessional || isProfessional;
+  // Admin has full access
+  const hasPortalAccess = isAdmin || canAccessFeature(user.portal, travessia.portal_minimo);
+  const hasProfessionalAccess = isAdmin || !travessia.requer_profissional || isProfessional;
   const hasFullAccess = hasPortalAccess && hasProfessionalAccess;
 
   // Navigate between travessias
-  const currentIndex = TRAVESSIAS_DATA.findIndex(t => t.slug === slug);
-  const prevTravessia = currentIndex > 0 ? TRAVESSIAS_DATA[currentIndex - 1] : null;
-  const nextTravessia = currentIndex < TRAVESSIAS_DATA.length - 1 ? TRAVESSIAS_DATA[currentIndex + 1] : null;
+  const currentIndex = allTravessias.findIndex(t => t.slug === slug);
+  const prevTravessia = currentIndex > 0 ? allTravessias[currentIndex - 1] : null;
+  const nextTravessia = currentIndex < allTravessias.length - 1 ? allTravessias[currentIndex + 1] : null;
 
   const canAccessNextTravessia = nextTravessia 
-    ? canAccessFeature(user.portal, nextTravessia.minPortal) && (!nextTravessia.requiresProfessional || isProfessional)
+    ? isAdmin || (canAccessFeature(user.portal, nextTravessia.portal_minimo) && (!nextTravessia.requer_profissional || isProfessional))
     : false;
 
   // Group library items by familia
@@ -316,19 +385,25 @@ export default function TravessiaDetalhe() {
               <h1 className={cn("font-display text-3xl font-bold mb-2", colors.text)}>
                 {travessia.title}
               </h1>
-              <p className="text-lg text-muted-foreground mb-4">{travessia.subtitle}</p>
-              <p className="text-foreground/80 leading-relaxed">{travessia.description}</p>
+              {travessia.subtitle && (
+                <p className="text-lg text-muted-foreground mb-4">{travessia.subtitle}</p>
+              )}
+              {travessia.description && (
+                <p className="text-foreground/80 leading-relaxed">{travessia.description}</p>
+              )}
               
-              <div className="flex flex-wrap gap-2 mt-4">
-                {travessia.temas.map((tema) => (
-                  <span
-                    key={tema}
-                    className="text-xs px-3 py-1 bg-secondary/50 rounded-full text-muted-foreground"
-                  >
-                    {tema}
-                  </span>
-                ))}
-              </div>
+              {travessia.temas && travessia.temas.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {travessia.temas.map((tema) => (
+                    <span
+                      key={tema}
+                      className="text-xs px-3 py-1 bg-secondary/50 rounded-full text-muted-foreground"
+                    >
+                      {tema}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -343,7 +418,7 @@ export default function TravessiaDetalhe() {
                   <p className="font-medium text-foreground">Acesso restrito</p>
                   <p className="text-sm text-muted-foreground mt-1">
                     {!hasPortalAccess 
-                      ? `Esta travessia requer o portal ${travessia.minPortal}.`
+                      ? `Esta travessia requer o portal ${travessia.portal_minimo}.`
                       : 'Esta travessia requer confirmação profissional.'}
                   </p>
                   {!hasProfessionalAccess && (
