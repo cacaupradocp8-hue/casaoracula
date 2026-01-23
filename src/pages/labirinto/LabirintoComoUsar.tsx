@@ -1,8 +1,8 @@
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, BookOpen } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { ArrowLeft, BookOpen, Home, ChevronRight } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function LabirintoComoUsar() {
   const navigate = useNavigate();
@@ -19,6 +19,24 @@ export default function LabirintoComoUsar() {
           <ArrowLeft className="w-4 h-4" />
           Voltar ao Labirinto
         </Button>
+
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <Link to="/ferramentas-metodo" className="hover:text-foreground transition-colors">
+            Ferramentas
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <Link to="/labirinto" className="hover:text-foreground transition-colors">
+            Labirinto
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Como Usar</span>
+        </nav>
 
         {/* Header */}
         <div className="text-center space-y-4">

@@ -14,6 +14,7 @@ import {
   Building2, 
   Castle, 
   ArrowRight, 
+  ArrowLeft,
   Lock,
   ChevronRight,
   Home,
@@ -99,15 +100,21 @@ export default function FerramentasMetodoHub() {
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-5xl">
+        {/* Back Button */}
+        <Button
+          variant="ghost"
+          onClick={() => navigate('/jornada')}
+          className="gap-2 text-muted-foreground hover:text-foreground mb-4"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Voltar à Casa
+        </Button>
+
         {/* Breadcrumb Navigation */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
           <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
             <Home className="w-3 h-3" />
             Casa
-          </Link>
-          <ChevronRight className="w-3 h-3" />
-          <Link to="/salas" className="hover:text-foreground transition-colors">
-            Formação
           </Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-foreground">Ferramentas do Método</span>

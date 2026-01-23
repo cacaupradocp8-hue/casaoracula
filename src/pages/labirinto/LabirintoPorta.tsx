@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams, Link } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -22,7 +22,9 @@ import {
   Layers,
   AlertTriangle,
   Volume2,
-  Castle
+  Castle,
+  Home,
+  ChevronRight
 } from "lucide-react";
 import { 
   useLabirintoPorta, 
@@ -231,6 +233,24 @@ export default function LabirintoPorta() {
           <ArrowLeft className="w-4 h-4" />
           Voltar ao Labirinto
         </Button>
+
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <Link to="/ferramentas-metodo" className="hover:text-foreground transition-colors">
+            Ferramentas
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <Link to="/labirinto" className="hover:text-foreground transition-colors">
+            Labirinto
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Porta {porta.numero}</span>
+        </nav>
 
         {/* Door Header */}
         <div className="relative">

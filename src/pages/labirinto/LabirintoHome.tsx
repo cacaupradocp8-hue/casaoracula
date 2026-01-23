@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DoorOpen, BookOpen, History, FileText, Loader2, Compass, Map, Table, HelpCircle } from "lucide-react";
+import { DoorOpen, BookOpen, History, FileText, Loader2, Compass, Map, Table, HelpCircle, ArrowLeft, Home, ChevronRight } from "lucide-react";
 import { useLabirintoPortas, useCreateLeitura, useLabirintoLeituras, type LabirintoPorta } from "@/hooks/useLabirinto";
 import { useAuth } from "@/contexts/AuthContext";
 import { canAccessFeature } from "@/types/portal";
@@ -114,6 +114,30 @@ export default function LabirintoHome() {
   return (
     <AppLayout>
       <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+        {/* Back Button */}
+        <Button
+          variant="ghost"
+          onClick={() => navigate('/ferramentas-metodo')}
+          className="gap-2 text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Voltar às Ferramentas do Método
+        </Button>
+
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <Link to="/ferramentas-metodo" className="hover:text-foreground transition-colors">
+            Ferramentas do Método
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Labirinto das 39 Portas</span>
+        </nav>
+
         {/* Header */}
         <div className="text-center space-y-4">
           <div className="flex items-center justify-center gap-3">

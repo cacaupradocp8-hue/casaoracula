@@ -54,8 +54,13 @@ export default function CartografiaTorre() {
     <ContentPageLayout
       title="Cartografia da Torre"
       subtitle="Mapeamento das estruturas de defesa e transformação"
-      onBack={() => navigate('/ferramentas')}
-      backLabel="Voltar para Ferramentas"
+      onBack={() => navigate('/ferramentas-metodo')}
+      backLabel="Voltar às Ferramentas do Método"
+      breadcrumbs={[
+        { label: 'Casa', href: '/jornada' },
+        { label: 'Ferramentas do Método', href: '/ferramentas-metodo' },
+        { label: 'Cartografia das Torres' },
+      ]}
     >
       <EthicalNotice toolName="Cartografia da Torre" className="mb-6" />
       
