@@ -100,8 +100,30 @@ export function AdminTravessiasTab() {
     },
   });
 
+  // Helper to get next available number
+  const getNextAvailableNumber = () => {
+    if (!travessias || travessias.length === 0) return 1;
+    const usedNumbers = travessias.map(t => t.number);
+    let next = 0;
+    while (usedNumbers.includes(next)) {
+      next++;
+    }
+    return next;
+  };
+
+  // Check if number is already in use by another travessia
+  const isNumberInUse = (num: number, excludeId?: string) => {
+    if (!travessias) return false;
+    return travessias.some(t => t.number === num && t.id !== excludeId);
+  };
+
   const saveMutation = useMutation({
     mutationFn: async (data: typeof formData & { id?: string }) => {
+      // Pre-validate: check for duplicate number
+      if (isNumberInUse(data.number, data.id)) {
+        throw new Error(`DUPLICATE_NUMBER:${data.number}`);
+      }
+
       if (data.id) {
         const { error } = await supabase
           .from('travessias')
@@ -149,8 +171,28 @@ export function AdminTravessiasTab() {
       resetForm();
       setIsDialogOpen(false);
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       console.error('Error saving travessia:', error);
+      
+      // Handle duplicate number error with friendly message
+      if (error.message?.startsWith('DUPLICATE_NUMBER:')) {
+        const num = error.message.split(':')[1];
+        const existing = travessias?.find(t => t.number === parseInt(num));
+        const suggestion = getNextAvailableNumber();
+        toast.error(
+          `Já existe uma travessia com o número ${num}${existing ? ` ("${existing.title}")` : ''}. Próximo disponível: ${suggestion}`,
+          { duration: 6000 }
+        );
+        return;
+      }
+      
+      // Handle database constraint error
+      if (error.message?.includes('23505') || error.message?.includes('unique constraint')) {
+        const suggestion = getNextAvailableNumber();
+        toast.error(`Número já em uso. Próximo disponível: ${suggestion}`, { duration: 5000 });
+        return;
+      }
+      
       toast.error('Erro ao salvar travessia');
     },
   });
@@ -201,8 +243,9 @@ export function AdminTravessiasTab() {
   });
 
   const resetForm = () => {
+    const nextNumber = getNextAvailableNumber();
     setFormData({
-      number: (travessias?.length || 0) + 1,
+      number: nextNumber,
       slug: '',
       title: '',
       subtitle: '',
@@ -320,11 +363,16 @@ export function AdminTravessiasTab() {
                   <Label>Número</Label>
                   <Input
                     type="number"
-                    min={1}
+                    min={0}
                     value={formData.number}
-                    onChange={(e) => setFormData({ ...formData, number: parseInt(e.target.value) || 1 })}
+                    onChange={(e) => setFormData({ ...formData, number: parseInt(e.target.value) || 0 })}
                     required
                   />
+                  {isNumberInUse(formData.number, editingTravessia?.id) && (
+                    <p className="text-xs text-destructive">
+                      Número já em uso. Próximo disponível: {getNextAvailableNumber()}
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label>Slug (URL)</Label>
