@@ -226,6 +226,14 @@ interface TravessiaFamilia {
   ativa: boolean;
 }
 
+interface ConteudoAula {
+  id: string;
+  titulo: string;
+  descricao_curta: string;
+  ordem: number;
+  publicado: boolean;
+}
+
 interface TravessiaLibraryItem {
   id: string;
   titulo_ritual: string;
@@ -318,6 +326,25 @@ export default function TravessiaDetalhe() {
     enabled: !!slug && !!user,
   });
 
+  // Fetch lições/dias do banco (conteudo_aulas)
+  const { data: licoesFromDB = [] } = useQuery({
+    queryKey: ['travessia-licoes', travessia?.id],
+    queryFn: async () => {
+      if (!travessia?.id) return [];
+      
+      const { data, error } = await supabase
+        .from('conteudo_aulas')
+        .select('id, titulo, descricao_curta, ordem, publicado')
+        .eq('travessia_id', travessia.id)
+        .eq('publicado', true)
+        .order('ordem', { ascending: true });
+      
+      if (error) throw error;
+      return data as ConteudoAula[];
+    },
+    enabled: !!travessia?.id,
+  });
+
   if (!user || !slug) return null;
 
   if (isLoadingTravessia) {
@@ -348,7 +375,35 @@ export default function TravessiaDetalhe() {
   const isAdmin = user.portal === 'admin';
   const Icon = ICON_MAP[travessia.icone] || Compass;
   const colors = COLOR_MAP[travessia.cor_acento] || COLOR_MAP.gold;
-  const sections = TRAVESSIA_CONTEUDO[slug] || [];
+  
+  // Use lições do banco se existirem, senão use hardcode como fallback
+  const hardcodedSections = TRAVESSIA_CONTEUDO[slug] || [];
+  const hasDBLicoes = licoesFromDB.length > 0;
+  
+  // Mapeamento de ícones para lições do banco
+  const LICAO_ICONS: Record<number, LucideIcon> = {
+    1: Moon,
+    2: Compass,
+    3: Waves,
+    4: Heart,
+    5: Sparkles,
+    6: DoorOpen,
+    7: Castle,
+  };
+  
+  // Construir sections dinamicamente se tiver lições no banco
+  const sections: TravessiaSection[] = hasDBLicoes 
+    ? [{
+        title: travessia.subtitle || 'Conteúdo da Travessia',
+        description: travessia.description || '',
+        items: licoesFromDB.map(licao => ({
+          title: licao.titulo,
+          description: licao.descricao_curta,
+          route: `/aula/${licao.id}`,
+          icon: LICAO_ICONS[licao.ordem] || Sparkles,
+        }))
+      }]
+    : hardcodedSections;
 
   // Admin has full access
   const hasPortalAccess = isAdmin || canAccessFeature(user.portal, travessia.portal_minimo);

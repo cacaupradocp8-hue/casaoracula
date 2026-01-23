@@ -223,7 +223,7 @@ export default function Admin() {
             </TabsTrigger>
             <TabsTrigger value="travessias-conteudo" className="gap-2">
               <BookOpen className="w-4 h-4" />
-              Conteúdo Travessias
+              Biblioteca Travessias
             </TabsTrigger>
             <TabsTrigger value="familias" className="gap-2">
               <FolderTree className="w-4 h-4" />
