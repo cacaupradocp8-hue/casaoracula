@@ -23,7 +23,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 import { useOnboarding } from '@/hooks/useOnboarding';
 import { PortalType, canAccessFeature } from '@/types/portal';
-import { VisitorDashboardPanel } from '@/components/visitor/VisitorDashboardPanel';
+import { VisitorHomePage } from '@/components/visitor/VisitorHomePage';
 
 // ════════════════════════════════════════════════════════════════════════════
 // TIPOS E CONFIGURAÇÕES
@@ -451,6 +451,16 @@ export default function Jornada() {
     );
   }
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // VISITANTE: Tela específica sem menu, apenas porta gratuita
+  // ═══════════════════════════════════════════════════════════════════════════
+  if (userState === 'visitante') {
+    return <VisitorHomePage />;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // USUÁRIAS COM ACESSO: Interface completa com AppLayout
+  // ═══════════════════════════════════════════════════════════════════════════
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 max-w-2xl">
@@ -485,22 +495,9 @@ export default function Jornada() {
           <StateIndicator state={userState} />
 
           {/* ═══════════════════════════════════════════════════════════════ */}
-          {/* BLOCO ESPECIAL: PAINEL VISITANTE */}
+          {/* BLOCO 2: PORTA ATIVA (AÇÃO PRINCIPAL) */}
           {/* ═══════════════════════════════════════════════════════════════ */}
-          {userState === 'visitante' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <VisitorDashboardPanel />
-            </motion.div>
-          )}
-
-          {/* ═══════════════════════════════════════════════════════════════ */}
-          {/* BLOCO 2: PORTA ATIVA (AÇÃO PRINCIPAL) - Only for non-visitors */}
-          {/* ═══════════════════════════════════════════════════════════════ */}
-          {userState !== 'visitante' && <PrimaryActionCard state={userState} />}
+          <PrimaryActionCard state={userState} />
 
           {/* ═══════════════════════════════════════════════════════════════ */}
           {/* BLOCO 3: CAMINHOS FUTUROS (ESMAECIDOS) */}
