@@ -1,14 +1,21 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Library, Search, Heart, BookOpen, Sparkles, MessageCircle, Scroll, Home, ChevronRight } from 'lucide-react';
+import { Library, Search, Heart, BookOpen, Sparkles, MessageCircle, Scroll, Home, ChevronRight, Globe, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 
 type SymbolicItemType = 'conto' | 'arquetipo' | 'pergunta' | 'ritual';
 
@@ -18,59 +25,9 @@ interface SymbolicItem {
   title: string;
   content: string;
   tags: string[];
-  isFavorite: boolean;
+  origem_cultural: string | null;
+  observacoes_leitura: string | null;
 }
-
-const MOCK_ITEMS: SymbolicItem[] = [
-  {
-    id: '1',
-    type: 'conto',
-    title: 'A Mulher Esqueleto',
-    content: 'Uma história sobre o amor que não foge da morte. Conta de um pescador que, ao puxar sua rede, traz à tona os ossos de uma mulher afogada. Assustado, ele foge, mas ela o segue, presa em sua linha. Na cabana, enquanto ele dorme, ela reconstrói seu corpo com as lágrimas dele. É uma narrativa sobre amar o que está por baixo da superfície.',
-    tags: ['morte', 'renascimento', 'amor profundo', 'feminino'],
-    isFavorite: true,
-  },
-  {
-    id: '2',
-    type: 'arquetipo',
-    title: 'A Donzela Interior',
-    content: 'A Donzela representa o aspecto virginal da psique — não no sentido de pureza sexual, mas de inteireza, de pertencer apenas a si mesma. Quando este arquétipo está ferido, a mulher busca constantemente aprovação externa, não confia em suas percepções, entrega seu poder facilmente.',
-    tags: ['feminino', 'autonomia', 'início', 'potencial'],
-    isFavorite: false,
-  },
-  {
-    id: '3',
-    type: 'pergunta',
-    title: 'A Pergunta do Limiar',
-    content: 'Se você pudesse voltar ao exato momento em que fez a escolha que mudou tudo... você faria diferente? Ou a dor que veio depois ensinou algo que nenhuma facilidade poderia ter ensinado?',
-    tags: ['escolha', 'limiar', 'travessia', 'reflexão'],
-    isFavorite: true,
-  },
-  {
-    id: '4',
-    type: 'ritual',
-    title: 'Ritual do Espelho Escuro',
-    content: 'Em ambiente escuro e seguro, acenda uma vela e coloque-a ao lado de um espelho. Olhe para seu reflexo por 10 minutos, deixando que as formas se transformem. Não force nenhuma imagem — deixe que seu inconsciente mostre o que precisa ser visto. Depois, escreva o que surgiu sem editar.',
-    tags: ['sombra', 'autoconhecimento', 'espelho', 'inconsciente'],
-    isFavorite: false,
-  },
-  {
-    id: '5',
-    type: 'arquetipo',
-    title: 'A Mãe Devoradora',
-    content: 'Quando o arquétipo materno se torna devorador, o amor vira prisão. A Mãe Devoradora não permite que os filhos cresçam, mantendo-os dependentes para preencher seu próprio vazio. Este padrão pode aparecer em relações de cuidado onde quem cuida precisa ser indispensável.',
-    tags: ['sombra', 'mãe', 'dependência', 'controle'],
-    isFavorite: false,
-  },
-  {
-    id: '6',
-    type: 'pergunta',
-    title: 'A Pergunta Impossível',
-    content: 'Qual parte de você precisaria morrer para que você finalmente vivesse?',
-    tags: ['morte simbólica', 'transformação', 'profunda'],
-    isFavorite: true,
-  },
-];
 
 const typeConfig: Record<SymbolicItemType, { label: string; icon: React.ReactNode; color: string }> = {
   conto: { label: 'Conto de Poder', icon: <BookOpen className="w-4 h-4" />, color: 'bg-burgundy/20 text-burgundy-light' },
@@ -81,20 +38,44 @@ const typeConfig: Record<SymbolicItemType, { label: string; icon: React.ReactNod
 
 export default function Biblioteca() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [items, setItems] = useState(MOCK_ITEMS);
   const [selectedType, setSelectedType] = useState<SymbolicItemType | 'all'>('all');
+  const [favorites, setFavorites] = useState<Set<string>>(() => {
+    const saved = localStorage.getItem('biblioteca-favorites');
+    return saved ? new Set(JSON.parse(saved)) : new Set();
+  });
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  const { data: items = [], isLoading } = useQuery({
+    queryKey: ['library-items'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('library_items')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data as SymbolicItem[];
+    },
+  });
 
   const toggleFavorite = (id: string) => {
-    setItems(prev => prev.map(item => 
-      item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
-    ));
+    setFavorites(prev => {
+      const newFavorites = new Set(prev);
+      if (newFavorites.has(id)) {
+        newFavorites.delete(id);
+      } else {
+        newFavorites.add(id);
+      }
+      localStorage.setItem('biblioteca-favorites', JSON.stringify([...newFavorites]));
+      return newFavorites;
+    });
   };
 
   const filteredItems = items.filter(item => {
     const matchesSearch = 
       item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+      item.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const matchesType = selectedType === 'all' || item.type === selectedType;
     
@@ -158,17 +139,25 @@ export default function Biblioteca() {
           </TabsList>
 
           <TabsContent value={selectedType} className="mt-0">
-            {filteredItems.length === 0 ? (
+            {isLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              </div>
+            ) : filteredItems.length === 0 ? (
               <Card className="text-center py-12">
                 <CardContent>
                   <Library className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                  <p className="text-muted-foreground">Nenhum item encontrado</p>
+                  <p className="text-muted-foreground">
+                    {items.length === 0 ? 'Nenhum item cadastrado ainda' : 'Nenhum item encontrado'}
+                  </p>
                 </CardContent>
               </Card>
             ) : (
               <div className="grid gap-4">
                 {filteredItems.map((item) => {
                   const config = typeConfig[item.type];
+                  const isFavorite = favorites.has(item.id);
+                  const isExpanded = expandedId === item.id;
                   
                   return (
                     <Card key={item.id} className="group hover:shadow-gold transition-shadow">
@@ -179,9 +168,17 @@ export default function Biblioteca() {
                               {config.icon}
                             </div>
                             <div>
-                              <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                                {config.label}
-                              </p>
+                              <div className="flex items-center gap-2">
+                                <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                                  {config.label}
+                                </p>
+                                {item.origem_cultural && (
+                                  <Badge variant="outline" className="text-xs gap-1">
+                                    <Globe className="w-3 h-3" />
+                                    {item.origem_cultural}
+                                  </Badge>
+                                )}
+                              </div>
                               <CardTitle className="text-lg font-display">
                                 {item.title}
                               </CardTitle>
@@ -195,7 +192,7 @@ export default function Biblioteca() {
                           >
                             <Heart className={cn(
                               'w-5 h-5 transition-colors',
-                              item.isFavorite ? 'fill-gold text-gold' : 'text-muted-foreground'
+                              isFavorite ? 'fill-gold text-gold' : 'text-muted-foreground'
                             )} />
                           </Button>
                         </div>
@@ -204,8 +201,26 @@ export default function Biblioteca() {
                         <p className="text-muted-foreground text-sm leading-relaxed mb-4">
                           {item.content}
                         </p>
+                        
+                        {item.observacoes_leitura && (
+                          <Collapsible open={isExpanded} onOpenChange={() => setExpandedId(isExpanded ? null : item.id)}>
+                            <CollapsibleTrigger asChild>
+                              <Button variant="ghost" size="sm" className="gap-2 mb-3 text-muted-foreground hover:text-foreground">
+                                <Info className="w-4 h-4" />
+                                Observações de Leitura
+                                <ChevronRight className={cn('w-4 h-4 transition-transform', isExpanded && 'rotate-90')} />
+                              </Button>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent>
+                              <div className="bg-muted/50 rounded-lg p-4 mb-3 text-sm text-muted-foreground italic border-l-2 border-gold/50">
+                                {item.observacoes_leitura}
+                              </div>
+                            </CollapsibleContent>
+                          </Collapsible>
+                        )}
+                        
                         <div className="flex flex-wrap gap-2">
-                          {item.tags.map((tag) => (
+                          {item.tags?.map((tag) => (
                             <Badge key={tag} variant="secondary" className="text-xs">
                               {tag}
                             </Badge>
