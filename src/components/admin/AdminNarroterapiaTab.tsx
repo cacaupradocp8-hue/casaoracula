@@ -25,10 +25,14 @@ import {
 } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { BookOpen, BookOpenCheck, Headphones, Plus, Edit, Trash2, Loader2, DoorOpen } from 'lucide-react';
+import { BookOpen, BookOpenCheck, Headphones, Plus, Edit, Trash2, Loader2, DoorOpen, ShieldAlert, AlertTriangle, Users, Ban, ClipboardPen, Headphones as AudioIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 // ============ TYPES ============
+
+type NivelRisco = 'baixo' | 'medio' | 'alto';
+type TipoUso = 'estudo' | 'clinico_autorizado';
 
 interface ContoClinical {
   id: string;
@@ -40,6 +44,17 @@ interface ContoClinical {
   riscos_uso_inadequado: string;
   origem_cultural: string | null;
   porta_psiquica: string | null;
+  eixo_simbolico: string | null;
+  nivel_risco: NivelRisco;
+  tipo_uso: TipoUso;
+  exige_certificacao: boolean;
+  permite_grupo: boolean;
+  permite_crise_aguda: boolean;
+  restricoes_combinacao: string[];
+  exige_cartografia: boolean;
+  audio_padrao_disponivel: boolean;
+  audio_padrao_id: string | null;
+  aviso_etico: string | null;
   ordem: number;
   ativo: boolean;
 }
@@ -78,6 +93,17 @@ const EMPTY_CONTO: Omit<ContoClinical, 'id'> = {
   riscos_uso_inadequado: '',
   origem_cultural: '',
   porta_psiquica: '',
+  eixo_simbolico: '',
+  nivel_risco: 'baixo',
+  tipo_uso: 'estudo',
+  exige_certificacao: false,
+  permite_grupo: true,
+  permite_crise_aguda: false,
+  restricoes_combinacao: [],
+  exige_cartografia: false,
+  audio_padrao_disponivel: false,
+  audio_padrao_id: null,
+  aviso_etico: '',
   ordem: 0,
   ativo: true,
 };
@@ -282,6 +308,17 @@ export function AdminNarroterapiaTab() {
       riscos_uso_inadequado: conto.riscos_uso_inadequado,
       origem_cultural: conto.origem_cultural || '',
       porta_psiquica: conto.porta_psiquica || '',
+      eixo_simbolico: conto.eixo_simbolico || '',
+      nivel_risco: conto.nivel_risco || 'baixo',
+      tipo_uso: conto.tipo_uso || 'estudo',
+      exige_certificacao: conto.exige_certificacao || false,
+      permite_grupo: conto.permite_grupo ?? true,
+      permite_crise_aguda: conto.permite_crise_aguda || false,
+      restricoes_combinacao: conto.restricoes_combinacao || [],
+      exige_cartografia: conto.exige_cartografia || false,
+      audio_padrao_disponivel: conto.audio_padrao_disponivel || false,
+      audio_padrao_id: conto.audio_padrao_id,
+      aviso_etico: conto.aviso_etico || '',
       ordem: conto.ordem,
       ativo: conto.ativo,
     });
@@ -612,6 +649,65 @@ export function AdminNarroterapiaTab() {
                     </div>
                   </div>
 
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>Eixo Simbólico</Label>
+                      <Input
+                        value={formData.eixo_simbolico || ''}
+                        onChange={(e) => setFormData(prev => ({ ...prev, eixo_simbolico: e.target.value }))}
+                        placeholder="Feminino Ancestral"
+                      />
+                    </div>
+                    <div>
+                      <Label>Nível de Risco *</Label>
+                      <Select
+                        value={formData.nivel_risco}
+                        onValueChange={(value: NivelRisco) => setFormData(prev => ({ ...prev, nivel_risco: value }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione o nível" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="baixo">🟢 Baixo</SelectItem>
+                          <SelectItem value="medio">🟡 Médio</SelectItem>
+                          <SelectItem value="alto">🔴 Alto</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>Tipo de Uso *</Label>
+                      <Select
+                        value={formData.tipo_uso}
+                        onValueChange={(value: TipoUso) => setFormData(prev => ({ ...prev, tipo_uso: value }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione o tipo" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="estudo">📚 Estudo</SelectItem>
+                          <SelectItem value="clinico_autorizado">🏥 Clínico Autorizado</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label>Restrições de Combinação</Label>
+                      <Input
+                        value={formData.restricoes_combinacao?.join(', ') || ''}
+                        onChange={(e) => setFormData(prev => ({ 
+                          ...prev, 
+                          restricoes_combinacao: e.target.value.split(',').map(s => s.trim()).filter(Boolean)
+                        }))}
+                        placeholder="Porta do Luto, Porta da Sombra"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Portas Psíquicas separadas por vírgula
+                      </p>
+                    </div>
+                  </div>
+
                   <div>
                     <Label>Texto do Conto *</Label>
                     <Textarea
@@ -652,12 +748,80 @@ export function AdminNarroterapiaTab() {
                     />
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      checked={formData.ativo}
-                      onCheckedChange={(checked) => setFormData(prev => ({ ...prev, ativo: checked }))}
+                  <div>
+                    <Label>Aviso Ético (exibido para conto de alto risco)</Label>
+                    <Textarea
+                      value={formData.aviso_etico || ''}
+                      onChange={(e) => setFormData(prev => ({ ...prev, aviso_etico: e.target.value }))}
+                      placeholder="Este conto possui conteúdo que pode mobilizar camadas psíquicas profundas..."
+                      rows={2}
                     />
-                    <Label>Ativo</Label>
+                  </div>
+
+                  {/* Boolean switches grid */}
+                  <div className="grid grid-cols-2 gap-4 p-4 rounded-lg bg-muted/30">
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={formData.exige_certificacao}
+                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, exige_certificacao: checked }))}
+                      />
+                      <Label className="flex items-center gap-1">
+                        <ShieldAlert className="w-4 h-4" />
+                        Exige Certificação
+                      </Label>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={formData.exige_cartografia}
+                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, exige_cartografia: checked }))}
+                      />
+                      <Label className="flex items-center gap-1">
+                        <ClipboardPen className="w-4 h-4" />
+                        Exige Cartografia
+                      </Label>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={formData.permite_grupo}
+                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, permite_grupo: checked }))}
+                      />
+                      <Label className="flex items-center gap-1">
+                        <Users className="w-4 h-4" />
+                        Permite Grupo
+                      </Label>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={formData.permite_crise_aguda}
+                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, permite_crise_aguda: checked }))}
+                      />
+                      <Label className="flex items-center gap-1">
+                        <AlertTriangle className="w-4 h-4" />
+                        Permite Crise Aguda
+                      </Label>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={formData.audio_padrao_disponivel}
+                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, audio_padrao_disponivel: checked }))}
+                      />
+                      <Label className="flex items-center gap-1">
+                        <AudioIcon className="w-4 h-4" />
+                        Áudio Padrão Disponível
+                      </Label>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={formData.ativo}
+                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, ativo: checked }))}
+                      />
+                      <Label>Ativo</Label>
+                    </div>
                   </div>
 
                   <div className="flex justify-end gap-2">
@@ -695,13 +859,20 @@ export function AdminNarroterapiaTab() {
                     <TableHead className="w-12">#</TableHead>
                     <TableHead>Título</TableHead>
                     <TableHead>Porta Psíquica</TableHead>
-                    <TableHead>Origem</TableHead>
+                    <TableHead>Risco</TableHead>
+                    <TableHead>Tipo</TableHead>
                     <TableHead className="w-24">Status</TableHead>
                     <TableHead className="w-24">Ações</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {contos.map((conto) => (
+                  {contos.map((conto) => {
+                    const riskColors = {
+                      baixo: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/50',
+                      medio: 'bg-amber-500/10 text-amber-500 border-amber-500/50',
+                      alto: 'bg-destructive/10 text-destructive border-destructive/50',
+                    };
+                    return (
                     <TableRow key={conto.id}>
                       <TableCell className="font-mono text-xs">{conto.ordem}</TableCell>
                       <TableCell className="font-medium">{conto.titulo}</TableCell>
@@ -715,8 +886,16 @@ export function AdminNarroterapiaTab() {
                           <span className="text-muted-foreground text-xs">-</span>
                         )}
                       </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
-                        {conto.origem_cultural || '-'}
+                      <TableCell>
+                        <Badge className={riskColors[conto.nivel_risco || 'baixo']}>
+                          {conto.nivel_risco === 'alto' ? '🔴 Alto' : 
+                           conto.nivel_risco === 'medio' ? '🟡 Médio' : '🟢 Baixo'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="text-xs">
+                          {conto.tipo_uso === 'clinico_autorizado' ? '🏥 Clínico' : '📚 Estudo'}
+                        </Badge>
                       </TableCell>
                       <TableCell>
                         <Badge variant={conto.ativo ? 'secondary' : 'outline'}>
@@ -746,7 +925,8 @@ export function AdminNarroterapiaTab() {
                         </div>
                       </TableCell>
                     </TableRow>
-                  ))}
+                    );
+                  })}
                 </TableBody>
               </Table>
             </Card>

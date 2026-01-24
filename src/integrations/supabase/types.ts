@@ -1212,50 +1212,91 @@ export type Database = {
       contos_clinicos: {
         Row: {
           ativo: boolean | null
+          audio_padrao_disponivel: boolean | null
+          audio_padrao_id: string | null
+          aviso_etico: string | null
           created_at: string | null
+          eixo_simbolico: string | null
+          exige_cartografia: boolean | null
+          exige_certificacao: boolean | null
           id: string
+          nivel_risco: string | null
           o_que_observar: string
           ordem: number | null
           origem_cultural: string | null
+          permite_crise_aguda: boolean | null
+          permite_grupo: boolean | null
           porta_psiquica: string | null
           quando_usar: string
+          restricoes_combinacao: string[] | null
           riscos_uso_inadequado: string
           slug: string
           texto_conto: string
+          tipo_uso: string | null
           titulo: string
           updated_at: string | null
         }
         Insert: {
           ativo?: boolean | null
+          audio_padrao_disponivel?: boolean | null
+          audio_padrao_id?: string | null
+          aviso_etico?: string | null
           created_at?: string | null
+          eixo_simbolico?: string | null
+          exige_cartografia?: boolean | null
+          exige_certificacao?: boolean | null
           id?: string
+          nivel_risco?: string | null
           o_que_observar: string
           ordem?: number | null
           origem_cultural?: string | null
+          permite_crise_aguda?: boolean | null
+          permite_grupo?: boolean | null
           porta_psiquica?: string | null
           quando_usar: string
+          restricoes_combinacao?: string[] | null
           riscos_uso_inadequado: string
           slug: string
           texto_conto: string
+          tipo_uso?: string | null
           titulo: string
           updated_at?: string | null
         }
         Update: {
           ativo?: boolean | null
+          audio_padrao_disponivel?: boolean | null
+          audio_padrao_id?: string | null
+          aviso_etico?: string | null
           created_at?: string | null
+          eixo_simbolico?: string | null
+          exige_cartografia?: boolean | null
+          exige_certificacao?: boolean | null
           id?: string
+          nivel_risco?: string | null
           o_que_observar?: string
           ordem?: number | null
           origem_cultural?: string | null
+          permite_crise_aguda?: boolean | null
+          permite_grupo?: boolean | null
           porta_psiquica?: string | null
           quando_usar?: string
+          restricoes_combinacao?: string[] | null
           riscos_uso_inadequado?: string
           slug?: string
           texto_conto?: string
+          tipo_uso?: string | null
           titulo?: string
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "contos_clinicos_audio_padrao_id_fkey"
+            columns: ["audio_padrao_id"]
+            isOneToOne: false
+            referencedRelation: "audio_assets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       course_enrollments: {
         Row: {
