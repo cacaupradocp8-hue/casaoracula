@@ -134,6 +134,12 @@ import JardimPsiqueDetalhe from "./pages/JardimPsiqueDetalhe";
 import Tour from "./pages/Tour";
 // Travessia Detalhe
 import TravessiaDetalhe from "./pages/TravessiaDetalhe";
+// Narroterapia Oracular
+import NarroterapiaHub from "./pages/NarroterapiaHub";
+import BibliotecaContos from "./pages/narroterapia/BibliotecaContos";
+import BibliotecaClinica from "./pages/narroterapia/BibliotecaClinica";
+import ContoClinicoDetalhe from "./pages/narroterapia/ContoClinicoDetalhe";
+import AudiosNarracao from "./pages/narroterapia/AudiosNarracao";
 
 const queryClient = new QueryClient();
 
@@ -441,6 +447,49 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      
+      {/* Narroterapia Oracular™ */}
+      <Route
+        path="/narroterapia"
+        element={
+          <ProtectedRoute>
+            <NarroterapiaHub />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/narroterapia/biblioteca-contos"
+        element={
+          <ProtectedRoute>
+            <BibliotecaContos />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/narroterapia/clinica"
+        element={
+          <ProtectedRoute minPortal="aluna_formacao">
+            <BibliotecaClinica />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/narroterapia/clinica/:slug"
+        element={
+          <ProtectedRoute minPortal="aluna_formacao">
+            <ContoClinicoDetalhe />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/narroterapia/audios"
+        element={
+          <ProtectedRoute minPortal="aluna_formacao">
+            <AudiosNarracao />
+          </ProtectedRoute>
+        }
+      />
+      
       <Route
         path="/biblioteca"
         element={

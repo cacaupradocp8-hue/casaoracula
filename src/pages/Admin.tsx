@@ -58,6 +58,7 @@ const AdminGaleriaTab = lazy(() => import('@/components/admin/AdminGaleriaTab').
 const AdminTorreVivaTab = lazy(() => import('@/components/admin/AdminTorreVivaTab').then(m => ({ default: m.AdminTorreVivaTab })));
 const AdminBibliotecaCasosTab = lazy(() => import('@/components/admin/AdminBibliotecaCasosTab'));
 const AdminAtlasFemininoTab = lazy(() => import('@/components/admin/AdminAtlasFemininoTab').then(m => ({ default: m.AdminAtlasFemininoTab })));
+const AdminNarroterapiaTab = lazy(() => import('@/components/admin/AdminNarroterapiaTab').then(m => ({ default: m.AdminNarroterapiaTab })));
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
   { value: 'mentorada', label: '👁 Mentorada' },
@@ -284,6 +285,10 @@ export default function Admin() {
             <TabsTrigger value="atlas-feminino" className="gap-2">
               <Flower2 className="w-4 h-4 text-gold" />
               Atlas Arquétipos
+            </TabsTrigger>
+            <TabsTrigger value="narroterapia" className="gap-2">
+              <BookOpen className="w-4 h-4 text-burgundy-light" />
+              Narroterapia
             </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Cog className="w-4 h-4" />
@@ -530,6 +535,12 @@ export default function Admin() {
           <TabsContent value="atlas-feminino">
             <Suspense fallback={<TabLoader />}>
               <AdminAtlasFemininoTab />
+            </Suspense>
+          </TabsContent>
+
+          <TabsContent value="narroterapia">
+            <Suspense fallback={<TabLoader />}>
+              <AdminNarroterapiaTab />
             </Suspense>
           </TabsContent>
 

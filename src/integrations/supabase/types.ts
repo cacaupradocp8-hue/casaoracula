@@ -1206,6 +1206,51 @@ export type Database = {
           },
         ]
       }
+      contos_clinicos: {
+        Row: {
+          ativo: boolean | null
+          created_at: string | null
+          id: string
+          o_que_observar: string
+          ordem: number | null
+          origem_cultural: string | null
+          quando_usar: string
+          riscos_uso_inadequado: string
+          slug: string
+          texto_conto: string
+          titulo: string
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string | null
+          id?: string
+          o_que_observar: string
+          ordem?: number | null
+          origem_cultural?: string | null
+          quando_usar: string
+          riscos_uso_inadequado: string
+          slug: string
+          texto_conto: string
+          titulo: string
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string | null
+          id?: string
+          o_que_observar?: string
+          ordem?: number | null
+          origem_cultural?: string | null
+          quando_usar?: string
+          riscos_uso_inadequado?: string
+          slug?: string
+          texto_conto?: string
+          titulo?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       course_enrollments: {
         Row: {
           ativo: boolean
@@ -3049,6 +3094,8 @@ export type Database = {
           created_at: string
           created_by: string | null
           id: string
+          observacoes_leitura: string | null
+          origem_cultural: string | null
           portal_level_required: Database["public"]["Enums"]["portal_type"]
           tags: string[] | null
           title: string
@@ -3060,6 +3107,8 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          observacoes_leitura?: string | null
+          origem_cultural?: string | null
           portal_level_required?: Database["public"]["Enums"]["portal_type"]
           tags?: string[] | null
           title: string
@@ -3071,6 +3120,8 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          observacoes_leitura?: string | null
+          origem_cultural?: string | null
           portal_level_required?: Database["public"]["Enums"]["portal_type"]
           tags?: string[] | null
           title?: string
