@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { BookOpenCheck, Plus, Edit, Trash2, Loader2 } from 'lucide-react';
+import { BookOpenCheck, Headphones, Plus, Edit, Trash2, Loader2, DoorOpen } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface ContoClinical {
@@ -37,8 +37,18 @@ interface ContoClinical {
   o_que_observar: string;
   riscos_uso_inadequado: string;
   origem_cultural: string | null;
+  porta_psiquica: string | null;
   ordem: number;
   ativo: boolean;
+}
+
+interface AudioNarracao {
+  id: string;
+  titulo: string;
+  descricao: string | null;
+  porta_psiquica: string | null;
+  ordem: number | null;
+  publicado: boolean | null;
 }
 
 const EMPTY_CONTO: Omit<ContoClinical, 'id'> = {
@@ -49,6 +59,7 @@ const EMPTY_CONTO: Omit<ContoClinical, 'id'> = {
   o_que_observar: '',
   riscos_uso_inadequado: '',
   origem_cultural: '',
+  porta_psiquica: '',
   ordem: 0,
   ativo: true,
 };
@@ -71,6 +82,21 @@ export function AdminNarroterapiaTab() {
 
       if (error) throw error;
       return data as ContoClinical[];
+    },
+  });
+
+  // Fetch narration audios
+  const { data: audios, isLoading: isLoadingAudios } = useQuery({
+    queryKey: ['admin-audios-narracao'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('audio_assets')
+        .select('id, titulo, descricao, porta_psiquica, ordem, publicado')
+        .eq('categoria', 'Narração Padrão Oracular')
+        .order('ordem', { ascending: true });
+
+      if (error) throw error;
+      return data as AudioNarracao[];
     },
   });
 
@@ -124,6 +150,24 @@ export function AdminNarroterapiaTab() {
     },
   });
 
+  // Update audio mutation
+  const updateAudioMutation = useMutation({
+    mutationFn: async ({ id, porta_psiquica }: { id: string; porta_psiquica: string }) => {
+      const { error } = await supabase
+        .from('audio_assets')
+        .update({ porta_psiquica })
+        .eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-audios-narracao'] });
+      toast({ title: 'Áudio atualizado!' });
+    },
+    onError: (error) => {
+      toast({ title: 'Erro ao atualizar', description: String(error), variant: 'destructive' });
+    },
+  });
+
   const handleEdit = (conto: ContoClinical) => {
     setEditingConto(conto);
     setFormData({
@@ -134,6 +178,7 @@ export function AdminNarroterapiaTab() {
       o_que_observar: conto.o_que_observar,
       riscos_uso_inadequado: conto.riscos_uso_inadequado,
       origem_cultural: conto.origem_cultural || '',
+      porta_psiquica: conto.porta_psiquica || '',
       ordem: conto.ordem,
       ativo: conto.ativo,
     });
@@ -167,6 +212,10 @@ export function AdminNarroterapiaTab() {
             <BookOpenCheck className="w-4 h-4" />
             Contos Clínicos
           </TabsTrigger>
+          <TabsTrigger value="audios" className="gap-2">
+            <Headphones className="w-4 h-4" />
+            Áudios de Narração
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="contos" className="space-y-4">
@@ -174,7 +223,7 @@ export function AdminNarroterapiaTab() {
             <div>
               <h3 className="text-lg font-semibold">Contos Clínicos Oficiais</h3>
               <p className="text-sm text-muted-foreground">
-                Os 12 contos da Narroterapia Oracular™
+                Os 12 contos da Câmara de Narração Oracular™
               </p>
             </div>
             <Dialog open={isDialogOpen} onOpenChange={(open) => {
@@ -226,7 +275,15 @@ export function AdminNarroterapiaTab() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <Label>Porta Psíquica</Label>
+                      <Input
+                        value={formData.porta_psiquica || ''}
+                        onChange={(e) => setFormData(prev => ({ ...prev, porta_psiquica: e.target.value }))}
+                        placeholder="Porta da Origem"
+                      />
+                    </div>
                     <div>
                       <Label>Origem Cultural</Label>
                       <Input
@@ -327,6 +384,7 @@ export function AdminNarroterapiaTab() {
                   <TableRow>
                     <TableHead className="w-12">#</TableHead>
                     <TableHead>Título</TableHead>
+                    <TableHead>Porta Psíquica</TableHead>
                     <TableHead>Origem</TableHead>
                     <TableHead className="w-24">Status</TableHead>
                     <TableHead className="w-24">Ações</TableHead>
@@ -337,6 +395,16 @@ export function AdminNarroterapiaTab() {
                     <TableRow key={conto.id}>
                       <TableCell className="font-mono text-xs">{conto.ordem}</TableCell>
                       <TableCell className="font-medium">{conto.titulo}</TableCell>
+                      <TableCell>
+                        {conto.porta_psiquica ? (
+                          <Badge variant="outline" className="gap-1">
+                            <DoorOpen className="w-3 h-3" />
+                            {conto.porta_psiquica}
+                          </Badge>
+                        ) : (
+                          <span className="text-muted-foreground text-xs">-</span>
+                        )}
+                      </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {conto.origem_cultural || '-'}
                       </TableCell>
@@ -366,6 +434,72 @@ export function AdminNarroterapiaTab() {
                             <Trash2 className="w-4 h-4 text-destructive" />
                           </Button>
                         </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Card>
+          )}
+        </TabsContent>
+
+        <TabsContent value="audios" className="space-y-4">
+          <div>
+            <h3 className="text-lg font-semibold">Áudios de Narração</h3>
+            <p className="text-sm text-muted-foreground">
+              Associar Porta Psíquica aos áudios da categoria "Narração Padrão Oracular"
+            </p>
+          </div>
+
+          {isLoadingAudios ? (
+            <Card>
+              <CardContent className="py-8 text-center">
+                <Loader2 className="w-6 h-6 animate-spin mx-auto" />
+              </CardContent>
+            </Card>
+          ) : !audios || audios.length === 0 ? (
+            <Card>
+              <CardContent className="py-8 text-center">
+                <Headphones className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                <p className="text-muted-foreground">Nenhum áudio encontrado</p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Adicione áudios na aba Áudios com categoria "Narração Padrão Oracular"
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-12">#</TableHead>
+                    <TableHead>Título</TableHead>
+                    <TableHead>Porta Psíquica</TableHead>
+                    <TableHead className="w-24">Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {audios.map((audio) => (
+                    <TableRow key={audio.id}>
+                      <TableCell className="font-mono text-xs">{audio.ordem || '-'}</TableCell>
+                      <TableCell className="font-medium">{audio.titulo}</TableCell>
+                      <TableCell>
+                        <Input
+                          className="max-w-[200px] h-8 text-sm"
+                          value={audio.porta_psiquica || ''}
+                          placeholder="Porta da Origem"
+                          onChange={(e) => {
+                            updateAudioMutation.mutate({
+                              id: audio.id,
+                              porta_psiquica: e.target.value,
+                            });
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={audio.publicado ? 'secondary' : 'outline'}>
+                          {audio.publicado ? 'Publicado' : 'Rascunho'}
+                        </Badge>
                       </TableCell>
                     </TableRow>
                   ))}

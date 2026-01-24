@@ -357,6 +357,7 @@ export type Database = {
           file_path: string
           id: string
           ordem: number | null
+          porta_psiquica: string | null
           portal_minimo: Database["public"]["Enums"]["portal_type"] | null
           publicado: boolean | null
           titulo: string
@@ -371,6 +372,7 @@ export type Database = {
           file_path: string
           id?: string
           ordem?: number | null
+          porta_psiquica?: string | null
           portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
           publicado?: boolean | null
           titulo: string
@@ -385,6 +387,7 @@ export type Database = {
           file_path?: string
           id?: string
           ordem?: number | null
+          porta_psiquica?: string | null
           portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
           publicado?: boolean | null
           titulo?: string
@@ -1214,6 +1217,7 @@ export type Database = {
           o_que_observar: string
           ordem: number | null
           origem_cultural: string | null
+          porta_psiquica: string | null
           quando_usar: string
           riscos_uso_inadequado: string
           slug: string
@@ -1228,6 +1232,7 @@ export type Database = {
           o_que_observar: string
           ordem?: number | null
           origem_cultural?: string | null
+          porta_psiquica?: string | null
           quando_usar: string
           riscos_uso_inadequado: string
           slug: string
@@ -1242,6 +1247,7 @@ export type Database = {
           o_que_observar?: string
           ordem?: number | null
           origem_cultural?: string | null
+          porta_psiquica?: string | null
           quando_usar?: string
           riscos_uso_inadequado?: string
           slug?: string
@@ -3588,6 +3594,83 @@ export type Database = {
             columns: ["therapist_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      narroterapia_estudos: {
+        Row: {
+          audio_id: string
+          estudado_em: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          audio_id: string
+          estudado_em?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          audio_id?: string
+          estudado_em?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "narroterapia_estudos_audio_id_fkey"
+            columns: ["audio_id"]
+            isOneToOne: false
+            referencedRelation: "audio_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      narroterapia_reacoes_simbolicas: {
+        Row: {
+          audio_id: string | null
+          conto_clinico_id: string | null
+          created_at: string | null
+          id: string
+          observacoes: string | null
+          tipo_uso: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          audio_id?: string | null
+          conto_clinico_id?: string | null
+          created_at?: string | null
+          id?: string
+          observacoes?: string | null
+          tipo_uso?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          audio_id?: string | null
+          conto_clinico_id?: string | null
+          created_at?: string | null
+          id?: string
+          observacoes?: string | null
+          tipo_uso?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "narroterapia_reacoes_simbolicas_audio_id_fkey"
+            columns: ["audio_id"]
+            isOneToOne: false
+            referencedRelation: "audio_assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "narroterapia_reacoes_simbolicas_conto_clinico_id_fkey"
+            columns: ["conto_clinico_id"]
+            isOneToOne: false
+            referencedRelation: "contos_clinicos"
             referencedColumns: ["id"]
           },
         ]

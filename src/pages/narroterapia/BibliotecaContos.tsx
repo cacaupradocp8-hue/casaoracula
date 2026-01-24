@@ -66,21 +66,23 @@ export default function BibliotecaContos() {
             Narroterapia Oracular™
           </Link>
           <ChevronRight className="w-3 h-3" />
-          <span className="text-foreground">Biblioteca de Contos</span>
+          <span className="text-foreground">Acervo Simbólico</span>
         </nav>
 
         <SectionHeader
-          title="Biblioteca de Contos"
+          title="Acervo Simbólico de Referência"
           subtitle="Contos clássicos e simbólicos para estudo"
           icon={<BookOpen className="w-5 h-5" />}
           className="mb-6"
         />
 
-        {/* Fixed Ethical Warning */}
-        <Alert className="mb-6 border-amber-500/50 bg-amber-500/10">
-          <AlertTriangle className="w-4 h-4 text-amber-500" />
-          <AlertDescription className="text-amber-200">
-            Este espaço é para estudo simbólico. Não utilizar clinicamente.
+        {/* Fixed Ethical Warning - Exact text from specification */}
+        <Alert className="mb-6 border-amber-500/50 bg-amber-950/30">
+          <AlertTriangle className="w-4 h-4 text-amber-400" />
+          <AlertDescription className="text-amber-200 text-sm">
+            Este espaço é destinado exclusivamente ao estudo simbólico.
+            <br />
+            Os contos aqui não devem ser utilizados em condução clínica.
           </AlertDescription>
         </Alert>
 
@@ -165,7 +167,7 @@ export default function BibliotecaContos() {
                       {conto.observacoes_leitura && (
                         <div className="p-3 rounded-lg bg-muted/50">
                           <p className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
-                            Observações de Leitura
+                            Observações de Leitura (não clínicas)
                           </p>
                           <p className="text-sm text-foreground">
                             {conto.observacoes_leitura}

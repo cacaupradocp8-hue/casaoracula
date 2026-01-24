@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
-import { BookOpenCheck, Home, ChevronRight, AlertTriangle, ChevronRightIcon } from 'lucide-react';
+import { BookOpenCheck, Home, ChevronRight, AlertTriangle, ChevronRightIcon, DoorOpen } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface ContoClinical {
@@ -14,6 +14,7 @@ interface ContoClinical {
   slug: string;
   titulo: string;
   origem_cultural: string | null;
+  porta_psiquica: string | null;
   ordem: number;
 }
 
@@ -24,7 +25,7 @@ export default function BibliotecaClinica() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('contos_clinicos')
-        .select('id, slug, titulo, origem_cultural, ordem')
+        .select('id, slug, titulo, origem_cultural, porta_psiquica, ordem')
         .eq('ativo', true)
         .order('ordem', { ascending: true });
 
@@ -47,21 +48,21 @@ export default function BibliotecaClinica() {
             Narroterapia Oracular™
           </Link>
           <ChevronRight className="w-3 h-3" />
-          <span className="text-foreground">Biblioteca Clínica</span>
+          <span className="text-foreground">Câmara de Narração</span>
         </nav>
 
         <SectionHeader
-          title="Biblioteca de Narroterapia Oracular™"
-          subtitle="12 contos clínicos oficiais para uso terapêutico"
+          title="Câmara de Narração Oracular™"
+          subtitle="12 contos clínicos organizados por Porta Psíquica"
           icon={<BookOpenCheck className="w-5 h-5" />}
           className="mb-6"
         />
 
         {/* Ethical Notice */}
-        <Alert className="mb-6 border-gold/50 bg-gold/10">
+        <Alert className="mb-6 border-gold/50 bg-gold/5">
           <AlertTriangle className="w-4 h-4 text-gold" />
-          <AlertDescription className="text-gold-light">
-            Conteúdo exclusivo para facilitadoras certificadas. Uso clínico requer supervisão.
+          <AlertDescription className="text-gold-light text-sm">
+            Uso clínico autorizado apenas para facilitadoras certificadas.
           </AlertDescription>
         </Alert>
 
@@ -114,11 +115,19 @@ export default function BibliotecaClinica() {
                           <CardTitle className="text-base font-display group-hover:text-gold transition-colors">
                             {conto.titulo}
                           </CardTitle>
-                          {conto.origem_cultural && (
-                            <CardDescription className="text-xs mt-0.5">
-                              {conto.origem_cultural}
-                            </CardDescription>
-                          )}
+                          <div className="flex items-center gap-3 mt-1">
+                            {conto.porta_psiquica && (
+                              <div className="flex items-center gap-1 text-xs text-gold/80">
+                                <DoorOpen className="w-3 h-3" />
+                                {conto.porta_psiquica}
+                              </div>
+                            )}
+                            {conto.origem_cultural && (
+                              <CardDescription className="text-xs">
+                                {conto.origem_cultural}
+                              </CardDescription>
+                            )}
+                          </div>
                         </div>
                       </div>
                       <ChevronRightIcon className="w-4 h-4 text-muted-foreground group-hover:text-gold transition-colors" />

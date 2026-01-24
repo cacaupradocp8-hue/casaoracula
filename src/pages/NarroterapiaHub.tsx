@@ -3,10 +3,11 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature } from '@/types/portal';
 import { useAccessExpiration } from '@/hooks/useAccessExpiration';
-import { BookOpen, BookOpenCheck, Headphones, Home, ChevronRight, Lock } from 'lucide-react';
+import { BookOpen, BookOpenCheck, Headphones, Home, ChevronRight, Lock, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface AreaCard {
@@ -23,7 +24,7 @@ const AREAS: AreaCard[] = [
   {
     id: 'biblioteca-contos',
     title: 'Acervo Simbólico de Referência',
-    description: 'Contos clássicos e simbólicos para estudo. Acesso aberto a todas as usuárias.',
+    description: 'Contos clássicos para estudo simbólico. Não clínico.',
     icon: <BookOpen className="w-6 h-6" />,
     path: '/narroterapia/biblioteca-contos',
     requiresCertification: false,
@@ -32,7 +33,7 @@ const AREAS: AreaCard[] = [
   {
     id: 'biblioteca-clinica',
     title: 'Câmara de Narração Oracular™',
-    description: '12 contos clínicos oficiais com orientações de uso terapêutico.',
+    description: '12 contos oficiais organizados por Porta Psíquica. Uso clínico autorizado.',
     icon: <BookOpenCheck className="w-6 h-6" />,
     path: '/narroterapia/clinica',
     requiresCertification: true,
@@ -41,7 +42,7 @@ const AREAS: AreaCard[] = [
   {
     id: 'audios-narracao',
     title: 'Ofício da Voz Oracular™',
-    description: 'Áudios de treino para facilitadoras certificadas.',
+    description: 'Treino da Narração Padrão Oracular™. Voz neutra, sem indução.',
     icon: <Headphones className="w-6 h-6" />,
     path: '/narroterapia/audios',
     requiresCertification: true,
@@ -77,10 +78,18 @@ export default function NarroterapiaHub() {
 
         <SectionHeader
           title="Narroterapia Oracular™"
-          subtitle="Espaço de contos, narrativas clínicas e treino de narração"
+          subtitle="Infraestrutura ética e clínica do método. Não é biblioteca de consumo."
           icon={<BookOpen className="w-5 h-5" />}
-          className="mb-8"
+          className="mb-6"
         />
+
+        {/* Institutional Notice */}
+        <Alert className="mb-8 border-border/50 bg-muted/30">
+          <Info className="w-4 h-4 text-muted-foreground" />
+          <AlertDescription className="text-muted-foreground text-sm">
+            Este espaço é parte de uma formação profissional e funciona como infraestrutura ética do método.
+          </AlertDescription>
+        </Alert>
 
         {/* Areas Grid */}
         <div className="grid gap-6">
@@ -143,7 +152,7 @@ export default function NarroterapiaHub() {
                   {!hasAccess && (
                     <CardContent className="pt-0">
                       <p className="text-xs text-muted-foreground">
-                        Disponível para usuárias com certificação ativa (Formação Orácula).
+                        A Narroterapia Oracular™ exige certificação ativa.
                       </p>
                     </CardContent>
                   )}

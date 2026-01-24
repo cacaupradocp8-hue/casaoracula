@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Slider } from '@/components/ui/slider';
+import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import { 
@@ -16,10 +17,16 @@ import {
   Play, 
   Pause, 
   Volume2,
-  VolumeX 
+  VolumeX,
+  CheckCircle2,
+  Circle,
+  DoorOpen,
+  ClipboardPen
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
+import { useNarroterapiaEstudos } from '@/hooks/useNarroterapiaEstudos';
+import { CartografiaReacaoModal } from '@/components/narroterapia/CartografiaReacaoModal';
 
 interface AudioNarracao {
   id: string;
@@ -27,6 +34,7 @@ interface AudioNarracao {
   descricao: string | null;
   file_path: string;
   duracao_segundos: number | null;
+  porta_psiquica: string | null;
 }
 
 export default function AudiosNarracao() {
@@ -34,7 +42,11 @@ export default function AudiosNarracao() {
   const [currentTime, setCurrentTime] = useState<Record<string, number>>({});
   const [volume, setVolume] = useState(80);
   const [isMuted, setIsMuted] = useState(false);
+  const [showCartografia, setShowCartografia] = useState(false);
+  const [selectedAudioId, setSelectedAudioId] = useState<string | null>(null);
   const audioRefs = useRef<Record<string, HTMLAudioElement>>({});
+  
+  const { isStudied, toggleStudied, isPending } = useNarroterapiaEstudos();
 
   // Fetch audios with category 'Narração Padrão Oracular'
   const { data: audios, isLoading } = useQuery({
@@ -42,7 +54,7 @@ export default function AudiosNarracao() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('audio_assets')
-        .select('id, titulo, descricao, file_path, duracao_segundos')
+        .select('id, titulo, descricao, file_path, duracao_segundos, porta_psiquica')
         .eq('categoria', 'Narração Padrão Oracular')
         .eq('publicado', true)
         .order('ordem', { ascending: true });
@@ -132,6 +144,11 @@ export default function AudiosNarracao() {
     });
   };
 
+  const openCartografia = (audioId: string) => {
+    setSelectedAudioId(audioId);
+    setShowCartografia(true);
+  };
+
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-4xl">
@@ -146,23 +163,23 @@ export default function AudiosNarracao() {
             Narroterapia Oracular™
           </Link>
           <ChevronRight className="w-3 h-3" />
-          <span className="text-foreground">Áudios de Narração</span>
+          <span className="text-foreground">Ofício da Voz</span>
         </nav>
 
         <SectionHeader
-          title="Áudios – Narração Padrão Oracular™"
-          subtitle="Áudios para treino da facilitadora"
+          title="Ofício da Voz Oracular™"
+          subtitle="Treino da facilitadora na Narração Padrão Oracular™"
           icon={<Headphones className="w-5 h-5" />}
           className="mb-6"
         />
 
-        {/* Fixed Warning */}
+        {/* Fixed Warning - Exact text from specification */}
         <Alert className="mb-6 border-destructive/50 bg-destructive/10">
           <AlertTriangle className="w-4 h-4 text-destructive" />
-          <AlertDescription className="text-destructive">
-            <strong>Não enviar ou reproduzir para clientes.</strong>
+          <AlertDescription className="text-destructive text-sm">
+            Este áudio é destinado exclusivamente ao treino da facilitadora.
             <br />
-            Este áudio é exclusivo para treino da facilitadora.
+            Não deve ser enviado ou reproduzido para clientes.
           </AlertDescription>
         </Alert>
 
@@ -231,42 +248,75 @@ export default function AudiosNarracao() {
               const time = currentTime[audio.id] || 0;
               const duration = audio.duracao_segundos || 0;
               const progress = duration > 0 ? (time / duration) * 100 : 0;
+              const studied = isStudied(audio.id);
 
               return (
                 <Card key={audio.id} className={cn(
                   'transition-all',
-                  isPlaying && 'border-gold/50 shadow-md'
+                  isPlaying && 'border-gold/50 shadow-md',
+                  studied && 'border-sage/30'
                 )}>
                   <CardHeader className="pb-2">
                     <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <CardTitle className="text-base font-display">
-                          {audio.titulo}
-                        </CardTitle>
-                        {audio.descricao && (
-                          <CardDescription className="text-sm mt-1">
-                            {audio.descricao}
-                          </CardDescription>
-                        )}
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <CardTitle className="text-base font-display">
+                            {audio.titulo}
+                          </CardTitle>
+                          {studied && (
+                            <Badge variant="secondary" className="text-xs gap-1 bg-sage/10 text-sage-light">
+                              <CheckCircle2 className="w-3 h-3" />
+                              Estudado
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-3">
+                          {audio.porta_psiquica && (
+                            <div className="flex items-center gap-1 text-xs text-gold/80">
+                              <DoorOpen className="w-3 h-3" />
+                              {audio.porta_psiquica}
+                            </div>
+                          )}
+                          {audio.descricao && (
+                            <CardDescription className="text-xs">
+                              {audio.descricao}
+                            </CardDescription>
+                          )}
+                        </div>
                       </div>
-                      <Button
-                        variant={isPlaying ? 'secondary' : 'outline'}
-                        size="icon"
-                        className={cn(
-                          'shrink-0',
-                          isPlaying && 'bg-gold/10 border-gold/50'
-                        )}
-                        onClick={() => handlePlayPause(audio)}
-                      >
-                        {isPlaying ? (
-                          <Pause className="w-4 h-4 text-gold" />
-                        ) : (
-                          <Play className="w-4 h-4" />
-                        )}
-                      </Button>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="shrink-0"
+                          onClick={() => toggleStudied(audio.id)}
+                          disabled={isPending}
+                        >
+                          {studied ? (
+                            <CheckCircle2 className="w-4 h-4 text-sage" />
+                          ) : (
+                            <Circle className="w-4 h-4 text-muted-foreground" />
+                          )}
+                        </Button>
+                        <Button
+                          variant={isPlaying ? 'secondary' : 'outline'}
+                          size="icon"
+                          className={cn(
+                            'shrink-0',
+                            isPlaying && 'bg-gold/10 border-gold/50'
+                          )}
+                          onClick={() => handlePlayPause(audio)}
+                        >
+                          {isPlaying ? (
+                            <Pause className="w-4 h-4 text-gold" />
+                          ) : (
+                            <Play className="w-4 h-4" />
+                          )}
+                        </Button>
+                      </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="space-y-3">
                     <div className="space-y-2">
                       <Slider
                         value={[progress]}
@@ -280,6 +330,17 @@ export default function AudiosNarracao() {
                         <span>{formatTime(duration)}</span>
                       </div>
                     </div>
+                    
+                    {/* Register Reaction Button */}
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className="w-full gap-2 text-xs"
+                      onClick={() => openCartografia(audio.id)}
+                    >
+                      <ClipboardPen className="w-3 h-3" />
+                      Registrar Reação Simbólica
+                    </Button>
                   </CardContent>
                 </Card>
               );
@@ -295,6 +356,16 @@ export default function AudiosNarracao() {
             Não estão disponíveis para download ou compartilhamento.
           </p>
         </div>
+
+        {/* Cartografia Modal */}
+        <CartografiaReacaoModal
+          isOpen={showCartografia}
+          onClose={() => {
+            setShowCartografia(false);
+            setSelectedAudioId(null);
+          }}
+          audioId={selectedAudioId || undefined}
+        />
       </div>
     </AppLayout>
   );
