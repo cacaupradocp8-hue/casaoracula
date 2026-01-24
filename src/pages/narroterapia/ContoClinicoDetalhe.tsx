@@ -18,11 +18,14 @@ import {
   Eye,
   Shield,
   Globe,
-  ArrowLeft
+  ArrowLeft,
+  DoorOpen,
+  ClipboardPen
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { CartografiaReacaoModal } from '@/components/narroterapia/CartografiaReacaoModal';
 
 interface ContoClinicoFull {
   id: string;
@@ -33,6 +36,7 @@ interface ContoClinicoFull {
   o_que_observar: string;
   riscos_uso_inadequado: string;
   origem_cultural: string | null;
+  porta_psiquica: string | null;
 }
 
 type IntentionType = 'individual' | 'grupo' | 'ritualistico';
@@ -40,6 +44,7 @@ type IntentionType = 'individual' | 'grupo' | 'ritualistico';
 export default function ContoClinicoDetalhe() {
   const { slug } = useParams<{ slug: string }>();
   const [selectedIntention, setSelectedIntention] = useState<IntentionType | null>(null);
+  const [showCartografia, setShowCartografia] = useState(false);
 
   // Fetch clinical tale by slug
   const { data: conto, isLoading, error } = useQuery({
@@ -58,10 +63,25 @@ export default function ContoClinicoDetalhe() {
     enabled: !!slug,
   });
 
-  const intentions: { type: IntentionType; label: string; icon: React.ReactNode }[] = [
-    { type: 'individual', label: 'Individual', icon: <User className="w-4 h-4" /> },
-    { type: 'grupo', label: 'Grupo', icon: <Users className="w-4 h-4" /> },
-    { type: 'ritualistico', label: 'Ritualístico', icon: <Sparkles className="w-4 h-4" /> },
+  const intentions: { type: IntentionType; label: string; icon: React.ReactNode; posture: string }[] = [
+    { 
+      type: 'individual', 
+      label: 'Individual', 
+      icon: <User className="w-4 h-4" />,
+      posture: 'Mantenha presença silenciosa. O conto trabalha sozinho.'
+    },
+    { 
+      type: 'grupo', 
+      label: 'Grupo', 
+      icon: <Users className="w-4 h-4" />,
+      posture: 'Sustente o campo coletivo. Não direcione reações.'
+    },
+    { 
+      type: 'ritualistico', 
+      label: 'Ritualístico', 
+      icon: <Sparkles className="w-4 h-4" />,
+      posture: 'O ritual é continente. A palavra é sagrada.'
+    },
   ];
 
   if (isLoading) {
@@ -88,7 +108,7 @@ export default function ContoClinicoDetalhe() {
               <Button asChild variant="outline">
                 <Link to="/narroterapia/clinica">
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  Voltar à biblioteca
+                  Voltar à Câmara
                 </Link>
               </Button>
             </CardContent>
@@ -113,7 +133,7 @@ export default function ContoClinicoDetalhe() {
           </Link>
           <ChevronRight className="w-3 h-3" />
           <Link to="/narroterapia/clinica" className="hover:text-foreground transition-colors">
-            Biblioteca Clínica
+            Câmara
           </Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-foreground truncate max-w-[150px]">{conto.titulo}</span>
@@ -129,12 +149,20 @@ export default function ContoClinicoDetalhe() {
               <h1 className="text-2xl font-display font-bold text-foreground">
                 {conto.titulo}
               </h1>
-              {conto.origem_cultural && (
-                <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
-                  <Globe className="w-3 h-3" />
-                  {conto.origem_cultural}
-                </div>
-              )}
+              <div className="flex items-center gap-3 mt-1">
+                {conto.porta_psiquica && (
+                  <Badge variant="outline" className="border-gold/50 text-gold gap-1">
+                    <DoorOpen className="w-3 h-3" />
+                    {conto.porta_psiquica}
+                  </Badge>
+                )}
+                {conto.origem_cultural && (
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <Globe className="w-3 h-3" />
+                    {conto.origem_cultural}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -224,28 +252,58 @@ export default function ContoClinicoDetalhe() {
               </Button>
             ))}
           </div>
-          <p className="text-xs text-muted-foreground mt-2">
-            Marcação pessoal – não executa nenhuma ação.
-          </p>
+          
+          {/* Posture message when intention selected */}
+          {selectedIntention && (
+            <Alert className="mt-4 border-gold/30 bg-gold/5">
+              <Shield className="w-4 h-4 text-gold" />
+              <AlertDescription className="text-gold-light text-sm">
+                {intentions.find(i => i.type === selectedIntention)?.posture}
+              </AlertDescription>
+            </Alert>
+          )}
         </div>
 
-        {/* Fixed Ethical Rule */}
-        <Alert className="border-gold bg-gold/5">
-          <Shield className="w-4 h-4 text-gold" />
-          <AlertDescription className="text-gold-light font-medium">
-            O conto não deve ser explicado nem interpretado.
-          </AlertDescription>
-        </Alert>
+        {/* Register Reaction Button */}
+        <div className="mb-6">
+          <Button 
+            variant="outline" 
+            className="w-full gap-2 border-gold/50 hover:bg-gold/10"
+            onClick={() => setShowCartografia(true)}
+          >
+            <ClipboardPen className="w-4 h-4" />
+            Registrar Reação Simbólica
+          </Button>
+        </div>
+
+        {/* Fixed Ethical Rule - Exact text from specification */}
+        <div className="p-4 rounded-lg bg-muted/50 border border-border text-center">
+          <p className="text-sm text-muted-foreground italic">
+            O conto não deve ser explicado.
+            <br />
+            O conto não deve ser interpretado.
+            <br />
+            O conto abre campo, não fecha sentido.
+          </p>
+        </div>
 
         {/* Back Button */}
         <div className="mt-8 text-center">
           <Button asChild variant="ghost">
             <Link to="/narroterapia/clinica">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar à Biblioteca Clínica
+              Voltar à Câmara de Narração
             </Link>
           </Button>
         </div>
+
+        {/* Cartografia Modal */}
+        <CartografiaReacaoModal
+          isOpen={showCartografia}
+          onClose={() => setShowCartografia(false)}
+          contoClinicoId={conto.id}
+          contoTitulo={conto.titulo}
+        />
       </div>
     </AppLayout>
   );
