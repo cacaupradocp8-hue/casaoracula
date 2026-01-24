@@ -258,6 +258,12 @@ export function Navigation() {
         label: 'Recursos',
         items: [
           {
+            path: '/narroterapia',
+            label: 'Narroterapia',
+            icon: BookOpen,
+            minPortal: 'visitante',
+          },
+          {
             path: '/biblioteca',
             label: 'Biblioteca',
             icon: Library,
