@@ -44,6 +44,8 @@ interface LibraryItem {
   content: string;
   tags: string[];
   portal_level_required: PortalType;
+  origem_cultural: string | null;
+  observacoes_leitura: string | null;
   created_at: string;
 }
 
@@ -74,6 +76,8 @@ export function AdminBibliotecaTab() {
     content: '',
     tags: [] as string[],
     portal_level_required: 'visitante' as PortalType,
+    origem_cultural: '',
+    observacoes_leitura: '',
   });
   const [tagInput, setTagInput] = useState('');
 
@@ -110,6 +114,8 @@ export function AdminBibliotecaTab() {
         content: item.content,
         tags: item.tags || [],
         portal_level_required: item.portal_level_required,
+        origem_cultural: item.origem_cultural || '',
+        observacoes_leitura: item.observacoes_leitura || '',
       });
     } else {
       setEditingItem(null);
@@ -119,6 +125,8 @@ export function AdminBibliotecaTab() {
         content: '',
         tags: [],
         portal_level_required: 'visitante',
+        origem_cultural: '',
+        observacoes_leitura: '',
       });
     }
     setTagInput('');
@@ -434,6 +442,25 @@ export function AdminBibliotecaTab() {
                   ))}
                 </div>
               )}
+            </div>
+            {(form.type === 'conto' || form.type === 'arquetipo') && (
+              <div>
+                <Label>Origem Cultural</Label>
+                <Input
+                  value={form.origem_cultural}
+                  onChange={(e) => setForm(prev => ({ ...prev, origem_cultural: e.target.value }))}
+                  placeholder="Ex: Inuit, Grega, Africana..."
+                />
+              </div>
+            )}
+            <div>
+              <Label>Observações de Leitura</Label>
+              <Textarea
+                value={form.observacoes_leitura}
+                onChange={(e) => setForm(prev => ({ ...prev, observacoes_leitura: e.target.value }))}
+                placeholder="Orientações para uso do item na prática..."
+                rows={3}
+              />
             </div>
           </div>
           <DialogFooter>
