@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,8 +25,10 @@ import {
 } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { BookOpenCheck, Headphones, Plus, Edit, Trash2, Loader2, DoorOpen } from 'lucide-react';
+import { BookOpen, BookOpenCheck, Headphones, Plus, Edit, Trash2, Loader2, DoorOpen } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+
+// ============ TYPES ============
 
 interface ContoClinical {
   id: string;
@@ -51,6 +53,22 @@ interface AudioNarracao {
   publicado: boolean | null;
 }
 
+type PortalLevel = 'admin' | 'aluna_formacao' | 'assinante' | 'iniciada' | 'mentorada' | 'oracula' | 'pre_iniciada' | 'visitante';
+
+interface AcervoItem {
+  id: string;
+  title: string;
+  content: string | null;
+  type: string;
+  tags: string[] | null;
+  origem_cultural: string | null;
+  observacoes_leitura: string | null;
+  portal_level_required: PortalLevel | null;
+  created_at: string;
+}
+
+// ============ EMPTY STATES ============
+
 const EMPTY_CONTO: Omit<ContoClinical, 'id'> = {
   slug: '',
   titulo: '',
@@ -64,12 +82,31 @@ const EMPTY_CONTO: Omit<ContoClinical, 'id'> = {
   ativo: true,
 };
 
+const EMPTY_ACERVO: Omit<AcervoItem, 'id' | 'created_at'> = {
+  title: '',
+  content: '',
+  type: 'conto',
+  tags: [],
+  origem_cultural: '',
+  observacoes_leitura: '',
+  portal_level_required: 'visitante' as PortalLevel,
+};
+
 export function AdminNarroterapiaTab() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // ============ CONTOS CLÍNICOS STATE ============
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingConto, setEditingConto] = useState<ContoClinical | null>(null);
   const [formData, setFormData] = useState<Omit<ContoClinical, 'id'>>(EMPTY_CONTO);
+
+  // ============ ACERVO SIMBÓLICO STATE ============
+  const [isAcervoDialogOpen, setIsAcervoDialogOpen] = useState(false);
+  const [editingAcervo, setEditingAcervo] = useState<AcervoItem | null>(null);
+  const [acervoFormData, setAcervoFormData] = useState<Omit<AcervoItem, 'id' | 'created_at'>>(EMPTY_ACERVO);
+
+  // ============ QUERIES ============
 
   // Fetch clinical tales
   const { data: contos, isLoading } = useQuery({
@@ -100,7 +137,23 @@ export function AdminNarroterapiaTab() {
     },
   });
 
-  // Create mutation
+  // Fetch acervo simbólico (study tales)
+  const { data: acervoItems, isLoading: isLoadingAcervo } = useQuery({
+    queryKey: ['admin-acervo-simbolico'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('library_items')
+        .select('*')
+        .eq('type', 'conto')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data as AcervoItem[];
+    },
+  });
+
+  // ============ CONTOS CLÍNICOS MUTATIONS ============
+
   const createMutation = useMutation({
     mutationFn: async (data: Omit<ContoClinical, 'id'>) => {
       const { error } = await supabase.from('contos_clinicos').insert(data);
@@ -117,7 +170,6 @@ export function AdminNarroterapiaTab() {
     },
   });
 
-  // Update mutation
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<ContoClinical> }) => {
       const { error } = await supabase.from('contos_clinicos').update(data).eq('id', id);
@@ -135,7 +187,6 @@ export function AdminNarroterapiaTab() {
     },
   });
 
-  // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase.from('contos_clinicos').delete().eq('id', id);
@@ -150,7 +201,8 @@ export function AdminNarroterapiaTab() {
     },
   });
 
-  // Update audio mutation
+  // ============ AUDIO MUTATIONS ============
+
   const updateAudioMutation = useMutation({
     mutationFn: async ({ id, porta_psiquica }: { id: string; porta_psiquica: string }) => {
       const { error } = await supabase
@@ -167,6 +219,57 @@ export function AdminNarroterapiaTab() {
       toast({ title: 'Erro ao atualizar', description: String(error), variant: 'destructive' });
     },
   });
+
+  // ============ ACERVO SIMBÓLICO MUTATIONS ============
+
+  const createAcervoMutation = useMutation({
+    mutationFn: async (data: Omit<AcervoItem, 'id' | 'created_at'>) => {
+      const { error } = await supabase.from('library_items').insert([data]);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-acervo-simbolico'] });
+      toast({ title: 'Conto de estudo criado!' });
+      setIsAcervoDialogOpen(false);
+      setAcervoFormData(EMPTY_ACERVO);
+    },
+    onError: (error) => {
+      toast({ title: 'Erro ao criar', description: String(error), variant: 'destructive' });
+    },
+  });
+
+  const updateAcervoMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: Omit<AcervoItem, 'id' | 'created_at'> }) => {
+      const { error } = await supabase.from('library_items').update(data).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-acervo-simbolico'] });
+      toast({ title: 'Conto atualizado!' });
+      setIsAcervoDialogOpen(false);
+      setEditingAcervo(null);
+      setAcervoFormData(EMPTY_ACERVO);
+    },
+    onError: (error) => {
+      toast({ title: 'Erro ao atualizar', description: String(error), variant: 'destructive' });
+    },
+  });
+
+  const deleteAcervoMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('library_items').delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-acervo-simbolico'] });
+      toast({ title: 'Conto removido' });
+    },
+    onError: (error) => {
+      toast({ title: 'Erro ao remover', description: String(error), variant: 'destructive' });
+    },
+  });
+
+  // ============ HANDLERS ============
 
   const handleEdit = (conto: ContoClinical) => {
     setEditingConto(conto);
@@ -193,6 +296,28 @@ export function AdminNarroterapiaTab() {
     }
   };
 
+  const handleEditAcervo = (item: AcervoItem) => {
+    setEditingAcervo(item);
+    setAcervoFormData({
+      title: item.title,
+      content: item.content || '',
+      type: 'conto',
+      tags: item.tags || [],
+      origem_cultural: item.origem_cultural || '',
+      observacoes_leitura: item.observacoes_leitura || '',
+      portal_level_required: (item.portal_level_required || 'visitante') as PortalLevel,
+    });
+    setIsAcervoDialogOpen(true);
+  };
+
+  const handleSubmitAcervo = () => {
+    if (editingAcervo) {
+      updateAcervoMutation.mutate({ id: editingAcervo.id, data: acervoFormData });
+    } else {
+      createAcervoMutation.mutate(acervoFormData);
+    }
+  };
+
   const generateSlug = (titulo: string) => {
     return titulo
       .toLowerCase()
@@ -203,11 +328,16 @@ export function AdminNarroterapiaTab() {
   };
 
   const isPending = createMutation.isPending || updateMutation.isPending;
+  const isAcervoPending = createAcervoMutation.isPending || updateAcervoMutation.isPending;
 
   return (
     <div className="space-y-6">
-      <Tabs defaultValue="contos">
+      <Tabs defaultValue="acervo">
         <TabsList>
+          <TabsTrigger value="acervo" className="gap-2">
+            <BookOpen className="w-4 h-4" />
+            Acervo Simbólico
+          </TabsTrigger>
           <TabsTrigger value="contos" className="gap-2">
             <BookOpenCheck className="w-4 h-4" />
             Contos Clínicos
@@ -218,6 +348,186 @@ export function AdminNarroterapiaTab() {
           </TabsTrigger>
         </TabsList>
 
+        {/* ============ ACERVO SIMBÓLICO TAB ============ */}
+        <TabsContent value="acervo" className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold">Acervo Simbólico de Referência</h3>
+              <p className="text-sm text-muted-foreground">
+                Contos de estudo abertos a todos os portais
+              </p>
+            </div>
+            <Dialog open={isAcervoDialogOpen} onOpenChange={(open) => {
+              setIsAcervoDialogOpen(open);
+              if (!open) {
+                setEditingAcervo(null);
+                setAcervoFormData(EMPTY_ACERVO);
+              }
+            }}>
+              <DialogTrigger asChild>
+                <Button className="gap-2">
+                  <Plus className="w-4 h-4" />
+                  Adicionar Conto
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>
+                    {editingAcervo ? 'Editar Conto de Estudo' : 'Novo Conto de Estudo'}
+                  </DialogTitle>
+                  <DialogDescription>
+                    Contos do acervo simbólico para estudo e referência.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="space-y-4">
+                  <div>
+                    <Label>Título *</Label>
+                    <Input
+                      value={acervoFormData.title}
+                      onChange={(e) => setAcervoFormData(prev => ({ ...prev, title: e.target.value }))}
+                      placeholder="A Donzela Sem Mãos"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>Origem Cultural</Label>
+                      <Input
+                        value={acervoFormData.origem_cultural || ''}
+                        onChange={(e) => setAcervoFormData(prev => ({ ...prev, origem_cultural: e.target.value }))}
+                        placeholder="Tradição europeia"
+                      />
+                    </div>
+                    <div>
+                      <Label>Tags (separadas por vírgula)</Label>
+                      <Input
+                        value={acervoFormData.tags?.join(', ') || ''}
+                        onChange={(e) => setAcervoFormData(prev => ({
+                          ...prev,
+                          tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean)
+                        }))}
+                        placeholder="feminino, sombra, integração"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label>Conteúdo / Texto do Conto</Label>
+                    <Textarea
+                      value={acervoFormData.content || ''}
+                      onChange={(e) => setAcervoFormData(prev => ({ ...prev, content: e.target.value }))}
+                      placeholder="Era uma vez..."
+                      rows={8}
+                    />
+                  </div>
+
+                  <div>
+                    <Label>Observações de Leitura</Label>
+                    <Textarea
+                      value={acervoFormData.observacoes_leitura || ''}
+                      onChange={(e) => setAcervoFormData(prev => ({ ...prev, observacoes_leitura: e.target.value }))}
+                      placeholder="Notas sobre os símbolos e camadas de interpretação..."
+                      rows={4}
+                    />
+                  </div>
+
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => setIsAcervoDialogOpen(false)}>
+                      Cancelar
+                    </Button>
+                    <Button onClick={handleSubmitAcervo} disabled={isAcervoPending}>
+                      {isAcervoPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                      {editingAcervo ? 'Salvar' : 'Criar'}
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {isLoadingAcervo ? (
+            <Card>
+              <CardContent className="py-8 text-center">
+                <Loader2 className="w-6 h-6 animate-spin mx-auto" />
+              </CardContent>
+            </Card>
+          ) : !acervoItems || acervoItems.length === 0 ? (
+            <Card>
+              <CardContent className="py-8 text-center">
+                <BookOpen className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                <p className="text-muted-foreground">Nenhum conto de estudo cadastrado</p>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Título</TableHead>
+                    <TableHead>Origem Cultural</TableHead>
+                    <TableHead>Tags</TableHead>
+                    <TableHead className="w-24">Status</TableHead>
+                    <TableHead className="w-24">Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {acervoItems.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell className="font-medium">{item.title}</TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {item.origem_cultural || '-'}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1">
+                          {item.tags?.slice(0, 3).map((tag, i) => (
+                            <Badge key={i} variant="outline" className="text-xs">
+                              {tag}
+                            </Badge>
+                          ))}
+                          {(item.tags?.length || 0) > 3 && (
+                            <Badge variant="outline" className="text-xs">
+                              +{(item.tags?.length || 0) - 3}
+                            </Badge>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">
+                          Ativo
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleEditAcervo(item)}
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              if (confirm('Remover este conto de estudo?')) {
+                                deleteAcervoMutation.mutate(item.id);
+                              }
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4 text-destructive" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Card>
+          )}
+        </TabsContent>
+
+        {/* ============ CONTOS CLÍNICOS TAB ============ */}
         <TabsContent value="contos" className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
@@ -443,6 +753,7 @@ export function AdminNarroterapiaTab() {
           )}
         </TabsContent>
 
+        {/* ============ ÁUDIOS TAB ============ */}
         <TabsContent value="audios" className="space-y-4">
           <div>
             <h3 className="text-lg font-semibold">Áudios de Narração</h3>
