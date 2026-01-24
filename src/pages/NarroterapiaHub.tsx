@@ -22,7 +22,7 @@ interface AreaCard {
 const AREAS: AreaCard[] = [
   {
     id: 'biblioteca-contos',
-    title: 'Biblioteca de Contos',
+    title: 'Acervo Simbólico de Referência',
     description: 'Contos clássicos e simbólicos para estudo. Acesso aberto a todas as usuárias.',
     icon: <BookOpen className="w-6 h-6" />,
     path: '/narroterapia/biblioteca-contos',
@@ -31,7 +31,7 @@ const AREAS: AreaCard[] = [
   },
   {
     id: 'biblioteca-clinica',
-    title: 'Biblioteca de Narroterapia Oracular™',
+    title: 'Câmara de Narração Oracular™',
     description: '12 contos clínicos oficiais com orientações de uso terapêutico.',
     icon: <BookOpenCheck className="w-6 h-6" />,
     path: '/narroterapia/clinica',
@@ -40,7 +40,7 @@ const AREAS: AreaCard[] = [
   },
   {
     id: 'audios-narracao',
-    title: 'Áudios – Narração Padrão Oracular™',
+    title: 'Ofício da Voz Oracular™',
     description: 'Áudios de treino para facilitadoras certificadas.',
     icon: <Headphones className="w-6 h-6" />,
     path: '/narroterapia/audios',
