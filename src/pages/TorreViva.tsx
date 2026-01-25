@@ -21,11 +21,13 @@ import {
   Quote,
   BookOpen,
   Loader2,
-  Copy
+  Copy,
+  Leaf
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useCasoClinico, TorreId } from "@/hooks/useTorrePortaIntegracao";
+import { SalvarJardimModal } from "@/components/shared/SalvarJardimModal";
 
 // ══════════════════════════════════════════════════════════════
 // CARTOGRAFIA FIXA — 7 TORRES (NÃO EDITÁVEL)
@@ -391,6 +393,7 @@ export default function TorreViva() {
   const [step, setStep] = useState<Step>("apresentacao");
   const [observacoesSelecionadas, setObservacoesSelecionadas] = useState<string[]>([]);
   const [torreEscolhida, setTorreEscolhida] = useState<Torre | null>(null);
+  const [showJardimModal, setShowJardimModal] = useState(false);
 
   const toggleObservacao = (id: string) => {
     setObservacoesSelecionadas(prev => 
@@ -858,13 +861,22 @@ E pede que ${sintese.nao_reconstruir} não seja reconstruído agora.`;
               </div>
             </div>
 
-            <Button 
-              size="lg" 
-              onClick={() => navigate(-1)}
-              className="mt-4"
-            >
-              Voltar à Sessão
-            </Button>
+            <div className="flex gap-3">
+              <Button 
+                variant="outline"
+                onClick={() => setShowJardimModal(true)}
+                className="gap-2"
+              >
+                <Leaf className="w-4 h-4" />
+                Salvar no Jardim
+              </Button>
+              <Button 
+                size="lg" 
+                onClick={() => navigate(-1)}
+              >
+                Voltar à Sessão
+              </Button>
+            </div>
           </div>
         );
 
@@ -887,6 +899,39 @@ E pede que ${sintese.nao_reconstruir} não seja reconstruído agora.`;
       <div className="py-8">
         {renderStep()}
       </div>
+
+      {/* Modal Jardim da Psique */}
+      <SalvarJardimModal
+        open={showJardimModal}
+        onOpenChange={setShowJardimModal}
+        ferramenta_nome="Torre Viva™"
+        ferramenta_chave="torre_viva"
+        tipo_registro="ferramenta"
+        conteudo={{
+          torre_principal: torreEscolhida?.id,
+          torre_nome: torreEscolhida?.nome,
+          observacoes_marcadas: observacoesSelecionadas,
+          sintese: torreEscolhida ? {
+            motivo_queda: TORRE_SINTESE[torreEscolhida.id as TorreId]?.motivo_queda,
+            sustentava: TORRE_SINTESE[torreEscolhida.id as TorreId]?.sustentava,
+            aprisionou: TORRE_SINTESE[torreEscolhida.id as TorreId]?.aprisionou,
+            nao_reconstruir: TORRE_SINTESE[torreEscolhida.id as TorreId]?.nao_reconstruir,
+          } : null,
+        }}
+        resultado_simbolico={{
+          torre: torreEscolhida?.nome,
+          orientacoes: {
+            sustentar: torreEscolhida?.sustentar,
+            evitar: torreEscolhida?.evitar,
+            ritmo: torreEscolhida?.ritmo,
+          },
+        }}
+        onSaved={() => {
+          toast.success('Salvo no Jardim da Psique!');
+          navigate('/jardim-da-psique');
+        }}
+        onSkipped={() => navigate(-1)}
+      />
     </ContentPageLayout>
   );
 }
