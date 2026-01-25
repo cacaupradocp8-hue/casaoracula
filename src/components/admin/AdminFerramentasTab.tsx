@@ -24,7 +24,33 @@ interface Ferramenta {
   sala_id: string | null;
   ordem: number;
   ativa: boolean;
+  tipo_ferramenta: string | null;
+  origem_metodologica: string | null;
+  vinculo_metodologico: string | null;
+  finalidade_pratica: string | null;
 }
+
+// Options for classification fields
+const TIPO_FERRAMENTA_OPTIONS = [
+  { value: 'diagnostico', label: 'Diagnóstico' },
+  { value: 'leitura_simbolica', label: 'Leitura Simbólica' },
+  { value: 'autoleitura', label: 'Autoleitura' },
+  { value: 'conducao_terapeutica', label: 'Condução Terapêutica' },
+  { value: 'ritual_simbolico', label: 'Ritual Simbólico' },
+  { value: 'ferramenta_narrativa', label: 'Ferramenta Narrativa' },
+];
+
+const ORIGEM_METODOLOGICA_OPTIONS = [
+  { value: 'padrao_psicologico', label: 'Padrão Psicológico' },
+  { value: 'metodo_oracula', label: 'Método Orácula' },
+  { value: 'metodo_hibrido', label: 'Método Híbrido' },
+];
+
+const VINCULO_METODOLOGICO_OPTIONS = [
+  { value: 'pertence_metodo_oracula', label: 'Pertence ao Método Orácula' },
+  { value: 'ferramenta_apoio', label: 'Ferramenta de Apoio' },
+  { value: 'ferramenta_externa_integrada', label: 'Ferramenta Externa Integrada' },
+];
 
 interface Sala {
   id: string;
@@ -177,7 +203,11 @@ function CatalogoFerramentasSection() {
           icone: ferramenta.icone,
           sala_id: ferramenta.sala_id,
           ordem: ferramenta.ordem,
-          ativa: ferramenta.ativa
+          ativa: ferramenta.ativa,
+          tipo_ferramenta: ferramenta.tipo_ferramenta,
+          origem_metodologica: ferramenta.origem_metodologica,
+          vinculo_metodologico: ferramenta.vinculo_metodologico,
+          finalidade_pratica: ferramenta.finalidade_pratica
         }]);
 
       if (error) {
@@ -199,7 +229,11 @@ function CatalogoFerramentasSection() {
           icone: ferramenta.icone,
           sala_id: ferramenta.sala_id,
           ordem: ferramenta.ordem,
-          ativa: ferramenta.ativa
+          ativa: ferramenta.ativa,
+          tipo_ferramenta: ferramenta.tipo_ferramenta,
+          origem_metodologica: ferramenta.origem_metodologica,
+          vinculo_metodologico: ferramenta.vinculo_metodologico,
+          finalidade_pratica: ferramenta.finalidade_pratica
         })
         .eq('id', ferramenta.id);
 
@@ -249,7 +283,11 @@ function CatalogoFerramentasSection() {
       icone: 'sparkles',
       sala_id: salas[0]?.id || null,
       ordem: ferramentas.length + 1,
-      ativa: false
+      ativa: false,
+      tipo_ferramenta: null,
+      origem_metodologica: null,
+      vinculo_metodologico: null,
+      finalidade_pratica: null
     });
     setIsCreating(true);
     setDialogOpen(true);
@@ -297,11 +335,10 @@ function CatalogoFerramentasSection() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-12">Ordem</TableHead>
+                <TableHead className="w-12">Ord</TableHead>
                 <TableHead>Nome</TableHead>
-                <TableHead>Chave</TableHead>
-                <TableHead>Sala</TableHead>
-                <TableHead>Rota</TableHead>
+                <TableHead>Tipo/Origem</TableHead>
+                <TableHead>Finalidade</TableHead>
                 <TableHead className="w-20">Status</TableHead>
                 <TableHead className="w-24">Ações</TableHead>
               </TableRow>
@@ -313,14 +350,29 @@ function CatalogoFerramentasSection() {
                   <TableCell>
                     <div>
                       <span className="font-medium">{f.ferramenta_nome}</span>
-                      {f.icone && (
-                        <span className="ml-2 text-xs text-muted-foreground">({f.icone})</span>
+                      <div className="text-xs text-muted-foreground">{f.ferramenta_chave}</div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="space-y-1">
+                      {f.tipo_ferramenta && (
+                        <span className="inline-block px-2 py-0.5 text-xs rounded bg-gold/10 text-gold">
+                          {TIPO_FERRAMENTA_OPTIONS.find(o => o.value === f.tipo_ferramenta)?.label || f.tipo_ferramenta}
+                        </span>
+                      )}
+                      {f.vinculo_metodologico === 'pertence_metodo_oracula' && (
+                        <span className="inline-block px-2 py-0.5 text-xs rounded bg-purple-500/10 text-purple-400 ml-1">
+                          Método Orácula
+                        </span>
+                      )}
+                      {!f.tipo_ferramenta && !f.vinculo_metodologico && (
+                        <span className="text-xs text-muted-foreground/50">Sem classificação</span>
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="font-mono text-xs">{f.ferramenta_chave}</TableCell>
-                  <TableCell className="text-sm">{getSalaNome(f.sala_id)}</TableCell>
-                  <TableCell className="font-mono text-xs">{f.rota || '-'}</TableCell>
+                  <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate">
+                    {f.finalidade_pratica || '-'}
+                  </TableCell>
                   <TableCell>
                     <Switch
                       checked={f.ativa}
@@ -354,7 +406,7 @@ function CatalogoFerramentasSection() {
               ))}
               {ferramentas.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                  <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
                     Nenhuma ferramenta cadastrada
                   </TableCell>
                 </TableRow>
@@ -375,7 +427,7 @@ function FerramentaForm({ ferramenta, salas, onSave, onChange }: {
   onChange: (f: Ferramenta) => void;
 }) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
       <div>
         <Label>Nome da Ferramenta</Label>
         <Input 
@@ -401,51 +453,121 @@ function FerramentaForm({ ferramenta, salas, onSave, onChange }: {
           rows={2}
         />
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label>Rota</Label>
-          <Input 
-            value={ferramenta.rota || ''} 
-            onChange={(e) => onChange({ ...ferramenta, rota: e.target.value })}
-            placeholder="/ferramentas/chakras"
-          />
+      
+      {/* Classification Section */}
+      <div className="border-t border-border/50 pt-4 mt-4">
+        <h4 className="text-sm font-medium mb-3 text-gold">Classificação Metodológica</h4>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label>Tipo de Ferramenta</Label>
+            <Select 
+              value={ferramenta.tipo_ferramenta || ''} 
+              onValueChange={(v) => onChange({ ...ferramenta, tipo_ferramenta: v || null })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione o tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                {TIPO_FERRAMENTA_OPTIONS.map(opt => (
+                  <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>Origem Metodológica</Label>
+            <Select 
+              value={ferramenta.origem_metodologica || ''} 
+              onValueChange={(v) => onChange({ ...ferramenta, origem_metodologica: v || null })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione a origem" />
+              </SelectTrigger>
+              <SelectContent>
+                {ORIGEM_METODOLOGICA_OPTIONS.map(opt => (
+                  <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-        <div>
-          <Label>Ícone (nome Lucide)</Label>
-          <Input 
-            value={ferramenta.icone || ''} 
-            onChange={(e) => onChange({ ...ferramenta, icone: e.target.value })}
-            placeholder="sparkles, brain, heart..."
-          />
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label>Sala</Label>
+        <div className="mt-3">
+          <Label>Vínculo Metodológico</Label>
           <Select 
-            value={ferramenta.sala_id || ''} 
-            onValueChange={(v) => onChange({ ...ferramenta, sala_id: v || null })}
+            value={ferramenta.vinculo_metodologico || ''} 
+            onValueChange={(v) => onChange({ ...ferramenta, vinculo_metodologico: v || null })}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Selecione a sala" />
+              <SelectValue placeholder="Selecione o vínculo" />
             </SelectTrigger>
             <SelectContent>
-              {salas.map(sala => (
-                <SelectItem key={sala.id} value={sala.id}>{sala.nome_exibicao}</SelectItem>
+              {VINCULO_METODOLOGICO_OPTIONS.map(opt => (
+                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
-        <div>
-          <Label>Ordem</Label>
-          <Input 
-            type="number" 
-            value={ferramenta.ordem} 
-            onChange={(e) => onChange({ ...ferramenta, ordem: parseInt(e.target.value) || 0 })}
+        <div className="mt-3">
+          <Label>Finalidade Prática</Label>
+          <Textarea 
+            value={ferramenta.finalidade_pratica || ''} 
+            onChange={(e) => onChange({ ...ferramenta, finalidade_pratica: e.target.value })}
+            placeholder="Para que esta ferramenta serve na prática profissional?"
+            rows={2}
           />
         </div>
       </div>
-      <div className="flex items-center gap-2">
+      
+      {/* Technical Section */}
+      <div className="border-t border-border/50 pt-4 mt-4">
+        <h4 className="text-sm font-medium mb-3">Configuração Técnica</h4>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label>Rota</Label>
+            <Input 
+              value={ferramenta.rota || ''} 
+              onChange={(e) => onChange({ ...ferramenta, rota: e.target.value })}
+              placeholder="/ferramentas/chakras"
+            />
+          </div>
+          <div>
+            <Label>Ícone (nome Lucide)</Label>
+            <Input 
+              value={ferramenta.icone || ''} 
+              onChange={(e) => onChange({ ...ferramenta, icone: e.target.value })}
+              placeholder="sparkles, brain, heart..."
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4 mt-3">
+          <div>
+            <Label>Sala</Label>
+            <Select 
+              value={ferramenta.sala_id || ''} 
+              onValueChange={(v) => onChange({ ...ferramenta, sala_id: v || null })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione a sala" />
+              </SelectTrigger>
+              <SelectContent>
+                {salas.map(sala => (
+                  <SelectItem key={sala.id} value={sala.id}>{sala.nome_exibicao}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>Ordem</Label>
+            <Input 
+              type="number" 
+              value={ferramenta.ordem} 
+              onChange={(e) => onChange({ ...ferramenta, ordem: parseInt(e.target.value) || 0 })}
+            />
+          </div>
+        </div>
+      </div>
+      
+      <div className="flex items-center gap-2 pt-2">
         <Switch 
           checked={ferramenta.ativa} 
           onCheckedChange={(checked) => onChange({ ...ferramenta, ativa: checked })}
