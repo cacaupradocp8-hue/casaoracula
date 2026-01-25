@@ -71,7 +71,7 @@ export const TRAVESSIAS_DATA: Omit<Travessia, 'lessons'>[] = [
     icone: 'Moon',
     corAcento: 'purple',
     temas: ['Arquétipos', 'Sombra', 'Contos', 'Biblioteca'],
-    minPortal: 'mentorada',
+    minPortal: 'aluna',
     requiresProfessional: false,
   },
   {
@@ -85,7 +85,7 @@ export const TRAVESSIAS_DATA: Omit<Travessia, 'lessons'>[] = [
     icone: 'BookOpen',
     corAcento: 'gold',
     temas: ['Sala de Sessão', 'Mapas', 'IA', 'Prática'],
-    minPortal: 'mentorada',
+    minPortal: 'aluna',
     requiresProfessional: true,
   },
   {

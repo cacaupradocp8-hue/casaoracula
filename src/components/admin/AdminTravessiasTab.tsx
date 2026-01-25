@@ -53,10 +53,9 @@ const COLOR_OPTIONS = [
 
 const PORTAL_OPTIONS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: 'Visitante' },
-  { value: 'mentorada', label: 'Mentorada' },
-  { value: 'aluna_formacao', label: 'Aluna Formação' },
-  { value: 'assinante', label: 'Assinante' },
+  { value: 'aluna', label: 'Aluna' },
   { value: 'oracula', label: 'Orácula' },
+  { value: 'assinante', label: 'Assinante' },
 ];
 
 const ICON_MAP: Record<string, typeof Compass> = {

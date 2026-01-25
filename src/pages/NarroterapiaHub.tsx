@@ -57,8 +57,8 @@ export default function NarroterapiaHub() {
   const { isExpired } = useAccessExpiration();
   const { temAcessoCompleto, isLoading, seloAtivo, isAdmin } = useNarroterapiaAutorizacao();
   
-  // Check if user is certified (aluna_formacao+)
-  const isCertified = user && canAccessFeature(user.portal, 'aluna_formacao') && !isExpired;
+  // Check if user is certified (aluna+)
+  const isCertified = user && canAccessFeature(user.portal, 'aluna') && !isExpired;
 
   const canAccessArea = (area: AreaCard) => {
     if (!area.requiresCertification) return true;

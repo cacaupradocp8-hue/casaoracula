@@ -748,7 +748,7 @@ export function transformFerramentaRow(row: FerramentaRow): Ferramenta {
     ordem: row.ordem,
     ativa: row.ativa,
     tipo: row.tipo || 'custom',
-    portalMinimo: (row.portal_minimo as PortalType) || 'mentorada',
+    portalMinimo: (row.portal_minimo as PortalType) || 'aluna',
     hasBlocks: row.has_blocks || false,
     slug: row.slug,
     createdAt: row.created_at,
