@@ -6496,6 +6496,7 @@ export type Database = {
         | "pre_iniciada"
         | "iniciada"
         | "admin"
+        | "aluna"
       post_status: "rascunho" | "publicado" | "arquivado"
       pricing_model: "free" | "one_time" | "subscription"
     }
@@ -6685,6 +6686,7 @@ export const Constants = {
         "pre_iniciada",
         "iniciada",
         "admin",
+        "aluna",
       ],
       post_status: ["rascunho", "publicado", "arquivado"],
       pricing_model: ["free", "one_time", "subscription"],
