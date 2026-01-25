@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SectionHeader } from "@/components/shared/SectionHeader";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { FerramentaCard, FerramentaCardData } from "@/components/shared/FerramentaCard";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
@@ -9,24 +9,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import {
   Wrench,
-  Lock,
-  ArrowRight,
   Loader2,
   Compass,
   Shield,
   Brain,
   Sparkles,
   Map,
-  Wand2,
   Home,
   ChevronRight,
-  DoorOpen,
-  Waves,
-  Castle,
-  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { canAccessFeature, PortalType } from "@/types/portal";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { ArrowRight } from "lucide-react";
 
 interface Ferramenta {
   id: string;
@@ -35,6 +30,9 @@ interface Ferramenta {
   rota: string | null;
   icone: string | null;
   tipo: string | null;
+  tipo_ferramenta: string | null;
+  origem_metodologica: string | null;
+  finalidade_pratica: string | null;
   portal_minimo: string;
   ordem: number;
   ativa: boolean;
@@ -82,11 +80,6 @@ const SECTIONS = [
     categories: ['Oráculos', 'Leituras', 'Cartas', 'Divinação', 'Simbólico'],
   },
 ];
-
-// Map icon names to emoji display
-const getIconDisplay = (iconName: string | null): string => {
-  return iconName || "🔧";
-};
 
 // Determine which section a ferramenta belongs to based on its tipo
 const getSectionForTipo = (tipo: string | null): string => {
@@ -151,13 +144,13 @@ export default function FerramentasHub() {
   const isAdmin = userPortal === 'admin';
   const canAccessSyntheia = canAccessFeature(userPortal as PortalType, 'mentorada');
 
-  // Fetch ferramentas from database
+  // Fetch ferramentas from database with new classification fields
   const { data: ferramentas, isLoading } = useQuery({
     queryKey: ['ferramentas-hub'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('sala_ferramentas')
-        .select('id, ferramenta_nome, ferramenta_descricao, rota, icone, tipo, portal_minimo, ordem, ativa')
+        .select('id, ferramenta_nome, ferramenta_descricao, rota, icone, tipo, tipo_ferramenta, origem_metodologica, finalidade_pratica, portal_minimo, ordem, ativa')
         .eq('ativa', true)
         .order('ordem', { ascending: true });
 
@@ -258,60 +251,32 @@ export default function FerramentasHub() {
                     </div>
                   </div>
 
-                  {/* Tools Grid */}
+                  {/* Tools Grid - Using FerramentaCard */}
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {sectionTools.map((ferramenta) => {
                       const isAccessible = canAccess(ferramenta.portal_minimo);
 
+                      const cardData: FerramentaCardData = {
+                        id: ferramenta.id,
+                        nome: ferramenta.ferramenta_nome,
+                        icone: ferramenta.icone,
+                        tipo: ferramenta.tipo_ferramenta,
+                        finalidade: ferramenta.finalidade_pratica || ferramenta.ferramenta_descricao,
+                        origem: ferramenta.origem_metodologica,
+                        rota: ferramenta.rota,
+                        acessivel: isAccessible,
+                        portalMinimo: ferramenta.portal_minimo,
+                      };
+
                       return (
-                        <Card
+                        <FerramentaCard
                           key={ferramenta.id}
-                          className={cn(
-                            "group transition-all duration-300 cursor-pointer",
-                            isAccessible && "hover:shadow-gold hover:border-gold/30",
-                            !isAccessible && "opacity-60"
-                          )}
+                          ferramenta={cardData}
+                          colorScheme={section.color as 'gold' | 'purple' | 'emerald' | 'rose'}
                           onClick={() => {
-                            if (!isAccessible) return;
-                            if (!ferramenta.rota) return;
-                            navigate(ferramenta.rota);
+                            if (ferramenta.rota) navigate(ferramenta.rota);
                           }}
-                        >
-                          <CardHeader className="pb-2">
-                            <div className="flex items-start justify-between">
-                              <div
-                                className={cn(
-                                  "w-10 h-10 rounded-lg flex items-center justify-center text-lg",
-                                  isAccessible
-                                    ? colors.icon
-                                    : "bg-muted text-muted-foreground"
-                                )}
-                              >
-                                {isAccessible ? getIconDisplay(ferramenta.icone) : <Lock className="w-5 h-5" />}
-                              </div>
-                            </div>
-                          </CardHeader>
-                          <CardContent>
-                            <CardTitle
-                              className={cn(
-                                "text-base mb-1",
-                                isAccessible && `group-hover:${colors.text} transition-colors`
-                              )}
-                            >
-                              {ferramenta.ferramenta_nome}
-                            </CardTitle>
-                            <CardDescription className="text-sm line-clamp-2">
-                              {isAccessible
-                                ? (ferramenta.ferramenta_descricao || "Ferramenta simbólica")
-                                : `Disponível a partir do portal ${ferramenta.portal_minimo.replace("_", "-")}`}
-                            </CardDescription>
-                            {isAccessible && (
-                              <div className="flex items-center justify-end mt-3">
-                                <ArrowRight className={cn("w-4 h-4 text-muted-foreground transition-all group-hover:translate-x-1", `group-hover:${colors.text}`)} />
-                              </div>
-                            )}
-                          </CardContent>
-                        </Card>
+                        />
                       );
                     })}
                   </div>
