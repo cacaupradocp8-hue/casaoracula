@@ -5173,6 +5173,7 @@ export type Database = {
         Row: {
           ativa: boolean
           created_at: string
+          familia_id: string | null
           ferramenta_chave: string
           ferramenta_descricao: string | null
           ferramenta_nome: string
@@ -5195,6 +5196,7 @@ export type Database = {
         Insert: {
           ativa?: boolean
           created_at?: string
+          familia_id?: string | null
           ferramenta_chave: string
           ferramenta_descricao?: string | null
           ferramenta_nome: string
@@ -5217,6 +5219,7 @@ export type Database = {
         Update: {
           ativa?: boolean
           created_at?: string
+          familia_id?: string | null
           ferramenta_chave?: string
           ferramenta_descricao?: string | null
           ferramenta_nome?: string
@@ -5237,6 +5240,13 @@ export type Database = {
           vinculo_metodologico?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "sala_ferramentas_familia_id_fkey"
+            columns: ["familia_id"]
+            isOneToOne: false
+            referencedRelation: "travessia_familias"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "sala_ferramentas_portal_id_fkey"
             columns: ["portal_id"]
@@ -5883,7 +5893,10 @@ export type Database = {
           icone: string | null
           id: string
           nome: string
+          o_que_sustenta: string | null
           ordem: number | null
+          quando_usar: string | null
+          slug: string | null
           updated_at: string
         }
         Insert: {
@@ -5893,7 +5906,10 @@ export type Database = {
           icone?: string | null
           id?: string
           nome: string
+          o_que_sustenta?: string | null
           ordem?: number | null
+          quando_usar?: string | null
+          slug?: string | null
           updated_at?: string
         }
         Update: {
@@ -5903,7 +5919,10 @@ export type Database = {
           icone?: string | null
           id?: string
           nome?: string
+          o_que_sustenta?: string | null
           ordem?: number | null
+          quando_usar?: string | null
+          slug?: string | null
           updated_at?: string
         }
         Relationships: []
