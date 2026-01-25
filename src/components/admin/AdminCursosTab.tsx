@@ -21,12 +21,14 @@ import {
   Layers,
   BookOpen,
   Users,
-  BarChart3
+  BarChart3,
+  Sparkles
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Course, CourseModule, CourseLesson, CourseEnrollment, PricingModel, ContentType } from '@/types/course';
 import { ImageUpload } from './ImageUpload';
+import { PedagogicalModuleEditor } from './PedagogicalModuleEditor';
 
 interface Sala {
   id: string;
@@ -58,6 +60,10 @@ export function AdminCursosTab() {
   const [editingLesson, setEditingLesson] = useState<CourseLesson | null>(null);
   const [lessonDialogOpen, setLessonDialogOpen] = useState(false);
   const [selectedModuleId, setSelectedModuleId] = useState<string>('');
+
+  // Pedagogical editor state
+  const [pedagogicalEditorOpen, setPedagogicalEditorOpen] = useState(false);
+  const [pedagogicalModuleId, setPedagogicalModuleId] = useState<string>('');
 
   useEffect(() => {
     fetchData();
@@ -618,8 +624,21 @@ export function AdminCursosTab() {
                             size="icon" 
                             variant="ghost"
                             onClick={() => { setEditingModule(module); setModuleDialogOpen(true); }}
+                            title="Editar básico"
                           >
                             <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button 
+                            size="icon" 
+                            variant="ghost"
+                            onClick={() => { 
+                              setPedagogicalModuleId(module.id); 
+                              setPedagogicalEditorOpen(true); 
+                            }}
+                            title="Editar formato pedagógico"
+                            className="text-primary hover:text-primary"
+                          >
+                            <Sparkles className="w-4 h-4" />
                           </Button>
                           <Button 
                             size="icon" 
@@ -865,6 +884,28 @@ export function AdminCursosTab() {
           </Table>
         </TabsContent>
       </Tabs>
+
+      {/* Pedagogical Module Editor Dialog */}
+      <Dialog open={pedagogicalEditorOpen} onOpenChange={setPedagogicalEditorOpen}>
+        <DialogContent className="max-w-4xl max-h-[95vh]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-primary" />
+              Editor de Módulo Pedagógico
+            </DialogTitle>
+          </DialogHeader>
+          {pedagogicalModuleId && (
+            <PedagogicalModuleEditor
+              moduleId={pedagogicalModuleId}
+              onSave={() => {
+                fetchData();
+                setPedagogicalEditorOpen(false);
+              }}
+              onClose={() => setPedagogicalEditorOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

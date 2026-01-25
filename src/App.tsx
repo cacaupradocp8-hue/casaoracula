@@ -54,6 +54,7 @@ import OracleHistory from "./pages/OracleHistory";
 import Cursos from "./pages/Cursos";
 import CursoDetalhe from "./pages/CursoDetalhe";
 import CursoAula from "./pages/CursoAula";
+import CursoModulo from "./pages/CursoModulo";
 import BibliotecaDasTravessias from "./pages/BibliotecaDasTravessias";
 import BibliotecaTravessiaDetalhe from "./pages/BibliotecaTravessiaDetalhe";
 import LabirintoHome from "./pages/labirinto/LabirintoHome";
@@ -1173,6 +1174,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <CursoAula />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cursos/:courseId/modulo/:moduleId"
+          element={
+            <ProtectedRoute>
+              <CursoModulo />
             </ProtectedRoute>
           }
         />
