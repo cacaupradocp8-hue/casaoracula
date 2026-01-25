@@ -6482,6 +6482,8 @@ export type Database = {
         | "tool"
         | "sala"
         | "landing"
+        | "course"
+        | "lesson"
       casa_media_type: "audio" | "text" | "video" | "link" | "pdf"
       casa_room: "sustentacao" | "leitura" | "circulo"
       cliente_status: "ativo" | "pausado" | "encerrado"
@@ -6670,6 +6672,8 @@ export const Constants = {
         "tool",
         "sala",
         "landing",
+        "course",
+        "lesson",
       ],
       casa_media_type: ["audio", "text", "video", "link", "pdf"],
       casa_room: ["sustentacao", "leitura", "circulo"],
