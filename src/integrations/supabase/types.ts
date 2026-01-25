@@ -1453,40 +1453,67 @@ export type Database = {
       }
       course_modules: {
         Row: {
+          cards_leitura: Json | null
+          check_maturidade: Json | null
           course_id: string
           created_at: string
           descricao: string | null
           dias_apos_matricula: number | null
           disponivel_em: string | null
+          estudos_caso: Json | null
+          ferramenta_pratica: Json | null
+          formato_pedagogico: boolean | null
           id: string
           ordem: number
           publicado: boolean
+          subtitulo: string | null
           titulo: string
           updated_at: string
+          video_principal_duracao: number | null
+          video_principal_titulo: string | null
+          video_principal_url: string | null
         }
         Insert: {
+          cards_leitura?: Json | null
+          check_maturidade?: Json | null
           course_id: string
           created_at?: string
           descricao?: string | null
           dias_apos_matricula?: number | null
           disponivel_em?: string | null
+          estudos_caso?: Json | null
+          ferramenta_pratica?: Json | null
+          formato_pedagogico?: boolean | null
           id?: string
           ordem?: number
           publicado?: boolean
+          subtitulo?: string | null
           titulo: string
           updated_at?: string
+          video_principal_duracao?: number | null
+          video_principal_titulo?: string | null
+          video_principal_url?: string | null
         }
         Update: {
+          cards_leitura?: Json | null
+          check_maturidade?: Json | null
           course_id?: string
           created_at?: string
           descricao?: string | null
           dias_apos_matricula?: number | null
           disponivel_em?: string | null
+          estudos_caso?: Json | null
+          ferramenta_pratica?: Json | null
+          formato_pedagogico?: boolean | null
           id?: string
           ordem?: number
           publicado?: boolean
+          subtitulo?: string | null
           titulo?: string
           updated_at?: string
+          video_principal_duracao?: number | null
+          video_principal_titulo?: string | null
+          video_principal_url?: string | null
         }
         Relationships: [
           {
