@@ -81,32 +81,26 @@ const SECTIONS = [
   },
 ];
 
-// Determine which section a ferramenta belongs to based on its tipo
-const getSectionForTipo = (tipo: string | null): string => {
-  if (!tipo) return 'oracular'; // Default section
+// Determine which section a ferramenta belongs to based on tipo_ferramenta (standardized)
+const getSectionForTipoFerramenta = (tipoFerramenta: string | null): string => {
+  if (!tipoFerramenta) return 'mapas'; // Default
   
-  const tipoLower = tipo.toLowerCase();
-  
-  for (const section of SECTIONS) {
-    for (const cat of section.categories) {
-      if (tipoLower.includes(cat.toLowerCase())) {
-        return section.key;
-      }
-    }
+  switch (tipoFerramenta) {
+    case 'diagnostico':
+      return 'mapas'; // Mapas da Psique
+    case 'leitura_simbolica':
+      return 'oracular'; // Prática Oracular
+    case 'autoleitura':
+      return 'mapas'; // Mapas da Psique (autorreflexão)
+    case 'conducao_terapeutica':
+      return 'travessia'; // Travessia Simbólica
+    case 'ritual_simbolico':
+      return 'estrutura'; // Estrutura & Sustentação
+    case 'ferramenta_narrativa':
+      return 'travessia'; // Travessia Simbólica
+    default:
+      return 'mapas';
   }
-  
-  // Default fallback based on common patterns
-  if (tipoLower.includes('jornada') || tipoLower.includes('heroina') || tipoLower.includes('caminho')) {
-    return 'travessia';
-  }
-  if (tipoLower.includes('mapa') || tipoLower.includes('territorio') || tipoLower.includes('big5') || tipoLower.includes('eneagrama')) {
-    return 'mapas';
-  }
-  if (tipoLower.includes('labirinto') || tipoLower.includes('protocolo') || tipoLower.includes('estrutura')) {
-    return 'estrutura';
-  }
-  
-  return 'oracular'; // Default
 };
 
 const colorClasses = {
@@ -145,6 +139,7 @@ export default function FerramentasHub() {
   const canAccessSyntheia = canAccessFeature(userPortal as PortalType, 'mentorada');
 
   // Fetch ferramentas from database with new classification fields
+  // Only show complete, active tools (must have tipo_ferramenta and finalidade_pratica)
   const { data: ferramentas, isLoading } = useQuery({
     queryKey: ['ferramentas-hub'],
     queryFn: async () => {
@@ -152,6 +147,8 @@ export default function FerramentasHub() {
         .from('sala_ferramentas')
         .select('id, ferramenta_nome, ferramenta_descricao, rota, icone, tipo, tipo_ferramenta, origem_metodologica, finalidade_pratica, portal_minimo, ordem, ativa')
         .eq('ativa', true)
+        .not('tipo_ferramenta', 'is', null)
+        .not('finalidade_pratica', 'is', null)
         .order('ordem', { ascending: true });
 
       if (error) throw error;
@@ -164,9 +161,9 @@ export default function FerramentasHub() {
     return canAccessFeature(userPortal as PortalType, minPortal as PortalType);
   };
 
-  // Group ferramentas by section
+  // Group ferramentas by section using tipo_ferramenta (standardized field)
   const groupedBySection = ferramentas?.reduce((acc, ferramenta) => {
-    const sectionKey = getSectionForTipo(ferramenta.tipo);
+    const sectionKey = getSectionForTipoFerramenta(ferramenta.tipo_ferramenta);
     if (!acc[sectionKey]) {
       acc[sectionKey] = [];
     }
