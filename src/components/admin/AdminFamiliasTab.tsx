@@ -30,6 +30,7 @@ interface TravessiaFamily {
   icone: string | null;
   ordem: number;
   ativa: boolean;
+  ferramentas_count?: number;
 }
 
 export function AdminFamiliasTab() {
@@ -50,13 +51,35 @@ export function AdminFamiliasTab() {
 
   const fetchFamilies = async () => {
     try {
-      const { data, error } = await supabase
+      // Fetch families
+      const { data: famData, error: famError } = await supabase
         .from('travessia_familias')
         .select('*')
         .order('ordem');
 
-      if (error) throw error;
-      setFamilies(data || []);
+      if (famError) throw famError;
+
+      // Fetch tool counts
+      const { data: countData, error: countError } = await supabase
+        .from('sala_ferramentas')
+        .select('familia_id')
+        .not('familia_id', 'is', null);
+
+      if (countError) throw countError;
+
+      // Calculate counts per family
+      const counts: Record<string, number> = {};
+      countData?.forEach((f) => {
+        counts[f.familia_id as string] = (counts[f.familia_id as string] || 0) + 1;
+      });
+
+      // Merge counts into families
+      const familiesWithCounts = (famData || []).map(f => ({
+        ...f,
+        ferramentas_count: counts[f.id] || 0,
+      }));
+
+      setFamilies(familiesWithCounts);
     } catch (error) {
       console.error('Error fetching families:', error);
       toast.error('Erro ao carregar famílias');
@@ -202,6 +225,7 @@ export function AdminFamiliasTab() {
             <TableRow>
               <TableHead className="w-12">Ordem</TableHead>
               <TableHead>Nome</TableHead>
+              <TableHead className="w-24">Ferramentas</TableHead>
               <TableHead className="hidden md:table-cell">Descrição</TableHead>
               <TableHead className="w-20">Status</TableHead>
               <TableHead className="w-32">Ações</TableHead>
@@ -237,6 +261,11 @@ export function AdminFamiliasTab() {
                     <Sparkles className="h-4 w-4 text-gold" />
                     <span className="font-medium">{family.nome}</span>
                   </div>
+                </TableCell>
+                <TableCell>
+                  <span className="text-sm text-muted-foreground">
+                    {family.ferramentas_count || 0}
+                  </span>
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
                   <span className="text-muted-foreground text-sm line-clamp-2">
@@ -274,7 +303,7 @@ export function AdminFamiliasTab() {
             ))}
             {families.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   Nenhuma família criada ainda.
                 </TableCell>
               </TableRow>

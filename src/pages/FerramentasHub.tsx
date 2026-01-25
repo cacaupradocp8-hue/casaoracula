@@ -154,6 +154,7 @@ export default function FerramentasHub() {
       if (error) throw error;
       return data as Ferramenta[];
     },
+    staleTime: 5 * 60 * 1000, // 5 minutes - prevent flickering from refetches
   });
 
   const canAccess = (minPortal: string): boolean => {

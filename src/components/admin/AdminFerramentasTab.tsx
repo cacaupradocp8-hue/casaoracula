@@ -22,12 +22,19 @@ interface Ferramenta {
   rota: string | null;
   icone: string | null;
   sala_id: string | null;
+  familia_id: string | null;
   ordem: number;
   ativa: boolean;
   tipo_ferramenta: string | null;
   origem_metodologica: string | null;
   vinculo_metodologico: string | null;
   finalidade_pratica: string | null;
+}
+
+interface TravessiaFamilia {
+  id: string;
+  nome: string;
+  icone: string | null;
 }
 
 // Options for classification fields
@@ -164,6 +171,7 @@ export function AdminFerramentasTab() {
 function CatalogoFerramentasSection() {
   const [ferramentas, setFerramentas] = useState<Ferramenta[]>([]);
   const [salas, setSalas] = useState<Sala[]>([]);
+  const [familias, setFamilias] = useState<TravessiaFamilia[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingFerramenta, setEditingFerramenta] = useState<Ferramenta | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -175,13 +183,15 @@ function CatalogoFerramentasSection() {
   }, []);
 
   const fetchData = async () => {
-    const [ferramentasRes, salasRes] = await Promise.all([
+    const [ferramentasRes, salasRes, familiasRes] = await Promise.all([
       supabase.from('sala_ferramentas').select('*').order('ordem'),
-      supabase.from('salas').select('id, nome_exibicao').eq('ativa', true).order('ordem')
+      supabase.from('salas').select('id, nome_exibicao').eq('ativa', true).order('ordem'),
+      supabase.from('travessia_familias').select('id, nome, icone').eq('ativa', true).order('ordem')
     ]);
 
     if (ferramentasRes.data) setFerramentas(ferramentasRes.data);
     if (salasRes.data) setSalas(salasRes.data);
+    if (familiasRes.data) setFamilias(familiasRes.data);
     setLoading(false);
   };
 
@@ -189,6 +199,12 @@ function CatalogoFerramentasSection() {
     if (!salaId) return 'Sem sala';
     const sala = salas.find(s => s.id === salaId);
     return sala?.nome_exibicao || 'Sala não encontrada';
+  };
+
+  const getFamiliaNome = (familiaId: string | null) => {
+    if (!familiaId) return null;
+    const familia = familias.find(f => f.id === familiaId);
+    return familia ? `${familia.icone || ''} ${familia.nome}` : null;
   };
 
   const handleSave = async (ferramenta: Ferramenta) => {
@@ -202,6 +218,7 @@ function CatalogoFerramentasSection() {
           rota: ferramenta.rota,
           icone: ferramenta.icone,
           sala_id: ferramenta.sala_id,
+          familia_id: ferramenta.familia_id,
           ordem: ferramenta.ordem,
           ativa: ferramenta.ativa,
           tipo_ferramenta: ferramenta.tipo_ferramenta,
@@ -228,6 +245,7 @@ function CatalogoFerramentasSection() {
           rota: ferramenta.rota,
           icone: ferramenta.icone,
           sala_id: ferramenta.sala_id,
+          familia_id: ferramenta.familia_id,
           ordem: ferramenta.ordem,
           ativa: ferramenta.ativa,
           tipo_ferramenta: ferramenta.tipo_ferramenta,
@@ -282,6 +300,7 @@ function CatalogoFerramentasSection() {
       rota: '/ferramentas/',
       icone: 'sparkles',
       sala_id: salas[0]?.id || null,
+      familia_id: null,
       ordem: ferramentas.length + 1,
       ativa: false,
       tipo_ferramenta: null,
@@ -323,6 +342,7 @@ function CatalogoFerramentasSection() {
             <FerramentaForm 
               ferramenta={editingFerramenta} 
               salas={salas}
+              familias={familias}
               onSave={handleSave}
               onChange={setEditingFerramenta}
             />
@@ -337,6 +357,7 @@ function CatalogoFerramentasSection() {
               <TableRow>
                 <TableHead className="w-12">Ord</TableHead>
                 <TableHead>Nome</TableHead>
+                <TableHead>Família</TableHead>
                 <TableHead>Tipo/Origem</TableHead>
                 <TableHead>Finalidade</TableHead>
                 <TableHead className="w-20">Status</TableHead>
@@ -374,6 +395,15 @@ function CatalogoFerramentasSection() {
                           )}
                         </div>
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      {getFamiliaNome(f.familia_id) ? (
+                        <span className="inline-block px-2 py-0.5 text-xs rounded bg-secondary text-secondary-foreground">
+                          {getFamiliaNome(f.familia_id)}
+                        </span>
+                      ) : (
+                        <span className="text-xs text-amber-400">Sem família</span>
+                      )}
                     </TableCell>
                     <TableCell>
                       <div className="space-y-1">
@@ -432,7 +462,7 @@ function CatalogoFerramentasSection() {
               })}
               {ferramentas.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                     Nenhuma ferramenta cadastrada
                   </TableCell>
                 </TableRow>
@@ -446,9 +476,10 @@ function CatalogoFerramentasSection() {
 }
 
 // Form para Criar/Editar Ferramenta
-function FerramentaForm({ ferramenta, salas, onSave, onChange }: { 
+function FerramentaForm({ ferramenta, salas, familias, onSave, onChange }: { 
   ferramenta: Ferramenta;
   salas: Sala[];
+  familias: TravessiaFamilia[];
   onSave: (f: Ferramenta) => void;
   onChange: (f: Ferramenta) => void;
 }) {
@@ -478,6 +509,32 @@ function FerramentaForm({ ferramenta, salas, onSave, onChange }: {
           placeholder="Descrição breve da ferramenta..."
           rows={2}
         />
+      </div>
+      
+      {/* Família Simbólica - NEW FIELD */}
+      <div className="border-t border-border/50 pt-4 mt-4">
+        <h4 className="text-sm font-medium mb-3 text-gold">Família Simbólica</h4>
+        <div>
+          <Label>Pertence à Família</Label>
+          <Select 
+            value={ferramenta.familia_id || ''} 
+            onValueChange={(v) => onChange({ ...ferramenta, familia_id: v || null })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Selecione a família simbólica" />
+            </SelectTrigger>
+            <SelectContent>
+              {familias.map(fam => (
+                <SelectItem key={fam.id} value={fam.id}>
+                  {fam.icone} {fam.nome}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground mt-1">
+            Ferramentas sem família não aparecem na Biblioteca das Travessias.
+          </p>
+        </div>
       </div>
       
       {/* Classification Section */}
