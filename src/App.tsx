@@ -22,7 +22,7 @@ import Biblioteca from "./pages/Biblioteca";
 import Mentoria from "./pages/Mentoria";
 import CasaTecelaAtrio from "./pages/CasaTecelaAtrio";
 import CasaTecelaInterior from "./pages/CasaTecelaInterior";
-import { CasaAtrio, CasaSustentacao, CasaLeitura, CasaCirculo } from "./pages/casa";
+import { CasaAtrio, CasaSustentacao, CasaLeitura, CasaCirculo, CasaJardim } from "./pages/casa";
 import MentoriaOracular from "./pages/MentoriaOracular";
 import Travessias from "./pages/Travessias";
 import Agentes from "./pages/Agentes";
@@ -412,6 +412,22 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="oracula">
             <CasaCirculo />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/casa/jardim"
+        element={
+          <ProtectedRoute>
+            <CasaJardim />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/casa/jardim/:id"
+        element={
+          <ProtectedRoute>
+            <JardimPsiqueDetalhe />
           </ProtectedRoute>
         }
       />

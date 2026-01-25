@@ -2550,13 +2550,17 @@ export type Database = {
           conteudo: Json
           created_at: string
           data_aplicacao: string
+          emocao_predominante: string | null
           ferramenta_chave: string
           ferramenta_nome: string
+          fonte: string | null
           id: string
           integrado: boolean
           reflexao_pessoal: string | null
           resultado_simbolico: Json | null
           tags: string[] | null
+          tipo_registro: string | null
+          titulo: string | null
           updated_at: string
           user_id: string
         }
@@ -2565,13 +2569,17 @@ export type Database = {
           conteudo?: Json
           created_at?: string
           data_aplicacao?: string
+          emocao_predominante?: string | null
           ferramenta_chave: string
           ferramenta_nome: string
+          fonte?: string | null
           id?: string
           integrado?: boolean
           reflexao_pessoal?: string | null
           resultado_simbolico?: Json | null
           tags?: string[] | null
+          tipo_registro?: string | null
+          titulo?: string | null
           updated_at?: string
           user_id: string
         }
@@ -2580,13 +2588,17 @@ export type Database = {
           conteudo?: Json
           created_at?: string
           data_aplicacao?: string
+          emocao_predominante?: string | null
           ferramenta_chave?: string
           ferramenta_nome?: string
+          fonte?: string | null
           id?: string
           integrado?: boolean
           reflexao_pessoal?: string | null
           resultado_simbolico?: Json | null
           tags?: string[] | null
+          tipo_registro?: string | null
+          titulo?: string | null
           updated_at?: string
           user_id?: string
         }

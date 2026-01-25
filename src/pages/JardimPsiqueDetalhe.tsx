@@ -4,7 +4,7 @@
 // Visualização completa de uma leitura salva
 
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ContentPageLayout } from '@/components/shared/ContentPageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,17 +22,24 @@ import {
   Save,
   Sparkles,
   FileDown,
+  Moon,
+  Quote,
+  FileText,
+  PenLine,
+  Compass,
+  BookOpen,
 } from 'lucide-react';
 import { exportJardimRegistroAsPdf } from '@/lib/exportPdf';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useJardimPsique, JardimRegistro } from '@/hooks/useJardimPsique';
+import { useJardimPsique, JardimRegistro, TipoRegistroJardim } from '@/hooks/useJardimPsique';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 // Mapa de nomes amigáveis
 const FERRAMENTA_LABELS: Record<string, string> = {
-  'big5-simbolico': 'Big5 Simbólico',
-  'eneagrama-feminino': 'Eneagrama Feminino',
+  'big5-simbolico': 'Mapa dos Cinco Territórios',
+  'eneagrama-feminino': 'Oráculo dos Nove Arquétipos',
   'mapa-arquetipos': 'Mapa dos Arquétipos',
   'jornada-heroina': 'Jornada da Heroína',
   '5-camadas': 'Leitura em 5 Camadas',
@@ -41,11 +48,27 @@ const FERRAMENTA_LABELS: Record<string, string> = {
   radiestesia: 'Radiestesia',
   labirinto: 'Labirinto Oracular',
   tarot: 'Tarot Simbólico',
+  sonho: 'Registro de Sonho',
+  frase: 'Frase Guardada',
+  fragmento: 'Fragmento de Sessão',
+  reflexao: 'Reflexão Pessoal',
+  oraculo: 'Tiragem de Oráculo',
+};
+
+// Configuração de tipos de registro
+const TIPO_CONFIG: Record<TipoRegistroJardim, { icon: React.ElementType; label: string; color: string }> = {
+  ferramenta: { icon: Compass, label: 'Ferramenta', color: 'text-purple-400' },
+  sonho: { icon: Moon, label: 'Sonho', color: 'text-indigo-400' },
+  frase: { icon: Quote, label: 'Frase', color: 'text-amber-400' },
+  fragmento: { icon: FileText, label: 'Fragmento', color: 'text-blue-400' },
+  oraculo: { icon: Sparkles, label: 'Oráculo', color: 'text-gold' },
+  reflexao: { icon: PenLine, label: 'Reflexão', color: 'text-emerald-400' },
 };
 
 export default function JardimPsiqueDetalhe() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const { getRegistro, atualizarReflexao, marcarIntegrado, arquivarRegistro } =
     useJardimPsique();
@@ -55,6 +78,10 @@ export default function JardimPsiqueDetalhe() {
   const [reflexaoEditada, setReflexaoEditada] = useState('');
   const [saving, setSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
+
+  // Detect if coming from /casa/jardim
+  const isFromCasa = location.pathname.startsWith('/casa/jardim');
+  const backPath = isFromCasa ? '/casa/jardim' : '/jardim-da-psique';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -98,17 +125,44 @@ export default function JardimPsiqueDetalhe() {
       toast({
         title: registro.arquivado ? 'Registro restaurado' : 'Registro arquivado',
       });
-      navigate('/jardim-da-psique');
+      navigate(backPath);
     }
   };
 
   const renderConteudo = () => {
     if (!registro?.conteudo) return null;
 
-    // Renderizar conteúdo de forma genérica
     const entries = Object.entries(registro.conteudo);
     if (entries.length === 0) return null;
 
+    // For manual entries (sonho, frase, etc.) show content differently
+    if (registro.tipo_registro !== 'ferramenta') {
+      const texto = registro.conteudo.texto as string;
+      if (!texto) return null;
+
+      return (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <BookOpen className="w-4 h-4" />
+              Conteúdo
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-foreground whitespace-pre-wrap leading-relaxed">
+              {texto}
+            </p>
+            {registro.fonte && (
+              <p className="mt-4 text-sm text-muted-foreground italic">
+                Fonte: {registro.fonte}
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      );
+    }
+
+    // For ferramentas, show structured content
     return (
       <Card>
         <CardHeader>
@@ -165,7 +219,7 @@ export default function JardimPsiqueDetalhe() {
       <AppLayout>
         <ContentPageLayout
           title="Carregando..."
-          onBack={() => navigate('/jardim-da-psique')}
+          onBack={() => navigate(backPath)}
           backLabel="Voltar ao Jardim"
           maxWidth="2xl"
         >
@@ -184,7 +238,7 @@ export default function JardimPsiqueDetalhe() {
       <AppLayout>
         <ContentPageLayout
           title="Registro não encontrado"
-          onBack={() => navigate('/jardim-da-psique')}
+          onBack={() => navigate(backPath)}
           backLabel="Voltar ao Jardim"
           maxWidth="2xl"
         >
@@ -206,23 +260,39 @@ export default function JardimPsiqueDetalhe() {
     { locale: ptBR }
   );
 
+  const tipoConfig = TIPO_CONFIG[registro.tipo_registro] || TIPO_CONFIG.ferramenta;
+  const TipoIcon = tipoConfig.icon;
+  const displayTitle = registro.titulo || 
+    FERRAMENTA_LABELS[registro.ferramenta_chave] || 
+    registro.ferramenta_nome;
+
   return (
     <AppLayout>
       <ContentPageLayout
-        title={FERRAMENTA_LABELS[registro.ferramenta_chave] || registro.ferramenta_nome}
+        title={displayTitle}
         subtitle={dataFormatada}
         badge="Registro Privado"
         badgeIcon={<Leaf className="w-4 h-4 text-emerald-500" />}
-        onBack={() => navigate('/jardim-da-psique')}
+        onBack={() => navigate(backPath)}
         backLabel="Voltar ao Jardim"
         maxWidth="2xl"
       >
         {/* Status badges */}
         <div className="flex flex-wrap gap-2 mb-6">
+          <Badge variant="outline" className={cn("gap-1", tipoConfig.color)}>
+            <TipoIcon className="w-3 h-3" />
+            {tipoConfig.label}
+          </Badge>
           <Badge variant="outline" className="gap-1">
             <Calendar className="w-3 h-3" />
             {format(new Date(registro.data_aplicacao), 'dd/MM/yyyy')}
           </Badge>
+          {registro.emocao_predominante && (
+            <Badge variant="secondary" className="gap-1">
+              <Sparkles className="w-3 h-3" />
+              {registro.emocao_predominante}
+            </Badge>
+          )}
           {registro.integrado && (
             <Badge variant="outline" className="gap-1 text-emerald-500 border-emerald-500/30">
               <CheckCircle2 className="w-3 h-3" />
