@@ -20,13 +20,14 @@ import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
 import { toast } from 'sonner';
 import { 
   Loader2, Sparkles, ArrowRight, ArrowLeft, Check, 
-  Compass, Users, ChevronRight, Save, Eye, EyeOff
+  Compass, Users, ChevronRight, Save, Eye, EyeOff, Leaf
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { JourneySpiral } from '@/components/jornada/JourneySpiral';
 import { PhaseDetailPanel } from '@/components/jornada/PhaseDetailPanel';
 import { ProfessionalNotesPanel } from '@/components/jornada/ProfessionalNotesPanel';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
+import { SalvarJardimModal } from '@/components/shared/SalvarJardimModal';
 
 interface Fase {
   id: string;
@@ -117,6 +118,7 @@ export default function JornadaHeroina() {
   const [reflexaoFinal, setReflexaoFinal] = useState('');
   
   const [showProfessionalNotes, setShowProfessionalNotes] = useState(false);
+  const [showJardimModal, setShowJardimModal] = useState(false);
 
   const currentFase = fases.find(f => f.numero === selectedFase);
   const currentResposta = respostas[selectedFase];
@@ -342,8 +344,13 @@ export default function JornadaHeroina() {
 
       if (error) throw error;
       
-      setPhase('complete');
-      toast.success('Jornada concluída');
+      // Se for modo pessoal, oferecer salvar no Jardim
+      if (mode === 'pessoal') {
+        setShowJardimModal(true);
+      } else {
+        setPhase('complete');
+        toast.success('Jornada concluída');
+      }
     } catch (error: any) {
       console.error('Error completing journey:', error);
       toast.error('Erro ao concluir: ' + error.message);
@@ -709,6 +716,42 @@ export default function JornadaHeroina() {
             />
           </div>
         )}
+        
+        {/* Modal Jardim da Psique - apenas para modo pessoal */}
+        <SalvarJardimModal
+          open={showJardimModal}
+          onOpenChange={setShowJardimModal}
+          ferramenta_nome="Jornada da Heroína"
+          ferramenta_chave="jornada_heroina"
+          tipo_registro="ferramenta"
+          conteudo={{
+            registro_id: registro?.id,
+            modo: mode,
+            fase_final: selectedFase,
+            nome_simbolico: nomeSimbolico,
+            intencao_inicial: intencaoInicial,
+            reflexao_final: reflexaoFinal,
+            respostas: Object.entries(respostas).map(([fase, resp]) => ({
+              fase: parseInt(fase),
+              tom_emocional: resp.tom_emocional,
+              arquetipo: resp.arquetipo_escolhido,
+              simbolo_pessoal: resp.simbolo_pessoal,
+            })),
+          }}
+          resultado_simbolico={{
+            nome_simbolico: nomeSimbolico || 'Jornada Pessoal',
+            fases_atravessadas: Object.keys(respostas).length,
+            arquetipos: Object.values(respostas).map(r => r.arquetipo_escolhido).filter(Boolean).join(', '),
+          }}
+          onSaved={() => {
+            toast.success('Salvo no Jardim da Psique!');
+            setPhase('complete');
+          }}
+          onSkipped={() => {
+            setPhase('complete');
+            toast.success('Jornada concluída');
+          }}
+        />
       </ContentPageLayout>
     </AppLayout>
   );

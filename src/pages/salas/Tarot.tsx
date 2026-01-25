@@ -7,12 +7,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Save, Loader2, Layers, Plus, X } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, Layers, Plus, X, Leaf } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
+import { SalvarJardimModal } from '@/components/shared/SalvarJardimModal';
 import {
   Select,
   SelectContent,
@@ -40,11 +41,13 @@ export default function Tarot() {
   const [associacaoTerapeutica, setAssociacaoTerapeutica] = useState('');
   const [saving, setSaving] = useState(false);
   const [clienteInfo, setClienteInfo] = useState<{ id: string; nome: string } | null>(null);
+  const [showJardimModal, setShowJardimModal] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const clienteId = searchParams.get('cliente');
+  const isUsoPessoal = !clienteId;
 
   useEffect(() => {
     if (clienteId) {
@@ -81,9 +84,18 @@ export default function Tarot() {
       description: 'A leitura de Tarô foi registrada.',
     });
     setSaving(false);
-    if (clienteId) {
+    
+    // Se for uso pessoal (sem cliente), oferecer salvar no Jardim
+    if (isUsoPessoal) {
+      setShowJardimModal(true);
+    } else if (clienteId) {
       navigate(`/cliente/${clienteId}`);
     }
+  };
+
+  const handleJardimSaved = () => {
+    toast({ title: 'Salvo no Jardim da Psique!' });
+    navigate('/jardim-da-psique');
   };
 
   return (
@@ -201,6 +213,27 @@ export default function Tarot() {
             Salvar Leitura
           </Button>
         </div>
+
+        {/* Modal Jardim da Psique - apenas para uso pessoal */}
+        <SalvarJardimModal
+          open={showJardimModal}
+          onOpenChange={setShowJardimModal}
+          ferramenta_nome="Tarô Terapêutico"
+          ferramenta_chave="tarot"
+          tipo_registro="ferramenta"
+          conteudo={{
+            tiragem: tiragemUtilizada,
+            cartas: cartas,
+            leitura_simbolica: leituraSimbolica,
+            associacao_terapeutica: associacaoTerapeutica,
+          }}
+          resultado_simbolico={{
+            tiragem: tiragemUtilizada,
+            cartas_principais: cartas.join(', '),
+          }}
+          onSaved={handleJardimSaved}
+          onSkipped={() => navigate('/ferramentas')}
+        />
       </div>
     </AppLayout>
   );

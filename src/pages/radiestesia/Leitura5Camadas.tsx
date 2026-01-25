@@ -11,6 +11,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
+import { SalvarJardimModal } from '@/components/shared/SalvarJardimModal';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -39,7 +40,8 @@ import {
   ImageIcon,
   Repeat,
   Shield,
-  TrendingUp
+  TrendingUp,
+  Leaf
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -246,6 +248,8 @@ export default function Leitura5Camadas() {
   const [respostas, setRespostas] = useState<Record<number, RespostaCamada>>({});
   const [saving, setSaving] = useState(false);
   const [mostrarResumo, setMostrarResumo] = useState(false);
+  const [showJardimModal, setShowJardimModal] = useState(false);
+  const isUsoPessoal = !clienteId;
 
   // Estados específicos por camada
   // Camada 1
@@ -432,7 +436,10 @@ export default function Leitura5Camadas() {
         description: 'As 5 camadas foram salvas com sucesso.',
       });
 
-      if (clienteId) {
+      // Se for uso pessoal, oferecer salvar no Jardim
+      if (isUsoPessoal) {
+        setShowJardimModal(true);
+      } else if (clienteId) {
         navigate(`/cliente/${clienteId}`);
       } else {
         navigate('/radiestesia/diario');
@@ -1198,10 +1205,40 @@ export default function Leitura5Camadas() {
         {camadaAtual === 5 && (
           <div className="text-center py-4">
             <p className="text-sm text-muted-foreground/60 italic">
-              "A leitura não encerra o processo. Ela indica por onde o cuidado pode seguir."
+            "A leitura não encerra o processo. Ela indica por onde o cuidado pode seguir."
             </p>
           </div>
         )}
+
+        {/* Modal Jardim da Psique - apenas para uso pessoal */}
+        <SalvarJardimModal
+          open={showJardimModal}
+          onOpenChange={setShowJardimModal}
+          ferramenta_nome="Leitura em 5 Camadas"
+          ferramenta_chave="radiestesia_5_camadas"
+          tipo_registro="ferramenta"
+          conteudo={{
+            camadas: respostas,
+            emocao: emocaoSelecionada,
+            campo_vibracional: campoVibracional?.nome,
+            imagem_simbolo: imagemSimbolo,
+            movimento: movimentoAtivo?.nome,
+            o_que_pede: oquePede,
+            o_que_sustentar: oqueSustentar,
+            o_que_nao_mexer: oqueNaoMexer,
+          }}
+          resultado_simbolico={{
+            campo: campoVibracional?.nome,
+            movimento: movimentoAtivo?.nome,
+            emocao: EMOCOES.find(e => e.id === emocaoSelecionada)?.label,
+            imagem: imagemSimbolo,
+          }}
+          onSaved={() => {
+            toast({ title: 'Salvo no Jardim da Psique!' });
+            navigate('/jardim-da-psique');
+          }}
+          onSkipped={() => navigate('/radiestesia')}
+        />
       </ContentPageLayout>
     </AppLayout>
   );

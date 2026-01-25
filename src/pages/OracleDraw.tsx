@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { Sparkles, Loader2, ArrowLeft, RotateCcw, Save, ChevronDown, ChevronUp } from 'lucide-react';
+import { Sparkles, Loader2, ArrowLeft, RotateCcw, Save, ChevronDown, ChevronUp, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,6 +11,7 @@ import { OracleCard as OracleCardType, OracleSpread, DrawnCard } from '@/types/o
 import { OracleCard } from '@/components/oracle/OracleCard';
 import { MeditationPause } from '@/components/oracle/MeditationPause';
 import { AmbientSoundToggle } from '@/components/oracle/AmbientSoundToggle';
+import { SalvarJardimModal } from '@/components/shared/SalvarJardimModal';
 import { cn } from '@/lib/utils';
 
 type DrawStep = 'select-spread' | 'meditation' | 'drawing' | 'reveal' | 'closing';
@@ -34,6 +35,8 @@ export default function OracleDraw() {
   const [isSaving, setIsSaving] = useState(false);
   const [expandedCardIndex, setExpandedCardIndex] = useState<number | null>(null);
   const [showCardText, setShowCardText] = useState(false);
+  const [showJardimModal, setShowJardimModal] = useState(false);
+  const [savedDrawData, setSavedDrawData] = useState<{cards: OracleCardType[], spread: OracleSpread | null, notes: string} | null>(null);
 
   // Pre-select spread from URL
   useEffect(() => {
@@ -121,7 +124,14 @@ export default function OracleDraw() {
       });
 
       toast({ title: 'Tiragem salva' });
-      setStep('closing');
+      
+      // Guardar dados para o Jardim e abrir modal
+      setSavedDrawData({
+        cards: drawnCards,
+        spread: selectedSpread,
+        notes: userNotes,
+      });
+      setShowJardimModal(true);
     } catch (error) {
       console.error('Error saving draw:', error);
       toast({ title: 'Erro ao salvar', variant: 'destructive' });
@@ -514,6 +524,38 @@ export default function OracleDraw() {
           </div>
         )}
       </main>
+
+      {/* Modal Jardim da Psique */}
+      {oracle && savedDrawData && (
+        <SalvarJardimModal
+          open={showJardimModal}
+          onOpenChange={setShowJardimModal}
+          ferramenta_nome={`Oráculo: ${oracle.name}`}
+          ferramenta_chave="oraculo"
+          tipo_registro="oraculo"
+          conteudo={{
+            oracle_id: oracle.id,
+            oracle_nome: oracle.name,
+            oracle_slug: oracle.slug,
+            spread_nome: savedDrawData.spread?.name,
+            cartas: savedDrawData.cards.map((c, i) => ({
+              nome: c.title,
+              posicao: savedDrawData.spread?.positions_json?.[i]?.name || `Posição ${i + 1}`,
+              significado: c.short_message,
+            })),
+            notas: savedDrawData.notes,
+          }}
+          resultado_simbolico={{
+            tiragem: savedDrawData.spread?.name,
+            cartas_principais: savedDrawData.cards.map(c => c.title).join(', '),
+          }}
+          onSaved={() => {
+            toast({ title: 'Salvo no Jardim da Psique!' });
+            setStep('closing');
+          }}
+          onSkipped={() => setStep('closing')}
+        />
+      )}
     </div>
   );
 }
