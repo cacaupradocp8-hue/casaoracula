@@ -344,41 +344,66 @@ function CatalogoFerramentasSection() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {ferramentas.map((f) => (
-                <TableRow key={f.id} className={!f.ativa ? 'opacity-50' : ''}>
-                  <TableCell className="font-mono text-xs">{f.ordem}</TableCell>
-                  <TableCell>
-                    <div>
-                      <span className="font-medium">{f.ferramenta_nome}</span>
-                      <div className="text-xs text-muted-foreground">{f.ferramenta_chave}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="space-y-1">
-                      {f.tipo_ferramenta && (
-                        <span className="inline-block px-2 py-0.5 text-xs rounded bg-gold/10 text-gold">
-                          {TIPO_FERRAMENTA_OPTIONS.find(o => o.value === f.tipo_ferramenta)?.label || f.tipo_ferramenta}
-                        </span>
-                      )}
-                      {f.vinculo_metodologico === 'pertence_metodo_oracula' && (
-                        <span className="inline-block px-2 py-0.5 text-xs rounded bg-purple-500/10 text-purple-400 ml-1">
-                          Método Orácula
-                        </span>
-                      )}
-                      {!f.tipo_ferramenta && !f.vinculo_metodologico && (
-                        <span className="text-xs text-muted-foreground/50">Sem classificação</span>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate">
-                    {f.finalidade_pratica || '-'}
-                  </TableCell>
-                  <TableCell>
-                    <Switch
-                      checked={f.ativa}
-                      onCheckedChange={() => toggleAtiva(f)}
-                    />
-                  </TableCell>
+              {ferramentas.map((f) => {
+                const isInDevelopment = f.finalidade_pratica?.startsWith('[EM DESENVOLVIMENTO]');
+                
+                return (
+                  <TableRow key={f.id} className={!f.ativa ? 'opacity-50' : ''}>
+                    <TableCell className="font-mono text-xs">{f.ordem}</TableCell>
+                    <TableCell>
+                      <div className="flex items-start gap-2">
+                        <div>
+                          <span className="font-medium">{f.ferramenta_nome}</span>
+                          <div className="text-xs text-muted-foreground">{f.ferramenta_chave}</div>
+                        </div>
+                        {/* Status badges */}
+                        <div className="flex gap-1 flex-wrap">
+                          {isInDevelopment && (
+                            <span className="inline-block px-1.5 py-0.5 text-[10px] rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                              EM DEV
+                            </span>
+                          )}
+                          {f.ativa ? (
+                            <span className="inline-block px-1.5 py-0.5 text-[10px] rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                              ATIVA
+                            </span>
+                          ) : (
+                            <span className="inline-block px-1.5 py-0.5 text-[10px] rounded bg-muted text-muted-foreground border border-border">
+                              INATIVA
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        {f.tipo_ferramenta && (
+                          <span className="inline-block px-2 py-0.5 text-xs rounded bg-gold/10 text-gold">
+                            {TIPO_FERRAMENTA_OPTIONS.find(o => o.value === f.tipo_ferramenta)?.label || f.tipo_ferramenta}
+                          </span>
+                        )}
+                        {f.vinculo_metodologico === 'pertence_metodo_oracula' && (
+                          <span className="inline-block px-2 py-0.5 text-xs rounded bg-purple-500/10 text-purple-400 ml-1">
+                            Método Orácula
+                          </span>
+                        )}
+                        {!f.tipo_ferramenta && !f.vinculo_metodologico && (
+                          <span className="text-xs text-muted-foreground/50">Sem classificação</span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate">
+                      {isInDevelopment 
+                        ? f.finalidade_pratica?.replace('[EM DESENVOLVIMENTO] ', '') 
+                        : (f.finalidade_pratica || '-')
+                      }
+                    </TableCell>
+                    <TableCell>
+                      <Switch
+                        checked={f.ativa}
+                        onCheckedChange={() => toggleAtiva(f)}
+                      />
+                    </TableCell>
                   <TableCell>
                     <div className="flex gap-1">
                       <Button 
@@ -402,8 +427,9 @@ function CatalogoFerramentasSection() {
                       </Button>
                     </div>
                   </TableCell>
-                </TableRow>
-              ))}
+                  </TableRow>
+                );
+              })}
               {ferramentas.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center text-muted-foreground py-8">

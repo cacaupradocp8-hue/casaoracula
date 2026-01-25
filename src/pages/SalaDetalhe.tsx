@@ -29,6 +29,10 @@ interface Ferramenta {
   rota: string;
   ordem: number;
   ativa: boolean;
+  tipo_ferramenta: string | null;
+  origem_metodologica: string | null;
+  finalidade_pratica: string | null;
+  portal_minimo: string | null;
 }
 
 interface Sala {
@@ -140,7 +144,7 @@ export default function SalaDetalhe() {
             .eq("ativo", true),
           supabase
             .from("sala_ferramentas")
-            .select("id, ferramenta_nome, ferramenta_descricao, icone, rota, ordem, ativa")
+            .select("id, ferramenta_nome, ferramenta_descricao, icone, rota, ordem, ativa, tipo_ferramenta, origem_metodologica, finalidade_pratica, portal_minimo")
             .eq("sala_id", id)
             .eq("ativa", true)
             .order("ordem"),
