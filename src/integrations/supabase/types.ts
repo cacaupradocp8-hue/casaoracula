@@ -5176,17 +5176,21 @@ export type Database = {
           ferramenta_chave: string
           ferramenta_descricao: string | null
           ferramenta_nome: string
+          finalidade_pratica: string | null
           has_blocks: boolean | null
           icone: string | null
           id: string
           ordem: number
+          origem_metodologica: string | null
           portal_id: string | null
           portal_minimo: Database["public"]["Enums"]["portal_type"] | null
           rota: string
           sala_id: string
           slug: string | null
           tipo: string | null
+          tipo_ferramenta: string | null
           updated_at: string
+          vinculo_metodologico: string | null
         }
         Insert: {
           ativa?: boolean
@@ -5194,17 +5198,21 @@ export type Database = {
           ferramenta_chave: string
           ferramenta_descricao?: string | null
           ferramenta_nome: string
+          finalidade_pratica?: string | null
           has_blocks?: boolean | null
           icone?: string | null
           id?: string
           ordem?: number
+          origem_metodologica?: string | null
           portal_id?: string | null
           portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
           rota: string
           sala_id: string
           slug?: string | null
           tipo?: string | null
+          tipo_ferramenta?: string | null
           updated_at?: string
+          vinculo_metodologico?: string | null
         }
         Update: {
           ativa?: boolean
@@ -5212,17 +5220,21 @@ export type Database = {
           ferramenta_chave?: string
           ferramenta_descricao?: string | null
           ferramenta_nome?: string
+          finalidade_pratica?: string | null
           has_blocks?: boolean | null
           icone?: string | null
           id?: string
           ordem?: number
+          origem_metodologica?: string | null
           portal_id?: string | null
           portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
           rota?: string
           sala_id?: string
           slug?: string | null
           tipo?: string | null
+          tipo_ferramenta?: string | null
           updated_at?: string
+          vinculo_metodologico?: string | null
         }
         Relationships: [
           {
