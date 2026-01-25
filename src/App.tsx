@@ -140,6 +140,9 @@ import BibliotecaContos from "./pages/narroterapia/BibliotecaContos";
 import BibliotecaClinica from "./pages/narroterapia/BibliotecaClinica";
 import ContoClinicoDetalhe from "./pages/narroterapia/ContoClinicoDetalhe";
 import AudiosNarracao from "./pages/narroterapia/AudiosNarracao";
+// Biblioteca das Travessias (Symbolic Families)
+import BibliotecaTravessias from "./pages/BibliotecaTravessias";
+import BibliotecaTravessiasFamilia from "./pages/BibliotecaTravessiasFamilia";
 
 const queryClient = new QueryClient();
 
@@ -1267,6 +1270,24 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <Notificacoes />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Biblioteca das Travessias - Symbolic Families */}
+        <Route
+          path="/biblioteca-travessias"
+          element={
+            <ProtectedRoute>
+              <BibliotecaTravessias />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/biblioteca-travessias/:familiaSlug"
+          element={
+            <ProtectedRoute>
+              <BibliotecaTravessiasFamilia />
             </ProtectedRoute>
           }
         />
