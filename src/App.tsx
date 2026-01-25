@@ -140,6 +140,7 @@ import BibliotecaContos from "./pages/narroterapia/BibliotecaContos";
 import BibliotecaClinica from "./pages/narroterapia/BibliotecaClinica";
 import ContoClinicoDetalhe from "./pages/narroterapia/ContoClinicoDetalhe";
 import AudiosNarracao from "./pages/narroterapia/AudiosNarracao";
+import RitualAutorizacao from "./pages/narroterapia/RitualAutorizacao";
 // Biblioteca das Travessias (Symbolic Families)
 import BibliotecaTravessias from "./pages/BibliotecaTravessias";
 import BibliotecaTravessiasFamilia from "./pages/BibliotecaTravessiasFamilia";
@@ -492,14 +493,22 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/narroterapia/clinica/:slug"
-        element={
-          <ProtectedRoute minPortal="aluna_formacao">
-            <ContoClinicoDetalhe />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/narroterapia/clinica/:slug"
+          element={
+            <ProtectedRoute minPortal="aluna_formacao">
+              <ContoClinicoDetalhe />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/narroterapia/ritual"
+          element={
+            <ProtectedRoute minPortal="aluna_formacao">
+              <RitualAutorizacao />
+            </ProtectedRoute>
+          }
+        />
       <Route
         path="/narroterapia/audios"
         element={

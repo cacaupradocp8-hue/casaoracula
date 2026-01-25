@@ -7,7 +7,9 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature } from '@/types/portal';
 import { useAccessExpiration } from '@/hooks/useAccessExpiration';
-import { BookOpen, BookOpenCheck, Headphones, Home, ChevronRight, Lock, Info } from 'lucide-react';
+import { useNarroterapiaAutorizacao } from '@/hooks/useNarroterapiaAutorizacao';
+import { RitualGatekeeper } from '@/components/narroterapia';
+import { BookOpen, BookOpenCheck, Headphones, Home, ChevronRight, Lock, Info, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface AreaCard {
@@ -53,15 +55,43 @@ const AREAS: AreaCard[] = [
 export default function NarroterapiaHub() {
   const { user } = useAuth();
   const { isExpired } = useAccessExpiration();
+  const { temAcessoCompleto, isLoading, seloAtivo, isAdmin } = useNarroterapiaAutorizacao();
   
   // Check if user is certified (aluna_formacao+)
   const isCertified = user && canAccessFeature(user.portal, 'aluna_formacao') && !isExpired;
-  const isAdmin = user?.portal === 'admin';
 
   const canAccessArea = (area: AreaCard) => {
     if (!area.requiresCertification) return true;
     return isCertified || isAdmin;
   };
+
+  // Se não tem acesso completo (não passou pelo ritual), mostra o gatekeeper
+  if (!isLoading && !temAcessoCompleto) {
+    return (
+      <AppLayout>
+        <div className="container mx-auto px-4 py-8 pb-20 max-w-4xl">
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+            <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+              <Home className="w-3 h-3" />
+              Casa
+            </Link>
+            <ChevronRight className="w-3 h-3" />
+            <span className="text-foreground">Narroterapia Oracular™</span>
+          </nav>
+
+          <SectionHeader
+            title="Narroterapia Oracular™"
+            subtitle="Infraestrutura ética e clínica do método."
+            icon={<BookOpen className="w-5 h-5" />}
+            className="mb-6"
+          />
+
+          <RitualGatekeeper />
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>
@@ -82,6 +112,18 @@ export default function NarroterapiaHub() {
           icon={<BookOpen className="w-5 h-5" />}
           className="mb-6"
         />
+
+        {/* Selo de Autorização */}
+        {seloAtivo && (
+          <div className="mb-6 flex justify-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gold/10 border border-gold/30 rounded-lg">
+              <Sparkles className="w-4 h-4 text-gold" />
+              <span className="text-xs uppercase tracking-widest text-gold">
+                Facilitadora Autorizada
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Institutional Notice */}
         <Alert className="mb-8 border-border/50 bg-muted/30">

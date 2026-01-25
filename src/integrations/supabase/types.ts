@@ -3651,6 +3651,60 @@ export type Database = {
           },
         ]
       }
+      narroterapia_autorizacao: {
+        Row: {
+          autorizado: boolean
+          created_at: string
+          id: string
+          motivo_suspensao: string | null
+          movimento_1_completado_em: string | null
+          movimento_2_aceite_em: string | null
+          movimento_3_autorizado_em: string | null
+          movimento_3_pausa_iniciada_em: string | null
+          movimento_4_selado_em: string | null
+          selo_ativo: boolean
+          suspenso: boolean
+          suspenso_em: string | null
+          suspenso_por: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          autorizado?: boolean
+          created_at?: string
+          id?: string
+          motivo_suspensao?: string | null
+          movimento_1_completado_em?: string | null
+          movimento_2_aceite_em?: string | null
+          movimento_3_autorizado_em?: string | null
+          movimento_3_pausa_iniciada_em?: string | null
+          movimento_4_selado_em?: string | null
+          selo_ativo?: boolean
+          suspenso?: boolean
+          suspenso_em?: string | null
+          suspenso_por?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          autorizado?: boolean
+          created_at?: string
+          id?: string
+          motivo_suspensao?: string | null
+          movimento_1_completado_em?: string | null
+          movimento_2_aceite_em?: string | null
+          movimento_3_autorizado_em?: string | null
+          movimento_3_pausa_iniciada_em?: string | null
+          movimento_4_selado_em?: string | null
+          selo_ativo?: boolean
+          suspenso?: boolean
+          suspenso_em?: string | null
+          suspenso_por?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       narroterapia_estudos: {
         Row: {
           audio_id: string
@@ -4601,6 +4655,7 @@ export type Database = {
           email: string | null
           entry_archetype: string | null
           entry_symbol: string | null
+          formacao_oracula_concluida: boolean | null
           id: string
           is_professional_verified: boolean
           nome: string | null
@@ -4608,6 +4663,8 @@ export type Database = {
           portal: string | null
           role: string
           subscription_status: string | null
+          supervisao_validada: boolean | null
+          termo_etico_aceito: boolean | null
           updated_at: string
         }
         Insert: {
@@ -4618,6 +4675,7 @@ export type Database = {
           email?: string | null
           entry_archetype?: string | null
           entry_symbol?: string | null
+          formacao_oracula_concluida?: boolean | null
           id: string
           is_professional_verified?: boolean
           nome?: string | null
@@ -4625,6 +4683,8 @@ export type Database = {
           portal?: string | null
           role?: string
           subscription_status?: string | null
+          supervisao_validada?: boolean | null
+          termo_etico_aceito?: boolean | null
           updated_at?: string
         }
         Update: {
@@ -4635,6 +4695,7 @@ export type Database = {
           email?: string | null
           entry_archetype?: string | null
           entry_symbol?: string | null
+          formacao_oracula_concluida?: boolean | null
           id?: string
           is_professional_verified?: boolean
           nome?: string | null
@@ -4642,6 +4703,8 @@ export type Database = {
           portal?: string | null
           role?: string
           subscription_status?: string | null
+          supervisao_validada?: boolean | null
+          termo_etico_aceito?: boolean | null
           updated_at?: string
         }
         Relationships: []
