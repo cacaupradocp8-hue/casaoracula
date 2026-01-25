@@ -29,11 +29,14 @@ import { ImageUpload } from '@/components/admin/ImageUpload';
 
 const PORTAL_LABELS: Record<PortalType, string> = {
   visitante: 'Visitante',
-  mentorada: 'Mentorada',
-  aluna_formacao: 'Aluna Formação',
-  assinante: 'Assinante',
+  aluna: 'Aluna',
   oracula: 'Orácula',
+  assinante: 'Assinante',
   admin: 'Admin',
+  mentorada: 'Aluna',
+  aluna_formacao: 'Aluna',
+  pre_iniciada: 'Aluna',
+  iniciada: 'Orácula',
 };
 import { supabase } from '@/integrations/supabase/client';
 

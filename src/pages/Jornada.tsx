@@ -29,7 +29,7 @@ import { VisitorHomePage } from '@/components/visitor/VisitorHomePage';
 // TIPOS E CONFIGURAÇÕES
 // ════════════════════════════════════════════════════════════════════════════
 
-type UserState = 'visitante' | 'mentorada' | 'aluna_formacao' | 'assinante' | 'oracula' | 'admin';
+type UserState = 'visitante' | 'aluna' | 'assinante' | 'oracula' | 'admin';
 
 interface StateConfig {
   title: string;
@@ -64,17 +64,9 @@ const STATE_CONFIGS: Record<UserState, StateConfig> = {
     bgColor: 'bg-gold/10',
     borderColor: 'border-gold/30',
   },
-  mentorada: {
-    title: 'Mentorada',
-    description: 'Você está em travessia pessoal. O foco agora é sustentação e leitura interna.',
-    icon: Compass,
-    color: 'text-purple-400',
-    bgColor: 'bg-purple-500/10',
-    borderColor: 'border-purple-500/30',
-  },
-  aluna_formacao: {
-    title: 'Aluna da Formação',
-    description: 'Você está em fase de aprendizagem e aplicação do método.',
+  aluna: {
+    title: 'Aluna',
+    description: 'Você está em jornada formativa. O foco agora é travessia e aprendizado do método.',
     icon: GraduationCap,
     color: 'text-emerald-400',
     bgColor: 'bg-emerald-500/10',
@@ -112,13 +104,8 @@ const PRIMARY_ACTIONS: Record<UserState, PrimaryAction> = {
     route: '/sala-da-visitante',
     icon: DoorOpen,
   },
-  mentorada: {
-    label: 'Acessar Sala da Mentoria',
-    route: '/mentoria-oracular',
-    icon: Compass,
-  },
-  aluna_formacao: {
-    label: 'Acessar Sala de Treinamento',
+  aluna: {
+    label: 'Acessar Sala das Alunas',
     route: '/salas',
     icon: GraduationCap,
   },
@@ -141,36 +128,28 @@ const PRIMARY_ACTIONS: Record<UserState, PrimaryAction> = {
 
 const FUTURE_PATHS: FuturePath[] = [
   {
-    id: 'mentoria',
-    title: 'Sala da Mentoria',
-    description: 'Jornada de 24 meses com acompanhamento individual e formação simbólica.',
-    icon: Compass,
-    requiredLevel: 'mentorada',
-    route: '/mentoria-oracular',
-  },
-  {
-    id: 'formacao',
-    title: 'Sala de Treinamento',
-    description: 'Formação completa no Método ORÁCULA com certificação.',
+    id: 'aluna',
+    title: 'Sala das Alunas',
+    description: 'Formação completa no Método ORÁCULA com acompanhamento.',
     icon: GraduationCap,
-    requiredLevel: 'aluna_formacao',
+    requiredLevel: 'aluna',
     route: '/salas',
-  },
-  {
-    id: 'ferramentas',
-    title: 'Ferramentas do Método',
-    description: 'Acesso às ferramentas simbólicas vivas da Casa.',
-    icon: Sparkles,
-    requiredLevel: 'assinante',
-    route: '/ferramentas',
   },
   {
     id: 'oracula',
     title: 'Círculo da Orácula',
-    description: 'Espaço exclusivo para profissionais formadas no método.',
+    description: 'Espaço exclusivo para profissionais formadas e certificadas.',
     icon: Crown,
     requiredLevel: 'oracula',
     route: '/casa/circulo',
+  },
+  {
+    id: 'assinante',
+    title: 'Ferramentas do Método',
+    description: 'Acesso contínuo às ferramentas simbólicas vivas da Casa.',
+    icon: Sparkles,
+    requiredLevel: 'assinante',
+    route: '/ferramentas',
   },
 ];
 
@@ -409,10 +388,8 @@ export default function Jornada() {
           state = 'admin';
         } else if (user.portal === 'oracula') {
           state = 'oracula';
-        } else if (hasFormacao || user.portal === 'aluna_formacao') {
-          state = 'aluna_formacao';
-        } else if (hasMentoria || user.portal === 'mentorada') {
-          state = 'mentorada';
+        } else if (hasFormacao || hasMentoria || user.portal === 'aluna') {
+          state = 'aluna';
         } else if (isSubscribed || user.portal === 'assinante') {
           state = 'assinante';
         } else if (!onboardingCompleted) {

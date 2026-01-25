@@ -66,7 +66,7 @@ export function Navigation() {
 
   const portal = user ? getPortal(user.portal) : null;
   const isAdmin = user?.portal === 'admin';
-  const isProfessionalLevel = user && canAccessFeature(user.portal, 'mentorada');
+  const isProfessionalLevel = user && canAccessFeature(user.portal, 'aluna');
 
   // Check matriculas for mentoria and formação, and professional status
   useEffect(() => {
@@ -197,7 +197,7 @@ export function Navigation() {
         path: '/jardim-da-psique',
         label: 'Jardim da Psique',
         icon: Leaf,
-        minPortal: 'mentorada',
+        minPortal: 'aluna',
       },
     ];
 
@@ -219,21 +219,21 @@ export function Navigation() {
       },
       {
         path: '/salas',
-        label: 'Sala da Mentoria',
+        label: 'Sala das Alunas',
         icon: GraduationCap,
-        minPortal: 'mentorada',
+        minPortal: 'aluna',
       },
       {
         path: '/ferramentas-metodo',
         label: 'Ferramentas do Método',
         icon: Compass,
-        minPortal: 'aluna_formacao',
+        minPortal: 'aluna',
       },
       {
         path: '/ferramentas',
         label: 'Ferramentas Práticas',
         icon: Sparkles,
-        minPortal: 'mentorada',
+        minPortal: 'aluna',
       },
       {
         path: '/casa',
@@ -267,7 +267,7 @@ export function Navigation() {
             path: '/biblioteca',
             label: 'Biblioteca',
             icon: Library,
-            minPortal: 'mentorada',
+            minPortal: 'aluna',
           },
           {
             path: '/biblioteca-das-travessias',
@@ -285,19 +285,19 @@ export function Navigation() {
             path: '/oraculos',
             label: 'Oráculos',
             icon: Sparkles,
-            minPortal: 'mentorada',
+            minPortal: 'aluna',
           },
           {
             path: '/audios',
             label: 'Áudios',
             icon: Music,
-            minPortal: 'mentorada',
+            minPortal: 'aluna',
           },
           {
             path: '/agentes',
             label: 'Agentes IA',
             icon: Bot,
-            minPortal: 'mentorada',
+            minPortal: 'aluna',
           },
           {
             path: '/laboratorio-leitura',
@@ -321,13 +321,13 @@ export function Navigation() {
             path: '/minhas-clientes',
             label: 'Clientes',
             icon: Users,
-            minPortal: 'mentorada',
+            minPortal: 'aluna',
           },
           {
             path: '/session-room',
             label: 'Sala de Sessão',
             icon: ClipboardList,
-            minPortal: 'mentorada',
+            minPortal: 'aluna',
           },
         ],
       });

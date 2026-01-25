@@ -110,10 +110,9 @@ export function AdminUsersTab() {
   const stats = {
     total: users.length,
     visitante: users.filter(u => u.portal === 'visitante').length,
-    mentorada: users.filter(u => u.portal === 'mentorada').length,
-    aluna_formacao: users.filter(u => u.portal === 'aluna_formacao').length,
+    aluna: users.filter(u => ['aluna', 'mentorada', 'aluna_formacao', 'pre_iniciada'].includes(u.portal as string)).length,
+    oracula: users.filter(u => ['oracula', 'iniciada'].includes(u.portal as string)).length,
     assinante: users.filter(u => u.portal === 'assinante').length,
-    oracula: users.filter(u => u.portal === 'oracula').length,
     admin: users.filter(u => u.portal === 'admin').length,
   };
 
@@ -145,16 +144,9 @@ export function AdminUsersTab() {
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <Heart className="w-6 h-6 mx-auto mb-2 text-burgundy-light" />
-            <p className="text-2xl font-display font-bold text-foreground">{stats.mentorada}</p>
-            <p className="text-xs text-muted-foreground">Mentoradas</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 text-center">
             <GraduationCap className="w-6 h-6 mx-auto mb-2 text-purple-400" />
-            <p className="text-2xl font-display font-bold text-foreground">{stats.aluna_formacao}</p>
-            <p className="text-xs text-muted-foreground">Aluna Formação</p>
+            <p className="text-2xl font-display font-bold text-foreground">{stats.aluna}</p>
+            <p className="text-xs text-muted-foreground">Alunas</p>
           </CardContent>
         </Card>
         <Card>
@@ -199,10 +191,9 @@ export function AdminUsersTab() {
             <SelectContent>
               <SelectItem value="all">Todos os Portais</SelectItem>
               <SelectItem value="visitante">Visitante</SelectItem>
-              <SelectItem value="mentorada">Mentorada</SelectItem>
-              <SelectItem value="aluna_formacao">Aluna Formação</SelectItem>
-              <SelectItem value="assinante">Assinante</SelectItem>
+              <SelectItem value="aluna">Aluna</SelectItem>
               <SelectItem value="oracula">Orácula</SelectItem>
+              <SelectItem value="assinante">Assinante</SelectItem>
               <SelectItem value="admin">Admin</SelectItem>
             </SelectContent>
           </Select>

@@ -1,16 +1,17 @@
 // Nova hierarquia: visitante → aluna → oracula → assinante → admin
-export type PortalType = 'visitante' | 'aluna' | 'oracula' | 'assinante' | 'admin';
+// Tipos legados mantidos para compatibilidade durante transição
+export type PortalType = 'visitante' | 'aluna' | 'oracula' | 'assinante' | 'admin' | 'mentorada' | 'aluna_formacao' | 'pre_iniciada' | 'iniciada';
 
 // Database may still return legacy values - this function normalizes them
-export type DatabasePortalType = PortalType | 'pre_iniciada' | 'iniciada' | 'mentorada' | 'aluna_formacao';
+export type DatabasePortalType = PortalType;
 
-export const normalizePortalType = (dbPortal: DatabasePortalType): PortalType => {
-  // Legacy mappings
+export const normalizePortalType = (dbPortal: PortalType): PortalType => {
+  // Legacy mappings - normalize to new hierarchy
   if (dbPortal === 'pre_iniciada') return 'aluna';
   if (dbPortal === 'mentorada') return 'aluna';
   if (dbPortal === 'aluna_formacao') return 'aluna';
   if (dbPortal === 'iniciada') return 'oracula';
-  return dbPortal as PortalType;
+  return dbPortal;
 };
 
 export interface User {
@@ -94,16 +95,23 @@ export const PORTALS: Portal[] = [
 ];
 
 // Nova hierarquia: visitante(1) → aluna(2) → oracula(3) → assinante(4) → admin(5)
+// Tipos legados mapeados para os novos níveis
 const PORTAL_HIERARCHY: Record<PortalType, number> = {
   visitante: 1,
   aluna: 2,
+  mentorada: 2, // legado → aluna
+  aluna_formacao: 2, // legado → aluna
+  pre_iniciada: 2, // legado → aluna
   oracula: 3,
+  iniciada: 3, // legado → oracula
   assinante: 4,
   admin: 5,
 };
 
 export const getPortal = (type: PortalType): Portal => {
-  return PORTALS.find(p => p.type === type) || PORTALS[0];
+  // Normalize legacy types before lookup
+  const normalizedType = normalizePortalType(type);
+  return PORTALS.find(p => p.type === normalizedType) || PORTALS[0];
 };
 
 export const canAccessFeature = (userPortal: PortalType, requiredPortal: PortalType): boolean => {

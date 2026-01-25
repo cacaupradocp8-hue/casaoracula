@@ -66,14 +66,16 @@ interface Ferramenta {
   portal_id: string | null;
 }
 
-const PORTAL_LABELS: Record<PortalType, string> = {
+const PORTAL_LABELS: Record<string, string> = {
   visitante: 'Visitante',
-  mentorada: 'Mentorada',
-  aluna_formacao: 'Aluna Formação',
-  assinante: 'Assinante',
+  aluna: 'Aluna',
   oracula: 'Orácula',
+  assinante: 'Assinante',
   admin: 'Admin',
-  pre_iniciada: 'Mentorada (legado)',
+  // Legacy mappings for display
+  mentorada: 'Aluna (legado)',
+  aluna_formacao: 'Aluna (legado)',
+  pre_iniciada: 'Aluna (legado)',
   iniciada: 'Orácula (legado)',
 };
 

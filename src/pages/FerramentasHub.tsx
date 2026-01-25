@@ -136,7 +136,7 @@ export default function FerramentasHub() {
 
   const userPortal = user?.portal || 'visitante';
   const isAdmin = userPortal === 'admin';
-  const canAccessSyntheia = canAccessFeature(userPortal as PortalType, 'mentorada');
+  const canAccessSyntheia = canAccessFeature(userPortal as PortalType, 'aluna');
 
   // Fetch ferramentas from database with new classification fields
   // Only show complete, active tools (must have tipo_ferramenta and finalidade_pratica)

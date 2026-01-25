@@ -33,7 +33,7 @@ interface FerramentaCard {
   cor: string;
   bgCor: string;
   rota: string;
-  minPortal: 'visitante' | 'mentorada' | 'aluna_formacao' | 'assinante' | 'oracula' | 'admin';
+  minPortal: 'visitante' | 'aluna' | 'oracula' | 'assinante' | 'admin';
   destaques: string[];
 }
 
@@ -47,7 +47,7 @@ const FERRAMENTAS: FerramentaCard[] = [
     cor: 'text-amber-400',
     bgCor: 'bg-amber-500/20',
     rota: '/labirinto',
-    minPortal: 'aluna_formacao',
+    minPortal: 'aluna',
     destaques: [
       'Leitura em 5 camadas',
       'Protocolo estruturado',
@@ -79,7 +79,7 @@ const FERRAMENTAS: FerramentaCard[] = [
     cor: 'text-indigo-400',
     bgCor: 'bg-indigo-500/20',
     rota: '/ferramentas/cartografia-torre',
-    minPortal: 'aluna_formacao',
+    minPortal: 'aluna',
     destaques: [
       '5 famílias mapeadas',
       'Padrões relacionais',

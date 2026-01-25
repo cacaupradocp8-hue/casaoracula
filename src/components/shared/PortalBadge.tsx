@@ -12,20 +12,26 @@ interface PortalBadgeProps {
 
 const portalIcons: Record<PortalType, typeof Eye> = {
   visitante: Eye,
-  mentorada: Heart,
-  aluna_formacao: GraduationCap,
-  assinante: Sparkles,
+  aluna: GraduationCap,
   oracula: Star,
+  assinante: Sparkles,
   admin: Crown,
+  mentorada: GraduationCap,
+  aluna_formacao: GraduationCap,
+  pre_iniciada: GraduationCap,
+  iniciada: Star,
 };
 
 const portalColors: Record<PortalType, string> = {
   visitante: 'bg-muted text-muted-foreground',
-  mentorada: 'bg-burgundy/30 text-burgundy-light',
-  aluna_formacao: 'bg-purple-500/20 text-purple-300',
-  assinante: 'bg-emerald-500/20 text-emerald-300',
+  aluna: 'bg-purple-500/20 text-purple-300',
   oracula: 'bg-gold/20 text-gold',
+  assinante: 'bg-emerald-500/20 text-emerald-300',
   admin: 'bg-accent text-accent-foreground',
+  mentorada: 'bg-purple-500/20 text-purple-300',
+  aluna_formacao: 'bg-purple-500/20 text-purple-300',
+  pre_iniciada: 'bg-purple-500/20 text-purple-300',
+  iniciada: 'bg-gold/20 text-gold',
 };
 
 export const PortalBadge = React.forwardRef<HTMLDivElement, PortalBadgeProps>(

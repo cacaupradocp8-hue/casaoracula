@@ -62,10 +62,9 @@ const AdminNarroterapiaTab = lazy(() => import('@/components/admin/AdminNarroter
 const AdminNarroterapiaAutorizacaoTab = lazy(() => import('@/components/admin/AdminNarroterapiaAutorizacaoTab'));
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
-  { value: 'mentorada', label: '👁 Mentorada' },
-  { value: 'aluna_formacao', label: '👁 Aluna Formação' },
-  { value: 'assinante', label: '👁 Assinante' },
+  { value: 'aluna', label: '👁 Aluna' },
   { value: 'oracula', label: '👁 Orácula' },
+  { value: 'assinante', label: '👁 Assinante' },
 ];
 
 // Tab loading fallback

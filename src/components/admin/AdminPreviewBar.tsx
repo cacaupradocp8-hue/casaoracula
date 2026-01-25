@@ -13,10 +13,9 @@ import { PortalType } from '@/types/portal';
 
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
-  { value: 'mentorada', label: '👁 Mentorada' },
-  { value: 'aluna_formacao', label: '👁 Aluna Formação' },
-  { value: 'assinante', label: '👁 Assinante' },
+  { value: 'aluna', label: '👁 Aluna' },
   { value: 'oracula', label: '👁 Orácula' },
+  { value: 'assinante', label: '👁 Assinante' },
 ];
 
 export function AdminPreviewBar() {
@@ -27,6 +26,17 @@ export function AdminPreviewBar() {
   if (!user || user.portal !== 'admin' || !preview) return null;
 
   const { isPreviewMode, previewPortal, enablePreviewMode, disablePreviewMode } = preview;
+
+  const getPortalLabel = (portal: PortalType) => {
+    switch (portal) {
+      case 'visitante': return 'Visitante';
+      case 'aluna': return 'Aluna';
+      case 'oracula': return 'Orácula';
+      case 'assinante': return 'Assinante';
+      case 'admin': return 'Admin';
+      default: return portal;
+    }
+  };
 
   return (
     <>
@@ -45,13 +55,7 @@ export function AdminPreviewBar() {
                 <AlertTriangle className="w-4 h-4" />
                 <span className="text-sm font-medium">
                   Modo Preview: Visualizando como{' '}
-                <strong>
-                    {previewPortal === 'visitante' && 'Visitante'}
-                    {previewPortal === 'mentorada' && 'Mentorada'}
-                    {previewPortal === 'aluna_formacao' && 'Aluna Formação'}
-                    {previewPortal === 'assinante' && 'Assinante'}
-                    {previewPortal === 'oracula' && 'Orácula'}
-                  </strong>
+                  <strong>{getPortalLabel(previewPortal!)}</strong>
                 </span>
               </>
             ) : (
