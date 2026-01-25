@@ -13,13 +13,13 @@ export default function CartografiaTorre() {
   const navigate = useNavigate();
 
   const { data: ferramenta, isLoading } = useQuery({
-    queryKey: ['ferramenta', 'cartografia-torre'],
+    queryKey: ['ferramenta', 'cartografia_torre'],
     queryFn: async () => {
       const { data } = await supabase
         .from('sala_ferramentas')
         .select('*')
-        .eq('ferramenta_chave', 'cartografia-torre')
-        .single();
+        .eq('ferramenta_chave', 'cartografia_torre')
+        .maybeSingle();
       return data;
     }
   });

@@ -11,13 +11,13 @@ export default function MapaArquetiposEgo() {
   const navigate = useNavigate();
 
   const { data: ferramenta, isLoading } = useQuery({
-    queryKey: ['ferramenta', 'mapa-arquetipos-ego'],
+    queryKey: ['ferramenta', 'mapa_arquetipos_ego'],
     queryFn: async () => {
       const { data } = await supabase
         .from('sala_ferramentas')
         .select('*')
-        .eq('ferramenta_chave', 'mapa-arquetipos-ego')
-        .single();
+        .eq('ferramenta_chave', 'mapa_arquetipos_ego')
+        .maybeSingle();
       return data;
     }
   });

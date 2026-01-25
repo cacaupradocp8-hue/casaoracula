@@ -11,13 +11,13 @@ export default function EspelhoConsciencia() {
   const navigate = useNavigate();
 
   const { data: ferramenta, isLoading } = useQuery({
-    queryKey: ['ferramenta', 'espelho-consciencia'],
+    queryKey: ['ferramenta', 'espelho_consciencia'],
     queryFn: async () => {
       const { data } = await supabase
         .from('sala_ferramentas')
         .select('*')
-        .eq('ferramenta_chave', 'espelho-consciencia')
-        .single();
+        .eq('ferramenta_chave', 'espelho_consciencia')
+        .maybeSingle();
       return data;
     }
   });
