@@ -4,10 +4,22 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import { Ear, BookOpen, Users, ArrowRight, Heart, Shield, AlertCircle } from 'lucide-react';
+import { Ear, BookOpen, Users, ArrowRight, Heart, Shield, AlertCircle, Leaf } from 'lucide-react';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 
 const rooms = [
+  {
+    id: 'jardim',
+    title: 'Jardim da Psique',
+    subtitle: 'Diário arquetípico privado',
+    description: 'Sonhos, oráculos, frases que tocaram. Campo de memória simbólica que pode ser revisitado.',
+    icon: Leaf,
+    path: '/casa/jardim',
+    color: 'text-emerald-400',
+    bgColor: 'bg-emerald-500/10',
+    borderColor: 'border-emerald-500/30',
+    hoverColor: 'hover:border-emerald-500/50',
+  },
   {
     id: 'sustentacao',
     title: 'Sala da Sustentação',
@@ -110,7 +122,7 @@ export default function CasaAtrio() {
         </motion.div>
 
         {/* Room Cards */}
-        <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
           {rooms.map((room, index) => {
             const Icon = room.icon;
             const isHovered = hoveredRoom === room.id;

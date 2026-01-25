@@ -14,9 +14,10 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Leaf, X } from 'lucide-react';
-import { useJardimPsique, NovoRegistroJardim } from '@/hooks/useJardimPsique';
+import { Leaf, X, Sparkles } from 'lucide-react';
+import { useJardimPsique, NovoRegistroJardim, TipoRegistroJardim } from '@/hooks/useJardimPsique';
 
 interface SalvarJardimModalProps {
   open: boolean;
@@ -25,6 +26,7 @@ interface SalvarJardimModalProps {
   ferramenta_chave: string;
   conteudo: Record<string, unknown>;
   resultado_simbolico?: Record<string, unknown>;
+  tipo_registro?: TipoRegistroJardim;
   onSaved?: (registroId: string) => void;
   onSkipped?: () => void;
 }
@@ -36,10 +38,12 @@ export function SalvarJardimModal({
   ferramenta_chave,
   conteudo,
   resultado_simbolico,
+  tipo_registro = 'ferramenta',
   onSaved,
   onSkipped,
 }: SalvarJardimModalProps) {
   const [reflexao, setReflexao] = useState('');
+  const [emocao, setEmocao] = useState('');
   const [saving, setSaving] = useState(false);
   const { salvarRegistro } = useJardimPsique();
 
@@ -52,6 +56,8 @@ export function SalvarJardimModal({
         conteudo,
         resultado_simbolico,
         reflexao_pessoal: reflexao || undefined,
+        tipo_registro,
+        emocao_predominante: emocao || undefined,
       };
 
       const registroId = await salvarRegistro(novoRegistro);
@@ -59,7 +65,7 @@ export function SalvarJardimModal({
       if (registroId) {
         onSaved?.(registroId);
         onOpenChange(false);
-        setReflexao('');
+        resetForm();
       }
     } finally {
       setSaving(false);
@@ -69,7 +75,12 @@ export function SalvarJardimModal({
   const handleSkip = () => {
     onSkipped?.();
     onOpenChange(false);
+    resetForm();
+  };
+
+  const resetForm = () => {
     setReflexao('');
+    setEmocao('');
   };
 
   return (
@@ -102,6 +113,19 @@ export function SalvarJardimModal({
               value={reflexao}
               onChange={(e) => setReflexao(e.target.value)}
               className="min-h-[100px] resize-none"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="emocao" className="text-sm flex items-center gap-2">
+              <Sparkles className="w-4 h-4" />
+              Emoção predominante <span className="text-muted-foreground">(opcional)</span>
+            </Label>
+            <Input
+              id="emocao"
+              placeholder="Ex: clareza, inquietação, esperança..."
+              value={emocao}
+              onChange={(e) => setEmocao(e.target.value)}
             />
           </div>
         </div>
