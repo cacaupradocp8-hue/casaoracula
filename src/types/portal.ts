@@ -1,10 +1,14 @@
-export type PortalType = 'visitante' | 'mentorada' | 'aluna_formacao' | 'assinante' | 'oracula' | 'admin';
+// Nova hierarquia: visitante → aluna → oracula → assinante → admin
+export type PortalType = 'visitante' | 'aluna' | 'oracula' | 'assinante' | 'admin';
 
 // Database may still return legacy values - this function normalizes them
-export type DatabasePortalType = PortalType | 'pre_iniciada' | 'iniciada';
+export type DatabasePortalType = PortalType | 'pre_iniciada' | 'iniciada' | 'mentorada' | 'aluna_formacao';
 
 export const normalizePortalType = (dbPortal: DatabasePortalType): PortalType => {
-  if (dbPortal === 'pre_iniciada') return 'mentorada';
+  // Legacy mappings
+  if (dbPortal === 'pre_iniciada') return 'aluna';
+  if (dbPortal === 'mentorada') return 'aluna';
+  if (dbPortal === 'aluna_formacao') return 'aluna';
   if (dbPortal === 'iniciada') return 'oracula';
   return dbPortal as PortalType;
 };
@@ -32,58 +36,45 @@ export const PORTALS: Portal[] = [
     name: 'Visitante',
     description: 'Acesso inicial à Casa ORÁCULA',
     features: [
-      'Conteúdos simbólicos curtos',
+      'Travessia Zero',
+      'Conteúdos simbólicos de degustação',
       'Perguntas-oráculo',
-      'Exploração da tese central',
     ],
     caseLimit: 0,
   },
   {
-    type: 'mentorada',
-    name: 'Mentorada',
-    description: 'Inscrita na Mentoria Orácula',
-    features: [
-      'Acesso à Mentoria Orácula',
-      'Ferramentas básicas',
-      'Biblioteca simbólica inicial',
-      'Até 3 Casos',
-    ],
-    caseLimit: 3,
-  },
-  {
-    type: 'aluna_formacao',
-    name: 'Aluna Formação',
+    type: 'aluna',
+    name: 'Aluna',
     description: 'Matriculada na Formação Orácula',
     features: [
-      'Formação completa nos 4 Portais',
-      'Ferramentas profissionais',
+      'Acesso às Travessias',
+      'Ferramentas práticas',
+      'Biblioteca simbólica',
       'Até 5 Casos',
     ],
     caseLimit: 5,
   },
   {
-    type: 'assinante',
-    name: 'Assinante',
-    description: 'Assinante ativa da Casa ORÁCULA',
+    type: 'oracula',
+    name: 'Orácula',
+    description: 'Formada e certificada',
     features: [
-      'Acesso contínuo à plataforma',
-      'Biblioteca simbólica profunda',
+      'Formação completa',
+      'Ferramentas do Método',
+      'Portal de Leitura Oracular',
       'Casos ilimitados',
-      'Atualizações e novos conteúdos',
     ],
     caseLimit: 'unlimited',
   },
   {
-    type: 'oracula',
-    name: 'Orácula',
-    description: 'Combo completo: Formação + Mentoria + Assinatura',
+    type: 'assinante',
+    name: 'Assinante',
+    description: 'Acesso contínuo à Casa ORÁCULA',
     features: [
-      'Acesso total à formação',
-      'Mentoria completa',
+      'Acesso contínuo pós-formação',
       'Biblioteca simbólica profunda',
       'Casos ilimitados',
-      'Portal de Leitura Oracular',
-      'Área de supervisão',
+      'Atualizações e novos conteúdos',
     ],
     caseLimit: 'unlimited',
   },
@@ -102,13 +93,13 @@ export const PORTALS: Portal[] = [
   },
 ];
 
+// Nova hierarquia: visitante(1) → aluna(2) → oracula(3) → assinante(4) → admin(5)
 const PORTAL_HIERARCHY: Record<PortalType, number> = {
   visitante: 1,
-  mentorada: 2,
-  aluna_formacao: 3,
+  aluna: 2,
+  oracula: 3,
   assinante: 4,
-  oracula: 5,
-  admin: 6,
+  admin: 5,
 };
 
 export const getPortal = (type: PortalType): Portal => {
