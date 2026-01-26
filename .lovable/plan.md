@@ -1,184 +1,329 @@
 
 
-# Plano: Corrigir Flickering na Página de Detalhe do Jardim
+# Plano: Ajustes na Travessia 00 - UX Mobile e Liberação Gradual
 
-## Problema Identificado
+## Visão Geral
 
-A página de detalhe (`/jardim-da-psique/:id`) está piscando porque a função `getRegistro` do hook **não está memorizada com `useCallback`**, causando um loop infinito de requisições.
+Implementar três melhorias na Travessia 00 para otimizar a experiência no mobile e a condução da visitante:
+
+1. **Liberação diária** — Um dia por vez, com 24h de intervalo
+2. **Texto de abertura condensado** — Expansível no mobile
+3. **Prova social + CTA** — Comentários de alunas e botão "Conheça a Casa"
+
+---
+
+## 1. Liberação de Conteúdo — Um Dia por Vez
+
+### Lógica de Negócio
 
 ```text
-Render 1 → getRegistro é NOVA função
-    ↓
-useEffect([id, getRegistro]) dispara
-    ↓
-fetch inicia → loading = true → re-render
-    ↓
-Render 2 → getRegistro é NOVA função de novo!
-    ↓
-useEffect dispara novamente
-    ↓
-Loop infinito ∞
+Dia 1 → Liberado no primeiro acesso à Travessia 00
+Dia 2 → Liberado 24h após o primeiro acesso ao Dia 1
+Dia 3 → Liberado 24h após o primeiro acesso ao Dia 2
+...e assim por diante
+```
+
+### Regras
+- Não exige conclusão forçada (a usuária pode pausar)
+- Não pode pular dias (sequencial)
+- Sem gamificação visual ou contadores
+- Dias futuros aparecem visíveis, porém bloqueados
+
+### UX de Bloqueio
+
+Os dias bloqueados mostrarão:
+- Card visível com título e descrição (para curiosidade)
+- Overlay discreto com cadeado
+- Texto: "Este passo pede um dia de intervalo para maturação."
+
+### Implementação Técnica
+
+**Nova tabela no banco:**
+```sql
+travessia_day_unlocks (
+  id UUID PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES auth.users(id),
+  aula_id UUID NOT NULL REFERENCES conteudo_aulas(id),
+  first_accessed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE(user_id, aula_id)
+)
+```
+
+**RLS:**
+- SELECT/INSERT: `user_id = auth.uid()`
+
+**Hook `useTravessiaUnlock`:**
+- Verifica quais dias estão liberados
+- Registra primeiro acesso
+- Calcula tempo restante para próximo dia
+
+---
+
+## 2. Ajuste do Texto de Abertura (Mobile)
+
+### Problema Atual
+
+O texto de descrição da Travessia no header ocupa muito espaço vertical no mobile, empurrando os cards de dias para baixo.
+
+### Solução
+
+Criar componente colapsável:
+- **Desktop**: Exibe tudo normalmente
+- **Mobile**: Exibe apenas título + 2 linhas + botão "Ler mais"
+
+### Implementação
+
+No `TravessiaDetalhe.tsx`, dentro do header:
+
+```text
+┌─────────────────────────────────────────┐
+│ [Ícone]                                 │
+│                                         │
+│ TRAVESSIA 0                             │
+│ O Limiar da Casa                        │
+│ Uma jornada de 7 dias para mapear...    │
+│                                         │
+│ [▼ Ler introdução completa]             │
+│                                         │
+│ [Começar Dia 1]                         │
+└─────────────────────────────────────────┘
+```
+
+Ao expandir:
+```text
+│ Uma jornada de 7 dias para mapear seu   │
+│ ponto de partida. Sem fórmulas. Sem     │
+│ promessas. Apenas clareza sobre onde    │
+│ você está agora.                        │
+│                                         │
+│ [▲ Fechar]                              │
 ```
 
 ---
 
-## Solução
+## 3. Comentários de Alunas + CTA "Conheça a Casa"
 
-Duas correções necessárias:
+### Onde Aparecem
 
-### 1. Memorizar `getRegistro` no Hook
+No final da página `TravessiaDetalhe.tsx`, após a listagem de todos os 7 dias.
 
-Envolver a função `getRegistro` em `useCallback` com dependências estáveis (`user.id` e `toast`):
+### Design dos Comentários
 
-```typescript
-// useJardimPsique.ts
-const getRegistro = useCallback(async (
-  registroId: string
-): Promise<JardimRegistro | null> => {
-  if (!user) return null;
-  // ... lógica existente
-}, [user?.id]); // Apenas user.id como dependência
+```text
+┌─────────────────────────────────────────┐
+│ VOZES DA TRAVESSIA                      │
+├─────────────────────────────────────────┤
+│                                         │
+│ ┌───────────────────────────────────┐   │
+│ │ "Não mudou minha vida.            │   │
+│ │  Mas organizou algo que eu nunca  │   │
+│ │  tinha conseguido nomear."        │   │
+│ │                          — Marina │   │
+│ └───────────────────────────────────┘   │
+│                                         │
+│ ┌───────────────────────────────────┐   │
+│ │ "Finalmente parei de correr       │   │
+│ │  atrás de respostas que           │   │
+│ │  não eram minhas."                │   │
+│ │                           — Carla │   │
+│ └───────────────────────────────────┘   │
+│                                         │
+│ ┌───────────────────────────────────┐   │
+│ │ "Sete dias. Sem pressa.           │   │
+│ │  Foi o tempo certo."              │   │
+│ │                          — Renata │   │
+│ └───────────────────────────────────┘   │
+│                                         │
+└─────────────────────────────────────────┘
 ```
 
-### 2. Remover `getRegistro` das Dependências do useEffect
+### CTA "Conheça a Casa"
 
-Na página de detalhe, usar um padrão mais seguro que não depende da referência da função:
-
-```typescript
-// JardimPsiqueDetalhe.tsx
-useEffect(() => {
-  const fetchData = async () => {
-    if (!id) return;
-    setLoading(true);
-    const data = await getRegistro(id);
-    // ...
-  };
-  fetchData();
-}, [id]); // Apenas id - getRegistro movido para fora ou estabilizado
+```text
+┌─────────────────────────────────────────┐
+│                                         │
+│      🜂 Conheça a Casa Orácula          │
+│                                         │
+│    Sem pressa. Apenas quando fizer      │
+│              sentido.                   │
+│                                         │
+└─────────────────────────────────────────┘
 ```
 
-Alternativa: fazer a query diretamente na página de detalhe em vez de usar o hook genérico.
+### Implementação
+
+Os depoimentos serão gerenciáveis via tabela `app_settings` ou `text_models`:
+- Chave: `travessia_zero_depoimentos`
+- Valor: JSON array com `nome` e `texto`
+
+O botão CTA leva para `/tour` (página institucional existente).
 
 ---
 
-## Arquivos a Modificar
+## Arquivos a Criar/Modificar
 
 | Arquivo | Ação |
 |---------|------|
-| `src/hooks/useJardimPsique.ts` | Envolver `getRegistro` em `useCallback` |
-| `src/pages/JardimPsiqueDetalhe.tsx` | Ajustar dependências do `useEffect` |
+| `supabase/migrations/xxx.sql` | **CRIAR** — Nova tabela `travessia_day_unlocks` |
+| `src/hooks/useTravessiaUnlock.ts` | **CRIAR** — Hook para lógica de liberação |
+| `src/components/travessia/TravessiaHeader.tsx` | **CRIAR** — Header com texto colapsável |
+| `src/components/travessia/TravessiaDayCard.tsx` | **CRIAR** — Card de dia com estado bloqueado |
+| `src/components/travessia/TravessiaTestimonials.tsx` | **CRIAR** — Bloco de depoimentos |
+| `src/pages/TravessiaDetalhe.tsx` | **MODIFICAR** — Integrar novos componentes |
 
 ---
 
-## Modificações Detalhadas
+## Fluxo Visual Esperado
 
-### Hook: `useJardimPsique.ts`
-
-```typescript
-// Antes (linha 291-321)
-const getRegistro = async (registroId: string) => { ... };
-
-// Depois
-const getRegistro = useCallback(async (
-  registroId: string
-): Promise<JardimRegistro | null> => {
-  if (!user) return null;
-
-  try {
-    const { data, error } = await (supabase as any)
-      .from('jardim_psique_registros')
-      .select('*')
-      .eq('id', registroId)
-      .eq('user_id', user.id)
-      .single();
-
-    if (error) throw error;
-
-    return {
-      ...data,
-      conteudo: (data.conteudo as Record<string, unknown>) || {},
-      resultado_simbolico: data.resultado_simbolico as Record<string, unknown> | null,
-      tags: data.tags || [],
-      tipo_registro: data.tipo_registro || 'ferramenta',
-      titulo: data.titulo || null,
-      fonte: data.fonte || null,
-      emocao_predominante: data.emocao_predominante || null,
-    };
-  } catch (error: unknown) {
-    console.error('Erro ao buscar registro:', error);
-    return null;
-  }
-}, [user?.id]);
-```
-
-### Página: `JardimPsiqueDetalhe.tsx`
-
-```typescript
-// Antes (linha 86-96)
-useEffect(() => {
-  const fetchData = async () => {
-    if (!id) return;
-    setLoading(true);
-    const data = await getRegistro(id);
-    setRegistro(data);
-    setReflexaoEditada(data?.reflexao_pessoal || '');
-    setLoading(false);
-  };
-  fetchData();
-}, [id, getRegistro]);
-
-// Depois - getRegistro agora é estável
-useEffect(() => {
-  const fetchData = async () => {
-    if (!id) return;
-    setLoading(true);
-    const data = await getRegistro(id);
-    setRegistro(data);
-    setReflexaoEditada(data?.reflexao_pessoal || '');
-    setLoading(false);
-  };
-  fetchData();
-}, [id, getRegistro]); // Agora funciona porque getRegistro é useCallback
+```text
+VISITANTE ACESSA TRAVESSIA 00
+           │
+           ▼
+┌─────────────────────────────────────────┐
+│ TRAVESSIA ZERO                          │
+│ O Limiar da Casa                        │
+│ Uma jornada de 7 dias...                │
+│ [▼ Ler introdução completa]             │
+├─────────────────────────────────────────┤
+│                                         │
+│ [Dia 1 — O Silêncio]  ✓ Disponível      │
+│ [Dia 2 — O Mapa]      🔒 Amanhã         │
+│ [Dia 3 — O Eco]       🔒 Em 2 dias      │
+│ [Dia 4 — A Pausa]     🔒 Bloqueado      │
+│ [Dia 5 — O Corpo]     🔒 Bloqueado      │
+│ [Dia 6 — O Limiar]    🔒 Bloqueado      │
+│ [Dia 7 — A Decisão]   🔒 Bloqueado      │
+│                                         │
+├─────────────────────────────────────────┤
+│ VOZES DA TRAVESSIA                      │
+│ [Depoimento 1] [Depoimento 2]           │
+├─────────────────────────────────────────┤
+│       🜂 Conheça a Casa Orácula         │
+│   Sem pressa. Apenas quando fizer       │
+│             sentido.                    │
+└─────────────────────────────────────────┘
 ```
 
 ---
 
 ## Resultado Esperado
 
-1. Página de detalhe carrega **uma única vez**
-2. Sem requisições duplicadas
-3. Sem flickering/piscando
-4. Transição suave da lista para o detalhe
+1. Visitante tem experiência mais fluida no mobile
+2. Liberação gradual cria ritmo de maturação
+3. Prova social transmite reconhecimento sem promessas
+4. CTA respeitoso convida sem pressionar
+5. Zero alteração no conteúdo existente
 
 ---
 
 ## Seção Técnica
 
-### Por Que Isso Acontece
-
-O React compara referências de objetos/funções em arrays de dependência. Quando você escreve:
+### Hook `useTravessiaUnlock`
 
 ```typescript
-const getRegistro = async () => { ... };  // Nova função a cada render
+interface DayUnlockStatus {
+  aulaId: string;
+  isUnlocked: boolean;
+  unlockDate: Date | null;
+  hoursRemaining: number | null;
+}
+
+function useTravessiaUnlock(travessiaId: string) {
+  // Busca todas as aulas da travessia (ordem)
+  // Busca registros de unlock do usuario
+  // Calcula status de cada dia baseado em:
+  //   - Dia 1: sempre liberado
+  //   - Dia N: liberado se existe unlock do Dia N-1 
+  //            E passou 24h desde first_accessed_at
+  
+  return {
+    dayStatuses: DayUnlockStatus[],
+    registerAccess: (aulaId: string) => Promise<void>,
+    isLoading: boolean
+  };
+}
 ```
 
-Cada render cria uma **nova instância** da função. O React vê como "diferente" e re-executa o `useEffect`.
-
-### Solução: `useCallback`
+### Lógica de Liberação
 
 ```typescript
-const getRegistro = useCallback(async () => { ... }, [user?.id]);
+// Para cada dia N (ordem):
+const prevDayUnlock = unlocks.find(u => u.aula_ordem === ordem - 1);
+
+if (ordem === 1) {
+  return { isUnlocked: true };
+}
+
+if (!prevDayUnlock) {
+  return { isUnlocked: false, hoursRemaining: null };
+}
+
+const hoursSincePrevAccess = differenceInHours(
+  new Date(),
+  prevDayUnlock.first_accessed_at
+);
+
+if (hoursSincePrevAccess >= 24) {
+  return { isUnlocked: true };
+}
+
+return { 
+  isUnlocked: false, 
+  hoursRemaining: 24 - hoursSincePrevAccess,
+  unlockDate: addHours(prevDayUnlock.first_accessed_at, 24)
+};
 ```
 
-Agora a função só é recriada quando `user.id` muda (ou seja, quase nunca durante navegação normal).
+### Texto de Bloqueio (Copy)
 
-### Funções que Também Precisariam de useCallback
+- **Genérico**: "Este passo pede um dia de intervalo para maturação."
+- **Com tempo**: "Disponível amanhã às 14h" (opcional, se quiser mostrar)
 
-Para consistência, outras funções do hook também deveriam ser memorizadas:
-- `atualizarReflexao`
-- `marcarIntegrado`
-- `arquivarRegistro`
-- `salvarRegistro`
+### Depoimentos (Dados Iniciais)
 
-Mas como essas são usadas apenas em handlers de clique (não em dependências de useEffect), o impacto é menor. A prioridade é corrigir `getRegistro`.
+```json
+[
+  {
+    "nome": "Marina",
+    "texto": "Não mudou minha vida. Mas organizou algo que eu nunca tinha conseguido nomear."
+  },
+  {
+    "nome": "Carla", 
+    "texto": "Finalmente parei de correr atrás de respostas que não eram minhas."
+  },
+  {
+    "nome": "Renata",
+    "texto": "Sete dias. Sem pressa. Foi o tempo certo."
+  }
+]
+```
+
+### Migração SQL
+
+```sql
+-- Tabela para rastrear primeiro acesso a cada dia
+CREATE TABLE travessia_day_unlocks (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  aula_id UUID NOT NULL REFERENCES conteudo_aulas(id) ON DELETE CASCADE,
+  first_accessed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE(user_id, aula_id)
+);
+
+-- RLS
+ALTER TABLE travessia_day_unlocks ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own unlocks"
+  ON travessia_day_unlocks FOR SELECT
+  USING (user_id = auth.uid());
+
+CREATE POLICY "Users can insert own unlocks"
+  ON travessia_day_unlocks FOR INSERT
+  WITH CHECK (user_id = auth.uid());
+
+-- Index para performance
+CREATE INDEX idx_travessia_day_unlocks_user 
+  ON travessia_day_unlocks(user_id, aula_id);
+```
 
