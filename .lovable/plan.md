@@ -1,195 +1,184 @@
 
-# Plano: Biblioteca Pessoal Unificada
 
-## Visão Geral
+# Plano: Corrigir Flickering na Página de Detalhe do Jardim
 
-Criar uma nova página central chamada **"Minha Biblioteca"** (`/minha-biblioteca`) que reúne todos os conteúdos pessoais salvos pela aluna em um único lugar organizado.
+## Problema Identificado
 
----
-
-## O Que Será Reunido
-
-| Categoria | Tabela de Origem | O Que Mostra |
-|-----------|------------------|--------------|
-| Diários de Bordo | `diario_bordo_aulas` | Notas pessoais escritas durante as aulas |
-| Jardim da Psique | `jardim_psique_registros` | Sonhos, frases, reflexões, resultados de ferramentas |
-| Oráculos | `oracle_draws` | Histórico de tiragens pessoais (não profissionais) |
-| Labirinto | `labirinto_leituras` | Leituras pessoais do Labirinto Oracular |
-| Progresso de Aulas | `course_lesson_progress` | Aulas concluídas com datas |
-
----
-
-## Design da Interface
+A página de detalhe (`/jardim-da-psique/:id`) está piscando porque a função `getRegistro` do hook **não está memorizada com `useCallback`**, causando um loop infinito de requisições.
 
 ```text
-┌─────────────────────────────────────────────────────────────────────────┐
-│  📚 MINHA BIBLIOTECA                                     [Exportar PDF] │
-│  Seu espaço pessoal de memórias e aprendizados                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  [📔 Diários] [🌿 Jardim] [🔮 Oráculos] [🌀 Labirinto] [📊 Progresso]  │
-│                                                                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  🔍 Buscar...                              📅 Filtrar por período ▼     │
-│                                                                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ┌────────────────────────────────────────────────────────────────────┐ │
-│  │ 📔 Dia 3 — A Escuta Interior                                      │ │
-│  │ "Percebi que o silêncio não é ausência, mas presença..."          │ │
-│  │ 📅 25 Jan 2026 · Travessia Zero                      [Ver aula →] │ │
-│  └────────────────────────────────────────────────────────────────────┘ │
-│                                                                         │
-│  ┌────────────────────────────────────────────────────────────────────┐ │
-│  │ 🌿 Mapa dos Cinco Territórios                        ✓ Integrado  │ │
-│  │ "O território da abertura me chamou mais atenção..."              │ │
-│  │ 📅 24 Jan 2026 · Ferramenta                         [Abrir →]     │ │
-│  └────────────────────────────────────────────────────────────────────┘ │
-│                                                                         │
-│  ┌────────────────────────────────────────────────────────────────────┐ │
-│  │ 🔮 Tiragem do Oráculo Lua                                         │ │
-│  │ 3 cartas · "Um novo ciclo se inicia..."                           │ │
-│  │ 📅 23 Jan 2026                                       [Ver →]      │ │
-│  └────────────────────────────────────────────────────────────────────┘ │
-│                                                                         │
-│  ...mais registros...                                                   │
-│                                                                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│  🔒 Tudo aqui é 100% privado. Nenhum admin vê seus registros.          │
-└─────────────────────────────────────────────────────────────────────────┘
+Render 1 → getRegistro é NOVA função
+    ↓
+useEffect([id, getRegistro]) dispara
+    ↓
+fetch inicia → loading = true → re-render
+    ↓
+Render 2 → getRegistro é NOVA função de novo!
+    ↓
+useEffect dispara novamente
+    ↓
+Loop infinito ∞
 ```
 
 ---
 
-## Funcionalidades
+## Solução
 
-1. **Abas por categoria**: Permite filtrar por tipo de conteúdo
-2. **Aba "Todos"**: Timeline unificada ordenada por data
-3. **Busca textual**: Procura em todos os registros
-4. **Filtro por período**: Última semana, mês, 3 meses, todos
-5. **Links diretos**: Cada card leva ao conteúdo original (aula, ferramenta, etc.)
-6. **Exportar PDF**: Gera documento com todos os registros (ou por categoria)
-7. **100% privado**: Apenas a própria usuária vê (RLS existente)
+Duas correções necessárias:
+
+### 1. Memorizar `getRegistro` no Hook
+
+Envolver a função `getRegistro` em `useCallback` com dependências estáveis (`user.id` e `toast`):
+
+```typescript
+// useJardimPsique.ts
+const getRegistro = useCallback(async (
+  registroId: string
+): Promise<JardimRegistro | null> => {
+  if (!user) return null;
+  // ... lógica existente
+}, [user?.id]); // Apenas user.id como dependência
+```
+
+### 2. Remover `getRegistro` das Dependências do useEffect
+
+Na página de detalhe, usar um padrão mais seguro que não depende da referência da função:
+
+```typescript
+// JardimPsiqueDetalhe.tsx
+useEffect(() => {
+  const fetchData = async () => {
+    if (!id) return;
+    setLoading(true);
+    const data = await getRegistro(id);
+    // ...
+  };
+  fetchData();
+}, [id]); // Apenas id - getRegistro movido para fora ou estabilizado
+```
+
+Alternativa: fazer a query diretamente na página de detalhe em vez de usar o hook genérico.
 
 ---
 
-## Arquivos a Criar/Modificar
+## Arquivos a Modificar
 
 | Arquivo | Ação |
 |---------|------|
-| `src/pages/MinhaBiblioteca.tsx` | **CRIAR** - Nova página principal |
-| `src/hooks/useMinhaBiblioteca.ts` | **CRIAR** - Hook que agrega todas as fontes |
-| `src/components/biblioteca-pessoal/BibliotecaCard.tsx` | **CRIAR** - Card unificado para diferentes tipos |
-| `src/components/biblioteca-pessoal/BibliotecaTabs.tsx` | **CRIAR** - Navegação por abas |
-| `src/components/biblioteca-pessoal/BibliotecaTimeline.tsx` | **CRIAR** - Lista cronológica |
-| `src/App.tsx` | Adicionar rota `/minha-biblioteca` |
-| `src/components/layout/Navigation.tsx` | Adicionar link na seção Jornada |
+| `src/hooks/useJardimPsique.ts` | Envolver `getRegistro` em `useCallback` |
+| `src/pages/JardimPsiqueDetalhe.tsx` | Ajustar dependências do `useEffect` |
 
 ---
 
-## Hook `useMinhaBiblioteca`
+## Modificações Detalhadas
 
-O hook será responsável por:
-1. Buscar dados de todas as 5 tabelas em paralelo
-2. Normalizar para um formato unificado
-3. Ordenar por data (mais recente primeiro)
-4. Filtrar por categoria, busca e período
+### Hook: `useJardimPsique.ts`
 
-```text
-Formato Unificado:
-{
-  id: string
-  tipo: 'diario' | 'jardim' | 'oraculo' | 'labirinto' | 'progresso'
-  titulo: string
-  resumo: string
-  data: Date
-  link: string
-  metadata: { ... }
-}
+```typescript
+// Antes (linha 291-321)
+const getRegistro = async (registroId: string) => { ... };
+
+// Depois
+const getRegistro = useCallback(async (
+  registroId: string
+): Promise<JardimRegistro | null> => {
+  if (!user) return null;
+
+  try {
+    const { data, error } = await (supabase as any)
+      .from('jardim_psique_registros')
+      .select('*')
+      .eq('id', registroId)
+      .eq('user_id', user.id)
+      .single();
+
+    if (error) throw error;
+
+    return {
+      ...data,
+      conteudo: (data.conteudo as Record<string, unknown>) || {},
+      resultado_simbolico: data.resultado_simbolico as Record<string, unknown> | null,
+      tags: data.tags || [],
+      tipo_registro: data.tipo_registro || 'ferramenta',
+      titulo: data.titulo || null,
+      fonte: data.fonte || null,
+      emocao_predominante: data.emocao_predominante || null,
+    };
+  } catch (error: unknown) {
+    console.error('Erro ao buscar registro:', error);
+    return null;
+  }
+}, [user?.id]);
 ```
 
----
+### Página: `JardimPsiqueDetalhe.tsx`
 
-## Integração no Menu
+```typescript
+// Antes (linha 86-96)
+useEffect(() => {
+  const fetchData = async () => {
+    if (!id) return;
+    setLoading(true);
+    const data = await getRegistro(id);
+    setRegistro(data);
+    setReflexaoEditada(data?.reflexao_pessoal || '');
+    setLoading(false);
+  };
+  fetchData();
+}, [id, getRegistro]);
 
-A "Minha Biblioteca" será adicionada ao bloco **Jornada** no menu de navegação, logo após "Jardim da Psique":
-
-```text
-JORNADA
-├── Meu Caminho
-├── Jardim da Psique
-└── Minha Biblioteca  ← NOVO
+// Depois - getRegistro agora é estável
+useEffect(() => {
+  const fetchData = async () => {
+    if (!id) return;
+    setLoading(true);
+    const data = await getRegistro(id);
+    setRegistro(data);
+    setReflexaoEditada(data?.reflexao_pessoal || '');
+    setLoading(false);
+  };
+  fetchData();
+}, [id, getRegistro]); // Agora funciona porque getRegistro é useCallback
 ```
 
 ---
 
 ## Resultado Esperado
 
-1. Aluna tem **um só lugar** para ver tudo que salvou
-2. Navegação fluida entre registros e conteúdos originais
-3. Busca unificada facilita encontrar memórias específicas
-4. Exportação permite criar documento físico/digital da jornada
-5. Zero impacto em outras funcionalidades existentes
+1. Página de detalhe carrega **uma única vez**
+2. Sem requisições duplicadas
+3. Sem flickering/piscando
+4. Transição suave da lista para o detalhe
 
 ---
 
-## Seção Tecnica
+## Seção Técnica
 
-### Estrutura de Dados Normalizada
+### Por Que Isso Acontece
 
-```typescript
-interface RegistroBiblioteca {
-  id: string;
-  tipo: 'diario' | 'jardim' | 'oraculo' | 'labirinto' | 'progresso';
-  titulo: string;
-  resumo: string | null;
-  data: string; // ISO date
-  link: string;
-  icone: string; // lucide icon name
-  metadata: {
-    // tipo-specific data
-    aulaId?: string;
-    cursoNome?: string;
-    ferramentaChave?: string;
-    oracleId?: string;
-    portaId?: string;
-    integrado?: boolean;
-    arquivado?: boolean;
-  };
-}
-```
-
-### Queries Paralelas
+O React compara referências de objetos/funções em arrays de dependência. Quando você escreve:
 
 ```typescript
-const { data, isLoading } = useQuery({
-  queryKey: ['minha-biblioteca', userId, filtros],
-  queryFn: async () => {
-    const [diarios, jardim, oraculos, labirinto, progresso] = await Promise.all([
-      supabase.from('diario_bordo_aulas').select('*').eq('user_id', userId),
-      supabase.from('jardim_psique_registros').select('*').eq('user_id', userId),
-      supabase.from('oracle_draws').select('*').eq('user_id', userId).eq('is_professional_session', false),
-      supabase.from('labirinto_leituras').select('*').eq('user_id', userId).is('cliente_id', null),
-      supabase.from('course_lesson_progress').select('*, lesson:course_lessons(titulo, modulo:course_modules(titulo, curso:courses(titulo)))').eq('user_id', userId).eq('completed', true),
-    ]);
-    
-    return normalizeAndMerge(diarios, jardim, oraculos, labirinto, progresso);
-  },
-  staleTime: 30000,
-});
+const getRegistro = async () => { ... };  // Nova função a cada render
 ```
 
-### Seguranca (RLS)
+Cada render cria uma **nova instância** da função. O React vê como "diferente" e re-executa o `useEffect`.
 
-Todas as tabelas ja possuem RLS configurado com `user_id = auth.uid()`. Nenhuma alteracao de seguranca necessaria.
+### Solução: `useCallback`
 
-### Mapeamento de Links
+```typescript
+const getRegistro = useCallback(async () => { ... }, [user?.id]);
+```
 
-| Tipo | Link Pattern |
-|------|--------------|
-| diario | `/travessia/{travessiaId}/aula/{aulaId}` ou `/curso/{cursoId}/aula/{aulaId}` |
-| jardim | `/jardim-da-psique/{registroId}` |
-| oraculo | `/oraculos/{oracleId}/history` |
-| labirinto | `/labirinto/porta/{portaId}` |
-| progresso | `/curso/{cursoId}/aula/{lessonId}` |
+Agora a função só é recriada quando `user.id` muda (ou seja, quase nunca durante navegação normal).
+
+### Funções que Também Precisariam de useCallback
+
+Para consistência, outras funções do hook também deveriam ser memorizadas:
+- `atualizarReflexao`
+- `marcarIntegrado`
+- `arquivarRegistro`
+- `salvarRegistro`
+
+Mas como essas são usadas apenas em handlers de clique (não em dependências de useEffect), o impacto é menor. A prioridade é corrigir `getRegistro`.
+
