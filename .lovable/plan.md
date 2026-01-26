@@ -1,128 +1,249 @@
 
 
-# Plano: Corrigir Áudio que Não Toca na Travessia Zero
+# Plano: Corrigir Flickering do Jardim da Psique + Criar Diário de Bordo para Aulas
 
-## Problema Identificado
+## Problema 1: Jardim da Psique Piscando (Flickering)
 
-A **Aula "Dia 1 — O Silêncio"** (id: `27cd2622-5b42-4175-a1d2-0fec81cab961`) tem o campo `audio_url` com valor inválido:
+### Diagnóstico
 
-| Campo | Valor Atual | Problema |
-|-------|-------------|----------|
-| audio_url | ` 1769387803653.ogg` | Começa com espaço, não tem URL base |
-
-As demais aulas (Dia 2 a 8) já possuem URLs completas e funcionam corretamente.
-
----
-
-## Causa Raiz
-
-1. O SQL de correção anterior usou o padrão `✓ Arquivo carregado:%`, que não capturou o Dia 1
-2. O Dia 1 foi salvo com um formato diferente: apenas o nome do arquivo com um espaço inicial
-3. O código em `AulaPage.tsx` passa o `audio_url` diretamente para `<source src="">` sem normalizar
-
----
-
-## Solução em Duas Partes
-
-### Parte 1: Correção de Dados (SQL Migration)
-
-Corrigir o registro do Dia 1 e qualquer outro que tenha apenas nome de arquivo:
-
-```sql
-UPDATE conteudo_aulas
-SET audio_url = 
-  'https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/audios/uploads/' 
-  || TRIM(audio_url)
-WHERE audio_url IS NOT NULL 
-  AND audio_url NOT LIKE 'http%'
-  AND TRIM(audio_url) != '';
-```
-
-Isso converte qualquer valor que:
-- Não seja nulo
-- Não comece com `http`
-- Não seja apenas espaços em branco
-
-### Parte 2: Normalização no Código
-
-Adicionar uma função helper em `AulaPage.tsx` para garantir que URLs incompletas sejam normalizadas antes de renderizar:
+O console mostra dezenas de erros `"TypeError: Failed to fetch"` repetidos em loop. A causa raiz é uma **referência de objeto instável** no hook:
 
 ```typescript
-const getAudioUrl = (url: string | null) => {
-  if (!url) return null;
-  const trimmed = url.trim();
-  if (!trimmed) return null;
-  
-  // Se já é URL completa, retorna como está
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
-    return trimmed;
-  }
-  
-  // Constrói URL completa do storage
-  return `https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/audios/uploads/${trimmed}`;
-};
+// JardimPsique.tsx linha 83-86
+const { registros, loading, getFerramentasUsadas } = useJardimPsique({
+  arquivado: viewArquivados,
+  busca: busca || undefined,  // <-- novo objeto a cada render!
+});
 ```
 
-E usar no render:
+O objeto `filtros` é recriado a cada render, causando:
+1. `useCallback` recria `fetchRegistros` (porque `filtros` mudou)
+2. `useEffect` dispara `fetchRegistros`
+3. Componente re-renderiza
+4. Ciclo infinito de requisições
 
-```tsx
-{aula.audio_url && getAudioUrl(aula.audio_url) && (
-  <Card className="mb-8">
-    {/* ... */}
-    <audio controls className="w-full">
-      <source src={getAudioUrl(aula.audio_url)!} />
-    </audio>
-  </Card>
-)}
-```
+### Solução
+
+1. **Memorizar os filtros** no componente `JardimPsique.tsx` usando `useMemo`
+2. **Desestruturar os filtros** no hook `useJardimPsique.ts` para evitar dependência do objeto inteiro
+3. **Adicionar `staleTime`** usando TanStack Query (padrão já usado em outros hooks do projeto)
 
 ---
 
-## Arquivos a Modificar
+## Problema 2: Diário de Bordo nas Aulas
+
+### O que a Usuária Quer
+
+Um espaço **dentro de cada aula/travessia** para que a aluna possa:
+- Fazer anotações pessoais enquanto assiste/lê
+- Registrar insights e reflexões
+- Ter um histórico do que anotou em cada lição
+
+Isso é diferente do Jardim da Psique global - é um **diário contextualizado por aula**.
+
+### Solução Proposta
+
+Criar um novo componente `DiarioBordoAula` que:
+1. Aparece colapsado por padrão no final da aula
+2. Permite escrever/editar notas
+3. Salva automaticamente (auto-save com debounce)
+4. Mostra histórico de entradas anteriores daquela aula
+
+---
+
+## Arquivos a Modificar/Criar
 
 | Arquivo | Ação |
 |---------|------|
-| Migration SQL | Atualizar registros existentes |
-| `src/pages/AulaPage.tsx` | Adicionar helper `getAudioUrl` e usar no render |
-| `src/components/courses/LessonContent.tsx` | Aplicar mesma normalização (para cursos) |
+| `src/hooks/useJardimPsique.ts` | Refatorar para evitar loop infinito |
+| `src/pages/JardimPsique.tsx` | Memorizar filtros com useMemo |
+| `src/components/shared/DiarioBordoAula.tsx` | **CRIAR** - componente de diário para aulas |
+| `src/pages/AulaPage.tsx` | Adicionar DiarioBordoAula |
+| `src/components/courses/LessonContent.tsx` | Adicionar DiarioBordoAula |
+| Migration SQL | Criar tabela `diario_bordo_aulas` |
+
+---
+
+## Parte 1: Corrigir Flickering
+
+### Refatoração do Hook
+
+O hook será refatorado para:
+1. Receber parâmetros primitivos em vez de objeto
+2. Usar `JSON.stringify` para estabilizar a dependência
+3. Adicionar um flag `enabled` para evitar fetch desnecessário
+
+```typescript
+export function useJardimPsique(filtros?: FiltrosJardim) {
+  // Serializar filtros para dependência estável
+  const filtrosKey = JSON.stringify(filtros ?? {});
+  
+  const fetchRegistros = useCallback(async () => {
+    // ... lógica existente
+  }, [user?.id, filtrosKey]); // Dependência estável
+  
+  useEffect(() => {
+    fetchRegistros();
+  }, [fetchRegistros]);
+}
+```
+
+### Memorização na Página
+
+```typescript
+// JardimPsique.tsx
+const filtros = useMemo(() => ({
+  arquivado: viewArquivados,
+  busca: busca || undefined,
+}), [viewArquivados, busca]);
+
+const { registros, loading } = useJardimPsique(filtros);
+```
+
+---
+
+## Parte 2: Diário de Bordo para Aulas
+
+### Nova Tabela: `diario_bordo_aulas`
+
+```sql
+CREATE TABLE public.diario_bordo_aulas (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  aula_id UUID NOT NULL,
+  conteudo TEXT,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- RLS: Apenas o próprio usuário pode ver/editar suas notas
+ALTER TABLE public.diario_bordo_aulas ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage own notes"
+  ON public.diario_bordo_aulas
+  FOR ALL
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- Índice para busca rápida
+CREATE INDEX idx_diario_bordo_user_aula 
+  ON public.diario_bordo_aulas(user_id, aula_id);
+```
+
+### Novo Componente: DiarioBordoAula
+
+Um componente compacto que:
+- Mostra um accordion/collapsible com ícone de caderno
+- Textarea para escrita livre
+- Auto-save após 2 segundos de inatividade
+- Indicador visual de "salvando..." / "salvo"
+- Badge mostrando data da última edição
+
+```text
+┌─────────────────────────────────────────────────────────┐
+│ 📓 Diário de Bordo                          [▼ Abrir]   │
+└─────────────────────────────────────────────────────────┘
+
+Quando expandido:
+
+┌─────────────────────────────────────────────────────────┐
+│ 📓 Diário de Bordo                          [▲ Fechar]  │
+├─────────────────────────────────────────────────────────┤
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ Minhas anotações sobre esta aula...                 │ │
+│ │                                                     │ │
+│ │ - Insight sobre o tema X                            │ │
+│ │ - Lembrar de aplicar Y                              │ │
+│ │                                                     │ │
+│ └─────────────────────────────────────────────────────┘ │
+│                                                         │
+│                              ✓ Salvo · Editado há 2min  │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Integração nas Páginas de Aula
+
+Adicionar após o conteúdo principal e antes do botão "Marcar como concluída":
+
+```tsx
+{/* AulaPage.tsx - após Materials, antes de Mark as Complete */}
+<DiarioBordoAula aulaId={aula.id} />
+```
+
+```tsx
+{/* LessonContent.tsx - após conteúdo, antes de navegação */}
+<DiarioBordoAula aulaId={lesson.id} />
+```
 
 ---
 
 ## Resultado Esperado
 
-1. O áudio do "Dia 1 — O Silêncio" vai tocar imediatamente após a correção SQL
-2. Qualquer novo registro com formato inválido será tratado pelo código
-3. A aplicação fica resiliente a valores parcialmente incorretos
+1. **Jardim da Psique** para de piscar e carrega normalmente
+2. **Cada aula** tem seu próprio espaço de anotações pessoais
+3. **Auto-save** evita perda de conteúdo
+4. **100% privado** - protegido por RLS (só o próprio usuário vê)
+5. **Leve** - não afeta performance das aulas
 
 ---
 
 ## Seção Técnica
 
-### Por Que o Áudio Não Toca
-
-O elemento HTML:
-```html
-<audio controls>
-  <source src=" 1769387803653.ogg" />
-</audio>
-```
-
-O navegador interpreta ` 1769387803653.ogg` como um **caminho relativo** (começa com espaço, que é ignorado). Como não existe um arquivo `1769387803653.ogg` na raiz do site, o áudio falha silenciosamente.
-
-### Arquivo Confirmado no Storage
-
-O arquivo existe no bucket:
-- **Bucket**: `audios`
-- **Path**: `uploads/1769387803653.ogg`
-- **URL Correta**: `https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/audios/uploads/1769387803653.ogg`
-
-### Fluxo de Correção
+### Por Que o Flickering Acontece
 
 ```text
-1. Migration SQL executa
-2. audio_url do Dia 1: " 1769387803653.ogg" → URL completa
-3. Usuário recarrega página
-4. <audio src="https://...1769387803653.ogg">
-5. Áudio toca normalmente
+Render 1: filtros = { arquivado: false, busca: undefined }
+          ↓
+useCallback recria fetchRegistros (filtros é nova referência)
+          ↓
+useEffect dispara fetchRegistros
+          ↓
+fetch inicia → componente re-renderiza enquanto loading
+          ↓
+Render 2: filtros = { arquivado: false, busca: undefined } (NOVA referência!)
+          ↓
+useCallback recria fetchRegistros novamente
+          ↓
+useEffect dispara novamente
+          ↓
+Loop infinito → "Failed to fetch" (rate limit ou cancelamento)
+```
+
+### Solução com JSON.stringify
+
+```typescript
+const filtrosKey = JSON.stringify(filtros ?? {});
+
+// Agora filtrosKey é uma STRING estável:
+// '{"arquivado":false}' === '{"arquivado":false}' ✓
+```
+
+### Hook para Diário de Bordo
+
+```typescript
+function useDiarioBordo(aulaId: string) {
+  const [conteudo, setConteudo] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  
+  // Carregar nota existente
+  useEffect(() => {
+    if (!aulaId || !user) return;
+    // fetch do banco...
+  }, [aulaId, user]);
+  
+  // Auto-save com debounce
+  const debouncedSave = useMemo(
+    () => debounce(async (text: string) => {
+      setSaving(true);
+      await supabase.from('diario_bordo_aulas').upsert({...});
+      setLastSaved(new Date());
+      setSaving(false);
+    }, 2000),
+    [aulaId, user]
+  );
+  
+  return { conteudo, setConteudo, saving, lastSaved };
+}
 ```
 
