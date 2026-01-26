@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -10,10 +9,10 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { Plus, Pencil, Trash2, ChevronUp, ChevronDown, GripVertical, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, ChevronUp, ChevronDown, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PortalType } from '@/types/portal';
-
+import { AudioUpload } from './AudioUpload';
 interface Licao {
   id: string;
   travessia_id: string;
@@ -288,14 +287,11 @@ export function TravessiaLicoesManager({ travessiaId, travessiaTitle }: Travessi
                     placeholder="https://..."
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label>URL do Áudio</Label>
-                  <Input
-                    value={formData.audio_url}
-                    onChange={(e) => setFormData({ ...formData, audio_url: e.target.value })}
-                    placeholder="https://..."
-                  />
-                </div>
+                <AudioUpload
+                  value={formData.audio_url}
+                  onChange={(url) => setFormData({ ...formData, audio_url: url })}
+                  label="Áudio"
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
