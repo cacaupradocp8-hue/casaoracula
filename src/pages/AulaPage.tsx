@@ -184,6 +184,20 @@ export default function AulaPage() {
     return url;
   };
 
+  const getAudioUrl = (url: string | null): string | null => {
+    if (!url) return null;
+    const trimmed = url.trim();
+    if (!trimmed) return null;
+    
+    // Se já é URL completa, retorna como está
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return trimmed;
+    }
+    
+    // Constrói URL completa do storage
+    return `https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/audios/uploads/${trimmed}`;
+  };
+
   if (isLoading) {
     return (
       <AppLayout>
@@ -263,7 +277,7 @@ export default function AulaPage() {
         )}
 
         {/* Audio */}
-        {aula.audio_url && (
+        {aula.audio_url && getAudioUrl(aula.audio_url) && (
           <Card className="mb-8">
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
@@ -273,7 +287,7 @@ export default function AulaPage() {
             </CardHeader>
             <CardContent>
               <audio controls className="w-full">
-                <source src={aula.audio_url} />
+                <source src={getAudioUrl(aula.audio_url)!} />
               </audio>
             </CardContent>
           </Card>

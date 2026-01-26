@@ -51,6 +51,18 @@ export function LessonContent({
     return url;
   };
 
+  const getAudioUrl = (url: string | null): string | null => {
+    if (!url) return null;
+    const trimmed = url.trim();
+    if (!trimmed) return null;
+    
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return trimmed;
+    }
+    
+    return `https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/audios/uploads/${trimmed}`;
+  };
+
   // Check if module has pedagogical format enabled
   const isPedagogical = module?.formato_pedagogico === true;
   
@@ -119,10 +131,10 @@ export function LessonContent({
             )}
 
             {/* Audio Content */}
-            {lesson.audio_url && (
+            {lesson.audio_url && getAudioUrl(lesson.audio_url) && (
               <Card className="p-4">
                 <audio controls className="w-full">
-                  <source src={lesson.audio_url} />
+                  <source src={getAudioUrl(lesson.audio_url)!} />
                   Seu navegador não suporta áudio.
                 </audio>
               </Card>
