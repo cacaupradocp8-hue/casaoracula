@@ -6002,6 +6002,38 @@ export type Database = {
         }
         Relationships: []
       }
+      travessia_day_unlocks: {
+        Row: {
+          aula_id: string
+          created_at: string
+          first_accessed_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          aula_id: string
+          created_at?: string
+          first_accessed_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          aula_id?: string
+          created_at?: string
+          first_accessed_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "travessia_day_unlocks_aula_id_fkey"
+            columns: ["aula_id"]
+            isOneToOne: false
+            referencedRelation: "conteudo_aulas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       travessia_familias: {
         Row: {
           ativa: boolean | null

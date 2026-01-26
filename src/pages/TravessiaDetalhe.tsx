@@ -1,13 +1,14 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
+import { useTravessiaUnlock } from '@/hooks/useTravessiaUnlock';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { canAccessFeature, PortalType } from '@/types/portal';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
+import { TravessiaHeader, TravessiaDayCard, TravessiaTestimonials } from '@/components/travessia';
 import { 
   Compass, 
   Moon, 
@@ -107,6 +108,7 @@ interface TravessiaItem {
   description: string;
   route: string;
   icon: LucideIcon;
+  aulaId?: string;
 }
 
 interface TravessiaSection {
@@ -132,7 +134,7 @@ const TRAVESSIA_FAMILIAS_MAP: Record<string, string[]> = {
 };
 
 const TRAVESSIA_CONTEUDO: Record<string, TravessiaSection[]> = {
-  // TRAVESSIA ZERO - Conteúdo para visitantes
+  // TRAVESSIA ZERO - Conteúdo para visitantes (fallback hardcoded)
   'travessia-zero-o-limiar-da-casa': [
     {
       title: 'Onde estou antes de tentar mudar?',
@@ -271,6 +273,14 @@ export default function TravessiaDetalhe() {
     enabled: !!slug,
   });
 
+  // Detectar se é Travessia 00
+  const isTravessiaZero = slug === 'travessia-zero-o-limiar-da-casa' || travessia?.number === 0;
+
+  // Hook de unlock (só ativo para Travessia 00)
+  const { dayStatuses, registerAccess, getDayStatus, isLoading: isLoadingUnlocks } = useTravessiaUnlock(
+    isTravessiaZero ? travessia?.id : undefined
+  );
+
   // Fetch all travessias for navigation
   const { data: allTravessias = [] } = useQuery({
     queryKey: ['travessias-all'],
@@ -401,6 +411,7 @@ export default function TravessiaDetalhe() {
           description: licao.descricao_curta,
           route: `/aulas/${licao.id}`,
           icon: LICAO_ICONS[licao.ordem] || Sparkles,
+          aulaId: licao.id,
         }))
       }]
     : hardcodedSections;
@@ -429,6 +440,20 @@ export default function TravessiaDetalhe() {
 
   const isLoadingData = isLoadingFamilias || isLoadingItems || isLoadingLicoes;
 
+  // Handler para clicar em um dia (registra acesso se necessário)
+  const handleDayClick = async (item: TravessiaItem) => {
+    if (isTravessiaZero && item.aulaId) {
+      const status = getDayStatus(item.aulaId);
+      if (status?.isUnlocked) {
+        await registerAccess(item.aulaId);
+      }
+    }
+    
+    if (!item.route.startsWith('#')) {
+      navigate(item.route);
+    }
+  };
+
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-5xl">
@@ -446,39 +471,16 @@ export default function TravessiaDetalhe() {
           <span className="text-foreground">Travessia {travessia.number}</span>
         </nav>
 
-        {/* Header */}
-        <div className={cn("rounded-2xl p-8 mb-8", colors.bg, "border", colors.border)}>
-          <div className="flex items-start gap-6">
-            <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center shrink-0", colors.icon)}>
-              <Icon className="w-8 h-8" />
-            </div>
-            <div className="flex-1">
-              <Badge variant="outline" className="mb-3">Travessia {travessia.number}</Badge>
-              <h1 className={cn("font-display text-3xl font-bold mb-2", colors.text)}>
-                {travessia.title}
-              </h1>
-              {travessia.subtitle && (
-                <p className="text-lg text-muted-foreground mb-4">{travessia.subtitle}</p>
-              )}
-              {travessia.description && (
-                <p className="text-foreground/80 leading-relaxed">{travessia.description}</p>
-              )}
-              
-              {travessia.temas && travessia.temas.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-4">
-                  {travessia.temas.map((tema) => (
-                    <span
-                      key={tema}
-                      className="text-xs px-3 py-1 bg-secondary/50 rounded-full text-muted-foreground"
-                    >
-                      {tema}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        {/* Header com texto colapsável */}
+        <TravessiaHeader
+          number={travessia.number}
+          title={travessia.title}
+          subtitle={travessia.subtitle}
+          description={travessia.description}
+          temas={travessia.temas}
+          Icon={Icon}
+          colors={colors}
+        />
 
         {/* Access Warning */}
         {!hasFullAccess && (
@@ -511,7 +513,7 @@ export default function TravessiaDetalhe() {
         {/* Content Sections */}
         {hasFullAccess && (
           <div className="space-y-10">
-            {isLoadingLicoes && sections.length === 0 ? (
+            {(isLoadingLicoes || isLoadingUnlocks) && sections.length === 0 ? (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
               </div>
@@ -528,6 +530,24 @@ export default function TravessiaDetalhe() {
 
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                       {section.items.map((item, itemIndex) => {
+                        // Para Travessia 00 com lições do banco, usar TravessiaDayCard
+                        if (isTravessiaZero && item.aulaId) {
+                          const unlockStatus = getDayStatus(item.aulaId);
+                          return (
+                            <TravessiaDayCard
+                              key={itemIndex}
+                              title={item.title}
+                              description={item.description}
+                              icon={item.icon}
+                              colors={colors}
+                              unlockStatus={unlockStatus}
+                              isTravessiaZero={true}
+                              onClick={() => handleDayClick(item)}
+                            />
+                          );
+                        }
+
+                        // Card normal para outras travessias
                         const ItemIcon = item.icon;
                         const isClickable = !item.route.startsWith('#');
                         
@@ -644,6 +664,9 @@ export default function TravessiaDetalhe() {
                 )}
               </section>
             )}
+
+            {/* Depoimentos e CTA para Travessia 00 */}
+            {isTravessiaZero && <TravessiaTestimonials />}
           </div>
         )}
 
