@@ -76,6 +76,7 @@ import Eneagrama from "./pages/salas/Eneagrama";
 import OraculoPerguntas from "./pages/salas/OraculoPerguntas";
 import Chakras from "./pages/salas/Chakras";
 import Hawkins from "./pages/salas/Hawkins";
+import EscalaMAIA from "./pages/salas/EscalaMAIA";
 import Antroposofia from "./pages/salas/Antroposofia";
 import Neuroplasticidade from "./pages/salas/Neuroplasticidade";
 import Narrativas from "./pages/salas/Narrativas";
@@ -841,6 +842,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="mentorada">
             <Hawkins />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramentas/escala-maia"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <EscalaMAIA />
           </ProtectedRoute>
         }
       />
