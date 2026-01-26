@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,8 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
-import { BookOpenCheck, Home, ChevronRight, AlertTriangle, ChevronRightIcon, DoorOpen } from 'lucide-react';
+import { BookOpenCheck, Home, ChevronRight, AlertTriangle, ChevronRightIcon, DoorOpen, Filter, X } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 
 interface ContoClinical {
   id: string;
@@ -19,20 +20,32 @@ interface ContoClinical {
 }
 
 export default function BibliotecaClinica() {
-  // Fetch clinical tales
+  const [searchParams, setSearchParams] = useSearchParams();
+  const portaFiltro = searchParams.get('porta');
+
+  // Fetch clinical tales with optional filter
   const { data: contos, isLoading, error } = useQuery({
-    queryKey: ['contos-clinicos'],
+    queryKey: ['contos-clinicos', portaFiltro],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('contos_clinicos')
         .select('id, slug, titulo, origem_cultural, porta_psiquica, ordem')
-        .eq('ativo', true)
-        .order('ordem', { ascending: true });
+        .eq('ativo', true);
+
+      if (portaFiltro) {
+        query = query.eq('porta_psiquica', portaFiltro);
+      }
+
+      const { data, error } = await query.order('ordem', { ascending: true });
 
       if (error) throw error;
       return data as ContoClinical[];
     },
   });
+
+  const clearFilter = () => {
+    setSearchParams({});
+  };
 
   return (
     <AppLayout>
@@ -62,9 +75,26 @@ export default function BibliotecaClinica() {
         <Alert className="mb-6 border-gold/50 bg-gold/5">
           <AlertTriangle className="w-4 h-4 text-gold" />
           <AlertDescription className="text-gold-light text-sm">
-            Uso clínico autorizado apenas para facilitadoras certificadas.
+            Escuta simbólica. Não interpretar.
           </AlertDescription>
         </Alert>
+
+        {/* Filter indicator */}
+        {portaFiltro && (
+          <div className="mb-6 flex items-center gap-2 p-3 rounded-lg bg-gold/10 border border-gold/30">
+            <Filter className="w-4 h-4 text-gold" />
+            <span className="text-sm text-gold">Filtrando por: <strong>{portaFiltro}</strong></span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearFilter}
+              className="ml-auto h-7 px-2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="w-4 h-4" />
+              <span className="ml-1">Limpar</span>
+            </Button>
+          </div>
+        )}
 
         {/* Content */}
         {isLoading ? (
