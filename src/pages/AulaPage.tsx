@@ -23,9 +23,11 @@ interface Aula {
   portal_minimo: string;
 }
 
-interface Portal {
+interface ParentInfo {
+  type: 'travessia' | 'portal';
   id: string;
   titulo: string;
+  slug?: string;
 }
 
 export default function AulaPage() {
@@ -35,7 +37,7 @@ export default function AulaPage() {
   const { toast } = useToast();
   
   const [aula, setAula] = useState<Aula | null>(null);
-  const [portal, setPortal] = useState<Portal | null>(null);
+  const [parentInfo, setParentInfo] = useState<ParentInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isMarking, setIsMarking] = useState(false);
@@ -70,14 +72,36 @@ export default function AulaPage() {
 
       setAula(aulaData);
 
-      // Fetch portal info
-      const { data: portalData } = await supabase
-        .from('conteudo_travessias')
-        .select('id, titulo')
+      // Fetch travessia info first (for Travessia Zero and similar)
+      const { data: travessiaData } = await supabase
+        .from('travessias')
+        .select('id, title, slug')
         .eq('id', aulaData.travessia_id)
         .maybeSingle();
 
-      setPortal(portalData);
+      if (travessiaData) {
+        setParentInfo({
+          type: 'travessia',
+          id: travessiaData.id,
+          titulo: travessiaData.title,
+          slug: travessiaData.slug,
+        });
+      } else {
+        // Fallback to conteudo_travessias (legacy portals)
+        const { data: portalData } = await supabase
+          .from('conteudo_travessias')
+          .select('id, titulo')
+          .eq('id', aulaData.travessia_id)
+          .maybeSingle();
+
+        if (portalData) {
+          setParentInfo({
+            type: 'portal',
+            id: portalData.id,
+            titulo: portalData.titulo,
+          });
+        }
+      }
 
       // Check if completed
       if (user) {
@@ -191,19 +215,22 @@ export default function AulaPage() {
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6 flex-wrap">
           <button 
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/travessias')}
             className="hover:text-gold transition-colors"
           >
-            Salas
+            Travessias
           </button>
           <span>/</span>
-          {portal && (
+          {parentInfo && (
             <>
               <button 
-                onClick={() => navigate(`/portal/${portal.id}`)}
+                onClick={() => parentInfo.type === 'travessia' 
+                  ? navigate(`/travessia/${parentInfo.slug}`) 
+                  : navigate(`/portal/${parentInfo.id}`)
+                }
                 className="hover:text-gold transition-colors"
               >
-                {portal.titulo}
+                {parentInfo.titulo}
               </button>
               <span>/</span>
             </>
@@ -318,11 +345,21 @@ export default function AulaPage() {
         <div className="flex justify-between">
           <Button
             variant="outline"
-            onClick={() => prevAula ? navigate(`/aulas/${prevAula.id}`) : portal ? navigate(`/portal/${portal.id}`) : navigate('/dashboard')}
+            onClick={() => {
+              if (prevAula) {
+                navigate(`/aulas/${prevAula.id}`);
+              } else if (parentInfo?.type === 'travessia') {
+                navigate(`/travessia/${parentInfo.slug}`);
+              } else if (parentInfo) {
+                navigate(`/portal/${parentInfo.id}`);
+              } else {
+                navigate('/travessias');
+              }
+            }}
             className="gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
-            {prevAula ? 'Aula Anterior' : 'Voltar ao Portal'}
+            {prevAula ? 'Aula Anterior' : 'Voltar'}
           </Button>
           
           {nextAula ? (
@@ -337,10 +374,18 @@ export default function AulaPage() {
           ) : (
             <Button
               variant="outline"
-              onClick={() => portal ? navigate(`/portal/${portal.id}`) : navigate('/dashboard')}
+              onClick={() => {
+                if (parentInfo?.type === 'travessia') {
+                  navigate(`/travessia/${parentInfo.slug}`);
+                } else if (parentInfo) {
+                  navigate(`/portal/${parentInfo.id}`);
+                } else {
+                  navigate('/travessias');
+                }
+              }}
               className="gap-2"
             >
-              Finalizar Portal
+              Concluir Travessia
               <ArrowRight className="w-4 h-4" />
             </Button>
           )}

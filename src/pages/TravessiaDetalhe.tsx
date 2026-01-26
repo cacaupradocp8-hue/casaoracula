@@ -399,7 +399,7 @@ export default function TravessiaDetalhe() {
         items: licoesFromDB.map(licao => ({
           title: licao.titulo,
           description: licao.descricao_curta,
-          route: `/aula/${licao.id}`,
+          route: `/aulas/${licao.id}`,
           icon: LICAO_ICONS[licao.ordem] || Sparkles,
         }))
       }]
