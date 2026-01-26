@@ -5,16 +5,23 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Sparkles, ArrowLeft, ArrowRight, Check, RefreshCw, History, AlertTriangle } from 'lucide-react';
+import { Sparkles, ArrowLeft, ArrowRight, Check, RefreshCw, AlertTriangle, Home } from 'lucide-react';
 import { useBig5Oracular, Big5OracularFator, Big5OracularResult } from '@/hooks/useBig5Oracular';
+import { useBig5PortaMapping } from '@/hooks/useBig5PortaMapping';
+import { useRitualSymbolic } from '@/hooks/useRitualSymbolic';
 import { RadialVisualization } from '@/components/visualization/RadialVisualization';
 import { SymbolicElement, VisualizationConfig } from '@/components/visualization/types';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
 import { ToolEthicalNote } from '@/components/shared/ToolEthicalNote';
+import { SymbolicReadingScreen } from '@/components/big5/SymbolicReadingScreen';
+import { RitualSymbolicScreen } from '@/components/big5/RitualSymbolicScreen';
+import { DepthDecisionScreen } from '@/components/big5/DepthDecisionScreen';
+import { useNavigate } from 'react-router-dom';
 
-type Phase = 'intro' | 'questionnaire' | 'result';
+type Phase = 'intro' | 'questionnaire' | 'result' | 'symbolic_reading' | 'ritual' | 'decision';
 
 export default function Big5Oracular() {
+  const navigate = useNavigate();
   const {
     fatores,
     perguntas,
@@ -22,15 +29,23 @@ export default function Big5Oracular() {
     saving,
     calcularMedias,
     saveResult,
-    getPerguntasPorFator,
     getIntensidade,
   } = useBig5Oracular();
+
+  const { saving: savingRitual, saveRitualCompletion, markNarroterapiaAccess, isCertified, registro } = useRitualSymbolic();
 
   const [phase, setPhase] = useState<Phase>('intro');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [respostas, setRespostas] = useState<Record<string, number>>({});
   const [reflexao, setReflexao] = useState('');
   const [resultado, setResultado] = useState<Big5OracularResult | null>(null);
+  const [big5RegistroId, setBig5RegistroId] = useState<string | null>(null);
+
+  // Mapping based on resultado
+  const { mapping, ritual } = useBig5PortaMapping(
+    resultado?.predominante?.chave,
+    resultado?.fragilizado?.chave
+  );
 
   // Todas as perguntas em ordem
   const allQuestions = fatores.flatMap(fator => 
@@ -82,9 +97,40 @@ export default function Big5Oracular() {
     setResultado(result);
     
     // Salvar automaticamente
-    await saveResult(respostas, reflexao);
+    const savedResult = await saveResult(respostas, reflexao);
+    if (savedResult) {
+      setBig5RegistroId(savedResult.id);
+    }
     
     setPhase('result');
+  };
+
+  const handleViewSymbolicReading = () => {
+    setPhase('symbolic_reading');
+  };
+
+  const handleStartRitual = () => {
+    setPhase('ritual');
+  };
+
+  const handleRitualComplete = async () => {
+    // Save ritual completion
+    await saveRitualCompletion(
+      big5RegistroId,
+      ritual?.id || null,
+      mapping?.porta_associada || null
+    );
+    setPhase('decision');
+  };
+
+  const handleAccessNarroterapia = async () => {
+    if (registro?.id) {
+      await markNarroterapiaAccess(registro.id);
+    }
+  };
+
+  const handleClose = () => {
+    navigate('/jornada');
   };
 
   const handleReset = () => {
@@ -93,6 +139,7 @@ export default function Big5Oracular() {
     setRespostas({});
     setReflexao('');
     setResultado(null);
+    setBig5RegistroId(null);
   };
 
   // Verificar se pode avançar
@@ -435,42 +482,51 @@ export default function Big5Oracular() {
                 </CardContent>
               </Card>
 
-              {/* Reflexão */}
-              <Card className="glass border-gold/20">
-                <CardHeader>
-                  <CardTitle className="text-lg">Reflexão</CardTitle>
-                  <CardDescription>
-                    O que este mapa diz sobre seu momento atual?
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Textarea
-                    value={reflexao}
-                    onChange={(e) => setReflexao(e.target.value)}
-                    placeholder="Escreva aqui suas reflexões sobre o resultado..."
-                    className="min-h-[120px]"
-                  />
-                  <Button
-                    onClick={() => saveResult(respostas, reflexao)}
-                    className="mt-4"
-                    variant="outline"
-                    disabled={saving || !reflexao}
-                  >
-                    {saving ? 'Salvando...' : 'Salvar Reflexão'}
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Ações */}
-              <div className="flex gap-4">
-                <Button variant="outline" onClick={handleReset} className="flex-1">
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Fazer Novamente
-                </Button>
-              </div>
+              {/* CTA para próxima fase */}
+              <Button
+                onClick={handleViewSymbolicReading}
+                className="w-full"
+                size="lg"
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                Ver Campo Simbólico
+              </Button>
 
               <EthicalNotice toolName="Mapa Simbólico Big Five Oracular" />
             </motion.div>
+          )}
+
+          {/* FASE 4: Leitura Simbólica */}
+          {phase === 'symbolic_reading' && resultado && (
+            <SymbolicReadingScreen
+              key="symbolic_reading"
+              predominante={resultado.predominante}
+              fragilizado={resultado.fragilizado}
+              mapping={mapping}
+              onContinue={handleStartRitual}
+            />
+          )}
+
+          {/* FASE 5: Ritual Simbólico */}
+          {phase === 'ritual' && (
+            <RitualSymbolicScreen
+              key="ritual"
+              ritual={ritual}
+              portaAssociada={mapping?.porta_associada || null}
+              onComplete={handleRitualComplete}
+              saving={savingRitual}
+            />
+          )}
+
+          {/* FASE 6: Decisão de Profundidade */}
+          {phase === 'decision' && (
+            <DepthDecisionScreen
+              key="decision"
+              portaAssociada={mapping?.porta_associada || null}
+              isCertified={isCertified}
+              onClose={handleClose}
+              onAccessNarroterapia={handleAccessNarroterapia}
+            />
           )}
         </AnimatePresence>
       </div>

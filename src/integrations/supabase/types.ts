@@ -639,6 +639,56 @@ export type Database = {
         }
         Relationships: []
       }
+      big5_porta_mapeamento: {
+        Row: {
+          ativo: boolean | null
+          created_at: string | null
+          descricao_combinacao: string | null
+          fator_alto: string
+          fator_baixo: string
+          id: string
+          narrativa_curta: string | null
+          ordem: number | null
+          porta_associada: string
+          porta_tipo_campo: string | null
+          ritual_id: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string | null
+          descricao_combinacao?: string | null
+          fator_alto: string
+          fator_baixo: string
+          id?: string
+          narrativa_curta?: string | null
+          ordem?: number | null
+          porta_associada: string
+          porta_tipo_campo?: string | null
+          ritual_id?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string | null
+          descricao_combinacao?: string | null
+          fator_alto?: string
+          fator_baixo?: string
+          id?: string
+          narrativa_curta?: string | null
+          ordem?: number | null
+          porta_associada?: string
+          porta_tipo_campo?: string | null
+          ritual_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "big5_porta_mapeamento_ritual_id_fkey"
+            columns: ["ritual_id"]
+            isOneToOne: false
+            referencedRelation: "rituais_simbolicos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       big5_questionario: {
         Row: {
           ativo: boolean
@@ -727,6 +777,54 @@ export type Database = {
             columns: ["caso_id"]
             isOneToOne: false
             referencedRelation: "casos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      big5_ritual_registros: {
+        Row: {
+          acessou_narroterapia: boolean | null
+          big5_registro_id: string | null
+          completado_em: string | null
+          created_at: string | null
+          id: string
+          porta_acessada: string | null
+          ritual_id: string | null
+          user_id: string
+        }
+        Insert: {
+          acessou_narroterapia?: boolean | null
+          big5_registro_id?: string | null
+          completado_em?: string | null
+          created_at?: string | null
+          id?: string
+          porta_acessada?: string | null
+          ritual_id?: string | null
+          user_id: string
+        }
+        Update: {
+          acessou_narroterapia?: boolean | null
+          big5_registro_id?: string | null
+          completado_em?: string | null
+          created_at?: string | null
+          id?: string
+          porta_acessada?: string | null
+          ritual_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "big5_ritual_registros_big5_registro_id_fkey"
+            columns: ["big5_registro_id"]
+            isOneToOne: false
+            referencedRelation: "big5_oracular_registros"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "big5_ritual_registros_ritual_id_fkey"
+            columns: ["ritual_id"]
+            isOneToOne: false
+            referencedRelation: "rituais_simbolicos"
             referencedColumns: ["id"]
           },
         ]
@@ -5399,6 +5497,54 @@ export type Database = {
           quando_nao_usar?: string | null
           tipo_leitura?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      rituais_simbolicos: {
+        Row: {
+          ativo: boolean | null
+          created_at: string | null
+          duracao_segundos: number | null
+          frase_unica: string | null
+          id: string
+          instrucao: string
+          material: string | null
+          nome: string
+          observacoes_facilitadora: string | null
+          ordem: number | null
+          porta_associada: string | null
+          silencio_obrigatorio: boolean | null
+          slug: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string | null
+          duracao_segundos?: number | null
+          frase_unica?: string | null
+          id?: string
+          instrucao: string
+          material?: string | null
+          nome: string
+          observacoes_facilitadora?: string | null
+          ordem?: number | null
+          porta_associada?: string | null
+          silencio_obrigatorio?: boolean | null
+          slug: string
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string | null
+          duracao_segundos?: number | null
+          frase_unica?: string | null
+          id?: string
+          instrucao?: string
+          material?: string | null
+          nome?: string
+          observacoes_facilitadora?: string | null
+          ordem?: number | null
+          porta_associada?: string | null
+          silencio_obrigatorio?: boolean | null
+          slug?: string
         }
         Relationships: []
       }
