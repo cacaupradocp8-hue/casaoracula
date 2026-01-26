@@ -13,6 +13,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Plus, Pencil, Trash2, ChevronDown, ChevronRight, BookOpen, Video, DoorOpen, Music, FileText, Type, Eye, EyeOff, Image, Wrench, ExternalLink } from 'lucide-react';
 import { ImageUpload } from './ImageUpload';
+import { AudioUpload } from './AudioUpload';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
@@ -1116,13 +1117,11 @@ export function AdminConteudosTab() {
                 <Music className="w-4 h-4" />
                 Áudio
               </h4>
-              <div>
-                <Input
-                  value={aulaForm.audio_url}
-                  onChange={(e) => setAulaForm({ ...aulaForm, audio_url: e.target.value })}
-                  placeholder="https://soundcloud.com/... ou URL de MP3"
-                />
-              </div>
+              <AudioUpload
+                value={aulaForm.audio_url}
+                onChange={(url) => setAulaForm({ ...aulaForm, audio_url: url })}
+                label=""
+              />
             </div>
 
             <Separator />
