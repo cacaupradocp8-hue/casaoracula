@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
+import { SalvarJardimModal } from '@/components/shared/SalvarJardimModal';
 import { useBig5Funcional, Dimensao } from '@/hooks/useBig5Funcional';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -56,6 +57,7 @@ export default function Big5Funcional() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [respostas, setRespostas] = useState<Record<string, number>>({});
   const [resultado, setResultado] = useState<ReturnType<typeof calcularResultado> | null>(null);
+  const [showJardimModal, setShowJardimModal] = useState(false);
 
   const perguntaAtual = perguntas[currentIndex];
   const totalPerguntas = perguntas.length;
@@ -89,6 +91,13 @@ export default function Big5Funcional() {
     }
     
     setScreen('resultado');
+    
+    // Show Jardim modal after a short delay to let user see results
+    setTimeout(() => {
+      if (user) {
+        setShowJardimModal(true);
+      }
+    }, 1500);
   };
 
   const reiniciar = () => {
@@ -191,7 +200,7 @@ export default function Big5Funcional() {
                             className="w-3 h-3 rounded-full shrink-0"
                             style={{ backgroundColor: dim.cor }}
                           />
-                          <span className="truncate">{dim.nome_ingles}</span>
+                          <span className="truncate">{dim.nome}</span>
                         </div>
                       ))}
                     </div>
@@ -460,6 +469,33 @@ export default function Big5Funcional() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Jardim da Psique Modal */}
+        {resultado && (
+          <SalvarJardimModal
+            open={showJardimModal}
+            onOpenChange={setShowJardimModal}
+            ferramenta_nome="Big Five — Leitura Funcional"
+            ferramenta_chave="big5_funcional"
+            conteudo={{
+              respostas,
+              medias: resultado.medias,
+            }}
+            resultado_simbolico={{
+              dimensao_alta: resultado.dimensaoAlta ? {
+                nome: resultado.dimensaoAlta.nome,
+                media: resultado.dimensaoAlta.media,
+                descricao: resultado.dimensaoAlta.descricao,
+              } : null,
+              dimensao_baixa: resultado.dimensaoBaixa ? {
+                nome: resultado.dimensaoBaixa.nome,
+                media: resultado.dimensaoBaixa.media,
+                descricao: resultado.dimensaoBaixa.descricao,
+              } : null,
+            }}
+            tipo_registro="ferramenta"
+          />
+        )}
       </div>
     </AppLayout>
   );

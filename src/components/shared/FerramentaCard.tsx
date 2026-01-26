@@ -1,8 +1,78 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Lock, ArrowRight } from "lucide-react";
+import { 
+  Lock, 
+  ArrowRight,
+  Brain,
+  Map,
+  Wrench,
+  Target,
+  Castle,
+  Layers,
+  Users,
+  Triangle,
+  Compass,
+  Sparkles,
+  Eye,
+  BookOpen,
+  Lightbulb,
+  Heart,
+  Flame,
+  Mountain,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+
+// Map of known Lucide icon names to components
+const ICON_MAP: Record<string, LucideIcon> = {
+  Brain,
+  Map,
+  Wrench,
+  Target,
+  Castle,
+  Layers,
+  Users,
+  Triangle,
+  Compass,
+  Sparkles,
+  Eye,
+  BookOpen,
+  Lightbulb,
+  Heart,
+  Flame,
+  Mountain,
+  // lowercase variants
+  brain: Brain,
+  map: Map,
+  wrench: Wrench,
+  target: Target,
+  castle: Castle,
+  layers: Layers,
+  users: Users,
+  triangle: Triangle,
+  compass: Compass,
+  sparkles: Sparkles,
+  eye: Eye,
+  bookOpen: BookOpen,
+  lightbulb: Lightbulb,
+  heart: Heart,
+  flame: Flame,
+  mountain: Mountain,
+};
+
+// Helper to render icon - either from map or as emoji
+function renderIcon(icone: string | null, className?: string) {
+  if (!icone) return "🔧";
+  
+  const IconComponent = ICON_MAP[icone];
+  if (IconComponent) {
+    return <IconComponent className={cn("w-5 h-5", className)} />;
+  }
+  
+  // Return as emoji/text if not in map
+  return icone;
+}
 
 // Label mappings for display
 const TIPO_LABELS: Record<string, string> = {
@@ -91,7 +161,7 @@ export function FerramentaCard({ ferramenta, onClick, colorScheme = 'gold' }: Fe
                 acessivel ? colors.icon : "bg-muted text-muted-foreground"
               )}
             >
-              {acessivel ? (icone || "🔧") : <Lock className="w-5 h-5" />}
+              {acessivel ? renderIcon(icone) : <Lock className="w-5 h-5" />}
             </div>
             {tipoLabel && acessivel && (
               <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0", colors.badge)}>
