@@ -1,74 +1,93 @@
 
-# Plano: Adicionar Big Five Oracular ao Hub de Ferramentas do Método
+# Plano: Substituir Nomes de Ícones por Símbolos
 
 ## Problema Identificado
-A ferramenta **Big Five Oracular** foi implementada e está acessível em `/ferramenta/big5-oracular`, mas **não aparece** na página `/ferramentas-metodo` porque essa página usa uma lista hardcoded de ferramentas.
 
-## Solução
+Na aba **Ferramentas** (`/ferramentas`), os cards exibem textos como "sparkles", "Flower2", "brain-circuit", "book-open" porque o campo `icone` na tabela `sala_ferramentas` armazena **nomes de ícones Lucide** em vez de símbolos/emojis.
 
-### Etapa 1: Adicionar ao Array de Ferramentas
+O componente `FerramentaCard` renderiza diretamente o valor do campo `icone`:
 
-Modificar `src/pages/FerramentasMetodoHub.tsx` para incluir o Big Five Oracular no array `FERRAMENTAS`:
-
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│                  FERRAMENTAS DO MÉTODO                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐              │
-│  │  Labirinto  │  │ Torre Viva  │  │ Cartografia │              │
-│  │  39 Portas  │  │     ™       │  │ das Torres  │              │
-│  └─────────────┘  └─────────────┘  └─────────────┘              │
-│                                                                 │
-│  ┌─────────────┐  ← NOVO                                        │
-│  │   Big Five  │                                                │
-│  │   Oracular  │                                                │
-│  └─────────────┘                                                │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+```tsx
+{acessivel ? (icone || "🔧") : <Lock className="w-5 h-5" />}
 ```
 
-### Nova Entrada no Array
-
-```typescript
-{
-  id: 'big5-oracular',
-  titulo: 'Big Five Oracular',
-  subtitulo: 'Mapa Simbólico de Funcionamento Psíquico',
-  descricao: 'Identifique os 5 fatores simbólicos e a Porta associada ao momento atual. Inclui ritual de ancoragem.',
-  icon: Sparkles,  // ou Brain
-  cor: 'text-violet-400',
-  bgCor: 'bg-violet-500/20',
-  rota: '/ferramenta/big5-oracular',
-  minPortal: 'mentorada',
-  destaques: [
-    '30 perguntas simbólicas',
-    'Visualização radial',
-    'Ritual por Porta',
-  ],
-}
-```
-
-### Etapa 2: Importar Icone
-
-Adicionar `Sparkles` aos imports de `lucide-react` no arquivo.
+Quando `icone = "sparkles"`, aparece o texto "sparkles" literal.
 
 ---
 
-## Arquivo a Modificar
+## Solução: Atualizar Banco de Dados
 
-| Arquivo | Acao |
-|---------|------|
-| `src/pages/FerramentasMetodoHub.tsx` | Adicionar Big Five Oracular ao array FERRAMENTAS |
+Substituir todos os nomes de ícones Lucide por **símbolos Unicode** ou **emojis** apropriados.
+
+### Mapeamento Proposto
+
+| Ferramenta | Ícone Atual | Símbolo Novo |
+|------------|-------------|--------------|
+| Neuroplasticidade | brain-circuit | 🧠 |
+| Mapa dos Cinco Territórios | sparkles | ✨ |
+| Oráculo dos Nove Arquétipos | Flower2 | 🌸 |
+| Radar de Eixo | 🎯 | 🎯 (manter) |
+| Trilha de Neuroplasticidade | 🔄 | 🔄 (manter) |
+| Eneagrama | circle | ⭕ |
+| Espelho de Consciência | eye | 👁 |
+| Mapa Arquetípico do Ego | crown | 👑 |
+| Cartografia da Torre | building | 🏛 |
+| Caderno Ritual Cisne Negro | Feather | 🪶 |
+| Labirinto das 39 Portas | Flame | 🔥 |
+| Leitura em 5 Camadas | 🔮 | 🔮 (manter) |
+| Mapa da Orácula | map | 🗺 |
+| Big 5 | brain | 🧬 |
+| SYNTHEIA | sparkles | 🌟 |
+| Agente Tradutor Simbólico | bot | 🤖 |
+| Narrativas Terapêuticas | book-open | 📖 |
+| Caminho da Mulher | Compass | 🧭 |
+| Chakras | circle-dot | ☯ |
+| Hawkins | activity | 📊 |
+
+---
+
+## Etapa: Migração SQL
+
+```sql
+UPDATE sala_ferramentas SET icone = '🧠' WHERE icone = 'brain-circuit';
+UPDATE sala_ferramentas SET icone = '✨' WHERE icone = 'sparkles';
+UPDATE sala_ferramentas SET icone = '🌸' WHERE icone = 'Flower2';
+UPDATE sala_ferramentas SET icone = '⭕' WHERE icone = 'circle';
+UPDATE sala_ferramentas SET icone = '👁' WHERE icone = 'eye';
+UPDATE sala_ferramentas SET icone = '👑' WHERE icone = 'crown';
+UPDATE sala_ferramentas SET icone = '🏛' WHERE icone = 'building';
+UPDATE sala_ferramentas SET icone = '🪶' WHERE icone = 'Feather';
+UPDATE sala_ferramentas SET icone = '🔥' WHERE icone = 'Flame';
+UPDATE sala_ferramentas SET icone = '🗺' WHERE icone = 'map';
+UPDATE sala_ferramentas SET icone = '🧬' WHERE icone = 'brain';
+UPDATE sala_ferramentas SET icone = '🤖' WHERE icone = 'bot';
+UPDATE sala_ferramentas SET icone = '📖' WHERE icone = 'book-open';
+UPDATE sala_ferramentas SET icone = '🧭' WHERE icone = 'Compass';
+UPDATE sala_ferramentas SET icone = '☯' WHERE icone = 'circle-dot';
+UPDATE sala_ferramentas SET icone = '📊' WHERE icone = 'activity';
+```
 
 ---
 
 ## Resultado Esperado
 
-Apos implementacao, a ferramenta aparecera na pagina `/ferramentas-metodo` junto com:
-- Labirinto das 39 Portas
-- Torre Viva
-- Cartografia das Torres
-- **Big Five Oracular** (novo)
+Após a migração, os cards exibirão símbolos visuais em vez de texto:
 
-O card tera o mesmo estilo visual e respeitara o controle de acesso por portal.
+```text
+ANTES                    DEPOIS
+┌─────────────────┐      ┌─────────────────┐
+│ sparkles        │  →   │      ✨         │
+│ Mapa dos Cinco  │      │ Mapa dos Cinco  │
+│ Territórios     │      │ Territórios     │
+└─────────────────┘      └─────────────────┘
+```
+
+---
+
+## Arquivos Afetados
+
+| Arquivo | Ação |
+|---------|------|
+| Migração SQL | CRIAR - Atualizar campo `icone` em `sala_ferramentas` |
+
+Nenhuma alteração de código é necessária. O componente `FerramentaCard` já renderiza o campo `icone` corretamente — o problema estava nos dados.
