@@ -1,249 +1,195 @@
 
+# Plano: Biblioteca Pessoal Unificada
 
-# Plano: Corrigir Flickering do Jardim da Psique + Criar Diário de Bordo para Aulas
+## Visão Geral
 
-## Problema 1: Jardim da Psique Piscando (Flickering)
+Criar uma nova página central chamada **"Minha Biblioteca"** (`/minha-biblioteca`) que reúne todos os conteúdos pessoais salvos pela aluna em um único lugar organizado.
 
-### Diagnóstico
+---
 
-O console mostra dezenas de erros `"TypeError: Failed to fetch"` repetidos em loop. A causa raiz é uma **referência de objeto instável** no hook:
+## O Que Será Reunido
 
-```typescript
-// JardimPsique.tsx linha 83-86
-const { registros, loading, getFerramentasUsadas } = useJardimPsique({
-  arquivado: viewArquivados,
-  busca: busca || undefined,  // <-- novo objeto a cada render!
-});
+| Categoria | Tabela de Origem | O Que Mostra |
+|-----------|------------------|--------------|
+| Diários de Bordo | `diario_bordo_aulas` | Notas pessoais escritas durante as aulas |
+| Jardim da Psique | `jardim_psique_registros` | Sonhos, frases, reflexões, resultados de ferramentas |
+| Oráculos | `oracle_draws` | Histórico de tiragens pessoais (não profissionais) |
+| Labirinto | `labirinto_leituras` | Leituras pessoais do Labirinto Oracular |
+| Progresso de Aulas | `course_lesson_progress` | Aulas concluídas com datas |
+
+---
+
+## Design da Interface
+
+```text
+┌─────────────────────────────────────────────────────────────────────────┐
+│  📚 MINHA BIBLIOTECA                                     [Exportar PDF] │
+│  Seu espaço pessoal de memórias e aprendizados                          │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  [📔 Diários] [🌿 Jardim] [🔮 Oráculos] [🌀 Labirinto] [📊 Progresso]  │
+│                                                                         │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  🔍 Buscar...                              📅 Filtrar por período ▼     │
+│                                                                         │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │ 📔 Dia 3 — A Escuta Interior                                      │ │
+│  │ "Percebi que o silêncio não é ausência, mas presença..."          │ │
+│  │ 📅 25 Jan 2026 · Travessia Zero                      [Ver aula →] │ │
+│  └────────────────────────────────────────────────────────────────────┘ │
+│                                                                         │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │ 🌿 Mapa dos Cinco Territórios                        ✓ Integrado  │ │
+│  │ "O território da abertura me chamou mais atenção..."              │ │
+│  │ 📅 24 Jan 2026 · Ferramenta                         [Abrir →]     │ │
+│  └────────────────────────────────────────────────────────────────────┘ │
+│                                                                         │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │ 🔮 Tiragem do Oráculo Lua                                         │ │
+│  │ 3 cartas · "Um novo ciclo se inicia..."                           │ │
+│  │ 📅 23 Jan 2026                                       [Ver →]      │ │
+│  └────────────────────────────────────────────────────────────────────┘ │
+│                                                                         │
+│  ...mais registros...                                                   │
+│                                                                         │
+├─────────────────────────────────────────────────────────────────────────┤
+│  🔒 Tudo aqui é 100% privado. Nenhum admin vê seus registros.          │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
 
-O objeto `filtros` é recriado a cada render, causando:
-1. `useCallback` recria `fetchRegistros` (porque `filtros` mudou)
-2. `useEffect` dispara `fetchRegistros`
-3. Componente re-renderiza
-4. Ciclo infinito de requisições
+---
 
-### Solução
+## Funcionalidades
 
-1. **Memorizar os filtros** no componente `JardimPsique.tsx` usando `useMemo`
-2. **Desestruturar os filtros** no hook `useJardimPsique.ts` para evitar dependência do objeto inteiro
-3. **Adicionar `staleTime`** usando TanStack Query (padrão já usado em outros hooks do projeto)
+1. **Abas por categoria**: Permite filtrar por tipo de conteúdo
+2. **Aba "Todos"**: Timeline unificada ordenada por data
+3. **Busca textual**: Procura em todos os registros
+4. **Filtro por período**: Última semana, mês, 3 meses, todos
+5. **Links diretos**: Cada card leva ao conteúdo original (aula, ferramenta, etc.)
+6. **Exportar PDF**: Gera documento com todos os registros (ou por categoria)
+7. **100% privado**: Apenas a própria usuária vê (RLS existente)
 
 ---
 
-## Problema 2: Diário de Bordo nas Aulas
-
-### O que a Usuária Quer
-
-Um espaço **dentro de cada aula/travessia** para que a aluna possa:
-- Fazer anotações pessoais enquanto assiste/lê
-- Registrar insights e reflexões
-- Ter um histórico do que anotou em cada lição
-
-Isso é diferente do Jardim da Psique global - é um **diário contextualizado por aula**.
-
-### Solução Proposta
-
-Criar um novo componente `DiarioBordoAula` que:
-1. Aparece colapsado por padrão no final da aula
-2. Permite escrever/editar notas
-3. Salva automaticamente (auto-save com debounce)
-4. Mostra histórico de entradas anteriores daquela aula
-
----
-
-## Arquivos a Modificar/Criar
+## Arquivos a Criar/Modificar
 
 | Arquivo | Ação |
 |---------|------|
-| `src/hooks/useJardimPsique.ts` | Refatorar para evitar loop infinito |
-| `src/pages/JardimPsique.tsx` | Memorizar filtros com useMemo |
-| `src/components/shared/DiarioBordoAula.tsx` | **CRIAR** - componente de diário para aulas |
-| `src/pages/AulaPage.tsx` | Adicionar DiarioBordoAula |
-| `src/components/courses/LessonContent.tsx` | Adicionar DiarioBordoAula |
-| Migration SQL | Criar tabela `diario_bordo_aulas` |
+| `src/pages/MinhaBiblioteca.tsx` | **CRIAR** - Nova página principal |
+| `src/hooks/useMinhaBiblioteca.ts` | **CRIAR** - Hook que agrega todas as fontes |
+| `src/components/biblioteca-pessoal/BibliotecaCard.tsx` | **CRIAR** - Card unificado para diferentes tipos |
+| `src/components/biblioteca-pessoal/BibliotecaTabs.tsx` | **CRIAR** - Navegação por abas |
+| `src/components/biblioteca-pessoal/BibliotecaTimeline.tsx` | **CRIAR** - Lista cronológica |
+| `src/App.tsx` | Adicionar rota `/minha-biblioteca` |
+| `src/components/layout/Navigation.tsx` | Adicionar link na seção Jornada |
 
 ---
 
-## Parte 1: Corrigir Flickering
+## Hook `useMinhaBiblioteca`
 
-### Refatoração do Hook
+O hook será responsável por:
+1. Buscar dados de todas as 5 tabelas em paralelo
+2. Normalizar para um formato unificado
+3. Ordenar por data (mais recente primeiro)
+4. Filtrar por categoria, busca e período
 
-O hook será refatorado para:
-1. Receber parâmetros primitivos em vez de objeto
-2. Usar `JSON.stringify` para estabilizar a dependência
-3. Adicionar um flag `enabled` para evitar fetch desnecessário
-
-```typescript
-export function useJardimPsique(filtros?: FiltrosJardim) {
-  // Serializar filtros para dependência estável
-  const filtrosKey = JSON.stringify(filtros ?? {});
-  
-  const fetchRegistros = useCallback(async () => {
-    // ... lógica existente
-  }, [user?.id, filtrosKey]); // Dependência estável
-  
-  useEffect(() => {
-    fetchRegistros();
-  }, [fetchRegistros]);
+```text
+Formato Unificado:
+{
+  id: string
+  tipo: 'diario' | 'jardim' | 'oraculo' | 'labirinto' | 'progresso'
+  titulo: string
+  resumo: string
+  data: Date
+  link: string
+  metadata: { ... }
 }
 ```
 
-### Memorização na Página
-
-```typescript
-// JardimPsique.tsx
-const filtros = useMemo(() => ({
-  arquivado: viewArquivados,
-  busca: busca || undefined,
-}), [viewArquivados, busca]);
-
-const { registros, loading } = useJardimPsique(filtros);
-```
-
 ---
 
-## Parte 2: Diário de Bordo para Aulas
+## Integração no Menu
 
-### Nova Tabela: `diario_bordo_aulas`
-
-```sql
-CREATE TABLE public.diario_bordo_aulas (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  aula_id UUID NOT NULL,
-  conteudo TEXT,
-  created_at TIMESTAMPTZ DEFAULT now(),
-  updated_at TIMESTAMPTZ DEFAULT now()
-);
-
--- RLS: Apenas o próprio usuário pode ver/editar suas notas
-ALTER TABLE public.diario_bordo_aulas ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users can manage own notes"
-  ON public.diario_bordo_aulas
-  FOR ALL
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
-
--- Índice para busca rápida
-CREATE INDEX idx_diario_bordo_user_aula 
-  ON public.diario_bordo_aulas(user_id, aula_id);
-```
-
-### Novo Componente: DiarioBordoAula
-
-Um componente compacto que:
-- Mostra um accordion/collapsible com ícone de caderno
-- Textarea para escrita livre
-- Auto-save após 2 segundos de inatividade
-- Indicador visual de "salvando..." / "salvo"
-- Badge mostrando data da última edição
+A "Minha Biblioteca" será adicionada ao bloco **Jornada** no menu de navegação, logo após "Jardim da Psique":
 
 ```text
-┌─────────────────────────────────────────────────────────┐
-│ 📓 Diário de Bordo                          [▼ Abrir]   │
-└─────────────────────────────────────────────────────────┘
-
-Quando expandido:
-
-┌─────────────────────────────────────────────────────────┐
-│ 📓 Diário de Bordo                          [▲ Fechar]  │
-├─────────────────────────────────────────────────────────┤
-│ ┌─────────────────────────────────────────────────────┐ │
-│ │ Minhas anotações sobre esta aula...                 │ │
-│ │                                                     │ │
-│ │ - Insight sobre o tema X                            │ │
-│ │ - Lembrar de aplicar Y                              │ │
-│ │                                                     │ │
-│ └─────────────────────────────────────────────────────┘ │
-│                                                         │
-│                              ✓ Salvo · Editado há 2min  │
-└─────────────────────────────────────────────────────────┘
-```
-
-### Integração nas Páginas de Aula
-
-Adicionar após o conteúdo principal e antes do botão "Marcar como concluída":
-
-```tsx
-{/* AulaPage.tsx - após Materials, antes de Mark as Complete */}
-<DiarioBordoAula aulaId={aula.id} />
-```
-
-```tsx
-{/* LessonContent.tsx - após conteúdo, antes de navegação */}
-<DiarioBordoAula aulaId={lesson.id} />
+JORNADA
+├── Meu Caminho
+├── Jardim da Psique
+└── Minha Biblioteca  ← NOVO
 ```
 
 ---
 
 ## Resultado Esperado
 
-1. **Jardim da Psique** para de piscar e carrega normalmente
-2. **Cada aula** tem seu próprio espaço de anotações pessoais
-3. **Auto-save** evita perda de conteúdo
-4. **100% privado** - protegido por RLS (só o próprio usuário vê)
-5. **Leve** - não afeta performance das aulas
+1. Aluna tem **um só lugar** para ver tudo que salvou
+2. Navegação fluida entre registros e conteúdos originais
+3. Busca unificada facilita encontrar memórias específicas
+4. Exportação permite criar documento físico/digital da jornada
+5. Zero impacto em outras funcionalidades existentes
 
 ---
 
-## Seção Técnica
+## Seção Tecnica
 
-### Por Que o Flickering Acontece
-
-```text
-Render 1: filtros = { arquivado: false, busca: undefined }
-          ↓
-useCallback recria fetchRegistros (filtros é nova referência)
-          ↓
-useEffect dispara fetchRegistros
-          ↓
-fetch inicia → componente re-renderiza enquanto loading
-          ↓
-Render 2: filtros = { arquivado: false, busca: undefined } (NOVA referência!)
-          ↓
-useCallback recria fetchRegistros novamente
-          ↓
-useEffect dispara novamente
-          ↓
-Loop infinito → "Failed to fetch" (rate limit ou cancelamento)
-```
-
-### Solução com JSON.stringify
+### Estrutura de Dados Normalizada
 
 ```typescript
-const filtrosKey = JSON.stringify(filtros ?? {});
-
-// Agora filtrosKey é uma STRING estável:
-// '{"arquivado":false}' === '{"arquivado":false}' ✓
-```
-
-### Hook para Diário de Bordo
-
-```typescript
-function useDiarioBordo(aulaId: string) {
-  const [conteudo, setConteudo] = useState('');
-  const [saving, setSaving] = useState(false);
-  const [lastSaved, setLastSaved] = useState<Date | null>(null);
-  
-  // Carregar nota existente
-  useEffect(() => {
-    if (!aulaId || !user) return;
-    // fetch do banco...
-  }, [aulaId, user]);
-  
-  // Auto-save com debounce
-  const debouncedSave = useMemo(
-    () => debounce(async (text: string) => {
-      setSaving(true);
-      await supabase.from('diario_bordo_aulas').upsert({...});
-      setLastSaved(new Date());
-      setSaving(false);
-    }, 2000),
-    [aulaId, user]
-  );
-  
-  return { conteudo, setConteudo, saving, lastSaved };
+interface RegistroBiblioteca {
+  id: string;
+  tipo: 'diario' | 'jardim' | 'oraculo' | 'labirinto' | 'progresso';
+  titulo: string;
+  resumo: string | null;
+  data: string; // ISO date
+  link: string;
+  icone: string; // lucide icon name
+  metadata: {
+    // tipo-specific data
+    aulaId?: string;
+    cursoNome?: string;
+    ferramentaChave?: string;
+    oracleId?: string;
+    portaId?: string;
+    integrado?: boolean;
+    arquivado?: boolean;
+  };
 }
 ```
 
+### Queries Paralelas
+
+```typescript
+const { data, isLoading } = useQuery({
+  queryKey: ['minha-biblioteca', userId, filtros],
+  queryFn: async () => {
+    const [diarios, jardim, oraculos, labirinto, progresso] = await Promise.all([
+      supabase.from('diario_bordo_aulas').select('*').eq('user_id', userId),
+      supabase.from('jardim_psique_registros').select('*').eq('user_id', userId),
+      supabase.from('oracle_draws').select('*').eq('user_id', userId).eq('is_professional_session', false),
+      supabase.from('labirinto_leituras').select('*').eq('user_id', userId).is('cliente_id', null),
+      supabase.from('course_lesson_progress').select('*, lesson:course_lessons(titulo, modulo:course_modules(titulo, curso:courses(titulo)))').eq('user_id', userId).eq('completed', true),
+    ]);
+    
+    return normalizeAndMerge(diarios, jardim, oraculos, labirinto, progresso);
+  },
+  staleTime: 30000,
+});
+```
+
+### Seguranca (RLS)
+
+Todas as tabelas ja possuem RLS configurado com `user_id = auth.uid()`. Nenhuma alteracao de seguranca necessaria.
+
+### Mapeamento de Links
+
+| Tipo | Link Pattern |
+|------|--------------|
+| diario | `/travessia/{travessiaId}/aula/{aulaId}` ou `/curso/{cursoId}/aula/{aulaId}` |
+| jardim | `/jardim-da-psique/{registroId}` |
+| oraculo | `/oraculos/{oracleId}/history` |
+| labirinto | `/labirinto/porta/{portaId}` |
+| progresso | `/curso/{cursoId}/aula/{lessonId}` |
