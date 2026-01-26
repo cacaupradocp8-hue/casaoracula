@@ -93,6 +93,7 @@ export default function JardimPsiqueDetalhe() {
       setLoading(false);
     };
     fetchData();
+    // getRegistro agora é estável via useCallback
   }, [id, getRegistro]);
 
   useEffect(() => {
