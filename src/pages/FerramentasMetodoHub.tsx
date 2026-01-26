@@ -20,7 +20,8 @@ import {
   Home,
   BookOpen,
   Shield,
-  Layers
+  Layers,
+  Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -52,6 +53,22 @@ const FERRAMENTAS: FerramentaCard[] = [
       'Leitura em 5 camadas',
       'Protocolo estruturado',
       'Áudio-guias por porta',
+    ],
+  },
+  {
+    id: 'big5-oracular',
+    titulo: 'Big Five Oracular',
+    subtitulo: 'Mapa Simbólico de Funcionamento',
+    descricao: 'Identifique os 5 fatores simbólicos e a Porta associada ao momento atual. Inclui ritual de ancoragem.',
+    icon: Sparkles,
+    cor: 'text-violet-400',
+    bgCor: 'bg-violet-500/20',
+    rota: '/ferramenta/big5-oracular',
+    minPortal: 'aluna',
+    destaques: [
+      '30 perguntas simbólicas',
+      'Visualização radial',
+      'Ritual por Porta',
     ],
   },
   {
