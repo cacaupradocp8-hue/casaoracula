@@ -17,14 +17,29 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
-  PedagogicalModuleData,
   LeituraCard,
   EstudoCaso,
   CheckMaturidade,
+  FerramentaPratica,
 } from '@/types/pedagogical-module';
 
+// Simplified data type for PedagogicalModuleView
+export interface PedagogicalModuleViewData {
+  id: string;
+  titulo: string;
+  subtitulo?: string;
+  descricao?: string;
+  video_principal_url?: string;
+  video_principal_titulo?: string;
+  video_principal_duracao?: number;
+  cards_leitura?: LeituraCard[];
+  ferramenta_pratica?: FerramentaPratica | null;
+  estudos_caso?: EstudoCaso[];
+  check_maturidade?: CheckMaturidade[];
+}
+
 interface PedagogicalModuleViewProps {
-  module: PedagogicalModuleData;
+  module: PedagogicalModuleViewData;
   courseId: string;
   onBack?: () => void;
 }

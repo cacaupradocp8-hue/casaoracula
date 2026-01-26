@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { 
   Accordion, 
   AccordionContent, 
@@ -8,7 +8,6 @@ import {
 } from '@/components/ui/accordion';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   Check, 
@@ -73,9 +72,9 @@ export function CourseSidebar({
   };
 
   return (
-    <div className="w-80 bg-card border-r border-border flex flex-col h-full">
+    <div className="w-80 bg-card border-r border-border flex flex-col h-full max-h-screen lg:max-h-none">
       {/* Header */}
-      <div className="p-4 border-b border-border">
+      <div className="p-4 border-b border-border flex-shrink-0">
         <Link 
           to="/cursos" 
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-3"
@@ -164,12 +163,12 @@ export function CourseSidebar({
                             {lessonIndex + 1}. {lesson.titulo}
                           </span>
                           {lesson.is_preview && !hasAccess && (
-                            <Badge variant="outline" className="text-xs">
+                            <Badge variant="outline" className="text-xs flex-shrink-0">
                               Preview
                             </Badge>
                           )}
                           {lesson.duracao_minutos && (
-                            <span className="text-xs text-muted-foreground">
+                            <span className="text-xs text-muted-foreground flex-shrink-0">
                               {lesson.duracao_minutos}min
                             </span>
                           )}
