@@ -1,6 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 
 @tailwind base;
+
+/* Audio Card Animations */
+@keyframes audioCardPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.audio-card-pulse {
+  animation: audioCardPulse 2s ease-in-out infinite;
+}
+
+.audio-card-halo {
+  box-shadow: 0 0 0 3px hsl(var(--gold) / 0.15), 0 0 20px hsl(var(--gold) / 0.1);
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .audio-card-pulse {
+    animation: none;
+  }
+}
 @tailwind components;
 @tailwind utilities;
 
