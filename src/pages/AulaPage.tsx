@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { ArrowLeft, ArrowRight, Check, Play, FileText, Download, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { DiarioBordoAula } from '@/components/shared/DiarioBordoAula';
 
 interface Aula {
   id: string;
@@ -336,6 +337,9 @@ export default function AulaPage() {
             </CardContent>
           </Card>
         )}
+
+        {/* Diário de Bordo */}
+        <DiarioBordoAula aulaId={aula.id} className="mb-8" />
 
         {/* Mark as Complete */}
         <div className="flex justify-center mb-8">

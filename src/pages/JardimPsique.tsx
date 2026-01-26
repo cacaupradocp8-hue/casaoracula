@@ -80,10 +80,13 @@ export default function JardimPsique() {
   const [viewArquivados, setViewArquivados] = useState(false);
   const [modalNovaEntrada, setModalNovaEntrada] = useState(false);
 
-  const { registros, loading, getFerramentasUsadas } = useJardimPsique({
+  // Memorizar filtros para evitar recriação a cada render
+  const filtros = useMemo(() => ({
     arquivado: viewArquivados,
     busca: busca || undefined,
-  });
+  }), [viewArquivados, busca]);
+
+  const { registros, loading, getFerramentasUsadas } = useJardimPsique(filtros);
 
   const ferramentasUsadas = useMemo(() => getFerramentasUsadas(), [getFerramentasUsadas]);
 

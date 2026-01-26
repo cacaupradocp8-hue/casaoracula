@@ -65,6 +65,9 @@ export function useJardimPsique(filtros?: FiltrosJardim) {
   const { user } = useAuth();
   const { toast } = useToast();
 
+  // Estabilizar filtros com JSON.stringify para evitar loop infinito
+  const filtrosKey = JSON.stringify(filtros ?? {});
+
   const fetchRegistros = useCallback(async () => {
     if (!user) {
       setRegistros([]);
@@ -74,6 +77,9 @@ export function useJardimPsique(filtros?: FiltrosJardim) {
 
     setLoading(true);
     try {
+      // Parse filtros de volta do key estável
+      const parsedFiltros: FiltrosJardim = JSON.parse(filtrosKey);
+      
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let query = (supabase as any)
         .from('jardim_psique_registros')
@@ -82,16 +88,16 @@ export function useJardimPsique(filtros?: FiltrosJardim) {
         .order('data_aplicacao', { ascending: false });
 
       // Aplicar filtros
-      if (filtros?.ferramenta_chave) {
-        query = query.eq('ferramenta_chave', filtros.ferramenta_chave);
+      if (parsedFiltros?.ferramenta_chave) {
+        query = query.eq('ferramenta_chave', parsedFiltros.ferramenta_chave);
       }
       
-      if (filtros?.arquivado !== undefined) {
-        query = query.eq('arquivado', filtros.arquivado);
+      if (parsedFiltros?.arquivado !== undefined) {
+        query = query.eq('arquivado', parsedFiltros.arquivado);
       }
 
-      if (filtros?.tipo_registro) {
-        query = query.eq('tipo_registro', filtros.tipo_registro);
+      if (parsedFiltros?.tipo_registro) {
+        query = query.eq('tipo_registro', parsedFiltros.tipo_registro);
       }
 
       const { data, error } = await query;
@@ -111,8 +117,8 @@ export function useJardimPsique(filtros?: FiltrosJardim) {
 
       // Filtro de busca textual (client-side)
       let resultado = transformedData;
-      if (filtros?.busca) {
-        const busca = filtros.busca.toLowerCase();
+      if (parsedFiltros?.busca) {
+        const busca = parsedFiltros.busca.toLowerCase();
         resultado = transformedData.filter(
           (r) =>
             r.ferramenta_nome.toLowerCase().includes(busca) ||
@@ -133,7 +139,7 @@ export function useJardimPsique(filtros?: FiltrosJardim) {
     } finally {
       setLoading(false);
     }
-  }, [user, filtros, toast]);
+  }, [user?.id, filtrosKey, toast]);
 
   useEffect(() => {
     fetchRegistros();
