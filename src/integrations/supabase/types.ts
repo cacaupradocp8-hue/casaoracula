@@ -1713,6 +1713,33 @@ export type Database = {
         }
         Relationships: []
       }
+      diario_bordo_aulas: {
+        Row: {
+          aula_id: string
+          conteudo: string | null
+          created_at: string | null
+          id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          aula_id: string
+          conteudo?: string | null
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          aula_id?: string
+          conteudo?: string | null
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       email_logs: {
         Row: {
           data_envio: string

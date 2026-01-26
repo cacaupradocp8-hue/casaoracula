@@ -13,6 +13,7 @@ import { CourseLesson, CourseModuleWithLessons } from '@/types/course';
 import DOMPurify from 'dompurify';
 import { ModularPageRenderer } from '@/components/modular/ModularPageRenderer';
 import { PedagogicalModuleView } from './PedagogicalModuleView';
+import { DiarioBordoAula } from '@/components/shared/DiarioBordoAula';
 
 interface LessonContentProps {
   lesson: CourseLesson;
@@ -187,6 +188,9 @@ export function LessonContent({
             </div>
           </Card>
         )}
+
+        {/* Diário de Bordo */}
+        <DiarioBordoAula aulaId={lesson.id} />
 
         {/* Navigation */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-border">
