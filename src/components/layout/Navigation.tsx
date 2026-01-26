@@ -264,6 +264,12 @@ export function Navigation() {
         label: 'Recursos',
         items: [
           {
+            path: '/radiestesia',
+            label: 'Radiestesia',
+            icon: Sparkles,
+            minPortal: 'aluna',
+          },
+          {
             path: '/narroterapia',
             label: 'Narroterapia',
             icon: BookOpen,

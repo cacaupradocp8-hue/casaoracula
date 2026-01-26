@@ -34,12 +34,19 @@ interface RadiestesiaConfig {
 export interface Grafico {
   id: string;
   nome: string;
+  slug: string | null;
   autor: string | null;
   origem: string;
   categoria: string;
   tipo_leitura: string;
+  tipo_acao: string | null;
   para_que_serve: string | null;
+  quando_usar: string | null;
   quando_nao_usar: string | null;
+  como_usar: string | null;
+  erro_iniciante: string | null;
+  nivel_intensidade: string | null;
+  observacao_etica: string | null;
   observacoes_simbolicas: string | null;
   imagem_url: string | null;
   combinacoes: string[];
