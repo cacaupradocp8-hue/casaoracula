@@ -88,7 +88,8 @@ export default function JardimPsique() {
 
   const { registros, loading, getFerramentasUsadas } = useJardimPsique(filtros);
 
-  const ferramentasUsadas = useMemo(() => getFerramentasUsadas(), [getFerramentasUsadas]);
+  // getFerramentasUsadas já é useCallback, chamamos diretamente
+  const ferramentasUsadas = getFerramentasUsadas();
 
   const registrosFiltrados = useMemo(() => {
     let resultado = registros;
