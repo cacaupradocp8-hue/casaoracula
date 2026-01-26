@@ -100,6 +100,7 @@ import AgenteSimbólico from "./pages/salas/AgenteSimbólico";
 import FerramentaDinamica from "./pages/FerramentaDinamica";
 import Big5Simbolico from "./pages/Big5Simbolico";
 import Big5Oracular from "./pages/Big5Oracular";
+import Big5Funcional from "./pages/Big5Funcional";
 import EneagramaFeminino from "./pages/EneagramaFeminino";
 import JornadaHeroina from "./pages/JornadaHeroina";
 import TorreViva from "./pages/TorreViva";
@@ -658,6 +659,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="mentorada">
             <Big5Oracular />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ferramenta/big5-funcional"
+        element={
+          <ProtectedRoute minPortal="mentorada">
+            <Big5Funcional />
           </ProtectedRoute>
         }
       />
