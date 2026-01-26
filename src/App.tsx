@@ -131,6 +131,7 @@ import PersonalMapEditor from "./pages/PersonalMapEditor";
 // Jardim da Psique - Espaço privado de registros
 import JardimPsique from "./pages/JardimPsique";
 import JardimPsiqueDetalhe from "./pages/JardimPsiqueDetalhe";
+import MinhaBiblioteca from "./pages/MinhaBiblioteca";
 // Tour da Casa
 import Tour from "./pages/Tour";
 // Travessia Detalhe
@@ -1110,6 +1111,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <JardimPsiqueDetalhe />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/minha-biblioteca"
+          element={
+            <ProtectedRoute>
+              <MinhaBiblioteca />
             </ProtectedRoute>
           }
         />
