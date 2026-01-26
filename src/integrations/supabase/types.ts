@@ -523,6 +523,110 @@ export type Database = {
         }
         Relationships: []
       }
+      big5_funcional_dimensoes: {
+        Row: {
+          ativo: boolean
+          chave: string
+          cor: string
+          created_at: string
+          descricao: string
+          id: string
+          nome: string
+          nome_ingles: string
+          ordem: number
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          chave: string
+          cor: string
+          created_at?: string
+          descricao: string
+          id?: string
+          nome: string
+          nome_ingles: string
+          ordem?: number
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          chave?: string
+          cor?: string
+          created_at?: string
+          descricao?: string
+          id?: string
+          nome?: string
+          nome_ingles?: string
+          ordem?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      big5_funcional_perguntas: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          dimensao_id: string
+          id: string
+          ordem: number
+          texto_pergunta: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          dimensao_id: string
+          id?: string
+          ordem?: number
+          texto_pergunta: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          dimensao_id?: string
+          id?: string
+          ordem?: number
+          texto_pergunta?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "big5_funcional_perguntas_dimensao_id_fkey"
+            columns: ["dimensao_id"]
+            isOneToOne: false
+            referencedRelation: "big5_funcional_dimensoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      big5_funcional_registros: {
+        Row: {
+          created_at: string
+          dimensao_alta: string | null
+          dimensao_baixa: string | null
+          id: string
+          medias_json: Json
+          respostas_json: Json
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          dimensao_alta?: string | null
+          dimensao_baixa?: string | null
+          id?: string
+          medias_json?: Json
+          respostas_json?: Json
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          dimensao_alta?: string | null
+          dimensao_baixa?: string | null
+          id?: string
+          medias_json?: Json
+          respostas_json?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
       big5_oracular_fatores: {
         Row: {
           ativo: boolean | null
