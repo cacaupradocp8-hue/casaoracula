@@ -1,4 +1,5 @@
 // Course Types for Members Area
+import { Json } from '@/integrations/supabase/types';
 
 export type PricingModel = 'free' | 'one_time' | 'subscription';
 export type ContentType = 'text' | 'video' | 'audio' | 'file' | 'mixed';
@@ -33,13 +34,23 @@ export interface CourseModule {
   id: string;
   course_id: string;
   titulo: string;
-  descricao: string;
+  descricao: string | null;
+  subtitulo?: string | null;
   ordem: number;
   publicado: boolean;
   disponivel_em: string | null;
   dias_apos_matricula: number | null;
   created_at: string;
   updated_at: string;
+  // Pedagogical format fields
+  formato_pedagogico?: boolean | null;
+  video_principal_url?: string | null;
+  video_principal_titulo?: string | null;
+  video_principal_duracao?: number | null;
+  cards_leitura?: Json | null;
+  ferramenta_pratica?: Json | null;
+  estudos_caso?: Json | null;
+  check_maturidade?: Json | null;
 }
 
 export interface CourseLesson {

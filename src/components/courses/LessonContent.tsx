@@ -7,15 +7,17 @@ import {
   ChevronLeft, 
   ChevronRight, 
   Download, 
-  FileText,
-  Play
+  FileText
 } from 'lucide-react';
-import { CourseLesson } from '@/types/course';
+import { CourseLesson, CourseModuleWithLessons } from '@/types/course';
 import DOMPurify from 'dompurify';
 import { ModularPageRenderer } from '@/components/modular/ModularPageRenderer';
+import { PedagogicalModuleView } from './PedagogicalModuleView';
 
 interface LessonContentProps {
   lesson: CourseLesson;
+  module?: CourseModuleWithLessons | null;
+  courseId: string;
   isCompleted: boolean;
   onMarkComplete: () => void;
   onNavigate: (direction: 'prev' | 'next') => void;
@@ -25,6 +27,8 @@ interface LessonContentProps {
 
 export function LessonContent({
   lesson,
+  module,
+  courseId,
   isCompleted,
   onMarkComplete,
   onNavigate,
@@ -47,12 +51,30 @@ export function LessonContent({
     return url;
   };
 
+  // Check if module has pedagogical format enabled
+  const isPedagogical = module?.formato_pedagogico === true;
+  
+  // Build pedagogical data from module if available
+  const pedagogicalData = isPedagogical && module ? {
+    id: module.id,
+    titulo: module.titulo,
+    subtitulo: module.subtitulo || undefined,
+    descricao: module.descricao || undefined,
+    video_principal_url: module.video_principal_url || undefined,
+    video_principal_titulo: module.video_principal_titulo || undefined,
+    video_principal_duracao: module.video_principal_duracao || undefined,
+    cards_leitura: (module.cards_leitura as any[]) || [],
+    ferramenta_pratica: module.ferramenta_pratica as any || undefined,
+    estudos_caso: (module.estudos_caso as any[]) || [],
+    check_maturidade: (module.check_maturidade as any[]) || [],
+  } : null;
+
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <div className="max-w-4xl mx-auto p-4 lg:p-6 space-y-6">
         {/* Header */}
         <div className="space-y-2">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Badge variant="outline" className="capitalize">
               {lesson.content_type}
             </Badge>
@@ -67,7 +89,7 @@ export function LessonContent({
               </Badge>
             )}
           </div>
-          <h1 className="font-display text-3xl font-bold text-foreground">
+          <h1 className="font-display text-2xl lg:text-3xl font-bold text-foreground">
             {lesson.titulo}
           </h1>
           {lesson.descricao_curta && (
@@ -75,46 +97,56 @@ export function LessonContent({
           )}
         </div>
 
-        {/* Video Content */}
-        {lesson.video_url && (
-          <Card className="aspect-video overflow-hidden bg-background">
-            <iframe
-              src={getEmbedUrl(lesson.video_url)}
-              className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              onLoad={() => setIsVideoLoaded(true)}
-            />
-          </Card>
-        )}
-
-        {/* Audio Content */}
-        {lesson.audio_url && (
-          <Card className="p-4">
-            <audio controls className="w-full">
-              <source src={lesson.audio_url} />
-              Seu navegador não suporta áudio.
-            </audio>
-          </Card>
-        )}
-
-        {/* Text Content */}
-        {lesson.texto_aula && (
-          <div 
-            className="prose prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ 
-              __html: DOMPurify.sanitize(lesson.texto_aula) 
-            }}
+        {/* Pedagogical Module View (if enabled) */}
+        {pedagogicalData ? (
+          <PedagogicalModuleView
+            module={pedagogicalData}
+            courseId={courseId}
           />
-        )}
+        ) : (
+          <>
+            {/* Video Content */}
+            {lesson.video_url && (
+              <Card className="aspect-video overflow-hidden bg-background">
+                <iframe
+                  src={getEmbedUrl(lesson.video_url)}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  onLoad={() => setIsVideoLoaded(true)}
+                />
+              </Card>
+            )}
 
-        {/* Modular Blocks for Lesson */}
-        <ModularPageRenderer
-          contextType="lesson"
-          contextId={lesson.id}
-          fallback={null}
-          blockSpacing="lg"
-        />
+            {/* Audio Content */}
+            {lesson.audio_url && (
+              <Card className="p-4">
+                <audio controls className="w-full">
+                  <source src={lesson.audio_url} />
+                  Seu navegador não suporta áudio.
+                </audio>
+              </Card>
+            )}
+
+            {/* Text Content */}
+            {lesson.texto_aula && (
+              <div 
+                className="prose prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ 
+                  __html: DOMPurify.sanitize(lesson.texto_aula) 
+                }}
+              />
+            )}
+
+            {/* Modular Blocks for Lesson */}
+            <ModularPageRenderer
+              contextType="lesson"
+              contextId={lesson.id}
+              fallback={null}
+              blockSpacing="lg"
+            />
+          </>
+        )}
 
         {/* PDF/Materials */}
         {(lesson.pdf_url || lesson.materiais_url) && (
@@ -145,19 +177,19 @@ export function LessonContent({
         )}
 
         {/* Navigation */}
-        <div className="flex items-center justify-between pt-6 border-t border-border">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-border">
           <Button
             variant="outline"
             onClick={() => onNavigate('prev')}
             disabled={!hasPrev}
-            className="gap-2"
+            className="gap-2 w-full sm:w-auto"
           >
             <ChevronLeft className="w-4 h-4" />
             Anterior
           </Button>
 
           {!isCompleted && (
-            <Button onClick={onMarkComplete} className="gap-2">
+            <Button onClick={onMarkComplete} className="gap-2 w-full sm:w-auto order-first sm:order-none">
               <Check className="w-4 h-4" />
               Marcar como Concluída
             </Button>
@@ -167,7 +199,7 @@ export function LessonContent({
             variant={hasNext ? 'default' : 'outline'}
             onClick={() => onNavigate('next')}
             disabled={!hasNext}
-            className="gap-2"
+            className="gap-2 w-full sm:w-auto"
           >
             Próxima
             <ChevronRight className="w-4 h-4" />
