@@ -199,6 +199,12 @@ export function Navigation() {
         icon: Leaf,
         minPortal: 'aluna',
       },
+      {
+        path: '/minha-biblioteca',
+        label: 'Minha Biblioteca',
+        icon: Library,
+        minPortal: 'aluna',
+      },
     ];
 
     blocks.push({
