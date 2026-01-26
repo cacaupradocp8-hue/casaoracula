@@ -327,7 +327,7 @@ export default function TravessiaDetalhe() {
   });
 
   // Fetch lições/dias do banco (conteudo_aulas)
-  const { data: licoesFromDB = [] } = useQuery({
+  const { data: licoesFromDB = [], isLoading: isLoadingLicoes } = useQuery({
     queryKey: ['travessia-licoes', travessia?.id],
     queryFn: async () => {
       if (!travessia?.id) return [];
@@ -427,7 +427,7 @@ export default function TravessiaDetalhe() {
     return acc;
   }, {} as Record<string, TravessiaLibraryItem[]>);
 
-  const isLoadingData = isLoadingFamilias || isLoadingItems;
+  const isLoadingData = isLoadingFamilias || isLoadingItems || isLoadingLicoes;
 
   return (
     <AppLayout>
@@ -511,57 +511,65 @@ export default function TravessiaDetalhe() {
         {/* Content Sections */}
         {hasFullAccess && (
           <div className="space-y-10">
-            {sections.map((section, sectionIndex) => (
-              <section key={sectionIndex}>
-                <div className="mb-6">
-                  <h2 className="font-display text-xl font-semibold text-foreground mb-1">
-                    {section.title}
-                  </h2>
-                  <p className="text-sm text-muted-foreground">{section.description}</p>
-                </div>
+            {isLoadingLicoes && sections.length === 0 ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+              </div>
+            ) : (
+              <>
+                {sections.map((section, sectionIndex) => (
+                  <section key={sectionIndex}>
+                    <div className="mb-6">
+                      <h2 className="font-display text-xl font-semibold text-foreground mb-1">
+                        {section.title}
+                      </h2>
+                      <p className="text-sm text-muted-foreground">{section.description}</p>
+                    </div>
 
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {section.items.map((item, itemIndex) => {
-                    const ItemIcon = item.icon;
-                    const isClickable = !item.route.startsWith('#'); // Travessia Zero items não são clicáveis
-                    
-                    return (
-                      <Card
-                        key={itemIndex}
-                        className={cn(
-                          "transition-all duration-300",
-                          isClickable && "group cursor-pointer hover:shadow-lg hover:border-gold/40",
-                          !isClickable && "bg-card/50"
-                        )}
-                        onClick={() => isClickable && navigate(item.route)}
-                      >
-                        <CardHeader className="pb-2">
-                          <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center", colors.icon)}>
-                            <ItemIcon className="w-5 h-5" />
-                          </div>
-                        </CardHeader>
-                        <CardContent>
-                          <CardTitle className={cn(
-                            "text-base mb-1",
-                            isClickable && "group-hover:text-gold transition-colors"
-                          )}>
-                            {item.title}
-                          </CardTitle>
-                          <CardDescription className="text-sm line-clamp-2">
-                            {item.description}
-                          </CardDescription>
-                          {isClickable && (
-                            <div className="flex items-center justify-end mt-3">
-                              <ArrowRight className="w-4 h-4 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-gold" />
-                            </div>
-                          )}
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-              </section>
-            ))}
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {section.items.map((item, itemIndex) => {
+                        const ItemIcon = item.icon;
+                        const isClickable = !item.route.startsWith('#');
+                        
+                        return (
+                          <Card
+                            key={itemIndex}
+                            className={cn(
+                              "transition-all duration-300",
+                              isClickable && "group cursor-pointer hover:shadow-lg hover:border-gold/40",
+                              !isClickable && "bg-card/50"
+                            )}
+                            onClick={() => isClickable && navigate(item.route)}
+                          >
+                            <CardHeader className="pb-2">
+                              <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center", colors.icon)}>
+                                <ItemIcon className="w-5 h-5" />
+                              </div>
+                            </CardHeader>
+                            <CardContent>
+                              <CardTitle className={cn(
+                                "text-base mb-1",
+                                isClickable && "group-hover:text-gold transition-colors"
+                              )}>
+                                {item.title}
+                              </CardTitle>
+                              <CardDescription className="text-sm line-clamp-2">
+                                {item.description}
+                              </CardDescription>
+                              {isClickable && (
+                                <div className="flex items-center justify-end mt-3">
+                                  <ArrowRight className="w-4 h-4 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-gold" />
+                                </div>
+                              )}
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
+                    </div>
+                  </section>
+                ))}
+              </>
+            )}
 
             {/* Famílias Simbólicas Section - from database */}
             {familias.length > 0 && (
