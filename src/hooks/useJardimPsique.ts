@@ -287,8 +287,8 @@ export function useJardimPsique(filtros?: FiltrosJardim) {
     }
   };
 
-  // Buscar registro específico
-  const getRegistro = async (
+  // Buscar registro específico - memorizado para evitar loop infinito
+  const getRegistro = useCallback(async (
     registroId: string
   ): Promise<JardimRegistro | null> => {
     if (!user) return null;
@@ -318,7 +318,7 @@ export function useJardimPsique(filtros?: FiltrosJardim) {
       console.error('Erro ao buscar registro:', error);
       return null;
     }
-  };
+  }, [user?.id]);
 
   // Listar ferramentas únicas usadas
   const getFerramentasUsadas = useCallback((): string[] => {
