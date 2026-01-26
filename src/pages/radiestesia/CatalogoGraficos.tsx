@@ -20,7 +20,6 @@ import {
   BookOpen,
   User,
   FileText,
-  Eye,
   Image as ImageIcon,
   ShoppingBag,
   ExternalLink,
@@ -33,12 +32,19 @@ const GRAFICOS_FALLBACK: Grafico[] = [
   {
     id: 'decagono',
     nome: 'Decágono',
+    slug: 'decagono',
     autor: 'Tradicional',
     origem: 'tradicional',
     categoria: 'clinico',
     tipo_leitura: 'campo',
+    tipo_acao: 'Regulador',
     para_que_serve: 'Harmonização geral de ambientes e campos. Equilibra energias dispersas e cria campo de proteção básico.',
+    quando_usar: 'Em ambientes desarmônicos. Para equilibrar campos gerais.',
     quando_nao_usar: 'Quando o campo precisa de ação direcionada específica. Não substitui trabalho terapêutico profundo.',
+    como_usar: 'Posicionar no ambiente. Tempo: 15-30 minutos.',
+    erro_iniciante: 'Esperar resultados imediatos sem preparação do campo.',
+    nivel_intensidade: 'medio',
+    observacao_etica: 'Gráfico de equilíbrio, não de cura. Use com discernimento.',
     observacoes_simbolicas: 'Gráfico de equilíbrio universal.',
     imagem_url: null,
     combinacoes: ['Quartzo transparente', 'Ametista', 'Chakra coronário'],
@@ -51,12 +57,19 @@ const GRAFICOS_FALLBACK: Grafico[] = [
   {
     id: 'antahkarana',
     nome: 'Antahkarana',
+    slug: 'antahkarana-fallback',
     autor: 'Tradição Tibetana',
     origem: 'tradicional',
     categoria: 'estudo',
     tipo_leitura: 'narrativa',
+    tipo_acao: 'Regulador',
     para_que_serve: 'Ponte entre personalidade e alma. Usado para meditação profunda e conexão com o Eu Superior.',
+    quando_usar: 'Em meditações profundas. Para trabalhos de integração.',
     quando_nao_usar: 'Em situações de urgência emocional. Requer estado meditativo prévio para funcionar adequadamente.',
+    como_usar: 'Meditar com o símbolo. Tempo: 15-30 minutos.',
+    erro_iniciante: 'Usar para fugir da realidade.',
+    nivel_intensidade: 'medio',
+    observacao_etica: 'A ponte une céu e terra. Mantenha-se ancorado.',
     observacoes_simbolicas: 'Símbolo de conexão interdimensional.',
     imagem_url: null,
     combinacoes: ['Quartzo azul', 'Lápis-lazúli', 'Chakra frontal'],
@@ -69,12 +82,19 @@ const GRAFICOS_FALLBACK: Grafico[] = [
   {
     id: 'flor-vida',
     nome: 'Flor da Vida',
+    slug: 'flor-vida-fallback',
     autor: 'Geometria Sagrada',
     origem: 'tradicional',
     categoria: 'oracular',
     tipo_leitura: 'campo',
+    tipo_acao: 'Regulador',
     para_que_serve: 'Geometria sagrada de criação. Potencializa intenções, energiza cristais e alimentos.',
+    quando_usar: 'Para harmonização geral. Em meditações. Para carregar objetos.',
     quando_nao_usar: 'Para intenções de manipulação ou controle. A energia amplifica tudo — inclusive sombras.',
+    como_usar: 'Posicionar objeto no centro. Tempo: 15-60 minutos.',
+    erro_iniciante: 'Tratar como decoração.',
+    nivel_intensidade: 'medio',
+    observacao_etica: 'Use com reverência e propósito claro.',
     observacoes_simbolicas: 'Padrão da criação universal.',
     imagem_url: null,
     combinacoes: ['Todos os cristais', 'Água', 'Chakra cardíaco'],
@@ -93,21 +113,6 @@ const CATEGORIAS = [
   { id: 'estudo', label: 'Estudo' },
 ];
 
-const ORIGENS = {
-  tradicional: { label: 'Tradicional', color: 'bg-blue-500/20 text-blue-400' },
-  autoral: { label: 'Autoral', color: 'bg-purple-500/20 text-purple-400' },
-  alquimico: { label: 'Alquímico', color: 'bg-gold/20 text-gold' },
-};
-
-const TIPO_LEITURA = {
-  campo: 'Leitura de Campo',
-  frequencia: 'Frequência',
-  narrativa: 'Narrativa',
-  apoio: 'Apoio',
-  limpeza: 'Limpeza',
-  harmonizacao: 'Harmonização',
-  amplificacao: 'Amplificação',
-};
 
 export default function CatalogoGraficos() {
   const navigate = useNavigate();
@@ -221,12 +226,18 @@ export default function CatalogoGraficos() {
               <Card 
                 key={grafico.id}
                 className={cn(
-                  "transition-all cursor-pointer",
-                  graficoExpandido === grafico.id && "border-gold/50"
+                  "transition-all cursor-pointer hover:border-gold/50 hover:shadow-lg hover:shadow-gold/10",
+                  "group"
                 )}
-                onClick={() => setGraficoExpandido(
-                  graficoExpandido === grafico.id ? null : grafico.id
-                )}
+                onClick={() => {
+                  if (grafico.slug) {
+                    navigate(`/radiestesia/graficos/${grafico.slug}`);
+                  } else {
+                    setGraficoExpandido(
+                      graficoExpandido === grafico.id ? null : grafico.id
+                    );
+                  }
+                }}
               >
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between gap-4">
@@ -252,19 +263,31 @@ export default function CatalogoGraficos() {
                           </div>
                         )}
                         <div className="flex gap-2 mt-2 flex-wrap">
-                          <Badge className={cn("text-xs", ORIGENS[grafico.origem as keyof typeof ORIGENS]?.color || ORIGENS.tradicional.color)}>
-                            {ORIGENS[grafico.origem as keyof typeof ORIGENS]?.label || grafico.origem}
-                          </Badge>
-                          <Badge variant="outline" className="text-xs">
-                            {TIPO_LEITURA[grafico.tipo_leitura as keyof typeof TIPO_LEITURA] || grafico.tipo_leitura}
-                          </Badge>
+                          {grafico.tipo_acao && (
+                            <Badge className="text-xs bg-gold/20 text-gold">
+                              {grafico.tipo_acao}
+                            </Badge>
+                          )}
+                          {grafico.nivel_intensidade && (
+                            <Badge variant="outline" className={cn(
+                              "text-xs",
+                              grafico.nivel_intensidade === 'suave' && "border-emerald-500/50 text-emerald-400",
+                              grafico.nivel_intensidade === 'medio' && "border-amber-500/50 text-amber-400",
+                              grafico.nivel_intensidade === 'forte' && "border-orange-500/50 text-orange-400",
+                              grafico.nivel_intensidade === 'muito_forte' && "border-rose-500/50 text-rose-400"
+                            )}>
+                              {grafico.nivel_intensidade === 'suave' && '○ Suave'}
+                              {grafico.nivel_intensidade === 'medio' && '◐ Médio'}
+                              {grafico.nivel_intensidade === 'forte' && '◕ Forte'}
+                              {grafico.nivel_intensidade === 'muito_forte' && '● Muito Forte'}
+                            </Badge>
+                          )}
                         </div>
                       </div>
                     </div>
-                    <Eye className={cn(
-                      "w-5 h-5 transition-transform",
-                      graficoExpandido === grafico.id ? "rotate-180 text-gold" : "text-muted-foreground"
-                    )} />
+                    <div className="flex items-center gap-2 text-sm text-gold opacity-0 group-hover:opacity-100 transition-opacity">
+                      Ver detalhes →
+                    </div>
                   </div>
                 </CardHeader>
                 

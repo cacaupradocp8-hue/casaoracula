@@ -2,6 +2,7 @@ export { default as RadiestesiaPortal } from './RadiestesiaPortal';
 export { default as Leitura5Camadas } from './Leitura5Camadas';
 export { default as MesaRadionica } from './MesaRadionica';
 export { default as CatalogoGraficos } from './CatalogoGraficos';
+export { default as GraficoDetalhe } from './GraficoDetalhe';
 export { default as Pantaculos } from './Pantaculos';
 export { default as CristaisCampos } from './CristaisCampos';
 export { default as EscalaNarrativa } from './EscalaNarrativa';

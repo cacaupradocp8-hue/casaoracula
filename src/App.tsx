@@ -84,7 +84,8 @@ import {
   RadiestesiaPortal, 
   Leitura5Camadas,
   MesaRadionica, 
-  CatalogoGraficos, 
+  CatalogoGraficos,
+  GraficoDetalhe,
   Pantaculos, 
   CristaisCampos, 
   EscalaNarrativa, 
@@ -888,6 +889,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="mentorada">
             <CatalogoGraficos />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/radiestesia/graficos/:slug"
+        element={
+          <ProtectedRoute minPortal="mentorada">
+            <GraficoDetalhe />
           </ProtectedRoute>
         }
       />

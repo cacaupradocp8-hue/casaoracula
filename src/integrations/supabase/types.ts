@@ -5443,18 +5443,25 @@ export type Database = {
           autor: string | null
           categoria: string | null
           combinacoes: string[] | null
+          como_usar: string | null
           created_at: string
           disponivel_loja: boolean | null
+          erro_iniciante: string | null
           id: string
           imagem_fisica_url: string | null
           imagem_url: string | null
           link_loja: string | null
+          nivel_intensidade: string | null
           nome: string
+          observacao_etica: string | null
           observacoes_simbolicas: string | null
           ordem: number | null
           origem: string | null
           para_que_serve: string | null
           quando_nao_usar: string | null
+          quando_usar: string | null
+          slug: string | null
+          tipo_acao: string | null
           tipo_leitura: string | null
           updated_at: string
         }
@@ -5463,18 +5470,25 @@ export type Database = {
           autor?: string | null
           categoria?: string | null
           combinacoes?: string[] | null
+          como_usar?: string | null
           created_at?: string
           disponivel_loja?: boolean | null
+          erro_iniciante?: string | null
           id?: string
           imagem_fisica_url?: string | null
           imagem_url?: string | null
           link_loja?: string | null
+          nivel_intensidade?: string | null
           nome: string
+          observacao_etica?: string | null
           observacoes_simbolicas?: string | null
           ordem?: number | null
           origem?: string | null
           para_que_serve?: string | null
           quando_nao_usar?: string | null
+          quando_usar?: string | null
+          slug?: string | null
+          tipo_acao?: string | null
           tipo_leitura?: string | null
           updated_at?: string
         }
@@ -5483,18 +5497,25 @@ export type Database = {
           autor?: string | null
           categoria?: string | null
           combinacoes?: string[] | null
+          como_usar?: string | null
           created_at?: string
           disponivel_loja?: boolean | null
+          erro_iniciante?: string | null
           id?: string
           imagem_fisica_url?: string | null
           imagem_url?: string | null
           link_loja?: string | null
+          nivel_intensidade?: string | null
           nome?: string
+          observacao_etica?: string | null
           observacoes_simbolicas?: string | null
           ordem?: number | null
           origem?: string | null
           para_que_serve?: string | null
           quando_nao_usar?: string | null
+          quando_usar?: string | null
+          slug?: string | null
+          tipo_acao?: string | null
           tipo_leitura?: string | null
           updated_at?: string
         }
