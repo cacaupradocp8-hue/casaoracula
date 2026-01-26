@@ -11,6 +11,87 @@ const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
+// Security: Patterns that indicate prompt injection attempts
+const INJECTION_PATTERNS = [
+  /ignore\s+(all\s+)?(previous|above|prior)\s+(instructions?|prompts?|rules?)/i,
+  /disregard\s+(all\s+)?(previous|above|prior)\s+(instructions?|prompts?|rules?)/i,
+  /forget\s+(all\s+)?(previous|above|prior)\s+(instructions?|prompts?|rules?)/i,
+  /you\s+are\s+now\s+(an?\s+)?unrestricted/i,
+  /new\s+instructions?:/i,
+  /system\s*:\s*/i,
+  /\[INST\]/i,
+  /\[\/INST\]/i,
+  /<\|system\|>/i,
+  /<\|user\|>/i,
+  /<\|assistant\|>/i,
+];
+
+// Security: Maximum lengths for context fields to prevent abuse
+const MAX_CONTEXT_PROMPT_LENGTH = 2000;
+const MAX_CONTEXT_DATA_SIZE = 5000;
+const MAX_MESSAGE_LENGTH = 10000;
+
+/**
+ * Sanitize and validate context prompt to prevent injection
+ */
+function sanitizeContextPrompt(prompt: string | undefined): string {
+  if (!prompt || typeof prompt !== 'string') return '';
+  
+  // Truncate to max length
+  let sanitized = prompt.slice(0, MAX_CONTEXT_PROMPT_LENGTH);
+  
+  // Check for injection patterns
+  for (const pattern of INJECTION_PATTERNS) {
+    if (pattern.test(sanitized)) {
+      console.warn('Potential prompt injection detected in contextPrompt');
+      return ''; // Return empty string if injection detected
+    }
+  }
+  
+  return sanitized;
+}
+
+/**
+ * Sanitize context data to prevent injection via JSON
+ */
+function sanitizeContextData(data: unknown): string {
+  if (!data || typeof data !== 'object') return '';
+  
+  try {
+    const jsonStr = JSON.stringify(data);
+    
+    // Check size limit
+    if (jsonStr.length > MAX_CONTEXT_DATA_SIZE) {
+      console.warn('Context data exceeds size limit, truncating');
+      return JSON.stringify({ note: 'Context data truncated for security' });
+    }
+    
+    // Check for injection patterns in stringified data
+    for (const pattern of INJECTION_PATTERNS) {
+      if (pattern.test(jsonStr)) {
+        console.warn('Potential prompt injection detected in contextData');
+        return '';
+      }
+    }
+    
+    return jsonStr;
+  } catch {
+    return '';
+  }
+}
+
+/**
+ * Validate and sanitize user messages
+ */
+function sanitizeMessages(messages: Array<{ role: string; content: string }>): Array<{ role: string; content: string }> {
+  return messages
+    .filter(m => m && typeof m.content === 'string' && ['user', 'assistant'].includes(m.role))
+    .map(m => ({
+      role: m.role,
+      content: m.content.slice(0, MAX_MESSAGE_LENGTH),
+    }));
+}
+
 serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -25,6 +106,12 @@ serve(async (req) => {
     // Validate input
     if (!messages || !Array.isArray(messages)) {
       throw new Error('Messages array is required');
+    }
+
+    // Sanitize messages
+    const sanitizedMessages = sanitizeMessages(messages);
+    if (sanitizedMessages.length === 0) {
+      throw new Error('No valid messages provided');
     }
 
     // Check if AI is enabled
@@ -81,23 +168,25 @@ serve(async (req) => {
       }
     }
 
-    // Build complete system prompt
+    // Build complete system prompt with SANITIZED context
     let systemPrompt = globalPrompt + agentPrompt;
     
-    // Add context prompt if provided
-    if (context?.contextPrompt) {
-      systemPrompt += `\n\n## Contexto da Página\n${context.contextPrompt}`;
+    // Add context prompt if provided (SANITIZED)
+    const sanitizedContextPrompt = sanitizeContextPrompt(context?.contextPrompt);
+    if (sanitizedContextPrompt) {
+      systemPrompt += `\n\n## Contexto da Página\n${sanitizedContextPrompt}`;
     }
 
-    // Add context data if provided
-    if (context?.contextData) {
-      systemPrompt += `\n\n## Dados do Contexto\n${JSON.stringify(context.contextData, null, 2)}`;
+    // Add context data if provided (SANITIZED)
+    const sanitizedContextData = sanitizeContextData(context?.contextData);
+    if (sanitizedContextData) {
+      systemPrompt += `\n\n## Dados do Contexto\n${sanitizedContextData}`;
     }
 
     // Prepare messages with system prompt
     const aiMessages = [
       { role: 'system', content: systemPrompt },
-      ...messages,
+      ...sanitizedMessages,
     ];
 
     const startTime = Date.now();
@@ -135,7 +224,7 @@ serve(async (req) => {
         agente_id: context.agentId || null,
         context_type: context.contextType || null,
         context_id: context.contextId || null,
-        input_text: messages[messages.length - 1]?.content || '',
+        input_text: sanitizedMessages[sanitizedMessages.length - 1]?.content || '',
         output_text: content,
         modelo_usado: modelo,
         tokens_used: tokensUsed,
@@ -160,7 +249,7 @@ serve(async (req) => {
 
     return new Response(
       JSON.stringify({ 
-        error: errorMessage,
+        error: 'Erro ao processar mensagem',
         content: 'Desculpe, ocorreu um erro ao processar sua mensagem. Por favor, tente novamente.',
       }),
       { 
