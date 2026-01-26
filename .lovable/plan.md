@@ -1,39 +1,31 @@
+# Plano: Mapa Simbólico Big Five Oracular
 
+## ✅ Status: CONCLUÍDO
 
-# Plano: Criar Mapa Simbólico Big Five Oracular
+### Etapas Finalizadas
 
-## Status Atual
-As tabelas necessárias (`big5_oracular_fatores`, `big5_oracular_perguntas`, `big5_oracular_registros`) ainda não existem no banco de dados.
+1. **Banco de Dados** ✅
+   - Tabela `big5_oracular_fatores` — 5 fatores simbólicos
+   - Tabela `big5_oracular_perguntas` — 30 perguntas exatas
+   - Tabela `big5_oracular_registros` — Resultados com RLS
 
-## Próximo Passo Imediato
-Preciso aplicar a migração do banco de dados para criar:
+2. **Hook React** ✅
+   - `src/hooks/useBig5Oracular.ts`
+   - Lógica de fetch, cálculo de médias, salvamento
 
-1. **Tabela `big5_oracular_fatores`** — Os 5 fatores simbólicos
-2. **Tabela `big5_oracular_perguntas`** — As 30 perguntas exatas
-3. **Tabela `big5_oracular_registros`** — Resultados das usuárias
+3. **Página Principal** ✅
+   - `src/pages/Big5Oracular.tsx`
+   - Fluxo: Aviso ético → Questionário → Resultado
 
-## Sequência de Implementação
+4. **Rota** ✅
+   - `/ferramenta/big5-oracular` adicionada no App.tsx
 
-### Etapa 1: Banco de Dados (PENDENTE)
-- Criar as 3 tabelas com RLS
-- Inserir os 5 fatores simbólicos
-- Inserir as 30 perguntas exatas
+5. **Visualização** ✅
+   - Gráfico radial com os 5 fatores
+   - Narrativas simbólicas por fator
+   - Indicação de fator predominante/fragilizado
 
-### Etapa 2: Hook React
-- Criar `src/hooks/useBig5Oracular.ts`
-- Lógica de fetch e cálculo de médias
+## Acesso
 
-### Etapa 3: Página Principal
-- Criar `src/pages/Big5Oracular.tsx`
-- Fluxo: Aviso ético → Questionário → Resultado
-
-### Etapa 4: Rota
-- Adicionar rota `/ferramenta/big5-oracular` no App.tsx
-
-### Etapa 5: Visualização
-- Componente de resultado com gráfico radial
-- Narrativas simbólicas por fator
-
-## Ação Necessária
-Aprovar a migração do banco de dados para prosseguir com a implementação.
-
+Rota: `/ferramenta/big5-oracular`
+Portal mínimo: `mentorada`

@@ -523,6 +523,122 @@ export type Database = {
         }
         Relationships: []
       }
+      big5_oracular_fatores: {
+        Row: {
+          ativo: boolean | null
+          chave: string
+          cor_primaria: string | null
+          created_at: string | null
+          descricao_simbolica: string | null
+          id: string
+          narrativa_elevada: string | null
+          narrativa_fragil: string | null
+          nome: string
+          nome_ocean: string
+          ordem: number
+          simbolo: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          chave: string
+          cor_primaria?: string | null
+          created_at?: string | null
+          descricao_simbolica?: string | null
+          id?: string
+          narrativa_elevada?: string | null
+          narrativa_fragil?: string | null
+          nome: string
+          nome_ocean: string
+          ordem: number
+          simbolo?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          chave?: string
+          cor_primaria?: string | null
+          created_at?: string | null
+          descricao_simbolica?: string | null
+          id?: string
+          narrativa_elevada?: string | null
+          narrativa_fragil?: string | null
+          nome?: string
+          nome_ocean?: string
+          ordem?: number
+          simbolo?: string | null
+        }
+        Relationships: []
+      }
+      big5_oracular_perguntas: {
+        Row: {
+          ativo: boolean | null
+          created_at: string | null
+          fator_id: string
+          id: string
+          ordem: number
+          texto_pergunta: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string | null
+          fator_id: string
+          id?: string
+          ordem: number
+          texto_pergunta: string
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string | null
+          fator_id?: string
+          id?: string
+          ordem?: number
+          texto_pergunta?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "big5_oracular_perguntas_fator_id_fkey"
+            columns: ["fator_id"]
+            isOneToOne: false
+            referencedRelation: "big5_oracular_fatores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      big5_oracular_registros: {
+        Row: {
+          created_at: string | null
+          fator_fragilizado: string | null
+          fator_predominante: string | null
+          id: string
+          medias_json: Json
+          reflexao_pessoal: string | null
+          respostas_json: Json
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          fator_fragilizado?: string | null
+          fator_predominante?: string | null
+          id?: string
+          medias_json?: Json
+          reflexao_pessoal?: string | null
+          respostas_json?: Json
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          fator_fragilizado?: string | null
+          fator_predominante?: string | null
+          id?: string
+          medias_json?: Json
+          reflexao_pessoal?: string | null
+          respostas_json?: Json
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       big5_questionario: {
         Row: {
           ativo: boolean
