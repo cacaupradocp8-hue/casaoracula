@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { ModularPageRenderer } from "@/components/modular/ModularPageRenderer";
 import { ContentPageLayout } from "@/components/shared/ContentPageLayout";
 import { useContentBlocks } from "@/hooks/useContentBlocks";
+import { UnifiedAudioPlayer } from "@/components/audio/UnifiedAudioPlayer";
 
 interface Quiz {
   id: string;
@@ -379,23 +380,18 @@ export default function QuizPage() {
 
         {/* 2. AUDIO */}
         {result.audio_url && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                🎧 Mensagem em Áudio
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <audio controls className="w-full">
-                <source src={result.audio_url} type="audio/mpeg" />
-                Seu navegador não suporta o elemento de áudio.
-              </audio>
-            </CardContent>
-          </Card>
+          <UnifiedAudioPlayer
+            audioUrl={result.audio_url}
+            title="🎧 Mensagem em Áudio"
+            size="lg"
+            className="mt-4"
+          />
         )}
       </div>
     );
   };
+
+  // Import statement for UnifiedAudioPlayer is handled at top
 
   // Image Banner Component - renders the result image as a full-width banner
   const ResultImageBanner = ({ result }: { result: Resultado }) => {

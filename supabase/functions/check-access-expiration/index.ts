@@ -17,12 +17,53 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Call the database function to check and expire access
+    // 1. Call the database function to check and expire access (profiles)
     const { data: expiredCount, error } = await supabase.rpc('check_and_expire_access');
 
     if (error) {
-      console.error('Error running expiration check:', error);
+      console.error('Error running profile expiration check:', error);
       throw error;
+    }
+
+    // 2. Expire degustação requests that have passed their expiration time
+    const { data: expiredDegustacoes, error: degustacaoError } = await supabase
+      .from('degustacao_requests')
+      .update({ status: 'expirado' })
+      .eq('status', 'aprovado')
+      .lt('expira_em', new Date().toISOString())
+      .select('id, user_id');
+
+    if (degustacaoError) {
+      console.error('Error expiring degustações:', degustacaoError);
+    }
+
+    // 3. Revert portal for users whose degustação just expired
+    let degustacaoExpiredCount = 0;
+    if (expiredDegustacoes && expiredDegustacoes.length > 0) {
+      degustacaoExpiredCount = expiredDegustacoes.length;
+      
+      for (const deg of expiredDegustacoes) {
+        // Revert user portal to visitante
+        await supabase
+          .from('profiles')
+          .update({ portal: 'visitante' })
+          .eq('id', deg.user_id);
+
+        await supabase
+          .from('user_roles')
+          .update({ portal: 'visitante' })
+          .eq('user_id', deg.user_id);
+
+        // Notify user that degustação expired
+        await supabase
+          .from('notifications')
+          .insert({
+            user_id: deg.user_id,
+            type: 'info',
+            title: 'Degustação encerrada',
+            body: 'Seu período de degustação de 24h foi encerrado. Conheça nossos planos para continuar acessando a Casa.',
+          });
+      }
     }
 
     // Log the expiration run
@@ -38,13 +79,14 @@ Deno.serve(async (req) => {
       console.warn('Could not log expiration run:', logError);
     }
 
-    console.log(`Access expiration check completed. Expired users: ${expiredCount}`);
+    console.log(`Access expiration check completed. Expired users: ${expiredCount}, Expired degustações: ${degustacaoExpiredCount}`);
 
     return new Response(
       JSON.stringify({
         success: true,
         expired_count: expiredCount,
-        message: `Checked and expired ${expiredCount} user(s)`,
+        degustacao_expired_count: degustacaoExpiredCount,
+        message: `Checked and expired ${expiredCount} user(s), ${degustacaoExpiredCount} degustação(ões)`,
         timestamp: new Date().toISOString(),
       }),
       {

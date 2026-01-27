@@ -9,6 +9,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { ArrowLeft, ArrowRight, Check, Play, FileText, Download, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { DiarioBordoAula } from '@/components/shared/DiarioBordoAula';
+import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
+import { getPublicAudioUrl } from '@/lib/audioUtils';
 
 interface Aula {
   id: string;
@@ -278,20 +280,13 @@ export default function AulaPage() {
         )}
 
         {/* Audio */}
-        {aula.audio_url && getAudioUrl(aula.audio_url) && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Play className="w-4 h-4 text-gold" />
-                Áudio da Aula
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <audio controls className="w-full">
-                <source src={getAudioUrl(aula.audio_url)!} />
-              </audio>
-            </CardContent>
-          </Card>
+        {aula.audio_url && (
+          <UnifiedAudioPlayer
+            audioUrl={aula.audio_url}
+            title="Áudio da Aula"
+            size="lg"
+            className="mb-8"
+          />
         )}
 
         {/* Content */}

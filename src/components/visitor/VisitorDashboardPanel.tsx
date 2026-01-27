@@ -30,6 +30,8 @@ import {
 import { useDegustacao } from '@/hooks/useDegustacao';
 import { cn } from '@/lib/utils';
 import { ModularPageRenderer } from '@/components/modular/ModularPageRenderer';
+import { supabase } from '@/integrations/supabase/client';
+import { useEffect, useState as useReactState } from 'react';
 
 // Landing context ID for visitor home
 const VISITOR_LANDING_ID = 'visitor-home';
@@ -104,9 +106,17 @@ const FREE_FEATURES = [
 
 export function VisitorDashboardPanel() {
   const navigate = useNavigate();
-  const { myRequest, isLoading, isSubmitting, hasDegustacaoActive, requestDegustacao } = useDegustacao();
+  const { myRequest, isLoading, isSubmitting, hasDegustacaoActive, requestDegustacao, refetch } = useDegustacao();
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [motivo, setMotivo] = useState('');
+  const [hadDegustacaoExpired, setHadDegustacaoExpired] = useReactState(false);
+
+  // Check if user had an expired degustação
+  useEffect(() => {
+    if (myRequest?.status === 'expirado') {
+      setHadDegustacaoExpired(true);
+    }
+  }, [myRequest]);
 
   const handleRequestDegustacao = async () => {
     const success = await requestDegustacao(motivo);
@@ -120,6 +130,38 @@ export function VisitorDashboardPanel() {
 
   return (
     <div className="space-y-6">
+      {/* Expired Degustação Banner */}
+      {hadDegustacaoExpired && !hasDegustacaoActive && !hasPendingRequest && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="flex items-center gap-3 flex-1">
+              <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center shrink-0">
+                <Clock className="w-5 h-5 text-amber-400" />
+              </div>
+              <div>
+                <h3 className="font-medium text-amber-400">Sua degustação foi encerrada</h3>
+                <p className="text-sm text-amber-400/70">
+                  Seu período de 24h terminou. Conheça nossos planos para continuar acessando a Casa.
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/planos')}
+              className="gap-2 border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+            >
+              Conhecer planos
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </motion.div>
+      )}
+
       {/* Active Degustação Banner */}
       {hasDegustacaoActive && myRequest?.expira_em && (
         <motion.div

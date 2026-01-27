@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Gift, 
@@ -10,7 +10,8 @@ import {
   AlertCircle,
   CheckCircle,
   XCircle,
-  TimerOff
+  TimerOff,
+  StopCircle
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -36,7 +37,7 @@ const STATUS_CONFIG = {
     borderColor: 'border-yellow-500/30',
   },
   aprovado: {
-    label: 'Aprovado',
+    label: 'Ativo',
     icon: CheckCircle,
     color: 'text-emerald-400',
     bgColor: 'bg-emerald-500/10',
@@ -60,21 +61,51 @@ const STATUS_CONFIG = {
 
 type StatusType = keyof typeof STATUS_CONFIG;
 
+// Helper to calculate time remaining
+function getTimeRemaining(expiraEm: string | null): { text: string; isActive: boolean } {
+  if (!expiraEm) return { text: '', isActive: false };
+  
+  const now = new Date();
+  const expires = new Date(expiraEm);
+  const diff = expires.getTime() - now.getTime();
+  
+  if (diff <= 0) return { text: 'Expirado', isActive: false };
+  
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  
+  if (hours > 0) {
+    return { text: `${hours}h ${minutes}min restantes`, isActive: true };
+  }
+  return { text: `${minutes}min restantes`, isActive: true };
+}
+
 export function AdminDegustacaoTab() {
   const { 
     requests, 
-    pendingCount, 
+    pendingCount,
+    activeCount, 
     isLoading, 
     isProcessing,
     approveRequest, 
     rejectRequest,
+    endRequest,
     refetch 
   } = useDegustacaoAdmin();
   
   const [selectedRequest, setSelectedRequest] = useState<string | null>(null);
-  const [actionType, setActionType] = useState<'approve' | 'reject' | null>(null);
+  const [actionType, setActionType] = useState<'approve' | 'reject' | 'end' | null>(null);
   const [adminNotes, setAdminNotes] = useState('');
   const [filter, setFilter] = useState<StatusType | 'all'>('all');
+  const [, setTick] = useState(0);
+
+  // Update time remaining every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTick(t => t + 1);
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleAction = async () => {
     if (!selectedRequest || !actionType) return;
@@ -82,8 +113,10 @@ export function AdminDegustacaoTab() {
     let success = false;
     if (actionType === 'approve') {
       success = await approveRequest(selectedRequest, adminNotes);
-    } else {
+    } else if (actionType === 'reject') {
       success = await rejectRequest(selectedRequest, adminNotes);
+    } else if (actionType === 'end') {
+      success = await endRequest(selectedRequest, adminNotes);
     }
 
     if (success) {
@@ -93,7 +126,7 @@ export function AdminDegustacaoTab() {
     }
   };
 
-  const openActionDialog = (requestId: string, action: 'approve' | 'reject') => {
+  const openActionDialog = (requestId: string, action: 'approve' | 'reject' | 'end') => {
     setSelectedRequest(requestId);
     setActionType(action);
     setAdminNotes('');
@@ -173,6 +206,8 @@ export function AdminDegustacaoTab() {
             const StatusIcon = config.icon;
             const userName = request.profiles?.nome || request.profiles?.email || 'Usuário';
             const isPending = status === 'pendente';
+            const isApproved = status === 'aprovado';
+            const timeRemaining = getTimeRemaining(request.expira_em);
 
             return (
               <motion.div
@@ -182,7 +217,8 @@ export function AdminDegustacaoTab() {
               >
                 <Card className={cn(
                   "transition-all",
-                  isPending && "border-yellow-500/30 bg-yellow-500/5"
+                  isPending && "border-yellow-500/30 bg-yellow-500/5",
+                  isApproved && timeRemaining.isActive && "border-emerald-500/30 bg-emerald-500/5"
                 )}>
                   <CardContent className="p-4">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -218,7 +254,15 @@ export function AdminDegustacaoTab() {
                         {config.label}
                       </Badge>
 
-                      {/* Actions */}
+                      {/* Time Remaining for Active */}
+                      {isApproved && timeRemaining.isActive && (
+                        <Badge className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                          <Clock className="w-3 h-3 mr-1" />
+                          {timeRemaining.text}
+                        </Badge>
+                      )}
+
+                      {/* Actions for Pending */}
                       {isPending && (
                         <div className="flex gap-2">
                           <Button
@@ -238,6 +282,19 @@ export function AdminDegustacaoTab() {
                             Aprovar
                           </Button>
                         </div>
+                      )}
+
+                      {/* End button for Active */}
+                      {isApproved && timeRemaining.isActive && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => openActionDialog(request.id, 'end')}
+                          className="text-amber-400 border-amber-500/30 hover:bg-amber-500/10"
+                        >
+                          <StopCircle className="w-4 h-4 mr-1" />
+                          Encerrar
+                        </Button>
                       )}
                     </div>
 
@@ -259,11 +316,11 @@ export function AdminDegustacaoTab() {
                       </div>
                     )}
 
-                    {/* Expiration for approved */}
-                    {status === 'aprovado' && request.expira_em && (
+                    {/* Expiration info for approved */}
+                    {isApproved && request.expira_em && !timeRemaining.isActive && (
                       <div className="mt-2">
-                        <p className="text-xs text-emerald-400">
-                          Expira em: {new Date(request.expira_em).toLocaleString('pt-BR')}
+                        <p className="text-xs text-muted-foreground">
+                          Expirou em: {new Date(request.expira_em).toLocaleString('pt-BR')}
                         </p>
                       </div>
                     )}
@@ -292,6 +349,11 @@ export function AdminDegustacaoTab() {
                   <Check className="w-5 h-5 text-emerald-400" />
                   Aprovar Degustação
                 </>
+              ) : actionType === 'end' ? (
+                <>
+                  <StopCircle className="w-5 h-5 text-amber-400" />
+                  Encerrar Degustação
+                </>
               ) : (
                 <>
                   <X className="w-5 h-5 text-red-400" />
@@ -302,6 +364,8 @@ export function AdminDegustacaoTab() {
             <DialogDescription>
               {actionType === 'approve'
                 ? 'Ao aprovar, o usuário terá acesso de mentorada por 24 horas.'
+                : actionType === 'end'
+                ? 'O acesso será revogado imediatamente e o usuário será notificado.'
                 : 'Ao rejeitar, o usuário será notificado e poderá solicitar novamente no futuro.'
               }
             </DialogDescription>
@@ -316,6 +380,8 @@ export function AdminDegustacaoTab() {
               onChange={(e) => setAdminNotes(e.target.value)}
               placeholder={actionType === 'approve' 
                 ? 'Mensagem de boas-vindas...'
+                : actionType === 'end'
+                ? 'Motivo do encerramento...'
                 : 'Motivo da rejeição...'
               }
               className="min-h-[80px] resize-none"
@@ -334,10 +400,10 @@ export function AdminDegustacaoTab() {
               Cancelar
             </Button>
             <Button
-              variant={actionType === 'approve' ? 'gold' : 'destructive'}
+              variant={actionType === 'approve' ? 'gold' : actionType === 'end' ? 'outline' : 'destructive'}
               onClick={handleAction}
               disabled={isProcessing}
-              className="gap-2"
+              className={cn("gap-2", actionType === 'end' && "text-amber-400 border-amber-500/30")}
             >
               {isProcessing ? (
                 <>
@@ -348,6 +414,11 @@ export function AdminDegustacaoTab() {
                 <>
                   <Check className="w-4 h-4" />
                   Aprovar (24h)
+                </>
+              ) : actionType === 'end' ? (
+                <>
+                  <StopCircle className="w-4 h-4" />
+                  Encerrar Agora
                 </>
               ) : (
                 <>

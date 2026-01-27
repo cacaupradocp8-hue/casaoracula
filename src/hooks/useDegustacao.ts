@@ -289,15 +289,89 @@ export function useDegustacaoAdmin() {
     }
   }, [user, requests, fetchRequests]);
 
+  const endRequest = useCallback(async (requestId: string, notes?: string) => {
+    if (!user || user.portal !== 'admin') return false;
+    
+    setIsProcessing(true);
+    try {
+      const request = requests.find(r => r.id === requestId);
+      if (!request) throw new Error('Request not found');
+
+      // Update request status to expired
+      const { error: updateError } = await supabase
+        .from('degustacao_requests')
+        .update({
+          status: 'expirado',
+          expira_em: new Date().toISOString(),
+          admin_notes: notes || request.admin_notes,
+        })
+        .eq('id', requestId);
+
+      if (updateError) throw updateError;
+
+      // Revert user's portal to visitante
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({
+          portal: 'visitante',
+          access_expires_at: null,
+        })
+        .eq('id', request.user_id);
+
+      if (profileError) throw profileError;
+
+      // Also update user_roles
+      await supabase
+        .from('user_roles')
+        .update({ portal: 'visitante' })
+        .eq('user_id', request.user_id);
+
+      // Notify user
+      await supabase
+        .from('notifications')
+        .insert({
+          user_id: request.user_id,
+          type: 'info',
+          title: 'Degustação encerrada',
+          body: 'Seu acesso de degustação foi encerrado. Conheça nossos planos para continuar acessando a Casa.',
+        });
+
+      toast({
+        title: 'Degustação encerrada',
+        description: 'O acesso foi revogado e o usuário foi notificado.',
+      });
+
+      await fetchRequests();
+      return true;
+    } catch (error) {
+      console.error('Error ending request:', error);
+      toast({
+        title: 'Erro ao encerrar',
+        description: 'Não foi possível encerrar a degustação.',
+        variant: 'destructive',
+      });
+      return false;
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [user, requests, fetchRequests]);
+
   const pendingCount = requests.filter(r => r.status === 'pendente').length;
+  const activeCount = requests.filter(r => {
+    if (r.status !== 'aprovado') return false;
+    if (!r.expira_em) return false;
+    return new Date(r.expira_em) > new Date();
+  }).length;
 
   return {
     requests,
     pendingCount,
+    activeCount,
     isLoading,
     isProcessing,
     approveRequest,
     rejectRequest,
+    endRequest,
     refetch: fetchRequests,
   };
 }
