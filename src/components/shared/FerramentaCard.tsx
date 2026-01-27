@@ -112,6 +112,7 @@ interface FerramentaCardProps {
   ferramenta: FerramentaCardData;
   onClick: () => void;
   colorScheme?: 'gold' | 'purple' | 'emerald' | 'rose';
+  vitrineMode?: boolean;
 }
 
 const colorSchemes = {
@@ -141,21 +142,27 @@ const colorSchemes = {
   },
 };
 
-export function FerramentaCard({ ferramenta, onClick, colorScheme = 'gold' }: FerramentaCardProps) {
+export function FerramentaCard({ ferramenta, onClick, colorScheme = 'gold', vitrineMode = false }: FerramentaCardProps) {
   const { nome, icone, tipo, finalidade, origem, acessivel, portalMinimo } = ferramenta;
   const colors = colorSchemes[colorScheme];
 
   const tipoLabel = tipo ? TIPO_LABELS[tipo] || tipo : null;
   const origemLabel = origem ? ORIGEM_LABELS[origem] || origem : null;
 
+  // In vitrineMode: show icon with lock overlay, keep descriptions, no navigation
+  const isLocked = vitrineMode || !acessivel;
+  const showOriginalIcon = vitrineMode || acessivel;
+
   return (
     <Card
       className={cn(
-        "group transition-all duration-300 cursor-pointer",
-        acessivel && colors.hover,
-        !acessivel && "opacity-60 cursor-not-allowed"
+        "group transition-all duration-300",
+        !isLocked && "cursor-pointer",
+        !isLocked && colors.hover,
+        isLocked && !vitrineMode && "opacity-60 cursor-not-allowed",
+        vitrineMode && "cursor-default opacity-80"
       )}
-      onClick={() => acessivel && onClick()}
+      onClick={() => !isLocked && onClick()}
     >
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-2">
@@ -163,14 +170,20 @@ export function FerramentaCard({ ferramenta, onClick, colorScheme = 'gold' }: Fe
           <div className="flex items-center gap-2">
             <div
               className={cn(
-                "w-10 h-10 rounded-lg flex items-center justify-center text-lg shrink-0",
-                acessivel ? colors.icon : "bg-muted text-muted-foreground"
+                "relative w-10 h-10 rounded-lg flex items-center justify-center text-lg shrink-0",
+                showOriginalIcon ? colors.icon : "bg-muted text-muted-foreground"
               )}
             >
-              {acessivel ? renderIcon(icone) : <Lock className="w-5 h-5" />}
+              {showOriginalIcon ? renderIcon(icone) : <Lock className="w-5 h-5" />}
+              {/* Small lock overlay for vitrine mode */}
+              {vitrineMode && (
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-background border border-border flex items-center justify-center">
+                  <Lock className="w-2.5 h-2.5 text-muted-foreground" />
+                </div>
+              )}
             </div>
-            {tipoLabel && acessivel && (
-              <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0", colors.badge)}>
+            {tipoLabel && (acessivel || vitrineMode) && (
+              <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0", vitrineMode ? "opacity-70" : colors.badge)}>
                 {tipoLabel}
               </Badge>
             )}
@@ -183,29 +196,32 @@ export function FerramentaCard({ ferramenta, onClick, colorScheme = 'gold' }: Fe
         <CardTitle
           className={cn(
             "text-base leading-tight",
-            acessivel && colors.text,
+            !isLocked && colors.text,
             "transition-colors"
           )}
         >
           {nome}
         </CardTitle>
 
-        {/* Purpose (1 line) */}
+        {/* Purpose (1 line) - In vitrineMode, always show finalidade */}
         <CardDescription className="text-sm line-clamp-2">
-          {acessivel
+          {vitrineMode
             ? (finalidade || "Ferramenta simbólica do método")
-            : `Disponível a partir do portal ${portalMinimo?.replace("_", "-") || "superior"}`}
+            : acessivel
+              ? (finalidade || "Ferramenta simbólica do método")
+              : `Disponível a partir do portal ${portalMinimo?.replace("_", "-") || "superior"}`}
         </CardDescription>
 
         {/* Origin Badge + CTA */}
         <div className="flex items-center justify-between pt-2">
-          {acessivel && origemLabel ? (
+          {(acessivel || vitrineMode) && origemLabel ? (
             <span className="text-[10px] text-muted-foreground/70">{origemLabel}</span>
           ) : (
             <span />
           )}
           
-          {acessivel && (
+          {/* Hide button in vitrineMode */}
+          {acessivel && !vitrineMode && (
             <Button variant="ghost" size="sm" className={cn("h-7 px-2 gap-1", colors.text)}>
               Abrir
               <ArrowRight className="w-3.5 h-3.5" />

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { Compass, Lock } from 'lucide-react';
+import { Compass, Lock, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface TourSection {
@@ -103,15 +104,24 @@ export function FerramentasSection({ section, ferramentas }: FerramentasSectionP
           ))}
         </motion.div>
 
-        {/* Note */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+        {/* CTA to Vitrine */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center text-sm text-muted-foreground mt-8"
+          className="text-center mt-10"
         >
-          E muitas outras ferramentas aguardam por você dentro da Casa...
-        </motion.p>
+          <Link 
+            to="/ferramentas-vitrine"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 transition-colors font-medium"
+          >
+            Ver todas as ferramentas
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+          <p className="text-sm text-muted-foreground mt-3">
+            Explore a vitrine completa de recursos disponíveis na formação
+          </p>
+        </motion.div>
       </div>
     </section>
   );
