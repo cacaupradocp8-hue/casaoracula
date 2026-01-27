@@ -20,6 +20,8 @@ import {
   Heart,
   Flame,
   Mountain,
+  Flower2,
+  Scale,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -42,6 +44,8 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Heart,
   Flame,
   Mountain,
+  Flower2,
+  Scale,
   // lowercase variants
   brain: Brain,
   map: Map,
@@ -59,6 +63,8 @@ const ICON_MAP: Record<string, LucideIcon> = {
   heart: Heart,
   flame: Flame,
   mountain: Mountain,
+  flower2: Flower2,
+  scale: Scale,
 };
 
 // Helper to render icon - either from map or as emoji
