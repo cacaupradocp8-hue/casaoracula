@@ -1,164 +1,159 @@
 
+# Plano: Estrutura Completa dos 12 Ciclos do Clube do Livro Oracular
 
-# Plano: Estrutura de 4 Semanas do Clube do Livro
+## Situacao Atual
 
-## Resumo da Mudança
+O banco de dados ja possui:
+- 1 ciclo cadastrado: "Mulheres que Correm com Lobos" (id: 9ab2832e-...)
+- 5 fases neste ciclo (4 padrao + 1 manual)
+- Estrutura de tabelas completa para ciclos, fases, perguntas, escutas e encontros
+- Campos clinicos disponiveis (orientacao_clinica_uso, evitar, riscos, indicado, contraindicado)
+- Campos de semana disponiveis (numero_semana, leitura_orientada, alerta_clinico, etc.)
 
-A estrutura atual usa 4 fases genéricas (Chamado, Ruptura, Reorganização, Integração). A nova especificação exige uma estrutura de **4 SEMANAS** com conteúdo muito mais rico e específico por semana, incluindo:
+## O Que Sera Criado
 
-- Textos de orientação fixos por semana
-- Alertas clínicos com avisos éticos
-- Pontes com outras Salas (ex: Sala da Sustentação)
-- Listas de uso inadequado
-- Capítulos específicos de leitura orientada
+### 1. Botao de Importacao em Massa no Admin
 
----
+Adicionar um botao **"Importar Calendario Anual"** no AdminClubeLivroTab que:
+- Cria automaticamente os 12 ciclos com titulos, autores e temas simbolicos
+- Gera as 4 semanas padrao para cada ciclo com a estrutura especificada
+- Preenche os campos clinicos basicos para livros que precisam
+- Define datas de inicio/fim baseadas em ciclos de 6 semanas
 
-## Arquitetura Proposta
-
-### Nova Estrutura de Fases/Semanas
-
-```text
-SEMANA 0 — Ritual de Abertura (já implementado, precisa atualização)
-SEMANA 1 — O Arquétipo Não É a Cliente
-SEMANA 2 — O Risco da Projeção da Facilitadora
-SEMANA 3 — Quando Não Usar um Conto
-SEMANA 4 — Integração e Fechamento
-```
-
----
-
-## Mudanças no Banco de Dados
-
-### Tabela: clube_livro_fases
-
-Adicionar campos para suportar o conteúdo rico por semana:
-
-| Campo | Tipo | Descrição |
-|-------|------|-----------|
-| `numero_semana` | integer | Número da semana (0, 1, 2, 3, 4) |
-| `leitura_orientada` | text | Capítulos/seções para ler |
-| `alerta_clinico` | text | Aviso clínico fixo (ex: "O arquétipo é campo, não rótulo") |
-| `observacao_clinica` | text | Observação mais longa |
-| `lista_uso_inadequado` | text[] | Lista de situações a evitar |
-| `ponte_sala_id` | uuid | Link para outra Sala (referência) |
-| `ponte_sala_texto` | text | Texto explicativo da ponte |
-| `texto_fechamento` | text | Bloco de fechamento da semana |
-
----
-
-## Mudanças na UI
-
-### 1. Página de Ritual (ClubeLivroRitual.tsx)
-
-Atualizar o texto do manifesto para o novo texto canônico:
+### 2. Dados dos 12 Ciclos
 
 ```text
-"Este não é um clube de leitura.
-É um campo de escuta simbólica.
+CICLO 1 - DESPERTAR
+  Livro: Mulheres que Correm com os Lobos
+  Autor: Clarissa Pinkola Estes
+  Tema: DESPERTAR
 
-Não lemos para entender histórias.
-Lemos para sustentar imagens sem invadir.
+CICLO 2 - COLAPSO DO PERSONAGEM
+  Livro: O Codigo do Ser
+  Autor: James Hillman
+  Tema: COLAPSO DO PERSONAGEM
 
-Se você costuma explicar demais, apressar sentidos ou salvar personagens,
-este ciclo vai te desacelerar."
+CICLO 3 - CORPO & SOMBRA
+  Livro: A Coruja Era Filha do Padeiro
+  Autor: Marion Woodman
+  Tema: CORPO & SOMBRA
+
+CICLO 4 - ESPACO POTENCIAL
+  Livro: O Brincar e a Realidade
+  Autor: Donald Winnicott
+  Tema: ESPACO POTENCIAL
+
+CICLO 5 - DESEJO & AMBIVALENCIA
+  Livro: Inteligencia Erotica
+  Autor: Esther Perel
+  Tema: DESEJO & AMBIVALENCIA
+
+CICLO 6 - QUEDA & DIGNIDADE
+  Livro: O Acontecimento
+  Autor: Annie Ernaux
+  Tema: QUEDA & DIGNIDADE
+
+CICLO 7 - NARRATIVA COMO CURA
+  Livro: Ficcoes que Curam
+  Autor: James Hillman
+  Tema: NARRATIVA COMO CURA
+
+CICLO 8 - CASA PSIQUICA
+  Livro: A Poetica do Espaco
+  Autor: Gaston Bachelard
+  Tema: CASA PSIQUICA
+
+CICLO 9 - ATENCAO & LIMITE
+  Livro: A Gravidade e a Graca
+  Autor: Simone Weil
+  Tema: ATENCAO & LIMITE
+
+CICLO 10 - RESPONSABILIDADE
+  Livro: A Condicao Humana
+  Autor: Hannah Arendt
+  Tema: RESPONSABILIDADE
+
+CICLO 11 - ESCRITA COMO PRATICA
+  Livro: O Poder da Escrita
+  Autor: Christina Baldwin
+  Tema: ESCRITA COMO PRATICA
+
+CICLO 12 - LINGUAGEM VIVA
+  Livro: Agua Viva
+  Autor: Clarice Lispector
+  Tema: LINGUAGEM VIVA
 ```
 
-Checkbox atualizado:
-- "Aceito ler sem interpretar para o outro."
+### 3. Estrutura de 4 Semanas por Ciclo
 
-### 2. Página de Fase/Semana (ClubeLivroFase.tsx)
+Para cada ciclo, serao criadas 4 semanas com a estrutura canonica:
 
-Expandir para exibir todos os novos blocos:
+| Semana | Titulo | Tipo | Descricao |
+|--------|--------|------|-----------|
+| 1 | O Arquetipo Nao E a Cliente | chamado | Diferenca entre simbolo e identidade |
+| 2 | O Risco da Projecao da Facilitadora | ruptura | Quando a leitura vira identificacao |
+| 3 | Quando Nao Usar um Conto | reorganizacao | Contraindicacoes e uso inadequado |
+| 4 | Integracao e Fechamento | integracao | Consolidacao do ciclo |
 
-1. **Número da Semana** (header visual)
-2. **Leitura Orientada** (capítulos em destaque)
-3. **Pergunta-Guia** (já existe)
-4. **Alerta Clínico** (card vermelho/amber)
-5. **Observação Clínica** (texto expandido)
-6. **Lista de Uso Inadequado** (bullets com ícone de proibido)
-7. **Ponte com Sala** (card com botão de navegação)
-8. **Texto de Fechamento** (bloco final)
+### 4. Conteudo Clinico Padrao (Mulheres que Correm com Lobos)
 
-### 3. Admin (AdminClubeLivroTab.tsx)
+Para o primeiro ciclo, ja preenchido como exemplo:
 
-Expandir o editor de fases para incluir todos os novos campos:
-- Campo de número da semana
-- Textarea para leitura orientada
-- Textarea para alerta clínico
-- Textarea para observação clínica
-- Editor de lista (uso inadequado)
-- Seletor de Sala para ponte
-- Textarea para texto da ponte
-- Textarea para fechamento
+**Quando usar com clientes:**
+- Cliente desconectada do corpo
+- Excesso de adaptacao
+- Apagamento do desejo
 
----
+**Quando evitar:**
+- Crise psicotica
+- Luto recente
+- Ego fragilizado
 
-## Fluxo Visual por Semana
-
-```text
-┌─────────────────────────────────────────────────────────┐
-│  SEMANA 1 — O Arquétipo Não É a Cliente                │
-├─────────────────────────────────────────────────────────┤
-│  📖 LEITURA ORIENTADA                                   │
-│  Introdução + Capítulo: La Loba                        │
-├─────────────────────────────────────────────────────────┤
-│  ✨ PERGUNTA-GUIA                                       │
-│  "Onde eu costumo confundir símbolo com identidade?"   │
-│  [    Campo de escrita privada    ]  [Salvar]          │
-├─────────────────────────────────────────────────────────┤
-│  ⚠️ ALERTA CLÍNICO                                     │
-│  Nunca diga à cliente: "Você é a mulher selvagem."     │
-│  O arquétipo é campo, não rótulo.                      │
-├─────────────────────────────────────────────────────────┤
-│  🜁 PONTE COM SALA DA SUSTENTAÇÃO                      │
-│  "Se esta leitura ativar excesso de identificação      │
-│  ou impulso de condução, pause."                       │
-│                     [Ir para a Sala da Sustentação]    │
-└─────────────────────────────────────────────────────────┘
-```
+**Riscos de projecao da terapeuta:**
+- Romantizar sofrimento
+- Projetar propria iniciacao
 
 ---
 
 ## Arquivos a Modificar
 
-1. **Migração SQL** - Adicionar novos campos na tabela `clube_livro_fases`
+### 1. src/components/admin/AdminClubeLivroTab.tsx
 
-2. **src/hooks/useClubeLivro.ts** - Atualizar interface `ClubeFase` com novos campos
+Adicionar:
+- Botao "Importar Calendario Anual (12 Ciclos)"
+- Mutation para inserir os 12 ciclos em massa
+- Mutation para gerar as 4 semanas de cada ciclo
+- Confirmacao antes da importacao
 
-3. **src/pages/clube-livro/ClubeLivroRitual.tsx** - Atualizar texto canônico e checkbox
+### 2. src/hooks/useClubeLivro.ts
 
-4. **src/pages/clube-livro/ClubeLivroFase.tsx** - Expandir para exibir:
-   - Número da semana
-   - Leitura orientada
-   - Alerta clínico
-   - Observação clínica
-   - Lista de uso inadequado
-   - Ponte com sala
-   - Texto de fechamento
-
-5. **src/components/admin/AdminClubeLivroTab.tsx** - Expandir editor de fases com todos os novos campos
-
-6. **src/pages/clube-livro/ClubeLivroCiclo.tsx** - Ajustar visualização das semanas
+Adicionar:
+- Constante CALENDARIO_ANUAL com os dados dos 12 livros
+- Constante SEMANAS_PADRAO com a estrutura das 4 semanas
 
 ---
 
-## Ordem de Implementação
+## Fluxo de Importacao
 
-1. Migração do banco (novos campos)
-2. Atualizar tipos no hook useClubeLivro
-3. Atualizar texto do ritual de abertura
-4. Expandir página de fase/semana
-5. Expandir admin com novos campos
-6. Testar fluxo completo
+```text
+1. Admin clica em "Importar Calendario Anual"
+2. Modal de confirmacao aparece
+3. Ao confirmar:
+   a. Verifica ciclos existentes (evita duplicatas)
+   b. Insere os 12 ciclos com ordem sequencial
+   c. Para cada ciclo, gera as 4 semanas padrao
+   d. Define primeiro ciclo como ativo
+   e. Define todos como rascunho (publicado = false)
+4. Toast de sucesso
+5. Lista atualizada
+```
 
 ---
 
-## Considerações
+## Consideracoes
 
-- O texto do Ritual de Abertura será o novo texto canônico especificado
-- Os campos de lista (uso inadequado) serão armazenados como array de texto
-- A ponte com Sala será opcional e renderizada apenas se configurada
-- O alerta clínico terá destaque visual (cor amber/vermelho)
-- Mantemos compatibilidade com fases existentes (campos novos são nullable)
-
+- O ciclo existente ("Mulheres que Correm com Lobos") sera mantido
+- Novos ciclos serao criados com publicado = false para revisao manual
+- As datas de inicio/fim podem ser definidas manualmente apos importacao
+- Conteudo clinico pode ser preenchido posteriormente no editor expandido
+- Capas dos livros podem ser adicionadas via upload no editor de ciclo
