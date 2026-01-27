@@ -1,165 +1,239 @@
 
-# Plano: Vitrine de Ferramentas para Visitantes
+
+# Plano: Interpretação de Funcionamento Atual — Big Five Funcional
 
 ## Objetivo
 
-Criar uma **página separada** (`/ferramentas-vitrine`) que exibe todas as ferramentas da Casa em estado **bloqueado**, sem alterar a proteção da rota principal `/ferramentas`. Isso permite que visitantes conheçam a riqueza do método antes de entrar.
+Adicionar uma **seção de leitura interpretativa completa** à tela de resultados do Big Five Funcional, exibindo as interpretações dinâmicas para cada dimensão baseadas no nível (alto/baixo).
 
 ---
 
-## Abordagem
+## Situação Atual
 
-| Elemento | Decisão |
-|----------|---------|
-| Rota protegida `/ferramentas` | ✅ Mantida intacta |
-| Nova rota `/ferramentas-vitrine` | ✅ Aberta para visitantes |
-| Estado das ferramentas na vitrine | 🔒 Sempre bloqueado |
-| CTA | Direcionar para Travessia Zero |
+| Elemento | Estado |
+|----------|--------|
+| Tabela `big5_funcional_dimensoes` | ✅ Existe com 5 dimensões |
+| Campo `descricao` | ✅ Existe (descrição curta) |
+| Campos de interpretação alto/baixo | ❌ Não existem |
+| Tela de resultados | ✅ Mostra radar + dimensões alta/baixa |
+| Leitura interpretativa expandida | ❌ Não existe |
 
 ---
 
 ## Arquitetura da Solução
 
 ```text
-/ferramentas-vitrine (NOVA)
-├── Acessível para visitantes autenticados
-├── Busca TODAS as ferramentas ativas do banco
-├── Exibe com FerramentaCard em modo bloqueado
-├── Banner explicativo no topo
-└── CTA para iniciar travessia
+1. BANCO DE DADOS
+   └── Adicionar campos de interpretação à tabela big5_funcional_dimensoes:
+       • interpretacao_alto (TEXT) - texto completo quando resultado é alto
+       • interpretacao_baixo (TEXT) - texto completo quando resultado é baixo
+       • ponto_atencao_alto (TEXT) - ponto de atenção para resultado alto
+       • ponto_atencao_baixo (TEXT) - ponto de atenção para resultado baixo
 
-/ferramentas (EXISTENTE)
-├── Protegido com minPortal="mentorada"
-├── Sem alterações
-└── Lógica de acesso normal
+2. HOOK
+   └── Atualizar interface Dimensao para incluir os novos campos
+
+3. TELA DE RESULTADOS
+   └── Adicionar nova seção "Leitura de Funcionamento Atual"
+       com cards para cada dimensão mostrando:
+       • Ícone/cor da dimensão
+       • Nome da dimensão
+       • Interpretação baseada no nível (alto ou baixo)
+       • Ponto de atenção correspondente
 ```
 
 ---
 
 ## Alterações Técnicas
 
-### 1. Criar Nova Página `FerramentasVitrine`
+### 1. Migração do Banco de Dados
 
-**Arquivo:** `src/pages/FerramentasVitrine.tsx`
+Adicionar 4 novos campos à tabela `big5_funcional_dimensoes`:
 
-Conteúdo:
-- Reutilizar a estrutura visual do `FerramentasHub`
-- Buscar ferramentas ativas do banco (mesma query)
-- **Forçar `acessivel: false`** para todas as ferramentas
-- Não permitir navegação ao clicar nos cards
-- Exibir ícone real com cadeado sobreposto
-
----
-
-### 2. Adicionar Banner de Vitrine
-
-No topo da página, exibir:
-
-```text
-┌─────────────────────────────────────────────────────────┐
-│ 🔐 Vitrine de Ferramentas                               │
-│                                                         │
-│ Estes são os recursos disponíveis para quem atravessa   │
-│ a formação. Para utilizá-los, inicie sua jornada na     │
-│ Sala da Visitante.                                      │
-│                                                         │
-│ [Iniciar Travessia]                                     │
-└─────────────────────────────────────────────────────────┘
+```sql
+ALTER TABLE big5_funcional_dimensoes
+ADD COLUMN interpretacao_alto TEXT,
+ADD COLUMN interpretacao_baixo TEXT,
+ADD COLUMN ponto_atencao_alto TEXT,
+ADD COLUMN ponto_atencao_baixo TEXT;
 ```
 
+Depois, popular com os textos fornecidos:
+
+| Dimensão | interpretacao_alto | ponto_atencao_alto | interpretacao_baixo | ponto_atencao_baixo |
+|----------|-------------------|-------------------|---------------------|---------------------|
+| abertura | Você tende a: aprender com facilidade, questionar padrões... | Pode se dispersar ou se frustrar... | Você tende a: preferir métodos testados... | Pode resistir a mudanças necessárias... |
+| conscienciosidade | Você tende a: cumprir compromissos com responsabilidade... | Pode assumir carga excessiva... | Você tende a: agir de forma mais espontânea... | Pode enfrentar dificuldades com prazos... |
+| extroversao | Você tende a: se energizar em interações sociais... | Pode ter dificuldade em lidar com silêncio... | Você tende a: processar informações internamente... | Pode ser percebida como distante... |
+| amabilidade | Você tende a: considerar o impacto das suas ações... | Pode evitar conflitos necessários... | Você tende a: priorizar autonomia e objetividade... | Pode ser percebida como dura... |
+| neuroticismo | Você tende a: reagir intensamente ao estresse... | Pode se desgastar emocionalmente... | Você tende a: manter estabilidade emocional... | Pode minimizar emoções importantes... |
+
 ---
 
-### 3. Modificar FerramentaCard para Modo Vitrine
+### 2. Atualizar Hook `useBig5Funcional`
 
-**Arquivo:** `src/components/shared/FerramentaCard.tsx`
+**Arquivo:** `src/hooks/useBig5Funcional.ts`
 
-Adicionar prop opcional `vitrineMode`:
+Atualizar a interface `Dimensao`:
 
-```text
-interface FerramentaCardProps {
-  ferramenta: FerramentaCardData;
-  onClick: () => void;
-  colorScheme?: 'gold' | 'purple' | 'emerald' | 'rose';
-  vitrineMode?: boolean;  // NOVO
+```typescript
+export interface Dimensao {
+  id: string;
+  chave: string;
+  nome: string;
+  nome_ingles: string;
+  descricao: string;
+  cor: string;
+  ordem: number;
+  ativo: boolean;
+  // NOVOS CAMPOS
+  interpretacao_alto: string | null;
+  interpretacao_baixo: string | null;
+  ponto_atencao_alto: string | null;
+  ponto_atencao_baixo: string | null;
 }
 ```
 
-Quando `vitrineMode = true`:
-- Exibir o ícone original (não substituir por cadeado)
-- Adicionar cadeado pequeno no canto do ícone
-- Manter descrição da finalidade visível (não mensagem de bloqueio)
-- Remover botão "Abrir"
-- Cursor `cursor-default` (não `cursor-not-allowed`)
+Atualizar também `ResultadoCalculado` para incluir os novos campos:
 
----
-
-### 4. Registrar Rota no App.tsx
-
-**Arquivo:** `src/App.tsx`
-
-```text
-<Route
-  path="/ferramentas-vitrine"
-  element={
-    <ProtectedRoute minPortal="visitante">
-      <FerramentasVitrine />
-    </ProtectedRoute>
-  }
-/>
+```typescript
+export interface ResultadoCalculado {
+  medias: Record<string, number>;
+  dimensaoAlta: { 
+    chave: string; 
+    nome: string; 
+    descricao: string; 
+    cor: string; 
+    media: number;
+    interpretacao_alto: string | null;
+    ponto_atencao_alto: string | null;
+  } | null;
+  dimensaoBaixa: { 
+    chave: string; 
+    nome: string; 
+    descricao: string; 
+    cor: string; 
+    media: number;
+    interpretacao_baixo: string | null;
+    ponto_atencao_baixo: string | null;
+  } | null;
+}
 ```
 
 ---
 
-### 5. Adicionar Link no Menu para Visitantes
+### 3. Nova Seção na Tela de Resultados
 
-**Onde:** Na navegação lateral ou no Tour, adicionar link para `/ferramentas-vitrine` visível para visitantes.
+**Arquivo:** `src/pages/Big5Funcional.tsx`
 
-Possíveis locais:
-- `Navigation.tsx` — item condicional para visitantes
-- `Tour.tsx` — botão "Ver todas as ferramentas"
-- `VisitorHomePage.tsx` — card com CTA
+Adicionar seção "Leitura de Funcionamento Atual" após o radar chart:
+
+```text
+┌─────────────────────────────────────────────────────────────────┐
+│ 📖 LEITURA DE FUNCIONAMENTO ATUAL                               │
+│                                                                 │
+│ Este resultado descreve tendências de funcionamento,            │
+│ não identidade fixa. Ele não define quem você é —               │
+│ indica como você tende a agir hoje.                             │
+├─────────────────────────────────────────────────────────────────┤
+│ 🟦 ABERTURA À EXPERIÊNCIA (alto)                                │
+│                                                                 │
+│ Você tende a:                                                   │
+│ • aprender com facilidade                                       │
+│ • questionar padrões estabelecidos                              │
+│ • se interessar por ideias novas e abordagens diferentes        │
+│                                                                 │
+│ Costuma se adaptar bem a contextos de mudança e inovação.       │
+│                                                                 │
+│ ⚠️ Ponto de atenção:                                            │
+│ Pode se dispersar ou se frustrar em ambientes muito rígidos...  │
+├─────────────────────────────────────────────────────────────────┤
+│ 🟩 CONSCIENCIOSIDADE (alto/baixo)                               │
+│ ...                                                             │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+A lógica para determinar alto/baixo:
+- **Alto**: média ≥ 3.5
+- **Baixo**: média < 3.5
 
 ---
 
-## Resultado Esperado
+### 4. Síntese Automática do Perfil
 
-| Perfil | Acesso `/ferramentas` | Acesso `/ferramentas-vitrine` |
-|--------|----------------------|------------------------------|
-| visitante | ❌ Bloqueado | ✅ Todas bloqueadas (vitrine) |
-| aluna | ❌ Bloqueado | ✅ Todas bloqueadas (vitrine) |
-| mentorada+ | ✅ Normal | ✅ Pode ver vitrine também |
-| admin | ✅ Total | ✅ Pode ver vitrine |
+Adicionar ao final da leitura:
 
----
-
-## Fluxo do Visitante
-
-1. Visitante acessa `/ferramentas-vitrine`
-2. Vê todas as ferramentas organizadas por seção
-3. Cada card mostra:
-   - Ícone original + cadeado pequeno
-   - Nome da ferramenta
-   - Finalidade/descrição
-   - Badge de tipo (quando houver)
-4. Banner no topo explica contexto
-5. CTA leva para Travessia Zero ou Sala da Visitante
+```text
+┌─────────────────────────────────────────────────────────────────┐
+│ 🧭 SÍNTESE DO PERFIL                                            │
+│                                                                 │
+│ Seu funcionamento atual mostra maior tendência em               │
+│ [DIMENSÃO MAIS ALTA] e menor tendência em [DIMENSÃO MAIS BAIXA].│
+│                                                                 │
+│ Isso indica como você costuma reagir, não como deve agir.       │
+│ Padrões podem mudar com contexto, fase de vida e escolhas       │
+│ conscientes.                                                    │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## Benefícios
+### 5. Aviso Ético Fixo
 
-- ✅ Rota protegida permanece intacta
-- ✅ Visitantes conhecem a amplitude do método
-- ✅ Cards mantêm identidade visual (não apenas cadeados)
-- ✅ Nenhuma promessa falsa — tudo claramente bloqueado
-- ✅ Incentivo claro para iniciar a travessia
-- ✅ Reutiliza componentes existentes
+Garantir que o `EthicalNotice` existente esteja presente:
+
+```text
+⚠️ Este resultado não é diagnóstico psicológico.
+   Ele descreve tendências comportamentais em determinado momento.
+```
+
+---
+
+## Estrutura Visual da Tela de Resultados Atualizada
+
+```text
+┌─────────────────────────────────────────────────────────────────┐
+│ SEU PERFIL FUNCIONAL                                            │
+│ [Radar Chart com 5 dimensões]                                   │
+├─────────────────────────────────────────────────────────────────┤
+│ [Cards: Dimensão mais alta | Dimensão mais baixa]               │
+├─────────────────────────────────────────────────────────────────┤
+│ 📖 LEITURA DE FUNCIONAMENTO ATUAL                               │
+│ [Accordion ou Cards para cada dimensão com interpretação]       │
+├─────────────────────────────────────────────────────────────────┤
+│ 🧭 SÍNTESE DO PERFIL                                            │
+│ [Texto dinâmico com resumo]                                     │
+├─────────────────────────────────────────────────────────────────┤
+│ RESUMO POR DIMENSÃO                                             │
+│ [Barras de progresso para todas as 5 dimensões]                 │
+├─────────────────────────────────────────────────────────────────┤
+│ ⚠️ AVISO ÉTICO                                                  │
+│ [EthicalNotice existente]                                       │
+├─────────────────────────────────────────────────────────────────┤
+│ [Botões: Voltar | Refazer]                                      │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
 ## Ordem de Implementação
 
-1. Adicionar prop `vitrineMode` ao `FerramentaCard`
-2. Criar página `FerramentasVitrine.tsx`
-3. Registrar rota em `App.tsx`
-4. Adicionar link na navegação para visitantes
+1. Criar migração para adicionar campos à tabela `big5_funcional_dimensoes`
+2. Popular os campos com os textos de interpretação fornecidos
+3. Atualizar interfaces no hook `useBig5Funcional.ts`
+4. Criar componente `Big5InterpretacaoCard` para cada dimensão
+5. Adicionar seção de leitura na tela de resultados
+6. Adicionar síntese automática do perfil
+7. Testar fluxo completo
+
+---
+
+## Benefícios
+
+- Leitura interpretativa rica e contextualizada
+- Dados dinâmicos vindos do banco (editável pelo Admin)
+- Indicação clara de alto/baixo por dimensão
+- Ponto de atenção específico para cada cenário
+- Linguagem funcional (não psicologizante)
+- Mantém posicionamento ético da Casa Orácula
+
