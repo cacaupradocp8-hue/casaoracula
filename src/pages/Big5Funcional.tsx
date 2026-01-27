@@ -9,10 +9,13 @@ import { EthicalNotice } from '@/components/shared/EthicalNotice';
 import { SalvarJardimModal } from '@/components/shared/SalvarJardimModal';
 import { Big5InterpretacaoCard } from '@/components/big5/Big5InterpretacaoCard';
 import { Big5SintesePerfil } from '@/components/big5/Big5SintesePerfil';
+import { GuardiaLeituraChat } from '@/components/big5/GuardiaLeituraChat';
+import { GuardiaManualProfissional } from '@/components/big5/GuardiaManualProfissional';
 import { useBig5Funcional, Dimensao } from '@/hooks/useBig5Funcional';
+import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import {
   ArrowLeft, 
   ArrowRight, 
   Brain, 
@@ -48,6 +51,7 @@ const ESCALA = [
 export default function Big5Funcional() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { isProfessional } = useProfessionalStatus();
   const { 
     dimensoes, 
     perguntas, 
@@ -219,6 +223,14 @@ export default function Big5Funcional() {
                   </Button>
                 </CardContent>
               </Card>
+
+              {/* Guardiã da Leitura - Intro */}
+              <div className="mt-6">
+                <GuardiaLeituraChat 
+                  contextPage="funcional"
+                  welcomeMessage="Olá! Antes de começar, posso explicar o que esta leitura revela — e o que ela não pretende revelar. Pergunte se quiser."
+                />
+              </div>
             </motion.div>
           )}
 
@@ -519,6 +531,16 @@ export default function Big5Funcional() {
               </div>
 
               <EthicalNotice toolName="Big Five — Leitura Funcional" />
+
+              {/* Guardiã da Leitura - Resultado */}
+              <GuardiaLeituraChat 
+                contextPage="funcional_resultado"
+                welcomeMessage="Você completou a Leitura Funcional. Posso explicar o que significa esse mapa, ou esclarecer a diferença para a Leitura Oracular."
+                defaultOpen
+              />
+
+              {/* Manual para Facilitadoras (apenas profissionais) */}
+              {isProfessional && <GuardiaManualProfissional />}
             </motion.div>
           )}
         </AnimatePresence>
