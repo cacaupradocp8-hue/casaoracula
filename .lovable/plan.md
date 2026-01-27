@@ -1,183 +1,164 @@
 
-# Plano: Expansao do Clube do Livro Oracular
 
-## Resumo do Status Atual
+# Plano: Estrutura de 4 Semanas do Clube do Livro
 
-O sistema base do Clube do Livro Oracular ja foi implementado com:
-- Tabelas no banco de dados (ciclos, fases, perguntas, respostas, escutas, encontros)
-- Paginas: Apresentacao, Ciclo, Fase, Escutas, Encontros
-- Hook `useClubeLivro.ts` para gestao de dados
-- Tab administrativa para gerenciar conteudo
-- Rotas protegidas para nivel `aluna+`
+## Resumo da Mudança
 
-**Problema atual**: O Clube esta "orfao" - nao ha link no menu de navegacao para acessa-lo.
+A estrutura atual usa 4 fases genéricas (Chamado, Ruptura, Reorganização, Integração). A nova especificação exige uma estrutura de **4 SEMANAS** com conteúdo muito mais rico e específico por semana, incluindo:
 
----
-
-## Mudancas Necessarias
-
-### 1. Navegacao e Acesso
-
-**Adicionar link no menu de Recursos:**
-- Arquivo: `src/components/layout/Navigation.tsx`
-- Local: Dentro do bloco `recursos` (linha ~261-321)
-- Item: `{ path: '/clube-livro', label: 'Circulo de Leitura', icon: BookOpen, minPortal: 'aluna' }`
-
-**Adicionar card na pagina Biblioteca:**
-- Arquivo: `src/pages/Biblioteca.tsx`
-- Adicionar secao de destaque para o Clube do Livro com link direto
+- Textos de orientação fixos por semana
+- Alertas clínicos com avisos éticos
+- Pontes com outras Salas (ex: Sala da Sustentação)
+- Listas de uso inadequado
+- Capítulos específicos de leitura orientada
 
 ---
 
-### 2. Alteracoes no Banco de Dados
+## Arquitetura Proposta
 
-Adicionar novos campos para suportar as especificacoes completas:
+### Nova Estrutura de Fases/Semanas
 
 ```text
-Tabela: clube_livro_ciclos
-  - tema_simbolico (text) -- ex: "DESPERTAR", "COLAPSO DO PERSONAGEM"
-  - orientacao_clinica_uso (text) -- Quando usar este livro com clientes
-  - orientacao_clinica_evitar (text) -- Quando nao usar
-  - orientacao_clinica_riscos (text) -- Riscos de projecao da terapeuta
-  - orientacao_clinica_indicado (text) -- Tipo de cliente indicado
-  - orientacao_clinica_contraindicado (text) -- Tipo de cliente contraindicado
-  - ritual_aceite_obrigatorio (boolean, default true) -- Se requer aceite do ritual
-
-Tabela: clube_livro_fases
-  - tipo_fase (text) -- 'chamado', 'ruptura', 'reorganizacao', 'integracao'
-  - orientacao_curta (text) -- texto curto de orientacao por fase
+SEMANA 0 — Ritual de Abertura (já implementado, precisa atualização)
+SEMANA 1 — O Arquétipo Não É a Cliente
+SEMANA 2 — O Risco da Projeção da Facilitadora
+SEMANA 3 — Quando Não Usar um Conto
+SEMANA 4 — Integração e Fechamento
 ```
 
 ---
 
-### 3. Estrutura de Fases Padronizadas
+## Mudanças no Banco de Dados
 
-O sistema atual permite fases flexiveis. A nova especificacao pede 4 fases FIXAS:
-1. **Chamado** - inicio da jornada
-2. **Ruptura** - momento de crise/desorganizacao
-3. **Reorganizacao** - retomada do fio
-4. **Integracao** - consolidacao e encerramento
+### Tabela: clube_livro_fases
 
-**Abordagem**: Manter flexibilidade no banco, mas criar helper no Admin para gerar as 4 fases automaticamente ao criar um novo ciclo.
+Adicionar campos para suportar o conteúdo rico por semana:
 
----
-
-### 4. Ritual de Abertura
-
-**Nova pagina**: `src/pages/clube-livro/ClubeLivroRitual.tsx`
-
-Conteudo fixo (canonico):
-- Fundo escuro
-- Texto-manifesto imutavel
-- Checkbox obrigatorio: "Leio com presenca, nao com pressa."
-- Botao: "Entrar no Ciclo"
-- Salva aceite no localStorage ou banco (por ciclo/usuario)
-
-**Rota**: `/clube-livro/:id/ritual`
-
-**Fluxo**: Apresentacao → Ritual (se nao aceito) → Ciclo
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `numero_semana` | integer | Número da semana (0, 1, 2, 3, 4) |
+| `leitura_orientada` | text | Capítulos/seções para ler |
+| `alerta_clinico` | text | Aviso clínico fixo (ex: "O arquétipo é campo, não rótulo") |
+| `observacao_clinica` | text | Observação mais longa |
+| `lista_uso_inadequado` | text[] | Lista de situações a evitar |
+| `ponte_sala_id` | uuid | Link para outra Sala (referência) |
+| `ponte_sala_texto` | text | Texto explicativo da ponte |
+| `texto_fechamento` | text | Bloco de fechamento da semana |
 
 ---
 
-### 5. Uso Clinico (Profissional)
+## Mudanças na UI
 
-**Nova aba na pagina do Ciclo** para usuarios profissionais verificados:
+### 1. Página de Ritual (ClubeLivroRitual.tsx)
 
-Arquivo: `src/pages/clube-livro/ClubeLivroCiclo.tsx`
-- Adicionar Tab "Uso Clinico" visivel apenas para `isProfessionalVerified`
-- Exibir: 
-  - Quando usar este livro
-  - Quando evitar
-  - Riscos de projecao
-  - Cliente indicado/contraindicado
-- Aviso fixo etico
+Atualizar o texto do manifesto para o novo texto canônico:
 
----
+```text
+"Este não é um clube de leitura.
+É um campo de escuta simbólica.
 
-### 6. Calendario e Arquivo de Ciclos
+Não lemos para entender histórias.
+Lemos para sustentar imagens sem invadir.
 
-**Atualizar pagina de Apresentacao** (`ClubeLivroApresentacao.tsx`):
+Se você costuma explicar demais, apressar sentidos ou salvar personagens,
+este ciclo vai te desacelerar."
+```
 
-Estrutura:
-1. Texto-manifesto (ja existe)
-2. **Ciclo Atual** - em destaque
-3. **Proximos Ciclos** - cards bloqueados com data prevista
-4. **Ciclos Anteriores** - arquivo expandivel
-5. **Regras Eticas** - sempre visivel (texto fixo)
+Checkbox atualizado:
+- "Aceito ler sem interpretar para o outro."
 
----
+### 2. Página de Fase/Semana (ClubeLivroFase.tsx)
 
-### 7. Melhoria no Admin
+Expandir para exibir todos os novos blocos:
 
-Arquivo: `src/components/admin/AdminClubeLivroTab.tsx`
+1. **Número da Semana** (header visual)
+2. **Leitura Orientada** (capítulos em destaque)
+3. **Pergunta-Guia** (já existe)
+4. **Alerta Clínico** (card vermelho/amber)
+5. **Observação Clínica** (texto expandido)
+6. **Lista de Uso Inadequado** (bullets com ícone de proibido)
+7. **Ponte com Sala** (card com botão de navegação)
+8. **Texto de Fechamento** (bloco final)
 
-Adicionar:
-- Campo de tema simbolico
-- Campos de orientacao clinica (5 campos)
-- Toggle para ritual obrigatorio
-- Botao "Gerar Fases Padrao" que cria automaticamente: Chamado, Ruptura, Reorganizacao, Integracao
-- Preview do calendario anual
+### 3. Admin (AdminClubeLivroTab.tsx)
 
----
-
-### 8. Regras de Acesso Diferenciado
-
-O sistema atual usa `portal_minimo = 'aluna'` para todos. A especificacao pede:
-
-| Nivel | Acesso |
-|-------|--------|
-| Visitante | Nenhum |
-| Assinante | Ciclo atual |
-| Aluna Formacao | Ciclo atual + material clinico |
-| Oracula/Certificada | Ciclo atual + material clinico + supervisao |
-
-**Implementacao**: 
-- Campo `portal_minimo_clinico` na tabela ciclos (default: `aluna_formacao`)
-- Verificacao em runtime para exibir/ocultar aba clinica
+Expandir o editor de fases para incluir todos os novos campos:
+- Campo de número da semana
+- Textarea para leitura orientada
+- Textarea para alerta clínico
+- Textarea para observação clínica
+- Editor de lista (uso inadequado)
+- Seletor de Sala para ponte
+- Textarea para texto da ponte
+- Textarea para fechamento
 
 ---
 
-## Arquivos a Criar
+## Fluxo Visual por Semana
 
-1. `src/pages/clube-livro/ClubeLivroRitual.tsx` - Tela de ritual de abertura
-2. Migracao SQL para novos campos
+```text
+┌─────────────────────────────────────────────────────────┐
+│  SEMANA 1 — O Arquétipo Não É a Cliente                │
+├─────────────────────────────────────────────────────────┤
+│  📖 LEITURA ORIENTADA                                   │
+│  Introdução + Capítulo: La Loba                        │
+├─────────────────────────────────────────────────────────┤
+│  ✨ PERGUNTA-GUIA                                       │
+│  "Onde eu costumo confundir símbolo com identidade?"   │
+│  [    Campo de escrita privada    ]  [Salvar]          │
+├─────────────────────────────────────────────────────────┤
+│  ⚠️ ALERTA CLÍNICO                                     │
+│  Nunca diga à cliente: "Você é a mulher selvagem."     │
+│  O arquétipo é campo, não rótulo.                      │
+├─────────────────────────────────────────────────────────┤
+│  🜁 PONTE COM SALA DA SUSTENTAÇÃO                      │
+│  "Se esta leitura ativar excesso de identificação      │
+│  ou impulso de condução, pause."                       │
+│                     [Ir para a Sala da Sustentação]    │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
 
 ## Arquivos a Modificar
 
-1. `src/components/layout/Navigation.tsx` - Adicionar link no menu Recursos
-2. `src/pages/Biblioteca.tsx` - Adicionar card de acesso ao Clube
-3. `src/pages/clube-livro/ClubeLivroApresentacao.tsx` - Reorganizar com ciclos atual/proximos/anteriores
-4. `src/pages/clube-livro/ClubeLivroCiclo.tsx` - Adicionar aba de uso clinico
-5. `src/hooks/useClubeLivro.ts` - Adicionar hooks para ritual aceite e dados clinicos
-6. `src/components/admin/AdminClubeLivroTab.tsx` - Adicionar campos clinicos e gerador de fases
-7. `src/App.tsx` - Adicionar rota `/clube-livro/:id/ritual`
+1. **Migração SQL** - Adicionar novos campos na tabela `clube_livro_fases`
+
+2. **src/hooks/useClubeLivro.ts** - Atualizar interface `ClubeFase` com novos campos
+
+3. **src/pages/clube-livro/ClubeLivroRitual.tsx** - Atualizar texto canônico e checkbox
+
+4. **src/pages/clube-livro/ClubeLivroFase.tsx** - Expandir para exibir:
+   - Número da semana
+   - Leitura orientada
+   - Alerta clínico
+   - Observação clínica
+   - Lista de uso inadequado
+   - Ponte com sala
+   - Texto de fechamento
+
+5. **src/components/admin/AdminClubeLivroTab.tsx** - Expandir editor de fases com todos os novos campos
+
+6. **src/pages/clube-livro/ClubeLivroCiclo.tsx** - Ajustar visualização das semanas
 
 ---
 
-## Ordem de Implementacao
+## Ordem de Implementação
 
-1. Migracao do banco de dados (novos campos)
-2. Atualizar hooks com tipos expandidos
-3. Criar pagina do Ritual de Abertura
-4. Atualizar Apresentacao com estrutura de ciclos
-5. Adicionar aba Uso Clinico na pagina do Ciclo
-6. Atualizar Admin com novos campos
-7. Adicionar link no menu de navegacao
-8. Adicionar card na Biblioteca
+1. Migração do banco (novos campos)
+2. Atualizar tipos no hook useClubeLivro
+3. Atualizar texto do ritual de abertura
+4. Expandir página de fase/semana
+5. Expandir admin com novos campos
+6. Testar fluxo completo
 
 ---
 
-## Consideracoes de Seguranca
+## Considerações
 
-- RLS ja aplicado: respostas sao privadas por usuario
-- Campos clinicos sao apenas leitura (gerenciados por admin)
-- Aceite do ritual pode ser salvo no banco vinculado ao usuario
-- Verificacao de `isProfessionalVerified` para aba clinica
+- O texto do Ritual de Abertura será o novo texto canônico especificado
+- Os campos de lista (uso inadequado) serão armazenados como array de texto
+- A ponte com Sala será opcional e renderizada apenas se configurada
+- O alerta clínico terá destaque visual (cor amber/vermelho)
+- Mantemos compatibilidade com fases existentes (campos novos são nullable)
 
-## Nota sobre UX
-
-- Linguagem simbolica e contida
-- Nada academico ou gamificado
-- Sem obrigatoriedade de participacao
-- Escrita sempre privada
-- Nenhum forum ou feed publico
