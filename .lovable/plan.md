@@ -1,255 +1,183 @@
 
+# Plano: Expansao do Clube do Livro Oracular
 
-# Plano: Guardiã da Leitura — IA Explicativa Big Five
+## Resumo do Status Atual
 
-## Objetivo
+O sistema base do Clube do Livro Oracular ja foi implementado com:
+- Tabelas no banco de dados (ciclos, fases, perguntas, respostas, escutas, encontros)
+- Paginas: Apresentacao, Ciclo, Fase, Escutas, Encontros
+- Hook `useClubeLivro.ts` para gestao de dados
+- Tab administrativa para gerenciar conteudo
+- Rotas protegidas para nivel `aluna+`
 
-Integrar uma **assistente de IA chamada "Guardiã da Leitura"** dentro da estrutura das páginas Big5 (Funcional e Oracular), com a função exclusiva de **explicar a diferença entre as duas leituras** seguindo regras éticas rígidas.
-
----
-
-## Situação Atual
-
-| Elemento | Estado |
-|----------|--------|
-| `AIChatBlock` | Componente modular de chat com IA |
-| Edge Function `ai-chat` | Recebe `contextPrompt` para contextualizar agente |
-| `Big5Funcional.tsx` | Página completa com radar, leitura, síntese |
-| `Big5Oracular.tsx` | Página com mapa simbólico, ritual, decisão |
-| Tabela `agentes` | Armazena agentes com prompt, modelo, temperatura |
-| IA explicativa integrada | Nao existe |
+**Problema atual**: O Clube esta "orfao" - nao ha link no menu de navegacao para acessa-lo.
 
 ---
 
-## Arquitetura da Solução
+## Mudancas Necessarias
+
+### 1. Navegacao e Acesso
+
+**Adicionar link no menu de Recursos:**
+- Arquivo: `src/components/layout/Navigation.tsx`
+- Local: Dentro do bloco `recursos` (linha ~261-321)
+- Item: `{ path: '/clube-livro', label: 'Circulo de Leitura', icon: BookOpen, minPortal: 'aluna' }`
+
+**Adicionar card na pagina Biblioteca:**
+- Arquivo: `src/pages/Biblioteca.tsx`
+- Adicionar secao de destaque para o Clube do Livro com link direto
+
+---
+
+### 2. Alteracoes no Banco de Dados
+
+Adicionar novos campos para suportar as especificacoes completas:
 
 ```text
-1. BANCO DE DADOS
-   └── Criar agente "Guardiã da Leitura" na tabela `agentes`
-       • prompt_personalidade: regras absolutas (sem diagnóstico, sem hierarquia)
-       • instrucoes_base: estrutura de resposta (Funcional → Oracular → Integração)
-       • temperatura: 0.5 (respostas consistentes)
-       • status: ativo
+Tabela: clube_livro_ciclos
+  - tema_simbolico (text) -- ex: "DESPERTAR", "COLAPSO DO PERSONAGEM"
+  - orientacao_clinica_uso (text) -- Quando usar este livro com clientes
+  - orientacao_clinica_evitar (text) -- Quando nao usar
+  - orientacao_clinica_riscos (text) -- Riscos de projecao da terapeuta
+  - orientacao_clinica_indicado (text) -- Tipo de cliente indicado
+  - orientacao_clinica_contraindicado (text) -- Tipo de cliente contraindicado
+  - ritual_aceite_obrigatorio (boolean, default true) -- Se requer aceite do ritual
 
-2. COMPONENTE
-   └── Criar `GuardiaLeituraChat.tsx`
-       • Chat compacto e expansível (accordion ou collapsible)
-       • Mensagem inicial contextualizada
-       • Usa `ai-chat` edge function com agente específico
-       • Perguntas sugeridas para facilitar uso
-
-3. INTEGRAÇÃO NAS PÁGINAS
-   └── Adicionar componente em:
-       • Big5Funcional.tsx (tela intro e resultado)
-       • Big5Oracular.tsx (tela intro e resultado)
-       
-4. MODO PROFISSIONAL (OPCIONAL)
-   └── Seção colapsável "Manual para Facilitadoras"
-       • Ordem correta de aplicação
-       • Como apresentar ao cliente
-       • Frases permitidas e proibidas
-       • Regra de ouro clínica
+Tabela: clube_livro_fases
+  - tipo_fase (text) -- 'chamado', 'ruptura', 'reorganizacao', 'integracao'
+  - orientacao_curta (text) -- texto curto de orientacao por fase
 ```
 
 ---
 
-## Alterações Técnicas
+### 3. Estrutura de Fases Padronizadas
 
-### 1. Criar Agente na Tabela `agentes`
+O sistema atual permite fases flexiveis. A nova especificacao pede 4 fases FIXAS:
+1. **Chamado** - inicio da jornada
+2. **Ruptura** - momento de crise/desorganizacao
+3. **Reorganizacao** - retomada do fio
+4. **Integracao** - consolidacao e encerramento
 
-Migração para inserir o agente "Guardiã da Leitura":
-
-```sql
-INSERT INTO agentes (
-  nome,
-  descricao,
-  prompt_personalidade,
-  instrucoes_base,
-  modelo_preferido,
-  temperatura,
-  max_tokens,
-  status
-) VALUES (
-  'Guardiã da Leitura',
-  'Explica a diferença entre Big Five Funcional e Oracular, sem diagnósticos ou interpretações.',
-  'Você é a Guardiã da Leitura da Casa Orácula.
-
-Sua função é explicar, de forma clara e tranquila, a diferença entre duas leituras oferecidas no app:
-1) Big Five – Leitura Funcional
-2) Big Five – Leitura Oracular
-
-Regras absolutas:
-– Não diagnosticar
-– Não interpretar a usuária
-– Não hierarquizar qual é "melhor"
-– Não usar termos clínicos
-– Não oferecer conselhos de mudança
-
-Sua linguagem deve ser:
-– adulta
-– clara
-– respeitosa
-– simbólica leve, mas não mística',
-  
-  'Estrutura da resposta:
-
-1) Explicar o Big Five Funcional
-   → como um mapa de funcionamento prático
-   → foco em comportamento, rotina, decisões e ambiente
-
-2) Explicar o Big Five Oracular
-   → como um espelho simbólico do momento psíquico
-   → foco em narrativa interna, Portas e travessias
-
-3) Explicar por que os dois não se contradizem
-   → eles observam camadas diferentes da mesma pessoa
-
-4) Encerrar com uma frase de integração, sem convite à ação
-
-Frase-base de encerramento (use variações):
-"O funcional mostra como você opera.
-O oracular mostra onde a alma está trabalhando."',
-
-  'google/gemini-2.5-flash',
-  0.5,
-  800,
-  'ativo'
-);
-```
+**Abordagem**: Manter flexibilidade no banco, mas criar helper no Admin para gerar as 4 fases automaticamente ao criar um novo ciclo.
 
 ---
 
-### 2. Criar Componente `GuardiaLeituraChat`
+### 4. Ritual de Abertura
 
-**Arquivo:** `src/components/big5/GuardiaLeituraChat.tsx`
+**Nova pagina**: `src/pages/clube-livro/ClubeLivroRitual.tsx`
 
-Componente que:
-- Usa o `AIChatBlock` internamente ou reimplementa com UI simplificada
-- Exibe em formato collapsible/accordion
-- Mensagem de boas-vindas contextualizada
-- Perguntas sugeridas clicáveis
+Conteudo fixo (canonico):
+- Fundo escuro
+- Texto-manifesto imutavel
+- Checkbox obrigatorio: "Leio com presenca, nao com pressa."
+- Botao: "Entrar no Ciclo"
+- Salva aceite no localStorage ou banco (por ciclo/usuario)
 
-```text
-┌──────────────────────────────────────────────────────────────┐
-│ 💬 Pergunte à Guardiã da Leitura                       [▼]   │
-├──────────────────────────────────────────────────────────────┤
-│ "Olá! Sou a Guardiã da Leitura. Posso explicar a diferença  │
-│ entre a Leitura Funcional e a Leitura Oracular do Big Five. │
-│ Pergunte o que quiser — sem pressa."                         │
-│                                                              │
-│ Sugestões:                                                   │
-│ [Qual a diferença entre as duas leituras?]                   │
-│ [O resultado pode mudar com o tempo?]                        │
-│ [Posso confiar nesse mapa?]                                  │
-├──────────────────────────────────────────────────────────────┤
-│ [____________________________________] [Enviar]              │
-└──────────────────────────────────────────────────────────────┘
-```
+**Rota**: `/clube-livro/:id/ritual`
+
+**Fluxo**: Apresentacao → Ritual (se nao aceito) → Ciclo
 
 ---
 
-### 3. Criar Seção "Manual para Facilitadoras"
+### 5. Uso Clinico (Profissional)
 
-**Arquivo:** `src/components/big5/GuardiaManualProfissional.tsx`
+**Nova aba na pagina do Ciclo** para usuarios profissionais verificados:
 
-Componente colapsável exibido apenas para usuárias com perfil profissional (`oracula`, `iniciada`, `admin`):
-
-```text
-┌──────────────────────────────────────────────────────────────┐
-│ 📋 Manual para Facilitadoras                            [▼]  │
-├──────────────────────────────────────────────────────────────┤
-│ COMO USAR COM CLIENTES                                       │
-│                                                              │
-│ 1️⃣ Ordem correta                                            │
-│ ✔ Primeiro: Big Five Funcional                              │
-│ ✔ Depois (se houver campo): Big Five Oracular               │
-│ Nunca o inverso.                                             │
-│                                                              │
-│ 2️⃣ Como apresentar                                          │
-│ "Este primeiro mapa mostra como você tende a funcionar       │
-│ no dia a dia. Ele não explica sua história, só organiza      │
-│ padrões."                                                    │
-│                                                              │
-│ ...                                                          │
-│                                                              │
-│ ⚠️ O QUE É PROIBIDO                                         │
-│ ❌ "Isso explica por que você é assim"                       │
-│ ❌ "Seu problema está aqui"                                  │
-│ ❌ "Você precisa desenvolver esse fator"                     │
-│                                                              │
-│ 🏆 REGRA DE OURO CLÍNICA                                    │
-│ Se o mapa virar explicação, ele perdeu a função.            │
-│ Se virar espelho silencioso, cumpriu o papel.               │
-└──────────────────────────────────────────────────────────────┘
-```
+Arquivo: `src/pages/clube-livro/ClubeLivroCiclo.tsx`
+- Adicionar Tab "Uso Clinico" visivel apenas para `isProfessionalVerified`
+- Exibir: 
+  - Quando usar este livro
+  - Quando evitar
+  - Riscos de projecao
+  - Cliente indicado/contraindicado
+- Aviso fixo etico
 
 ---
 
-### 4. Integrar nas Páginas Big5
+### 6. Calendario e Arquivo de Ciclos
 
-**Arquivo:** `src/pages/Big5Funcional.tsx`
+**Atualizar pagina de Apresentacao** (`ClubeLivroApresentacao.tsx`):
 
-Adicionar na tela **intro** (antes do questionário):
-```text
-<GuardiaLeituraChat 
-  contextPage="funcional" 
-  welcomeMessage="Olá! Antes de começar, posso explicar o que esta leitura revela — e o que ela não pretende revelar. Pergunte se quiser."
-/>
-```
-
-Adicionar na tela **resultado** (após o EthicalNotice):
-```text
-<GuardiaLeituraChat 
-  contextPage="funcional_resultado"
-  welcomeMessage="Você completou a Leitura Funcional. Posso explicar o que significa esse mapa, ou esclarecer a diferença para a Leitura Oracular."
-/>
-
-{isProfessional && <GuardiaManualProfissional />}
-```
-
-**Arquivo:** `src/pages/Big5Oracular.tsx`
-
-Mesma lógica:
-- Na tela intro: chat contextualizado
-- Na tela resultado: chat + manual profissional
+Estrutura:
+1. Texto-manifesto (ja existe)
+2. **Ciclo Atual** - em destaque
+3. **Proximos Ciclos** - cards bloqueados com data prevista
+4. **Ciclos Anteriores** - arquivo expandivel
+5. **Regras Eticas** - sempre visivel (texto fixo)
 
 ---
 
-## Fluxo de Uso
+### 7. Melhoria no Admin
 
-```text
-Usuária acessa Big5 Funcional
-    ↓
-Vê chat da Guardiã (colapsado por padrão)
-    ↓
-Pode perguntar antes de iniciar
-    ↓
-Responde questionário
-    ↓
-Vê resultado + chat da Guardiã expandido
-    ↓
-Se profissional: vê Manual para Facilitadoras
-```
+Arquivo: `src/components/admin/AdminClubeLivroTab.tsx`
+
+Adicionar:
+- Campo de tema simbolico
+- Campos de orientacao clinica (5 campos)
+- Toggle para ritual obrigatorio
+- Botao "Gerar Fases Padrao" que cria automaticamente: Chamado, Ruptura, Reorganizacao, Integracao
+- Preview do calendario anual
 
 ---
 
-## Benefícios
+### 8. Regras de Acesso Diferenciado
 
-- IA contextualizada e restrita ao escopo explicativo
-- Nenhum risco de diagnóstico ou interpretação
-- Manual profissional protege o método e a facilitadora
-- Componente reutilizável em ambas as páginas Big5
-- Linguagem adulta, clara e simbólica leve
-- Regras éticas garantidas pelo prompt do agente
+O sistema atual usa `portal_minimo = 'aluna'` para todos. A especificacao pede:
+
+| Nivel | Acesso |
+|-------|--------|
+| Visitante | Nenhum |
+| Assinante | Ciclo atual |
+| Aluna Formacao | Ciclo atual + material clinico |
+| Oracula/Certificada | Ciclo atual + material clinico + supervisao |
+
+**Implementacao**: 
+- Campo `portal_minimo_clinico` na tabela ciclos (default: `aluna_formacao`)
+- Verificacao em runtime para exibir/ocultar aba clinica
 
 ---
 
-## Ordem de Implementação
+## Arquivos a Criar
 
-1. Criar migração para inserir agente "Guardiã da Leitura"
-2. Criar componente `GuardiaLeituraChat.tsx`
-3. Criar componente `GuardiaManualProfissional.tsx`
-4. Integrar chat na página `Big5Funcional.tsx`
-5. Integrar chat na página `Big5Oracular.tsx`
-6. Testar fluxo completo
+1. `src/pages/clube-livro/ClubeLivroRitual.tsx` - Tela de ritual de abertura
+2. Migracao SQL para novos campos
 
+## Arquivos a Modificar
+
+1. `src/components/layout/Navigation.tsx` - Adicionar link no menu Recursos
+2. `src/pages/Biblioteca.tsx` - Adicionar card de acesso ao Clube
+3. `src/pages/clube-livro/ClubeLivroApresentacao.tsx` - Reorganizar com ciclos atual/proximos/anteriores
+4. `src/pages/clube-livro/ClubeLivroCiclo.tsx` - Adicionar aba de uso clinico
+5. `src/hooks/useClubeLivro.ts` - Adicionar hooks para ritual aceite e dados clinicos
+6. `src/components/admin/AdminClubeLivroTab.tsx` - Adicionar campos clinicos e gerador de fases
+7. `src/App.tsx` - Adicionar rota `/clube-livro/:id/ritual`
+
+---
+
+## Ordem de Implementacao
+
+1. Migracao do banco de dados (novos campos)
+2. Atualizar hooks com tipos expandidos
+3. Criar pagina do Ritual de Abertura
+4. Atualizar Apresentacao com estrutura de ciclos
+5. Adicionar aba Uso Clinico na pagina do Ciclo
+6. Atualizar Admin com novos campos
+7. Adicionar link no menu de navegacao
+8. Adicionar card na Biblioteca
+
+---
+
+## Consideracoes de Seguranca
+
+- RLS ja aplicado: respostas sao privadas por usuario
+- Campos clinicos sao apenas leitura (gerenciados por admin)
+- Aceite do ritual pode ser salvo no banco vinculado ao usuario
+- Verificacao de `isProfessionalVerified` para aba clinica
+
+## Nota sobre UX
+
+- Linguagem simbolica e contida
+- Nada academico ou gamificado
+- Sem obrigatoriedade de participacao
+- Escrita sempre privada
+- Nenhum forum ou feed publico
