@@ -151,6 +151,14 @@ import RitualAutorizacao from "./pages/narroterapia/RitualAutorizacao";
 // Biblioteca das Travessias (Symbolic Families)
 import BibliotecaTravessias from "./pages/BibliotecaTravessias";
 import BibliotecaTravessiasFamilia from "./pages/BibliotecaTravessiasFamilia";
+// Clube do Livro Oracular
+import { 
+  ClubeLivroApresentacao, 
+  ClubeLivroCiclo, 
+  ClubeLivroFase, 
+  ClubeLivroEscutas, 
+  ClubeLivroEncontros 
+} from "./pages/clube-livro";
 
 const queryClient = new QueryClient();
 
@@ -521,6 +529,48 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="aluna_formacao">
             <AudiosNarracao />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Clube do Livro Oracular */}
+      <Route
+        path="/clube-livro"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroApresentacao />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/:id"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroCiclo />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/:id/fase/:faseId"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroFase />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/:id/escutas"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroEscutas />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/:id/encontros"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroEncontros />
           </ProtectedRoute>
         }
       />

@@ -1332,6 +1332,313 @@ export type Database = {
         }
         Relationships: []
       }
+      clube_livro_ciclos: {
+        Row: {
+          ativo: boolean | null
+          autor_livro: string | null
+          capa_url: string | null
+          como_ler: string | null
+          created_at: string
+          data_fim: string | null
+          data_inicio: string | null
+          id: string
+          manifesto: string | null
+          ordem: number | null
+          por_que_este_livro: string | null
+          portal_minimo: Database["public"]["Enums"]["portal_type"] | null
+          publicado: boolean | null
+          subtitulo: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          autor_livro?: string | null
+          capa_url?: string | null
+          como_ler?: string | null
+          created_at?: string
+          data_fim?: string | null
+          data_inicio?: string | null
+          id?: string
+          manifesto?: string | null
+          ordem?: number | null
+          por_que_este_livro?: string | null
+          portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
+          publicado?: boolean | null
+          subtitulo?: string | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean | null
+          autor_livro?: string | null
+          capa_url?: string | null
+          como_ler?: string | null
+          created_at?: string
+          data_fim?: string | null
+          data_inicio?: string | null
+          id?: string
+          manifesto?: string | null
+          ordem?: number | null
+          por_que_este_livro?: string | null
+          portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
+          publicado?: boolean | null
+          subtitulo?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      clube_livro_encontros: {
+        Row: {
+          ativo: boolean | null
+          ciclo_id: string
+          created_at: string
+          data_encontro: string | null
+          descricao: string | null
+          id: string
+          link_ao_vivo: string | null
+          orientacao_encontro: string | null
+          replay_url: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          ciclo_id: string
+          created_at?: string
+          data_encontro?: string | null
+          descricao?: string | null
+          id?: string
+          link_ao_vivo?: string | null
+          orientacao_encontro?: string | null
+          replay_url?: string | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean | null
+          ciclo_id?: string
+          created_at?: string
+          data_encontro?: string | null
+          descricao?: string | null
+          id?: string
+          link_ao_vivo?: string | null
+          orientacao_encontro?: string | null
+          replay_url?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_livro_encontros_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_livro_escutas: {
+        Row: {
+          ativo: boolean | null
+          audio_url: string | null
+          ciclo_id: string
+          created_at: string
+          descricao: string | null
+          duracao_segundos: number | null
+          fase_id: string | null
+          id: string
+          ordem: number | null
+          texto_conteudo: string | null
+          tipo: string
+          titulo: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          audio_url?: string | null
+          ciclo_id: string
+          created_at?: string
+          descricao?: string | null
+          duracao_segundos?: number | null
+          fase_id?: string | null
+          id?: string
+          ordem?: number | null
+          texto_conteudo?: string | null
+          tipo?: string
+          titulo: string
+        }
+        Update: {
+          ativo?: boolean | null
+          audio_url?: string | null
+          ciclo_id?: string
+          created_at?: string
+          descricao?: string | null
+          duracao_segundos?: number | null
+          fase_id?: string | null
+          id?: string
+          ordem?: number | null
+          texto_conteudo?: string | null
+          tipo?: string
+          titulo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_livro_escutas_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_livro_escutas_fase_id_fkey"
+            columns: ["fase_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_fases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_livro_fases: {
+        Row: {
+          ativo: boolean | null
+          ciclo_id: string
+          created_at: string
+          descricao: string | null
+          icone: string | null
+          id: string
+          ordem: number | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          ciclo_id: string
+          created_at?: string
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          ordem?: number | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean | null
+          ciclo_id?: string
+          created_at?: string
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          ordem?: number | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_livro_fases_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_livro_perguntas: {
+        Row: {
+          ativo: boolean | null
+          created_at: string
+          fase_id: string
+          id: string
+          ordem: number | null
+          texto_pergunta: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string
+          fase_id: string
+          id?: string
+          ordem?: number | null
+          texto_pergunta: string
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string
+          fase_id?: string
+          id?: string
+          ordem?: number | null
+          texto_pergunta?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_livro_perguntas_fase_id_fkey"
+            columns: ["fase_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_fases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_livro_respostas: {
+        Row: {
+          ciclo_id: string
+          created_at: string
+          fase_id: string
+          id: string
+          jardim_registro_id: string | null
+          pergunta_id: string
+          resposta: string | null
+          salvo_jardim: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ciclo_id: string
+          created_at?: string
+          fase_id: string
+          id?: string
+          jardim_registro_id?: string | null
+          pergunta_id: string
+          resposta?: string | null
+          salvo_jardim?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ciclo_id?: string
+          created_at?: string
+          fase_id?: string
+          id?: string
+          jardim_registro_id?: string | null
+          pergunta_id?: string
+          resposta?: string | null
+          salvo_jardim?: boolean | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_livro_respostas_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_livro_respostas_fase_id_fkey"
+            columns: ["fase_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_fases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_livro_respostas_pergunta_id_fkey"
+            columns: ["pergunta_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_perguntas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       confirmacao_profissional: {
         Row: {
           aceita_codigo_etico: boolean
