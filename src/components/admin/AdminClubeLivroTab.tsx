@@ -14,15 +14,16 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter 
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription 
 } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { 
   BookOpen, Plus, Pencil, Trash2, ChevronDown, ChevronUp,
-  Sparkles, Headphones, Video, FileText
+  Sparkles, Headphones, Video, FileText, Calendar, Loader2
 } from 'lucide-react';
 import { FaseEditorExpandido } from './clube-livro';
+import { CALENDARIO_ANUAL, SEMANAS_PADRAO } from '@/constants/clubeLivroCalendario';
 
 interface Ciclo {
   id: string;
@@ -109,6 +110,7 @@ export function AdminClubeLivroTab() {
   const [selectedCiclo, setSelectedCiclo] = useState<string | null>(null);
   const [cicloDialogOpen, setCicloDialogOpen] = useState(false);
   const [editingCiclo, setEditingCiclo] = useState<Ciclo | null>(null);
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
 
   // Fetch ciclos
   const { data: ciclos, isLoading } = useQuery({
@@ -188,10 +190,92 @@ export function AdminClubeLivroTab() {
     setCicloDialogOpen(true);
   };
 
+  // ============================================
+  // Importação em Massa - 12 Ciclos do Calendário
+  // ============================================
+  const importarCalendario = useMutation({
+    mutationFn: async () => {
+      // 1. Buscar ciclos existentes para evitar duplicatas
+      const { data: ciclosExistentes } = await supabase
+        .from('clube_livro_ciclos')
+        .select('titulo');
+      
+      const titulosExistentes = new Set(ciclosExistentes?.map(c => c.titulo) || []);
+      
+      // 2. Filtrar apenas ciclos que não existem
+      const ciclosParaCriar = CALENDARIO_ANUAL.filter(
+        c => !titulosExistentes.has(c.titulo)
+      );
+      
+      if (ciclosParaCriar.length === 0) {
+        throw new Error('Todos os 12 ciclos já estão cadastrados.');
+      }
+      
+      // 3. Inserir os ciclos
+      const ciclosPayload = ciclosParaCriar.map(c => ({
+        titulo: c.titulo,
+        autor_livro: c.autor,
+        tema_simbolico: c.tema,
+        ordem: c.ordem,
+        publicado: false,
+        ativo: c.ordem === 1, // Primeiro ciclo ativo
+        orientacao_clinica_uso: c.orientacao_clinica_uso || null,
+        orientacao_clinica_evitar: c.orientacao_clinica_evitar || null,
+        orientacao_clinica_riscos: c.orientacao_clinica_riscos || null,
+      }));
+      
+      const { data: novosCiclos, error: ciclosError } = await supabase
+        .from('clube_livro_ciclos')
+        .insert(ciclosPayload)
+        .select('id, ordem');
+      
+      if (ciclosError) throw ciclosError;
+      
+      // 4. Para cada ciclo criado, gerar as 4 semanas padrão
+      if (novosCiclos && novosCiclos.length > 0) {
+        const fasesPayload = novosCiclos.flatMap(ciclo => 
+          SEMANAS_PADRAO.map(semana => ({
+            ciclo_id: ciclo.id,
+            titulo: semana.titulo,
+            tipo_fase: semana.tipo_fase,
+            descricao: semana.descricao,
+            numero_semana: semana.numero_semana,
+            alerta_clinico: semana.alerta_clinico,
+            ordem: semana.numero_semana,
+            ativo: true,
+          }))
+        );
+        
+        const { error: fasesError } = await supabase
+          .from('clube_livro_fases')
+          .insert(fasesPayload);
+        
+        if (fasesError) throw fasesError;
+      }
+      
+      return { ciclosCriados: novosCiclos?.length || 0 };
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-ciclos'] });
+      setImportDialogOpen(false);
+      toast({ 
+        title: 'Calendário importado com sucesso!',
+        description: `${data.ciclosCriados} ciclos criados com 4 semanas cada.`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({ 
+        title: 'Erro na importação', 
+        description: error.message,
+        variant: 'destructive' 
+      });
+    },
+  });
+
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h2 className="text-lg font-display text-foreground flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-gold" />
@@ -201,10 +285,20 @@ export function AdminClubeLivroTab() {
             Gerencie ciclos, fases, perguntas, escutas e encontros.
           </p>
         </div>
-        <Button onClick={handleNewCiclo} className="gap-2">
-          <Plus className="w-4 h-4" />
-          Novo Ciclo
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            onClick={() => setImportDialogOpen(true)} 
+            className="gap-2"
+          >
+            <Calendar className="w-4 h-4" />
+            Importar Calendário Anual
+          </Button>
+          <Button onClick={handleNewCiclo} className="gap-2">
+            <Plus className="w-4 h-4" />
+            Novo Ciclo
+          </Button>
+        </div>
       </div>
 
       {/* Lista de Ciclos */}
@@ -231,9 +325,15 @@ export function AdminClubeLivroTab() {
           <CardContent className="py-8 text-center">
             <BookOpen className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
             <p className="text-muted-foreground">Nenhum ciclo cadastrado.</p>
-            <Button variant="outline" className="mt-4" onClick={handleNewCiclo}>
-              Criar primeiro ciclo
-            </Button>
+            <div className="flex justify-center gap-2 mt-4">
+              <Button variant="outline" onClick={() => setImportDialogOpen(true)}>
+                <Calendar className="w-4 h-4 mr-2" />
+                Importar 12 Ciclos
+              </Button>
+              <Button variant="ghost" onClick={handleNewCiclo}>
+                Criar manualmente
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}
@@ -246,6 +346,71 @@ export function AdminClubeLivroTab() {
         onSave={(data) => saveCiclo.mutate(data)}
         isLoading={saveCiclo.isPending}
       />
+
+      {/* Dialog para importação em massa */}
+      <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-gold" />
+              Importar Calendário Anual
+            </DialogTitle>
+            <DialogDescription>
+              Esta ação irá criar os 12 ciclos do calendário oficial do Clube do Livro Oracular,
+              cada um com 4 semanas estruturadas (Chamado, Ruptura, Reorganização, Integração).
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="bg-muted/50 rounded-lg p-4 max-h-60 overflow-y-auto">
+              <p className="text-xs text-muted-foreground mb-3">Ciclos que serão criados:</p>
+              <div className="space-y-2">
+                {CALENDARIO_ANUAL.map((c) => (
+                  <div key={c.ordem} className="flex items-center gap-2 text-sm">
+                    <Badge variant="outline" className="text-xs shrink-0">
+                      {c.ordem}
+                    </Badge>
+                    <span className="font-medium truncate">{c.titulo}</span>
+                    <span className="text-muted-foreground text-xs truncate">— {c.autor}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="text-sm text-muted-foreground">
+              <ul className="list-disc list-inside space-y-1">
+                <li>Ciclos existentes serão mantidos (sem duplicatas)</li>
+                <li>Todos serão criados como <strong>rascunho</strong></li>
+                <li>O primeiro ciclo será marcado como <strong>ativo</strong></li>
+                <li>Cada ciclo terá 4 semanas com alertas clínicos</li>
+              </ul>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setImportDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button 
+              onClick={() => importarCalendario.mutate()}
+              disabled={importarCalendario.isPending}
+              className="gap-2"
+            >
+              {importarCalendario.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Importando...
+                </>
+              ) : (
+                <>
+                  <Calendar className="w-4 h-4" />
+                  Confirmar Importação
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
