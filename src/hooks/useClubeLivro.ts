@@ -20,6 +20,15 @@ export interface ClubeCiclo {
   data_fim?: string;
   portal_minimo: string;
   created_at: string;
+  // New clinical fields
+  tema_simbolico?: string;
+  orientacao_clinica_uso?: string;
+  orientacao_clinica_evitar?: string;
+  orientacao_clinica_riscos?: string;
+  orientacao_clinica_indicado?: string;
+  orientacao_clinica_contraindicado?: string;
+  ritual_aceite_obrigatorio?: boolean;
+  portal_minimo_clinico?: string;
 }
 
 export interface ClubeFase {
@@ -30,6 +39,9 @@ export interface ClubeFase {
   icone?: string;
   ordem: number;
   ativo: boolean;
+  // New fields
+  tipo_fase?: 'chamado' | 'ruptura' | 'reorganizacao' | 'integracao';
+  orientacao_curta?: string;
 }
 
 export interface ClubePergunta {
@@ -79,6 +91,13 @@ export interface ClubeEncontro {
   ativo: boolean;
 }
 
+export interface RitualAceite {
+  id: string;
+  user_id: string;
+  ciclo_id: string;
+  aceito_em: string;
+}
+
 // Hook principal
 export function useClubeLivro() {
   const { user } = useAuth();
@@ -100,12 +119,25 @@ export function useClubeLivro() {
     enabled: !!user,
   });
 
-  // Buscar ciclo atual (mais recente publicado)
+  // Organize cycles
+  const now = new Date();
   const cicloAtual = ciclos?.find(c => c.publicado && c.ativo) || null;
+  
+  const ciclosProximos = ciclos?.filter(c => {
+    if (!c.data_inicio) return false;
+    return new Date(c.data_inicio) > now && !c.ativo;
+  }) || [];
+
+  const ciclosAnteriores = ciclos?.filter(c => {
+    if (!c.data_fim) return c.publicado && !c.ativo && c !== cicloAtual;
+    return new Date(c.data_fim) < now;
+  }) || [];
 
   return {
     ciclos,
     cicloAtual,
+    ciclosProximos,
+    ciclosAnteriores,
     loadingCiclos,
   };
 }
@@ -188,6 +220,64 @@ export function useClubeCicloDetalhe(cicloId: string | undefined) {
     escutas,
     encontros,
     isLoading: loadingCiclo || loadingFases || loadingEscutas || loadingEncontros,
+  };
+}
+
+// Hook para ritual de aceite
+export function useRitualAceite(cicloId: string | undefined) {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  // Check if user has accepted ritual for this cycle
+  const { data: aceite, isLoading } = useQuery({
+    queryKey: ['clube-livro-ritual-aceite', cicloId, user?.id],
+    queryFn: async () => {
+      if (!cicloId || !user?.id) return null;
+      const { data, error } = await supabase
+        .from('clube_livro_ritual_aceites')
+        .select('*')
+        .eq('ciclo_id', cicloId)
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data as RitualAceite | null;
+    },
+    enabled: !!cicloId && !!user?.id,
+  });
+
+  // Accept ritual
+  const acceptRitual = useMutation({
+    mutationFn: async () => {
+      if (!user?.id || !cicloId) throw new Error('Dados incompletos');
+
+      const { error } = await supabase
+        .from('clube_livro_ritual_aceites')
+        .insert({
+          user_id: user.id,
+          ciclo_id: cicloId,
+        });
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clube-livro-ritual-aceite', cicloId] });
+    },
+    onError: () => {
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível registrar o aceite.',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  return {
+    hasAccepted: !!aceite,
+    aceite,
+    isLoading,
+    acceptRitual,
   };
 }
 
@@ -283,3 +373,11 @@ export function useClubeFasePerguntas(faseId: string | undefined, cicloId: strin
     salvarResposta,
   };
 }
+
+// Fixed phase types for generating standard phases
+export const FASES_PADRAO = [
+  { tipo_fase: 'chamado', titulo: 'Chamado', descricao: 'Início da jornada - o livro chega até você', ordem: 1 },
+  { tipo_fase: 'ruptura', titulo: 'Ruptura', descricao: 'Momento de crise ou desorganização interna', ordem: 2 },
+  { tipo_fase: 'reorganizacao', titulo: 'Reorganização', descricao: 'Retomada do fio - integração gradual', ordem: 3 },
+  { tipo_fase: 'integracao', titulo: 'Integração', descricao: 'Consolidação e encerramento do ciclo', ordem: 4 },
+] as const;

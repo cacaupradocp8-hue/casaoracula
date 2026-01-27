@@ -157,7 +157,8 @@ import {
   ClubeLivroCiclo, 
   ClubeLivroFase, 
   ClubeLivroEscutas, 
-  ClubeLivroEncontros 
+  ClubeLivroEncontros,
+  ClubeLivroRitual
 } from "./pages/clube-livro";
 
 const queryClient = new QueryClient();
@@ -547,6 +548,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="aluna">
             <ClubeLivroCiclo />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/:id/ritual"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroRitual />
           </ProtectedRoute>
         }
       />

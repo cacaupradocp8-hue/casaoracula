@@ -36,6 +36,15 @@ interface Ciclo {
   ativo: boolean;
   publicado: boolean;
   portal_minimo: string;
+  // New clinical fields
+  tema_simbolico?: string;
+  orientacao_clinica_uso?: string;
+  orientacao_clinica_evitar?: string;
+  orientacao_clinica_riscos?: string;
+  orientacao_clinica_indicado?: string;
+  orientacao_clinica_contraindicado?: string;
+  ritual_aceite_obrigatorio?: boolean;
+  portal_minimo_clinico?: string;
 }
 
 interface Fase {
@@ -46,6 +55,8 @@ interface Fase {
   icone?: string;
   ordem: number;
   ativo: boolean;
+  tipo_fase?: string;
+  orientacao_curta?: string;
 }
 
 interface Pergunta {
@@ -366,6 +377,31 @@ function FasesManager({ cicloId }: { cicloId: string }) {
     },
   });
 
+  // Generate standard 4 phases
+  const gerarFasesPadrao = useMutation({
+    mutationFn: async () => {
+      const fasesExistentes = fases?.length || 0;
+      const fasesPadrao = [
+        { ciclo_id: cicloId, titulo: 'Chamado', tipo_fase: 'chamado', descricao: 'Início da jornada - o livro chega até você', ordem: fasesExistentes + 1 },
+        { ciclo_id: cicloId, titulo: 'Ruptura', tipo_fase: 'ruptura', descricao: 'Momento de crise ou desorganização interna', ordem: fasesExistentes + 2 },
+        { ciclo_id: cicloId, titulo: 'Reorganização', tipo_fase: 'reorganizacao', descricao: 'Retomada do fio - integração gradual', ordem: fasesExistentes + 3 },
+        { ciclo_id: cicloId, titulo: 'Integração', tipo_fase: 'integracao', descricao: 'Consolidação e encerramento do ciclo', ordem: fasesExistentes + 4 },
+      ];
+      
+      const { error } = await supabase
+        .from('clube_livro_fases')
+        .insert(fasesPadrao);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-fases', cicloId] });
+      toast({ title: '4 fases padrão criadas' });
+    },
+    onError: () => {
+      toast({ title: 'Erro ao criar fases', variant: 'destructive' });
+    },
+  });
+
   const deleteFase = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase.from('clube_livro_fases').delete().eq('id', id);
@@ -377,9 +413,28 @@ function FasesManager({ cicloId }: { cicloId: string }) {
     },
   });
 
+
+
   return (
     <div className="space-y-4">
-      {/* Add fase */}
+      {/* Generate standard phases button */}
+      <div className="flex gap-2 items-center">
+        <Button 
+          size="sm" 
+          variant="outline" 
+          onClick={() => gerarFasesPadrao.mutate()}
+          disabled={gerarFasesPadrao.isPending}
+          className="text-xs"
+        >
+          <Plus className="w-3 h-3 mr-1" />
+          Gerar 4 Fases Padrão
+        </Button>
+        <span className="text-xs text-muted-foreground">
+          (Chamado, Ruptura, Reorganização, Integração)
+        </span>
+      </div>
+
+      {/* Add fase manually */}
       <div className="flex gap-2">
         <Input
           placeholder="Nome da nova fase..."

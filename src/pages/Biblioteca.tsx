@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Library, Search, Heart, BookOpen, Sparkles, MessageCircle, Scroll, Home, ChevronRight, Globe, Info } from 'lucide-react';
+import { Library, Search, Heart, BookOpen, Sparkles, MessageCircle, Scroll, Home, ChevronRight, Globe, Info, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -16,6 +16,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import { useClubeLivro } from '@/hooks/useClubeLivro';
 
 type SymbolicItemType = 'conto' | 'arquetipo' | 'pergunta' | 'ritual';
 
@@ -37,6 +38,7 @@ const typeConfig: Record<SymbolicItemType, { label: string; icon: React.ReactNod
 };
 
 export default function Biblioteca() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<SymbolicItemType | 'all'>('all');
   const [favorites, setFavorites] = useState<Set<string>>(() => {
@@ -44,7 +46,7 @@ export default function Biblioteca() {
     return saved ? new Set(JSON.parse(saved)) : new Set();
   });
   const [expandedId, setExpandedId] = useState<string | null>(null);
-
+  const { cicloAtual } = useClubeLivro();
   const { data: items = [], isLoading } = useQuery({
     queryKey: ['library-items'],
     queryFn: async () => {
@@ -101,6 +103,29 @@ export default function Biblioteca() {
           icon={<Library className="w-5 h-5" />}
           className="mb-8"
         />
+
+        {/* Card de acesso ao Clube do Livro */}
+        <Card 
+          className="mb-8 bg-gradient-to-br from-gold/10 to-gold/5 border-gold/30 cursor-pointer hover:border-gold/50 transition-all group"
+          onClick={() => navigate('/clube-livro')}
+        >
+          <CardContent className="p-6 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center shrink-0">
+              <BookOpen className="w-6 h-6 text-gold" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-display text-lg text-foreground group-hover:text-gold transition-colors">
+                Círculo de Leitura Oracular
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {cicloAtual 
+                  ? `Ciclo atual: ${cicloAtual.titulo}` 
+                  : 'Território de leitura viva e atravessamento simbólico'}
+              </p>
+            </div>
+            <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-gold transition-colors" />
+          </CardContent>
+        </Card>
 
         {/* Search and Filters */}
         <div className="glass rounded-xl p-4 mb-8">
