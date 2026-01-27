@@ -12,6 +12,10 @@ export interface Dimensao {
   cor: string;
   ordem: number;
   ativo: boolean;
+  interpretacao_alto: string | null;
+  interpretacao_baixo: string | null;
+  ponto_atencao_alto: string | null;
+  ponto_atencao_baixo: string | null;
 }
 
 export interface Pergunta {
@@ -35,8 +39,24 @@ export interface Registro {
 
 export interface ResultadoCalculado {
   medias: Record<string, number>;
-  dimensaoAlta: { chave: string; nome: string; descricao: string; cor: string; media: number } | null;
-  dimensaoBaixa: { chave: string; nome: string; descricao: string; cor: string; media: number } | null;
+  dimensaoAlta: { 
+    chave: string; 
+    nome: string; 
+    descricao: string; 
+    cor: string; 
+    media: number;
+    interpretacao_alto: string | null;
+    ponto_atencao_alto: string | null;
+  } | null;
+  dimensaoBaixa: { 
+    chave: string; 
+    nome: string; 
+    descricao: string; 
+    cor: string; 
+    media: number;
+    interpretacao_baixo: string | null;
+    ponto_atencao_baixo: string | null;
+  } | null;
 }
 
 export function useBig5Funcional() {
@@ -141,6 +161,8 @@ export function useBig5Funcional() {
           descricao: dim.descricao,
           cor: dim.cor,
           media,
+          interpretacao_alto: dim.interpretacao_alto,
+          ponto_atencao_alto: dim.ponto_atencao_alto,
         };
       }
       if (media < minMedia) {
@@ -151,6 +173,8 @@ export function useBig5Funcional() {
           descricao: dim.descricao,
           cor: dim.cor,
           media,
+          interpretacao_baixo: dim.interpretacao_baixo,
+          ponto_atencao_baixo: dim.ponto_atencao_baixo,
         };
       }
     });

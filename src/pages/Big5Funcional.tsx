@@ -7,6 +7,8 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
 import { SalvarJardimModal } from '@/components/shared/SalvarJardimModal';
+import { Big5InterpretacaoCard } from '@/components/big5/Big5InterpretacaoCard';
+import { Big5SintesePerfil } from '@/components/big5/Big5SintesePerfil';
 import { useBig5Funcional, Dimensao } from '@/hooks/useBig5Funcional';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,6 +22,7 @@ import {
   TrendingDown,
   ChevronRight,
   Home,
+  BookOpen,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -406,6 +409,56 @@ export default function Big5Funcional() {
                   </Card>
                 )}
               </div>
+
+              {/* LEITURA DE FUNCIONAMENTO ATUAL */}
+              <Card className="border-primary/20">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <BookOpen className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg font-display">
+                        Leitura de Funcionamento Atual
+                      </CardTitle>
+                      <CardDescription className="mt-1">
+                        Este resultado descreve tendências de funcionamento, não identidade fixa.
+                        Ele não define quem você é — indica como você tende a agir hoje.
+                      </CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {dimensoes.map(dim => {
+                    const media = resultado.medias[dim.chave] || 0;
+                    return (
+                      <Big5InterpretacaoCard
+                        key={dim.id}
+                        nome={dim.nome}
+                        nomeIngles={dim.nome_ingles}
+                        cor={dim.cor}
+                        media={media}
+                        interpretacaoAlto={dim.interpretacao_alto}
+                        interpretacaoBaixo={dim.interpretacao_baixo}
+                        pontoAtencaoAlto={dim.ponto_atencao_alto}
+                        pontoAtencaoBaixo={dim.ponto_atencao_baixo}
+                      />
+                    );
+                  })}
+                </CardContent>
+              </Card>
+
+              {/* SÍNTESE DO PERFIL */}
+              <Big5SintesePerfil
+                dimensaoAlta={resultado.dimensaoAlta ? {
+                  nome: resultado.dimensaoAlta.nome,
+                  media: resultado.dimensaoAlta.media,
+                } : null}
+                dimensaoBaixa={resultado.dimensaoBaixa ? {
+                  nome: resultado.dimensaoBaixa.nome,
+                  media: resultado.dimensaoBaixa.media,
+                } : null}
+              />
 
               {/* All dimensions table */}
               <Card>

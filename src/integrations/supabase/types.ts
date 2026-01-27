@@ -531,9 +531,13 @@ export type Database = {
           created_at: string
           descricao: string
           id: string
+          interpretacao_alto: string | null
+          interpretacao_baixo: string | null
           nome: string
           nome_ingles: string
           ordem: number
+          ponto_atencao_alto: string | null
+          ponto_atencao_baixo: string | null
           updated_at: string
         }
         Insert: {
@@ -543,9 +547,13 @@ export type Database = {
           created_at?: string
           descricao: string
           id?: string
+          interpretacao_alto?: string | null
+          interpretacao_baixo?: string | null
           nome: string
           nome_ingles: string
           ordem?: number
+          ponto_atencao_alto?: string | null
+          ponto_atencao_baixo?: string | null
           updated_at?: string
         }
         Update: {
@@ -555,9 +563,13 @@ export type Database = {
           created_at?: string
           descricao?: string
           id?: string
+          interpretacao_alto?: string | null
+          interpretacao_baixo?: string | null
           nome?: string
           nome_ingles?: string
           ordem?: number
+          ponto_atencao_alto?: string | null
+          ponto_atencao_baixo?: string | null
           updated_at?: string
         }
         Relationships: []
