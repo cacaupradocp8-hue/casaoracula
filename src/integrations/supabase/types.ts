@@ -1525,40 +1525,64 @@ export type Database = {
       }
       clube_livro_fases: {
         Row: {
+          alerta_clinico: string | null
           ativo: boolean | null
           ciclo_id: string
           created_at: string
           descricao: string | null
           icone: string | null
           id: string
+          leitura_orientada: string | null
+          lista_uso_inadequado: string[] | null
+          numero_semana: number | null
+          observacao_clinica: string | null
           ordem: number | null
           orientacao_curta: string | null
+          ponte_sala_id: string | null
+          ponte_sala_texto: string | null
+          texto_fechamento: string | null
           tipo_fase: string | null
           titulo: string
           updated_at: string
         }
         Insert: {
+          alerta_clinico?: string | null
           ativo?: boolean | null
           ciclo_id: string
           created_at?: string
           descricao?: string | null
           icone?: string | null
           id?: string
+          leitura_orientada?: string | null
+          lista_uso_inadequado?: string[] | null
+          numero_semana?: number | null
+          observacao_clinica?: string | null
           ordem?: number | null
           orientacao_curta?: string | null
+          ponte_sala_id?: string | null
+          ponte_sala_texto?: string | null
+          texto_fechamento?: string | null
           tipo_fase?: string | null
           titulo: string
           updated_at?: string
         }
         Update: {
+          alerta_clinico?: string | null
           ativo?: boolean | null
           ciclo_id?: string
           created_at?: string
           descricao?: string | null
           icone?: string | null
           id?: string
+          leitura_orientada?: string | null
+          lista_uso_inadequado?: string[] | null
+          numero_semana?: number | null
+          observacao_clinica?: string | null
           ordem?: number | null
           orientacao_curta?: string | null
+          ponte_sala_id?: string | null
+          ponte_sala_texto?: string | null
+          texto_fechamento?: string | null
           tipo_fase?: string | null
           titulo?: string
           updated_at?: string
@@ -1569,6 +1593,13 @@ export type Database = {
             columns: ["ciclo_id"]
             isOneToOne: false
             referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_livro_fases_ponte_sala_id_fkey"
+            columns: ["ponte_sala_id"]
+            isOneToOne: false
+            referencedRelation: "salas"
             referencedColumns: ["id"]
           },
         ]

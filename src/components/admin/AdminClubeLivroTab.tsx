@@ -22,6 +22,7 @@ import {
   BookOpen, Plus, Pencil, Trash2, ChevronDown, ChevronUp,
   Sparkles, Headphones, Video, FileText
 } from 'lucide-react';
+import { FaseEditorExpandido } from './clube-livro';
 
 interface Ciclo {
   id: string;
@@ -57,6 +58,15 @@ interface Fase {
   ativo: boolean;
   tipo_fase?: string;
   orientacao_curta?: string;
+  // New week-based structure fields
+  numero_semana?: number;
+  leitura_orientada?: string;
+  alerta_clinico?: string;
+  observacao_clinica?: string;
+  lista_uso_inadequado?: string[];
+  ponte_sala_id?: string;
+  ponte_sala_texto?: string;
+  texto_fechamento?: string;
 }
 
 interface Pergunta {
@@ -377,15 +387,43 @@ function FasesManager({ cicloId }: { cicloId: string }) {
     },
   });
 
-  // Generate standard 4 phases
+  // Generate standard 4 weeks (semanas)
   const gerarFasesPadrao = useMutation({
     mutationFn: async () => {
       const fasesExistentes = fases?.length || 0;
       const fasesPadrao = [
-        { ciclo_id: cicloId, titulo: 'Chamado', tipo_fase: 'chamado', descricao: 'Início da jornada - o livro chega até você', ordem: fasesExistentes + 1 },
-        { ciclo_id: cicloId, titulo: 'Ruptura', tipo_fase: 'ruptura', descricao: 'Momento de crise ou desorganização interna', ordem: fasesExistentes + 2 },
-        { ciclo_id: cicloId, titulo: 'Reorganização', tipo_fase: 'reorganizacao', descricao: 'Retomada do fio - integração gradual', ordem: fasesExistentes + 3 },
-        { ciclo_id: cicloId, titulo: 'Integração', tipo_fase: 'integracao', descricao: 'Consolidação e encerramento do ciclo', ordem: fasesExistentes + 4 },
+        { 
+          ciclo_id: cicloId, 
+          titulo: 'O Arquétipo Não É a Cliente', 
+          tipo_fase: 'chamado', 
+          descricao: 'Início da jornada - diferença entre símbolo e identidade', 
+          ordem: fasesExistentes + 1,
+          numero_semana: 1,
+        },
+        { 
+          ciclo_id: cicloId, 
+          titulo: 'O Risco da Projeção da Facilitadora', 
+          tipo_fase: 'ruptura', 
+          descricao: 'Momento de crise ou desorganização interna', 
+          ordem: fasesExistentes + 2,
+          numero_semana: 2,
+        },
+        { 
+          ciclo_id: cicloId, 
+          titulo: 'Quando Não Usar um Conto', 
+          tipo_fase: 'reorganizacao', 
+          descricao: 'Uso inadequado e contraindicações', 
+          ordem: fasesExistentes + 3,
+          numero_semana: 3,
+        },
+        { 
+          ciclo_id: cicloId, 
+          titulo: 'Integração e Fechamento', 
+          tipo_fase: 'integracao', 
+          descricao: 'Consolidação e encerramento do ciclo', 
+          ordem: fasesExistentes + 4,
+          numero_semana: 4,
+        },
       ];
       
       const { error } = await supabase
@@ -395,10 +433,10 @@ function FasesManager({ cicloId }: { cicloId: string }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-clube-fases', cicloId] });
-      toast({ title: '4 fases padrão criadas' });
+      toast({ title: '4 semanas padrão criadas' });
     },
     onError: () => {
-      toast({ title: 'Erro ao criar fases', variant: 'destructive' });
+      toast({ title: 'Erro ao criar semanas', variant: 'destructive' });
     },
   });
 
@@ -417,7 +455,7 @@ function FasesManager({ cicloId }: { cicloId: string }) {
 
   return (
     <div className="space-y-4">
-      {/* Generate standard phases button */}
+      {/* Generate standard weeks button */}
       <div className="flex gap-2 items-center">
         <Button 
           size="sm" 
@@ -427,10 +465,10 @@ function FasesManager({ cicloId }: { cicloId: string }) {
           className="text-xs"
         >
           <Plus className="w-3 h-3 mr-1" />
-          Gerar 4 Fases Padrão
+          Gerar 4 Semanas Padrão
         </Button>
         <span className="text-xs text-muted-foreground">
-          (Chamado, Ruptura, Reorganização, Integração)
+          (Estrutura canônica do Clube)
         </span>
       </div>
 
@@ -476,7 +514,7 @@ function FasesManager({ cicloId }: { cicloId: string }) {
               </div>
               {expandedFase === fase.id && (
                 <div className="mt-3 pt-3 border-t">
-                  <PerguntasManager faseId={fase.id} />
+                  <FaseEditorExpandido faseId={fase.id} cicloId={cicloId} />
                 </div>
               )}
             </div>
