@@ -1,5 +1,5 @@
 // ============================================
-// CLUBE DO LIVRO ORACULAR - Guia Oracular de Leitura (Fase)
+// CLUBE DO LIVRO ORACULAR - Guia Oracular de Leitura (Fase/Semana)
 // ============================================
 
 import { useState, useEffect } from 'react';
@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useClubeCicloDetalhe, useClubeFasePerguntas, ClubeFase } from '@/hooks/useClubeLivro';
+import { FaseWeekContent } from '@/components/clube-livro';
 import { 
   BookOpen, ChevronRight, Home, Sparkles, 
   ArrowLeft, ArrowRight, Save, Check
@@ -108,23 +109,18 @@ export default function ClubeLivroFase() {
           <span className="text-foreground">{faseAtual.titulo}</span>
         </nav>
 
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-4 h-4 text-gold" />
-            <span className="text-xs uppercase tracking-widest text-gold">
-              Fase {faseIndex + 1} de {fases?.length}
-            </span>
+        {/* Week-based Content Blocks */}
+        <FaseWeekContent fase={faseAtual} faseIndex={faseIndex} />
+
+        {/* Separator before questions */}
+        {perguntas && perguntas.length > 0 && (
+          <div className="my-8 border-t border-border pt-8">
+            <h3 className="text-lg font-display text-foreground mb-4 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-gold" />
+              Pergunta-Guia
+            </h3>
           </div>
-          <h1 className="text-2xl font-display text-foreground mb-2">
-            {faseAtual.titulo}
-          </h1>
-          {faseAtual.descricao && (
-            <p className="text-muted-foreground">
-              {faseAtual.descricao}
-            </p>
-          )}
-        </div>
+        )}
 
         {/* Perguntas Oraculares */}
         {perguntas && perguntas.length > 0 ? (

@@ -39,9 +39,18 @@ export interface ClubeFase {
   icone?: string;
   ordem: number;
   ativo: boolean;
-  // New fields
+  // Type and orientation
   tipo_fase?: 'chamado' | 'ruptura' | 'reorganizacao' | 'integracao';
   orientacao_curta?: string;
+  // New week-based structure fields
+  numero_semana?: number;
+  leitura_orientada?: string;
+  alerta_clinico?: string;
+  observacao_clinica?: string;
+  lista_uso_inadequado?: string[];
+  ponte_sala_id?: string;
+  ponte_sala_texto?: string;
+  texto_fechamento?: string;
 }
 
 export interface ClubePergunta {

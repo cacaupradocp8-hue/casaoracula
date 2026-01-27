@@ -10,19 +10,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useClubeCicloDetalhe, useRitualAceite } from '@/hooks/useClubeLivro';
 import { BookOpen, ChevronRight, Home, Sparkles } from 'lucide-react';
 
-const RITUAL_TEXT = `Este livro não foi escolhido para te ensinar.
-Foi escolhido para te atravessar.
+const RITUAL_TEXT = `Este não é um clube de leitura.
+É um campo de escuta simbólica.
 
-Leia sem pressa.
-Pare quando o corpo pedir.
+Não lemos para entender histórias.
+Lemos para sustentar imagens sem invadir.
 
-Aqui, não buscamos entendimento.
-Buscamos escuta.
-
-Se algo se mover, sustente.
-Se nada se mover, respeite.
-
-A leitura começa quando você aceita não controlar.`;
+Se você costuma explicar demais, apressar sentidos ou salvar personagens,
+este ciclo vai te desacelerar.`;
 
 export default function ClubeLivroRitual() {
   const { id } = useParams<{ id: string }>();
@@ -135,10 +130,7 @@ export default function ClubeLivroRitual() {
               htmlFor="ritual-aceite" 
               className="text-sm text-foreground cursor-pointer leading-relaxed"
             >
-              <span className="font-medium">Leio com presença, não com pressa.</span>
-              <span className="block text-muted-foreground mt-1">
-                Aceito atravessar este livro no ritmo que meu corpo permitir.
-              </span>
+              <span className="font-medium">Aceito ler sem interpretar para o outro.</span>
             </label>
           </div>
 
