@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { canAccessFeature, normalizePortalType } from '@/types/portal';
 import { Database } from '@/integrations/supabase/types';
+import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
 
 type PortalType = Database['public']['Enums']['portal_type'];
 import { 
@@ -129,13 +130,11 @@ export default function BibliotecaTravessiaDetalhe() {
 
       case 'audio':
         return (
-          <div className="bg-muted/30 rounded-lg p-4">
-            <div className="flex items-center gap-3 mb-3">
-              <Volume2 className="h-5 w-5 text-primary" />
-              <span className="text-sm font-medium">{mediaItem.titulo || 'Áudio'}</span>
-            </div>
-            <audio src={mediaItem.url} controls className="w-full" />
-          </div>
+          <UnifiedAudioPlayer
+            audioUrl={mediaItem.url}
+            title={mediaItem.titulo || 'Áudio'}
+            size="md"
+          />
         );
 
       case 'image':
