@@ -1344,10 +1344,18 @@ export type Database = {
           id: string
           manifesto: string | null
           ordem: number | null
+          orientacao_clinica_contraindicado: string | null
+          orientacao_clinica_evitar: string | null
+          orientacao_clinica_indicado: string | null
+          orientacao_clinica_riscos: string | null
+          orientacao_clinica_uso: string | null
           por_que_este_livro: string | null
           portal_minimo: Database["public"]["Enums"]["portal_type"] | null
+          portal_minimo_clinico: string | null
           publicado: boolean | null
+          ritual_aceite_obrigatorio: boolean | null
           subtitulo: string | null
+          tema_simbolico: string | null
           titulo: string
           updated_at: string
         }
@@ -1362,10 +1370,18 @@ export type Database = {
           id?: string
           manifesto?: string | null
           ordem?: number | null
+          orientacao_clinica_contraindicado?: string | null
+          orientacao_clinica_evitar?: string | null
+          orientacao_clinica_indicado?: string | null
+          orientacao_clinica_riscos?: string | null
+          orientacao_clinica_uso?: string | null
           por_que_este_livro?: string | null
           portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
+          portal_minimo_clinico?: string | null
           publicado?: boolean | null
+          ritual_aceite_obrigatorio?: boolean | null
           subtitulo?: string | null
+          tema_simbolico?: string | null
           titulo: string
           updated_at?: string
         }
@@ -1380,10 +1396,18 @@ export type Database = {
           id?: string
           manifesto?: string | null
           ordem?: number | null
+          orientacao_clinica_contraindicado?: string | null
+          orientacao_clinica_evitar?: string | null
+          orientacao_clinica_indicado?: string | null
+          orientacao_clinica_riscos?: string | null
+          orientacao_clinica_uso?: string | null
           por_que_este_livro?: string | null
           portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
+          portal_minimo_clinico?: string | null
           publicado?: boolean | null
+          ritual_aceite_obrigatorio?: boolean | null
           subtitulo?: string | null
+          tema_simbolico?: string | null
           titulo?: string
           updated_at?: string
         }
@@ -1508,6 +1532,8 @@ export type Database = {
           icone: string | null
           id: string
           ordem: number | null
+          orientacao_curta: string | null
+          tipo_fase: string | null
           titulo: string
           updated_at: string
         }
@@ -1519,6 +1545,8 @@ export type Database = {
           icone?: string | null
           id?: string
           ordem?: number | null
+          orientacao_curta?: string | null
+          tipo_fase?: string | null
           titulo: string
           updated_at?: string
         }
@@ -1530,6 +1558,8 @@ export type Database = {
           icone?: string | null
           id?: string
           ordem?: number | null
+          orientacao_curta?: string | null
+          tipo_fase?: string | null
           titulo?: string
           updated_at?: string
         }
@@ -1635,6 +1665,35 @@ export type Database = {
             columns: ["pergunta_id"]
             isOneToOne: false
             referencedRelation: "clube_livro_perguntas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_livro_ritual_aceites: {
+        Row: {
+          aceito_em: string
+          ciclo_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          aceito_em?: string
+          ciclo_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          aceito_em?: string
+          ciclo_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_livro_ritual_aceites_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
             referencedColumns: ["id"]
           },
         ]

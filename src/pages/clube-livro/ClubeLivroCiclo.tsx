@@ -8,18 +8,37 @@ import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useClubeCicloDetalhe } from '@/hooks/useClubeLivro';
+import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
+import { useAuth } from '@/contexts/AuthContext';
+import { canAccessFeature } from '@/types/portal';
 import { 
   BookOpen, ChevronRight, Home, Sparkles, 
   BookMarked, Headphones, Video, MessageCircle,
-  ArrowRight
+  ArrowRight, Stethoscope, AlertTriangle, CheckCircle, XCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+// Phase type icons/labels
+const FASE_TYPE_CONFIG: Record<string, { label: string; color: string }> = {
+  chamado: { label: 'Chamado', color: 'bg-blue-500/20 text-blue-400' },
+  ruptura: { label: 'Ruptura', color: 'bg-red-500/20 text-red-400' },
+  reorganizacao: { label: 'Reorganização', color: 'bg-amber-500/20 text-amber-400' },
+  integracao: { label: 'Integração', color: 'bg-green-500/20 text-green-400' },
+};
 
 export default function ClubeLivroCiclo() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { ciclo, fases, escutas, encontros, isLoading } = useClubeCicloDetalhe(id);
+  const { isProfessional } = useProfessionalStatus();
+  const { user } = useAuth();
+  
+  // Check if user can see clinical tab
+  const portalMinimoClin = ciclo?.portal_minimo_clinico || 'aluna_formacao';
+  const canSeeClinical = isProfessional && user && canAccessFeature(user.portal, portalMinimoClin as any);
+  const hasClinicalContent = ciclo?.orientacao_clinica_uso || ciclo?.orientacao_clinica_evitar;
 
   if (isLoading) {
     return (
@@ -88,9 +107,16 @@ export default function ClubeLivroCiclo() {
 
           {/* Info */}
           <div className="flex-1 text-center md:text-left">
-            <Badge variant="secondary" className="mb-2">
-              Ciclo Atual
-            </Badge>
+            <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
+              {ciclo.ativo && (
+                <Badge variant="secondary">Ciclo Atual</Badge>
+              )}
+              {ciclo.tema_simbolico && (
+                <Badge variant="outline" className="text-gold border-gold/30">
+                  {ciclo.tema_simbolico}
+                </Badge>
+              )}
+            </div>
             <h1 className="text-2xl md:text-3xl font-display text-foreground mb-1">
               {ciclo.titulo}
             </h1>
@@ -103,130 +129,261 @@ export default function ClubeLivroCiclo() {
           </div>
         </div>
 
-        {/* Por que este livro */}
-        {ciclo.por_que_este_livro && (
-          <Card className="mb-6 bg-card/50 border-gold/20">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm uppercase tracking-widest text-gold flex items-center gap-2">
-                <Sparkles className="w-4 h-4" />
-                Por que este livro está aqui
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                {ciclo.por_que_este_livro}
-              </p>
-            </CardContent>
-          </Card>
-        )}
+        {/* Tabs: Leitura / Uso Clínico */}
+        <Tabs defaultValue="leitura" className="mb-8">
+          <TabsList className={cn(canSeeClinical && hasClinicalContent ? 'grid grid-cols-2' : 'hidden')}>
+            <TabsTrigger value="leitura" className="gap-2">
+              <BookOpen className="w-4 h-4" />
+              Leitura
+            </TabsTrigger>
+            {canSeeClinical && hasClinicalContent && (
+              <TabsTrigger value="clinico" className="gap-2">
+                <Stethoscope className="w-4 h-4" />
+                Uso Clínico
+              </TabsTrigger>
+            )}
+          </TabsList>
 
-        {/* Como ler */}
-        {ciclo.como_ler && (
-          <Card className="mb-8 bg-muted/30">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                <BookOpen className="w-4 h-4" />
-                Como ler este livro na Casa Orácula
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                {ciclo.como_ler}
-              </p>
-            </CardContent>
-          </Card>
-        )}
+          {/* Tab: Leitura */}
+          <TabsContent value="leitura" className="mt-6 space-y-6">
+            {/* Por que este livro */}
+            {ciclo.por_que_este_livro && (
+              <Card className="bg-card/50 border-gold/20">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm uppercase tracking-widest text-gold flex items-center gap-2">
+                    <Sparkles className="w-4 h-4" />
+                    Por que este livro está aqui
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                    {ciclo.por_que_este_livro}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
 
-        {/* Fases do Livro */}
-        {fases && fases.length > 0 && (
-          <section className="mb-8">
-            <h2 className="text-lg font-display text-foreground mb-4 flex items-center gap-2">
-              <BookMarked className="w-5 h-5 text-gold" />
-              Fases da Leitura
-            </h2>
-            <div className="space-y-3">
-              {fases.map((fase, index) => (
-                <Card
-                  key={fase.id}
-                  className={cn(
-                    'cursor-pointer transition-all hover:border-gold/50',
-                    'group'
-                  )}
-                  onClick={() => navigate(`/clube-livro/${id}/fase/${fase.id}`)}
-                >
-                  <CardContent className="py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-8 h-8 rounded-full bg-gold/10 text-gold flex items-center justify-center text-sm font-medium">
-                        {index + 1}
-                      </div>
-                      <div>
-                        <h3 className="font-medium text-foreground group-hover:text-gold transition-colors">
-                          {fase.titulo}
-                        </h3>
-                        {fase.descricao && (
-                          <p className="text-xs text-muted-foreground line-clamp-1">
-                            {fase.descricao}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-gold transition-colors" />
+            {/* Como ler */}
+            {ciclo.como_ler && (
+              <Card className="bg-muted/30">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                    <BookOpen className="w-4 h-4" />
+                    Como ler este livro na Casa Orácula
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                    {ciclo.como_ler}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Fases do Livro */}
+            {fases && fases.length > 0 && (
+              <section>
+                <h2 className="text-lg font-display text-foreground mb-4 flex items-center gap-2">
+                  <BookMarked className="w-5 h-5 text-gold" />
+                  Fases da Leitura
+                </h2>
+                <div className="space-y-3">
+                  {fases.map((fase, index) => {
+                    const typeConfig = fase.tipo_fase ? FASE_TYPE_CONFIG[fase.tipo_fase] : null;
+                    
+                    return (
+                      <Card
+                        key={fase.id}
+                        className="cursor-pointer transition-all hover:border-gold/50 group"
+                        onClick={() => navigate(`/clube-livro/${id}/fase/${fase.id}`)}
+                      >
+                        <CardContent className="py-4 flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <div className="w-8 h-8 rounded-full bg-gold/10 text-gold flex items-center justify-center text-sm font-medium">
+                              {index + 1}
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <h3 className="font-medium text-foreground group-hover:text-gold transition-colors">
+                                  {fase.titulo}
+                                </h3>
+                                {typeConfig && (
+                                  <Badge variant="outline" className={cn('text-xs', typeConfig.color)}>
+                                    {typeConfig.label}
+                                  </Badge>
+                                )}
+                              </div>
+                              {(fase.descricao || fase.orientacao_curta) && (
+                                <p className="text-xs text-muted-foreground line-clamp-1">
+                                  {fase.orientacao_curta || fase.descricao}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-gold transition-colors" />
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+            {/* Escuta Guiada */}
+            {hasEscutas && (
+              <section>
+                <h2 className="text-lg font-display text-foreground mb-4 flex items-center gap-2">
+                  <Headphones className="w-5 h-5 text-gold" />
+                  Escuta Guiada
+                </h2>
+                <Card className="bg-muted/30">
+                  <CardContent className="py-4">
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-between"
+                      onClick={() => navigate(`/clube-livro/${id}/escutas`)}
+                    >
+                      <span className="flex items-center gap-2">
+                        <Headphones className="w-4 h-4" />
+                        {escutas.length} {escutas.length === 1 ? 'áudio/texto' : 'áudios/textos'} disponíveis
+                      </span>
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
-          </section>
-        )}
+              </section>
+            )}
 
-        {/* Escuta Guiada */}
-        {hasEscutas && (
-          <section className="mb-8">
-            <h2 className="text-lg font-display text-foreground mb-4 flex items-center gap-2">
-              <Headphones className="w-5 h-5 text-gold" />
-              Escuta Guiada
-            </h2>
-            <Card className="bg-muted/30">
-              <CardContent className="py-4">
-                <Button
-                  variant="ghost"
-                  className="w-full justify-between"
-                  onClick={() => navigate(`/clube-livro/${id}/escutas`)}
-                >
-                  <span className="flex items-center gap-2">
-                    <Headphones className="w-4 h-4" />
-                    {escutas.length} {escutas.length === 1 ? 'áudio/texto' : 'áudios/textos'} disponíveis
-                  </span>
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </CardContent>
-            </Card>
-          </section>
-        )}
+            {/* Encontros */}
+            {hasEncontros && (
+              <section>
+                <h2 className="text-lg font-display text-foreground mb-4 flex items-center gap-2">
+                  <Video className="w-5 h-5 text-gold" />
+                  Encontros do Círculo
+                </h2>
+                <Card className="bg-muted/30">
+                  <CardContent className="py-4">
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-between"
+                      onClick={() => navigate(`/clube-livro/${id}/encontros`)}
+                    >
+                      <span className="flex items-center gap-2">
+                        <MessageCircle className="w-4 h-4" />
+                        {encontros.length} {encontros.length === 1 ? 'encontro' : 'encontros'}
+                      </span>
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              </section>
+            )}
+          </TabsContent>
 
-        {/* Encontros */}
-        {hasEncontros && (
-          <section>
-            <h2 className="text-lg font-display text-foreground mb-4 flex items-center gap-2">
-              <Video className="w-5 h-5 text-gold" />
-              Encontros do Círculo
-            </h2>
-            <Card className="bg-muted/30">
-              <CardContent className="py-4">
-                <Button
-                  variant="ghost"
-                  className="w-full justify-between"
-                  onClick={() => navigate(`/clube-livro/${id}/encontros`)}
-                >
-                  <span className="flex items-center gap-2">
-                    <MessageCircle className="w-4 h-4" />
-                    {encontros.length} {encontros.length === 1 ? 'encontro' : 'encontros'}
-                  </span>
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </CardContent>
-            </Card>
-          </section>
-        )}
+          {/* Tab: Uso Clínico (Profissional) */}
+          {canSeeClinical && hasClinicalContent && (
+            <TabsContent value="clinico" className="mt-6 space-y-6">
+              {/* Aviso Ético Fixo */}
+              <Card className="bg-amber-500/10 border-amber-500/30">
+                <CardContent className="py-4 flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-amber-500 mb-1">
+                      Orientação para uso clínico supervisionado
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Este livro não interpreta a cliente. Ele afina a escuta da facilitadora.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Quando usar */}
+              {ciclo.orientacao_clinica_uso && (
+                <Card className="bg-green-500/5 border-green-500/20">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm uppercase tracking-widest text-green-500 flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4" />
+                      Quando usar este livro com clientes
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line text-sm">
+                      {ciclo.orientacao_clinica_uso}
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Quando evitar */}
+              {ciclo.orientacao_clinica_evitar && (
+                <Card className="bg-red-500/5 border-red-500/20">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm uppercase tracking-widest text-red-500 flex items-center gap-2">
+                      <XCircle className="w-4 h-4" />
+                      Quando evitar
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line text-sm">
+                      {ciclo.orientacao_clinica_evitar}
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Riscos de projeção */}
+              {ciclo.orientacao_clinica_riscos && (
+                <Card className="bg-amber-500/5 border-amber-500/20">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm uppercase tracking-widest text-amber-500 flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4" />
+                      Riscos de projeção da terapeuta
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line text-sm">
+                      {ciclo.orientacao_clinica_riscos}
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Cliente indicado / contraindicado */}
+              <div className="grid gap-4 md:grid-cols-2">
+                {ciclo.orientacao_clinica_indicado && (
+                  <Card className="bg-card/50">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground">
+                        Cliente indicado
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground whitespace-pre-line">
+                        {ciclo.orientacao_clinica_indicado}
+                      </p>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {ciclo.orientacao_clinica_contraindicado && (
+                  <Card className="bg-card/50">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground">
+                        Cliente contraindicado
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground whitespace-pre-line">
+                        {ciclo.orientacao_clinica_contraindicado}
+                      </p>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            </TabsContent>
+          )}
+        </Tabs>
       </div>
     </AppLayout>
   );

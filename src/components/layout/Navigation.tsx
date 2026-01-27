@@ -282,6 +282,12 @@ export function Navigation() {
             minPortal: 'aluna',
           },
           {
+            path: '/clube-livro',
+            label: 'Círculo de Leitura',
+            icon: BookOpen,
+            minPortal: 'aluna',
+          },
+          {
             path: '/biblioteca-das-travessias',
             label: 'Travessias',
             icon: Compass,
