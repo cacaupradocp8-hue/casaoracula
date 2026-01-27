@@ -9,6 +9,7 @@ import { Sparkles, ArrowLeft, ArrowRight, Check, RefreshCw, AlertTriangle, Home 
 import { useBig5Oracular, Big5OracularFator, Big5OracularResult } from '@/hooks/useBig5Oracular';
 import { useBig5PortaMapping } from '@/hooks/useBig5PortaMapping';
 import { useRitualSymbolic } from '@/hooks/useRitualSymbolic';
+import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
 import { RadialVisualization } from '@/components/visualization/RadialVisualization';
 import { SymbolicElement, VisualizationConfig } from '@/components/visualization/types';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
@@ -16,6 +17,8 @@ import { ToolEthicalNote } from '@/components/shared/ToolEthicalNote';
 import { SymbolicReadingScreen } from '@/components/big5/SymbolicReadingScreen';
 import { RitualSymbolicScreen } from '@/components/big5/RitualSymbolicScreen';
 import { DepthDecisionScreen } from '@/components/big5/DepthDecisionScreen';
+import { GuardiaLeituraChat } from '@/components/big5/GuardiaLeituraChat';
+import { GuardiaManualProfissional } from '@/components/big5/GuardiaManualProfissional';
 import { useNavigate } from 'react-router-dom';
 
 type Phase = 'intro' | 'questionnaire' | 'result' | 'symbolic_reading' | 'ritual' | 'decision';
@@ -33,6 +36,7 @@ export default function Big5Oracular() {
   } = useBig5Oracular();
 
   const { saving: savingRitual, saveRitualCompletion, markNarroterapiaAccess, isCertified, registro } = useRitualSymbolic();
+  const { isProfessional } = useProfessionalStatus();
 
   const [phase, setPhase] = useState<Phase>('intro');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -262,6 +266,14 @@ export default function Big5Oracular() {
               </Card>
 
               <ToolEthicalNote />
+
+              {/* Guardiã da Leitura - Intro */}
+              <div className="mt-2">
+                <GuardiaLeituraChat 
+                  contextPage="oracular"
+                  welcomeMessage="Olá! Antes de começar a leitura simbólica, posso explicar como ela difere da Leitura Funcional. Pergunte se quiser."
+                />
+              </div>
             </motion.div>
           )}
 
@@ -520,13 +532,30 @@ export default function Big5Oracular() {
 
           {/* FASE 6: Decisão de Profundidade */}
           {phase === 'decision' && (
-            <DepthDecisionScreen
-              key="decision"
-              portaAssociada={mapping?.porta_associada || null}
-              isCertified={isCertified}
-              onClose={handleClose}
-              onAccessNarroterapia={handleAccessNarroterapia}
-            />
+            <motion.div
+              key="decision-wrapper"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
+              <DepthDecisionScreen
+                key="decision"
+                portaAssociada={mapping?.porta_associada || null}
+                isCertified={isCertified}
+                onClose={handleClose}
+                onAccessNarroterapia={handleAccessNarroterapia}
+              />
+
+              {/* Guardiã da Leitura - Resultado */}
+              <GuardiaLeituraChat 
+                contextPage="oracular_resultado"
+                welcomeMessage="Você completou a Leitura Oracular. Posso esclarecer o que esse mapa simbólico representa e como ele se relaciona com a Leitura Funcional."
+                defaultOpen
+              />
+
+              {/* Manual para Facilitadoras (apenas profissionais) */}
+              {isProfessional && <GuardiaManualProfissional />}
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
