@@ -34,6 +34,7 @@ import CartografiaTorre from "./pages/salas/CartografiaTorre";
 import PlasticidadePsiquica from "./pages/salas/PlasticidadePsiquica";
 import SalasList from "./pages/SalasList";
 import FerramentasHub from "./pages/FerramentasHub";
+import FerramentasVitrine from "./pages/FerramentasVitrine";
 import SalaDetalhe from "./pages/SalaDetalhe";
 import PortalDetalhe from "./pages/PortalDetalhe";
 import AulaPage from "./pages/AulaPage";
@@ -564,6 +565,16 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="mentorada">
             <FerramentasHub />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Ferramentas Vitrine - Showcase for visitors */}
+      <Route
+        path="/ferramentas-vitrine"
+        element={
+          <ProtectedRoute minPortal="visitante">
+            <FerramentasVitrine />
           </ProtectedRoute>
         }
       />
