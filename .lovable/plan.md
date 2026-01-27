@@ -1,100 +1,165 @@
 
-# Plano: Ajustes Finais da Ferramenta Big Five Funcional
+# Plano: Vitrine de Ferramentas para Visitantes
 
-## Resumo das Alterações
+## Objetivo
 
-Este plano resolve os 4 problemas identificados para deixar a ferramenta Big Five — Leitura Funcional como a versão única e funcional.
-
----
-
-## 1. Desativar Ferramentas Big 5 Duplicadas
-
-Alterar `ativa = false` para as ferramentas antigas que serão removidas do Hub:
-
-| ID | Nome | Ação |
-|----|------|------|
-| `de09a467-d3f9-486a-be2b-b1a335ce7b54` | Big 5 | Desativar |
-| `7803626e-0762-47f1-9d57-f7012b69a6ff` | Big Five (OCEAN) | Desativar |
-
-A ferramenta `big5_simbolico` (O Mapa dos Cinco Territórios) será mantida, pois é uma versão diferente com proposta simbólica.
+Criar uma **página separada** (`/ferramentas-vitrine`) que exibe todas as ferramentas da Casa em estado **bloqueado**, sem alterar a proteção da rota principal `/ferramentas`. Isso permite que visitantes conheçam a riqueza do método antes de entrar.
 
 ---
 
-## 2. Traduzir Fatores para Português na Interface
+## Abordagem
 
-Corrigir a tela de introdução que exibe os nomes em inglês.
+| Elemento | Decisão |
+|----------|---------|
+| Rota protegida `/ferramentas` | ✅ Mantida intacta |
+| Nova rota `/ferramentas-vitrine` | ✅ Aberta para visitantes |
+| Estado das ferramentas na vitrine | 🔒 Sempre bloqueado |
+| CTA | Direcionar para Travessia Zero |
 
-**Arquivo:** `src/pages/Big5Funcional.tsx`
+---
 
-**Alteração na linha 194:**
+## Arquitetura da Solução
+
 ```text
-Antes: {dim.nome_ingles}
-Depois: {dim.nome}
+/ferramentas-vitrine (NOVA)
+├── Acessível para visitantes autenticados
+├── Busca TODAS as ferramentas ativas do banco
+├── Exibe com FerramentaCard em modo bloqueado
+├── Banner explicativo no topo
+└── CTA para iniciar travessia
+
+/ferramentas (EXISTENTE)
+├── Protegido com minPortal="mentorada"
+├── Sem alterações
+└── Lógica de acesso normal
 ```
 
-Os nomes já estão em português no banco:
-- Abertura à Experiência
-- Conscienciosidade  
-- Extroversão
-- Amabilidade
-- Neuroticismo
+---
+
+## Alterações Técnicas
+
+### 1. Criar Nova Página `FerramentasVitrine`
+
+**Arquivo:** `src/pages/FerramentasVitrine.tsx`
+
+Conteúdo:
+- Reutilizar a estrutura visual do `FerramentasHub`
+- Buscar ferramentas ativas do banco (mesma query)
+- **Forçar `acessivel: false`** para todas as ferramentas
+- Não permitir navegação ao clicar nos cards
+- Exibir ícone real com cadeado sobreposto
 
 ---
 
-## 3. Corrigir Ícones no Hub de Ferramentas
+### 2. Adicionar Banner de Vitrine
 
-O componente `FerramentaCard` renderiza o ícone diretamente como texto. Para ícones salvos como nomes de componentes Lucide (ex: "Brain"), é necessário adicionar um mapeamento.
+No topo da página, exibir:
+
+```text
+┌─────────────────────────────────────────────────────────┐
+│ 🔐 Vitrine de Ferramentas                               │
+│                                                         │
+│ Estes são os recursos disponíveis para quem atravessa   │
+│ a formação. Para utilizá-los, inicie sua jornada na     │
+│ Sala da Visitante.                                      │
+│                                                         │
+│ [Iniciar Travessia]                                     │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 3. Modificar FerramentaCard para Modo Vitrine
 
 **Arquivo:** `src/components/shared/FerramentaCard.tsx`
 
-**Solução:**
-Criar um mapa de ícones conhecidos e renderizar o componente correspondente quando o valor for um nome Lucide:
+Adicionar prop opcional `vitrineMode`:
 
 ```text
-const ICON_MAP = {
-  Brain: <Brain />,
-  Map: <Map />,
-  wrench: <Wrench />,
-  target: <Target />,
-  castle: <Castle />,
-  layers: <Layers />,
-  users: <Users />,
-  triangle: <Triangle />,
-};
+interface FerramentaCardProps {
+  ferramenta: FerramentaCardData;
+  onClick: () => void;
+  colorScheme?: 'gold' | 'purple' | 'emerald' | 'rose';
+  vitrineMode?: boolean;  // NOVO
+}
+```
 
-// Na renderização:
-Se icone está em ICON_MAP → renderizar componente
-Senão → renderizar como emoji/texto
+Quando `vitrineMode = true`:
+- Exibir o ícone original (não substituir por cadeado)
+- Adicionar cadeado pequeno no canto do ícone
+- Manter descrição da finalidade visível (não mensagem de bloqueio)
+- Remover botão "Abrir"
+- Cursor `cursor-default` (não `cursor-not-allowed`)
+
+---
+
+### 4. Registrar Rota no App.tsx
+
+**Arquivo:** `src/App.tsx`
+
+```text
+<Route
+  path="/ferramentas-vitrine"
+  element={
+    <ProtectedRoute minPortal="visitante">
+      <FerramentasVitrine />
+    </ProtectedRoute>
+  }
+/>
 ```
 
 ---
 
-## 4. Adicionar Integração com Jardim da Psique
+### 5. Adicionar Link no Menu para Visitantes
 
-Para que os resultados sejam salvos automaticamente no diário arquetípico (como as outras ferramentas fazem), adicionar o `SalvarJardimModal` na tela de resultado.
+**Onde:** Na navegação lateral ou no Tour, adicionar link para `/ferramentas-vitrine` visível para visitantes.
 
-**Arquivo:** `src/pages/Big5Funcional.tsx`
-
-**Alterações:**
-1. Importar `SalvarJardimModal`
-2. Adicionar state para controlar o modal
-3. Exibir o modal após salvar o resultado
-4. Passar os dados do resultado para o modal
+Possíveis locais:
+- `Navigation.tsx` — item condicional para visitantes
+- `Tour.tsx` — botão "Ver todas as ferramentas"
+- `VisitorHomePage.tsx` — card com CTA
 
 ---
 
-## Ordem de Execução
+## Resultado Esperado
 
-1. Migração SQL para desativar ferramentas duplicadas
-2. Corrigir exibição dos nomes em português
-3. Atualizar FerramentaCard com mapeamento de ícones Lucide
-4. Adicionar integração com SalvarJardimModal
+| Perfil | Acesso `/ferramentas` | Acesso `/ferramentas-vitrine` |
+|--------|----------------------|------------------------------|
+| visitante | ❌ Bloqueado | ✅ Todas bloqueadas (vitrine) |
+| aluna | ❌ Bloqueado | ✅ Todas bloqueadas (vitrine) |
+| mentorada+ | ✅ Normal | ✅ Pode ver vitrine também |
+| admin | ✅ Total | ✅ Pode ver vitrine |
 
 ---
 
-## Resultado Final
+## Fluxo do Visitante
 
-- Apenas **Big Five — Leitura Funcional** aparecerá no Hub (além da versão Simbólica)
-- Os 5 fatores serão exibidos em português
-- Ícones serão renderizados corretamente
-- Resultados serão salvos no Jardim da Psique automaticamente
+1. Visitante acessa `/ferramentas-vitrine`
+2. Vê todas as ferramentas organizadas por seção
+3. Cada card mostra:
+   - Ícone original + cadeado pequeno
+   - Nome da ferramenta
+   - Finalidade/descrição
+   - Badge de tipo (quando houver)
+4. Banner no topo explica contexto
+5. CTA leva para Travessia Zero ou Sala da Visitante
+
+---
+
+## Benefícios
+
+- ✅ Rota protegida permanece intacta
+- ✅ Visitantes conhecem a amplitude do método
+- ✅ Cards mantêm identidade visual (não apenas cadeados)
+- ✅ Nenhuma promessa falsa — tudo claramente bloqueado
+- ✅ Incentivo claro para iniciar a travessia
+- ✅ Reutiliza componentes existentes
+
+---
+
+## Ordem de Implementação
+
+1. Adicionar prop `vitrineMode` ao `FerramentaCard`
+2. Criar página `FerramentasVitrine.tsx`
+3. Registrar rota em `App.tsx`
+4. Adicionar link na navegação para visitantes
