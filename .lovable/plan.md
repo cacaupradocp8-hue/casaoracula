@@ -1,159 +1,259 @@
 
-# Plano: Estrutura Completa dos 12 Ciclos do Clube do Livro Oracular
+# Plano: Correção de Degustação 24h e Áudio no App
 
-## Situacao Atual
+## Análise Atual
 
-O banco de dados ja possui:
-- 1 ciclo cadastrado: "Mulheres que Correm com Lobos" (id: 9ab2832e-...)
-- 5 fases neste ciclo (4 padrao + 1 manual)
-- Estrutura de tabelas completa para ciclos, fases, perguntas, escutas e encontros
-- Campos clinicos disponiveis (orientacao_clinica_uso, evitar, riscos, indicado, contraindicado)
-- Campos de semana disponiveis (numero_semana, leitura_orientada, alerta_clinico, etc.)
+### Degustação 24h - Estado Atual
+A funcionalidade de degustação JÁ EXISTE e está quase completa:
 
-## O Que Sera Criado
+**O que já funciona:**
+- Tabela `degustacao_requests` com campos corretos (status, expira_em, aprovado_por, etc.)
+- Hook `useDegustacao.ts` para visitantes solicitarem degustação
+- Hook `useDegustacaoAdmin()` para admin gerenciar pedidos
+- Painel admin em `/admin` com aba "Degustação"
+- Trigger que cria notificação para admins quando novo pedido é criado
+- Interface visual para aprovar/rejeitar pedidos
 
-### 1. Botao de Importacao em Massa no Admin
+**Problemas identificados:**
+1. Notificação chega ao admin mas pode não ter link direto para a aba
+2. Falta botão "Encerrar manualmente" no admin
+3. Status "expirado" não é atualizado automaticamente (apenas verificado no frontend)
+4. Falta histórico visual claro com tempo restante em tempo real
 
-Adicionar um botao **"Importar Calendario Anual"** no AdminClubeLivroTab que:
-- Cria automaticamente os 12 ciclos com titulos, autores e temas simbolicos
-- Gera as 4 semanas padrao para cada ciclo com a estrutura especificada
-- Preenche os campos clinicos basicos para livros que precisam
-- Define datas de inicio/fim baseadas em ciclos de 6 semanas
+### Áudio - Estado Atual
+Múltiplos componentes de áudio já existem:
 
-### 2. Dados dos 12 Ciclos
+**Componentes existentes:**
+- `AudioUpload.tsx` - Upload/seleção no admin (funcionando)
+- `AudioCard.tsx` - Player reativo no Ofício da Voz Oracular (funcionando)
+- `AudioBlock.tsx` - Bloco modular para conteúdos (funcionando)
+- `PortaAudioPlayer.tsx` - Player no Labirinto (funcionando)
+- Players nativos `<audio>` em várias páginas
+
+**Problemas identificados:**
+1. Inconsistência entre tipos de player (alguns usam componente customizado, outros `<audio>` nativo)
+2. Falta tratamento de erro quando URL é inválida
+3. Alguns campos salvam path em vez de URL pública completa
+4. Não há componente unificado para todas as situações
+
+---
+
+## Correções Propostas
+
+### 1. Degustação 24h
+
+#### A) Atualização Automática de Status Expirado
+Modificar a função `check_and_expire_access` existente para também atualizar degustações expiradas:
 
 ```text
-CICLO 1 - DESPERTAR
-  Livro: Mulheres que Correm com os Lobos
-  Autor: Clarissa Pinkola Estes
-  Tema: DESPERTAR
-
-CICLO 2 - COLAPSO DO PERSONAGEM
-  Livro: O Codigo do Ser
-  Autor: James Hillman
-  Tema: COLAPSO DO PERSONAGEM
-
-CICLO 3 - CORPO & SOMBRA
-  Livro: A Coruja Era Filha do Padeiro
-  Autor: Marion Woodman
-  Tema: CORPO & SOMBRA
-
-CICLO 4 - ESPACO POTENCIAL
-  Livro: O Brincar e a Realidade
-  Autor: Donald Winnicott
-  Tema: ESPACO POTENCIAL
-
-CICLO 5 - DESEJO & AMBIVALENCIA
-  Livro: Inteligencia Erotica
-  Autor: Esther Perel
-  Tema: DESEJO & AMBIVALENCIA
-
-CICLO 6 - QUEDA & DIGNIDADE
-  Livro: O Acontecimento
-  Autor: Annie Ernaux
-  Tema: QUEDA & DIGNIDADE
-
-CICLO 7 - NARRATIVA COMO CURA
-  Livro: Ficcoes que Curam
-  Autor: James Hillman
-  Tema: NARRATIVA COMO CURA
-
-CICLO 8 - CASA PSIQUICA
-  Livro: A Poetica do Espaco
-  Autor: Gaston Bachelard
-  Tema: CASA PSIQUICA
-
-CICLO 9 - ATENCAO & LIMITE
-  Livro: A Gravidade e a Graca
-  Autor: Simone Weil
-  Tema: ATENCAO & LIMITE
-
-CICLO 10 - RESPONSABILIDADE
-  Livro: A Condicao Humana
-  Autor: Hannah Arendt
-  Tema: RESPONSABILIDADE
-
-CICLO 11 - ESCRITA COMO PRATICA
-  Livro: O Poder da Escrita
-  Autor: Christina Baldwin
-  Tema: ESCRITA COMO PRATICA
-
-CICLO 12 - LINGUAGEM VIVA
-  Livro: Agua Viva
-  Autor: Clarice Lispector
-  Tema: LINGUAGEM VIVA
+┌─────────────────────────────────────────────────────┐
+│  Edge Function: check-access-expiration             │
+│  (já existe, precisa expansão)                      │
+├─────────────────────────────────────────────────────┤
+│  1. Verificar profiles com access_expires_at < now()│
+│  2. NOVO: Verificar degustacao_requests aprovados   │
+│     onde expira_em < now() → marcar como 'expirado' │
+│  3. Reverter portal do usuário para 'visitante'    │
+└─────────────────────────────────────────────────────┘
 ```
 
-### 3. Estrutura de 4 Semanas por Ciclo
+#### B) Botão "Encerrar Manualmente" no Admin
+Adicionar função `endRequest` no hook `useDegustacaoAdmin`:
 
-Para cada ciclo, serao criadas 4 semanas com a estrutura canonica:
+```text
+┌─────────────────────────────────────────────────────┐
+│  Ação: Encerrar Degustação                          │
+├─────────────────────────────────────────────────────┤
+│  1. Atualizar status → 'expirado'                  │
+│  2. Atualizar expira_em → now()                    │
+│  3. Reverter portal do usuário → 'visitante'       │
+│  4. Notificar usuária                               │
+│  5. Toast de confirmação                            │
+└─────────────────────────────────────────────────────┘
+```
 
-| Semana | Titulo | Tipo | Descricao |
-|--------|--------|------|-----------|
-| 1 | O Arquetipo Nao E a Cliente | chamado | Diferenca entre simbolo e identidade |
-| 2 | O Risco da Projecao da Facilitadora | ruptura | Quando a leitura vira identificacao |
-| 3 | Quando Nao Usar um Conto | reorganizacao | Contraindicacoes e uso inadequado |
-| 4 | Integracao e Fechamento | integracao | Consolidacao do ciclo |
+#### C) Tempo Restante em Tempo Real
+No AdminDegustacaoTab, para pedidos aprovados ativos:
 
-### 4. Conteudo Clinico Padrao (Mulheres que Correm com Lobos)
+```text
+┌─────────────────────────────────────────────────────┐
+│  Card do Pedido Aprovado                            │
+├─────────────────────────────────────────────────────┤
+│  👤 Patricia                                        │
+│  ✅ Aprovado                                        │
+│  ⏱️ Tempo restante: 18h 32min                      │
+│                        [Encerrar]                   │
+└─────────────────────────────────────────────────────┘
+```
 
-Para o primeiro ciclo, ja preenchido como exemplo:
+#### D) Notificação com Link Direto
+Atualizar trigger para incluir CTA na notificação:
 
-**Quando usar com clientes:**
-- Cliente desconectada do corpo
-- Excesso de adaptacao
-- Apagamento do desejo
+```text
+cta_label: 'Ver pedidos'
+cta_url: '/admin?tab=degustacao'
+```
 
-**Quando evitar:**
-- Crise psicotica
-- Luto recente
-- Ego fragilizado
+#### E) Mensagem Clara para Visitante
+No VisitorDashboardPanel, quando degustação expira:
 
-**Riscos de projecao da terapeuta:**
-- Romantizar sofrimento
-- Projetar propria iniciacao
+```text
+┌─────────────────────────────────────────────────────┐
+│  ⏰ Sua degustação foi encerrada                    │
+│  Seu período de 24h terminou. Conheça nossos       │
+│  planos para continuar acessando a Casa.           │
+│                   [Conhecer planos]                 │
+└─────────────────────────────────────────────────────┘
+```
+
+---
+
+### 2. Correção de Áudios
+
+#### A) Componente Unificado de Áudio
+Criar componente `UnifiedAudioPlayer.tsx` baseado no `AudioCard.tsx` (que já funciona bem):
+
+```text
+Props:
+- audioUrl: string
+- title?: string
+- coverImage?: string
+- size?: 'sm' | 'md' | 'lg'
+- showTitle?: boolean
+- onError?: () => void
+
+Features:
+- Play/pause
+- Barra de progresso
+- Tempo decorrido
+- Funciona em mobile
+- Não inicia automaticamente
+- Tratamento de erro (não renderiza se URL inválida)
+```
+
+#### B) Validação de URL no AudioUpload
+Adicionar verificação se a URL retornada é válida antes de salvar:
+
+```text
+1. Após upload, verificar se URL começa com https://
+2. Se for path relativo, converter para URL pública
+3. Testar se URL é acessível antes de confirmar
+```
+
+#### C) Fallback Seguro em Todas as Páginas
+Padronizar renderização condicional:
+
+```text
+{audioUrl && isValidAudioUrl(audioUrl) ? (
+  <UnifiedAudioPlayer audioUrl={audioUrl} />
+) : null}
+```
+
+Páginas que precisam atualização:
+- QuizPage.tsx (resultado com áudio)
+- AulaPage.tsx (aulas com áudio)
+- LessonContent.tsx (lições de curso)
+- BibliotecaTravessiaDetalhe.tsx (mídia da travessia)
+- LabirintoPorta.tsx (já usa PortaAudioPlayer - ok)
 
 ---
 
 ## Arquivos a Modificar
 
-### 1. src/components/admin/AdminClubeLivroTab.tsx
+### Degustação
 
-Adicionar:
-- Botao "Importar Calendario Anual (12 Ciclos)"
-- Mutation para inserir os 12 ciclos em massa
-- Mutation para gerar as 4 semanas de cada ciclo
-- Confirmacao antes da importacao
+| Arquivo | Modificação |
+|---------|-------------|
+| `src/hooks/useDegustacao.ts` | Adicionar função `endRequest` para encerrar manualmente |
+| `src/components/admin/AdminDegustacaoTab.tsx` | Adicionar botão "Encerrar", tempo restante em tempo real |
+| `src/components/visitor/VisitorDashboardPanel.tsx` | Mensagem quando degustação expirou |
+| `supabase/functions/check-access-expiration/index.ts` | Incluir verificação de degustações expiradas |
+| Migration SQL | Atualizar trigger para incluir cta_url na notificação |
 
-### 2. src/hooks/useClubeLivro.ts
+### Áudio
 
-Adicionar:
-- Constante CALENDARIO_ANUAL com os dados dos 12 livros
-- Constante SEMANAS_PADRAO com a estrutura das 4 semanas
+| Arquivo | Modificação |
+|---------|-------------|
+| `src/components/audio/UnifiedAudioPlayer.tsx` | CRIAR - componente unificado |
+| `src/lib/audioUtils.ts` | CRIAR - funções auxiliares (isValidAudioUrl, getPublicAudioUrl) |
+| `src/pages/QuizPage.tsx` | Usar UnifiedAudioPlayer com fallback |
+| `src/pages/AulaPage.tsx` | Usar UnifiedAudioPlayer com fallback |
+| `src/components/courses/LessonContent.tsx` | Usar UnifiedAudioPlayer com fallback |
+| `src/pages/BibliotecaTravessiaDetalhe.tsx` | Usar UnifiedAudioPlayer com fallback |
 
 ---
 
-## Fluxo de Importacao
+## Ordem de Implementação
 
-```text
-1. Admin clica em "Importar Calendario Anual"
-2. Modal de confirmacao aparece
-3. Ao confirmar:
-   a. Verifica ciclos existentes (evita duplicatas)
-   b. Insere os 12 ciclos com ordem sequencial
-   c. Para cada ciclo, gera as 4 semanas padrao
-   d. Define primeiro ciclo como ativo
-   e. Define todos como rascunho (publicado = false)
-4. Toast de sucesso
-5. Lista atualizada
+1. **Degustação - Backend**
+   - Atualizar edge function para expirar degustações
+   - Atualizar trigger de notificação
+
+2. **Degustação - Frontend**
+   - Adicionar função `endRequest` no hook
+   - Implementar botão "Encerrar" e tempo restante no admin
+   - Melhorar feedback para visitante
+
+3. **Áudio - Componente Base**
+   - Criar `UnifiedAudioPlayer.tsx`
+   - Criar `audioUtils.ts`
+
+4. **Áudio - Integração**
+   - Atualizar páginas para usar novo componente
+   - Testar em mobile
+
+---
+
+## Seção Técnica
+
+### Função SQL para Expirar Degustações
+
+```sql
+-- Adicionar à função check_and_expire_access
+UPDATE degustacao_requests
+SET status = 'expirado'
+WHERE status = 'aprovado'
+  AND expira_em IS NOT NULL
+  AND expira_em < NOW();
+```
+
+### Interface do UnifiedAudioPlayer
+
+```typescript
+interface UnifiedAudioPlayerProps {
+  audioUrl: string;
+  title?: string;
+  coverImage?: string;
+  size?: 'sm' | 'md' | 'lg';
+  showControls?: boolean;
+  className?: string;
+}
+```
+
+### Validação de URL de Áudio
+
+```typescript
+export function isValidAudioUrl(url: string | null | undefined): boolean {
+  if (!url) return false;
+  if (!url.startsWith('http://') && !url.startsWith('https://')) return false;
+  return true;
+}
+
+export function getPublicAudioUrl(path: string): string {
+  if (path.startsWith('http')) return path;
+  const { data } = supabase.storage.from('audios').getPublicUrl(path);
+  return data.publicUrl;
+}
 ```
 
 ---
 
-## Consideracoes
+## Critérios de Sucesso
 
-- O ciclo existente ("Mulheres que Correm com Lobos") sera mantido
-- Novos ciclos serao criados com publicado = false para revisao manual
-- As datas de inicio/fim podem ser definidas manualmente apos importacao
-- Conteudo clinico pode ser preenchido posteriormente no editor expandido
-- Capas dos livros podem ser adicionadas via upload no editor de ciclo
+- [ ] Toda solicitação de degustação aparece no admin
+- [ ] Admin pode aprovar, negar e encerrar manualmente
+- [ ] Degustação expira automaticamente em 24h (status atualizado)
+- [ ] Visitante vê mensagem clara quando expira
+- [ ] Áudios tocam em mobile e desktop
+- [ ] Páginas não quebram se áudio estiver ausente ou inválido
+- [ ] Player unificado funciona consistentemente em todo o app
