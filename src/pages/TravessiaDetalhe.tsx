@@ -426,8 +426,16 @@ export default function TravessiaDetalhe() {
   const prevTravessia = currentIndex > 0 ? allTravessias[currentIndex - 1] : null;
   const nextTravessia = currentIndex < allTravessias.length - 1 ? allTravessias[currentIndex + 1] : null;
 
+  // Regra de negócio: Travessias 1+ sempre exigem pelo menos 'aluna' (fallback de segurança)
+  const getEffectivePortalMinimo = (t: { number: number; portal_minimo: PortalType }): PortalType => {
+    if (t.number >= 1 && t.portal_minimo === 'visitante') {
+      return 'aluna';
+    }
+    return t.portal_minimo;
+  };
+
   const canAccessNextTravessia = nextTravessia 
-    ? isAdmin || (canAccessFeature(user.portal, nextTravessia.portal_minimo) && (!nextTravessia.requer_profissional || isProfessional))
+    ? isAdmin || (canAccessFeature(user.portal, getEffectivePortalMinimo(nextTravessia)) && (!nextTravessia.requer_profissional || isProfessional))
     : false;
 
   // Group library items by familia
