@@ -1,0 +1,12 @@
+export { VSLPortal } from "./VSLPortal";
+export { SilencioVisual } from "./SilencioVisual";
+export { OrigemProjeto } from "./OrigemProjeto";
+export { EspelhoLead } from "./EspelhoLead";
+export { BigIdeia } from "./BigIdeia";
+export { MecanismoUnico } from "./MecanismoUnico";
+export { ApresentacaoFormacao } from "./ApresentacaoFormacao";
+export { ParaQuemE } from "./ParaQuemE";
+export { ComoESustentada } from "./ComoESustentada";
+export { InvestimentoBloco } from "./InvestimentoBloco";
+export { FAQFormacao } from "./FAQFormacao";
+export { FechamentoRitual } from "./FechamentoRitual";

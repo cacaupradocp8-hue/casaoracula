@@ -1,303 +1,165 @@
-import { useFormacaoContent } from "@/hooks/useFormacaoContent";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Check, X, Users, Compass, BookOpen, FlaskConical, Sparkles, Lock, TrendingUp } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { 
+  VSLPortal,
+  SilencioVisual,
+  OrigemProjeto,
+  EspelhoLead,
+  BigIdeia,
+  MecanismoUnico,
+  ApresentacaoFormacao,
+  ParaQuemE,
+  ComoESustentada,
+  InvestimentoBloco,
+  FAQFormacao,
+  FechamentoRitual
+} from "@/components/formacao";
 
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  users: Users,
-  compass: Compass,
-  "book-open": BookOpen,
-  "flask-conical": FlaskConical,
-  sparkles: Sparkles,
-  lock: Lock,
-  "trending-up": TrendingUp,
-};
+interface FormacaoContent {
+  [key: string]: Record<string, unknown>;
+}
 
 export default function FormacaoOracula() {
-  const { sections, isLoading } = useFormacaoContent();
+  const [content, setContent] = useState<FormacaoContent>({});
+  const [isLoading, setIsLoading] = useState(true);
 
-  const scrollToVSL = () => {
-    document.getElementById("vsl-section")?.scrollIntoView({ behavior: "smooth" });
-  };
+  const fetchContent = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from("formacao_oracula_content")
+        .select("section_key, content");
+
+      if (error) throw error;
+
+      const contentMap: FormacaoContent = {};
+      data?.forEach((item) => {
+        contentMap[item.section_key] = item.content as Record<string, unknown>;
+      });
+
+      setContent(contentMap);
+    } catch (error) {
+      console.error("Error fetching formacao content:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchContent();
+  }, [fetchContent]);
 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-pulse text-gold">Carregando...</div>
+        <div className="text-muted-foreground animate-pulse font-body">
+          Carregando...
+        </div>
       </div>
     );
   }
 
-  const hero = sections.hero || {};
-  const vsl = sections.vsl || {};
-  const oQueE = sections.o_que_e || {};
-  const appDiferencial = sections.app_diferencial || {};
-  const paraQuem = sections.para_quem || {};
-  const oQueRecebe = sections.o_que_recebe || {};
-  const planos = sections.planos || {};
-  const autoridade = sections.autoridade || {};
-  const faq = sections.faq || {};
+  // Extract content sections with fallbacks
+  const vsl = content.vsl || {};
+  const silencio = content.silencio || {};
+  const origem = content.origem || {};
+  const espelho = content.espelho_lead || {};
+  const bigIdeia = content.big_ideia || {};
+  const mecanismo = content.mecanismo || {};
+  const apresentacao = content.apresentacao || {};
+  const paraQuem = content.para_quem || {};
+  const sustentacao = content.sustentacao || {};
+  const planos = content.planos || {};
+  const faq = content.faq || {};
+  const fechamento = content.fechamento || {};
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center px-4 py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-gold/5 via-transparent to-transparent" />
-        <div className="relative z-10 max-w-4xl mx-auto text-center space-y-8">
-          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
-            {hero.titulo || "ORÁCULA — A Formação"}
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            {hero.subtitulo || "Uma certificação para profissionais do feminino."}
-          </p>
-          <Button
-            onClick={scrollToVSL}
-            variant="gold"
-            size="xl"
-            className="mt-8"
-          >
-            {hero.cta_texto || "Quero entrar na Formação ORÁCULA"}
-          </Button>
-        </div>
-      </section>
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+      {/* Bloco 0: Portal de Entrada (VSL Isolada) */}
+      <VSLPortal videoUrl={vsl.video_url as string} />
 
-      {/* VSL Section */}
-      <section id="vsl-section" className="py-20 px-4 bg-card/50">
-        <div className="max-w-4xl mx-auto space-y-8">
-          <p className="text-center text-lg text-muted-foreground">
-            {vsl.texto_acima || "Assista ao vídeo e entenda a formação."}
-          </p>
-          
-          {vsl.video_url ? (
-            <div className="aspect-video rounded-lg overflow-hidden border border-border/50 shadow-lg">
-              <iframe
-                src={vsl.video_url.replace("watch?v=", "embed/").replace("vimeo.com/", "player.vimeo.com/video/")}
-                className="w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                title="Vídeo de apresentação da formação ORÁCULA"
-              />
-            </div>
-          ) : (
-            <div className="aspect-video rounded-lg bg-secondary/50 border border-border/50 flex items-center justify-center">
-              <p className="text-muted-foreground">Vídeo será adicionado em breve</p>
-            </div>
-          )}
-          
-          <p className="text-center text-lg text-muted-foreground">
-            {vsl.texto_abaixo || "Essa formação forma terapeutas simbólicas."}
-          </p>
-          
-          <div className="text-center">
-            <Button variant="gold" size="lg">
-              {vsl.cta_texto || "Entrar na Formação ORÁCULA"}
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* Bloco 1: Silêncio Visual */}
+      <SilencioVisual texto={silencio.texto as string} />
 
-      {/* O que é Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto space-y-8">
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-center text-foreground">
-            {oQueE.titulo || "O que é a Formação ORÁCULA"}
-          </h2>
-          <ul className="space-y-4">
-            {(oQueE.items || []).map((item: string, index: number) => (
-              <li key={index} className="flex items-start gap-3 text-lg text-muted-foreground">
-                <Check className="w-6 h-6 text-gold shrink-0 mt-0.5" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      {/* Bloco 2: Origem do Projeto */}
+      <OrigemProjeto 
+        titulo={origem.titulo as string}
+        paragrafos={origem.paragrafos as string[]}
+      />
 
-      {/* App Diferencial Section */}
-      <section className="py-20 px-4 bg-card/50">
-        <div className="max-w-5xl mx-auto space-y-12">
-          <div className="text-center space-y-4">
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
-              {appDiferencial.titulo || "O APP Casa Orácula"}
-            </h2>
-            <p className="text-xl text-gold font-medium">
-              {appDiferencial.subtitulo || "O app não é bônus. Ele é parte do método."}
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {(appDiferencial.items || []).map((item: { icone: string; texto: string }, index: number) => {
-              const IconComponent = iconMap[item.icone] || Check;
-              return (
-                <Card key={index} className="bg-secondary/30 border-border/50 hover:border-gold/30 transition-colors">
-                  <CardContent className="p-6 flex items-start gap-4">
-                    <div className="p-2 rounded-lg bg-gold/10">
-                      <IconComponent className="w-6 h-6 text-gold" />
-                    </div>
-                    <span className="text-foreground">{item.texto}</span>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {/* Bloco 3: Espelho da Lead */}
+      <EspelhoLead frases={espelho.frases as string[]} />
 
-      {/* Para Quem Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto space-y-8">
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-center text-foreground">
-            {paraQuem.titulo || "Para quem é"}
-          </h2>
-          
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="space-y-4">
-              {(paraQuem.incluidos || []).map((item: string, index: number) => (
-                <div key={index} className="flex items-center gap-3 text-lg">
-                  <Check className="w-6 h-6 text-green-500" />
-                  <span className="text-foreground">{item}</span>
-                </div>
-              ))}
-            </div>
-            
-            <div className="flex items-start gap-3 p-6 rounded-lg bg-destructive/10 border border-destructive/20">
-              <X className="w-6 h-6 text-destructive shrink-0" />
-              <span className="text-muted-foreground">{paraQuem.excluidos}</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Bloco 4: Big Ideia (Virada) */}
+      <BigIdeia 
+        fraseCentral={bigIdeia.frase_central as string}
+        explicacao={bigIdeia.explicacao as string}
+      />
 
-      {/* O que recebe Section */}
-      <section className="py-20 px-4 bg-card/50">
-        <div className="max-w-4xl mx-auto space-y-8">
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-center text-foreground">
-            {oQueRecebe.titulo || "O que você recebe"}
-          </h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            {(oQueRecebe.items || []).map((item: string, index: number) => (
-              <Card key={index} className="bg-secondary/30 border-border/50">
-                <CardContent className="p-4 flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-gold" />
-                  <span className="text-foreground">{item}</span>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Bloco 5: Mecanismo Único */}
+      <MecanismoUnico 
+        nome={mecanismo.nome as string}
+        oQueE={mecanismo.o_que_e as string}
+        oQueMuda={mecanismo.o_que_muda as string}
+        oQueDeixaDeAcontecer={mecanismo.o_que_deixa as string}
+      />
 
-      {/* Planos Section */}
-      <section id="planos-section" className="py-20 px-4">
-        <div className="max-w-6xl mx-auto space-y-12">
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-center text-foreground">
-            {planos.titulo || "Escolha seu caminho"}
-          </h2>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {(planos.planos || []).map((plano: any, index: number) => (
-              <Card 
-                key={index} 
-                className={`relative overflow-hidden ${
-                  plano.destaque 
-                    ? "border-gold shadow-gold bg-gradient-to-b from-gold/10 to-transparent" 
-                    : "border-border/50 bg-card"
-                }`}
-              >
-                {plano.destaque && (
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-gold to-gold-dark" />
-                )}
-                <CardHeader className="text-center space-y-4 pb-4">
-                  <CardTitle className="font-display text-2xl text-foreground">
-                    {plano.nome}
-                  </CardTitle>
-                  <div>
-                    <span className="text-4xl font-bold text-gold">{plano.preco}</span>
-                    <p className="text-muted-foreground text-sm mt-1">{plano.periodo}</p>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <ul className="space-y-3">
-                    {(plano.items || []).map((item: string, i: number) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <Check className="w-4 h-4 text-gold shrink-0 mt-0.5" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  {plano.checkout_url ? (
-                    <a href={plano.checkout_url} target="_blank" rel="noopener noreferrer" className="block">
-                      <Button 
-                        variant={plano.destaque ? "gold" : "outline"} 
-                        className="w-full"
-                      >
-                        Garantir minha vaga
-                      </Button>
-                    </a>
-                  ) : (
-                    <Button 
-                      variant={plano.destaque ? "gold" : "outline"} 
-                      className="w-full"
-                      disabled
-                    >
-                      Em breve
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Bloco 6: Apresentação da Formação */}
+      <ApresentacaoFormacao 
+        titulo={apresentacao.titulo as string}
+        subtitulo={apresentacao.subtitulo as string}
+        detalhes={apresentacao.detalhes as {
+          duracao?: string;
+          estrutura?: string;
+          presenca?: string;
+          ritoFinal?: string;
+        }}
+      />
 
-      {/* Autoridade Section */}
-      <section className="py-20 px-4 bg-card/50">
-        <div className="max-w-3xl mx-auto text-center">
-          <blockquote className="font-display text-2xl md:text-3xl text-foreground italic leading-relaxed">
-            "{autoridade.texto || "ORÁCULA é uma formação que respeita o simbólico."}"
-          </blockquote>
-        </div>
-      </section>
+      {/* Bloco 7: Para Quem É / Para Quem Não É */}
+      <ParaQuemE 
+        paraQuem={paraQuem.incluidos as string[]}
+        naoParaQuem={paraQuem.excluidos as string[]}
+      />
 
-      {/* FAQ Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-3xl mx-auto space-y-8">
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-center text-foreground">
-            {faq.titulo || "Perguntas Frequentes"}
-          </h2>
-          
-          <Accordion type="single" collapsible className="w-full">
-            {(faq.items || []).map((item: { pergunta: string; resposta: string }, index: number) => (
-              <AccordionItem key={index} value={`item-${index}`} className="border-border/50">
-                <AccordionTrigger className="text-left text-foreground hover:text-gold">
-                  {item.pergunta}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
-                  {item.resposta}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      </section>
+      {/* Bloco 8: Como a Travessia É Sustentada */}
+      <ComoESustentada 
+        titulo={sustentacao.titulo as string}
+        subtitulo={sustentacao.subtitulo as string}
+        elementos={sustentacao.elementos as {
+          icone: string;
+          titulo: string;
+          descricao: string;
+        }[]}
+      />
 
-      {/* Footer CTA */}
-      <section className="py-20 px-4 bg-gradient-to-t from-gold/10 via-transparent to-transparent">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
-            Pronta para começar sua travessia?
-          </h2>
-          <Button
-            onClick={() => document.getElementById("planos-section")?.scrollIntoView({ behavior: "smooth" })}
-            variant="gold"
-            size="xl"
-          >
-            Escolher meu plano
-          </Button>
-        </div>
-      </section>
+      {/* Bloco 9: Investimento */}
+      <div id="investimento">
+        <InvestimentoBloco 
+          titulo={planos.titulo as string}
+          subtitulo={planos.subtitulo as string}
+          planos={planos.planos as {
+            nome: string;
+            preco: string;
+            periodo: string;
+            items: string[];
+            destaque?: boolean;
+            checkout_url?: string;
+          }[]}
+          notaFinal={planos.nota_final as string}
+        />
+      </div>
+
+      {/* FAQ */}
+      <FAQFormacao 
+        titulo={faq.titulo as string}
+        items={faq.items as { pergunta: string; resposta: string }[]}
+      />
+
+      {/* Fechamento Ritual */}
+      <FechamentoRitual 
+        frase={fechamento.frase as string}
+        cta={fechamento.cta as string}
+      />
     </div>
   );
 }
