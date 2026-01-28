@@ -1,95 +1,177 @@
 
+# Plano: Corrigir Acesso às Travessias Após Travessia 00
 
-# Plano: Adicionar Botão "Copiar URL" na Biblioteca de Áudios
+## Problema Identificado
 
-## O Que Será Implementado
+A Travessia 1 está configurada com `portal_minimo: visitante` no banco de dados, permitindo que visitantes acessem após completar a Travessia 00.
 
-Adicionar um botão na tabela de áudios do Admin que copia a URL pública para a área de transferência com um clique.
+| Travessia | portal_minimo atual | portal_minimo correto |
+|-----------|--------------------|-----------------------|
+| 0 (Zero)  | visitante          | visitante             |
+| 1 (Portal I) | visitante       | **aluna**             |
+| 2+ | mentorada/aluna | aluna |
 
-## Modificação Visual
+## Causa Raiz
 
-```text
-┌──────────────────────────────────────────────────────────────────────────────────┐
-│  Biblioteca de Áudios                                        [+ Novo Áudio]      │
-├──────────────────────────────────────────────────────────────────────────────────┤
-│  ▶  │ Título              │ Categoria  │ Portal   │ Duração │ Status │ Ações    │
-├──────────────────────────────────────────────────────────────────────────────────┤
-│  ▶  │ Bem-vinda à Casa    │ Onboarding │ visitante│  5:30   │   👁   │ 📋 ✏️ 🗑️ │
-│  ▶  │ Meditação do Fogo   │ Meditação  │ iniciada │  12:45  │   👁   │ 📋 ✏️ 🗑️ │
-└──────────────────────────────────────────────────────────────────────────────────┘
-                                                                  ↑
-                                                            NOVO BOTÃO
-                                                          "Copiar URL"
+A lógica de navegação está correta, mas o dado no banco está errado:
+
+```typescript
+// Esta verificação está correta
+const canAccessNextTravessia = nextTravessia 
+  ? isAdmin || canAccessFeature(user.portal, nextTravessia.portal_minimo)
+  : false;
 ```
 
-## Comportamento
-
-1. Admin clica no botão 📋 (ícone Copy)
-2. Sistema copia a URL completa para o clipboard:
-   `https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/audios/uploads/12345.mp3`
-3. Toast aparece: "URL copiada!"
-4. Admin pode colar em qualquer lugar (ex: campo de Áudio da Página de Entrada)
+Como `nextTravessia.portal_minimo` retorna `visitante`, qualquer visitante passa na verificação.
 
 ---
 
-## Arquivo a Modificar
+## Solução Proposta
+
+### Opção A: Corrigir Dados no Banco (Recomendada)
+
+Atualizar o `portal_minimo` de todas as travessias numeradas (1+) para `aluna`.
+
+```sql
+UPDATE travessias 
+SET portal_minimo = 'aluna' 
+WHERE number >= 1;
+```
+
+**Vantagem**: Solução limpa, sem lógica extra no código.
+
+### Opção B: Adicionar Regra de Negócio no Código
+
+Modificar `TravessiaDetalhe.tsx` para forçar que travessias após a Zero requeiram portal `aluna`:
+
+```typescript
+// Travessias numeradas (1+) sempre requerem aluna
+const effectivePortalMinimo = nextTravessia.number >= 1 
+  ? 'aluna' 
+  : nextTravessia.portal_minimo;
+
+const canAccessNextTravessia = nextTravessia 
+  ? isAdmin || canAccessFeature(user.portal, effectivePortalMinimo)
+  : false;
+```
+
+**Vantagem**: Proteção extra mesmo se alguém errar no Admin.
+
+---
+
+## Implementação Recomendada
+
+Combinar ambas as abordagens:
+
+### 1. Corrigir Banco (via Migration)
+
+```sql
+UPDATE travessias 
+SET portal_minimo = 'aluna' 
+WHERE number >= 1 AND portal_minimo = 'visitante';
+```
+
+### 2. Adicionar Proteção no Código
+
+Modificar a lógica de `canAccessNextTravessia` em `TravessiaDetalhe.tsx`:
+
+```typescript
+// Regra de negócio: Travessias numeradas (1+) exigem pelo menos aluna
+const getEffectivePortalMinimo = (travessia: Travessia): PortalType => {
+  if (travessia.number >= 1 && travessia.portal_minimo === 'visitante') {
+    return 'aluna'; // Fallback de segurança
+  }
+  return travessia.portal_minimo;
+};
+
+const canAccessNextTravessia = nextTravessia 
+  ? isAdmin || (
+      canAccessFeature(user.portal, getEffectivePortalMinimo(nextTravessia)) && 
+      (!nextTravessia.requer_profissional || isProfessional)
+    )
+  : false;
+```
+
+---
+
+## Arquivos a Modificar
 
 | Arquivo | Modificação |
 |---------|-------------|
-| `src/components/admin/AdminAudiosTab.tsx` | Adicionar botão "Copiar URL" e função `handleCopyUrl` |
+| Migration SQL | Atualizar `portal_minimo` das travessias 1+ para `aluna` |
+| `src/pages/TravessiaDetalhe.tsx` | Adicionar `getEffectivePortalMinimo` como fallback de segurança |
 
 ---
 
-## Mudanças no Código
+## Fluxo Esperado Após Correção
 
-### 1. Importar ícone Copy do Lucide
-
-```typescript
-import { Copy } from 'lucide-react';
+```text
+Visitante completa Travessia 00
+           ↓
+   Tenta acessar Travessia 1
+           ↓
+  ┌────────────────────────────┐
+  │ portal_minimo = 'aluna'    │
+  │ user.portal = 'visitante'  │
+  │ canAccessFeature = FALSE   │
+  └────────────────────────────┘
+           ↓
+    Botão desabilitado + cadeado
+    Mensagem: "Requer matrícula"
 ```
 
-### 2. Adicionar função handleCopyUrl
+---
+
+## Critérios de Sucesso
+
+- [ ] Visitante NÃO consegue acessar Travessia 1 após completar Travessia 00
+- [ ] Botão "Próxima Travessia" aparece desabilitado com cadeado
+- [ ] Aluna matriculada consegue acessar normalmente
+- [ ] Admin mantém acesso total
+
+---
+
+## Seção Técnica
+
+### Lógica de Hierarquia de Portais
 
 ```typescript
-const handleCopyUrl = async (audio: AudioAsset) => {
-  const url = getAudioUrl(audio.file_path);
-  await navigator.clipboard.writeText(url);
-  toast({ title: 'URL copiada!' });
+// src/types/portal.ts
+const PORTAL_HIERARCHY: Record<PortalType, number> = {
+  visitante: 1,
+  aluna: 2,
+  oracula: 3,
+  assinante: 4,
+  admin: 5,
 };
+
+// canAccessFeature(visitante, aluna) → 1 >= 2 → FALSE
+// canAccessFeature(aluna, aluna) → 2 >= 2 → TRUE
 ```
 
-### 3. Adicionar botão na coluna de ações
+### Modificação em TravessiaDetalhe.tsx
+
+Localização: linhas 424-431
 
 ```typescript
-<Button
-  variant="ghost"
-  size="icon"
-  className="h-8 w-8"
-  onClick={() => handleCopyUrl(audio)}
-  title="Copiar URL"
->
-  <Copy className="w-4 h-4" />
-</Button>
+// ANTES
+const canAccessNextTravessia = nextTravessia 
+  ? isAdmin || (canAccessFeature(user.portal, nextTravessia.portal_minimo) && ...)
+  : false;
+
+// DEPOIS
+const getEffectivePortalMinimo = (t: Travessia): PortalType => {
+  // Travessias 1+ nunca devem ser acessíveis para visitantes
+  if (t.number >= 1 && t.portal_minimo === 'visitante') {
+    return 'aluna';
+  }
+  return t.portal_minimo;
+};
+
+const canAccessNextTravessia = nextTravessia 
+  ? isAdmin || (
+      canAccessFeature(user.portal, getEffectivePortalMinimo(nextTravessia)) && 
+      (!nextTravessia.requer_profissional || isProfessional)
+    )
+  : false;
 ```
-
----
-
-## Fluxo de Uso
-
-1. Admin vai em `/admin` → aba **Áudios**
-2. Encontra o áudio desejado
-3. Clica no botão 📋 **Copiar URL**
-4. Toast confirma: "URL copiada!"
-5. Vai na aba **Configurações** → seção "Áudio da Página de Entrada"
-6. Cola a URL no campo
-7. Salva
-
----
-
-## Critério de Sucesso
-
-- [ ] Botão "Copiar URL" aparece em cada linha da tabela de áudios
-- [ ] Ao clicar, a URL pública completa é copiada
-- [ ] Toast confirma a ação
-- [ ] URL copiada funciona quando colada em qualquer campo de áudio
-
