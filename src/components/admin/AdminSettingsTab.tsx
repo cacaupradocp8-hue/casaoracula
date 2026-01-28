@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Pencil, Trash2, Settings, ExternalLink } from 'lucide-react';
+import { EntryAudioSettings } from './EntryAudioSettings';
 
 export function AdminSettingsTab() {
   const { settings, isLoading, updateSetting, createSetting, deleteSetting, refetch } = useAppSettingsAdmin();
@@ -70,6 +71,9 @@ export function AdminSettingsTab() {
 
   return (
     <div className="space-y-6">
+      {/* Entry Audio Settings */}
+      <EntryAudioSettings />
+
       {/* Webhook Info Card */}
       <Card className="bg-secondary/30 border-gold/20">
         <CardHeader>

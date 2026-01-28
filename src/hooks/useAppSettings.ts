@@ -45,6 +45,11 @@ export function useAppSettings() {
   const getMentoriaDescription = () => getSetting('mentoria_description', '');
   const getModalTitulo = () => getSetting('modal_conteudo_bloqueado_titulo', 'Conteúdo exclusivo');
   const getModalTexto = () => getSetting('modal_conteudo_bloqueado_texto', 'Este conteúdo é exclusivo para matriculadas.');
+  
+  // Entry page audio settings
+  const getEntryAudioUrl = () => getSetting('entry_audio_url', '');
+  const getEntryAudioTitle = () => getSetting('entry_audio_title', '');
+  const getEntryAudioCaption = () => getSetting('entry_audio_caption', '');
 
   return {
     settings,
@@ -55,6 +60,9 @@ export function useAppSettings() {
     getMentoriaDescription,
     getModalTitulo,
     getModalTexto,
+    getEntryAudioUrl,
+    getEntryAudioTitle,
+    getEntryAudioCaption,
   };
 }
 

@@ -2,9 +2,16 @@ import { Link } from 'react-router-dom';
 import { Logo } from '@/components/layout/Logo';
 import { Button } from '@/components/ui/button';
 import { useCopy } from '@/hooks/useCopy';
+import { useAppSettings } from '@/hooks/useAppSettings';
+import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
 
 export default function Landing() {
   const { getCopyByKey } = useCopy();
+  const { getEntryAudioUrl, getEntryAudioTitle, getEntryAudioCaption, isLoading } = useAppSettings();
+  
+  const audioUrl = getEntryAudioUrl();
+  const audioTitle = getEntryAudioTitle();
+  const audioCaption = getEntryAudioCaption();
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
@@ -34,10 +41,26 @@ export default function Landing() {
           <p>{getCopyByKey('landing_texto_2', 'É um espaço de formação simbólica, clínica e ética para mulheres que conduzem outras mulheres.')}</p>
           <p>{getCopyByKey('landing_texto_3', 'Aqui, a técnica não substitui a escuta. O símbolo não é ornamento — é linguagem. E o portal não é metáfora — é prática.')}</p>
           <p>{getCopyByKey('landing_texto_4', 'Você entra para aprender a ler narrativas profundas, sustentar eixo e conduzir processos reais de transformação.')}</p>
-          <p className="text-primary italic mt-8 font-display text-xl md:text-2xl">
+        <p className="text-primary italic mt-8 font-display text-xl md:text-2xl">
             {getCopyByKey('landing_convite', 'Sente-se. A Casa se revela passo a passo.')}
           </p>
         </div>
+
+        {/* Audio Player - Dynamic */}
+        {audioUrl && (
+          <div className="animate-slide-up max-w-md mx-auto space-y-2" style={{ animationDelay: '0.5s' }}>
+            <UnifiedAudioPlayer 
+              audioUrl={audioUrl}
+              title={audioTitle || undefined}
+              size="lg"
+            />
+            {audioCaption && (
+              <p className="text-sm text-muted-foreground text-center italic">
+                {audioCaption}
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Botões */}
         <div className="animate-slide-up flex flex-col sm:flex-row gap-4 justify-center" style={{ animationDelay: '0.6s' }}>
