@@ -1,259 +1,226 @@
 
-# Plano: Correção de Degustação 24h e Áudio no App
 
-## Análise Atual
+# Plano: Personalização de Áudio na Página de Entrada
 
-### Degustação 24h - Estado Atual
-A funcionalidade de degustação JÁ EXISTE e está quase completa:
+## Resumo
 
-**O que já funciona:**
-- Tabela `degustacao_requests` com campos corretos (status, expira_em, aprovado_por, etc.)
-- Hook `useDegustacao.ts` para visitantes solicitarem degustação
-- Hook `useDegustacaoAdmin()` para admin gerenciar pedidos
-- Painel admin em `/admin` com aba "Degustação"
-- Trigger que cria notificação para admins quando novo pedido é criado
-- Interface visual para aprovar/rejeitar pedidos
+Vamos adicionar três configurações no banco de dados (`app_settings`) e criar uma seção dedicada no Admin para configurar o áudio da página de entrada, sem precisar editar código.
 
-**Problemas identificados:**
-1. Notificação chega ao admin mas pode não ter link direto para a aba
-2. Falta botão "Encerrar manualmente" no admin
-3. Status "expirado" não é atualizado automaticamente (apenas verificado no frontend)
-4. Falta histórico visual claro com tempo restante em tempo real
+## Situação Atual
 
-### Áudio - Estado Atual
-Múltiplos componentes de áudio já existem:
+| O que existe | Localização |
+|--------------|-------------|
+| Tabela `app_settings` | Banco de dados (key/value) |
+| Hook `useAppSettings()` | `src/hooks/useAppSettings.ts` |
+| Hook `useAppSettingsAdmin()` | `src/hooks/useAppSettings.ts` |
+| Aba de Configurações | `AdminSettingsTab.tsx` |
+| `UnifiedAudioPlayer` | `src/components/audio/UnifiedAudioPlayer.tsx` |
+| Landing Page | `src/pages/Landing.tsx` |
 
-**Componentes existentes:**
-- `AudioUpload.tsx` - Upload/seleção no admin (funcionando)
-- `AudioCard.tsx` - Player reativo no Ofício da Voz Oracular (funcionando)
-- `AudioBlock.tsx` - Bloco modular para conteúdos (funcionando)
-- `PortaAudioPlayer.tsx` - Player no Labirinto (funcionando)
-- Players nativos `<audio>` em várias páginas
-
-**Problemas identificados:**
-1. Inconsistência entre tipos de player (alguns usam componente customizado, outros `<audio>` nativo)
-2. Falta tratamento de erro quando URL é inválida
-3. Alguns campos salvam path em vez de URL pública completa
-4. Não há componente unificado para todas as situações
+A página de entrada (`Landing.tsx`) atualmente **não possui áudio**.
 
 ---
 
-## Correções Propostas
+## O Que Será Criado
 
-### 1. Degustação 24h
+### 1. Novas Configurações no Banco
 
-#### A) Atualização Automática de Status Expirado
-Modificar a função `check_and_expire_access` existente para também atualizar degustações expiradas:
+Três novas chaves na tabela `app_settings`:
 
-```text
-┌─────────────────────────────────────────────────────┐
-│  Edge Function: check-access-expiration             │
-│  (já existe, precisa expansão)                      │
-├─────────────────────────────────────────────────────┤
-│  1. Verificar profiles com access_expires_at < now()│
-│  2. NOVO: Verificar degustacao_requests aprovados   │
-│     onde expira_em < now() → marcar como 'expirado' │
-│  3. Reverter portal do usuário para 'visitante'    │
-└─────────────────────────────────────────────────────┘
-```
+| Chave | Descrição |
+|-------|-----------|
+| `entry_audio_url` | URL do áudio (mp3/m4a) |
+| `entry_audio_title` | Título exibido no player |
+| `entry_audio_caption` | Texto curto abaixo do player |
 
-#### B) Botão "Encerrar Manualmente" no Admin
-Adicionar função `endRequest` no hook `useDegustacaoAdmin`:
+### 2. Seção no Admin: "Mídias da Entrada"
+
+Adicionar uma seção dedicada no `AdminSettingsTab.tsx`:
 
 ```text
-┌─────────────────────────────────────────────────────┐
-│  Ação: Encerrar Degustação                          │
-├─────────────────────────────────────────────────────┤
-│  1. Atualizar status → 'expirado'                  │
-│  2. Atualizar expira_em → now()                    │
-│  3. Reverter portal do usuário → 'visitante'       │
-│  4. Notificar usuária                               │
-│  5. Toast de confirmação                            │
-└─────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│  🎵 Áudio da Página de Entrada                               │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  URL do Áudio (mp3 ou m4a)                                   │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ https://exemplo.com/audio-entrada.mp3                  │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  Título                                                      │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ Bem-vinda à Casa                                       │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  Legenda curta (opcional)                                    │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ Uma introdução poética à Casa ORÁCULA                  │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  [🔊 Preview]                         [Salvar Configuração]  │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  ▶ Bem-vinda à Casa        ═══════════○═══  2:45 / 5:30│  │
+│  │  Uma introdução poética à Casa ORÁCULA                 │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-#### C) Tempo Restante em Tempo Real
-No AdminDegustacaoTab, para pedidos aprovados ativos:
+**Funcionalidades:**
+- Validação de URL (http/https)
+- Preview do áudio antes de salvar
+- Mensagem de erro se URL inválida
+- Toast de confirmação ao salvar
+
+### 3. Atualização da Landing Page
+
+Modificar `Landing.tsx` para:
+
+1. Buscar configurações de áudio via `useAppSettings()`
+2. Se `entry_audio_url` existir e for válida → exibir player
+3. Se não existir → não renderizar nada (sem erro)
 
 ```text
-┌─────────────────────────────────────────────────────┐
-│  Card do Pedido Aprovado                            │
-├─────────────────────────────────────────────────────┤
-│  👤 Patricia                                        │
-│  ✅ Aprovado                                        │
-│  ⏱️ Tempo restante: 18h 32min                      │
-│                        [Encerrar]                   │
-└─────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                                                              │
+│                    [Logo Casa ORÁCULA]                       │
+│                                                              │
+│            Bem-vinda à Casa ORÁCULA                          │
+│                                                              │
+│      A Casa ORÁCULA não é um curso...                        │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  ▶ Bem-vinda à Casa        ═══════════○═══  2:45 / 5:30│  │
+│  │  Uma introdução poética                                │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│         [Entrar na Casa ORÁCULA]  [Conhecer a Casa]          │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
 ```
-
-#### D) Notificação com Link Direto
-Atualizar trigger para incluir CTA na notificação:
-
-```text
-cta_label: 'Ver pedidos'
-cta_url: '/admin?tab=degustacao'
-```
-
-#### E) Mensagem Clara para Visitante
-No VisitorDashboardPanel, quando degustação expira:
-
-```text
-┌─────────────────────────────────────────────────────┐
-│  ⏰ Sua degustação foi encerrada                    │
-│  Seu período de 24h terminou. Conheça nossos       │
-│  planos para continuar acessando a Casa.           │
-│                   [Conhecer planos]                 │
-└─────────────────────────────────────────────────────┘
-```
-
----
-
-### 2. Correção de Áudios
-
-#### A) Componente Unificado de Áudio
-Criar componente `UnifiedAudioPlayer.tsx` baseado no `AudioCard.tsx` (que já funciona bem):
-
-```text
-Props:
-- audioUrl: string
-- title?: string
-- coverImage?: string
-- size?: 'sm' | 'md' | 'lg'
-- showTitle?: boolean
-- onError?: () => void
-
-Features:
-- Play/pause
-- Barra de progresso
-- Tempo decorrido
-- Funciona em mobile
-- Não inicia automaticamente
-- Tratamento de erro (não renderiza se URL inválida)
-```
-
-#### B) Validação de URL no AudioUpload
-Adicionar verificação se a URL retornada é válida antes de salvar:
-
-```text
-1. Após upload, verificar se URL começa com https://
-2. Se for path relativo, converter para URL pública
-3. Testar se URL é acessível antes de confirmar
-```
-
-#### C) Fallback Seguro em Todas as Páginas
-Padronizar renderização condicional:
-
-```text
-{audioUrl && isValidAudioUrl(audioUrl) ? (
-  <UnifiedAudioPlayer audioUrl={audioUrl} />
-) : null}
-```
-
-Páginas que precisam atualização:
-- QuizPage.tsx (resultado com áudio)
-- AulaPage.tsx (aulas com áudio)
-- LessonContent.tsx (lições de curso)
-- BibliotecaTravessiaDetalhe.tsx (mídia da travessia)
-- LabirintoPorta.tsx (já usa PortaAudioPlayer - ok)
 
 ---
 
 ## Arquivos a Modificar
 
-### Degustação
-
 | Arquivo | Modificação |
 |---------|-------------|
-| `src/hooks/useDegustacao.ts` | Adicionar função `endRequest` para encerrar manualmente |
-| `src/components/admin/AdminDegustacaoTab.tsx` | Adicionar botão "Encerrar", tempo restante em tempo real |
-| `src/components/visitor/VisitorDashboardPanel.tsx` | Mensagem quando degustação expirou |
-| `supabase/functions/check-access-expiration/index.ts` | Incluir verificação de degustações expiradas |
-| Migration SQL | Atualizar trigger para incluir cta_url na notificação |
+| `src/hooks/useAppSettings.ts` | Adicionar funções `getEntryAudioUrl`, `getEntryAudioTitle`, `getEntryAudioCaption` |
+| `src/components/admin/AdminSettingsTab.tsx` | Adicionar seção "Áudio da Página de Entrada" com formulário e preview |
+| `src/pages/Landing.tsx` | Integrar `UnifiedAudioPlayer` com renderização condicional |
 
-### Áudio
-
-| Arquivo | Modificação |
-|---------|-------------|
-| `src/components/audio/UnifiedAudioPlayer.tsx` | CRIAR - componente unificado |
-| `src/lib/audioUtils.ts` | CRIAR - funções auxiliares (isValidAudioUrl, getPublicAudioUrl) |
-| `src/pages/QuizPage.tsx` | Usar UnifiedAudioPlayer com fallback |
-| `src/pages/AulaPage.tsx` | Usar UnifiedAudioPlayer com fallback |
-| `src/components/courses/LessonContent.tsx` | Usar UnifiedAudioPlayer com fallback |
-| `src/pages/BibliotecaTravessiaDetalhe.tsx` | Usar UnifiedAudioPlayer com fallback |
+**Nenhuma nova tabela será criada** - usaremos a `app_settings` existente.
 
 ---
 
-## Ordem de Implementação
+## Fluxo de Uso
 
-1. **Degustação - Backend**
-   - Atualizar edge function para expirar degustações
-   - Atualizar trigger de notificação
+### Para o Admin:
 
-2. **Degustação - Frontend**
-   - Adicionar função `endRequest` no hook
-   - Implementar botão "Encerrar" e tempo restante no admin
-   - Melhorar feedback para visitante
+1. Acessa `/admin` → aba "Configurações"
+2. Encontra seção "Áudio da Página de Entrada"
+3. Cola a URL do áudio (mp3/m4a)
+4. Preenche título e legenda (opcional)
+5. Clica em "Preview" para ouvir
+6. Clica em "Salvar Configuração"
+7. Pronto! O áudio aparece na Landing
 
-3. **Áudio - Componente Base**
-   - Criar `UnifiedAudioPlayer.tsx`
-   - Criar `audioUtils.ts`
+### Para Remover o Áudio:
 
-4. **Áudio - Integração**
-   - Atualizar páginas para usar novo componente
-   - Testar em mobile
+1. Acessa a mesma seção no Admin
+2. Limpa o campo de URL
+3. Salva
+4. O player desaparece da Landing
+
+---
+
+## Validações Implementadas
+
+| Validação | Comportamento |
+|-----------|---------------|
+| URL vazia | Player não renderiza (ok) |
+| URL sem http/https | Erro: "URL inválida" |
+| URL retorna 404 | Fallback: "Áudio indisponível no momento" |
+| Formatos aceitos | mp3, m4a, ogg, wav |
+
+---
+
+## Comportamento do Player
+
+| Configuração | Valor |
+|--------------|-------|
+| Autoplay | NÃO |
+| Preload | `none` (não pesa a página) |
+| Tamanho | `lg` (grande, destacado) |
+| Posição | Entre o texto poético e os botões |
 
 ---
 
 ## Seção Técnica
 
-### Função SQL para Expirar Degustações
-
-```sql
--- Adicionar à função check_and_expire_access
-UPDATE degustacao_requests
-SET status = 'expirado'
-WHERE status = 'aprovado'
-  AND expira_em IS NOT NULL
-  AND expira_em < NOW();
-```
-
-### Interface do UnifiedAudioPlayer
+### Funções Adicionadas ao Hook
 
 ```typescript
-interface UnifiedAudioPlayerProps {
-  audioUrl: string;
-  title?: string;
-  coverImage?: string;
-  size?: 'sm' | 'md' | 'lg';
-  showControls?: boolean;
-  className?: string;
-}
+// useAppSettings.ts
+const getEntryAudioUrl = () => getSetting('entry_audio_url', '');
+const getEntryAudioTitle = () => getSetting('entry_audio_title', '');
+const getEntryAudioCaption = () => getSetting('entry_audio_caption', '');
 ```
 
-### Validação de URL de Áudio
+### Integração na Landing
 
 ```typescript
-export function isValidAudioUrl(url: string | null | undefined): boolean {
-  if (!url) return false;
-  if (!url.startsWith('http://') && !url.startsWith('https://')) return false;
-  return true;
-}
+// Landing.tsx
+const { getEntryAudioUrl, getEntryAudioTitle, getEntryAudioCaption, isLoading } = useAppSettings();
 
-export function getPublicAudioUrl(path: string): string {
-  if (path.startsWith('http')) return path;
-  const { data } = supabase.storage.from('audios').getPublicUrl(path);
-  return data.publicUrl;
-}
+const audioUrl = getEntryAudioUrl();
+const audioTitle = getEntryAudioTitle();
+const audioCaption = getEntryAudioCaption();
+
+// Renderização condicional
+{audioUrl && (
+  <div className="space-y-2">
+    <UnifiedAudioPlayer 
+      audioUrl={audioUrl}
+      title={audioTitle}
+      size="lg"
+    />
+    {audioCaption && (
+      <p className="text-sm text-muted-foreground text-center italic">
+        {audioCaption}
+      </p>
+    )}
+  </div>
+)}
+```
+
+### Seção do Admin
+
+```typescript
+// AdminSettingsTab.tsx - Nova seção
+<Card>
+  <CardHeader>
+    <CardTitle>🎵 Áudio da Página de Entrada</CardTitle>
+    <CardDescription>
+      Configure o áudio que aparece na página inicial para visitantes
+    </CardDescription>
+  </CardHeader>
+  <CardContent>
+    {/* Formulário com campos e preview */}
+  </CardContent>
+</Card>
 ```
 
 ---
 
 ## Critérios de Sucesso
 
-- [ ] Toda solicitação de degustação aparece no admin
-- [ ] Admin pode aprovar, negar e encerrar manualmente
-- [ ] Degustação expira automaticamente em 24h (status atualizado)
-- [ ] Visitante vê mensagem clara quando expira
-- [ ] Áudios tocam em mobile e desktop
-- [ ] Páginas não quebram se áudio estiver ausente ou inválido
-- [ ] Player unificado funciona consistentemente em todo o app
+- [ ] Admin consegue configurar URL, título e legenda do áudio
+- [ ] Admin consegue fazer preview antes de salvar
+- [ ] Áudio aparece na Landing quando URL está configurada
+- [ ] Áudio não aparece quando URL está vazia
+- [ ] Página não quebra se URL for inválida
+- [ ] Player usa `preload="none"` para não pesar
+- [ ] Fallback exibe "Áudio indisponível" em caso de erro
+
