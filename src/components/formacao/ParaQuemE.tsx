@@ -6,21 +6,28 @@ interface ParaQuemEProps {
   naoParaQuem?: string[];
 }
 
+const defaultParaQuem = [
+  "Terapeutas que trabalham com mulheres e sentem que falta profundidade simbólica em sua prática",
+  "Psicólogas que desejam integrar o arquetípico e o narrativo ao trabalho clínico",
+  "Mentoras que sustentam processos transformadores e querem linguagem e método",
+  "Facilitadoras de círculos que buscam condução ética e estruturada",
+  "Profissionais do cuidado que sentem-se prontas para uma formação séria"
+];
+
+const defaultNaoParaQuem = [
+  "Quem busca consumo superficial ou coleção de certificados",
+  "Quem não tem disponibilidade real para imersão formativa",
+  "Quem espera receitas prontas sem reflexão pessoal",
+  "Quem não trabalha ou não pretende trabalhar com mulheres"
+];
+
 export function ParaQuemE({ 
-  paraQuem = [
-    "Terapeutas que trabalham com mulheres e sentem que falta profundidade simbólica em sua prática",
-    "Psicólogas que desejam integrar o arquetípico e o narrativo ao trabalho clínico",
-    "Mentoras que sustentam processos transformadores e querem linguagem e método",
-    "Facilitadoras de círculos que buscam condução ética e estruturada",
-    "Profissionais do cuidado que sentem-se prontas para uma formação séria"
-  ],
-  naoParaQuem = [
-    "Quem busca consumo superficial ou coleção de certificados",
-    "Quem não tem disponibilidade real para imersão formativa",
-    "Quem espera receitas prontas sem reflexão pessoal",
-    "Quem não trabalha ou não pretende trabalhar com mulheres"
-  ]
+  paraQuem,
+  naoParaQuem
 }: ParaQuemEProps) {
+  // Ensure we always have valid arrays
+  const paraQuemList = Array.isArray(paraQuem) ? paraQuem : defaultParaQuem;
+  const naoParaQuemList = Array.isArray(naoParaQuem) ? naoParaQuem : defaultNaoParaQuem;
   return (
     <section className="py-20 md:py-32 px-6 bg-card/30">
       <div className="max-w-3xl mx-auto">
@@ -46,7 +53,7 @@ export function ParaQuemE({
               Para quem é
             </h3>
             <ul className="space-y-4">
-              {paraQuem.map((item, index) => (
+              {paraQuemList.map((item, index) => (
                 <li key={index} className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-gold shrink-0 mt-0.5" />
                   <span className="text-foreground/90 font-body text-sm leading-relaxed">
@@ -68,7 +75,7 @@ export function ParaQuemE({
               Para quem não é
             </h3>
             <ul className="space-y-4">
-              {naoParaQuem.map((item, index) => (
+              {naoParaQuemList.map((item, index) => (
                 <li key={index} className="flex items-start gap-3">
                   <X className="w-5 h-5 text-muted-foreground/60 shrink-0 mt-0.5" />
                   <span className="text-muted-foreground font-body text-sm leading-relaxed">
