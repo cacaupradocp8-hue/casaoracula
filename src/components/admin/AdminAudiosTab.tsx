@@ -39,7 +39,8 @@ import {
   Play,
   Pause,
   Eye,
-  EyeOff
+  EyeOff,
+  Copy
 } from 'lucide-react';
 import { ImageUpload } from './ImageUpload';
 
@@ -262,6 +263,12 @@ export function AdminAudiosTab() {
       }
       setPlayingId(audio.id);
     }
+  };
+
+  const handleCopyUrl = async (audio: AudioAsset) => {
+    const url = getAudioUrl(audio.file_path);
+    await navigator.clipboard.writeText(url);
+    toast({ title: 'URL copiada!' });
   };
 
   const formatDuration = (seconds: number | null) => {
@@ -495,6 +502,15 @@ export function AdminAudiosTab() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => handleCopyUrl(audio)}
+                          title="Copiar URL"
+                        >
+                          <Copy className="w-4 h-4" />
+                        </Button>
                         <Button
                           variant="ghost"
                           size="icon"
