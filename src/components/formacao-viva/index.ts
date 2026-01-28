@@ -1,0 +1,15 @@
+export { OraclePhrase } from "./OraclePhrase";
+export { ArchitectureDivider } from "./ArchitectureDivider";
+export { SectionPortal } from "./SectionPortal";
+export { SectionSilencio } from "./SectionSilencio";
+export { SectionOrigem } from "./SectionOrigem";
+export { SectionEspelho } from "./SectionEspelho";
+export { SectionVirada } from "./SectionVirada";
+export { SectionMetodo } from "./SectionMetodo";
+export { SectionPostura } from "./SectionPostura";
+export { SectionNarroterapia } from "./SectionNarroterapia";
+export { SectionFundamentacao } from "./SectionFundamentacao";
+export { SectionAplicabilidade } from "./SectionAplicabilidade";
+export { SectionCaminhos } from "./SectionCaminhos";
+export { SectionFechamento } from "./SectionFechamento";
+export { EthicalFooter } from "./EthicalFooter";
