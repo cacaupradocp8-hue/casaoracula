@@ -3,56 +3,119 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useAppSettingsAdmin } from '@/hooks/useAppSettings';
 import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
-import { isValidAudioUrl } from '@/lib/audioUtils';
-import { Music, Save, Eye, AlertCircle } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { getPublicAudioUrl } from '@/lib/audioUtils';
+import { Music, Save, Eye, Library, RefreshCw } from 'lucide-react';
+
+interface AudioAsset {
+  id: string;
+  titulo: string;
+  file_path: string;
+  categoria: string | null;
+  duracao_segundos: number | null;
+}
 
 export function EntryAudioSettings() {
   const { settings, updateSetting, createSetting, isLoading } = useAppSettingsAdmin();
   const { toast } = useToast();
   
-  const [audioUrl, setAudioUrl] = useState('');
+  const [selectedAudioId, setSelectedAudioId] = useState<string>('');
   const [audioTitle, setAudioTitle] = useState('');
   const [audioCaption, setAudioCaption] = useState('');
   const [showPreview, setShowPreview] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [audioAssets, setAudioAssets] = useState<AudioAsset[]>([]);
+  const [isLoadingAudios, setIsLoadingAudios] = useState(true);
+  const [currentAudioUrl, setCurrentAudioUrl] = useState<string | null>(null);
 
-  // Load current values from settings
+  // Load audio assets from library
+  const fetchAudioAssets = async () => {
+    setIsLoadingAudios(true);
+    try {
+      const { data, error } = await supabase
+        .from('audio_assets')
+        .select('id, titulo, file_path, categoria, duracao_segundos')
+        .eq('publicado', true)
+        .order('categoria')
+        .order('ordem')
+        .order('titulo');
+
+      if (error) throw error;
+      setAudioAssets(data || []);
+    } catch (error) {
+      console.error('Error fetching audio assets:', error);
+      toast({
+        title: 'Erro ao carregar áudios',
+        description: 'Não foi possível carregar a biblioteca de áudios.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoadingAudios(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAudioAssets();
+  }, []);
+
+  // Load current values from settings and find matching audio
   useEffect(() => {
     const urlSetting = settings.find(s => s.key === 'entry_audio_url');
     const titleSetting = settings.find(s => s.key === 'entry_audio_title');
     const captionSetting = settings.find(s => s.key === 'entry_audio_caption');
+    const audioIdSetting = settings.find(s => s.key === 'entry_audio_id');
     
-    if (urlSetting) setAudioUrl(urlSetting.value);
+    if (audioIdSetting?.value) {
+      setSelectedAudioId(audioIdSetting.value);
+    }
+    if (urlSetting?.value) {
+      setCurrentAudioUrl(urlSetting.value);
+    }
     if (titleSetting) setAudioTitle(titleSetting.value);
     if (captionSetting) setAudioCaption(captionSetting.value);
   }, [settings]);
 
-  const validateUrl = (url: string): boolean => {
-    if (!url.trim()) return true; // Empty is valid (removes audio)
-    return isValidAudioUrl(url);
+  // Update preview URL when audio selection changes
+  useEffect(() => {
+    if (selectedAudioId && selectedAudioId !== 'none') {
+      const selectedAudio = audioAssets.find(a => a.id === selectedAudioId);
+      if (selectedAudio) {
+        const url = getPublicAudioUrl(selectedAudio.file_path);
+        setCurrentAudioUrl(url);
+        // Auto-fill title if empty
+        if (!audioTitle) {
+          setAudioTitle(selectedAudio.titulo);
+        }
+      }
+    } else if (selectedAudioId === 'none') {
+      setCurrentAudioUrl(null);
+    }
+    setShowPreview(false);
+  }, [selectedAudioId, audioAssets]);
+
+  const formatDuration = (seconds: number | null): string => {
+    if (!seconds) return '';
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return ` (${mins}:${secs.toString().padStart(2, '0')})`;
   };
 
   const handleSave = async () => {
-    // Validate URL if provided
-    if (audioUrl && !validateUrl(audioUrl)) {
-      toast({
-        title: 'URL inválida',
-        description: 'A URL deve começar com http:// ou https://',
-        variant: 'destructive',
-      });
-      return;
-    }
-
     setIsSaving(true);
 
     try {
-      // Save each setting - create if not exists, update if exists
+      const selectedAudio = audioAssets.find(a => a.id === selectedAudioId);
+      const audioUrl = selectedAudio ? getPublicAudioUrl(selectedAudio.file_path) || '' : '';
+
+      // Check which settings exist
       const urlExists = settings.some(s => s.key === 'entry_audio_url');
       const titleExists = settings.some(s => s.key === 'entry_audio_title');
       const captionExists = settings.some(s => s.key === 'entry_audio_caption');
+      const idExists = settings.some(s => s.key === 'entry_audio_id');
 
       const promises = [
         urlExists 
@@ -64,13 +127,18 @@ export function EntryAudioSettings() {
         captionExists
           ? updateSetting('entry_audio_caption', audioCaption)
           : createSetting('entry_audio_caption', audioCaption, 'Legenda do áudio na página de entrada'),
+        idExists
+          ? updateSetting('entry_audio_id', selectedAudioId === 'none' ? '' : selectedAudioId)
+          : createSetting('entry_audio_id', selectedAudioId === 'none' ? '' : selectedAudioId, 'ID do áudio selecionado da biblioteca'),
       ];
 
       await Promise.all(promises);
 
       toast({
         title: 'Configuração salva',
-        description: audioUrl ? 'O áudio aparecerá na página de entrada.' : 'O áudio foi removido da página de entrada.',
+        description: selectedAudioId && selectedAudioId !== 'none' 
+          ? 'O áudio aparecerá na página de entrada.' 
+          : 'O áudio foi removido da página de entrada.',
       });
     } catch (error) {
       toast({
@@ -84,26 +152,24 @@ export function EntryAudioSettings() {
   };
 
   const handlePreview = () => {
-    if (!audioUrl) {
+    if (!currentAudioUrl) {
       toast({
-        title: 'URL vazia',
-        description: 'Preencha a URL do áudio para visualizar.',
+        title: 'Nenhum áudio selecionado',
+        description: 'Selecione um áudio da biblioteca para visualizar.',
         variant: 'destructive',
       });
       return;
     }
-
-    if (!validateUrl(audioUrl)) {
-      toast({
-        title: 'URL inválida',
-        description: 'A URL deve começar com http:// ou https://',
-        variant: 'destructive',
-      });
-      return;
-    }
-
     setShowPreview(true);
   };
+
+  // Group audios by category
+  const groupedAudios = audioAssets.reduce((acc, audio) => {
+    const category = audio.categoria || 'Sem categoria';
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(audio);
+    return acc;
+  }, {} as Record<string, AudioAsset[]>);
 
   if (isLoading) {
     return (
@@ -123,28 +189,61 @@ export function EntryAudioSettings() {
           Áudio da Página de Entrada
         </CardTitle>
         <CardDescription>
-          Configure o áudio que aparece na página inicial para visitantes. 
-          Deixe a URL vazia para remover o player.
+          Selecione um áudio da biblioteca para exibir na página inicial. 
+          Os áudios são gerenciados na Biblioteca de Áudios.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* URL Field */}
+        {/* Audio Selection */}
         <div className="space-y-2">
-          <Label htmlFor="entry-audio-url">URL do Áudio (mp3, m4a, ogg, wav)</Label>
-          <Input
-            id="entry-audio-url"
-            value={audioUrl}
-            onChange={(e) => {
-              setAudioUrl(e.target.value);
-              setShowPreview(false);
-            }}
-            placeholder="https://exemplo.com/audio-entrada.mp3"
-            className="font-mono text-sm"
-          />
-          {audioUrl && !validateUrl(audioUrl) && (
-            <p className="text-sm text-destructive flex items-center gap-1">
-              <AlertCircle className="w-4 h-4" />
-              URL deve começar com http:// ou https://
+          <div className="flex items-center justify-between">
+            <Label htmlFor="entry-audio-select">Áudio da Biblioteca</Label>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={fetchAudioAssets}
+              disabled={isLoadingAudios}
+              className="h-8 gap-1 text-xs"
+            >
+              <RefreshCw className={`w-3 h-3 ${isLoadingAudios ? 'animate-spin' : ''}`} />
+              Atualizar
+            </Button>
+          </div>
+          <Select 
+            value={selectedAudioId || 'none'} 
+            onValueChange={setSelectedAudioId}
+            disabled={isLoadingAudios}
+          >
+            <SelectTrigger id="entry-audio-select" className="w-full">
+              <SelectValue placeholder={isLoadingAudios ? "Carregando..." : "Selecione um áudio"} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">
+                <span className="text-muted-foreground">Nenhum (remover áudio)</span>
+              </SelectItem>
+              {Object.entries(groupedAudios).map(([category, audios]) => (
+                <div key={category}>
+                  <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-muted/50">
+                    {category}
+                  </div>
+                  {audios.map((audio) => (
+                    <SelectItem key={audio.id} value={audio.id}>
+                      <div className="flex items-center gap-2">
+                        <Library className="w-3 h-3 text-gold/70" />
+                        <span>{audio.titulo}</span>
+                        <span className="text-muted-foreground text-xs">
+                          {formatDuration(audio.duracao_segundos)}
+                        </span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </div>
+              ))}
+            </SelectContent>
+          </Select>
+          {audioAssets.length === 0 && !isLoadingAudios && (
+            <p className="text-sm text-muted-foreground">
+              Nenhum áudio publicado na biblioteca. Adicione áudios na aba "Biblioteca de Áudios".
             </p>
           )}
         </div>
@@ -176,7 +275,7 @@ export function EntryAudioSettings() {
           <Button
             variant="outline"
             onClick={handlePreview}
-            disabled={!audioUrl}
+            disabled={!currentAudioUrl || selectedAudioId === 'none'}
             className="gap-2"
           >
             <Eye className="w-4 h-4" />
@@ -193,11 +292,11 @@ export function EntryAudioSettings() {
         </div>
 
         {/* Preview Player */}
-        {showPreview && audioUrl && (
+        {showPreview && currentAudioUrl && (
           <div className="space-y-2 pt-4 border-t border-border/50">
             <p className="text-sm text-muted-foreground font-medium">Preview:</p>
             <UnifiedAudioPlayer
-              audioUrl={audioUrl}
+              audioUrl={currentAudioUrl}
               title={audioTitle || undefined}
               size="lg"
             />
