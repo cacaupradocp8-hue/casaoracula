@@ -1,177 +1,105 @@
 
-# Plano: Corrigir Acesso às Travessias Após Travessia 00
+# Plano: Criar o Oráculo dos Reinos
 
-## Problema Identificado
-
-A Travessia 1 está configurada com `portal_minimo: visitante` no banco de dados, permitindo que visitantes acessem após completar a Travessia 00.
-
-| Travessia | portal_minimo atual | portal_minimo correto |
-|-----------|--------------------|-----------------------|
-| 0 (Zero)  | visitante          | visitante             |
-| 1 (Portal I) | visitante       | **aluna**             |
-| 2+ | mentorada/aluna | aluna |
-
-## Causa Raiz
-
-A lógica de navegação está correta, mas o dado no banco está errado:
-
-```typescript
-// Esta verificação está correta
-const canAccessNextTravessia = nextTravessia 
-  ? isAdmin || canAccessFeature(user.portal, nextTravessia.portal_minimo)
-  : false;
-```
-
-Como `nextTravessia.portal_minimo` retorna `visitante`, qualquer visitante passa na verificação.
+## Resumo
+Criar um novo oráculo completo chamado "Oráculo dos Reinos" com base no PDF enviado, incluindo o deck, categorias por Reino/Tema, e todas as cartas de perguntas reflexivas.
 
 ---
 
-## Solução Proposta
+## Estrutura do Oráculo (extraída do PDF)
 
-### Opção A: Corrigir Dados no Banco (Recomendada)
+### Reinos e Temas identificados:
 
-Atualizar o `portal_minimo` de todas as travessias numeradas (1+) para `aluna`.
+| Reino | Temas | Quantidade de Cartas |
+|-------|-------|---------------------|
+| **Água** | Emoções e Memória, Relações e Emoções | ~21 cartas |
+| **Terra** | Corpo, Sombra e Confronto, Sombra e Raízes | ~21 cartas |
+| **Fogo** | Potência, Verdade e Nascimento do Eu | ~5+ cartas (documento cortado em 50 páginas) |
+| **Ar** | (provável, não visível no preview) | ~20 cartas (estimado) |
 
-```sql
-UPDATE travessias 
-SET portal_minimo = 'aluna' 
-WHERE number >= 1;
-```
-
-**Vantagem**: Solução limpa, sem lógica extra no código.
-
-### Opção B: Adicionar Regra de Negócio no Código
-
-Modificar `TravessiaDetalhe.tsx` para forçar que travessias após a Zero requeiram portal `aluna`:
-
-```typescript
-// Travessias numeradas (1+) sempre requerem aluna
-const effectivePortalMinimo = nextTravessia.number >= 1 
-  ? 'aluna' 
-  : nextTravessia.portal_minimo;
-
-const canAccessNextTravessia = nextTravessia 
-  ? isAdmin || canAccessFeature(user.portal, effectivePortalMinimo)
-  : false;
-```
-
-**Vantagem**: Proteção extra mesmo se alguém errar no Admin.
+**Total estimado: ~60-80 cartas**
 
 ---
 
-## Implementação Recomendada
+## Etapas de Implementação
 
-Combinar ambas as abordagens:
+### Etapa 1: Criar o Deck Principal
+Inserir um novo registro na tabela `oracle_decks`:
 
-### 1. Corrigir Banco (via Migration)
+- **nome:** Oráculo dos Reinos
+- **slug:** oraculo-dos-reinos
+- **subtítulo:** Perguntas dos Quatro Elementos
+- **tema:** Cores elementais (azul água, marrom terra, vermelho fogo, branco ar)
+- **portal_minimo:** pre_iniciada (configurável)
+- **status:** draft (para revisão antes de publicar)
 
-```sql
-UPDATE travessias 
-SET portal_minimo = 'aluna' 
-WHERE number >= 1 AND portal_minimo = 'visitante';
+### Etapa 2: Criar Categorias por Reino
+Inserir 4 categorias na tabela `oracle_categories`:
+
+1. **Reino da Água** - Emoções e Memória
+2. **Reino da Terra** - Corpo, Sombra e Raízes
+3. **Reino do Fogo** - Potência e Verdade
+4. **Reino do Ar** - (a confirmar com documento completo)
+
+### Etapa 3: Cadastrar Todas as Cartas
+Inserir cada pergunta como uma carta na tabela `oracle_cards`:
+
+**Campos por carta:**
+- `title`: Primeira palavra-chave da pergunta
+- `short_message`: A pergunta reflexiva completa
+- `category_id`: Vinculado ao Reino correspondente
+- `keywords_json`: Palavras-chave extraídas do tema
+- `reflection_questions_json`: A mesma pergunta como questão reflexiva
+- `status`: published
+- `ordem`: Sequência dentro do Reino
+
+**Exemplo de carta:**
+```text
+Reino: Água | Tema: Emoções e Memória
+Pergunta: "Que amor em mim ainda tem medo de ser recebido?"
+Keywords: [amor, medo, receber, emoções, memória]
 ```
 
-### 2. Adicionar Proteção no Código
+### Etapa 4: Criar Tiragens Padrão
+Inserir spreads sugeridos na tabela `oracle_spreads`:
 
-Modificar a lógica de `canAccessNextTravessia` em `TravessiaDetalhe.tsx`:
-
-```typescript
-// Regra de negócio: Travessias numeradas (1+) exigem pelo menos aluna
-const getEffectivePortalMinimo = (travessia: Travessia): PortalType => {
-  if (travessia.number >= 1 && travessia.portal_minimo === 'visitante') {
-    return 'aluna'; // Fallback de segurança
-  }
-  return travessia.portal_minimo;
-};
-
-const canAccessNextTravessia = nextTravessia 
-  ? isAdmin || (
-      canAccessFeature(user.portal, getEffectivePortalMinimo(nextTravessia)) && 
-      (!nextTravessia.requer_profissional || isProfessional)
-    )
-  : false;
-```
+1. **Tiragem do Elemento** - 1 carta de cada Reino (4 cartas)
+2. **Tiragem Reflexiva** - 3 cartas aleatórias
+3. **Tiragem do Reino** - 5 cartas de um único Reino escolhido
 
 ---
 
-## Arquivos a Modificar
+## Detalhes Técnicos
 
-| Arquivo | Modificação |
-|---------|-------------|
-| Migration SQL | Atualizar `portal_minimo` das travessias 1+ para `aluna` |
-| `src/pages/TravessiaDetalhe.tsx` | Adicionar `getEffectivePortalMinimo` como fallback de segurança |
-
----
-
-## Fluxo Esperado Após Correção
+### Operações no Banco de Dados
 
 ```text
-Visitante completa Travessia 00
-           ↓
-   Tenta acessar Travessia 1
-           ↓
-  ┌────────────────────────────┐
-  │ portal_minimo = 'aluna'    │
-  │ user.portal = 'visitante'  │
-  │ canAccessFeature = FALSE   │
-  └────────────────────────────┘
-           ↓
-    Botão desabilitado + cadeado
-    Mensagem: "Requer matrícula"
+1. INSERT INTO oracle_decks (1 registro)
+2. INSERT INTO oracle_categories (4 registros)
+3. INSERT INTO oracle_cards (60-80 registros em lotes)
+4. INSERT INTO oracle_spreads (3 registros)
 ```
+
+### Processamento das Cartas do PDF
+Extrair de cada página:
+- Reino (REINO DA ÁGUA, TERRA, FOGO, AR)
+- Tema (subtítulo após o Reino)
+- Pergunta (texto da carta)
+
+### Tratamento de Imagens
+O PDF contém imagens de cada carta. Opções:
+- Usar as imagens extraídas do PDF como `main_image_url`
+- Deixar vazio para geração posterior via IA
+- O documento tem imagens em `parsed-documents://...` que podem ser copiadas
 
 ---
 
-## Critérios de Sucesso
+## Observações
 
-- [ ] Visitante NÃO consegue acessar Travessia 1 após completar Travessia 00
-- [ ] Botão "Próxima Travessia" aparece desabilitado com cadeado
-- [ ] Aluna matriculada consegue acessar normalmente
-- [ ] Admin mantém acesso total
+1. **Documento incompleto**: O PDF foi processado até a página 50. Se existirem mais cartas (Reino do Ar, por exemplo), será necessário reprocessar ou adicionar manualmente.
 
----
+2. **Configuração de acesso**: O oráculo será criado como `draft` para revisão antes de publicar.
 
-## Seção Técnica
+3. **Imagens das cartas**: Podemos copiar as imagens extraídas do PDF para o storage do projeto e associá-las às cartas.
 
-### Lógica de Hierarquia de Portais
-
-```typescript
-// src/types/portal.ts
-const PORTAL_HIERARCHY: Record<PortalType, number> = {
-  visitante: 1,
-  aluna: 2,
-  oracula: 3,
-  assinante: 4,
-  admin: 5,
-};
-
-// canAccessFeature(visitante, aluna) → 1 >= 2 → FALSE
-// canAccessFeature(aluna, aluna) → 2 >= 2 → TRUE
-```
-
-### Modificação em TravessiaDetalhe.tsx
-
-Localização: linhas 424-431
-
-```typescript
-// ANTES
-const canAccessNextTravessia = nextTravessia 
-  ? isAdmin || (canAccessFeature(user.portal, nextTravessia.portal_minimo) && ...)
-  : false;
-
-// DEPOIS
-const getEffectivePortalMinimo = (t: Travessia): PortalType => {
-  // Travessias 1+ nunca devem ser acessíveis para visitantes
-  if (t.number >= 1 && t.portal_minimo === 'visitante') {
-    return 'aluna';
-  }
-  return t.portal_minimo;
-};
-
-const canAccessNextTravessia = nextTravessia 
-  ? isAdmin || (
-      canAccessFeature(user.portal, getEffectivePortalMinimo(nextTravessia)) && 
-      (!nextTravessia.requer_profissional || isProfessional)
-    )
-  : false;
-```
+4. **Alinhamento com sistema existente**: O oráculo seguirá exatamente a estrutura já existente (oracle_decks, oracle_cards, etc.), garantindo compatibilidade total com as páginas de Oráculos já implementadas.
