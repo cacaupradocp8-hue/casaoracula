@@ -13,3 +13,4 @@ export { SectionAplicabilidade } from "./SectionAplicabilidade";
 export { SectionCaminhos } from "./SectionCaminhos";
 export { SectionFechamento } from "./SectionFechamento";
 export { EthicalFooter } from "./EthicalFooter";
+export { SectionVerdadeFinal } from "./SectionVerdadeFinal";

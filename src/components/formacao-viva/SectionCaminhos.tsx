@@ -9,7 +9,7 @@ const CAMINHOS = [
     symbol: "🜂",
     nome: "FORMAÇÃO ORÁCULA",
     subtitulo: "12 meses de travessia estruturada",
-    preco: "R$ 5.900",
+    preco: "R$ 7.900",
     nota: "parcelamento disponível",
     cta: "Solicitar entrada no próximo círculo",
     destaque: true
@@ -19,7 +19,7 @@ const CAMINHOS = [
     symbol: "🜄",
     nome: "ASSINATURA CASA ORÁCULA",
     subtitulo: "Continuidade para ex-alunas",
-    preco: "R$ 49",
+    preco: "R$ 97 a R$ 147",
     periodo: "/mês",
     cta: "Acessar planos",
     destaque: false
