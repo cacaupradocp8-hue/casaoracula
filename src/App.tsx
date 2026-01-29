@@ -110,6 +110,7 @@ import AtlasArquetiposFemininos from "./pages/AtlasArquetiposFemininos";
 import BibliotecaCasos from "./pages/BibliotecaCasos";
 import { AsPortas, OsCamposPsiquicos, AsTorres, TriadeMetodo } from "./pages/metodo";
 import FormacaoOracula from "./pages/FormacaoOracula";
+import FormacaoVivaPage from "./pages/FormacaoVivaPage";
 import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
 import Jornada from "./pages/Jornada";
@@ -272,6 +273,7 @@ function AppRoutes() {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/install" element={<InstallApp />} />
       <Route path="/formacao-oracula" element={<FormacaoOracula />} />
+      <Route path="/formacao-viva" element={<FormacaoVivaPage />} />
       <Route path="/tour" element={<Tour />} />
 
       {/* Onboarding Route - First-time experience (before completing) */}
