@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button';
 import { canAccessFeature, PortalType } from '@/types/portal';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
-import { TravessiaHeader, TravessiaDayCard, TravessiaTestimonials } from '@/components/travessia';
+import { TravessiaHeader, TravessiaDayCard } from '@/components/travessia';
+import { TravessiaComentarios } from '@/components/travessia/TravessiaComentarios';
 import { 
   Compass, 
   Moon, 
@@ -673,8 +674,8 @@ export default function TravessiaDetalhe() {
               </section>
             )}
 
-            {/* Depoimentos e CTA para Travessia 00 */}
-            {isTravessiaZero && <TravessiaTestimonials />}
+            {/* Área de Comentários para Travessia 00 */}
+            {isTravessiaZero && <TravessiaComentarios travessiaId="travessia-zero" />}
           </div>
         )}
 
