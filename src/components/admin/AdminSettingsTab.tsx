@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Pencil, Trash2, Settings, ExternalLink } from 'lucide-react';
 import { EntryAudioSettings } from './EntryAudioSettings';
+import { WebhookDebugPanel } from './WebhookDebugPanel';
 
 export function AdminSettingsTab() {
   const { settings, isLoading, updateSetting, createSetting, deleteSetting, refetch } = useAppSettingsAdmin();
@@ -71,6 +72,9 @@ export function AdminSettingsTab() {
 
   return (
     <div className="space-y-6">
+      {/* Webhook Debug Panel */}
+      <WebhookDebugPanel />
+
       {/* Entry Audio Settings */}
       <EntryAudioSettings />
 
