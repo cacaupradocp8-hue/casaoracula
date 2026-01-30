@@ -20,6 +20,10 @@ export interface LabirintoPorta {
   campo_pede: string | null;
   nao_fazer_aqui: string | null;
   postura_facilitadora: string | null;
+  // Campos do Tratado das 39 Portas
+  grupo_tratado: string | null;
+  criterio_integracao: string | null;
+  tipo_evento: string | null;
   // Campos legados (opcionais)
   cena_narrativa: string | null;
   eixo_psiquico: string | null;
