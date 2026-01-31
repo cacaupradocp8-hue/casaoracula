@@ -182,10 +182,10 @@ export default function Auth() {
             <span>Voltar para Login</span>
           </button>
 
-          <div className="text-center mb-8">
-            <Logo size="lg" variant="vertical" className="justify-center mb-4" />
-            <h1 className="text-2xl font-display text-gold mb-2">Recuperar Senha</h1>
-            <p className="text-muted-foreground">
+          <div className="text-center mb-6">
+            <Logo size="md" variant="vertical" className="justify-center mb-3" />
+            <h1 className="text-xl font-display text-gold mb-2">Recuperar Senha</h1>
+            <p className="text-muted-foreground text-sm">
               Digite seu email para receber o link de recuperação
             </p>
           </div>
@@ -265,9 +265,9 @@ export default function Auth() {
           <span>Voltar</span>
         </Link>
 
-        <div className="text-center mb-8">
-          <Logo size="lg" variant="vertical" className="justify-center mb-4" />
-          <p className="text-muted-foreground font-display italic">
+        <div className="text-center mb-6">
+          <Logo size="md" variant="vertical" className="justify-center mb-3" />
+          <p className="text-muted-foreground font-display italic text-sm">
             "A mulher de alma antiga encontra aqui sua linguagem"
           </p>
         </div>
