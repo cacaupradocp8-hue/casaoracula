@@ -1,339 +1,401 @@
+// ============================================
+// JORNADA — Espelho de Jornada Simbólica
+// ============================================
+// Este espaço não mede valor. Ele escuta o campo.
+// "O que está pedindo cuidado agora?"
+
 import React, { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
-  Compass, 
-  ArrowRight,
-  DoorOpen,
-  Home as HomeIcon,
-  ChevronRight,
+  Flower2, 
+  Heart, 
+  Moon,
   Sparkles,
+  Feather,
+  Eye,
   BookOpen,
   Users,
-  GraduationCap,
-  Lock,
-  Crown,
-  Layers
+  Shield,
+  Compass,
+  CircleDot,
+  Leaf
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
-import { useOnboarding } from '@/hooks/useOnboarding';
-import { PortalType, canAccessFeature } from '@/types/portal';
 import { VisitorHomePage } from '@/components/visitor/VisitorHomePage';
 
 // ════════════════════════════════════════════════════════════════════════════
-// TIPOS E CONFIGURAÇÕES
+// TIPOS
 // ════════════════════════════════════════════════════════════════════════════
 
-type UserState = 'visitante' | 'aluna' | 'assinante' | 'oracula' | 'admin';
+type JornadaLevel = 'visitante' | 'iniciada' | 'terapeuta' | 'guardia';
 
-interface StateConfig {
-  title: string;
-  description: string;
-  icon: React.ElementType;
-  color: string;
-  bgColor: string;
-  borderColor: string;
+interface JardimStatus {
+  ritmoRegular: boolean;
+  ultimoAcesso: string | null;
 }
 
-interface PrimaryAction {
-  label: string;
-  route: string;
-  icon: React.ElementType;
+interface VivenciaStatus {
+  travessiasAbertas: string[];
+  rituaisConcluidos: string[];
 }
 
-interface FuturePath {
-  id: string;
-  title: string;
-  description: string;
-  icon: React.ElementType;
-  requiredLevel: PortalType;
-  route: string;
+interface SessaoStatus {
+  clientesAtivos: string[];
+  ultimaSessaoFechada: boolean;
+  mapaVivoAtualizado: boolean;
+  jardimHeroinaUsado: boolean;
+  campoFechado: boolean;
 }
 
-const STATE_CONFIGS: Record<UserState, StateConfig> = {
-  visitante: {
-    title: 'Visitante',
-    description: 'Você está na porta de entrada da Casa. Antes de avançar, é preciso atravessar a Sala da Visitante.',
-    icon: DoorOpen,
-    color: 'text-gold',
-    bgColor: 'bg-gold/10',
-    borderColor: 'border-gold/30',
-  },
-  aluna: {
-    title: 'Aluna',
-    description: 'Você está em jornada formativa. O foco agora é travessia e aprendizado do método.',
-    icon: GraduationCap,
-    color: 'text-emerald-400',
-    bgColor: 'bg-emerald-500/10',
-    borderColor: 'border-emerald-500/30',
-  },
-  assinante: {
-    title: 'Assinante',
-    description: 'Você acessa as ferramentas vivas do Método ORÁCULA.',
-    icon: Sparkles,
-    color: 'text-blue-400',
-    bgColor: 'bg-blue-500/10',
-    borderColor: 'border-blue-500/30',
-  },
-  oracula: {
-    title: 'Orácula',
-    description: 'Você completou a formação e integra o Círculo da Casa.',
-    icon: Crown,
-    color: 'text-gold',
-    bgColor: 'bg-gold/10',
-    borderColor: 'border-gold/30',
-  },
-  admin: {
-    title: 'Administradora',
-    description: 'Você tem acesso completo a todos os recursos da Casa.',
-    icon: Layers,
-    color: 'text-gold',
-    bgColor: 'bg-gold/10',
-    borderColor: 'border-gold/30',
-  },
-};
+interface CuidadoTerapeuta {
+  jardimPosSessao: boolean;
+  lembreteSupevisao: string;
+}
 
-const PRIMARY_ACTIONS: Record<UserState, PrimaryAction> = {
-  visitante: {
-    label: 'Entrar na Sala da Visitante',
-    route: '/sala-da-visitante',
-    icon: DoorOpen,
-  },
-  aluna: {
-    label: 'Acessar Sala das Alunas',
-    route: '/salas',
-    icon: GraduationCap,
-  },
-  assinante: {
-    label: 'Acessar Ferramentas do Método',
-    route: '/ferramentas',
-    icon: Sparkles,
-  },
-  oracula: {
-    label: 'Acessar Ferramentas do Método',
-    route: '/ferramentas',
-    icon: Crown,
-  },
-  admin: {
-    label: 'Acessar Painel Administrativo',
-    route: '/admin',
-    icon: Layers,
-  },
-};
+interface GuardiaStatus {
+  gruposAtivos: string[];
+  mentoriasAndamento: string[];
+  usoEticoJardim: boolean;
+  limitesPreservados: boolean;
+  aulasConduzidas: string[];
+  acompanhamentoStatus: 'ativo' | 'pausado';
+}
 
-const FUTURE_PATHS: FuturePath[] = [
-  {
-    id: 'aluna',
-    title: 'Sala das Alunas',
-    description: 'Formação completa no Método ORÁCULA com acompanhamento.',
-    icon: GraduationCap,
-    requiredLevel: 'aluna',
-    route: '/salas',
-  },
-  {
-    id: 'oracula',
-    title: 'Círculo da Orácula',
-    description: 'Espaço exclusivo para profissionais formadas e certificadas.',
-    icon: Crown,
-    requiredLevel: 'oracula',
-    route: '/casa/circulo',
-  },
-  {
-    id: 'assinante',
-    title: 'Ferramentas do Método',
-    description: 'Acesso contínuo às ferramentas simbólicas vivas da Casa.',
-    icon: Sparkles,
-    requiredLevel: 'assinante',
-    route: '/ferramentas',
-  },
+// ════════════════════════════════════════════════════════════════════════════
+// CONVITES DA SEMANA (rotativos)
+// ════════════════════════════════════════════════════════════════════════════
+
+const CONVITES_INICIADA = [
+  "O que precisa ser olhado antes de seguir?",
+  "Há algo que você evitou nomear essa semana?",
+  "Qual parte de você precisa de pausa?",
+  "O que você gostaria de acolher hoje?",
 ];
 
-// ════════════════════════════════════════════════════════════════════════════
-// COMPONENTES
-// ════════════════════════════════════════════════════════════════════════════
+const CONVITES_TERAPEUTA = [
+  "Antes de abrir um campo, você fechou o anterior?",
+  "O que seu corpo absorveu das sessões?",
+  "Há algo que você precisa devolver ao campo?",
+  "Você se permitiu ser cuidada esta semana?",
+];
 
-function StateIndicator({ state }: { state: UserState }) {
-  const config = STATE_CONFIGS[state];
-  const Icon = config.icon;
+const CONVITES_GUARDIA = [
+  "O que você transmite sem perceber?",
+  "Há um padrão nos grupos que você conduz?",
+  "O que precisa ser protegido agora?",
+  "Qual transmissão pede refinamento?",
+];
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={cn(
-        "rounded-xl border p-6",
-        config.bgColor,
-        config.borderColor
-      )}
-    >
-      <div className="flex items-start gap-4">
-        <div className={cn(
-          "w-12 h-12 rounded-full flex items-center justify-center shrink-0",
-          config.bgColor
-        )}>
-          <Icon className={cn("w-6 h-6", config.color)} />
-        </div>
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-              Seu ponto atual na Casa
-            </span>
-          </div>
-          <h2 className={cn("text-xl font-display mb-2", config.color)}>
-            {config.title}
-          </h2>
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            {config.description}
-          </p>
-        </div>
-      </div>
-    </motion.div>
-  );
+function getConviteDaSemana(convites: string[]): string {
+  const weekNumber = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
+  return convites[weekNumber % convites.length];
 }
 
-function PrimaryActionCard({ state }: { state: UserState }) {
-  const navigate = useNavigate();
-  const action = PRIMARY_ACTIONS[state];
-  const Icon = action.icon;
-  const config = STATE_CONFIGS[state];
+// ════════════════════════════════════════════════════════════════════════════
+// COMPONENTES - Cards Simbólicos
+// ════════════════════════════════════════════════════════════════════════════
 
+function SymbolicCard({ 
+  title, 
+  icon: Icon, 
+  children,
+  delay = 0 
+}: { 
+  title: string; 
+  icon: React.ElementType; 
+  children: React.ReactNode;
+  delay?: number;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.1 }}
+      transition={{ delay, duration: 0.5 }}
     >
-      <Card 
-        className={cn(
-          "relative overflow-hidden cursor-pointer transition-all duration-300",
-          "bg-gradient-to-br from-gold/5 via-card to-card",
-          "border-2 border-gold/40 hover:border-gold/60",
-          "hover:shadow-lg hover:shadow-gold/10"
-        )}
-        onClick={() => navigate(action.route)}
-      >
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gold to-transparent" />
-        
-        <CardContent className="p-8">
-          <div className="flex flex-col items-center text-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-gold/20 flex items-center justify-center">
-              <Icon className="w-8 h-8 text-gold" />
+      <Card className="glass border-border/30 bg-card/50 backdrop-blur-sm">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-3 text-base font-medium text-foreground/80">
+            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <Icon className="w-4 h-4 text-primary/70" />
             </div>
-            
-            <div>
-              <span className="text-xs font-medium text-gold uppercase tracking-wider mb-2 block">
-                Sua porta ativa
-              </span>
-              <h3 className="text-xl font-display text-foreground mb-4">
-                {action.label}
-              </h3>
-            </div>
-            
-            <Button 
-              size="lg"
-              className="bg-gold hover:bg-gold/90 text-background rounded-full px-8 gap-2"
-            >
-              Atravessar
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-          </div>
+            {title}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0 space-y-3 text-sm">
+          {children}
         </CardContent>
       </Card>
     </motion.div>
   );
 }
 
-function FuturePathCard({ path, hasAccess }: { path: FuturePath; hasAccess: boolean }) {
-  const navigate = useNavigate();
-  const Icon = path.icon;
-
-  if (hasAccess) {
-    // If user has access, don't show as future path (it's already accessible)
-    return null;
+function StatusItem({ 
+  label, 
+  value, 
+  variant = 'text' 
+}: { 
+  label: string; 
+  value: string | boolean | null; 
+  variant?: 'text' | 'boolean';
+}) {
+  if (variant === 'boolean') {
+    const isActive = value === true;
+    return (
+      <div className="flex items-center justify-between py-1.5 border-b border-border/20 last:border-0">
+        <span className="text-muted-foreground">{label}</span>
+        <span className={cn(
+          "text-xs px-2 py-0.5 rounded-full",
+          isActive ? "bg-emerald-500/20 text-emerald-400" : "bg-muted/30 text-muted-foreground"
+        )}>
+          {isActive ? 'sim' : 'não'}
+        </span>
+      </div>
+    );
   }
 
   return (
+    <div className="flex items-center justify-between py-1.5 border-b border-border/20 last:border-0">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="text-foreground/80">{value || '—'}</span>
+    </div>
+  );
+}
+
+function ListaSimbolica({ 
+  items, 
+  emptyText = "Nenhum registro" 
+}: { 
+  items: string[]; 
+  emptyText?: string;
+}) {
+  if (!items || items.length === 0) {
+    return <p className="text-muted-foreground/60 italic text-xs">{emptyText}</p>;
+  }
+
+  return (
+    <ul className="space-y-1">
+      {items.map((item, idx) => (
+        <li key={idx} className="flex items-start gap-2 text-muted-foreground">
+          <Leaf className="w-3 h-3 mt-1 text-primary/50 shrink-0" />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function ConviteCard({ texto, delay = 0.5 }: { texto: string; delay?: number }) {
+  return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
+      transition={{ delay, duration: 0.5 }}
     >
-      <Card 
-        className={cn(
-          "relative overflow-hidden transition-all duration-300",
-          "bg-card/30 border-border/30",
-          "opacity-60"
-        )}
-      >
-        <CardContent className="p-5">
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-full bg-muted/30 flex items-center justify-center shrink-0">
-              <Icon className="w-5 h-5 text-muted-foreground" />
-            </div>
-            
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <h4 className="font-medium text-muted-foreground">
-                  {path.title}
-                </h4>
-                <Lock className="w-3 h-3 text-muted-foreground/50" />
-              </div>
-              <p className="text-xs text-muted-foreground/70 leading-relaxed">
-                {path.description}
-              </p>
-            </div>
-          </div>
+      <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+        <CardContent className="p-5 text-center">
+          <Feather className="w-5 h-5 text-primary/60 mx-auto mb-3" />
+          <p className="text-sm text-foreground/80 italic leading-relaxed">
+            "{texto}"
+          </p>
+          <p className="text-xs text-muted-foreground mt-2">Convite da semana</p>
         </CardContent>
       </Card>
     </motion.div>
   );
 }
 
-function ResourcesQuickAccess({ userState }: { userState: UserState }) {
-  const navigate = useNavigate();
-  
-  // Only show for users with some level of access
-  if (userState === 'visitante') return null;
+// ════════════════════════════════════════════════════════════════════════════
+// NÍVEL 1 — INICIADA ORÁCULA
+// ════════════════════════════════════════════════════════════════════════════
 
-  const resources = [
-    { label: 'Biblioteca', route: '/biblioteca', icon: BookOpen },
-    { label: 'Oráculos', route: '/oraculos', icon: Sparkles },
-    { label: 'Áudios', route: '/audios', icon: Compass },
-  ];
-
+function JornadaIniciada({ 
+  jardimStatus, 
+  vivencias,
+  fraseSelo 
+}: { 
+  jardimStatus: JardimStatus;
+  vivencias: VivenciaStatus;
+  fraseSelo: string;
+}) {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.4 }}
-      className="mt-8"
-    >
-      <h3 className="text-sm font-medium text-muted-foreground mb-3 text-center">
-        Recursos disponíveis
-      </h3>
-      <div className="flex flex-wrap justify-center gap-2">
-        {resources.map((resource) => {
-          const Icon = resource.icon;
-          return (
-            <Button
-              key={resource.route}
-              variant="ghost"
-              size="sm"
-              className="text-muted-foreground hover:text-foreground gap-2"
-              onClick={() => navigate(resource.route)}
-            >
-              <Icon className="w-4 h-4" />
-              {resource.label}
-            </Button>
-          );
-        })}
-      </div>
-    </motion.div>
+    <div className="space-y-5">
+      {/* Onde Você Está */}
+      <SymbolicCard title="Onde Você Está na Jornada" icon={Compass} delay={0.1}>
+        <p className="text-foreground/80">Fase atual: <span className="text-primary">Em travessia</span></p>
+        <p className="text-muted-foreground italic text-xs">"{fraseSelo}"</p>
+      </SymbolicCard>
+
+      {/* Ritmo do Jardim */}
+      <SymbolicCard title="Ritmo do Jardim da Psiquê" icon={Flower2} delay={0.2}>
+        <StatusItem 
+          label="Ritmo" 
+          value={jardimStatus.ritmoRegular ? 'Regular' : 'Irregular'} 
+        />
+        <StatusItem 
+          label="Último acesso" 
+          value={jardimStatus.ultimoAcesso || 'Ainda não acessado'} 
+        />
+      </SymbolicCard>
+
+      {/* Vivências Ativas */}
+      <SymbolicCard title="Vivências Ativas" icon={Moon} delay={0.3}>
+        <div className="space-y-3">
+          <div>
+            <p className="text-xs text-muted-foreground mb-1.5">Travessias abertas</p>
+            <ListaSimbolica items={vivencias.travessiasAbertas} emptyText="Nenhuma travessia aberta" />
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground mb-1.5">Rituais concluídos</p>
+            <ListaSimbolica items={vivencias.rituaisConcluidos} emptyText="Nenhum ritual concluído" />
+          </div>
+        </div>
+      </SymbolicCard>
+
+      {/* Convite */}
+      <ConviteCard texto={getConviteDaSemana(CONVITES_INICIADA)} delay={0.4} />
+    </div>
   );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// NÍVEL 2 — TERAPEUTA ORÁCULA
+// ════════════════════════════════════════════════════════════════════════════
+
+function JornadaTerapeuta({ 
+  sessaoStatus, 
+  cuidado 
+}: { 
+  sessaoStatus: SessaoStatus;
+  cuidado: CuidadoTerapeuta;
+}) {
+  return (
+    <div className="space-y-5">
+      {/* Sala de Sessão Viva */}
+      <SymbolicCard title="Sala de Sessão Viva" icon={Users} delay={0.1}>
+        <div className="space-y-3">
+          <div>
+            <p className="text-xs text-muted-foreground mb-1.5">Clientes em acompanhamento</p>
+            <ListaSimbolica items={sessaoStatus.clientesAtivos} emptyText="Nenhum cliente ativo" />
+          </div>
+          <StatusItem 
+            label="Última sessão fechada?" 
+            value={sessaoStatus.ultimaSessaoFechada} 
+            variant="boolean" 
+          />
+        </div>
+      </SymbolicCard>
+
+      {/* Fluxo Ético */}
+      <SymbolicCard title="Fluxo Ético" icon={Eye} delay={0.2}>
+        <StatusItem 
+          label="Mapa Vivo atualizado?" 
+          value={sessaoStatus.mapaVivoAtualizado} 
+          variant="boolean" 
+        />
+        <StatusItem 
+          label="Jardim da Heroína usado?" 
+          value={sessaoStatus.jardimHeroinaUsado} 
+          variant="boolean" 
+        />
+        <StatusItem 
+          label="Campo fechado?" 
+          value={sessaoStatus.campoFechado} 
+          variant="boolean" 
+        />
+      </SymbolicCard>
+
+      {/* Cuidado da Terapeuta */}
+      <SymbolicCard title="Cuidado da Terapeuta" icon={Heart} delay={0.3}>
+        <StatusItem 
+          label="Jardim pós-sessão realizado?" 
+          value={cuidado.jardimPosSessao} 
+          variant="boolean" 
+        />
+        <p className="text-muted-foreground/70 text-xs italic pt-2">
+          {cuidado.lembreteSupevisao || "Lembre-se: supervisão protege o campo."}
+        </p>
+      </SymbolicCard>
+
+      {/* Convite */}
+      <ConviteCard texto={getConviteDaSemana(CONVITES_TERAPEUTA)} delay={0.4} />
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// NÍVEL 3 — GUARDIÃ / MENTORA
+// ════════════════════════════════════════════════════════════════════════════
+
+function JornadaGuardia({ status }: { status: GuardiaStatus }) {
+  return (
+    <div className="space-y-5">
+      {/* Campos que Sustenta */}
+      <SymbolicCard title="Campos que Você Sustenta" icon={Shield} delay={0.1}>
+        <div className="space-y-3">
+          <div>
+            <p className="text-xs text-muted-foreground mb-1.5">Grupos ativos</p>
+            <ListaSimbolica items={status.gruposAtivos} emptyText="Nenhum grupo ativo" />
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground mb-1.5">Mentorias em andamento</p>
+            <ListaSimbolica items={status.mentoriasAndamento} emptyText="Nenhuma mentoria ativa" />
+          </div>
+        </div>
+      </SymbolicCard>
+
+      {/* Qualidade de Campo */}
+      <SymbolicCard title="Qualidade de Campo" icon={CircleDot} delay={0.2}>
+        <StatusItem 
+          label="Uso ético do Jardim?" 
+          value={status.usoEticoJardim} 
+          variant="boolean" 
+        />
+        <StatusItem 
+          label="Limites preservados?" 
+          value={status.limitesPreservados} 
+          variant="boolean" 
+        />
+      </SymbolicCard>
+
+      {/* Transmissão do Método */}
+      <SymbolicCard title="Transmissão do Método" icon={BookOpen} delay={0.3}>
+        <div className="space-y-3">
+          <div>
+            <p className="text-xs text-muted-foreground mb-1.5">Aulas ou rituais conduzidos</p>
+            <ListaSimbolica items={status.aulasConduzidas} emptyText="Nenhum registro" />
+          </div>
+          <StatusItem 
+            label="Acompanhamento de iniciadas" 
+            value={status.acompanhamentoStatus === 'ativo' ? 'Ativo' : 'Pausado'} 
+          />
+        </div>
+      </SymbolicCard>
+
+      {/* Convite */}
+      <ConviteCard texto={getConviteDaSemana(CONVITES_GUARDIA)} delay={0.4} />
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// FRASES-SELO (exemplo rotativo por semana)
+// ════════════════════════════════════════════════════════════════════════════
+
+const FRASES_SELO = [
+  "Cada passo é uma escolha de presença.",
+  "A jornada não se apressou para você chegar.",
+  "O que se integra, não retorna como ferida.",
+  "Caminhar devagar também é avançar.",
+  "Honre o ritmo que o corpo pede.",
+];
+
+function getFraseSelo(): string {
+  const weekNumber = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
+  return FRASES_SELO[weekNumber % FRASES_SELO.length];
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -342,192 +404,201 @@ function ResourcesQuickAccess({ userState }: { userState: UserState }) {
 
 export default function Jornada() {
   const { user } = useAuth();
-  const navigate = useNavigate();
-  const { onboardingCompleted } = useOnboarding();
   const [loading, setLoading] = useState(true);
-  const [userState, setUserState] = useState<UserState>('visitante');
-  const [hasMatriculas, setHasMatriculas] = useState({
-    mentoria: false,
-    formacao: false,
+  const [level, setLevel] = useState<JornadaLevel>('visitante');
+  
+  // States por nível
+  const [jardimStatus, setJardimStatus] = useState<JardimStatus>({
+    ritmoRegular: false,
+    ultimoAcesso: null,
   });
-  const [hasSubscription, setHasSubscription] = useState(false);
+  const [vivencias, setVivencias] = useState<VivenciaStatus>({
+    travessiasAbertas: [],
+    rituaisConcluidos: [],
+  });
+  const [sessaoStatus, setSessaoStatus] = useState<SessaoStatus>({
+    clientesAtivos: [],
+    ultimaSessaoFechada: true,
+    mapaVivoAtualizado: false,
+    jardimHeroinaUsado: false,
+    campoFechado: true,
+  });
+  const [cuidado, setCuidado] = useState<CuidadoTerapeuta>({
+    jardimPosSessao: false,
+    lembreteSupevisao: "Supervisão protege o campo.",
+  });
+  const [guardiaStatus, setGuardiaStatus] = useState<GuardiaStatus>({
+    gruposAtivos: [],
+    mentoriasAndamento: [],
+    usoEticoJardim: true,
+    limitesPreservados: true,
+    aulasConduzidas: [],
+    acompanhamentoStatus: 'pausado',
+  });
 
   useEffect(() => {
-    const loadUserData = async () => {
+    const loadData = async () => {
       if (!user) return;
       
       setLoading(true);
       
       try {
-        // Fetch active matriculas
-        const { data: matriculasData } = await supabase
-          .from('matriculas')
-          .select('curso_id')
-          .eq('user_id', user.id)
-          .eq('ativa', true);
-
-        const hasMentoria = matriculasData?.some(m => m.curso_id.includes('mentoria')) || false;
-        const hasFormacao = matriculasData?.some(m => m.curso_id.includes('formacao')) || false;
+        // Determine level based on portal
+        let userLevel: JornadaLevel = 'visitante';
         
-        setHasMatriculas({ mentoria: hasMentoria, formacao: hasFormacao });
-
-        // Fetch subscription status
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('subscription_status')
-          .eq('id', user.id)
-          .maybeSingle();
-
-        const isSubscribed = profile?.subscription_status === 'active' || profile?.subscription_status === 'trialing';
-        setHasSubscription(isSubscribed);
-
-        // Determine user state based on portal and access
-        let state: UserState = 'visitante';
-        
-        if (user.portal === 'admin') {
-          state = 'admin';
-        } else if (user.portal === 'oracula') {
-          state = 'oracula';
-        } else if (hasFormacao || hasMentoria || user.portal === 'aluna') {
-          state = 'aluna';
-        } else if (isSubscribed || user.portal === 'assinante') {
-          state = 'assinante';
-        } else if (!onboardingCompleted) {
-          state = 'visitante';
-        } else {
-          // Completed onboarding but no matricula/subscription
-          state = 'visitante';
+        if (user.portal === 'admin' || user.portal === 'oracula') {
+          // Check if has clients → terapeuta; if mentoring others → guardia
+          const { data: clientes } = await supabase
+            .from('clientes')
+            .select('id, nome')
+            .eq('terapeuta_id', user.id)
+            .eq('status', 'ativo')
+            .limit(5);
+          
+          if (clientes && clientes.length > 0) {
+            userLevel = 'terapeuta';
+            setSessaoStatus(prev => ({
+              ...prev,
+              clientesAtivos: clientes.map(c => c.nome),
+            }));
+          } else {
+            userLevel = 'iniciada';
+          }
+          
+          // Check for mentoring/teaching role
+          const { data: mentoriasCount } = await supabase
+            .from('matriculas')
+            .select('id', { count: 'exact' })
+            .eq('curso_id', 'mentoria')
+            .eq('ativa', true);
+          
+          if (mentoriasCount && mentoriasCount.length > 0) {
+            userLevel = 'guardia';
+          }
+        } else if (user.portal === 'assinante' || user.portal === 'aluna') {
+          userLevel = 'iniciada';
         }
         
-        setUserState(state);
+        setLevel(userLevel);
+
+        // Load Jardim status
+        const { data: jardimRecords } = await supabase
+          .from('jardim_psique_registros')
+          .select('created_at')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(10);
+        
+        if (jardimRecords && jardimRecords.length > 0) {
+          const lastDate = new Date(jardimRecords[0].created_at);
+          const daysSince = Math.floor((Date.now() - lastDate.getTime()) / (24 * 60 * 60 * 1000));
+          
+          setJardimStatus({
+            ritmoRegular: daysSince <= 7 && jardimRecords.length >= 2,
+            ultimoAcesso: daysSince === 0 ? 'Hoje' : 
+                         daysSince === 1 ? 'Ontem' : 
+                         `${daysSince} dias atrás`,
+          });
+        }
+
+        // Load active travessias
+        const { data: travessias } = await supabase
+          .from('conteudo_travessias')
+          .select('titulo')
+          .eq('publicado', true)
+          .limit(3);
+        
+        if (travessias) {
+          setVivencias(prev => ({
+            ...prev,
+            travessiasAbertas: travessias.map(t => t.titulo),
+          }));
+        }
+
       } catch (error) {
-        console.error('Error loading user data:', error);
+        console.error('Erro ao carregar dados da jornada:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    loadUserData();
-  }, [user, onboardingCompleted]);
+    loadData();
+  }, [user]);
 
-  // Filter future paths that user doesn't have access to
-  const futurePaths = FUTURE_PATHS.filter(path => {
-    const hasAccess = canAccessFeature(user?.portal || 'visitante', path.requiredLevel);
-    return !hasAccess; // Only show paths user CAN'T access yet
-  });
+  // Visitante → página específica
+  if (!user || user.portal === 'visitante') {
+    return <VisitorHomePage />;
+  }
 
   if (loading) {
     return (
       <AppLayout>
         <div className="min-h-[60vh] flex items-center justify-center">
-          <div className="animate-pulse text-gold font-display text-xl">
-            Carregando seu caminho...
-          </div>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center"
+          >
+            <Sparkles className="w-8 h-8 text-primary/50 mx-auto mb-4 animate-pulse" />
+            <p className="text-muted-foreground text-sm">Escutando o campo...</p>
+          </motion.div>
         </div>
       </AppLayout>
     );
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // VISITANTE: Tela específica sem menu, apenas porta gratuita
-  // ═══════════════════════════════════════════════════════════════════════════
-  if (userState === 'visitante') {
-    return <VisitorHomePage />;
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // USUÁRIAS COM ACESSO: Interface completa com AppLayout
-  // ═══════════════════════════════════════════════════════════════════════════
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 max-w-2xl">
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <Link to="/dashboard" className="hover:text-foreground transition-colors flex items-center gap-1">
-            <HomeIcon className="w-3 h-3" />
-            Casa
-          </Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-foreground">Meu Caminho</span>
-        </div>
-
-        {/* Header */}
+      <div className="container mx-auto px-4 py-8 max-w-lg">
+        {/* Header Simbólico */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <h1 className="text-2xl md:text-3xl font-display text-foreground mb-2">
-            Meu Caminho
+          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+            <Compass className="w-6 h-6 text-primary/70" />
+          </div>
+          <h1 className="text-2xl font-display text-foreground mb-2">
+            Espelho da Jornada
           </h1>
-          <p className="text-muted-foreground text-sm">
-            Sua orientação pessoal na Casa ORÁCULA
+          <p className="text-muted-foreground text-sm italic">
+            O que está pedindo cuidado agora?
           </p>
         </motion.div>
 
-        <div className="space-y-6">
-          {/* ═══════════════════════════════════════════════════════════════ */}
-          {/* BLOCO 1: ESTADO ATUAL */}
-          {/* ═══════════════════════════════════════════════════════════════ */}
-          <StateIndicator state={userState} />
+        {/* Conteúdo por nível */}
+        {level === 'iniciada' && (
+          <JornadaIniciada 
+            jardimStatus={jardimStatus}
+            vivencias={vivencias}
+            fraseSelo={getFraseSelo()}
+          />
+        )}
 
-          {/* ═══════════════════════════════════════════════════════════════ */}
-          {/* BLOCO 2: PORTA ATIVA (AÇÃO PRINCIPAL) */}
-          {/* ═══════════════════════════════════════════════════════════════ */}
-          <PrimaryActionCard state={userState} />
+        {level === 'terapeuta' && (
+          <JornadaTerapeuta 
+            sessaoStatus={sessaoStatus}
+            cuidado={cuidado}
+          />
+        )}
 
-          {/* ═══════════════════════════════════════════════════════════════ */}
-          {/* BLOCO 3: CAMINHOS FUTUROS (ESMAECIDOS) */}
-          {/* ═══════════════════════════════════════════════════════════════ */}
-          {futurePaths.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="pt-6"
-            >
-              <div className="text-center mb-4">
-                <span className="text-xs font-medium text-muted-foreground/70 uppercase tracking-wider">
-                  Caminhos que se abrem adiante
-                </span>
-              </div>
-              
-              <div className="space-y-3">
-                {futurePaths.map((path, index) => (
-                  <motion.div
-                    key={path.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 + index * 0.1 }}
-                  >
-                    <FuturePathCard 
-                      path={path} 
-                      hasAccess={canAccessFeature(user?.portal || 'visitante', path.requiredLevel)}
-                    />
-                  </motion.div>
-                ))}
-              </div>
+        {level === 'guardia' && (
+          <JornadaGuardia status={guardiaStatus} />
+        )}
 
-              {/* CTA to explore plans */}
-              <div className="text-center mt-6">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-muted-foreground hover:text-gold gap-2"
-                  onClick={() => navigate('/planos')}
-                >
-                  Conhecer os caminhos formativos
-                  <ArrowRight className="w-3 h-3" />
-                </Button>
-              </div>
-            </motion.div>
-          )}
-
-          {/* ═══════════════════════════════════════════════════════════════ */}
-          {/* BLOCO 4: RECURSOS RÁPIDOS */}
-          {/* ═══════════════════════════════════════════════════════════════ */}
-          <ResourcesQuickAccess userState={userState} />
-        </div>
+        {/* Footer */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="text-center mt-10 pt-6 border-t border-border/20"
+        >
+          <p className="text-xs text-muted-foreground/50 italic">
+            Este espaço não mede valor.<br/>
+            Ele escuta o campo.
+          </p>
+        </motion.div>
       </div>
     </AppLayout>
   );
