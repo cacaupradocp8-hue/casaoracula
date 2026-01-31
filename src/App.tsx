@@ -65,6 +65,7 @@ import LabirintoTiposCampo from "./pages/labirinto/LabirintoTiposCampo";
 import LabirintoTabela from "./pages/labirinto/LabirintoTabela";
 import InstallApp from "./pages/InstallApp";
 import Planos from "./pages/Planos";
+import PosCompra from "./pages/PosCompra";
 import Assinatura from "./pages/Assinatura";
 import Billing from "./pages/Billing";
 import CheckoutSucesso from "./pages/CheckoutSucesso";
@@ -188,6 +189,7 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
   const isJornadaRoute = location.pathname === '/jornada';
   const isSalaVisitanteRoute = location.pathname === '/sala-da-visitante';
   const isPlanosRoute = location.pathname === '/planos';
+  const isPosCompraRoute = location.pathname === '/pos-compra';
   const isAdmin = user?.portal === 'admin';
   const isVisitor = user?.portal === 'visitante';
   
@@ -206,8 +208,8 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
   const hasAccess = canAccessFeature(effectivePortal, minPortal);
   
   // VISITORS: Show blocking component for restricted content (not redirect!)
-  // Allowed routes for visitors: /jornada, /sala-da-visitante, /planos, /onboarding
-  if (isVisitor && !isAdmin && !hasAccess) {
+  // Allowed routes for visitors: /jornada, /sala-da-visitante, /planos, /pos-compra, /onboarding
+  if (isVisitor && !isAdmin && !hasAccess && !isPosCompraRoute) {
     return <LockedForVisitor />;
   }
   
@@ -1374,6 +1376,14 @@ function AppRoutes() {
 
         {/* Planos e Assinatura */}
         <Route path="/planos" element={<Planos />} />
+        <Route 
+          path="/pos-compra" 
+          element={
+            <ProtectedRoute>
+              <PosCompra />
+            </ProtectedRoute>
+          } 
+        />
         <Route
           path="/assinatura"
           element={
