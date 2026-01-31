@@ -3325,6 +3325,105 @@ export type Database = {
         }
         Relationships: []
       }
+      jardim_grupo_registros: {
+        Row: {
+          campo_fechado: boolean | null
+          clima_descricao: string | null
+          clima_movimento: string | null
+          created_at: string
+          cuidado_proximo_encontro: string | null
+          data_registro: string
+          escuta_campo: string | null
+          escuta_coletiva: string | null
+          fase_jornada_grupo: string | null
+          frase_semente_grupo: string | null
+          group_id: string
+          id: string
+          imagens_emergentes: string | null
+          movimentos_repetidos: string | null
+          notas_privadas: string | null
+          resistencias_grupais: string | null
+          resposta_campo: string | null
+          ritual_atual: string | null
+          ritual_fechamento: string | null
+          ritual_realizado: string | null
+          session_id: string | null
+          simbolos_coletivos: string | null
+          tema_simbolico: string | null
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          campo_fechado?: boolean | null
+          clima_descricao?: string | null
+          clima_movimento?: string | null
+          created_at?: string
+          cuidado_proximo_encontro?: string | null
+          data_registro?: string
+          escuta_campo?: string | null
+          escuta_coletiva?: string | null
+          fase_jornada_grupo?: string | null
+          frase_semente_grupo?: string | null
+          group_id: string
+          id?: string
+          imagens_emergentes?: string | null
+          movimentos_repetidos?: string | null
+          notas_privadas?: string | null
+          resistencias_grupais?: string | null
+          resposta_campo?: string | null
+          ritual_atual?: string | null
+          ritual_fechamento?: string | null
+          ritual_realizado?: string | null
+          session_id?: string | null
+          simbolos_coletivos?: string | null
+          tema_simbolico?: string | null
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          campo_fechado?: boolean | null
+          clima_descricao?: string | null
+          clima_movimento?: string | null
+          created_at?: string
+          cuidado_proximo_encontro?: string | null
+          data_registro?: string
+          escuta_campo?: string | null
+          escuta_coletiva?: string | null
+          fase_jornada_grupo?: string | null
+          frase_semente_grupo?: string | null
+          group_id?: string
+          id?: string
+          imagens_emergentes?: string | null
+          movimentos_repetidos?: string | null
+          notas_privadas?: string | null
+          resistencias_grupais?: string | null
+          resposta_campo?: string | null
+          ritual_atual?: string | null
+          ritual_fechamento?: string | null
+          ritual_realizado?: string | null
+          session_id?: string | null
+          simbolos_coletivos?: string | null
+          tema_simbolico?: string | null
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jardim_grupo_registros_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "therapeutic_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jardim_grupo_registros_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "group_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       jardim_heroina_registros: {
         Row: {
           arquetipo_snapshot: string | null
