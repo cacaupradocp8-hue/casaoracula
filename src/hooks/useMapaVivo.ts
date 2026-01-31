@@ -114,6 +114,25 @@ export function useMapaVivo() {
     }
   }, [user]);
 
+  // Update gesto jardim reference
+  const atualizarGestoJardimRef = useCallback(async (
+    mapaId: string,
+    jardimRegistroId: string
+  ): Promise<boolean> => {
+    try {
+      const { error } = await supabase
+        .from('mapa_vivo_heroina')
+        .update({ gesto_jardim_registro_id: jardimRegistroId })
+        .eq('id', mapaId);
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('Error updating gesto jardim ref:', error);
+      return false;
+    }
+  }, []);
+
   // Fetch history for a mapa
   const fetchHistorico = useCallback(async (mapaId: string): Promise<MapaVivoHistorico[]> => {
     const { data, error } = await supabase
@@ -136,5 +155,6 @@ export function useMapaVivo() {
     saveMapa,
     registrarMudancaFase,
     fetchHistorico,
+    atualizarGestoJardimRef,
   };
 }

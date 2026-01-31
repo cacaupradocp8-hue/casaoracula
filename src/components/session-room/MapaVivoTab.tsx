@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Save, History, ChevronDown, ChevronUp, Sparkles, Eye, Shield, Flame, Clock } from 'lucide-react';
+import { Save, History, ChevronDown, ChevronUp, Sparkles, Eye, Shield, Flame, Clock, Leaf, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -48,6 +48,10 @@ export function MapaVivoTab({ caseId, clientId, clientName }: MapaVivoTabProps) 
     espelho_toca_minha: '',
     espelho_risco_projecao: '',
     espelho_supervisao: '',
+    // Camada 7: Gesto de Integração
+    gesto_integracao: '',
+    gesto_sem_indicacao: false,
+    gesto_justificativa: '',
   });
 
   useEffect(() => {
@@ -77,6 +81,10 @@ export function MapaVivoTab({ caseId, clientId, clientName }: MapaVivoTabProps) 
         espelho_toca_minha: data.espelho_toca_minha || '',
         espelho_risco_projecao: data.espelho_risco_projecao || '',
         espelho_supervisao: data.espelho_supervisao || '',
+        // Camada 7: Gesto de Integração
+        gesto_integracao: data.gesto_integracao || '',
+        gesto_sem_indicacao: data.gesto_sem_indicacao || false,
+        gesto_justificativa: data.gesto_justificativa || '',
       });
       
       const hist = await fetchHistorico(data.id);
@@ -454,6 +462,77 @@ export function MapaVivoTab({ caseId, clientId, clientName }: MapaVivoTabProps) 
                   className="mt-2 min-h-20"
                 />
               </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Camada 7: Gesto de Integração */}
+        <AccordionItem value="gesto" className="border rounded-lg bg-card border-emerald-500/20">
+          <AccordionTrigger className="px-4 py-3 hover:no-underline">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                <Leaf className="w-4 h-4 text-emerald-500" />
+              </div>
+              <div className="text-left">
+                <p className="font-medium">Gesto de Integração</p>
+                <p className="text-xs text-muted-foreground">Ação simbólica para o Jardim</p>
+              </div>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pb-4">
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Defina um gesto, ritual ou prática para a cliente realizar entre as sessões. 
+                Este gesto será registrado automaticamente no Jardim da Heroína.
+              </p>
+              
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border/50">
+                <Checkbox
+                  id="gesto_sem_indicacao"
+                  checked={form.gesto_sem_indicacao}
+                  onCheckedChange={(v) => handleChange('gesto_sem_indicacao', v)}
+                />
+                <Label htmlFor="gesto_sem_indicacao" className="cursor-pointer text-sm">
+                  Sem indicação de gesto neste momento
+                </Label>
+              </div>
+
+              {form.gesto_sem_indicacao ? (
+                <div>
+                  <Label>Justificativa</Label>
+                  <Textarea
+                    value={form.gesto_justificativa}
+                    onChange={(e) => handleChange('gesto_justificativa', e.target.value)}
+                    placeholder="Por que não há indicação de gesto agora? (ex: momento de recolhimento, pausa necessária...)"
+                    className="mt-2 min-h-20"
+                  />
+                </div>
+              ) : (
+                <div>
+                  <Label>Gesto / Ritual Sugerido</Label>
+                  <Textarea
+                    value={form.gesto_integracao}
+                    onChange={(e) => handleChange('gesto_integracao', e.target.value)}
+                    placeholder="Descreva o gesto simbólico, ritual ou prática para entre sessões..."
+                    className="mt-2 min-h-24"
+                  />
+                  {form.gesto_integracao && (
+                    <p className="text-xs text-emerald-600 mt-2 flex items-center gap-1">
+                      <Leaf className="w-3 h-3" />
+                      Ao salvar, este gesto será registrado no Jardim da Heroína
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {!form.gesto_sem_indicacao && !form.gesto_integracao && (
+                <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
+                  <AlertCircle className="w-4 h-4 text-amber-500 mt-0.5" />
+                  <p className="text-xs text-amber-700">
+                    Considere definir um gesto de integração ou marcar que não há indicação neste momento.
+                  </p>
+                </div>
+              )}
             </div>
           </AccordionContent>
         </AccordionItem>

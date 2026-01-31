@@ -54,6 +54,12 @@ export interface MapaVivoHeroina {
   espelho_risco_projecao: string | null;
   espelho_supervisao: string | null;
 
+  // Camada 7: Gesto de Integração (ponte para o Jardim)
+  gesto_integracao: string | null;
+  gesto_sem_indicacao: boolean;
+  gesto_justificativa: string | null;
+  gesto_jardim_registro_id: string | null;
+
   // Metadata
   created_at: string;
   updated_at: string;

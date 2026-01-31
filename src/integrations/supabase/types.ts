@@ -3434,8 +3434,11 @@ export type Database = {
           data_registro: string
           fase_jornada_snapshot: string | null
           frase_semente: string | null
+          gesto_origem: string | null
+          gesto_revisao_status: string | null
           id: string
           mapa_vivo_id: string | null
+          mapa_vivo_origem_id: string | null
           memorias_emergentes: string | null
           notas_privadas: string | null
           ritual_movimento: string | null
@@ -3457,8 +3460,11 @@ export type Database = {
           data_registro?: string
           fase_jornada_snapshot?: string | null
           frase_semente?: string | null
+          gesto_origem?: string | null
+          gesto_revisao_status?: string | null
           id?: string
           mapa_vivo_id?: string | null
+          mapa_vivo_origem_id?: string | null
           memorias_emergentes?: string | null
           notas_privadas?: string | null
           ritual_movimento?: string | null
@@ -3480,8 +3486,11 @@ export type Database = {
           data_registro?: string
           fase_jornada_snapshot?: string | null
           frase_semente?: string | null
+          gesto_origem?: string | null
+          gesto_revisao_status?: string | null
           id?: string
           mapa_vivo_id?: string | null
+          mapa_vivo_origem_id?: string | null
           memorias_emergentes?: string | null
           notas_privadas?: string | null
           ritual_movimento?: string | null
@@ -3498,6 +3507,13 @@ export type Database = {
           {
             foreignKeyName: "jardim_heroina_registros_mapa_vivo_id_fkey"
             columns: ["mapa_vivo_id"]
+            isOneToOne: false
+            referencedRelation: "mapa_vivo_heroina"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jardim_heroina_registros_mapa_vivo_origem_id_fkey"
+            columns: ["mapa_vivo_origem_id"]
             isOneToOne: false
             referencedRelation: "mapa_vivo_heroina"
             referencedColumns: ["id"]
@@ -4280,6 +4296,10 @@ export type Database = {
           espelho_toca_minha: string | null
           fase_descricao: string | null
           fase_jornada: string | null
+          gesto_integracao: string | null
+          gesto_jardim_registro_id: string | null
+          gesto_justificativa: string | null
+          gesto_sem_indicacao: boolean | null
           id: string
           metafora_central: string | null
           mito_pessoal: string | null
@@ -4306,6 +4326,10 @@ export type Database = {
           espelho_toca_minha?: string | null
           fase_descricao?: string | null
           fase_jornada?: string | null
+          gesto_integracao?: string | null
+          gesto_jardim_registro_id?: string | null
+          gesto_justificativa?: string | null
+          gesto_sem_indicacao?: boolean | null
           id?: string
           metafora_central?: string | null
           mito_pessoal?: string | null
@@ -4332,6 +4356,10 @@ export type Database = {
           espelho_toca_minha?: string | null
           fase_descricao?: string | null
           fase_jornada?: string | null
+          gesto_integracao?: string | null
+          gesto_jardim_registro_id?: string | null
+          gesto_justificativa?: string | null
+          gesto_sem_indicacao?: boolean | null
           id?: string
           metafora_central?: string | null
           mito_pessoal?: string | null
@@ -4347,6 +4375,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "mapa_vivo_heroina_gesto_jardim_registro_id_fkey"
+            columns: ["gesto_jardim_registro_id"]
+            isOneToOne: false
+            referencedRelation: "jardim_heroina_registros"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "mapa_vivo_heroina_session_case_id_fkey"
             columns: ["session_case_id"]
