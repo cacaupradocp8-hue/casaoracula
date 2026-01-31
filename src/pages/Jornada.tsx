@@ -26,6 +26,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 import { VisitorHomePage } from '@/components/visitor/VisitorHomePage';
+import { useJornadaData } from '@/hooks/useJornadaData';
 
 // ════════════════════════════════════════════════════════════════════════════
 // TIPOS
@@ -63,36 +64,6 @@ interface GuardiaStatus {
   limitesPreservados: boolean;
   aulasConduzidas: string[];
   acompanhamentoStatus: 'ativo' | 'pausado';
-}
-
-// ════════════════════════════════════════════════════════════════════════════
-// CONVITES DA SEMANA (rotativos)
-// ════════════════════════════════════════════════════════════════════════════
-
-const CONVITES_INICIADA = [
-  "O que precisa ser olhado antes de seguir?",
-  "Há algo que você evitou nomear essa semana?",
-  "Qual parte de você precisa de pausa?",
-  "O que você gostaria de acolher hoje?",
-];
-
-const CONVITES_TERAPEUTA = [
-  "Antes de abrir um campo, você fechou o anterior?",
-  "O que seu corpo absorveu das sessões?",
-  "Há algo que você precisa devolver ao campo?",
-  "Você se permitiu ser cuidada esta semana?",
-];
-
-const CONVITES_GUARDIA = [
-  "O que você transmite sem perceber?",
-  "Há um padrão nos grupos que você conduz?",
-  "O que precisa ser protegido agora?",
-  "Qual transmissão pede refinamento?",
-];
-
-function getConviteDaSemana(convites: string[]): string {
-  const weekNumber = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
-  return convites[weekNumber % convites.length];
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -215,11 +186,13 @@ function ConviteCard({ texto, delay = 0.5 }: { texto: string; delay?: number }) 
 function JornadaIniciada({ 
   jardimStatus, 
   vivencias,
-  fraseSelo 
+  fraseSelo,
+  conviteDaSemana
 }: { 
   jardimStatus: JardimStatus;
   vivencias: VivenciaStatus;
   fraseSelo: string;
+  conviteDaSemana: string | null;
 }) {
   return (
     <div className="space-y-5">
@@ -256,7 +229,7 @@ function JornadaIniciada({
       </SymbolicCard>
 
       {/* Convite */}
-      <ConviteCard texto={getConviteDaSemana(CONVITES_INICIADA)} delay={0.4} />
+      {conviteDaSemana && <ConviteCard texto={conviteDaSemana} delay={0.4} />}
     </div>
   );
 }
@@ -267,10 +240,12 @@ function JornadaIniciada({
 
 function JornadaTerapeuta({ 
   sessaoStatus, 
-  cuidado 
+  cuidado,
+  conviteDaSemana
 }: { 
   sessaoStatus: SessaoStatus;
   cuidado: CuidadoTerapeuta;
+  conviteDaSemana: string | null;
 }) {
   return (
     <div className="space-y-5">
@@ -321,7 +296,7 @@ function JornadaTerapeuta({
       </SymbolicCard>
 
       {/* Convite */}
-      <ConviteCard texto={getConviteDaSemana(CONVITES_TERAPEUTA)} delay={0.4} />
+      {conviteDaSemana && <ConviteCard texto={conviteDaSemana} delay={0.4} />}
     </div>
   );
 }
@@ -330,7 +305,7 @@ function JornadaTerapeuta({
 // NÍVEL 3 — GUARDIÃ / MENTORA
 // ════════════════════════════════════════════════════════════════════════════
 
-function JornadaGuardia({ status }: { status: GuardiaStatus }) {
+function JornadaGuardia({ status, conviteDaSemana }: { status: GuardiaStatus; conviteDaSemana: string | null }) {
   return (
     <div className="space-y-5">
       {/* Campos que Sustenta */}
@@ -376,27 +351,12 @@ function JornadaGuardia({ status }: { status: GuardiaStatus }) {
       </SymbolicCard>
 
       {/* Convite */}
-      <ConviteCard texto={getConviteDaSemana(CONVITES_GUARDIA)} delay={0.4} />
+      {conviteDaSemana && <ConviteCard texto={conviteDaSemana} delay={0.4} />}
     </div>
   );
 }
 
-// ════════════════════════════════════════════════════════════════════════════
-// FRASES-SELO (exemplo rotativo por semana)
-// ════════════════════════════════════════════════════════════════════════════
-
-const FRASES_SELO = [
-  "Cada passo é uma escolha de presença.",
-  "A jornada não se apressou para você chegar.",
-  "O que se integra, não retorna como ferida.",
-  "Caminhar devagar também é avançar.",
-  "Honre o ritmo que o corpo pede.",
-];
-
-function getFraseSelo(): string {
-  const weekNumber = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
-  return FRASES_SELO[weekNumber % FRASES_SELO.length];
-}
+// FRASES-SELO fallback removido - agora vem do banco via useJornadaData
 
 // ════════════════════════════════════════════════════════════════════════════
 // COMPONENTE PRINCIPAL
@@ -406,6 +366,10 @@ export default function Jornada() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [level, setLevel] = useState<JornadaLevel>('visitante');
+  
+  // Hook para dados dinâmicos do banco
+  const jornadaNivel = level !== 'visitante' ? level : null;
+  const { conviteDaSemana, fraseSelo, isLoading: isLoadingJornada } = useJornadaData(jornadaNivel, user?.id);
   
   // States por nível
   const [jardimStatus, setJardimStatus] = useState<JardimStatus>({
@@ -572,7 +536,8 @@ export default function Jornada() {
           <JornadaIniciada 
             jardimStatus={jardimStatus}
             vivencias={vivencias}
-            fraseSelo={getFraseSelo()}
+            fraseSelo={fraseSelo || "Cada passo é uma escolha de presença."}
+            conviteDaSemana={conviteDaSemana}
           />
         )}
 
@@ -580,11 +545,12 @@ export default function Jornada() {
           <JornadaTerapeuta 
             sessaoStatus={sessaoStatus}
             cuidado={cuidado}
+            conviteDaSemana={conviteDaSemana}
           />
         )}
 
         {level === 'guardia' && (
-          <JornadaGuardia status={guardiaStatus} />
+          <JornadaGuardia status={guardiaStatus} conviteDaSemana={conviteDaSemana} />
         )}
 
         {/* Footer */}
