@@ -4081,6 +4081,139 @@ export type Database = {
         }
         Relationships: []
       }
+      mapa_vivo_heroina: {
+        Row: {
+          arquetipo_emergente: string | null
+          arquetipo_predominante: string | null
+          arquetipo_tensao: string | null
+          client_id: string
+          created_at: string
+          dinamica_arquetipal: string | null
+          espelho_risco_projecao: string | null
+          espelho_supervisao: string | null
+          espelho_toca_minha: string | null
+          fase_descricao: string | null
+          fase_jornada: string | null
+          id: string
+          metafora_central: string | null
+          mito_pessoal: string | null
+          movimento_descricao: string | null
+          movimento_heroina: string | null
+          ritual_descricao: string | null
+          ritual_observacoes: string | null
+          ritual_realizado: boolean | null
+          ritual_tipo: string | null
+          session_case_id: string
+          simbolo_recorrente: string | null
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          arquetipo_emergente?: string | null
+          arquetipo_predominante?: string | null
+          arquetipo_tensao?: string | null
+          client_id: string
+          created_at?: string
+          dinamica_arquetipal?: string | null
+          espelho_risco_projecao?: string | null
+          espelho_supervisao?: string | null
+          espelho_toca_minha?: string | null
+          fase_descricao?: string | null
+          fase_jornada?: string | null
+          id?: string
+          metafora_central?: string | null
+          mito_pessoal?: string | null
+          movimento_descricao?: string | null
+          movimento_heroina?: string | null
+          ritual_descricao?: string | null
+          ritual_observacoes?: string | null
+          ritual_realizado?: boolean | null
+          ritual_tipo?: string | null
+          session_case_id: string
+          simbolo_recorrente?: string | null
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          arquetipo_emergente?: string | null
+          arquetipo_predominante?: string | null
+          arquetipo_tensao?: string | null
+          client_id?: string
+          created_at?: string
+          dinamica_arquetipal?: string | null
+          espelho_risco_projecao?: string | null
+          espelho_supervisao?: string | null
+          espelho_toca_minha?: string | null
+          fase_descricao?: string | null
+          fase_jornada?: string | null
+          id?: string
+          metafora_central?: string | null
+          mito_pessoal?: string | null
+          movimento_descricao?: string | null
+          movimento_heroina?: string | null
+          ritual_descricao?: string | null
+          ritual_observacoes?: string | null
+          ritual_realizado?: boolean | null
+          ritual_tipo?: string | null
+          session_case_id?: string
+          simbolo_recorrente?: string | null
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mapa_vivo_heroina_session_case_id_fkey"
+            columns: ["session_case_id"]
+            isOneToOne: false
+            referencedRelation: "session_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mapa_vivo_historico: {
+        Row: {
+          created_at: string
+          fase_anterior: string | null
+          fase_nova: string | null
+          id: string
+          mapa_id: string
+          movimento: string | null
+          observacao: string | null
+          session_case_id: string
+          therapist_id: string
+        }
+        Insert: {
+          created_at?: string
+          fase_anterior?: string | null
+          fase_nova?: string | null
+          id?: string
+          mapa_id: string
+          movimento?: string | null
+          observacao?: string | null
+          session_case_id: string
+          therapist_id: string
+        }
+        Update: {
+          created_at?: string
+          fase_anterior?: string | null
+          fase_nova?: string | null
+          id?: string
+          mapa_id?: string
+          movimento?: string | null
+          observacao?: string | null
+          session_case_id?: string
+          therapist_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mapa_vivo_historico_mapa_id_fkey"
+            columns: ["mapa_id"]
+            isOneToOne: false
+            referencedRelation: "mapa_vivo_heroina"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       matriculas: {
         Row: {
           ativa: boolean
