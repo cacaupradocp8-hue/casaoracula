@@ -3325,6 +3325,93 @@ export type Database = {
         }
         Relationships: []
       }
+      jardim_heroina_registros: {
+        Row: {
+          arquetipo_snapshot: string | null
+          aterramento_corpo_sentiu: string | null
+          aterramento_ficou_vivo: string | null
+          aterramento_imagem_central: string | null
+          created_at: string
+          data_registro: string
+          fase_jornada_snapshot: string | null
+          frase_semente: string | null
+          id: string
+          mapa_vivo_id: string | null
+          memorias_emergentes: string | null
+          notas_privadas: string | null
+          ritual_movimento: string | null
+          ritual_resistencia: string | null
+          ritual_vivendo: string | null
+          session_case_id: string
+          sinais_sincronicidades: string | null
+          sonhos_imagens: string | null
+          therapist_id: string
+          tipo_registro: string
+          updated_at: string
+        }
+        Insert: {
+          arquetipo_snapshot?: string | null
+          aterramento_corpo_sentiu?: string | null
+          aterramento_ficou_vivo?: string | null
+          aterramento_imagem_central?: string | null
+          created_at?: string
+          data_registro?: string
+          fase_jornada_snapshot?: string | null
+          frase_semente?: string | null
+          id?: string
+          mapa_vivo_id?: string | null
+          memorias_emergentes?: string | null
+          notas_privadas?: string | null
+          ritual_movimento?: string | null
+          ritual_resistencia?: string | null
+          ritual_vivendo?: string | null
+          session_case_id: string
+          sinais_sincronicidades?: string | null
+          sonhos_imagens?: string | null
+          therapist_id: string
+          tipo_registro?: string
+          updated_at?: string
+        }
+        Update: {
+          arquetipo_snapshot?: string | null
+          aterramento_corpo_sentiu?: string | null
+          aterramento_ficou_vivo?: string | null
+          aterramento_imagem_central?: string | null
+          created_at?: string
+          data_registro?: string
+          fase_jornada_snapshot?: string | null
+          frase_semente?: string | null
+          id?: string
+          mapa_vivo_id?: string | null
+          memorias_emergentes?: string | null
+          notas_privadas?: string | null
+          ritual_movimento?: string | null
+          ritual_resistencia?: string | null
+          ritual_vivendo?: string | null
+          session_case_id?: string
+          sinais_sincronicidades?: string | null
+          sonhos_imagens?: string | null
+          therapist_id?: string
+          tipo_registro?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jardim_heroina_registros_mapa_vivo_id_fkey"
+            columns: ["mapa_vivo_id"]
+            isOneToOne: false
+            referencedRelation: "mapa_vivo_heroina"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jardim_heroina_registros_session_case_id_fkey"
+            columns: ["session_case_id"]
+            isOneToOne: false
+            referencedRelation: "session_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       jardim_psique_registros: {
         Row: {
           arquivado: boolean
