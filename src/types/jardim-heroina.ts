@@ -38,6 +38,11 @@ export interface JardimHeroinaRegistro {
   // 5. Notas Privadas
   notas_privadas: string | null;
   
+  // Integração com Mapa Vivo
+  gesto_origem: string | null;
+  gesto_revisao_status: 'sustentado' | 'parcial' | 'nao_sustentado' | null;
+  mapa_vivo_origem_id: string | null;
+
   // Metadados
   data_registro: string;
   created_at: string;
@@ -63,6 +68,10 @@ export interface NovoJardimRegistro {
   frase_semente?: string;
   notas_privadas?: string;
   data_registro?: string;
+  // Integração com Mapa Vivo
+  gesto_origem?: string;
+  gesto_revisao_status?: 'sustentado' | 'parcial' | 'nao_sustentado';
+  mapa_vivo_origem_id?: string;
 }
 
 export const TIPOS_REGISTRO_LABELS: Record<TipoRegistroJardim, string> = {
@@ -70,3 +79,9 @@ export const TIPOS_REGISTRO_LABELS: Record<TipoRegistroJardim, string> = {
   entre_sessoes: 'Entre Sessões',
   reflexao: 'Reflexão',
 };
+
+export const GESTO_REVISAO_OPTIONS = [
+  { value: 'sustentado', label: 'Sustentado', color: 'bg-emerald-500' },
+  { value: 'parcial', label: 'Parcialmente sustentado', color: 'bg-amber-500' },
+  { value: 'nao_sustentado', label: 'Não sustentado', color: 'bg-rose-500' },
+] as const;

@@ -44,7 +44,7 @@ import type {
   TipoRegistroJardim, 
   NovoJardimRegistro 
 } from '@/types/jardim-heroina';
-import { TIPOS_REGISTRO_LABELS } from '@/types/jardim-heroina';
+import { TIPOS_REGISTRO_LABELS, GESTO_REVISAO_OPTIONS } from '@/types/jardim-heroina';
 import type { MapaVivoHeroina } from '@/types/mapa-vivo';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -435,6 +435,26 @@ export function JardimHeroinaTab({ sessionCaseId }: JardimHeroinaTabProps) {
                       </div>
                     </CardHeader>
                     <CardContent className="space-y-3 text-sm">
+                      {/* Gesto de Origem (vindo do Mapa Vivo) */}
+                      {registro.gesto_origem && (
+                        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-3">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Leaf className="w-4 h-4 text-emerald-500" />
+                            <span className="text-xs font-medium text-emerald-700">Gesto de Integração</span>
+                            {registro.gesto_revisao_status && (
+                              <Badge 
+                                className={`text-xs ${
+                                  GESTO_REVISAO_OPTIONS.find(o => o.value === registro.gesto_revisao_status)?.color || ''
+                                }`}
+                              >
+                                {GESTO_REVISAO_OPTIONS.find(o => o.value === registro.gesto_revisao_status)?.label}
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-sm">{registro.gesto_origem}</p>
+                        </div>
+                      )}
+
                       {registro.frase_semente && (
                         <div className="bg-muted/30 rounded-lg p-3 italic text-center">
                           "{registro.frase_semente}"
