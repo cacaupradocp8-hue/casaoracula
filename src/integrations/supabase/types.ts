@@ -3385,6 +3385,63 @@ export type Database = {
         }
         Relationships: []
       }
+      jornada_convites: {
+        Row: {
+          ativo: boolean | null
+          created_at: string | null
+          id: string
+          nivel: string
+          ordem: number | null
+          texto: string
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string | null
+          id?: string
+          nivel: string
+          ordem?: number | null
+          texto: string
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string | null
+          id?: string
+          nivel?: string
+          ordem?: number | null
+          texto?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      jornada_frases_selo: {
+        Row: {
+          ativo: boolean | null
+          created_at: string | null
+          id: string
+          ordem: number | null
+          texto: string
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string | null
+          id?: string
+          ordem?: number | null
+          texto: string
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string | null
+          id?: string
+          ordem?: number | null
+          texto?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       jornada_heroina_fases: {
         Row: {
           arquetipos_sugeridos: string[] | null
@@ -3628,6 +3685,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      jornada_progressao: {
+        Row: {
+          created_at: string | null
+          desbloqueio: string | null
+          id: string
+          metadata: Json | null
+          tipo_evento: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          desbloqueio?: string | null
+          id?: string
+          metadata?: Json | null
+          tipo_evento: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          desbloqueio?: string | null
+          id?: string
+          metadata?: Json | null
+          tipo_evento?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       lab_casos: {
         Row: {
