@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Sparkles, Layers, Map, FileText, Heart, Archive, MoreVertical, ClipboardList, Compass, Wrench } from 'lucide-react';
+import { ArrowLeft, Sparkles, Layers, Map, FileText, Heart, Archive, MoreVertical, ClipboardList, Compass, Wrench, Route } from 'lucide-react';
 import { RefinamentoLeituraButton } from '@/components/session-room/RefinamentoLeituraPanel';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,7 @@ import { SessionScriptTab } from '@/components/session-room/SessionScriptTab';
 import { PostSessionTab } from '@/components/session-room/PostSessionTab';
 import { TemplatesTab } from '@/components/session-room/TemplatesTab';
 import { ProtocoloOraculaTab } from '@/components/session-room/ProtocoloOraculaTab';
+import { MapaVivoTab } from '@/components/session-room/MapaVivoTab';
 
 export default function SessionRoomCase() {
   const { caseId } = useParams<{ caseId: string }>();
@@ -149,7 +150,7 @@ export default function SessionRoomCase() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-7 h-auto">
+          <TabsList className="grid w-full grid-cols-8 h-auto">
             <TabsTrigger value="protocolo" className="flex flex-col gap-1 py-3">
               <Compass className="w-4 h-4 text-gold" />
               <span className="text-xs">Protocolo</span>
@@ -165,6 +166,10 @@ export default function SessionRoomCase() {
             <TabsTrigger value="map" className="flex flex-col gap-1 py-3">
               <Map className="w-4 h-4" />
               <span className="text-xs">Mapa</span>
+            </TabsTrigger>
+            <TabsTrigger value="mapa-vivo" className="flex flex-col gap-1 py-3">
+              <Route className="w-4 h-4 text-gold" />
+              <span className="text-xs">Mapa Vivo</span>
             </TabsTrigger>
             <TabsTrigger value="script" className="flex flex-col gap-1 py-3">
               <FileText className="w-4 h-4" />
@@ -203,6 +208,14 @@ export default function SessionRoomCase() {
 
           <TabsContent value="map">
             <NarrativeMapTab narrativeMap={narrativeMap} clientName={caseData.client?.nome} />
+          </TabsContent>
+
+          <TabsContent value="mapa-vivo">
+            <MapaVivoTab
+              caseId={caseData.id}
+              clientId={caseData.client_id}
+              clientName={caseData.client?.nome}
+            />
           </TabsContent>
 
           <TabsContent value="script">
