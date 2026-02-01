@@ -21,7 +21,16 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 
-interface MentoriaPortal {
+/**
+ * PortalOraculaPage — Portal Interno da Formação Orácula
+ * 
+ * Área restrita para alunas matriculadas.
+ * Exibe portais de formação, progresso e recursos.
+ * 
+ * NOVO COMPONENTE - Sem herança de componentes anteriores.
+ */
+
+interface FormacaoPortal {
   id: string;
   titulo: string;
   descricao: string;
@@ -32,56 +41,51 @@ interface MentoriaPortal {
   progresso: number;
 }
 
-/**
- * PortalOraculaPage - Internal portal for enrolled students
- * 
- * Route: /portal-oracula
- * 
- * Access: Protected - requires active matrícula or admin
- */
 export default function PortalOraculaPage() {
-  const [portais, setPortais] = useState<MentoriaPortal[]>([]);
+  const [portais, setPortais] = useState<FormacaoPortal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
-      fetchPortals();
-    }
+    fetchPortais();
   }, [user]);
 
-  const fetchPortals = async () => {
+  const fetchPortais = async () => {
+    if (!user) {
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      // Fetch mentoria portals from conteudo_travessias
+      // Busca portais/travessias da formação
       const { data: travessias, error } = await supabase
         .from('conteudo_travessias')
         .select('*')
         .eq('publicado', true)
-        .eq('portal_minimo', 'iniciada')
         .order('ordem', { ascending: true });
 
       if (error) throw error;
 
-      // Transform to portal format with mock progress
-      const portaisData: MentoriaPortal[] = (travessias || []).map((t, index) => ({
+      // Transforma para formato de portais com progresso mock
+      const portaisData: FormacaoPortal[] = (travessias || []).map((t, index) => ({
         id: t.id,
         titulo: t.titulo,
         descricao: t.descricao || '',
         ordem: t.ordem,
         portal_minimo: t.portal_minimo,
         publicado: t.publicado,
-        desbloqueado: index === 0, // Only first is unlocked by default
-        progresso: index === 0 ? 35 : 0, // Mock progress
+        desbloqueado: index === 0, // Primeiro portal desbloqueado
+        progresso: index === 0 ? 35 : 0, // Progresso mock
       }));
 
       setPortais(portaisData);
     } catch (error) {
-      console.error('Error fetching portal data:', error);
+      console.error('Erro ao carregar portais:', error);
       toast({
         title: 'Erro ao carregar dados',
-        description: 'Não foi possível carregar os portais de formação.',
+        description: 'Não foi possível carregar os portais da formação.',
         variant: 'destructive',
       });
     }
@@ -110,7 +114,7 @@ export default function PortalOraculaPage() {
         />
 
         <div className="space-y-8">
-          {/* Connection to Casa das Tecelãs */}
+          {/* Conexão com Casa das Tecelãs */}
           <Card className="glass border-gold/20">
             <CardContent className="py-4">
               <div className="flex items-center justify-between flex-wrap gap-4">
@@ -128,7 +132,7 @@ export default function PortalOraculaPage() {
             </CardContent>
           </Card>
 
-          {/* Portais Grid */}
+          {/* Grid de Portais */}
           <div className="grid gap-6">
             {portais.map((portal, index) => (
               <motion.div
@@ -220,7 +224,7 @@ export default function PortalOraculaPage() {
             )}
           </div>
 
-          {/* Key Principles */}
+          {/* Princípios da Formação */}
           <Card className="glass border-purple-500/20">
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">

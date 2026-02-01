@@ -25,6 +25,7 @@ import CasaTecelaInterior from "./pages/CasaTecelaInterior";
 import { CasaAtrio, CasaSustentacao, CasaLeitura, CasaCirculo, CasaJardim } from "./pages/casa";
 import OraculaPage from "./pages/OraculaPage";
 import PortalOraculaPage from "./pages/PortalOraculaPage";
+import OraculaSalesPage from "./pages/OraculaSalesPage";
 import Travessias from "./pages/Travessias";
 import Agentes from "./pages/Agentes";
 import LeituraOracular from "./pages/LeituraOracular";
