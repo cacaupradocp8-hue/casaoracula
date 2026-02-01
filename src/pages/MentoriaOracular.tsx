@@ -110,12 +110,12 @@ export default function MentoriaOracular() {
       </div>
       
       <h2 className="text-2xl font-display text-gold mb-4">
-        Mentoria Oracular
+        Formação Orácula
       </h2>
       
       <div className="glass p-6 rounded-xl border border-gold/20 mb-8">
         <p className="text-lg text-foreground/90 italic mb-4">
-          "A Mentoria aprofunda.
+          "A Formação aprofunda.
         </p>
         <p className="text-lg text-foreground/90 italic mb-4">
           A Casa sustenta.
@@ -126,7 +126,7 @@ export default function MentoriaOracular() {
       </div>
       
       <p className="text-muted-foreground mb-6">
-        A Mentoria Oracular é uma jornada iniciática profunda reservada para 
+        A Formação Orácula é uma jornada iniciática profunda reservada para 
         profissionais com matrícula ativa.
       </p>
       
@@ -152,7 +152,7 @@ export default function MentoriaOracular() {
               <Sparkles className="w-5 h-5 text-gold" />
               <p className="text-sm text-foreground/80">
                 A <span className="text-gold font-medium">Casa das Tecelãs</span> permanece 
-                ativa durante toda sua jornada de mentoria.
+                ativa durante toda sua jornada de formação.
               </p>
             </div>
             <Button variant="outline" size="sm" onClick={() => navigate('/casa')}>
@@ -244,7 +244,7 @@ export default function MentoriaOracular() {
             <CardContent className="py-12 text-center">
               <BookOpen className="w-12 h-12 mx-auto text-muted-foreground/50 mb-4" />
               <p className="text-muted-foreground">
-                Os portais de mentoria estão sendo preparados.
+                Os portais de formação estão sendo preparados.
               </p>
               <p className="text-sm text-muted-foreground mt-2">
                 Você será notificada quando estiverem disponíveis.
@@ -259,7 +259,7 @@ export default function MentoriaOracular() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <Users className="w-5 h-5 text-purple-400" />
-            Princípios da Mentoria
+            Princípios da Formação
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -279,7 +279,7 @@ export default function MentoriaOracular() {
             <div className="space-y-1">
               <p className="font-medium text-foreground/90">Certificação Futura</p>
               <p className="text-muted-foreground">
-                A conclusão da mentoria é pré-requisito para certificação.
+                A conclusão da formação é pré-requisito para certificação.
               </p>
             </div>
           </div>
@@ -302,7 +302,7 @@ export default function MentoriaOracular() {
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20">
         <SectionHeader
-          title="Mentoria Oracular"
+          title="Formação Orácula"
           subtitle="Jornada iniciática profunda"
           icon={<GraduationCap className="w-5 h-5" />}
           className="mb-8"
