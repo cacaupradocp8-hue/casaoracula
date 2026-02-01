@@ -231,7 +231,7 @@ export function Navigation() {
         minPortal: 'aluna',
       },
       {
-        path: '/mentoria-oracular',
+        path: '/oracula',
         label: 'Formação Orácula',
         icon: Star,
         minPortal: 'visitante',
