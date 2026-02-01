@@ -104,14 +104,16 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          BLOCO 4 — IMAGEM METODOLOGIA (LIMPA)
+          BLOCO 4 — IMAGEM METODOLOGIA (FUNDO SUTIL)
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="w-full py-8">
+      <section className="relative w-full h-48 md:h-64 overflow-hidden">
         <img 
           src={metodologiaSection} 
-          alt="Metodologia Orácula" 
-          className="w-full max-h-[400px] object-cover"
+          alt="" 
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.12] grayscale-[50%] brightness-50 blur-[1px]"
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220,20%,4%)] via-transparent to-[hsl(220,20%,4%)]" />
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
@@ -226,14 +228,16 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          BLOCO 7 — IMAGEM TRAVESSIAS (LIMPA)
+          BLOCO 7 — IMAGEM TRAVESSIAS (FUNDO SUTIL)
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="w-full py-8">
+      <section className="relative w-full h-40 md:h-56 overflow-hidden">
         <img 
           src={travessiasSection} 
-          alt="As Travessias da Formação" 
-          className="w-full max-h-[450px] object-cover"
+          alt="" 
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.15] grayscale-[45%] brightness-[0.4] blur-[0.5px]"
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220,20%,4%)] via-transparent to-[hsl(220,20%,4%)]" />
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
@@ -337,14 +341,16 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          BLOCO 10 — IMAGEM FERRAMENTAS (LIMPA)
+          BLOCO 10 — IMAGEM FERRAMENTAS (FUNDO SUTIL)
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="w-full py-8">
+      <section className="relative w-full h-40 md:h-52 overflow-hidden">
         <img 
           src={ferramentasSection} 
-          alt="As Ferramentas da Casa" 
-          className="w-full max-h-[400px] object-cover"
+          alt="" 
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.10] grayscale-[55%] brightness-[0.35] blur-[1px]"
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220,20%,4%)] via-transparent to-[hsl(220,20%,4%)]" />
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
