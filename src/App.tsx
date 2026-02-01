@@ -23,7 +23,8 @@ import Mentoria from "./pages/Mentoria";
 import CasaTecelaAtrio from "./pages/CasaTecelaAtrio";
 import CasaTecelaInterior from "./pages/CasaTecelaInterior";
 import { CasaAtrio, CasaSustentacao, CasaLeitura, CasaCirculo, CasaJardim } from "./pages/casa";
-import MentoriaOracular from "./pages/MentoriaOracular";
+import OraculaPage from "./pages/OraculaPage";
+import PortalOraculaPage from "./pages/PortalOraculaPage";
 import Travessias from "./pages/Travessias";
 import Agentes from "./pages/Agentes";
 import LeituraOracular from "./pages/LeituraOracular";
@@ -457,9 +458,24 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      {/* Formação Orácula - Public sales page */}
+      <Route
+        path="/oracula"
+        element={<OraculaPage />}
+      />
+      {/* Portal interno para alunas matriculadas */}
+      <Route
+        path="/portal-oracula"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <PortalOraculaPage />
+          </ProtectedRoute>
+        }
+      />
+      {/* Legacy redirect */}
       <Route
         path="/mentoria-oracular"
-        element={<MentoriaOracular />}
+        element={<OraculaPage />}
       />
       <Route
         path="/metodo"
