@@ -20,6 +20,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
+import FormacaoVivaPage from './FormacaoVivaPage';
 
 interface MentoriaPortal {
   id: string;
@@ -288,7 +289,8 @@ export default function MentoriaOracular() {
     </div>
   );
 
-  if (isLoading) {
+  // Show loading only if user is logged in
+  if (isLoading && user) {
     return (
       <AppLayout>
         <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-[50vh]">
@@ -298,18 +300,23 @@ export default function MentoriaOracular() {
     );
   }
 
-  return (
-    <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20">
-        <SectionHeader
-          title="Formação Orácula"
-          subtitle="Jornada iniciática profunda"
-          icon={<GraduationCap className="w-5 h-5" />}
-          className="mb-8"
-        />
+  // If user has access (matricula), show the internal portal view
+  if (hasAccess) {
+    return (
+      <AppLayout>
+        <div className="container mx-auto px-4 py-8 pb-20">
+          <SectionHeader
+            title="Formação Orácula"
+            subtitle="Jornada iniciática profunda"
+            icon={<GraduationCap className="w-5 h-5" />}
+            className="mb-8"
+          />
+          {renderPortais()}
+        </div>
+      </AppLayout>
+    );
+  }
 
-        {hasAccess ? renderPortais() : renderNoAccess()}
-      </div>
-    </AppLayout>
-  );
+  // For visitors and users without access, show the sales page
+  return <FormacaoVivaPage />;
 }
