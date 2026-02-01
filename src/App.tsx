@@ -111,9 +111,8 @@ import TorreViva from "./pages/TorreViva";
 import AtlasArquetiposFemininos from "./pages/AtlasArquetiposFemininos";
 import BibliotecaCasos from "./pages/BibliotecaCasos";
 import { AsPortas, OsCamposPsiquicos, AsTorres, TriadeMetodo } from "./pages/metodo";
-import FormacaoOracula from "./pages/FormacaoOracula";
-import FormacaoVivaPage from "./pages/FormacaoVivaPage";
-import FormacaoPage from "./pages/FormacaoPage";
+// FormacaoOracula, FormacaoVivaPage, FormacaoPage - removidos do import direto
+// Agora usando OraculaPage como gate e PortalOraculaPage para área interna
 import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
 import Jornada from "./pages/Jornada";
@@ -276,9 +275,10 @@ function AppRoutes() {
       />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/install" element={<InstallApp />} />
-      <Route path="/formacao-oracula" element={<FormacaoOracula />} />
-      <Route path="/formacao-viva" element={<FormacaoVivaPage />} />
-      <Route path="/formacao" element={<FormacaoPage />} />
+      {/* Rotas legadas /formacao-oracula, /formacao-viva, /formacao removidas - usar /oracula */}
+      <Route path="/formacao-oracula" element={<Navigate to="/oracula" replace />} />
+      <Route path="/formacao-viva" element={<Navigate to="/oracula" replace />} />
+      <Route path="/formacao" element={<Navigate to="/oracula" replace />} />
       <Route path="/tour" element={<Tour />} />
 
       {/* Onboarding Route - First-time experience (before completing) */}
@@ -388,7 +388,7 @@ function AppRoutes() {
       />
       <Route
         path="/mentoria"
-        element={<Navigate to="/mentoria-oracular" replace />}
+        element={<Navigate to="/oracula" replace />}
       />
       
       {/* Living Territories */}
