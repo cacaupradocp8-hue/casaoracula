@@ -6577,6 +6577,119 @@ export type Database = {
         }
         Relationships: []
       }
+      ritual_definitions: {
+        Row: {
+          ativo: boolean | null
+          autoriza_acesso: boolean | null
+          campos_reflexao: Json | null
+          created_at: string
+          descricao: string | null
+          id: string
+          microcopy: string | null
+          nome: string
+          ordem: number | null
+          pergunta_compromisso: string | null
+          texto_ritual: string
+          tipo: Database["public"]["Enums"]["ritual_type"]
+          trigger_context_id: string | null
+          trigger_context_type: string | null
+          trigger_event: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          autoriza_acesso?: boolean | null
+          campos_reflexao?: Json | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          microcopy?: string | null
+          nome: string
+          ordem?: number | null
+          pergunta_compromisso?: string | null
+          texto_ritual: string
+          tipo: Database["public"]["Enums"]["ritual_type"]
+          trigger_context_id?: string | null
+          trigger_context_type?: string | null
+          trigger_event: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean | null
+          autoriza_acesso?: boolean | null
+          campos_reflexao?: Json | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          microcopy?: string | null
+          nome?: string
+          ordem?: number | null
+          pergunta_compromisso?: string | null
+          texto_ritual?: string
+          tipo?: Database["public"]["Enums"]["ritual_type"]
+          trigger_context_id?: string | null
+          trigger_context_type?: string | null
+          trigger_event?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ritual_passages: {
+        Row: {
+          admin_marked_by: string | null
+          admin_note: string | null
+          completed_at: string | null
+          context_id: string | null
+          context_type: string | null
+          created_at: string
+          id: string
+          respostas: Json | null
+          ritual_id: string
+          started_at: string | null
+          status: Database["public"]["Enums"]["ritual_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_marked_by?: string | null
+          admin_note?: string | null
+          completed_at?: string | null
+          context_id?: string | null
+          context_type?: string | null
+          created_at?: string
+          id?: string
+          respostas?: Json | null
+          ritual_id: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["ritual_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_marked_by?: string | null
+          admin_note?: string | null
+          completed_at?: string | null
+          context_id?: string | null
+          context_type?: string | null
+          created_at?: string
+          id?: string
+          respostas?: Json | null
+          ritual_id?: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["ritual_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ritual_passages_ritual_id_fkey"
+            columns: ["ritual_id"]
+            isOneToOne: false
+            referencedRelation: "ritual_definitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sala_ferramentas: {
         Row: {
           ativa: boolean
@@ -7913,6 +8026,8 @@ export type Database = {
         | "aluna"
       post_status: "rascunho" | "publicado" | "arquivado"
       pricing_model: "free" | "one_time" | "subscription"
+      ritual_status: "pending" | "completed" | "skipped_by_admin"
+      ritual_type: "abertura" | "transicao" | "consagracao"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -8106,6 +8221,8 @@ export const Constants = {
       ],
       post_status: ["rascunho", "publicado", "arquivado"],
       pricing_model: ["free", "one_time", "subscription"],
+      ritual_status: ["pending", "completed", "skipped_by_admin"],
+      ritual_type: ["abertura", "transicao", "consagracao"],
     },
   },
 } as const

@@ -4,6 +4,8 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, ArrowRight } from 'lucide-react';
+import { RitualGate } from '@/components/ritual';
+
 
 export default function CasaTecelaAtrio() {
   const [entered, setEntered] = useState(false);
@@ -18,7 +20,12 @@ export default function CasaTecelaAtrio() {
 
   return (
     <AppLayout>
-      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4">
+      <RitualGate 
+        triggerEvent="first_sala_access" 
+        contextType="sala" 
+        contextId="casa-tecelas"
+      >
+        <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4">
         <AnimatePresence mode="wait">
           {!entered ? (
             <motion.div
@@ -115,6 +122,7 @@ export default function CasaTecelaAtrio() {
           )}
         </AnimatePresence>
       </div>
+      </RitualGate>
     </AppLayout>
   );
 }
