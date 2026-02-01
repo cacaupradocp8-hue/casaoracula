@@ -3,16 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import FormacaoVivaPage from './FormacaoVivaPage';
+import OraculaSalesPage from './OraculaSalesPage';
 
 /**
- * OraculaPage - Public sales page with conditional portal access
+ * OraculaPage — Gate de Acesso à Formação Orácula
  * 
- * Route: /oracula
+ * Rota: /oracula
  * 
- * Access Logic:
- * - Visitors (not logged in or no matrícula) → See FormacaoVivaPage (sales page)
- * - Enrolled students (with active matrícula) → Redirected to /portal-oracula (internal portal)
+ * Lógica de Acesso:
+ * - Visitantes (não logados ou sem matrícula) → Exibe OraculaSalesPage (página de vendas)
+ * - Alunas matriculadas (com matrícula ativa) → Redireciona para /portal-oracula
+ * - Admins → Redireciona para /portal-oracula
+ * 
+ * NOVO COMPONENTE - Sem herança de componentes anteriores.
  */
 export default function OraculaPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -25,20 +28,20 @@ export default function OraculaPage() {
   }, [user]);
 
   const checkAccessAndRedirect = async () => {
-    // Not logged in = visitor, show sales page
+    // Não logado = visitante, exibe página de vendas
     if (!user) {
       setIsLoading(false);
       return;
     }
 
     try {
-      // Admin has full access, redirect to internal portal
+      // Admin tem acesso total, redireciona para portal interno
       if (user.portal === 'admin') {
         navigate('/portal-oracula', { replace: true });
         return;
       }
 
-      // Check if user has mentoria/formação matrícula
+      // Verifica se usuário tem matrícula na formação
       const { data: matriculas } = await supabase
         .from('matriculas')
         .select('*')
@@ -49,15 +52,15 @@ export default function OraculaPage() {
       const hasMatricula = (matriculas?.length ?? 0) > 0;
       
       if (hasMatricula) {
-        // User has access - redirect to internal portal
+        // Usuário tem acesso - redireciona para portal interno
         navigate('/portal-oracula', { replace: true });
         return;
       }
 
-      // No matrícula = show sales page
+      // Sem matrícula = exibe página de vendas
       setIsLoading(false);
     } catch (error) {
-      console.error('Error checking access:', error);
+      console.error('Erro ao verificar acesso:', error);
       toast({
         title: 'Erro ao verificar acesso',
         description: 'Tente novamente mais tarde.',
@@ -67,7 +70,7 @@ export default function OraculaPage() {
     }
   };
 
-  // Show loading state while checking
+  // Exibe loading enquanto verifica
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -76,6 +79,6 @@ export default function OraculaPage() {
     );
   }
 
-  // Sales page for visitors and non-enrolled users
-  return <FormacaoVivaPage />;
+  // Página de vendas para visitantes e usuários não matriculados
+  return <OraculaSalesPage />;
 }
