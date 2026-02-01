@@ -8,6 +8,7 @@ import { useOfertas, Oferta } from '@/hooks/useOfertas';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Check, ExternalLink, Loader2 } from 'lucide-react';
+import planosBanner from '@/assets/planos-banner.png';
 
 // Subtle divider component
 const RitualDivider = () => (
@@ -63,22 +64,34 @@ export default function Planos() {
   return (
     <AppLayout>
       <div className="min-h-screen bg-background">
-        {/* Hero Section */}
-        <section className="relative py-16 sm:py-24">
-          <div className="absolute inset-0 bg-gradient-to-b from-gold/5 via-transparent to-transparent opacity-50" />
+        {/* Hero Banner with Image */}
+        <section className="relative">
+          {/* Banner Image with blur shadow effect */}
+          <div className="relative h-48 sm:h-64 lg:h-80 overflow-hidden">
+            <img 
+              src={planosBanner} 
+              alt="Planos & Travessias"
+              className="w-full h-full object-cover object-center"
+            />
+            {/* Gradient overlay for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+            {/* Bottom blur shadow effect */}
+            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent backdrop-blur-[2px]" />
+          </div>
           
-          <div className="container mx-auto px-6 relative">
+          {/* Content overlay */}
+          <div className="absolute inset-0 flex items-center justify-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-center max-w-2xl mx-auto"
+              className="text-center max-w-2xl mx-auto px-6"
             >
-              <span className="text-gold/60 text-2xl mb-4 block">🜂</span>
-              <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-foreground tracking-wide mb-4">
+              <span className="text-gold/80 text-2xl mb-4 block drop-shadow-lg">🜂</span>
+              <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-foreground tracking-wide mb-4 drop-shadow-lg">
                 Planos & Travessias
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-foreground/90 drop-shadow-md">
                 Escolha o caminho que ressoa com o seu momento
               </p>
             </motion.div>
