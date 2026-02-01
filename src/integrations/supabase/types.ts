@@ -5064,6 +5064,63 @@ export type Database = {
         }
         Relationships: []
       }
+      ofertas: {
+        Row: {
+          ativo: boolean | null
+          badge: string | null
+          created_at: string
+          destaque: boolean | null
+          gratuito: boolean | null
+          id: string
+          inclusoes: string[] | null
+          link_botao: string
+          nome: string
+          ordem: number | null
+          preco: string | null
+          simbolo: string | null
+          subtitulo: string | null
+          texto_botao: string
+          tipo: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          badge?: string | null
+          created_at?: string
+          destaque?: boolean | null
+          gratuito?: boolean | null
+          id?: string
+          inclusoes?: string[] | null
+          link_botao?: string
+          nome: string
+          ordem?: number | null
+          preco?: string | null
+          simbolo?: string | null
+          subtitulo?: string | null
+          texto_botao?: string
+          tipo: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean | null
+          badge?: string | null
+          created_at?: string
+          destaque?: boolean | null
+          gratuito?: boolean | null
+          id?: string
+          inclusoes?: string[] | null
+          link_botao?: string
+          nome?: string
+          ordem?: number | null
+          preco?: string | null
+          simbolo?: string | null
+          subtitulo?: string | null
+          texto_botao?: string
+          tipo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       oracle_cards: {
         Row: {
           ai_generated_image_url: string | null

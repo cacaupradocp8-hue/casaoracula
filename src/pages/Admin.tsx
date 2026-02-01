@@ -33,6 +33,7 @@ const AdminLeiturasTab = lazy(() => import('@/components/admin/AdminLeiturasTab'
 const AdminQuizTab = lazy(() => import('@/components/admin/AdminQuizTab').then(m => ({ default: m.AdminQuizTab })));
 const AdminLabCasosTab = lazy(() => import('@/components/admin/AdminLabCasosTab').then(m => ({ default: m.AdminLabCasosTab })));
 const AdminPlanosTab = lazy(() => import('@/components/admin/AdminPlanosTab').then(m => ({ default: m.AdminPlanosTab })));
+const AdminOfertasTab = lazy(() => import('@/components/admin/AdminOfertasTab').then(m => ({ default: m.AdminOfertasTab })));
 const AdminProgressoTab = lazy(() => import('@/components/admin/AdminProgressoTab').then(m => ({ default: m.AdminProgressoTab })));
 const AdminCopyTab = lazy(() => import('@/components/admin/AdminCopyTab'));
 const AdminOraculosTab = lazy(() => import('@/components/admin/AdminOraculosTab').then(m => ({ default: m.AdminOraculosTab })));
@@ -205,7 +206,11 @@ export default function Admin() {
             </TabsTrigger>
             <TabsTrigger value="planos" className="gap-2">
               <CreditCard className="w-4 h-4" />
-              Planos
+              Limites
+            </TabsTrigger>
+            <TabsTrigger value="ofertas" className="gap-2">
+              <Gift className="w-4 h-4 text-gold" />
+              Ofertas
             </TabsTrigger>
             <TabsTrigger value="progresso" className="gap-2">
               <TrendingUp className="w-4 h-4" />
@@ -405,6 +410,12 @@ export default function Admin() {
           <TabsContent value="planos">
             <Suspense fallback={<TabLoader />}>
               <AdminPlanosTab />
+            </Suspense>
+          </TabsContent>
+
+          <TabsContent value="ofertas">
+            <Suspense fallback={<TabLoader />}>
+              <AdminOfertasTab />
             </Suspense>
           </TabsContent>
 
