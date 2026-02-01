@@ -1,37 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppLayout } from '@/components/layout/AppLayout';
-import { SectionHeader } from '@/components/shared/SectionHeader';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { 
-  GraduationCap, 
-  Lock, 
-  CheckCircle2, 
-  ArrowRight,
-  Sparkles,
-  BookOpen,
-  Users,
-  Star
-} from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { motion } from 'framer-motion';
 import FormacaoVivaPage from './FormacaoVivaPage';
-
-interface MentoriaPortal {
-  id: string;
-  titulo: string;
-  descricao: string;
-  ordem: number;
-  portal_minimo: string;
-  publicado: boolean;
-  desbloqueado: boolean;
-  progresso: number;
-}
 
 /**
  * OraculaPage - Public sales page with conditional portal access
@@ -44,7 +16,6 @@ interface MentoriaPortal {
  */
 export default function OraculaPage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [hasAccess, setHasAccess] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -54,17 +25,15 @@ export default function OraculaPage() {
   }, [user]);
 
   const checkAccessAndRedirect = async () => {
+    // Not logged in = visitor, show sales page
     if (!user) {
-      // No user = visitor, show sales page
-      setHasAccess(false);
       setIsLoading(false);
       return;
     }
 
     try {
-      // Check if user is admin (full access)
+      // Admin has full access, redirect to internal portal
       if (user.portal === 'admin') {
-        // Admin can choose - redirect to portal
         navigate('/portal-oracula', { replace: true });
         return;
       }
@@ -86,7 +55,7 @@ export default function OraculaPage() {
       }
 
       // No matrícula = show sales page
-      setHasAccess(false);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error checking access:', error);
       toast({
@@ -94,15 +63,14 @@ export default function OraculaPage() {
         description: 'Tente novamente mais tarde.',
         variant: 'destructive',
       });
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   // Show loading state while checking
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[hsl(220,20%,6%)] flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-pulse text-gold font-display text-xl">Carregando...</div>
       </div>
     );
