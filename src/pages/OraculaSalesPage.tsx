@@ -556,13 +556,13 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          BLOCO 15 — IMAGEM FINAL (LIMPA, SEM TRANSPARÊNCIA)
+          BLOCO 15 — IMAGEM FINAL (COM TRANSPARÊNCIA 20%)
       ═══════════════════════════════════════════════════════════════════ */}
       <section className="w-full py-8">
         <img 
           src={finalPagina} 
           alt="Casa Orácula" 
-          className="w-full max-h-[600px] object-contain"
+          className="w-full max-h-[600px] object-contain opacity-20"
         />
       </section>
 
