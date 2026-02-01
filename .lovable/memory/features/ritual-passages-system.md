@@ -1,0 +1,4 @@
+# Memory: features/ritual-passages-system
+Updated: just now
+
+Sistema de Rituais de Passagem Automáticos: Progressão simbólica sem gamificação, implementada via tabelas `ritual_definitions` (templates) e `ritual_passages` (registros por usuário). Três tipos de ritual: 1) **Abertura** - primeira entrada em Sala/Formação, com texto ritual e campo de escrita mínima; 2) **Transição** - mudança de Portal ou travessias-chave, com reflexões sobre o que foi deixado e o que começa; 3) **Consagração** - conclusão de Portal estruturante, com declaração simbólica silenciosa. Rituais são disparados via hook `useRitualPassage` com triggers híbridos (frontend + banco). O componente `RitualGate` envolve conteúdo que requer passagem, podendo bloquear acesso (`autoriza_acesso=true`) ou apenas registrar. UI limpa, sem botões chamativos, fundo neutro. Admin pode marcar rituais como concluídos manualmente via status `skipped_by_admin`.
