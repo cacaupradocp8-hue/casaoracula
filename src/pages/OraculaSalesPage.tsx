@@ -217,6 +217,33 @@ export default function OraculaSalesPage() {
               </p>
             </div>
           </div>
+          
+          {/* Três Níveis */}
+          <div className="mt-12 text-center">
+            <p className="text-foreground/50 text-sm mb-6">
+              Três níveis. Nenhuma pressa.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-8">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">🌱</span>
+                <span className="text-foreground/60 text-sm">Iniciada Orácula</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-lg">🌿</span>
+                <span className="text-foreground/60 text-sm">Terapeuta Orácula</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-lg">🌕</span>
+                <span className="text-foreground/60 text-sm">Guardiã / Mentora</span>
+              </div>
+            </div>
+            
+            <p className="text-foreground/40 text-xs italic">
+              Aqui não se mede performance.<br />
+              Reconhece-se maturidade.
+            </p>
+          </div>
         </motion.div>
       </section>
 
