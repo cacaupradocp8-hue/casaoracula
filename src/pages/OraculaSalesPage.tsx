@@ -582,9 +582,9 @@ export default function OraculaSalesPage() {
           </p>
           
           <p className="text-foreground/50 mb-10">
-            Entre quando estiver pronta.<br />
             A ORÁCULA não tem pressa.<br />
-            Mas não espera para sempre.
+            Mas, não espera para sempre.<br />
+            Entre quando estiver pronta.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
