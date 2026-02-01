@@ -230,6 +230,13 @@ export function Navigation() {
         minPortal: 'aluna',
       },
       {
+        path: '/mentoria-oracular',
+        label: 'Formação Orácula',
+        icon: GraduationCap,
+        minPortal: 'aluna',
+        requiresMatricula: 'formacao',
+      },
+      {
         path: '/ferramentas-metodo',
         label: 'Ferramentas do Método',
         icon: Compass,
