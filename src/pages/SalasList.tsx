@@ -297,7 +297,7 @@ export default function SalasList() {
                     ? "border-gold/50 bg-gold/5 hover:border-gold hover:bg-gold/10" 
                     : "border-border/50 bg-card/50 hover:border-gold/30"
                 )}
-                onClick={() => navigate('/mentoria-oracular')}
+                onClick={() => navigate('/oracula')}
               >
                 {/* Banner Image */}
                 {config.formacao_banner_url && (
