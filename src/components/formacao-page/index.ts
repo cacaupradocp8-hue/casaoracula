@@ -1,0 +1,13 @@
+export { HeroFormacao } from "./HeroFormacao";
+export { AvisoHonestoSection } from "./AvisoHonestoSection";
+export { OQueESection } from "./OQueESection";
+export { ComoFuncionaSection } from "./ComoFuncionaSection";
+export { TravessiasSection } from "./TravessiasSection";
+export { NarroterapiaSection } from "./NarroterapiaSection";
+export { CirculoOracularSection } from "./CirculoOracularSection";
+export { FerramentasSection } from "./FerramentasSection";
+export { EticaSection } from "./EticaSection";
+export { ParaQuemSection } from "./ParaQuemSection";
+export { ChamadoFinalSection } from "./ChamadoFinalSection";
+export { FormacaoFooter } from "./FormacaoFooter";
+export { FormacaoDivider } from "./FormacaoDivider";

@@ -112,6 +112,7 @@ import BibliotecaCasos from "./pages/BibliotecaCasos";
 import { AsPortas, OsCamposPsiquicos, AsTorres, TriadeMetodo } from "./pages/metodo";
 import FormacaoOracula from "./pages/FormacaoOracula";
 import FormacaoVivaPage from "./pages/FormacaoVivaPage";
+import FormacaoPage from "./pages/FormacaoPage";
 import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
 import Jornada from "./pages/Jornada";
@@ -276,6 +277,7 @@ function AppRoutes() {
       <Route path="/install" element={<InstallApp />} />
       <Route path="/formacao-oracula" element={<FormacaoOracula />} />
       <Route path="/formacao-viva" element={<FormacaoVivaPage />} />
+      <Route path="/formacao" element={<FormacaoPage />} />
       <Route path="/tour" element={<Tour />} />
 
       {/* Onboarding Route - First-time experience (before completing) */}
