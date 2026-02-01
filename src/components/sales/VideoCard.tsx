@@ -1,11 +1,12 @@
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Pause, AlertCircle, ExternalLink } from 'lucide-react';
+import { Play, AlertCircle, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface VideoCardProps {
   title: string;
   videoUrl: string;
+  microcopy?: string;
   className?: string;
 }
 
@@ -14,7 +15,7 @@ interface VideoCardProps {
  * Estilo: editorial, ritual, institucional
  * Sem ícones decorativos, bordas chamativas ou elementos visuais excessivos
  */
-export function VideoCard({ title, videoUrl, className = '' }: VideoCardProps) {
+export function VideoCard({ title, videoUrl, microcopy, className = '' }: VideoCardProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasError, setHasError] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -104,6 +105,13 @@ export function VideoCard({ title, videoUrl, className = '' }: VideoCardProps) {
               </span>
             </div>
           </div>
+          
+          {/* Microcopy below video */}
+          {microcopy && (
+            <p className="text-foreground/35 text-center text-xs italic mt-6 leading-relaxed">
+              {microcopy}
+            </p>
+          )}
         </motion.div>
       </section>
     );
