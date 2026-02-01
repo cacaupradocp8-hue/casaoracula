@@ -28,6 +28,7 @@ import {
   Bot,
   FlaskConical,
   Leaf,
+  Star,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -232,7 +233,7 @@ export function Navigation() {
       {
         path: '/mentoria-oracular',
         label: 'Formação Orácula',
-        icon: GraduationCap,
+        icon: Star,
         minPortal: 'visitante',
       },
       {
