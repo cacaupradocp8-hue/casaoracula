@@ -26,14 +26,16 @@ export default function OraculaSalesPage() {
     <div className="min-h-screen bg-[hsl(220,20%,4%)] text-foreground overflow-x-hidden selection:bg-gold/20">
       
       {/* ═══════════════════════════════════════════════════════════════════
-          BLOCO 1 — IMAGEM HERO (TOPO - LIMPA)
+          BLOCO 1 — IMAGEM HERO (TOPO COM SOMBRA SUAVE)
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="w-full">
+      <section className="relative w-full">
         <img 
           src={heroTopo} 
           alt="Formação Orácula" 
           className="w-full h-auto object-cover"
         />
+        {/* Sombra suave na borda inferior para suavizar a dobra */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[hsl(220,20%,4%)] to-transparent" />
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
@@ -554,14 +556,16 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          BLOCO 15 — IMAGEM FINAL (SEM CORTAR CABEÇA)
+          BLOCO 15 — IMAGEM FINAL (FUNDO SUTIL COM TRANSPARÊNCIA)
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="w-full py-8">
+      <section className="relative w-full h-80 md:h-[450px] overflow-hidden">
         <img 
           src={finalPagina} 
-          alt="Casa Orácula" 
-          className="w-full max-h-[600px] object-contain"
+          alt="" 
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-contain opacity-[0.15] grayscale-[30%] brightness-[0.6]"
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220,20%,4%)] via-transparent to-[hsl(220,20%,4%)]" />
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
