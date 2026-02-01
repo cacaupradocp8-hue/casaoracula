@@ -459,11 +459,7 @@ function AppRoutes() {
       />
       <Route
         path="/mentoria-oracular"
-        element={
-          <ProtectedRoute minPortal="oracula">
-            <MentoriaOracular />
-          </ProtectedRoute>
-        }
+        element={<MentoriaOracular />}
       />
       <Route
         path="/metodo"
