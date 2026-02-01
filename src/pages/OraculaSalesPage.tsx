@@ -167,31 +167,56 @@ export default function OraculaSalesPage() {
             O que é a Formação ORÁCULA
           </h2>
           
-          <p className="text-foreground/70 text-center leading-relaxed mb-10">
+          <p className="text-foreground/70 text-center leading-relaxed mb-12">
             A Formação ORÁCULA é uma metodologia viva<br />
             para terapeutas, psicólogas e mentoras do feminino<br />
             que desejam atuar com profundidade sem ferir, invadir ou improvisar.
           </p>
           
-          <p className="text-foreground/60 text-center mb-6">Ela integra:</p>
-          
-          <div className="grid md:grid-cols-2 gap-4 max-w-xl mx-auto mb-10">
-            <div className="text-foreground/60 space-y-2">
-              <p>• psique feminina e Jornada da Heroína</p>
-              <p>• linguagem arquetípica</p>
-              <p>• leitura simbólica</p>
-            </div>
-            <div className="text-foreground/60 space-y-2">
-              <p>• narroterapia oracular</p>
-              <p>• neuroplasticidade e competências do ego</p>
-              <p>• ética de condução e limite terapêutico</p>
+          {/* Card Formação ORÁCULA */}
+          <div className="border border-gold/20 rounded-xl p-8 md:p-10 bg-card/5 space-y-6">
+            <h3 className="font-display text-xl text-gold text-center mb-6">
+              🏛️ FORMAÇÃO ORÁCULA
+            </h3>
+            
+            <p className="text-foreground/60 text-center text-sm mb-6">
+              Formação iniciática e profissional para mulheres que conduzem processos humanos com símbolos e narrativa
+            </p>
+            
+            <ul className="space-y-4 text-foreground/50 text-sm">
+              <li className="flex items-start gap-3">
+                <span className="text-gold/60 mt-0.5">•</span>
+                <span>Metodologia própria ORÁCULA, estruturada em Portas, Torres e Travessias <span className="text-foreground/40 italic">(não modular, não linear)</span></span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-gold/60 mt-0.5">•</span>
+                <span>Leitura oracular e arquetípica com critérios éticos claros — <span className="text-foreground/40 italic">símbolo como diagnóstico, não espetáculo</span></span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-gold/60 mt-0.5">•</span>
+                <span>Travessias vividas antes do método: <span className="text-foreground/40 italic">ninguém aplica o que não sustentou</span></span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-gold/60 mt-0.5">•</span>
+                <span>Mentoria contínua para direção de campo, ritmo e limite <span className="text-foreground/40 italic">(não motivacional)</span></span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-gold/60 mt-0.5">•</span>
+                <span>Ferramentas exclusivas integradas ao App</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-gold/60 mt-0.5">•</span>
+                <span>Formação para atendimentos individuais e grupos, com abertura e fechamento de campo</span>
+              </li>
+            </ul>
+            
+            <div className="pt-6 border-t border-gold/10">
+              <p className="text-gold/60 text-center italic text-sm">
+                Não é um método para aplicar.<br />
+                É um lugar para sustentar.
+              </p>
             </div>
           </div>
-          
-          <p className="text-gold/70 text-center italic">
-            Tudo organizado em Portais de Aprendizado<br />
-            e Travessias de Vivência.
-          </p>
         </motion.div>
       </section>
 
