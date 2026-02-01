@@ -1,94 +1,159 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Star, Shield, BookOpen, Users, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+
+// Imagens
+import heroImage from "@/assets/formacao/hero-oracula-new.jpg";
+import silencioImage from "@/assets/formacao/oracula-silencio-pb.jpg";
+import atmosfera01 from "@/assets/formacao/atmosfera-ritual-01-new.jpg";
+import atmosfera02 from "@/assets/formacao/atmosfera-ritual-02-new.jpg";
+import autoridadeImage from "@/assets/formacao/autoridade-metodo-new.jpg";
 
 /**
- * OraculaSalesPage — Página de Vendas da Formação Orácula
+ * OraculaSalesPage — Página de Apresentação da Formação Orácula
  * 
- * Página pública para visitantes e usuárias não matriculadas.
- * Design contemplativo, minimalista, com tom iniciático.
- * 
- * NOVO COMPONENTE - Sem herança de componentes anteriores.
+ * Copy oficial aplicada sem alterações.
  */
 export default function OraculaSalesPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[hsl(220,20%,6%)] text-foreground overflow-x-hidden selection:bg-gold/20">
+    <div className="min-h-screen bg-[hsl(220,20%,4%)] text-foreground overflow-x-hidden selection:bg-gold/20">
       
       {/* ═══════════════════════════════════════════════════════════════════
-          HERO — Portal de Entrada
+          BLOCO 1 — HERO (TOPO DA PÁGINA)
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 py-24">
-        {/* Gradiente sutil de fundo */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/[0.02] to-transparent pointer-events-none" />
+      <section className="relative min-h-screen flex items-center justify-center">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${heroImage})` }}
+        />
+        <div className="absolute inset-0 bg-black/60" />
         
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
-          className="relative z-10 max-w-3xl mx-auto text-center"
+          className="relative z-10 max-w-4xl mx-auto text-center px-6 py-24"
         >
-          {/* Símbolo */}
-          <div className="mb-8">
-            <span className="text-4xl text-gold/60">🜂</span>
-          </div>
+          <p className="text-gold/80 uppercase tracking-[0.3em] text-sm mb-6">
+            Casa Orácula
+          </p>
           
-          {/* Título Principal */}
-          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground tracking-wide leading-tight mb-6">
-            Formação Orácula
+          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground tracking-wide leading-tight mb-8">
+            Formação Iniciática em Terapia Arquetípica
           </h1>
           
-          {/* Subtítulo */}
-          <p className="font-display text-xl md:text-2xl text-gold/80 italic mb-8">
-            Uma jornada iniciática para quem sustenta travessias
+          <p className="text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto leading-relaxed">
+            Não é um curso.<br />
+            É um território de formação simbólica, ética e estruturada<br />
+            para mulheres que não podem mais improvisar profundidade.
           </p>
-          
-          {/* Frase de impacto */}
-          <p className="text-lg text-muted-foreground/80 max-w-xl mx-auto mb-12 leading-relaxed">
-            Aqui não formamos terapeutas. Aqui formamos guardiãs — 
-            profissionais que sabem quando falar, quando silenciar, e quando apenas sustentar.
-          </p>
-          
-          {/* CTA */}
-          <Button 
-            variant="outline" 
-            size="lg"
-            onClick={() => navigate('/planos')}
-            className="border-gold/30 text-gold hover:bg-gold/10 hover:border-gold/50"
-          >
-            Conhecer os caminhos
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
         </motion.div>
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          SILÊNCIO — Pausa contemplativa
+          BLOCO 2 — AVISO HONESTO
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-32 px-6">
+      <section className="relative py-24 px-6">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
+          style={{ backgroundImage: `url(${silencioImage})` }}
+        />
+        <div className="absolute inset-0 bg-[hsl(220,20%,4%)]/90" />
+        
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 1.5 }}
-          className="max-w-2xl mx-auto text-center"
+          transition={{ duration: 0.8 }}
+          className="relative z-10 max-w-3xl mx-auto"
         >
-          <p className="font-display text-2xl md:text-3xl text-foreground/70 italic leading-relaxed">
-            "Algumas travessias só começam<br />
-            quando ninguém está tentando convencer você."
+          <h2 className="font-display text-2xl md:text-3xl text-gold mb-10 text-center">
+            Antes de entrar, um aviso claro.
+          </h2>
+          
+          <p className="text-foreground/70 text-center mb-8">
+            Se você procura:
+          </p>
+          
+          <ul className="space-y-3 text-center text-foreground/60 mb-10">
+            <li>técnicas rápidas</li>
+            <li>certificações vazias</li>
+            <li>espiritualidade performática</li>
+            <li>atalhos para "atender mais"</li>
+          </ul>
+          
+          <p className="text-gold/90 text-center text-lg italic mb-6">
+            esta formação não é para você.
+          </p>
+          
+          <p className="text-foreground/80 text-center leading-relaxed">
+            A ORÁCULA forma mulheres que sustentam processos humanos<br />
+            com leitura simbólica, presença e responsabilidade psíquica.
           </p>
         </motion.div>
       </section>
 
       {/* Divider */}
       <div className="flex items-center justify-center py-8">
-        <span className="text-gold/40 text-xl">🌑</span>
+        <span className="text-gold/40 text-xl">🜂</span>
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          O QUE É — Apresentação
+          BLOCO 3 — O QUE É A FORMAÇÃO ORÁCULA
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="relative py-24 px-6">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${atmosfera01})` }}
+        />
+        <div className="absolute inset-0 bg-black/75" />
+        
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="relative z-10 max-w-3xl mx-auto"
+        >
+          <h2 className="font-display text-2xl md:text-3xl text-gold mb-8 text-center">
+            O que é a Formação ORÁCULA
+          </h2>
+          
+          <p className="text-foreground/80 text-center leading-relaxed mb-10">
+            A Formação ORÁCULA é uma metodologia viva<br />
+            para terapeutas, psicólogas e mentoras do feminino<br />
+            que desejam atuar com profundidade sem ferir, invadir ou improvisar.
+          </p>
+          
+          <p className="text-foreground/70 text-center mb-6">Ela integra:</p>
+          
+          <ul className="space-y-2 text-center text-foreground/70 mb-8">
+            <li>psique feminina e Jornada da Heroína</li>
+            <li>linguagem arquetípica</li>
+            <li>leitura simbólica</li>
+            <li>narroterapia oracular</li>
+            <li>neuroplasticidade e competências do ego</li>
+            <li>ética de condução e limite terapêutico</li>
+          </ul>
+          
+          <p className="text-gold/80 text-center italic">
+            Tudo organizado em Portais de Aprendizado<br />
+            e Travessias de Vivência.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* Divider */}
+      <div className="flex items-center justify-center py-8">
+        <span className="text-gold/40 text-xl">🜃</span>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          BLOCO 4 — COMO A FORMAÇÃO FUNCIONA
       ═══════════════════════════════════════════════════════════════════ */}
       <section className="py-24 px-6">
         <motion.div
@@ -96,27 +161,128 @@ export default function OraculaSalesPage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="max-w-3xl mx-auto"
+          className="max-w-4xl mx-auto"
         >
-          <h2 className="font-display text-2xl md:text-3xl text-gold mb-8 text-center">
-            O que é a Formação Orácula
+          <h2 className="font-display text-2xl md:text-3xl text-gold mb-12 text-center">
+            Como a Formação Funciona
           </h2>
           
-          <div className="space-y-6 text-foreground/80 leading-relaxed">
-            <p>
-              A Formação Orácula é um percurso de treinamento profundo para profissionais 
-              que desejam dominar a arte de sustentar travessias psíquicas com rigor, ética e presença.
-            </p>
+          <p className="text-foreground/70 text-center mb-12">
+            A ORÁCULA se estrutura em dois movimentos inseparáveis:
+          </p>
+          
+          <div className="grid md:grid-cols-2 gap-10">
+            {/* Travessias */}
+            <div className="border border-gold/20 rounded-lg p-8 bg-card/5">
+              <h3 className="font-display text-xl text-gold mb-4 flex items-center gap-3">
+                <span>🔮</span> TRAVESSIAS
+              </h3>
+              <p className="text-foreground/70 italic mb-6">
+                O mergulho na própria psique da facilitadora.
+              </p>
+              <p className="text-foreground/60 mb-4">Aqui você:</p>
+              <ul className="space-y-2 text-foreground/60 text-sm">
+                <li>• atravessa o método em si mesma</li>
+                <li>• constrói seu Mapa Vivo</li>
+                <li>• reconhece limites, defesas e potências</li>
+                <li>• integra corpo, símbolo e presença</li>
+              </ul>
+              <p className="text-gold/70 italic mt-6 text-sm">
+                Nada é aplicado sem antes ser vivido.
+              </p>
+            </div>
             
-            <p>
-              Não é um curso de técnicas. É uma arquitetura viva — onde você aprende a ler 
-              os campos, a usar as ferramentas oraculares e a conduzir processos terapêuticos 
-              que tocam o simbólico sem perder o chão clínico.
-            </p>
+            {/* Portais */}
+            <div className="border border-gold/20 rounded-lg p-8 bg-card/5">
+              <h3 className="font-display text-xl text-gold mb-4 flex items-center gap-3">
+                <span>🗝️</span> PORTAIS
+              </h3>
+              <p className="text-foreground/70 italic mb-6">
+                O espaço do aprendizado estruturado.
+              </p>
+              <p className="text-foreground/60 mb-4">Em cada Portal você encontra:</p>
+              <ul className="space-y-2 text-foreground/60 text-sm">
+                <li>• fundamentos teóricos e simbólicos</li>
+                <li>• aulas didáticas</li>
+                <li>• registros orientados</li>
+                <li>• exercícios de leitura e condução</li>
+                <li>• integração ética do método</li>
+              </ul>
+              <p className="text-gold/70 italic mt-6 text-sm">
+                Aqui você aprende como sustentar outras mulheres<br />
+                sem colapsar nem criar dependência.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Divider */}
+      <div className="flex items-center justify-center py-8">
+        <span className="text-gold/40 text-xl">🜂</span>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          BLOCO 5 — AS TRAVESSIAS DA FORMAÇÃO
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="relative py-24 px-6">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${atmosfera02})` }}
+        />
+        <div className="absolute inset-0 bg-black/80" />
+        
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="relative z-10 max-w-4xl mx-auto"
+        >
+          <h2 className="font-display text-2xl md:text-3xl text-gold mb-12 text-center">
+            As Travessias da Formação
+          </h2>
+          
+          <div className="space-y-8">
+            <div className="border-l-2 border-gold/30 pl-6">
+              <h3 className="font-display text-lg text-foreground mb-2">
+                Travessia I — A Jornada Ritual da Heroína
+              </h3>
+              <p className="text-foreground/60">
+                As 14 Portas da Psique Feminina.<br />
+                A base iniciática da formação e a criação do seu Mapa Pessoal.
+              </p>
+            </div>
             
-            <p className="text-gold/90 italic">
-              Aqui, profundidade não é luxo. É responsabilidade.
-            </p>
+            <div className="border-l-2 border-gold/30 pl-6">
+              <h3 className="font-display text-lg text-foreground mb-2">
+                Travessia II — Neuroplasticidade & Competências do Ego
+              </h3>
+              <p className="text-foreground/60">
+                O corpo que sustenta o símbolo.<br />
+                Aqui você aprende quando não conduzir.
+              </p>
+            </div>
+            
+            <div className="border-l-2 border-gold/30 pl-6">
+              <h3 className="font-display text-lg text-foreground mb-2">
+                Travessia III — Mito Pessoal & Linguagem Arquetípica
+              </h3>
+              <p className="text-foreground/60">
+                A história que te atravessa e posiciona.<br />
+                Sem romantização. Sem projeção.
+              </p>
+            </div>
+            
+            <div className="border-l-2 border-gold/30 pl-6">
+              <h3 className="font-display text-lg text-foreground mb-2">
+                Travessia IV — A Guardiã da Leitura
+              </h3>
+              <p className="text-foreground/60">
+                A passagem da vivência pessoal para a condução ética.<br />
+                A facilitadora nasce quando sabe não agir.
+              </p>
+            </div>
           </div>
         </motion.div>
       </section>
@@ -127,157 +293,261 @@ export default function OraculaSalesPage() {
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          PILARES — Estrutura da Formação
-      ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-24 px-6">
-        <div className="max-w-4xl mx-auto">
-          <motion.h2
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="font-display text-2xl md:text-3xl text-gold mb-16 text-center"
-          >
-            Os Três Pilares
-          </motion.h2>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                symbol: "🜂",
-                title: "Portas",
-                description: "Onde a psique está. Limiares, momentos internos, territórios de entrada."
-              },
-              {
-                symbol: "🌑",
-                title: "Labirintos",
-                description: "Como a psique se move. Processo, complexidade inteligente, travessia."
-              },
-              {
-                symbol: "🜁",
-                title: "Torres",
-                description: "Por que a forma existe. Estrutura, sustentação, dignidade da prática."
-              }
-            ].map((pilar, index) => (
-              <motion.div
-                key={pilar.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.15 }}
-                className="text-center p-6 border border-border/20 rounded-lg bg-card/5 hover:border-gold/20 transition-colors"
-              >
-                <span className="text-3xl mb-4 block">{pilar.symbol}</span>
-                <h3 className="font-display text-xl text-foreground mb-3">{pilar.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{pilar.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Divider */}
-      <div className="flex items-center justify-center py-8">
-        <span className="text-gold/40 text-xl">✦</span>
-      </div>
-
-      {/* ═══════════════════════════════════════════════════════════════════
-          PARA QUEM É — Reconhecimento
+          BLOCO 6 — PORTAL DA NARROTERAPIA ORACULAR
       ═══════════════════════════════════════════════════════════════════ */}
       <section className="py-24 px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
           className="max-w-3xl mx-auto"
         >
-          <h2 className="font-display text-2xl md:text-3xl text-gold mb-10 text-center">
-            Para quem é esta jornada
+          <h2 className="font-display text-2xl md:text-3xl text-gold mb-8 text-center">
+            Portal da Narroterapia Oracular
           </h2>
           
-          <div className="space-y-4">
-            {[
-              "Você sente antes de falar. Percebe quando algo abre.",
-              "Já conduziu processos profundos, mas falta território para sustentar.",
-              "Busca rigor ético sem perder a dimensão simbólica.",
-              "Quer dominar ferramentas oraculares com fundamento clínico.",
-              "Está pronta para ser guardiã, não apenas facilitadora."
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="flex items-start gap-3 text-foreground/80"
-              >
-                <Star className="w-4 h-4 text-gold mt-1 flex-shrink-0" />
-                <span>{item}</span>
-              </motion.div>
-            ))}
-          </div>
+          <p className="text-foreground/80 text-center leading-relaxed mb-10">
+            A Narroterapia Oracular não é contar histórias.<br />
+            É ler a psique através delas.
+          </p>
+          
+          <p className="text-foreground/70 text-center mb-6">Neste Portal você aprende:</p>
+          
+          <ul className="space-y-2 text-center text-foreground/60 mb-10">
+            <li>escuta narrativa profunda</li>
+            <li>uso terapêutico de contos e mitos</li>
+            <li>condução simbólica sem sugestão</li>
+            <li>criação de ritos narrativos seguros</li>
+          </ul>
+          
+          <p className="text-gold/80 text-center italic">
+            Aqui a história deixa de ser metáfora<br />
+            e se torna instrumento clínico simbólico.
+          </p>
         </motion.div>
       </section>
 
       {/* Divider */}
       <div className="flex items-center justify-center py-8">
-        <span className="text-gold/40 text-xl">🜃</span>
+        <span className="text-gold/40 text-xl">🛠️</span>
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          O QUE VOCÊ VAI APRENDER
+          BLOCO 7 — AS FERRAMENTAS DA CASA
       ═══════════════════════════════════════════════════════════════════ */}
       <section className="py-24 px-6">
-        <div className="max-w-4xl mx-auto">
-          <motion.h2
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="font-display text-2xl md:text-3xl text-gold mb-12 text-center"
-          >
-            O que você vai dominar
-          </motion.h2>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="max-w-3xl mx-auto"
+        >
+          <h2 className="font-display text-2xl md:text-3xl text-gold mb-8 text-center">
+            As Ferramentas da Casa
+          </h2>
           
-          <div className="grid md:grid-cols-2 gap-6">
-            {[
-              { icon: BookOpen, title: "Leitura de Campos", desc: "Identificar territórios psíquicos e portas de entrada" },
-              { icon: Shield, title: "Ética Oracular", desc: "Conduzir com responsabilidade e sem projeção" },
-              { icon: Users, title: "Condução de Sessões", desc: "Sustentar travessias com presença e rigor" },
-              { icon: Sparkles, title: "Ferramentas Simbólicas", desc: "Big5, Eneagrama, Narroterapia e mais" }
-            ].map((item, index) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="flex items-start gap-4 p-5 border border-border/20 rounded-lg bg-card/5"
-              >
-                <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center flex-shrink-0">
-                  <item.icon className="w-5 h-5 text-gold" />
-                </div>
-                <div>
-                  <h3 className="font-display text-lg text-foreground mb-1">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground">{item.desc}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          <p className="text-foreground/70 text-center mb-10">
+            Ao entrar na Formação ORÁCULA, você acessa um App exclusivo com:
+          </p>
+          
+          <ul className="space-y-3 text-center text-foreground/60 mb-10">
+            <li>Mapa Vivo da Heroína</li>
+            <li>Jardim da Psique</li>
+            <li>Oráculo das Portas</li>
+            <li>Biblioteca Narrativa</li>
+            <li>Checklists de condução</li>
+            <li>Prompts da Sibila por Portal</li>
+            <li>Avaliação automática e avaliação humana</li>
+          </ul>
+          
+          <p className="text-gold/80 text-center italic">
+            Tudo criado para não depender de improviso.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* Divider */}
+      <div className="flex items-center justify-center py-8">
+        <span className="text-gold/40 text-xl">🛡️</span>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          BLOCO 8 — ÉTICA E SUSTENTAÇÃO
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="relative py-24 px-6">
+        <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="font-display text-2xl md:text-3xl text-gold mb-8">
+              Ética e Sustentação
+            </h2>
+            
+            <p className="text-foreground/80 leading-relaxed mb-8">
+              A ORÁCULA não certifica presença.<br />
+              Certifica integração.
+            </p>
+            
+            <p className="text-foreground/70 mb-4">Aqui existem:</p>
+            
+            <ul className="space-y-2 text-foreground/60 mb-8">
+              <li>• critérios claros de passagem</li>
+              <li>• termos éticos desde o onboarding</li>
+              <li>• leitura humana do processo</li>
+              <li>• limite de atuação profissional</li>
+            </ul>
+            
+            <p className="text-gold/80 italic">
+              Formar presença é coisa séria.
+            </p>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="hidden md:block"
+          >
+            <img 
+              src={autoridadeImage} 
+              alt="Autoridade do método" 
+              className="rounded-lg shadow-2xl w-full object-cover max-h-[400px]"
+            />
+          </motion.div>
         </div>
       </section>
 
+      {/* Divider */}
+      <div className="flex items-center justify-center py-8">
+        <span className="text-gold/40 text-xl">🜁</span>
+      </div>
+
       {/* ═══════════════════════════════════════════════════════════════════
-          FECHAMENTO — CTA Final
+          BLOCO 9 — PARA QUEM É
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="py-24 px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="max-w-3xl mx-auto"
+        >
+          <h2 className="font-display text-2xl md:text-3xl text-gold mb-8 text-center">
+            Para quem é
+          </h2>
+          
+          <p className="text-foreground/70 text-center mb-6">Para:</p>
+          
+          <ul className="space-y-2 text-center text-foreground/70 mb-8">
+            <li>terapeutas</li>
+            <li>psicólogas</li>
+            <li>mentoras do feminino</li>
+            <li>facilitadoras de grupos</li>
+          </ul>
+          
+          <p className="text-foreground/60 text-center italic">
+            que já estudaram muito<br />
+            mas sentem que falta eixo, estrutura e autoridade interna.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* Divider */}
+      <div className="flex items-center justify-center py-8">
+        <span className="text-gold/40 text-xl">🜄</span>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          BLOCO 10 — PARA QUEM NÃO É
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="py-16 px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="max-w-3xl mx-auto"
+        >
+          <h2 className="font-display text-2xl md:text-3xl text-gold/80 mb-8 text-center">
+            Para quem não é
+          </h2>
+          
+          <p className="text-foreground/60 text-center mb-6">Não é para quem:</p>
+          
+          <ul className="space-y-2 text-center text-foreground/50">
+            <li>busca atalhos</li>
+            <li>copia métodos</li>
+            <li>confunde espiritualidade com ausência de limite</li>
+            <li>não deseja ser atravessada</li>
+          </ul>
+        </motion.div>
+      </section>
+
+      {/* Divider */}
+      <div className="flex items-center justify-center py-8">
+        <span className="text-gold/40 text-xl">🌑</span>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          BLOCO 11 — ENCERRAMENTO
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="py-24 px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="max-w-3xl mx-auto text-center"
+        >
+          <p className="text-foreground/80 leading-relaxed mb-8">
+            A Casa Orácula não promete resultados rápidos.<br />
+            Ela oferece lugar.
+          </p>
+          
+          <p className="text-foreground/70 mb-8">
+            Lugar interno.<br />
+            Lugar simbólico.<br />
+            Lugar profissional.
+          </p>
+          
+          <p className="text-gold italic text-lg">
+            Você não entra para aprender.<br />
+            Você entra para atravessar.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* Divider */}
+      <div className="flex items-center justify-center py-8">
+        <span className="text-gold/40 text-xl">🗝️</span>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          BLOCO 12 — CHAMADO FINAL
       ═══════════════════════════════════════════════════════════════════ */}
       <section className="py-32 px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
           className="max-w-2xl mx-auto text-center"
         >
-          <p className="font-display text-2xl md:text-3xl text-foreground/80 italic leading-relaxed mb-10">
-            "O valor não está no acesso.<br />
-            Está na responsabilidade de quem atravessa."
+          <p className="text-foreground/80 text-lg mb-6">
+            Se você sentiu o chamado, a Casa está aberta.
+          </p>
+          
+          <p className="text-foreground/60 mb-10">
+            Entre quando estiver pronta.<br />
+            A ORÁCULA não tem pressa.<br />
+            Mas não espera para sempre.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
