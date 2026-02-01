@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react';
 import { loginSchema, signupSchema, forgotPasswordSchema, getValidationError } from '@/lib/validations';
 import { useCopy } from '@/hooks/useCopy';
+import authBanner from '@/assets/auth-banner.png';
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
@@ -255,22 +256,31 @@ export default function Auth() {
   }
 
   return (
-    <div className="min-h-screen bg-background pattern-geometric flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-hero-radial" />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" />
+    <div className="min-h-screen bg-background flex flex-col lg:flex-row">
+      {/* Banner lateral (desktop) / topo (mobile) */}
+      <div className="relative lg:w-1/2 h-48 lg:h-auto">
+        <img 
+          src={authBanner} 
+          alt="Casa Orácula" 
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-background via-background/60 to-transparent" />
+      </div>
       
-      <div className="relative w-full max-w-md">
-        <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8">
-          <ArrowLeft className="w-4 h-4" />
-          <span>Voltar</span>
-        </Link>
+      {/* Formulário */}
+      <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
+        <div className="w-full max-w-md">
+          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8">
+            <ArrowLeft className="w-4 h-4" />
+            <span>Voltar</span>
+          </Link>
 
-        <div className="text-center mb-6">
-          <Logo size="md" variant="vertical" className="justify-center mb-3" />
-          <p className="text-muted-foreground font-display italic text-sm">
-            "A mulher de alma antiga encontra aqui sua linguagem"
-          </p>
-        </div>
+          <div className="text-center mb-6">
+            <Logo size="md" variant="vertical" className="justify-center mb-3" />
+            <p className="text-muted-foreground font-display italic text-sm">
+              "A mulher de alma antiga encontra aqui sua linguagem"
+            </p>
+          </div>
 
         <div className="glass rounded-2xl p-8 shadow-glow">
           <Tabs defaultValue="login" className="w-full">
@@ -396,5 +406,6 @@ export default function Auth() {
         </div>
       </div>
     </div>
+  </div>
   );
 }
