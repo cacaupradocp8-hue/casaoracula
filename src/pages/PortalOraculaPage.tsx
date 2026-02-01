@@ -20,6 +20,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
+import { FormationMapTrigger } from '@/components/formation-map';
 
 /**
  * PortalOraculaPage — Portal Interno da Formação Orácula
@@ -257,6 +258,9 @@ export default function PortalOraculaPage() {
           </Card>
         </div>
       </div>
+      
+      {/* Floating Map Trigger */}
+      <FormationMapTrigger />
     </AppLayout>
   );
 }

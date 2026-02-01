@@ -44,6 +44,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "access_expiration_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       agente_conversas: {
@@ -2500,6 +2507,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "email_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       eneagrama_feminino_afirmacoes: {
@@ -3188,6 +3202,57 @@ export type Database = {
           status?: string
           titulo?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      formation_map_nodes: {
+        Row: {
+          ativo: boolean | null
+          color: string | null
+          created_at: string | null
+          description_locked: string | null
+          description_unlocked: string | null
+          icon: string | null
+          id: string
+          label: string
+          node_type: string
+          ordem: number | null
+          position_angle: number | null
+          position_ring: number | null
+          reference_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          color?: string | null
+          created_at?: string | null
+          description_locked?: string | null
+          description_unlocked?: string | null
+          icon?: string | null
+          id?: string
+          label: string
+          node_type: string
+          ordem?: number | null
+          position_angle?: number | null
+          position_ring?: number | null
+          reference_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          color?: string | null
+          created_at?: string | null
+          description_locked?: string | null
+          description_unlocked?: string | null
+          icon?: string | null
+          id?: string
+          label?: string
+          node_type?: string
+          ordem?: number | null
+          position_angle?: number | null
+          position_ring?: number | null
+          reference_id?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -4744,6 +4809,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "mind_maps_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       narrative_maps: {
@@ -4862,11 +4934,25 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "narrative_maps_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "narrative_maps_therapist_id_fkey"
             columns: ["therapist_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "narrative_maps_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -5866,11 +5952,25 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "post_session_closures_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "post_session_closures_therapist_id_fkey"
             columns: ["therapist_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_session_closures_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -6863,6 +6963,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "session_cases_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       session_oracle_draws: {
@@ -6927,11 +7034,25 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "session_oracle_draws_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "session_oracle_draws_therapist_id_fkey"
             columns: ["therapist_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_oracle_draws_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -7003,6 +7124,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "session_scripts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "session_scripts_narrative_map_id_fkey"
             columns: ["narrative_map_id"]
             isOneToOne: false
@@ -7015,6 +7143,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_scripts_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -7439,6 +7574,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "travessia_comentarios_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       travessia_day_unlocks: {
@@ -7835,7 +7977,19 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      v_formation_progress: {
+        Row: {
+          active_travessias: Json | null
+          completed_rituals: Json | null
+          completed_travessias: Json | null
+          current_portal: string | null
+          joined_at: string | null
+          nome_exibicao: string | null
+          role: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       activate_fundadora_plan: {

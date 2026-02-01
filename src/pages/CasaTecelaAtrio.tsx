@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { RitualGate } from '@/components/ritual';
-
+import { FormationMapTrigger } from '@/components/formation-map';
 
 export default function CasaTecelaAtrio() {
   const [entered, setEntered] = useState(false);
@@ -123,6 +123,9 @@ export default function CasaTecelaAtrio() {
         </AnimatePresence>
       </div>
       </RitualGate>
+      
+      {/* Floating Map Trigger */}
+      <FormationMapTrigger />
     </AppLayout>
   );
 }
