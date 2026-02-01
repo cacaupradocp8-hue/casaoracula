@@ -9,6 +9,8 @@ import eticaSustentacao from "@/assets/formacao/etica-sustentacao.png";
 import finalPagina from "@/assets/formacao/final-pagina.png";
 import fundoRitual1 from "@/assets/formacao/fundo-ritual-1.png";
 import fundoRitual2 from "@/assets/formacao/fundo-ritual-2.png";
+import fundoNarroterapia from "@/assets/formacao/fundo-narroterapia.png";
+import fundoParaQuemE from "@/assets/formacao/fundo-para-quem-e.png";
 
 // Imagens geradas (arquetípicas)
 import travessiasSection from "@/assets/formacao/travessias-section.jpg";
@@ -309,15 +311,24 @@ export default function OraculaSalesPage() {
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          BLOCO 9 — PORTAL DA NARROTERAPIA ORACULAR
+          BLOCO 9 — PORTAL DA NARROTERAPIA ORACULAR (COM FUNDO 20%)
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-20 px-6">
+      <section className="relative py-20 px-6 overflow-hidden">
+        {/* Imagem de fundo 20% transparência */}
+        <img 
+          src={fundoNarroterapia} 
+          alt="" 
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover opacity-20"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220,20%,4%)]/60 via-transparent to-[hsl(220,20%,4%)]/60" />
+        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="max-w-3xl mx-auto"
+          className="relative z-10 max-w-3xl mx-auto"
         >
           <h2 className="font-display text-2xl md:text-3xl text-gold mb-8 text-center">
             Portal da Narroterapia Oracular
@@ -456,17 +467,17 @@ export default function OraculaSalesPage() {
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          BLOCO 13 — PARA QUEM É / PARA QUEM NÃO É (COM FUNDO RITUAL 1)
+          BLOCO 13 — PARA QUEM É / PARA QUEM NÃO É (COM FUNDO 20%)
       ═══════════════════════════════════════════════════════════════════ */}
       <section className="relative py-20 px-6 overflow-hidden">
-        {/* Imagem de fundo sutil */}
+        {/* Imagem de fundo 20% transparência */}
         <img 
-          src={fundoRitual1} 
+          src={fundoParaQuemE} 
           alt="" 
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover opacity-[0.08] grayscale-[40%] brightness-[0.6]"
+          className="absolute inset-0 w-full h-full object-cover opacity-20"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220,20%,4%)] via-transparent to-[hsl(220,20%,4%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220,20%,4%)]/60 via-transparent to-[hsl(220,20%,4%)]/60" />
         
         <motion.div
           initial={{ opacity: 0, y: 20 }}
