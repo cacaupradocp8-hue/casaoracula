@@ -7,6 +7,8 @@ import { ArrowRight } from "lucide-react";
 import heroTopo from "@/assets/formacao/hero-topo.png";
 import eticaSustentacao from "@/assets/formacao/etica-sustentacao.png";
 import finalPagina from "@/assets/formacao/final-pagina.png";
+import fundoRitual1 from "@/assets/formacao/fundo-ritual-1.png";
+import fundoRitual2 from "@/assets/formacao/fundo-ritual-2.png";
 
 // Imagens geradas (arquetípicas)
 import travessiasSection from "@/assets/formacao/travessias-section.jpg";
@@ -452,15 +454,24 @@ export default function OraculaSalesPage() {
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          BLOCO 13 — PARA QUEM É / PARA QUEM NÃO É
+          BLOCO 13 — PARA QUEM É / PARA QUEM NÃO É (COM FUNDO RITUAL 1)
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-20 px-6">
+      <section className="relative py-20 px-6 overflow-hidden">
+        {/* Imagem de fundo sutil */}
+        <img 
+          src={fundoRitual1} 
+          alt="" 
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.08] grayscale-[40%] brightness-[0.6]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220,20%,4%)] via-transparent to-[hsl(220,20%,4%)]" />
+        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="max-w-4xl mx-auto"
+          className="relative z-10 max-w-4xl mx-auto"
         >
           <div className="grid md:grid-cols-2 gap-12">
             {/* Para quem é */}
@@ -507,13 +518,22 @@ export default function OraculaSalesPage() {
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 14 — ENCERRAMENTO
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-20 px-6">
+      <section className="relative py-20 px-6 overflow-hidden">
+        {/* Imagem de fundo sutil */}
+        <img 
+          src={fundoRitual2} 
+          alt="" 
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.10] grayscale-[35%] brightness-[0.5]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220,20%,4%)] via-transparent to-[hsl(220,20%,4%)]" />
+        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="max-w-2xl mx-auto text-center"
+          className="relative z-10 max-w-2xl mx-auto text-center"
         >
           <p className="text-foreground/70 leading-relaxed mb-8">
             A Casa Orácula não promete resultados rápidos.<br />
@@ -534,13 +554,13 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          BLOCO 15 — IMAGEM FINAL (LIMPA)
+          BLOCO 15 — IMAGEM FINAL (SEM CORTAR CABEÇA)
       ═══════════════════════════════════════════════════════════════════ */}
       <section className="w-full py-8">
         <img 
           src={finalPagina} 
           alt="Casa Orácula" 
-          className="w-full max-h-[500px] object-cover"
+          className="w-full max-h-[600px] object-contain"
         />
       </section>
 
