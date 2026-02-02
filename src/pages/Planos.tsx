@@ -66,32 +66,30 @@ export default function Planos() {
       <div className="min-h-screen bg-background">
         {/* Hero Banner with Image */}
         <section className="relative">
-          {/* Banner Image with blur shadow effect */}
-          <div className="relative h-48 sm:h-64 lg:h-80 overflow-hidden">
+          {/* Banner Image */}
+          <div className="relative h-40 sm:h-52 lg:h-64 overflow-hidden">
             <img 
               src={planosBanner} 
               alt="Planos & Travessias"
-              className="w-full h-full object-cover object-center"
+              className="w-full h-full object-cover object-top"
             />
-            {/* Gradient overlay for text readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-            {/* Bottom blur shadow effect */}
-            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent backdrop-blur-[2px]" />
+            {/* Bottom gradient fade */}
+            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent" />
           </div>
           
-          {/* Content overlay */}
-          <div className="absolute inset-0 flex items-center justify-center">
+          {/* Content below image */}
+          <div className="container mx-auto px-6 -mt-6 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-center max-w-2xl mx-auto px-6"
+              className="text-center max-w-2xl mx-auto"
             >
-              <span className="text-gold/80 text-2xl mb-4 block drop-shadow-lg">🜂</span>
-              <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-foreground tracking-wide mb-4 drop-shadow-lg">
+              <span className="text-gold/70 text-2xl mb-3 block">🜂</span>
+              <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-foreground tracking-wide mb-3">
                 Planos & Travessias
               </h1>
-              <p className="text-foreground/90 drop-shadow-md">
+              <p className="text-muted-foreground">
                 Escolha o caminho que ressoa com o seu momento
               </p>
             </motion.div>
