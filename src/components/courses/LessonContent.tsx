@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -7,7 +7,8 @@ import {
   ChevronLeft, 
   ChevronRight, 
   Download, 
-  FileText
+  FileText,
+  Lock
 } from 'lucide-react';
 import { CourseLesson, CourseModuleWithLessons } from '@/types/course';
 import DOMPurify from 'dompurify';
@@ -15,6 +16,8 @@ import { ModularPageRenderer } from '@/components/modular/ModularPageRenderer';
 import { PedagogicalModuleView } from './PedagogicalModuleView';
 import { DiarioBordoAula } from '@/components/shared/DiarioBordoAula';
 import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
+import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
+import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
 
 interface LessonContentProps {
   lesson: CourseLesson;
@@ -38,21 +41,16 @@ export function LessonContent({
   hasNext
 }: LessonContentProps) {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const { extractVideoId, isCloudflareVideoId } = useCloudflareVideo();
 
-  const getEmbedUrl = (url: string): string => {
-    // YouTube
-    const youtubeMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&\s]+)/);
-    if (youtubeMatch) {
-      return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+  // Extract Cloudflare video ID from lesson URL
+  const videoId = useMemo(() => {
+    if (!lesson.video_url) return null;
+    if (isCloudflareVideoId(lesson.video_url)) {
+      return lesson.video_url;
     }
-    // Vimeo
-    const vimeoMatch = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-    if (vimeoMatch) {
-      return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
-    }
-    return url;
-  };
-
+    return extractVideoId(lesson.video_url);
+  }, [lesson.video_url, extractVideoId, isCloudflareVideoId]);
 
   // Check if module has pedagogical format enabled
   const isPedagogical = module?.formato_pedagogico === true;
@@ -108,17 +106,27 @@ export function LessonContent({
           />
         ) : (
           <>
-            {/* Video Content */}
+            {/* Video Content - Cloudflare Stream only */}
             {lesson.video_url && (
-              <Card className="aspect-video overflow-hidden bg-background">
-                <iframe
-                  src={getEmbedUrl(lesson.video_url)}
-                  className="w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
+              videoId ? (
+                <CloudflareStreamPlayer
+                  videoId={videoId}
+                  title={lesson.titulo}
+                  contextType="lesson"
+                  contextId={lesson.id}
+                  requiredPortal="visitante"
                   onLoad={() => setIsVideoLoaded(true)}
                 />
-              </Card>
+              ) : (
+                <Card className="aspect-video overflow-hidden bg-muted/30 flex items-center justify-center">
+                  <div className="text-center p-6">
+                    <Lock className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-muted-foreground text-sm">
+                      Vídeo não disponível no Cloudflare Stream
+                    </p>
+                  </div>
+                </Card>
+              )
             )}
 
             {/* Audio Content */}

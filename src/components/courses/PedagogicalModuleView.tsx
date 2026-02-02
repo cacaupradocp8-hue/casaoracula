@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -14,6 +14,7 @@ import {
   ChevronRight,
   ExternalLink,
   CheckCircle2,
+  Lock,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
@@ -22,6 +23,8 @@ import {
   CheckMaturidade,
   FerramentaPratica,
 } from '@/types/pedagogical-module';
+import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
+import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
 
 // Simplified data type for PedagogicalModuleView
 export interface PedagogicalModuleViewData {
@@ -52,24 +55,20 @@ export function PedagogicalModuleView({
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [checkResponses, setCheckResponses] = useState<Record<number, string>>({});
   const [checkCompleted, setCheckCompleted] = useState(false);
+  const { extractVideoId, isCloudflareVideoId } = useCloudflareVideo();
 
   const cards = module.cards_leitura || [];
   const casos = module.estudos_caso || [];
   const checks = module.check_maturidade || [];
 
-  const getEmbedUrl = (url: string): string => {
-    const youtubeMatch = url.match(
-      /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&\s]+)/
-    );
-    if (youtubeMatch) {
-      return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+  // Extract Cloudflare video ID from URL
+  const videoId = useMemo(() => {
+    if (!module.video_principal_url) return null;
+    if (isCloudflareVideoId(module.video_principal_url)) {
+      return module.video_principal_url;
     }
-    const vimeoMatch = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-    if (vimeoMatch) {
-      return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
-    }
-    return url;
-  };
+    return extractVideoId(module.video_principal_url);
+  }, [module.video_principal_url, extractVideoId, isCloudflareVideoId]);
 
   const handleCheckChange = (index: number, value: string) => {
     setCheckResponses((prev) => ({ ...prev, [index]: value }));
@@ -126,14 +125,24 @@ export function PedagogicalModuleView({
           {module.video_principal_titulo && (
             <h3 className="text-xl font-medium">{module.video_principal_titulo}</h3>
           )}
-          <Card className="aspect-video overflow-hidden bg-black/20">
-            <iframe
-              src={getEmbedUrl(module.video_principal_url)}
-              className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
+          {videoId ? (
+            <CloudflareStreamPlayer
+              videoId={videoId}
+              title={module.video_principal_titulo || module.titulo}
+              contextType="course_module"
+              contextId={module.id}
+              requiredPortal="visitante"
             />
-          </Card>
+          ) : (
+            <Card className="aspect-video overflow-hidden bg-muted/30 flex items-center justify-center">
+              <div className="text-center p-6">
+                <Lock className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+                <p className="text-muted-foreground text-sm">
+                  Vídeo não disponível no Cloudflare Stream
+                </p>
+              </div>
+            </Card>
+          )}
         </section>
       )}
 

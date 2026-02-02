@@ -5,12 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useCopy } from '@/hooks/useCopy';
 import { useAppSettings } from '@/hooks/useAppSettings';
+import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
+import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
 
 /**
  * VisitorSalaContent - Conteúdo da Sala de Visita (Plano Gratuito)
  * 
  * Blocos fixos (ordem obrigatória):
- * 1. Vídeo de Boas-Vindas (gerenciável via Admin > Configurações)
+ * 1. Vídeo de Boas-Vindas (Cloudflare Stream - gerenciável via Admin)
  * 2. Texto curto de acolhimento (sem CTA comercial)
  * 3. Convite para a Travessia 00 (texto explicativo + botão)
  * 
@@ -20,9 +22,15 @@ export function VisitorSalaContent() {
   const navigate = useNavigate();
   const { getCopyByKey } = useCopy();
   const { getSetting } = useAppSettings();
+  const { extractVideoId, isCloudflareVideoId } = useCloudflareVideo();
 
-  // URL do vídeo configurada pelo Admin
+  // URL do vídeo configurada pelo Admin (pode ser ID ou URL do Cloudflare Stream)
   const videoUrl = getSetting('sala_visita_video_url', '');
+  
+  // Extract Cloudflare video ID
+  const videoId = videoUrl ? (
+    isCloudflareVideoId(videoUrl) ? videoUrl : extractVideoId(videoUrl)
+  ) : null;
 
   const handleIniciarTravessia = () => {
     // Navega para a Travessia Zero (rota correta: singular)
@@ -39,16 +47,13 @@ export function VisitorSalaContent() {
       >
         <Card className="overflow-hidden bg-card/50 border-gold/20">
           <CardContent className="p-0">
-            {videoUrl ? (
-              <div className="aspect-video">
-                <iframe
-                  src={videoUrl}
-                  className="w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  title="Vídeo de Boas-Vindas"
-                />
-              </div>
+            {videoId ? (
+              <CloudflareStreamPlayer
+                videoId={videoId}
+                title="Vídeo de Boas-Vindas"
+                contextType="sala_visita"
+                requiredPortal="visitante"
+              />
             ) : (
               <div className="aspect-video bg-gradient-to-br from-gold/10 to-background flex items-center justify-center">
                 <div className="text-center">
@@ -59,7 +64,7 @@ export function VisitorSalaContent() {
                     Vídeo de Boas-Vindas
                   </p>
                   <p className="text-xs text-muted-foreground/60 mt-1">
-                    (Configure em Admin → Configurações)
+                    (Configure o ID do Cloudflare Stream em Admin → Configurações)
                   </p>
                 </div>
               </div>
