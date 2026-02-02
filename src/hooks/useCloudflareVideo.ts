@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface VideoTokenResult {
   success: boolean;
-  embedUrl?: string;
+  manifestUrl?: string;
   expiresAt?: string;
   error?: string;
   message?: string;
@@ -19,7 +19,10 @@ export function useCloudflareVideo(options: UseCloudflareVideoOptions = {}) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const getVideoUrl = useCallback(async (videoId: string): Promise<string | null> => {
+  /**
+   * Get signed manifest URL for a Cloudflare Stream video
+   */
+  const getSignedStreamUrl = useCallback(async (videoId: string): Promise<string | null> => {
     if (!videoId) {
       setError('Video ID is required');
       return null;
@@ -50,8 +53,8 @@ export function useCloudflareVideo(options: UseCloudflareVideoOptions = {}) {
         return null;
       }
 
-      if (data?.success && data.embedUrl) {
-        return data.embedUrl;
+      if (data?.success && data.manifestUrl) {
+        return data.manifestUrl;
       }
 
       throw new Error('Invalid response');
@@ -90,6 +93,7 @@ export function useCloudflareVideo(options: UseCloudflareVideoOptions = {}) {
       /cloudflarestream\.com\/([a-f0-9]{32})/i,
       /watch\.cloudflarestream\.com\/([a-f0-9]{32})/i,
       /customer-[^.]+\.cloudflarestream\.com\/([a-f0-9]{32})/i,
+      /videodelivery\.net\/([a-f0-9]{32})/i,
     ];
 
     for (const pattern of cfPatterns) {
@@ -103,7 +107,7 @@ export function useCloudflareVideo(options: UseCloudflareVideoOptions = {}) {
   }, [isCloudflareVideoId]);
 
   return {
-    getVideoUrl,
+    getSignedStreamUrl,
     isCloudflareVideoId,
     extractVideoId,
     isLoading,

@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertCircle, RefreshCw, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
+import Hls from 'hls.js';
 
 interface CloudflareStreamPlayerProps {
   videoId: string;
@@ -11,13 +12,14 @@ interface CloudflareStreamPlayerProps {
   contextId?: string;
   requiredPortal?: string;
   className?: string;
+  autoPlay?: boolean;
   onError?: (error: string) => void;
   onLoad?: () => void;
 }
 
 interface TokenResponse {
   success: boolean;
-  embedUrl: string;
+  manifestUrl: string;
   expiresAt: string;
   videoId: string;
   error?: string;
@@ -33,14 +35,18 @@ export function CloudflareStreamPlayer({
   contextId,
   requiredPortal = 'visitante',
   className = '',
+  autoPlay = false,
   onError,
   onLoad,
 }: CloudflareStreamPlayerProps) {
-  const [embedUrl, setEmbedUrl] = useState<string | null>(null);
+  const [manifestUrl, setManifestUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [accessDenied, setAccessDenied] = useState(false);
   const [expiresAt, setExpiresAt] = useState<Date | null>(null);
+  
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const hlsRef = useRef<Hls | null>(null);
 
   const fetchToken = useCallback(async () => {
     if (!videoId) {
@@ -84,8 +90,8 @@ export function CloudflareStreamPlayer({
         return;
       }
 
-      if (data.success && data.embedUrl) {
-        setEmbedUrl(data.embedUrl);
+      if (data.success && data.manifestUrl) {
+        setManifestUrl(data.manifestUrl);
         setExpiresAt(new Date(data.expiresAt));
         onLoad?.();
       } else {
@@ -106,12 +112,91 @@ export function CloudflareStreamPlayer({
     fetchToken();
   }, [fetchToken]);
 
-  // Auto-refresh token before expiration
+  // Initialize HLS player when manifestUrl is available
+  useEffect(() => {
+    if (!manifestUrl || !videoRef.current) return;
+
+    const video = videoRef.current;
+
+    // Cleanup previous HLS instance
+    if (hlsRef.current) {
+      hlsRef.current.destroy();
+      hlsRef.current = null;
+    }
+
+    if (Hls.isSupported()) {
+      const hls = new Hls({
+        enableWorker: true,
+        lowLatencyMode: false,
+        // Security: prevent manifest caching
+        xhrSetup: (xhr) => {
+          xhr.withCredentials = false;
+        },
+      });
+
+      hls.loadSource(manifestUrl);
+      hls.attachMedia(video);
+
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        console.log('[CloudflareStreamPlayer] Manifest loaded');
+        if (autoPlay) {
+          video.play().catch(e => {
+            console.log('[CloudflareStreamPlayer] Autoplay blocked:', e);
+          });
+        }
+      });
+
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        console.error('[CloudflareStreamPlayer] HLS error:', data);
+        if (data.fatal) {
+          switch (data.type) {
+            case Hls.ErrorTypes.NETWORK_ERROR:
+              // Try to recover network error
+              console.log('[CloudflareStreamPlayer] Network error, attempting recovery...');
+              hls.startLoad();
+              break;
+            case Hls.ErrorTypes.MEDIA_ERROR:
+              console.log('[CloudflareStreamPlayer] Media error, attempting recovery...');
+              hls.recoverMediaError();
+              break;
+            default:
+              setError('Erro ao reproduzir vídeo');
+              onError?.('Fatal HLS error');
+              hls.destroy();
+              break;
+          }
+        }
+      });
+
+      hlsRef.current = hls;
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      // Native HLS support (Safari)
+      video.src = manifestUrl;
+      video.addEventListener('loadedmetadata', () => {
+        if (autoPlay) {
+          video.play().catch(e => {
+            console.log('[CloudflareStreamPlayer] Autoplay blocked:', e);
+          });
+        }
+      });
+    } else {
+      setError('Seu navegador não suporta reprodução de vídeo HLS');
+    }
+
+    return () => {
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+        hlsRef.current = null;
+      }
+    };
+  }, [manifestUrl, autoPlay, onError]);
+
+  // Auto-refresh token before expiration (30 min before)
   useEffect(() => {
     if (!expiresAt) return;
 
-    // Refresh 5 minutes before expiration
-    const refreshTime = expiresAt.getTime() - Date.now() - 5 * 60 * 1000;
+    // Refresh 30 minutes before expiration
+    const refreshTime = expiresAt.getTime() - Date.now() - 30 * 60 * 1000;
     
     if (refreshTime > 0) {
       const timeout = setTimeout(() => {
@@ -122,6 +207,12 @@ export function CloudflareStreamPlayer({
       return () => clearTimeout(timeout);
     }
   }, [expiresAt, fetchToken]);
+
+  // Prevent right-click context menu on video
+  const handleContextMenu = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    return false;
+  }, []);
 
   // Loading state
   if (isLoading) {
@@ -168,20 +259,25 @@ export function CloudflareStreamPlayer({
     );
   }
 
-  // Player - Minimal UI, no download, no share, no related videos
+  // HLS Player with security measures
   return (
-    <div className={`relative aspect-video rounded-xl overflow-hidden bg-black/20 shadow-2xl ${className}`}>
-      <iframe
-        src={embedUrl || ''}
-        title={title || 'Video'}
+    <div 
+      className={`relative aspect-video rounded-xl overflow-hidden bg-black shadow-2xl ${className}`}
+      onContextMenu={handleContextMenu}
+    >
+      <video
+        ref={videoRef}
         className="absolute inset-0 w-full h-full"
-        allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        loading="lazy"
-        referrerPolicy="strict-origin-when-cross-origin"
-        // Security: prevent downloading and sharing
-        sandbox="allow-scripts allow-same-origin"
-      />
+        controls
+        controlsList="nodownload noplaybackrate"
+        disablePictureInPicture
+        playsInline
+        title={title || 'Video'}
+        // Security: prevent easy downloading
+        onContextMenu={handleContextMenu}
+      >
+        Seu navegador não suporta a reprodução de vídeo.
+      </video>
     </div>
   );
 }
