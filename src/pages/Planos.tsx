@@ -73,8 +73,8 @@ export default function Planos() {
               alt="Planos & Travessias"
               className="w-full h-full object-cover object-[center_20%]"
             />
-            {/* Bottom gradient fade to graphite */}
-            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#1a1a1a] to-transparent" />
+            {/* Bottom gradient fade - only at the edge */}
+            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#1a1a1a] to-transparent" />
           </div>
           
           {/* Content below image */}
