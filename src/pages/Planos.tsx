@@ -63,18 +63,18 @@ export default function Planos() {
 
   return (
     <AppLayout>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-[#1a1a1a]">
         {/* Hero Banner with Image */}
         <section className="relative">
           {/* Banner Image */}
-          <div className="relative h-52 sm:h-64 lg:h-72 overflow-hidden bg-background">
+          <div className="relative h-48 sm:h-56 lg:h-64 overflow-hidden">
             <img 
               src={planosBanner} 
               alt="Planos & Travessias"
-              className="w-full h-full object-contain"
+              className="w-full h-full object-cover object-[center_20%]"
             />
-            {/* Bottom gradient fade */}
-            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent" />
+            {/* Bottom gradient fade to graphite */}
+            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#1a1a1a] to-transparent" />
           </div>
           
           {/* Content below image */}
