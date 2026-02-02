@@ -14,6 +14,11 @@ export default defineConfig(({ mode }) => ({
     react(),
     mode === "development" && componentTagger(),
     VitePWA({
+      // Importante: no construtor/preview (dev), não queremos Service Worker
+      // porque ele pode “prender” o app em versões antigas por cache.
+      devOptions: {
+        enabled: false,
+      },
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "logo-icon.png"],
       manifest: {
