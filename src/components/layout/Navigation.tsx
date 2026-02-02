@@ -51,9 +51,15 @@ export function Navigation() {
     navigate('/');
   };
 
-  // Build minimal menu items
+  // Build menu items with more navigation options
   const buildMenuItems = (): MenuItem[] => {
     const items: MenuItem[] = [
+      {
+        path: '/jornada',
+        label: 'Início',
+        icon: Home,
+        minPortal: 'visitante',
+      },
       {
         path: '/oracula',
         label: 'Formação',
