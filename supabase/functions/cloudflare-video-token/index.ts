@@ -12,82 +12,66 @@ const PORTAL_LEVELS: Record<string, number> = {
   'mentorada': 2,
   'aluna_formacao': 3,
   'assinante': 4,
-  'pre_iniciada': 2, // Legacy
-  'iniciada': 5, // Legacy
+  'pre_iniciada': 2,
+  'iniciada': 5,
   'oracula': 5,
   'admin': 6,
 };
 
-// Generate signed token for Cloudflare Stream
+// Base64URL encode helper
+function base64UrlEncode(data: string): string {
+  return btoa(data)
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '');
+}
+
+// Generate signed token for Cloudflare Stream using HS256
 async function generateSignedToken(
   videoId: string,
   signingKey: string,
-  expiresInSeconds: number = 3600
+  expiresInSeconds: number = 21600 // 6 hours default
 ): Promise<string> {
-  // Cloudflare Stream uses JWT for signed URLs
   const header = {
-    alg: "RS256",
-    kid: signingKey.split('.')[0], // Key ID is before the dot
+    alg: "HS256",
+    typ: "JWT",
+    kid: "default"
   };
 
   const now = Math.floor(Date.now() / 1000);
   const payload = {
     sub: videoId,
-    kid: signingKey.split('.')[0],
+    kid: "default",
     exp: now + expiresInSeconds,
     nbf: now - 60, // Allow 60 seconds clock skew
-    accessRules: [
-      {
-        type: "any",
-        action: "allow",
-      },
-    ],
   };
 
-  // For Cloudflare Stream, we use the signing key directly
-  // The key format is: keyId.base64EncodedPrivateKey
-  const keyParts = signingKey.split('.');
-  if (keyParts.length !== 2) {
-    throw new Error("Invalid signing key format");
-  }
-
-  const keyId = keyParts[0];
-  const privateKeyPem = atob(keyParts[1]);
-  
-  // Encode header and payload
-  const encodedHeader = btoa(JSON.stringify(header)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
-  const encodedPayload = btoa(JSON.stringify(payload)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
-  
+  const encodedHeader = base64UrlEncode(JSON.stringify(header));
+  const encodedPayload = base64UrlEncode(JSON.stringify(payload));
   const signingInput = `${encodedHeader}.${encodedPayload}`;
-  
-  // Import the private key
-  const pemContents = privateKeyPem
-    .replace('-----BEGIN RSA PRIVATE KEY-----', '')
-    .replace('-----END RSA PRIVATE KEY-----', '')
-    .replace(/\s/g, '');
-  
-  const binaryKey = Uint8Array.from(atob(pemContents), c => c.charCodeAt(0));
+
+  // Create HMAC signature using HS256
+  const encoder = new TextEncoder();
+  const keyData = encoder.encode(signingKey);
   
   const cryptoKey = await crypto.subtle.importKey(
-    'pkcs8',
-    binaryKey,
-    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+    'raw',
+    keyData,
+    { name: 'HMAC', hash: 'SHA-256' },
     false,
     ['sign']
   );
-  
-  // Sign the token
+
   const signature = await crypto.subtle.sign(
-    'RSASSA-PKCS1-v1_5',
+    'HMAC',
     cryptoKey,
-    new TextEncoder().encode(signingInput)
+    encoder.encode(signingInput)
   );
-  
-  const encodedSignature = btoa(String.fromCharCode(...new Uint8Array(signature)))
-    .replace(/=/g, '')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_');
-  
+
+  const encodedSignature = base64UrlEncode(
+    String.fromCharCode(...new Uint8Array(signature))
+  );
+
   return `${signingInput}.${encodedSignature}`;
 }
 
@@ -107,14 +91,10 @@ serve(async (req) => {
   }
 
   try {
-    const CLOUDFLARE_ACCOUNT_ID = Deno.env.get('CLOUDFLARE_ACCOUNT_ID');
     const CLOUDFLARE_STREAM_SIGNING_KEY = Deno.env.get('CLOUDFLARE_STREAM_SIGNING_KEY');
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
-    if (!CLOUDFLARE_ACCOUNT_ID) {
-      throw new Error('CLOUDFLARE_ACCOUNT_ID is not configured');
-    }
     if (!CLOUDFLARE_STREAM_SIGNING_KEY) {
       throw new Error('CLOUDFLARE_STREAM_SIGNING_KEY is not configured');
     }
@@ -193,13 +173,13 @@ serve(async (req) => {
       );
     }
 
-    // Generate signed token (expires in 1 hour)
-    const expiresIn = 3600;
+    // Generate signed token (expires in 6 hours)
+    const expiresIn = 21600; // 6 hours in seconds
     const signedToken = await generateSignedToken(videoId, CLOUDFLARE_STREAM_SIGNING_KEY, expiresIn);
     const tokenHash = await hashToken(signedToken);
 
-    // Build the embed URL with signed token
-    const embedUrl = `https://customer-${CLOUDFLARE_ACCOUNT_ID}.cloudflarestream.com/${videoId}/iframe?signed=${signedToken}`;
+    // Build the manifest URL with signed token (HLS format)
+    const manifestUrl = `https://videodelivery.net/${videoId}/manifest/video.m3u8?token=${signedToken}`;
 
     // Log successful access attempt
     await supabase.from('video_playback_logs').insert({
@@ -220,7 +200,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        embedUrl,
+        manifestUrl,
         expiresAt: new Date(Date.now() + expiresIn * 1000).toISOString(),
         videoId,
       }),
