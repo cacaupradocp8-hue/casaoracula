@@ -71,7 +71,7 @@ export default function Planos() {
             <img 
               src={planosBanner} 
               alt="Planos & Travessias"
-              className="w-full h-full object-cover object-[center_20%]"
+              className="w-full h-full object-cover object-top"
             />
             {/* Bottom gradient fade - only at the edge */}
             <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#1a1a1a] to-transparent" />
