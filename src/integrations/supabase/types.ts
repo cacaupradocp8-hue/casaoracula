@@ -1777,6 +1777,7 @@ export type Database = {
           agente_id: string | null
           ativo: boolean
           block_type: Database["public"]["Enums"]["content_block_type"]
+          cloudflare_video_id: string | null
           content: Json
           context_id: string
           context_type: Database["public"]["Enums"]["block_context_type"]
@@ -1792,6 +1793,7 @@ export type Database = {
           agente_id?: string | null
           ativo?: boolean
           block_type: Database["public"]["Enums"]["content_block_type"]
+          cloudflare_video_id?: string | null
           content?: Json
           context_id: string
           context_type: Database["public"]["Enums"]["block_context_type"]
@@ -1807,6 +1809,7 @@ export type Database = {
           agente_id?: string | null
           ativo?: boolean
           block_type?: Database["public"]["Enums"]["content_block_type"]
+          cloudflare_video_id?: string | null
           content?: Json
           context_id?: string
           context_type?: Database["public"]["Enums"]["block_context_type"]
@@ -7945,6 +7948,54 @@ export type Database = {
         }
         Relationships: []
       }
+      video_playback_logs: {
+        Row: {
+          action: string
+          context_id: string | null
+          context_type: string
+          created_at: string
+          error_message: string | null
+          id: string
+          ip_address: string | null
+          portal_level: string
+          success: boolean
+          token_used: string | null
+          user_agent: string | null
+          user_id: string | null
+          video_id: string
+        }
+        Insert: {
+          action?: string
+          context_id?: string | null
+          context_type: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          ip_address?: string | null
+          portal_level: string
+          success?: boolean
+          token_used?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          video_id: string
+        }
+        Update: {
+          action?: string
+          context_id?: string | null
+          context_type?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          ip_address?: string | null
+          portal_level?: string
+          success?: boolean
+          token_used?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          video_id?: string
+        }
+        Relationships: []
+      }
       webhook_logs: {
         Row: {
           created_at: string
@@ -8057,6 +8108,7 @@ export type Database = {
           agente_id: string | null
           ativo: boolean
           block_type: Database["public"]["Enums"]["content_block_type"]
+          cloudflare_video_id: string | null
           content: Json
           context_id: string
           context_type: Database["public"]["Enums"]["block_context_type"]

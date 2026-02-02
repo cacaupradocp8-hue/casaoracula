@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -6,11 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { ArrowLeft, ArrowRight, Check, Play, FileText, Download, Loader2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Play, FileText, Download, Loader2, Lock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { DiarioBordoAula } from '@/components/shared/DiarioBordoAula';
 import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
 import { getPublicAudioUrl } from '@/lib/audioUtils';
+import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
+import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
 
 interface Aula {
   id: string;
@@ -46,6 +48,7 @@ export default function AulaPage() {
   const [isMarking, setIsMarking] = useState(false);
   const [nextAula, setNextAula] = useState<Aula | null>(null);
   const [prevAula, setPrevAula] = useState<Aula | null>(null);
+  const { extractVideoId, isCloudflareVideoId } = useCloudflareVideo();
 
   useEffect(() => {
     if (id) {
@@ -224,7 +227,14 @@ export default function AulaPage() {
     );
   }
 
-  const embedUrl = getEmbedUrl(aula.video_url);
+  // Extract Cloudflare video ID
+  const videoId = useMemo(() => {
+    if (!aula.video_url) return null;
+    if (isCloudflareVideoId(aula.video_url)) {
+      return aula.video_url;
+    }
+    return extractVideoId(aula.video_url);
+  }, [aula.video_url, extractVideoId, isCloudflareVideoId]);
 
   return (
     <AppLayout>
@@ -264,19 +274,30 @@ export default function AulaPage() {
           <p className="text-muted-foreground">{aula.descricao_curta}</p>
         </div>
 
-        {/* Video */}
-        {embedUrl && (
-          <Card className="mb-8 overflow-hidden">
-            <div className="aspect-video">
-              <iframe
-                src={embedUrl}
+        {/* Video - Cloudflare Stream only */}
+        {aula.video_url && (
+          videoId ? (
+            <div className="mb-8">
+              <CloudflareStreamPlayer
+                videoId={videoId}
                 title={aula.titulo}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
+                contextType="aula"
+                contextId={aula.id}
+                requiredPortal={aula.portal_minimo}
               />
             </div>
-          </Card>
+          ) : (
+            <Card className="mb-8 overflow-hidden">
+              <div className="aspect-video flex items-center justify-center bg-muted/30">
+                <div className="text-center p-6">
+                  <Lock className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+                  <p className="text-muted-foreground text-sm">
+                    Vídeo não disponível no Cloudflare Stream
+                  </p>
+                </div>
+              </div>
+            </Card>
+          )
         )}
 
         {/* Audio */}

@@ -1,90 +1,95 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ContentBlock, VideoContent } from '@/types/modular';
 import { Button } from '@/components/ui/button';
-import { AlertCircle, ExternalLink, Copy, Check } from 'lucide-react';
-import { toast } from 'sonner';
+import { AlertCircle, Lock, RefreshCw } from 'lucide-react';
+import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
+import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
 
 interface VideoBlockProps {
   block: ContentBlock;
 }
 
-function getEmbedUrl(url: string, provider?: string): string {
-  // YouTube - multiple formats
-  const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([^&\s?]+)/);
-  if (youtubeMatch) {
-    return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
-  }
-  
-  // Vimeo - multiple formats
-  const vimeoMatch = url.match(/(?:vimeo\.com\/|player\.vimeo\.com\/video\/)(\d+)/);
-  if (vimeoMatch) {
-    return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
-  }
-
-  // If already an embed URL or custom, return as-is
-  return url;
-}
-
-function isEmbeddable(url: string): boolean {
-  return url.includes('youtube') || 
-         url.includes('youtu.be') || 
-         url.includes('vimeo') ||
-         url.includes('embed');
-}
-
+/**
+ * VideoBlock - Cloudflare Stream exclusive video player
+ * 
+ * Security features:
+ * - Videos are private by default
+ * - Signed tokens with expiration
+ * - User-specific access based on portal level
+ * - Playback logging for security auditing
+ * - No download, share, or related videos
+ */
 export function VideoBlock({ block }: VideoBlockProps) {
   const content = block.content as VideoContent;
   const [hasError, setHasError] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const { extractVideoId, isCloudflareVideoId } = useCloudflareVideo();
   
   if (!content.url) {
     return null;
   }
 
-  const embedUrl = getEmbedUrl(content.url, content.provider);
-  const isCustom = content.provider === 'custom' || !isEmbeddable(content.url);
-
-  const handleCopyUrl = async () => {
-    try {
-      await navigator.clipboard.writeText(content.url);
-      setCopied(true);
-      toast.success('URL copiada!');
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      toast.error('Não foi possível copiar');
+  // Extract Cloudflare video ID from URL or use directly if it's already an ID
+  const videoId = useMemo(() => {
+    // First check if we have a cloudflare_video_id in the block
+    if ((block as any).cloudflare_video_id) {
+      return (block as any).cloudflare_video_id;
     }
-  };
+    
+    // Check if the URL is a Cloudflare video ID
+    if (isCloudflareVideoId(content.url)) {
+      return content.url;
+    }
+    
+    // Try to extract from URL
+    return extractVideoId(content.url);
+  }, [content.url, block, extractVideoId, isCloudflareVideoId]);
 
-  const handleOpenExternal = () => {
-    window.open(content.url, '_blank', 'noopener,noreferrer');
-  };
+  // If we can't get a Cloudflare video ID, show unsupported message
+  // This enforces Cloudflare Stream as the exclusive video provider
+  if (!videoId) {
+    return (
+      <div className="animate-fade-in">
+        {block.titulo && (
+          <h3 className="text-xl font-semibold text-foreground mb-4 text-center">
+            {block.titulo}
+          </h3>
+        )}
+        <div className="relative aspect-video rounded-xl overflow-hidden bg-muted/30 border border-border flex flex-col items-center justify-center p-6">
+          <Lock className="w-12 h-12 text-muted-foreground mb-4" />
+          <p className="text-muted-foreground text-center mb-2">
+            Formato de vídeo não suportado
+          </p>
+          <p className="text-xs text-muted-foreground/60 text-center">
+            Este vídeo precisa ser hospedado no Cloudflare Stream.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // Error fallback UI
   if (hasError) {
     return (
       <div className="animate-fade-in">
         {block.titulo && (
-          <h3 className="text-xl font-semibold text-foreground mb-4 text-center">{block.titulo}</h3>
+          <h3 className="text-xl font-semibold text-foreground mb-4 text-center">
+            {block.titulo}
+          </h3>
         )}
         <div className="relative aspect-video rounded-xl overflow-hidden bg-muted/30 border border-border flex flex-col items-center justify-center p-6">
           <AlertCircle className="w-12 h-12 text-muted-foreground mb-4" />
           <p className="text-muted-foreground text-center mb-4">
             Não foi possível carregar o vídeo
           </p>
-          <div className="flex gap-3 flex-wrap justify-center">
-            <Button variant="outline" size="sm" onClick={handleOpenExternal}>
-              <ExternalLink className="w-4 h-4 mr-2" />
-              Abrir em nova aba
-            </Button>
-            <Button variant="ghost" size="sm" onClick={handleCopyUrl}>
-              {copied ? (
-                <Check className="w-4 h-4 mr-2" />
-              ) : (
-                <Copy className="w-4 h-4 mr-2" />
-              )}
-              {copied ? 'Copiado!' : 'Copiar URL'}
-            </Button>
-          </div>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setHasError(false)}
+            className="gap-2"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Tentar novamente
+          </Button>
         </div>
       </div>
     );
@@ -93,38 +98,27 @@ export function VideoBlock({ block }: VideoBlockProps) {
   return (
     <div className="animate-fade-in">
       {block.titulo && (
-        <h3 className="text-xl font-semibold text-foreground mb-4 text-center">{block.titulo}</h3>
+        <h3 className="text-xl font-semibold text-foreground mb-4 text-center">
+          {block.titulo}
+        </h3>
       )}
-      <div className="relative aspect-video rounded-xl overflow-hidden bg-black/20 shadow-2xl">
-        {isCustom ? (
-          <video
-            src={content.url}
-            controls
-            autoPlay={content.autoplay}
-            loop={content.loop}
-            muted={content.muted}
-            poster={content.thumbnail}
-            className="w-full h-full object-contain"
-            onError={() => setHasError(true)}
-          >
-            Seu navegador não suporta o elemento de vídeo.
-          </video>
-        ) : (
-          <iframe
-            src={embedUrl}
-            title={block.titulo || 'Video'}
-            frameBorder="0"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-            referrerPolicy="strict-origin-when-cross-origin"
-            onError={() => setHasError(true)}
-            className="absolute inset-0 w-full h-full"
-          />
-        )}
-      </div>
+      
+      <CloudflareStreamPlayer
+        videoId={videoId}
+        title={block.titulo || 'Video'}
+        contextType="content_block"
+        contextId={block.id}
+        requiredPortal={block.portalMinimo}
+        onError={(error) => {
+          console.error('[VideoBlock] Player error:', error);
+          setHasError(true);
+        }}
+      />
+      
       {block.descricao && (
-        <p className="mt-3 text-center text-sm text-muted-foreground">{block.descricao}</p>
+        <p className="mt-3 text-center text-sm text-muted-foreground">
+          {block.descricao}
+        </p>
       )}
     </div>
   );
