@@ -67,14 +67,14 @@ export default function Planos() {
         {/* Hero Banner with Image */}
         <section className="relative">
           {/* Banner Image */}
-          <div className="relative h-40 sm:h-52 lg:h-64 overflow-hidden">
+          <div className="relative h-52 sm:h-64 lg:h-72 overflow-hidden bg-background">
             <img 
               src={planosBanner} 
               alt="Planos & Travessias"
-              className="w-full h-full object-cover object-top"
+              className="w-full h-full object-contain"
             />
             {/* Bottom gradient fade */}
-            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent" />
           </div>
           
           {/* Content below image */}
