@@ -282,47 +282,13 @@ export default function Auth() {
           {/* Manifesto */}
           <div className="glass rounded-2xl p-6 mb-6 border border-gold/20 text-center space-y-4">
             <p className="text-foreground/80 text-sm leading-relaxed">
-              <strong className="text-gold">Você não está comprando um curso.</strong><br />
-              Está atravessando um limiar.
+              <strong className="text-gold">Antes de conduzir o outro,</strong><br />
+              aprenda a sustentar o campo.
             </p>
             
-            <p className="text-foreground/60 text-xs leading-relaxed">
-              A Casa Orácula é um território de formação simbólica<br />
-              para mulheres que já sentem —<br />
-              mas sabem que sentir sem estrutura não sustenta processos.
-            </p>
-
-            <p className="text-foreground/50 text-xs italic">
-              Aqui, nada é improviso.<br />
-              Cada ferramenta tem ética.<br />
-              Cada travessia tem limite.<br />
-              Cada portal pede presença.
-            </p>
-
-            <div className="pt-3 border-t border-gold/10 space-y-2">
-              <div className="text-left">
-                <p className="text-gold/70 text-xs font-medium mb-1">🜂 O que existe aqui</p>
-                <ul className="text-foreground/50 text-xs space-y-0.5 pl-4">
-                  <li>• Portais de formação simbólica</li>
-                  <li>• Ferramentas do Método Orácula</li>
-                  <li>• Biblioteca das Travessias</li>
-                  <li>• Agentes de leitura e supervisão</li>
-                  <li>• Um campo vivo — não um acervo morto</li>
-                </ul>
-              </div>
-
-              <div className="text-left">
-                <p className="text-gold/70 text-xs font-medium mb-1">🜃 O que não existe</p>
-                <ul className="text-foreground/50 text-xs space-y-0.5 pl-4">
-                  <li>• Fórmulas rápidas</li>
-                  <li>• Promessas de cura</li>
-                  <li>• Conteúdo descartável</li>
-                </ul>
-              </div>
-            </div>
-
-            <p className="text-foreground/40 text-xs italic pt-2">
-              🜄 Se você entra, entra para sustentar.
+            <p className="text-foreground/60 text-xs leading-relaxed italic">
+              Aqui, não se aprende a interpretar.<br />
+              Aprende-se a sustentar.
             </p>
           </div>
 
