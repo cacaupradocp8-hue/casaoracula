@@ -2,6 +2,7 @@ import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ServiceWorkerUpdateToast } from "@/components/pwa/ServiceWorkerUpdateToast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useParams, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
@@ -1473,6 +1474,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <ServiceWorkerUpdateToast />
       <BrowserRouter>
         <AuthProvider>
           <AdminPreviewProvider>
