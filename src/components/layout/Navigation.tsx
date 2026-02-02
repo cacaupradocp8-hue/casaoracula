@@ -201,7 +201,21 @@ export function Navigation() {
                     <div className="px-2 py-1.5">
                       <p className="text-sm font-medium">{user.name}</p>
                       <p className="text-xs text-muted-foreground">{user.email}</p>
+                      <p className="text-xs text-gold mt-1">Portal: {user.portal}</p>
                     </div>
+                    <DropdownMenuSeparator />
+                    {/* Link direto para Jornada */}
+                    <DropdownMenuItem onClick={() => navigate('/jornada')}>
+                      <Home className="w-4 h-4 mr-2" />
+                      Minha Jornada
+                    </DropdownMenuItem>
+                    {/* Admin link - always visible for admins */}
+                    {isAdmin && (
+                      <DropdownMenuItem onClick={() => navigate('/admin')}>
+                        <Settings className="w-4 h-4 mr-2" />
+                        Painel Admin
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout} className="text-destructive">
                       <LogOut className="w-4 h-4 mr-2" />
