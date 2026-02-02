@@ -1474,7 +1474,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <ServiceWorkerUpdateToast />
+      {import.meta.env.PROD && <ServiceWorkerUpdateToast />}
       <BrowserRouter>
         <AuthProvider>
           <AdminPreviewProvider>
