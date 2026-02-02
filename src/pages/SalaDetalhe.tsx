@@ -231,8 +231,15 @@ export default function SalaDetalhe() {
           className="mb-8"
         />
 
-        {/* Ferramentas Section */}
-        {ferramentas.length > 0 && (
+        {/* Visitor Sala Content - FIRST for visitor sala (video de boas-vindas) */}
+        {sala && isSalaVisitante(sala.nivel_minimo) && (
+          <div className="mb-8">
+            <VisitorSalaContent />
+          </div>
+        )}
+
+        {/* Ferramentas Section - NOT shown for visitor sala */}
+        {ferramentas.length > 0 && !isSalaVisitante(sala.nivel_minimo) && (
           <div className="mb-8">
             <h3 className="text-lg font-semibold text-gold mb-4 flex items-center gap-2">
               <Wrench className="w-5 h-5" />
@@ -268,8 +275,8 @@ export default function SalaDetalhe() {
           </div>
         )}
 
-        {/* Cursos Section */}
-        {cursos.length > 0 && (
+        {/* Cursos Section - NOT shown for visitor sala */}
+        {cursos.length > 0 && !isSalaVisitante(sala.nivel_minimo) && (
           <div className="mb-8">
             <h3 className="text-lg font-semibold text-gold mb-4 flex items-center gap-2">
               <GraduationCap className="w-5 h-5" />
@@ -325,8 +332,8 @@ export default function SalaDetalhe() {
           </div>
         )}
 
-        {/* Quizzes Section */}
-        {quizzes.length > 0 && (
+        {/* Quizzes Section - NOT shown for visitor sala */}
+        {quizzes.length > 0 && !isSalaVisitante(sala.nivel_minimo) && (
           <div className="mb-8">
             <h3 className="text-lg font-semibold text-gold mb-4 flex items-center gap-2">
               <ClipboardList className="w-5 h-5" />
@@ -428,18 +435,11 @@ export default function SalaDetalhe() {
           </>
         )}
 
-        {/* Empty state for salas without content */}
-        {sala && !isSalaFormacao(sala.nivel_minimo) && ferramentas.length === 0 && quizzes.length === 0 && cursos.length === 0 && (
+        {/* Empty state for salas without content (excluding visitor sala) */}
+        {sala && !isSalaFormacao(sala.nivel_minimo) && !isSalaVisitante(sala.nivel_minimo) && ferramentas.length === 0 && quizzes.length === 0 && cursos.length === 0 && (
           <div className="text-center py-12 text-muted-foreground">
             <Wrench className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>Nenhuma ferramenta disponível nesta sala ainda.</p>
-          </div>
-        )}
-
-        {/* Visitor Sala Content - Special blocks for visitors */}
-        {sala && isSalaVisitante(sala.nivel_minimo) && (
-          <div className="mt-8">
-            <VisitorSalaContent />
           </div>
         )}
 
