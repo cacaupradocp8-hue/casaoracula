@@ -164,7 +164,7 @@ export function VisitorSalaContent() {
         className="text-center px-4"
       >
         <h2 className="font-display text-xl text-foreground mb-3">
-          {getCopyByKey('sala_visita_titulo', 'Bem-vinda à Sala de Visita')}
+          {getCopyByKey('sala_visita_titulo', 'Sala de Visita')}
         </h2>
         <p className="text-muted-foreground max-w-md mx-auto leading-relaxed">
           {getCopyByKey('sala_visita_texto', 
