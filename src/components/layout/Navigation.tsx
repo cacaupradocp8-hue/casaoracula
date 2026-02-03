@@ -23,6 +23,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -203,39 +204,106 @@ export function Navigation() {
                       <User className="w-5 h-5" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuContent align="end" className="w-64 max-h-[80vh] overflow-y-auto">
                     <div className="px-2 py-1.5">
                       <p className="text-sm font-medium">{user.name}</p>
                       <p className="text-xs text-muted-foreground">{user.email}</p>
                       <p className="text-xs text-gold mt-1">Portal: {user.portal}</p>
                     </div>
+                    
                     <DropdownMenuSeparator />
-                    {/* Link direto para Jornada */}
+                    <DropdownMenuLabel className="text-xs text-muted-foreground">Navegação Principal</DropdownMenuLabel>
+                    
                     <DropdownMenuItem onClick={() => navigate('/jornada')}>
                       <Home className="w-4 h-4 mr-2" />
                       Minha Jornada
                     </DropdownMenuItem>
-                    {/* Formação */}
                     <DropdownMenuItem onClick={() => navigate('/oracula')}>
                       <Star className="w-4 h-4 mr-2" />
                       Formação Orácula
                     </DropdownMenuItem>
-                    {/* Salas */}
                     <DropdownMenuItem onClick={() => navigate('/salas')}>
                       <Home className="w-4 h-4 mr-2" />
                       Salas
                     </DropdownMenuItem>
-                    {/* Ferramentas do Método */}
+                    
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel className="text-xs text-muted-foreground">Ferramentas do Método</DropdownMenuLabel>
+                    
                     <DropdownMenuItem onClick={() => navigate('/ferramentas-metodo')}>
                       <Settings className="w-4 h-4 mr-2" />
-                      Ferramentas do Método
+                      Hub de Ferramentas
                     </DropdownMenuItem>
-                    {/* Casa / Sustentação */}
+                    <DropdownMenuItem onClick={() => navigate('/labirinto')}>
+                      <Star className="w-4 h-4 mr-2" />
+                      Labirinto das 39 Portas
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/torre-viva')}>
+                      <Star className="w-4 h-4 mr-2" />
+                      Torre Viva™
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/big5-oracular')}>
+                      <Star className="w-4 h-4 mr-2" />
+                      Big Five Oracular
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/escala-maia')}>
+                      <Star className="w-4 h-4 mr-2" />
+                      Escala MAIA
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel className="text-xs text-muted-foreground">Recursos Clínicos</DropdownMenuLabel>
+                    
+                    <DropdownMenuItem onClick={() => navigate('/narroterapia')}>
+                      <Star className="w-4 h-4 mr-2" />
+                      Narroterapia Oracular™
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/radiestesia')}>
+                      <Star className="w-4 h-4 mr-2" />
+                      Radiestesia
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/atlas-arquetipos')}>
+                      <Star className="w-4 h-4 mr-2" />
+                      Atlas de Arquétipos
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/session-room')}>
+                      <Star className="w-4 h-4 mr-2" />
+                      Sala de Sessão
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel className="text-xs text-muted-foreground">Biblioteca & Oráculos</DropdownMenuLabel>
+                    
+                    <DropdownMenuItem onClick={() => navigate('/minha-biblioteca')}>
+                      <Star className="w-4 h-4 mr-2" />
+                      Minha Biblioteca
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/biblioteca-travessias')}>
+                      <Star className="w-4 h-4 mr-2" />
+                      Biblioteca das Travessias
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/oraculos')}>
+                      <Star className="w-4 h-4 mr-2" />
+                      Oráculos
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/clube-do-livro')}>
+                      <Star className="w-4 h-4 mr-2" />
+                      Clube do Livro
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel className="text-xs text-muted-foreground">Sustentação</DropdownMenuLabel>
+                    
                     <DropdownMenuItem onClick={() => navigate('/casa')}>
                       <Home className="w-4 h-4 mr-2" />
                       Casa / Sustentação
                     </DropdownMenuItem>
-                    {/* Admin link - always visible for admins */}
+                    <DropdownMenuItem onClick={() => navigate('/jardim-da-psique')}>
+                      <Star className="w-4 h-4 mr-2" />
+                      Jardim da Psique
+                    </DropdownMenuItem>
+                    
+                    {/* Admin link */}
                     {isAdmin && (
                       <>
                         <DropdownMenuSeparator />
@@ -245,6 +313,7 @@ export function Navigation() {
                         </DropdownMenuItem>
                       </>
                     )}
+                    
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout} className="text-destructive">
                       <LogOut className="w-4 h-4 mr-2" />
