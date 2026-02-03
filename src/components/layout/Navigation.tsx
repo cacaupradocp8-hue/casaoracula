@@ -174,8 +174,8 @@ export function Navigation() {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
+          <div className="container mx-auto px-4">
+          	<div className="flex items-center justify-between h-20 md:h-24">
             <Link to={user ? '/jornada' : '/'}>
               <Logo size="xl" variant="horizontal" />
             </Link>
@@ -349,7 +349,7 @@ export function Navigation() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden absolute top-16 left-0 right-0 bg-background border-b border-border animate-slide-up">
+          <div className="md:hidden absolute top-20 md:top-24 left-0 right-0 bg-background border-b border-border animate-slide-up">
             <div className="container mx-auto px-4 py-4">
               <div className="flex flex-col gap-2">
                 {menuItems.map(item => renderMobileItem(item))}
