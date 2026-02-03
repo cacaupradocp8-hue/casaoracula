@@ -198,7 +198,7 @@ export default function PortalOraculaPage() {
                         <Button 
                           variant="outline" 
                           className="w-full"
-                          onClick={() => navigate(`/portais/${portal.id}`)}
+                          onClick={() => navigate(`/portal/${portal.id}`)}
                         >
                           Continuar Jornada
                           <ArrowRight className="w-4 h-4 ml-2" />

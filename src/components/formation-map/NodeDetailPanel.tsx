@@ -76,7 +76,7 @@ export function NodeDetailPanel({ node, onClose }: NodeDetailPanelProps) {
         navigate(`/travessia/${node.reference_id}`);
         break;
       case 'portal':
-        navigate(`/portais/${node.reference_id}`);
+        navigate(`/portal/${node.reference_id}`);
         break;
     }
   };
