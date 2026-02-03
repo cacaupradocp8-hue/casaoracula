@@ -35,7 +35,8 @@ export const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
       sm: 'h-10 md:h-12',
       md: 'h-12 md:h-16',
       lg: 'h-16 md:h-24',
-      xl: 'h-16 md:h-20'
+      // Header do portal: precisa ficar legível no mobile também
+      xl: 'h-20 md:h-24'
     };
     const verticalSizes = {
       sm: 'h-20',
