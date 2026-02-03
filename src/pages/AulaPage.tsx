@@ -50,6 +50,15 @@ export default function AulaPage() {
   const [prevAula, setPrevAula] = useState<Aula | null>(null);
   const { extractVideoId, isCloudflareVideoId } = useCloudflareVideo();
 
+  // Extract Cloudflare video ID - must be before any conditional returns
+  const videoId = useMemo(() => {
+    if (!aula?.video_url) return null;
+    if (isCloudflareVideoId(aula.video_url)) {
+      return aula.video_url;
+    }
+    return extractVideoId(aula.video_url);
+  }, [aula?.video_url, extractVideoId, isCloudflareVideoId]);
+
   useEffect(() => {
     if (id) {
       fetchAula();
@@ -227,14 +236,6 @@ export default function AulaPage() {
     );
   }
 
-  // Extract Cloudflare video ID
-  const videoId = useMemo(() => {
-    if (!aula.video_url) return null;
-    if (isCloudflareVideoId(aula.video_url)) {
-      return aula.video_url;
-    }
-    return extractVideoId(aula.video_url);
-  }, [aula.video_url, extractVideoId, isCloudflareVideoId]);
 
   return (
     <AppLayout>
