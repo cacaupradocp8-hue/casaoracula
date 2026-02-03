@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import logoFull from '@/assets/logo-casa-oracula.png';
 import logoIcon from '@/assets/logo-icon.png';
 import logoText from '@/assets/logo-text.png';
-import logoHorizontal from '@/assets/logo-horizontal.png';
+import logoHorizontal from '@/assets/logo-horizontal-cropped.png';
 import logoVertical from '@/assets/logo-vertical.png';
 
 interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
