@@ -1,17 +1,14 @@
 import { useState, useEffect } from 'react';
-import { AppLayout } from '@/components/layout/AppLayout';
-import { SectionHeader } from '@/components/shared/SectionHeader';
+import { FerramentaPageTemplate } from '@/components/shared/FerramentaPageTemplate';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { ArrowLeft, Save, Loader2, Users, Leaf } from 'lucide-react';
+import { Save, Loader2, Users } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { EthicalNotice } from '@/components/shared/EthicalNotice';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { SalvarJardimModal } from '@/components/shared/SalvarJardimModal';
 import {
   Select,
@@ -73,7 +70,6 @@ export default function Constelacao() {
     });
     setSaving(false);
     
-    // Se for uso pessoal (sem cliente), oferecer salvar no Jardim
     if (isUsoPessoal) {
       setShowJardimModal(true);
     } else if (clienteId) {
@@ -87,138 +83,124 @@ export default function Constelacao() {
   };
 
   return (
-    <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20">
-        <div className="mb-6">
-          <Link to="/ferramentas" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="w-4 h-4" />
-            Voltar às Ferramentas
-          </Link>
-        </div>
+    <FerramentaPageTemplate
+      title="Constelação Sistêmica"
+      subtitle="Registro de movimentos e padrões observados em constelações"
+      icon={<Users className="w-5 h-5" />}
+      categoriaBadge="padrao"
+      toolName="Constelação Sistêmica"
+      clienteInfo={clienteInfo}
+      textoQuandoUsar="Esta ferramenta é chamada quando há emaranhamentos sistêmicos que não se resolvem pela via racional. A constelação revela dinâmicas ocultas de pertencimento, exclusão e lealdade que operam no campo familiar ou organizacional."
+      textoOQueSustenta="Sustenta a percepção das ordens do amor e dos movimentos da alma. Não oferece solução ou cura — oferece reconhecimento do que está, e espaço para que o sistema encontre seu próprio movimento de reequilíbrio."
+      textoComoAtravessar="Pode ser usada como registro pós-sessão para documentar movimentos percebidos, ou como ferramenta de integração após vivências constelares. O registro ajuda a ancoragem do trabalho realizado."
+    >
+      {/* Tipo de Constelação */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Tipo de Constelação</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Select value={tipoConstelacao} onValueChange={setTipoConstelacao}>
+            <SelectTrigger>
+              <SelectValue placeholder="Selecione o tipo..." />
+            </SelectTrigger>
+            <SelectContent>
+              {TIPOS_CONSTELACAO.map((t) => (
+                <SelectItem key={t} value={t}>{t}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </CardContent>
+      </Card>
 
-        <SectionHeader
-          title="Constelação Sistêmica"
-          subtitle="Registro de movimentos e padrões observados em constelações"
-          icon={<Users className="w-5 h-5" />}
-          className="mb-8"
-        />
+      {/* Tema */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Tema / Questão Central</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Input
+            value={tema}
+            onChange={(e) => setTema(e.target.value)}
+            placeholder="Qual foi a questão trabalhada..."
+          />
+        </CardContent>
+      </Card>
 
-        {clienteInfo && (
-          <Card className="mb-6 border-gold/30 bg-gold/5">
-            <CardContent className="py-4">
-              <p className="text-sm">
-                Registrando para: <strong>{clienteInfo.nome}</strong>
-              </p>
-            </CardContent>
-          </Card>
-        )}
+      {/* Padrões */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Padrões Identificados</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Textarea
+            value={padroesIdentificados}
+            onChange={(e) => setPadroesIdentificados(e.target.value)}
+            placeholder="Padrões sistêmicos, emaranhamentos, exclusões..."
+            rows={4}
+          />
+        </CardContent>
+      </Card>
 
-        <EthicalNotice toolName="Constelação Sistêmica" className="mb-6" />
+      {/* Frases */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Frases Utilizadas</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Textarea
+            value={frasesUsadas}
+            onChange={(e) => setFrasesUsadas(e.target.value)}
+            placeholder="Frases de cura, reconhecimento, restituição..."
+            rows={3}
+          />
+        </CardContent>
+      </Card>
 
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Tipo de Constelação</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Select value={tipoConstelacao} onValueChange={setTipoConstelacao}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o tipo..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {TIPOS_CONSTELACAO.map((t) => (
-                    <SelectItem key={t} value={t}>{t}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </CardContent>
-          </Card>
+      {/* Movimentos */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Movimentos Percebidos</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Textarea
+            value={movimentosPercebidos}
+            onChange={(e) => setMovimentosPercebidos(e.target.value)}
+            placeholder="Movimentos da alma, reações, mudanças de posição..."
+            rows={4}
+          />
+        </CardContent>
+      </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Tema / Questão Central</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Input
-                value={tema}
-                onChange={(e) => setTema(e.target.value)}
-                placeholder="Qual foi a questão trabalhada..."
-              />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Padrões Identificados</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                value={padroesIdentificados}
-                onChange={(e) => setPadroesIdentificados(e.target.value)}
-                placeholder="Padrões sistêmicos, emaranhamentos, exclusões..."
-                rows={4}
-              />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Frases Utilizadas</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                value={frasesUsadas}
-                onChange={(e) => setFrasesUsadas(e.target.value)}
-                placeholder="Frases de cura, reconhecimento, restituição..."
-                rows={3}
-              />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Movimentos Percebidos</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                value={movimentosPercebidos}
-                onChange={(e) => setMovimentosPercebidos(e.target.value)}
-                placeholder="Movimentos da alma, reações, mudanças de posição..."
-                rows={4}
-              />
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="flex justify-end mt-6">
-          <Button onClick={handleSave} disabled={saving}>
-            {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-            Salvar Constelação
-          </Button>
-        </div>
-
-        {/* Modal Jardim da Psique - apenas para uso pessoal */}
-        <SalvarJardimModal
-          open={showJardimModal}
-          onOpenChange={setShowJardimModal}
-          ferramenta_nome="Constelação Sistêmica"
-          ferramenta_chave="constelacao"
-          tipo_registro="ferramenta"
-          conteudo={{
-            tipo: tipoConstelacao,
-            tema: tema,
-            padroes_identificados: padroesIdentificados,
-            frases_usadas: frasesUsadas,
-            movimentos_percebidos: movimentosPercebidos,
-          }}
-          resultado_simbolico={{
-            tipo: tipoConstelacao,
-            tema: tema,
-          }}
-          onSaved={handleJardimSaved}
-          onSkipped={() => navigate('/ferramentas')}
-        />
+      {/* Botão Salvar */}
+      <div className="flex justify-end">
+        <Button onClick={handleSave} disabled={saving}>
+          {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+          Salvar Constelação
+        </Button>
       </div>
-    </AppLayout>
+
+      {/* Modal Jardim da Psique */}
+      <SalvarJardimModal
+        open={showJardimModal}
+        onOpenChange={setShowJardimModal}
+        ferramenta_nome="Constelação Sistêmica"
+        ferramenta_chave="constelacao"
+        tipo_registro="ferramenta"
+        conteudo={{
+          tipo: tipoConstelacao,
+          tema: tema,
+          padroes_identificados: padroesIdentificados,
+          frases_usadas: frasesUsadas,
+          movimentos_percebidos: movimentosPercebidos,
+        }}
+        resultado_simbolico={{
+          tipo: tipoConstelacao,
+          tema: tema,
+        }}
+        onSaved={handleJardimSaved}
+        onSkipped={() => navigate('/ferramentas')}
+      />
+    </FerramentaPageTemplate>
   );
 }
