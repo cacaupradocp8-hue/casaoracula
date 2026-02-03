@@ -230,9 +230,13 @@ export function Navigation() {
                     <DropdownMenuSeparator />
                     <DropdownMenuLabel className="text-xs text-muted-foreground">Ferramentas do Método</DropdownMenuLabel>
                     
-                    <DropdownMenuItem onClick={() => navigate('/ferramentas-metodo')}>
+                    <DropdownMenuItem onClick={() => navigate('/ferramentas')}>
                       <Settings className="w-4 h-4 mr-2" />
-                      Hub de Ferramentas
+                      Sala de Ferramentas
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/ferramentas-metodo')}>
+                      <Star className="w-4 h-4 mr-2" />
+                      Hub do Método
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => navigate('/labirinto')}>
                       <Star className="w-4 h-4 mr-2" />
