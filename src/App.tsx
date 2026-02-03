@@ -890,7 +890,7 @@ function AppRoutes() {
       <Route
         path="/salas/big5"
         element={
-          <ProtectedRoute minPortal="mentorada">
+          <ProtectedRoute minPortal="visitante">
             <Big5 />
           </ProtectedRoute>
         }
@@ -898,7 +898,7 @@ function AppRoutes() {
       <Route
         path="/salas/eneagrama"
         element={
-          <ProtectedRoute minPortal="mentorada">
+          <ProtectedRoute minPortal="visitante">
             <Eneagrama />
           </ProtectedRoute>
         }
@@ -906,7 +906,7 @@ function AppRoutes() {
       <Route
         path="/salas/oraculo-perguntas"
         element={
-          <ProtectedRoute minPortal="mentorada">
+          <ProtectedRoute minPortal="visitante">
             <OraculoPerguntas />
           </ProtectedRoute>
         }
