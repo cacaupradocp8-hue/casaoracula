@@ -92,14 +92,14 @@ export function VisitorSalaContent() {
         </p>
       </motion.div>
 
-      {/* Bloco 3: Quiz da Voz (Oráculo das Perguntas) */}
+      {/* Bloco 3: Oráculo de Perguntas */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.5 }}
       >
         <Card className="bg-gradient-to-br from-purple-500/10 via-card to-card border-purple-500/30 hover:border-purple-500/50 transition-colors cursor-pointer group"
-          onClick={() => navigate('/quiz-page')}
+          onClick={() => navigate('/ferramentas/oraculo-perguntas')}
         >
           <CardContent className="p-6">
             <div className="flex items-start gap-4">
@@ -111,7 +111,7 @@ export function VisitorSalaContent() {
                   Primeiro Passo
                 </span>
                 <h3 className="font-display text-lg text-foreground mt-1 mb-2">
-                  Quiz da Voz — Oráculo das Perguntas
+                  Oráculo de Perguntas
                 </h3>
                 <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
                   Descubra qual é a pergunta que sua alma está fazendo neste momento. Um convite para ouvir antes de agir.
@@ -120,7 +120,7 @@ export function VisitorSalaContent() {
                   variant="outline"
                   className="gap-2 border-purple-500/30 text-purple-400 hover:bg-purple-500/10"
                 >
-                  Iniciar o Quiz
+                  Iniciar
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </div>
@@ -129,14 +129,14 @@ export function VisitorSalaContent() {
         </Card>
       </motion.div>
 
-      {/* Bloco 4: Ferramenta - Big Five Padrão */}
+      {/* Bloco 4: Ferramenta - Big Five Funcional */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.5 }}
       >
         <Card className="bg-gradient-to-br from-blue-500/10 via-card to-card border-blue-500/30 hover:border-blue-500/50 transition-colors cursor-pointer group"
-          onClick={() => navigate('/big5-funcional')}
+          onClick={() => navigate('/ferramenta/big5-funcional')}
         >
           <CardContent className="p-6">
             <div className="flex items-start gap-4">
