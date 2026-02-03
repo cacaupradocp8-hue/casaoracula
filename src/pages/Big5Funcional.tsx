@@ -57,14 +57,50 @@ export default function Big5Funcional() {
     perguntas, 
     isLoading, 
     calcularResultado, 
-    salvarResultado 
+    salvarResultado,
+    ultimoRegistro,
+    loadingHistorico,
   } = useBig5Funcional();
+
+  // Check if visitor has already used this tool (limit: 1x)
+  const isVisitor = user?.portal === 'visitante';
+  const hasUsedBefore = !!ultimoRegistro;
+  const isBlockedVisitor = isVisitor && hasUsedBefore;
 
   const [screen, setScreen] = useState<Screen>('intro');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [respostas, setRespostas] = useState<Record<string, number>>({});
   const [resultado, setResultado] = useState<ReturnType<typeof calcularResultado> | null>(null);
   const [showJardimModal, setShowJardimModal] = useState(false);
+
+  // If visitor already used, show their previous result
+  useEffect(() => {
+    if (isBlockedVisitor && ultimoRegistro && dimensoes.length > 0) {
+      const previousResult = {
+        medias: ultimoRegistro.medias_json as Record<string, number>,
+        dimensaoAlta: ultimoRegistro.dimensao_alta ? {
+          chave: ultimoRegistro.dimensao_alta,
+          nome: dimensoes.find(d => d.chave === ultimoRegistro.dimensao_alta)?.nome || '',
+          descricao: dimensoes.find(d => d.chave === ultimoRegistro.dimensao_alta)?.descricao || '',
+          cor: dimensoes.find(d => d.chave === ultimoRegistro.dimensao_alta)?.cor || '',
+          media: (ultimoRegistro.medias_json as Record<string, number>)[ultimoRegistro.dimensao_alta] || 0,
+          interpretacao_alto: dimensoes.find(d => d.chave === ultimoRegistro.dimensao_alta)?.interpretacao_alto || null,
+          ponto_atencao_alto: dimensoes.find(d => d.chave === ultimoRegistro.dimensao_alta)?.ponto_atencao_alto || null,
+        } : null,
+        dimensaoBaixa: ultimoRegistro.dimensao_baixa ? {
+          chave: ultimoRegistro.dimensao_baixa,
+          nome: dimensoes.find(d => d.chave === ultimoRegistro.dimensao_baixa)?.nome || '',
+          descricao: dimensoes.find(d => d.chave === ultimoRegistro.dimensao_baixa)?.descricao || '',
+          cor: dimensoes.find(d => d.chave === ultimoRegistro.dimensao_baixa)?.cor || '',
+          media: (ultimoRegistro.medias_json as Record<string, number>)[ultimoRegistro.dimensao_baixa] || 0,
+          interpretacao_baixo: dimensoes.find(d => d.chave === ultimoRegistro.dimensao_baixa)?.interpretacao_baixo || null,
+          ponto_atencao_baixo: dimensoes.find(d => d.chave === ultimoRegistro.dimensao_baixa)?.ponto_atencao_baixo || null,
+        } : null,
+      };
+      setResultado(previousResult);
+      setScreen('resultado');
+    }
+  }, [isBlockedVisitor, ultimoRegistro, dimensoes]);
 
   const perguntaAtual = perguntas[currentIndex];
   const totalPerguntas = perguntas.length;
@@ -108,6 +144,9 @@ export default function Big5Funcional() {
   };
 
   const reiniciar = () => {
+    // Visitors cannot restart - they can only use once
+    if (isBlockedVisitor) return;
+    
     setScreen('intro');
     setCurrentIndex(0);
     setRespostas({});
@@ -510,6 +549,27 @@ export default function Big5Funcional() {
                 </CardContent>
               </Card>
 
+              {/* Visitor Limit Notice */}
+              {isBlockedVisitor && (
+                <Card className="border-amber-500/30 bg-amber-500/5">
+                  <CardContent className="p-4">
+                    <p className="text-sm text-amber-400/90 text-center">
+                      Este é seu resultado salvo. Como visitante, você pode usar esta ferramenta uma única vez.
+                      Para refazer ou acessar mais ferramentas, considere um de nossos planos.
+                    </p>
+                    <div className="flex justify-center mt-3">
+                      <Button
+                        variant="gold"
+                        size="sm"
+                        onClick={() => navigate('/planos')}
+                      >
+                        Conhecer planos
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
               {/* Actions */}
               <div className="flex gap-3">
                 <Button
@@ -520,14 +580,16 @@ export default function Big5Funcional() {
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Voltar
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={reiniciar}
-                  className="flex-1"
-                >
-                  <RotateCcw className="w-4 h-4 mr-2" />
-                  Refazer
-                </Button>
+                {!isBlockedVisitor && (
+                  <Button
+                    variant="outline"
+                    onClick={reiniciar}
+                    className="flex-1"
+                  >
+                    <RotateCcw className="w-4 h-4 mr-2" />
+                    Refazer
+                  </Button>
+                )}
               </div>
 
               <EthicalNotice toolName="Big Five — Leitura Funcional" />
