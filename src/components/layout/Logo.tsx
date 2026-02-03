@@ -32,10 +32,10 @@ export const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
       xl: 'h-20'
     };
     const horizontalSizes = {
-      sm: 'h-10',
-      md: 'h-14',
-      lg: 'h-20',
-      xl: 'h-24'
+      sm: 'h-8 md:h-10',
+      md: 'h-10 md:h-14',
+      lg: 'h-12 md:h-20',
+      xl: 'h-12 md:h-16'
     };
     const verticalSizes = {
       sm: 'h-20',
