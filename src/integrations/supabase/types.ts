@@ -6796,8 +6796,10 @@ export type Database = {
       sala_ferramentas: {
         Row: {
           ativa: boolean
+          categoria_badge: string | null
           created_at: string
           familia_id: string | null
+          familia_simbolica: string | null
           ferramenta_chave: string
           ferramenta_descricao: string | null
           ferramenta_nome: string
@@ -6812,6 +6814,9 @@ export type Database = {
           rota: string
           sala_id: string
           slug: string | null
+          texto_como_atravessar: string | null
+          texto_o_que_sustenta: string | null
+          texto_quando_usar: string | null
           tipo: string | null
           tipo_ferramenta: string | null
           updated_at: string
@@ -6819,8 +6824,10 @@ export type Database = {
         }
         Insert: {
           ativa?: boolean
+          categoria_badge?: string | null
           created_at?: string
           familia_id?: string | null
+          familia_simbolica?: string | null
           ferramenta_chave: string
           ferramenta_descricao?: string | null
           ferramenta_nome: string
@@ -6835,6 +6842,9 @@ export type Database = {
           rota: string
           sala_id: string
           slug?: string | null
+          texto_como_atravessar?: string | null
+          texto_o_que_sustenta?: string | null
+          texto_quando_usar?: string | null
           tipo?: string | null
           tipo_ferramenta?: string | null
           updated_at?: string
@@ -6842,8 +6852,10 @@ export type Database = {
         }
         Update: {
           ativa?: boolean
+          categoria_badge?: string | null
           created_at?: string
           familia_id?: string | null
+          familia_simbolica?: string | null
           ferramenta_chave?: string
           ferramenta_descricao?: string | null
           ferramenta_nome?: string
@@ -6858,6 +6870,9 @@ export type Database = {
           rota?: string
           sala_id?: string
           slug?: string | null
+          texto_como_atravessar?: string | null
+          texto_o_que_sustenta?: string | null
+          texto_quando_usar?: string | null
           tipo?: string | null
           tipo_ferramenta?: string | null
           updated_at?: string
