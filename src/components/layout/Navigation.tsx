@@ -246,11 +246,11 @@ export function Navigation() {
                       <Star className="w-4 h-4 mr-2" />
                       Torre Viva™
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/big5-oracular')}>
+                    <DropdownMenuItem onClick={() => navigate('/ferramenta/big5-oracular')}>
                       <Star className="w-4 h-4 mr-2" />
                       Big Five Oracular
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/escala-maia')}>
+                    <DropdownMenuItem onClick={() => navigate('/ferramentas/escala-maia')}>
                       <Star className="w-4 h-4 mr-2" />
                       Escala MAIA
                     </DropdownMenuItem>
