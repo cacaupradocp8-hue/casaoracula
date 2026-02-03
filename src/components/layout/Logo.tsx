@@ -47,8 +47,12 @@ export const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
     // Horizontal variant - logo lado a lado (para header do portal)
     if (variant === 'horizontal') {
       return (
-        <div ref={ref} className={cn('flex items-center justify-center', className)} {...props}>
-          <img src={logoHorizontal} alt="Casa ORÁCULA" className={cn('w-auto object-contain', horizontalSizes[size])} />
+        <div ref={ref} className={cn('flex items-center h-full py-2', className)} {...props}>
+          <img 
+            src={logoHorizontal} 
+            alt="Casa ORÁCULA" 
+            className="h-full w-auto max-h-16 md:max-h-20 object-contain"
+          />
         </div>
       );
     }
