@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import logoFull from '@/assets/logo-casa-oracula.png';
 import logoIcon from '@/assets/logo-icon.png';
 import logoText from '@/assets/logo-text.png';
-import logoHorizontal from '@/assets/logo-horizontal-cropped.png';
+import logoHorizontal from '@/assets/logo-horizontal.png';
 import logoVertical from '@/assets/logo-vertical.png';
 
 interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -47,11 +47,11 @@ export const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
     // Horizontal variant - logo lado a lado (para header do portal)
     if (variant === 'horizontal') {
       return (
-        <div ref={ref} className={cn('flex items-center h-full py-2', className)} {...props}>
+        <div ref={ref} className={cn('flex items-center', className)} {...props}>
           <img 
             src={logoHorizontal} 
             alt="Casa ORÁCULA" 
-            className="h-full w-auto max-h-16 md:max-h-20 object-contain"
+            className="h-20 w-auto object-contain sm:h-24 md:h-28 lg:h-32"
           />
         </div>
       );
