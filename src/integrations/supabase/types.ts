@@ -6796,6 +6796,7 @@ export type Database = {
       sala_ferramentas: {
         Row: {
           ativa: boolean
+          bloco_interativo_requerido: boolean | null
           categoria_badge: string | null
           created_at: string
           familia_id: string | null
@@ -6807,6 +6808,7 @@ export type Database = {
           has_blocks: boolean | null
           icone: string | null
           id: string
+          modo_uso: string[] | null
           ordem: number
           origem_metodologica: string | null
           portal_id: string | null
@@ -6814,16 +6816,19 @@ export type Database = {
           rota: string
           sala_id: string
           slug: string | null
+          status_criacao: string | null
           texto_como_atravessar: string | null
           texto_o_que_sustenta: string | null
           texto_quando_usar: string | null
           tipo: string | null
+          tipo_fechamento: string | null
           tipo_ferramenta: string | null
           updated_at: string
           vinculo_metodologico: string | null
         }
         Insert: {
           ativa?: boolean
+          bloco_interativo_requerido?: boolean | null
           categoria_badge?: string | null
           created_at?: string
           familia_id?: string | null
@@ -6835,6 +6840,7 @@ export type Database = {
           has_blocks?: boolean | null
           icone?: string | null
           id?: string
+          modo_uso?: string[] | null
           ordem?: number
           origem_metodologica?: string | null
           portal_id?: string | null
@@ -6842,16 +6848,19 @@ export type Database = {
           rota: string
           sala_id: string
           slug?: string | null
+          status_criacao?: string | null
           texto_como_atravessar?: string | null
           texto_o_que_sustenta?: string | null
           texto_quando_usar?: string | null
           tipo?: string | null
+          tipo_fechamento?: string | null
           tipo_ferramenta?: string | null
           updated_at?: string
           vinculo_metodologico?: string | null
         }
         Update: {
           ativa?: boolean
+          bloco_interativo_requerido?: boolean | null
           categoria_badge?: string | null
           created_at?: string
           familia_id?: string | null
@@ -6863,6 +6872,7 @@ export type Database = {
           has_blocks?: boolean | null
           icone?: string | null
           id?: string
+          modo_uso?: string[] | null
           ordem?: number
           origem_metodologica?: string | null
           portal_id?: string | null
@@ -6870,10 +6880,12 @@ export type Database = {
           rota?: string
           sala_id?: string
           slug?: string | null
+          status_criacao?: string | null
           texto_como_atravessar?: string | null
           texto_o_que_sustenta?: string | null
           texto_quando_usar?: string | null
           tipo?: string | null
+          tipo_fechamento?: string | null
           tipo_ferramenta?: string | null
           updated_at?: string
           vinculo_metodologico?: string | null

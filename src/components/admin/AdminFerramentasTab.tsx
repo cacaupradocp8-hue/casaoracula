@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Edit, Trash2, Brain, Compass, HelpCircle, Save, ClipboardList, Wrench, ExternalLink } from 'lucide-react';
+import { Plus, Edit, Trash2, Brain, Compass, HelpCircle, Save, ClipboardList, Wrench, ExternalLink, Sparkles } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -321,10 +321,16 @@ function CatalogoFerramentasSection() {
           <h3 className="text-lg font-semibold">Catálogo de Ferramentas</h3>
           <p className="text-sm text-muted-foreground">Gerencie todas as ferramentas do sistema</p>
         </div>
-        <Button onClick={openCreateDialog} className="gap-2">
-          <Plus className="w-4 h-4" />
-          Nova Ferramenta
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => window.location.href = '/admin/ferramentas/criar'} className="gap-2">
+            <Sparkles className="w-4 h-4" />
+            Criar (Wizard)
+          </Button>
+          <Button onClick={openCreateDialog} className="gap-2">
+            <Plus className="w-4 h-4" />
+            Nova Rápida
+          </Button>
+        </div>
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={(open) => {
