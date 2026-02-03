@@ -104,6 +104,7 @@ import AgenteAnalista from "./pages/salas/AgenteAnalista";
 import AgenteCurador from "./pages/salas/AgenteCurador";
 import AgenteSimbólico from "./pages/salas/AgenteSimbólico";
 import FerramentaDinamica from "./pages/FerramentaDinamica";
+import CriarFerramenta from "./pages/admin/CriarFerramenta";
 import Big5Simbolico from "./pages/Big5Simbolico";
 import Big5Oracular from "./pages/Big5Oracular";
 import Big5Funcional from "./pages/Big5Funcional";
@@ -1386,6 +1387,16 @@ function AppRoutes() {
           element={
             <ProtectedRoute minPortal="admin">
               <Admin />
+            </ProtectedRoute>
+          }
+        />
+        
+        {/* Admin - Criar Ferramenta Padronizada */}
+        <Route
+          path="/admin/ferramentas/criar"
+          element={
+            <ProtectedRoute minPortal="admin">
+              <CriarFerramenta />
             </ProtectedRoute>
           }
         />
