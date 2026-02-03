@@ -215,12 +215,35 @@ export function Navigation() {
                       <Home className="w-4 h-4 mr-2" />
                       Minha Jornada
                     </DropdownMenuItem>
+                    {/* Formação */}
+                    <DropdownMenuItem onClick={() => navigate('/oracula')}>
+                      <Star className="w-4 h-4 mr-2" />
+                      Formação Orácula
+                    </DropdownMenuItem>
+                    {/* Salas */}
+                    <DropdownMenuItem onClick={() => navigate('/salas')}>
+                      <Home className="w-4 h-4 mr-2" />
+                      Salas
+                    </DropdownMenuItem>
+                    {/* Ferramentas do Método */}
+                    <DropdownMenuItem onClick={() => navigate('/ferramentas-metodo')}>
+                      <Settings className="w-4 h-4 mr-2" />
+                      Ferramentas do Método
+                    </DropdownMenuItem>
+                    {/* Casa / Sustentação */}
+                    <DropdownMenuItem onClick={() => navigate('/casa')}>
+                      <Home className="w-4 h-4 mr-2" />
+                      Casa / Sustentação
+                    </DropdownMenuItem>
                     {/* Admin link - always visible for admins */}
                     {isAdmin && (
-                      <DropdownMenuItem onClick={() => navigate('/admin')}>
-                        <Settings className="w-4 h-4 mr-2" />
-                        Painel Admin
-                      </DropdownMenuItem>
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => navigate('/admin')}>
+                          <Settings className="w-4 h-4 mr-2" />
+                          Painel Admin
+                        </DropdownMenuItem>
+                      </>
                     )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout} className="text-destructive">
