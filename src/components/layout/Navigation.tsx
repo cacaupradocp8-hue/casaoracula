@@ -243,6 +243,10 @@ export function Navigation() {
                       <Star className="w-4 h-4 mr-2" />
                       Labirinto das 39 Portas
                     </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/labirinto-heroina')}>
+                      <Star className="w-4 h-4 mr-2" />
+                      Labirinto da Heroína Interna®
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => navigate('/torre-viva')}>
                       <Star className="w-4 h-4 mr-2" />
                       Torre Viva™
