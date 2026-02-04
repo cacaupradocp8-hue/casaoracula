@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   ArrowLeft, Home, ChevronRight, Loader2, 
   Compass, Moon, Sparkles, Feather, Flame,
-  History, BookOpen, FileText
+  History, BookOpen, FileText, Scroll
 } from "lucide-react";
 import { useLabirintoHeroinaData, useLabirintoHeroinaRegistros } from "@/hooks/useLabirintoHeroina";
 import { FasesLayer } from "./components/FasesLayer";
@@ -88,14 +88,25 @@ export default function LabirintoHeroinaPage() {
             Quatro camadas sistêmicas que se entrelaçam.
           </p>
           
-          {/* CTA - Gerador de Roteiro */}
-          <Button 
-            onClick={() => setShowGeradorRoteiro(true)}
-            className="bg-gold hover:bg-gold/90 text-gold-foreground gap-2"
-          >
-            <FileText className="w-4 h-4" />
-            Gerar Roteiro de Sessão
-          </Button>
+          {/* CTAs */}
+          <div className="flex flex-wrap justify-center gap-3">
+            <Button 
+              onClick={() => navigate("/mapa-heroina")}
+              className="bg-gold hover:bg-gold/90 text-gold-foreground gap-2"
+            >
+              <Scroll className="w-4 h-4" />
+              Meu Mapa Pessoal
+            </Button>
+            
+            <Button 
+              variant="outline"
+              onClick={() => setShowGeradorRoteiro(true)}
+              className="border-gold/30 text-gold hover:bg-gold/10 gap-2"
+            >
+              <FileText className="w-4 h-4" />
+              Gerar Roteiro de Sessão
+            </Button>
+          </div>
         </div>
 
         {/* Layer Overview Cards */}
