@@ -250,7 +250,7 @@ export function JardimHeroinaIntegracaoTab({
       <Alert className="border-amber-500/30 bg-amber-950/20">
         <AlertTriangle className="w-4 h-4 text-amber-500" />
         <AlertDescription className="text-sm text-amber-200/80">
-          Este espaço é para integração. Conteúdos intensos devem ser levados para a sessão.
+          Este espaço é para integrar, não para aprofundar. O que precisa de cuidado maior pertence à sessão.
         </AlertDescription>
       </Alert>
 
@@ -293,11 +293,10 @@ export function JardimHeroinaIntegracaoTab({
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label className="text-sm text-muted-foreground">
-                    O que ficou mais vivo da sessão? 
-                    <span className="text-xs ml-1">(máx. 240 caracteres)</span>
+                    O que ficou mais vivo da sessão?
                   </Label>
                   <Textarea
-                    placeholder="O que permaneceu ressoando após a sessão..."
+                    placeholder="Uma frase, uma sensação, uma imagem simples."
                     value={jardim?.chegada_vivo || ''}
                     onChange={(e) => handleFieldChange('chegada_vivo', e.target.value.slice(0, 240))}
                     className="min-h-[100px] resize-none"
@@ -311,11 +310,27 @@ export function JardimHeroinaIntegracaoTab({
                 <div className="space-y-2">
                   <Label className="text-sm text-muted-foreground">
                     Onde senti isso no corpo?
-                    <span className="text-xs ml-1">(máx. 100 caracteres)</span>
                   </Label>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {['peito', 'ventre', 'garganta', 'ombros', 'pernas'].map((local) => (
+                      <Button
+                        key={local}
+                        type="button"
+                        variant={jardim?.chegada_corpo === local ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => handleFieldChange('chegada_corpo', local)}
+                        className={cn(
+                          "text-xs capitalize",
+                          jardim?.chegada_corpo === local && "bg-emerald-600 hover:bg-emerald-700"
+                        )}
+                      >
+                        {local}
+                      </Button>
+                    ))}
+                  </div>
                   <Input
-                    placeholder="Peito, garganta, mãos..."
-                    value={jardim?.chegada_corpo || ''}
+                    placeholder="outro (texto curto)"
+                    value={!['peito', 'ventre', 'garganta', 'ombros', 'pernas'].includes(jardim?.chegada_corpo || '') ? (jardim?.chegada_corpo || '') : ''}
                     onChange={(e) => handleFieldChange('chegada_corpo', e.target.value.slice(0, 100))}
                     maxLength={100}
                   />
@@ -345,10 +360,9 @@ export function JardimHeroinaIntegracaoTab({
                 <div className="space-y-2">
                   <Label className="text-sm text-muted-foreground">
                     O que vou observar em mim até a próxima sessão?
-                    <span className="text-xs ml-1">(máx. 300 caracteres)</span>
                   </Label>
                   <Textarea
-                    placeholder="Apenas observação, sem interpretação..."
+                    placeholder="Algo simples. Algo possível."
                     value={jardim?.integracao_observar || ''}
                     onChange={(e) => handleFieldChange('integracao_observar', e.target.value.slice(0, 300))}
                     className="min-h-[120px] resize-none"
@@ -383,21 +397,17 @@ export function JardimHeroinaIntegracaoTab({
           {/* Section 3: Gesto Simbólico (CORE) */}
           {activeSection === 3 && (
             <JardimSection 
-              title="Gesto Simbólico" 
+              title="Gesto de Integração" 
               icon={<Sparkles className="w-4 h-4 text-amber-400" />}
             >
               <div className="space-y-4">
-                <Alert className="border-gold/30 bg-gold/5">
-                  <Sparkles className="w-4 h-4 text-gold" />
-                  <AlertDescription className="text-sm">
-                    O gesto é definido junto em sessão. Apenas <strong>um gesto ativo</strong> por vez.
-                  </AlertDescription>
-                </Alert>
+                <p className="text-xs text-muted-foreground italic">
+                  Um gesto. Não mais que isso.
+                </p>
 
                 <div className="space-y-2">
                   <Label className="text-sm text-muted-foreground">
-                    Descrição do gesto
-                    <span className="text-xs ml-1">(máx. 200 caracteres)</span>
+                    Qual gesto sustenta o que emergiu?
                   </Label>
                   <Textarea
                     placeholder="Descreva o gesto acordado em sessão..."
@@ -432,7 +442,9 @@ export function JardimHeroinaIntegracaoTab({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-sm text-muted-foreground">Prazo</Label>
+                    <Label className="text-sm text-muted-foreground">
+                      Até quando este gesto será sustentado?
+                    </Label>
                     <Input
                       type="date"
                       value={jardim?.gesto_prazo || ''}
@@ -502,10 +514,10 @@ export function JardimHeroinaIntegracaoTab({
                 <div className="space-y-2">
                   <Label className="text-sm text-muted-foreground">
                     O que percebi? 
-                    <span className="text-xs ml-1">(opcional, máx. 180 caracteres)</span>
+                    <span className="text-xs ml-1">(opcional)</span>
                   </Label>
                   <Textarea
-                    placeholder="Sem certo ou errado, apenas observação..."
+                    placeholder="Sem certo ou errado."
                     value={jardim?.observacao_percebi || ''}
                     onChange={(e) => handleFieldChange('observacao_percebi', e.target.value.slice(0, 180))}
                     className="min-h-[80px] resize-none"
@@ -541,21 +553,12 @@ export function JardimHeroinaIntegracaoTab({
               icon={<Lock className="w-4 h-4 text-rose-400" />}
             >
               <div className="space-y-4">
-                <Alert className="border-rose-500/30 bg-rose-950/20">
-                  <AlertTriangle className="w-4 h-4 text-rose-400" />
-                  <AlertDescription className="text-sm text-rose-200/80">
-                    Após fechar o Jardim, a cliente perde acesso de edição. 
-                    O conteúdo fica congelado para referência.
-                  </AlertDescription>
-                </Alert>
-
                 <div className="space-y-2">
                   <Label className="text-sm text-muted-foreground">
                     O que levo para a próxima sessão?
-                    <span className="text-xs ml-1">(máx. 200 caracteres)</span>
                   </Label>
                   <Textarea
-                    placeholder="O que ficou para trabalhar..."
+                    placeholder=""
                     value={jardim?.fechamento_levo || ''}
                     onChange={(e) => handleFieldChange('fechamento_levo', e.target.value.slice(0, 200))}
                     className="min-h-[80px] resize-none"
@@ -566,15 +569,21 @@ export function JardimHeroinaIntegracaoTab({
                 <div className="space-y-2">
                   <Label className="text-sm text-muted-foreground">
                     O que posso deixar aqui?
-                    <span className="text-xs ml-1">(máx. 200 caracteres)</span>
                   </Label>
                   <Textarea
-                    placeholder="O que pode ser deixado para trás..."
+                    placeholder=""
                     value={jardim?.fechamento_deixo || ''}
                     onChange={(e) => handleFieldChange('fechamento_deixo', e.target.value.slice(0, 200))}
                     className="min-h-[80px] resize-none"
                     maxLength={200}
                   />
+                </div>
+
+                <div className="bg-muted/30 rounded-lg p-4 text-center border border-muted">
+                  <p className="text-sm text-muted-foreground italic">
+                    O Jardim se fecha.<br />
+                    O gesto segue com você.
+                  </p>
                 </div>
 
                 <Separator />
