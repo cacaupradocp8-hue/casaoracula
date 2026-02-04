@@ -3374,6 +3374,41 @@ export type Database = {
           },
         ]
       }
+      heroina_cenario_registros: {
+        Row: {
+          anotacao_livre: string | null
+          created_at: string
+          id: string
+          metafora_id: string
+          registrado_em: string
+          user_id: string
+        }
+        Insert: {
+          anotacao_livre?: string | null
+          created_at?: string
+          id?: string
+          metafora_id: string
+          registrado_em?: string
+          user_id: string
+        }
+        Update: {
+          anotacao_livre?: string | null
+          created_at?: string
+          id?: string
+          metafora_id?: string
+          registrado_em?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "heroina_cenario_registros_metafora_id_fkey"
+            columns: ["metafora_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_metaforas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       heroina_fase_ativa: {
         Row: {
           ativa: boolean
@@ -4288,6 +4323,7 @@ export type Database = {
           created_at: string
           icone: string | null
           id: string
+          imagem_url: string | null
           nome: string
           ordem: number
           pergunta_reflexao: string | null
@@ -4300,6 +4336,7 @@ export type Database = {
           created_at?: string
           icone?: string | null
           id?: string
+          imagem_url?: string | null
           nome: string
           ordem?: number
           pergunta_reflexao?: string | null
@@ -4312,6 +4349,7 @@ export type Database = {
           created_at?: string
           icone?: string | null
           id?: string
+          imagem_url?: string | null
           nome?: string
           ordem?: number
           pergunta_reflexao?: string | null

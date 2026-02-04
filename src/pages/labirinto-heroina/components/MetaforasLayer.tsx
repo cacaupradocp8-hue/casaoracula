@@ -1,80 +1,73 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Feather, HelpCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Feather, MapPin } from "lucide-react";
 import type { LabirintoMetafora } from "@/hooks/useLabirintoHeroina";
+import { MetaforaCard } from "./MetaforaCard";
+import { useHeroinaCenarioRegistros } from "@/hooks/useHeroinaCenarioRegistro";
 
 interface MetaforasLayerProps {
   metaforas: LabirintoMetafora[];
 }
 
 export function MetaforasLayer({ metaforas }: MetaforasLayerProps) {
+  const { data: registros } = useHeroinaCenarioRegistros();
+  
   if (metaforas.length === 0) {
     return (
       <Card className="border-dashed">
         <CardContent className="p-8 text-center text-muted-foreground">
           <Feather className="w-12 h-12 mx-auto mb-4 opacity-30" />
-          <p>Nenhuma metáfora configurada ainda.</p>
+          <p>Nenhum cenário configurado ainda.</p>
         </CardContent>
       </Card>
     );
   }
 
+  // Contagem de registros por cenário
+  const registrosPorCenario = registros?.reduce((acc, r) => {
+    acc[r.metafora_id] = (acc[r.metafora_id] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>) || {};
+
   return (
-    <div className="space-y-6">
-      {/* Introduction */}
+    <div className="space-y-8">
+      {/* Introdução Poética */}
       <Card className="border-gold/30 bg-gradient-to-r from-gold/5 to-transparent">
-        <CardContent className="p-6">
-          <h3 className="font-display text-xl text-gold mb-2">
-            As 7 Metáforas-Espelho
+        <CardContent className="p-6 space-y-4">
+          <h3 className="font-display text-xl text-gold">
+            🜃 O Reino dos Cenários
           </h3>
-          <p className="text-muted-foreground text-sm">
-            Cada metáfora é um espelho simbólico — uma imagem que reflete aspectos 
-            do processo interno de forma segura e poética.
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            Este é o palco do inconsciente. Aqui, a psique não se explica — ela se mostra.
+            Imagens internas, atmosferas simbólicas, paisagens psíquicas que habitam
+            sonhos e devaneios.
           </p>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 pt-2 border-t border-gold/10">
+            <MapPin className="w-3 h-3" />
+            <span>
+              {registros?.length || 0} cenário(s) registrado(s) no seu Mapa Pessoal
+            </span>
+          </div>
         </CardContent>
       </Card>
 
-      {/* Metaphors Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Aviso Ético */}
+      <div className="text-center text-sm text-muted-foreground/70 italic">
+        O sistema apresenta e sustenta o campo. Não interpreta, não associa significados automáticos.
+      </div>
+
+      {/* Grid de Cartas-Cenário */}
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {metaforas.map((metafora) => (
-          <Card 
-            key={metafora.id}
-            className={cn(
-              "border-gold/20 hover:border-gold/40 transition-all",
-              "group cursor-pointer"
-            )}
-          >
-            <CardContent className="p-6 space-y-4">
-              {/* Icon & Title */}
-              <div className="text-center">
-                <span className="text-4xl block mb-2 group-hover:scale-110 transition-transform">
-                  {metafora.icone}
-                </span>
-                <h4 className="font-display text-lg text-foreground">
-                  {metafora.nome}
-                </h4>
+          <div key={metafora.id} className="relative">
+            <MetaforaCard metafora={metafora} />
+            
+            {/* Badge de Registros */}
+            {registrosPorCenario[metafora.id] > 0 && (
+              <div className="absolute top-2 right-2 bg-gold/90 text-gold-foreground text-xs px-2 py-1 rounded-full">
+                {registrosPorCenario[metafora.id]}×
               </div>
-
-              {/* Evocative Text */}
-              {metafora.texto_evocativo && (
-                <p className="text-sm text-muted-foreground italic text-center">
-                  "{metafora.texto_evocativo}"
-                </p>
-              )}
-
-              {/* Reflection Question */}
-              {metafora.pergunta_reflexao && (
-                <div className="pt-4 border-t border-gold/10">
-                  <div className="flex items-start gap-2">
-                    <HelpCircle className="w-4 h-4 text-gold shrink-0 mt-0.5" />
-                    <p className="text-sm text-gold/80">
-                      {metafora.pergunta_reflexao}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+            )}
+          </div>
         ))}
       </div>
     </div>

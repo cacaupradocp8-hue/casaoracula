@@ -42,6 +42,7 @@ export interface LabirintoMetafora {
   texto_evocativo: string | null;
   pergunta_reflexao: string | null;
   icone: string | null;
+  imagem_url: string | null;
   cor_acento: string | null;
   ativo: boolean;
   created_at: string;
