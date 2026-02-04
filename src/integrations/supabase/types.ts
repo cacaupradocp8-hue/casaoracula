@@ -3632,6 +3632,90 @@ export type Database = {
           },
         ]
       }
+      jardim_heroina: {
+        Row: {
+          ativado_em: string | null
+          case_id: string
+          chegada_corpo: string | null
+          chegada_vivo: string | null
+          client_id: string
+          created_at: string
+          fechado_em: string | null
+          fechamento_deixo: string | null
+          fechamento_levo: string | null
+          gesto_descricao: string | null
+          gesto_prazo: string | null
+          gesto_prazo_texto: string | null
+          gesto_tipo: Database["public"]["Enums"]["jardim_gesto_tipo"] | null
+          id: string
+          integracao_observar: string | null
+          observacao_percebi: string | null
+          observacao_sustentou: string | null
+          status: Database["public"]["Enums"]["jardim_heroina_status"]
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          ativado_em?: string | null
+          case_id: string
+          chegada_corpo?: string | null
+          chegada_vivo?: string | null
+          client_id: string
+          created_at?: string
+          fechado_em?: string | null
+          fechamento_deixo?: string | null
+          fechamento_levo?: string | null
+          gesto_descricao?: string | null
+          gesto_prazo?: string | null
+          gesto_prazo_texto?: string | null
+          gesto_tipo?: Database["public"]["Enums"]["jardim_gesto_tipo"] | null
+          id?: string
+          integracao_observar?: string | null
+          observacao_percebi?: string | null
+          observacao_sustentou?: string | null
+          status?: Database["public"]["Enums"]["jardim_heroina_status"]
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          ativado_em?: string | null
+          case_id?: string
+          chegada_corpo?: string | null
+          chegada_vivo?: string | null
+          client_id?: string
+          created_at?: string
+          fechado_em?: string | null
+          fechamento_deixo?: string | null
+          fechamento_levo?: string | null
+          gesto_descricao?: string | null
+          gesto_prazo?: string | null
+          gesto_prazo_texto?: string | null
+          gesto_tipo?: Database["public"]["Enums"]["jardim_gesto_tipo"] | null
+          id?: string
+          integracao_observar?: string | null
+          observacao_percebi?: string | null
+          observacao_sustentou?: string | null
+          status?: Database["public"]["Enums"]["jardim_heroina_status"]
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jardim_heroina_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "session_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jardim_heroina_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       jardim_heroina_registros: {
         Row: {
           arquetipo_snapshot: string | null
@@ -8644,6 +8728,11 @@ export type Database = {
       }
       check_and_expire_access: { Args: never; Returns: number }
       check_case_limit: { Args: { _therapist_id: string }; Returns: boolean }
+      client_has_active_jardim: {
+        Args: { _client_id: string }
+        Returns: boolean
+      }
+      close_expired_jardins: { Args: never; Returns: number }
       get_agent_with_context: {
         Args: {
           _agent_id: string
@@ -8787,6 +8876,13 @@ export type Database = {
         | "narrative_result"
         | "porta_familias"
       content_type: "text" | "video" | "audio" | "file" | "mixed"
+      jardim_gesto_tipo:
+        | "observacao"
+        | "limite"
+        | "cuidado"
+        | "pausa"
+        | "acao_simbolica"
+      jardim_heroina_status: "inactive" | "active" | "closed"
       labirinto_modo_uso: "individual" | "grupo" | "constelacao" | "mentoria"
       mentoria_tipo: "aviso" | "evento" | "supervisao"
       nivel_sala: "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3"
@@ -8982,6 +9078,14 @@ export const Constants = {
         "porta_familias",
       ],
       content_type: ["text", "video", "audio", "file", "mixed"],
+      jardim_gesto_tipo: [
+        "observacao",
+        "limite",
+        "cuidado",
+        "pausa",
+        "acao_simbolica",
+      ],
+      jardim_heroina_status: ["inactive", "active", "closed"],
       labirinto_modo_uso: ["individual", "grupo", "constelacao", "mentoria"],
       mentoria_tipo: ["aviso", "evento", "supervisao"],
       nivel_sala: ["NIVEL_0", "NIVEL_1", "NIVEL_2", "NIVEL_3"],

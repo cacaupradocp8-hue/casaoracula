@@ -21,6 +21,7 @@ import { TemplatesTab } from '@/components/session-room/TemplatesTab';
 import { ProtocoloOraculaTab } from '@/components/session-room/ProtocoloOraculaTab';
 import { MapaVivoTab } from '@/components/session-room/MapaVivoTab';
 import { JardimHeroinaTab } from '@/components/session-room/JardimHeroinaTab';
+import { JardimHeroinaIntegracaoTab } from '@/components/session-room/JardimHeroinaIntegracaoTab';
 
 export default function SessionRoomCase() {
   const { caseId } = useParams<{ caseId: string }>();
@@ -224,7 +225,11 @@ export default function SessionRoomCase() {
           </TabsContent>
 
           <TabsContent value="jardim">
-            <JardimHeroinaTab sessionCaseId={caseData.id} />
+            <JardimHeroinaIntegracaoTab 
+              caseId={caseData.id} 
+              clientId={caseData.client_id}
+              clientName={caseData.client?.nome}
+            />
           </TabsContent>
 
           <TabsContent value="script">
