@@ -5,6 +5,7 @@ import logoIcon from '@/assets/logo-icon.png';
 import logoText from '@/assets/logo-text.png';
 import logoHorizontal from '@/assets/logo-horizontal.png';
 import logoVertical from '@/assets/logo-vertical.png';
+import logoHorizontalCombined from '@/assets/logo-horizontal-combined.png';
 
 interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -66,24 +67,17 @@ export const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
       );
     }
 
-    // Combined variant (legacy - uses separate icon + text)
+    // Combined variant - unified horizontal logo (icon + text in one image)
     if (variant === 'combined') {
-      const combinedIconSizes = {
+      const combinedSizes = {
         sm: 'h-12',
         md: 'h-16',
         lg: 'h-24',
-        xl: 'h-24 md:h-28'
-      };
-      const combinedTextSizes = {
-        sm: 'h-10',
-        md: 'h-14',
-        lg: 'h-20',
-        xl: 'h-[72px] md:h-[84px]'
+        xl: 'h-14 sm:h-16 md:h-20'
       };
       return (
-        <div ref={ref} className={cn('flex items-center justify-center gap-3', className)} {...props}>
-          <img src={logoIcon} alt="Casa ORÁCULA" className={cn('w-auto object-contain', combinedIconSizes[size])} />
-          <img src={logoText} alt="Casa ORÁCULA" className={cn('w-auto object-contain', combinedTextSizes[size])} />
+        <div ref={ref} className={cn('flex items-center justify-center', className)} {...props}>
+          <img src={logoHorizontalCombined} alt="Casa ORÁCULA" className={cn('w-auto object-contain', combinedSizes[size])} />
         </div>
       );
     }
