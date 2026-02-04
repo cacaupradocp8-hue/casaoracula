@@ -4502,6 +4502,135 @@ export type Database = {
         }
         Relationships: []
       }
+      labirinto_roteiro_templates: {
+        Row: {
+          ativo: boolean
+          camada_id: string
+          created_at: string
+          id: string
+          ordem: number
+          secao: string
+          texto_base: string
+          tipo_camada: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          camada_id: string
+          created_at?: string
+          id?: string
+          ordem?: number
+          secao: string
+          texto_base: string
+          tipo_camada: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          camada_id?: string
+          created_at?: string
+          id?: string
+          ordem?: number
+          secao?: string
+          texto_base?: string
+          tipo_camada?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      labirinto_roteiros_gerados: {
+        Row: {
+          abertura: string | null
+          arquetipo_id: string | null
+          created_at: string
+          editado: boolean
+          exploracao: string | null
+          fase_id: string | null
+          fechamento: string | null
+          gerado_por: string
+          id: string
+          intervencao: string | null
+          metafora_id: string | null
+          notas_terapeuta: string | null
+          ritual_id: string | null
+          session_case_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          abertura?: string | null
+          arquetipo_id?: string | null
+          created_at?: string
+          editado?: boolean
+          exploracao?: string | null
+          fase_id?: string | null
+          fechamento?: string | null
+          gerado_por?: string
+          id?: string
+          intervencao?: string | null
+          metafora_id?: string | null
+          notas_terapeuta?: string | null
+          ritual_id?: string | null
+          session_case_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          abertura?: string | null
+          arquetipo_id?: string | null
+          created_at?: string
+          editado?: boolean
+          exploracao?: string | null
+          fase_id?: string | null
+          fechamento?: string | null
+          gerado_por?: string
+          id?: string
+          intervencao?: string | null
+          metafora_id?: string | null
+          notas_terapeuta?: string | null
+          ritual_id?: string | null
+          session_case_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "labirinto_roteiros_gerados_arquetipo_id_fkey"
+            columns: ["arquetipo_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_arquetipos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "labirinto_roteiros_gerados_fase_id_fkey"
+            columns: ["fase_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_fases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "labirinto_roteiros_gerados_metafora_id_fkey"
+            columns: ["metafora_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_metaforas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "labirinto_roteiros_gerados_ritual_id_fkey"
+            columns: ["ritual_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_rituais"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "labirinto_roteiros_gerados_session_case_id_fkey"
+            columns: ["session_case_id"]
+            isOneToOne: false
+            referencedRelation: "session_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lessons: {
         Row: {
           content: string

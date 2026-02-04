@@ -2,33 +2,32 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   ArrowLeft, Home, ChevronRight, Loader2, 
   Compass, Moon, Sparkles, Feather, Flame,
-  History, BookOpen
+  History, BookOpen, FileText
 } from "lucide-react";
 import { useLabirintoHeroinaData, useLabirintoHeroinaRegistros } from "@/hooks/useLabirintoHeroina";
-import { useAuth } from "@/contexts/AuthContext";
-import { cn } from "@/lib/utils";
 import { FasesLayer } from "./components/FasesLayer";
 import { ArquetiposLayer } from "./components/ArquetiposLayer";
 import { MetaforasLayer } from "./components/MetaforasLayer";
 import { RituaisLayer } from "./components/RituaisLayer";
 import { LabirintoHeroinaIntro } from "./components/LabirintoHeroinaIntro";
+import { GeradorRoteiroModal } from "./components/GeradorRoteiroModal";
 
 const LABIRINTO_HEROINA_INTRO_KEY = "labirinto-heroina-intro-seen";
 
 export default function LabirintoHeroinaPage() {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const { fases, arquetipos, metaforas, rituais, isLoading } = useLabirintoHeroinaData();
   const { data: registros } = useLabirintoHeroinaRegistros();
   const [showIntro, setShowIntro] = useState(() => {
     const seen = localStorage.getItem(LABIRINTO_HEROINA_INTRO_KEY);
     return seen !== "true";
   });
+  const [showGeradorRoteiro, setShowGeradorRoteiro] = useState(false);
 
   const handleEnter = () => {
     localStorage.setItem(LABIRINTO_HEROINA_INTRO_KEY, "true");
@@ -88,6 +87,15 @@ export default function LabirintoHeroinaPage() {
             Ecossistema simbólico modular para navegação do processo de individuação feminina.
             Quatro camadas sistêmicas que se entrelaçam.
           </p>
+          
+          {/* CTA - Gerador de Roteiro */}
+          <Button 
+            onClick={() => setShowGeradorRoteiro(true)}
+            className="bg-gold hover:bg-gold/90 text-gold-foreground gap-2"
+          >
+            <FileText className="w-4 h-4" />
+            Gerar Roteiro de Sessão
+          </Button>
         </div>
 
         {/* Layer Overview Cards */}
@@ -163,6 +171,16 @@ export default function LabirintoHeroinaPage() {
             <HistoricoTab registros={registros || []} />
           </TabsContent>
         </Tabs>
+
+        {/* Modal do Gerador */}
+        <GeradorRoteiroModal
+          open={showGeradorRoteiro}
+          onOpenChange={setShowGeradorRoteiro}
+          fases={fases}
+          arquetipos={arquetipos}
+          metaforas={metaforas}
+          rituais={rituais}
+        />
       </div>
     </AppLayout>
   );
