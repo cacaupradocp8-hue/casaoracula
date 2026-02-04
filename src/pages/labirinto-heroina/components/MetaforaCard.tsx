@@ -10,12 +10,12 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { MapPin, Check, Loader2 } from "lucide-react";
+import { Heart, Check, Loader2 } from "lucide-react";
 import { useRegistrarCenario } from "@/hooks/useHeroinaCenarioRegistro";
 import { toast } from "sonner";
 import type { LabirintoMetafora } from "@/hooks/useLabirintoHeroina";
 
-// Importar imagens dos cenários
+// Importar imagens dos cenários (14 paisagens simbólicas)
 import cenario01 from "@/assets/labirinto/cenario-01-espelho-partido.jpg";
 import cenario02 from "@/assets/labirinto/cenario-02-floresta-cega.jpg";
 import cenario03 from "@/assets/labirinto/cenario-03-poco-encantado.jpg";
@@ -23,6 +23,13 @@ import cenario04 from "@/assets/labirinto/cenario-04-porta-sem-macaneta.jpg";
 import cenario05 from "@/assets/labirinto/cenario-05-fio-ancestral.jpg";
 import cenario06 from "@/assets/labirinto/cenario-06-torre-vazia.jpg";
 import cenario07 from "@/assets/labirinto/cenario-07-rio-subterraneo.jpg";
+import cenario08 from "@/assets/labirinto/cenario-08-caverna-memoria.jpg";
+import cenario09 from "@/assets/labirinto/cenario-09-jardim-abandonado.jpg";
+import cenario10 from "@/assets/labirinto/cenario-10-ponte-suspensa.jpg";
+import cenario11 from "@/assets/labirinto/cenario-11-ninho-vazio.jpg";
+import cenario12 from "@/assets/labirinto/cenario-12-janela-embacada.jpg";
+import cenario13 from "@/assets/labirinto/cenario-13-tear-silencioso.jpg";
+import cenario14 from "@/assets/labirinto/cenario-14-limiar-lua.jpg";
 
 const CENARIO_IMAGES: Record<number, string> = {
   1: cenario01,
@@ -32,6 +39,13 @@ const CENARIO_IMAGES: Record<number, string> = {
   5: cenario05,
   6: cenario06,
   7: cenario07,
+  8: cenario08,
+  9: cenario09,
+  10: cenario10,
+  11: cenario11,
+  12: cenario12,
+  13: cenario13,
+  14: cenario14,
 };
 
 interface MetaforaCardProps {
@@ -149,16 +163,16 @@ export function MetaforaCard({ metafora }: MetaforaCardProps) {
             </div>
           )}
 
-          {/* Espaço de Anotação Livre */}
+          {/* Espaço de Leitura Sensorial */}
           <div className="space-y-2">
             <label className="text-sm text-muted-foreground">
-              Espaço para suas percepções (opcional):
+              Sua leitura sensorial deste cenário (opcional):
             </label>
             <Textarea
               value={anotacao}
               onChange={(e) => setAnotacao(e.target.value)}
-              placeholder="O que este cenário desperta em você?"
-              className="min-h-[80px] border-gold/20 bg-background/50 resize-none"
+              placeholder="O que você sente ao contemplar este cenário? Que sensações, imagens ou memórias emergem?"
+              className="min-h-[100px] border-gold/20 bg-background/50 resize-none"
               disabled={registrado}
             />
           </div>
@@ -182,12 +196,12 @@ export function MetaforaCard({ metafora }: MetaforaCardProps) {
             ) : registrado ? (
               <>
                 <Check className="w-4 h-4" />
-                Registrado no Mapa Pessoal
+                Sentido e registrado
               </>
             ) : (
               <>
-                <MapPin className="w-4 h-4" />
-                Registrar este cenário
+                <Heart className="w-4 h-4" />
+                Sentir este cenário
               </>
             )}
           </Button>
