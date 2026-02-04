@@ -168,6 +168,7 @@ import {
 } from "./pages/clube-livro";
 // Labirinto da Heroína Interna®
 import { LabirintoHeroinaPage } from "./pages/labirinto-heroina";
+import MapaHeroinaPage from "./pages/mapa-heroina";
 
 const queryClient = new QueryClient();
 
@@ -513,6 +514,16 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="aluna_formacao">
             <LabirintoHeroinaPage />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Mapa Pessoal da Heroína */}
+      <Route
+        path="/mapa-heroina"
+        element={
+          <ProtectedRoute minPortal="aluna_formacao">
+            <MapaHeroinaPage />
           </ProtectedRoute>
         }
       />
