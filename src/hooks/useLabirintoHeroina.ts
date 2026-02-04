@@ -28,6 +28,7 @@ export interface LabirintoArquetipo {
   descricao_luz: string | null;
   descricao_sombra: string | null;
   icone: string | null;
+  imagem_url: string | null;
   cor_acento: string | null;
   ativo: boolean;
   created_at: string;

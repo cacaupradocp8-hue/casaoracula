@@ -3339,6 +3339,41 @@ export type Database = {
           },
         ]
       }
+      heroina_arquetipo_registros: {
+        Row: {
+          arquetipo_id: string
+          created_at: string
+          id: string
+          polaridade_percebida: string | null
+          registrado_em: string
+          user_id: string
+        }
+        Insert: {
+          arquetipo_id: string
+          created_at?: string
+          id?: string
+          polaridade_percebida?: string | null
+          registrado_em?: string
+          user_id: string
+        }
+        Update: {
+          arquetipo_id?: string
+          created_at?: string
+          id?: string
+          polaridade_percebida?: string | null
+          registrado_em?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "heroina_arquetipo_registros_arquetipo_id_fkey"
+            columns: ["arquetipo_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_arquetipos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       heroina_fase_ativa: {
         Row: {
           ativa: boolean
@@ -4117,6 +4152,7 @@ export type Database = {
           descricao_sombra: string
           icone: string | null
           id: string
+          imagem_url: string | null
           nome: string
           ordem: number
           territorio: string | null
@@ -4130,6 +4166,7 @@ export type Database = {
           descricao_sombra: string
           icone?: string | null
           id?: string
+          imagem_url?: string | null
           nome: string
           ordem?: number
           territorio?: string | null
@@ -4143,6 +4180,7 @@ export type Database = {
           descricao_sombra?: string
           icone?: string | null
           id?: string
+          imagem_url?: string | null
           nome?: string
           ordem?: number
           territorio?: string | null

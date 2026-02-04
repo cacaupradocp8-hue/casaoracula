@@ -42,6 +42,7 @@ interface LabirintoArquetipo {
   descricao_luz: string | null;
   descricao_sombra: string | null;
   icone: string | null;
+  imagem_url: string | null;
   cor_acento: string | null;
   ativo: boolean;
   created_at: string;
@@ -479,6 +480,7 @@ function ArquetiposSection() {
     descricao_luz: "",
     descricao_sombra: "",
     icone: "",
+    imagem_url: "",
     cor_acento: "",
     ativo: true,
     ordem: 0,
@@ -510,6 +512,7 @@ function ArquetiposSection() {
       descricao_luz: "",
       descricao_sombra: "",
       icone: "",
+      imagem_url: "",
       cor_acento: "",
       ativo: true,
       ordem: arquetipos.length,
@@ -525,6 +528,7 @@ function ArquetiposSection() {
       descricao_luz: arq.descricao_luz || "",
       descricao_sombra: arq.descricao_sombra || "",
       icone: arq.icone || "",
+      imagem_url: arq.imagem_url || "",
       cor_acento: arq.cor_acento || "",
       ativo: arq.ativo,
       ordem: arq.ordem,
@@ -546,6 +550,7 @@ function ArquetiposSection() {
       descricao_luz: form.descricao_luz || null,
       descricao_sombra: form.descricao_sombra || null,
       icone: form.icone || null,
+      imagem_url: form.imagem_url || null,
       cor_acento: form.cor_acento || null,
       ativo: form.ativo,
       ordem: form.ordem,
@@ -736,11 +741,11 @@ function ArquetiposSection() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>Ícone (Lucide)</Label>
+                <Label>Ícone (Emoji)</Label>
                 <Input
                   value={form.icone}
                   onChange={(e) => setForm({ ...form, icone: e.target.value })}
-                  placeholder="Ex: Sparkles"
+                  placeholder="Ex: 🐺"
                 />
               </div>
               <div>
@@ -751,6 +756,18 @@ function ArquetiposSection() {
                   placeholder="Ex: #D4AF37"
                 />
               </div>
+            </div>
+
+            <div>
+              <Label>URL da Imagem</Label>
+              <Input
+                value={form.imagem_url}
+                onChange={(e) => setForm({ ...form, imagem_url: e.target.value })}
+                placeholder="https://... (deixe vazio para usar imagem padrão)"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Se vazio, a imagem gerada automaticamente será usada
+              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
