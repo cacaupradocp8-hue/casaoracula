@@ -78,11 +78,11 @@ export const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
         xl: 'h-20 md:h-24'
       };
       return (
-        <div ref={ref} className={cn('flex items-center justify-center', className)} {...props}>
+        <div ref={ref} className={cn('flex items-center justify-center h-full', className)} {...props}>
           <img
             src={logoHeaderFinalClean}
             alt="Casa ORÁCULA"
-            className={cn('w-auto object-contain', combinedSizes[size], 'max-h-full')}
+            className={cn('w-auto object-contain max-h-full', combinedSizes[size])}
           />
         </div>
       );
