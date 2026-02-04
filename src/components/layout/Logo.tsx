@@ -66,25 +66,24 @@ export const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
       );
     }
 
-    // Combined variant - icon + text side by side
+    // Combined variant - icon only on mobile, icon + text on desktop
     if (variant === 'combined') {
       const iconSizesMap = {
         sm: 'h-10',
         md: 'h-14',
         lg: 'h-20',
-        // Navigation uses size="xl" for the header logo
-        xl: 'h-24 md:h-28'
+        xl: 'h-20 md:h-24'
       };
       const textSizesMap = {
         sm: 'h-6',
         md: 'h-10',
         lg: 'h-14',
-        xl: 'h-20 md:h-24'
+        xl: 'h-16 md:h-20'
       };
       return (
         <div ref={ref} className={cn('flex items-center justify-center gap-2 md:gap-4 h-full', className)} {...props}>
-          <img src={logoIcon} alt="" className={cn('w-auto object-contain', iconSizesMap[size])} />
-          <img src={logoText} alt="Casa ORÁCULA" className={cn('w-auto object-contain', textSizesMap[size])} />
+          <img src={logoIcon} alt="Casa ORÁCULA" className={cn('w-auto object-contain', iconSizesMap[size])} />
+          <img src={logoText} alt="" className={cn('w-auto object-contain hidden md:block', textSizesMap[size])} />
         </div>
       );
     }
