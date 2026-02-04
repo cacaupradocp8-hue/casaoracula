@@ -1,8 +1,8 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import logoFull from '@/assets/logo-casa-oracula.png';
-import logoIcon from '@/assets/logo-casa-icon-crop.png';
-import logoText from '@/assets/logo-casa-text-crop.png';
+import logoIcon from '@/assets/logo-casa-icon-new.png';
+import logoText from '@/assets/logo-casa-text-new.png';
 import logoHorizontal from '@/assets/logo-horizontal.png';
 import logoVertical from '@/assets/logo-vertical.png';
 
