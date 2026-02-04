@@ -5,7 +5,7 @@ import logoIcon from '@/assets/logo-icon.png';
 import logoText from '@/assets/logo-text.png';
 import logoHorizontal from '@/assets/logo-horizontal.png';
 import logoVertical from '@/assets/logo-vertical.png';
-import logoHorizontalCombined from '@/assets/logo-horizontal-combined.png';
+import logoHeaderFinal from '@/assets/logo-header-final.png';
 
 interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -73,11 +73,11 @@ export const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
         sm: 'h-12',
         md: 'h-16',
         lg: 'h-24',
-        xl: 'h-14 sm:h-16 md:h-20'
+        xl: 'h-16 sm:h-20 md:h-24'
       };
       return (
         <div ref={ref} className={cn('flex items-center justify-center', className)} {...props}>
-          <img src={logoHorizontalCombined} alt="Casa ORÁCULA" className={cn('w-auto object-contain', combinedSizes[size])} />
+          <img src={logoHeaderFinal} alt="Casa ORÁCULA" className={cn('w-auto object-contain', combinedSizes[size])} />
         </div>
       );
     }
