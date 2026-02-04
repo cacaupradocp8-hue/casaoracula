@@ -176,8 +176,9 @@ export function Navigation() {
       <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
           <div className="container mx-auto px-4">
           	<div className="flex items-center justify-between h-20 md:h-24">
-            <Link to={user ? '/jornada' : '/'}>
-              <Logo size="xl" variant="horizontal" />
+            <Link to={user ? '/jornada' : '/'} className="h-full flex items-center">
+              <Logo size="xl" variant="combined" className="md:hidden" />
+              <Logo size="xl" variant="horizontal" className="hidden md:flex" />
             </Link>
 
             {/* Desktop Navigation */}
