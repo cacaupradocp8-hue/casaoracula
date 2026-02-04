@@ -72,13 +72,13 @@ export const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
         sm: 'h-10',
         md: 'h-14',
         lg: 'h-20',
-        xl: 'h-16 md:h-20'
+        xl: 'h-14 md:h-20'
       };
       const textSizesMap = {
         sm: 'h-6',
         md: 'h-10',
         lg: 'h-14',
-        xl: 'h-10 md:h-14'
+        xl: 'h-12 md:h-16'
       };
       return (
         <div ref={ref} className={cn('flex items-center justify-center gap-2 md:gap-3 h-full', className)} {...props}>
