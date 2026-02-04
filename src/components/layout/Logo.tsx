@@ -1,8 +1,8 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import logoFull from '@/assets/logo-casa-oracula.png';
-import logoIcon from '@/assets/logo-casa-icon-new.png';
-import logoText from '@/assets/logo-casa-text-new.png';
+import logoIcon from '@/assets/logo-casa-icon-crop.png';
+import logoText from '@/assets/logo-casa-text-crop.png';
 import logoHorizontal from '@/assets/logo-horizontal.png';
 import logoVertical from '@/assets/logo-vertical.png';
 
@@ -72,16 +72,17 @@ export const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
         sm: 'h-10',
         md: 'h-14',
         lg: 'h-20',
-        xl: 'h-16 md:h-20'
+        // Navigation uses size="xl" for the header logo
+        xl: 'h-24 md:h-28'
       };
       const textSizesMap = {
         sm: 'h-6',
         md: 'h-10',
         lg: 'h-14',
-        xl: 'h-14 md:h-16'
+        xl: 'h-20 md:h-24'
       };
       return (
-        <div ref={ref} className={cn('flex items-center justify-center gap-2 md:gap-3 h-full', className)} {...props}>
+        <div ref={ref} className={cn('flex items-center justify-center gap-2 md:gap-4 h-full', className)} {...props}>
           <img src={logoIcon} alt="" className={cn('w-auto object-contain', iconSizesMap[size])} />
           <img src={logoText} alt="Casa ORÁCULA" className={cn('w-auto object-contain', textSizesMap[size])} />
         </div>
