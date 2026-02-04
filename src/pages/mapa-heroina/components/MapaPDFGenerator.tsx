@@ -1,8 +1,15 @@
+// ============================================
+// MAPA PDF GENERATOR - GRIMÓRIO CERIMONIAL
+// ============================================
+// Generates a ceremonial PDF/image of the Heroína journey
+// with parchment-style design and ritual elements
+
 import { useState, useRef } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
-import { Loader2, FileDown, X } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Loader2, FileDown, Mail, Scroll, Sparkles } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +18,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import type { MapaHeroinaData } from "@/hooks/useMapaHeroina";
+import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import html2canvas from "html2canvas";
 
@@ -21,14 +29,34 @@ interface MapaPDFGeneratorProps {
   insights: string;
 }
 
+// Frases de encerramento rituais
+const FRASES_ENCERRAMENTO = [
+  "Que esta travessia continue a ecoar em seu despertar.",
+  "O labirinto se fecha, mas suas revelações permanecem.",
+  "Você entrou buscando — sai portando.",
+  "A heroína que entra não é a mesma que atravessa.",
+  "Cada espiral guarda um fragmento de quem você está se tornando.",
+  "O caminho se fez caminhando, a mulher se fez atravessando.",
+];
+
 export function MapaPDFGenerator({
   open,
   onOpenChange,
   mapa,
   insights,
 }: MapaPDFGeneratorProps) {
+  const { user } = useAuth();
   const [isGenerating, setIsGenerating] = useState(false);
+  const [anotacoesPessoais, setAnotacoesPessoais] = useState(insights);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  // Random closing phrase
+  const fraseEncerramento = FRASES_ENCERRAMENTO[
+    Math.floor(Math.random() * FRASES_ENCERRAMENTO.length)
+  ];
+
+  const nomeHeroina = user?.name || "Heroína";
+  const dataTravessia = format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
 
   const handleGeneratePDF = async () => {
     if (!contentRef.current) return;
@@ -38,29 +66,39 @@ export function MapaPDFGenerator({
     try {
       const canvas = await html2canvas(contentRef.current, {
         scale: 2,
-        backgroundColor: "#0E1A24",
+        backgroundColor: null,
         logging: false,
+        useCORS: true,
       });
       
       const link = document.createElement("a");
-      link.download = `mapa-heroina-${format(new Date(), "yyyy-MM-dd")}.png`;
+      link.download = `travessia-heroina-${format(new Date(), "yyyy-MM-dd")}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
       
-      toast.success("Mapa da Travessia salvo com sucesso ✨");
+      toast.success("A Travessia foi selada. Deseja abrir um novo ciclo?", {
+        duration: 5000,
+        icon: "✨",
+      });
       onOpenChange(false);
     } catch (error) {
       console.error("Erro ao gerar imagem:", error);
-      toast.error("Erro ao gerar o Mapa. Tente novamente.");
+      toast.error("Erro ao selar a Travessia. Tente novamente.");
     } finally {
       setIsGenerating(false);
     }
   };
 
+  const handleSendEmail = () => {
+    toast.info("Funcionalidade de envio por e-mail em desenvolvimento", {
+      icon: "📧",
+    });
+  };
+
   const formatData = (data: string | null | undefined) => {
     if (!data) return "—";
     try {
-      return format(new Date(data), "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+      return format(new Date(data), "dd/MM/yyyy", { locale: ptBR });
     } catch {
       return "—";
     }
@@ -68,196 +106,316 @@ export function MapaPDFGenerator({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-background">
+      <DialogContent className="max-w-3xl max-h-[95vh] overflow-y-auto bg-stone-950 border-gold/30">
         <DialogHeader>
           <DialogTitle className="font-display text-xl text-gold flex items-center gap-2">
-            <FileDown className="w-5 h-5" />
-            Encerrar Travessia
+            <Scroll className="w-5 h-5" />
+            Encerramento Cerimonial da Travessia
           </DialogTitle>
-          <DialogDescription>
-            Gere uma imagem cerimonial do seu Mapa Pessoal da Heroína
+          <DialogDescription className="text-muted-foreground">
+            Seu grimório pessoal será selado com as revelações desta jornada
           </DialogDescription>
         </DialogHeader>
 
-        {/* Preview */}
+        {/* Anotações Pessoais Input */}
+        <div className="space-y-2 mb-4">
+          <label className="text-sm text-gold/80 font-medium">
+            Anotações Pessoais da Travessia
+          </label>
+          <Textarea
+            value={anotacoesPessoais}
+            onChange={(e) => setAnotacoesPessoais(e.target.value)}
+            placeholder="O que esta travessia revelou? Que imagens, sonhos ou intuições emergiram?"
+            className="min-h-[80px] bg-stone-900/50 border-gold/20 focus:border-gold/40 text-foreground"
+          />
+        </div>
+
+        {/* PDF Preview - Grimório Style */}
         <div 
           ref={contentRef}
-          className="bg-gradient-to-br from-[#0E1A24] via-[#142634] to-[#0E1A24] rounded-lg p-8 space-y-6"
+          className="relative rounded-lg overflow-hidden"
+          style={{
+            background: `
+              radial-gradient(ellipse at center, rgba(139, 115, 85, 0.15) 0%, transparent 70%),
+              linear-gradient(135deg, 
+                #1a1510 0%, 
+                #252018 25%, 
+                #1f1a14 50%, 
+                #252018 75%, 
+                #1a1510 100%
+              )
+            `,
+            boxShadow: "inset 0 0 100px rgba(0,0,0,0.5)",
+          }}
         >
-          {/* Header */}
-          <div className="text-center space-y-2 border-b border-gold/20 pb-6">
-            <div className="text-4xl mb-4">🌕</div>
-            <h2 className="font-display text-2xl text-gold">
-              Mapa Pessoal da Heroína®
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              {format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
-            </p>
-          </div>
+          {/* Textured Overlay */}
+          <div 
+            className="absolute inset-0 opacity-20 pointer-events-none"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+            }}
+          />
 
-          {/* Four Quadrants */}
-          <div className="grid grid-cols-2 gap-4">
-            {/* Fase */}
-            <div className="bg-blue-900/20 rounded-lg p-4 border border-gold/10">
-              <h4 className="text-xs uppercase tracking-wider text-gold/70 mb-2">
-                Reino das Marés — Fase
-              </h4>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">
-                  {mapa.faseAtiva?.fase?.icone || "🌙"}
-                </span>
-                <div>
-                  <p className="font-display text-foreground">
-                    {mapa.faseAtiva?.fase?.nome || "Não registrada"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatData(mapa.faseAtiva?.registrado_em)}
-                  </p>
+          {/* Content */}
+          <div className="relative p-8 md:p-10 space-y-6">
+            
+            {/* Header with Seal */}
+            <div className="text-center space-y-4 pb-6 border-b border-amber-800/30">
+              {/* Mandala Seal */}
+              <div className="relative inline-block">
+                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-amber-900/40 to-amber-950/60 border-2 border-amber-700/50 flex items-center justify-center shadow-lg shadow-amber-900/20">
+                  <span className="text-5xl">🌕</span>
                 </div>
+                <Sparkles className="absolute -top-1 -right-1 w-6 h-6 text-amber-500/60" />
               </div>
-            </div>
-
-            {/* Arquétipo */}
-            <div className="bg-purple-900/20 rounded-lg p-4 border border-gold/10">
-              <h4 className="text-xs uppercase tracking-wider text-gold/70 mb-2">
-                Reino das Figuras — Arquétipo
-              </h4>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">
-                  {mapa.ultimoArquetipo?.arquetipo?.icone || "✨"}
-                </span>
-                <div>
-                  <p className="font-display text-foreground">
-                    {mapa.ultimoArquetipo?.arquetipo?.nome || "Não registrado"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatData(mapa.ultimoArquetipo?.registrado_em)}
-                  </p>
-                </div>
-              </div>
-              {mapa.ultimoArquetipo?.polaridade_percebida && (
-                <p className="text-xs text-muted-foreground/70 mt-2 italic">
-                  "{mapa.ultimoArquetipo.polaridade_percebida}"
+              
+              <div className="space-y-1">
+                <p className="text-xs uppercase tracking-[0.3em] text-amber-600/70">
+                  ✧ Grimório da Travessia ✧
                 </p>
-              )}
+                <h1 
+                  className="font-display text-3xl md:text-4xl"
+                  style={{ 
+                    color: "#d4a574",
+                    textShadow: "0 2px 10px rgba(212, 165, 116, 0.3)",
+                  }}
+                >
+                  Mapa Pessoal da Heroína®
+                </h1>
+              </div>
+
+              {/* Heroína Name & Date */}
+              <div className="pt-4 space-y-1">
+                <p className="text-amber-500/90 font-display text-xl">
+                  {nomeHeroina}
+                </p>
+                <p className="text-amber-700/70 text-sm">
+                  Travessia selada em {dataTravessia}
+                </p>
+              </div>
             </div>
 
-            {/* Cenário */}
-            <div className="bg-emerald-900/20 rounded-lg p-4 border border-gold/10">
-              <h4 className="text-xs uppercase tracking-wider text-gold/70 mb-2">
-                Reino dos Cenários — Metáfora
-              </h4>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">
-                  {mapa.ultimoCenario?.metafora?.icone || "🪶"}
-                </span>
-                <div>
-                  <p className="font-display text-foreground">
-                    {mapa.ultimoCenario?.metafora?.nome || "Não registrado"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatData(mapa.ultimoCenario?.registrado_em)}
-                  </p>
+            {/* Four Realms Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              
+              {/* Reino das Marés - Fase */}
+              <div 
+                className="rounded-lg p-5 border"
+                style={{
+                  background: "linear-gradient(135deg, rgba(30, 58, 95, 0.3) 0%, rgba(20, 40, 65, 0.4) 100%)",
+                  borderColor: "rgba(100, 150, 200, 0.25)",
+                }}
+              >
+                <div className="flex items-start gap-3">
+                  <span className="text-3xl">{mapa.faseAtiva?.fase?.icone || "🌙"}</span>
+                  <div className="flex-1">
+                    <h4 className="text-xs uppercase tracking-wider text-blue-400/70 mb-1">
+                      Reino das Marés — Fase da Jornada
+                    </h4>
+                    <p className="font-display text-lg text-blue-200/90">
+                      {mapa.faseAtiva?.fase?.nome || "Não registrada"}
+                    </p>
+                    <p className="text-xs text-blue-400/50 mt-1">
+                      {formatData(mapa.faseAtiva?.registrado_em)}
+                    </p>
+                  </div>
                 </div>
               </div>
-              {mapa.ultimoCenario?.anotacao_livre && (
-                <p className="text-xs text-muted-foreground/70 mt-2 italic line-clamp-2">
-                  "{mapa.ultimoCenario.anotacao_livre}"
-                </p>
-              )}
-            </div>
 
-            {/* Ritual */}
-            <div className="bg-amber-900/20 rounded-lg p-4 border border-gold/10">
-              <h4 className="text-xs uppercase tracking-wider text-gold/70 mb-2">
-                Reino dos Gestos — Ritual
-              </h4>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">
-                  {mapa.ultimoRitual?.ritual?.icone || "🔥"}
-                </span>
-                <div>
-                  <p className="font-display text-foreground">
-                    {mapa.ultimoRitual?.ritual?.nome || "Não registrado"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatData(mapa.ultimoRitual?.completado_em)}
-                  </p>
+              {/* Reino das Figuras - Arquétipo */}
+              <div 
+                className="rounded-lg p-5 border"
+                style={{
+                  background: "linear-gradient(135deg, rgba(75, 35, 95, 0.3) 0%, rgba(50, 25, 70, 0.4) 100%)",
+                  borderColor: "rgba(150, 100, 180, 0.25)",
+                }}
+              >
+                <div className="flex items-start gap-3">
+                  <span className="text-3xl">{mapa.ultimoArquetipo?.arquetipo?.icone || "✨"}</span>
+                  <div className="flex-1">
+                    <h4 className="text-xs uppercase tracking-wider text-purple-400/70 mb-1">
+                      Reino das Figuras — Arquétipo em Trânsito
+                    </h4>
+                    <p className="font-display text-lg text-purple-200/90">
+                      {mapa.ultimoArquetipo?.arquetipo?.nome || "Não registrado"}
+                    </p>
+                    {mapa.ultimoArquetipo?.polaridade_percebida && (
+                      <p className="text-xs text-purple-300/60 mt-1 italic">
+                        "{mapa.ultimoArquetipo.polaridade_percebida}"
+                      </p>
+                    )}
+                    <p className="text-xs text-purple-400/50 mt-1">
+                      {formatData(mapa.ultimoArquetipo?.registrado_em)}
+                    </p>
+                  </div>
                 </div>
               </div>
-              {mapa.ultimoRitual?.reflexao && (
-                <p className="text-xs text-muted-foreground/70 mt-2 italic line-clamp-2">
-                  "{mapa.ultimoRitual.reflexao}"
-                </p>
-              )}
-            </div>
-          </div>
 
-          {/* Insights */}
-          {insights && (
-            <div className="bg-gold/5 rounded-lg p-4 border border-gold/20">
-              <h4 className="text-xs uppercase tracking-wider text-gold/70 mb-2">
-                Caderno de Insights
-              </h4>
-              <p className="text-sm text-foreground/80 italic whitespace-pre-wrap">
-                {insights}
+              {/* Reino dos Cenários - Metáfora */}
+              <div 
+                className="rounded-lg p-5 border"
+                style={{
+                  background: "linear-gradient(135deg, rgba(25, 70, 55, 0.3) 0%, rgba(18, 50, 40, 0.4) 100%)",
+                  borderColor: "rgba(80, 160, 120, 0.25)",
+                }}
+              >
+                <div className="flex items-start gap-3">
+                  <span className="text-3xl">{mapa.ultimoCenario?.metafora?.icone || "🪶"}</span>
+                  <div className="flex-1">
+                    <h4 className="text-xs uppercase tracking-wider text-emerald-400/70 mb-1">
+                      Reino dos Cenários — Metáfora Revelada
+                    </h4>
+                    <p className="font-display text-lg text-emerald-200/90">
+                      {mapa.ultimoCenario?.metafora?.nome || "Não registrado"}
+                    </p>
+                    {mapa.ultimoCenario?.anotacao_livre && (
+                      <p className="text-xs text-emerald-300/60 mt-1 italic line-clamp-2">
+                        "{mapa.ultimoCenario.anotacao_livre}"
+                      </p>
+                    )}
+                    <p className="text-xs text-emerald-400/50 mt-1">
+                      {formatData(mapa.ultimoCenario?.registrado_em)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Reino dos Gestos - Ritual */}
+              <div 
+                className="rounded-lg p-5 border"
+                style={{
+                  background: "linear-gradient(135deg, rgba(95, 55, 25, 0.3) 0%, rgba(70, 40, 18, 0.4) 100%)",
+                  borderColor: "rgba(200, 140, 80, 0.25)",
+                }}
+              >
+                <div className="flex items-start gap-3">
+                  <span className="text-3xl">{mapa.ultimoRitual?.ritual?.icone || "🔥"}</span>
+                  <div className="flex-1">
+                    <h4 className="text-xs uppercase tracking-wider text-amber-400/70 mb-1">
+                      Reino dos Gestos — Ritual Escolhido
+                    </h4>
+                    <p className="font-display text-lg text-amber-200/90">
+                      {mapa.ultimoRitual?.ritual?.nome || "Não registrado"}
+                    </p>
+                    <p className="text-xs text-amber-300/70 mt-1">
+                      {mapa.ultimoRitual?.completado_em ? "✓ Realizado" : "○ Em curso"}
+                    </p>
+                    {mapa.ultimoRitual?.reflexao && (
+                      <p className="text-xs text-amber-300/60 mt-1 italic line-clamp-2">
+                        "{mapa.ultimoRitual.reflexao}"
+                      </p>
+                    )}
+                    <p className="text-xs text-amber-400/50 mt-1">
+                      {formatData(mapa.ultimoRitual?.completado_em)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Anotações Pessoais */}
+            {anotacoesPessoais && (
+              <div 
+                className="rounded-lg p-5 mt-4"
+                style={{
+                  background: "rgba(212, 165, 116, 0.08)",
+                  border: "1px solid rgba(212, 165, 116, 0.2)",
+                }}
+              >
+                <h4 className="text-xs uppercase tracking-wider text-amber-500/70 mb-3 flex items-center gap-2">
+                  <Scroll className="w-3 h-3" />
+                  Anotações da Tecelã
+                </h4>
+                <p 
+                  className="text-sm leading-relaxed whitespace-pre-wrap"
+                  style={{ color: "rgba(212, 190, 160, 0.9)" }}
+                >
+                  {anotacoesPessoais}
+                </p>
+              </div>
+            )}
+
+            {/* Statistics Bar */}
+            <div 
+              className="flex justify-center gap-8 py-4 mt-4 rounded-lg"
+              style={{
+                background: "rgba(0, 0, 0, 0.3)",
+                border: "1px solid rgba(212, 165, 116, 0.15)",
+              }}
+            >
+              <div className="text-center">
+                <p className="text-xl font-display text-amber-500">{mapa.totalFases}</p>
+                <p className="text-[10px] uppercase tracking-wider text-amber-700/60">Fases</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xl font-display text-amber-500">{mapa.totalArquetipos}</p>
+                <p className="text-[10px] uppercase tracking-wider text-amber-700/60">Arquétipos</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xl font-display text-amber-500">{mapa.totalCenarios}</p>
+                <p className="text-[10px] uppercase tracking-wider text-amber-700/60">Cenários</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xl font-display text-amber-500">{mapa.totalRituais}</p>
+                <p className="text-[10px] uppercase tracking-wider text-amber-700/60">Rituais</p>
+              </div>
+            </div>
+
+            {/* Closing Phrase */}
+            <div className="text-center pt-6 pb-2">
+              <p 
+                className="font-display text-lg italic"
+                style={{ color: "rgba(212, 175, 140, 0.8)" }}
+              >
+                "{fraseEncerramento}"
               </p>
             </div>
-          )}
 
-          {/* Statistics */}
-          <div className="flex justify-center gap-8 pt-4 border-t border-gold/20">
-            <div className="text-center">
-              <p className="text-lg font-display text-gold">{mapa.totalFases}</p>
-              <p className="text-xs text-muted-foreground">Fases</p>
+            {/* Footer Seal */}
+            <div className="text-center pt-4 border-t border-amber-800/20">
+              <div className="inline-flex items-center gap-2 text-amber-700/50 text-xs">
+                <span>✧</span>
+                <span>Labirinto da Heroína Interna®</span>
+                <span>✧</span>
+              </div>
+              <p className="text-[10px] text-amber-800/40 mt-1">
+                Casa ORÁCULA — Método Terapêutico Integrativo
+              </p>
             </div>
-            <div className="text-center">
-              <p className="text-lg font-display text-gold">{mapa.totalArquetipos}</p>
-              <p className="text-xs text-muted-foreground">Arquétipos</p>
-            </div>
-            <div className="text-center">
-              <p className="text-lg font-display text-gold">{mapa.totalCenarios}</p>
-              <p className="text-xs text-muted-foreground">Cenários</p>
-            </div>
-            <div className="text-center">
-              <p className="text-lg font-display text-gold">{mapa.totalRituais}</p>
-              <p className="text-xs text-muted-foreground">Rituais</p>
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div className="text-center pt-4 border-t border-gold/20">
-            <p className="text-xs text-gold/50">
-              ✧ O Labirinto da Heroína Interna® ✧
-            </p>
-            <p className="text-xs text-muted-foreground/50 mt-1">
-              Casa ORÁCULA — Método Terapêutico Integrativo
-            </p>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="flex justify-end gap-3 pt-4">
+        <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
           <Button
             variant="ghost"
             onClick={() => onOpenChange(false)}
+            className="text-muted-foreground"
           >
             Cancelar
           </Button>
           <Button
+            variant="outline"
+            onClick={handleSendEmail}
+            className="border-gold/30 text-gold hover:bg-gold/10 gap-2"
+          >
+            <Mail className="w-4 h-4" />
+            Enviar por E-mail
+          </Button>
+          <Button
             onClick={handleGeneratePDF}
             disabled={isGenerating}
-            className="bg-gold hover:bg-gold/90 text-gold-foreground gap-2"
+            className="bg-gradient-to-r from-amber-700 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-amber-50 gap-2"
           >
             {isGenerating ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Gerando...
+                Selando Travessia...
               </>
             ) : (
               <>
                 <FileDown className="w-4 h-4" />
-                Salvar Imagem
+                Selar e Baixar PDF
               </>
             )}
           </Button>
