@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Feather, MapPin } from "lucide-react";
+import { Feather, Heart } from "lucide-react";
 import type { LabirintoMetafora } from "@/hooks/useLabirintoHeroina";
 import { MetaforaCard } from "./MetaforaCard";
 import { useHeroinaCenarioRegistros } from "@/hooks/useHeroinaCenarioRegistro";
@@ -34,17 +34,16 @@ export function MetaforasLayer({ metaforas }: MetaforasLayerProps) {
       <Card className="border-gold/30 bg-gradient-to-r from-gold/5 to-transparent">
         <CardContent className="p-6 space-y-4">
           <h3 className="font-display text-xl text-gold">
-            🜃 O Reino dos Cenários
+            🪞 Reino dos Cenários — Metáforas do Inconsciente
           </h3>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            Este é o palco do inconsciente. Aqui, a psique não se explica — ela se mostra.
-            Imagens internas, atmosferas simbólicas, paisagens psíquicas que habitam
-            sonhos e devaneios.
+            São 14 paisagens simbólicas que refletem estados da psique feminina.
+            Este é o palco do inconsciente — aqui, a psique não se explica, ela se mostra.
           </p>
           <div className="flex items-center gap-2 text-xs text-muted-foreground/70 pt-2 border-t border-gold/10">
-            <MapPin className="w-3 h-3" />
+            <Heart className="w-3 h-3" />
             <span>
-              {registros?.length || 0} cenário(s) registrado(s) no seu Mapa Pessoal
+              {registros?.length || 0} cenário(s) sentido(s) no seu Mapa Pessoal
             </span>
           </div>
         </CardContent>
