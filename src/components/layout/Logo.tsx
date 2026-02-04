@@ -1,12 +1,10 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import logoFull from '@/assets/logo-casa-oracula.png';
-import logoIcon from '@/assets/logo-icon.png';
-import logoText from '@/assets/logo-text.png';
+import logoIcon from '@/assets/logo-casa-icon-new.png';
+import logoText from '@/assets/logo-casa-text-new.png';
 import logoHorizontal from '@/assets/logo-horizontal.png';
 import logoVertical from '@/assets/logo-vertical.png';
-import logoHeaderFinal from '@/assets/logo-header-final.png';
-import logoHeaderFinalClean from '@/assets/logo-header-final-clean.png';
 
 interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -68,22 +66,24 @@ export const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
       );
     }
 
-    // Combined variant - unified horizontal logo (icon + text in one image)
+    // Combined variant - icon + text side by side
     if (variant === 'combined') {
-      const combinedSizes = {
-        sm: 'h-14',
-        md: 'h-16',
-        lg: 'h-24',
-        // intended for header usage (Navigation uses size="xl")
-        xl: 'h-20 md:h-24'
+      const iconSizesMap = {
+        sm: 'h-10',
+        md: 'h-14',
+        lg: 'h-20',
+        xl: 'h-16 md:h-20'
+      };
+      const textSizesMap = {
+        sm: 'h-6',
+        md: 'h-10',
+        lg: 'h-14',
+        xl: 'h-10 md:h-14'
       };
       return (
-        <div ref={ref} className={cn('flex items-center justify-center h-full', className)} {...props}>
-          <img
-            src={logoHeaderFinalClean}
-            alt="Casa ORÁCULA"
-            className={cn('w-auto object-contain max-h-full', combinedSizes[size])}
-          />
+        <div ref={ref} className={cn('flex items-center justify-center gap-2 md:gap-3 h-full', className)} {...props}>
+          <img src={logoIcon} alt="" className={cn('w-auto object-contain', iconSizesMap[size])} />
+          <img src={logoText} alt="Casa ORÁCULA" className={cn('w-auto object-contain', textSizesMap[size])} />
         </div>
       );
     }
