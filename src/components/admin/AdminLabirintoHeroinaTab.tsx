@@ -56,6 +56,7 @@ interface LabirintoMetafora {
   texto_evocativo: string | null;
   pergunta_reflexao: string | null;
   icone: string | null;
+  imagem_url: string | null;
   cor_acento: string | null;
   ativo: boolean;
   created_at: string;
@@ -820,6 +821,7 @@ function MetaforasSection() {
     texto_evocativo: "",
     pergunta_reflexao: "",
     icone: "",
+    imagem_url: "",
     cor_acento: "",
     ativo: true,
     ordem: 0,
@@ -850,6 +852,7 @@ function MetaforasSection() {
       texto_evocativo: "",
       pergunta_reflexao: "",
       icone: "",
+      imagem_url: "",
       cor_acento: "",
       ativo: true,
       ordem: metaforas.length,
@@ -864,6 +867,7 @@ function MetaforasSection() {
       texto_evocativo: met.texto_evocativo || "",
       pergunta_reflexao: met.pergunta_reflexao || "",
       icone: met.icone || "",
+      imagem_url: met.imagem_url || "",
       cor_acento: met.cor_acento || "",
       ativo: met.ativo,
       ordem: met.ordem,
@@ -884,6 +888,7 @@ function MetaforasSection() {
       texto_evocativo: form.texto_evocativo || null,
       pergunta_reflexao: form.pergunta_reflexao || null,
       icone: form.icone || null,
+      imagem_url: form.imagem_url || null,
       cor_acento: form.cor_acento || null,
       ativo: form.ativo,
       ordem: form.ordem,
@@ -1081,6 +1086,18 @@ function MetaforasSection() {
                   placeholder="Ex: #D4AF37"
                 />
               </div>
+            </div>
+
+            <div>
+              <Label>URL da Imagem</Label>
+              <Input
+                value={form.imagem_url}
+                onChange={(e) => setForm({ ...form, imagem_url: e.target.value })}
+                placeholder="https://... (deixe vazio para usar imagem padrão)"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Se vazio, a imagem gerada automaticamente será usada
+              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
