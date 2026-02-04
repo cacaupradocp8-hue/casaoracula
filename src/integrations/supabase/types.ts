@@ -3444,6 +3444,41 @@ export type Database = {
           },
         ]
       }
+      heroina_ritual_registros: {
+        Row: {
+          completado_em: string | null
+          created_at: string | null
+          id: string
+          reflexao: string | null
+          ritual_id: string
+          user_id: string
+        }
+        Insert: {
+          completado_em?: string | null
+          created_at?: string | null
+          id?: string
+          reflexao?: string | null
+          ritual_id: string
+          user_id: string
+        }
+        Update: {
+          completado_em?: string | null
+          created_at?: string | null
+          id?: string
+          reflexao?: string | null
+          ritual_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "heroina_ritual_registros_ritual_id_fkey"
+            columns: ["ritual_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_rituais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       image_assets: {
         Row: {
           alt_text: string | null
