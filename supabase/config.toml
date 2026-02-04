@@ -32,3 +32,9 @@ verify_jwt = false
 
 [functions.generate-labirinto-roteiro]
 verify_jwt = false
+
+[functions.generate-clinical-narrative]
+verify_jwt = false
+
+[functions.syntheia-chat]
+verify_jwt = false
