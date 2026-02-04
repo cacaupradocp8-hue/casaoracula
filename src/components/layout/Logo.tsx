@@ -71,15 +71,17 @@ export const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
       const combinedIconSizes = {
         sm: 'h-12',
         md: 'h-16',
-        lg: 'h-24'
+        lg: 'h-24',
+        xl: 'h-16 md:h-20'
       };
       const combinedTextSizes = {
         sm: 'h-10',
         md: 'h-14',
-        lg: 'h-20'
+        lg: 'h-20',
+        xl: 'h-12 md:h-16'
       };
       return (
-        <div ref={ref} className={cn('flex items-center justify-center gap-4', className)} {...props}>
+        <div ref={ref} className={cn('flex items-center justify-center gap-3', className)} {...props}>
           <img src={logoIcon} alt="Casa ORÁCULA" className={cn('w-auto object-contain', combinedIconSizes[size])} />
           <img src={logoText} alt="Casa ORÁCULA" className={cn('w-auto object-contain', combinedTextSizes[size])} />
         </div>
