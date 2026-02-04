@@ -3339,6 +3339,41 @@ export type Database = {
           },
         ]
       }
+      heroina_fase_ativa: {
+        Row: {
+          ativa: boolean
+          created_at: string
+          fase_id: string
+          id: string
+          registrado_em: string
+          user_id: string
+        }
+        Insert: {
+          ativa?: boolean
+          created_at?: string
+          fase_id: string
+          id?: string
+          registrado_em?: string
+          user_id: string
+        }
+        Update: {
+          ativa?: boolean
+          created_at?: string
+          fase_id?: string
+          id?: string
+          registrado_em?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "heroina_fase_ativa_fase_id_fkey"
+            columns: ["fase_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_fases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       image_assets: {
         Row: {
           alt_text: string | null
@@ -4123,9 +4158,11 @@ export type Database = {
           descricao: string
           icone: string | null
           id: string
+          imagem_url: string | null
           nome: string
           ordem: number
           subtitulo: string | null
+          texto_simbolico: string | null
           updated_at: string
         }
         Insert: {
@@ -4135,9 +4172,11 @@ export type Database = {
           descricao: string
           icone?: string | null
           id?: string
+          imagem_url?: string | null
           nome: string
           ordem?: number
           subtitulo?: string | null
+          texto_simbolico?: string | null
           updated_at?: string
         }
         Update: {
@@ -4147,9 +4186,11 @@ export type Database = {
           descricao?: string
           icone?: string | null
           id?: string
+          imagem_url?: string | null
           nome?: string
           ordem?: number
           subtitulo?: string | null
+          texto_simbolico?: string | null
           updated_at?: string
         }
         Relationships: []
