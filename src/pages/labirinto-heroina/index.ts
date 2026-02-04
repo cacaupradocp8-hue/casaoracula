@@ -1,1 +1,2 @@
-export { default as LabirintoHeroinaPage } from './LabirintoHeroinaPage';
+export { default as LabirintoHeroinaPage } from './LabirintoHeroinaPraticoPage';
+export { default as LabirintoHeroinaLegacyPage } from './LabirintoHeroinaPage';
