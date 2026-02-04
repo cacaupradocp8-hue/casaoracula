@@ -166,6 +166,8 @@ import {
   ClubeLivroEncontros,
   ClubeLivroRitual
 } from "./pages/clube-livro";
+// Labirinto da Heroína Interna®
+import { LabirintoHeroinaPage } from "./pages/labirinto-heroina";
 
 const queryClient = new QueryClient();
 
@@ -501,6 +503,16 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="oracula">
             <FerramentasMetodo />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Labirinto da Heroína Interna® */}
+      <Route
+        path="/labirinto-heroina"
+        element={
+          <ProtectedRoute minPortal="aluna_formacao">
+            <LabirintoHeroinaPage />
           </ProtectedRoute>
         }
       />
