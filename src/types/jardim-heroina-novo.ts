@@ -16,11 +16,11 @@ export type JardimGestoTipo =
   | 'acao_simbolica'; // simple symbolic action
 
 export const GESTO_TIPO_LABELS: Record<JardimGestoTipo, string> = {
-  observacao: 'Observação',
-  limite: 'Limite',
-  cuidado: 'Cuidado',
-  pausa: 'Pausa',
-  acao_simbolica: 'Ação Simbólica',
+  observacao: 'observar',
+  limite: 'colocar limite',
+  cuidado: 'cuidar',
+  pausa: 'pausar',
+  acao_simbolica: 'agir simbolicamente',
 };
 
 export const GESTO_TIPO_ICONS: Record<JardimGestoTipo, string> = {
