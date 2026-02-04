@@ -4073,6 +4073,87 @@ export type Database = {
           },
         ]
       }
+      labirinto_arquetipos: {
+        Row: {
+          ativo: boolean
+          cor_acento: string | null
+          created_at: string
+          descricao_luz: string
+          descricao_sombra: string
+          icone: string | null
+          id: string
+          nome: string
+          ordem: number
+          territorio: string | null
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          cor_acento?: string | null
+          created_at?: string
+          descricao_luz: string
+          descricao_sombra: string
+          icone?: string | null
+          id?: string
+          nome: string
+          ordem?: number
+          territorio?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          cor_acento?: string | null
+          created_at?: string
+          descricao_luz?: string
+          descricao_sombra?: string
+          icone?: string | null
+          id?: string
+          nome?: string
+          ordem?: number
+          territorio?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      labirinto_fases: {
+        Row: {
+          ativo: boolean
+          cor_acento: string | null
+          created_at: string
+          descricao: string
+          icone: string | null
+          id: string
+          nome: string
+          ordem: number
+          subtitulo: string | null
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          cor_acento?: string | null
+          created_at?: string
+          descricao: string
+          icone?: string | null
+          id?: string
+          nome: string
+          ordem?: number
+          subtitulo?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          cor_acento?: string | null
+          created_at?: string
+          descricao?: string
+          icone?: string | null
+          id?: string
+          nome?: string
+          ordem?: number
+          subtitulo?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       labirinto_leituras: {
         Row: {
           cliente_id: string | null
@@ -4120,6 +4201,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      labirinto_metaforas: {
+        Row: {
+          ativo: boolean
+          cor_acento: string | null
+          created_at: string
+          icone: string | null
+          id: string
+          nome: string
+          ordem: number
+          pergunta_reflexao: string | null
+          texto_evocativo: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          cor_acento?: string | null
+          created_at?: string
+          icone?: string | null
+          id?: string
+          nome: string
+          ordem?: number
+          pergunta_reflexao?: string | null
+          texto_evocativo: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          cor_acento?: string | null
+          created_at?: string
+          icone?: string | null
+          id?: string
+          nome?: string
+          ordem?: number
+          pergunta_reflexao?: string | null
+          texto_evocativo?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       labirinto_portas: {
         Row: {
@@ -4234,6 +4354,150 @@ export type Database = {
           subtitulo?: string | null
           symbolic_focus?: string | null
           tipo_campo?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      labirinto_registros: {
+        Row: {
+          arquetipo_id: string | null
+          concluido: boolean
+          concluido_em: string | null
+          created_at: string
+          fase_id: string | null
+          id: string
+          metafora_id: string | null
+          modo_uso: Database["public"]["Enums"]["labirinto_modo_uso"]
+          notas_terapeuta: string | null
+          reflexao_arquetipo: string | null
+          reflexao_fase: string | null
+          reflexao_final: string | null
+          reflexao_metafora: string | null
+          reflexao_ritual: string | null
+          ritual_id: string | null
+          session_case_id: string | null
+          terapeuta_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          arquetipo_id?: string | null
+          concluido?: boolean
+          concluido_em?: string | null
+          created_at?: string
+          fase_id?: string | null
+          id?: string
+          metafora_id?: string | null
+          modo_uso?: Database["public"]["Enums"]["labirinto_modo_uso"]
+          notas_terapeuta?: string | null
+          reflexao_arquetipo?: string | null
+          reflexao_fase?: string | null
+          reflexao_final?: string | null
+          reflexao_metafora?: string | null
+          reflexao_ritual?: string | null
+          ritual_id?: string | null
+          session_case_id?: string | null
+          terapeuta_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          arquetipo_id?: string | null
+          concluido?: boolean
+          concluido_em?: string | null
+          created_at?: string
+          fase_id?: string | null
+          id?: string
+          metafora_id?: string | null
+          modo_uso?: Database["public"]["Enums"]["labirinto_modo_uso"]
+          notas_terapeuta?: string | null
+          reflexao_arquetipo?: string | null
+          reflexao_fase?: string | null
+          reflexao_final?: string | null
+          reflexao_metafora?: string | null
+          reflexao_ritual?: string | null
+          ritual_id?: string | null
+          session_case_id?: string | null
+          terapeuta_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "labirinto_registros_arquetipo_id_fkey"
+            columns: ["arquetipo_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_arquetipos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "labirinto_registros_fase_id_fkey"
+            columns: ["fase_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_fases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "labirinto_registros_metafora_id_fkey"
+            columns: ["metafora_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_metaforas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "labirinto_registros_ritual_id_fkey"
+            columns: ["ritual_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_rituais"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "labirinto_registros_session_case_id_fkey"
+            columns: ["session_case_id"]
+            isOneToOne: false
+            referencedRelation: "session_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      labirinto_rituais: {
+        Row: {
+          ativo: boolean
+          cor_acento: string | null
+          created_at: string
+          descricao: string
+          duracao: string | null
+          icone: string | null
+          id: string
+          instrucoes: string | null
+          nome: string
+          ordem: number
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          cor_acento?: string | null
+          created_at?: string
+          descricao: string
+          duracao?: string | null
+          icone?: string | null
+          id?: string
+          instrucoes?: string | null
+          nome: string
+          ordem?: number
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          cor_acento?: string | null
+          created_at?: string
+          descricao?: string
+          duracao?: string | null
+          icone?: string | null
+          id?: string
+          instrucoes?: string | null
+          nome?: string
+          ordem?: number
           updated_at?: string
         }
         Relationships: []
@@ -8242,6 +8506,7 @@ export type Database = {
         | "narrative_result"
         | "porta_familias"
       content_type: "text" | "video" | "audio" | "file" | "mixed"
+      labirinto_modo_uso: "individual" | "grupo" | "constelacao" | "mentoria"
       mentoria_tipo: "aviso" | "evento" | "supervisao"
       nivel_sala: "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3"
       oracle_card_level: "beginner" | "intermediate" | "advanced"
@@ -8436,6 +8701,7 @@ export const Constants = {
         "porta_familias",
       ],
       content_type: ["text", "video", "audio", "file", "mixed"],
+      labirinto_modo_uso: ["individual", "grupo", "constelacao", "mentoria"],
       mentoria_tipo: ["aviso", "evento", "supervisao"],
       nivel_sala: ["NIVEL_0", "NIVEL_1", "NIVEL_2", "NIVEL_3"],
       oracle_card_level: ["beginner", "intermediate", "advanced"],
