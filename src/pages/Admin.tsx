@@ -42,6 +42,7 @@ const AdminAISettingsTab = lazy(() => import('@/components/admin/AdminAISettings
 const AdminBibliotecaTravessiasTab = lazy(() => import('@/components/admin/AdminBibliotecaTravessiasTab').then(m => ({ default: m.AdminBibliotecaTravessiasTab })));
 const AdminTravessiasTab = lazy(() => import('@/components/admin/AdminTravessiasTab').then(m => ({ default: m.AdminTravessiasTab })));
 const AdminLabirintoTab = lazy(() => import('@/components/admin/AdminLabirintoTab').then(m => ({ default: m.AdminLabirintoTab })));
+const AdminLabirintoHeroinaTab = lazy(() => import('@/components/admin/AdminLabirintoHeroinaTab').then(m => ({ default: m.AdminLabirintoHeroinaTab })));
 const AdminFamiliasTab = lazy(() => import('@/components/admin/AdminFamiliasTab').then(m => ({ default: m.AdminFamiliasTab })));
 const AdminBig5SymbolicTab = lazy(() => import('@/components/admin/AdminBig5SymbolicTab').then(m => ({ default: m.AdminBig5SymbolicTab })));
 const AdminEneagramaFemininoTab = lazy(() => import('@/components/admin/AdminEneagramaFemininoTab'));
@@ -238,7 +239,11 @@ export default function Admin() {
             </TabsTrigger>
             <TabsTrigger value="labirinto" className="gap-2">
               <DoorOpen className="w-4 h-4 text-gold" />
-              🜂 Labirinto
+              🜂 Labirinto 39P
+            </TabsTrigger>
+            <TabsTrigger value="labirinto-heroina" className="gap-2">
+              <Compass className="w-4 h-4 text-gold" />
+              Heroína Interna®
             </TabsTrigger>
             <TabsTrigger value="big5-simbolico" className="gap-2">
               <Moon className="w-4 h-4" />
@@ -458,6 +463,12 @@ export default function Admin() {
           <TabsContent value="labirinto">
             <Suspense fallback={<TabLoader />}>
               <AdminLabirintoTab />
+            </Suspense>
+          </TabsContent>
+
+          <TabsContent value="labirinto-heroina">
+            <Suspense fallback={<TabLoader />}>
+              <AdminLabirintoHeroinaTab />
             </Suspense>
           </TabsContent>
 
