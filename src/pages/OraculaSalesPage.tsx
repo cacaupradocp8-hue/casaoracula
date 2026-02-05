@@ -65,7 +65,7 @@ export default function OraculaSalesPage() {
           </p>
           
           <h1 className="font-display text-3xl md:text-4xl lg:text-5xl text-foreground tracking-wide leading-tight mb-6">
-            FORMAÇÃO ORÁCULA
+            Formação Iniciática em Terapia Arquetípica e Narroterapia Oracular
           </h1>
           
           <p className="text-gold/80 text-lg mb-8">
