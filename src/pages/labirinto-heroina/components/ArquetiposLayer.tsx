@@ -21,17 +21,25 @@ export function ArquetiposLayer({ arquetipos }: ArquetiposLayerProps) {
 
   return (
     <div className="space-y-8">
-      {/* Introduction */}
-      <Card className="border-gold/30 bg-gradient-to-r from-gold/5 to-transparent">
-        <CardContent className="p-6">
-          <h3 className="font-display text-xl text-gold mb-2">
+      {/* Introduction - Symbolic Language */}
+      <Card className="border-gold/30 bg-gradient-to-br from-gold/5 via-transparent to-accent/5">
+        <CardContent className="p-6 md:p-8">
+          <h3 className="font-display text-xl md:text-2xl text-gold mb-3 text-center">
             Os 14 Arquétipos da Psique Feminina
           </h3>
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            Cada arquétipo carrega luz e sombra. O sistema não diagnostica, não classifica 
-            e não interpreta automaticamente. Você é a única que pode reconhecer como 
-            cada força atua em sua vida.
+          <p className="text-muted-foreground text-sm md:text-base leading-relaxed text-center max-w-2xl mx-auto">
+            Cada arquétipo carrega uma polaridade — luz e sombra que coexistem.
+            Este não é um teste. Não há resultado certo ou errado.
+            Você é a única que pode reconhecer como cada força pulsa em sua vida.
           </p>
+          
+          {/* Ritual instruction */}
+          <div className="mt-6 pt-4 border-t border-gold/10 text-center">
+            <p className="text-xs text-muted-foreground/70 italic">
+              Permita-se contemplar cada carta sem pressa. 
+              Deixe que a imagem fale antes das palavras.
+            </p>
+          </div>
         </CardContent>
       </Card>
 
@@ -41,6 +49,16 @@ export function ArquetiposLayer({ arquetipos }: ArquetiposLayerProps) {
           <ArquetipoCard key={arquetipo.id} arquetipo={arquetipo} />
         ))}
       </div>
+
+      {/* Closing reflection */}
+      <Card className="border-gold/20 bg-card/50">
+        <CardContent className="p-6 text-center">
+          <p className="text-sm text-muted-foreground italic">
+            "A heroína não escolhe apenas um arquétipo. 
+            Ela atravessa todos — até integrar a totalidade que sempre foi."
+          </p>
+        </CardContent>
+      </Card>
     </div>
   );
 }
