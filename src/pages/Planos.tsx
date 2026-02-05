@@ -86,10 +86,10 @@ export default function Planos() {
               className="text-center max-w-2xl mx-auto"
             >
               <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-foreground tracking-wide mb-3">
-                Planos da Casa Orácula
+                Uso do Sistema
               </h1>
               <p className="text-gold/80 font-medium">
-                Infraestrutura para a prática. Ética para a condução.
+                Sustentação da prática. Infraestrutura profissional.
               </p>
             </motion.div>
           </div>
@@ -100,15 +100,16 @@ export default function Planos() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-center max-w-lg mx-auto space-y-3"
+              className="text-center max-w-xl mx-auto space-y-4"
             >
               <p className="text-foreground/90">
-                A Casa Orácula não vende atalhos.<br />
-                Ela sustenta práticas reais.
+                Aqui você não aluga conhecimento.<br />
+                Você sustenta um campo de trabalho.
               </p>
-              <p className="text-muted-foreground text-sm">
-                Os planos dão acesso ao uso do sistema —<br />
-                não substituem formação, nem prometem autorização.
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                O plano mensal mantém o sistema ativo —<br />
+                ferramentas, IA e infraestrutura de atendimento.<br />
+                <span className="text-gold/70">A Formação autoriza. O Plano sustenta a prática.</span>
               </p>
             </motion.div>
           </div>
@@ -234,13 +235,15 @@ export default function Planos() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="max-w-lg mx-auto text-center space-y-2"
+              className="max-w-xl mx-auto text-center space-y-3"
             >
-              <p className="text-muted-foreground text-sm">
-                O plano permite o uso do sistema.
+              <p className="text-foreground/80 text-sm font-medium">
+                O plano cobra uso, volume e recursos.<br />
+                Não "autoriza" ninguém.
               </p>
               <p className="text-muted-foreground text-sm">
-                A condução simbólica depende do nível de formação.
+                A autorização vem da Formação.<br />
+                O plano sustenta quem já está em prática.
               </p>
             </motion.div>
           </div>
