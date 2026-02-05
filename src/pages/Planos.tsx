@@ -85,12 +85,30 @@ export default function Planos() {
               transition={{ duration: 0.6 }}
               className="text-center max-w-2xl mx-auto"
             >
-              <span className="text-gold/70 text-2xl mb-3 block">🜂</span>
               <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-foreground tracking-wide mb-3">
-                Planos & Travessias
+                Planos da Casa Orácula
               </h1>
-              <p className="text-muted-foreground">
-                Escolha o caminho que ressoa com o seu momento
+              <p className="text-gold/80 font-medium">
+                Infraestrutura para a prática. Ética para a condução.
+              </p>
+            </motion.div>
+          </div>
+          
+          {/* Opening text */}
+          <div className="container mx-auto px-6 mt-8">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-center max-w-lg mx-auto space-y-3"
+            >
+              <p className="text-foreground/90">
+                A Casa Orácula não vende atalhos.<br />
+                Ela sustenta práticas reais.
+              </p>
+              <p className="text-muted-foreground text-sm">
+                Os planos dão acesso ao uso do sistema —<br />
+                não substituem formação, nem prometem autorização.
               </p>
             </motion.div>
           </div>
@@ -208,7 +226,7 @@ export default function Planos() {
 
         <RitualDivider />
 
-        {/* Closing Note */}
+        {/* Ethical Footer Note */}
         <section className="py-10 sm:py-16">
           <div className="container mx-auto px-6">
             <motion.div
@@ -216,24 +234,15 @@ export default function Planos() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="max-w-lg mx-auto text-center space-y-4"
+              className="max-w-lg mx-auto text-center space-y-2"
             >
-              <p className="text-foreground/90">
-                Não há pressa. A Casa continua aqui.
+              <p className="text-muted-foreground text-sm">
+                O plano permite o uso do sistema.
               </p>
               <p className="text-muted-foreground text-sm">
-                Escolha quando o corpo estiver de acordo.
+                A condução simbólica depende do nível de formação.
               </p>
             </motion.div>
-          </div>
-        </section>
-
-        {/* Footer Note */}
-        <section className="py-8 border-t border-border/20">
-          <div className="container mx-auto px-6">
-            <p className="text-center text-xs text-muted-foreground/60">
-              🔒 A Casa Orácula não substitui terapia, acompanhamento psicológico ou tratamento clínico.
-            </p>
           </div>
         </section>
       </div>
