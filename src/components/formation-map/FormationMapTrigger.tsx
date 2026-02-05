@@ -1,10 +1,15 @@
-import { useState } from 'react';
+import { useState, forwardRef } from 'react';
 import { motion } from 'framer-motion';
 import { Map, Compass } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FormationMapModal } from './FormationMapModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+
+// Motion div com forwardRef para compatibilidade com Radix
+const MotionDiv = forwardRef<HTMLDivElement, React.ComponentProps<typeof motion.div>>(
+  (props, ref) => <motion.div ref={ref} {...props} />
+);
 
 /**
  * FormationMapTrigger — Botão flutuante para abrir o mapa da formação
@@ -49,7 +54,7 @@ export function FormationMapTrigger({
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <motion.div
+            <MotionDiv
               className={`fixed bottom-20 right-4 z-40 ${className}`}
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -63,7 +68,7 @@ export function FormationMapTrigger({
               >
                 <Map className="w-5 h-5 text-gold" />
               </Button>
-            </motion.div>
+            </MotionDiv>
           </TooltipTrigger>
           <TooltipContent side="left">
             <p>Mapa da Formação</p>
