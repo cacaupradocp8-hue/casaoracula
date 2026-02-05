@@ -356,11 +356,9 @@ export default function OraculaSalesPage() {
           
           <div className="mt-10 pt-8 border-t border-gold/10 text-center">
             <p className="text-foreground/50 mb-4">Cada nível exige:</p>
-            <div className="flex flex-wrap justify-center gap-3 text-foreground/60 mb-6">
+            <div className="flex flex-col items-center gap-1 text-foreground/60 mb-6">
               <span>prática</span>
-              <span className="text-gold/30">•</span>
               <span>evidência</span>
-              <span className="text-gold/30">•</span>
               <span>revisão</span>
             </div>
             <p className="text-gold/70 italic">
