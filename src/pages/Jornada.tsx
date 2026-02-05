@@ -7,26 +7,17 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  Flower2, 
-  Heart, 
   Moon,
   Sparkles,
-  Feather,
-  Eye,
-  BookOpen,
-  Users,
-  Shield,
-  Compass,
-  CircleDot,
-  Leaf
+  ArrowRight
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
-import { cn } from '@/lib/utils';
 import { VisitorHomePage } from '@/components/visitor/VisitorHomePage';
 import { useJornadaData } from '@/hooks/useJornadaData';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 // ════════════════════════════════════════════════════════════════════════════
 // TIPOS
@@ -34,329 +25,78 @@ import { useJornadaData } from '@/hooks/useJornadaData';
 
 type JornadaLevel = 'visitante' | 'iniciada' | 'terapeuta' | 'guardia';
 
-interface JardimStatus {
-  ritmoRegular: boolean;
-  ultimoAcesso: string | null;
+type GrauAtual = 'iniciacao' | 'profundizacao' | 'integracao';
+
+interface PortalInfo {
+  nome: string;
+  subtitulo: string;
 }
 
-interface VivenciaStatus {
-  travessiasAbertas: string[];
-  rituaisConcluidos: string[];
-}
-
-interface SessaoStatus {
-  clientesAtivos: string[];
-  ultimaSessaoFechada: boolean;
-  mapaVivoAtualizado: boolean;
-  jardimHeroinaUsado: boolean;
-  campoFechado: boolean;
-}
-
-interface CuidadoTerapeuta {
-  jardimPosSessao: boolean;
-  lembreteSupevisao: string;
-}
-
-interface GuardiaStatus {
-  gruposAtivos: string[];
-  mentoriasAndamento: string[];
-  usoEticoJardim: boolean;
-  limitesPreservados: boolean;
-  aulasConduzidas: string[];
-  acompanhamentoStatus: 'ativo' | 'pausado';
+interface ProximoGesto {
+  texto: string;
+  rota: string;
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-// COMPONENTES - Cards Simbólicos
+// MAPEAMENTOS
 // ════════════════════════════════════════════════════════════════════════════
 
-function SymbolicCard({ 
-  title, 
-  icon: Icon, 
-  children,
-  delay = 0 
-}: { 
-  title: string; 
-  icon: React.ElementType; 
-  children: React.ReactNode;
-  delay?: number;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.5 }}
-    >
-      <Card className="glass border-border/30 bg-card/50 backdrop-blur-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-3 text-base font-medium text-foreground/80">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <Icon className="w-4 h-4 text-primary/70" />
-            </div>
-            {title}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-3 text-sm">
-          {children}
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
-}
+const PORTAIS_INFO: Record<string, PortalInfo> = {
+  visitante: { nome: 'Portal Zero', subtitulo: 'O Limiar' },
+  aluna: { nome: 'Portal I', subtitulo: 'Mapa da Psique' },
+  assinante: { nome: 'Portal II', subtitulo: 'Campo Simbólico' },
+  oracula: { nome: 'Portal III', subtitulo: 'A Prática Viva' },
+  admin: { nome: 'Portal da Guardiã', subtitulo: 'Transmissão' },
+};
 
-function StatusItem({ 
-  label, 
-  value, 
-  variant = 'text' 
-}: { 
-  label: string; 
-  value: string | boolean | null; 
-  variant?: 'text' | 'boolean';
-}) {
-  if (variant === 'boolean') {
-    const isActive = value === true;
-    return (
-      <div className="flex items-center justify-between py-1.5 border-b border-border/20 last:border-0">
-        <span className="text-muted-foreground">{label}</span>
-        <span className={cn(
-          "text-xs px-2 py-0.5 rounded-full",
-          isActive ? "bg-emerald-500/20 text-emerald-400" : "bg-muted/30 text-muted-foreground"
-        )}>
-          {isActive ? 'sim' : 'não'}
-        </span>
-      </div>
-    );
-  }
+const GRAUS_LABEL: Record<GrauAtual, string> = {
+  iniciacao: 'Iniciação',
+  profundizacao: 'Profundização',
+  integracao: 'Integração',
+};
 
-  return (
-    <div className="flex items-center justify-between py-1.5 border-b border-border/20 last:border-0">
-      <span className="text-muted-foreground">{label}</span>
-      <span className="text-foreground/80">{value || '—'}</span>
-    </div>
-  );
-}
+// Frases-oráculo contextuais por grau
+const FRASES_POR_GRAU: Record<GrauAtual, string[]> = {
+  iniciacao: [
+    "A jornada começa quando você escolhe olhar para dentro.",
+    "Cada ferramenta que você toca abre uma porta em si mesma.",
+    "Permita-se não saber. O mistério é o convite."
+  ],
+  profundizacao: [
+    "Você está aprendendo a habitar o que antes apenas visitava.",
+    "A prática revela o que a teoria apenas nomeia.",
+    "O campo se aprofunda quando você retorna com presença."
+  ],
+  integracao: [
+    "O que foi fragmento agora busca reunião.",
+    "Integrar é trazer para o corpo o que a mente compreendeu.",
+    "Você não está terminando. Está completando um ciclo."
+  ]
+};
 
-function ListaSimbolica({ 
-  items, 
-  emptyText = "Nenhum registro" 
-}: { 
-  items: string[]; 
-  emptyText?: string;
-}) {
-  if (!items || items.length === 0) {
-    return <p className="text-muted-foreground/60 italic text-xs">{emptyText}</p>;
-  }
-
-  return (
-    <ul className="space-y-1">
-      {items.map((item, idx) => (
-        <li key={idx} className="flex items-start gap-2 text-muted-foreground">
-          <Leaf className="w-3 h-3 mt-1 text-primary/50 shrink-0" />
-          <span>{item}</span>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function ConviteCard({ texto, delay = 0.5 }: { texto: string; delay?: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.5 }}
-    >
-      <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-        <CardContent className="p-5 text-center">
-          <Feather className="w-5 h-5 text-primary/60 mx-auto mb-3" />
-          <p className="text-sm text-foreground/80 italic leading-relaxed">
-            "{texto}"
-          </p>
-          <p className="text-xs text-muted-foreground mt-2">Convite da semana</p>
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
-}
+// Gestos possíveis por contexto
+const GESTOS_POSSIVEIS = {
+  sem_jardim: { texto: "Escrever no Jardim da Psiquê", rota: "/jardim-psique" },
+  sem_travessia: { texto: "Iniciar uma travessia", rota: "/formacao" },
+  sem_ferramenta: { texto: "Explorar uma ferramenta", rota: "/ferramentas" },
+  continuar_curso: { texto: "Continuar sua formação", rota: "/formacao" },
+  praticar: { texto: "Praticar com uma cliente", rota: "/clientes" },
+  default: { texto: "Retornar ao centro", rota: "/dashboard" }
+};
 
 // ════════════════════════════════════════════════════════════════════════════
-// NÍVEL 1 — INICIADA ORÁCULA
+// HELPERS
 // ════════════════════════════════════════════════════════════════════════════
 
-function JornadaIniciada({ 
-  jardimStatus, 
-  vivencias,
-  fraseSelo,
-  conviteDaSemana
-}: { 
-  jardimStatus: JardimStatus;
-  vivencias: VivenciaStatus;
-  fraseSelo: string;
-  conviteDaSemana: string | null;
-}) {
-  return (
-    <div className="space-y-5">
-      {/* Onde Você Está */}
-      <SymbolicCard title="Onde Você Está na Jornada" icon={Compass} delay={0.1}>
-        <p className="text-foreground/80">Fase atual: <span className="text-primary">Em travessia</span></p>
-        <p className="text-muted-foreground italic text-xs">"{fraseSelo}"</p>
-      </SymbolicCard>
-
-      {/* Ritmo do Jardim */}
-      <SymbolicCard title="Ritmo do Jardim da Psiquê" icon={Flower2} delay={0.2}>
-        <StatusItem 
-          label="Ritmo" 
-          value={jardimStatus.ritmoRegular ? 'Regular' : 'Irregular'} 
-        />
-        <StatusItem 
-          label="Último acesso" 
-          value={jardimStatus.ultimoAcesso || 'Ainda não acessado'} 
-        />
-      </SymbolicCard>
-
-      {/* Vivências Ativas */}
-      <SymbolicCard title="Vivências Ativas" icon={Moon} delay={0.3}>
-        <div className="space-y-3">
-          <div>
-            <p className="text-xs text-muted-foreground mb-1.5">Travessias abertas</p>
-            <ListaSimbolica items={vivencias.travessiasAbertas} emptyText="Nenhuma travessia aberta" />
-          </div>
-          <div>
-            <p className="text-xs text-muted-foreground mb-1.5">Rituais concluídos</p>
-            <ListaSimbolica items={vivencias.rituaisConcluidos} emptyText="Nenhum ritual concluído" />
-          </div>
-        </div>
-      </SymbolicCard>
-
-      {/* Convite */}
-      {conviteDaSemana && <ConviteCard texto={conviteDaSemana} delay={0.4} />}
-    </div>
-  );
+function getFraseOraculo(grau: GrauAtual): string {
+  const frases = FRASES_POR_GRAU[grau];
+  const weekNumber = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
+  return frases[weekNumber % frases.length];
 }
 
-// ════════════════════════════════════════════════════════════════════════════
-// NÍVEL 2 — TERAPEUTA ORÁCULA
-// ════════════════════════════════════════════════════════════════════════════
-
-function JornadaTerapeuta({ 
-  sessaoStatus, 
-  cuidado,
-  conviteDaSemana
-}: { 
-  sessaoStatus: SessaoStatus;
-  cuidado: CuidadoTerapeuta;
-  conviteDaSemana: string | null;
-}) {
-  return (
-    <div className="space-y-5">
-      {/* Sala de Sessão Viva */}
-      <SymbolicCard title="Sala de Sessão Viva" icon={Users} delay={0.1}>
-        <div className="space-y-3">
-          <div>
-            <p className="text-xs text-muted-foreground mb-1.5">Clientes em acompanhamento</p>
-            <ListaSimbolica items={sessaoStatus.clientesAtivos} emptyText="Nenhum cliente ativo" />
-          </div>
-          <StatusItem 
-            label="Última sessão fechada?" 
-            value={sessaoStatus.ultimaSessaoFechada} 
-            variant="boolean" 
-          />
-        </div>
-      </SymbolicCard>
-
-      {/* Fluxo Ético */}
-      <SymbolicCard title="Fluxo Ético" icon={Eye} delay={0.2}>
-        <StatusItem 
-          label="Mapa Vivo atualizado?" 
-          value={sessaoStatus.mapaVivoAtualizado} 
-          variant="boolean" 
-        />
-        <StatusItem 
-          label="Jardim da Heroína usado?" 
-          value={sessaoStatus.jardimHeroinaUsado} 
-          variant="boolean" 
-        />
-        <StatusItem 
-          label="Campo fechado?" 
-          value={sessaoStatus.campoFechado} 
-          variant="boolean" 
-        />
-      </SymbolicCard>
-
-      {/* Cuidado da Terapeuta */}
-      <SymbolicCard title="Cuidado da Terapeuta" icon={Heart} delay={0.3}>
-        <StatusItem 
-          label="Jardim pós-sessão realizado?" 
-          value={cuidado.jardimPosSessao} 
-          variant="boolean" 
-        />
-        <p className="text-muted-foreground/70 text-xs italic pt-2">
-          {cuidado.lembreteSupevisao || "Lembre-se: supervisão protege o campo."}
-        </p>
-      </SymbolicCard>
-
-      {/* Convite */}
-      {conviteDaSemana && <ConviteCard texto={conviteDaSemana} delay={0.4} />}
-    </div>
-  );
+function getPortalInfo(portal: string): PortalInfo {
+  return PORTAIS_INFO[portal] || PORTAIS_INFO.visitante;
 }
-
-// ════════════════════════════════════════════════════════════════════════════
-// NÍVEL 3 — GUARDIÃ / MENTORA
-// ════════════════════════════════════════════════════════════════════════════
-
-function JornadaGuardia({ status, conviteDaSemana }: { status: GuardiaStatus; conviteDaSemana: string | null }) {
-  return (
-    <div className="space-y-5">
-      {/* Campos que Sustenta */}
-      <SymbolicCard title="Campos que Você Sustenta" icon={Shield} delay={0.1}>
-        <div className="space-y-3">
-          <div>
-            <p className="text-xs text-muted-foreground mb-1.5">Grupos ativos</p>
-            <ListaSimbolica items={status.gruposAtivos} emptyText="Nenhum grupo ativo" />
-          </div>
-          <div>
-            <p className="text-xs text-muted-foreground mb-1.5">Mentorias em andamento</p>
-            <ListaSimbolica items={status.mentoriasAndamento} emptyText="Nenhuma mentoria ativa" />
-          </div>
-        </div>
-      </SymbolicCard>
-
-      {/* Qualidade de Campo */}
-      <SymbolicCard title="Qualidade de Campo" icon={CircleDot} delay={0.2}>
-        <StatusItem 
-          label="Uso ético do Jardim?" 
-          value={status.usoEticoJardim} 
-          variant="boolean" 
-        />
-        <StatusItem 
-          label="Limites preservados?" 
-          value={status.limitesPreservados} 
-          variant="boolean" 
-        />
-      </SymbolicCard>
-
-      {/* Transmissão do Método */}
-      <SymbolicCard title="Transmissão do Método" icon={BookOpen} delay={0.3}>
-        <div className="space-y-3">
-          <div>
-            <p className="text-xs text-muted-foreground mb-1.5">Aulas ou rituais conduzidos</p>
-            <ListaSimbolica items={status.aulasConduzidas} emptyText="Nenhum registro" />
-          </div>
-          <StatusItem 
-            label="Acompanhamento de iniciadas" 
-            value={status.acompanhamentoStatus === 'ativo' ? 'Ativo' : 'Pausado'} 
-          />
-        </div>
-      </SymbolicCard>
-
-      {/* Convite */}
-      {conviteDaSemana && <ConviteCard texto={conviteDaSemana} delay={0.4} />}
-    </div>
-  );
-}
-
-// FRASES-SELO fallback removido - agora vem do banco via useJornadaData
 
 // ════════════════════════════════════════════════════════════════════════════
 // COMPONENTE PRINCIPAL
@@ -364,41 +104,15 @@ function JornadaGuardia({ status, conviteDaSemana }: { status: GuardiaStatus; co
 
 export default function Jornada() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [level, setLevel] = useState<JornadaLevel>('visitante');
+  const [grau, setGrau] = useState<GrauAtual>('iniciacao');
+  const [proximoGesto, setProximoGesto] = useState<ProximoGesto>(GESTOS_POSSIVEIS.default);
   
   // Hook para dados dinâmicos do banco
   const jornadaNivel = level !== 'visitante' ? level : null;
-  const { conviteDaSemana, fraseSelo, isLoading: isLoadingJornada } = useJornadaData(jornadaNivel, user?.id);
-  
-  // States por nível
-  const [jardimStatus, setJardimStatus] = useState<JardimStatus>({
-    ritmoRegular: false,
-    ultimoAcesso: null,
-  });
-  const [vivencias, setVivencias] = useState<VivenciaStatus>({
-    travessiasAbertas: [],
-    rituaisConcluidos: [],
-  });
-  const [sessaoStatus, setSessaoStatus] = useState<SessaoStatus>({
-    clientesAtivos: [],
-    ultimaSessaoFechada: true,
-    mapaVivoAtualizado: false,
-    jardimHeroinaUsado: false,
-    campoFechado: true,
-  });
-  const [cuidado, setCuidado] = useState<CuidadoTerapeuta>({
-    jardimPosSessao: false,
-    lembreteSupevisao: "Supervisão protege o campo.",
-  });
-  const [guardiaStatus, setGuardiaStatus] = useState<GuardiaStatus>({
-    gruposAtivos: [],
-    mentoriasAndamento: [],
-    usoEticoJardim: true,
-    limitesPreservados: true,
-    aulasConduzidas: [],
-    acompanhamentoStatus: 'pausado',
-  });
+  const { fraseSelo } = useJornadaData(jornadaNivel, user?.id);
 
   useEffect(() => {
     const loadData = async () => {
@@ -407,38 +121,19 @@ export default function Jornada() {
       setLoading(true);
       
       try {
-        // Determine level based on portal
+        // Determinar nível baseado no portal
         let userLevel: JornadaLevel = 'visitante';
         
         if (user.portal === 'admin' || user.portal === 'oracula') {
-          // Check if has clients → terapeuta; if mentoring others → guardia
+          // Verificar se tem clientes
           const { data: clientes } = await supabase
             .from('clientes')
-            .select('id, nome')
+            .select('id')
             .eq('terapeuta_id', user.id)
             .eq('status', 'ativo')
-            .limit(5);
+            .limit(1);
           
-          if (clientes && clientes.length > 0) {
-            userLevel = 'terapeuta';
-            setSessaoStatus(prev => ({
-              ...prev,
-              clientesAtivos: clientes.map(c => c.nome),
-            }));
-          } else {
-            userLevel = 'iniciada';
-          }
-          
-          // Check for mentoring/teaching role
-          const { data: mentoriasCount } = await supabase
-            .from('matriculas')
-            .select('id', { count: 'exact' })
-            .eq('curso_id', 'mentoria')
-            .eq('ativa', true);
-          
-          if (mentoriasCount && mentoriasCount.length > 0) {
-            userLevel = 'guardia';
-          }
+          userLevel = clientes && clientes.length > 0 ? 'terapeuta' : 'iniciada';
         } else if (user.portal === 'assinante' || user.portal === 'aluna') {
           userLevel = 'iniciada';
         }
@@ -448,35 +143,40 @@ export default function Jornada() {
         // Load Jardim status
         const { data: jardimRecords } = await supabase
           .from('jardim_psique_registros')
-          .select('created_at')
+          .select('id')
           .eq('user_id', user.id)
-          .order('created_at', { ascending: false })
           .limit(10);
+
+        // Usar view de progresso
+        const { data: formationProgress } = await supabase
+          .from('v_formation_progress')
+          .select('completed_travessias, completed_rituals')
+          .eq('user_id', user.id)
+          .limit(1);
         
-        if (jardimRecords && jardimRecords.length > 0) {
-          const lastDate = new Date(jardimRecords[0].created_at);
-          const daysSince = Math.floor((Date.now() - lastDate.getTime()) / (24 * 60 * 60 * 1000));
-          
-          setJardimStatus({
-            ritmoRegular: daysSince <= 7 && jardimRecords.length >= 2,
-            ultimoAcesso: daysSince === 0 ? 'Hoje' : 
-                         daysSince === 1 ? 'Ontem' : 
-                         `${daysSince} dias atrás`,
-          });
+        const jardimCount = jardimRecords?.length || 0;
+        const travessiasCount = Number(formationProgress?.[0]?.completed_travessias) || 0;
+        const rituaisCount = Number(formationProgress?.[0]?.completed_rituals) || 0;
+        const progressTotal = travessiasCount + rituaisCount;
+        
+        // Lógica de grau
+        if (progressTotal >= 10 && jardimCount >= 5) {
+          setGrau('integracao');
+        } else if (progressTotal >= 3 || jardimCount >= 3) {
+          setGrau('profundizacao');
+        } else {
+          setGrau('iniciacao');
         }
 
-        // Load active travessias
-        const { data: travessias } = await supabase
-          .from('conteudo_travessias')
-          .select('titulo')
-          .eq('publicado', true)
-          .limit(3);
-        
-        if (travessias) {
-          setVivencias(prev => ({
-            ...prev,
-            travessiasAbertas: travessias.map(t => t.titulo),
-          }));
+        // Determinar próximo gesto
+        if (jardimCount === 0) {
+          setProximoGesto(GESTOS_POSSIVEIS.sem_jardim);
+        } else if (progressTotal === 0) {
+          setProximoGesto(GESTOS_POSSIVEIS.sem_travessia);
+        } else if (userLevel === 'terapeuta') {
+          setProximoGesto(GESTOS_POSSIVEIS.praticar);
+        } else {
+          setProximoGesto(GESTOS_POSSIVEIS.continuar_curso);
         }
 
       } catch (error) {
@@ -494,17 +194,20 @@ export default function Jornada() {
     return <VisitorHomePage />;
   }
 
+  const portalInfo = getPortalInfo(user.portal || 'visitante');
+  const fraseOraculo = fraseSelo || getFraseOraculo(grau);
+
   if (loading) {
     return (
       <AppLayout>
-        <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="min-h-[80vh] flex items-center justify-center bg-background">
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="text-center"
           >
-            <Sparkles className="w-8 h-8 text-primary/50 mx-auto mb-4 animate-pulse" />
-            <p className="text-muted-foreground text-sm">Escutando o campo...</p>
+            <Moon className="w-10 h-10 text-primary/30 mx-auto mb-4 animate-pulse" />
+            <p className="text-muted-foreground/50 text-sm">Escutando o campo...</p>
           </motion.div>
         </div>
       </AppLayout>
@@ -513,56 +216,90 @@ export default function Jornada() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 max-w-lg">
-        {/* Header Simbólico */}
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
+      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 py-12">
+        
+        {/* Símbolo Central */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="mb-12"
         >
-          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-            <Compass className="w-6 h-6 text-primary/70" />
+          <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 flex items-center justify-center">
+            <Moon className="w-10 h-10 text-primary/60" />
           </div>
-          <h1 className="text-2xl font-display text-foreground mb-2">
-            Espelho da Jornada
-          </h1>
-          <p className="text-muted-foreground text-sm italic">
-            O que está pedindo cuidado agora?
-          </p>
         </motion.div>
 
-        {/* Conteúdo por nível */}
-        {level === 'iniciada' && (
-          <JornadaIniciada 
-            jardimStatus={jardimStatus}
-            vivencias={vivencias}
-            fraseSelo={fraseSelo || "Cada passo é uma escolha de presença."}
-            conviteDaSemana={conviteDaSemana}
-          />
-        )}
+        {/* Onde Você Está Agora */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          className="text-center mb-10 max-w-md"
+        >
+          <p className="text-xs uppercase tracking-widest text-muted-foreground/50 mb-3">
+            Onde você está agora
+          </p>
+          
+          {/* Portal Ativo */}
+          <h1 className="text-2xl md:text-3xl font-display text-foreground mb-1">
+            {portalInfo.nome}
+          </h1>
+          <p className="text-muted-foreground italic mb-6">
+            {portalInfo.subtitulo}
+          </p>
 
-        {level === 'terapeuta' && (
-          <JornadaTerapeuta 
-            sessaoStatus={sessaoStatus}
-            cuidado={cuidado}
-            conviteDaSemana={conviteDaSemana}
-          />
-        )}
+          {/* Grau Atual */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10">
+            <Sparkles className="w-3.5 h-3.5 text-primary/50" />
+            <span className="text-sm text-foreground/70">
+              {GRAUS_LABEL[grau]}
+            </span>
+          </div>
+        </motion.div>
 
-        {level === 'guardia' && (
-          <JornadaGuardia status={guardiaStatus} conviteDaSemana={conviteDaSemana} />
-        )}
-
-        {/* Footer */}
+        {/* Frase-Oráculo Contextual */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="text-center mt-10 pt-6 border-t border-border/20"
+          transition={{ delay: 0.5, duration: 0.8 }}
+          className="text-center mb-12 max-w-sm px-6"
         >
-          <p className="text-xs text-muted-foreground/50 italic">
-            Este espaço não mede valor.<br/>
-            Ele escuta o campo.
+          <p className="text-foreground/60 italic leading-relaxed text-lg">
+            "{fraseOraculo}"
+          </p>
+        </motion.div>
+
+        {/* Próximo Gesto Possível */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.6 }}
+          className="text-center"
+        >
+          <p className="text-xs uppercase tracking-widest text-muted-foreground/40 mb-4">
+            Próximo gesto possível
+          </p>
+          
+          <Button
+            variant="outline"
+            onClick={() => navigate(proximoGesto.rota)}
+            className="border-primary/20 hover:border-primary/40 hover:bg-primary/5 text-foreground/80 gap-2 px-6 py-5"
+          >
+            {proximoGesto.texto}
+            <ArrowRight className="w-4 h-4 text-primary/60" />
+          </Button>
+        </motion.div>
+
+        {/* Footer Minimalista */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="mt-16"
+        >
+          <p className="text-xs text-muted-foreground/30 text-center">
+            Este espaço escuta o campo.
           </p>
         </motion.div>
       </div>
