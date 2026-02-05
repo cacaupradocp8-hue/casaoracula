@@ -11,6 +11,7 @@ import { Big5InterpretacaoCard } from '@/components/big5/Big5InterpretacaoCard';
 import { Big5SintesePerfil } from '@/components/big5/Big5SintesePerfil';
 import { GuardiaLeituraChat } from '@/components/big5/GuardiaLeituraChat';
 import { GuardiaManualProfissional } from '@/components/big5/GuardiaManualProfissional';
+ import { SyntheiaChatModal } from '@/components/syntheia/SyntheiaChatModal';
 import { useBig5Funcional, Dimensao } from '@/hooks/useBig5Funcional';
 import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
 import { useAuth } from '@/contexts/AuthContext';
@@ -26,6 +27,7 @@ import {
   ChevronRight,
   Home,
   BookOpen,
+   MessageCircle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -72,6 +74,7 @@ export default function Big5Funcional() {
   const [respostas, setRespostas] = useState<Record<string, number>>({});
   const [resultado, setResultado] = useState<ReturnType<typeof calcularResultado> | null>(null);
   const [showJardimModal, setShowJardimModal] = useState(false);
+   const [showSyntheiaChat, setShowSyntheiaChat] = useState(false);
 
   // If visitor already used, show their previous result
   useEffect(() => {
@@ -594,6 +597,29 @@ export default function Big5Funcional() {
 
               <EthicalNotice toolName="Big Five — Leitura Funcional" />
 
+               {/* Syntheia Chat - Modo Ferramenteira */}
+               <Card className="border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
+                 <CardContent className="py-6">
+                   <div className="text-center space-y-3">
+                     <p className="text-sm text-muted-foreground">
+                       Quer transformar esse mapa em <strong>prática aplicável</strong>?
+                     </p>
+                     <Button
+                       variant="gold"
+                       size="lg"
+                       onClick={() => setShowSyntheiaChat(true)}
+                       className="gap-2"
+                     >
+                       <MessageCircle className="w-5 h-5" />
+                       Aplicar com Syntheia
+                     </Button>
+                     <p className="text-xs text-muted-foreground">
+                       Rituais, práticas e roteiros de sessão baseados no seu perfil.
+                     </p>
+                   </div>
+                 </CardContent>
+               </Card>
+
               {/* Guardiã da Leitura - Resultado */}
               <GuardiaLeituraChat 
                 contextPage="funcional_resultado"
@@ -633,6 +659,25 @@ export default function Big5Funcional() {
             tipo_registro="ferramenta"
           />
         )}
+
+       {/* Syntheia Chat Modal - Ferramenteira */}
+       {resultado && (
+         <SyntheiaChatModal
+           open={showSyntheiaChat}
+           onOpenChange={setShowSyntheiaChat}
+           mode="ferramenteira"
+           context={{
+             ferramenta: 'Big Five Funcional',
+             dimensaoAlta: resultado.dimensaoAlta?.nome,
+             dimensaoBaixa: resultado.dimensaoBaixa?.nome,
+             mediaAlta: resultado.dimensaoAlta?.media,
+             mediaBaixa: resultado.dimensaoBaixa?.media,
+             perfil: Object.entries(resultado.medias).map(([k, v]) => `${k}: ${v.toFixed(1)}`).join(', '),
+           }}
+           welcomeMessage={`Olá! Sou Syntheia em modo Ferramenteira. Vi que seu perfil mostra maior tendência em ${resultado.dimensaoAlta?.nome || 'uma dimensão'} e menor em ${resultado.dimensaoBaixa?.nome || 'outra'}. Posso criar práticas, rituais ou roteiros de sessão baseados nesse mapa. O que você gostaria de trabalhar?`}
+           title="Syntheia — Ferramenteira"
+         />
+       )}
       </div>
     </AppLayout>
   );
