@@ -59,14 +59,14 @@ const FERRAMENTAS: FerramentaCard[] = [
     id: 'big5-oracular',
     titulo: 'Big Five Oracular',
     subtitulo: 'Mapa Simbólico de Funcionamento',
-    descricao: 'Identifique os 5 fatores simbólicos e a Porta associada ao momento atual. Inclui ritual de ancoragem.',
+    descricao: 'Identifique os 5 territórios simbólicos e a Porta associada ao momento atual. Inclui ritual de ancoragem.',
     icon: Sparkles,
     cor: 'text-violet-400',
     bgCor: 'bg-violet-500/20',
     rota: '/ferramenta/big5-oracular',
     minPortal: 'aluna',
     destaques: [
-      '30 perguntas simbólicas',
+      '30 convites de escuta',
       'Visualização radial',
       'Ritual por Porta',
     ],
@@ -82,9 +82,9 @@ const FERRAMENTAS: FerramentaCard[] = [
     rota: '/ferramentas/torre-viva',
     minPortal: 'oracula',
     destaques: [
-      '7 estruturas de defesa',
-      'Guia de condução ética',
-      'Integração com casos',
+      '7 estruturas de proteção',
+      'Orientação para a prática',
+      'Pontes com vivências',
     ],
   },
   {
@@ -161,7 +161,7 @@ export default function FerramentasMetodoHub() {
                   <p className="text-muted-foreground text-sm leading-relaxed">
                     O Método Orácula opera em três dimensões: as <strong>Portas</strong> mostram <em>onde</em> a psique está, 
                     os <strong>Campos Psíquicos</strong> indicam <em>como</em> sustentar, e as <strong>Torres</strong> revelam 
-                    <em> por que</em> ela se organizou assim. Estas ferramentas são os instrumentos práticos dessa tríade.
+                    <em> por que</em> ela se organizou assim. Estes são os recursos vivos dessa tríade.
                   </p>
                 </div>
               </div>
@@ -260,7 +260,7 @@ export default function FerramentasMetodoHub() {
         >
           <h2 className="text-lg font-display text-foreground mb-6 flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-muted-foreground" />
-            Base Conceitual
+            O Território
           </h2>
 
           <div className="grid gap-4 md:grid-cols-3">

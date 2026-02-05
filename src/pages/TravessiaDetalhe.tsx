@@ -139,7 +139,7 @@ const TRAVESSIA_CONTEUDO: Record<string, TravessiaSection[]> = {
   'travessia-zero-o-limiar-da-casa': [
     {
       title: 'Onde estou antes de tentar mudar?',
-      description: '7 dias para mapear seu ponto de partida',
+      description: '7 dias para escutar onde você está',
       items: [
         { title: 'Dia 1 — O Silêncio', description: 'O que acontece quando paro de buscar resposta?', route: '#dia1', icon: Moon },
         { title: 'Dia 2 — O Mapa', description: 'Onde realmente estou neste momento?', route: '#dia2', icon: Compass },
@@ -153,18 +153,18 @@ const TRAVESSIA_CONTEUDO: Record<string, TravessiaSection[]> = {
   ],
   'mundo-sem-simbolos': [
     {
-      title: 'Fundamentos Éticos',
-      description: 'A base do caminho iniciático',
+      title: 'O Solo',
+      description: 'O chão da travessia',
       items: [
-        { title: 'Biblioteca das Travessias', description: 'Famílias simbólicas e ferramentas integradas', route: '/biblioteca-das-travessias', icon: BookOpen },
-        { title: 'Cursos Disponíveis', description: 'Formação estruturada e guiada', route: '/cursos', icon: Sparkles },
+        { title: 'Biblioteca das Travessias', description: 'Famílias simbólicas e recursos integrados', route: '/biblioteca-das-travessias', icon: BookOpen },
+        { title: 'Percursos Disponíveis', description: 'Jornadas de aprofundamento', route: '/cursos', icon: Sparkles },
       ],
     },
   ],
   'mulher-alma-antiga': [
     {
       title: 'A Tríade do Método Orácula',
-      description: 'Fundamentos conceituais da cartografia clínica',
+      description: 'Os mapas que orientam o caminhar',
       items: [
         { title: 'As Portas', description: 'Onde a psique está operando agora', route: '/metodo/portas', icon: DoorOpen },
         { title: 'Os Campos Psíquicos', description: 'Como sustentar cada campo', route: '/metodo/campos-psiquicos', icon: Waves },
@@ -172,8 +172,8 @@ const TRAVESSIA_CONTEUDO: Record<string, TravessiaSection[]> = {
       ],
     },
     {
-      title: 'Recursos Complementares',
-      description: 'Conteúdos de apoio à formação',
+      title: 'Escutas Adicionais',
+      description: 'Materiais de sustentação',
       items: [
         { title: 'Síntese da Tríade', description: 'Visão integrada do método', route: '/metodo/triade', icon: Compass },
         { title: 'Biblioteca de Contos', description: 'Narrativas simbólicas em texto e áudio', route: '/biblioteca', icon: BookOpen },
@@ -182,8 +182,8 @@ const TRAVESSIA_CONTEUDO: Record<string, TravessiaSection[]> = {
   ],
   'codigo-narrativas': [
     {
-      title: 'Ferramentas de Escuta',
-      description: 'Instrumentos para prática profissional',
+      title: 'Recursos de Escuta',
+      description: 'Para a prática profissional',
       items: [
         { title: 'Labirinto das 39 Portas', description: 'Protocolo formativo de leitura psíquica', route: '/labirinto', icon: DoorOpen },
         { title: 'SYNTHEIA — O Templo', description: 'Inteligência operacional de apoio à profissional', route: '/syntheia', icon: Wand2 },
