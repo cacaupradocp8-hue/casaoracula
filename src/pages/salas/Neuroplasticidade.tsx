@@ -4,9 +4,8 @@ import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Save, Loader2, BrainCircuit } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, Sparkles } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -20,12 +19,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-export default function Neuroplasticidade() {
-  const [padraoObservado, setPadraoObservado] = useState('');
-  const [gatilhos, setGatilhos] = useState('');
-  const [praticaAplicada, setPraticaAplicada] = useState('');
-  const [frequencia, setFrequencia] = useState<'diaria' | 'semanal' | 'esporadica'>('semanal');
-  const [observacoes, setObservacoes] = useState('');
+export default function CampoIntegracaoViva() {
+  const [modoAnterior, setModoAnterior] = useState('');
+  const [contextoAtivacao, setContextoAtivacao] = useState('');
+  const [novaResposta, setNovaResposta] = useState('');
+  const [ritmo, setRitmo] = useState<'diaria' | 'semanal' | 'quando_surgir'>('semanal');
+  const [percepcoes, setPercepcoes] = useState('');
   const [saving, setSaving] = useState(false);
   const [clienteInfo, setClienteInfo] = useState<{ id: string; nome: string } | null>(null);
   const { toast } = useToast();
@@ -52,10 +51,9 @@ export default function Neuroplasticidade() {
 
   const handleSave = async () => {
     setSaving(true);
-    // Para futuro: salvar em tabela neuroplasticidade_registros
     toast({
-      title: 'Registro salvo!',
-      description: 'O mapeamento de padrões foi registrado.',
+      title: 'Registro integrado',
+      description: 'O campo de integração foi atualizado.',
     });
     setSaving(false);
     if (clienteId) {
@@ -74,9 +72,9 @@ export default function Neuroplasticidade() {
         </div>
 
         <SectionHeader
-          title="Neuroplasticidade & Mudança de Padrões"
-          subtitle="Mapeamento de padrões comportamentais e práticas de ressignificação"
-          icon={<BrainCircuit className="w-5 h-5" />}
+          title="Campo de Integração Viva"
+          subtitle="Onde novos modos de responder à vida se estabilizam"
+          icon={<Sparkles className="w-5 h-5" />}
           className="mb-8"
         />
 
@@ -84,24 +82,35 @@ export default function Neuroplasticidade() {
           <Card className="mb-6 border-gold/30 bg-gold/5">
             <CardContent className="py-4">
               <p className="text-sm">
-                Avaliando para: <strong>{clienteInfo.nome}</strong>
+                Integrando com: <strong>{clienteInfo.nome}</strong>
               </p>
             </CardContent>
           </Card>
         )}
 
-        <EthicalNotice toolName="Neuroplasticidade" className="mb-6" />
+        <EthicalNotice toolName="Campo de Integração" className="mb-6" />
+
+        {/* Texto introdutório simbólico */}
+        <Card className="mb-6 border-gold/20 bg-card/50">
+          <CardContent className="py-6">
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Este não é um espaço de correção. É um campo de reorganização interna —
+              onde o que foi percebido encontra lugar para enraizar. Aqui, a consciência
+              se transforma em continuidade. Sem pressa. Sem método. Apenas presença e repetição viva.
+            </p>
+          </CardContent>
+        </Card>
 
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Padrão Observado</CardTitle>
+              <CardTitle className="text-base">O que pede para mudar</CardTitle>
             </CardHeader>
             <CardContent>
               <Textarea
-                value={padraoObservado}
-                onChange={(e) => setPadraoObservado(e.target.value)}
-                placeholder="Descreva o padrão de comportamento, pensamento ou emoção identificado..."
+                value={modoAnterior}
+                onChange={(e) => setModoAnterior(e.target.value)}
+                placeholder="Descreva o modo de responder que não serve mais... uma reação automática, uma forma antiga de lidar com algo..."
                 rows={3}
               />
             </CardContent>
@@ -109,13 +118,13 @@ export default function Neuroplasticidade() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Gatilhos Identificados</CardTitle>
+              <CardTitle className="text-base">Quando isso aparece</CardTitle>
             </CardHeader>
             <CardContent>
               <Textarea
-                value={gatilhos}
-                onChange={(e) => setGatilhos(e.target.value)}
-                placeholder="Situações, pessoas, ambientes ou estímulos que ativam o padrão..."
+                value={contextoAtivacao}
+                onChange={(e) => setContextoAtivacao(e.target.value)}
+                placeholder="Em quais situações esse modo antigo costuma surgir? Lugares, pessoas, momentos..."
                 rows={3}
               />
             </CardContent>
@@ -123,25 +132,25 @@ export default function Neuroplasticidade() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Prática Aplicada</CardTitle>
+              <CardTitle className="text-base">A nova resposta que deseja nascer</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <Textarea
-                value={praticaAplicada}
-                onChange={(e) => setPraticaAplicada(e.target.value)}
-                placeholder="Técnica ou prática utilizada para ressignificar o padrão..."
+                value={novaResposta}
+                onChange={(e) => setNovaResposta(e.target.value)}
+                placeholder="Como você gostaria de responder de forma diferente? Qual movimento novo está tentando se estabelecer?"
                 rows={3}
               />
               <div>
-                <Label>Frequência recomendada</Label>
-                <Select value={frequencia} onValueChange={(v: any) => setFrequencia(v)}>
-                  <SelectTrigger>
+                <Label className="text-muted-foreground">Ritmo de sustentação</Label>
+                <Select value={ritmo} onValueChange={(v: any) => setRitmo(v)}>
+                  <SelectTrigger className="mt-2">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="diaria">Diária</SelectItem>
-                    <SelectItem value="semanal">Semanal</SelectItem>
-                    <SelectItem value="esporadica">Esporádica (conforme necessidade)</SelectItem>
+                    <SelectItem value="diaria">Atenção diária</SelectItem>
+                    <SelectItem value="semanal">Revisão semanal</SelectItem>
+                    <SelectItem value="quando_surgir">Quando surgir</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -150,13 +159,13 @@ export default function Neuroplasticidade() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Observações Clínicas</CardTitle>
+              <CardTitle className="text-base">Percepções do caminho</CardTitle>
             </CardHeader>
             <CardContent>
               <Textarea
-                value={observacoes}
-                onChange={(e) => setObservacoes(e.target.value)}
-                placeholder="Evolução percebida, resistências, insights..."
+                value={percepcoes}
+                onChange={(e) => setPercepcoes(e.target.value)}
+                placeholder="O que você tem percebido nesse processo? Resistências, pequenas vitórias, momentos de clareza..."
                 rows={4}
               />
             </CardContent>
@@ -166,7 +175,7 @@ export default function Neuroplasticidade() {
         <div className="flex justify-end mt-6">
           <Button onClick={handleSave} disabled={saving}>
             {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-            Salvar Mapeamento
+            Registrar Integração
           </Button>
         </div>
       </div>
