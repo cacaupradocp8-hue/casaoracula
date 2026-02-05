@@ -14,6 +14,7 @@ import { useContentBlocks } from "@/hooks/useContentBlocks";
 import { UnifiedAudioPlayer } from "@/components/audio/UnifiedAudioPlayer";
  import { SyntheiaChatModal } from "@/components/syntheia/SyntheiaChatModal";
  import { MessageCircle } from "lucide-react";
+ import { useSyntheiaVoice } from "@/hooks/useSyntheiaVoice";
 
 interface Quiz {
   id: string;
@@ -76,6 +77,12 @@ export default function QuizPage() {
   const [previousResponse, setPreviousResponse] = useState<UserResponse | null>(null);
   const [showDebug, setShowDebug] = useState(false);
    const [showSyntheiaChat, setShowSyntheiaChat] = useState(false);
+
+   // Fetch Syntheia voice for quiz result
+   const { voice: syntheiaVoice } = useSyntheiaVoice({
+     type: 'quiz',
+     triggerId: finalResult?.id,
+   });
 
   const isAdmin = user?.portal === 'admin';
 
@@ -661,14 +668,18 @@ export default function QuizPage() {
        <SyntheiaChatModal
          open={showSyntheiaChat}
          onOpenChange={setShowSyntheiaChat}
-         mode="arcano"
+          mode="arcane"
          context={{
            quizResultId: finalResult.id,
            arquetipo: finalResult.titulo_simbolico,
            categoria: finalResult.categoria || undefined,
+           voiceId: syntheiaVoice?.id,
+           voicePrompt: syntheiaVoice?.voice_prompt,
+           quizTitulo: quiz.titulo,
+           textoInterpretativo: finalResult.texto_interpretativo?.substring(0, 500),
          }}
          welcomeMessage={`Olá! Sou Syntheia. Vejo que você descobriu o arquétipo "${finalResult.titulo_simbolico}". Este é um território simbólico rico para explorarmos juntas. O que você gostaria de compreender mais profundamente sobre essa força que habita em você?`}
-         title="Syntheia — Arcano"
+          title="Syntheia — Arcane"
        />
       </AppLayout>
     );

@@ -13,6 +13,7 @@
    arquetipo?: string;
    categoria?: string;
    voiceId?: string;
+   voicePrompt?: string;
    [key: string]: unknown;
  }
  
@@ -108,7 +109,8 @@
        const response = await sendMessageToSyntheia(
          mode,
          apiMessages,
-         options.context
+           options.context,
+           options.context?.voicePrompt
        );
  
        const assistantMessage: Message = {
