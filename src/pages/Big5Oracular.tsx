@@ -205,6 +205,15 @@ export default function Big5Oracular() {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-6"
             >
+              {/* Botão Voltar */}
+              <Button
+                variant="ghost"
+                onClick={() => navigate(-1)}
+                className="gap-2 text-muted-foreground hover:text-foreground"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Voltar
+              </Button>
               <Card className="glass border-gold/20">
                 <CardHeader className="text-center">
                   <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center">
