@@ -4,7 +4,7 @@
 // Temporary integration space for the client between sessions
 // Therapist-controlled, never standalone
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -45,6 +45,7 @@ import type {
   AtualizarJardimHeroina 
 } from '@/types/jardim-heroina-novo';
 import { GESTO_TIPO_LABELS, GESTO_TIPO_ICONS, SUSTENTACAO_LABELS } from '@/types/jardim-heroina-novo';
+import { GuardiaJardim, GUARDIA_LIMITES } from './guardia-jardim';
 
 interface JardimHeroinaIntegracaoTabProps {
   caseId: string;
@@ -100,6 +101,32 @@ export function JardimHeroinaIntegracaoTab({
 
   const [activeSection, setActiveSection] = useState(1);
 
+  // Detectar escrita longa para a Guardiã
+  const isEscritaLonga = useMemo(() => {
+    if (!jardim) return false;
+    const textos = [
+      jardim.chegada_vivo,
+      jardim.integracao_observar,
+      jardim.gesto_descricao,
+      jardim.observacao_percebi,
+      jardim.fechamento_levo,
+      jardim.fechamento_deixo,
+    ];
+    const limites = [
+      GUARDIA_LIMITES.chegada_vivo,
+      GUARDIA_LIMITES.integracao_observar,
+      GUARDIA_LIMITES.gesto_descricao,
+      GUARDIA_LIMITES.observacao_percebi,
+      GUARDIA_LIMITES.fechamento_levo,
+      GUARDIA_LIMITES.fechamento_deixo,
+    ];
+    return textos.some((texto, index) => {
+      if (!texto) return false;
+      const limite = limites[index];
+      return texto.length > limite * 0.85; // 85% do limite
+    });
+  }, [jardim]);
+
   // Load on mount
   useEffect(() => {
     fetchJardim();
@@ -154,6 +181,9 @@ export function JardimHeroinaIntegracaoTab({
   if (jardim?.status === 'closed') {
     return (
       <div className="space-y-6">
+        {/* Guardiã do Jardim — mensagem de fechamento */}
+        <GuardiaJardim status="closed" />
+        
         <Card className="border-muted">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -246,13 +276,12 @@ export function JardimHeroinaIntegracaoTab({
         </div>
       </div>
 
-      {/* Ethical warning - Fixed */}
-      <Alert className="border-amber-500/30 bg-amber-950/20">
-        <AlertTriangle className="w-4 h-4 text-amber-500" />
-        <AlertDescription className="text-sm text-amber-200/80">
-          Este espaço é para integrar, não para aprofundar. O que precisa de cuidado maior pertence à sessão.
-        </AlertDescription>
-      </Alert>
+      {/* Guardiã do Jardim — IA contida com frases pré-definidas */}
+      <GuardiaJardim 
+        status={jardim?.status || 'active'}
+        prazoDate={jardim?.gesto_prazo}
+        isEscritaLonga={isEscritaLonga}
+      />
 
       {/* Section Navigation */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2">
