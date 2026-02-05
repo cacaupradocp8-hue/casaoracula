@@ -113,6 +113,7 @@ interface SyntheiaChatRequest {
   mode: "arcano" | "arcane" | "ferramenteira";
   messages: ChatMessage[];
   extra_context?: Record<string, unknown>;
+   voice_prompt?: string;
 }
 
 // ============================================
@@ -137,7 +138,7 @@ serve(async (req) => {
     }
 
     // Parse request
-    const { mode, messages, extra_context }: SyntheiaChatRequest = await req.json();
+     const { mode, messages, extra_context, voice_prompt }: SyntheiaChatRequest = await req.json();
 
     // Validate mode
     if (!mode || !MODE_PROMPTS[mode]) {
@@ -159,6 +160,14 @@ serve(async (req) => {
 
     // Build system prompt
     let systemPrompt = SYNTHEIA_CORE + "\n\n" + MODE_PROMPTS[mode];
+
+     // Add voice prompt if provided
+     if (voice_prompt) {
+       systemPrompt += `\n\n━━━━━━━━━━━━━━━━━━
+ VOZ ATIVA
+ ━━━━━━━━━━━━━━━━━━
+ ${voice_prompt}`;
+     }
 
     // Add extra context if provided
     if (extra_context && Object.keys(extra_context).length > 0) {

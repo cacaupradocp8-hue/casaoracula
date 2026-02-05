@@ -22,10 +22,12 @@
      arquetipo?: string;
      categoria?: string;
      voiceId?: string;
+     voicePrompt?: string;
      [key: string]: unknown;
    };
    welcomeMessage?: string;
    title?: string;
+   autoOpen?: boolean;
  }
  
  export function SyntheiaChatModal({

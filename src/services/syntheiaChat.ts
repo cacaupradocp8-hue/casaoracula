@@ -40,7 +40,8 @@ export interface SyntheiaChatError {
 export async function sendMessageToSyntheia(
   mode: SyntheiaChatMode,
   messages: ChatMessage[],
-  extraContext?: Record<string, unknown>
+   extraContext?: Record<string, unknown>,
+   voicePrompt?: string
 ): Promise<SyntheiaChatResponse> {
   const { data, error } = await supabase.functions.invoke<SyntheiaChatResponse | SyntheiaChatError>(
     "syntheia-chat",
@@ -49,6 +50,7 @@ export async function sendMessageToSyntheia(
         mode,
         messages,
         extra_context: extraContext,
+         voice_prompt: voicePrompt,
       },
     }
   );
