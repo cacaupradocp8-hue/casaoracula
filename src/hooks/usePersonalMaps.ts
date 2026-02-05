@@ -156,7 +156,7 @@ export function usePersonalMaps(templateKey?: PersonalMapTemplateKey) {
     }
   };
 
-  const getMap = async (mapId: string): Promise<PersonalSymbolicMap | null> => {
+  const getMap = useCallback(async (mapId: string): Promise<PersonalSymbolicMap | null> => {
     if (!user) return null;
 
     try {
@@ -178,7 +178,7 @@ export function usePersonalMaps(templateKey?: PersonalMapTemplateKey) {
       console.error('Error fetching map:', error);
       return null;
     }
-  };
+  }, [user]);
 
   return {
     maps,
