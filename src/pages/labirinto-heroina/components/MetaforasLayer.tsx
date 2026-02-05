@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Feather, Heart } from "lucide-react";
+import { Feather } from "lucide-react";
 import type { LabirintoMetafora } from "@/hooks/useLabirintoHeroina";
 import { MetaforaCard } from "./MetaforaCard";
 import { useHeroinaCenarioRegistros } from "@/hooks/useHeroinaCenarioRegistro";
@@ -30,31 +30,28 @@ export function MetaforasLayer({ metaforas }: MetaforasLayerProps) {
 
   return (
     <div className="space-y-8">
-      {/* Introdução Poética */}
-      <Card className="border-gold/30 bg-gradient-to-r from-gold/5 to-transparent">
-        <CardContent className="p-6 space-y-4">
-          <h3 className="font-display text-xl text-gold">
-            🪞 Reino dos Cenários — Metáforas do Inconsciente
+      {/* Introdução Atmosférica — Sem Explicação */}
+      <Card className="border-gold/30 bg-gradient-to-br from-gold/5 via-transparent to-accent/5">
+        <CardContent className="p-6 md:p-8">
+          <h3 className="font-display text-xl md:text-2xl text-gold mb-3 text-center">
+            Os 14 Cenários do Inconsciente
           </h3>
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            São 14 paisagens simbólicas que refletem estados da psique feminina.
-            Este é o palco do inconsciente — aqui, a psique não se explica, ela se mostra.
+          <p className="text-muted-foreground text-sm md:text-base leading-relaxed text-center max-w-2xl mx-auto">
+            Paisagens simbólicas onde a psique se mostra, não se explica.
+            Atmosferas, limiares, territórios internos que habitam você.
           </p>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground/70 pt-2 border-t border-gold/10">
-            <Heart className="w-3 h-3" />
-            <span>
-              {registros?.length || 0} cenário(s) sentido(s) no seu Mapa Pessoal
-            </span>
+          
+          {/* Instrução ritual */}
+          <div className="mt-6 pt-4 border-t border-gold/10 text-center">
+            <p className="text-xs text-muted-foreground/70 italic">
+              Permita-se habitar cada cenário. 
+              Não busque significado — deixe que a paisagem fale.
+            </p>
           </div>
         </CardContent>
       </Card>
 
-      {/* Aviso Ético */}
-      <div className="text-center text-sm text-muted-foreground/70 italic">
-        O sistema apresenta e sustenta o campo. Não interpreta, não associa significados automáticos.
-      </div>
-
-      {/* Grid de Cartas-Cenário */}
+      {/* Grid de Cenários — Estilo Contemplativo */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {metaforas.map((metafora) => (
           <div key={metafora.id} className="relative">
@@ -62,13 +59,23 @@ export function MetaforasLayer({ metaforas }: MetaforasLayerProps) {
             
             {/* Badge de Registros */}
             {registrosPorCenario[metafora.id] > 0 && (
-              <div className="absolute top-2 right-2 bg-gold/90 text-gold-foreground text-xs px-2 py-1 rounded-full">
+              <div className="absolute top-2 right-2 bg-gold/90 text-gold-foreground text-xs px-2 py-1 rounded-full font-medium">
                 {registrosPorCenario[metafora.id]}×
               </div>
             )}
           </div>
         ))}
       </div>
+
+      {/* Fechamento Contemplativo */}
+      <Card className="border-gold/20 bg-card/50">
+        <CardContent className="p-6 text-center">
+          <p className="text-sm text-muted-foreground italic">
+            "A heroína não atravessa o labirinto buscando saídas.
+            Ela atravessa até que o labirinto não seja mais estranho."
+          </p>
+        </CardContent>
+      </Card>
     </div>
   );
 }
