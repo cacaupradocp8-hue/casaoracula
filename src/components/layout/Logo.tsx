@@ -32,10 +32,10 @@ export const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
       xl: 'h-20'
     };
     const horizontalSizes = {
-      sm: 'h-14 md:h-16',
-      md: 'h-16 md:h-20',
-      lg: 'h-20 md:h-28',
-      xl: 'h-[56px] md:h-[72px]'
+      sm: 'h-10 md:h-12',
+      md: 'h-12 md:h-14',
+      lg: 'h-14 md:h-16',
+      xl: 'h-10 md:h-14'
     };
     const verticalSizes = {
       sm: 'h-20',
@@ -69,16 +69,16 @@ export const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
     // Combined variant - icon only on mobile, icon + text on desktop
     if (variant === 'combined') {
       const iconSizesMap = {
-        sm: 'h-10',
-        md: 'h-14',
-        lg: 'h-20',
-        xl: 'h-20 md:h-24'
+        sm: 'h-8',
+        md: 'h-10',
+        lg: 'h-12',
+        xl: 'h-10 md:h-14'
       };
       const textSizesMap = {
-        sm: 'h-6',
-        md: 'h-10',
-        lg: 'h-14',
-        xl: 'h-16 md:h-20'
+        sm: 'h-5',
+        md: 'h-8',
+        lg: 'h-10',
+        xl: 'h-10 md:h-14'
       };
       return (
         <div ref={ref} className={cn('flex items-center justify-center gap-2 md:gap-4 h-full', className)} {...props}>
