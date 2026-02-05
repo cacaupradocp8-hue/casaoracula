@@ -82,24 +82,28 @@ export function ArquetipoCard({ arquetipo }: ArquetipoCardProps) {
 
   return (
     <>
-      <Card className="border-gold/20 bg-card/80 overflow-hidden hover:border-gold/40 transition-all group">
+      <Card className="border-gold/20 bg-card/80 overflow-hidden hover:border-gold/40 transition-all duration-300 group hover:shadow-lg hover:shadow-gold/5">
         <CardContent className="p-0">
-          {/* Image Section */}
+          {/* Image Section - Ceremonial Aspect */}
           <div className="relative aspect-[3/4] overflow-hidden">
             <img
               src={imageSrc}
               alt={arquetipo.nome}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+            {/* Layered gradient for depth */}
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-b from-gold/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             
             {/* Archetype Name Overlay */}
             <div className="absolute bottom-0 left-0 right-0 p-4">
               <div className="text-center">
-                <span className="text-xs uppercase tracking-widest text-gold/70 font-medium">
-                  {arquetipo.territorio}
-                </span>
-                <h3 className="font-display text-2xl text-foreground mt-1">
+                {arquetipo.territorio && (
+                  <span className="text-xs uppercase tracking-[0.2em] text-gold/60 font-medium block mb-1">
+                    {arquetipo.territorio}
+                  </span>
+                )}
+                <h3 className="font-display text-xl md:text-2xl text-foreground drop-shadow-sm">
                   {arquetipo.nome}
                 </h3>
               </div>
@@ -134,9 +138,9 @@ export function ArquetipoCard({ arquetipo }: ArquetipoCardProps) {
               </p>
             </div>
 
-            {/* Reflection Question */}
-            <div className="p-5 border-t border-gold/10">
-              <p className="text-sm italic text-center text-muted-foreground">
+            {/* Reflection Question - More ceremonial */}
+            <div className="p-5 border-t border-gold/10 bg-gradient-to-b from-transparent to-gold/5">
+              <p className="text-sm italic text-center text-muted-foreground leading-relaxed">
                 "Como esse arquétipo atua em mim hoje?"
               </p>
             </div>
