@@ -7,3 +7,6 @@ export { TemplatesTab } from './TemplatesTab';
 export { MapaVivoTab } from './MapaVivoTab';
 export { JardimHeroinaTab } from './JardimHeroinaTab';
 export { JardimGrupoTab } from './JardimGrupoTab';
+
+// Guardiã do Jardim - IA contida
+export { GuardiaJardim, GUARDIA_FRASES, GUARDIA_LIMITES } from './guardia-jardim';
