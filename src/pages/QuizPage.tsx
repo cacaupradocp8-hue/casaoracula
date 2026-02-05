@@ -12,6 +12,8 @@ import { ModularPageRenderer } from "@/components/modular/ModularPageRenderer";
 import { ContentPageLayout } from "@/components/shared/ContentPageLayout";
 import { useContentBlocks } from "@/hooks/useContentBlocks";
 import { UnifiedAudioPlayer } from "@/components/audio/UnifiedAudioPlayer";
+ import { SyntheiaChatModal } from "@/components/syntheia/SyntheiaChatModal";
+ import { MessageCircle } from "lucide-react";
 
 interface Quiz {
   id: string;
@@ -73,6 +75,7 @@ export default function QuizPage() {
   const [saving, setSaving] = useState(false);
   const [previousResponse, setPreviousResponse] = useState<UserResponse | null>(null);
   const [showDebug, setShowDebug] = useState(false);
+   const [showSyntheiaChat, setShowSyntheiaChat] = useState(false);
 
   const isAdmin = user?.portal === 'admin';
 
@@ -626,7 +629,20 @@ export default function QuizPage() {
             </div>
           )}
 
-          {/* 5. Action buttons */}
+         {/* 5. Syntheia Chat Button */}
+         <div className="flex justify-center">
+           <Button
+             variant="gold"
+             size="lg"
+             onClick={() => setShowSyntheiaChat(true)}
+             className="gap-2"
+           >
+             <MessageCircle className="w-5 h-5" />
+             Explorar com Syntheia
+           </Button>
+         </div>
+ 
+         {/* 6. Action buttons */}
           <div className="flex gap-4 justify-center pt-4">
             <Button variant="outline" onClick={() => navigate(-1)}>
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -640,6 +656,20 @@ export default function QuizPage() {
         </ContentPageLayout>
 
         <DebugPanel resultId={finalResult.id} />
+
+       {/* Syntheia Chat Modal */}
+       <SyntheiaChatModal
+         open={showSyntheiaChat}
+         onOpenChange={setShowSyntheiaChat}
+         mode="arcano"
+         context={{
+           quizResultId: finalResult.id,
+           arquetipo: finalResult.titulo_simbolico,
+           categoria: finalResult.categoria || undefined,
+         }}
+         welcomeMessage={`Olá! Sou Syntheia. Vejo que você descobriu o arquétipo "${finalResult.titulo_simbolico}". Este é um território simbólico rico para explorarmos juntas. O que você gostaria de compreender mais profundamente sobre essa força que habita em você?`}
+         title="Syntheia — Arcano"
+       />
       </AppLayout>
     );
   }
