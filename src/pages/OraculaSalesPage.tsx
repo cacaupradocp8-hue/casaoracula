@@ -50,7 +50,7 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          BLOCO 2 — TÍTULO E INTRODUÇÃO
+          BLOCO 2 — TÍTULO E INTRODUÇÃO (Atualizado)
       ═══════════════════════════════════════════════════════════════════ */}
       <section className="py-20 px-6">
         <motion.div 
@@ -64,17 +64,70 @@ export default function OraculaSalesPage() {
             Casa Orácula
           </p>
           
-          <h1 className="font-display text-3xl md:text-4xl lg:text-5xl text-foreground tracking-wide leading-tight mb-8">
-            Formação Iniciática em Terapia Arquetípica
+          <h1 className="font-display text-3xl md:text-4xl lg:text-5xl text-foreground tracking-wide leading-tight mb-6">
+            FORMAÇÃO ORÁCULA
           </h1>
           
-          <p className="text-lg text-foreground/70 leading-relaxed">
-            Não é um curso.<br />
-            É um território de formação simbólica, ética e estruturada<br />
-            para mulheres que não podem mais improvisar profundidade.
+          <p className="text-gold/80 text-lg mb-8">
+            Certificação em Condução Simbólica, Método e Ética do Feminino
           </p>
         </motion.div>
       </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          BLOCO 2.1 — O PROBLEMA REAL
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="py-16 px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="max-w-2xl mx-auto text-center"
+        >
+          <h2 className="font-display text-2xl md:text-3xl text-foreground mb-8">
+            Você não precisa de mais técnicas.<br />
+            <span className="text-gold">Precisa de critério.</span>
+          </h2>
+          
+          <p className="text-foreground/60 mb-6">
+            Muitas mulheres conduzem outras mulheres com:
+          </p>
+          
+          <div className="flex flex-wrap justify-center gap-3 mb-8">
+            <span className="text-foreground/70">sensibilidade</span>
+            <span className="text-gold/40">•</span>
+            <span className="text-foreground/70">intuição</span>
+            <span className="text-gold/40">•</span>
+            <span className="text-foreground/70">símbolos</span>
+            <span className="text-gold/40">•</span>
+            <span className="text-foreground/70">histórias</span>
+          </div>
+          
+          <p className="text-foreground/50 mb-6">
+            Mas sem método, isso vira:
+          </p>
+          
+          <div className="flex flex-wrap justify-center gap-3 mb-10">
+            <span className="text-foreground/40">confusão</span>
+            <span className="text-foreground/30">•</span>
+            <span className="text-foreground/40">dependência</span>
+            <span className="text-foreground/30">•</span>
+            <span className="text-foreground/40">excesso</span>
+            <span className="text-foreground/30">•</span>
+            <span className="text-foreground/40">ou invasão silenciosa</span>
+          </div>
+          
+          <p className="text-gold/80 italic text-lg">
+            A Formação ORÁCULA nasce para organizar o campo.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* Divider */}
+      <div className="flex items-center justify-center py-4">
+        <div className="w-16 h-px bg-gold/20" />
+      </div>
 
       {/* ═══════════════════════════════════════════════════════════════════
           🎥 VÍDEO-CARD 1 — A Voz da Orácula
@@ -167,13 +220,33 @@ export default function OraculaSalesPage() {
             O que é a Formação ORÁCULA
           </h2>
           
-          <p className="text-foreground/70 text-center leading-relaxed mb-12">
-            A Formação ORÁCULA é uma metodologia viva<br />
-            para terapeutas, psicólogas e mentoras do feminino<br />
-            que desejam atuar com profundidade sem ferir, invadir ou improvisar.
+          <p className="text-foreground/60 text-center mb-10">
+            A Formação ORÁCULA não é um curso rápido.
           </p>
           
-          {/* Card Formação ORÁCULA */}
+          <p className="text-foreground/70 text-center leading-relaxed mb-8">
+            Ela é:
+          </p>
+          
+          <ul className="space-y-3 text-center text-foreground/60 mb-12">
+            <li>um percurso de autorização progressiva</li>
+            <li>um método simbólico estruturado</li>
+            <li>uma formação ética para quem guia outras mulheres</li>
+          </ul>
+          
+          <p className="text-gold/80 text-center mb-6">Aqui, você aprende:</p>
+          
+          <div className="flex flex-wrap justify-center gap-4 text-foreground/70 mb-12">
+            <span>quando conduzir</span>
+            <span className="text-gold/30">•</span>
+            <span>quando silenciar</span>
+            <span className="text-gold/30">•</span>
+            <span>quando sustentar</span>
+            <span className="text-gold/30">•</span>
+            <span>quando encerrar</span>
+          </div>
+          
+          {/* Card Formação ORÁCULA - mantido */}
           <div className="border border-gold/20 rounded-xl p-8 md:p-10 bg-card/5 space-y-6">
             <h3 className="font-display text-xl text-gold text-center mb-6">
               🏛️ FORMAÇÃO ORÁCULA
@@ -217,31 +290,82 @@ export default function OraculaSalesPage() {
               </p>
             </div>
           </div>
+        </motion.div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          BLOCO 5.1 — OS NÍVEIS DA FORMAÇÃO (Expandido)
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="py-16 px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="max-w-2xl mx-auto"
+        >
+          <h2 className="font-display text-2xl md:text-3xl text-gold mb-8 text-center">
+            Os Níveis da Formação
+          </h2>
           
-          {/* Três Níveis */}
-          <div className="mt-12 text-center">
-            <p className="text-foreground/50 text-sm mb-6">
-              Três níveis. Nenhuma pressa.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-8">
-              <div className="flex items-center gap-2">
-                <span className="text-lg">🌱</span>
-                <span className="text-foreground/60 text-sm">Iniciada Orácula</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-lg">🌿</span>
-                <span className="text-foreground/60 text-sm">Terapeuta Orácula</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-lg">🌕</span>
-                <span className="text-foreground/60 text-sm">Guardiã / Mentora</span>
+          <p className="text-foreground/60 text-center mb-10">
+            A Formação acontece por níveis, não por pressa.
+          </p>
+          
+          <div className="space-y-6">
+            <div className="flex items-start gap-4">
+              <span className="text-2xl">🌱</span>
+              <div>
+                <h3 className="font-display text-lg text-foreground mb-1">Iniciada</h3>
+                <p className="text-foreground/50 text-sm">presença e contenção</p>
               </div>
             </div>
             
-            <p className="text-foreground/40 text-xs italic">
-              Aqui não se mede performance.<br />
-              Reconhece-se maturidade.
+            <div className="flex items-start gap-4">
+              <span className="text-2xl">🌒</span>
+              <div>
+                <h3 className="font-display text-lg text-foreground mb-1">Praticante</h3>
+                <p className="text-foreground/50 text-sm">estrutura e linguagem</p>
+              </div>
+            </div>
+            
+            <div className="flex items-start gap-4">
+              <span className="text-2xl">🔥</span>
+              <div>
+                <h3 className="font-display text-lg text-foreground mb-1">Condutora</h3>
+                <p className="text-foreground/50 text-sm">decisão e travessia</p>
+              </div>
+            </div>
+            
+            <div className="flex items-start gap-4">
+              <span className="text-2xl">🌌</span>
+              <div>
+                <h3 className="font-display text-lg text-foreground mb-1">Guia de Grupos</h3>
+                <p className="text-foreground/50 text-sm">campo coletivo</p>
+              </div>
+            </div>
+            
+            <div className="flex items-start gap-4">
+              <span className="text-2xl">🧝🏽‍♀️</span>
+              <div>
+                <h3 className="font-display text-lg text-foreground mb-1">Formadora</h3>
+                <p className="text-foreground/50 text-sm">transmissão e linhagem</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-10 pt-8 border-t border-gold/10 text-center">
+            <p className="text-foreground/50 mb-4">Cada nível exige:</p>
+            <div className="flex flex-wrap justify-center gap-3 text-foreground/60 mb-6">
+              <span>prática</span>
+              <span className="text-gold/30">•</span>
+              <span>evidência</span>
+              <span className="text-gold/30">•</span>
+              <span>revisão</span>
+            </div>
+            <p className="text-gold/70 italic">
+              Não se avança por tempo.<br />
+              Avança-se por maturidade.
             </p>
           </div>
         </motion.div>
@@ -622,7 +746,105 @@ export default function OraculaSalesPage() {
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          BLOCO 14 — ENCERRAMENTO
+          BLOCO 14 — O QUE VOCÊ RECEBE
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="py-20 px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="max-w-2xl mx-auto"
+        >
+          <h2 className="font-display text-2xl md:text-3xl text-gold mb-10 text-center">
+            O que você recebe
+          </h2>
+          
+          <ul className="space-y-4 text-foreground/70">
+            <li className="flex items-start gap-3">
+              <span className="text-gold">✔</span>
+              <span>acesso completo à formação</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="text-gold">✔</span>
+              <span>travessias e aulas estruturadas</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="text-gold">✔</span>
+              <span>checklists de autorização</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="text-gold">✔</span>
+              <span>supervisão e revisão</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="text-gold">✔</span>
+              <span>certificação por nível</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="text-gold">✔</span>
+              <span>acesso integrado ao sistema Casa Orácula</span>
+            </li>
+          </ul>
+        </motion.div>
+      </section>
+
+      {/* Divider */}
+      <div className="flex items-center justify-center py-6">
+        <div className="w-16 h-px bg-gold/20" />
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          BLOCO 14.1 — INVESTIMENTO
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="py-20 px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="max-w-2xl mx-auto"
+        >
+          <h2 className="font-display text-2xl md:text-3xl text-gold mb-10 text-center">
+            Investimento
+          </h2>
+          
+          <div className="space-y-8">
+            {/* Formação Completa */}
+            <div className="border border-gold/20 rounded-xl p-8 bg-card/5 text-center">
+              <h3 className="font-display text-lg text-foreground mb-2">
+                Formação ORÁCULA — Certificação Completa
+              </h3>
+              <p className="text-2xl text-gold font-semibold mb-2">
+                💰 R$ 4.997 a R$ 7.997
+              </p>
+              <p className="text-foreground/50 text-sm">(parcelável)</p>
+            </div>
+            
+            {/* Opção Premium */}
+            <div className="border border-gold/30 rounded-xl p-8 bg-gold/5 text-center">
+              <h3 className="font-display text-lg text-foreground mb-2">
+                Opção Premium <span className="text-gold/70">(com mentoria)</span>
+              </h3>
+              <p className="text-2xl text-gold font-semibold mb-2">
+                💰 R$ 9.997 a R$ 14.997
+              </p>
+            </div>
+          </div>
+          
+          <div className="mt-10 pt-8 border-t border-gold/10 text-center">
+            <p className="text-foreground/60 mb-2">
+              O acesso à formação é seu.
+            </p>
+            <p className="text-foreground/50 text-sm italic">
+              O plano mensal é opcional e contratado à parte.
+            </p>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          BLOCO 15 — ENCERRAMENTO
       ═══════════════════════════════════════════════════════════════════ */}
       <section className="relative py-20 px-6 overflow-hidden">
         {/* Imagem de fundo sutil */}
@@ -660,7 +882,7 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          BLOCO 15 — IMAGEM FINAL (COM TRANSPARÊNCIA 20%)
+          BLOCO 16 — IMAGEM FINAL (COM TRANSPARÊNCIA 20%)
       ═══════════════════════════════════════════════════════════════════ */}
       <section className="w-full py-8">
         <img 
@@ -671,7 +893,7 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          BLOCO 16 — CHAMADO FINAL
+          BLOCO 17 — CHAMADO FINAL
       ═══════════════════════════════════════════════════════════════════ */}
       <section className="py-24 px-6">
         <motion.div
@@ -681,8 +903,9 @@ export default function OraculaSalesPage() {
           transition={{ duration: 0.8 }}
           className="max-w-2xl mx-auto text-center"
         >
-          <p className="text-foreground/70 text-lg mb-6">
-            Se você sentiu o chamado, a Casa está aberta.
+          <p className="font-display text-xl text-gold mb-8">
+            Aqui não se forma facilitadoras.<br />
+            <span className="text-foreground">Forma-se quem sabe sustentar campo.</span>
           </p>
           
           <p className="text-foreground/50 mb-10">
