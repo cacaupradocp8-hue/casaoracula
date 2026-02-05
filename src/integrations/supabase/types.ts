@@ -7911,6 +7911,54 @@ export type Database = {
           },
         ]
       }
+      syntheia_conversations: {
+        Row: {
+          context_data: Json | null
+          created_at: string
+          id: string
+          mode_id: string | null
+          title: string | null
+          updated_at: string
+          user_id: string
+          voice_id: string | null
+        }
+        Insert: {
+          context_data?: Json | null
+          created_at?: string
+          id?: string
+          mode_id?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id: string
+          voice_id?: string | null
+        }
+        Update: {
+          context_data?: Json | null
+          created_at?: string
+          id?: string
+          mode_id?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+          voice_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "syntheia_conversations_mode_id_fkey"
+            columns: ["mode_id"]
+            isOneToOne: false
+            referencedRelation: "syntheia_modes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "syntheia_conversations_voice_id_fkey"
+            columns: ["voice_id"]
+            isOneToOne: false
+            referencedRelation: "syntheia_voices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       syntheia_creations: {
         Row: {
           chave_simbolica: string | null
@@ -7965,6 +8013,113 @@ export type Database = {
           titulo?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      syntheia_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          role: string
+          tokens_used: number | null
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          role: string
+          tokens_used?: number | null
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          role?: string
+          tokens_used?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "syntheia_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "syntheia_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      syntheia_modes: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          ordem: number | null
+          system_prompt: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id: string
+          ordem?: number | null
+          system_prompt: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          ordem?: number | null
+          system_prompt?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      syntheia_voices: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          ordem: number | null
+          title: string
+          trigger_context: Json | null
+          type: string
+          updated_at: string
+          voice_prompt: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          ordem?: number | null
+          title: string
+          trigger_context?: Json | null
+          type: string
+          updated_at?: string
+          voice_prompt: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          ordem?: number | null
+          title?: string
+          trigger_context?: Json | null
+          type?: string
+          updated_at?: string
+          voice_prompt?: string
         }
         Relationships: []
       }
