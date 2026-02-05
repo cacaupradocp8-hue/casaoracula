@@ -85,13 +85,14 @@ export function MetaforaCard({ metafora }: MetaforaCardProps) {
       <Card 
         className={cn(
           "group relative overflow-hidden cursor-pointer",
-          "border-gold/20 hover:border-gold/50 transition-all duration-500",
-          "bg-gradient-to-b from-card to-card/80"
+          "border-gold/20 hover:border-gold/40 transition-all duration-500",
+          "bg-gradient-to-b from-card to-card/80",
+          "hover:shadow-lg hover:shadow-gold/5"
         )}
         onClick={() => setIsOpen(true)}
       >
         {/* Imagem Atmosférica */}
-        <div className="aspect-square relative overflow-hidden">
+        <div className="aspect-[3/4] relative overflow-hidden">
           {imageUrl && (
             <img
               src={imageUrl}
@@ -100,21 +101,22 @@ export function MetaforaCard({ metafora }: MetaforaCardProps) {
             />
           )}
           
-          {/* Overlay Gradiente */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+          {/* Overlay Gradiente - Mais atmosférico */}
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-gold/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           
           {/* Nome do Cenário */}
           <div className="absolute bottom-0 left-0 right-0 p-4">
-            <h3 className="font-display text-lg text-white leading-tight">
+            <h3 className="font-display text-lg text-foreground leading-tight drop-shadow-sm">
               {metafora.nome}
             </h3>
           </div>
         </div>
         
         {/* Texto Evocativo */}
-        <CardContent className="p-4">
+        <CardContent className="p-5">
           {metafora.texto_evocativo && (
-            <p className="text-sm text-muted-foreground italic leading-relaxed">
+            <p className="text-sm text-muted-foreground italic leading-relaxed line-clamp-3">
               "{metafora.texto_evocativo}"
             </p>
           )}
@@ -166,15 +168,18 @@ export function MetaforaCard({ metafora }: MetaforaCardProps) {
           {/* Espaço de Leitura Sensorial */}
           <div className="space-y-2">
             <label className="text-sm text-muted-foreground">
-              Sua leitura sensorial deste cenário (opcional):
+              O que você sente neste cenário? (opcional)
             </label>
             <Textarea
               value={anotacao}
               onChange={(e) => setAnotacao(e.target.value)}
-              placeholder="O que você sente ao contemplar este cenário? Que sensações, imagens ou memórias emergem?"
+              placeholder="Sensações, imagens, memórias que emergem ao habitar esta paisagem..."
               className="min-h-[100px] border-gold/20 bg-background/50 resize-none"
               disabled={registrado}
             />
+            <p className="text-xs text-muted-foreground/70 italic text-center">
+              Não há resposta certa. Apenas escute.
+            </p>
           </div>
 
           {/* Botão de Registro */}
@@ -184,7 +189,7 @@ export function MetaforaCard({ metafora }: MetaforaCardProps) {
             className={cn(
               "w-full gap-2",
               registrado 
-                ? "bg-emerald-600 hover:bg-emerald-600 text-white" 
+                ? "bg-accent hover:bg-accent text-accent-foreground" 
                 : "bg-gold hover:bg-gold/90 text-gold-foreground"
             )}
           >
