@@ -52,7 +52,7 @@ export default function OraculaSalesPage() {
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 2 — TÍTULO E INTRODUÇÃO (Atualizado)
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-20 px-6">
+      <section className="py-12 px-6">
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -77,7 +77,7 @@ export default function OraculaSalesPage() {
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 2.1 — O PROBLEMA REAL
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-16 px-6">
+      <section className="py-10 px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -125,7 +125,7 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* Divider */}
-      <div className="flex items-center justify-center py-4">
+      <div className="flex items-center justify-center py-2">
         <div className="w-16 h-px bg-gold/20" />
       </div>
 
@@ -140,14 +140,14 @@ export default function OraculaSalesPage() {
       />
 
       {/* Divider */}
-      <div className="flex items-center justify-center py-6">
+      <div className="flex items-center justify-center py-3">
         <div className="w-16 h-px bg-gold/20" />
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 3 — AVISO HONESTO (FILTRO)
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-16 px-6">
+      <section className="py-10 px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -208,7 +208,7 @@ export default function OraculaSalesPage() {
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 5 — O QUE É A FORMAÇÃO ORÁCULA
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-20 px-6">
+      <section className="py-12 px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -296,7 +296,7 @@ export default function OraculaSalesPage() {
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 5.1 — OS NÍVEIS DA FORMAÇÃO (Expandido)
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-16 px-6">
+      <section className="py-10 px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -370,14 +370,14 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* Divider */}
-      <div className="flex items-center justify-center py-6">
+      <div className="flex items-center justify-center py-3">
         <div className="w-16 h-px bg-gold/20" />
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 6 — COMO A FORMAÇÃO FUNCIONA
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-20 px-6">
+      <section className="py-12 px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -453,7 +453,7 @@ export default function OraculaSalesPage() {
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 8 — AS TRAVESSIAS DA FORMAÇÃO
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-20 px-6">
+      <section className="py-12 px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -510,14 +510,14 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* Divider */}
-      <div className="flex items-center justify-center py-6">
+      <div className="flex items-center justify-center py-3">
         <div className="w-16 h-px bg-gold/20" />
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 9 — PORTAL DA NARROTERAPIA ORACULAR (COM FUNDO 20%)
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="relative py-20 px-6 overflow-hidden">
+      <section className="relative py-12 px-6 overflow-hidden">
         {/* Imagem de fundo 20% transparência */}
         <img 
           src={fundoNarroterapia} 
@@ -575,7 +575,7 @@ export default function OraculaSalesPage() {
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 11 — AS FERRAMENTAS DA CASA
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-20 px-6">
+      <section className="py-12 px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -623,14 +623,14 @@ export default function OraculaSalesPage() {
       />
 
       {/* Divider */}
-      <div className="flex items-center justify-center py-6">
+      <div className="flex items-center justify-center py-3">
         <div className="w-16 h-px bg-gold/20" />
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 12 — ÉTICA E SUSTENTAÇÃO (COM IMAGEM LATERAL)
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-20 px-6">
+      <section className="py-12 px-6">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -677,14 +677,14 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* Divider */}
-      <div className="flex items-center justify-center py-6">
+      <div className="flex items-center justify-center py-3">
         <div className="w-16 h-px bg-gold/20" />
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 13 — PARA QUEM É / PARA QUEM NÃO É (COM FUNDO 20%)
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="relative py-20 px-6 overflow-hidden">
+      <section className="relative py-12 px-6 overflow-hidden">
         {/* Imagem de fundo 20% transparência */}
         <img 
           src={fundoParaQuemE} 
@@ -739,14 +739,14 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* Divider */}
-      <div className="flex items-center justify-center py-6">
+      <div className="flex items-center justify-center py-3">
         <div className="w-16 h-px bg-gold/20" />
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 14 — O QUE VOCÊ RECEBE
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-20 px-6">
+      <section className="py-12 px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -788,14 +788,14 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* Divider */}
-      <div className="flex items-center justify-center py-6">
+      <div className="flex items-center justify-center py-3">
         <div className="w-16 h-px bg-gold/20" />
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 14.1 — INVESTIMENTO
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-20 px-6">
+      <section className="py-12 px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -844,7 +844,7 @@ export default function OraculaSalesPage() {
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 15 — ENCERRAMENTO
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="relative py-20 px-6 overflow-hidden">
+      <section className="relative py-12 px-6 overflow-hidden">
         {/* Imagem de fundo sutil */}
         <img 
           src={fundoRitual2} 
@@ -893,7 +893,7 @@ export default function OraculaSalesPage() {
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 17 — CHAMADO FINAL
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="py-24 px-6">
+      <section className="py-16 px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
