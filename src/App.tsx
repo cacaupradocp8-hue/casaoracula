@@ -169,6 +169,7 @@ import {
 // Labirinto da Heroína Interna®
 import { LabirintoHeroinaPage } from "./pages/labirinto-heroina";
 import MapaHeroinaPage from "./pages/mapa-heroina";
+import CartasJornadaPage from "./pages/CartasJornadaPage";
 
 const queryClient = new QueryClient();
 
@@ -514,6 +515,16 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="aluna_formacao">
             <LabirintoHeroinaPage />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Cartas da Jornada - Oráculo Labirinto da Heroína */}
+      <Route
+        path="/cartas-jornada"
+        element={
+          <ProtectedRoute minPortal="pre_iniciada">
+            <CartasJornadaPage />
           </ProtectedRoute>
         }
       />

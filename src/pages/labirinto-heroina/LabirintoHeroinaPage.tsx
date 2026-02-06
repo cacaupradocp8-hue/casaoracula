@@ -91,8 +91,17 @@ export default function LabirintoHeroinaPage() {
           {/* CTAs */}
           <div className="flex flex-wrap justify-center gap-3">
             <Button 
-              onClick={() => navigate("/mapa-heroina")}
+              onClick={() => navigate("/cartas-jornada")}
               className="bg-gold hover:bg-gold/90 text-gold-foreground gap-2"
+            >
+              <Compass className="w-4 h-4" />
+              Cartas da Jornada
+            </Button>
+            
+            <Button 
+              onClick={() => navigate("/mapa-heroina")}
+              variant="outline"
+              className="border-gold/30 text-gold hover:bg-gold/10 gap-2"
             >
               <Scroll className="w-4 h-4" />
               Meu Mapa Pessoal
