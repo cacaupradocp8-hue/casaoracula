@@ -46,19 +46,14 @@ export default function Landing() {
           </p>
         </div>
 
-        {/* Audio Player - Dynamic */}
+        {/* Audio Player - Ambient */}
         {audioUrl && (
-          <div className="animate-slide-up max-w-md mx-auto space-y-2" style={{ animationDelay: '0.5s' }}>
+          <div className="animate-slide-up max-w-xs mx-auto mb-8 opacity-80 hover:opacity-100 transition-opacity" style={{ animationDelay: '0.5s' }}>
             <UnifiedAudioPlayer 
               audioUrl={audioUrl}
               title={audioTitle || undefined}
-              size="lg"
+              size="sm"
             />
-            {audioCaption && (
-              <p className="text-sm text-muted-foreground text-center italic">
-                {audioCaption}
-              </p>
-            )}
           </div>
         )}
 
