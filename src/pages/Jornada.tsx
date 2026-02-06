@@ -237,7 +237,7 @@ export default function Jornada() {
           transition={{ delay: 0.2, duration: 0.6 }}
           className="text-center mb-10 max-w-md"
         >
-          <p className="text-xs uppercase tracking-widest text-muted-foreground/50 mb-3">
+          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">
             Onde você está agora
           </p>
           
@@ -277,7 +277,7 @@ export default function Jornada() {
           transition={{ delay: 0.7, duration: 0.6 }}
           className="text-center"
         >
-          <p className="text-xs uppercase tracking-widest text-muted-foreground/40 mb-4">
+          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">
             Próximo gesto possível
           </p>
           
