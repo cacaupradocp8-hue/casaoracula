@@ -193,177 +193,69 @@ export default function SalasList() {
           <span className="text-foreground">Formação</span>
         </nav>
 
-        <SectionHeader
-          title="Formação"
-          subtitle="Escolha seu caminho de desenvolvimento"
-          icon={<GraduationCap className="w-5 h-5" />}
-          className="mb-10"
-        />
-
-        {/* Two Main Paths */}
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
-          {/* MENTORIA ORÁCULA */}
-          {config.mentoria_ativa && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <Card 
-                className={cn(
-                  "h-full border-2 transition-all duration-300 cursor-pointer group overflow-hidden",
-                  matriculas.hasMentoria 
-                    ? "border-purple-500/50 bg-purple-500/5 hover:border-purple-500 hover:bg-purple-500/10" 
-                    : "border-border/50 bg-card/50 hover:border-purple-500/30"
-                )}
-                onClick={() => matriculas.hasMentoria ? navigate('/mentoria-oracular') : navigate('/planos')}
-              >
-                {/* Banner Image */}
-                {config.mentoria_banner_url && (
-                  <div className="w-full aspect-[3/1] overflow-hidden">
-                    <img 
-                      src={config.mentoria_banner_url} 
-                      alt={config.mentoria_titulo}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
+        {/* Welcome Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-12"
+        >
+          <Card className="border-gold/20 bg-gradient-to-br from-card via-card to-gold/5 overflow-hidden">
+            <CardContent className="p-8 md:p-12">
+              <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
+                {/* Icon */}
+                <div className="w-16 h-16 rounded-2xl bg-gold/10 flex items-center justify-center mb-6">
+                  <Building2 className="w-8 h-8 text-gold" />
+                </div>
                 
-                <CardHeader className="pb-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-14 h-14 rounded-2xl bg-purple-500/20 flex items-center justify-center">
-                      <Moon className="w-7 h-7 text-purple-400" />
-                    </div>
-                    {matriculas.hasMentoria ? (
-                      <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">
-                        <Unlock className="w-3 h-3 mr-1" /> Ativo
-                      </Badge>
-                    ) : (
-                      <Badge variant="secondary">
-                        <Lock className="w-3 h-3 mr-1" /> Requer Matrícula
-                      </Badge>
-                    )}
-                  </div>
-                  <CardTitle className="text-xl font-display text-foreground group-hover:text-purple-400 transition-colors">
-                    {config.mentoria_titulo}
-                  </CardTitle>
-                  <CardDescription className="text-base">
-                    {config.mentoria_subtitulo}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {config.mentoria_descricao}
+                {/* Title */}
+                <h1 className="text-2xl md:text-3xl font-display text-foreground mb-6">
+                  Bem-vinda à Casa Orácula
+                </h1>
+                
+                {/* Body Text */}
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    Aqui não se improvisa condução.
+                    <br />
+                    Aqui se aprende a sustentar campo, antes de guiar o da outra.
                   </p>
                   
-                  <div className="space-y-2 pt-2">
-                    {config.mentoria_itens.map((item, index) => (
-                      <div key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-                        {index === 0 && <Heart className="w-4 h-4 text-purple-400 shrink-0" />}
-                        {index === 1 && <Sparkles className="w-4 h-4 text-purple-400 shrink-0" />}
-                        {index === 2 && <Compass className="w-4 h-4 text-purple-400 shrink-0" />}
-                        {index > 2 && <Moon className="w-4 h-4 text-purple-400 shrink-0" />}
-                        <span>{item}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center justify-end pt-2">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="gap-1 text-purple-400 hover:text-purple-300"
-                    >
-                      {matriculas.hasMentoria ? 'Acessar' : 'Ver planos'}
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
-
-          {/* FORMAÇÃO ORÁCULA */}
-          {config.formacao_ativa && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <Card 
-                className={cn(
-                  "h-full border-2 transition-all duration-300 cursor-pointer group overflow-hidden",
-                  matriculas.hasFormacao 
-                    ? "border-gold/50 bg-gold/5 hover:border-gold hover:bg-gold/10" 
-                    : "border-border/50 bg-card/50 hover:border-gold/30"
-                )}
-                onClick={() => navigate('/oracula')}
-              >
-                {/* Banner Image */}
-                {config.formacao_banner_url && (
-                  <div className="w-full aspect-[3/1] overflow-hidden">
-                    <img 
-                      src={config.formacao_banner_url} 
-                      alt={config.formacao_titulo}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
-                
-                <CardHeader className="pb-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-14 h-14 rounded-2xl bg-gold/20 flex items-center justify-center">
-                      <Star className="w-7 h-7 text-gold" />
-                    </div>
-                    {matriculas.hasFormacao ? (
-                      <Badge className="bg-gold/20 text-gold border-gold/30">
-                        <Unlock className="w-3 h-3 mr-1" /> Ativo
-                      </Badge>
-                    ) : (
-                      <Badge variant="secondary">
-                        <Lock className="w-3 h-3 mr-1" /> Requer Matrícula
-                      </Badge>
-                    )}
-                  </div>
-                  <CardTitle className="text-xl font-display text-foreground group-hover:text-gold transition-colors">
-                    {config.formacao_titulo}
-                  </CardTitle>
-                  <CardDescription className="text-base">
-                    {config.formacao_subtitulo}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {config.formacao_descricao}
+                  <p className="text-foreground/80">
+                    A Casa Orácula é um sistema profissional para terapeutas, mentoras e educadoras do feminino que desejam organização, clareza e ética na prática simbólica.
                   </p>
                   
-                  <div className="space-y-2 pt-2">
-                    {config.formacao_itens.map((item, index) => (
-                      <div key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-                        {index === 0 && <BookOpen className="w-4 h-4 text-gold shrink-0" />}
-                        {index === 1 && <GraduationCap className="w-4 h-4 text-gold shrink-0" />}
-                        {index === 2 && <Users className="w-4 h-4 text-gold shrink-0" />}
-                        {index > 2 && <Star className="w-4 h-4 text-gold shrink-0" />}
-                        <span>{item}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center justify-end pt-2">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="gap-1 text-gold hover:text-gold/80"
-                    >
-                      {matriculas.hasFormacao ? 'Acessar' : 'Ver planos'}
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
-        </div>
+                  <p className="text-sm italic text-muted-foreground/80 pt-2">
+                    Você não precisa saber tudo agora.
+                    <br />
+                    Precisa apenas saber onde está.
+                  </p>
+                </div>
+                
+                {/* Action Buttons */}
+                <div className="flex flex-wrap gap-4 justify-center mt-8">
+                  <Button 
+                    variant="gold" 
+                    onClick={() => navigate('/oracula')}
+                    className="gap-2"
+                  >
+                    <GraduationCap className="w-4 h-4" />
+                    Conhecer a Formação
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => navigate('/planos')}
+                    className="gap-2"
+                  >
+                    <MapPin className="w-4 h-4" />
+                    Ver Planos
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
         {/* Espaços Formativos Section */}
         <motion.div
