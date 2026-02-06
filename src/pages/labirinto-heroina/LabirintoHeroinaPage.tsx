@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   ArrowLeft, Home, ChevronRight, Loader2, 
   Compass, Moon, Sparkles, Feather, Flame,
-  History, BookOpen, FileText, Scroll
+  History, BookOpen, FileText, Scroll, User, Briefcase
 } from "lucide-react";
 import { useLabirintoHeroinaData, useLabirintoHeroinaRegistros } from "@/hooks/useLabirintoHeroina";
 import { FasesLayer } from "./components/FasesLayer";
@@ -15,6 +15,8 @@ import { ArquetiposLayer } from "./components/ArquetiposLayer";
 import { MetaforasLayer } from "./components/MetaforasLayer";
 import { RituaisLayer } from "./components/RituaisLayer";
 import { LabirintoHeroinaIntro } from "./components/LabirintoHeroinaIntro";
+import { LabirintoModoSelector } from "./components/LabirintoModoSelector";
+import { LabirintoProvider, LabirintoConfig } from "./contexts/LabirintoContext";
 import { GeradorRoteiroModal } from "./components/GeradorRoteiroModal";
 
 const LABIRINTO_HEROINA_INTRO_KEY = "labirinto-heroina-intro-seen";
@@ -28,14 +30,32 @@ export default function LabirintoHeroinaPage() {
     return seen !== "true";
   });
   const [showGeradorRoteiro, setShowGeradorRoteiro] = useState(false);
+  const [labirintoConfig, setLabirintoConfig] = useState<LabirintoConfig | null>(null);
 
   const handleEnter = () => {
     localStorage.setItem(LABIRINTO_HEROINA_INTRO_KEY, "true");
     setShowIntro(false);
   };
 
+  const handleModeSelected = (config: LabirintoConfig) => {
+    setLabirintoConfig(config);
+  };
+
+  const handleBackToModeSelection = () => {
+    setLabirintoConfig(null);
+  };
+
   if (showIntro) {
     return <LabirintoHeroinaIntro onEnter={handleEnter} />;
+  }
+
+  // Show mode selector if no config set yet
+  if (!labirintoConfig) {
+    return (
+      <AppLayout>
+        <LabirintoModoSelector onModeSelected={handleModeSelected} />
+      </AppLayout>
+    );
   }
 
   if (isLoading) {
@@ -49,17 +69,39 @@ export default function LabirintoHeroinaPage() {
   }
 
   return (
-    <AppLayout>
-      <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
-        {/* Back Button */}
-        <Button
-          variant="ghost"
-          onClick={() => navigate('/ferramentas-metodo')}
-          className="gap-2 text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Voltar às Ferramentas do Método
-        </Button>
+    <LabirintoProvider config={labirintoConfig}>
+      <AppLayout>
+        <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+        {/* Mode Indicator & Back */}
+        <div className="flex items-center justify-between">
+          <Button
+            variant="ghost"
+            onClick={handleBackToModeSelection}
+            className="gap-2 text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Voltar à seleção de modo
+          </Button>
+
+          {/* Mode Badge */}
+          <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm ${
+            labirintoConfig.modo === "pessoal" 
+              ? "bg-gold/10 text-gold border border-gold/30" 
+              : "bg-purple-500/10 text-purple-400 border border-purple-500/30"
+          }`}>
+            {labirintoConfig.modo === "pessoal" ? (
+              <>
+                <User className="w-4 h-4" />
+                Travessia Pessoal
+              </>
+            ) : (
+              <>
+                <Briefcase className="w-4 h-4" />
+                Condução Profissional
+              </>
+            )}
+          </div>
+        </div>
 
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -203,6 +245,7 @@ export default function LabirintoHeroinaPage() {
         />
       </div>
     </AppLayout>
+    </LabirintoProvider>
   );
 }
 
