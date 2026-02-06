@@ -272,12 +272,12 @@ export default function Auth() {
 
         {/* Manifesto */}
         <div className="glass rounded-2xl p-6 mb-6 border border-gold/20 text-center space-y-4">
-          <p className="text-foreground/80 text-base md:text-sm leading-relaxed">
+          <p className="text-foreground text-base md:text-sm leading-relaxed">
             <strong className="text-gold">Antes de conduzir o outro,</strong><br />
             aprenda a sustentar o campo.
           </p>
           
-          <p className="text-foreground/60 text-sm md:text-xs leading-relaxed italic">
+          <p className="text-foreground/80 text-sm md:text-xs leading-relaxed italic">
             Aqui, não se aprende a interpretar.<br />
             Aprende-se a sustentar.
           </p>
