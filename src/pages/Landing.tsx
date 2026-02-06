@@ -23,10 +23,10 @@ export default function Landing() {
       <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-pulse-slow" />
       <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
 
-      <div className="relative z-10 text-center px-6 max-w-2xl mx-auto">
+      <div className="relative z-10 text-center px-6 max-w-2xl mx-auto pt-8 md:pt-12">
         {/* Logo */}
-        <div className="animate-fade-in mb-10">
-          <Logo size="lg" variant="vertical" className="justify-center" />
+        <div className="animate-fade-in mb-12">
+          <Logo size="xl" variant="vertical" className="justify-center" />
         </div>
 
         {/* Título */}
