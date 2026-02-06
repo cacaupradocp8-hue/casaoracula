@@ -13,7 +13,7 @@ import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
 import { getPublicAudioUrl } from '@/lib/audioUtils';
 import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
 import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
-
+import { useTravessiaUnlock } from '@/hooks/useTravessiaUnlock';
 interface Aula {
   id: string;
   titulo: string;
@@ -48,7 +48,13 @@ export default function AulaPage() {
   const [isMarking, setIsMarking] = useState(false);
   const [nextAula, setNextAula] = useState<Aula | null>(null);
   const [prevAula, setPrevAula] = useState<Aula | null>(null);
+  const [isTravessiaZero, setIsTravessiaZero] = useState(false);
   const { extractVideoId, isCloudflareVideoId } = useCloudflareVideo();
+  
+  // Hook para verificar bloqueio temporal da Travessia Zero
+  const { getDayStatus, registerAccess } = useTravessiaUnlock(
+    isTravessiaZero ? aula?.travessia_id : undefined
+  );
 
   // Extract Cloudflare video ID - must be before any conditional returns
   const videoId = useMemo(() => {
@@ -64,6 +70,13 @@ export default function AulaPage() {
       fetchAula();
     }
   }, [id, user]);
+
+  // Registrar acesso quando entrar na aula da Travessia Zero
+  useEffect(() => {
+    if (isTravessiaZero && aula?.id && user) {
+      registerAccess(aula.id);
+    }
+  }, [isTravessiaZero, aula?.id, user, registerAccess]);
 
   const fetchAula = async () => {
     if (!id) return;
@@ -101,6 +114,8 @@ export default function AulaPage() {
           titulo: travessiaData.title,
           slug: travessiaData.slug,
         });
+        // Detectar se é Travessia Zero pelo slug
+        setIsTravessiaZero(travessiaData.slug === 'travessia-zero' || travessiaData.slug === '00-limiar-da-casa');
       } else {
         // Fallback to conteudo_travessias (legacy portals)
         const { data: portalData } = await supabase
@@ -116,6 +131,7 @@ export default function AulaPage() {
             titulo: portalData.titulo,
           });
         }
+        setIsTravessiaZero(false);
       }
 
       // Check if completed
@@ -398,14 +414,35 @@ export default function AulaPage() {
           </Button>
           
           {nextAula ? (
-            <Button
-              variant="gold"
-              onClick={() => navigate(`/aulas/${nextAula.id}`)}
-              className="gap-2"
-            >
-              Próxima Aula
-              <ArrowRight className="w-4 h-4" />
-            </Button>
+            (() => {
+              // Verificar se a próxima aula está bloqueada (Travessia Zero)
+              const nextUnlockStatus = isTravessiaZero ? getDayStatus(nextAula.id) : null;
+              const isNextLocked = isTravessiaZero && nextUnlockStatus && !nextUnlockStatus.isUnlocked;
+              
+              if (isNextLocked) {
+                return (
+                  <Button
+                    variant="outline"
+                    disabled
+                    className="gap-2 opacity-60 cursor-not-allowed"
+                  >
+                    <Lock className="w-4 h-4" />
+                    Próxima Aula Bloqueada
+                  </Button>
+                );
+              }
+              
+              return (
+                <Button
+                  variant="gold"
+                  onClick={() => navigate(`/aulas/${nextAula.id}`)}
+                  className="gap-2"
+                >
+                  Próxima Aula
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              );
+            })()
           ) : (
             <Button
               variant="outline"
