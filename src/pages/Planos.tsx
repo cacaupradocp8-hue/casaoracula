@@ -86,10 +86,10 @@ export default function Planos() {
               className="text-center max-w-2xl mx-auto"
             >
               <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-foreground tracking-wide mb-3">
-                Uso do Sistema
+                Planos da Casa Orácula
               </h1>
               <p className="text-gold/80 font-medium">
-                Sustentação da prática. Infraestrutura profissional.
+                Infraestrutura para a prática. Ética para a condução.
               </p>
             </motion.div>
           </div>
@@ -103,13 +103,12 @@ export default function Planos() {
               className="text-center max-w-xl mx-auto space-y-4"
             >
               <p className="text-foreground/90">
-                Aqui você não aluga conhecimento.<br />
-                Você sustenta um campo de trabalho.
+                A Casa Orácula não vende atalhos.<br />
+                Ela sustenta práticas reais.
               </p>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                O plano mensal mantém o sistema ativo —<br />
-                ferramentas, IA e infraestrutura de atendimento.<br />
-                <span className="text-gold/70">A Formação autoriza. O Plano sustenta a prática.</span>
+                Os planos dão acesso ao uso do sistema —<br />
+                não substituem formação, nem prometem autorização.
               </p>
             </motion.div>
           </div>
@@ -238,12 +237,10 @@ export default function Planos() {
               className="max-w-xl mx-auto text-center space-y-3"
             >
               <p className="text-foreground/80 text-sm font-medium">
-                O plano cobra uso, volume e recursos.<br />
-                Não "autoriza" ninguém.
+                O plano permite o uso do sistema.
               </p>
               <p className="text-muted-foreground text-sm">
-                A autorização vem da Formação.<br />
-                O plano sustenta quem já está em prática.
+                A condução simbólica depende do nível de formação.
               </p>
             </motion.div>
           </div>
