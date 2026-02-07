@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
-import { Navigate } from "react-router-dom";
 import { Palette, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -16,22 +14,8 @@ interface GeneratedContent {
 }
 
 export default function AtelieConteudo() {
-  const { user, isLoading } = useAuth();
+  // Note: Admin access is already enforced by ProtectedRoute in App.tsx
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null);
-
-  // Loading state
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-muted-foreground">Carregando...</div>
-      </div>
-    );
-  }
-
-  // Admin check
-  if (!user || user.portal !== "admin") {
-    return <Navigate to="/" replace />;
-  }
 
   const handleGenerated = (content: GeneratedContent) => {
     setGeneratedContent(content);
