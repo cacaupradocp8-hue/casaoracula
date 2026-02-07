@@ -84,7 +84,7 @@ export default function AtelieFormulario({ onGenerated }: AtelieFormularioProps)
               <SelectContent>
                 {templates?.map((template) => (
                   <SelectItem key={template.id} value={template.id}>
-                    {template.nome} {template.is_default && "(Padrão)"}
+                    {template.name} {template.is_default && "(Padrão)"}
                   </SelectItem>
                 ))}
               </SelectContent>

@@ -5,9 +5,10 @@ import { toast } from "sonner";
 
 export interface AtelieTemplate {
   id: string;
-  nome: string;
-  descricao: string | null;
-  template_content: string;
+  name: string;
+  version: string | null;
+  system_prompt: string;
+  action_prompt: string;
   is_default: boolean;
   ativo: boolean;
   created_at: string;
@@ -51,11 +52,11 @@ export function useAtelieTemplates() {
     queryKey: ["atelie-templates"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("atelie_templates")
+        .from("templates")
         .select("*")
         .eq("ativo", true)
         .order("is_default", { ascending: false })
-        .order("nome");
+        .order("name");
 
       if (error) throw error;
       return data as AtelieTemplate[];

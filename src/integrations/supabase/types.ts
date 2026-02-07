@@ -8212,6 +8212,42 @@ export type Database = {
         }
         Relationships: []
       }
+      templates: {
+        Row: {
+          action_prompt: string
+          ativo: boolean | null
+          created_at: string | null
+          id: string
+          is_default: boolean | null
+          name: string
+          system_prompt: string
+          updated_at: string | null
+          version: string | null
+        }
+        Insert: {
+          action_prompt: string
+          ativo?: boolean | null
+          created_at?: string | null
+          id?: string
+          is_default?: boolean | null
+          name: string
+          system_prompt: string
+          updated_at?: string | null
+          version?: string | null
+        }
+        Update: {
+          action_prompt?: string
+          ativo?: boolean | null
+          created_at?: string | null
+          id?: string
+          is_default?: boolean | null
+          name?: string
+          system_prompt?: string
+          updated_at?: string | null
+          version?: string | null
+        }
+        Relationships: []
+      }
       text_models: {
         Row: {
           ativo: boolean | null
