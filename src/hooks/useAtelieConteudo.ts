@@ -207,6 +207,79 @@ export function useReviseContent() {
   return { revise, isRevising };
 }
 
+export interface EthicalReviewInput {
+  conteudo: string;
+  contexto?: string;
+}
+
+export interface EthicalReviewSection {
+  pontos_seguros: string[];
+  pontos_atencao: string[];
+  sugestoes_ajuste: string[];
+}
+
+export interface EthicalReviewResponse {
+  raw_content: string;
+  review: EthicalReviewSection;
+  usage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number };
+}
+
+export function useEthicalReview() {
+  const [isReviewing, setIsReviewing] = useState(false);
+
+  const review = async (input: EthicalReviewInput): Promise<EthicalReviewResponse | null> => {
+    setIsReviewing(true);
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+
+      if (!token) {
+        toast.error("Você precisa estar autenticado");
+        return null;
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ethical-review-content`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(input),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        
+        if (response.status === 429) {
+          toast.error("Limite de requisições excedido. Aguarde e tente novamente.");
+          return null;
+        }
+        if (response.status === 402) {
+          toast.error("Créditos insuficientes. Adicione créditos ao workspace.");
+          return null;
+        }
+        
+        throw new Error(errorData.error || "Erro na revisão ética");
+      }
+
+      const data: EthicalReviewResponse = await response.json();
+      toast.success("Revisão ética concluída!");
+      return data;
+    } catch (error) {
+      console.error("Error in ethical review:", error);
+      toast.error(error instanceof Error ? error.message : "Erro na revisão ética");
+      return null;
+    } finally {
+      setIsReviewing(false);
+    }
+  };
+
+  return { review, isReviewing };
+}
+
 export function useSaveConteudo() {
   const queryClient = useQueryClient();
 

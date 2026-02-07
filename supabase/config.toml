@@ -44,3 +44,6 @@ verify_jwt = false
 
 [functions.revise-portal-content]
 verify_jwt = false
+
+[functions.ethical-review-content]
+verify_jwt = false
