@@ -138,6 +138,75 @@ export function useGenerateContent() {
   return { generate, isGenerating };
 }
 
+export interface ReviseContentInput {
+  aula_original: string;
+  tipo_revisao: string;
+  conteudo_id?: string;
+}
+
+export interface ReviseContentResponse {
+  raw_content: string;
+  sections: Record<string, string>;
+  usage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number };
+  tipo_revisao: string;
+}
+
+export function useReviseContent() {
+  const [isRevising, setIsRevising] = useState(false);
+
+  const revise = async (input: ReviseContentInput): Promise<ReviseContentResponse | null> => {
+    setIsRevising(true);
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+
+      if (!token) {
+        toast.error("Você precisa estar autenticado");
+        return null;
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/revise-portal-content`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(input),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        
+        if (response.status === 429) {
+          toast.error("Limite de requisições excedido. Aguarde e tente novamente.");
+          return null;
+        }
+        if (response.status === 402) {
+          toast.error("Créditos insuficientes. Adicione créditos ao workspace.");
+          return null;
+        }
+        
+        throw new Error(errorData.error || "Erro na revisão");
+      }
+
+      const data: ReviseContentResponse = await response.json();
+      toast.success("Conteúdo revisado com sucesso!");
+      return data;
+    } catch (error) {
+      console.error("Error revising content:", error);
+      toast.error(error instanceof Error ? error.message : "Erro ao revisar conteúdo");
+      return null;
+    } finally {
+      setIsRevising(false);
+    }
+  };
+
+  return { revise, isRevising };
+}
+
 export function useSaveConteudo() {
   const queryClient = useQueryClient();
 
