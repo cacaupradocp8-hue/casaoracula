@@ -39,12 +39,15 @@ export interface GenerateContentInput {
   tom: string;
   duracao?: string;
   template_id?: string;
+  save_draft?: boolean;
+  status?: "rascunho" | "revisado" | "publicado";
 }
 
 export interface GenerateContentResponse {
   raw_content: string;
   sections: Record<string, string>;
   usage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number };
+  draft?: AtelieConteudo | null;
 }
 
 export function useAtelieTemplates() {
