@@ -208,12 +208,17 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
     return <Navigate to="/onboarding" replace />;
   }
   
-  // Get effective portal considering preview mode
-  const effectivePortal = preview?.isPreviewMode && preview?.previewPortal && user?.portal === 'admin'
+  // ADMIN ALWAYS has access to admin routes, even in preview mode
+  // Preview mode only affects non-admin content visibility
+  const isAdminRoute = minPortal === 'admin';
+  
+  // For admin routes: check ACTUAL portal, not effective portal
+  // For other routes: use effective portal (respects preview mode)
+  const effectivePortal = preview?.isPreviewMode && preview?.previewPortal && user?.portal === 'admin' && !isAdminRoute
     ? preview.previewPortal
     : user?.portal || 'visitante';
   
-  // Check access with effective portal
+  // Check access with appropriate portal
   const hasAccess = canAccessFeature(effectivePortal, minPortal);
   
   // VISITORS: Show blocking component for restricted content (not redirect!)
