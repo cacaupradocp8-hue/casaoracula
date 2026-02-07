@@ -103,6 +103,21 @@ export default function Auth() {
     const result = await signup(signupEmail, signupPassword, signupName);
     
     if (result.success) {
+      // Send welcome email in background (non-blocking)
+      supabase.functions.invoke('send-welcome-email', {
+        body: {
+          email: signupEmail,
+          userName: signupName,
+          includeWaitingListLink: true,
+        },
+      }).then(({ error }) => {
+        if (error) {
+          console.error('Error sending welcome email:', error);
+        } else {
+          console.log('Welcome email sent successfully');
+        }
+      });
+
       toast({
         title: 'Conta criada',
         description: 'Seja bem-vinda à Casa ORÁCULA.',
