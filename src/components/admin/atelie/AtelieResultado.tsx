@@ -4,9 +4,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Save, Copy, FileText, Eye, Edit, RefreshCw } from "lucide-react";
+import { Save, Copy, FileText, Eye, Edit, RefreshCw, Shield } from "lucide-react";
 import { useSaveConteudo, GenerateContentInput, ReviseContentResponse } from "@/hooks/useAtelieConteudo";
 import AtelieRevisao from "./AtelieRevisao";
+import AtelieRevisaoEtica from "./AtelieRevisaoEtica";
 
 interface AtelieResultadoProps {
   rawContent: string;
@@ -27,12 +28,14 @@ const SECTION_LABELS: Record<string, string> = {
   conteudo_completo: "Conteúdo Completo",
 };
 
+type ReviewMode = "none" | "pedagogica" | "etica";
+
 export default function AtelieResultado({ rawContent, sections, input, onSaved }: AtelieResultadoProps) {
   const [editedSections, setEditedSections] = useState<Record<string, string>>(sections);
   const [editedRaw, setEditedRaw] = useState(rawContent);
   const [viewMode, setViewMode] = useState<"sections" | "raw">("sections");
   const [isEditing, setIsEditing] = useState(false);
-  const [showRevisao, setShowRevisao] = useState(false);
+  const [reviewMode, setReviewMode] = useState<ReviewMode>("none");
   const [wasRevised, setWasRevised] = useState(false);
 
   const saveConteudo = useSaveConteudo();
@@ -67,7 +70,11 @@ export default function AtelieResultado({ rawContent, sections, input, onSaved }
     setEditedSections(result.sections);
     setEditedRaw(result.raw_content);
     setWasRevised(true);
-    setShowRevisao(false);
+    setReviewMode("none");
+  };
+
+  const toggleReviewMode = (mode: ReviewMode) => {
+    setReviewMode(reviewMode === mode ? "none" : mode);
   };
 
   // Build full content for revision
@@ -96,23 +103,36 @@ export default function AtelieResultado({ rawContent, sections, input, onSaved }
             </div>
             <div className="flex items-center gap-2">
               <Badge variant="outline">{input.tom}</Badge>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowRevisao(!showRevisao)}
-              >
-                <RefreshCw className="h-4 w-4 mr-1" />
-                Revisar
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsEditing(!isEditing)}
-              >
-                {isEditing ? <Eye className="h-4 w-4" /> : <Edit className="h-4 w-4" />}
-                {isEditing ? "Visualizar" : "Editar"}
-              </Button>
             </div>
+          </div>
+          
+          {/* Action buttons row */}
+          <div className="flex flex-wrap items-center gap-2 pt-2 border-t mt-4">
+            <Button
+              variant={reviewMode === "pedagogica" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => toggleReviewMode("pedagogica")}
+            >
+              <RefreshCw className="h-4 w-4 mr-1" />
+              Revisão Pedagógica
+            </Button>
+            <Button
+              variant={reviewMode === "etica" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => toggleReviewMode("etica")}
+            >
+              <Shield className="h-4 w-4 mr-1" />
+              Revisão Ética
+            </Button>
+            <div className="flex-1" />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsEditing(!isEditing)}
+            >
+              {isEditing ? <Eye className="h-4 w-4" /> : <Edit className="h-4 w-4" />}
+              {isEditing ? "Visualizar" : "Editar"}
+            </Button>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -188,11 +208,17 @@ export default function AtelieResultado({ rawContent, sections, input, onSaved }
         </CardContent>
       </Card>
 
-      {/* Revision Panel */}
-      {showRevisao && (
+      {/* Revision Panels */}
+      {reviewMode === "pedagogica" && (
         <AtelieRevisao
           conteudoOriginal={fullContentForRevision}
           onRevised={handleRevised}
+        />
+      )}
+
+      {reviewMode === "etica" && (
+        <AtelieRevisaoEtica
+          conteudoOriginal={fullContentForRevision}
         />
       )}
     </div>
