@@ -77,33 +77,38 @@ serve(async (req) => {
       );
     }
 
-    // Get template (default if not specified)
-    let templateContent = "";
+    // Get template from new templates table
+    let systemPrompt = "";
+    let actionPrompt = "";
+    
     if (template_id) {
       const { data: template } = await supabase
-        .from("atelie_templates")
-        .select("template_content")
+        .from("templates")
+        .select("system_prompt, action_prompt")
         .eq("id", template_id)
+        .eq("ativo", true)
         .single();
       if (template) {
-        templateContent = template.template_content;
+        systemPrompt = template.system_prompt;
+        actionPrompt = template.action_prompt;
       }
     } else {
+      // Get default template
       const { data: defaultTemplate } = await supabase
-        .from("atelie_templates")
-        .select("template_content")
+        .from("templates")
+        .select("system_prompt, action_prompt")
         .eq("is_default", true)
+        .eq("ativo", true)
         .single();
       if (defaultTemplate) {
-        templateContent = defaultTemplate.template_content;
+        systemPrompt = defaultTemplate.system_prompt;
+        actionPrompt = defaultTemplate.action_prompt;
       }
     }
 
-    console.log(`[generate-portal-content] Generating content for portal: ${portal}`);
-
-    // Build the prompt
-    const systemPrompt = `Você é uma especialista em criação de conteúdo pedagógico para formação terapêutica e simbólica.
-
+    // Fallback if no template found
+    if (!systemPrompt) {
+      systemPrompt = `Você é uma especialista em criação de conteúdo pedagógico para formação terapêutica e simbólica.
 Você cria Portais/Aulas para a Casa Orácula, uma escola de formação em Terapia Arquetípica e Narroterapia Oracular.
 
 REGRAS ABSOLUTAS:
@@ -112,20 +117,31 @@ REGRAS ABSOLUTAS:
 - NÃO usar linguagem diagnóstica ou determinista
 - Sustentar profundidade com clareza
 - Incluir prática possível, aplicação profissional e cuidado ético
-- Escrever em português brasileiro, com tom ${tom}
+- Escrever em português brasileiro, com tom ${tom}`;
+    }
 
-${templateContent}`;
+    // Replace placeholders in action prompt
+    let userPrompt = actionPrompt || `Crie um Portal/Aula completo com os seguintes dados:
 
-    const userPrompt = `Crie um Portal/Aula completo com os seguintes dados:
-
-**Jornada:** ${jornada}
-**Portal:** ${portal}
-**Objetivo do Portal:** ${objetivo}
-**Ideias-chave (matéria-prima autoral):** ${ideias_chave}
-**Tom desejado:** ${tom}
-${duracao ? `**Duração sugerida:** ${duracao}` : ""}
+**Jornada:** {{jornada}}
+**Portal:** {{portal}}
+**Objetivo:** {{objetivo}}
+**Ideias-chave:** {{ideias_chave}}
+**Tom:** {{tom}}
+**Duração:** {{duracao}}
 
 Gere o conteúdo seguindo EXATAMENTE o formato do template, com todas as 7 seções.`;
+
+    // Replace template variables
+    userPrompt = userPrompt
+      .replace(/\{\{jornada\}\}/g, jornada)
+      .replace(/\{\{portal\}\}/g, portal)
+      .replace(/\{\{objetivo\}\}/g, objetivo)
+      .replace(/\{\{ideias_chave\}\}/g, ideias_chave)
+      .replace(/\{\{tom\}\}/g, tom)
+      .replace(/\{\{duracao\}\}/g, duracao || "não especificada");
+
+    console.log(`[generate-portal-content] Generating content for portal: ${portal}`);
 
     // Call Lovable AI Gateway
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
