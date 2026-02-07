@@ -19,6 +19,8 @@ interface GenerateRequest {
   tom: string;
   duracao?: string;
   template_id?: string;
+  save_draft?: boolean;
+  status?: "rascunho" | "revisado" | "publicado";
 }
 
 serve(async (req) => {
@@ -67,7 +69,11 @@ serve(async (req) => {
     }
 
     // Parse request
-    const { jornada, portal, objetivo, ideias_chave, tom, duracao, template_id }: GenerateRequest = await req.json();
+    const { 
+      jornada, portal, objetivo, ideias_chave, tom, duracao, template_id,
+      save_draft = false,
+      status = "rascunho"
+    }: GenerateRequest = await req.json();
 
     // Validate required fields
     if (!jornada || !portal || !objetivo || !ideias_chave || !tom) {
@@ -77,32 +83,37 @@ serve(async (req) => {
       );
     }
 
-    // Get template from new templates table
+    // Track which template was used
+    let usedTemplateId: string | null = null;
+
+    // Get template from templates table
     let systemPrompt = "";
     let actionPrompt = "";
     
     if (template_id) {
       const { data: template } = await supabase
         .from("templates")
-        .select("system_prompt, action_prompt")
+        .select("id, system_prompt, action_prompt")
         .eq("id", template_id)
         .eq("ativo", true)
         .single();
       if (template) {
         systemPrompt = template.system_prompt;
         actionPrompt = template.action_prompt;
+        usedTemplateId = template.id;
       }
     } else {
       // Get default template
       const { data: defaultTemplate } = await supabase
         .from("templates")
-        .select("system_prompt, action_prompt")
+        .select("id, system_prompt, action_prompt")
         .eq("is_default", true)
         .eq("ativo", true)
         .single();
       if (defaultTemplate) {
         systemPrompt = defaultTemplate.system_prompt;
         actionPrompt = defaultTemplate.action_prompt;
+        usedTemplateId = defaultTemplate.id;
       }
     }
 
@@ -211,12 +222,41 @@ Gere o conteúdo seguindo EXATAMENTE o formato do template, com todas as 7 seç�
 
     console.log(`[generate-portal-content] Success - Generated ${Object.keys(sections).length} sections`);
 
+    // Auto-save as draft if requested
+    let savedDraft = null;
+    if (save_draft) {
+      const { data: draft, error: draftError } = await supabase
+        .from("atelie_conteudos")
+        .insert({
+          template_id: usedTemplateId,
+          jornada,
+          portal,
+          objetivo,
+          ideias_chave,
+          tom,
+          duracao,
+          conteudo_gerado: sections,
+          status,
+          created_by: user.id,
+        })
+        .select()
+        .single();
+
+      if (draftError) {
+        console.error("[generate-portal-content] Error saving draft:", draftError);
+      } else {
+        savedDraft = draft;
+        console.log(`[generate-portal-content] Draft saved with id: ${draft.id}`);
+      }
+    }
+
     // Return response
     return new Response(
       JSON.stringify({
         raw_content: content,
         sections,
         usage: data.usage,
+        draft: savedDraft,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
