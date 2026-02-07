@@ -41,3 +41,6 @@ verify_jwt = false
 
 [functions.generate-portal-content]
 verify_jwt = false
+
+[functions.revise-portal-content]
+verify_jwt = false
