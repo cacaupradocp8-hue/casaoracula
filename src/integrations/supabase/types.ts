@@ -294,6 +294,95 @@ export type Database = {
         }
         Relationships: []
       }
+      atelie_conteudos: {
+        Row: {
+          conteudo_gerado: Json | null
+          created_at: string | null
+          created_by: string | null
+          duracao: string | null
+          id: string
+          ideias_chave: string
+          jornada: string
+          objetivo: string
+          portal: string
+          status: string | null
+          template_id: string | null
+          tom: string
+          updated_at: string | null
+        }
+        Insert: {
+          conteudo_gerado?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          duracao?: string | null
+          id?: string
+          ideias_chave: string
+          jornada: string
+          objetivo: string
+          portal: string
+          status?: string | null
+          template_id?: string | null
+          tom: string
+          updated_at?: string | null
+        }
+        Update: {
+          conteudo_gerado?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          duracao?: string | null
+          id?: string
+          ideias_chave?: string
+          jornada?: string
+          objetivo?: string
+          portal?: string
+          status?: string | null
+          template_id?: string | null
+          tom?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "atelie_conteudos_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "atelie_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      atelie_templates: {
+        Row: {
+          ativo: boolean | null
+          created_at: string | null
+          descricao: string | null
+          id: string
+          is_default: boolean | null
+          nome: string
+          template_content: string
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string | null
+          descricao?: string | null
+          id?: string
+          is_default?: boolean | null
+          nome: string
+          template_content: string
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string | null
+          descricao?: string | null
+          id?: string
+          is_default?: boolean | null
+          nome?: string
+          template_content?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       atlas_arquetipos_femininos: {
         Row: {
           ativo: boolean | null

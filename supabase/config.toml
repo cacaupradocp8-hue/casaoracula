@@ -38,3 +38,6 @@ verify_jwt = false
 
 [functions.syntheia-chat]
 verify_jwt = false
+
+[functions.generate-portal-content]
+verify_jwt = false
