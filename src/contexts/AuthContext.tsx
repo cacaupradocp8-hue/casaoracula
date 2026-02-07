@@ -34,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchUserProfile = async (userId: string) => {
+  const fetchUserProfile = async (userId: string, markLoaded = false) => {
     try {
       // Fetch profile
       const { data: profile } = await supabase
@@ -70,8 +70,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           isMatriculada: !!matricula,
         });
       }
+      
+      // Only mark loading as complete AFTER user profile is loaded
+      if (markLoaded) {
+        setIsLoading(false);
+      }
     } catch (error) {
       console.error('Error fetching user profile:', error);
+      // Still mark as loaded on error to prevent infinite loading
+      if (markLoaded) {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -116,14 +125,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         if (session?.user) {
           // Defer Supabase calls with setTimeout to prevent deadlock
+          // Pass markLoaded=true so loading state is set after profile loads
           setTimeout(() => {
-            fetchUserProfile(session.user.id);
+            fetchUserProfile(session.user.id, true);
           }, 0);
         } else {
           setUser(null);
+          setIsLoading(false);
         }
-        
-        setIsLoading(false);
       }
     );
 
@@ -131,9 +140,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (session?.user) {
-        fetchUserProfile(session.user.id);
+        // Pass markLoaded=true so loading state is set after profile loads
+        fetchUserProfile(session.user.id, true);
+      } else {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     });
 
     return () => subscription.unsubscribe();
