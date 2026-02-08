@@ -9,6 +9,16 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Check, ExternalLink, Loader2 } from 'lucide-react';
 import planosBanner from '@/assets/planos-banner.png';
+import {
+  FundamentacaoSection,
+  MetodoOraculaSection,
+  NarroterapiaSection,
+  PortasSection,
+  LabirintosSection,
+  TorresSection,
+  PosturaSection,
+  MicroFrasesSection,
+} from '@/components/sales/metodologia';
 
 // Subtle divider component
 const RitualDivider = () => (
@@ -223,6 +233,22 @@ export default function Planos() {
             )}
           </div>
         </section>
+
+        <RitualDivider />
+
+        {/* Metodologia Sections */}
+        <FundamentacaoSection />
+        <RitualDivider />
+        <MetodoOraculaSection />
+        <RitualDivider />
+        <NarroterapiaSection />
+        <RitualDivider />
+        <PortasSection />
+        <LabirintosSection />
+        <TorresSection />
+        <RitualDivider />
+        <PosturaSection />
+        <MicroFrasesSection />
 
         <RitualDivider />
 
