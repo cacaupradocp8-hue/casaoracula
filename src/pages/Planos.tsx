@@ -58,7 +58,7 @@ export default function Planos() {
         {/* Hero Banner with Image */}
         <section className="relative">
           {/* Banner Image */}
-          <div className="relative h-48 sm:h-56 lg:h-64 overflow-hidden bg-[#1a1a1a]">
+          <div className="relative h-56 sm:h-72 lg:h-80 overflow-hidden bg-[#1a1a1a]">
             <img 
               src={planosBanner} 
               alt="Planos & Travessias"
