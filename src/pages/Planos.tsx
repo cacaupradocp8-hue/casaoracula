@@ -9,25 +9,6 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Check, ExternalLink, Loader2 } from 'lucide-react';
 import planosBanner from '@/assets/planos-banner.png';
-import {
-  FundamentacaoSection,
-  MetodoOraculaSection,
-  NarroterapiaSection,
-  PortasSection,
-  LabirintosSection,
-  TorresSection,
-  PosturaSection,
-  MicroFrasesSection,
-} from '@/components/sales/metodologia';
-
-// Subtle divider component
-const RitualDivider = () => (
-  <div className="flex items-center justify-center py-8 sm:py-10">
-    <div className="h-px w-12 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-    <span className="mx-3 text-gold/40 text-sm">✦</span>
-    <div className="h-px w-12 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-  </div>
-);
 
 export default function Planos() {
   const navigate = useNavigate();
@@ -104,24 +85,6 @@ export default function Planos() {
             </motion.div>
           </div>
           
-          {/* Opening text */}
-          <div className="container mx-auto px-6 mt-8">
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-center max-w-xl mx-auto space-y-4"
-            >
-              <p className="text-foreground/90">
-                A Casa Orácula não vende atalhos.<br />
-                Ela sustenta práticas reais.
-              </p>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Os planos dão acesso ao uso do sistema —<br />
-                não substituem formação, nem prometem autorização.
-              </p>
-            </motion.div>
-          </div>
         </section>
 
         {/* Plans Grid */}
@@ -234,43 +197,6 @@ export default function Planos() {
           </div>
         </section>
 
-        <RitualDivider />
-
-        {/* Metodologia Sections */}
-        <FundamentacaoSection />
-        <RitualDivider />
-        <MetodoOraculaSection />
-        <RitualDivider />
-        <NarroterapiaSection />
-        <RitualDivider />
-        <PortasSection />
-        <LabirintosSection />
-        <TorresSection />
-        <RitualDivider />
-        <PosturaSection />
-        <MicroFrasesSection />
-
-        <RitualDivider />
-
-        {/* Ethical Footer Note */}
-        <section className="py-10 sm:py-16">
-          <div className="container mx-auto px-6">
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="max-w-xl mx-auto text-center space-y-3"
-            >
-              <p className="text-foreground/80 text-sm font-medium">
-                O plano permite o uso do sistema.
-              </p>
-              <p className="text-muted-foreground text-sm">
-                A condução simbólica depende do nível de formação.
-              </p>
-            </motion.div>
-          </div>
-        </section>
       </div>
     </AppLayout>
   );
