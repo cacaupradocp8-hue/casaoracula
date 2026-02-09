@@ -199,6 +199,13 @@ export default function Planos() {
           </div>
         </section>
 
+        {/* Nota ética obrigatória */}
+        <footer className="py-8 text-center">
+          <p className="text-xs text-muted-foreground/60 max-w-md mx-auto px-6">
+            O plano permite o uso do sistema. A condução simbólica depende do nível de formação.
+          </p>
+        </footer>
+
       </div>
     </AppLayout>
   );
