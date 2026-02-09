@@ -135,9 +135,11 @@ export default function Planos() {
                       <CardContent className="p-6 flex flex-col h-full">
                         {/* Header */}
                         <div className="text-center mb-6">
-                          <span className="text-2xl text-gold/70 block mb-3">
-                            {oferta.simbolo}
-                          </span>
+                          {oferta.simbolo && (
+                            <span className="text-2xl text-gold/70 block mb-3">
+                              {oferta.simbolo}
+                            </span>
+                          )}
                           <h3 className="font-display text-xl font-semibold text-foreground mb-1">
                             {oferta.nome}
                           </h3>
