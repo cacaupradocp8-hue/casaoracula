@@ -19,6 +19,7 @@ import { LabirintoModoSelector } from "./components/LabirintoModoSelector";
 import { LabirintoProvider, LabirintoConfig } from "./contexts/LabirintoContext";
 import { GeradorRoteiroModal } from "./components/GeradorRoteiroModal";
 import { GuiaTerapeutaTab } from "./components/GuiaTerapeutaTab";
+import { PortasHeroinaGrid } from "./components/PortasHeroinaGrid";
 
 const LABIRINTO_HEROINA_INTRO_KEY = "labirinto-heroina-intro-seen";
 
@@ -190,8 +191,12 @@ export default function LabirintoHeroinaPage() {
         </div>
 
         {/* Main Content Tabs */}
-        <Tabs defaultValue="fases" className="space-y-6">
+        <Tabs defaultValue="portas" className="space-y-6">
           <TabsList className="w-full justify-start overflow-x-auto flex-wrap h-auto gap-1 bg-muted/50">
+            <TabsTrigger value="portas" className="gap-2">
+              <Compass className="w-4 h-4" />
+              Portas
+            </TabsTrigger>
             <TabsTrigger value="fases" className="gap-2">
               <Moon className="w-4 h-4" />
               Fases
@@ -219,6 +224,10 @@ export default function LabirintoHeroinaPage() {
               </TabsTrigger>
             )}
           </TabsList>
+
+          <TabsContent value="portas">
+            <PortasHeroinaGrid />
+          </TabsContent>
 
           <TabsContent value="fases">
             <FasesLayer fases={fases} />
