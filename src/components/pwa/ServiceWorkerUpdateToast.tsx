@@ -12,6 +12,14 @@ export function ServiceWorkerUpdateToast() {
     updateServiceWorker,
   } = useRegisterSW({
     immediate: true,
+    onRegisteredSW(_swUrl, registration) {
+      // Check for updates every 60 seconds
+      if (registration) {
+        setInterval(() => {
+          registration.update();
+        }, 60 * 1000);
+      }
+    },
   });
 
   useEffect(() => {
