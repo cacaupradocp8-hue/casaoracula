@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ExercicioCadernoBlock } from "./ExercicioCadernoBlock";
+import { EXERCICIOS_PORTAS } from "../data/exercicios-portas";
+import { useLabirintoContext } from "../contexts/LabirintoContext";
 
 interface PortaData {
   id: string;
@@ -28,16 +30,18 @@ interface PortaHeroinaCardProps {
 const PLACEHOLDER_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'%3E%3Crect fill='%231a1510' width='400' height='600'/%3E%3Ctext x='200' y='300' text-anchor='middle' fill='%23d4a574' font-size='40' font-family='serif'%3E✧%3C/text%3E%3C/svg%3E";
 
 export function PortaHeroinaCard({ porta, onSaveToMap, isSaving }: PortaHeroinaCardProps) {
-  const [resposta, setResposta] = useState("");
+  let isProfessional = false;
+  try {
+    const ctx = useLabirintoContext();
+    isProfessional = ctx.isProfessional;
+  } catch {
+    // Outside provider — default to pessoal
+  }
   const [expanded, setExpanded] = useState(false);
 
-  const imageUrl = porta.imagem_url || PLACEHOLDER_IMG;
+  const exercicio = EXERCICIOS_PORTAS[porta.numero];
 
-  const handleSave = () => {
-    if (onSaveToMap && resposta.trim()) {
-      onSaveToMap(porta.id, resposta);
-    }
-  };
+  const imageUrl = porta.imagem_url || PLACEHOLDER_IMG;
 
   return (
     <Card
@@ -128,48 +132,18 @@ export function PortaHeroinaCard({ porta, onSaveToMap, isSaving }: PortaHeroinaC
           </Button>
         ) : (
           <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
-            {/* Exercício */}
-            <div>
-              <p className="text-[10px] uppercase tracking-widest text-gold/60 mb-1">
-                Exercício
-              </p>
-              <p className="text-sm text-foreground/80 leading-relaxed">
-                {porta.cena_narrativa || "Exercício em preparação — será adicionado em breve."}
-              </p>
-            </div>
-
-            {/* Ritual de Integração */}
-            <div>
-              <p className="text-[10px] uppercase tracking-widest text-gold/60 mb-1">
-                Ritual de Integração
-              </p>
-              <p className="text-sm text-foreground/80 leading-relaxed">
-                {porta.eixo_psiquico || "Ritual em preparação — será adicionado em breve."}
-              </p>
-            </div>
-
-            {/* Campo de Resposta */}
-            <div>
-              <p className="text-[10px] uppercase tracking-widest text-gold/60 mb-2">
-                Minha Resposta
-              </p>
-              <Textarea
-                value={resposta}
-                onChange={(e) => setResposta(e.target.value)}
-                placeholder="Escreva aqui sua reflexão sobre esta porta..."
-                rows={4}
-                maxLength={500}
-                className="bg-card/50 border-gold/20 text-sm resize-none"
+            {/* Bloco de Exercício do Caderno */}
+            {exercicio && (
+              <ExercicioCadernoBlock
+                exercicio={exercicio}
+                isProfessional={isProfessional}
               />
-              <p className="text-[10px] text-muted-foreground/50 text-right mt-1">
-                {resposta.length}/500
-              </p>
-            </div>
+            )}
 
             {/* Salvar no Mapa */}
             <Button
-              onClick={handleSave}
-              disabled={!resposta.trim() || isSaving}
+              onClick={() => onSaveToMap?.(porta.id, "")}
+              disabled={isSaving}
               className="w-full bg-gold hover:bg-gold/90 text-gold-foreground gap-2"
             >
               {isSaving ? (
