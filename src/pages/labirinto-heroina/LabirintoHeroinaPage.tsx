@@ -18,6 +18,7 @@ import { LabirintoHeroinaIntro } from "./components/LabirintoHeroinaIntro";
 import { LabirintoModoSelector } from "./components/LabirintoModoSelector";
 import { LabirintoProvider, LabirintoConfig } from "./contexts/LabirintoContext";
 import { GeradorRoteiroModal } from "./components/GeradorRoteiroModal";
+import { GuiaTerapeutaTab } from "./components/GuiaTerapeutaTab";
 
 const LABIRINTO_HEROINA_INTRO_KEY = "labirinto-heroina-intro-seen";
 
@@ -211,6 +212,12 @@ export default function LabirintoHeroinaPage() {
               <History className="w-4 h-4" />
               Histórico
             </TabsTrigger>
+            {labirintoConfig.modo === "profissional" && (
+              <TabsTrigger value="guia-terapeuta" className="gap-2">
+                <BookOpen className="w-4 h-4" />
+                Guia da Terapeuta
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="fases">
@@ -232,6 +239,12 @@ export default function LabirintoHeroinaPage() {
           <TabsContent value="historico">
             <HistoricoTab registros={registros || []} />
           </TabsContent>
+
+          {labirintoConfig.modo === "profissional" && (
+            <TabsContent value="guia-terapeuta">
+              <GuiaTerapeutaTab />
+            </TabsContent>
+          )}
         </Tabs>
 
         {/* Modal do Gerador */}

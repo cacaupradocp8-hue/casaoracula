@@ -81,6 +81,9 @@ export interface LabirintoRegistro {
   concluido: boolean;
   concluido_em: string | null;
   notas_terapeuta: string | null;
+  observacoes_clinicas: string | null;
+  hipotese_terapeutica: string | null;
+  nome_cliente: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -211,6 +214,9 @@ export function useCreateLabirintoRegistro() {
       reflexao_metafora?: string;
       reflexao_ritual?: string;
       reflexao_final?: string;
+      observacoes_clinicas?: string;
+      hipotese_terapeutica?: string;
+      nome_cliente?: string;
     }) => {
       const { data, error } = await supabase
         .from("labirinto_registros")
@@ -228,6 +234,9 @@ export function useCreateLabirintoRegistro() {
           reflexao_metafora: params.reflexao_metafora || null,
           reflexao_ritual: params.reflexao_ritual || null,
           reflexao_final: params.reflexao_final || null,
+          observacoes_clinicas: params.observacoes_clinicas || null,
+          hipotese_terapeutica: params.hipotese_terapeutica || null,
+          nome_cliente: params.nome_cliente || null,
         })
         .select()
         .single();
@@ -257,6 +266,9 @@ export function useUpdateLabirintoRegistro() {
       reflexao_ritual?: string;
       reflexao_final?: string;
       concluido?: boolean;
+      observacoes_clinicas?: string;
+      hipotese_terapeutica?: string;
+      nome_cliente?: string;
     }) => {
       const { id, ...updates } = params;
       
@@ -271,6 +283,9 @@ export function useUpdateLabirintoRegistro() {
       if (updates.reflexao_metafora !== undefined) updateData.reflexao_metafora = updates.reflexao_metafora;
       if (updates.reflexao_ritual !== undefined) updateData.reflexao_ritual = updates.reflexao_ritual;
       if (updates.reflexao_final !== undefined) updateData.reflexao_final = updates.reflexao_final;
+      if (updates.observacoes_clinicas !== undefined) updateData.observacoes_clinicas = updates.observacoes_clinicas;
+      if (updates.hipotese_terapeutica !== undefined) updateData.hipotese_terapeutica = updates.hipotese_terapeutica;
+      if (updates.nome_cliente !== undefined) updateData.nome_cliente = updates.nome_cliente;
       if (updates.concluido !== undefined) {
         updateData.concluido = updates.concluido;
         if (updates.concluido) {

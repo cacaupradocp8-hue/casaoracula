@@ -4690,10 +4690,13 @@ export type Database = {
           concluido_em: string | null
           created_at: string
           fase_id: string | null
+          hipotese_terapeutica: string | null
           id: string
           metafora_id: string | null
           modo_uso: Database["public"]["Enums"]["labirinto_modo_uso"]
+          nome_cliente: string | null
           notas_terapeuta: string | null
+          observacoes_clinicas: string | null
           reflexao_arquetipo: string | null
           reflexao_fase: string | null
           reflexao_final: string | null
@@ -4711,10 +4714,13 @@ export type Database = {
           concluido_em?: string | null
           created_at?: string
           fase_id?: string | null
+          hipotese_terapeutica?: string | null
           id?: string
           metafora_id?: string | null
           modo_uso?: Database["public"]["Enums"]["labirinto_modo_uso"]
+          nome_cliente?: string | null
           notas_terapeuta?: string | null
+          observacoes_clinicas?: string | null
           reflexao_arquetipo?: string | null
           reflexao_fase?: string | null
           reflexao_final?: string | null
@@ -4732,10 +4738,13 @@ export type Database = {
           concluido_em?: string | null
           created_at?: string
           fase_id?: string | null
+          hipotese_terapeutica?: string | null
           id?: string
           metafora_id?: string | null
           modo_uso?: Database["public"]["Enums"]["labirinto_modo_uso"]
+          nome_cliente?: string | null
           notas_terapeuta?: string | null
+          observacoes_clinicas?: string | null
           reflexao_arquetipo?: string | null
           reflexao_fase?: string | null
           reflexao_final?: string | null
