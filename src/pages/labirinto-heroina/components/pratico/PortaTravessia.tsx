@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import type { LabirintoFase } from "@/hooks/useLabirintoHeroina";
 import type { LabirintoModo } from "../ModoSelector";
 import { ExercicioCaderno } from "./ExercicioCaderno";
+import { RoteiroClinicoPorta } from "../profissional/RoteiroClinicoPorta";
 
 interface PortaTravessiaProps {
   porta: LabirintoFase;
@@ -138,6 +139,11 @@ export function PortaTravessia({ porta, modo, onBack, onComplete }: PortaTravess
         exercicioRealizado={exercicioRealizado}
         onMarcarRealizado={handleMarcarRealizado}
       />
+
+      {/* 2b. Protocolo Clínico — Modo Profissional */}
+      {modo === "profissional" && (
+        <RoteiroClinicoPorta faseName={porta.nome} />
+      )}
 
       {/* 3. Registro da Ação */}
       <Card className="border-gold/20">
