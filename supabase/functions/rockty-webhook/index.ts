@@ -41,49 +41,117 @@ serve(async (req) => {
     // Read raw body for signature verification
     const rawBody = await req.text();
     
-    // Verify webhook signature if secret is configured
+    // Require webhook signature - reject if secret not configured
     const webhookSecret = Deno.env.get('ROCKTY_WEBHOOK_SECRET');
-    if (webhookSecret) {
-      const signature = req.headers.get('X-Rockty-Signature') || req.headers.get('x-webhook-signature');
-      
-      if (!signature) {
-        console.error('Missing webhook signature header');
-        return new Response(
-          JSON.stringify({ error: 'Missing signature' }),
-          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      // Compute HMAC-SHA256 signature
-      const encoder = new TextEncoder();
-      const key = await crypto.subtle.importKey(
-        'raw',
-        encoder.encode(webhookSecret),
-        { name: 'HMAC', hash: 'SHA-256' },
-        false,
-        ['sign']
+    if (!webhookSecret) {
+      console.error('ROCKTY_WEBHOOK_SECRET not configured - rejecting request');
+      return new Response(
+        JSON.stringify({ error: 'Webhook not properly configured' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
-      const signatureBuffer = await crypto.subtle.sign('HMAC', key, encoder.encode(rawBody));
-      const computedSignature = Array.from(new Uint8Array(signatureBuffer))
-        .map(b => b.toString(16).padStart(2, '0'))
-        .join('');
-
-      if (signature !== computedSignature) {
-        console.error('Invalid webhook signature');
-        return new Response(
-          JSON.stringify({ error: 'Invalid signature' }),
-          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-      
-      console.log('Webhook signature verified successfully');
-    } else {
-      console.warn('ROCKTY_WEBHOOK_SECRET not configured - skipping signature verification');
     }
 
-    const payload: RocktyWebhookPayload = JSON.parse(rawBody);
+    const signature = req.headers.get('X-Rockty-Signature') || req.headers.get('x-webhook-signature');
     
-    console.log('Rockty webhook received:', JSON.stringify(payload, null, 2));
+    if (!signature) {
+      console.error('Missing webhook signature header');
+      return new Response(
+        JSON.stringify({ error: 'Missing signature' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Compute HMAC-SHA256 signature
+    const encoder = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+      'raw',
+      encoder.encode(webhookSecret),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    );
+    const signatureBuffer = await crypto.subtle.sign('HMAC', key, encoder.encode(rawBody));
+    const computedSignature = Array.from(new Uint8Array(signatureBuffer))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+
+    if (signature !== computedSignature) {
+      console.error('Invalid webhook signature');
+      return new Response(
+        JSON.stringify({ error: 'Invalid signature' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    console.log('Webhook signature verified successfully');
+
+    // Validate and parse payload
+    const rawPayload = JSON.parse(rawBody);
+
+    // Validate required fields and formats
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const customer_email = typeof rawPayload.customer_email === 'string' 
+      ? rawPayload.customer_email.trim().toLowerCase() 
+      : '';
+    const event_type = typeof rawPayload.event_type === 'string' 
+      ? rawPayload.event_type.slice(0, 100) 
+      : '';
+
+    if (!customer_email || !emailRegex.test(customer_email) || customer_email.length > 255) {
+      console.error('Invalid or missing customer_email in webhook payload');
+      return new Response(
+        JSON.stringify({ error: 'Invalid customer_email' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!event_type) {
+      console.error('Missing event_type in webhook payload');
+      return new Response(
+        JSON.stringify({ error: 'Missing event_type' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Sanitize optional string fields
+    const customer_name = typeof rawPayload.customer_name === 'string' 
+      ? rawPayload.customer_name.slice(0, 200).trim() 
+      : undefined;
+    const subscription_id = typeof rawPayload.subscription_id === 'string' 
+      ? rawPayload.subscription_id.slice(0, 100) 
+      : undefined;
+    const status = typeof rawPayload.status === 'string' 
+      ? rawPayload.status.slice(0, 50) 
+      : undefined;
+    const plan_id = typeof rawPayload.plan_id === 'string' 
+      ? rawPayload.plan_id.slice(0, 100) 
+      : undefined;
+    const current_period_start = typeof rawPayload.current_period_start === 'string' 
+      ? rawPayload.current_period_start.slice(0, 50) 
+      : undefined;
+    const current_period_end = typeof rawPayload.current_period_end === 'string' 
+      ? rawPayload.current_period_end.slice(0, 50) 
+      : undefined;
+    const next_billing_date = typeof rawPayload.next_billing_date === 'string' 
+      ? rawPayload.next_billing_date.slice(0, 50) 
+      : undefined;
+
+    const payload: RocktyWebhookPayload = {
+      event_type,
+      customer_email,
+      customer_name,
+      subscription_id,
+      status,
+      plan_id,
+      current_period_start,
+      current_period_end,
+      next_billing_date,
+      transaction_id: typeof rawPayload.transaction_id === 'string' 
+        ? rawPayload.transaction_id.slice(0, 100) 
+        : undefined,
+    };
+    
+    console.log('Rockty webhook received:', event_type, 'for', customer_email);
 
     // Log the webhook event
     await supabase.from('webhook_logs').insert({
@@ -92,17 +160,6 @@ serve(async (req) => {
       payload: payload,
       processed: false,
     });
-
-    const { customer_email, event_type, subscription_id, status, plan_id, 
-            current_period_start, current_period_end, next_billing_date, customer_name } = payload;
-
-    if (!customer_email) {
-      console.error('Missing customer_email in webhook payload');
-      return new Response(
-        JSON.stringify({ error: 'Missing customer_email' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
 
     // 1. Find or create user by email
     let userId: string | null = null;
