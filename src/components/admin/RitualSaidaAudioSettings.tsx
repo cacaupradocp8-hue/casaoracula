@@ -34,8 +34,7 @@ export function RitualSaidaAudioSettings() {
     try {
       const { data, error } = await supabase
         .from('audio_assets')
-        .select('id, titulo, file_path, categoria, duracao_segundos')
-        .eq('publicado', true)
+        .select('id, titulo, file_path, categoria, duracao_segundos, publicado')
         .order('categoria')
         .order('ordem')
         .order('titulo');
