@@ -4,9 +4,12 @@
 // Espaço 100% privado da usuária
 // Integrado à Casa das Tecelãs
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { JardimFirstExperience } from '@/components/jardim/JardimFirstExperience';
 import { ContentPageLayout } from '@/components/shared/ContentPageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -74,11 +77,26 @@ const TIPO_CONFIG: Record<TipoRegistroJardim, { icon: React.ElementType; label: 
 
 export default function JardimPsique() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [busca, setBusca] = useState('');
   const [ferramentaFiltro, setFerramentaFiltro] = useState<string>('todas');
   const [tipoFiltro, setTipoFiltro] = useState<string>('todos');
   const [viewArquivados, setViewArquivados] = useState(false);
   const [modalNovaEntrada, setModalNovaEntrada] = useState(false);
+  const [profileTag, setProfileTag] = useState<string | null>(null);
+
+  // Fetch entry_archetype for personalized first experience
+  useEffect(() => {
+    if (!user?.id) return;
+    supabase
+      .from('profiles')
+      .select('entry_archetype')
+      .eq('id', user.id)
+      .single()
+      .then(({ data }) => {
+        setProfileTag(data?.entry_archetype || null);
+      });
+  }, [user?.id]);
 
   // Memorizar filtros para evitar recriação a cada render
   const filtros = useMemo(() => ({
@@ -303,28 +321,20 @@ export default function JardimPsique() {
             ))}
           </div>
         ) : registrosFiltrados.length === 0 ? (
-          <Card className="border-dashed">
-            <CardContent className="py-12 text-center">
-              <Leaf className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
-              <h3 className="text-lg font-medium mb-2">
-                {viewArquivados ? 'Nenhum registro arquivado' : 'Seu Jardim está vazio'}
-              </h3>
-              <p className="text-muted-foreground text-sm max-w-md mx-auto mb-6">
-                {viewArquivados
-                  ? 'Registros arquivados aparecerão aqui.'
-                  : 'Registre sonhos, frases que tocaram, fragmentos de sessões ou aplique ferramentas em si mesma.'}
-              </p>
-              {!viewArquivados && (
-                <Button
-                  onClick={() => setModalNovaEntrada(true)}
-                  className="gap-2 bg-emerald-600 hover:bg-emerald-700"
-                >
-                  <Plus className="w-4 h-4" />
-                  Criar primeiro registro
-                </Button>
-              )}
-            </CardContent>
-          </Card>
+          viewArquivados ? (
+            <Card className="border-dashed">
+              <CardContent className="py-12 text-center">
+                <Archive className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
+                <h3 className="text-lg font-medium mb-2">Nenhum registro arquivado</h3>
+                <p className="text-muted-foreground text-sm">Registros arquivados aparecerão aqui.</p>
+              </CardContent>
+            </Card>
+          ) : (
+            <JardimFirstExperience
+              profileTag={profileTag}
+              onNewEntry={() => setModalNovaEntrada(true)}
+            />
+          )
         ) : (
           <div className="grid gap-4 sm:grid-cols-2">
             {registrosFiltrados.map(renderRegistroCard)}
