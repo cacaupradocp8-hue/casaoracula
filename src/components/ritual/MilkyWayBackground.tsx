@@ -21,18 +21,21 @@ interface Props {
  */
 function MilkyWayBackgroundRaw({ state = 'neutral', className = '' }: Props) {
   return (
-    <div className={`fixed inset-0 ${className}`} style={{ zIndex: 0 }}>
+    <div className={`fixed inset-0 overflow-hidden ${className}`} style={{ zIndex: 0 }}>
       {/* Background image layer with breathing animation */}
       <div
-        className="absolute inset-0 animate-ritual-breathe"
+        className="absolute animate-ritual-breathe"
         style={{
           backgroundImage: `url(${BG_MAP[state]})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          width: '100%',
-          height: '100vh',
+          top: '-2%',
+          left: '-2%',
+          width: '104%',
+          height: '104%',
           willChange: 'transform',
+          transformOrigin: 'center center',
         }}
         aria-hidden="true"
       />
