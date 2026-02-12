@@ -25,12 +25,63 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Only accept POST requests
+  if (req.method !== 'POST') {
+    return new Response(
+      JSON.stringify({ error: 'Method not allowed' }),
+      { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  }
+
   const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
   const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
   try {
-    const payload: RocktyWebhookPayload = await req.json();
+    // Read raw body for signature verification
+    const rawBody = await req.text();
+    
+    // Verify webhook signature if secret is configured
+    const webhookSecret = Deno.env.get('ROCKTY_WEBHOOK_SECRET');
+    if (webhookSecret) {
+      const signature = req.headers.get('X-Rockty-Signature') || req.headers.get('x-webhook-signature');
+      
+      if (!signature) {
+        console.error('Missing webhook signature header');
+        return new Response(
+          JSON.stringify({ error: 'Missing signature' }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Compute HMAC-SHA256 signature
+      const encoder = new TextEncoder();
+      const key = await crypto.subtle.importKey(
+        'raw',
+        encoder.encode(webhookSecret),
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign']
+      );
+      const signatureBuffer = await crypto.subtle.sign('HMAC', key, encoder.encode(rawBody));
+      const computedSignature = Array.from(new Uint8Array(signatureBuffer))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+
+      if (signature !== computedSignature) {
+        console.error('Invalid webhook signature');
+        return new Response(
+          JSON.stringify({ error: 'Invalid signature' }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      console.log('Webhook signature verified successfully');
+    } else {
+      console.warn('ROCKTY_WEBHOOK_SECRET not configured - skipping signature verification');
+    }
+
+    const payload: RocktyWebhookPayload = JSON.parse(rawBody);
     
     console.log('Rockty webhook received:', JSON.stringify(payload, null, 2));
 
@@ -276,7 +327,7 @@ serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ error: 'Internal server error', details: errorMessage }),
+      JSON.stringify({ error: 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
