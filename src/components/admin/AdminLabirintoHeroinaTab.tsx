@@ -13,7 +13,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { 
   Compass, Moon, Sparkles, Feather, Flame,
-  Plus, Pencil, Trash2, Loader2, GripVertical, Save, FileText
+  Plus, Pencil, Trash2, Loader2, GripVertical, Save, FileText,
+  BarChart3, Image as ImageIcon, AlertTriangle, CheckCircle2, Eye
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -28,8 +29,19 @@ interface LabirintoFase {
   subtitulo: string | null;
   descricao: string | null;
   icone: string | null;
+  imagem_url: string | null;
+  texto_simbolico: string | null;
   cor_acento: string | null;
   ativo: boolean;
+  nucleo: string | null;
+  tema_central: string | null;
+  pergunta_chave: string | null;
+  exercicio_titulo: string | null;
+  exercicio_instrucao: string | null;
+  ritual_texto: string | null;
+  codigo_interno: string | null;
+  versao_conteudo: string | null;
+  observacoes_admin: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -114,7 +126,15 @@ export function AdminLabirintoHeroinaTab() {
         <TabsList className="w-full justify-start flex-wrap h-auto gap-1 bg-muted/50">
           <TabsTrigger value="fases" className="gap-2">
             <Moon className="w-4 h-4" />
-            Fases
+            Portas (14)
+          </TabsTrigger>
+          <TabsTrigger value="auditoria" className="gap-2">
+            <BarChart3 className="w-4 h-4" />
+            Auditoria
+          </TabsTrigger>
+          <TabsTrigger value="imagens" className="gap-2">
+            <ImageIcon className="w-4 h-4" />
+            Imagens
           </TabsTrigger>
           <TabsTrigger value="arquetipos" className="gap-2">
             <Sparkles className="w-4 h-4" />
@@ -136,6 +156,12 @@ export function AdminLabirintoHeroinaTab() {
 
         <TabsContent value="fases">
           <FasesSection />
+        </TabsContent>
+        <TabsContent value="auditoria">
+          <AuditoriaSection />
+        </TabsContent>
+        <TabsContent value="imagens">
+          <ImagensSection />
         </TabsContent>
         <TabsContent value="arquetipos">
           <ArquetiposSection />
@@ -173,6 +199,15 @@ function FasesSection() {
     cor_acento: "",
     ativo: true,
     ordem: 0,
+    nucleo: "",
+    tema_central: "",
+    pergunta_chave: "",
+    exercicio_titulo: "",
+    exercicio_instrucao: "",
+    ritual_texto: "",
+    codigo_interno: "",
+    versao_conteudo: "1.0",
+    observacoes_admin: "",
   });
 
   useEffect(() => {
@@ -196,13 +231,11 @@ function FasesSection() {
   const openCreate = () => {
     setEditing(null);
     setForm({
-      nome: "",
-      subtitulo: "",
-      descricao: "",
-      icone: "",
-      cor_acento: "",
-      ativo: true,
-      ordem: fases.length,
+      nome: "", subtitulo: "", descricao: "", icone: "", cor_acento: "",
+      ativo: true, ordem: fases.length,
+      nucleo: "", tema_central: "", pergunta_chave: "",
+      exercicio_titulo: "", exercicio_instrucao: "", ritual_texto: "",
+      codigo_interno: "", versao_conteudo: "1.0", observacoes_admin: "",
     });
     setDialogOpen(true);
   };
@@ -210,100 +243,56 @@ function FasesSection() {
   const openEdit = (fase: LabirintoFase) => {
     setEditing(fase);
     setForm({
-      nome: fase.nome,
-      subtitulo: fase.subtitulo || "",
-      descricao: fase.descricao || "",
-      icone: fase.icone || "",
-      cor_acento: fase.cor_acento || "",
-      ativo: fase.ativo,
-      ordem: fase.ordem,
+      nome: fase.nome, subtitulo: fase.subtitulo || "", descricao: fase.descricao || "",
+      icone: fase.icone || "", cor_acento: fase.cor_acento || "",
+      ativo: fase.ativo, ordem: fase.ordem,
+      nucleo: fase.nucleo || "", tema_central: fase.tema_central || "",
+      pergunta_chave: fase.pergunta_chave || "",
+      exercicio_titulo: fase.exercicio_titulo || "",
+      exercicio_instrucao: fase.exercicio_instrucao || "",
+      ritual_texto: fase.ritual_texto || "",
+      codigo_interno: fase.codigo_interno || "",
+      versao_conteudo: fase.versao_conteudo || "1.0",
+      observacoes_admin: fase.observacoes_admin || "",
     });
     setDialogOpen(true);
   };
 
   const handleSave = async () => {
-    if (!form.nome.trim()) {
-      toast.error("Nome é obrigatório");
-      return;
-    }
-
+    if (!form.nome.trim()) { toast.error("Nome é obrigatório"); return; }
     setSaving(true);
 
     const payload = {
-      nome: form.nome,
-      subtitulo: form.subtitulo || null,
-      descricao: form.descricao || null,
-      icone: form.icone || null,
-      cor_acento: form.cor_acento || null,
-      ativo: form.ativo,
-      ordem: form.ordem,
+      nome: form.nome, subtitulo: form.subtitulo || null, descricao: form.descricao || null,
+      icone: form.icone || null, cor_acento: form.cor_acento || null,
+      ativo: form.ativo, ordem: form.ordem,
+      nucleo: form.nucleo || null, tema_central: form.tema_central || null,
+      pergunta_chave: form.pergunta_chave || null,
+      exercicio_titulo: form.exercicio_titulo || null,
+      exercicio_instrucao: form.exercicio_instrucao || null,
+      ritual_texto: form.ritual_texto || null,
+      codigo_interno: form.codigo_interno || null,
+      versao_conteudo: form.versao_conteudo || null,
+      observacoes_admin: form.observacoes_admin || null,
     };
 
     if (editing) {
-      const { error } = await supabase
-        .from("labirinto_fases")
-        .update(payload)
-        .eq("id", editing.id);
-
-      if (error) {
-        toast.error("Erro ao atualizar fase");
-      } else {
-        toast.success("Fase atualizada");
-        fetchFases();
-        setDialogOpen(false);
-      }
+      const { error } = await supabase.from("labirinto_fases").update(payload).eq("id", editing.id);
+      if (error) toast.error("Erro ao atualizar"); else { toast.success("Porta atualizada"); fetchFases(); setDialogOpen(false); }
     } else {
-      const { error } = await supabase
-        .from("labirinto_fases")
-        .insert(payload);
-
-      if (error) {
-        toast.error("Erro ao criar fase");
-      } else {
-        toast.success("Fase criada");
-        fetchFases();
-        setDialogOpen(false);
-      }
+      const { error } = await supabase.from("labirinto_fases").insert(payload);
+      if (error) toast.error("Erro ao criar"); else { toast.success("Porta criada"); fetchFases(); setDialogOpen(false); }
     }
-
     setSaving(false);
   };
 
   const toggleAtivo = async (fase: LabirintoFase) => {
-    const { error } = await supabase
-      .from("labirinto_fases")
-      .update({ ativo: !fase.ativo })
-      .eq("id", fase.id);
-
-    if (error) {
-      toast.error("Erro ao alterar status");
-    } else {
-      fetchFases();
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!confirm("Excluir esta fase?")) return;
-    
-    const { error } = await supabase
-      .from("labirinto_fases")
-      .delete()
-      .eq("id", id);
-
-    if (error) {
-      toast.error("Erro ao excluir");
-    } else {
-      toast.success("Fase excluída");
-      fetchFases();
-    }
+    const { error } = await supabase.from("labirinto_fases").update({ ativo: !fase.ativo }).eq("id", fase.id);
+    if (error) toast.error("Erro ao alterar status"); else fetchFases();
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 animate-spin text-gold" />
-      </div>
-    );
+    return <div className="flex items-center justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-gold" /></div>;
   }
 
   return (
@@ -312,147 +301,103 @@ function FasesSection() {
         <div>
           <CardTitle className="flex items-center gap-2">
             <Moon className="w-5 h-5 text-gold" />
-            Fases da Travessia
+            14 Portas da Jornada
           </CardTitle>
-          <CardDescription>Estágios do processo de individuação</CardDescription>
+          <CardDescription>Gestão clínica das portas — edição controlada</CardDescription>
         </div>
-        <Button onClick={openCreate} className="gap-2">
-          <Plus className="w-4 h-4" />
-          Nova Fase
-        </Button>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-12">Ordem</TableHead>
-              <TableHead>Nome</TableHead>
-              <TableHead>Subtítulo</TableHead>
+              <TableHead className="w-12">#</TableHead>
+              <TableHead>Porta</TableHead>
+              <TableHead>Núcleo</TableHead>
+              <TableHead>Tema Central</TableHead>
+              <TableHead className="w-16">Versão</TableHead>
               <TableHead className="w-20">Ativo</TableHead>
-              <TableHead className="w-24">Ações</TableHead>
+              <TableHead className="w-16">Editar</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {fases.map((fase) => (
               <TableRow key={fase.id}>
-                <TableCell>{fase.ordem}</TableCell>
+                <TableCell className="font-mono text-muted-foreground">{fase.ordem}</TableCell>
                 <TableCell className="font-medium">{fase.nome}</TableCell>
-                <TableCell className="text-muted-foreground">{fase.subtitulo || "-"}</TableCell>
                 <TableCell>
-                  <Switch
-                    checked={fase.ativo}
-                    onCheckedChange={() => toggleAtivo(fase)}
-                  />
+                  {fase.nucleo ? (
+                    <Badge variant="outline" className="text-xs">{fase.nucleo}</Badge>
+                  ) : <span className="text-muted-foreground/40">—</span>}
+                </TableCell>
+                <TableCell className="text-muted-foreground text-sm max-w-[200px] truncate">{fase.tema_central || "—"}</TableCell>
+                <TableCell className="text-xs text-muted-foreground font-mono">{fase.versao_conteudo || "1.0"}</TableCell>
+                <TableCell>
+                  <Switch checked={fase.ativo} onCheckedChange={() => toggleAtivo(fase)} />
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-1">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => openEdit(fase)}
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => handleDelete(fase.id)}
-                    >
-                      <Trash2 className="w-4 h-4 text-destructive" />
-                    </Button>
-                  </div>
+                  <Button size="icon" variant="ghost" onClick={() => openEdit(fase)}>
+                    <Pencil className="w-4 h-4" />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
-            {fases.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                  Nenhuma fase cadastrada
-                </TableCell>
-              </TableRow>
-            )}
           </TableBody>
         </Table>
       </CardContent>
 
-      {/* Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editing ? "Editar Fase" : "Nova Fase"}</DialogTitle>
+            <DialogTitle>{editing ? `Editar: ${editing.nome}` : "Nova Porta"}</DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4">
-            <div>
-              <Label>Nome *</Label>
-              <Input
-                value={form.nome}
-                onChange={(e) => setForm({ ...form, nome: e.target.value })}
-                placeholder="Ex: A Chamada"
-              />
-            </div>
-
-            <div>
-              <Label>Subtítulo</Label>
-              <Input
-                value={form.subtitulo}
-                onChange={(e) => setForm({ ...form, subtitulo: e.target.value })}
-                placeholder="Ex: O despertar do chamado interior"
-              />
-            </div>
-
-            <div>
-              <Label>Descrição</Label>
-              <Textarea
-                value={form.descricao}
-                onChange={(e) => setForm({ ...form, descricao: e.target.value })}
-                placeholder="Descrição completa da fase..."
-                rows={4}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Ícone (Lucide)</Label>
-                <Input
-                  value={form.icone}
-                  onChange={(e) => setForm({ ...form, icone: e.target.value })}
-                  placeholder="Ex: Moon"
-                />
+          <ScrollArea className="max-h-[60vh] pr-4">
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Identificação</h4>
+                <div className="grid grid-cols-2 gap-3">
+                  <div><Label>Nome *</Label><Input value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} /></div>
+                  <div><Label>Subtítulo</Label><Input value={form.subtitulo} onChange={(e) => setForm({ ...form, subtitulo: e.target.value })} /></div>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  <div><Label>Núcleo</Label><Input value={form.nucleo} onChange={(e) => setForm({ ...form, nucleo: e.target.value })} placeholder="Identidade / Descida / Corpo / Integração" /></div>
+                  <div><Label>Ícone</Label><Input value={form.icone} onChange={(e) => setForm({ ...form, icone: e.target.value })} /></div>
+                  <div><Label>Cor Acento</Label><Input value={form.cor_acento} onChange={(e) => setForm({ ...form, cor_acento: e.target.value })} /></div>
+                </div>
               </div>
-              <div>
-                <Label>Cor Acento</Label>
-                <Input
-                  value={form.cor_acento}
-                  onChange={(e) => setForm({ ...form, cor_acento: e.target.value })}
-                  placeholder="Ex: #D4AF37"
-                />
+
+              <div className="space-y-3 border-t border-gold/10 pt-4">
+                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Conteúdo Clínico (Pareto 80/20)</h4>
+                <div><Label>Tema Central</Label><Input value={form.tema_central} onChange={(e) => setForm({ ...form, tema_central: e.target.value })} /></div>
+                <div><Label>Pergunta Terapêutica-Chave</Label><Input value={form.pergunta_chave} onChange={(e) => setForm({ ...form, pergunta_chave: e.target.value })} /></div>
+                <div><Label>Título do Exercício</Label><Input value={form.exercicio_titulo} onChange={(e) => setForm({ ...form, exercicio_titulo: e.target.value })} /></div>
+                <div><Label>Instrução do Exercício</Label><Textarea value={form.exercicio_instrucao} onChange={(e) => setForm({ ...form, exercicio_instrucao: e.target.value })} rows={3} /></div>
+                <div><Label>Texto do Ritual</Label><Textarea value={form.ritual_texto} onChange={(e) => setForm({ ...form, ritual_texto: e.target.value })} rows={3} /></div>
+              </div>
+
+              <div className="space-y-3 border-t border-gold/10 pt-4">
+                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Texto Oracular</h4>
+                <div><Label>Descrição</Label><Textarea value={form.descricao} onChange={(e) => setForm({ ...form, descricao: e.target.value })} rows={4} /></div>
+              </div>
+
+              <div className="space-y-3 border-t border-gold/10 pt-4">
+                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Campos Internos (Admin)</h4>
+                <div className="grid grid-cols-3 gap-3">
+                  <div><Label>Código Interno</Label><Input value={form.codigo_interno} onChange={(e) => setForm({ ...form, codigo_interno: e.target.value })} placeholder="PORTA-01" /></div>
+                  <div><Label>Versão</Label><Input value={form.versao_conteudo} onChange={(e) => setForm({ ...form, versao_conteudo: e.target.value })} /></div>
+                  <div><Label>Ordem</Label><Input type="number" value={form.ordem} onChange={(e) => setForm({ ...form, ordem: parseInt(e.target.value) || 0 })} /></div>
+                </div>
+                <div><Label>Observações Editoriais</Label><Textarea value={form.observacoes_admin} onChange={(e) => setForm({ ...form, observacoes_admin: e.target.value })} rows={2} /></div>
+                <div className="flex items-center gap-2">
+                  <Switch checked={form.ativo} onCheckedChange={(checked) => setForm({ ...form, ativo: checked })} />
+                  <Label>Porta Ativa</Label>
+                </div>
               </div>
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Ordem</Label>
-                <Input
-                  type="number"
-                  value={form.ordem}
-                  onChange={(e) => setForm({ ...form, ordem: parseInt(e.target.value) || 0 })}
-                />
-              </div>
-              <div className="flex items-center gap-2 pt-6">
-                <Switch
-                  checked={form.ativo}
-                  onCheckedChange={(checked) => setForm({ ...form, ativo: checked })}
-                />
-                <Label>Ativo</Label>
-              </div>
-            </div>
-          </div>
+          </ScrollArea>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>
-              Cancelar
-            </Button>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancelar</Button>
             <Button onClick={handleSave} disabled={saving}>
               {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
               Salvar
@@ -460,6 +405,145 @@ function FasesSection() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </Card>
+  );
+}
+
+// ============================================
+// AUDITORIA — MÉTRICAS AGREGADAS
+// ============================================
+
+function AuditoriaSection() {
+  const [metrics, setMetrics] = useState<{ porPorta: Record<string, number>; pessoal: number; profissional: number; total: number } | null>(null);
+  const [fases, setFases] = useState<Array<{ id: string; nome: string; ordem: number }>>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      supabase.from("sessoes_labirinto").select("porta_id, modo"),
+      supabase.from("labirinto_fases").select("id, nome, ordem").order("ordem"),
+    ]).then(([sessRes, fasesRes]) => {
+      const sessoes = sessRes.data || [];
+      const porPorta: Record<string, number> = {};
+      let pessoal = 0, profissional = 0;
+      sessoes.forEach((s: any) => {
+        if (s.porta_id) porPorta[s.porta_id] = (porPorta[s.porta_id] || 0) + 1;
+        if (s.modo === "pessoal") pessoal++;
+        if (s.modo === "profissional") profissional++;
+      });
+      setMetrics({ porPorta, pessoal, profissional, total: sessoes.length });
+      setFases(fasesRes.data || []);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) return <div className="flex items-center justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-gold" /></div>;
+  if (!metrics) return null;
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <Card><CardContent className="p-4 text-center">
+          <p className="text-3xl font-bold text-gold">{metrics.total}</p>
+          <p className="text-sm text-muted-foreground">Sessões totais</p>
+        </CardContent></Card>
+        <Card><CardContent className="p-4 text-center">
+          <p className="text-3xl font-bold text-foreground">{metrics.pessoal}</p>
+          <p className="text-sm text-muted-foreground">Modo Pessoal</p>
+        </CardContent></Card>
+        <Card><CardContent className="p-4 text-center">
+          <p className="text-3xl font-bold text-foreground">{metrics.profissional}</p>
+          <p className="text-sm text-muted-foreground">Modo Profissional</p>
+        </CardContent></Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2"><BarChart3 className="w-5 h-5 text-gold" /> Uso por Porta</CardTitle>
+          <CardDescription>Quantas vezes cada porta foi ativada (dados agregados)</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader><TableRow>
+              <TableHead className="w-12">#</TableHead>
+              <TableHead>Porta</TableHead>
+              <TableHead className="w-24 text-right">Ativações</TableHead>
+            </TableRow></TableHeader>
+            <TableBody>
+              {fases.map((fase) => (
+                <TableRow key={fase.id}>
+                  <TableCell className="font-mono text-muted-foreground">{fase.ordem}</TableCell>
+                  <TableCell className="font-medium">{fase.nome}</TableCell>
+                  <TableCell className="text-right">
+                    <Badge variant={(metrics.porPorta[fase.id] || 0) > 0 ? "default" : "outline"}>
+                      {metrics.porPorta[fase.id] || 0}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// ============================================
+// IMAGENS — GESTÃO DE VINCULAÇÃO
+// ============================================
+
+function ImagensSection() {
+  const [fases, setFases] = useState<LabirintoFase[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    supabase.from("labirinto_fases").select("*").order("ordem").then(({ data }) => {
+      setFases((data || []) as LabirintoFase[]);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) return <div className="flex items-center justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-gold" /></div>;
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2"><ImageIcon className="w-5 h-5 text-gold" /> Gestão de Imagens</CardTitle>
+        <CardDescription>Verificação de vinculação correta das imagens por porta</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {fases.map((fase) => {
+            const hasImage = !!fase.imagem_url;
+            return (
+              <Card key={fase.id} className={`border ${hasImage ? 'border-emerald-500/20' : 'border-amber-500/20'}`}>
+                <CardContent className="p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">{fase.ordem}. {fase.nome}</span>
+                    {hasImage ? <CheckCircle2 className="w-4 h-4 text-emerald-500" /> : <AlertTriangle className="w-4 h-4 text-amber-500" />}
+                  </div>
+                  {hasImage ? (
+                    <div className="aspect-[3/4] rounded overflow-hidden bg-muted">
+                      <img src={fase.imagem_url!} alt={fase.nome} className="w-full h-full object-cover" />
+                    </div>
+                  ) : (
+                    <div className="aspect-[3/4] rounded bg-muted/50 flex items-center justify-center border border-dashed border-muted-foreground/20">
+                      <p className="text-xs text-muted-foreground">Sem imagem vinculada</p>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-2 text-xs">
+                    <span className={`px-1.5 py-0.5 rounded ${hasImage ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'}`}>
+                      {hasImage ? 'Vinculada' : 'Ausente'}
+                    </span>
+                    <span className="text-muted-foreground">v{fase.versao_conteudo || "1.0"}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </CardContent>
     </Card>
   );
 }

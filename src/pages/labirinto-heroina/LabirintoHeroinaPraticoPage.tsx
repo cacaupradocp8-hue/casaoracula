@@ -12,7 +12,7 @@ import { ModoIndicator } from "./components/ModoIndicator";
 import { PortaSelecao } from "./components/pratico/PortaSelecao";
 import { PortaTravessia } from "./components/pratico/PortaTravessia";
 import { MapaHeroina } from "./components/pratico/MapaHeroina";
-import { CamposClinicosCard } from "./components/profissional/CamposClinicosCard";
+import { CamposClinicosCard, type CamposClinicosData } from "./components/profissional/CamposClinicosCard";
 import { GuiaTerapeutaTab } from "./components/profissional/GuiaTerapeutaTab";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -20,17 +20,27 @@ import { Loader2 } from "lucide-react";
 
 type FlowStep = "modo" | "selecao" | "travessia" | "mapa";
 
+const INITIAL_CAMPOS: CamposClinicosData = {
+  nomeCliente: "",
+  observacoesClinicas: "",
+  hipoteseTerapeutica: "",
+  emocaoDominante: "",
+  padraoDefensivo: "",
+  direcionamentoTerapeutico: "",
+  microAcaoDefinida: "",
+};
+
 export default function LabirintoHeroinaPraticoPage() {
   const { data: fases, isLoading } = useLabirintoFases();
   const [step, setStep] = useState<FlowStep>("modo");
   const [modo, setModo] = useState<LabirintoModo | null>(null);
   const [selectedPortaId, setSelectedPortaId] = useState<string | null>(null);
   const [portasAtravessadas, setPortasAtravessadas] = useState<string[]>([]);
+  const [camposClinicos, setCamposClinicos] = useState<CamposClinicosData>(INITIAL_CAMPOS);
 
-  // Campos profissionais
-  const [nomeCliente, setNomeCliente] = useState("");
-  const [observacoesClinicas, setObservacoesClinicas] = useState("");
-  const [hipoteseTerapeutica, setHipoteseTerapeutica] = useState("");
+  const handleChangeCampo = (field: keyof CamposClinicosData, value: string) => {
+    setCamposClinicos(prev => ({ ...prev, [field]: value }));
+  };
 
   const handleSelectModo = (selectedModo: LabirintoModo) => {
     setModo(selectedModo);
@@ -42,9 +52,7 @@ export default function LabirintoHeroinaPraticoPage() {
     setModo(null);
     setSelectedPortaId(null);
     setPortasAtravessadas([]);
-    setNomeCliente("");
-    setObservacoesClinicas("");
-    setHipoteseTerapeutica("");
+    setCamposClinicos(INITIAL_CAMPOS);
   };
 
   const handleSelectPorta = (portaId: string) => {
@@ -58,7 +66,6 @@ export default function LabirintoHeroinaPraticoPage() {
   };
 
   const handleComplete = () => {
-    // Mark porta as crossed
     if (selectedPortaId && !portasAtravessadas.includes(selectedPortaId)) {
       setPortasAtravessadas(prev => [...prev, selectedPortaId]);
     }
@@ -66,13 +73,8 @@ export default function LabirintoHeroinaPraticoPage() {
     setSelectedPortaId(null);
   };
 
-  const handleOpenMapa = () => {
-    setStep("mapa");
-  };
-
-  const handleBackFromMapa = () => {
-    setStep("selecao");
-  };
+  const handleOpenMapa = () => setStep("mapa");
+  const handleBackFromMapa = () => setStep("selecao");
 
   const selectedPorta = fases?.find(f => f.id === selectedPortaId);
   const fasesAtravessadasData = (fases || []).filter(f => portasAtravessadas.includes(f.id));
@@ -107,7 +109,6 @@ export default function LabirintoHeroinaPraticoPage() {
         <Card className="border-gold/20 bg-card/30">
           <CardContent className="py-4 space-y-3">
             {modo && <ModoIndicator modo={modo} onSwitch={handleSwitchModo} />}
-
             <div className="flex items-center justify-center gap-4 text-sm">
               <StepIndicator number={1} label="Escolher Carta" active={step === "selecao"} completed={step === "travessia" || step === "mapa"} />
               <ArrowRight className="w-4 h-4 text-muted-foreground/30" />
@@ -120,19 +121,13 @@ export default function LabirintoHeroinaPraticoPage() {
       )}
 
       {/* === STEP: Seleção de Modo === */}
-      {step === "modo" && (
-        <ModoSelector onSelect={handleSelectModo} />
-      )}
+      {step === "modo" && <ModoSelector onSelect={handleSelectModo} />}
 
       {/* === STEP: Seleção de Carta === */}
       {step === "selecao" && modo && (
         <div className="space-y-6">
-          {/* Mapa button if has crossed portals */}
           {portasAtravessadas.length > 0 && (
-            <Card
-              className="border-gold/30 bg-gold/5 cursor-pointer hover:bg-gold/10 transition-colors"
-              onClick={handleOpenMapa}
-            >
+            <Card className="border-gold/30 bg-gold/5 cursor-pointer hover:bg-gold/10 transition-colors" onClick={handleOpenMapa}>
               <CardContent className="py-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Map className="w-5 h-5 text-gold" />
@@ -158,19 +153,10 @@ export default function LabirintoHeroinaPraticoPage() {
                   Guia da Terapeuta
                 </TabsTrigger>
               </TabsList>
-
               <TabsContent value="cartas" className="space-y-6">
-                <CamposClinicosCard
-                  nomeCliente={nomeCliente}
-                  observacoesClinicas={observacoesClinicas}
-                  hipoteseTerapeutica={hipoteseTerapeutica}
-                  onChangeNomeCliente={setNomeCliente}
-                  onChangeObservacoes={setObservacoesClinicas}
-                  onChangeHipotese={setHipoteseTerapeutica}
-                />
+                <CamposClinicosCard campos={camposClinicos} onChange={handleChangeCampo} />
                 <PortaSelecao portas={fases || []} onSelect={handleSelectPorta} />
               </TabsContent>
-
               <TabsContent value="guia">
                 <GuiaTerapeutaTab />
               </TabsContent>
@@ -183,45 +169,33 @@ export default function LabirintoHeroinaPraticoPage() {
 
       {/* === STEP: Travessia === */}
       {step === "travessia" && selectedPorta && modo && (
-        <div className="space-y-6">
-          {modo === "profissional" && (
-            <CamposClinicosCard
-              nomeCliente={nomeCliente}
-              observacoesClinicas={observacoesClinicas}
-              hipoteseTerapeutica={hipoteseTerapeutica}
-              onChangeNomeCliente={setNomeCliente}
-              onChangeObservacoes={setObservacoesClinicas}
-              onChangeHipotese={setHipoteseTerapeutica}
-            />
-          )}
-
-          <PortaTravessia
-            porta={selectedPorta}
-            modo={modo}
-            onBack={handleBack}
-            onComplete={handleComplete}
-          />
-        </div>
+        <PortaTravessia
+          porta={selectedPorta}
+          modo={modo}
+          camposClinicos={modo === "profissional" ? camposClinicos : undefined}
+          onBack={handleBack}
+          onComplete={handleComplete}
+        />
       )}
 
       {/* === STEP: Mapa === */}
       {step === "mapa" && modo && (
         <div className="space-y-6">
-          <button
-            onClick={handleBackFromMapa}
-            className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
-          >
+          <button onClick={handleBackFromMapa} className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
             ← Voltar às cartas
           </button>
-
           <MapaHeroina
             modo={modo}
             fasesAtravessadas={fasesAtravessadasData}
             todasFases={fases || []}
             camposClinicos={modo === "profissional" ? {
-              nomeCliente,
-              observacoesClinicas,
-              hipoteseTerapeutica,
+              nomeCliente: camposClinicos.nomeCliente,
+              observacoesClinicas: camposClinicos.observacoesClinicas,
+              hipoteseTerapeutica: camposClinicos.hipoteseTerapeutica,
+              crencaCentral: "",
+              emocaoDominante: camposClinicos.emocaoDominante,
+              padraoDefensivo: camposClinicos.padraoDefensivo,
+              direcionamento: camposClinicos.direcionamentoTerapeutico,
             } : undefined}
           />
         </div>
@@ -230,23 +204,10 @@ export default function LabirintoHeroinaPraticoPage() {
   );
 }
 
-function StepIndicator({
-  number,
-  label,
-  active,
-  completed,
-}: {
-  number: number;
-  label: string;
-  active: boolean;
-  completed: boolean;
-}) {
+function StepIndicator({ number, label, active, completed }: { number: number; label: string; active: boolean; completed: boolean }) {
   return (
     <div className={`flex items-center gap-2 ${active ? 'text-gold' : completed ? 'text-gold/50' : 'text-muted-foreground/40'}`}>
-      <div className={`
-        w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium
-        ${active ? 'bg-gold text-gold-foreground' : completed ? 'bg-gold/20 text-gold' : 'bg-muted text-muted-foreground'}
-      `}>
+      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${active ? 'bg-gold text-gold-foreground' : completed ? 'bg-gold/20 text-gold' : 'bg-muted text-muted-foreground'}`}>
         {completed ? <Sparkles className="w-3 h-3" /> : number}
       </div>
       <span className="hidden sm:inline">{label}</span>

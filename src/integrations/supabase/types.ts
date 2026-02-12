@@ -4434,45 +4434,72 @@ export type Database = {
       labirinto_fases: {
         Row: {
           ativo: boolean
+          codigo_interno: string | null
           cor_acento: string | null
           created_at: string
           descricao: string
+          exercicio_instrucao: string | null
+          exercicio_titulo: string | null
           icone: string | null
           id: string
           imagem_url: string | null
           nome: string
+          nucleo: string | null
+          observacoes_admin: string | null
           ordem: number
+          pergunta_chave: string | null
+          ritual_texto: string | null
           subtitulo: string | null
+          tema_central: string | null
           texto_simbolico: string | null
           updated_at: string
+          versao_conteudo: string | null
         }
         Insert: {
           ativo?: boolean
+          codigo_interno?: string | null
           cor_acento?: string | null
           created_at?: string
           descricao: string
+          exercicio_instrucao?: string | null
+          exercicio_titulo?: string | null
           icone?: string | null
           id?: string
           imagem_url?: string | null
           nome: string
+          nucleo?: string | null
+          observacoes_admin?: string | null
           ordem?: number
+          pergunta_chave?: string | null
+          ritual_texto?: string | null
           subtitulo?: string | null
+          tema_central?: string | null
           texto_simbolico?: string | null
           updated_at?: string
+          versao_conteudo?: string | null
         }
         Update: {
           ativo?: boolean
+          codigo_interno?: string | null
           cor_acento?: string | null
           created_at?: string
           descricao?: string
+          exercicio_instrucao?: string | null
+          exercicio_titulo?: string | null
           icone?: string | null
           id?: string
           imagem_url?: string | null
           nome?: string
+          nucleo?: string | null
+          observacoes_admin?: string | null
           ordem?: number
+          pergunta_chave?: string | null
+          ritual_texto?: string | null
           subtitulo?: string | null
+          tema_central?: string | null
           texto_simbolico?: string | null
           updated_at?: string
+          versao_conteudo?: string | null
         }
         Relationships: []
       }
@@ -5077,6 +5104,50 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      mapa_heroina: {
+        Row: {
+          cliente_nome: string | null
+          created_at: string
+          data_registro: string
+          evolucao_texto: string | null
+          id: string
+          porta_id: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cliente_nome?: string | null
+          created_at?: string
+          data_registro?: string
+          evolucao_texto?: string | null
+          id?: string
+          porta_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cliente_nome?: string | null
+          created_at?: string
+          data_registro?: string
+          evolucao_texto?: string | null
+          id?: string
+          porta_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mapa_heroina_porta_id_fkey"
+            columns: ["porta_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_fases"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       mapa_vivo_heroina: {
         Row: {
@@ -7359,6 +7430,44 @@ export type Database = {
         }
         Relationships: []
       }
+      respostas_exercicios: {
+        Row: {
+          campo_corporal: string | null
+          created_at: string
+          id: string
+          pergunta_1: string | null
+          pergunta_2: string | null
+          pergunta_3: string | null
+          sessao_id: string
+        }
+        Insert: {
+          campo_corporal?: string | null
+          created_at?: string
+          id?: string
+          pergunta_1?: string | null
+          pergunta_2?: string | null
+          pergunta_3?: string | null
+          sessao_id: string
+        }
+        Update: {
+          campo_corporal?: string | null
+          created_at?: string
+          id?: string
+          pergunta_1?: string | null
+          pergunta_2?: string | null
+          pergunta_3?: string | null
+          sessao_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "respostas_exercicios_sessao_id_fkey"
+            columns: ["sessao_id"]
+            isOneToOne: false
+            referencedRelation: "sessoes_labirinto"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rituais_simbolicos: {
         Row: {
           ativo: boolean | null
@@ -7907,6 +8016,74 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_formation_progress"
             referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      sessoes_labirinto: {
+        Row: {
+          cliente_nome: string | null
+          concluida: boolean
+          created_at: string
+          data_sessao: string
+          direcionamento_terapeutico: string | null
+          emocao_dominante: string | null
+          hipotese_terapeutica: string | null
+          id: string
+          micro_acao_definida: string | null
+          modo: string
+          observacoes_clinicas: string | null
+          padrao_defensivo: string | null
+          porta_id: string | null
+          registro_acao: string | null
+          registro_percepcao: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cliente_nome?: string | null
+          concluida?: boolean
+          created_at?: string
+          data_sessao?: string
+          direcionamento_terapeutico?: string | null
+          emocao_dominante?: string | null
+          hipotese_terapeutica?: string | null
+          id?: string
+          micro_acao_definida?: string | null
+          modo?: string
+          observacoes_clinicas?: string | null
+          padrao_defensivo?: string | null
+          porta_id?: string | null
+          registro_acao?: string | null
+          registro_percepcao?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cliente_nome?: string | null
+          concluida?: boolean
+          created_at?: string
+          data_sessao?: string
+          direcionamento_terapeutico?: string | null
+          emocao_dominante?: string | null
+          hipotese_terapeutica?: string | null
+          id?: string
+          micro_acao_definida?: string | null
+          modo?: string
+          observacoes_clinicas?: string | null
+          padrao_defensivo?: string | null
+          porta_id?: string | null
+          registro_acao?: string | null
+          registro_percepcao?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sessoes_labirinto_porta_id_fkey"
+            columns: ["porta_id"]
+            isOneToOne: false
+            referencedRelation: "labirinto_fases"
+            referencedColumns: ["id"]
           },
         ]
       }
