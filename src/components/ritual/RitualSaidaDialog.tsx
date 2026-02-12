@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Play, Pause, Moon } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { MilkyWayBackground } from './MilkyWayBackground';
+import { useRitualState, stampRitualLastAccess } from '@/hooks/useRitualState';
 
 interface RitualSaidaDialogProps {
   open: boolean;
@@ -12,6 +13,7 @@ interface RitualSaidaDialogProps {
 }
 
 export function RitualSaidaDialog({ open, onClose, onConfirmExit }: RitualSaidaDialogProps) {
+  const ritualState = useRitualState();
   const [phase, setPhase] = useState<'initial' | 'listening' | 'closing'>('initial');
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -71,6 +73,7 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit }: RitualSaidaD
     if (audio) { audio.pause(); audio.currentTime = 0; }
     setIsPlaying(false);
     setPhase('initial');
+    stampRitualLastAccess();
     onConfirmExit();
   };
 
@@ -98,7 +101,7 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit }: RitualSaidaD
           />
         )}
 
-        <MilkyWayBackground />
+        <MilkyWayBackground state={ritualState} />
 
         <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center gap-8">
           <Moon className="w-10 h-10 text-gold/70" />

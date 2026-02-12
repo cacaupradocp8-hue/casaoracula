@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ServiceWorkerUpdateToast } from "@/components/pwa/ServiceWorkerUpdateToast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useParams, useLocation } from "react-router-dom";
+import { initRitualSessionTracking, trackRouteForRitual } from "@/hooks/useRitualState";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { AdminPreviewProvider, useAdminPreviewOptional } from "@/contexts/AdminPreviewContext";
 import { PortalType, canAccessFeature } from "@/types/portal";
@@ -267,6 +268,12 @@ function LegacyAulaRedirect() {
 }
 
 function AppRoutes() {
+  const location = useLocation();
+
+  // Init session tracking once + track deep routes
+  React.useEffect(() => { initRitualSessionTracking(); }, []);
+  React.useEffect(() => { trackRouteForRitual(location.pathname); }, [location.pathname]);
+
   return (
     <Routes>
       {/* Public Routes */}
