@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Pencil, Trash2, Settings, ExternalLink } from 'lucide-react';
 import { EntryAudioSettings } from './EntryAudioSettings';
+import { RitualSaidaAudioSettings } from './RitualSaidaAudioSettings';
 import { WebhookDebugPanel } from './WebhookDebugPanel';
 
 export function AdminSettingsTab() {
@@ -77,6 +78,9 @@ export function AdminSettingsTab() {
 
       {/* Entry Audio Settings */}
       <EntryAudioSettings />
+
+      {/* Ritual de Saída Audio Settings */}
+      <RitualSaidaAudioSettings />
 
       {/* Webhook Info Card */}
       <Card className="bg-secondary/30 border-gold/20">
