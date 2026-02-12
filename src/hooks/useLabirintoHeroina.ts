@@ -14,8 +14,20 @@ export interface LabirintoFase {
   subtitulo: string | null;
   descricao: string | null;
   icone: string | null;
+  imagem_url: string | null;
+  texto_simbolico: string | null;
   cor_acento: string | null;
   ativo: boolean;
+  // Campos clínicos
+  nucleo: string | null;
+  tema_central: string | null;
+  pergunta_chave: string | null;
+  exercicio_titulo: string | null;
+  exercicio_instrucao: string | null;
+  ritual_texto: string | null;
+  codigo_interno: string | null;
+  versao_conteudo: string | null;
+  observacoes_admin: string | null;
   created_at: string;
   updated_at: string;
 }
