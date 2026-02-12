@@ -13,65 +13,45 @@ import { Textarea } from "@/components/ui/textarea";
 import { 
   ArrowLeft, 
   Scroll, 
-  Sparkles, 
   PenLine, 
   FileDown, 
   Loader2,
-  Check,
   RotateCcw
 } from "lucide-react";
 import { toast } from "sonner";
 import type { LabirintoFase } from "@/hooks/useLabirintoHeroina";
+import type { LabirintoModo } from "../ModoSelector";
+import { ExercicioCaderno } from "./ExercicioCaderno";
 
 interface PortaTravessiaProps {
   porta: LabirintoFase;
+  modo: LabirintoModo;
   onBack: () => void;
   onComplete: () => void;
 }
 
-// Exercícios fixos por fase (baseados no Caderno da Heroína)
-// TODO: Migrar para banco de dados quando conteúdo estiver disponível
-const EXERCICIOS_POR_FASE: Record<string, { titulo: string; instrucao: string }> = {
-  "O Chamado Silenciado": {
-    titulo: "Exercício: Ouvir o Chamado",
-    instrucao: "Sente-se em silêncio por 5 minutos. Depois, escreva: O que em mim pede atenção e ainda não foi nomeado? Que sussurro tenho ignorado?"
-  },
-  "A Descida": {
-    titulo: "Exercício: O Primeiro Passo Para Dentro",
-    instrucao: "Desenhe ou descreva simbolicamente o que você está deixando para trás ao entrar nesta jornada. O que o mundo externo não pode lhe dar?"
-  },
-  "A Fragmentação": {
-    titulo: "Exercício: Nomear os Pedaços",
-    instrucao: "Liste 3 certezas que estão se desfazendo. Para cada uma, escreva: O que eu acreditava ser verdade? O que está se revelando?"
-  },
-  "A Morte Simbólica": {
-    titulo: "Exercício: Ritual de Entrega",
-    instrucao: "Escreva uma carta de despedida para uma versão de si mesma que precisa morrer. O que você agradece? O que você libera?"
-  },
-  "A Travessia": {
-    titulo: "Exercício: O Passo Sem Garantias",
-    instrucao: "Feche os olhos e pergunte: Qual é o próximo passo que não depende de certeza? Escreva sua resposta sem julgamento."
-  },
-  "A Reintegração": {
-    titulo: "Exercício: Reunir os Fragmentos",
-    instrucao: "Descreva 3 qualidades ou partes de si que você está recuperando. O que foi perdido e está retornando transformado?"
-  },
-  "O Retorno": {
-    titulo: "Exercício: A Nova Mulher no Mundo",
-    instrucao: "Escreva um compromisso consigo mesma: Como você vai viver de forma diferente a partir de agora? O que você traz de volta?"
-  },
-};
+// Exercícios agora vivem em ExercicioCaderno.tsx
 
-export function PortaTravessia({ porta, onBack, onComplete }: PortaTravessiaProps) {
+export function PortaTravessia({ porta, modo, onBack, onComplete }: PortaTravessiaProps) {
   const [registroAcao, setRegistroAcao] = useState("");
   const [registroPercepcao, setRegistroPercepcao] = useState("");
   const [exercicioRealizado, setExercicioRealizado] = useState(false);
+  const [respostasExercicio, setRespostasExercicio] = useState<Record<string, string>>({});
+  const [camposClinicos, setCamposClinicos] = useState({
+    crencaCentral: "",
+    emocaoDominante: "",
+    padraoDefensivo: "",
+    direcionamento: "",
+  });
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const pdfRef = useRef<HTMLDivElement>(null);
 
-  const exercicio = EXERCICIOS_POR_FASE[porta.nome] || {
-    titulo: "Exercício de Reflexão",
-    instrucao: "Sente-se em silêncio e reflita: O que esta fase da jornada está pedindo de mim? Escreva sua resposta."
+  const handleChangeResposta = (key: string, value: string) => {
+    setRespostasExercicio(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleChangeCampoClinico = (key: string, value: string) => {
+    setCamposClinicos(prev => ({ ...prev, [key]: value }));
   };
 
   const handleMarcarRealizado = () => {
@@ -147,35 +127,17 @@ export function PortaTravessia({ porta, onBack, onComplete }: PortaTravessiaProp
         </CardContent>
       </Card>
 
-      {/* 2. Exercício Prático */}
-      <Card className="border-amber-500/30 bg-amber-500/5">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Sparkles className="w-5 h-5 text-amber-500" />
-            {exercicio.titulo}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-foreground/80 leading-relaxed">
-            {exercicio.instrucao}
-          </p>
-          
-          {!exercicioRealizado ? (
-            <Button 
-              onClick={handleMarcarRealizado}
-              className="w-full bg-amber-600 hover:bg-amber-500 text-white gap-2"
-            >
-              <Check className="w-4 h-4" />
-              Marcar exercício como realizado
-            </Button>
-          ) : (
-            <div className="flex items-center justify-center gap-2 py-2 text-emerald-500">
-              <Check className="w-5 h-5" />
-              <span className="font-medium">Exercício realizado</span>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {/* 2. Exercício do Caderno */}
+      <ExercicioCaderno
+        faseName={porta.nome}
+        modo={modo}
+        respostas={respostasExercicio}
+        onChangeResposta={handleChangeResposta}
+        camposClinicos={camposClinicos}
+        onChangeCampoClinico={handleChangeCampoClinico}
+        exercicioRealizado={exercicioRealizado}
+        onMarcarRealizado={handleMarcarRealizado}
+      />
 
       {/* 3. Registro da Ação */}
       <Card className="border-gold/20">
@@ -297,14 +259,16 @@ export function PortaTravessia({ porta, onBack, onComplete }: PortaTravessiaProp
             </p>
           </div>
 
-          {/* Exercício */}
+          {/* Respostas do Exercício */}
           <div className="py-6 border-b border-amber-800/20">
             <h4 className="text-xs uppercase tracking-wider mb-3 opacity-60">
-              {exercicio.titulo}
+              Exercício do Caderno
             </h4>
-            <p className="text-sm leading-relaxed opacity-80">
-              {exercicio.instrucao}
-            </p>
+            {Object.entries(respostasExercicio).filter(([, v]) => v.trim()).map(([key, value]) => (
+              <div key={key} className="mb-2">
+                <p className="text-sm leading-relaxed opacity-90">{value}</p>
+              </div>
+            ))}
           </div>
 
           {/* Registro */}
