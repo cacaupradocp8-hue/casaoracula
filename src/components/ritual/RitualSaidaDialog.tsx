@@ -103,7 +103,7 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit }: RitualSaidaD
 
         <MilkyWayBackground state={ritualState} />
 
-        <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center gap-8">
+        <div className="relative flex flex-col items-center justify-center h-full px-6 text-center gap-8" style={{ zIndex: 2 }}>
           <Moon className="w-10 h-10 text-gold/70" />
 
           <div className="space-y-3 max-w-md">
