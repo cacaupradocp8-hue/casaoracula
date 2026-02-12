@@ -3,7 +3,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Moon } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import ritualBg from '@/assets/ritual-saida-bg.jpg';
+import { MilkyWayBackground } from './MilkyWayBackground';
 
 interface RitualSaidaDialogProps {
   open: boolean;
@@ -98,16 +98,7 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit }: RitualSaidaD
           />
         )}
 
-        <div
-          className="absolute inset-0 bg-cover bg-center animate-fade-in"
-          style={{
-            backgroundImage: `url(${ritualBg})`,
-            animationDuration: '400ms',
-            animationFillMode: 'forwards',
-            animationIterationCount: '1',
-          }}
-        />
-        <div className="absolute inset-0 bg-black/50" />
+        <MilkyWayBackground />
 
         <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center gap-8">
           <Moon className="w-10 h-10 text-gold/70" />
