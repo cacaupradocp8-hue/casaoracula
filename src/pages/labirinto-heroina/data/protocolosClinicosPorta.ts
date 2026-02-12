@@ -25,24 +25,57 @@ export interface ProtocoloPorta {
 
 // Roteiro clínico padrão (aplicável a todas as portas)
 export const ROTEIRO_CLINICO_BASE = [
-  "Abertura clínica — Estabeleça presença e segurança. Conduza 3 respirações. Pergunte: 'Como você chega?'",
-  "Revelação da Porta — Apresente a carta (imagem + tema). Leia a pergunta-chave em voz alta.",
-  "Exercício guiado do caderno — Conduza o exercício correspondente. Permita pausas. Não interprete.",
-  "Elaboração — Individual: escrita livre. Grupo: partilha mediada sem análise cruzada.",
-  "Ritual de integração — Gesto corporal de fechamento. Nomeie uma palavra-síntese.",
-  "Registro no sistema — Cliente registra ação e percepção. Terapeuta registra observações clínicas.",
-  "Fechamento e orientação pós-sessão — Oriente sobre autocuidado. Indique próximo passo se houver.",
+  "Abertura clínica (5 min) — Checagem de presença corporal. Nomeação da Porta (sem explicação longa).",
+  "Revelação da Porta (5 min) — Mostrar a carta (imagem completa). Ler Tema Central + Pergunta-chave.",
+  "Exercício guiado (15–20 min) — Execução do exercício do caderno. Silêncio ativo. Facilitadora observa, não conduz demais.",
+  "Elaboração (10–20 min) — Individual: aprofundar respostas. Grupo: partilha mediada sem análise cruzada.",
+  "Integração ritual (5 min) — Ritual breve da Porta. Ancoragem corporal.",
+  "Registro (5 min) — Modo Profissional: salvar no Mapa (crença, emoção, padrão, direção). Modo Pessoal: registro simples.",
+  "Fechamento (5 min) — Retorno ao corpo. Orientação de cuidado pós-sessão.",
 ];
+
+// Estrutura fixa de grupo (serve para todas as Portas)
+export const ESTRUTURA_GRUPO_BASE = [
+  { titulo: "Abertura", descricao: "Aterramento + enunciação da Porta.", tempo: "5min" },
+  { titulo: "Ativação coletiva", descricao: "Pergunta-chave lida em voz alta.", tempo: "10min" },
+  { titulo: "Trabalho individual silencioso", descricao: "Escrita/desenho.", tempo: "10–15min" },
+  { titulo: "Partilha mediada", descricao: "Escuta sem debate.", tempo: "20–30min" },
+  { titulo: "Integração", descricao: "Gesto simbólico / ritual breve.", tempo: "5min" },
+  { titulo: "Fechamento", descricao: "Retorno ao corpo.", tempo: "5min" },
+];
+
+// Indicações clínicas por faixa de portas
+export const INDICACOES_POR_FAIXA = [
+  { faixa: "P1–P2", label: "Início de processo", descricao: "Triagem, transição, abertura de ciclo." },
+  { faixa: "P3–P8", label: "Trabalho de base", descricao: "Trauma leve/moderado, defesas, descida." },
+  { faixa: "P9–P12", label: "Consciência e expressão", descricao: "Consciência, decisão, expressão." },
+  { faixa: "P13–P14", label: "Encerramento", descricao: "Alta simbólica, integração, encerramento." },
+];
+
+// Critérios de segurança obrigatórios
+export const CRITERIOS_SEGURANCA = [
+  "Não avançar de P3–P8 sem checagem de recursos.",
+  "P7 (Ferida) NUNCA é primeira sessão.",
+  "Sempre fechar com integração corporal.",
+  "Ninguém interpreta a fala da outra. A facilitadora costura, não explica.",
+];
+
+// Uso em Constelação Simbólica (orientação geral)
+export const CONSTELACAO_ORIENTACAO = {
+  campo: "Porta atua como campo-tema.",
+  exercicio: "Exercício feito antes da movimentação.",
+  ritual: "Ritual usado como ancoragem pós-campo.",
+};
 
 export const PROTOCOLOS_POR_PORTA: Record<string, ProtocoloPorta> = {
   "O Chamado": {
     orientacaoGrupo: "Porta de abertura ideal para grupos iniciantes. O tema é acessível e não exige vulnerabilidade profunda. Permita que cada participante nomeie seu incômodo sem precisar explicar.",
     etapasGrupo: [
       { titulo: "Aterramento", descricao: "Círculo de pé. Pés no chão. 3 respirações coletivas.", tempo: "10min" },
-      { titulo: "Ativação coletiva", descricao: "Pergunte ao grupo: 'O que em vocês pede atenção e ainda não foi nomeado?' Silêncio de 2 minutos.", tempo: "5min" },
+      { titulo: "Ativação coletiva", descricao: "'O que em mim pede passagem agora?' Silêncio de 2 minutos.", tempo: "5min" },
       { titulo: "Trabalho individual", descricao: "Cada participante escreve em silêncio sobre o chamado que ouve.", tempo: "20min" },
       { titulo: "Partilha mediada", descricao: "Cada uma compartilha UMA palavra ou frase. Sem comentários das demais.", tempo: "20min" },
-      { titulo: "Ritual de integração", descricao: "Cada participante sussurra seu chamado para suas próprias mãos e as fecha.", tempo: "10min" },
+      { titulo: "Ritual de integração", descricao: "Cada participante lê uma frase (não a história).", tempo: "10min" },
       { titulo: "Fechamento corporal", descricao: "Mãos no coração. Respiração de encerramento em grupo.", tempo: "5min" },
     ],
     roteiroClinico: [
@@ -66,10 +99,10 @@ export const PROTOCOLOS_POR_PORTA: Record<string, ProtocoloPorta> = {
     orientacaoGrupo: "Porta que pode gerar desconforto. A facilitadora deve sustentar o campo sem tentar 'resolver'. O tema da quebra é universal mas mobilizante.",
     etapasGrupo: [
       { titulo: "Aterramento", descricao: "Sentadas em círculo. Pés plantados. Respiração profunda com som na expiração.", tempo: "10min" },
-      { titulo: "Ativação coletiva", descricao: "'O que se partiu em vocês recentemente?' Silêncio meditativo.", tempo: "5min" },
+      { titulo: "Ativação coletiva", descricao: "Listar pactos invisíveis (silencioso).", tempo: "5min" },
       { titulo: "Trabalho individual", descricao: "Escrever ou desenhar o que se quebrou. Permitir emoção sem intervir.", tempo: "25min" },
       { titulo: "Partilha mediada", descricao: "Cada uma compartilha se desejar. Regra: 'Eu ouço sem consertar.'", tempo: "25min" },
-      { titulo: "Ritual de integração", descricao: "Rasgar simbolicamente um papel com o que precisa ser solto.", tempo: "10min" },
+      { titulo: "Ritual de integração", descricao: "Rasgar papel em conjunto (ritual coletivo).", tempo: "10min" },
       { titulo: "Fechamento corporal", descricao: "Abraço em si mesma. Respiração de recolhimento.", tempo: "5min" },
     ],
     roteiroClinico: [
@@ -93,10 +126,10 @@ export const PROTOCOLOS_POR_PORTA: Record<string, ProtocoloPorta> = {
     orientacaoGrupo: "Porta de profundidade. Requer grupo já vinculado. Não indicada para primeiros encontros. A facilitadora deve estar presente e firme.",
     etapasGrupo: [
       { titulo: "Aterramento profundo", descricao: "Meditação guiada de descida: escada, caverna ou rio. Olhos fechados.", tempo: "15min" },
-      { titulo: "Ativação coletiva", descricao: "'O que habita a parte de vocês que evitam?' Silêncio longo.", tempo: "5min" },
+      { titulo: "Ativação coletiva", descricao: "Nomear emoção evitada (sem relato). Silêncio longo.", tempo: "5min" },
       { titulo: "Trabalho individual", descricao: "Desenho ou escrita simbólica do que encontram ao descer. Sem palavras racionais.", tempo: "25min" },
       { titulo: "Partilha mediada", descricao: "Partilha voluntária. Ninguém é obrigada a falar. Presença é suficiente.", tempo: "20min" },
-      { titulo: "Ritual de integração", descricao: "Cada participante coloca as mãos na terra (ou no chão) e diz: 'Eu desci e encontrei...'", tempo: "10min" },
+      { titulo: "Ritual de integração", descricao: "Respiração guiada curta.", tempo: "10min" },
       { titulo: "Fechamento corporal", descricao: "Movimento de ascensão: levantar-se lentamente. Espreguiçar. Abrir os olhos.", tempo: "10min" },
     ],
     roteiroClinico: [
@@ -120,10 +153,10 @@ export const PROTOCOLOS_POR_PORTA: Record<string, ProtocoloPorta> = {
     orientacaoGrupo: "Porta que trabalha repetição e confusão. Excelente para grupos que se percebem 'andando em círculos'. A facilitadora não oferece saída — sustenta a desorientação.",
     etapasGrupo: [
       { titulo: "Aterramento", descricao: "Caminhar em círculo no espaço, lentamente, sem destino.", tempo: "10min" },
-      { titulo: "Ativação coletiva", descricao: "'Qual situação continua retornando na vida de vocês com rostos diferentes?'", tempo: "5min" },
+      { titulo: "Ativação coletiva", descricao: "Desenhar o ciclo repetitivo.", tempo: "5min" },
       { titulo: "Trabalho individual", descricao: "Mapear 3 padrões repetitivos. Desenhar o labirinto pessoal.", tempo: "25min" },
       { titulo: "Partilha mediada", descricao: "Compartilhar o padrão mais visível. Sem conselho.", tempo: "20min" },
-      { titulo: "Ritual de integração", descricao: "Cada uma traça com o dedo no ar o caminho que quer seguir. Gesto de saída.", tempo: "10min" },
+      { titulo: "Ritual de integração", descricao: "Marcar a saída possível no desenho. Gesto de saída.", tempo: "10min" },
       { titulo: "Fechamento corporal", descricao: "Parar. Ficar de pé. Sentir os pés. 'Eu estou aqui agora.'", tempo: "5min" },
     ],
     roteiroClinico: [
@@ -147,10 +180,10 @@ export const PROTOCOLOS_POR_PORTA: Record<string, ProtocoloPorta> = {
     orientacaoGrupo: "Porta de essência e nudez psíquica. Grupo precisa de confiança estabelecida. Trabalho silencioso e profundo.",
     etapasGrupo: [
       { titulo: "Aterramento", descricao: "Meditação de 'tirar camadas': cada respiração solta uma proteção.", tempo: "15min" },
-      { titulo: "Ativação coletiva", descricao: "'Quem sou eu quando não estou performando?'", tempo: "5min" },
+      { titulo: "Ativação coletiva", descricao: "Três palavras essenciais.", tempo: "5min" },
       { titulo: "Trabalho individual", descricao: "Escrever sobre o que é irredutível em si. O que resta quando tudo cai.", tempo: "25min" },
       { titulo: "Partilha mediada", descricao: "Partilha breve e essencial. Uma frase por participante.", tempo: "15min" },
-      { titulo: "Ritual de integração", descricao: "Tocar os próprios ossos (mãos, clavícula). Sentir a estrutura que sustenta.", tempo: "10min" },
+      { titulo: "Ritual de integração", descricao: "Guardar as palavras (bolso/envelope). Sentir a estrutura que sustenta.", tempo: "10min" },
       { titulo: "Fechamento corporal", descricao: "Postura ereta. Dignidade do osso. Silêncio.", tempo: "5min" },
     ],
     roteiroClinico: [
@@ -174,10 +207,10 @@ export const PROTOCOLOS_POR_PORTA: Record<string, ProtocoloPorta> = {
     orientacaoGrupo: "Porta ancestral. Excelente para círculos de mulheres. O trabalho é coletivo por natureza — todas carregam heranças.",
     etapasGrupo: [
       { titulo: "Aterramento", descricao: "Invocar as ancestrais: 'Eu venho de...' Cada uma nomeia uma mulher da sua linhagem.", tempo: "15min" },
-      { titulo: "Ativação coletiva", descricao: "'Que história da linhagem de vocês ressoa na vida de vocês?'", tempo: "5min" },
+      { titulo: "Ativação coletiva", descricao: "Escrever 'essa história é de quem?'", tempo: "5min" },
       { titulo: "Trabalho individual", descricao: "Escrever sobre a herança emocional carregada. O que é meu e o que é herdado?", tempo: "25min" },
       { titulo: "Partilha mediada", descricao: "Partilha em duplas primeiro, depois no círculo.", tempo: "25min" },
-      { titulo: "Ritual de integração", descricao: "Cada participante diz: 'Eu honro o que veio antes. Eu escolho o que levo adiante.'", tempo: "10min" },
+      { titulo: "Ritual de integração", descricao: "Frase de liberação em coro: 'Eu honro o que veio antes. Eu escolho o que levo adiante.'", tempo: "10min" },
       { titulo: "Fechamento corporal", descricao: "Reverência. Inclinação do tronco. Gratidão ao que sustenta.", tempo: "5min" },
     ],
     roteiroClinico: [
@@ -201,8 +234,8 @@ export const PROTOCOLOS_POR_PORTA: Record<string, ProtocoloPorta> = {
     orientacaoGrupo: "Porta de alta intensidade. NUNCA usar como primeira aplicação em grupo. Requer grupo maduro e facilitadora experiente.",
     etapasGrupo: [
       { titulo: "Aterramento reforçado", descricao: "Recurso de âncora: cada participante segura um objeto pessoal de segurança.", tempo: "15min" },
-      { titulo: "Ativação coletiva", descricao: "'Qual é a dor que está por trás de todas as outras?' Silêncio de 3 minutos.", tempo: "5min" },
-      { titulo: "Trabalho individual", descricao: "Localizar a ferida no corpo. Desenhar ou escrever. Sem pressa.", tempo: "30min" },
+      { titulo: "Ativação coletiva", descricao: "Identificar a dor sem narrar fatos. Silêncio de 3 minutos.", tempo: "5min" },
+      { titulo: "Trabalho individual", descricao: "Carta curta não compartilhada. Localizar a ferida no corpo.", tempo: "30min" },
       { titulo: "Partilha mediada", descricao: "Partilha voluntária e breve. A facilitadora sustenta sem interpretar.", tempo: "20min" },
       { titulo: "Ritual de integração", descricao: "Mãos sobre a parte do corpo onde a ferida vive. 'Eu te vejo. Eu te sustento.'", tempo: "10min" },
       { titulo: "Fechamento corporal", descricao: "Autoabraço prolongado. Respiração de colo. Cobertor simbólico.", tempo: "10min" },
@@ -228,10 +261,10 @@ export const PROTOCOLOS_POR_PORTA: Record<string, ProtocoloPorta> = {
     orientacaoGrupo: "Porta de reconhecimento, não de desmonte. O grupo NÃO deve pressionar ninguém a 'baixar a guarda'. A defesa foi necessária — honrá-la antes de questioná-la.",
     etapasGrupo: [
       { titulo: "Aterramento", descricao: "Postura de proteção consciente: braços cruzados, depois abertos. Sentir a diferença.", tempo: "10min" },
-      { titulo: "Ativação coletiva", descricao: "'Que proteção era necessária antes mas hoje limita vocês?'", tempo: "5min" },
-      { titulo: "Trabalho individual", descricao: "Listar as armaduras. Para cada uma: 'O que protege?' e 'O que impede?'", tempo: "25min" },
+      { titulo: "Ativação coletiva", descricao: "Listar defesas frequentes.", tempo: "5min" },
+      { titulo: "Trabalho individual", descricao: "Para cada defesa: 'O que protege?' e 'O que impede?'", tempo: "25min" },
       { titulo: "Partilha mediada", descricao: "Compartilhar UMA defesa reconhecida. Grupo acolhe sem sugerir mudança.", tempo: "20min" },
-      { titulo: "Ritual de integração", descricao: "Agradecer à defesa antes de questioná-la: 'Obrigada por me proteger.'", tempo: "10min" },
+      { titulo: "Ritual de integração", descricao: "Agradecer a defesa + nomear novo recurso: 'Obrigada por me proteger.'", tempo: "10min" },
       { titulo: "Fechamento corporal", descricao: "Abrir e fechar as mãos alternadamente. 'Eu posso proteger E abrir.'", tempo: "5min" },
     ],
     roteiroClinico: [
@@ -255,10 +288,10 @@ export const PROTOCOLOS_POR_PORTA: Record<string, ProtocoloPorta> = {
     orientacaoGrupo: "Porta de autorreconhecimento. Pode gerar desconforto com a autoimagem. A facilitadora sustenta o olhar sem corrigir.",
     etapasGrupo: [
       { titulo: "Aterramento", descricao: "Olhar as próprias mãos por 2 minutos em silêncio. Depois, fechar os olhos.", tempo: "10min" },
-      { titulo: "Ativação coletiva", descricao: "'O que vocês veem quando se olham sem julgamento?'", tempo: "5min" },
+      { titulo: "Ativação coletiva", descricao: "Responsabilidade sem culpa: 'O que vocês veem quando se olham sem julgamento?'", tempo: "5min" },
       { titulo: "Trabalho individual", descricao: "Autodescrição em terceira pessoa: 'Ela é...' Sem censura.", tempo: "25min" },
       { titulo: "Partilha mediada", descricao: "Opcionalmente, em duplas: cada uma lê sua descrição para a outra. Sem comentário.", tempo: "20min" },
-      { titulo: "Ritual de integração", descricao: "Cada participante diz uma qualidade que aceita em si. Em voz alta.", tempo: "10min" },
+      { titulo: "Ritual de integração", descricao: "Olhar no espelho (ou objeto refletivo). Dizer uma qualidade que aceita em si.", tempo: "10min" },
       { titulo: "Fechamento corporal", descricao: "Mãos no rosto. Toque gentil. 'Eu me vejo.'", tempo: "5min" },
     ],
     roteiroClinico: [
@@ -282,10 +315,10 @@ export const PROTOCOLOS_POR_PORTA: Record<string, ProtocoloPorta> = {
     orientacaoGrupo: "Porta de responsabilidade. O grupo sustenta sem opinar. Cada escolha é soberana.",
     etapasGrupo: [
       { titulo: "Aterramento", descricao: "De pé. Sentir o peso nos dois pés igualmente. Centro de gravidade.", tempo: "10min" },
-      { titulo: "Ativação coletiva", descricao: "'Qual decisão vocês estão adiando por medo do desconhecido?'", tempo: "5min" },
+      { titulo: "Ativação coletiva", descricao: "Decisão mínima possível: 'Qual decisão vocês estão adiando?'", tempo: "5min" },
       { titulo: "Trabalho individual", descricao: "Escrever a decisão adiada e o que impede. O que preciso abandonar para avançar?", tempo: "25min" },
       { titulo: "Partilha mediada", descricao: "Compartilhar o compromisso, não o medo. O grupo testemunha.", tempo: "20min" },
-      { titulo: "Ritual de integração", descricao: "Dar um passo à frente literalmente. 'Eu escolho.'", tempo: "10min" },
+      { titulo: "Ritual de integração", descricao: "Datar a escolha. Dar um passo à frente literalmente. 'Eu escolho.'", tempo: "10min" },
       { titulo: "Fechamento corporal", descricao: "Postura firme. Olhar para frente. Respiração de decisão.", tempo: "5min" },
     ],
     roteiroClinico: [
@@ -309,10 +342,10 @@ export const PROTOCOLOS_POR_PORTA: Record<string, ProtocoloPorta> = {
     orientacaoGrupo: "Porta de reunião. Excelente para grupos em fechamento de ciclo. O trabalho é de acolhimento das partes.",
     etapasGrupo: [
       { titulo: "Aterramento", descricao: "Abraço em si mesma. Reunir braços, pernas, tronco. 'Todo meu corpo está aqui.'", tempo: "10min" },
-      { titulo: "Ativação coletiva", descricao: "'Que parte rejeitada de vocês está pedindo para retornar?'", tempo: "5min" },
+      { titulo: "Ativação coletiva", descricao: "Diálogo entre duas partes internas: 'Que parte rejeitada pede para retornar?'", tempo: "5min" },
       { titulo: "Trabalho individual", descricao: "Listar partes integradas e partes ainda excluídas. Diálogo entre elas.", tempo: "25min" },
       { titulo: "Partilha mediada", descricao: "Cada participante nomeia o que está integrando. O grupo acolhe.", tempo: "20min" },
-      { titulo: "Ritual de integração", descricao: "Juntar as duas mãos. Entrelaçar os dedos. 'Eu me reúno.'", tempo: "10min" },
+      { titulo: "Ritual de integração", descricao: "Parágrafo de síntese. Juntar as duas mãos: 'Eu me reúno.'", tempo: "10min" },
       { titulo: "Fechamento corporal", descricao: "Balanço suave do corpo. Embalo. Acolhimento.", tempo: "5min" },
     ],
     roteiroClinico: [
@@ -336,10 +369,10 @@ export const PROTOCOLOS_POR_PORTA: Record<string, ProtocoloPorta> = {
     orientacaoGrupo: "Porta de expressão. Pode ser muito mobilizante em grupo. Garantir espaço seguro para que cada voz seja ouvida sem interrupção.",
     etapasGrupo: [
       { titulo: "Aterramento", descricao: "Humming coletivo (vibrar com a boca fechada). Sentir a vibração no peito.", tempo: "10min" },
-      { titulo: "Ativação coletiva", descricao: "'O que vocês precisam dizer que nunca disseram?'", tempo: "5min" },
+      { titulo: "Ativação coletiva", descricao: "Verdade não dita (segura): 'O que vocês precisam dizer que nunca disseram?'", tempo: "5min" },
       { titulo: "Trabalho individual", descricao: "Escrever a mensagem não dita. Para quem é? O que acontece se eu disser?", tempo: "25min" },
-      { titulo: "Partilha mediada", descricao: "Cada participante lê em voz alta (para o grupo ou para si). Grupo testemunha em silêncio.", tempo: "25min" },
-      { titulo: "Ritual de integração", descricao: "Cada uma diz em voz alta: 'Minha voz importa.' O grupo ecoa.", tempo: "10min" },
+      { titulo: "Partilha mediada", descricao: "Cada participante lê em voz baixa (ou escrita). Grupo testemunha em silêncio.", tempo: "25min" },
+      { titulo: "Ritual de integração", descricao: "Dizer em voz baixa (ou escrita): 'Minha voz importa.' O grupo ecoa.", tempo: "10min" },
       { titulo: "Fechamento corporal", descricao: "Mão na garganta. Respiração. Silêncio honrado.", tempo: "5min" },
     ],
     roteiroClinico: [
@@ -363,10 +396,10 @@ export const PROTOCOLOS_POR_PORTA: Record<string, ProtocoloPorta> = {
     orientacaoGrupo: "Porta de volta ao mundo. Celebrativa e integradora. Excelente para penúltimos encontros de grupo.",
     etapasGrupo: [
       { titulo: "Aterramento", descricao: "Caminhar pelo espaço como quem chega a um lugar novo. Observar o entorno.", tempo: "10min" },
-      { titulo: "Ativação coletiva", descricao: "'O que vocês trazem de volta desta travessia?'", tempo: "5min" },
-      { titulo: "Trabalho individual", descricao: "Escrever: O que trago de volta? Como vou viver diferente?", tempo: "20min" },
+      { titulo: "Ativação coletiva", descricao: "Onde aplicar o aprendido: 'O que vocês trazem de volta desta travessia?'", tempo: "5min" },
+      { titulo: "Trabalho individual", descricao: "Escrever: O que trago de volta? Como vou viver diferente? Compromisso prático.", tempo: "20min" },
       { titulo: "Partilha mediada", descricao: "Cada participante compartilha seu dom de retorno. O grupo celebra.", tempo: "25min" },
-      { titulo: "Ritual de integração", descricao: "Cada uma presenteia o grupo com uma palavra. Tesouro coletivo.", tempo: "10min" },
+      { titulo: "Ritual de integração", descricao: "Compromisso prático. Cada uma presenteia o grupo com uma palavra.", tempo: "10min" },
       { titulo: "Fechamento corporal", descricao: "De pé. Postura de quem chegou. Sorriso interno.", tempo: "5min" },
     ],
     roteiroClinico: [
@@ -390,8 +423,8 @@ export const PROTOCOLOS_POR_PORTA: Record<string, ProtocoloPorta> = {
     orientacaoGrupo: "Porta de encerramento e sabedoria incorporada. Ideal para último encontro de grupo ou ritual de formatura.",
     etapasGrupo: [
       { titulo: "Aterramento", descricao: "Meditação da guardiã: 'Imagine a mulher que você se tornou de pé à sua frente.'", tempo: "15min" },
-      { titulo: "Ativação coletiva", descricao: "'Que sabedoria agora guia os passos de vocês?'", tempo: "5min" },
-      { titulo: "Trabalho individual", descricao: "Carta à mulher que começou. Conselho da guardiã. Nomeação da sabedoria.", tempo: "25min" },
+      { titulo: "Ativação coletiva", descricao: "Reconhecer o que agora sustenta: 'Que sabedoria guia os passos de vocês?'", tempo: "5min" },
+      { titulo: "Trabalho individual", descricao: "Carta à mulher que começou. Frase-síntese da jornada. Nomeação da sabedoria.", tempo: "25min" },
       { titulo: "Partilha mediada", descricao: "Cada participante lê sua carta ou compartilha sua sabedoria. Ritual de encerramento.", tempo: "25min" },
       { titulo: "Ritual de integração", descricao: "Cada uma recebe um símbolo (pedra, fita, vela) como marca da travessia completa.", tempo: "10min" },
       { titulo: "Fechamento corporal", descricao: "Círculo final. Mãos dadas. Silêncio. Reverência mútua.", tempo: "10min" },

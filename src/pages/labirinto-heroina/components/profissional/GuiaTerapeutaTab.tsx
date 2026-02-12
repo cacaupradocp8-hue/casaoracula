@@ -1,6 +1,6 @@
 // ============================================
 // GUIA DA TERAPEUTA — MODO PROFISSIONAL EXCLUSIVO
-// 5 protocolos clínicos expandidos
+// 5 protocolos clínicos + indicações por faixa + segurança
 // ============================================
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,6 +10,8 @@ import {
   Sparkles, 
   Map, 
   Shield,
+  AlertTriangle,
+  Layers,
 } from "lucide-react";
 import {
   Accordion,
@@ -17,36 +19,31 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  ROTEIRO_CLINICO_BASE,
+  ESTRUTURA_GRUPO_BASE,
+  INDICACOES_POR_FAIXA,
+  CRITERIOS_SEGURANCA,
+  CONSTELACAO_ORIENTACAO,
+} from "../../data/protocolosClinicosPorta";
 
 const PROTOCOLOS = [
   {
     id: "individual",
-    titulo: "Roteiro de Aplicação Individual (60min)",
+    titulo: "Roteiro de Aplicação Individual (45–60min)",
     icone: BookOpen,
     descricao: "Sessão individual completa com as cartas do Labirinto como dispositivo terapêutico.",
-    etapas: [
-      { tempo: "10min", titulo: "Acolhimento e Presença", descricao: "Receba a cliente em silêncio. Conduza 3 respirações profundas. Pergunte: 'Como você chega hoje?'" },
-      { tempo: "5min", titulo: "Apresentação das Cartas", descricao: "Disponha as 14 cartas voltadas para baixo. Peça que a cliente escolha com a mão não-dominante, sem racionalizar." },
-      { tempo: "5min", titulo: "Revelação e Leitura", descricao: "A cliente vira a carta. Leia o texto oracular em voz alta, lentamente. Observe reações corporais." },
-      { tempo: "20min", titulo: "Exercício do Caderno", descricao: "Conduza o exercício correspondente à porta revelada. Guie as 3 perguntas de aprofundamento. Permita pausas longas." },
-      { tempo: "10min", titulo: "Registro da Travessia", descricao: "A cliente escreve livremente: O que fez? O que percebeu? Registre observações clínicas em paralelo." },
-      { tempo: "10min", titulo: "Fechamento Ritual", descricao: "Peça que a cliente nomeie uma palavra-síntese. Encerre com gesto simbólico de fechamento (mãos no coração)." },
-    ],
+    etapas: ROTEIRO_CLINICO_BASE.map((texto) => {
+      const [titulo, ...resto] = texto.split(" — ");
+      return { tempo: "", titulo: titulo.trim(), descricao: resto.join(" — ").trim() };
+    }),
   },
   {
     id: "grupo",
-    titulo: "Roteiro de Aplicação em Grupo (2h)",
+    titulo: "Estrutura Fixa de Grupo (90–120min)",
     icone: Users,
-    descricao: "Facilitação grupal com o Labirinto como eixo simbólico do encontro.",
-    etapas: [
-      { tempo: "15min", titulo: "Abertura em Círculo", descricao: "Forme o círculo. Cada participante diz seu nome e uma palavra sobre como chega. Acenda vela central se possível." },
-      { tempo: "10min", titulo: "Apresentação do Labirinto", descricao: "Explique brevemente a estrutura das 14 portas. Não revele conteúdo — apenas a intenção da travessia." },
-      { tempo: "10min", titulo: "Escolha Individual", descricao: "Cada participante escolhe sua carta em silêncio. As cartas podem ser compartilhadas ou individuais." },
-      { tempo: "30min", titulo: "Travessia em Silêncio", descricao: "Cada uma lê sua carta, realiza o exercício e registra. A facilitadora circula em silêncio, disponível mas não invasiva." },
-      { tempo: "30min", titulo: "Partilha no Círculo", descricao: "Cada participante compartilha o que deseja. Regra de ouro: escuta sem comentário ou conselho. Apenas presença." },
-      { tempo: "15min", titulo: "Integração Coletiva", descricao: "Pergunte ao grupo: 'O que o Labirinto nos revelou como corpo coletivo?' Registre palavras-chave no centro." },
-      { tempo: "10min", titulo: "Fechamento Ritual", descricao: "Cada participante diz uma palavra de encerramento. Sopre a vela juntas. Agradeça o círculo." },
-    ],
+    descricao: "Estrutura replicável para todas as Portas: grupos terapêuticos, círculos, formações e constelação simbólica.",
+    etapas: ESTRUTURA_GRUPO_BASE,
   },
   {
     id: "constelacao",
@@ -54,6 +51,9 @@ const PROTOCOLOS = [
     icone: Sparkles,
     descricao: "As cartas como representantes em dinâmicas constelativas.",
     etapas: [
+      { tempo: "", titulo: "Campo-tema", descricao: CONSTELACAO_ORIENTACAO.campo },
+      { tempo: "", titulo: "Exercício preparatório", descricao: CONSTELACAO_ORIENTACAO.exercicio },
+      { tempo: "", titulo: "Ancoragem pós-campo", descricao: CONSTELACAO_ORIENTACAO.ritual },
       { tempo: "", titulo: "Preparação do Campo", descricao: "Disponha as 14 cartas em círculo no chão. O centro representa o Self. Peça à cliente que entre no campo." },
       { tempo: "", titulo: "Escolha por Ressonância", descricao: "A cliente caminha pelo campo e para diante das cartas que 'chamam'. Observe qual porta atrai e qual repele." },
       { tempo: "", titulo: "Posicionamento", descricao: "A cliente posiciona as cartas escolhidas no campo como representantes de forças psíquicas. Não interprete — observe." },
@@ -79,10 +79,10 @@ const PROTOCOLOS = [
     icone: Shield,
     descricao: "Diretrizes éticas, posturais e limites do uso clínico.",
     etapas: [
-      { tempo: "", titulo: "Postura da Terapeuta", descricao: "Não interprete as cartas pela cliente. Não use linguagem diagnóstica. Sua função é sustentar, não conduzir. A heroína faz sua própria travessia." },
-      { tempo: "", titulo: "Tempo e Ritmo", descricao: "Respeite o tempo de cada travessia. Não há pressa. Uma porta pode levar uma sessão inteira ou apenas um respiro. Confie no processo." },
+      { tempo: "", titulo: "Postura da Terapeuta", descricao: "Não interprete as cartas pela cliente. Não use linguagem diagnóstica. Sua função é sustentar, não conduzir." },
+      { tempo: "", titulo: "Tempo e Ritmo", descricao: "Respeite o tempo de cada travessia. Não há pressa. Uma porta pode levar uma sessão inteira ou apenas um respiro." },
       { tempo: "", titulo: "Registros", descricao: "Mantenha registro clínico separado do registro ritual. O que a cliente escreve é dela. O que você observa é seu instrumento." },
-      { tempo: "", titulo: "Limites Éticos", descricao: "Não substitua tratamento clínico convencional. Contraindicado em crises agudas sem suporte adequado. Não use como ferramenta diagnóstica. Encaminhe quando necessário." },
+      { tempo: "", titulo: "Limites Éticos", descricao: "Não substitua tratamento clínico convencional. Contraindicado em crises agudas sem suporte adequado. Encaminhe quando necessário." },
       { tempo: "", titulo: "Formação", descricao: "O uso profissional do Labirinto requer formação no Método Orácula. Respeite os limites da sua formação e experiência clínica." },
     ],
   },
@@ -98,6 +98,36 @@ export function GuiaTerapeutaTab() {
         <p className="text-sm text-muted-foreground max-w-lg mx-auto">
           Protocolos e roteiros para uso clínico do Labirinto da Heroína Interna®.
         </p>
+      </div>
+
+      {/* Indicações clínicas por faixa */}
+      <Card className="border-gold/20 bg-card/30">
+        <CardContent className="p-4 space-y-3">
+          <div className="flex items-center gap-2 mb-2">
+            <Layers className="w-4 h-4 text-gold" />
+            <span className="font-medium text-sm">Indicações Clínicas por Faixa</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {INDICACOES_POR_FAIXA.map((faixa) => (
+              <div key={faixa.faixa} className="py-2 px-3 rounded bg-card/20 border border-gold/10">
+                <span className="text-xs text-gold font-mono">{faixa.faixa}</span>
+                <p className="text-xs font-medium text-foreground">{faixa.label}</p>
+                <p className="text-[11px] text-muted-foreground">{faixa.descricao}</p>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Critérios de segurança */}
+      <div className="flex items-start gap-2 py-3 px-4 rounded-lg bg-amber-500/5 border border-amber-500/20">
+        <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+        <div className="space-y-1">
+          <p className="text-xs font-medium text-amber-500">Critérios de Segurança Obrigatórios</p>
+          {CRITERIOS_SEGURANCA.map((criterio, i) => (
+            <p key={i} className="text-[11px] text-amber-500/80 leading-relaxed">• {criterio}</p>
+          ))}
+        </div>
       </div>
 
       <Accordion type="single" collapsible className="space-y-3">
