@@ -301,6 +301,20 @@
   }
 }
 
+/* Ritual breathing: inhale 4s, exhale 6s */
+@keyframes ritual-breathe {
+  0%, 100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.025);
+  }
+}
+
+.animate-ritual-breathe {
+  animation: ritual-breathe 10s ease-in-out infinite;
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
