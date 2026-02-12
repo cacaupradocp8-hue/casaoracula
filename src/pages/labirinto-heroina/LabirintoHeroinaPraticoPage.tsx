@@ -179,6 +179,7 @@ export default function LabirintoHeroinaPraticoPage() {
 
           <PortaTravessia
             porta={selectedPorta}
+            modo={modo!}
             onBack={handleBack}
             onComplete={handleComplete}
           />
