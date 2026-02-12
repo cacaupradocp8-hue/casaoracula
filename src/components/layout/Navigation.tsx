@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { RitualSaidaDialog } from '@/components/ritual/RitualSaidaDialog';
 import { Button } from '@/components/ui/button';
 import { Logo } from './Logo';
 import { getPortal, canAccessFeature, PortalType } from '@/types/portal';
@@ -43,11 +44,17 @@ export function Navigation() {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [lockedModalOpen, setLockedModalOpen] = useState(false);
+  const [ritualSaidaOpen, setRitualSaidaOpen] = useState(false);
 
   const portal = user ? getPortal(user.portal) : null;
   const isAdmin = user?.portal === 'admin';
 
   const handleLogout = () => {
+    setRitualSaidaOpen(true);
+  };
+
+  const handleConfirmExit = () => {
+    setRitualSaidaOpen(false);
     logout();
     navigate('/');
   };
@@ -376,6 +383,12 @@ export function Navigation() {
       <LockedContentModal 
         open={lockedModalOpen} 
         onOpenChange={setLockedModalOpen} 
+      />
+
+      <RitualSaidaDialog
+        open={ritualSaidaOpen}
+        onClose={() => setRitualSaidaOpen(false)}
+        onConfirmExit={handleConfirmExit}
       />
     </>
   );
