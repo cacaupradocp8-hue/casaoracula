@@ -4,28 +4,28 @@
 // ============================================
 
 import { useState } from "react";
-import { Compass, ArrowRight, Sparkles, BookOpen } from "lucide-react";
+import { Compass, ArrowRight, Sparkles, BookOpen, Map } from "lucide-react";
 import { FerramentaPageTemplate } from "@/components/shared/FerramentaPageTemplate";
 import { useLabirintoFases } from "@/hooks/useLabirintoHeroina";
 import { ModoSelector, type LabirintoModo } from "./components/ModoSelector";
 import { ModoIndicator } from "./components/ModoIndicator";
 import { PortaSelecao } from "./components/pratico/PortaSelecao";
 import { PortaTravessia } from "./components/pratico/PortaTravessia";
+import { MapaHeroina } from "./components/pratico/MapaHeroina";
 import { CamposClinicosCard } from "./components/profissional/CamposClinicosCard";
 import { GuiaTerapeutaTab } from "./components/profissional/GuiaTerapeutaTab";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2 } from "lucide-react";
 
-// Steps do fluxo
-type FlowStep = "modo" | "selecao" | "travessia";
+type FlowStep = "modo" | "selecao" | "travessia" | "mapa";
 
 export default function LabirintoHeroinaPraticoPage() {
   const { data: fases, isLoading } = useLabirintoFases();
   const [step, setStep] = useState<FlowStep>("modo");
   const [modo, setModo] = useState<LabirintoModo | null>(null);
   const [selectedPortaId, setSelectedPortaId] = useState<string | null>(null);
+  const [portasAtravessadas, setPortasAtravessadas] = useState<string[]>([]);
 
   // Campos profissionais
   const [nomeCliente, setNomeCliente] = useState("");
@@ -41,7 +41,7 @@ export default function LabirintoHeroinaPraticoPage() {
     setStep("modo");
     setModo(null);
     setSelectedPortaId(null);
-    // Reset campos profissionais
+    setPortasAtravessadas([]);
     setNomeCliente("");
     setObservacoesClinicas("");
     setHipoteseTerapeutica("");
@@ -58,11 +58,24 @@ export default function LabirintoHeroinaPraticoPage() {
   };
 
   const handleComplete = () => {
+    // Mark porta as crossed
+    if (selectedPortaId && !portasAtravessadas.includes(selectedPortaId)) {
+      setPortasAtravessadas(prev => [...prev, selectedPortaId]);
+    }
     setStep("selecao");
     setSelectedPortaId(null);
   };
 
+  const handleOpenMapa = () => {
+    setStep("mapa");
+  };
+
+  const handleBackFromMapa = () => {
+    setStep("selecao");
+  };
+
   const selectedPorta = fases?.find(f => f.id === selectedPortaId);
+  const fasesAtravessadasData = (fases || []).filter(f => portasAtravessadas.includes(f.id));
 
   const templateProps = {
     title: "O Labirinto da Heroína Interna®",
@@ -93,24 +106,14 @@ export default function LabirintoHeroinaPraticoPage() {
       {step !== "modo" && (
         <Card className="border-gold/20 bg-card/30">
           <CardContent className="py-4 space-y-3">
-            {/* Modo Indicator */}
             {modo && <ModoIndicator modo={modo} onSwitch={handleSwitchModo} />}
 
-            {/* Steps */}
             <div className="flex items-center justify-center gap-4 text-sm">
-              <StepIndicator
-                number={1}
-                label="Escolher Carta"
-                active={step === "selecao"}
-                completed={step === "travessia"}
-              />
+              <StepIndicator number={1} label="Escolher Carta" active={step === "selecao"} completed={step === "travessia" || step === "mapa"} />
               <ArrowRight className="w-4 h-4 text-muted-foreground/30" />
-              <StepIndicator
-                number={2}
-                label="Atravessar"
-                active={step === "travessia"}
-                completed={false}
-              />
+              <StepIndicator number={2} label="Atravessar" active={step === "travessia"} completed={step === "mapa"} />
+              <ArrowRight className="w-4 h-4 text-muted-foreground/30" />
+              <StepIndicator number={3} label="Mapa" active={step === "mapa"} completed={false} />
             </div>
           </CardContent>
         </Card>
@@ -124,7 +127,25 @@ export default function LabirintoHeroinaPraticoPage() {
       {/* === STEP: Seleção de Carta === */}
       {step === "selecao" && modo && (
         <div className="space-y-6">
-          {/* Modo Profissional: Tabs com Guia */}
+          {/* Mapa button if has crossed portals */}
+          {portasAtravessadas.length > 0 && (
+            <Card
+              className="border-gold/30 bg-gold/5 cursor-pointer hover:bg-gold/10 transition-colors"
+              onClick={handleOpenMapa}
+            >
+              <CardContent className="py-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Map className="w-5 h-5 text-gold" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Mapa da Heroína</p>
+                    <p className="text-xs text-muted-foreground">{portasAtravessadas.length} porta(s) atravessada(s)</p>
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-gold" />
+              </CardContent>
+            </Card>
+          )}
+
           {modo === "profissional" ? (
             <Tabs defaultValue="cartas" className="space-y-6">
               <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto">
@@ -139,7 +160,6 @@ export default function LabirintoHeroinaPraticoPage() {
               </TabsList>
 
               <TabsContent value="cartas" className="space-y-6">
-                {/* Campos Clínicos */}
                 <CamposClinicosCard
                   nomeCliente={nomeCliente}
                   observacoesClinicas={observacoesClinicas}
@@ -156,16 +176,14 @@ export default function LabirintoHeroinaPraticoPage() {
               </TabsContent>
             </Tabs>
           ) : (
-            /* Modo Pessoal: Direto para cartas */
             <PortaSelecao portas={fases || []} onSelect={handleSelectPorta} />
           )}
         </div>
       )}
 
       {/* === STEP: Travessia === */}
-      {step === "travessia" && selectedPorta && (
+      {step === "travessia" && selectedPorta && modo && (
         <div className="space-y-6">
-          {/* Campos Clínicos no modo profissional (acessíveis durante travessia) */}
           {modo === "profissional" && (
             <CamposClinicosCard
               nomeCliente={nomeCliente}
@@ -179,9 +197,32 @@ export default function LabirintoHeroinaPraticoPage() {
 
           <PortaTravessia
             porta={selectedPorta}
-            modo={modo!}
+            modo={modo}
             onBack={handleBack}
             onComplete={handleComplete}
+          />
+        </div>
+      )}
+
+      {/* === STEP: Mapa === */}
+      {step === "mapa" && modo && (
+        <div className="space-y-6">
+          <button
+            onClick={handleBackFromMapa}
+            className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
+          >
+            ← Voltar às cartas
+          </button>
+
+          <MapaHeroina
+            modo={modo}
+            fasesAtravessadas={fasesAtravessadasData}
+            todasFases={fases || []}
+            camposClinicos={modo === "profissional" ? {
+              nomeCliente,
+              observacoesClinicas,
+              hipoteseTerapeutica,
+            } : undefined}
           />
         </div>
       )}
@@ -189,7 +230,6 @@ export default function LabirintoHeroinaPraticoPage() {
   );
 }
 
-// Componente auxiliar para indicador de passo
 function StepIndicator({
   number,
   label,
