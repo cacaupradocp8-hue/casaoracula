@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import mandalaImg from '@/assets/ritual-mandala-breathe.png';
+import haloImg from '@/assets/ritual-halo.png';
 
 function MilkyWayBackgroundRaw() {
   return (
@@ -30,24 +31,24 @@ function MilkyWayBackgroundRaw() {
         aria-hidden="true"
       />
 
-      {/* HALO — strong amber radial glow, synced breathing */}
+      {/* HALO — image-based, synced breathing */}
       <div
-        className="absolute inset-0 animate-ritual-halo"
-        style={{
-          zIndex: 2,
-          pointerEvents: 'none',
-          background: `radial-gradient(circle at 50% 30%,
-            rgba(200,138,61,0.35) 0%,
-            rgba(200,138,61,0.28) 12%,
-            rgba(200,138,61,0.18) 25%,
-            rgba(200,138,61,0.08) 40%,
-            rgba(200,138,61,0.00) 55%
-          )`,
-          transformOrigin: '50% 30%',
-          willChange: 'transform, opacity',
-        }}
-        aria-hidden="true"
-      />
+        className="absolute left-0 right-0 top-0 flex items-center justify-center animate-ritual-halo"
+        style={{ zIndex: 2, height: '60%', pointerEvents: 'none' }}
+      >
+        <img
+          src={haloImg}
+          alt=""
+          style={{
+            width: 'min(85vw, 580px)',
+            height: 'auto',
+            objectFit: 'contain',
+            mixBlendMode: 'screen',
+            transformOrigin: 'center center',
+            willChange: 'transform, opacity',
+          }}
+        />
+      </div>
 
       {/* MANDALA — top 60%, not overlapping text */}
       <div
