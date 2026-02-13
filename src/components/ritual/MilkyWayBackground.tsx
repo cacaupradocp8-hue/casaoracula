@@ -17,7 +17,7 @@ function MilkyWayBackgroundRaw({ className = '' }: Props) {
       {/* Dark base background */}
       <div
         className="absolute inset-0"
-        style={{ background: 'linear-gradient(180deg, #0C1825 0%, #0E1420 40%, #0F1A2A 100%)' }}
+        style={{ background: 'radial-gradient(ellipse at center, #0F2A33 0%, #0A1F28 60%, #06141A 100%)' }}
         aria-hidden="true"
       />
 
