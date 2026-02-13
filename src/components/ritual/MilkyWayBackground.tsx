@@ -1,46 +1,67 @@
 import { memo } from 'react';
-import type { RitualState } from '@/hooks/useRitualState';
-import spiralNeutral from '@/assets/ritual-spiral-bg.jpg';
-import spiralArrival from '@/assets/ritual-arrival-bg.jpg';
-import spiralDense from '@/assets/ritual-dense-bg.jpg';
-
-const BG_MAP: Record<RitualState, string> = {
-  arrival: spiralArrival,
-  neutral: spiralNeutral,
-  dense: spiralDense,
-};
+import mandalaImg from '@/assets/ritual-mandala-breathe.png';
 
 interface Props {
-  state?: RitualState;
   className?: string;
 }
 
 /**
- * Milky Way spiral background with breathing animation.
- * Inhale 4s → scale 1.03, Exhale 6s → scale 1.
+ * Ritual de Respiração background:
+ * - Dark fixed background (#0E1420)
+ * - Centered mandala (60-70% width) with breathing animation
+ * - Radial amber halo behind the mandala
+ * - Overlay for content readability
  */
-function MilkyWayBackgroundRaw({ state = 'neutral', className = '' }: Props) {
+function MilkyWayBackgroundRaw({ className = '' }: Props) {
   return (
-    <div className={`fixed inset-0 overflow-hidden ${className}`} style={{ zIndex: 0 }}>
-      {/* Background image layer with breathing animation */}
+    <div className={`fixed inset-0 ${className}`} style={{ zIndex: 0 }}>
+      {/* Dark base background */}
       <div
-        className="absolute animate-ritual-breathe"
-        style={{
-          backgroundImage: `url(${BG_MAP[state]})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          top: '-2%',
-          left: '-2%',
-          width: '104%',
-          height: '104%',
-          willChange: 'transform',
-          transformOrigin: 'center center',
-        }}
+        className="absolute inset-0"
+        style={{ background: 'linear-gradient(180deg, #0C1825 0%, #0E1420 40%, #0F1A2A 100%)' }}
         aria-hidden="true"
       />
-      {/* Dark overlay */}
-      <div className="absolute inset-0" style={{ backgroundColor: 'hsl(var(--background) / 0.55)', zIndex: 1 }} />
+
+      {/* Centered mandala + halo container with breathing animation */}
+      <div
+        className="absolute inset-0 flex items-center justify-center"
+        aria-hidden="true"
+      >
+        {/* Amber radial halo — breathes with mandala via parent */}
+        <div
+          className="absolute animate-ritual-breathe"
+          style={{
+            width: '75vmin',
+            height: '75vmin',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, hsla(36, 55%, 50%, 0.25) 0%, hsla(36, 55%, 50%, 0.08) 50%, transparent 70%)',
+            willChange: 'transform',
+            transformOrigin: 'center center',
+          }}
+        />
+
+        {/* Mandala image — breathing animation */}
+        <img
+          src={mandalaImg}
+          alt=""
+          className="absolute animate-ritual-breathe"
+          style={{
+            width: '65vmin',
+            height: 'auto',
+            maxWidth: '70%',
+            objectFit: 'contain',
+            willChange: 'transform',
+            transformOrigin: 'center center',
+            filter: 'drop-shadow(0 0 40px hsla(36, 50%, 45%, 0.15))',
+          }}
+        />
+      </div>
+
+      {/* Dark overlay for content readability */}
+      <div
+        className="absolute inset-0"
+        style={{ backgroundColor: 'hsla(210, 40%, 8%, 0.35)', zIndex: 1 }}
+      />
     </div>
   );
 }
