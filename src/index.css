@@ -347,6 +347,29 @@
   animation: ritual-rays 20s ease-in-out infinite;
 }
 
+/* Water ripple: concentric wave propagation */
+@keyframes ritual-ripple {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+    border-color: rgba(180,210,240,0.18);
+    box-shadow: 0 0 6px 2px rgba(150,195,235,0.10), inset 0 0 4px 1px rgba(170,205,240,0.06);
+  }
+  15% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.18;
+    border-color: rgba(160,195,230,0.10);
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+    border-color: rgba(140,180,220,0);
+    box-shadow: 0 0 12px 4px rgba(140,180,220,0), inset 0 0 8px 2px rgba(160,195,230,0);
+  }
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;

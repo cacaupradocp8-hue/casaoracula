@@ -115,6 +115,26 @@ function MilkyWayBackgroundRaw() {
             willChange: 'transform, opacity',
           }}
         />
+        {/* WATER RIPPLE — concentric waves */}
+        {[0, 1, 2, 3, 4].map((i) => (
+          <div
+            key={`ripple-${i}`}
+            className="absolute rounded-full"
+            style={{
+              width: 'min(70vw, 460px)',
+              height: 'min(70vw, 460px)',
+              border: '1.5px solid rgba(160,200,235,0.12)',
+              boxShadow: `
+                0 0 8px 2px rgba(140,185,225,0.06),
+                inset 0 0 6px 1px rgba(170,205,240,0.04)
+              `,
+              animation: `ritual-ripple 8s cubic-bezier(0.2,0.6,0.4,1) ${i * 1.6}s infinite`,
+              opacity: 0,
+              transformOrigin: 'center center',
+              willChange: 'transform, opacity',
+            }}
+          />
+        ))}
         {/* MANDALA — on top, breathing animation */}
         <img
           src={mandalaImg}
