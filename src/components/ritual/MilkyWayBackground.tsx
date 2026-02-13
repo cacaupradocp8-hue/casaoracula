@@ -6,15 +6,14 @@ interface Props {
 }
 
 /**
- * Ritual de Respiração background:
- * - Dark fixed background (#0E1420)
- * - Centered mandala (60-70% width) with breathing animation
- * - Radial amber halo behind the mandala
- * - Overlay for content readability
+ * Ritual de Respiração background with 3 independent layers:
+ * A) Rays — subtle ambient movement (z-0)
+ * B) Halo — radial glow behind mandala, breathing at scale 1.06 (z-1)
+ * C) Mandala — main breathing animation at scale 1.03 (z-2)
  */
 function MilkyWayBackgroundRaw({ className = '' }: Props) {
   return (
-    <div className={`fixed inset-0 ${className}`} style={{ zIndex: 0 }}>
+    <div className={`absolute inset-0 overflow-hidden ${className}`} style={{ zIndex: 0 }}>
       {/* Dark base background */}
       <div
         className="absolute inset-0"
@@ -22,29 +21,52 @@ function MilkyWayBackgroundRaw({ className = '' }: Props) {
         aria-hidden="true"
       />
 
-      {/* Centered mandala + halo container with breathing animation */}
+      {/* A) RAYS — ambient, NOT synced with breathing */}
       <div
-        className="absolute inset-0 flex items-center justify-center"
+        className="absolute inset-0 flex items-center justify-center animate-ritual-rays"
+        style={{ zIndex: 0 }}
         aria-hidden="true"
       >
-        {/* Amber radial halo — breathes with mandala via parent */}
         <div
-          className="absolute animate-ritual-breathe"
+          style={{
+            width: '90vmin',
+            height: '90vmin',
+            borderRadius: '50%',
+            background: 'radial-gradient(ellipse at center, hsla(36, 40%, 50%, 0.06) 0%, hsla(36, 40%, 50%, 0.02) 40%, transparent 70%)',
+            willChange: 'transform, opacity',
+          }}
+        />
+      </div>
+
+      {/* B) HALO — breathing with larger scale & opacity shift */}
+      <div
+        className="absolute inset-0 flex items-center justify-center"
+        style={{ zIndex: 1 }}
+        aria-hidden="true"
+      >
+        <div
+          className="animate-ritual-halo"
           style={{
             width: '75vmin',
             height: '75vmin',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, hsla(36, 55%, 50%, 0.25) 0%, hsla(36, 55%, 50%, 0.08) 50%, transparent 70%)',
-            willChange: 'transform',
+            background: 'radial-gradient(circle, hsla(36, 55%, 50%, 0.22) 0%, hsla(36, 55%, 50%, 0.08) 50%, transparent 70%)',
+            willChange: 'transform, opacity',
             transformOrigin: 'center center',
           }}
         />
+      </div>
 
-        {/* Mandala image — breathing animation */}
+      {/* C) MANDALA — main breathing (4s in, 6s out) */}
+      <div
+        className="absolute inset-0 flex items-center justify-center"
+        style={{ zIndex: 2 }}
+        aria-hidden="true"
+      >
         <img
           src={mandalaImg}
           alt=""
-          className="absolute animate-ritual-breathe"
+          className="animate-ritual-breathe"
           style={{
             width: '65vmin',
             height: 'auto',
@@ -60,7 +82,7 @@ function MilkyWayBackgroundRaw({ className = '' }: Props) {
       {/* Dark overlay for content readability */}
       <div
         className="absolute inset-0"
-        style={{ backgroundColor: 'hsla(210, 40%, 8%, 0.35)', zIndex: 1 }}
+        style={{ backgroundColor: 'hsla(210, 40%, 8%, 0.25)', zIndex: 3 }}
       />
     </div>
   );
