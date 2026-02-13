@@ -40,7 +40,7 @@ function MilkyWayBackgroundRaw() {
           src={haloImg}
           alt=""
           style={{
-            width: 'min(75vw, 500px)',
+            width: 'min(82vw, 560px)',
             height: 'auto',
             objectFit: 'contain',
             mixBlendMode: 'screen',

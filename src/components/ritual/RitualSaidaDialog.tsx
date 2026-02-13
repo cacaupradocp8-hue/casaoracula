@@ -114,7 +114,7 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit }: RitualSaidaD
               <h2 className="text-2xl font-display text-foreground">
                 Antes de partir…
               </h2>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <p className="text-muted-foreground text-xs leading-relaxed">
                 Respire fundo. O que foi vivido hoje permanece em você.
                 <br />
                 Não há pressa. Apenas um instante de pausa.
