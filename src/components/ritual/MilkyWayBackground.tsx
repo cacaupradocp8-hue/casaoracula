@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import mandalaImg from '@/assets/ritual-mandala-breathe.png';
-import haloImg from '@/assets/ritual-halo.png';
+
 
 function MilkyWayBackgroundRaw() {
   return (
@@ -76,20 +76,6 @@ function MilkyWayBackgroundRaw() {
             borderRadius: '50%',
             background: 'radial-gradient(circle, rgba(160,195,230,0) 50%, rgba(160,195,230,0.12) 70%, rgba(160,195,230,0) 90%)',
             boxShadow: '0 0 60px 20px rgba(150,185,220,0.08), 0 0 120px 40px rgba(140,175,215,0.04)',
-            transformOrigin: 'center center',
-            willChange: 'transform, opacity',
-          }}
-        />
-        {/* HALO IMAGE — behind mandala */}
-        <img
-          src={haloImg}
-          alt=""
-          className="absolute animate-ritual-halo"
-          style={{
-            width: 'min(88vw, 580px)',
-            height: 'auto',
-            objectFit: 'contain',
-            mixBlendMode: 'screen',
             transformOrigin: 'center center',
             willChange: 'transform, opacity',
           }}
