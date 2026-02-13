@@ -42,7 +42,7 @@ function MilkyWayBackgroundRaw() {
           alt=""
           className="absolute animate-ritual-halo"
           style={{
-            width: 'min(95vw, 640px)',
+            width: 'min(64vw, 420px)',
             height: 'auto',
             objectFit: 'contain',
             mixBlendMode: 'screen',
@@ -56,7 +56,7 @@ function MilkyWayBackgroundRaw() {
           alt=""
           className="absolute animate-ritual-breathe"
           style={{
-            width: 'min(58vw, 380px)',
+            width: 'min(56vw, 370px)',
             height: 'auto',
             objectFit: 'contain',
             transformOrigin: 'center center',
