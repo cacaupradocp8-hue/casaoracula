@@ -47,10 +47,10 @@ function MilkyWayBackgroundRaw({ className = '' }: Props) {
         <div
           className="animate-ritual-halo"
           style={{
-            width: '75vmin',
-            height: '75vmin',
+            width: '80vmin',
+            height: '80vmin',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, hsla(36, 55%, 50%, 0.22) 0%, hsla(36, 55%, 50%, 0.08) 50%, transparent 70%)',
+            background: 'radial-gradient(circle, transparent 30%, hsla(36, 50%, 48%, 0.18) 50%, hsla(36, 50%, 48%, 0.10) 62%, transparent 75%)',
             willChange: 'transform, opacity',
             transformOrigin: 'center center',
           }}
