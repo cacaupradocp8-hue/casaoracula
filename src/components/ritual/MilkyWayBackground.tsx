@@ -60,7 +60,7 @@ function MilkyWayBackgroundRaw() {
           alt=""
           className="animate-ritual-breathe"
           style={{
-            width: 'min(60vw, 400px)',
+            width: 'min(78vw, 520px)',
             height: 'auto',
             objectFit: 'contain',
             transformOrigin: 'center center',
