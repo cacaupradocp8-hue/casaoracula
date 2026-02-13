@@ -53,7 +53,21 @@ function MilkyWayBackgroundRaw() {
         className="absolute left-0 right-0 top-0 flex items-center justify-center"
         style={{ zIndex: 3, height: '60%', pointerEvents: 'none' }}
       >
-        {/* Silver-blue outer glow ring */}
+        {/* OUTER HALO — large diffuse glow ring */}
+        <div
+          className="absolute animate-ritual-halo"
+          style={{
+            width: 'min(100vw, 660px)',
+            height: 'min(100vw, 660px)',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(160,195,230,0) 45%, rgba(160,195,230,0.08) 65%, rgba(160,195,230,0) 85%)',
+            boxShadow: '0 0 80px 30px rgba(150,185,220,0.06), 0 0 160px 60px rgba(140,175,215,0.03)',
+            transformOrigin: 'center center',
+            willChange: 'transform, opacity',
+            opacity: 0.7,
+          }}
+        />
+        {/* MIDDLE glow ring */}
         <div
           className="absolute animate-ritual-halo"
           style={{
@@ -66,7 +80,7 @@ function MilkyWayBackgroundRaw() {
             willChange: 'transform, opacity',
           }}
         />
-        {/* HALO — behind mandala, breathing animation */}
+        {/* HALO IMAGE — behind mandala */}
         <img
           src={haloImg}
           alt=""
@@ -76,6 +90,19 @@ function MilkyWayBackgroundRaw() {
             height: 'auto',
             objectFit: 'contain',
             mixBlendMode: 'screen',
+            transformOrigin: 'center center',
+            willChange: 'transform, opacity',
+          }}
+        />
+        {/* INNER HALO — subtle glow close to mandala */}
+        <div
+          className="absolute animate-ritual-breathe"
+          style={{
+            width: 'min(86vw, 570px)',
+            height: 'min(86vw, 570px)',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(200,180,140,0.06) 40%, rgba(180,160,120,0.10) 60%, rgba(160,195,230,0.04) 80%, transparent 90%)',
+            boxShadow: '0 0 30px 10px rgba(200,180,140,0.05)',
             transformOrigin: 'center center',
             willChange: 'transform, opacity',
           }}
