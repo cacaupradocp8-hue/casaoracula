@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Play, Pause, Moon } from 'lucide-react';
+import { Play, Pause } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { MilkyWayBackground } from './MilkyWayBackground';
 import { stampRitualLastAccess } from '@/hooks/useRitualState';
@@ -108,7 +108,7 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit }: RitualSaidaD
 
           {/* Bottom block: text + buttons */}
           <div className="flex-1 flex flex-col items-center justify-start px-6 text-center gap-5 pb-8">
-            <Moon className="w-7 h-7 text-gold/50" />
+            
 
             <div className="space-y-3 max-w-[420px]">
               <h2 className="text-2xl font-display text-foreground">
