@@ -103,8 +103,8 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit }: RitualSaidaD
 
         {/* Two-block layout: top = visual 60%, bottom = text 40% */}
         <div className="relative flex flex-col h-full" style={{ zIndex: 4 }}>
-          {/* Top block: visual space 60vh */}
-          <div className="flex-none h-[60vh]" />
+          {/* Top block: visual space — taller on desktop to avoid text overlap */}
+          <div className="flex-none h-[55vh] md:h-[65vh]" />
 
           {/* Bottom block: text + buttons */}
           <div className="flex-1 flex flex-col items-center justify-start px-6 text-center gap-5 pb-8">
