@@ -31,16 +31,18 @@ function MilkyWayBackgroundRaw() {
         aria-hidden="true"
       />
 
-      {/* HALO — image-based, synced breathing */}
+      {/* MANDALA + HALO container — both centered on same point */}
       <div
-        className="absolute left-0 right-0 top-0 flex items-center justify-center animate-ritual-halo"
+        className="absolute left-0 right-0 top-0 flex items-center justify-center"
         style={{ zIndex: 2, height: '60%', pointerEvents: 'none' }}
       >
+        {/* HALO — behind mandala, breathing animation */}
         <img
           src={haloImg}
           alt=""
+          className="absolute animate-ritual-halo"
           style={{
-            width: 'min(82vw, 560px)',
+            width: 'min(90vw, 600px)',
             height: 'auto',
             objectFit: 'contain',
             mixBlendMode: 'screen',
@@ -48,19 +50,13 @@ function MilkyWayBackgroundRaw() {
             willChange: 'transform, opacity',
           }}
         />
-      </div>
-
-      {/* MANDALA — top 60%, not overlapping text */}
-      <div
-        className="absolute left-0 right-0 top-0 flex items-center justify-center"
-        style={{ zIndex: 3, height: '60%' }}
-      >
+        {/* MANDALA — on top, breathing animation */}
         <img
           src={mandalaImg}
           alt=""
-          className="animate-ritual-breathe"
+          className="absolute animate-ritual-breathe"
           style={{
-            width: 'min(78vw, 520px)',
+            width: 'min(72vw, 480px)',
             height: 'auto',
             objectFit: 'contain',
             transformOrigin: 'center center',
