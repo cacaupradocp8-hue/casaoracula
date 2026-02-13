@@ -31,11 +31,41 @@ function MilkyWayBackgroundRaw() {
         aria-hidden="true"
       />
 
+      {/* SILVER-BLUE ambient glow — soft radial behind everything */}
+      <div
+        className="absolute animate-ritual-breathe"
+        style={{
+          inset: '-10%',
+          zIndex: 1,
+          pointerEvents: 'none',
+          background: `
+            radial-gradient(circle at 50% 30%, rgba(140,180,220,0.15), rgba(140,180,220,0) 55%),
+            radial-gradient(circle at 45% 35%, rgba(180,200,230,0.08), rgba(180,200,230,0) 40%),
+            radial-gradient(circle at 55% 25%, rgba(160,190,225,0.06), rgba(160,190,225,0) 35%)
+          `,
+          willChange: 'transform',
+        }}
+        aria-hidden="true"
+      />
+
       {/* MANDALA + HALO container — both centered on same point */}
       <div
         className="absolute left-0 right-0 top-0 flex items-center justify-center"
-        style={{ zIndex: 2, height: '60%', pointerEvents: 'none' }}
+        style={{ zIndex: 3, height: '60%', pointerEvents: 'none' }}
       >
+        {/* Silver-blue outer glow ring */}
+        <div
+          className="absolute animate-ritual-halo"
+          style={{
+            width: 'min(62vw, 410px)',
+            height: 'min(62vw, 410px)',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(160,195,230,0) 50%, rgba(160,195,230,0.12) 70%, rgba(160,195,230,0) 90%)',
+            boxShadow: '0 0 60px 20px rgba(150,185,220,0.08), 0 0 120px 40px rgba(140,175,215,0.04)',
+            transformOrigin: 'center center',
+            willChange: 'transform, opacity',
+          }}
+        />
         {/* HALO — behind mandala, breathing animation */}
         <img
           src={haloImg}
