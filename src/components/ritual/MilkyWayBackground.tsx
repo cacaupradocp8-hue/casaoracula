@@ -4,62 +4,62 @@ import mandalaImg from '@/assets/ritual-mandala-breathe.png';
 function MilkyWayBackgroundRaw() {
   return (
     <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 0, backgroundColor: '#0F2A33' }}>
-      {/* RAYS — amber conic gradient, independent drift */}
+      {/* RAYS — amber conic, synced with breathing */}
       <div
-        className="absolute animate-ritual-rays"
+        className="absolute animate-ritual-breathe"
         style={{
           inset: '-20%',
           zIndex: 1,
           pointerEvents: 'none',
           background: `
-            radial-gradient(circle at 50% 40%, rgba(200,138,61,0.15), rgba(200,138,61,0) 50%),
-            conic-gradient(from 0deg at 50% 40%,
+            radial-gradient(circle at 50% 30%, rgba(200,138,61,0.18), rgba(200,138,61,0) 50%),
+            conic-gradient(from 0deg at 50% 30%,
               rgba(200,138,61,0.00) 0deg,
-              rgba(200,138,61,0.10) 20deg,
+              rgba(200,138,61,0.12) 20deg,
               rgba(200,138,61,0.00) 40deg,
-              rgba(200,138,61,0.09) 70deg,
+              rgba(200,138,61,0.10) 70deg,
               rgba(200,138,61,0.00) 110deg,
-              rgba(200,138,61,0.08) 160deg,
+              rgba(200,138,61,0.09) 160deg,
               rgba(200,138,61,0.00) 220deg,
-              rgba(200,138,61,0.09) 280deg,
+              rgba(200,138,61,0.10) 280deg,
               rgba(200,138,61,0.00) 360deg
             )
           `,
-          willChange: 'opacity',
+          willChange: 'transform',
         }}
         aria-hidden="true"
       />
 
-      {/* HALO — amber radial glow, synced breathing */}
+      {/* HALO — strong amber radial glow, synced breathing */}
       <div
         className="absolute inset-0 animate-ritual-halo"
         style={{
           zIndex: 2,
           pointerEvents: 'none',
-          background: `radial-gradient(circle at 50% 40%,
-            rgba(200,138,61,0.00) 0%,
-            rgba(200,138,61,0.16) 15%,
-            rgba(200,138,61,0.25) 28%,
-            rgba(200,138,61,0.14) 42%,
-            rgba(200,138,61,0.00) 60%
+          background: `radial-gradient(circle at 50% 30%,
+            rgba(200,138,61,0.35) 0%,
+            rgba(200,138,61,0.28) 12%,
+            rgba(200,138,61,0.18) 25%,
+            rgba(200,138,61,0.08) 40%,
+            rgba(200,138,61,0.00) 55%
           )`,
-          transformOrigin: '50% 40%',
+          transformOrigin: '50% 30%',
           willChange: 'transform, opacity',
         }}
         aria-hidden="true"
       />
 
-      {/* MANDALA — centered, not cropped, with white bg intact */}
+      {/* MANDALA — top 60%, not overlapping text */}
       <div
-        className="absolute inset-0 flex items-center justify-center"
-        style={{ zIndex: 3 }}
+        className="absolute left-0 right-0 top-0 flex items-center justify-center"
+        style={{ zIndex: 3, height: '60%' }}
       >
         <img
           src={mandalaImg}
           alt=""
           className="animate-ritual-breathe"
           style={{
-            width: 'min(65vw, 440px)',
+            width: 'min(60vw, 400px)',
             height: 'auto',
             objectFit: 'contain',
             transformOrigin: 'center center',
