@@ -57,8 +57,8 @@ function MilkyWayBackgroundRaw() {
         <div
           className="absolute animate-ritual-halo"
           style={{
-            width: 'min(86vw, 528px)',
-            height: 'min(86vw, 528px)',
+            width: 'min(103vw, 634px)',
+            height: 'min(103vw, 634px)',
             borderRadius: '50%',
             background: 'radial-gradient(circle, rgba(160,195,230,0) 50%, rgba(160,195,230,0.12) 70%, rgba(160,195,230,0) 90%)',
             boxShadow: '0 0 60px 20px rgba(150,185,220,0.08), 0 0 120px 40px rgba(140,175,215,0.04)',
@@ -72,7 +72,7 @@ function MilkyWayBackgroundRaw() {
           alt=""
           className="absolute animate-ritual-halo"
           style={{
-            width: 'min(81vw, 506px)',
+            width: 'min(97vw, 607px)',
             height: 'auto',
             objectFit: 'contain',
             mixBlendMode: 'screen',
@@ -86,7 +86,7 @@ function MilkyWayBackgroundRaw() {
           alt=""
           className="absolute animate-ritual-breathe"
           style={{
-            width: 'min(77vw, 484px)',
+            width: 'min(92vw, 581px)',
             height: 'auto',
             objectFit: 'contain',
             transformOrigin: 'center center',
