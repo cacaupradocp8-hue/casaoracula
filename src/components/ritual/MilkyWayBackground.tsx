@@ -80,15 +80,37 @@ function MilkyWayBackgroundRaw() {
             willChange: 'transform, opacity',
           }}
         />
-        {/* INNER HALO — subtle glow close to mandala */}
+        {/* BLUE-SILVER HALO — rich layered glow */}
+        <div
+          className="absolute animate-ritual-halo"
+          style={{
+            width: 'min(90vw, 590px)',
+            height: 'min(90vw, 590px)',
+            borderRadius: '50%',
+            background: `
+              radial-gradient(circle, 
+                rgba(120,160,210,0) 42%,
+                rgba(140,175,220,0.10) 52%,
+                rgba(170,195,230,0.14) 60%,
+                rgba(190,210,240,0.10) 68%,
+                rgba(200,215,235,0.06) 76%,
+                rgba(180,200,230,0) 88%
+              )
+            `,
+            boxShadow: '0 0 40px 15px rgba(150,185,225,0.07), 0 0 80px 30px rgba(130,170,215,0.04)',
+            transformOrigin: 'center center',
+            willChange: 'transform, opacity',
+          }}
+        />
+        {/* INNER HALO — subtle silver close to mandala */}
         <div
           className="absolute animate-ritual-breathe"
           style={{
             width: 'min(86vw, 570px)',
             height: 'min(86vw, 570px)',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(200,180,140,0.06) 40%, rgba(180,160,120,0.10) 60%, rgba(160,195,230,0.04) 80%, transparent 90%)',
-            boxShadow: '0 0 30px 10px rgba(200,180,140,0.05)',
+            background: 'radial-gradient(circle, rgba(180,200,230,0.04) 40%, rgba(160,185,220,0.08) 58%, rgba(140,170,210,0.04) 75%, transparent 88%)',
+            boxShadow: '0 0 25px 8px rgba(160,190,225,0.05)',
             transformOrigin: 'center center',
             willChange: 'transform, opacity',
           }}
