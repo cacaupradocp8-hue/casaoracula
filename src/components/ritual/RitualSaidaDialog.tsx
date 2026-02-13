@@ -89,7 +89,7 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit }: RitualSaidaD
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-full w-full h-full max-h-full p-0 border-none rounded-none bg-transparent [&>button]:hidden">
+      <DialogContent className="max-w-full w-full h-[100vh] max-h-[100vh] p-0 border-none rounded-none bg-[#0F2A33] [&>button]:hidden overflow-hidden">
         {hasAudio && (
           <audio
             ref={audioRef}
@@ -101,14 +101,14 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit }: RitualSaidaD
 
         <MilkyWayBackground />
 
-        {/* Two-block layout: top = visual, bottom = text + buttons */}
+        {/* Two-block layout: top = visual 60%, bottom = text 40% */}
         <div className="relative flex flex-col h-full" style={{ zIndex: 4 }}>
-          {/* Top block: visual space (55% mobile / 60% desktop) */}
-          <div className="flex-none h-[55vh] md:h-[60vh]" />
+          {/* Top block: visual space 60vh */}
+          <div className="flex-none h-[60vh]" />
 
           {/* Bottom block: text + buttons */}
-          <div className="flex-1 flex flex-col items-center justify-start px-6 text-center gap-6 pb-8">
-            <Moon className="w-8 h-8 text-gold/60" />
+          <div className="flex-1 flex flex-col items-center justify-start px-6 text-center gap-5 pb-8">
+            <Moon className="w-7 h-7 text-gold/50" />
 
             <div className="space-y-3 max-w-[420px]">
               <h2 className="text-2xl font-display text-foreground">

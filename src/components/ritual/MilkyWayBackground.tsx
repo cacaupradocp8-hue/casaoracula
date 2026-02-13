@@ -9,18 +9,11 @@ interface Props {
 
 function MilkyWayBackgroundRaw({ className = '' }: Props) {
   return (
-    <div className={`absolute inset-0 overflow-hidden ${className}`} style={{ zIndex: 0 }}>
-      {/* Dark base background */}
-      <div
-        className="absolute inset-0"
-        style={{ background: 'radial-gradient(circle at center, #132F38 0%, #0F2A33 70%)' }}
-        aria-hidden="true"
-      />
-
-      {/* A) RAYS — ambient, NOT synced with breathing */}
+    <div className={`absolute inset-0 overflow-hidden ${className}`} style={{ zIndex: 0, backgroundColor: '#0F2A33' }}>
+      {/* A) RAYS — ambient drift, NOT synced with breathing */}
       <div
         className="absolute inset-0 flex items-center justify-center animate-ritual-rays"
-        style={{ zIndex: 0 }}
+        style={{ zIndex: 0, top: '0', height: '60%' }}
         aria-hidden="true"
       >
         <img
@@ -30,7 +23,7 @@ function MilkyWayBackgroundRaw({ className = '' }: Props) {
             width: '90vmin',
             height: '90vmin',
             objectFit: 'contain',
-            willChange: 'opacity',
+            willChange: 'transform, opacity',
           }}
         />
       </div>
@@ -38,7 +31,7 @@ function MilkyWayBackgroundRaw({ className = '' }: Props) {
       {/* B) HALO — breathing with larger scale & opacity shift */}
       <div
         className="absolute inset-0 flex items-center justify-center"
-        style={{ zIndex: 1 }}
+        style={{ zIndex: 1, top: '0', height: '60%' }}
         aria-hidden="true"
       >
         <img
@@ -55,10 +48,10 @@ function MilkyWayBackgroundRaw({ className = '' }: Props) {
         />
       </div>
 
-      {/* C) MANDALA — main breathing (5s in, 7s out) */}
+      {/* C) MANDALA — main breathing (4s in, 6s out) */}
       <div
         className="absolute inset-0 flex items-center justify-center"
-        style={{ zIndex: 2 }}
+        style={{ zIndex: 2, top: '0', height: '60%' }}
         aria-hidden="true"
       >
         <img
@@ -75,12 +68,6 @@ function MilkyWayBackgroundRaw({ className = '' }: Props) {
           }}
         />
       </div>
-
-      {/* Dark overlay for content readability */}
-      <div
-        className="absolute inset-0"
-        style={{ backgroundColor: 'hsla(210, 40%, 8%, 0.25)', zIndex: 3 }}
-      />
     </div>
   );
 }
