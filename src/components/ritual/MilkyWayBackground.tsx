@@ -1,23 +1,19 @@
 import { memo } from 'react';
 import mandalaImg from '@/assets/ritual-mandala-breathe.png';
+import haloImg from '@/assets/ritual-halo-ring.png';
+import raysImg from '@/assets/ritual-rays-soft.png';
 
 interface Props {
   className?: string;
 }
 
-/**
- * Ritual de Respiração background with 3 independent layers:
- * A) Rays — subtle ambient movement (z-0)
- * B) Halo — radial glow behind mandala, breathing at scale 1.06 (z-1)
- * C) Mandala — main breathing animation at scale 1.03 (z-2)
- */
 function MilkyWayBackgroundRaw({ className = '' }: Props) {
   return (
     <div className={`absolute inset-0 overflow-hidden ${className}`} style={{ zIndex: 0 }}>
       {/* Dark base background */}
       <div
         className="absolute inset-0"
-        style={{ background: 'radial-gradient(ellipse at center, #0F2A33 0%, #0A1F28 60%, #06141A 100%)' }}
+        style={{ background: 'radial-gradient(circle at center, #132F38 0%, #0F2A33 70%)' }}
         aria-hidden="true"
       />
 
@@ -27,13 +23,14 @@ function MilkyWayBackgroundRaw({ className = '' }: Props) {
         style={{ zIndex: 0 }}
         aria-hidden="true"
       >
-        <div
+        <img
+          src={raysImg}
+          alt=""
           style={{
             width: '90vmin',
             height: '90vmin',
-            borderRadius: '50%',
-            background: 'radial-gradient(ellipse at center, hsla(36, 40%, 50%, 0.06) 0%, hsla(36, 40%, 50%, 0.02) 40%, transparent 70%)',
-            willChange: 'transform, opacity',
+            objectFit: 'contain',
+            willChange: 'opacity',
           }}
         />
       </div>
@@ -44,20 +41,21 @@ function MilkyWayBackgroundRaw({ className = '' }: Props) {
         style={{ zIndex: 1 }}
         aria-hidden="true"
       >
-        <div
+        <img
+          src={haloImg}
+          alt=""
           className="animate-ritual-halo"
           style={{
             width: '80vmin',
             height: '80vmin',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, transparent 30%, hsla(36, 50%, 48%, 0.18) 50%, hsla(36, 50%, 48%, 0.10) 62%, transparent 75%)',
+            objectFit: 'contain',
             willChange: 'transform, opacity',
             transformOrigin: 'center center',
           }}
         />
       </div>
 
-      {/* C) MANDALA — main breathing (4s in, 6s out) */}
+      {/* C) MANDALA — main breathing (5s in, 7s out) */}
       <div
         className="absolute inset-0 flex items-center justify-center"
         style={{ zIndex: 2 }}
@@ -74,7 +72,6 @@ function MilkyWayBackgroundRaw({ className = '' }: Props) {
             objectFit: 'contain',
             willChange: 'transform',
             transformOrigin: 'center center',
-            filter: 'drop-shadow(0 0 40px hsla(36, 50%, 45%, 0.15))',
           }}
         />
       </div>
