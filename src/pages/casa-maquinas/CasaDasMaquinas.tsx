@@ -11,7 +11,6 @@ import {
   Users,
   Calendar,
   Sparkles,
-  Map,
   Flower2,
   TreePine,
   Home,
@@ -51,10 +50,9 @@ export default function CasaDasMaquinas() {
   };
 
   const cards = [
-    { label: 'Clientes', icon: Users, to: '/minhas-clientes', desc: 'Gerencie suas clientes' },
+    { label: 'Clientes', icon: Users, to: '/minhas-clientes', desc: 'Gerencie suas clientes e acompanhamentos' },
     { label: 'Sala de Sessão', icon: Calendar, to: '/casa-das-maquinas/sessoes', desc: 'Registre sessões simbólicas' },
-    { label: 'Mapa Vivo', icon: Map, to: '/ferramentas/mapa-vivo', desc: 'Acompanhe a jornada' },
-    { label: 'Gestos de Integração', icon: Sparkles, to: '/casa-das-maquinas/gestos', desc: 'Ações de integração' },
+    { label: 'Gestos de Integração', icon: Sparkles, to: '/casa-das-maquinas/gestos', desc: 'Ações simbólicas de integração' },
     { label: 'Jardim da Psique', icon: Flower2, to: '/jardim-da-psique', desc: 'Espaço privado de registros' },
     { label: 'Jardim da Heroína', icon: TreePine, to: '/casa/jardim', desc: 'Gestos e rituais ativos' },
   ];

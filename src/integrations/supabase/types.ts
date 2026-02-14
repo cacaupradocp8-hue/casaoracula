@@ -1400,7 +1400,9 @@ export type Database = {
       }
       clientes: {
         Row: {
+          codigo_interno: string | null
           created_at: string
+          data_inicio: string | null
           id: string
           nome: string
           objetivo_terapeutico: string | null
@@ -1410,7 +1412,9 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          codigo_interno?: string | null
           created_at?: string
+          data_inicio?: string | null
           id?: string
           nome: string
           objetivo_terapeutico?: string | null
@@ -1420,7 +1424,9 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          codigo_interno?: string | null
           created_at?: string
+          data_inicio?: string | null
           id?: string
           nome?: string
           objetivo_terapeutico?: string | null

@@ -319,6 +319,18 @@ export function Navigation() {
                       Jardim da Psique
                     </DropdownMenuItem>
                     
+                    {/* Casa das Máquinas - portal >= assinante */}
+                    {user && canAccessFeature(user.portal, 'assinante') && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuLabel className="text-xs text-muted-foreground">Espaço Profissional</DropdownMenuLabel>
+                        <DropdownMenuItem onClick={() => navigate('/casa-das-maquinas')}>
+                          <Settings className="w-4 h-4 mr-2" />
+                          Casa das Máquinas
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                    
                     {/* Admin link */}
                     {isAdmin && (
                       <>
