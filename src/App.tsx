@@ -120,6 +120,8 @@ import { AsPortas, OsCamposPsiquicos, AsTorres, TriadeMetodo } from "./pages/met
 // Agora usando OraculaPage como gate e PortalOraculaPage para área interna
 import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
+// Casa das Máquinas
+import { CasaDasMaquinas, SessoesPage, GestosIntegracaoPage, MapaVivoClientePage } from "./pages/casa-maquinas";
 import Jornada from "./pages/Jornada";
 import Onboarding from "./pages/Onboarding";
 // SalaDaVisitante removida - usar SalaDetalhe com ID do banco
@@ -1271,6 +1273,39 @@ function AppRoutes() {
         }
         />
 
+        {/* Casa das Máquinas */}
+        <Route
+          path="/casa-das-maquinas"
+          element={
+            <ProtectedRoute minPortal="assinante">
+              <CasaDasMaquinas />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/casa-das-maquinas/sessoes"
+          element={
+            <ProtectedRoute minPortal="assinante">
+              <SessoesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/casa-das-maquinas/gestos"
+          element={
+            <ProtectedRoute minPortal="assinante">
+              <GestosIntegracaoPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/casa-das-maquinas/mapa-vivo/:clienteId"
+          element={
+            <ProtectedRoute minPortal="assinante">
+              <MapaVivoClientePage />
+            </ProtectedRoute>
+          }
+        />
         {/* Jardim da Psique - Espaço 100% privado */}
         <Route
           path="/jardim-da-psique"
