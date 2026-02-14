@@ -49,10 +49,7 @@ export interface MapaVivoHeroina {
   movimento_heroina: MovimentoHeroina | null;
   movimento_descricao: string | null;
 
-  // Camada 6: Espelho da Terapeuta
-  espelho_toca_minha: string | null;
-  espelho_risco_projecao: string | null;
-  espelho_supervisao: string | null;
+  // Camada 6: (Espelho da Terapeuta migrado para Jardim do Ofício)
 
   // Camada 7: Gesto de Integração (ponte para o Jardim)
   gesto_integracao: string | null;

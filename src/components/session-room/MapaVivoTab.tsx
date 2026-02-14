@@ -45,9 +45,7 @@ export function MapaVivoTab({ caseId, clientId, clientName }: MapaVivoTabProps) 
     ritual_observacoes: '',
     movimento_heroina: '' as MovimentoHeroina | '',
     movimento_descricao: '',
-    espelho_toca_minha: '',
-    espelho_risco_projecao: '',
-    espelho_supervisao: '',
+    // Espelho da Terapeuta migrado para Jardim do Ofício
     // Camada 7: Gesto de Integração
     gesto_integracao: '',
     gesto_sem_indicacao: false,
@@ -78,9 +76,7 @@ export function MapaVivoTab({ caseId, clientId, clientName }: MapaVivoTabProps) 
         ritual_observacoes: data.ritual_observacoes || '',
         movimento_heroina: data.movimento_heroina || '',
         movimento_descricao: data.movimento_descricao || '',
-        espelho_toca_minha: data.espelho_toca_minha || '',
-        espelho_risco_projecao: data.espelho_risco_projecao || '',
-        espelho_supervisao: data.espelho_supervisao || '',
+        // Espelho da Terapeuta migrado para Jardim do Ofício
         // Camada 7: Gesto de Integração
         gesto_integracao: data.gesto_integracao || '',
         gesto_sem_indicacao: data.gesto_sem_indicacao || false,
@@ -417,54 +413,7 @@ export function MapaVivoTab({ caseId, clientId, clientName }: MapaVivoTabProps) 
           </AccordionContent>
         </AccordionItem>
 
-        {/* Camada 6: Espelho da Terapeuta */}
-        <AccordionItem value="espelho" className="border rounded-lg bg-card border-rose-500/20">
-          <AccordionTrigger className="px-4 py-3 hover:no-underline">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-rose-500/20 flex items-center justify-center">
-                <Eye className="w-4 h-4 text-rose-500" />
-              </div>
-              <div className="text-left">
-                <p className="font-medium">Espelho da Terapeuta</p>
-                <p className="text-xs text-muted-foreground">Reflexão privada (não compartilhado)</p>
-              </div>
-              <Badge variant="outline" className="ml-2 text-rose-500 border-rose-500/50">
-                <Shield className="w-3 h-3 mr-1" /> Privado
-              </Badge>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="px-4 pb-4">
-            <div className="space-y-4">
-              <div>
-                <Label>O que isso toca em mim?</Label>
-                <Textarea
-                  value={form.espelho_toca_minha}
-                  onChange={(e) => handleChange('espelho_toca_minha', e.target.value)}
-                  placeholder="Que ressonâncias pessoais este caso desperta?"
-                  className="mt-2 min-h-20"
-                />
-              </div>
-              <div>
-                <Label>Risco de projeção</Label>
-                <Textarea
-                  value={form.espelho_risco_projecao}
-                  onChange={(e) => handleChange('espelho_risco_projecao', e.target.value)}
-                  placeholder="Onde posso estar projetando meu próprio material?"
-                  className="mt-2 min-h-20"
-                />
-              </div>
-              <div>
-                <Label>Levar para supervisão</Label>
-                <Textarea
-                  value={form.espelho_supervisao}
-                  onChange={(e) => handleChange('espelho_supervisao', e.target.value)}
-                  placeholder="O que preciso discutir em supervisão?"
-                  className="mt-2 min-h-20"
-                />
-              </div>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+        {/* Camada 6: Espelho da Terapeuta — migrado para Jardim do Ofício */}
 
         {/* Camada 7: Gesto de Integração */}
         <AccordionItem value="gesto" className="border rounded-lg bg-card border-emerald-500/20">
