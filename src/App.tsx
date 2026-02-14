@@ -122,6 +122,8 @@ import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
 // Casa das Máquinas
 import { CasaDasMaquinas, SessoesPage, GestosIntegracaoPage, MapaVivoClientePage } from "./pages/casa-maquinas";
+// Jardim do Ofício
+import { JardimOficioPage, PainelSupervisaoPage } from "./pages/jardim-oficio";
 import Jornada from "./pages/Jornada";
 import Onboarding from "./pages/Onboarding";
 // SalaDaVisitante removida - usar SalaDetalhe com ID do banco
@@ -1306,6 +1308,25 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        
+        {/* Jardim do Ofício */}
+        <Route
+          path="/casa-das-maquinas/jardim-oficio"
+          element={
+            <ProtectedRoute minPortal="assinante">
+              <JardimOficioPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/casa-das-maquinas/supervisao"
+          element={
+            <ProtectedRoute minPortal="assinante">
+              <PainelSupervisaoPage />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Jardim da Psique - Espaço 100% privado */}
         <Route
           path="/jardim-da-psique"
