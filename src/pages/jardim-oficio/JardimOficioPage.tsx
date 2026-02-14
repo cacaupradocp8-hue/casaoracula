@@ -5,6 +5,7 @@ import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { canAccessFeature } from '@/types/portal';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -324,16 +325,18 @@ export default function JardimOficioPage() {
               />
             </div>
 
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="supervisao"
-                checked={enviarSupervisao}
-                onCheckedChange={(checked) => setEnviarSupervisao(!!checked)}
-              />
-              <Label htmlFor="supervisao" className="text-sm cursor-pointer">
-                Enviar para supervisão
-              </Label>
-            </div>
+            {user && canAccessFeature(user.portal, 'mentorada') && (
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="supervisao"
+                  checked={enviarSupervisao}
+                  onCheckedChange={(checked) => setEnviarSupervisao(!!checked)}
+                />
+                <Label htmlFor="supervisao" className="text-sm cursor-pointer">
+                  Enviar para supervisão
+                </Label>
+              </div>
+            )}
           </div>
 
           <DialogFooter>
