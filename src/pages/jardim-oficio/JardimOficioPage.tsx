@@ -48,6 +48,9 @@ interface JardimRegistro {
   tensao_etica: string | null;
   aprendizado_tecnico: string | null;
   pergunta_supervisao: string | null;
+  espelho_toca_minha: string | null;
+  espelho_risco_projecao: string | null;
+  espelho_supervisao: string | null;
   enviar_para_supervisao: boolean;
   status_supervisao: string;
   cliente_id: string | null;
@@ -83,6 +86,9 @@ export default function JardimOficioPage() {
   const [pergunta, setPergunta] = useState('');
   const [clienteId, setClienteId] = useState<string>('none');
   const [enviarSupervisao, setEnviarSupervisao] = useState(false);
+  const [espelhoToca, setEspelhoToca] = useState('');
+  const [espelhoRisco, setEspelhoRisco] = useState('');
+  const [espelhoSupervisao, setEspelhoSupervisao] = useState('');
 
   useEffect(() => {
     if (user) {
@@ -119,6 +125,9 @@ export default function JardimOficioPage() {
     setPergunta('');
     setClienteId('none');
     setEnviarSupervisao(false);
+    setEspelhoToca('');
+    setEspelhoRisco('');
+    setEspelhoSupervisao('');
   };
 
   const handleSave = async () => {
@@ -134,6 +143,9 @@ export default function JardimOficioPage() {
       cliente_id: clienteId !== 'none' ? clienteId : null,
       enviar_para_supervisao: enviarSupervisao,
       status_supervisao: enviarSupervisao ? 'enviado' : 'privado',
+      espelho_toca_minha: espelhoToca.trim() || null,
+      espelho_risco_projecao: espelhoRisco.trim() || null,
+      espelho_supervisao: espelhoSupervisao.trim() || null,
     };
 
     const { error } = await supabase.from('jardim_do_oficio').insert(payload as any);
@@ -323,6 +335,38 @@ export default function JardimOficioPage() {
                 onChange={(e) => setPergunta(e.target.value)}
                 placeholder="Gostaria de levar para supervisão..."
               />
+            </div>
+
+            {/* Espelho da Terapeuta */}
+            <div className="border-t border-border pt-4 mt-2">
+              <p className="text-xs font-medium text-muted-foreground mb-3 uppercase tracking-wider">Espelho da Terapeuta</p>
+              <div className="space-y-3">
+                <div>
+                  <Label>O que isso toca em mim?</Label>
+                  <Textarea
+                    value={espelhoToca}
+                    onChange={(e) => setEspelhoToca(e.target.value)}
+                    placeholder="Que ressonâncias pessoais este caso desperta?"
+                    rows={2}
+                  />
+                </div>
+                <div>
+                  <Label>Risco de projeção</Label>
+                  <Input
+                    value={espelhoRisco}
+                    onChange={(e) => setEspelhoRisco(e.target.value)}
+                    placeholder="Onde posso estar projetando meu próprio material?"
+                  />
+                </div>
+                <div>
+                  <Label>Levar para supervisão</Label>
+                  <Input
+                    value={espelhoSupervisao}
+                    onChange={(e) => setEspelhoSupervisao(e.target.value)}
+                    placeholder="O que preciso discutir em supervisão?"
+                  />
+                </div>
+              </div>
             </div>
 
             {user && canAccessFeature(user.portal, 'mentorada') && (

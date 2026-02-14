@@ -3688,6 +3688,9 @@ export type Database = {
           cliente_id: string | null
           created_at: string
           enviar_para_supervisao: boolean
+          espelho_risco_projecao: string | null
+          espelho_supervisao: string | null
+          espelho_toca_minha: string | null
           id: string
           pergunta_supervisao: string | null
           reflexao_profissional: string
@@ -3702,6 +3705,9 @@ export type Database = {
           cliente_id?: string | null
           created_at?: string
           enviar_para_supervisao?: boolean
+          espelho_risco_projecao?: string | null
+          espelho_supervisao?: string | null
+          espelho_toca_minha?: string | null
           id?: string
           pergunta_supervisao?: string | null
           reflexao_profissional: string
@@ -3716,6 +3722,9 @@ export type Database = {
           cliente_id?: string | null
           created_at?: string
           enviar_para_supervisao?: boolean
+          espelho_risco_projecao?: string | null
+          espelho_supervisao?: string | null
+          espelho_toca_minha?: string | null
           id?: string
           pergunta_supervisao?: string | null
           reflexao_profissional?: string
@@ -5277,9 +5286,6 @@ export type Database = {
           client_id: string
           created_at: string
           dinamica_arquetipal: string | null
-          espelho_risco_projecao: string | null
-          espelho_supervisao: string | null
-          espelho_toca_minha: string | null
           fase_descricao: string | null
           fase_jornada: string | null
           gesto_integracao: string | null
@@ -5307,9 +5313,6 @@ export type Database = {
           client_id: string
           created_at?: string
           dinamica_arquetipal?: string | null
-          espelho_risco_projecao?: string | null
-          espelho_supervisao?: string | null
-          espelho_toca_minha?: string | null
           fase_descricao?: string | null
           fase_jornada?: string | null
           gesto_integracao?: string | null
@@ -5337,9 +5340,6 @@ export type Database = {
           client_id?: string
           created_at?: string
           dinamica_arquetipal?: string | null
-          espelho_risco_projecao?: string | null
-          espelho_supervisao?: string | null
-          espelho_toca_minha?: string | null
           fase_descricao?: string | null
           fase_jornada?: string | null
           gesto_integracao?: string | null
