@@ -1404,6 +1404,7 @@ export type Database = {
           id: string
           nome: string
           objetivo_terapeutico: string | null
+          observacao_segura: string | null
           status: Database["public"]["Enums"]["cliente_status"]
           terapeuta_id: string
           updated_at: string
@@ -1413,6 +1414,7 @@ export type Database = {
           id?: string
           nome: string
           objetivo_terapeutico?: string | null
+          observacao_segura?: string | null
           status?: Database["public"]["Enums"]["cliente_status"]
           terapeuta_id: string
           updated_at?: string
@@ -1422,6 +1424,7 @@ export type Database = {
           id?: string
           nome?: string
           objetivo_terapeutico?: string | null
+          observacao_segura?: string | null
           status?: Database["public"]["Enums"]["cliente_status"]
           terapeuta_id?: string
           updated_at?: string
@@ -3347,6 +3350,57 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      gestos_integracao: {
+        Row: {
+          cliente_id: string
+          created_at: string
+          gesto_texto: string
+          id: string
+          jardim_registro_id: string | null
+          owner_id: string
+          sessao_id: string | null
+          status: Database["public"]["Enums"]["gesto_status"]
+          updated_at: string
+        }
+        Insert: {
+          cliente_id: string
+          created_at?: string
+          gesto_texto: string
+          id?: string
+          jardim_registro_id?: string | null
+          owner_id: string
+          sessao_id?: string | null
+          status?: Database["public"]["Enums"]["gesto_status"]
+          updated_at?: string
+        }
+        Update: {
+          cliente_id?: string
+          created_at?: string
+          gesto_texto?: string
+          id?: string
+          jardim_registro_id?: string | null
+          owner_id?: string
+          sessao_id?: string | null
+          status?: Database["public"]["Enums"]["gesto_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gestos_integracao_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gestos_integracao_sessao_id_fkey"
+            columns: ["sessao_id"]
+            isOneToOne: false
+            referencedRelation: "sessoes_casa_maquinas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       group_participants: {
         Row: {
@@ -8019,6 +8073,47 @@ export type Database = {
           },
         ]
       }
+      sessoes_casa_maquinas: {
+        Row: {
+          cliente_id: string
+          created_at: string
+          data_sessao: string
+          id: string
+          movimento_percebido: Database["public"]["Enums"]["movimento_percebido"]
+          nota_breve: string | null
+          owner_id: string
+          updated_at: string
+        }
+        Insert: {
+          cliente_id: string
+          created_at?: string
+          data_sessao?: string
+          id?: string
+          movimento_percebido?: Database["public"]["Enums"]["movimento_percebido"]
+          nota_breve?: string | null
+          owner_id: string
+          updated_at?: string
+        }
+        Update: {
+          cliente_id?: string
+          created_at?: string
+          data_sessao?: string
+          id?: string
+          movimento_percebido?: Database["public"]["Enums"]["movimento_percebido"]
+          nota_breve?: string | null
+          owner_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sessoes_casa_maquinas_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sessoes_labirinto: {
         Row: {
           cliente_nome: string | null
@@ -9342,6 +9437,7 @@ export type Database = {
         | "narrative_result"
         | "porta_familias"
       content_type: "text" | "video" | "audio" | "file" | "mixed"
+      gesto_status: "ativo" | "em_pratica" | "integrado" | "em_revisao"
       jardim_gesto_tipo:
         | "observacao"
         | "limite"
@@ -9351,6 +9447,11 @@ export type Database = {
       jardim_heroina_status: "inactive" | "active" | "closed"
       labirinto_modo_uso: "individual" | "grupo" | "constelacao" | "mentoria"
       mentoria_tipo: "aviso" | "evento" | "supervisao"
+      movimento_percebido:
+        | "avancou"
+        | "tensao"
+        | "ciclo_repetido"
+        | "observacao"
       nivel_sala: "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3"
       oracle_card_level: "beginner" | "intermediate" | "advanced"
       oracle_content_status: "draft" | "published" | "archived"
@@ -9544,6 +9645,7 @@ export const Constants = {
         "porta_familias",
       ],
       content_type: ["text", "video", "audio", "file", "mixed"],
+      gesto_status: ["ativo", "em_pratica", "integrado", "em_revisao"],
       jardim_gesto_tipo: [
         "observacao",
         "limite",
@@ -9554,6 +9656,12 @@ export const Constants = {
       jardim_heroina_status: ["inactive", "active", "closed"],
       labirinto_modo_uso: ["individual", "grupo", "constelacao", "mentoria"],
       mentoria_tipo: ["aviso", "evento", "supervisao"],
+      movimento_percebido: [
+        "avancou",
+        "tensao",
+        "ciclo_repetido",
+        "observacao",
+      ],
       nivel_sala: ["NIVEL_0", "NIVEL_1", "NIVEL_2", "NIVEL_3"],
       oracle_card_level: ["beginner", "intermediate", "advanced"],
       oracle_content_status: ["draft", "published", "archived"],
