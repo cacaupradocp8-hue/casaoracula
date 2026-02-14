@@ -3682,6 +3682,66 @@ export type Database = {
         }
         Relationships: []
       }
+      jardim_do_oficio: {
+        Row: {
+          aprendizado_tecnico: string | null
+          cliente_id: string | null
+          created_at: string
+          enviar_para_supervisao: boolean
+          id: string
+          pergunta_supervisao: string | null
+          reflexao_profissional: string
+          sessao_id: string | null
+          status_supervisao: Database["public"]["Enums"]["status_supervisao"]
+          tensao_etica: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          aprendizado_tecnico?: string | null
+          cliente_id?: string | null
+          created_at?: string
+          enviar_para_supervisao?: boolean
+          id?: string
+          pergunta_supervisao?: string | null
+          reflexao_profissional: string
+          sessao_id?: string | null
+          status_supervisao?: Database["public"]["Enums"]["status_supervisao"]
+          tensao_etica?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          aprendizado_tecnico?: string | null
+          cliente_id?: string | null
+          created_at?: string
+          enviar_para_supervisao?: boolean
+          id?: string
+          pergunta_supervisao?: string | null
+          reflexao_profissional?: string
+          sessao_id?: string | null
+          status_supervisao?: Database["public"]["Enums"]["status_supervisao"]
+          tensao_etica?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jardim_do_oficio_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jardim_do_oficio_sessao_id_fkey"
+            columns: ["sessao_id"]
+            isOneToOne: false
+            referencedRelation: "sessoes_casa_maquinas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       jardim_grupo_registros: {
         Row: {
           campo_fechado: boolean | null
@@ -9476,6 +9536,7 @@ export type Database = {
       pricing_model: "free" | "one_time" | "subscription"
       ritual_status: "pending" | "completed" | "skipped_by_admin"
       ritual_type: "abertura" | "transicao" | "consagracao"
+      status_supervisao: "privado" | "enviado" | "discutido"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -9687,6 +9748,7 @@ export const Constants = {
       pricing_model: ["free", "one_time", "subscription"],
       ritual_status: ["pending", "completed", "skipped_by_admin"],
       ritual_type: ["abertura", "transicao", "consagracao"],
+      status_supervisao: ["privado", "enviado", "discutido"],
     },
   },
 } as const

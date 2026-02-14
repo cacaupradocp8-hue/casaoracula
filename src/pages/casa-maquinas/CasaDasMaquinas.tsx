@@ -53,8 +53,8 @@ export default function CasaDasMaquinas() {
     { label: 'Clientes', icon: Users, to: '/minhas-clientes', desc: 'Gerencie suas clientes e acompanhamentos' },
     { label: 'Sala de Sessão', icon: Calendar, to: '/casa-das-maquinas/sessoes', desc: 'Registre sessões simbólicas' },
     { label: 'Gestos de Integração', icon: Sparkles, to: '/casa-das-maquinas/gestos', desc: 'Ações simbólicas de integração' },
-    { label: 'Jardim da Psique', icon: Flower2, to: '/jardim-da-psique', desc: 'Espaço privado de registros' },
-    { label: 'Jardim da Heroína', icon: TreePine, to: '/casa/jardim', desc: 'Gestos e rituais ativos' },
+    { label: 'Jardim do Ofício', icon: Flower2, to: '/casa-das-maquinas/jardim-oficio', desc: 'Reflexão sobre postura profissional' },
+    { label: 'Painel de Supervisão', icon: TreePine, to: '/casa-das-maquinas/supervisao', desc: 'Reflexões para supervisão' },
   ];
 
   if (loading) {

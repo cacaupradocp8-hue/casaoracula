@@ -328,6 +328,10 @@ export function Navigation() {
                           <Settings className="w-4 h-4 mr-2" />
                           Casa das Máquinas
                         </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate('/casa-das-maquinas/jardim-oficio')}>
+                          <Star className="w-4 h-4 mr-2" />
+                          Jardim do Ofício
+                        </DropdownMenuItem>
                       </>
                     )}
                     
