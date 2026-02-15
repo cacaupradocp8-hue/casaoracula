@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { VideoCard } from "@/components/sales/VideoCard";
+import { HeroVideoBanner } from "@/components/sales/HeroVideoBanner";
 
 // Imagens fornecidas pelo usuário
 import heroTopo from "@/assets/formacao/hero-topo.png";
@@ -39,15 +40,10 @@ export default function OraculaSalesPage() {
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 1 — IMAGEM HERO (TOPO COM SOMBRA SUAVE)
       ═══════════════════════════════════════════════════════════════════ */}
-      <section className="relative w-full">
-        <img 
-          src={heroTopo} 
-          alt="Formação Orácula" 
-          className="w-full h-auto object-cover"
-        />
-        {/* Sombra suave na borda inferior para suavizar a dobra */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[hsl(220,20%,4%)] to-transparent" />
-      </section>
+      {/* ═══════════════════════════════════════════════════════════════════
+          BLOCO 1 — VÍDEO BANNER HERO (ENRAIZAMENTO)
+      ═══════════════════════════════════════════════════════════════════ */}
+      <HeroVideoBanner />
 
       {/* ═══════════════════════════════════════════════════════════════════
           BLOCO 2 — TÍTULO E INTRODUÇÃO (Atualizado)
