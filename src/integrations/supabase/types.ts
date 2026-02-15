@@ -2361,8 +2361,10 @@ export type Database = {
           ferramenta_pratica: Json | null
           formato_pedagogico: boolean | null
           id: string
+          metodo_formativo: Json | null
           ordem: number
           publicado: boolean
+          roteiro_aula: string | null
           subtitulo: string | null
           titulo: string
           updated_at: string
@@ -2382,8 +2384,10 @@ export type Database = {
           ferramenta_pratica?: Json | null
           formato_pedagogico?: boolean | null
           id?: string
+          metodo_formativo?: Json | null
           ordem?: number
           publicado?: boolean
+          roteiro_aula?: string | null
           subtitulo?: string | null
           titulo: string
           updated_at?: string
@@ -2403,8 +2407,10 @@ export type Database = {
           ferramenta_pratica?: Json | null
           formato_pedagogico?: boolean | null
           id?: string
+          metodo_formativo?: Json | null
           ordem?: number
           publicado?: boolean
+          roteiro_aula?: string | null
           subtitulo?: string | null
           titulo?: string
           updated_at?: string

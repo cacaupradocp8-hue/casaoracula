@@ -22,13 +22,15 @@ import {
   BookOpen,
   Users,
   BarChart3,
-  Sparkles
+  Sparkles,
+  Target
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Course, CourseModule, CourseLesson, CourseEnrollment, PricingModel, ContentType } from '@/types/course';
 import { ImageUpload } from './ImageUpload';
 import { PedagogicalModuleEditor } from './PedagogicalModuleEditor';
+import { MetodoFormativoEditor } from './MetodoFormativoEditor';
 
 interface Sala {
   id: string;
@@ -64,6 +66,10 @@ export function AdminCursosTab() {
   // Pedagogical editor state
   const [pedagogicalEditorOpen, setPedagogicalEditorOpen] = useState(false);
   const [pedagogicalModuleId, setPedagogicalModuleId] = useState<string>('');
+
+  // Metodo Formativo editor state
+  const [metodoFormativoOpen, setMetodoFormativoOpen] = useState(false);
+  const [metodoFormativoModuleId, setMetodoFormativoModuleId] = useState<string>('');
 
   useEffect(() => {
     fetchData();
@@ -643,6 +649,18 @@ export function AdminCursosTab() {
                           <Button 
                             size="icon" 
                             variant="ghost"
+                            onClick={() => { 
+                              setMetodoFormativoModuleId(module.id); 
+                              setMetodoFormativoOpen(true); 
+                            }}
+                            title="Método Formativo"
+                            className="text-accent hover:text-accent"
+                          >
+                            <Target className="w-4 h-4" />
+                          </Button>
+                          <Button 
+                            size="icon" 
+                            variant="ghost"
                             onClick={() => handleDeleteModule(module.id)}
                           >
                             <Trash2 className="w-4 h-4" />
@@ -902,6 +920,28 @@ export function AdminCursosTab() {
                 setPedagogicalEditorOpen(false);
               }}
               onClose={() => setPedagogicalEditorOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Metodo Formativo Editor Dialog */}
+      <Dialog open={metodoFormativoOpen} onOpenChange={setMetodoFormativoOpen}>
+        <DialogContent className="max-w-4xl max-h-[95vh]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Target className="w-5 h-5 text-primary" />
+              Método Formativo
+            </DialogTitle>
+          </DialogHeader>
+          {metodoFormativoModuleId && (
+            <MetodoFormativoEditor
+              moduleId={metodoFormativoModuleId}
+              onSave={() => {
+                fetchData();
+                setMetodoFormativoOpen(false);
+              }}
+              onClose={() => setMetodoFormativoOpen(false)}
             />
           )}
         </DialogContent>
