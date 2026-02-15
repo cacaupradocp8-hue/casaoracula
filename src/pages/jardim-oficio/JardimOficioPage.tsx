@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent } from '@/components/ui/card';
@@ -55,6 +55,7 @@ interface JardimRegistro {
   status_supervisao: string;
   cliente_id: string | null;
   sessao_id: string | null;
+  contexto_origem: string | null;
   created_at: string;
   cliente?: { nome: string } | null;
 }
@@ -73,6 +74,7 @@ const statusConfig: Record<string, { label: string; variant: 'default' | 'second
 export default function JardimOficioPage() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [registros, setRegistros] = useState<JardimRegistro[]>([]);
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [loading, setLoading] = useState(true);
@@ -89,6 +91,22 @@ export default function JardimOficioPage() {
   const [espelhoToca, setEspelhoToca] = useState('');
   const [espelhoRisco, setEspelhoRisco] = useState('');
   const [espelhoSupervisao, setEspelhoSupervisao] = useState('');
+  const [contextoOrigem, setContextoOrigem] = useState('');
+
+  // Auto-open dialog from URL params (coming from Jardim da Heroína)
+  useEffect(() => {
+    const ctx = searchParams.get('contexto_origem');
+    if (ctx) {
+      setContextoOrigem(ctx);
+      const sessaoId = searchParams.get('sessao_id');
+      if (sessaoId) {
+        // sessao_id from session_cases - we won't set it directly since jardim_do_oficio uses sessoes_casa_maquinas
+      }
+      setDialogOpen(true);
+      // Clean URL params
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   useEffect(() => {
     if (user) {
@@ -128,6 +146,7 @@ export default function JardimOficioPage() {
     setEspelhoToca('');
     setEspelhoRisco('');
     setEspelhoSupervisao('');
+    setContextoOrigem('');
   };
 
   const handleSave = async () => {
@@ -146,6 +165,7 @@ export default function JardimOficioPage() {
       espelho_toca_minha: espelhoToca.trim() || null,
       espelho_risco_projecao: espelhoRisco.trim() || null,
       espelho_supervisao: espelhoSupervisao.trim() || null,
+      contexto_origem: contextoOrigem.trim() || null,
     };
 
     const { error } = await supabase.from('jardim_do_oficio').insert(payload as any);
@@ -244,6 +264,13 @@ export default function JardimOficioPage() {
                       </div>
                     </div>
 
+                    {r.contexto_origem && (
+                      <div className="bg-emerald-950/20 border border-emerald-500/20 rounded-md p-2 mb-3 text-xs">
+                        <span className="font-medium text-emerald-400">🧵 Contexto simbólico:</span>
+                        <p className="mt-0.5 whitespace-pre-line">{r.contexto_origem}</p>
+                      </div>
+                    )}
+
                     <p className="text-sm leading-relaxed mb-3">{r.reflexao_profissional}</p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
@@ -299,6 +326,22 @@ export default function JardimOficioPage() {
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Contexto de Origem (from Jardim da Heroína) */}
+            {contextoOrigem && (
+              <div className="bg-emerald-950/20 border border-emerald-500/20 rounded-lg p-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sprout className="w-4 h-4 text-emerald-500" />
+                  <span className="text-xs font-medium text-emerald-400">Contexto do Jardim da Heroína</span>
+                </div>
+                <Textarea
+                  value={contextoOrigem}
+                  onChange={(e) => setContextoOrigem(e.target.value)}
+                  rows={3}
+                  className="text-sm bg-transparent border-emerald-500/10"
+                />
+              </div>
+            )}
 
             <div>
               <Label>Reflexão profissional *</Label>
