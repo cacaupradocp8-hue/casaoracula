@@ -32,8 +32,127 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
-import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, Star, Loader2, Film, Save, Upload, Music } from "lucide-react";
+import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, Star, Loader2, Film, Save, Upload, Music, Link } from "lucide-react";
 import { SectionHeader } from "@/components/shared/SectionHeader";
+
+// ── Route Options Hook ────────────────────────────────
+
+interface RouteOption {
+  value: string;
+  label: string;
+  group: string;
+}
+
+function useAvailableRoutes() {
+  const { data: routes = [], isLoading } = useQuery({
+    queryKey: ["admin-available-routes"],
+    queryFn: async () => {
+      const [coursesRes, salasRes, toolsRes] = await Promise.all([
+        supabase.from("courses").select("id, titulo, publicado").order("titulo"),
+        supabase.from("salas").select("id, nome_exibicao, ativa").order("nome_exibicao"),
+        supabase.from("sala_ferramentas").select("id, ferramenta_nome, rota, ativa, slug").order("ferramenta_nome"),
+      ]);
+
+      const options: RouteOption[] = [];
+
+      salasRes.data?.forEach((s) => {
+        options.push({
+          value: `/sala/${s.id}`,
+          label: `${s.nome_exibicao}${s.ativa ? "" : " (inativa)"}`,
+          group: "Salas",
+        });
+      });
+
+      coursesRes.data?.forEach((c) => {
+        options.push({
+          value: `/curso/${c.id}`,
+          label: `${c.titulo}${c.publicado ? "" : " (rascunho)"}`,
+          group: "Cursos",
+        });
+      });
+
+      toolsRes.data?.forEach((t) => {
+        const route = t.rota || (t.slug ? `/ferramenta/${t.slug}` : null);
+        if (route) {
+          options.push({
+            value: route,
+            label: `${t.ferramenta_nome}${t.ativa ? "" : " (inativa)"}`,
+            group: "Ferramentas",
+          });
+        }
+      });
+
+      return options;
+    },
+    staleTime: 60_000,
+  });
+
+  return { routes, isLoading };
+}
+
+function RotaDestinoField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const { routes, isLoading } = useAvailableRoutes();
+  const [customMode, setCustomMode] = useState(!value || !routes.some((r) => r.value === value));
+
+  // When routes load, check if current value matches any route
+  useEffect(() => {
+    if (routes.length > 0 && value) {
+      setCustomMode(!routes.some((r) => r.value === value));
+    }
+  }, [routes, value]);
+
+  const grouped = routes.reduce((acc, r) => {
+    if (!acc[r.group]) acc[r.group] = [];
+    acc[r.group].push(r);
+    return acc;
+  }, {} as Record<string, RouteOption[]>);
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <Label>Rota de Destino</Label>
+        <button
+          type="button"
+          className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
+          onClick={() => setCustomMode(!customMode)}
+        >
+          <Link className="w-3 h-3" />
+          {customMode ? "Selecionar existente" : "Digitar manualmente"}
+        </button>
+      </div>
+
+      {customMode ? (
+        <Input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="/jornada ou /salas/..."
+        />
+      ) : (
+        <Select value={value} onValueChange={onChange}>
+          <SelectTrigger>
+            <SelectValue placeholder={isLoading ? "Carregando..." : "Selecione um conteúdo"} />
+          </SelectTrigger>
+          <SelectContent className="max-h-64">
+            {Object.entries(grouped).map(([group, items]) => (
+              <div key={group}>
+                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">{group}</div>
+                {items.map((item) => (
+                  <SelectItem key={item.value} value={item.value}>
+                    {item.label}
+                  </SelectItem>
+                ))}
+              </div>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
+
+      {value && (
+        <p className="text-xs text-muted-foreground">Rota: <code className="bg-muted px-1 rounded">{value}</code></p>
+      )}
+    </div>
+  );
+}
 
 // ── Types ──────────────────────────────────────────────
 
@@ -733,14 +852,10 @@ export default function AdminModulosFormativos() {
               />
             </div>
 
-            <div>
-              <Label>Rota de Destino</Label>
-              <Input
-                value={form.rota_destino || ""}
-                onChange={(e) => setForm({ ...form, rota_destino: e.target.value })}
-                placeholder="/jornada ou /salas/..."
-              />
-            </div>
+            <RotaDestinoField
+              value={form.rota_destino || ""}
+              onChange={(v) => setForm({ ...form, rota_destino: v })}
+            />
 
             <div className="grid grid-cols-2 gap-4">
               <div>
