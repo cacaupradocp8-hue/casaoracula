@@ -1,24 +1,25 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { SectionHeader } from "@/components/shared/SectionHeader";
-import { FerramentaCard, FerramentaCardData } from "@/components/shared/FerramentaCard";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import {
-  Wrench,
   Loader2,
   Compass,
   Shield,
   Brain,
   Sparkles,
   Lock,
-  Home,
-  ChevronRight,
   ArrowRight,
+  Plus,
+  Info,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { HeroVideoBanner } from "@/components/sales/HeroVideoBanner";
+import { useRef } from "react";
 
 interface Ferramenta {
   id: string;
@@ -35,46 +36,39 @@ interface Ferramenta {
   ativa: boolean;
 }
 
-// Define the 4 sections with metadata
 const SECTIONS = [
   {
     key: 'travessia',
     title: 'Travessia Simbólica',
-    subtitle: 'Ferramentas para jornadas de transformação profunda',
-    description: 'Instrumentos que acompanham processos de passagem, crise e renascimento.',
+    subtitle: 'Jornadas de transformação profunda',
     icon: Compass,
-    color: 'purple',
+    color: 'purple' as const,
   },
   {
     key: 'estrutura',
     title: 'Estrutura & Sobrevivência',
-    subtitle: 'Suporte para momentos de reorganização',
-    description: 'Recursos para quando o ego precisa se reorganizar.',
+    subtitle: 'Suporte para reorganização',
     icon: Shield,
-    color: 'emerald',
+    color: 'emerald' as const,
   },
   {
     key: 'mapas',
     title: 'Mapas da Psique',
     subtitle: 'Cartografias do mundo interior',
-    description: 'Ferramentas de mapeamento simbólico que revelam territórios internos.',
     icon: Brain,
-    color: 'gold',
+    color: 'gold' as const,
   },
   {
     key: 'oracular',
     title: 'Prática Oracular',
     subtitle: 'Leitura e interpretação simbólica',
-    description: 'Instrumentos de escuta oracular: cartas, imagens e práticas de leitura.',
     icon: Sparkles,
-    color: 'rose',
+    color: 'rose' as const,
   },
 ];
 
-// Determine which section a ferramenta belongs to based on tipo_ferramenta
 const getSectionForTipoFerramenta = (tipoFerramenta: string | null): string => {
   if (!tipoFerramenta) return 'mapas';
-  
   switch (tipoFerramenta) {
     case 'diagnostico':
     case 'autoleitura':
@@ -91,37 +85,114 @@ const getSectionForTipoFerramenta = (tipoFerramenta: string | null): string => {
   }
 };
 
-const colorClasses = {
-  purple: {
-    bg: 'bg-purple-500/10',
-    border: 'border-purple-500/30',
-    icon: 'bg-purple-500/20 text-purple-400',
-    text: 'text-purple-400',
-  },
-  emerald: {
-    bg: 'bg-emerald-500/10',
-    border: 'border-emerald-500/30',
-    icon: 'bg-emerald-500/20 text-emerald-400',
-    text: 'text-emerald-400',
-  },
-  gold: {
-    bg: 'bg-gold/10',
-    border: 'border-gold/30',
-    icon: 'bg-gold/20 text-gold',
-    text: 'text-gold',
-  },
-  rose: {
-    bg: 'bg-rose-500/10',
-    border: 'border-rose-500/30',
-    icon: 'bg-rose-500/20 text-rose-400',
-    text: 'text-rose-400',
-  },
+const sectionGradients = {
+  purple: 'from-purple-900/60 via-purple-800/30 to-transparent',
+  emerald: 'from-emerald-900/60 via-emerald-800/30 to-transparent',
+  gold: 'from-amber-900/60 via-amber-800/30 to-transparent',
+  rose: 'from-rose-900/60 via-rose-800/30 to-transparent',
 };
+
+const sectionAccents = {
+  purple: 'text-purple-400',
+  emerald: 'text-emerald-400',
+  gold: 'text-gold',
+  rose: 'text-rose-400',
+};
+
+const cardAccents = {
+  purple: 'border-purple-500/30 hover:border-purple-500/60',
+  emerald: 'border-emerald-500/30 hover:border-emerald-500/60',
+  gold: 'border-gold/30 hover:border-gold/60',
+  rose: 'border-rose-500/30 hover:border-rose-500/60',
+};
+
+const badgeColors = {
+  purple: 'bg-purple-500 text-white',
+  emerald: 'bg-emerald-500 text-white',
+  gold: 'bg-gold text-background',
+  rose: 'bg-rose-500 text-white',
+};
+
+/** Horizontal scroll row with arrows */
+function ScrollRow({ children, color }: { children: React.ReactNode; color: string }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (dir: 'left' | 'right') => {
+    if (!scrollRef.current) return;
+    const amount = scrollRef.current.clientWidth * 0.7;
+    scrollRef.current.scrollBy({ left: dir === 'left' ? -amount : amount, behavior: 'smooth' });
+  };
+
+  return (
+    <div className="relative group/scroll">
+      <button
+        onClick={() => scroll('left')}
+        className="absolute left-0 top-0 bottom-0 z-10 w-10 bg-gradient-to-r from-background to-transparent opacity-0 group-hover/scroll:opacity-100 transition-opacity flex items-center justify-center"
+      >
+        <ChevronLeft className="w-6 h-6 text-foreground/70" />
+      </button>
+      <div
+        ref={scrollRef}
+        className="flex gap-3 overflow-x-auto scrollbar-hide px-4 md:px-6 pb-2 snap-x snap-mandatory"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        {children}
+      </div>
+      <button
+        onClick={() => scroll('right')}
+        className="absolute right-0 top-0 bottom-0 z-10 w-10 bg-gradient-to-l from-background to-transparent opacity-0 group-hover/scroll:opacity-100 transition-opacity flex items-center justify-center"
+      >
+        <ChevronRight className="w-6 h-6 text-foreground/70" />
+      </button>
+    </div>
+  );
+}
+
+/** Netflix-style card for each ferramenta */
+function VitrineCard({ ferramenta, color }: { ferramenta: Ferramenta; color: 'purple' | 'emerald' | 'gold' | 'rose' }) {
+  return (
+    <div
+      className={cn(
+        "relative flex-shrink-0 w-[160px] sm:w-[180px] md:w-[200px] aspect-[3/4] rounded-lg overflow-hidden border transition-all duration-300 snap-start cursor-default group/card hover:scale-105 hover:z-10",
+        cardAccents[color]
+      )}
+    >
+      {/* Background gradient */}
+      <div className={cn("absolute inset-0 bg-gradient-to-b", sectionGradients[color])} />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+
+      {/* Lock badge */}
+      <div className="absolute top-2 right-2">
+        <div className={cn("w-6 h-6 rounded-full flex items-center justify-center", badgeColors[color])}>
+          <Lock className="w-3 h-3" />
+        </div>
+      </div>
+
+      {/* Icon */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-20">
+        <Lock className="w-16 h-16 text-foreground" />
+      </div>
+
+      {/* Content at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 p-3 space-y-1">
+        <h3 className="font-display text-sm font-semibold text-foreground leading-tight line-clamp-2">
+          {ferramenta.ferramenta_nome}
+        </h3>
+        <p className="text-[10px] text-foreground/50 line-clamp-2">
+          {ferramenta.finalidade_pratica || ferramenta.ferramenta_descricao || 'Ferramenta simbólica'}
+        </p>
+        {/* Portal badge */}
+        <span className={cn("inline-block text-[9px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded", badgeColors[color])}>
+          {ferramenta.portal_minimo?.replace('_', ' ') || 'Formação'}
+        </span>
+      </div>
+    </div>
+  );
+}
 
 export default function FerramentasVitrine() {
   const navigate = useNavigate();
 
-  // Fetch ALL active ferramentas from database
   const { data: ferramentas, isLoading } = useQuery({
     queryKey: ['ferramentas-vitrine'],
     queryFn: async () => {
@@ -139,12 +210,9 @@ export default function FerramentasVitrine() {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Group ferramentas by section
   const groupedBySection = ferramentas?.reduce((acc, ferramenta) => {
     const sectionKey = getSectionForTipoFerramenta(ferramenta.tipo_ferramenta);
-    if (!acc[sectionKey]) {
-      acc[sectionKey] = [];
-    }
+    if (!acc[sectionKey]) acc[sectionKey] = [];
     acc[sectionKey].push(ferramenta);
     return acc;
   }, {} as Record<string, Ferramenta[]>) || {};
@@ -152,7 +220,7 @@ export default function FerramentasVitrine() {
   if (isLoading) {
     return (
       <AppLayout>
-        <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center justify-center min-h-[400px]">
           <Loader2 className="w-8 h-8 animate-spin text-gold" />
         </div>
       </AppLayout>
@@ -163,72 +231,86 @@ export default function FerramentasVitrine() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20 max-w-6xl">
-        {/* Breadcrumb Navigation */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
-            <Home className="w-3 h-3" />
-            Casa
-          </Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-foreground">Vitrine de Ferramentas</span>
-        </nav>
+      <div className="min-h-screen bg-background">
+        {/* ═══ HERO VIDEO BANNER ═══ */}
+        <HeroVideoBanner />
 
-        <SectionHeader
-          title="Vitrine de Ferramentas"
-          subtitle="Conheça os recursos disponíveis para quem atravessa a formação"
-          icon={<Wrench className="w-5 h-5" />}
-          className="mb-6"
-        />
-
-        {/* Vitrine Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-10"
-        >
-          <div className="rounded-xl border border-gold/30 bg-gradient-to-br from-gold/10 to-gold/5 p-6">
-            <div className="flex flex-col md:flex-row items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gold/20 flex items-center justify-center shrink-0">
-                <Lock className="w-6 h-6 text-gold" />
-              </div>
-              <div className="flex-1 space-y-3">
-                <div>
-                  <h3 className="font-display text-lg text-foreground mb-1">
-                    Estas ferramentas aguardam sua travessia
-                  </h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    A Casa ORÁCULA oferece recursos profundos para quem deseja trabalhar com leitura simbólica 
-                    e sustentação terapêutica. Para utilizá-los, é necessário iniciar sua jornada na formação.
-                  </p>
-                </div>
-                <Button 
-                  onClick={() => navigate('/sala-da-visitante')}
-                  className="gap-2 bg-gold hover:bg-gold/90 text-background"
-                >
-                  Iniciar Travessia
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {!hasAnyTools ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">
-              Nenhuma ferramenta disponível no momento.
+        {/* ═══ TITLE & KEYWORDS ═══ */}
+        <div className="relative -mt-16 z-10 text-center px-4 pb-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <p className="text-gold/70 uppercase tracking-[0.3em] text-xs mb-3">
+              Casa Orácula
             </p>
-          </div>
-        ) : (
-          <div className="space-y-16">
-            {SECTIONS.map((section, sectionIndex) => {
-              const sectionTools = groupedBySection[section.key] || [];
-              const IconComponent = section.icon;
-              const colors = colorClasses[section.color as keyof typeof colorClasses];
+            <h1 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground tracking-wide mb-3">
+              VITRINE DE
+              <br />
+              <span className="font-bold text-3xl md:text-4xl lg:text-5xl">FERRAMENTAS</span>
+            </h1>
+            <p className="text-foreground/50 text-sm mb-5">
+              Recursos da Formação Orácula
+            </p>
 
-              // Only render section if it has tools
+            {/* Keywords row */}
+            <div className="flex items-center justify-center gap-3 text-foreground/60 text-sm mb-6">
+              <span>Leitura</span>
+              <span className="text-gold/30">-</span>
+              <span>Método</span>
+              <span className="text-gold/30">-</span>
+              <span>Sustentação</span>
+            </div>
+
+            {/* Action buttons row */}
+            <div className="flex items-center justify-center gap-8">
+              <button
+                onClick={() => navigate('/sala-da-visitante')}
+                className="flex flex-col items-center gap-1 text-foreground/60 hover:text-foreground transition-colors"
+              >
+                <Plus className="w-6 h-6" />
+                <span className="text-[10px]">Iniciar</span>
+              </button>
+
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 border-foreground/30 hover:border-foreground/60"
+                onClick={() => navigate('/sala-da-visitante')}
+              >
+                <ArrowRight className="w-4 h-4" />
+                Iniciar Travessia
+              </Button>
+
+              <button
+                onClick={() => {
+                  const el = document.getElementById('ferramentas-sections');
+                  el?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="flex flex-col items-center gap-1 text-foreground/60 hover:text-foreground transition-colors"
+              >
+                <Info className="w-6 h-6" />
+                <span className="text-[10px]">Explorar</span>
+              </button>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* ═══ SECTIONS WITH HORIZONTAL SCROLL ═══ */}
+        <div id="ferramentas-sections" className="space-y-10 pb-20 pt-6">
+          {!hasAnyTools ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">
+                Nenhuma ferramenta disponível no momento.
+              </p>
+            </div>
+          ) : (
+            SECTIONS.map((section, sectionIndex) => {
+              const sectionTools = groupedBySection[section.key] || [];
               if (sectionTools.length === 0) return null;
+
+              const IconComponent = section.icon;
 
               return (
                 <motion.section
@@ -237,77 +319,54 @@ export default function FerramentasVitrine() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: sectionIndex * 0.1 }}
                 >
-                  {/* Section Header */}
-                  <div className={cn("rounded-xl p-6 mb-6", colors.bg, "border", colors.border)}>
-                    <div className="flex items-start gap-4">
-                      <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0", colors.icon)}>
-                        <IconComponent className="w-6 h-6" />
-                      </div>
-                      <div className="flex-1">
-                        <h2 className={cn("font-display text-xl font-semibold mb-1", colors.text)}>
-                          {section.title}
-                        </h2>
-                        <p className="text-sm text-muted-foreground mb-2">
-                          {section.subtitle}
-                        </p>
-                        <p className="text-sm text-foreground/70 leading-relaxed">
-                          {section.description}
-                        </p>
-                      </div>
+                  {/* Section title */}
+                  <div className="flex items-center gap-3 px-4 md:px-6 mb-3">
+                    <IconComponent className={cn("w-5 h-5", sectionAccents[section.color])} />
+                    <div>
+                      <h2 className={cn("font-display text-lg font-semibold", sectionAccents[section.color])}>
+                        {section.title}
+                      </h2>
+                      <p className="text-xs text-muted-foreground">{section.subtitle}</p>
                     </div>
                   </div>
 
-                  {/* Tools Grid - All in vitrineMode (locked) */}
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {sectionTools.map((ferramenta) => {
-                      const cardData: FerramentaCardData = {
-                        id: ferramenta.id,
-                        nome: ferramenta.ferramenta_nome,
-                        icone: ferramenta.icone,
-                        tipo: ferramenta.tipo_ferramenta,
-                        finalidade: ferramenta.finalidade_pratica || ferramenta.ferramenta_descricao,
-                        origem: ferramenta.origem_metodologica,
-                        rota: ferramenta.rota,
-                        acessivel: false, // Always locked in vitrine
-                        portalMinimo: ferramenta.portal_minimo,
-                      };
-
-                      return (
-                        <FerramentaCard
-                          key={ferramenta.id}
-                          ferramenta={cardData}
-                          colorScheme={section.color as 'gold' | 'purple' | 'emerald' | 'rose'}
-                          vitrineMode={true}
-                          onClick={() => {}} // No navigation in vitrine
-                        />
-                      );
-                    })}
-                  </div>
+                  {/* Horizontal scroll row */}
+                  <ScrollRow color={section.color}>
+                    {sectionTools.map((ferramenta) => (
+                      <VitrineCard
+                        key={ferramenta.id}
+                        ferramenta={ferramenta}
+                        color={section.color}
+                      />
+                    ))}
+                  </ScrollRow>
                 </motion.section>
               );
-            })}
-          </div>
-        )}
+            })
+          )}
 
-        {/* CTA Final */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="mt-16 text-center"
-        >
-          <p className="text-muted-foreground mb-4">
-            Pronta para desbloquear essas ferramentas?
-          </p>
-          <Button 
-            onClick={() => navigate('/sala-da-visitante')}
-            size="lg"
-            className="gap-2 bg-gold hover:bg-gold/90 text-background"
-          >
-            Atravessar o Limiar
-            <ArrowRight className="w-4 h-4" />
-          </Button>
-        </motion.div>
+          {/* CTA Final */}
+          {hasAnyTools && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="text-center px-4 pt-6"
+            >
+              <p className="text-muted-foreground text-sm mb-4">
+                Pronta para desbloquear essas ferramentas?
+              </p>
+              <Button
+                onClick={() => navigate('/sala-da-visitante')}
+                size="lg"
+                className="gap-2 bg-gold hover:bg-gold/90 text-background"
+              >
+                Atravessar o Limiar
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </motion.div>
+          )}
+        </div>
       </div>
     </AppLayout>
   );
