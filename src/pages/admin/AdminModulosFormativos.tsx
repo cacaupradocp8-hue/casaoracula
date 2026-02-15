@@ -32,7 +32,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
-import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, Star, Loader2, Film, Save, Upload } from "lucide-react";
+import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, Star, Loader2, Film, Save, Upload, Music } from "lucide-react";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 
 // ── Types ──────────────────────────────────────────────
@@ -95,6 +95,9 @@ const BANNER_KEYS = [
   "vitrine_hero_btn_link",
   "vitrine_hero_overlay_opacity",
   "vitrine_hero_ativo",
+  "vitrine_ambient_audio_url",
+  "vitrine_ambient_audio_ativo",
+  "vitrine_ambient_audio_volume",
 ];
 
 // ── Banner Config Panel ───────────────────────────────
@@ -104,7 +107,9 @@ function BannerConfigPanel() {
   const [bannerForm, setBannerForm] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadingAudio, setUploadingAudio] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const audioInputRef = useRef<HTMLInputElement>(null);
 
   const { data: settings, isLoading } = useQuery({
     queryKey: ["admin-banner-settings"],
@@ -328,11 +333,119 @@ function BannerConfigPanel() {
           />
         </div>
 
+        {/* ── Ambient Audio Section ── */}
+        <div className="pt-4 border-t border-border space-y-4">
+          <div className="flex items-center gap-3">
+            <Music className="w-5 h-5 text-gold" />
+            <h3 className="text-sm font-semibold">Áudio Ambiente</h3>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Switch
+              checked={bannerForm.vitrine_ambient_audio_ativo === "true"}
+              onCheckedChange={(v) =>
+                setBannerForm((prev) => ({ ...prev, vitrine_ambient_audio_ativo: v ? "true" : "false" }))
+              }
+            />
+            <Label>Áudio ambiente ativo</Label>
+          </div>
+
+          {/* Audio Upload */}
+          <div className="space-y-3">
+            <Label>Arquivo de Áudio (música ambiente ou ruído branco)</Label>
+            <div className="flex items-center gap-3">
+              <input
+                ref={audioInputRef}
+                type="file"
+                accept="audio/mpeg,audio/mp3,audio/wav,audio/ogg,audio/webm"
+                className="hidden"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  if (file.size > 50 * 1024 * 1024) {
+                    toast.error("Arquivo muito grande. Máximo: 50MB");
+                    return;
+                  }
+                  setUploadingAudio(true);
+                  try {
+                    const ext = file.name.split('.').pop() || 'mp3';
+                    const filePath = `ambient/ambient-audio-${Date.now()}.${ext}`;
+                    const { error: uploadError } = await supabase.storage
+                      .from('audios')
+                      .upload(filePath, file, { upsert: true });
+                    if (uploadError) throw uploadError;
+                    const { data: urlData } = supabase.storage
+                      .from('audios')
+                      .getPublicUrl(filePath);
+                    setBannerForm((prev) => ({
+                      ...prev,
+                      vitrine_ambient_audio_url: urlData.publicUrl,
+                    }));
+                    toast.success("Áudio enviado com sucesso");
+                  } catch (err: any) {
+                    toast.error(err.message || "Erro ao enviar áudio");
+                  } finally {
+                    setUploadingAudio(false);
+                    if (audioInputRef.current) audioInputRef.current.value = '';
+                  }
+                }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                className="gap-2"
+                disabled={uploadingAudio}
+                onClick={() => audioInputRef.current?.click()}
+              >
+                {uploadingAudio ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Upload className="w-4 h-4" />
+                )}
+                {uploadingAudio ? "Enviando..." : "Enviar áudio"}
+              </Button>
+              <span className="text-xs text-muted-foreground">MP3, WAV, OGG (máx. 50MB)</span>
+            </div>
+
+            <Input
+              value={bannerForm.vitrine_ambient_audio_url ?? ""}
+              onChange={(e) =>
+                setBannerForm((prev) => ({ ...prev, vitrine_ambient_audio_url: e.target.value }))
+              }
+              placeholder="URL do áudio ambiente"
+            />
+
+            {/* Audio preview */}
+            {bannerForm.vitrine_ambient_audio_url?.trim() && (
+              <audio
+                src={bannerForm.vitrine_ambient_audio_url}
+                controls
+                className="w-full max-w-sm h-10"
+              />
+            )}
+          </div>
+
+          {/* Volume */}
+          <div>
+            <Label>Volume Padrão ({bannerForm.vitrine_ambient_audio_volume ?? "30"}%)</Label>
+            <Slider
+              value={[Number(bannerForm.vitrine_ambient_audio_volume ?? "30")]}
+              min={0}
+              max={100}
+              step={5}
+              onValueChange={([v]) =>
+                setBannerForm((prev) => ({ ...prev, vitrine_ambient_audio_volume: String(v) }))
+              }
+              className="mt-2"
+            />
+          </div>
+        </div>
+
         {/* Save */}
         <div className="flex justify-end pt-2">
           <Button onClick={handleSave} disabled={saving} className="gap-2">
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            Salvar Banner
+            Salvar Configurações
           </Button>
         </div>
       </CardContent>
