@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import heroVideoDefault from '@/assets/formacao/hero-banner-enraizamento.mp4';
+
 import heroFallback from '@/assets/formacao/hero-banner-fallback.jpg';
 
 /**
@@ -40,10 +40,7 @@ export function HeroVideoBanner() {
     staleTime: 10 * 60 * 1000,
   });
 
-  const videoSrc =
-    settings?.vitrine_hero_video_url?.trim()
-      ? settings.vitrine_hero_video_url
-      : heroVideoDefault;
+  const videoSrc = settings?.vitrine_hero_video_url?.trim() || '';
 
   const heroText = settings?.vitrine_hero_texto || 'Aqui, a travessia começa com presença';
   const btnText = settings?.vitrine_hero_btn_texto || 'Continuar minha travessia';
