@@ -1,23 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Sparkles, Users } from "lucide-react";
+import { Loader2, Sparkles, Users, Layers, Settings2 } from "lucide-react";
 import { useAtelieTemplates, useGenerateContent, GenerateContentInput } from "@/hooks/useAtelieConteudo";
+import {
+  useJornadas,
+  usePortaisByJornada,
+  useAulasByPortal,
+  ModoOperacao,
+  MotorGeracao,
+  NivelConteudo,
+  AtelieInstitucionalInput,
+} from "@/hooks/useAtelieInstitucional";
 
 interface AtelieFormularioProps {
-  onGenerated: (content: { raw_content: string; sections: Record<string, string>; input: GenerateContentInput }) => void;
+  onGenerated: (content: {
+    raw_content: string;
+    sections: Record<string, string>;
+    input: GenerateContentInput;
+    institucional: AtelieInstitucionalInput;
+  }) => void;
 }
-
-const JORNADA_OPTIONS = [
-  { value: "Jornada da Heroína", label: "Jornada da Heroína" },
-  { value: "Jornada da Sombra", label: "Jornada da Sombra" },
-  { value: "Jornada do Instinto", label: "Jornada do Instinto" },
-  { value: "Jornada do Corpo", label: "Jornada do Corpo" },
-];
 
 const TOM_OPTIONS = [
   { value: "simbólico e poético", label: "Mais simbólico / poético" },
@@ -31,10 +38,40 @@ const DURACAO_OPTIONS = [
   { value: "45-60 minutos", label: "45–60 minutos" },
 ];
 
+const MODO_OPTIONS: { value: ModoOperacao; label: string; desc: string }[] = [
+  { value: "criar_portal_aula", label: "Criar novo Portal + Aula", desc: "Cria portal e aula como rascunho" },
+  { value: "criar_aula", label: "Nova Aula em Portal existente", desc: "Adiciona aula a um portal" },
+  { value: "atualizar_aula", label: "Atualizar Aula existente", desc: "Sobrescreve conteúdo de uma aula" },
+];
+
+const MOTOR_OPTIONS: { value: MotorGeracao; label: string }[] = [
+  { value: "padrao", label: "Padrão (Template atual)" },
+  { value: "agente_casa_oracula", label: "Agente Casa Orácula (Andragogia + Missão)" },
+];
+
+const NIVEL_OPTIONS: { value: NivelConteudo; label: string }[] = [
+  { value: "certificada", label: "Certificada (Método Casa Orácula)" },
+  { value: "mentorada", label: "Mentorada (Arquitetura autoral)" },
+];
+
 export default function AtelieFormulario({ onGenerated }: AtelieFormularioProps) {
   const { data: templates, isLoading: loadingTemplates } = useAtelieTemplates();
   const { generate, isGenerating } = useGenerateContent();
+  const { data: jornadas } = useJornadas();
 
+  // Institutional fields
+  const [jornadaId, setJornadaId] = useState("");
+  const [portalId, setPortalId] = useState("");
+  const [aulaId, setAulaId] = useState("");
+  const [modo, setModo] = useState<ModoOperacao>("criar_portal_aula");
+  const [motor, setMotor] = useState<MotorGeracao>("padrao");
+  const [nivel, setNivel] = useState<NivelConteudo>("certificada");
+
+  // Cascading queries
+  const { data: portais } = usePortaisByJornada(jornadaId || undefined);
+  const { data: aulas } = useAulasByPortal(portalId || undefined);
+
+  // Content fields
   const [formData, setFormData] = useState<GenerateContentInput>({
     jornada: "",
     portal: "",
@@ -45,24 +82,55 @@ export default function AtelieFormulario({ onGenerated }: AtelieFormularioProps)
     template_id: undefined,
   });
 
+  // Sync jornada name when selection changes
+  useEffect(() => {
+    if (jornadaId && jornadas) {
+      const j = jornadas.find((j) => j.id === jornadaId);
+      if (j) setFormData((prev) => ({ ...prev, jornada: j.nome }));
+    }
+  }, [jornadaId, jornadas]);
+
+  // Reset dependent selects on parent change
+  useEffect(() => { setPortalId(""); setAulaId(""); }, [jornadaId]);
+  useEffect(() => { setAulaId(""); }, [portalId]);
+
   const handleChange = (field: keyof GenerateContentInput, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const isFormValid = () => {
+    if (!jornadaId || !formData.portal || !formData.objetivo || !formData.ideias_chave || !formData.tom) return false;
+    if (modo === "criar_aula" && !portalId) return false;
+    if (modo === "atualizar_aula" && (!portalId || !aulaId)) return false;
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Validate required fields
-    if (!formData.jornada || !formData.portal || !formData.objetivo || !formData.ideias_chave || !formData.tom) {
-      return;
-    }
+    if (!isFormValid()) return;
 
     const result = await generate(formData);
     if (result) {
+      const institucional: AtelieInstitucionalInput = {
+        jornada_id: jornadaId,
+        portal_id: portalId || undefined,
+        aula_id: aulaId || undefined,
+        modo,
+        motor,
+        nivel,
+        titulo_portal: formData.portal,
+        objetivo: formData.objetivo,
+        ideias_chave: formData.ideias_chave,
+        tom: formData.tom,
+        duracao: formData.duracao,
+        template_id: formData.template_id,
+      };
+
       onGenerated({
         raw_content: result.raw_content,
         sections: result.sections,
         input: formData,
+        institucional,
       });
     }
   };
@@ -77,62 +145,158 @@ export default function AtelieFormulario({ onGenerated }: AtelieFormularioProps)
           Ateliê de Conteúdo — Casa Orácula
         </CardTitle>
         <CardDescription>
-          Desenvolva aulas, portais e jornadas dentro do Método Formativo
+          Gerador institucional conectado a Jornadas, Portais, Aulas e Missões
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* BLOCO 1 — Identificação da Jornada */}
+          {/* BLOCO 1 — Identificação Estrutural */}
           <div className="space-y-4 p-4 border border-border/50 rounded-lg bg-muted/20">
-            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
-              🔮 Identificação da Jornada
+            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+              <Layers className="h-4 w-4" />
+              Identificação Estrutural
             </h3>
-            
-            {/* Jornada - Select */}
+
+            {/* Jornada (do banco) */}
             <div className="space-y-2">
-              <Label htmlFor="jornada">Jornada *</Label>
-              <Select 
-                value={formData.jornada} 
-                onValueChange={(value) => handleChange("jornada", value)}
-              >
+              <Label>Jornada *</Label>
+              <Select value={jornadaId} onValueChange={setJornadaId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione a jornada" />
                 </SelectTrigger>
                 <SelectContent className="bg-background border border-border z-50">
-                  {JORNADA_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
+                  {jornadas?.map((j) => (
+                    <SelectItem key={j.id} value={j.id}>{j.nome}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
 
-            {/* Portal */}
+            {/* Portal existente (cascaded) */}
+            {(modo === "criar_aula" || modo === "atualizar_aula") && (
+              <div className="space-y-2">
+                <Label>Portal/Travessia *</Label>
+                <Select value={portalId} onValueChange={setPortalId} disabled={!jornadaId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={!jornadaId ? "Selecione uma jornada primeiro" : "Selecione o portal"} />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background border border-border z-50">
+                    {portais?.map((p) => (
+                      <SelectItem key={p.id} value={p.id}>
+                        {p.titulo} <span className="text-muted-foreground ml-1">({p.status})</span>
+                      </SelectItem>
+                    ))}
+                    {portais?.length === 0 && (
+                      <div className="px-3 py-2 text-sm text-muted-foreground">Nenhum portal nesta jornada</div>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {/* Aula existente (cascaded) */}
+            {modo === "atualizar_aula" && (
+              <div className="space-y-2">
+                <Label>Aula *</Label>
+                <Select value={aulaId} onValueChange={setAulaId} disabled={!portalId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={!portalId ? "Selecione um portal primeiro" : "Selecione a aula"} />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background border border-border z-50">
+                    {aulas?.map((a) => (
+                      <SelectItem key={a.id} value={a.id}>
+                        {a.titulo} <span className="text-muted-foreground ml-1">({a.status})</span>
+                      </SelectItem>
+                    ))}
+                    {aulas?.length === 0 && (
+                      <div className="px-3 py-2 text-sm text-muted-foreground">Nenhuma aula neste portal</div>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+          </div>
+
+          {/* BLOCO 2 — Modo de Operação + Motor + Nível */}
+          <div className="space-y-4 p-4 border border-border/50 rounded-lg bg-muted/20">
+            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+              <Settings2 className="h-4 w-4" />
+              Configuração de Geração
+            </h3>
+
+            <div className="grid gap-4 sm:grid-cols-3">
+              {/* Modo */}
+              <div className="space-y-2">
+                <Label>Modo de operação *</Label>
+                <Select value={modo} onValueChange={(v) => setModo(v as ModoOperacao)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background border border-border z-50">
+                    {MODO_OPTIONS.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>
+                        <div>
+                          <div>{o.label}</div>
+                          <span className="text-xs text-muted-foreground ml-1">— {o.desc}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Motor */}
+              <div className="space-y-2">
+                <Label>Motor de geração</Label>
+                <Select value={motor} onValueChange={(v) => setMotor(v as MotorGeracao)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background border border-border z-50">
+                    {MOTOR_OPTIONS.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Nível */}
+              <div className="space-y-2">
+                <Label>Nível do conteúdo</Label>
+                <Select value={nivel} onValueChange={(v) => setNivel(v as NivelConteudo)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background border border-border z-50">
+                    {NIVEL_OPTIONS.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          {/* BLOCO 3 — Nome e Intenção */}
+          <div className="space-y-4 p-4 border border-border/50 rounded-lg bg-muted/20">
+            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+              🎯 Intenção Pedagógica
+            </h3>
+
             <div className="space-y-2">
-              <Label htmlFor="portal">Nome do Portal / Aula *</Label>
+              <Label>Nome do Portal / Aula *</Label>
               <Input
-                id="portal"
                 placeholder="Ex: O Encontro com a Sombra"
                 value={formData.portal}
                 onChange={(e) => handleChange("portal", e.target.value)}
                 required
               />
             </div>
-          </div>
 
-          {/* BLOCO 2 — Intenção Pedagógica */}
-          <div className="space-y-4 p-4 border border-border/50 rounded-lg bg-muted/20">
-            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
-              🎯 Intenção Pedagógica
-            </h3>
-            
-            {/* Objetivo */}
             <div className="space-y-2">
-              <Label htmlFor="objetivo">Objetivo do Portal *</Label>
+              <Label>Objetivo *</Label>
               <Textarea
-                id="objetivo"
-                placeholder="O que esta aula precisa desenvolver na aluna? (habilidade, consciência, aplicação)"
+                placeholder="O que esta aula precisa desenvolver na aluna?"
                 value={formData.objetivo}
                 onChange={(e) => handleChange("objetivo", e.target.value)}
                 rows={3}
@@ -140,7 +304,6 @@ export default function AtelieFormulario({ onGenerated }: AtelieFormularioProps)
               />
             </div>
 
-            {/* Público - Texto fixo */}
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
                 <Users className="h-4 w-4" />
@@ -152,15 +315,13 @@ export default function AtelieFormulario({ onGenerated }: AtelieFormularioProps)
             </div>
           </div>
 
-          {/* BLOCO 3 — Matéria-Prima Autoral */}
+          {/* BLOCO 4 — Matéria-Prima */}
           <div className="space-y-4 p-4 border border-border/50 rounded-lg bg-muted/20">
             <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
               🧠 Matéria-Prima Autoral
             </h3>
-            
-            {/* Ideias-chave */}
             <div className="space-y-2">
-              <Label htmlFor="ideias_chave">Ideias-chave (matéria bruta) *</Label>
+              <Label>Ideias-chave (matéria bruta) *</Label>
               <p className="text-xs text-muted-foreground mb-2">
                 • Que imagem você quer que fique?<br/>
                 • Que comportamento quer transformar?<br/>
@@ -168,7 +329,6 @@ export default function AtelieFormulario({ onGenerated }: AtelieFormularioProps)
                 • Que risco ético existe?
               </p>
               <Textarea
-                id="ideias_chave"
                 placeholder="Escreva aqui sua autoria crua — conceitos, metáforas, insights..."
                 value={formData.ideias_chave}
                 onChange={(e) => handleChange("ideias_chave", e.target.value)}
@@ -178,72 +338,63 @@ export default function AtelieFormulario({ onGenerated }: AtelieFormularioProps)
             </div>
           </div>
 
-          {/* BLOCO 4 — Tom e Ritmo */}
+          {/* BLOCO 5 — Tom e Ritmo */}
           <div className="space-y-4 p-4 border border-border/50 rounded-lg bg-muted/20">
             <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
               🎭 Tom e Ritmo
             </h3>
-            
-            {/* Tom */}
-            <div className="space-y-2">
-              <Label htmlFor="tom">Tom do conteúdo *</Label>
-              <Select value={formData.tom} onValueChange={(value) => handleChange("tom", value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o tom" />
-                </SelectTrigger>
-                <SelectContent className="bg-background border border-border z-50">
-                  {TOM_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Duração */}
-            <div className="space-y-2">
-              <Label htmlFor="duracao">Duração sugerida da aula</Label>
-              <Select 
-                value={formData.duracao} 
-                onValueChange={(value) => handleChange("duracao", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione a duração" />
-                </SelectTrigger>
-                <SelectContent className="bg-background border border-border z-50">
-                  {DURACAO_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label>Tom *</Label>
+                <Select value={formData.tom} onValueChange={(v) => handleChange("tom", v)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background border border-border z-50">
+                    {TOM_OPTIONS.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Duração sugerida</Label>
+                <Select value={formData.duracao} onValueChange={(v) => handleChange("duracao", v)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background border border-border z-50">
+                    {DURACAO_OPTIONS.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 
-          {/* Template Selection (opcional - avançado) */}
+          {/* Template (avançado) */}
           <div className="space-y-2">
-            <Label htmlFor="template" className="text-muted-foreground text-xs">Template (avançado)</Label>
+            <Label className="text-muted-foreground text-xs">Template (avançado)</Label>
             <Select
               value={formData.template_id || defaultTemplate?.id || ""}
-              onValueChange={(value) => handleChange("template_id", value)}
+              onValueChange={(v) => handleChange("template_id", v)}
             >
               <SelectTrigger className="text-xs">
                 <SelectValue placeholder={loadingTemplates ? "Carregando..." : "Template padrão"} />
               </SelectTrigger>
               <SelectContent className="bg-background border border-border z-50">
-                {templates?.map((template) => (
-                  <SelectItem key={template.id} value={template.id}>
-                    {template.name} {template.is_default && "(Padrão)"}
+                {templates?.map((t) => (
+                  <SelectItem key={t.id} value={t.id}>
+                    {t.name} {t.is_default && "(Padrão)"}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
-          {/* BLOCO 5 — Botão de Ação */}
-          <Button type="submit" disabled={isGenerating} className="w-full" size="lg">
+          {/* Botão */}
+          <Button type="submit" disabled={isGenerating || !isFormValid()} className="w-full" size="lg">
             {isGenerating ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -252,7 +403,7 @@ export default function AtelieFormulario({ onGenerated }: AtelieFormularioProps)
             ) : (
               <>
                 <Sparkles className="h-4 w-4 mr-2" />
-                Gerar Aula no Template da Casa Orácula
+                {motor === "agente_casa_oracula" ? "Gerar com Agente Casa Orácula" : "Gerar Aula no Template"}
               </>
             )}
           </Button>

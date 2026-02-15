@@ -491,6 +491,68 @@ export type Database = {
         }
         Relationships: []
       }
+      aulas: {
+        Row: {
+          conteudo_gerado: Json | null
+          conteudo_raw: string | null
+          created_at: string
+          created_by: string | null
+          duracao: string | null
+          id: string
+          motor_geracao: string | null
+          nivel_conteudo: string | null
+          ordem: number
+          portal_id: string
+          status: string
+          subtitulo: string | null
+          titulo: string
+          tom: string | null
+          updated_at: string
+        }
+        Insert: {
+          conteudo_gerado?: Json | null
+          conteudo_raw?: string | null
+          created_at?: string
+          created_by?: string | null
+          duracao?: string | null
+          id?: string
+          motor_geracao?: string | null
+          nivel_conteudo?: string | null
+          ordem?: number
+          portal_id: string
+          status?: string
+          subtitulo?: string | null
+          titulo: string
+          tom?: string | null
+          updated_at?: string
+        }
+        Update: {
+          conteudo_gerado?: Json | null
+          conteudo_raw?: string | null
+          created_at?: string
+          created_by?: string | null
+          duracao?: string | null
+          id?: string
+          motor_geracao?: string | null
+          nivel_conteudo?: string | null
+          ordem?: number
+          portal_id?: string
+          status?: string
+          subtitulo?: string | null
+          titulo?: string
+          tom?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aulas_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: false
+            referencedRelation: "portais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       automation_settings: {
         Row: {
           id: string
@@ -4428,6 +4490,42 @@ export type Database = {
         }
         Relationships: []
       }
+      jornadas: {
+        Row: {
+          ativa: boolean
+          cor_acento: string | null
+          created_at: string
+          descricao: string | null
+          icone: string | null
+          id: string
+          nome: string
+          ordem: number
+          updated_at: string
+        }
+        Insert: {
+          ativa?: boolean
+          cor_acento?: string | null
+          created_at?: string
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          nome: string
+          ordem?: number
+          updated_at?: string
+        }
+        Update: {
+          ativa?: boolean
+          cor_acento?: string | null
+          created_at?: string
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          nome?: string
+          ordem?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       lab_casos: {
         Row: {
           contexto: string | null
@@ -5742,6 +5840,66 @@ export type Database = {
           },
         ]
       }
+      missoes: {
+        Row: {
+          aula_id: string | null
+          compartilhamento_opcional: boolean
+          created_at: string
+          created_by: string | null
+          criterios_conclusao: string | null
+          descricao: string | null
+          id: string
+          ordem: number
+          portal_id: string | null
+          status: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          aula_id?: string | null
+          compartilhamento_opcional?: boolean
+          created_at?: string
+          created_by?: string | null
+          criterios_conclusao?: string | null
+          descricao?: string | null
+          id?: string
+          ordem?: number
+          portal_id?: string | null
+          status?: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          aula_id?: string | null
+          compartilhamento_opcional?: boolean
+          created_at?: string
+          created_by?: string | null
+          criterios_conclusao?: string | null
+          descricao?: string | null
+          id?: string
+          ordem?: number
+          portal_id?: string | null
+          status?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "missoes_aula_id_fkey"
+            columns: ["aula_id"]
+            isOneToOne: false
+            referencedRelation: "aulas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "missoes_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: false
+            referencedRelation: "portais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       modulos_formativos: {
         Row: {
           created_at: string
@@ -6844,6 +7002,78 @@ export type Database = {
           url_checkout?: string | null
         }
         Relationships: []
+      }
+      portais: {
+        Row: {
+          capa_url: string | null
+          created_at: string
+          created_by: string | null
+          descricao: string | null
+          id: string
+          jornada_id: string
+          modulo_id: string | null
+          motor_geracao: string | null
+          nivel_conteudo: string | null
+          objetivo: string | null
+          ordem: number
+          portal_minimo: string | null
+          status: string
+          subtitulo: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          capa_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          descricao?: string | null
+          id?: string
+          jornada_id: string
+          modulo_id?: string | null
+          motor_geracao?: string | null
+          nivel_conteudo?: string | null
+          objetivo?: string | null
+          ordem?: number
+          portal_minimo?: string | null
+          status?: string
+          subtitulo?: string | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          capa_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          descricao?: string | null
+          id?: string
+          jornada_id?: string
+          modulo_id?: string | null
+          motor_geracao?: string | null
+          nivel_conteudo?: string | null
+          objetivo?: string | null
+          ordem?: number
+          portal_minimo?: string | null
+          status?: string
+          subtitulo?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portais_jornada_id_fkey"
+            columns: ["jornada_id"]
+            isOneToOne: false
+            referencedRelation: "jornadas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "portais_modulo_id_fkey"
+            columns: ["modulo_id"]
+            isOneToOne: false
+            referencedRelation: "modulos_formativos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       portal_salas: {
         Row: {
