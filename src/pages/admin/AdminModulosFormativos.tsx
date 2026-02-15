@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -32,7 +32,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
-import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, Star, Loader2, Film, Save } from "lucide-react";
+import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, Star, Loader2, Film, Save, Upload } from "lucide-react";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 
 // ── Types ──────────────────────────────────────────────
@@ -103,6 +103,8 @@ function BannerConfigPanel() {
   const queryClient = useQueryClient();
   const [bannerForm, setBannerForm] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: settings, isLoading } = useQuery({
     queryKey: ["admin-banner-settings"],
@@ -174,19 +176,105 @@ function BannerConfigPanel() {
           <Label>Banner ativo</Label>
         </div>
 
-        {/* Video / Image URL */}
-        <div>
-          <Label>URL do Vídeo ou Imagem</Label>
+        {/* Video / Image Upload + URL */}
+        <div className="space-y-3">
+          <Label>Vídeo ou Imagem do Banner</Label>
+          
+          {/* Upload button */}
+          <div className="flex items-center gap-3">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="video/mp4,image/jpeg,image/png,image/webp"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                
+                const maxSize = 50 * 1024 * 1024; // 50MB
+                if (file.size > maxSize) {
+                  toast.error("Arquivo muito grande. Máximo: 50MB");
+                  return;
+                }
+
+                setUploading(true);
+                try {
+                  const ext = file.name.split('.').pop() || 'mp4';
+                  const filePath = `banner/hero-banner-${Date.now()}.${ext}`;
+                  
+                  const { error: uploadError } = await supabase.storage
+                    .from('content-images')
+                    .upload(filePath, file, { upsert: true });
+                  
+                  if (uploadError) throw uploadError;
+
+                  const { data: urlData } = supabase.storage
+                    .from('content-images')
+                    .getPublicUrl(filePath);
+
+                  setBannerForm((prev) => ({
+                    ...prev,
+                    vitrine_hero_video_url: urlData.publicUrl,
+                  }));
+                  toast.success("Arquivo enviado com sucesso");
+                } catch (err: any) {
+                  toast.error(err.message || "Erro ao enviar arquivo");
+                } finally {
+                  setUploading(false);
+                  if (fileInputRef.current) fileInputRef.current.value = '';
+                }
+              }}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              className="gap-2"
+              disabled={uploading}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              {uploading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Upload className="w-4 h-4" />
+              )}
+              {uploading ? "Enviando..." : "Enviar vídeo ou imagem"}
+            </Button>
+            <span className="text-xs text-muted-foreground">MP4, JPG, PNG, WebP (máx. 50MB)</span>
+          </div>
+
+          {/* URL input */}
           <Input
             value={bannerForm.vitrine_hero_video_url ?? ""}
             onChange={(e) =>
               setBannerForm((prev) => ({ ...prev, vitrine_hero_video_url: e.target.value }))
             }
-            placeholder="https://... (vazio = vídeo padrão)"
+            placeholder="URL gerada pelo upload ou cole uma URL externa"
           />
-          <p className="text-xs text-muted-foreground mt-1">
-            Cole a URL de um vídeo (.mp4) ou imagem (.jpg/.png). Deixe vazio para usar o vídeo padrão.
+          <p className="text-xs text-muted-foreground">
+            Envie um arquivo acima ou cole uma URL externa. Deixe vazio para usar o vídeo padrão.
           </p>
+
+          {/* Preview */}
+          {bannerForm.vitrine_hero_video_url?.trim() && (
+            <div className="rounded-lg overflow-hidden border border-border max-w-sm">
+              {bannerForm.vitrine_hero_video_url.match(/\.(mp4|webm|mov)(\?|$)/i) ? (
+                <video
+                  src={bannerForm.vitrine_hero_video_url}
+                  className="w-full h-32 object-cover"
+                  muted
+                  autoPlay
+                  loop
+                  playsInline
+                />
+              ) : (
+                <img
+                  src={bannerForm.vitrine_hero_video_url}
+                  alt="Preview do banner"
+                  className="w-full h-32 object-cover"
+                />
+              )}
+            </div>
+          )}
         </div>
 
         {/* Hero text */}
