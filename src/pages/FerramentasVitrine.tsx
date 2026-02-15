@@ -8,6 +8,7 @@ import { Loader2, Lock, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { HeroVideoBanner } from "@/components/sales/HeroVideoBanner";
+import { AmbientAudioPlayer } from "@/components/sales/AmbientAudioPlayer";
 
 interface ModuloFormativo {
   id: string;
@@ -187,6 +188,7 @@ export default function FerramentasVitrine() {
       <div className="min-h-screen bg-background">
         {/* Hero Banner */}
         <HeroVideoBanner />
+        <AmbientAudioPlayer />
 
         {/* Content */}
         <div className="max-w-[1200px] mx-auto px-5 md:px-8">
