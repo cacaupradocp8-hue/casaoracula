@@ -72,7 +72,7 @@ export function LessonContent({
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="max-w-4xl mx-auto p-4 lg:p-6 space-y-6">
+      <div className="max-w-[750px] mx-auto p-4 lg:p-8 space-y-8">
         {/* Header */}
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
@@ -90,7 +90,7 @@ export function LessonContent({
               </Badge>
             )}
           </div>
-          <h1 className="font-display text-2xl lg:text-3xl font-bold text-foreground">
+          <h1 className="font-display text-2xl lg:text-3xl font-semibold text-foreground leading-snug">
             {lesson.titulo}
           </h1>
           {lesson.descricao_curta && (
@@ -141,7 +141,7 @@ export function LessonContent({
             {/* Text Content */}
             {lesson.texto_aula && (
               <div 
-                className="prose prose-invert max-w-none"
+                className="prose prose-invert max-w-none prose-p:leading-[1.8] prose-p:text-foreground prose-headings:font-display prose-headings:font-semibold prose-li:leading-[1.7]"
                 dangerouslySetInnerHTML={{ 
                   __html: DOMPurify.sanitize(lesson.texto_aula) 
                 }}

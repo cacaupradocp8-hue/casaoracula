@@ -114,9 +114,9 @@ export function CourseSidebar({
               <AccordionItem 
                 key={module.id} 
                 value={module.id}
-                className="border-b border-border/50"
+                className="border-b border-border/40"
               >
-                <AccordionTrigger className="hover:no-underline py-3 px-2">
+                <AccordionTrigger className="hover:no-underline py-4 px-3">
                   <div className="flex-1 text-left">
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-muted-foreground">

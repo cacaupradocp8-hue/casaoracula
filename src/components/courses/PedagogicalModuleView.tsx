@@ -79,7 +79,7 @@ export function PedagogicalModuleView({
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-12 pb-20">
+    <div className="max-w-[750px] mx-auto space-y-14 pb-20">
       {/* Back button */}
       {onBack && (
         <button
@@ -97,7 +97,7 @@ export function PedagogicalModuleView({
           <BookOpen className="w-3 h-3" />
           Módulo Pedagógico
         </Badge>
-        <h1 className="font-display text-4xl font-bold text-foreground">
+        <h1 className="font-display text-4xl font-semibold text-foreground leading-snug">
           {module.titulo}
         </h1>
         {module.subtitulo && (
@@ -158,12 +158,12 @@ export function PedagogicalModuleView({
           </div>
 
           {/* Carousel style */}
-          <Card className="p-6">
+          <Card className="p-8 rounded-xl border-border/60 shadow-sm">
             <div className="min-h-[200px] flex flex-col items-center justify-center text-center space-y-6">
               <Badge className="bg-primary/20 text-primary">
                 Card {currentCardIndex + 1} de {cards.length}
               </Badge>
-              <p className="text-lg leading-relaxed max-w-2xl">
+              <p className="text-lg leading-[1.8] max-w-2xl text-foreground">
                 {cards[currentCardIndex]?.texto}
               </p>
               <div className="flex items-center gap-4">
@@ -211,7 +211,7 @@ export function PedagogicalModuleView({
             <Wrench className="w-5 h-5 text-green-400" />
             <span>Ferramenta Prática do Módulo</span>
           </div>
-          <Card className="p-6">
+          <Card className="p-8 rounded-xl border-border/60 shadow-sm">
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-2">
                 <h3 className="text-xl font-semibold">
@@ -241,7 +241,7 @@ export function PedagogicalModuleView({
           </div>
           <div className="space-y-4">
             {casos.map((caso, index) => (
-              <Card key={index} className="p-6">
+              <Card key={index} className="p-8 rounded-xl border-border/60 shadow-sm">
                 <CardHeader className="p-0 pb-3">
                   <CardTitle className="text-lg flex items-center gap-2">
                     <span className="w-6 h-6 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center text-sm">
@@ -251,7 +251,7 @@ export function PedagogicalModuleView({
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <p className="text-muted-foreground whitespace-pre-wrap">
+                  <p className="text-muted-foreground whitespace-pre-wrap leading-[1.8]">
                     {caso.texto}
                   </p>
                 </CardContent>
@@ -269,7 +269,7 @@ export function PedagogicalModuleView({
             <span>Check de Maturidade</span>
           </div>
 
-          <Card className="p-6 space-y-6 border-purple-400/30">
+          <Card className="p-8 space-y-6 border-purple-400/30 rounded-xl shadow-sm">
             <p className="text-sm text-muted-foreground italic text-center border border-border rounded-lg p-3 bg-muted/30">
               "Este check não avalia. Ele organiza percepção."
             </p>
