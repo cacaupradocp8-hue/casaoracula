@@ -7,7 +7,8 @@ import { motion } from "framer-motion";
 import { Loader2, Lock, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { HeroVideoBanner } from "@/components/sales/HeroVideoBanner";
+import { VitrineBanner } from "@/components/vitrine/VitrineBanner";
+import { VitrineBlocos } from "@/components/vitrine/VitrineBlocos";
 
 interface ModuloFormativo {
   id: string;
@@ -184,26 +185,16 @@ export default function FerramentasVitrine() {
 
   return (
     <AppLayout>
-      <div className="min-h-screen bg-background">
-        {/* Hero Banner */}
-        <HeroVideoBanner />
+      <div className="min-h-screen">
+        {/* Banner principal */}
+        <VitrineBanner onCtaClick={() => navigate("/formacao-oracula")} />
 
-        {/* Content */}
+        {/* Blocos institucionais */}
+        <VitrineBlocos onNavigate={navigate} />
+
+        {/* Módulos formativos */}
+        <div className="bg-background">
         <div className="max-w-[1200px] mx-auto px-5 md:px-8">
-          {/* Section header — subtle, institutional */}
-          <div className="py-12 md:py-20 text-center">
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }}>
-              <p className="text-[hsl(40,35%,60%)]/60 uppercase tracking-[0.25em] text-xs mb-4">
-                Casa Orácula
-              </p>
-              <h1 className="font-display text-2xl md:text-3xl lg:text-4xl text-[hsl(40,10%,90%)] tracking-wide font-medium">
-                Caminhos de Formação
-              </h1>
-              <p className="text-[hsl(40,5%,50%)] text-sm mt-3 max-w-md mx-auto leading-relaxed">
-                Jornadas, cursos e travessias para quem busca presença, método e sustentação.
-              </p>
-            </motion.div>
-          </div>
 
           {/* Sections */}
           <div className="space-y-12 md:space-y-20 pb-20">
@@ -242,30 +233,8 @@ export default function FerramentasVitrine() {
               </>
             )}
 
-            {/* CTA Final — contemplative, not promotional */}
-            {hasAny && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                className="text-center pt-8 pb-4"
-              >
-                <div className="h-px w-16 bg-[hsl(40,35%,60%)]/20 mx-auto mb-8" />
-                <p className="text-[hsl(40,5%,50%)] text-sm mb-6">
-                  Cada jornada começa com um passo consciente.
-                </p>
-                <Button
-                  onClick={() => navigate("/sala-da-visitante")}
-                  variant="hero"
-                  size="lg"
-                  className="gap-3 border-[hsl(40,35%,60%)]/30 text-[hsl(40,35%,60%)] hover:border-[hsl(40,35%,60%)]/60 hover:bg-[hsl(40,35%,60%)]/5 transition-all duration-300"
-                >
-                  Iniciar minha travessia
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </motion.div>
-            )}
           </div>
+        </div>
         </div>
       </div>
     </AppLayout>
