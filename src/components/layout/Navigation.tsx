@@ -319,8 +319,8 @@ export function Navigation() {
                       Jardim da Psique
                     </DropdownMenuItem>
                     
-                    {/* Casa das Máquinas - portal >= assinante */}
-                    {user && canAccessFeature(user.portal, 'assinante') && (
+                    {/* Casa das Máquinas - portal >= oracula (certificada) */}
+                    {user && canAccessFeature(user.portal, 'oracula') && (
                       <>
                         <DropdownMenuSeparator />
                         <DropdownMenuLabel className="text-xs text-muted-foreground">Espaço Profissional</DropdownMenuLabel>
