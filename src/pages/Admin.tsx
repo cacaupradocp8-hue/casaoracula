@@ -63,6 +63,7 @@ const AdminAtlasFemininoTab = lazy(() => import('@/components/admin/AdminAtlasFe
 const AdminNarroterapiaTab = lazy(() => import('@/components/admin/AdminNarroterapiaTab').then(m => ({ default: m.AdminNarroterapiaTab })));
 const AdminNarroterapiaAutorizacaoTab = lazy(() => import('@/components/admin/AdminNarroterapiaAutorizacaoTab'));
 const AdminClubeLivroTab = lazy(() => import('@/components/admin/AdminClubeLivroTab'));
+const AdminModulosFormativos = lazy(() => import('@/pages/admin/AdminModulosFormativos'));
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
   { value: 'aluna', label: '👁 Aluna' },
@@ -308,6 +309,10 @@ export default function Admin() {
             <TabsTrigger value="clube-livro" className="gap-2">
               <BookOpen className="w-4 h-4 text-emerald-400" />
               Clube do Livro
+            </TabsTrigger>
+            <TabsTrigger value="vitrine" className="gap-2">
+              <LayoutGrid className="w-4 h-4 text-gold" />
+              Vitrine
             </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Cog className="w-4 h-4" />
@@ -590,6 +595,12 @@ export default function Admin() {
           <TabsContent value="clube-livro">
             <Suspense fallback={<TabLoader />}>
               <AdminClubeLivroTab />
+            </Suspense>
+          </TabsContent>
+
+          <TabsContent value="vitrine">
+            <Suspense fallback={<TabLoader />}>
+              <AdminModulosFormativos />
             </Suspense>
           </TabsContent>
 
