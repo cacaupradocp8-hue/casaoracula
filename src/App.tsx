@@ -107,6 +107,7 @@ import AgenteSimbólico from "./pages/salas/AgenteSimbólico";
 import FerramentaDinamica from "./pages/FerramentaDinamica";
 import CriarFerramenta from "./pages/admin/CriarFerramenta";
 import AtelieConteudo from "./pages/admin/AtelieConteudo";
+import AdminModulosFormativos from "./pages/admin/AdminModulosFormativos";
 import Big5Simbolico from "./pages/Big5Simbolico";
 import Big5Oracular from "./pages/Big5Oracular";
 import Big5Funcional from "./pages/Big5Funcional";
@@ -1510,6 +1511,16 @@ function AppRoutes() {
           element={
             <ProtectedRoute minPortal="admin">
               <AtelieConteudo />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin - Módulos Formativos (Vitrine) */}
+        <Route
+          path="/admin/modulos-formativos"
+          element={
+            <ProtectedRoute minPortal="admin">
+              <AdminModulosFormativos />
             </ProtectedRoute>
           }
         />

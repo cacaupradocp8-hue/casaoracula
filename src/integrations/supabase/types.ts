@@ -5742,6 +5742,51 @@ export type Database = {
           },
         ]
       }
+      modulos_formativos: {
+        Row: {
+          created_at: string
+          descricao_curta: string | null
+          destaque_vitrine: boolean
+          id: string
+          imagem_capa: string | null
+          nivel_acesso: Database["public"]["Enums"]["nivel_acesso_modulo"]
+          nome_modulo: string
+          ordem_exibicao: number
+          rota_destino: string | null
+          status_publicacao: Database["public"]["Enums"]["status_publicacao"]
+          tipo_modulo: Database["public"]["Enums"]["tipo_modulo"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          descricao_curta?: string | null
+          destaque_vitrine?: boolean
+          id?: string
+          imagem_capa?: string | null
+          nivel_acesso?: Database["public"]["Enums"]["nivel_acesso_modulo"]
+          nome_modulo: string
+          ordem_exibicao?: number
+          rota_destino?: string | null
+          status_publicacao?: Database["public"]["Enums"]["status_publicacao"]
+          tipo_modulo?: Database["public"]["Enums"]["tipo_modulo"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          descricao_curta?: string | null
+          destaque_vitrine?: boolean
+          id?: string
+          imagem_capa?: string | null
+          nivel_acesso?: Database["public"]["Enums"]["nivel_acesso_modulo"]
+          nome_modulo?: string
+          ordem_exibicao?: number
+          rota_destino?: string | null
+          status_publicacao?: Database["public"]["Enums"]["status_publicacao"]
+          tipo_modulo?: Database["public"]["Enums"]["tipo_modulo"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       narrative_maps: {
         Row: {
           case_id: string
@@ -9521,6 +9566,7 @@ export type Database = {
         | "tensao"
         | "ciclo_repetido"
         | "observacao"
+      nivel_acesso_modulo: "aberta" | "iniciada" | "certificada" | "mentoria"
       nivel_sala: "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3"
       oracle_card_level: "beginner" | "intermediate" | "advanced"
       oracle_content_status: "draft" | "published" | "archived"
@@ -9539,7 +9585,9 @@ export type Database = {
       pricing_model: "free" | "one_time" | "subscription"
       ritual_status: "pending" | "completed" | "skipped_by_admin"
       ritual_type: "abertura" | "transicao" | "consagracao"
+      status_publicacao: "rascunho" | "publicado"
       status_supervisao: "privado" | "enviado" | "discutido"
+      tipo_modulo: "jornada" | "curso" | "circulo" | "travessia" | "biblioteca"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -9732,6 +9780,7 @@ export const Constants = {
         "ciclo_repetido",
         "observacao",
       ],
+      nivel_acesso_modulo: ["aberta", "iniciada", "certificada", "mentoria"],
       nivel_sala: ["NIVEL_0", "NIVEL_1", "NIVEL_2", "NIVEL_3"],
       oracle_card_level: ["beginner", "intermediate", "advanced"],
       oracle_content_status: ["draft", "published", "archived"],
@@ -9751,7 +9800,9 @@ export const Constants = {
       pricing_model: ["free", "one_time", "subscription"],
       ritual_status: ["pending", "completed", "skipped_by_admin"],
       ritual_type: ["abertura", "transicao", "consagracao"],
+      status_publicacao: ["rascunho", "publicado"],
       status_supervisao: ["privado", "enviado", "discutido"],
+      tipo_modulo: ["jornada", "curso", "circulo", "travessia", "biblioteca"],
     },
   },
 } as const
