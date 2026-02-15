@@ -122,7 +122,7 @@ import { AsPortas, OsCamposPsiquicos, AsTorres, TriadeMetodo } from "./pages/met
 import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
 // Casa das Máquinas
-import { CasaDasMaquinas, SessoesPage, GestosIntegracaoPage, MapaVivoClientePage } from "./pages/casa-maquinas";
+import { CasaDasMaquinas, SessoesPage, GestosIntegracaoPage, MapaVivoClientePage, PainelInstitucionalPage } from "./pages/casa-maquinas";
 // Jardim do Ofício
 import { JardimOficioPage, PainelSupervisaoPage } from "./pages/jardim-oficio";
 import Jornada from "./pages/Jornada";
@@ -1276,11 +1276,11 @@ function AppRoutes() {
         }
         />
 
-        {/* Casa das Máquinas */}
+        {/* Casa das Máquinas - acesso a partir de certificada (oracula) */}
         <Route
           path="/casa-das-maquinas"
           element={
-            <ProtectedRoute minPortal="assinante">
+            <ProtectedRoute minPortal="oracula">
               <CasaDasMaquinas />
             </ProtectedRoute>
           }
@@ -1288,7 +1288,7 @@ function AppRoutes() {
         <Route
           path="/casa-das-maquinas/sessoes"
           element={
-            <ProtectedRoute minPortal="assinante">
+            <ProtectedRoute minPortal="oracula">
               <SessoesPage />
             </ProtectedRoute>
           }
@@ -1296,7 +1296,7 @@ function AppRoutes() {
         <Route
           path="/casa-das-maquinas/gestos"
           element={
-            <ProtectedRoute minPortal="assinante">
+            <ProtectedRoute minPortal="oracula">
               <GestosIntegracaoPage />
             </ProtectedRoute>
           }
@@ -1304,8 +1304,16 @@ function AppRoutes() {
         <Route
           path="/casa-das-maquinas/mapa-vivo/:clienteId"
           element={
-            <ProtectedRoute minPortal="assinante">
+            <ProtectedRoute minPortal="oracula">
               <MapaVivoClientePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/casa-das-maquinas/painel"
+          element={
+            <ProtectedRoute minPortal="admin">
+              <PainelInstitucionalPage />
             </ProtectedRoute>
           }
         />
@@ -1314,7 +1322,7 @@ function AppRoutes() {
         <Route
           path="/casa-das-maquinas/jardim-oficio"
           element={
-            <ProtectedRoute minPortal="assinante">
+            <ProtectedRoute minPortal="oracula">
               <JardimOficioPage />
             </ProtectedRoute>
           }
