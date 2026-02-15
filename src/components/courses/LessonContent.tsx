@@ -14,6 +14,7 @@ import { CourseLesson, CourseModuleWithLessons } from '@/types/course';
 import DOMPurify from 'dompurify';
 import { ModularPageRenderer } from '@/components/modular/ModularPageRenderer';
 import { PedagogicalModuleView } from './PedagogicalModuleView';
+import { RitualLessonView } from './RitualLessonView';
 import { DiarioBordoAula } from '@/components/shared/DiarioBordoAula';
 import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
 import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
@@ -52,6 +53,9 @@ export function LessonContent({
     return extractVideoId(lesson.video_url);
   }, [lesson.video_url, extractVideoId, isCloudflareVideoId]);
 
+  // Check if this is a ritual lesson
+  const isRitual = lesson.content_type === 'ritual';
+
   // Check if module has pedagogical format enabled
   const isPedagogical = module?.formato_pedagogico === true;
   
@@ -69,6 +73,21 @@ export function LessonContent({
     estudos_caso: (module.estudos_caso as any[]) || [],
     check_maturidade: (module.check_maturidade as any[]) || [],
   } : null;
+
+  // Ritual lessons get their own full-screen view
+  if (isRitual) {
+    return (
+      <RitualLessonView
+        lesson={lesson}
+        courseId={courseId}
+        isCompleted={isCompleted}
+        onMarkComplete={onMarkComplete}
+        onNavigate={onNavigate}
+        hasPrev={hasPrev}
+        hasNext={hasNext}
+      />
+    );
+  }
 
   return (
     <div className="flex-1 overflow-y-auto">
