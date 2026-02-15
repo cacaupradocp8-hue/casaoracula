@@ -85,7 +85,7 @@ export function HeroVideoBanner() {
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
       {/* Text content — centered */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center z-10">
+      <div className="absolute inset-0 flex flex-col items-center justify-end pb-[18%] md:pb-[14%] px-6 text-center z-10">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
