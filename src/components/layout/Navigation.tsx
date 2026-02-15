@@ -69,8 +69,8 @@ export function Navigation() {
         minPortal: 'visitante',
       },
       {
-        path: '/oracula',
-        label: 'Formação',
+        path: '/ferramentas-vitrine',
+        label: 'Vitrine',
         icon: Star,
         minPortal: 'visitante',
       },
