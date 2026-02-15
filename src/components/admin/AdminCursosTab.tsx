@@ -207,11 +207,12 @@ export function AdminCursosTab() {
 
   // Lesson CRUD
   const handleSaveLesson = async (formData: FormData) => {
-    const lessonData = {
+    const contentType = formData.get('content_type') as ContentType;
+    const lessonData: any = {
       module_id: formData.get('module_id') as string,
       titulo: formData.get('titulo') as string,
       descricao_curta: formData.get('descricao_curta') as string || '',
-      content_type: formData.get('content_type') as ContentType,
+      content_type: contentType,
       texto_aula: formData.get('texto_aula') as string || null,
       video_url: formData.get('video_url') as string || null,
       audio_url: formData.get('audio_url') as string || null,
@@ -222,6 +223,19 @@ export function AdminCursosTab() {
       publicado: formData.get('publicado') === 'true',
       is_preview: formData.get('is_preview') === 'true',
     };
+
+    // Ritual-specific fields
+    if (contentType === 'ritual') {
+      lessonData.capa_url = formData.get('capa_url') as string || null;
+      lessonData.jornada = formData.get('jornada') as string || null;
+      lessonData.portal = formData.get('portal') as string || null;
+      try {
+        const slidesRaw = formData.get('ritual_slides') as string;
+        lessonData.ritual_slides = slidesRaw ? JSON.parse(slidesRaw) : [];
+      } catch {
+        lessonData.ritual_slides = [];
+      }
+    }
 
     try {
       if (editingLesson) {
@@ -744,6 +758,7 @@ export function AdminCursosTab() {
                             <SelectItem value="text">Texto</SelectItem>
                             <SelectItem value="file">Arquivo</SelectItem>
                             <SelectItem value="mixed">Misto</SelectItem>
+                            <SelectItem value="ritual">Aula Ritual (Slide + Áudio)</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -771,6 +786,43 @@ export function AdminCursosTab() {
                         <Label htmlFor="texto_aula">Conteúdo de Texto (HTML/Markdown)</Label>
                         <Textarea id="texto_aula" name="texto_aula" rows={6} defaultValue={editingLesson?.texto_aula || ''} />
                       </div>
+
+                      {/* Ritual-specific fields */}
+                      {(editingLesson?.content_type === 'ritual' || !editingLesson) && (
+                        <div className="col-span-2 space-y-4 border border-primary/20 rounded-lg p-4">
+                          <h4 className="text-sm font-semibold text-primary flex items-center gap-2">
+                            <Sparkles className="w-4 h-4" />
+                            Campos Aula Ritual
+                          </h4>
+                          <p className="text-xs text-muted-foreground">Estes campos só se aplicam ao tipo "Aula Ritual".</p>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <Label htmlFor="capa_url">URL da Capa</Label>
+                              <Input id="capa_url" name="capa_url" placeholder="https://..." defaultValue={(editingLesson as any)?.capa_url || ''} />
+                            </div>
+                            <div>
+                              <Label htmlFor="jornada">Jornada</Label>
+                              <Input id="jornada" name="jornada" placeholder="Ex: Jornada da Heroína" defaultValue={(editingLesson as any)?.jornada || ''} />
+                            </div>
+                            <div>
+                              <Label htmlFor="portal_ritual">Portal</Label>
+                              <Input id="portal_ritual" name="portal" placeholder="Ex: Portal da Sombra" defaultValue={(editingLesson as any)?.portal || ''} />
+                            </div>
+                          </div>
+                          <div>
+                            <Label htmlFor="ritual_slides">Slides (JSON)</Label>
+                            <Textarea
+                              id="ritual_slides"
+                              name="ritual_slides"
+                              rows={5}
+                              placeholder={'[\n  { "image_url": "https://...", "titulo": "Título", "frase_simbolica": "Frase..." }\n]'}
+                              defaultValue={editingLesson && (editingLesson as any)?.ritual_slides ? JSON.stringify((editingLesson as any).ritual_slides, null, 2) : ''}
+                            />
+                            <p className="text-xs text-muted-foreground mt-1">Array JSON de slides com image_url, titulo (opcional), frase_simbolica (opcional)</p>
+                          </div>
+                        </div>
+                      )}
+
                       <div>
                         <Label htmlFor="ordem">Ordem</Label>
                         <Input id="ordem" name="ordem" type="number" defaultValue={editingLesson?.ordem || 0} />

@@ -2,7 +2,7 @@
 import { Json } from '@/integrations/supabase/types';
 
 export type PricingModel = 'free' | 'one_time' | 'subscription';
-export type ContentType = 'text' | 'video' | 'audio' | 'file' | 'mixed';
+export type ContentType = 'text' | 'video' | 'audio' | 'file' | 'mixed' | 'ritual';
 
 export interface Course {
   id: string;
@@ -53,6 +53,12 @@ export interface CourseModule {
   check_maturidade?: Json | null;
 }
 
+export interface RitualSlide {
+  image_url: string;
+  titulo?: string;
+  frase_simbolica?: string;
+}
+
 export interface CourseLesson {
   id: string;
   module_id: string;
@@ -70,6 +76,11 @@ export interface CourseLesson {
   is_preview: boolean;
   created_at: string;
   updated_at: string;
+  // Ritual lesson fields
+  ritual_slides?: any[] | null;
+  capa_url?: string | null;
+  jornada?: string | null;
+  portal?: string | null;
 }
 
 export interface CourseEnrollment {

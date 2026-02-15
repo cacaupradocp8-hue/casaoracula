@@ -2286,17 +2286,21 @@ export type Database = {
       course_lessons: {
         Row: {
           audio_url: string | null
+          capa_url: string | null
           content_type: Database["public"]["Enums"]["content_type"]
           created_at: string
           descricao_curta: string | null
           duracao_minutos: number | null
           id: string
           is_preview: boolean
+          jornada: string | null
           materiais_url: string | null
           module_id: string
           ordem: number
           pdf_url: string | null
+          portal: string | null
           publicado: boolean
+          ritual_slides: Json | null
           texto_aula: string | null
           titulo: string
           updated_at: string
@@ -2304,17 +2308,21 @@ export type Database = {
         }
         Insert: {
           audio_url?: string | null
+          capa_url?: string | null
           content_type?: Database["public"]["Enums"]["content_type"]
           created_at?: string
           descricao_curta?: string | null
           duracao_minutos?: number | null
           id?: string
           is_preview?: boolean
+          jornada?: string | null
           materiais_url?: string | null
           module_id: string
           ordem?: number
           pdf_url?: string | null
+          portal?: string | null
           publicado?: boolean
+          ritual_slides?: Json | null
           texto_aula?: string | null
           titulo: string
           updated_at?: string
@@ -2322,17 +2330,21 @@ export type Database = {
         }
         Update: {
           audio_url?: string | null
+          capa_url?: string | null
           content_type?: Database["public"]["Enums"]["content_type"]
           created_at?: string
           descricao_curta?: string | null
           duracao_minutos?: number | null
           id?: string
           is_preview?: boolean
+          jornada?: string | null
           materiais_url?: string | null
           module_id?: string
           ordem?: number
           pdf_url?: string | null
+          portal?: string | null
           publicado?: boolean
+          ritual_slides?: Json | null
           texto_aula?: string | null
           titulo?: string
           updated_at?: string
@@ -9786,7 +9798,7 @@ export type Database = {
         | "archetypal_mapping"
         | "narrative_result"
         | "porta_familias"
-      content_type: "text" | "video" | "audio" | "file" | "mixed"
+      content_type: "text" | "video" | "audio" | "file" | "mixed" | "ritual"
       gesto_status: "ativo" | "em_pratica" | "integrado" | "em_revisao"
       jardim_gesto_tipo:
         | "observacao"
@@ -9998,7 +10010,7 @@ export const Constants = {
         "narrative_result",
         "porta_familias",
       ],
-      content_type: ["text", "video", "audio", "file", "mixed"],
+      content_type: ["text", "video", "audio", "file", "mixed", "ritual"],
       gesto_status: ["ativo", "em_pratica", "integrado", "em_revisao"],
       jardim_gesto_tipo: [
         "observacao",
