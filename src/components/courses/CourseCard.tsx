@@ -38,7 +38,7 @@ export function CourseCard({ course, showProgress = true }: CourseCardProps) {
   };
 
   return (
-    <Card className="group relative overflow-hidden bg-card border-border hover:border-primary/50 transition-all duration-300">
+    <Card className="group relative overflow-hidden bg-card border-border/60 hover:border-primary/40 hover:bg-card/80 transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-primary/5 rounded-xl">
       {/* Cover Image */}
       <div className="relative aspect-video overflow-hidden">
         {course.capa_url ? (
@@ -75,17 +75,17 @@ export function CourseCard({ course, showProgress = true }: CourseCardProps) {
         </div>
       </div>
 
-      <CardHeader className="pb-2">
-        <h3 className="font-display text-xl font-semibold text-foreground line-clamp-2">
+      <CardHeader className="pb-2 pt-5 px-5">
+        <h3 className="font-display text-xl font-semibold text-foreground line-clamp-2 leading-snug">
           {course.titulo}
         </h3>
         {course.subtitulo && (
-          <p className="text-sm text-muted-foreground line-clamp-1">{course.subtitulo}</p>
+          <p className="text-sm text-muted-foreground line-clamp-1 mt-1">{course.subtitulo}</p>
         )}
       </CardHeader>
 
-      <CardContent className="pb-2">
-        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+      <CardContent className="pb-2 px-5">
+        <p className="text-sm text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
           {course.descricao_publica || course.descricao}
         </p>
 
@@ -119,7 +119,7 @@ export function CourseCard({ course, showProgress = true }: CourseCardProps) {
         )}
       </CardContent>
 
-      <CardFooter className="pt-2">
+      <CardFooter className="pt-3 pb-5 px-5">
         <Link to={`/cursos/${course.id}`} className="w-full">
           <Button 
             variant={hasUserAccess ? 'default' : 'outline'} 
