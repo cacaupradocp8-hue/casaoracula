@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 
@@ -34,14 +34,15 @@
     /* Casa ORÁCULA - Nova Paleta */
     /* Fundo principal: #0E1A24 */
     --background: 206 44% 10%;
-    --foreground: 210 29% 94%;
+    /* Off-white para reduzir fadiga visual: ~#EAEAEA */
+    --foreground: 210 10% 90%;
 
     /* Fundo cards: #142634 */
     --card: 206 43% 14%;
-    --card-foreground: 210 29% 94%;
+    --card-foreground: 210 10% 90%;
 
     --popover: 206 43% 14%;
-    --popover-foreground: 210 29% 94%;
+    --popover-foreground: 210 10% 90%;
 
     /* Dourado principal: #C9A45C */
     --primary: 42 49% 58%;
@@ -49,7 +50,7 @@
 
     /* Fundo secundário */
     --secondary: 206 35% 18%;
-    --secondary-foreground: 210 29% 94%;
+    --secondary-foreground: 210 10% 90%;
 
     --muted: 206 30% 20%;
     /* Texto secundário: Ajustado para melhor legibilidade */
@@ -57,10 +58,10 @@
 
     /* Acento simbólico: #6F85A6 */
     --accent: 216 25% 54%;
-    --accent-foreground: 210 29% 94%;
+    --accent-foreground: 210 10% 90%;
 
     --destructive: 0 62% 45%;
-    --destructive-foreground: 210 29% 94%;
+    --destructive-foreground: 210 10% 90%;
 
     --border: 206 30% 22%;
     --input: 206 35% 18%;
@@ -93,15 +94,15 @@
 
     /* Typography */
     --font-display: 'Cormorant Garamond', serif;
-    --font-body: 'DM Sans', sans-serif;
+    --font-body: 'Inter', sans-serif;
 
     /* Sidebar */
     --sidebar-background: 206 43% 12%;
-    --sidebar-foreground: 210 29% 94%;
+    --sidebar-foreground: 210 10% 90%;
     --sidebar-primary: 42 49% 58%;
     --sidebar-primary-foreground: 206 44% 10%;
     --sidebar-accent: 206 35% 18%;
-    --sidebar-accent-foreground: 210 29% 94%;
+    --sidebar-accent-foreground: 210 10% 90%;
     --sidebar-border: 206 30% 22%;
     --sidebar-ring: 42 49% 58%;
   }
@@ -109,21 +110,21 @@
   .dark {
     /* Same as root - this is a dark-first theme */
     --background: 206 44% 10%;
-    --foreground: 210 29% 94%;
+    --foreground: 210 10% 90%;
     --card: 206 43% 14%;
-    --card-foreground: 210 29% 94%;
+    --card-foreground: 210 10% 90%;
     --popover: 206 43% 14%;
-    --popover-foreground: 210 29% 94%;
+    --popover-foreground: 210 10% 90%;
     --primary: 42 49% 58%;
     --primary-foreground: 206 44% 10%;
     --secondary: 206 35% 18%;
-    --secondary-foreground: 210 29% 94%;
+    --secondary-foreground: 210 10% 90%;
     --muted: 206 30% 20%;
     --muted-foreground: 210 20% 78%;
     --accent: 216 25% 54%;
-    --accent-foreground: 210 29% 94%;
+    --accent-foreground: 210 10% 90%;
     --destructive: 0 62% 45%;
-    --destructive-foreground: 210 29% 94%;
+    --destructive-foreground: 210 10% 90%;
     --border: 206 30% 22%;
     --input: 206 35% 18%;
     --ring: 42 49% 58%;
@@ -143,10 +144,20 @@
     @apply bg-background text-foreground font-body antialiased;
     background-image: var(--gradient-midnight);
     min-height: 100vh;
+    font-size: 16px;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-display;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  p, li, span, label, td {
+    line-height: 1.7;
   }
 }
 
