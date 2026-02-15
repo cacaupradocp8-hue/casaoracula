@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { AppLayout } from "@/components/layout/AppLayout";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -31,8 +30,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, Star, Loader2 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Slider } from "@/components/ui/slider";
+import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, Star, Loader2, Film, Save } from "lucide-react";
 import { SectionHeader } from "@/components/shared/SectionHeader";
+
+// ── Types ──────────────────────────────────────────────
 
 interface ModuloFormativo {
   id: string;
@@ -82,6 +85,174 @@ const STATUS_OPTIONS = [
   { value: "rascunho", label: "Rascunho" },
   { value: "publicado", label: "Publicado" },
 ];
+
+// ── Banner Settings Keys ──────────────────────────────
+
+const BANNER_KEYS = [
+  "vitrine_hero_video_url",
+  "vitrine_hero_texto",
+  "vitrine_hero_btn_texto",
+  "vitrine_hero_btn_link",
+  "vitrine_hero_overlay_opacity",
+  "vitrine_hero_ativo",
+];
+
+// ── Banner Config Panel ───────────────────────────────
+
+function BannerConfigPanel() {
+  const queryClient = useQueryClient();
+  const [bannerForm, setBannerForm] = useState<Record<string, string>>({});
+  const [saving, setSaving] = useState(false);
+
+  const { data: settings, isLoading } = useQuery({
+    queryKey: ["admin-banner-settings"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("app_settings")
+        .select("key, value")
+        .in("key", BANNER_KEYS);
+      if (error) throw error;
+      const map: Record<string, string> = {};
+      data?.forEach((s) => (map[s.key] = s.value));
+      return map;
+    },
+  });
+
+  useEffect(() => {
+    if (settings) setBannerForm(settings);
+  }, [settings]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      for (const key of BANNER_KEYS) {
+        const value = bannerForm[key];
+        if (value === undefined) continue;
+        const { error } = await supabase
+          .from("app_settings")
+          .update({ value })
+          .eq("key", key);
+        if (error) throw error;
+      }
+      queryClient.invalidateQueries({ queryKey: ["admin-banner-settings"] });
+      queryClient.invalidateQueries({ queryKey: ["vitrine-hero-settings"] });
+      toast.success("Banner atualizado");
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao salvar banner");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-8">
+        <Loader2 className="w-6 h-6 animate-spin text-gold" />
+      </div>
+    );
+  }
+
+  const overlayValue = Number(bannerForm.vitrine_hero_overlay_opacity ?? "30");
+
+  return (
+    <Card className="border-border mb-8">
+      <CardHeader className="pb-4">
+        <div className="flex items-center gap-3">
+          <Film className="w-5 h-5 text-gold" />
+          <CardTitle className="text-lg">Configurações do Banner</CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-5">
+        {/* Active toggle */}
+        <div className="flex items-center gap-3">
+          <Switch
+            checked={bannerForm.vitrine_hero_ativo !== "false"}
+            onCheckedChange={(v) =>
+              setBannerForm((prev) => ({ ...prev, vitrine_hero_ativo: v ? "true" : "false" }))
+            }
+          />
+          <Label>Banner ativo</Label>
+        </div>
+
+        {/* Video / Image URL */}
+        <div>
+          <Label>URL do Vídeo ou Imagem</Label>
+          <Input
+            value={bannerForm.vitrine_hero_video_url ?? ""}
+            onChange={(e) =>
+              setBannerForm((prev) => ({ ...prev, vitrine_hero_video_url: e.target.value }))
+            }
+            placeholder="https://... (vazio = vídeo padrão)"
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Cole a URL de um vídeo (.mp4) ou imagem (.jpg/.png). Deixe vazio para usar o vídeo padrão.
+          </p>
+        </div>
+
+        {/* Hero text */}
+        <div>
+          <Label>Texto Principal</Label>
+          <Input
+            value={bannerForm.vitrine_hero_texto ?? ""}
+            onChange={(e) =>
+              setBannerForm((prev) => ({ ...prev, vitrine_hero_texto: e.target.value }))
+            }
+            placeholder="Aqui, a travessia começa com presença"
+          />
+        </div>
+
+        {/* Button text + link */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label>Texto do Botão</Label>
+            <Input
+              value={bannerForm.vitrine_hero_btn_texto ?? ""}
+              onChange={(e) =>
+                setBannerForm((prev) => ({ ...prev, vitrine_hero_btn_texto: e.target.value }))
+              }
+              placeholder="Continuar minha travessia"
+            />
+          </div>
+          <div>
+            <Label>Link do Botão</Label>
+            <Input
+              value={bannerForm.vitrine_hero_btn_link ?? ""}
+              onChange={(e) =>
+                setBannerForm((prev) => ({ ...prev, vitrine_hero_btn_link: e.target.value }))
+              }
+              placeholder="/salas"
+            />
+          </div>
+        </div>
+
+        {/* Overlay opacity */}
+        <div>
+          <Label>Opacidade do Overlay ({overlayValue}%)</Label>
+          <Slider
+            value={[overlayValue]}
+            min={0}
+            max={80}
+            step={5}
+            onValueChange={([v]) =>
+              setBannerForm((prev) => ({ ...prev, vitrine_hero_overlay_opacity: String(v) }))
+            }
+            className="mt-2"
+          />
+        </div>
+
+        {/* Save */}
+        <div className="flex justify-end pt-2">
+          <Button onClick={handleSave} disabled={saving} className="gap-2">
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            Salvar Banner
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ── Main Admin Component ──────────────────────────────
 
 export default function AdminModulosFormativos() {
   const queryClient = useQueryClient();
@@ -193,224 +364,226 @@ export default function AdminModulosFormativos() {
     reorderMutation.mutate({ id, newOrder });
   };
 
-  const content = (
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
-        <div className="flex items-center justify-between mb-6">
-          <SectionHeader
-            title="Módulos Formativos"
-            subtitle="Gerencie os módulos exibidos na Vitrine"
-          />
-          <Button onClick={openCreate} className="gap-2">
-            <Plus className="w-4 h-4" /> Novo Módulo
-          </Button>
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-5xl">
+      {/* Banner Configuration */}
+      <BannerConfigPanel />
+
+      {/* Modules Management */}
+      <div className="flex items-center justify-between mb-6">
+        <SectionHeader
+          title="Módulos Formativos"
+          subtitle="Gerencie os módulos exibidos na Vitrine"
+        />
+        <Button onClick={openCreate} className="gap-2">
+          <Plus className="w-4 h-4" /> Novo Módulo
+        </Button>
+      </div>
+
+      {isLoading ? (
+        <div className="flex justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin text-gold" />
         </div>
-
-        {isLoading ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-gold" />
-          </div>
-        ) : (
-          <div className="rounded-lg border border-border overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-12">#</TableHead>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Tipo</TableHead>
-                  <TableHead>Acesso</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="w-12">⭐</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {modulos?.map((m) => (
-                  <TableRow key={m.id}>
-                    <TableCell className="font-mono text-xs">{m.ordem_exibicao}</TableCell>
-                    <TableCell className="font-medium">{m.nome_modulo}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="text-xs">
-                        {TIPO_OPTIONS.find((t) => t.value === m.tipo_modulo)?.label || m.tipo_modulo}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="secondary" className="text-xs">
-                        {NIVEL_OPTIONS.find((n) => n.value === m.nivel_acesso)?.label || m.nivel_acesso}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={m.status_publicacao === "publicado" ? "default" : "outline"}
-                        className="text-xs"
+      ) : (
+        <div className="rounded-lg border border-border overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-12">#</TableHead>
+                <TableHead>Nome</TableHead>
+                <TableHead>Tipo</TableHead>
+                <TableHead>Acesso</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="w-12">⭐</TableHead>
+                <TableHead className="text-right">Ações</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {modulos?.map((m) => (
+                <TableRow key={m.id}>
+                  <TableCell className="font-mono text-xs">{m.ordem_exibicao}</TableCell>
+                  <TableCell className="font-medium">{m.nome_modulo}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="text-xs">
+                      {TIPO_OPTIONS.find((t) => t.value === m.tipo_modulo)?.label || m.tipo_modulo}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="secondary" className="text-xs">
+                      {NIVEL_OPTIONS.find((n) => n.value === m.nivel_acesso)?.label || m.nivel_acesso}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={m.status_publicacao === "publicado" ? "default" : "outline"}
+                      className="text-xs"
+                    >
+                      {m.status_publicacao === "publicado" ? "Publicado" : "Rascunho"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {m.destaque_vitrine && <Star className="w-4 h-4 text-gold" />}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center justify-end gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={() => handleReorder(m.id, m.ordem_exibicao, "up")}
                       >
-                        {m.status_publicacao === "publicado" ? "Publicado" : "Rascunho"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {m.destaque_vitrine && <Star className="w-4 h-4 text-gold" />}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center justify-end gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7"
-                          onClick={() => handleReorder(m.id, m.ordem_exibicao, "up")}
-                        >
-                          <ArrowUp className="w-3 h-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7"
-                          onClick={() => handleReorder(m.id, m.ordem_exibicao, "down")}
-                        >
-                          <ArrowDown className="w-3 h-3" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(m)}>
-                          <Pencil className="w-3 h-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7 text-destructive"
-                          onClick={() => {
-                            if (confirm("Remover este módulo?")) deleteMutation.mutate(m.id);
-                          }}
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {(!modulos || modulos.length === 0) && (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
-                      Nenhum módulo criado ainda.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        )}
+                        <ArrowUp className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={() => handleReorder(m.id, m.ordem_exibicao, "down")}
+                      >
+                        <ArrowDown className="w-3 h-3" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(m)}>
+                        <Pencil className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-destructive"
+                        onClick={() => {
+                          if (confirm("Remover este módulo?")) deleteMutation.mutate(m.id);
+                        }}
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {(!modulos || modulos.length === 0) && (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                    Nenhum módulo criado ainda.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      )}
 
-        {/* Create/Edit Dialog */}
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>{editingId ? "Editar Módulo" : "Novo Módulo"}</DialogTitle>
-            </DialogHeader>
+      {/* Create/Edit Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{editingId ? "Editar Módulo" : "Novo Módulo"}</DialogTitle>
+          </DialogHeader>
 
-            <div className="space-y-4 py-4">
+          <div className="space-y-4 py-4">
+            <div>
+              <Label>Nome do Módulo *</Label>
+              <Input
+                value={form.nome_modulo}
+                onChange={(e) => setForm({ ...form, nome_modulo: e.target.value })}
+                placeholder="Ex: Travessia Zero"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>Nome do Módulo *</Label>
-                <Input
-                  value={form.nome_modulo}
-                  onChange={(e) => setForm({ ...form, nome_modulo: e.target.value })}
-                  placeholder="Ex: Travessia Zero"
-                />
+                <Label>Tipo</Label>
+                <Select value={form.tipo_modulo} onValueChange={(v) => setForm({ ...form, tipo_modulo: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {TIPO_OPTIONS.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Tipo</Label>
-                  <Select value={form.tipo_modulo} onValueChange={(v) => setForm({ ...form, tipo_modulo: v })}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {TIPO_OPTIONS.map((o) => (
-                        <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label>Nível de Acesso</Label>
-                  <Select value={form.nivel_acesso} onValueChange={(v) => setForm({ ...form, nivel_acesso: v })}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {NIVEL_OPTIONS.map((o) => (
-                        <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
               <div>
-                <Label>Descrição Curta</Label>
-                <Textarea
-                  value={form.descricao_curta || ""}
-                  onChange={(e) => setForm({ ...form, descricao_curta: e.target.value })}
-                  placeholder="Breve descrição do módulo"
-                  rows={2}
-                />
-              </div>
-
-              <div>
-                <Label>URL da Imagem de Capa</Label>
-                <Input
-                  value={form.imagem_capa || ""}
-                  onChange={(e) => setForm({ ...form, imagem_capa: e.target.value })}
-                  placeholder="https://..."
-                />
-              </div>
-
-              <div>
-                <Label>Rota de Destino</Label>
-                <Input
-                  value={form.rota_destino || ""}
-                  onChange={(e) => setForm({ ...form, rota_destino: e.target.value })}
-                  placeholder="/jornada ou /salas/..."
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Status</Label>
-                  <Select
-                    value={form.status_publicacao}
-                    onValueChange={(v) => setForm({ ...form, status_publicacao: v })}
-                  >
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {STATUS_OPTIONS.map((o) => (
-                        <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label>Ordem de Exibição</Label>
-                  <Input
-                    type="number"
-                    value={form.ordem_exibicao}
-                    onChange={(e) => setForm({ ...form, ordem_exibicao: parseInt(e.target.value) || 0 })}
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Switch
-                  checked={form.destaque_vitrine}
-                  onCheckedChange={(v) => setForm({ ...form, destaque_vitrine: v })}
-                />
-                <Label>Destaque na Vitrine</Label>
+                <Label>Nível de Acesso</Label>
+                <Select value={form.nivel_acesso} onValueChange={(v) => setForm({ ...form, nivel_acesso: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {NIVEL_OPTIONS.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
-            <DialogFooter>
-              <Button variant="outline" onClick={closeDialog}>Cancelar</Button>
-              <Button onClick={handleSave} disabled={saveMutation.isPending}>
-                {saveMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                {editingId ? "Salvar" : "Criar"}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
-  );
+            <div>
+              <Label>Descrição Curta</Label>
+              <Textarea
+                value={form.descricao_curta || ""}
+                onChange={(e) => setForm({ ...form, descricao_curta: e.target.value })}
+                placeholder="Breve descrição do módulo"
+                rows={2}
+              />
+            </div>
 
-  return content;
+            <div>
+              <Label>URL da Imagem de Capa</Label>
+              <Input
+                value={form.imagem_capa || ""}
+                onChange={(e) => setForm({ ...form, imagem_capa: e.target.value })}
+                placeholder="https://..."
+              />
+            </div>
+
+            <div>
+              <Label>Rota de Destino</Label>
+              <Input
+                value={form.rota_destino || ""}
+                onChange={(e) => setForm({ ...form, rota_destino: e.target.value })}
+                placeholder="/jornada ou /salas/..."
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Status</Label>
+                <Select
+                  value={form.status_publicacao}
+                  onValueChange={(v) => setForm({ ...form, status_publicacao: v })}
+                >
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {STATUS_OPTIONS.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Ordem de Exibição</Label>
+                <Input
+                  type="number"
+                  value={form.ordem_exibicao}
+                  onChange={(e) => setForm({ ...form, ordem_exibicao: parseInt(e.target.value) || 0 })}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Switch
+                checked={form.destaque_vitrine}
+                onCheckedChange={(v) => setForm({ ...form, destaque_vitrine: v })}
+              />
+              <Label>Destaque na Vitrine</Label>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={closeDialog}>Cancelar</Button>
+            <Button onClick={handleSave} disabled={saveMutation.isPending}>
+              {saveMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+              {editingId ? "Salvar" : "Criar"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
 }
