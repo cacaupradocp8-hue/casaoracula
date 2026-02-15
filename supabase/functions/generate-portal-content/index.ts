@@ -119,29 +119,101 @@ serve(async (req) => {
 
     // Fallback if no template found
     if (!systemPrompt) {
-      systemPrompt = `Você é uma especialista em criação de conteúdo pedagógico para formação terapêutica e simbólica.
-Você cria Portais/Aulas para a Casa Orácula, uma escola de formação em Terapia Arquetípica e Narroterapia Oracular.
+      systemPrompt = `Você está atuando como Agente de Desenvolvimento de Conteúdo da Casa Orácula.
 
-REGRAS ABSOLUTAS:
-- NÃO resumir livros
-- NÃO citar autores
-- NÃO usar linguagem diagnóstica ou determinista
-- Sustentar profundidade com clareza
-- Incluir prática possível, aplicação profissional e cuidado ético
-- Escrever em português brasileiro, com tom ${tom}`;
+Sua função é transformar a matéria-prima autoral fornecida em um Portal/Aula completo, seguindo rigorosamente o MÉTODO FORMATIVO DA CASA ORÁCULA.
+
+Priorize coerência com os pilares: Jornada simbólica, Pareto 80/20, Psicologia profunda aplicada e Autoeficácia.
+
+REGRAS OBRIGATÓRIAS:
+- Não resumir livros.
+- Não citar autores.
+- Não usar linguagem diagnóstica ou determinista.
+- Não usar academicismo excessivo.
+- Não invalidar dor emocional.
+- Manter profundidade com clareza.
+- Sustentar aplicabilidade prática.
+- Garantir separação ética entre processo pessoal e prática profissional.
+- Escrever em português brasileiro, com tom ${tom}.`;
     }
 
     // Replace placeholders in action prompt
-    let userPrompt = actionPrompt || `Crie um Portal/Aula completo com os seguintes dados:
+    let userPrompt = actionPrompt || `DADOS DE ENTRADA:
+- Jornada: {{jornada}}
+- Nome do Portal: {{portal}}
+- Objetivo do Portal: {{objetivo}}
+- Ideias-chave (matéria-prima autoral): {{ideias_chave}}
+- Tom desejado: {{tom}}
+- Duração sugerida: {{duracao}}
 
-**Jornada:** {{jornada}}
-**Portal:** {{portal}}
-**Objetivo:** {{objetivo}}
-**Ideias-chave:** {{ideias_chave}}
-**Tom:** {{tom}}
-**Duração:** {{duracao}}
+ENTREGAR EXATAMENTE NA ESTRUTURA ABAIXO:
 
-Gere o conteúdo seguindo EXATAMENTE o formato do template, com todas as 7 seções.`;
+------------------------------------------------------------
+
+PORTAL: {{portal}}
+JORNADA: {{jornada}}
+
+### 1) SENTIDO DA JORNADA
+- Contextualize simbolicamente onde este portal se insere na jornada.
+- Explique o tipo de maturidade psíquica convocada.
+- Inclua uma pergunta de entrada potente.
+
+### 2) ESSÊNCIA 80/20
+- Defina o núcleo vivo do tema.
+- Explique a tensão psíquica central.
+- Liste 3 verdades práticas e aplicáveis.
+- Inclua uma frase-guia forte e memorável.
+
+### 3) RAIZ PSÍQUICA
+- Nomeie o arquétipo ativado.
+- Explique o movimento psíquico envolvido.
+- Ofereça uma imagem simbólica organizadora.
+- Evite teoria acadêmica extensa.
+
+### 4) TRADUÇÃO PROFISSIONAL
+
+AULA:
+- Conceito-matriz
+- Objetivo pedagógico claro
+- Vivência prática estruturada
+- Pergunta final de fechamento
+
+SESSÃO:
+- Tema recorrente que pode emergir
+- Pergunta de acesso
+- Resistência provável
+- Cuidado ético explícito
+
+CÍRCULO / PALESTRA:
+- Imagem ou símbolo de abertura
+- Narrativa organizadora
+- Convite à ação
+- Encerramento ritual simples
+
+### 5) APLICAÇÃO PESSOAL
+- Onde isso pode atuar na vida da aluna?
+- Que padrão comportamental observar?
+- Qual gesto concreto e possível para a semana?
+
+### 6) PRÁTICA DE AUTOEFICÁCIA
+- Criar uma micro-vitória executável em 10–20 minutos.
+- Explicar como a aluna saberá que funcionou.
+- Garantir sensação de competência e progresso real.
+
+### 7) REGISTRO ÉTICO
+- Orientação para o Jardim da Psique (campo pessoal).
+- Orientação para o Jardim da Heroína (campo profissional).
+- Reforçar linguagem não diagnóstica e não determinista.
+
+------------------------------------------------------------
+
+FORMATO:
+- Texto pronto para colar no portal.
+- Seções bem separadas.
+- Linguagem profunda, clara e aplicável.
+- Sem floreios vazios.
+
+FINALIZE com um pequeno parágrafo de integração que convide à prática e responsabilidade interna.`;
 
     // Replace template variables
     userPrompt = userPrompt
