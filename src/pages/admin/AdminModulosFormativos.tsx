@@ -193,8 +193,7 @@ export default function AdminModulosFormativos() {
     reorderMutation.mutate({ id, newOrder });
   };
 
-  return (
-    <AppLayout>
+  const content = (
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         <div className="flex items-center justify-between mb-6">
           <SectionHeader
@@ -411,6 +410,7 @@ export default function AdminModulosFormativos() {
           </DialogContent>
         </Dialog>
       </div>
-    </AppLayout>
   );
+
+  return content;
 }
