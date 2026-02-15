@@ -3686,6 +3686,7 @@ export type Database = {
         Row: {
           aprendizado_tecnico: string | null
           cliente_id: string | null
+          contexto_origem: string | null
           created_at: string
           enviar_para_supervisao: boolean
           espelho_risco_projecao: string | null
@@ -3703,6 +3704,7 @@ export type Database = {
         Insert: {
           aprendizado_tecnico?: string | null
           cliente_id?: string | null
+          contexto_origem?: string | null
           created_at?: string
           enviar_para_supervisao?: boolean
           espelho_risco_projecao?: string | null
@@ -3720,6 +3722,7 @@ export type Database = {
         Update: {
           aprendizado_tecnico?: string | null
           cliente_id?: string | null
+          contexto_origem?: string | null
           created_at?: string
           enviar_para_supervisao?: boolean
           espelho_risco_projecao?: string | null

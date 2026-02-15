@@ -36,7 +36,9 @@ import {
   Calendar,
   Loader2,
   Trash2,
+  Sprout,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useJardimHeroina } from '@/hooks/useJardimHeroina';
 import { useMapaVivo } from '@/hooks/useMapaVivo';
 import { useAuth } from '@/contexts/AuthContext';
@@ -70,6 +72,7 @@ const EMPTY_FORM: Omit<NovoJardimRegistro, 'session_case_id' | 'therapist_id'> =
 
 export function JardimHeroinaTab({ sessionCaseId }: JardimHeroinaTabProps) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { registros, loading, saving, criarRegistro, excluirRegistro } = useJardimHeroina({
     sessionCaseId,
   });
@@ -489,6 +492,28 @@ export function JardimHeroinaTab({ sessionCaseId }: JardimHeroinaTabProps) {
                           {registro.notas_privadas}
                         </div>
                       )}
+
+                      {/* Botão para refletir no Jardim do Ofício */}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full mt-2 gap-2 text-xs text-muted-foreground hover:text-foreground"
+                        onClick={() => {
+                          const resumo = [
+                            registro.frase_semente && `Frase-semente: "${registro.frase_semente}"`,
+                            registro.aterramento_ficou_vivo && `O que ficou vivo: ${registro.aterramento_ficou_vivo}`,
+                            registro.gesto_origem && `Gesto: ${registro.gesto_origem}`,
+                            registro.ritual_vivendo && `Ritual: ${registro.ritual_vivendo}`,
+                          ].filter(Boolean).join('\n');
+                          const params = new URLSearchParams();
+                          params.set('contexto_origem', resumo);
+                          if (registro.session_case_id) params.set('sessao_id', registro.session_case_id);
+                          navigate(`/casa-das-maquinas/jardim-oficio?${params.toString()}`);
+                        }}
+                      >
+                        <Sprout className="w-3.5 h-3.5" />
+                        🧵 Refletir no Jardim do Ofício
+                      </Button>
                     </CardContent>
                   </Card>
                 ))}
