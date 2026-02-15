@@ -395,8 +395,8 @@ export function MetodoFormativoEditor({ moduleId, onSave, onClose }: MetodoForma
               <Textarea value={getField('registro_etico.orientacao_jardim_psique')} onChange={e => updateField('registro_etico.orientacao_jardim_psique', e.target.value)} rows={3} placeholder="Orientação para o registro pessoal..." />
             </div>
             <div>
-              <Label>Orientação — Jardim da Heroína (campo profissional)</Label>
-              <Textarea value={getField('registro_etico.orientacao_jardim_heroina')} onChange={e => updateField('registro_etico.orientacao_jardim_heroina', e.target.value)} rows={3} placeholder="Orientação para o registro profissional..." />
+              <Label>Orientação — Jardim do Ofício (campo profissional)</Label>
+              <Textarea value={getField('registro_etico.orientacao_jardim_oficio')} onChange={e => updateField('registro_etico.orientacao_jardim_oficio', e.target.value)} rows={3} placeholder="Orientação para o registro profissional..." />
             </div>
           </CardContent>
         </Card>

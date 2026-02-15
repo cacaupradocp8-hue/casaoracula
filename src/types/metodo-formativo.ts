@@ -73,7 +73,7 @@ export interface BlocoAutoeficacia {
 // BLOCO 8 — REGISTRO ÉTICO
 export interface BlocoRegistroEtico {
   orientacao_jardim_psique: string;
-  orientacao_jardim_heroina: string;
+  orientacao_jardim_oficio: string;
 }
 
 // CAMPO SEPARADO — Roteiro de Aula (Vídeo/Áudio)
@@ -157,7 +157,7 @@ export const criarTemplateVazio = (): MetodoFormativoTemplate => ({
   },
   registro_etico: {
     orientacao_jardim_psique: '',
-    orientacao_jardim_heroina: '',
+    orientacao_jardim_oficio: '',
   },
   roteiro_aula: {
     roteiro: '',
