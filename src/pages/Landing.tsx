@@ -2,16 +2,10 @@ import { Link } from 'react-router-dom';
 import { Logo } from '@/components/layout/Logo';
 import { Button } from '@/components/ui/button';
 import { useCopy } from '@/hooks/useCopy';
-import { useAppSettings } from '@/hooks/useAppSettings';
-import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
+import { PageAmbientAudio } from '@/components/audio/PageAmbientAudio';
 
 export default function Landing() {
   const { getCopyByKey } = useCopy();
-  const { getEntryAudioUrl, getEntryAudioTitle, getEntryAudioCaption, isLoading } = useAppSettings();
-  
-  const audioUrl = getEntryAudioUrl();
-  const audioTitle = getEntryAudioTitle();
-  const audioCaption = getEntryAudioCaption();
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
@@ -46,16 +40,8 @@ export default function Landing() {
           </p>
         </div>
 
-        {/* Audio Player - Ambient */}
-        {audioUrl && (
-          <div className="animate-slide-up max-w-xs mx-auto mb-8 opacity-80 hover:opacity-100 transition-opacity" style={{ animationDelay: '0.5s' }}>
-            <UnifiedAudioPlayer 
-              audioUrl={audioUrl}
-              title={audioTitle || undefined}
-              size="sm"
-            />
-          </div>
-        )}
+        {/* Ambient Audio - floating button */}
+        <PageAmbientAudio settingsPrefix="entry" autoPlay />
 
         {/* Botões */}
         <div className="animate-slide-up flex flex-col sm:flex-row gap-4 justify-center" style={{ animationDelay: '0.6s' }}>
