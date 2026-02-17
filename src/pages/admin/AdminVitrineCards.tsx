@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { ImageUpload } from "@/components/admin/ImageUpload";
+import { VideoUpload } from "@/components/admin/VideoUpload";
 import { toast } from "sonner";
 import {
   Select,
@@ -244,15 +245,12 @@ export default function AdminVitrineCards() {
               folder="vitrine"
               label="Imagem"
             />
-            <div>
-              <Label>URL do Vídeo (fundo hero)</Label>
-              <Input
-                value={form.video_url || ""}
-                onChange={(e) => setForm((p) => ({ ...p, video_url: e.target.value || null }))}
-                placeholder="https://..."
-              />
-              <p className="text-xs text-muted-foreground mt-1">Se preenchido, o vídeo será exibido como fundo no hero (muted, autoplay, loop).</p>
-            </div>
+            <VideoUpload
+              value={form.video_url || ""}
+              onChange={(url) => setForm((p) => ({ ...p, video_url: url || null }))}
+              folder="vitrine"
+              label="Vídeo de fundo (hero)"
+            />
             <div>
               <Label>Link destino (rota)</Label>
               <Input
