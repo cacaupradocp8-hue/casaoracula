@@ -1,10 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
 import { toast } from "@/components/ui/sonner";
 
 /**
- * Mostra um toast quando houver uma nova versão do app (PWA) disponível.
- * Isso evita ficar presa em versões antigas por cache de Service Worker.
+ * Gerencia atualizações do Service Worker (PWA).
+ * - Verifica atualizações a cada 30 segundos
+ * - Aplica atualizações automaticamente quando disponíveis
+ * - Mostra toast apenas se auto-update falhar
  */
 export function ServiceWorkerUpdateToast() {
   const {
@@ -13,27 +15,65 @@ export function ServiceWorkerUpdateToast() {
   } = useRegisterSW({
     immediate: true,
     onRegisteredSW(_swUrl, registration) {
-      // Check for updates every 60 seconds
+      // Check for updates every 30 seconds (more aggressive)
       if (registration) {
         setInterval(() => {
           registration.update();
-        }, 60 * 1000);
+        }, 30 * 1000);
       }
     },
   });
 
+  const doUpdate = useCallback(() => {
+    updateServiceWorker(true);
+  }, [updateServiceWorker]);
+
   useEffect(() => {
     if (!needRefresh) return;
 
-    toast("Nova versão disponível", {
-      description: "Toque em Atualizar para carregar a versão mais recente.",
-      duration: Infinity,
-      action: {
-        label: "Atualizar",
-        onClick: () => updateServiceWorker(true),
-      },
-    });
-  }, [needRefresh, updateServiceWorker]);
+    // Try to auto-update first
+    doUpdate();
+
+    // Show toast as fallback in case auto-update doesn't trigger reload
+    const timeout = setTimeout(() => {
+      toast("Nova versão disponível", {
+        description: "Toque para atualizar agora.",
+        duration: Infinity,
+        action: {
+          label: "Atualizar",
+          onClick: doUpdate,
+        },
+      });
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, [needRefresh, doUpdate]);
 
   return null;
+}
+
+/**
+ * Força limpeza completa de cache e recarregamento.
+ * Use como último recurso quando o app não atualiza.
+ */
+export async function forceFullRefresh() {
+  try {
+    // Unregister all service workers
+    if ("serviceWorker" in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.map((r) => r.unregister()));
+    }
+
+    // Clear all caches
+    if ("caches" in window) {
+      const cacheNames = await caches.keys();
+      await Promise.all(cacheNames.map((name) => caches.delete(name)));
+    }
+
+    // Hard reload
+    window.location.reload();
+  } catch (e) {
+    // Fallback: just reload
+    window.location.reload();
+  }
 }
