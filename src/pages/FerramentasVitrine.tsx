@@ -30,30 +30,31 @@ function userCanSeeCard(userPortal: string | undefined, roles: string[]): boolea
 
 function HeroCard({ card, onClick }: { card: VitrineCard; onClick: () => void }) {
   return (
-    <section className="relative w-full h-[55vh] md:h-[60vh] lg:h-[65vh] overflow-hidden">
-      {card.video_url ? (
-        <video
-          src={card.video_url}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover object-center"
-        />
-      ) : card.imagem ? (
-        <img
-          src={card.imagem}
-          alt={card.titulo}
-          className="absolute inset-0 w-full h-full object-cover object-center"
-        />
-      ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--primary))]/20 to-transparent" />
-      )}
+    <section className="w-full">
+      {/* Media */}
+      <div className="relative w-full aspect-video max-h-[65vh] overflow-hidden">
+        {card.video_url ? (
+          <video
+            src={card.video_url}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover object-center"
+          />
+        ) : card.imagem ? (
+          <img
+            src={card.imagem}
+            alt={card.titulo}
+            className="w-full h-full object-cover object-center"
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-[hsl(var(--primary))]/20 to-transparent" />
+        )}
+      </div>
 
-      <div className="absolute inset-0 bg-black/50" />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-
-      <div className="absolute inset-0 flex flex-col items-center justify-end pb-[6%] px-6 text-center z-10">
+      {/* Text below */}
+      <div className="flex flex-col items-center text-center px-6 py-10 md:py-14 bg-background">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -90,9 +91,6 @@ function HeroCard({ card, onClick }: { card: VitrineCard; onClick: () => void })
           </motion.div>
         )}
       </div>
-
-      <div className="absolute bottom-0 left-0 right-0 h-32 backdrop-blur-md [mask-image:linear-gradient(to_top,black_40%,transparent)]" />
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background via-background/80 to-transparent" />
     </section>
   );
 }
