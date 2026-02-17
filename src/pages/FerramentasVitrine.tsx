@@ -14,6 +14,7 @@ interface VitrineCard {
   subtitulo: string | null;
   descricao_curta: string | null;
   imagem: string | null;
+  video_url: string | null;
   link_destino: string | null;
   ordem: number;
   ativo: boolean;
@@ -30,7 +31,16 @@ function userCanSeeCard(userPortal: string | undefined, roles: string[]): boolea
 function HeroCard({ card, onClick }: { card: VitrineCard; onClick: () => void }) {
   return (
     <section className="relative w-full h-[55vh] md:h-[60vh] lg:h-[65vh] overflow-hidden">
-      {card.imagem ? (
+      {card.video_url ? (
+        <video
+          src={card.video_url}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
+      ) : card.imagem ? (
         <img
           src={card.imagem}
           alt={card.titulo}

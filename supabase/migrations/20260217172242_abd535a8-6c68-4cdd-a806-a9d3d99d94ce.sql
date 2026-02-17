@@ -1,0 +1,1 @@
+ALTER TABLE public.vitrine_cards ADD COLUMN video_url TEXT;

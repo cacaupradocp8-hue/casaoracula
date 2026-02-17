@@ -29,6 +29,7 @@ interface VitrineCard {
   subtitulo: string | null;
   descricao_curta: string | null;
   imagem: string | null;
+  video_url: string | null;
   link_destino: string | null;
   ordem: number;
   ativo: boolean;
@@ -49,6 +50,7 @@ const EMPTY_CARD: Omit<VitrineCard, "id"> = {
   subtitulo: null,
   descricao_curta: null,
   imagem: null,
+  video_url: null,
   link_destino: null,
   ordem: 0,
   ativo: true,
@@ -117,6 +119,7 @@ export default function AdminVitrineCards() {
       subtitulo: card.subtitulo,
       descricao_curta: card.descricao_curta,
       imagem: card.imagem,
+      video_url: card.video_url,
       link_destino: card.link_destino,
       ordem: card.ordem,
       ativo: card.ativo,
@@ -241,6 +244,15 @@ export default function AdminVitrineCards() {
               folder="vitrine"
               label="Imagem"
             />
+            <div>
+              <Label>URL do Vídeo (fundo hero)</Label>
+              <Input
+                value={form.video_url || ""}
+                onChange={(e) => setForm((p) => ({ ...p, video_url: e.target.value || null }))}
+                placeholder="https://..."
+              />
+              <p className="text-xs text-muted-foreground mt-1">Se preenchido, o vídeo será exibido como fundo no hero (muted, autoplay, loop).</p>
+            </div>
             <div>
               <Label>Link destino (rota)</Label>
               <Input
