@@ -8,6 +8,7 @@ import { getPortal, canAccessFeature, PortalType } from '@/types/portal';
 import { LockedContentModal } from '@/components/shared/LockedContentModal';
 import { NotificationBell } from '@/components/shared/NotificationBell';
 import { supabase } from '@/integrations/supabase/client';
+import { forceFullRefresh } from '@/components/pwa/ServiceWorkerUpdateToast';
 import {
   Home,
   Settings,
@@ -18,6 +19,7 @@ import {
   Lock,
   Star,
   LogIn,
+  RefreshCw,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -347,6 +349,10 @@ export function Navigation() {
                     )}
                     
                     <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => forceFullRefresh()}>
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                      Forçar Atualização
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleLogout} className="text-destructive">
                       <LogOut className="w-4 h-4 mr-2" />
                       Sair

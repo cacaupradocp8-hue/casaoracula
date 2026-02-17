@@ -20,6 +20,7 @@ export default defineConfig(({ mode }) => ({
         enabled: false,
       },
       registerType: "autoUpdate",
+      selfDestroying: false,
       includeAssets: ["favicon.ico", "logo-icon.png"],
       manifest: {
         name: "Casa ORÁCULA",
