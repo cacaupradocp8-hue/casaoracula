@@ -52,6 +52,9 @@ function HeroCard({ card, onClick }: { card: VitrineCard; onClick: () => void })
           <div className="w-full h-full bg-gradient-to-br from-[hsl(var(--primary))]/20 to-transparent" />
         )}
         <div className="absolute inset-0 bg-black/15" />
+        {/* Blur + fade transition at the bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 backdrop-blur-md [mask-image:linear-gradient(to_top,black_40%,transparent)]" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background via-background/80 to-transparent" />
       </div>
 
       {/* Text below */}
