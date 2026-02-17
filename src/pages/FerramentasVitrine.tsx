@@ -4,136 +4,126 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { Loader2, Lock, ArrowRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Loader2, ArrowRight, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { HeroVideoBanner } from "@/components/sales/HeroVideoBanner";
-import { AmbientAudioPlayer } from "@/components/sales/AmbientAudioPlayer";
+import { PageAmbientAudio } from "@/components/audio/PageAmbientAudio";
 
-interface ModuloFormativo {
+interface VitrineCard {
   id: string;
-  nome_modulo: string;
-  tipo_modulo: string;
+  titulo: string;
+  subtitulo: string | null;
   descricao_curta: string | null;
-  imagem_capa: string | null;
-  ordem_exibicao: number;
-  nivel_acesso: string;
-  status_publicacao: string;
-  destaque_vitrine: boolean;
-  rota_destino: string | null;
+  imagem: string | null;
+  link_destino: string | null;
+  ordem: number;
+  ativo: boolean;
+  estilo: string;
+  visibilidade_role: string[];
 }
 
-const NIVEL_MAP: Record<string, { label: string; portals: string[] }> = {
-  aberta: { label: "Aberto", portals: ["visitante", "mentorada", "aluna_formacao", "assinante", "oracula", "admin"] },
-  iniciada: { label: "Certificação", portals: ["aluna_formacao", "assinante", "oracula", "admin"] },
-  certificada: { label: "Assinante", portals: ["assinante", "oracula", "admin"] },
-  mentoria: { label: "Mentoria", portals: ["mentorada", "aluna_formacao", "assinante", "oracula", "admin"] },
-};
-
-const TIPO_LABELS: Record<string, string> = {
-  jornada: "Jornadas",
-  curso: "Cursos",
-  circulo: "Círculos",
-  travessia: "Travessias",
-  biblioteca: "Biblioteca",
-};
-
-function hasAccess(userPortal: string | undefined, nivelAcesso: string): boolean {
+function userCanSeeCard(userPortal: string | undefined, roles: string[]): boolean {
   const portal = userPortal || "visitante";
   if (portal === "admin") return true;
-  const config = NIVEL_MAP[nivelAcesso];
-  return config ? config.portals.includes(portal) : false;
+  return roles.includes(portal) || roles.includes("visitante");
 }
 
-function getBlockMessage(nivelAcesso: string): string {
-  switch (nivelAcesso) {
-    case "iniciada": return "Disponível na Certificação";
-    case "certificada": return "Disponível para Assinantes";
-    case "mentoria": return "Disponível na Mentoria";
-    default: return "Acesso restrito";
-  }
+function HeroCard({ card, onClick }: { card: VitrineCard; onClick: () => void }) {
+  return (
+    <section className="relative w-full h-[55vh] md:h-[60vh] lg:h-[65vh] overflow-hidden">
+      {card.imagem ? (
+        <img
+          src={card.imagem}
+          alt={card.titulo}
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--primary))]/20 to-transparent" />
+      )}
+
+      <div className="absolute inset-0 bg-black/50" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+
+      <div className="absolute inset-0 flex flex-col items-center justify-end pb-[6%] px-6 text-center z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.2 }}
+          className="space-y-3 max-w-2xl"
+        >
+          <h1 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground/90 tracking-wider font-medium leading-relaxed">
+            {card.titulo}
+          </h1>
+          {card.subtitulo && (
+            <p className="text-muted-foreground text-sm md:text-base">{card.subtitulo}</p>
+          )}
+          {card.descricao_curta && (
+            <p className="text-muted-foreground/70 text-xs md:text-sm max-w-md mx-auto">{card.descricao_curta}</p>
+          )}
+        </motion.div>
+
+        {card.link_destino && (
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1 }}
+            className="mt-8"
+          >
+            <Button
+              variant="hero"
+              size="xl"
+              className="gap-3 border-[hsl(40,35%,60%)]/40 text-[hsl(40,35%,60%)] hover:border-[hsl(40,35%,60%)]/80 hover:bg-[hsl(40,35%,60%)]/10 transition-all duration-300"
+              onClick={onClick}
+            >
+              Acessar
+              <ArrowRight className="w-5 h-5" />
+            </Button>
+          </motion.div>
+        )}
+      </div>
+
+      <div className="absolute bottom-0 left-0 right-0 h-32 backdrop-blur-md [mask-image:linear-gradient(to_top,black_40%,transparent)]" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background via-background/80 to-transparent" />
+    </section>
+  );
 }
 
-/** Vertical card — institutional style */
-function ModuloCard({
-  modulo,
-  canAccess,
-  onClick,
-  index,
-}: {
-  modulo: ModuloFormativo;
-  canAccess: boolean;
-  onClick: () => void;
-  index: number;
-}) {
+function SecondaryCard({ card, onClick, index }: { card: VitrineCard; onClick: () => void; index: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
-      onClick={canAccess ? onClick : undefined}
-      className={cn(
-        "relative rounded-lg overflow-hidden transition-all duration-300 group",
-        "bg-[hsl(240,5%,7%)] border border-[hsl(0,0%,100%)]/[0.06]",
-        canAccess
-          ? "cursor-pointer hover:shadow-[0_8px_30px_-8px_hsl(40,35%,60%,0.12)] hover:-translate-y-1 hover:border-[hsl(40,35%,60%)]/20"
-          : "cursor-not-allowed opacity-60"
-      )}
+      onClick={onClick}
+      className="relative rounded-lg overflow-hidden cursor-pointer group bg-card border border-border/30 hover:shadow-[0_8px_30px_-8px_hsl(40,35%,60%,0.12)] hover:-translate-y-1 hover:border-[hsl(40,35%,60%)]/20 transition-all duration-300"
     >
-      {/* Image area */}
-      {modulo.imagem_capa ? (
+      {card.imagem ? (
         <div className="aspect-[16/9] overflow-hidden">
           <img
-            src={modulo.imagem_capa}
-            alt={modulo.nome_modulo}
+            src={card.imagem}
+            alt={card.titulo}
             loading="lazy"
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>
       ) : (
-        <div className="aspect-[16/9] bg-gradient-to-br from-[hsl(40,35%,60%)]/10 to-transparent" />
+        <div className="aspect-[16/9] bg-gradient-to-br from-primary/10 to-transparent" />
       )}
 
-      {/* Lock overlay */}
-      {!canAccess && (
-        <div className="absolute top-3 right-3">
-          <div className="w-7 h-7 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center">
-            <Lock className="w-3.5 h-3.5 text-[hsl(40,10%,80%)]" />
-          </div>
-        </div>
-      )}
-
-      {/* Content */}
       <div className="p-5 space-y-3">
-        <div className="space-y-1.5">
-          <p className="text-[11px] uppercase tracking-[0.2em] text-[hsl(40,35%,60%)]/70 font-medium">
-            {TIPO_LABELS[modulo.tipo_modulo] || modulo.tipo_modulo}
-          </p>
-          <h3 className="font-display text-base md:text-lg font-medium text-[hsl(40,10%,90%)] leading-snug">
-            {modulo.nome_modulo}
-          </h3>
-        </div>
-
-        {modulo.descricao_curta && (
-          <p className="text-sm text-[hsl(40,5%,55%)] leading-relaxed line-clamp-3">
-            {modulo.descricao_curta}
-          </p>
+        <h3 className="font-display text-base md:text-lg font-medium text-foreground leading-snug">
+          {card.titulo}
+        </h3>
+        {card.subtitulo && (
+          <p className="text-sm text-muted-foreground">{card.subtitulo}</p>
         )}
-
-        {/* Divider */}
-        <div className="h-px bg-[hsl(0,0%,100%)]/[0.06]" />
-
-        {/* Action */}
-        {canAccess ? (
-          <button className="flex items-center gap-2 text-sm text-[hsl(40,35%,60%)] font-medium group-hover:gap-3 transition-all duration-300">
-            Acessar
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        ) : (
-          <span className="text-xs text-[hsl(40,5%,45%)]">
-            {getBlockMessage(modulo.nivel_acesso)}
-          </span>
+        {card.descricao_curta && (
+          <p className="text-sm text-muted-foreground/70 line-clamp-2">{card.descricao_curta}</p>
         )}
+        <div className="h-px bg-border/30" />
+        <button className="flex items-center gap-2 text-sm text-[hsl(40,35%,60%)] font-medium group-hover:gap-3 transition-all duration-300">
+          Acessar
+          <ArrowRight className="w-4 h-4" />
+        </button>
       </div>
     </motion.div>
   );
@@ -143,16 +133,16 @@ export default function FerramentasVitrine() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const { data: modulos, isLoading } = useQuery({
-    queryKey: ["modulos-formativos-vitrine"],
+  const { data: cards, isLoading } = useQuery({
+    queryKey: ["vitrine-cards"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("modulos_formativos")
+        .from("vitrine_cards")
         .select("*")
-        .eq("status_publicacao", "publicado")
-        .order("ordem_exibicao", { ascending: true });
+        .eq("ativo", true)
+        .order("ordem", { ascending: true });
       if (error) throw error;
-      return data as ModuloFormativo[];
+      return data as VitrineCard[];
     },
     staleTime: 5 * 60 * 1000,
   });
@@ -161,114 +151,51 @@ export default function FerramentasVitrine() {
     return (
       <AppLayout>
         <div className="flex items-center justify-center min-h-[400px]">
-          <Loader2 className="w-8 h-8 animate-spin text-gold" />
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
       </AppLayout>
     );
   }
 
-  // Group by tipo_modulo
-  const grouped = (modulos || []).reduce((acc, m) => {
-    if (!acc[m.tipo_modulo]) acc[m.tipo_modulo] = [];
-    acc[m.tipo_modulo].push(m);
-    return acc;
-  }, {} as Record<string, ModuloFormativo[]>);
+  const visibleCards = (cards || []).filter((c) =>
+    userCanSeeCard(user?.portal, c.visibilidade_role)
+  );
 
-  const handleCardClick = (modulo: ModuloFormativo) => {
-    if (modulo.rota_destino) {
-      navigate(modulo.rota_destino);
-    }
-  };
-
-  const hasAny = modulos && modulos.length > 0;
-  const sectionOrder = ["jornada", "curso", "travessia", "circulo", "biblioteca"];
+  const heroCard = visibleCards.find((c) => c.estilo === "hero_unico");
+  const secondaryCards = visibleCards.filter((c) => c.estilo === "card_secundario");
 
   return (
     <AppLayout>
       <div className="min-h-screen bg-background">
-        {/* Hero Banner */}
-        <HeroVideoBanner />
-        <AmbientAudioPlayer />
+        <PageAmbientAudio settingsPrefix="vitrine" />
 
-        {/* Content */}
-        <div className="max-w-[1200px] mx-auto px-5 md:px-8">
-          {/* Section header — subtle, institutional */}
-          <div className="py-12 md:py-20 text-center">
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }}>
-              <p className="text-[hsl(40,35%,60%)]/60 uppercase tracking-[0.25em] text-xs mb-4">
-                Casa Orácula
-              </p>
-              <h1 className="font-display text-2xl md:text-3xl lg:text-4xl text-[hsl(40,10%,90%)] tracking-wide font-medium">
-                Caminhos de Formação
-              </h1>
-              <p className="text-[hsl(40,5%,50%)] text-sm mt-3 max-w-md mx-auto leading-relaxed">
-                Jornadas, cursos e travessias para quem busca presença, método e sustentação.
-              </p>
-            </motion.div>
+        {heroCard && (
+          <HeroCard
+            card={heroCard}
+            onClick={() => heroCard.link_destino && navigate(heroCard.link_destino)}
+          />
+        )}
+
+        {secondaryCards.length > 0 && (
+          <div className="max-w-[1200px] mx-auto px-5 md:px-8 py-12 md:py-20">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+              {secondaryCards.map((card, i) => (
+                <SecondaryCard
+                  key={card.id}
+                  card={card}
+                  index={i}
+                  onClick={() => card.link_destino && navigate(card.link_destino)}
+                />
+              ))}
+            </div>
           </div>
+        )}
 
-          {/* Sections */}
-          <div className="space-y-12 md:space-y-20 pb-20">
-            {!hasAny ? (
-              <div className="text-center py-12">
-                <p className="text-[hsl(40,5%,45%)]">Nenhum módulo disponível no momento.</p>
-              </div>
-            ) : (
-              <>
-                {sectionOrder.map((tipo) => {
-                  const items = grouped[tipo];
-                  if (!items || items.length === 0) return null;
-
-                  return (
-                    <section key={tipo}>
-                      <div className="flex items-center gap-3 mb-6 md:mb-8">
-                        <h2 className="font-display text-lg md:text-xl text-[hsl(40,10%,85%)] font-medium tracking-wide">
-                          {TIPO_LABELS[tipo] || tipo}
-                        </h2>
-                        <div className="flex-1 h-px bg-[hsl(0,0%,100%)]/[0.06]" />
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-                        {items.map((m, i) => (
-                          <ModuloCard
-                            key={m.id}
-                            modulo={m}
-                            index={i}
-                            canAccess={hasAccess(user?.portal, m.nivel_acesso)}
-                            onClick={() => handleCardClick(m)}
-                          />
-                        ))}
-                      </div>
-                    </section>
-                  );
-                })}
-              </>
-            )}
-
-            {/* CTA Final — contemplative, not promotional */}
-            {hasAny && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                className="text-center pt-8 pb-4"
-              >
-                <div className="h-px w-16 bg-[hsl(40,35%,60%)]/20 mx-auto mb-8" />
-                <p className="text-[hsl(40,5%,50%)] text-sm mb-6">
-                  Cada jornada começa com um passo consciente.
-                </p>
-                <Button
-                  onClick={() => navigate("/sala-da-visitante")}
-                  variant="hero"
-                  size="lg"
-                  className="gap-3 border-[hsl(40,35%,60%)]/30 text-[hsl(40,35%,60%)] hover:border-[hsl(40,35%,60%)]/60 hover:bg-[hsl(40,35%,60%)]/5 transition-all duration-300"
-                >
-                  Iniciar minha travessia
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </motion.div>
-            )}
+        {visibleCards.length === 0 && (
+          <div className="flex items-center justify-center min-h-[400px]">
+            <p className="text-muted-foreground">Nenhum conteúdo disponível no momento.</p>
           </div>
-        </div>
+        )}
       </div>
     </AppLayout>
   );

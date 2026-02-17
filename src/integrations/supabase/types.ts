@@ -9575,6 +9575,51 @@ export type Database = {
         }
         Relationships: []
       }
+      vitrine_cards: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          descricao_curta: string | null
+          estilo: string
+          id: string
+          imagem: string | null
+          link_destino: string | null
+          ordem: number
+          subtitulo: string | null
+          titulo: string
+          updated_at: string
+          visibilidade_role: string[]
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          descricao_curta?: string | null
+          estilo?: string
+          id?: string
+          imagem?: string | null
+          link_destino?: string | null
+          ordem?: number
+          subtitulo?: string | null
+          titulo: string
+          updated_at?: string
+          visibilidade_role?: string[]
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          descricao_curta?: string | null
+          estilo?: string
+          id?: string
+          imagem?: string | null
+          link_destino?: string | null
+          ordem?: number
+          subtitulo?: string | null
+          titulo?: string
+          updated_at?: string
+          visibilidade_role?: string[]
+        }
+        Relationships: []
+      }
       webhook_logs: {
         Row: {
           created_at: string
