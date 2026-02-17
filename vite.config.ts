@@ -21,7 +21,7 @@ export default defineConfig(({ mode }) => ({
       },
       registerType: "autoUpdate",
       selfDestroying: false,
-      includeAssets: ["favicon.ico", "logo-icon.png"],
+      includeAssets: [],
       manifest: {
         name: "Casa ORÁCULA",
         short_name: "ORÁCULA",
@@ -52,21 +52,14 @@ export default defineConfig(({ mode }) => ({
         ],
       },
       workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB limit
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "google-fonts-cache",
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365,
-              },
-            },
-          },
-        ],
+        // Minimal precaching - only the shell, not all assets
+        globPatterns: ["**/*.html"],
+        maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
+        // Skip waiting immediately so new SW activates fast
+        skipWaiting: true,
+        clientsClaim: true,
+        // No runtime caching - let browser handle it naturally
+        runtimeCaching: [],
       },
     }),
   ].filter(Boolean),
