@@ -40,7 +40,7 @@ function HeroCard({ card, onClick }: { card: VitrineCard; onClick: () => void })
             loop
             muted
             playsInline
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover object-center blur-[2px] scale-105"
           />
         ) : card.imagem ? (
           <img
@@ -51,6 +51,7 @@ function HeroCard({ card, onClick }: { card: VitrineCard; onClick: () => void })
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-[hsl(var(--primary))]/20 to-transparent" />
         )}
+        <div className="absolute inset-0 bg-black/15" />
       </div>
 
       {/* Text below */}
