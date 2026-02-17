@@ -63,7 +63,7 @@ const AdminAtlasFemininoTab = lazy(() => import('@/components/admin/AdminAtlasFe
 const AdminNarroterapiaTab = lazy(() => import('@/components/admin/AdminNarroterapiaTab').then(m => ({ default: m.AdminNarroterapiaTab })));
 const AdminNarroterapiaAutorizacaoTab = lazy(() => import('@/components/admin/AdminNarroterapiaAutorizacaoTab'));
 const AdminClubeLivroTab = lazy(() => import('@/components/admin/AdminClubeLivroTab'));
-const AdminModulosFormativos = lazy(() => import('@/pages/admin/AdminModulosFormativos'));
+const AdminVitrineCards = lazy(() => import('@/pages/admin/AdminVitrineCards'));
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
   { value: 'aluna', label: '👁 Aluna' },
@@ -600,7 +600,7 @@ export default function Admin() {
 
           <TabsContent value="vitrine">
             <Suspense fallback={<TabLoader />}>
-              <AdminModulosFormativos />
+              <AdminVitrineCards />
             </Suspense>
           </TabsContent>
 
