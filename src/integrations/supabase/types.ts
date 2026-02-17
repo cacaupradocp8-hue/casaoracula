@@ -9588,6 +9588,7 @@ export type Database = {
           subtitulo: string | null
           titulo: string
           updated_at: string
+          video_url: string | null
           visibilidade_role: string[]
         }
         Insert: {
@@ -9602,6 +9603,7 @@ export type Database = {
           subtitulo?: string | null
           titulo: string
           updated_at?: string
+          video_url?: string | null
           visibilidade_role?: string[]
         }
         Update: {
@@ -9616,6 +9618,7 @@ export type Database = {
           subtitulo?: string | null
           titulo?: string
           updated_at?: string
+          video_url?: string | null
           visibilidade_role?: string[]
         }
         Relationships: []
