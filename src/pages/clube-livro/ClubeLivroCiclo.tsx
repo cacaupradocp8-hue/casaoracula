@@ -10,13 +10,15 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useClubeCicloDetalhe } from '@/hooks/useClubeLivro';
+import { useIntegracaoRecord } from '@/hooks/useIntegracaoOracular';
 import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
 import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature } from '@/types/portal';
 import { 
   BookOpen, ChevronRight, Home, Sparkles, 
   BookMarked, Headphones, Video, MessageCircle,
-  ArrowRight, Stethoscope, AlertTriangle, CheckCircle, XCircle
+  ArrowRight, Stethoscope, AlertTriangle, CheckCircle, XCircle,
+  Star, CheckCircle2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -32,6 +34,7 @@ export default function ClubeLivroCiclo() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { ciclo, fases, escutas, encontros, isLoading } = useClubeCicloDetalhe(id);
+  const { data: integracaoRecord } = useIntegracaoRecord(id);
   const { isProfessional } = useProfessionalStatus();
   const { user } = useAuth();
   
@@ -39,6 +42,8 @@ export default function ClubeLivroCiclo() {
   const portalMinimoClin = ciclo?.portal_minimo_clinico || 'aluna_formacao';
   const canSeeClinical = isProfessional && user && canAccessFeature(user.portal, portalMinimoClin as any);
   const hasClinicalContent = ciclo?.orientacao_clinica_uso || ciclo?.orientacao_clinica_evitar;
+  const integracaoConcluida = integracaoRecord?.status === 'concluida';
+
 
   if (isLoading) {
     return (
@@ -278,7 +283,73 @@ export default function ClubeLivroCiclo() {
                 </Card>
               </section>
             )}
+
+            {/* === INTEGRAÇÃO ORACULAR === */}
+            <section>
+              <Card
+                className={cn(
+                  'cursor-pointer transition-all border group',
+                  integracaoConcluida
+                    ? 'border-gold/40 bg-gold/5 hover:bg-gold/10'
+                    : 'border-gold/20 bg-gradient-to-br from-card to-gold/5 hover:border-gold/40'
+                )}
+                onClick={() => navigate(`/clube-livro/${id}/integracao`)}
+              >
+                <CardContent className="py-5 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
+                      {integracaoConcluida ? (
+                        <CheckCircle2 className="w-5 h-5 text-gold" />
+                      ) : (
+                        <Sparkles className="w-5 h-5 text-gold" />
+                      )}
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground text-sm">Integração Oracular</p>
+                      <p className="text-xs text-muted-foreground">
+                        {integracaoConcluida
+                          ? 'Integração concluída — ver registro'
+                          : 'Transforme a leitura em experiência prática'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {integracaoConcluida && (
+                      <Badge variant="outline" className="text-xs border-gold/40 text-gold hidden sm:flex">
+                        Concluída ✦
+                      </Badge>
+                    )}
+                    <Button
+                      size="sm"
+                      className={cn(
+                        'gap-2 text-xs',
+                        integracaoConcluida
+                          ? 'bg-gold/20 hover:bg-gold/30 text-gold border border-gold/40'
+                          : 'bg-gold hover:bg-gold/90 text-primary-foreground'
+                      )}
+                      onClick={(e) => { e.stopPropagation(); navigate(`/clube-livro/${id}/integracao`); }}
+                    >
+                      <Star className="w-3 h-3" />
+                      {integracaoConcluida ? 'Ver registro' : 'Integrar conteúdo'}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+              <div className="mt-3 text-center">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs text-muted-foreground hover:text-gold gap-1"
+                  onClick={() => navigate(`/clube-livro/${id}/meu-caminho`)}
+                >
+                  <Star className="w-3 h-3" />
+                  Ver Meu Caminho no Clube
+                </Button>
+              </div>
+            </section>
+
           </TabsContent>
+
 
           {/* Tab: Uso Clínico (Profissional) */}
           {canSeeClinical && hasClinicalContent && (
