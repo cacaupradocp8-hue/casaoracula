@@ -174,6 +174,7 @@ import {
   ClubeLivroRitual,
   IntegracaoOracular,
   MeuCaminhoClube,
+  Integracao8020,
 } from "./pages/clube-livro";
 // Labirinto da Heroína Interna®
 import { LabirintoHeroinaPage } from "./pages/labirinto-heroina";
@@ -704,7 +705,17 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      
+
+      {/* Integração 80/20 */}
+      <Route
+        path="/clube-livro/:id/integracao-8020"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <Integracao8020 />
+          </ProtectedRoute>
+        }
+      />
+
       <Route
         path="/biblioteca"
         element={
@@ -712,7 +723,6 @@ function AppRoutes() {
             <Biblioteca />
           </ProtectedRoute>
         }
-
       />
       <Route
         path="/laboratorio-leitura"
