@@ -10,4 +10,5 @@ export { default as ClubeLivroEncontros } from './ClubeLivroEncontros';
 export { default as ClubeLivroRitual } from './ClubeLivroRitual';
 export { default as IntegracaoOracular } from './IntegracaoOracular';
 export { default as MeuCaminhoClube } from './MeuCaminhoClube';
+export { default as Integracao8020 } from './Integracao8020';
 

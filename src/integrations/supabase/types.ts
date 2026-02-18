@@ -1771,6 +1771,124 @@ export type Database = {
           },
         ]
       }
+      clube_livro_integracao_8020: {
+        Row: {
+          aplicacao_pessoal_acao: string | null
+          aplicacao_pessoal_comportamento: string | null
+          aplicacao_pessoal_onde: string | null
+          ciclo_id: string
+          created_at: string
+          id: string
+          notas_profissionais: string | null
+          registro_livre: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          aplicacao_pessoal_acao?: string | null
+          aplicacao_pessoal_comportamento?: string | null
+          aplicacao_pessoal_onde?: string | null
+          ciclo_id: string
+          created_at?: string
+          id?: string
+          notas_profissionais?: string | null
+          registro_livre?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          aplicacao_pessoal_acao?: string | null
+          aplicacao_pessoal_comportamento?: string | null
+          aplicacao_pessoal_onde?: string | null
+          ciclo_id?: string
+          created_at?: string
+          id?: string
+          notas_profissionais?: string | null
+          registro_livre?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_livro_integracao_8020_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_livro_integracao_8020_config: {
+        Row: {
+          aula_conceito: string | null
+          aula_exemplo: string | null
+          aula_exercicio: string | null
+          ciclo_id: string
+          comportamento_abandonar: string | null
+          created_at: string
+          essencia_texto: string | null
+          id: string
+          palestra_convite: string | null
+          palestra_ideia: string | null
+          palestra_narrativa: string | null
+          sessao_escuta: string | null
+          sessao_pergunta: string | null
+          sessao_resistencia: string | null
+          tensao_central: string | null
+          transformacao_proposta: string | null
+          updated_at: string
+        }
+        Insert: {
+          aula_conceito?: string | null
+          aula_exemplo?: string | null
+          aula_exercicio?: string | null
+          ciclo_id: string
+          comportamento_abandonar?: string | null
+          created_at?: string
+          essencia_texto?: string | null
+          id?: string
+          palestra_convite?: string | null
+          palestra_ideia?: string | null
+          palestra_narrativa?: string | null
+          sessao_escuta?: string | null
+          sessao_pergunta?: string | null
+          sessao_resistencia?: string | null
+          tensao_central?: string | null
+          transformacao_proposta?: string | null
+          updated_at?: string
+        }
+        Update: {
+          aula_conceito?: string | null
+          aula_exemplo?: string | null
+          aula_exercicio?: string | null
+          ciclo_id?: string
+          comportamento_abandonar?: string | null
+          created_at?: string
+          essencia_texto?: string | null
+          id?: string
+          palestra_convite?: string | null
+          palestra_ideia?: string | null
+          palestra_narrativa?: string | null
+          sessao_escuta?: string | null
+          sessao_pergunta?: string | null
+          sessao_resistencia?: string | null
+          tensao_central?: string | null
+          transformacao_proposta?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_livro_integracao_8020_config_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: true
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_livro_integracao_config: {
         Row: {
           ciclo_id: string

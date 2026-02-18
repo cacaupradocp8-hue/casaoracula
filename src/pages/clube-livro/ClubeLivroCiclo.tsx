@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useClubeCicloDetalhe } from '@/hooks/useClubeLivro';
 import { useIntegracaoRecord } from '@/hooks/useIntegracaoOracular';
+import { useIntegracao8020Record } from '@/hooks/useIntegracao8020';
 import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
 import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature } from '@/types/portal';
@@ -18,7 +19,7 @@ import {
   BookOpen, ChevronRight, Home, Sparkles, 
   BookMarked, Headphones, Video, MessageCircle,
   ArrowRight, Stethoscope, AlertTriangle, CheckCircle, XCircle,
-  Star, CheckCircle2,
+  Star, CheckCircle2, Target,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -35,6 +36,7 @@ export default function ClubeLivroCiclo() {
   const navigate = useNavigate();
   const { ciclo, fases, escutas, encontros, isLoading } = useClubeCicloDetalhe(id);
   const { data: integracaoRecord } = useIntegracaoRecord(id);
+  const { data: integracao8020Record } = useIntegracao8020Record(id);
   const { isProfessional } = useProfessionalStatus();
   const { user } = useAuth();
   
@@ -43,6 +45,7 @@ export default function ClubeLivroCiclo() {
   const canSeeClinical = isProfessional && user && canAccessFeature(user.portal, portalMinimoClin as any);
   const hasClinicalContent = ciclo?.orientacao_clinica_uso || ciclo?.orientacao_clinica_evitar;
   const integracaoConcluida = integracaoRecord?.status === 'concluida';
+  const integracao8020Concluida = integracao8020Record?.status === 'concluida';
 
 
   if (isLoading) {
@@ -335,6 +338,54 @@ export default function ClubeLivroCiclo() {
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Card Integração 80/20 */}
+              <Card
+                className={cn(
+                  'cursor-pointer transition-all border group mt-3',
+                  integracao8020Concluida
+                    ? 'border-gold/40 bg-gold/5 hover:bg-gold/10'
+                    : 'border-border/40 hover:border-gold/30'
+                )}
+                onClick={() => navigate(`/clube-livro/${id}/integracao-8020`)}
+              >
+                <CardContent className="py-4 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center shrink-0">
+                      {integracao8020Concluida ? (
+                        <CheckCircle2 className="w-4 h-4 text-gold" />
+                      ) : (
+                        <Target className="w-4 h-4 text-muted-foreground" />
+                      )}
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground text-sm">Integração 80/20</p>
+                      <p className="text-xs text-muted-foreground">
+                        {integracao8020Concluida
+                          ? 'Integração concluída — ver aplicação'
+                          : 'Traduzir o livro em aplicação profissional e pessoal'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {integracao8020Concluida && (
+                      <Badge variant="outline" className="text-xs border-gold/40 text-gold hidden sm:flex">
+                        Concluída ✦
+                      </Badge>
+                    )}
+                    <Button
+                      size="sm"
+                      variant={integracao8020Concluida ? 'outline' : 'secondary'}
+                      className="gap-2 text-xs"
+                      onClick={(e) => { e.stopPropagation(); navigate(`/clube-livro/${id}/integracao-8020`); }}
+                    >
+                      <Target className="w-3 h-3" />
+                      {integracao8020Concluida ? 'Ver aplicação' : 'Fazer integração'}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
               <div className="mt-3 text-center">
                 <Button
                   variant="ghost"
