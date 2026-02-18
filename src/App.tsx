@@ -177,6 +177,8 @@ import {
 import { LabirintoHeroinaPage } from "./pages/labirinto-heroina";
 import MapaHeroinaPage from "./pages/mapa-heroina";
 import CartasJornadaPage from "./pages/CartasJornadaPage";
+import PortalJunguiano from "./pages/PortalJunguiano";
+import PortalJunguianoPorta from "./pages/PortalJunguianoPorta";
 
 const queryClient = new QueryClient();
 
@@ -398,6 +400,23 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Portais />
+          </ProtectedRoute>
+        }
+      />
+      {/* Portal Junguiano — Travessia das 9 Forças da Psique */}
+      <Route
+        path="/portal-junguiano"
+        element={
+          <ProtectedRoute minPortal="aluna_formacao">
+            <PortalJunguiano />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/portal-junguiano/porta/:id"
+        element={
+          <ProtectedRoute minPortal="aluna_formacao">
+            <PortalJunguianoPorta />
           </ProtectedRoute>
         }
       />
