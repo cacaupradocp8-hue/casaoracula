@@ -7093,6 +7093,257 @@ export type Database = {
           },
         ]
       }
+      portal_junguiano_config: {
+        Row: {
+          aviso_etico: string | null
+          created_at: string
+          descricao: string | null
+          id: string
+          modo_clinica_ativo: boolean | null
+          portal_minimo: Database["public"]["Enums"]["portal_type"]
+          status: string
+          subtitulo: string | null
+          texto_encerramento: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          aviso_etico?: string | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          modo_clinica_ativo?: boolean | null
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          status?: string
+          subtitulo?: string | null
+          texto_encerramento?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Update: {
+          aviso_etico?: string | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          modo_clinica_ativo?: boolean | null
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          status?: string
+          subtitulo?: string | null
+          texto_encerramento?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      portal_junguiano_modulos: {
+        Row: {
+          ativo: boolean | null
+          config_id: string | null
+          created_at: string
+          descricao: string | null
+          id: string
+          ordem: number
+          portal_minimo: Database["public"]["Enums"]["portal_type"]
+          subtitulo: string | null
+          tipo: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          config_id?: string | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          ordem?: number
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          subtitulo?: string | null
+          tipo?: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean | null
+          config_id?: string | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          ordem?: number
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          subtitulo?: string | null
+          tipo?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portal_junguiano_modulos_config_id_fkey"
+            columns: ["config_id"]
+            isOneToOne: false
+            referencedRelation: "portal_junguiano_config"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      portal_junguiano_portais: {
+        Row: {
+          ativo: boolean | null
+          audio_titulo: string | null
+          audio_url: string | null
+          created_at: string
+          desbloqueio_tipo: string | null
+          descricao: string | null
+          frase_oraculo: string | null
+          id: string
+          missao_criterio_conclusao: string | null
+          missao_descricao: string | null
+          missao_titulo: string | null
+          modulo_id: string | null
+          numero_ordem: number
+          portal_minimo: Database["public"]["Enums"]["portal_type"]
+          subtitulo: string | null
+          texto_aula_principal: string | null
+          titulo: string
+          updated_at: string
+          vivencia_guiada: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          audio_titulo?: string | null
+          audio_url?: string | null
+          created_at?: string
+          desbloqueio_tipo?: string | null
+          descricao?: string | null
+          frase_oraculo?: string | null
+          id?: string
+          missao_criterio_conclusao?: string | null
+          missao_descricao?: string | null
+          missao_titulo?: string | null
+          modulo_id?: string | null
+          numero_ordem?: number
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          subtitulo?: string | null
+          texto_aula_principal?: string | null
+          titulo: string
+          updated_at?: string
+          vivencia_guiada?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          audio_titulo?: string | null
+          audio_url?: string | null
+          created_at?: string
+          desbloqueio_tipo?: string | null
+          descricao?: string | null
+          frase_oraculo?: string | null
+          id?: string
+          missao_criterio_conclusao?: string | null
+          missao_descricao?: string | null
+          missao_titulo?: string | null
+          modulo_id?: string | null
+          numero_ordem?: number
+          portal_minimo?: Database["public"]["Enums"]["portal_type"]
+          subtitulo?: string | null
+          texto_aula_principal?: string | null
+          titulo?: string
+          updated_at?: string
+          vivencia_guiada?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portal_junguiano_portais_modulo_id_fkey"
+            columns: ["modulo_id"]
+            isOneToOne: false
+            referencedRelation: "portal_junguiano_modulos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      portal_junguiano_progresso: {
+        Row: {
+          concluido_em: string | null
+          config_id: string | null
+          created_at: string
+          id: string
+          iniciado_em: string | null
+          modo_clinica: boolean | null
+          portais_concluidos: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          concluido_em?: string | null
+          config_id?: string | null
+          created_at?: string
+          id?: string
+          iniciado_em?: string | null
+          modo_clinica?: boolean | null
+          portais_concluidos?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          concluido_em?: string | null
+          config_id?: string | null
+          created_at?: string
+          id?: string
+          iniciado_em?: string | null
+          modo_clinica?: boolean | null
+          portais_concluidos?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portal_junguiano_progresso_config_id_fkey"
+            columns: ["config_id"]
+            isOneToOne: false
+            referencedRelation: "portal_junguiano_config"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      portal_junguiano_registros: {
+        Row: {
+          created_at: string
+          id: string
+          missao_concluida: boolean | null
+          missao_concluida_em: string | null
+          portal_id: string | null
+          reflexao: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          missao_concluida?: boolean | null
+          missao_concluida_em?: string | null
+          portal_id?: string | null
+          reflexao?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          missao_concluida?: boolean | null
+          missao_concluida_em?: string | null
+          portal_id?: string | null
+          reflexao?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portal_junguiano_registros_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: false
+            referencedRelation: "portal_junguiano_portais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       portal_salas: {
         Row: {
           created_at: string
