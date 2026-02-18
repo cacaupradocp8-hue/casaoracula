@@ -374,6 +374,38 @@ export function AdminClubeLivroTab() {
 
         {/* ABA: Mapa de Jornadas */}
         <TabsContent value="mapa" className="space-y-6">
+
+          {/* Bloco: Como usar este calendário */}
+          <Card className="bg-muted/20 border-gold/20">
+            <CardContent className="pt-5 pb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles className="w-4 h-4 text-gold" />
+                <span className="text-xs uppercase tracking-widest text-gold font-medium">
+                  Como usar este calendário
+                </span>
+              </div>
+              <p className="text-sm font-medium text-foreground mb-2">
+                Este não é um calendário de leitura.
+              </p>
+              <p className="text-sm text-muted-foreground mb-3">
+                É um mapa de travessia formativa. Cada livro existe para desenvolver uma habilidade simbólica,
+                fortalecer a prática profissional e ampliar a capacidade de sustentar processos — em si e no outro.
+              </p>
+              <div className="flex flex-wrap gap-2 items-center text-xs text-muted-foreground">
+                <span className="font-medium text-foreground">Fluxo esperado:</span>
+                {['Calendário', 'Livro', 'Portal', 'Laboratório 80/20', 'Jardins'].map((step, i, arr) => (
+                  <span key={step} className="flex items-center gap-1">
+                    <span className="px-2 py-0.5 rounded bg-muted text-foreground text-xs">{step}</span>
+                    {i < arr.length - 1 && <span className="text-muted-foreground/50">→</span>}
+                  </span>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground/60 mt-3 italic">
+                Leia menos. Integre mais. Aplique com consciência.
+              </p>
+            </CardContent>
+          </Card>
+
           {isLoading ? (
             <div className="animate-pulse space-y-4">
               <div className="h-20 bg-muted rounded" />
