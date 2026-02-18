@@ -20,10 +20,68 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { 
   BookOpen, Plus, Pencil, Trash2, ChevronDown, ChevronUp,
-  Sparkles, Headphones, Video, FileText, Calendar, Loader2
+  Sparkles, Headphones, Video, FileText, Calendar, Loader2, Map
 } from 'lucide-react';
 import { FaseEditorExpandido } from './clube-livro';
 import { CALENDARIO_ANUAL, SEMANAS_PADRAO } from '@/constants/clubeLivroCalendario';
+import { cn } from '@/lib/utils';
+
+// Mapeamento canônico de jornadas (espelha CalendarioJornadas.tsx)
+const JORNADAS_ADMIN = [
+  {
+    chave: 'heroina',
+    nome: 'Jornada da Heroína',
+    subtitulo: 'Fundadora',
+    descricao: 'Identidade, instinto, voz e sentido.',
+    corLabel: 'text-amber-400',
+    corBorda: 'border-amber-700/30',
+    corBg: 'from-amber-950/30 to-card',
+    simbolo: '◈',
+    livros: [
+      'Mulheres que Correm com os Lobos',
+      'O Código do Ser',
+      'A Coruja Era Filha do Padeiro',
+      'Água Viva',
+    ],
+  },
+  {
+    chave: 'sombra',
+    nome: 'Jornada da Sombra',
+    subtitulo: 'Aprofundamento',
+    descricao: 'Projeção, ambivalência, ética e maturidade psíquica.',
+    corLabel: 'text-violet-400',
+    corBorda: 'border-violet-700/30',
+    corBg: 'from-violet-950/30 to-card',
+    simbolo: '◉',
+    livros: [
+      'O Brincar e a Realidade',
+      'A Gravidade e a Graça',
+      'O Acontecimento',
+      'Ficções que Curam',
+    ],
+  },
+  {
+    chave: 'expressao',
+    nome: 'Jornada da Expressão & Mundo',
+    subtitulo: 'Presença Pública',
+    descricao: 'Linguagem, desejo, ação e presença pública.',
+    corLabel: 'text-teal-400',
+    corBorda: 'border-teal-700/30',
+    corBg: 'from-teal-950/30 to-card',
+    simbolo: '◎',
+    livros: [
+      'O Poder da Escrita',
+      'A Poética do Espaço',
+      'Inteligência Erótica',
+      'A Condição Humana',
+    ],
+  },
+] as const;
+
+function matchLivroAdmin(titulo: string, livroRef: string): boolean {
+  return titulo.toLowerCase().includes(livroRef.toLowerCase()) ||
+    livroRef.toLowerCase().includes(titulo.toLowerCase());
+}
 
 interface Ciclo {
   id: string;
@@ -301,42 +359,168 @@ export function AdminClubeLivroTab() {
         </div>
       </div>
 
-      {/* Lista de Ciclos */}
-      {isLoading ? (
-        <div className="animate-pulse space-y-4">
-          <div className="h-20 bg-muted rounded" />
-          <div className="h-20 bg-muted rounded" />
-        </div>
-      ) : ciclos && ciclos.length > 0 ? (
-        <div className="space-y-4">
-          {ciclos.map((ciclo) => (
-            <CicloCard
-              key={ciclo.id}
-              ciclo={ciclo}
-              isExpanded={selectedCiclo === ciclo.id}
-              onToggle={() => setSelectedCiclo(selectedCiclo === ciclo.id ? null : ciclo.id)}
-              onEdit={() => handleEditCiclo(ciclo)}
-              onDelete={() => deleteCiclo.mutate(ciclo.id)}
-            />
-          ))}
-        </div>
-      ) : (
-        <Card className="bg-muted/30 border-dashed">
-          <CardContent className="py-8 text-center">
-            <BookOpen className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
-            <p className="text-muted-foreground">Nenhum ciclo cadastrado.</p>
-            <div className="flex justify-center gap-2 mt-4">
-              <Button variant="outline" onClick={() => setImportDialogOpen(true)}>
-                <Calendar className="w-4 h-4 mr-2" />
-                Importar 12 Ciclos
-              </Button>
-              <Button variant="ghost" onClick={handleNewCiclo}>
-                Criar manualmente
-              </Button>
+      {/* Abas: Mapa de Jornadas + Gerenciar Ciclos */}
+      <Tabs defaultValue="mapa">
+        <TabsList className="mb-4">
+          <TabsTrigger value="mapa" className="gap-2">
+            <Map className="w-4 h-4" />
+            Mapa de Jornadas
+          </TabsTrigger>
+          <TabsTrigger value="ciclos" className="gap-2">
+            <BookOpen className="w-4 h-4" />
+            Gerenciar Ciclos
+          </TabsTrigger>
+        </TabsList>
+
+        {/* ABA: Mapa de Jornadas */}
+        <TabsContent value="mapa" className="space-y-6">
+          {isLoading ? (
+            <div className="animate-pulse space-y-4">
+              <div className="h-20 bg-muted rounded" />
+              <div className="h-20 bg-muted rounded" />
             </div>
-          </CardContent>
-        </Card>
-      )}
+          ) : (
+            <div className="space-y-8">
+              {JORNADAS_ADMIN.map((jornada, jornadaIndex) => {
+                const mesBase = jornadaIndex * 4;
+                return (
+                  <div key={jornada.chave} className="space-y-3">
+                    {/* Cabeçalho da jornada */}
+                    <div className={cn(
+                      'rounded-xl p-4 bg-gradient-to-br border',
+                      jornada.corBg,
+                      jornada.corBorda,
+                    )}>
+                      <div className="flex items-start gap-3">
+                        <span className={cn('text-2xl leading-none mt-0.5', jornada.corLabel)}>
+                          {jornada.simbolo}
+                        </span>
+                        <div>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h3 className="font-display text-base text-foreground">
+                              {jornada.nome}
+                            </h3>
+                            <Badge variant="outline" className={cn('text-xs', jornada.corLabel, jornada.corBorda)}>
+                              {jornada.subtitulo}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mt-0.5">{jornada.descricao}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Grid de livros */}
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {jornada.livros.map((livroRef, i) => {
+                        const ciclo = ciclos?.find(c => matchLivroAdmin(c.titulo, livroRef));
+                        const mes = mesBase + i + 1;
+                        return (
+                          <div
+                            key={livroRef}
+                            className={cn(
+                              'flex items-center gap-3 p-3 rounded-lg border bg-card/50',
+                              ciclo ? 'border-border' : 'border-dashed border-muted-foreground/30 opacity-60',
+                            )}
+                          >
+                            {/* Thumbnail */}
+                            <div className="shrink-0">
+                              {ciclo?.capa_url ? (
+                                <img src={ciclo.capa_url} alt={ciclo.titulo} className="w-10 h-14 object-cover rounded" />
+                              ) : (
+                                <div className="w-10 h-14 bg-muted rounded flex items-center justify-center">
+                                  <BookOpen className="w-4 h-4 text-muted-foreground" />
+                                </div>
+                              )}
+                            </div>
+                            {/* Info */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-1.5 mb-0.5">
+                                <span className="text-[10px] font-mono text-muted-foreground">
+                                  Mês {mes.toString().padStart(2, '0')}
+                                </span>
+                                {ciclo && (
+                                  <>
+                                    <span className="text-muted-foreground/40 text-[10px]">·</span>
+                                    {ciclo.publicado ? (
+                                      <Badge className="text-[10px] px-1 py-0 h-4 bg-green-500/20 text-green-400 border-0">
+                                        Publicado
+                                      </Badge>
+                                    ) : (
+                                      <Badge variant="outline" className="text-[10px] px-1 py-0 h-4">
+                                        Rascunho
+                                      </Badge>
+                                    )}
+                                  </>
+                                )}
+                              </div>
+                              <p className="text-sm font-medium text-foreground truncate">
+                                {ciclo?.titulo || livroRef}
+                              </p>
+                              <p className="text-xs text-muted-foreground truncate">
+                                {ciclo?.autor_livro || '— não cadastrado'}
+                              </p>
+                            </div>
+                            {/* Editar */}
+                            {ciclo && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="shrink-0"
+                                onClick={() => { setEditingCiclo(ciclo); setCicloDialogOpen(true); }}
+                              >
+                                <Pencil className="w-3.5 h-3.5" />
+                              </Button>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </TabsContent>
+
+        {/* ABA: Gerenciar Ciclos (lista completa original) */}
+        <TabsContent value="ciclos">
+          {isLoading ? (
+            <div className="animate-pulse space-y-4">
+              <div className="h-20 bg-muted rounded" />
+              <div className="h-20 bg-muted rounded" />
+            </div>
+          ) : ciclos && ciclos.length > 0 ? (
+            <div className="space-y-4">
+              {ciclos.map((ciclo) => (
+                <CicloCard
+                  key={ciclo.id}
+                  ciclo={ciclo}
+                  isExpanded={selectedCiclo === ciclo.id}
+                  onToggle={() => setSelectedCiclo(selectedCiclo === ciclo.id ? null : ciclo.id)}
+                  onEdit={() => handleEditCiclo(ciclo)}
+                  onDelete={() => deleteCiclo.mutate(ciclo.id)}
+                />
+              ))}
+            </div>
+          ) : (
+            <Card className="bg-muted/30 border-dashed">
+              <CardContent className="py-8 text-center">
+                <BookOpen className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+                <p className="text-muted-foreground">Nenhum ciclo cadastrado.</p>
+                <div className="flex justify-center gap-2 mt-4">
+                  <Button variant="outline" onClick={() => setImportDialogOpen(true)}>
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Importar 12 Ciclos
+                  </Button>
+                  <Button variant="ghost" onClick={handleNewCiclo}>
+                    Criar manualmente
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+      </Tabs>
 
       {/* Dialog para criar/editar ciclo */}
       <CicloDialog
@@ -413,6 +597,7 @@ export function AdminClubeLivroTab() {
       </Dialog>
     </div>
   );
+
 }
 
 // ============================================
