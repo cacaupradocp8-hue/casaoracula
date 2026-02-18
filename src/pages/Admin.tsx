@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target, Flame, FolderOpen, Link, Gift, Image as ImageIcon, Castle } from 'lucide-react';
+import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target, Flame, FolderOpen, Link, Gift, Image as ImageIcon, Castle, Zap } from 'lucide-react';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -64,6 +64,7 @@ const AdminNarroterapiaTab = lazy(() => import('@/components/admin/AdminNarroter
 const AdminNarroterapiaAutorizacaoTab = lazy(() => import('@/components/admin/AdminNarroterapiaAutorizacaoTab'));
 const AdminClubeLivroTab = lazy(() => import('@/components/admin/AdminClubeLivroTab'));
 const AdminVitrineCards = lazy(() => import('@/pages/admin/AdminVitrineCards'));
+const AdminPortalJunguianoTab = lazy(() => import('@/components/admin/AdminPortalJunguianoTab').then(m => ({ default: m.AdminPortalJunguianoTab })));
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
   { value: 'aluna', label: '👁 Aluna' },
@@ -309,6 +310,10 @@ export default function Admin() {
             <TabsTrigger value="clube-livro" className="gap-2">
               <BookOpen className="w-4 h-4 text-emerald-400" />
               Clube do Livro
+            </TabsTrigger>
+            <TabsTrigger value="portal-junguiano" className="gap-2">
+              <Zap className="w-4 h-4 text-gold" />
+              Portal Junguiano
             </TabsTrigger>
             <TabsTrigger value="vitrine" className="gap-2">
               <LayoutGrid className="w-4 h-4 text-gold" />
@@ -595,6 +600,12 @@ export default function Admin() {
           <TabsContent value="clube-livro">
             <Suspense fallback={<TabLoader />}>
               <AdminClubeLivroTab />
+            </Suspense>
+          </TabsContent>
+
+          <TabsContent value="portal-junguiano">
+            <Suspense fallback={<TabLoader />}>
+              <AdminPortalJunguianoTab />
             </Suspense>
           </TabsContent>
 
