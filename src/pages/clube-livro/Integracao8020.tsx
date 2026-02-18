@@ -17,6 +17,9 @@ import {
 } from '@/hooks/useIntegracao8020';
 import { useClubeCicloDetalhe } from '@/hooks/useClubeLivro';
 import { GuardiaIntegracao8020Chat } from '@/components/clube-livro/GuardiaIntegracao8020Chat';
+import { useJardimPsique } from '@/hooks/useJardimPsique';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import {
   Home,
   ChevronRight,
@@ -31,9 +34,13 @@ import {
   Mic,
   Stethoscope,
   CheckCircle2,
+  Flower2,
+  Sprout,
+  ArrowRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+
 
 // Textarea com label
 function FieldTextarea({
@@ -100,6 +107,8 @@ export default function Integracao8020() {
   const { data: config, isLoading: loadingConfig } = useIntegracao8020Config(cicloId);
   const { data: record, isLoading: loadingRecord } = useIntegracao8020Record(cicloId);
   const salvar = useSalvarIntegracao8020(cicloId);
+  const { salvarRegistro } = useJardimPsique();
+  const { user } = useAuth();
 
   // Bloco 3 – Aplicação Pessoal
   const [onde, setOnde] = useState('');
@@ -111,6 +120,7 @@ export default function Integracao8020() {
   const [notasProfissionais, setNotasProfissionais] = useState('');
 
   const [salvando, setSalvando] = useState(false);
+  const [enviandoJardim, setEnviandoJardim] = useState<'psique' | 'oficio' | null>(null);
 
   // Inicializa com dados salvos
   useEffect(() => {
@@ -152,6 +162,65 @@ export default function Integracao8020() {
       setSalvando(false);
     }
   };
+
+  // Enviar insights ao Jardim da Psique (campo pessoal)
+  const handleEnviarJardimPsique = async () => {
+    if (!registroLivre.trim() && !onde.trim()) {
+      toast.error('Preencha ao menos um campo pessoal antes de enviar ao Jardim da Psique.');
+      return;
+    }
+    setEnviandoJardim('psique');
+    try {
+      await salvarRegistro({
+        ferramenta_nome: `Clube do Livro — ${ciclo?.titulo || 'Integração 80/20'}`,
+        ferramenta_chave: 'clube-livro-8020',
+        tipo_registro: 'reflexao',
+        titulo: `Integração 80/20: ${ciclo?.titulo || ''}`,
+        conteudo: {
+          onde_me_atravessa: onde,
+          comportamento_observar: comportamento,
+          acao_pratica: acao,
+          escrita_livre: registroLivre,
+        },
+        reflexao_pessoal: registroLivre || onde,
+        tags: ['clube-livro', '8020', ciclo?.titulo || ''],
+        fonte: 'Laboratório de Integração 80/20',
+      });
+      toast.success('Insight enviado ao Jardim da Psique ✦');
+    } finally {
+      setEnviandoJardim(null);
+    }
+  };
+
+  // Enviar notas ao Jardim do Ofício (campo profissional) via jardim_oficio_registros
+  const handleEnviarJardimOficio = async () => {
+    if (!notasProfissionais.trim()) {
+      toast.error('Preencha as anotações profissionais antes de enviar ao Jardim do Ofício.');
+      return;
+    }
+    if (!user) return;
+    setEnviandoJardim('oficio');
+    try {
+      const { error } = await (supabase as any)
+        .from('jardim_oficio_registros')
+        .insert({
+          user_id: user.id,
+          titulo: `Integração 80/20 — ${ciclo?.titulo || ''}`,
+          conteudo: notasProfissionais,
+          contexto_origem: `Laboratório de Integração 80/20 do Clube do Livro: ${ciclo?.titulo || ''}`,
+          status: 'privado',
+          tags: ['clube-livro', '8020', ciclo?.titulo || ''],
+        });
+      if (error) throw error;
+      toast.success('Notas enviadas ao Jardim do Ofício ✦');
+    } catch {
+      toast.error('Erro ao enviar ao Jardim do Ofício.');
+    } finally {
+      setEnviandoJardim(null);
+    }
+  };
+
+
 
   if (isLoading) {
     return (
@@ -501,8 +570,70 @@ export default function Integracao8020() {
               Apoio à integração
             </p>
           </div>
-          <GuardiaIntegracao8020Chat cicloTitulo={ciclo?.titulo} />
         </section>
+
+        {/* ============================
+            ENVIAR AOS JARDINS
+        ============================== */}
+        <section className="mb-8">
+          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
+            <Flower2 className="w-3 h-3" />
+            Registro nos Jardins
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Card className="bg-card/60 border-border/50">
+              <CardContent className="p-4 space-y-2">
+                <div className="flex items-center gap-2">
+                  <Flower2 className="w-4 h-4 text-muted-foreground" />
+                  <p className="text-sm font-medium text-foreground">Jardim da Psique</p>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Envia sua escrita livre e campo pessoal para seu diário simbólico privado.
+                </p>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full gap-2 text-xs mt-1"
+                  disabled={enviandoJardim === 'psique' || (!registroLivre.trim() && !onde.trim())}
+                  onClick={handleEnviarJardimPsique}
+                >
+                  {enviandoJardim === 'psique' ? (
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  ) : (
+                    <Flower2 className="w-3 h-3" />
+                  )}
+                  Enviar ao Jardim da Psique
+                </Button>
+              </CardContent>
+            </Card>
+            <Card className="bg-card/60 border-border/50">
+              <CardContent className="p-4 space-y-2">
+                <div className="flex items-center gap-2">
+                  <Sprout className="w-4 h-4 text-muted-foreground" />
+                  <p className="text-sm font-medium text-foreground">Jardim do Ofício</p>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Envia suas anotações profissionais para a reflexão da terapeuta.
+                </p>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full gap-2 text-xs mt-1"
+                  disabled={enviandoJardim === 'oficio' || !notasProfissionais.trim()}
+                  onClick={handleEnviarJardimOficio}
+                >
+                  {enviandoJardim === 'oficio' ? (
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  ) : (
+                    <Sprout className="w-3 h-3" />
+                  )}
+                  Enviar ao Jardim do Ofício
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
         <div className="space-y-3">
           {tudo_concluido && (
             <div className="flex items-center justify-center gap-2 text-xs text-gold mb-1">
@@ -510,7 +641,6 @@ export default function Integracao8020() {
               Integração completa — todos os blocos preenchidos
             </div>
           )}
-
           <Button
             onClick={handleSalvar}
             disabled={salvando || !temConteudoMinimo}
@@ -523,7 +653,6 @@ export default function Integracao8020() {
             )}
             Salvar integração
           </Button>
-
           <Button
             variant="ghost"
             className="w-full"
