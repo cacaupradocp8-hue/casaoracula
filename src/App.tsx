@@ -171,7 +171,9 @@ import {
   ClubeLivroFase, 
   ClubeLivroEscutas, 
   ClubeLivroEncontros,
-  ClubeLivroRitual
+  ClubeLivroRitual,
+  IntegracaoOracular,
+  MeuCaminhoClube,
 } from "./pages/clube-livro";
 // Labirinto da Heroína Interna®
 import { LabirintoHeroinaPage } from "./pages/labirinto-heroina";
@@ -675,6 +677,33 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      {/* Integração Oracular */}
+      <Route
+        path="/clube-livro/:id/integracao"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <IntegracaoOracular />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/:id/meu-caminho"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <MeuCaminhoClube />
+          </ProtectedRoute>
+        }
+      />
+      {/* Rota global "Meu Caminho" sem ciclo específico */}
+      <Route
+        path="/clube-livro/meu-caminho"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <MeuCaminhoClube />
+          </ProtectedRoute>
+        }
+      />
       
       <Route
         path="/biblioteca"
@@ -683,6 +712,7 @@ function AppRoutes() {
             <Biblioteca />
           </ProtectedRoute>
         }
+
       />
       <Route
         path="/laboratorio-leitura"

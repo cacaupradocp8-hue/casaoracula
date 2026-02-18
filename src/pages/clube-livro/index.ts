@@ -8,3 +8,6 @@ export { default as ClubeLivroFase } from './ClubeLivroFase';
 export { default as ClubeLivroEscutas } from './ClubeLivroEscutas';
 export { default as ClubeLivroEncontros } from './ClubeLivroEncontros';
 export { default as ClubeLivroRitual } from './ClubeLivroRitual';
+export { default as IntegracaoOracular } from './IntegracaoOracular';
+export { default as MeuCaminhoClube } from './MeuCaminhoClube';
+
