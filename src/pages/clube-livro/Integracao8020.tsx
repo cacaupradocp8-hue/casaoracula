@@ -2,7 +2,7 @@
 // INTEGRAÇÃO 80/20 — Clube do Livro
 // ============================================
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,6 +16,7 @@ import {
   useSalvarIntegracao8020,
 } from '@/hooks/useIntegracao8020';
 import { useClubeCicloDetalhe } from '@/hooks/useClubeLivro';
+import { GuardiaIntegracao8020Chat } from '@/components/clube-livro/GuardiaIntegracao8020Chat';
 import {
   Home,
   ChevronRight,
@@ -33,16 +34,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-
-// Debounce helper
-function useDebounce<T>(value: T, delay: number): T {
-  const [debounced, setDebounced] = useState(value);
-  useEffect(() => {
-    const t = setTimeout(() => setDebounced(value), delay);
-    return () => clearTimeout(t);
-  }, [value, delay]);
-  return debounced;
-}
 
 // Textarea com label
 function FieldTextarea({
@@ -501,7 +492,17 @@ export default function Integracao8020() {
           </Card>
         </section>
 
-        {/* Botões */}
+        {/* ============================
+            GUARDIÃ — Chat de apoio
+        ============================== */}
+        <section className="mb-8">
+          <div className="flex items-center gap-2 mb-3">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground">
+              Apoio à integração
+            </p>
+          </div>
+          <GuardiaIntegracao8020Chat cicloTitulo={ciclo?.titulo} />
+        </section>
         <div className="space-y-3">
           {tudo_concluido && (
             <div className="flex items-center justify-center gap-2 text-xs text-gold mb-1">
