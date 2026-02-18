@@ -1771,6 +1771,97 @@ export type Database = {
           },
         ]
       }
+      clube_livro_integracao_config: {
+        Row: {
+          ciclo_id: string
+          created_at: string
+          id: string
+          movimento_1: string | null
+          movimento_2: string | null
+          movimento_3: string | null
+          pergunta_central: string | null
+          ritual_instrucao: string | null
+          texto_introdutorio: string | null
+          updated_at: string
+        }
+        Insert: {
+          ciclo_id: string
+          created_at?: string
+          id?: string
+          movimento_1?: string | null
+          movimento_2?: string | null
+          movimento_3?: string | null
+          pergunta_central?: string | null
+          ritual_instrucao?: string | null
+          texto_introdutorio?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ciclo_id?: string
+          created_at?: string
+          id?: string
+          movimento_1?: string | null
+          movimento_2?: string | null
+          movimento_3?: string | null
+          pergunta_central?: string | null
+          ritual_instrucao?: string | null
+          texto_introdutorio?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_livro_integracao_config_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: true
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_livro_integracoes: {
+        Row: {
+          ciclo_id: string
+          created_at: string
+          id: string
+          movimentos_concluidos: boolean[] | null
+          registro_oracular: string | null
+          ritual_concluido: boolean | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ciclo_id: string
+          created_at?: string
+          id?: string
+          movimentos_concluidos?: boolean[] | null
+          registro_oracular?: string | null
+          ritual_concluido?: boolean | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ciclo_id?: string
+          created_at?: string
+          id?: string
+          movimentos_concluidos?: boolean[] | null
+          registro_oracular?: string | null
+          ritual_concluido?: boolean | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_livro_integracoes_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_livro_perguntas: {
         Row: {
           ativo: boolean | null
