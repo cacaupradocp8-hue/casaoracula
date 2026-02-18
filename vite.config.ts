@@ -58,6 +58,9 @@ export default defineConfig(({ mode }) => ({
         // Skip waiting immediately so new SW activates fast
         skipWaiting: true,
         clientsClaim: true,
+        // CRITICAL: SPA fallback — all navigation requests must return index.html
+        navigateFallback: "/index.html",
+        navigateFallbackDenylist: [/^\/api\//, /^\/supabase\//],
         // No runtime caching - let browser handle it naturally
         runtimeCaching: [],
       },
