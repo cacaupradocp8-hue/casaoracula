@@ -35,7 +35,7 @@ import {
 export default function ClubeLivroCiclo() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { ciclo, fases, escutas, encontros, isLoading } = useClubeCicloDetalhe(id);
+  const { ciclo, fases, escutas, encontros, aulas, isLoading } = useClubeCicloDetalhe(id);
   const { data: integracaoRecord } = useIntegracaoRecord(id);
   const { data: integracao8020Record } = useIntegracao8020Record(id);
   const { isProfessional } = useProfessionalStatus();
@@ -119,7 +119,9 @@ export default function ClubeLivroCiclo() {
           <TabsContent value="leitura" className="mt-6 space-y-6">
             {/* BLOCO: Aulas e Encontros */}
             <AulasEncontrosBlock
+              aulas={aulas || []}
               encontros={encontros || []}
+              onAulaClick={(aulaId) => navigate(`/clube-livro/${id}/aula/${aulaId}`)}
               onEncontroClick={(encontroId) => navigate(`/clube-livro/${id}/encontros`)}
             />
             {/* BLOCO 2: Por que este livro */}

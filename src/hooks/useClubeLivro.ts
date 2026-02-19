@@ -223,12 +223,32 @@ export function useClubeCicloDetalhe(cicloId: string | undefined) {
     enabled: !!cicloId && !!user,
   });
 
+  // Buscar aulas do ciclo
+  const { data: aulas, isLoading: loadingAulas } = useQuery({
+    queryKey: ['clube-livro-aulas', cicloId],
+    queryFn: async () => {
+      if (!cicloId) return [];
+      const { data, error } = await supabase
+        .from('clube_livro_aulas')
+        .select('*')
+        .eq('ciclo_id', cicloId)
+        .eq('ativo', true)
+        .eq('publicado', true)
+        .order('ordem', { ascending: true });
+
+      if (error) throw error;
+      return data as { id: string; titulo: string; subtitulo?: string; ordem: number; duracao?: string }[];
+    },
+    enabled: !!cicloId && !!user,
+  });
+
   return {
     ciclo,
     fases,
     escutas,
     encontros,
-    isLoading: loadingCiclo || loadingFases || loadingEscutas || loadingEncontros,
+    aulas,
+    isLoading: loadingCiclo || loadingFases || loadingEscutas || loadingEncontros || loadingAulas,
   };
 }
 
