@@ -3,10 +3,13 @@
 // Modular: cada seção é um bloco independente
 // ============================================
 
+import { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useClubeCicloDetalhe } from '@/hooks/useClubeLivro';
 import { useIntegracaoRecord } from '@/hooks/useIntegracaoOracular';
@@ -15,8 +18,10 @@ import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
 import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature } from '@/types/portal';
 import { getPortaisDoLivro, JORNADA_COR } from '@/constants/clubeLivroPortais';
-import { BookOpen, ChevronRight, Home, Stethoscope } from 'lucide-react';
+import { BookOpen, ChevronRight, Home, Stethoscope, DoorOpen, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 // Blocos modulares independentes
 import {
@@ -40,6 +45,24 @@ export default function ClubeLivroCiclo() {
   const { data: integracao8020Record } = useIntegracao8020Record(id);
   const { isProfessional } = useProfessionalStatus();
   const { user } = useAuth();
+  const [selectedPortaId, setSelectedPortaId] = useState<string | null>(null);
+
+  // Fetch portas from DB for multipolar books
+  const isMultipolar = (ciclo as any)?.is_multipolar === true;
+  const { data: portasDB } = useQuery({
+    queryKey: ['clube-livro-portas', id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('clube_livro_portas')
+        .select('*')
+        .eq('ciclo_id', id!)
+        .eq('ativo', true)
+        .order('ordem', { ascending: true });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!id && isMultipolar,
+  });
 
   const portalMinimoClin = ciclo?.portal_minimo_clinico || 'aluna_formacao';
   const canSeeClinical = isProfessional && user && canAccessFeature(user.portal, portalMinimoClin as any);
@@ -49,6 +72,17 @@ export default function ClubeLivroCiclo() {
 
   const portaisConfig = ciclo ? getPortaisDoLivro(ciclo.titulo) : null;
   const jornadaCor = portaisConfig ? JORNADA_COR[portaisConfig.jornada] : null;
+
+  const infograficoUrl = (ciclo as any)?.infografico_url;
+
+  // Filter aulas by selected porta for multipolar books
+  const filteredAulas = isMultipolar && selectedPortaId
+    ? (aulas || []).filter((a: any) => a.porta_id === selectedPortaId)
+    : aulas;
+
+  const filteredEscutas = isMultipolar && selectedPortaId
+    ? (escutas || []).filter((e: any) => e.porta_id === selectedPortaId)
+    : escutas;
 
   if (isLoading) {
     return (
@@ -100,6 +134,76 @@ export default function ClubeLivroCiclo() {
           <CicloHeaderBlock ciclo={ciclo} />
         </div>
 
+        {/* INFOGRÁFICO */}
+        {infograficoUrl && (
+          <div className="mb-8">
+            <figure className="mx-auto max-w-2xl">
+              <img
+                src={infograficoUrl}
+                alt={`Infográfico — ${ciclo.titulo}`}
+                className="w-full rounded-lg border border-border/50 shadow-sm"
+                loading="lazy"
+              />
+              <figcaption className="mt-2 text-center text-xs text-muted-foreground italic">
+                Mapa de travessia deste livro
+              </figcaption>
+            </figure>
+          </div>
+        )}
+
+        {/* SELEÇÃO DE PORTA — para livros multipolares */}
+        {isMultipolar && portasDB && portasDB.length > 0 && (
+          <div className="mb-8">
+            <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
+              <DoorOpen className="w-3.5 h-3.5" />
+              Escolha sua Porta de Travessia
+            </h3>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {portasDB.map((porta: any) => {
+                const isSelected = selectedPortaId === porta.id;
+                const jornadaCorPorta = JORNADA_COR[porta.jornada] || null;
+                return (
+                  <Card
+                    key={porta.id}
+                    className={cn(
+                      'cursor-pointer transition-all group',
+                      isSelected
+                        ? 'border-primary ring-1 ring-primary/30'
+                        : 'hover:border-primary/40',
+                    )}
+                    onClick={() => setSelectedPortaId(isSelected ? null : porta.id)}
+                  >
+                    <CardContent className="py-3 flex items-center gap-3">
+                      <span className={cn('text-lg leading-none shrink-0', jornadaCorPorta?.corLabel || 'text-primary')}>
+                        {porta.icone || jornadaCorPorta?.simbolo || '◈'}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className={cn(
+                          'text-sm font-medium transition-colors',
+                          isSelected ? 'text-primary' : 'text-foreground group-hover:text-primary',
+                        )}>
+                          {porta.titulo}
+                        </p>
+                        {porta.descricao && (
+                          <p className="text-xs text-muted-foreground truncate">{porta.descricao}</p>
+                        )}
+                      </div>
+                      {isSelected && (
+                        <Badge variant="secondary" className="text-xs shrink-0">Selecionada</Badge>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+            {!selectedPortaId && (
+              <p className="text-xs text-muted-foreground mt-2 text-center italic">
+                Selecione uma porta para ver o conteúdo específico da jornada.
+              </p>
+            )}
+          </div>
+        )}
+
         {/* Tabs: Leitura / Uso Clínico */}
         <Tabs defaultValue="leitura" className="mb-8">
           <TabsList className={cn(canSeeClinical && hasClinicalContent ? 'grid grid-cols-2' : 'hidden')}>
@@ -119,7 +223,7 @@ export default function ClubeLivroCiclo() {
           <TabsContent value="leitura" className="mt-6 space-y-6">
             {/* BLOCO: Aulas e Encontros */}
             <AulasEncontrosBlock
-              aulas={aulas || []}
+              aulas={filteredAulas || []}
               encontros={encontros || []}
               dataInicioCiclo={ciclo.data_inicio ?? undefined}
               intervaloLiberacaoDias={7}
@@ -144,7 +248,7 @@ export default function ClubeLivroCiclo() {
 
             {/* BLOCO 5: Escuta Guiada */}
             <EscutaGuiadaBlock
-              escutas={escutas || []}
+              escutas={filteredEscutas || []}
               onNavigate={() => navigate(`/clube-livro/${id}/escutas`)}
             />
 

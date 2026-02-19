@@ -1578,6 +1578,7 @@ export type Database = {
           data_fim: string | null
           data_inicio: string | null
           id: string
+          infografico_url: string | null
           is_multipolar: boolean | null
           manifesto: string | null
           ordem: number | null
@@ -1605,6 +1606,7 @@ export type Database = {
           data_fim?: string | null
           data_inicio?: string | null
           id?: string
+          infografico_url?: string | null
           is_multipolar?: boolean | null
           manifesto?: string | null
           ordem?: number | null
@@ -1632,6 +1634,7 @@ export type Database = {
           data_fim?: string | null
           data_inicio?: string | null
           id?: string
+          infografico_url?: string | null
           is_multipolar?: boolean | null
           manifesto?: string | null
           ordem?: number | null
