@@ -33,7 +33,7 @@ import {
 } from '@/components/clube-livro/blocks';
 
 export default function ClubeLivroCiclo() {
-  const { id } = useParams<{ id: string }>();
+  const { id, jornada } = useParams<{ id: string; jornada?: string }>();
   const navigate = useNavigate();
   const { ciclo, fases, escutas, encontros, aulas, isLoading } = useClubeCicloDetalhe(id);
   const { data: integracaoRecord } = useIntegracaoRecord(id);
@@ -49,6 +49,24 @@ export default function ClubeLivroCiclo() {
 
   const portaisConfig = ciclo ? getPortaisDoLivro(ciclo.titulo) : null;
   const jornadaCor = portaisConfig ? JORNADA_COR[portaisConfig.jornada] : null;
+
+  // Redirect multipolar books without jornada to portas page
+  const isMultipolar = (ciclo as any)?.is_multipolar;
+  if (!isLoading && ciclo && isMultipolar && !jornada) {
+    navigate(`/clube-livro/${id}/portas`, { replace: true });
+    return null;
+  }
+
+  // Filter content by porta/jornada if applicable
+  const filteredAulas = jornada
+    ? aulas?.filter((a: any) => !a.porta_id || a.porta_jornada === jornada) 
+    : aulas;
+  const filteredFases = jornada
+    ? fases?.filter((f: any) => !f.porta_id || f.porta_jornada === jornada)
+    : fases;
+  const filteredEscutas = jornada
+    ? escutas?.filter((e: any) => !e.porta_id || e.porta_jornada === jornada)
+    : escutas;
 
   if (isLoading) {
     return (
@@ -119,7 +137,7 @@ export default function ClubeLivroCiclo() {
           <TabsContent value="leitura" className="mt-6 space-y-6">
             {/* BLOCO: Aulas e Encontros */}
             <AulasEncontrosBlock
-              aulas={aulas || []}
+              aulas={filteredAulas || []}
               encontros={encontros || []}
               dataInicioCiclo={ciclo.data_inicio ?? undefined}
               intervaloLiberacaoDias={7}
@@ -138,13 +156,13 @@ export default function ClubeLivroCiclo() {
 
             {/* BLOCO 4: Fases da Leitura */}
             <FasesLeituraBlock
-              fases={fases || []}
+              fases={filteredFases || []}
               onFaseClick={(faseId) => navigate(`/clube-livro/${id}/fase/${faseId}`)}
             />
 
             {/* BLOCO 5: Escuta Guiada */}
             <EscutaGuiadaBlock
-              escutas={escutas || []}
+              escutas={filteredEscutas || []}
               onNavigate={() => navigate(`/clube-livro/${id}/escutas`)}
             />
 
