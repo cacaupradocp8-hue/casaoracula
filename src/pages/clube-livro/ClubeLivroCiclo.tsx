@@ -121,6 +121,8 @@ export default function ClubeLivroCiclo() {
             <AulasEncontrosBlock
               aulas={aulas || []}
               encontros={encontros || []}
+              dataInicioCiclo={ciclo.data_inicio ?? undefined}
+              intervaloLiberacaoDias={7}
               onAulaClick={(aulaId) => navigate(`/clube-livro/${id}/aula/${aulaId}`)}
               onEncontroClick={(encontroId) => navigate(`/clube-livro/${id}/encontros`)}
             />
