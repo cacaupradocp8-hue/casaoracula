@@ -20,9 +20,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { 
   BookOpen, Plus, Pencil, Trash2, ChevronDown, ChevronUp,
-  Sparkles, Headphones, Video, FileText, Calendar, Loader2, Map, GraduationCap
+  Sparkles, Headphones, Video, FileText, Calendar, Loader2, Map, GraduationCap, DoorOpen
 } from 'lucide-react';
 import { FaseEditorExpandido } from './clube-livro';
+import { PortasManager } from './clube-livro/PortasManager';
 import { CALENDARIO_ANUAL, SEMANAS_PADRAO } from '@/constants/clubeLivroCalendario';
 import { cn } from '@/lib/utils';
 
@@ -218,6 +219,7 @@ export function AdminClubeLivroTab() {
         como_ler: ciclo.como_ler,
         manifesto: ciclo.manifesto,
         publicado: ciclo.publicado,
+        is_multipolar: (ciclo as any).is_multipolar ?? false,
       };
       
       if (ciclo.id) {
@@ -725,10 +727,14 @@ function CicloCard({
 function CicloDetailTabs({ cicloId }: { cicloId: string }) {
   return (
     <Tabs defaultValue="fases" className="w-full">
-      <TabsList className="grid w-full grid-cols-4">
+      <TabsList className="grid w-full grid-cols-5">
         <TabsTrigger value="fases" className="gap-1 text-xs">
           <Sparkles className="w-3 h-3" />
           Fases
+        </TabsTrigger>
+        <TabsTrigger value="portas" className="gap-1 text-xs">
+          <DoorOpen className="w-3 h-3" />
+          Portas
         </TabsTrigger>
         <TabsTrigger value="aulas" className="gap-1 text-xs">
           <GraduationCap className="w-3 h-3" />
@@ -745,6 +751,9 @@ function CicloDetailTabs({ cicloId }: { cicloId: string }) {
       </TabsList>
       <TabsContent value="fases" className="pt-4">
         <FasesManager cicloId={cicloId} />
+      </TabsContent>
+      <TabsContent value="portas" className="pt-4">
+        <PortasManager cicloId={cicloId} />
       </TabsContent>
       <TabsContent value="aulas" className="pt-4">
         <AulasManager cicloId={cicloId} />
@@ -1196,6 +1205,7 @@ function CicloDialog({
     como_ler: '',
     manifesto: '',
     publicado: false,
+    is_multipolar: false,
   });
 
   // Reset form when dialog opens
@@ -1210,6 +1220,7 @@ function CicloDialog({
         como_ler: ciclo.como_ler || '',
         manifesto: ciclo.manifesto || '',
         publicado: ciclo.publicado || false,
+        is_multipolar: (ciclo as any).is_multipolar || false,
       });
     }
   });
@@ -1298,12 +1309,21 @@ function CicloDialog({
           </div>
 
           <div className="flex items-center justify-between pt-4 border-t">
-            <div className="flex items-center gap-2">
-              <Switch
-                checked={form.publicado}
-                onCheckedChange={(checked) => setForm({ ...form, publicado: checked })}
-              />
-              <Label>Publicado</Label>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={form.publicado}
+                  onCheckedChange={(checked) => setForm({ ...form, publicado: checked })}
+                />
+                <Label>Publicado</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={form.is_multipolar}
+                  onCheckedChange={(checked) => setForm({ ...form, is_multipolar: checked })}
+                />
+                <Label>Multipolar</Label>
+              </div>
             </div>
           </div>
         </div>
