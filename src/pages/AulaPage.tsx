@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { CollapsibleBlock } from '@/components/shared/MobilePageShell';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
@@ -255,9 +256,9 @@ export default function AulaPage() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20 max-w-4xl">
+      <div className="container mx-auto px-4 py-6 pb-28 max-w-4xl">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6 flex-wrap">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4 flex-wrap">
           <button 
             onClick={() => navigate('/travessias')}
             className="hover:text-gold transition-colors"
@@ -279,17 +280,30 @@ export default function AulaPage() {
               <span>/</span>
             </>
           )}
-          <span className="text-foreground">{aula.titulo}</span>
+          <span className="text-foreground truncate max-w-[160px]">{aula.titulo}</span>
         </div>
 
-        {/* Title */}
-        <div className="mb-8">
-          <p className="text-xs uppercase tracking-widest text-gold mb-2">
+        {/* Mobile Header */}
+        <div className="mb-6">
+          <p className="text-xs uppercase tracking-widest text-gold mb-1">
             Aula {aula.ordem}
           </p>
-          <h1 className="font-display text-3xl md:text-4xl mb-2">{aula.titulo}</h1>
-          <p className="text-muted-foreground">{aula.descricao_curta}</p>
+          <h1 className="font-display text-2xl md:text-4xl mb-2 leading-tight">{aula.titulo}</h1>
+          <p className="text-sm text-muted-foreground">{aula.descricao_curta}</p>
         </div>
+
+        {/* Collapsible info */}
+        {aula.texto_aula && (
+          <CollapsibleBlock title="Conteúdo da Aula" defaultOpen={false}>
+            <div 
+              className="prose prose-invert prose-sm max-w-none"
+              dangerouslySetInnerHTML={{ 
+                __html: DOMPurify.sanitize(aula.texto_aula.replace(/\n/g, '<br/>')) 
+              }}
+            />
+          </CollapsibleBlock>
+        )}
+        <div className="mb-6" />
 
         {/* Video - Cloudflare Stream only */}
         {aula.video_url && (
@@ -327,19 +341,7 @@ export default function AulaPage() {
           />
         )}
 
-        {/* Content */}
-        {aula.texto_aula && (
-          <Card className="mb-8">
-            <CardContent className="pt-6">
-              <div 
-                className="prose prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ 
-                  __html: DOMPurify.sanitize(aula.texto_aula.replace(/\n/g, '<br/>')) 
-                }}
-              />
-            </CardContent>
-          </Card>
-        )}
+        {/* Content — agora exibido via CollapsibleBlock no topo, removendo duplicata */}
 
         {/* Materials */}
         {(aula.pdf_url || aula.materiais_url) && (
@@ -375,13 +377,17 @@ export default function AulaPage() {
         <DiarioBordoAula aulaId={aula.id} className="mb-8" />
 
         {/* Mark as Complete */}
-        <div className="flex justify-center mb-8">
+        {/* Diário de Bordo */}
+        <div className="mb-6" />
+
+        {/* Mark as Complete — Botão fixo inferior mobile */}
+        <div className="sticky bottom-0 left-0 right-0 z-20 bg-background/95 backdrop-blur-sm border-t border-border/30 px-4 py-3">
           <Button
             variant={isCompleted ? 'outline' : 'gold'}
             size="lg"
             onClick={markAsCompleted}
             disabled={isCompleted || isMarking}
-            className="gap-2"
+            className="w-full gap-2"
           >
             {isMarking ? (
               <Loader2 className="w-4 h-4 animate-spin" />
