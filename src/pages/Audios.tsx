@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { MobilePageShell } from '@/components/shared/MobilePageShell';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -80,25 +81,24 @@ export default function Audios() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8">
-        {/* Breadcrumb Navigation */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
-            <Home className="w-3 h-3" />
-            Casa
-          </Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-foreground">Ofício da Voz Oracular™</span>
-        </nav>
-
-        <SectionHeader
-          title="Ofício da Voz Oracular™"
-          subtitle="Áudios de treino para prática narrativa e simbólica"
-          icon={<Headphones className="w-5 h-5" />}
-        />
-
+      <MobilePageShell
+        badge="Biblioteca"
+        title="Ofício da Voz Oracular™"
+        subtitle="Áudios de treino para prática narrativa e simbólica"
+        collapsibles={[
+          {
+            title: "O que é o Ofício da Voz?",
+            children: "Uma coleção de áudios de treino para desenvolver sua prática narrativa e simbólica. Cada áudio é organizado por categoria e porta psíquica.",
+          },
+          {
+            title: "Como usar",
+            children: "Escolha uma categoria, selecione um áudio e pratique no seu ritmo. Use fones de ouvido para uma experiência mais imersiva.",
+          },
+        ]}
+      >
+        <div className="pb-20">
         {audios.length === 0 ? (
-          <Card className="mt-8">
+          <Card>
             <CardContent className="py-12 text-center">
               <Music className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
               <p className="text-muted-foreground">
@@ -107,7 +107,7 @@ export default function Audios() {
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-10 mt-8">
+          <div className="space-y-10">
             {Object.entries(groupedAudios).map(([categoria, categoryAudios]) => (
               <div key={categoria}>
                 <div className="flex items-center gap-3 mb-5">
@@ -138,7 +138,8 @@ export default function Audios() {
             ))}
           </div>
         )}
-      </div>
+        </div>
+      </MobilePageShell>
     </AppLayout>
   );
 }

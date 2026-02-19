@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { MobilePageShell } from '@/components/shared/MobilePageShell';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -86,59 +87,37 @@ export default function Biblioteca() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20">
-        {/* Breadcrumb Navigation */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
-            <Home className="w-3 h-3" />
-            Casa
-          </Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-foreground">Biblioteca Simbólica</span>
-        </nav>
-
-        <SectionHeader
-          title="Biblioteca Simbólica"
-          subtitle="Contos, arquétipos, perguntas e rituais para sua prática"
-          icon={<Library className="w-5 h-5" />}
-          className="mb-8"
-        />
-
-        {/* Card de acesso ao Clube do Livro */}
-        <Card 
-          className="mb-8 bg-gradient-to-br from-gold/10 to-gold/5 border-gold/30 cursor-pointer hover:border-gold/50 transition-all group"
-          onClick={() => navigate('/clube-livro')}
-        >
-          <CardContent className="p-6 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center shrink-0">
-              <BookOpen className="w-6 h-6 text-gold" />
-            </div>
-            <div className="flex-1">
-              <h3 className="font-display text-lg text-foreground group-hover:text-gold transition-colors">
-                Círculo de Leitura Oracular
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {cicloAtual 
-                  ? `Ciclo atual: ${cicloAtual.titulo}` 
-                  : 'Território de leitura viva e atravessamento simbólico'}
-              </p>
-            </div>
-            <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-gold transition-colors" />
-          </CardContent>
-        </Card>
-
+      <MobilePageShell
+        badge="Biblioteca"
+        title="Biblioteca Simbólica"
+        subtitle="Contos, arquétipos, perguntas e rituais para sua prática"
+        collapsibles={[
+          {
+            title: "O que é a Biblioteca?",
+            children: "Um acervo vivo de contos de poder, arquétipos, perguntas impossíveis e rituais narrativos para enriquecer sua prática simbólica.",
+          },
+          {
+            title: "Como usar",
+            children: "Filtre por tipo de conteúdo, busque por palavra-chave ou navegue livremente. Marque favoritos para retornar depois.",
+          },
+        ]}
+        primaryAction={{
+          label: "Círculo de Leitura",
+          onClick: () => navigate('/clube-livro'),
+          icon: <BookOpen className="w-4 h-4" />,
+        }}
+      >
+        <div className="pb-20">
         {/* Search and Filters */}
-        <div className="glass rounded-xl p-4 mb-8">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                placeholder="Buscar por título, conteúdo ou tag..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+        <div className="glass rounded-xl p-4 mb-6">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar por título, conteúdo ou tag..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
           </div>
         </div>
 
@@ -259,7 +238,8 @@ export default function Biblioteca() {
             )}
           </TabsContent>
         </Tabs>
-      </div>
+        </div>
+      </MobilePageShell>
     </AppLayout>
   );
 }
