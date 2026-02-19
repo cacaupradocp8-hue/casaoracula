@@ -1499,6 +1499,65 @@ export type Database = {
         }
         Relationships: []
       }
+      clube_livro_aulas: {
+        Row: {
+          ativo: boolean | null
+          ciclo_id: string
+          conteudo: string | null
+          created_at: string
+          descricao: string | null
+          duracao: string | null
+          id: string
+          media_type: string | null
+          media_url: string | null
+          ordem: number | null
+          publicado: boolean | null
+          subtitulo: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          ciclo_id: string
+          conteudo?: string | null
+          created_at?: string
+          descricao?: string | null
+          duracao?: string | null
+          id?: string
+          media_type?: string | null
+          media_url?: string | null
+          ordem?: number | null
+          publicado?: boolean | null
+          subtitulo?: string | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean | null
+          ciclo_id?: string
+          conteudo?: string | null
+          created_at?: string
+          descricao?: string | null
+          duracao?: string | null
+          id?: string
+          media_type?: string | null
+          media_url?: string | null
+          ordem?: number | null
+          publicado?: boolean | null
+          subtitulo?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_livro_aulas_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_livro_ciclos: {
         Row: {
           ativo: boolean | null
