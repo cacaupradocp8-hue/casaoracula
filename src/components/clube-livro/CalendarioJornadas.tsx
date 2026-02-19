@@ -9,12 +9,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { BookOpen, Lock, ArrowRight, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ClubeCiclo } from '@/hooks/useClubeLivro';
+import { JornadaType } from '@/constants/clubeLivroPortais';
 
 // Mapeamento canônico: título do livro → jornada
 // Baseado exatamente nos 12 livros existentes em CALENDARIO_ANUAL
 const JORNADAS_SIMBOLICAS = [
   {
-    chave: 'heroina',
+    chave: 'heroina' as JornadaType,
     nome: 'Jornada da Heroína',
     subtitulo: 'Fundadora',
     descricao: 'Identidade, instinto, voz e sentido.',
@@ -31,7 +32,7 @@ const JORNADAS_SIMBOLICAS = [
     ],
   },
   {
-    chave: 'sombra',
+    chave: 'sombra' as JornadaType,
     nome: 'Jornada da Sombra',
     subtitulo: 'Aprofundamento',
     descricao: 'Projeção, ambivalência, ética e maturidade psíquica.',
@@ -48,7 +49,7 @@ const JORNADAS_SIMBOLICAS = [
     ],
   },
   {
-    chave: 'expressao',
+    chave: 'expressao' as JornadaType,
     nome: 'Jornada da Expressão & Mundo',
     subtitulo: 'Presença Pública',
     descricao: 'Linguagem, desejo, ação e presença pública.',
@@ -64,7 +65,31 @@ const JORNADAS_SIMBOLICAS = [
       'A Condição Humana',
     ],
   },
-] as const;
+  {
+    chave: 'instinto' as JornadaType,
+    nome: 'Jornada do Instinto',
+    subtitulo: 'Raiz Corporal',
+    descricao: 'Corpo, sensorialidade, pulsão e presença somática.',
+    cor: 'from-rose-950/40 to-card',
+    corBorda: 'border-rose-700/30',
+    corLabel: 'text-rose-400',
+    corBadge: 'border-rose-700/30 text-rose-400',
+    simbolo: '△',
+    livros: [],
+  },
+  {
+    chave: 'lideranca' as JornadaType,
+    nome: 'Jornada da Liderança',
+    subtitulo: 'Autoridade Interior',
+    descricao: 'Direção, responsabilidade, poder e serviço.',
+    cor: 'from-sky-950/40 to-card',
+    corBorda: 'border-sky-700/30',
+    corLabel: 'text-sky-400',
+    corBadge: 'border-sky-700/30 text-sky-400',
+    simbolo: '⬡',
+    livros: [],
+  },
+];
 
 // Associar ciclo do banco ao livro pelo título (match parcial, case-insensitive)
 function matchLivro(ciclo: ClubeCiclo, titulo: string): boolean {
@@ -75,10 +100,15 @@ function matchLivro(ciclo: ClubeCiclo, titulo: string): boolean {
 interface CalendarioJornadasProps {
   ciclos: ClubeCiclo[];
   cicloAtualId?: string;
+  filtroJornada?: JornadaType | null;
 }
 
-export function CalendarioJornadas({ ciclos, cicloAtualId }: CalendarioJornadasProps) {
+export function CalendarioJornadas({ ciclos, cicloAtualId, filtroJornada }: CalendarioJornadasProps) {
   const navigate = useNavigate();
+
+  const jornadasVisiveis = filtroJornada
+    ? JORNADAS_SIMBOLICAS.filter(j => j.chave === filtroJornada)
+    : JORNADAS_SIMBOLICAS;
 
   return (
     <section className="space-y-10">
@@ -98,7 +128,7 @@ export function CalendarioJornadas({ ciclos, cicloAtualId }: CalendarioJornadasP
       </div>
 
       {/* Seções de jornada */}
-      {JORNADAS_SIMBOLICAS.map((jornada, jornadaIndex) => {
+      {jornadasVisiveis.map((jornada, jornadaIndex) => {
         // Filtrar ciclos do banco que pertencem a esta jornada
         const ciclosDaJornada = jornada.livros
           .map((titulo, i) => {
@@ -140,7 +170,12 @@ export function CalendarioJornadas({ ciclos, cicloAtualId }: CalendarioJornadasP
               </div>
             </div>
 
-            {/* Cards dos livros */}
+            {/* Cards dos livros ou Em breve */}
+            {jornada.livros.length === 0 ? (
+              <div className="rounded-lg border border-dashed border-muted-foreground/20 p-6 text-center">
+                <p className="text-sm text-muted-foreground italic">Em breve — livros desta jornada serão anunciados.</p>
+              </div>
+            ) : (
             <div className="grid gap-3 sm:grid-cols-2">
               {ciclosDaJornada.map(({ titulo, ciclo, ordemNaJornada }) => {
                 const mes = mesBase + ordemNaJornada;
@@ -234,6 +269,7 @@ export function CalendarioJornadas({ ciclos, cicloAtualId }: CalendarioJornadasP
                 );
               })}
             </div>
+            )}
           </div>
         );
       })}

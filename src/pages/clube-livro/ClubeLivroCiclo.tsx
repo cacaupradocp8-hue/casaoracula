@@ -29,6 +29,7 @@ import {
   PortaisAssociadosBlock,
   IntegracoesBlock,
   UsoClinicalBlock,
+  AulasEncontrosBlock,
 } from '@/components/clube-livro/blocks';
 
 export default function ClubeLivroCiclo() {
@@ -116,6 +117,11 @@ export default function ClubeLivroCiclo() {
 
           {/* Tab: Leitura — composição de blocos independentes */}
           <TabsContent value="leitura" className="mt-6 space-y-6">
+            {/* BLOCO: Aulas e Encontros */}
+            <AulasEncontrosBlock
+              encontros={encontros || []}
+              onEncontroClick={(encontroId) => navigate(`/clube-livro/${id}/encontros`)}
+            />
             {/* BLOCO 2: Por que este livro */}
             {ciclo.por_que_este_livro && (
               <PorQueEsteLivroBlock texto={ciclo.por_que_este_livro} />
