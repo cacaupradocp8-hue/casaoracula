@@ -76,6 +76,28 @@ const JORNADAS_ADMIN = [
       'A Condição Humana',
     ],
   },
+  {
+    chave: 'instinto',
+    nome: 'Jornada do Instinto',
+    subtitulo: 'Raiz Corporal',
+    descricao: 'Corpo, sensorialidade, pulsão e presença somática.',
+    corLabel: 'text-rose-400',
+    corBorda: 'border-rose-700/30',
+    corBg: 'from-rose-950/30 to-card',
+    simbolo: '△',
+    livros: [],
+  },
+  {
+    chave: 'lideranca',
+    nome: 'Jornada da Liderança',
+    subtitulo: 'Autoridade Interior',
+    descricao: 'Direção, responsabilidade, poder e serviço.',
+    corLabel: 'text-sky-400',
+    corBorda: 'border-sky-700/30',
+    corBg: 'from-sky-950/30 to-card',
+    simbolo: '⬡',
+    livros: [],
+  },
 ] as const;
 
 function matchLivroAdmin(titulo: string, livroRef: string): boolean {
