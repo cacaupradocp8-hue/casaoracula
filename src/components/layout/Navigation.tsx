@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAppDomain } from '@/contexts/AppDomainContext';
 import { RitualSaidaDialog } from '@/components/ritual/RitualSaidaDialog';
 import { Button } from '@/components/ui/button';
 import { Logo } from './Logo';
@@ -15,7 +16,6 @@ import {
   Menu,
   X,
   User,
-  Star,
   LogIn,
   RefreshCw,
   BookOpen,
@@ -24,6 +24,15 @@ import {
   Flower2,
   GraduationCap,
   ChevronDown,
+  Cog,
+  Users,
+  Calendar,
+  Sparkles,
+  Map,
+  Clock,
+  Eye,
+  Crown,
+  ArrowLeftRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -38,8 +47,149 @@ import {
   DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu';
 
+// ── MUNDO 1: Experiência da Aluna ───────────────────────────────────────────
+const alunaMenuGroups = (hasOracula: boolean) => [
+  {
+    key: 'inicio',
+    label: 'Início',
+    icon: Home,
+    path: '/jornada',
+    subitems: [],
+  },
+  {
+    key: 'formacao',
+    label: 'Formação',
+    icon: GraduationCap,
+    path: '/oracula',
+    subitems: [
+      { label: 'Formação Orácula', path: '/oracula' },
+      { label: 'Salas', path: '/salas' },
+      { label: 'Portal Junguiano', path: '/portal-junguiano' },
+      { label: 'Travessias', path: '/travessias' },
+      { label: 'Oráculos', path: '/oraculos' },
+      { label: 'Labirinto das 39 Portas', path: '/labirinto' },
+      { label: 'Labirinto da Heroína Interna®', path: '/labirinto-heroina' },
+      { label: 'Mapa da Heroína', path: '/mapa-heroina' },
+      { label: 'Cartas da Jornada', path: '/cartas-jornada' },
+    ],
+  },
+  {
+    key: 'travessias',
+    label: 'Travessias',
+    icon: Compass,
+    path: '/biblioteca-travessias',
+    subitems: [
+      { label: 'Biblioteca das Travessias', path: '/biblioteca-travessias' },
+      { label: 'Família das Travessias', path: '/biblioteca-travessias/familias' },
+      { label: 'Portais', path: '/portais' },
+      { label: 'Clube do Livro', path: '/clube-livro' },
+      { label: 'Torre Viva™', path: '/torre-viva' },
+    ],
+  },
+  {
+    key: 'ferramentas',
+    label: 'Ferramentas',
+    icon: Wrench,
+    path: '/ferramentas',
+    subitems: [
+      { label: 'Hub do Método', path: '/ferramentas-metodo' },
+      { label: 'Sala de Ferramentas', path: '/ferramentas' },
+      { label: 'Big Five Oracular', path: '/ferramenta/big5-oracular' },
+      { label: 'Escala MAIA', path: '/ferramentas/escala-maia' },
+      { label: 'Atlas de Arquétipos', path: '/atlas-arquetipos' },
+      { label: 'Narroterapia Oracular™', path: '/narroterapia' },
+      { label: 'Radiestesia', path: '/radiestesia' },
+      { label: 'Vitrine', path: '/ferramentas-vitrine' },
+    ],
+  },
+  {
+    key: 'biblioteca',
+    label: 'Biblioteca',
+    icon: BookOpen,
+    path: '/minha-biblioteca',
+    subitems: [
+      { label: 'Minha Biblioteca', path: '/minha-biblioteca' },
+      { label: 'Áudios', path: '/audios' },
+    ],
+  },
+  {
+    key: 'jardim',
+    label: 'Meu Jardim',
+    icon: Flower2,
+    path: '/jardim-da-psique',
+    subitems: [
+      { label: 'Jardim da Psique', path: '/jardim-da-psique' },
+      { label: 'Casa / Sustentação', path: '/casa' },
+      { label: 'Mapas Simbólicos', path: '/mapas-simbolicos' },
+      { label: 'Mapas Vivos', path: '/mapas-vivos' },
+    ],
+  },
+];
+
+// ── MUNDO 2: Casa das Máquinas (Espaço Profissional) ────────────────────────
+const profissionalMenuGroups = (isAdmin: boolean, isMentorada: boolean) => [
+  {
+    key: 'visao-geral',
+    label: 'Visão Geral',
+    icon: Cog,
+    path: '/casa-das-maquinas',
+    subitems: [],
+  },
+  {
+    key: 'clientes',
+    label: 'Clientes',
+    icon: Users,
+    path: '/minhas-clientes',
+    subitems: [],
+  },
+  {
+    key: 'sessoes',
+    label: 'Sessões',
+    icon: Calendar,
+    path: '/casa-das-maquinas/sessoes',
+    subitems: [
+      { label: 'Sala de Sessão', path: '/casa-das-maquinas/sessoes' },
+      { label: 'Mapa Vivo', path: '/casa-das-maquinas/mapa-vivo' },
+      { label: 'Histórico', path: '/casa-das-maquinas/historico' },
+      { label: 'Gestos de Integração', path: '/casa-das-maquinas/gestos' },
+    ],
+  },
+  {
+    key: 'ferramentas-clinicas',
+    label: 'Ferramentas Clínicas',
+    icon: Wrench,
+    path: '/session-room',
+    subitems: [
+      { label: 'Sala de Sessão Clínica', path: '/session-room' },
+      { label: 'Big Five Oracular', path: '/ferramenta/big5-oracular' },
+      { label: 'Narroterapia Oracular™', path: '/narroterapia' },
+      { label: 'Atlas de Arquétipos', path: '/atlas-arquetipos' },
+      { label: 'Radiestesia', path: '/radiestesia' },
+      { label: 'Labirinto da Heroína Interna®', path: '/labirinto-heroina' },
+    ],
+  },
+  ...(isMentorada ? [{
+    key: 'supervisao',
+    label: 'Supervisão',
+    icon: Eye,
+    path: '/casa-das-maquinas/supervisao',
+    subitems: [
+      { label: 'Painel de Supervisão', path: '/casa-das-maquinas/supervisao' },
+      { label: 'Jardim do Ofício', path: '/casa-das-maquinas/jardim-oficio' },
+    ],
+  }] : []),
+  ...(isAdmin ? [{
+    key: 'painel-institucional',
+    label: 'Painel Admin',
+    icon: Crown,
+    path: '/casa-das-maquinas/painel',
+    subitems: [],
+  }] : []),
+];
+
 export function Navigation() {
   const { user, logout } = useAuth();
+  const { domain, toggleDomain } = useAppDomain();
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -48,7 +198,18 @@ export function Navigation() {
   const [mobileExpandedGroup, setMobileExpandedGroup] = useState<string | null>(null);
 
   const isAdmin = user?.portal === 'admin';
-  const hasOracula = user && canAccessFeature(user.portal, 'oracula');
+  const hasOracula = user ? canAccessFeature(user.portal, 'oracula') : false;
+  const isMentorada = user ? canAccessFeature(user.portal, 'assinante') : false;
+
+  // Perfil híbrido: pode alternar domínios
+  const isHybrid = hasOracula || isAdmin;
+
+  // Domínio ativo: profissional só para híbridos
+  const activeDomain = (isHybrid && domain === 'profissional') ? 'profissional' : 'aluna';
+
+  const menuGroups = activeDomain === 'profissional'
+    ? profissionalMenuGroups(isAdmin, isMentorada)
+    : alunaMenuGroups(hasOracula);
 
   const handleLogout = () => setRitualSaidaOpen(true);
   const handleConfirmExit = () => {
@@ -57,107 +218,29 @@ export function Navigation() {
     navigate('/');
   };
 
+  const handleToggleDomain = () => {
+    const next = activeDomain === 'aluna' ? 'profissional' : 'aluna';
+    toggleDomain();
+    // Navegar para home do domínio destino
+    if (next === 'profissional') navigate('/casa-das-maquinas');
+    else navigate('/jornada');
+    setMobileMenuOpen(false);
+  };
+
   const isActive = (paths: string[]) =>
     paths.some(p => location.pathname === p || (p !== '/' && location.pathname.startsWith(p)));
-
-  // ── 6 grupos do menu da aluna ────────────────────────────────────────────
-
-  const menuGroups = [
-    {
-      key: 'inicio',
-      label: 'Início',
-      icon: Home,
-      path: '/jornada',
-      subitems: [],
-    },
-    {
-      key: 'formacao',
-      label: 'Formação',
-      icon: GraduationCap,
-      path: '/oracula',
-      subitems: [
-        { label: 'Formação Orácula', path: '/oracula' },
-        { label: 'Salas', path: '/salas' },
-        { label: 'Portal Junguiano', path: '/portal-junguiano' },
-        { label: 'Travessias', path: '/travessias' },
-        { label: 'Oráculos', path: '/oraculos' },
-        { label: 'Labirinto das 39 Portas', path: '/labirinto' },
-        { label: 'Labirinto da Heroína Interna®', path: '/labirinto-heroina' },
-        { label: 'Mapa da Heroína', path: '/mapa-heroina' },
-        { label: 'Cartas da Jornada', path: '/cartas-jornada' },
-      ],
-    },
-    {
-      key: 'travessias',
-      label: 'Travessias',
-      icon: Compass,
-      path: '/biblioteca-travessias',
-      subitems: [
-        { label: 'Biblioteca das Travessias', path: '/biblioteca-travessias' },
-        { label: 'Família das Travessias', path: '/biblioteca-travessias/familias' },
-        { label: 'Portais', path: '/portais' },
-        { label: 'Clube do Livro', path: '/clube-livro' },
-        { label: 'Torre Viva™', path: '/torre-viva' },
-      ],
-    },
-    {
-      key: 'ferramentas',
-      label: 'Ferramentas',
-      icon: Wrench,
-      path: '/ferramentas',
-      subitems: [
-        { label: 'Hub do Método', path: '/ferramentas-metodo' },
-        { label: 'Sala de Ferramentas', path: '/ferramentas' },
-        { label: 'Big Five Oracular', path: '/ferramenta/big5-oracular' },
-        { label: 'Escala MAIA', path: '/ferramentas/escala-maia' },
-        { label: 'Atlas de Arquétipos', path: '/atlas-arquetipos' },
-        { label: 'Narroterapia Oracular™', path: '/narroterapia' },
-        { label: 'Radiestesia', path: '/radiestesia' },
-        { label: 'Sala de Sessão', path: '/session-room' },
-        { label: 'Vitrine', path: '/ferramentas-vitrine' },
-      ],
-    },
-    {
-      key: 'biblioteca',
-      label: 'Biblioteca',
-      icon: BookOpen,
-      path: '/minha-biblioteca',
-      subitems: [
-        { label: 'Minha Biblioteca', path: '/minha-biblioteca' },
-        { label: 'Áudios', path: '/audios' },
-      ],
-    },
-    {
-      key: 'jardim',
-      label: 'Meu Jardim',
-      icon: Flower2,
-      path: '/jardim-da-psique',
-      subitems: [
-        { label: 'Jardim da Psique', path: '/jardim-da-psique' },
-        { label: 'Casa / Sustentação', path: '/casa' },
-        { label: 'Mapas Simbólicos', path: '/mapas-simbolicos' },
-        { label: 'Mapas Vivos', path: '/mapas-vivos' },
-        ...(hasOracula
-          ? [
-              { label: 'Casa das Máquinas', path: '/casa-das-maquinas' },
-              { label: 'Jardim do Ofício', path: '/casa-das-maquinas/jardim-oficio' },
-            ]
-          : []),
-      ],
-    },
-  ];
 
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 md:h-20">
-            <Link to={user ? '/jornada' : '/'} className="h-full flex items-center py-2">
+            <Link to={user ? (activeDomain === 'profissional' ? '/casa-das-maquinas' : '/jornada') : '/'} className="h-full flex items-center py-2">
               <Logo size="xl" variant="combined" className="md:hidden" />
               <Logo size="xl" variant="horizontal" className="hidden md:flex" />
             </Link>
 
-            {/* Desktop — 6 grupos */}
+            {/* Desktop menu */}
             <div className="hidden md:flex items-center gap-1">
               {menuGroups.map(group => {
                 const Icon = group.icon;
@@ -205,9 +288,27 @@ export function Navigation() {
               })}
             </div>
 
-            {/* Right side: notifications + user menu */}
+            {/* Right side */}
             <div className="flex items-center gap-2">
               {user && <NotificationBell />}
+
+              {/* Toggle de domínio — visível apenas para perfis híbridos */}
+              {user && isHybrid && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleToggleDomain}
+                  className={cn(
+                    'hidden md:flex gap-1.5 text-xs transition-all border',
+                    activeDomain === 'profissional'
+                      ? 'border-primary/50 text-primary bg-primary/5'
+                      : 'border-border text-muted-foreground'
+                  )}
+                >
+                  <ArrowLeftRight className="w-3 h-3" />
+                  {activeDomain === 'profissional' ? '🧠 Profissional' : '🌿 Aluna'}
+                </Button>
+              )}
 
               {user ? (
                 <DropdownMenu>
@@ -224,6 +325,17 @@ export function Navigation() {
                     </div>
 
                     <DropdownMenuSeparator />
+
+                    {/* Toggle de domínio no user menu */}
+                    {isHybrid && (
+                      <>
+                        <DropdownMenuItem onClick={handleToggleDomain}>
+                          <ArrowLeftRight className="w-4 h-4 mr-2" />
+                          {activeDomain === 'profissional' ? 'Ir para Modo Aluna 🌿' : 'Ir para Espaço Profissional 🧠'}
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                      </>
+                    )}
 
                     {/* Admin link */}
                     {isAdmin && (
@@ -299,6 +411,19 @@ export function Navigation() {
           <div className="md:hidden absolute top-16 left-0 right-0 bg-background border-b border-border animate-slide-up">
             <div className="container mx-auto px-4 py-4">
               <div className="flex flex-col gap-1">
+
+                {/* Toggle de domínio mobile */}
+                {user && isHybrid && (
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start gap-3 mb-2 border-primary/30"
+                    onClick={handleToggleDomain}
+                  >
+                    <ArrowLeftRight className="w-5 h-5" />
+                    {activeDomain === 'profissional' ? 'Modo Aluna 🌿' : 'Espaço Profissional 🧠'}
+                  </Button>
+                )}
+
                 {menuGroups.map(group => {
                   const Icon = group.icon;
                   const expanded = mobileExpandedGroup === group.key;
