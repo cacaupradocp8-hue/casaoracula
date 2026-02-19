@@ -173,6 +173,7 @@ import {
   ClubeLivroEscutas, 
   ClubeLivroEncontros,
   ClubeLivroRitual,
+  ClubeLivroAula,
   IntegracaoOracular,
   MeuCaminhoClube,
   Integracao8020,
@@ -652,6 +653,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="aluna">
             <ClubeLivroRitual />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/:id/aula/:aulaId"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroAula />
           </ProtectedRoute>
         }
       />

@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
@@ -24,6 +25,7 @@ import {
 } from 'lucide-react';
 import { FaseEditorExpandido } from './clube-livro';
 import { PortasManager } from './clube-livro/PortasManager';
+import { AulaBlocosEditor, type AulaBloco } from './clube-livro/AulaBlocosEditor';
 import { CALENDARIO_ANUAL, SEMANAS_PADRAO } from '@/constants/clubeLivroCalendario';
 import { cn } from '@/lib/utils';
 
@@ -1598,7 +1600,7 @@ function AulasManager({ cicloId }: { cicloId: string }) {
 }
 
 // ============================================
-// AulaDialog - Criar/Editar aula
+// AulaDialog - Criar/Editar aula com blocos de conteúdo
 // ============================================
 function AulaDialog({
   open,
@@ -1624,6 +1626,7 @@ function AulaDialog({
     media_type: 'texto',
     ordem: nextOrdem,
   });
+  const [blocos, setBlocos] = useState<AulaBloco[]>([]);
 
   // Reset form when dialog opens
   useState(() => {
@@ -1637,6 +1640,13 @@ function AulaDialog({
         media_type: aula.media_type || 'texto',
         ordem: aula.ordem,
       });
+      // Parse blocos from conteudo
+      try {
+        const parsed = aula.conteudo ? (typeof aula.conteudo === 'string' ? JSON.parse(aula.conteudo) : aula.conteudo) : [];
+        setBlocos(Array.isArray(parsed) ? parsed : []);
+      } catch {
+        setBlocos([]);
+      }
     } else if (open) {
       setForm({
         titulo: '',
@@ -1647,6 +1657,7 @@ function AulaDialog({
         media_type: 'texto',
         ordem: nextOrdem,
       });
+      setBlocos([]);
     }
   });
 
@@ -1661,6 +1672,7 @@ function AulaDialog({
         media_url: form.media_url || null,
         media_type: form.media_type,
         ordem: form.ordem,
+        conteudo: blocos.length > 0 ? JSON.stringify(blocos) : null,
       };
 
       if (aula?.id) {
@@ -1692,18 +1704,25 @@ function AulaDialog({
       media_type: aula.media_type || 'texto',
       ordem: aula.ordem,
     });
+    try {
+      const parsed = aula.conteudo ? (typeof aula.conteudo === 'string' ? JSON.parse(aula.conteudo) : aula.conteudo) : [];
+      setBlocos(Array.isArray(parsed) ? parsed : []);
+    } catch {
+      setBlocos([]);
+    }
   }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{aula ? 'Editar Aula' : 'Nova Aula'}</DialogTitle>
           <DialogDescription>
-            {aula ? 'Atualize os dados da aula.' : 'Adicione uma nova aula ao ciclo.'}
+            {aula ? 'Atualize os dados e blocos de conteúdo.' : 'Crie uma aula com blocos estruturados.'}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
+          {/* Metadados */}
           <div className="grid grid-cols-4 gap-4">
             <div className="col-span-3 space-y-2">
               <Label>Título *</Label>
@@ -1743,8 +1762,12 @@ function AulaDialog({
           </div>
           <div className="space-y-2">
             <Label>Descrição</Label>
-            <Textarea value={form.descricao} onChange={(e) => setForm({ ...form, descricao: e.target.value })} className="min-h-[80px]" placeholder="Breve descrição da aula..." />
+            <Textarea value={form.descricao} onChange={(e) => setForm({ ...form, descricao: e.target.value })} className="min-h-[60px]" placeholder="Breve descrição da aula..." />
           </div>
+
+          {/* Blocos de Conteúdo */}
+          <Separator className="my-2" />
+          <AulaBlocosEditor blocos={blocos} onChange={setBlocos} />
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
