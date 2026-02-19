@@ -1,0 +1,12 @@
+export { ManifestoBlock } from './ManifestoBlock';
+export { CicloAtualCtaBlock } from './CicloAtualCtaBlock';
+export { RegrasEticasBlock } from './RegrasEticasBlock';
+export { CicloHeaderBlock } from './CicloHeaderBlock';
+export { PorQueEsteLivroBlock } from './PorQueEsteLivroBlock';
+export { ComoLerBlock } from './ComoLerBlock';
+export { FasesLeituraBlock } from './FasesLeituraBlock';
+export { EscutaGuiadaBlock } from './EscutaGuiadaBlock';
+export { EncontrosBlock } from './EncontrosBlock';
+export { PortaisAssociadosBlock } from './PortaisAssociadosBlock';
+export { IntegracoesBlock } from './IntegracoesBlock';
+export { UsoClinicalBlock } from './UsoClinicalBlock';

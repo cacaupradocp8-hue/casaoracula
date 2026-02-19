@@ -1,13 +1,12 @@
 // ============================================
 // CLUBE DO LIVRO ORACULAR - Livro do Ciclo
+// Modular: cada seção é um bloco independente
 // ============================================
 
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useClubeCicloDetalhe } from '@/hooks/useClubeLivro';
 import { useIntegracaoRecord } from '@/hooks/useIntegracaoOracular';
@@ -16,22 +15,21 @@ import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
 import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature } from '@/types/portal';
 import { getPortaisDoLivro, JORNADA_COR } from '@/constants/clubeLivroPortais';
-import { 
-  BookOpen, ChevronRight, Home, Sparkles, 
-  BookMarked, Headphones, Video, MessageCircle,
-  ArrowRight, Stethoscope, AlertTriangle, CheckCircle, XCircle,
-  Star, CheckCircle2, Target, Map, Flower2, Sprout,
-} from 'lucide-react';
+import { BookOpen, ChevronRight, Home, Stethoscope } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-
-// Phase type icons/labels
-const FASE_TYPE_CONFIG: Record<string, { label: string; color: string }> = {
-  chamado: { label: 'Chamado', color: 'bg-blue-500/20 text-blue-400' },
-  ruptura: { label: 'Ruptura', color: 'bg-red-500/20 text-red-400' },
-  reorganizacao: { label: 'Reorganização', color: 'bg-amber-500/20 text-amber-400' },
-  integracao: { label: 'Integração', color: 'bg-green-500/20 text-green-400' },
-};
+// Blocos modulares independentes
+import {
+  CicloHeaderBlock,
+  PorQueEsteLivroBlock,
+  ComoLerBlock,
+  FasesLeituraBlock,
+  EscutaGuiadaBlock,
+  EncontrosBlock,
+  PortaisAssociadosBlock,
+  IntegracoesBlock,
+  UsoClinicalBlock,
+} from '@/components/clube-livro/blocks';
 
 export default function ClubeLivroCiclo() {
   const { id } = useParams<{ id: string }>();
@@ -41,15 +39,13 @@ export default function ClubeLivroCiclo() {
   const { data: integracao8020Record } = useIntegracao8020Record(id);
   const { isProfessional } = useProfessionalStatus();
   const { user } = useAuth();
-  
-  // Check if user can see clinical tab
+
   const portalMinimoClin = ciclo?.portal_minimo_clinico || 'aluna_formacao';
   const canSeeClinical = isProfessional && user && canAccessFeature(user.portal, portalMinimoClin as any);
   const hasClinicalContent = ciclo?.orientacao_clinica_uso || ciclo?.orientacao_clinica_evitar;
   const integracaoConcluida = integracaoRecord?.status === 'concluida';
   const integracao8020Concluida = integracao8020Record?.status === 'concluida';
 
-  // Portais associados ao livro atual
   const portaisConfig = ciclo ? getPortaisDoLivro(ciclo.titulo) : null;
   const jornadaCor = portaisConfig ? JORNADA_COR[portaisConfig.jornada] : null;
 
@@ -81,9 +77,6 @@ export default function ClubeLivroCiclo() {
     );
   }
 
-  const hasEscutas = escutas && escutas.length > 0;
-  const hasEncontros = encontros && encontros.length > 0;
-
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
@@ -101,45 +94,9 @@ export default function ClubeLivroCiclo() {
           <span className="text-foreground">{ciclo.titulo}</span>
         </nav>
 
-        {/* Header do Livro */}
-        <div className="flex flex-col md:flex-row gap-6 mb-8">
-          {/* Capa */}
-          {ciclo.capa_url ? (
-            <div className="w-32 md:w-40 shrink-0 mx-auto md:mx-0">
-              <img
-                src={ciclo.capa_url}
-                alt={ciclo.titulo}
-                className="w-full rounded-lg shadow-lg border border-border/50"
-              />
-            </div>
-          ) : (
-            <div className="w-32 md:w-40 h-48 shrink-0 mx-auto md:mx-0 bg-muted rounded-lg flex items-center justify-center border border-border/50">
-              <BookMarked className="w-12 h-12 text-muted-foreground" />
-            </div>
-          )}
-
-          {/* Info */}
-          <div className="flex-1 text-center md:text-left">
-            <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
-              {ciclo.ativo && (
-                <Badge variant="secondary">Ciclo Atual</Badge>
-              )}
-              {ciclo.tema_simbolico && (
-                <Badge variant="outline" className="text-gold border-gold/30">
-                  {ciclo.tema_simbolico}
-                </Badge>
-              )}
-            </div>
-            <h1 className="text-2xl md:text-3xl font-display text-foreground mb-1">
-              {ciclo.titulo}
-            </h1>
-            {ciclo.subtitulo && (
-              <p className="text-muted-foreground mb-2">{ciclo.subtitulo}</p>
-            )}
-            {ciclo.autor_livro && (
-              <p className="text-sm text-gold">{ciclo.autor_livro}</p>
-            )}
-          </div>
+        {/* BLOCO 1: Header do Livro */}
+        <div className="mb-8">
+          <CicloHeaderBlock ciclo={ciclo} />
         </div>
 
         {/* Tabs: Leitura / Uso Clínico */}
@@ -157,449 +114,60 @@ export default function ClubeLivroCiclo() {
             )}
           </TabsList>
 
-          {/* Tab: Leitura */}
+          {/* Tab: Leitura — composição de blocos independentes */}
           <TabsContent value="leitura" className="mt-6 space-y-6">
-            {/* Por que este livro */}
+            {/* BLOCO 2: Por que este livro */}
             {ciclo.por_que_este_livro && (
-              <Card className="bg-card/50 border-gold/20">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm uppercase tracking-widest text-gold flex items-center gap-2">
-                    <Sparkles className="w-4 h-4" />
-                    Por que este livro está aqui
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                    {ciclo.por_que_este_livro}
-                  </p>
-                </CardContent>
-              </Card>
+              <PorQueEsteLivroBlock texto={ciclo.por_que_este_livro} />
             )}
 
-            {/* Como ler */}
+            {/* BLOCO 3: Como ler */}
             {ciclo.como_ler && (
-              <Card className="bg-muted/30">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                    <BookOpen className="w-4 h-4" />
-                    Como ler este livro na Casa Orácula
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                    {ciclo.como_ler}
-                  </p>
-                </CardContent>
-              </Card>
+              <ComoLerBlock texto={ciclo.como_ler} />
             )}
 
-            {/* Fases do Livro */}
-            {fases && fases.length > 0 && (
-              <section>
-                <h2 className="text-lg font-display text-foreground mb-4 flex items-center gap-2">
-                  <BookMarked className="w-5 h-5 text-gold" />
-                  Fases da Leitura
-                </h2>
-                <div className="space-y-3">
-                  {fases.map((fase, index) => {
-                    const typeConfig = fase.tipo_fase ? FASE_TYPE_CONFIG[fase.tipo_fase] : null;
-                    
-                    return (
-                      <Card
-                        key={fase.id}
-                        className="cursor-pointer transition-all hover:border-gold/50 group"
-                        onClick={() => navigate(`/clube-livro/${id}/fase/${fase.id}`)}
-                      >
-                        <CardContent className="py-4 flex items-center justify-between">
-                          <div className="flex items-center gap-4">
-                            <div className="w-8 h-8 rounded-full bg-gold/10 text-gold flex items-center justify-center text-sm font-medium">
-                              {index + 1}
-                            </div>
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <h3 className="font-medium text-foreground group-hover:text-gold transition-colors">
-                                  {fase.titulo}
-                                </h3>
-                                {typeConfig && (
-                                  <Badge variant="outline" className={cn('text-xs', typeConfig.color)}>
-                                    {typeConfig.label}
-                                  </Badge>
-                                )}
-                              </div>
-                              {(fase.descricao || fase.orientacao_curta) && (
-                                <p className="text-xs text-muted-foreground line-clamp-1">
-                                  {fase.orientacao_curta || fase.descricao}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                          <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-gold transition-colors" />
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-              </section>
-            )}
+            {/* BLOCO 4: Fases da Leitura */}
+            <FasesLeituraBlock
+              fases={fases || []}
+              onFaseClick={(faseId) => navigate(`/clube-livro/${id}/fase/${faseId}`)}
+            />
 
-            {/* Escuta Guiada */}
-            {hasEscutas && (
-              <section>
-                <h2 className="text-lg font-display text-foreground mb-4 flex items-center gap-2">
-                  <Headphones className="w-5 h-5 text-gold" />
-                  Escuta Guiada
-                </h2>
-                <Card className="bg-muted/30">
-                  <CardContent className="py-4">
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-between"
-                      onClick={() => navigate(`/clube-livro/${id}/escutas`)}
-                    >
-                      <span className="flex items-center gap-2">
-                        <Headphones className="w-4 h-4" />
-                        {escutas.length} {escutas.length === 1 ? 'áudio/texto' : 'áudios/textos'} disponíveis
-                      </span>
-                      <ArrowRight className="w-4 h-4" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              </section>
-            )}
+            {/* BLOCO 5: Escuta Guiada */}
+            <EscutaGuiadaBlock
+              escutas={escutas || []}
+              onNavigate={() => navigate(`/clube-livro/${id}/escutas`)}
+            />
 
-            {/* Encontros */}
-            {hasEncontros && (
-              <section>
-                <h2 className="text-lg font-display text-foreground mb-4 flex items-center gap-2">
-                  <Video className="w-5 h-5 text-gold" />
-                  Encontros do Círculo
-                </h2>
-                <Card className="bg-muted/30">
-                  <CardContent className="py-4">
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-between"
-                      onClick={() => navigate(`/clube-livro/${id}/encontros`)}
-                    >
-                      <span className="flex items-center gap-2">
-                        <MessageCircle className="w-4 h-4" />
-                        {encontros.length} {encontros.length === 1 ? 'encontro' : 'encontros'}
-                      </span>
-                      <ArrowRight className="w-4 h-4" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              </section>
-            )}
+            {/* BLOCO 6: Encontros */}
+            <EncontrosBlock
+              encontros={encontros || []}
+              onNavigate={() => navigate(`/clube-livro/${id}/encontros`)}
+            />
 
-            {/* === PORTAIS ASSOCIADOS === */}
+            {/* BLOCO 7: Portais Associados */}
             {portaisConfig && jornadaCor && (
-              <section>
-                {/* Banner da Jornada */}
-                <div className={cn(
-                  'rounded-xl p-4 mb-4 bg-gradient-to-br border flex items-start gap-3',
-                  jornadaCor.corBg,
-                  jornadaCor.corBorda,
-                )}>
-                  <span className={cn('text-xl leading-none mt-0.5 shrink-0', jornadaCor.corLabel)}>
-                    {jornadaCor.simbolo}
-                  </span>
-                  <div>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h2 className="font-display text-base text-foreground">
-                        {jornadaCor.label}
-                      </h2>
-                      <Map className={cn('w-4 h-4', jornadaCor.corLabel)} />
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                      {portaisConfig.orientacaoCurta}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Portais */}
-                <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
-                  <Map className="w-3 h-3" />
-                  Portais associados a este livro
-                </h3>
-                <div className="space-y-2 mb-4">
-                  {portaisConfig.portais.map((portal) => (
-                    <Card
-                      key={portal.rota}
-                      className="cursor-pointer hover:border-gold/40 transition-all group"
-                      onClick={() => navigate(portal.rota)}
-                    >
-                      <CardContent className="py-3 flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-3">
-                          <span className={cn('text-lg leading-none shrink-0', jornadaCor.corLabel)}>
-                            {portal.icone}
-                          </span>
-                          <div>
-                            <p className="text-sm font-medium text-foreground group-hover:text-gold transition-colors">
-                              {portal.nome}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {portal.descricao}
-                            </p>
-                          </div>
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="shrink-0 gap-1.5 text-xs"
-                          onClick={(e) => { e.stopPropagation(); navigate(portal.rota); }}
-                        >
-                          Entrar no Portal
-                          <ArrowRight className="w-3 h-3" />
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-
-                {/* Atalhos para os Jardins */}
-                <div className="grid grid-cols-2 gap-2">
-                  <Card
-                    className="cursor-pointer hover:border-gold/30 transition-all group bg-card/50"
-                    onClick={() => navigate('/jardim-da-psique')}
-                  >
-                    <CardContent className="py-3 text-center">
-                      <Flower2 className="w-5 h-5 text-muted-foreground group-hover:text-gold transition-colors mx-auto mb-1" />
-                      <p className="text-xs font-medium text-foreground">Jardim da Psique</p>
-                      <p className="text-[10px] text-muted-foreground">Registro pessoal</p>
-                    </CardContent>
-                  </Card>
-                  <Card
-                    className="cursor-pointer hover:border-gold/30 transition-all group bg-card/50"
-                    onClick={() => navigate('/casa-das-maquinas/jardim-oficio')}
-                  >
-                    <CardContent className="py-3 text-center">
-                      <Sprout className="w-5 h-5 text-muted-foreground group-hover:text-gold transition-colors mx-auto mb-1" />
-                      <p className="text-xs font-medium text-foreground">Jardim do Ofício</p>
-                      <p className="text-[10px] text-muted-foreground">Registro profissional</p>
-                    </CardContent>
-                  </Card>
-                </div>
-              </section>
+              <PortaisAssociadosBlock
+                portais={portaisConfig.portais}
+                jornadaCor={jornadaCor}
+                orientacaoCurta={portaisConfig.orientacaoCurta}
+                onNavigate={(rota) => navigate(rota)}
+              />
             )}
 
-            {/* === INTEGRAÇÃO ORACULAR === */}
-
-            <section>
-              <Card
-                className={cn(
-                  'cursor-pointer transition-all border group',
-                  integracaoConcluida
-                    ? 'border-gold/40 bg-gold/5 hover:bg-gold/10'
-                    : 'border-gold/20 bg-gradient-to-br from-card to-gold/5 hover:border-gold/40'
-                )}
-                onClick={() => navigate(`/clube-livro/${id}/integracao`)}
-              >
-                <CardContent className="py-5 flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
-                      {integracaoConcluida ? (
-                        <CheckCircle2 className="w-5 h-5 text-gold" />
-                      ) : (
-                        <Sparkles className="w-5 h-5 text-gold" />
-                      )}
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground text-sm">Integração Oracular</p>
-                      <p className="text-xs text-muted-foreground">
-                        {integracaoConcluida
-                          ? 'Integração concluída — ver registro'
-                          : 'Transforme a leitura em experiência prática'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    {integracaoConcluida && (
-                      <Badge variant="outline" className="text-xs border-gold/40 text-gold hidden sm:flex">
-                        Concluída ✦
-                      </Badge>
-                    )}
-                    <Button
-                      size="sm"
-                      className={cn(
-                        'gap-2 text-xs',
-                        integracaoConcluida
-                          ? 'bg-gold/20 hover:bg-gold/30 text-gold border border-gold/40'
-                          : 'bg-gold hover:bg-gold/90 text-primary-foreground'
-                      )}
-                      onClick={(e) => { e.stopPropagation(); navigate(`/clube-livro/${id}/integracao`); }}
-                    >
-                      <Star className="w-3 h-3" />
-                      {integracaoConcluida ? 'Ver registro' : 'Integrar conteúdo'}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Card Integração 80/20 */}
-              <Card
-                className={cn(
-                  'cursor-pointer transition-all border group mt-3',
-                  integracao8020Concluida
-                    ? 'border-gold/40 bg-gold/5 hover:bg-gold/10'
-                    : 'border-border/40 hover:border-gold/30'
-                )}
-                onClick={() => navigate(`/clube-livro/${id}/integracao-8020`)}
-              >
-                <CardContent className="py-4 flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center shrink-0">
-                      {integracao8020Concluida ? (
-                        <CheckCircle2 className="w-4 h-4 text-gold" />
-                      ) : (
-                        <Target className="w-4 h-4 text-muted-foreground" />
-                      )}
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground text-sm">Integração 80/20</p>
-                      <p className="text-xs text-muted-foreground">
-                        {integracao8020Concluida
-                          ? 'Integração concluída — ver aplicação'
-                          : 'Traduzir o livro em aplicação profissional e pessoal'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    {integracao8020Concluida && (
-                      <Badge variant="outline" className="text-xs border-gold/40 text-gold hidden sm:flex">
-                        Concluída ✦
-                      </Badge>
-                    )}
-                    <Button
-                      size="sm"
-                      variant={integracao8020Concluida ? 'outline' : 'secondary'}
-                      className="gap-2 text-xs"
-                      onClick={(e) => { e.stopPropagation(); navigate(`/clube-livro/${id}/integracao-8020`); }}
-                    >
-                      <Target className="w-3 h-3" />
-                      {integracao8020Concluida ? 'Ver aplicação' : 'Fazer integração'}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <div className="mt-3 text-center">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-xs text-muted-foreground hover:text-gold gap-1"
-                  onClick={() => navigate(`/clube-livro/${id}/meu-caminho`)}
-                >
-                  <Star className="w-3 h-3" />
-                  Ver Meu Caminho no Clube
-                </Button>
-              </div>
-            </section>
-
+            {/* BLOCO 8: Integrações */}
+            <IntegracoesBlock
+              cicloId={id!}
+              integracaoConcluida={integracaoConcluida}
+              integracao8020Concluida={integracao8020Concluida}
+              onNavigate={(path) => navigate(path)}
+            />
           </TabsContent>
 
-
-          {/* Tab: Uso Clínico (Profissional) */}
+          {/* Tab: Uso Clínico — bloco independente */}
           {canSeeClinical && hasClinicalContent && (
-            <TabsContent value="clinico" className="mt-6 space-y-6">
-              {/* Aviso Ético Fixo */}
-              <Card className="bg-amber-500/10 border-amber-500/30">
-                <CardContent className="py-4 flex items-start gap-3">
-                  <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm font-medium text-amber-500 mb-1">
-                      Orientação para uso clínico supervisionado
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Este livro não interpreta a cliente. Ele afina a escuta da facilitadora.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Quando usar */}
-              {ciclo.orientacao_clinica_uso && (
-                <Card className="bg-green-500/5 border-green-500/20">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm uppercase tracking-widest text-green-500 flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4" />
-                      Quando usar este livro com clientes
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line text-sm">
-                      {ciclo.orientacao_clinica_uso}
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Quando evitar */}
-              {ciclo.orientacao_clinica_evitar && (
-                <Card className="bg-red-500/5 border-red-500/20">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm uppercase tracking-widest text-red-500 flex items-center gap-2">
-                      <XCircle className="w-4 h-4" />
-                      Quando evitar
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line text-sm">
-                      {ciclo.orientacao_clinica_evitar}
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Riscos de projeção */}
-              {ciclo.orientacao_clinica_riscos && (
-                <Card className="bg-amber-500/5 border-amber-500/20">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm uppercase tracking-widest text-amber-500 flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4" />
-                      Riscos de projeção da terapeuta
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line text-sm">
-                      {ciclo.orientacao_clinica_riscos}
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Cliente indicado / contraindicado */}
-              <div className="grid gap-4 md:grid-cols-2">
-                {ciclo.orientacao_clinica_indicado && (
-                  <Card className="bg-card/50">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground">
-                        Cliente indicado
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground whitespace-pre-line">
-                        {ciclo.orientacao_clinica_indicado}
-                      </p>
-                    </CardContent>
-                  </Card>
-                )}
-
-                {ciclo.orientacao_clinica_contraindicado && (
-                  <Card className="bg-card/50">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground">
-                        Cliente contraindicado
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground whitespace-pre-line">
-                        {ciclo.orientacao_clinica_contraindicado}
-                      </p>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
+            <TabsContent value="clinico" className="mt-6">
+              {/* BLOCO 9: Uso Clínico */}
+              <UsoClinicalBlock ciclo={ciclo} />
             </TabsContent>
           )}
         </Tabs>
