@@ -217,6 +217,7 @@ export function AdminClubeLivroTab() {
         subtitulo: ciclo.subtitulo,
         autor_livro: ciclo.autor_livro,
         capa_url: ciclo.capa_url,
+        infografico_url: (ciclo as any).infografico_url || null,
         por_que_este_livro: ciclo.por_que_este_livro,
         como_ler: ciclo.como_ler,
         manifesto: ciclo.manifesto,
@@ -1203,6 +1204,7 @@ function CicloDialog({
     subtitulo: '',
     autor_livro: '',
     capa_url: '',
+    infografico_url: '',
     por_que_este_livro: '',
     como_ler: '',
     manifesto: '',
@@ -1218,6 +1220,7 @@ function CicloDialog({
         subtitulo: ciclo.subtitulo || '',
         autor_livro: ciclo.autor_livro || '',
         capa_url: ciclo.capa_url || '',
+        infografico_url: (ciclo as any).infografico_url || '',
         por_que_este_livro: ciclo.por_que_este_livro || '',
         como_ler: ciclo.como_ler || '',
         manifesto: ciclo.manifesto || '',
@@ -1278,6 +1281,18 @@ function CicloDialog({
               onChange={(e) => setForm({ ...form, capa_url: e.target.value })}
               placeholder="https://..."
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label>URL do Infográfico</Label>
+            <Input
+              value={form.infografico_url}
+              onChange={(e) => setForm({ ...form, infografico_url: e.target.value })}
+              placeholder="https://... (imagem do infográfico do livro)"
+            />
+            {form.infografico_url && (
+              <img src={form.infografico_url} alt="Preview infográfico" className="max-h-40 rounded border border-border mt-2" />
+            )}
           </div>
 
           <div className="space-y-2">
