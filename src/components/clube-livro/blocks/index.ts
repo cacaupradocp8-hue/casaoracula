@@ -10,3 +10,4 @@ export { EncontrosBlock } from './EncontrosBlock';
 export { PortaisAssociadosBlock } from './PortaisAssociadosBlock';
 export { IntegracoesBlock } from './IntegracoesBlock';
 export { UsoClinicalBlock } from './UsoClinicalBlock';
+export { AulasEncontrosBlock } from './AulasEncontrosBlock';

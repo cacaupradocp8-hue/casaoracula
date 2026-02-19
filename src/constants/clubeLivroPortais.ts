@@ -10,9 +10,11 @@ export interface PortalAssociado {
   icone?: string; // emoji simbólico
 }
 
+export type JornadaType = 'heroina' | 'sombra' | 'expressao' | 'instinto' | 'lideranca';
+
 export interface LivroPortaisConfig {
   tituloLivro: string; // deve bater com o campo titulo em clube_livro_ciclos
-  jornada: 'heroina' | 'sombra' | 'expressao';
+  jornada: JornadaType;
   orientacaoCurta: string; // texto orientador do livro (aparece no card)
   portais: PortalAssociado[];
 }
@@ -306,5 +308,19 @@ export const JORNADA_COR: Record<string, { label: string; corLabel: string; corB
     corBorda: 'border-teal-700/30',
     corBg: 'from-teal-950/30 to-card',
     simbolo: '◎',
+  },
+  instinto: {
+    label: 'Jornada do Instinto',
+    corLabel: 'text-rose-400',
+    corBorda: 'border-rose-700/30',
+    corBg: 'from-rose-950/30 to-card',
+    simbolo: '△',
+  },
+  lideranca: {
+    label: 'Jornada da Liderança',
+    corLabel: 'text-sky-400',
+    corBorda: 'border-sky-700/30',
+    corBg: 'from-sky-950/30 to-card',
+    simbolo: '⬡',
   },
 };

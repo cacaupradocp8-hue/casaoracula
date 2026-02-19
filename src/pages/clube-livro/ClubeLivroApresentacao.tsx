@@ -3,6 +3,7 @@
 // Modular: cada seção é um bloco independente
 // ============================================
 
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
@@ -13,7 +14,9 @@ import { useAccessExpiration } from '@/hooks/useAccessExpiration';
 import { LockedForVisitor } from '@/components/shared/LockedForVisitor';
 import { CalendarioJornadas } from '@/components/clube-livro/CalendarioJornadas';
 import { BookOpen, ChevronRight, Home } from 'lucide-react';
-
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+import { JornadaType, JORNADA_COR } from '@/constants/clubeLivroPortais';
 // Blocos modulares independentes
 import {
   ManifestoBlock,
@@ -21,12 +24,21 @@ import {
   RegrasEticasBlock,
 } from '@/components/clube-livro/blocks';
 
+const FILTROS_JORNADA: { chave: JornadaType; label: string }[] = [
+  { chave: 'heroina', label: 'Heroína' },
+  { chave: 'sombra', label: 'Sombra' },
+  { chave: 'expressao', label: 'Expressão' },
+  { chave: 'instinto', label: 'Instinto' },
+  { chave: 'lideranca', label: 'Liderança' },
+];
+
 export default function ClubeLivroApresentacao() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { isExpired } = useAccessExpiration();
   const { ciclos, cicloAtual, loadingCiclos } = useClubeLivro();
   const { hasAccepted } = useRitualAceite(cicloAtual?.id);
+  const [filtroJornada, setFiltroJornada] = useState<JornadaType | null>(null);
 
   const hasAccess = user && canAccessFeature(user.portal, 'aluna') && !isExpired;
 
@@ -90,6 +102,35 @@ export default function ClubeLivroApresentacao() {
           </div>
         )}
 
+        {/* Filtro por Jornada */}
+        <div className="flex flex-wrap gap-2 mb-6">
+          <Badge
+            variant={filtroJornada === null ? 'default' : 'outline'}
+            className="cursor-pointer"
+            onClick={() => setFiltroJornada(null)}
+          >
+            Todas
+          </Badge>
+          {FILTROS_JORNADA.map((f) => {
+            const cor = JORNADA_COR[f.chave];
+            return (
+              <Badge
+                key={f.chave}
+                variant="outline"
+                className={cn(
+                  'cursor-pointer transition-all',
+                  filtroJornada === f.chave
+                    ? `${cor?.corLabel} ${cor?.corBorda} bg-background`
+                    : 'text-muted-foreground hover:text-foreground',
+                )}
+                onClick={() => setFiltroJornada(filtroJornada === f.chave ? null : f.chave)}
+              >
+                {cor?.simbolo} {f.label}
+              </Badge>
+            );
+          })}
+        </div>
+
         {/* BLOCO 3: Calendário / Mapa de Travessia */}
         {loadingCiclos ? (
           <div className="flex justify-center py-16">
@@ -101,6 +142,7 @@ export default function ClubeLivroApresentacao() {
           <CalendarioJornadas
             ciclos={ciclos || []}
             cicloAtualId={cicloAtual?.id}
+            filtroJornada={filtroJornada}
           />
         )}
 
