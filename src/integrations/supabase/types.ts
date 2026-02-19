@@ -1511,7 +1511,6 @@ export type Database = {
           media_type: string | null
           media_url: string | null
           ordem: number | null
-          porta_id: string | null
           publicado: boolean | null
           subtitulo: string | null
           titulo: string
@@ -1528,7 +1527,6 @@ export type Database = {
           media_type?: string | null
           media_url?: string | null
           ordem?: number | null
-          porta_id?: string | null
           publicado?: boolean | null
           subtitulo?: string | null
           titulo: string
@@ -1545,7 +1543,6 @@ export type Database = {
           media_type?: string | null
           media_url?: string | null
           ordem?: number | null
-          porta_id?: string | null
           publicado?: boolean | null
           subtitulo?: string | null
           titulo?: string
@@ -1557,13 +1554,6 @@ export type Database = {
             columns: ["ciclo_id"]
             isOneToOne: false
             referencedRelation: "clube_livro_ciclos"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "clube_livro_aulas_porta_id_fkey"
-            columns: ["porta_id"]
-            isOneToOne: false
-            referencedRelation: "clube_livro_portas"
             referencedColumns: ["id"]
           },
         ]
@@ -1578,7 +1568,6 @@ export type Database = {
           data_fim: string | null
           data_inicio: string | null
           id: string
-          is_multipolar: boolean | null
           manifesto: string | null
           ordem: number | null
           orientacao_clinica_contraindicado: string | null
@@ -1605,7 +1594,6 @@ export type Database = {
           data_fim?: string | null
           data_inicio?: string | null
           id?: string
-          is_multipolar?: boolean | null
           manifesto?: string | null
           ordem?: number | null
           orientacao_clinica_contraindicado?: string | null
@@ -1632,7 +1620,6 @@ export type Database = {
           data_fim?: string | null
           data_inicio?: string | null
           id?: string
-          is_multipolar?: boolean | null
           manifesto?: string | null
           ordem?: number | null
           orientacao_clinica_contraindicado?: string | null
@@ -1713,7 +1700,6 @@ export type Database = {
           fase_id: string | null
           id: string
           ordem: number | null
-          porta_id: string | null
           texto_conteudo: string | null
           tipo: string
           titulo: string
@@ -1728,7 +1714,6 @@ export type Database = {
           fase_id?: string | null
           id?: string
           ordem?: number | null
-          porta_id?: string | null
           texto_conteudo?: string | null
           tipo?: string
           titulo: string
@@ -1743,7 +1728,6 @@ export type Database = {
           fase_id?: string | null
           id?: string
           ordem?: number | null
-          porta_id?: string | null
           texto_conteudo?: string | null
           tipo?: string
           titulo?: string
@@ -1761,13 +1745,6 @@ export type Database = {
             columns: ["fase_id"]
             isOneToOne: false
             referencedRelation: "clube_livro_fases"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "clube_livro_escutas_porta_id_fkey"
-            columns: ["porta_id"]
-            isOneToOne: false
-            referencedRelation: "clube_livro_portas"
             referencedColumns: ["id"]
           },
         ]
@@ -1789,7 +1766,6 @@ export type Database = {
           orientacao_curta: string | null
           ponte_sala_id: string | null
           ponte_sala_texto: string | null
-          porta_id: string | null
           texto_fechamento: string | null
           tipo_fase: string | null
           titulo: string
@@ -1811,7 +1787,6 @@ export type Database = {
           orientacao_curta?: string | null
           ponte_sala_id?: string | null
           ponte_sala_texto?: string | null
-          porta_id?: string | null
           texto_fechamento?: string | null
           tipo_fase?: string | null
           titulo: string
@@ -1833,7 +1808,6 @@ export type Database = {
           orientacao_curta?: string | null
           ponte_sala_id?: string | null
           ponte_sala_texto?: string | null
-          porta_id?: string | null
           texto_fechamento?: string | null
           tipo_fase?: string | null
           titulo?: string
@@ -1852,13 +1826,6 @@ export type Database = {
             columns: ["ponte_sala_id"]
             isOneToOne: false
             referencedRelation: "salas"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "clube_livro_fases_porta_id_fkey"
-            columns: ["porta_id"]
-            isOneToOne: false
-            referencedRelation: "clube_livro_portas"
             referencedColumns: ["id"]
           },
         ]
@@ -2103,56 +2070,6 @@ export type Database = {
             columns: ["fase_id"]
             isOneToOne: false
             referencedRelation: "clube_livro_fases"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      clube_livro_portas: {
-        Row: {
-          ativo: boolean | null
-          ciclo_id: string
-          cor: string | null
-          created_at: string | null
-          descricao: string | null
-          icone: string | null
-          id: string
-          jornada: string
-          ordem: number | null
-          titulo: string
-          updated_at: string | null
-        }
-        Insert: {
-          ativo?: boolean | null
-          ciclo_id: string
-          cor?: string | null
-          created_at?: string | null
-          descricao?: string | null
-          icone?: string | null
-          id?: string
-          jornada: string
-          ordem?: number | null
-          titulo: string
-          updated_at?: string | null
-        }
-        Update: {
-          ativo?: boolean | null
-          ciclo_id?: string
-          cor?: string | null
-          created_at?: string | null
-          descricao?: string | null
-          icone?: string | null
-          id?: string
-          jornada?: string
-          ordem?: number | null
-          titulo?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "clube_livro_portas_ciclo_id_fkey"
-            columns: ["ciclo_id"]
-            isOneToOne: false
-            referencedRelation: "clube_livro_ciclos"
             referencedColumns: ["id"]
           },
         ]

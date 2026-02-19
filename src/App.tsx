@@ -169,7 +169,6 @@ import BibliotecaTravessiasFamilia from "./pages/BibliotecaTravessiasFamilia";
 import { 
   ClubeLivroApresentacao, 
   ClubeLivroCiclo, 
-  ClubeLivroPortas,
   ClubeLivroFase, 
   ClubeLivroEscutas, 
   ClubeLivroEncontros,
@@ -642,22 +641,6 @@ function AppRoutes() {
       />
       <Route
         path="/clube-livro/:id"
-        element={
-          <ProtectedRoute minPortal="aluna">
-            <ClubeLivroCiclo />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/clube-livro/:id/portas"
-        element={
-          <ProtectedRoute minPortal="aluna">
-            <ClubeLivroPortas />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/clube-livro/:id/porta/:jornada"
         element={
           <ProtectedRoute minPortal="aluna">
             <ClubeLivroCiclo />

@@ -230,17 +230,14 @@ export function useClubeCicloDetalhe(cicloId: string | undefined) {
       if (!cicloId) return [];
       const { data, error } = await supabase
         .from('clube_livro_aulas')
-        .select('*, clube_livro_portas(jornada)')
+        .select('*')
         .eq('ciclo_id', cicloId)
         .eq('ativo', true)
         .eq('publicado', true)
         .order('ordem', { ascending: true });
 
       if (error) throw error;
-      return (data || []).map((a: any) => ({
-        ...a,
-        porta_jornada: a.clube_livro_portas?.jornada || null,
-      })) as { id: string; titulo: string; subtitulo?: string; ordem: number; duracao?: string; porta_id?: string; porta_jornada?: string }[];
+      return data as { id: string; titulo: string; subtitulo?: string; ordem: number; duracao?: string }[];
     },
     enabled: !!cicloId && !!user,
   });
