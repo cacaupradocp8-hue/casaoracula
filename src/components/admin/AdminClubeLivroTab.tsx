@@ -20,7 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { 
   BookOpen, Plus, Pencil, Trash2, ChevronDown, ChevronUp,
-  Sparkles, Headphones, Video, FileText, Calendar, Loader2, Map, GraduationCap
+  Sparkles, Headphones, Video, FileText, Calendar, Loader2, Map, GraduationCap, DoorOpen
 } from 'lucide-react';
 import { FaseEditorExpandido } from './clube-livro';
 import { CALENDARIO_ANUAL, SEMANAS_PADRAO } from '@/constants/clubeLivroCalendario';
@@ -725,7 +725,7 @@ function CicloCard({
 function CicloDetailTabs({ cicloId }: { cicloId: string }) {
   return (
     <Tabs defaultValue="fases" className="w-full">
-      <TabsList className="grid w-full grid-cols-4">
+      <TabsList className="grid w-full grid-cols-5">
         <TabsTrigger value="fases" className="gap-1 text-xs">
           <Sparkles className="w-3 h-3" />
           Fases
@@ -733,6 +733,10 @@ function CicloDetailTabs({ cicloId }: { cicloId: string }) {
         <TabsTrigger value="aulas" className="gap-1 text-xs">
           <GraduationCap className="w-3 h-3" />
           Aulas
+        </TabsTrigger>
+        <TabsTrigger value="portas" className="gap-1 text-xs">
+          <DoorOpen className="w-3 h-3" />
+          Portas
         </TabsTrigger>
         <TabsTrigger value="escutas" className="gap-1 text-xs">
           <Headphones className="w-3 h-3" />
@@ -748,6 +752,9 @@ function CicloDetailTabs({ cicloId }: { cicloId: string }) {
       </TabsContent>
       <TabsContent value="aulas" className="pt-4">
         <AulasManager cicloId={cicloId} />
+      </TabsContent>
+      <TabsContent value="portas" className="pt-4">
+        <PortasManager cicloId={cicloId} />
       </TabsContent>
       <TabsContent value="escutas" className="pt-4">
         <EscutasManager cicloId={cicloId} />
@@ -1734,6 +1741,184 @@ function AulaDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+// ============================================
+// PortasManager - Gestão de portas multipolares
+// ============================================
+const JORNADA_OPTIONS = [
+  { value: 'heroina', label: 'Heroína', simbolo: '◈' },
+  { value: 'sombra', label: 'Sombra', simbolo: '◉' },
+  { value: 'corpo', label: 'Corpo', simbolo: '◎' },
+  { value: 'instinto', label: 'Instinto', simbolo: '△' },
+  { value: 'lideranca', label: 'Liderança', simbolo: '⬡' },
+];
+
+function PortasManager({ cicloId }: { cicloId: string }) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  // Check if ciclo is multipolar
+  const { data: ciclo } = useQuery({
+    queryKey: ['admin-clube-ciclo-multipolar', cicloId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('clube_livro_ciclos')
+        .select('is_multipolar')
+        .eq('id', cicloId)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const { data: portas, isLoading } = useQuery({
+    queryKey: ['admin-clube-portas', cicloId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('clube_livro_portas')
+        .select('*')
+        .eq('ciclo_id', cicloId)
+        .order('ordem', { ascending: true });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const toggleMultipolar = useMutation({
+    mutationFn: async (value: boolean) => {
+      const { error } = await supabase
+        .from('clube_livro_ciclos')
+        .update({ is_multipolar: value })
+        .eq('id', cicloId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-ciclo-multipolar', cicloId] });
+      toast({ title: 'Modo atualizado' });
+    },
+  });
+
+  const addPorta = useMutation({
+    mutationFn: async (jornada: string) => {
+      const meta = JORNADA_OPTIONS.find(j => j.value === jornada);
+      const { error } = await supabase.from('clube_livro_portas').insert({
+        ciclo_id: cicloId,
+        jornada,
+        titulo: `Jornada ${meta?.label || jornada}`,
+        ordem: (portas?.length || 0) + 1,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-portas', cicloId] });
+      toast({ title: 'Porta adicionada' });
+    },
+    onError: (err: Error) => {
+      toast({ title: 'Erro', description: err.message, variant: 'destructive' });
+    },
+  });
+
+  const deletePorta = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('clube_livro_portas').delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-portas', cicloId] });
+      toast({ title: 'Porta removida' });
+    },
+  });
+
+  const toggleAtivo = useMutation({
+    mutationFn: async ({ id, ativo }: { id: string; ativo: boolean }) => {
+      const { error } = await supabase.from('clube_livro_portas').update({ ativo }).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-portas', cicloId] });
+    },
+  });
+
+  const usedJornadas = new Set(portas?.map(p => p.jornada) || []);
+  const availableJornadas = JORNADA_OPTIONS.filter(j => !usedJornadas.has(j.value));
+
+  return (
+    <div className="space-y-4">
+      {/* Toggle multipolar */}
+      <div className="flex items-center justify-between p-3 rounded-lg border bg-card/50">
+        <div>
+          <p className="text-sm font-medium">Livro Multipolar</p>
+          <p className="text-xs text-muted-foreground">
+            Ativa tela intermediária de escolha de jornada
+          </p>
+        </div>
+        <Switch
+          checked={ciclo?.is_multipolar || false}
+          onCheckedChange={(v) => toggleMultipolar.mutate(v)}
+        />
+      </div>
+
+      {ciclo?.is_multipolar && (
+        <>
+          {/* Add porta */}
+          {availableJornadas.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {availableJornadas.map((j) => (
+                <Button
+                  key={j.value}
+                  size="sm"
+                  variant="outline"
+                  onClick={() => addPorta.mutate(j.value)}
+                  disabled={addPorta.isPending}
+                  className="gap-1 text-xs"
+                >
+                  <Plus className="w-3 h-3" />
+                  {j.simbolo} {j.label}
+                </Button>
+              ))}
+            </div>
+          )}
+
+          {/* List portas */}
+          {isLoading ? (
+            <div className="animate-pulse h-16 bg-muted rounded" />
+          ) : portas && portas.length > 0 ? (
+            <div className="space-y-2">
+              {portas.map((porta) => {
+                const meta = JORNADA_OPTIONS.find(j => j.value === porta.jornada);
+                return (
+                  <div key={porta.id} className="flex items-center gap-3 p-3 rounded-lg border bg-card/50">
+                    <span className="text-lg">{meta?.simbolo || '●'}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium">{meta?.label || porta.jornada}</p>
+                      <p className="text-xs text-muted-foreground">{porta.descricao || 'Sem descrição'}</p>
+                    </div>
+                    <Switch
+                      checked={porta.ativo}
+                      onCheckedChange={(v) => toggleAtivo.mutate({ id: porta.id, ativo: v })}
+                    />
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-destructive"
+                      onClick={() => deletePorta.mutate(porta.id)}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground text-center py-4">
+              Nenhuma porta cadastrada. Adicione jornadas acima.
+            </p>
+          )}
+        </>
+      )}
+    </div>
   );
 }
 
