@@ -10,57 +10,22 @@ import { LockedContentModal } from '@/components/shared/LockedContentModal';
 import { NotificationBell } from '@/components/shared/NotificationBell';
 import { forceFullRefresh } from '@/components/pwa/ServiceWorkerUpdateToast';
 import {
-  Home,
-  Settings,
-  LogOut,
-  Menu,
-  X,
-  User,
-  LogIn,
-  RefreshCw,
-  BookOpen,
-  Compass,
-  Wrench,
-  Flower2,
-  GraduationCap,
-  ChevronDown,
-  Cog,
-  Users,
-  Calendar,
-  Sparkles,
-  Map,
-  Clock,
-  Eye,
-  Crown,
-  ArrowLeftRight,
+  Home, Settings, LogOut, Menu, X, User, LogIn, RefreshCw,
+  BookOpen, Compass, Wrench, Flower2, GraduationCap, ChevronDown,
+  Cog, Users, Calendar, Sparkles, Map, Clock, Eye, Crown, ArrowLeftRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
+  DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuSub,
+  DropdownMenuSubTrigger, DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu';
 
 // ── MUNDO 1: Experiência da Aluna ───────────────────────────────────────────
 const alunaMenuGroups = (hasOracula: boolean) => [
+  { key: 'inicio', label: 'Início', icon: Home, path: '/jornada', subitems: [] },
   {
-    key: 'inicio',
-    label: 'Início',
-    icon: Home,
-    path: '/jornada',
-    subitems: [],
-  },
-  {
-    key: 'formacao',
-    label: 'Formação',
-    icon: GraduationCap,
-    path: '/oracula',
+    key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/oracula',
     subitems: [
       { label: 'Formação Orácula', path: '/oracula' },
       { label: 'Salas', path: '/salas' },
@@ -74,10 +39,7 @@ const alunaMenuGroups = (hasOracula: boolean) => [
     ],
   },
   {
-    key: 'travessias',
-    label: 'Travessias',
-    icon: Compass,
-    path: '/biblioteca-travessias',
+    key: 'travessias', label: 'Travessias', icon: Compass, path: '/biblioteca-travessias',
     subitems: [
       { label: 'Biblioteca das Travessias', path: '/biblioteca-travessias' },
       { label: 'Família das Travessias', path: '/biblioteca-travessias/familias' },
@@ -87,10 +49,7 @@ const alunaMenuGroups = (hasOracula: boolean) => [
     ],
   },
   {
-    key: 'ferramentas',
-    label: 'Ferramentas',
-    icon: Wrench,
-    path: '/ferramentas',
+    key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas',
     subitems: [
       { label: 'Hub do Método', path: '/ferramentas-metodo' },
       { label: 'Sala de Ferramentas', path: '/ferramentas' },
@@ -103,20 +62,14 @@ const alunaMenuGroups = (hasOracula: boolean) => [
     ],
   },
   {
-    key: 'biblioteca',
-    label: 'Biblioteca',
-    icon: BookOpen,
-    path: '/minha-biblioteca',
+    key: 'biblioteca', label: 'Biblioteca', icon: BookOpen, path: '/minha-biblioteca',
     subitems: [
       { label: 'Minha Biblioteca', path: '/minha-biblioteca' },
       { label: 'Áudios', path: '/audios' },
     ],
   },
   {
-    key: 'jardim',
-    label: 'Meu Jardim',
-    icon: Flower2,
-    path: '/jardim-da-psique',
+    key: 'jardim', label: 'Meu Jardim', icon: Flower2, path: '/jardim-da-psique',
     subitems: [
       { label: 'Jardim da Psique', path: '/jardim-da-psique' },
       { label: 'Casa / Sustentação', path: '/casa' },
@@ -128,25 +81,10 @@ const alunaMenuGroups = (hasOracula: boolean) => [
 
 // ── MUNDO 2: Casa das Máquinas (Espaço Profissional) ────────────────────────
 const profissionalMenuGroups = (isAdmin: boolean, isMentorada: boolean) => [
+  { key: 'visao-geral', label: 'Visão Geral', icon: Cog, path: '/casa-das-maquinas', subitems: [] },
+  { key: 'clientes', label: 'Clientes', icon: Users, path: '/minhas-clientes', subitems: [] },
   {
-    key: 'visao-geral',
-    label: 'Visão Geral',
-    icon: Cog,
-    path: '/casa-das-maquinas',
-    subitems: [],
-  },
-  {
-    key: 'clientes',
-    label: 'Clientes',
-    icon: Users,
-    path: '/minhas-clientes',
-    subitems: [],
-  },
-  {
-    key: 'sessoes',
-    label: 'Sessões',
-    icon: Calendar,
-    path: '/casa-das-maquinas/sessoes',
+    key: 'sessoes', label: 'Sessões', icon: Calendar, path: '/casa-das-maquinas/sessoes',
     subitems: [
       { label: 'Sala de Sessão', path: '/casa-das-maquinas/sessoes' },
       { label: 'Mapa Vivo', path: '/casa-das-maquinas/mapa-vivo' },
@@ -155,10 +93,7 @@ const profissionalMenuGroups = (isAdmin: boolean, isMentorada: boolean) => [
     ],
   },
   {
-    key: 'ferramentas-clinicas',
-    label: 'Ferramentas Clínicas',
-    icon: Wrench,
-    path: '/session-room',
+    key: 'ferramentas-clinicas', label: 'Ferramentas Clínicas', icon: Wrench, path: '/session-room',
     subitems: [
       { label: 'Sala de Sessão Clínica', path: '/session-room' },
       { label: 'Big Five Oracular', path: '/ferramenta/big5-oracular' },
@@ -169,21 +104,14 @@ const profissionalMenuGroups = (isAdmin: boolean, isMentorada: boolean) => [
     ],
   },
   ...(isMentorada ? [{
-    key: 'supervisao',
-    label: 'Supervisão',
-    icon: Eye,
-    path: '/casa-das-maquinas/supervisao',
+    key: 'supervisao', label: 'Supervisão', icon: Eye, path: '/casa-das-maquinas/supervisao',
     subitems: [
       { label: 'Painel de Supervisão', path: '/casa-das-maquinas/supervisao' },
       { label: 'Jardim do Ofício', path: '/casa-das-maquinas/jardim-oficio' },
     ],
   }] : []),
   ...(isAdmin ? [{
-    key: 'painel-institucional',
-    label: 'Painel Admin',
-    icon: Crown,
-    path: '/casa-das-maquinas/painel',
-    subitems: [],
+    key: 'painel-institucional', label: 'Painel Admin', icon: Crown, path: '/casa-das-maquinas/painel', subitems: [],
   }] : []),
 ];
 
@@ -200,11 +128,7 @@ export function Navigation() {
   const isAdmin = user?.portal === 'admin';
   const hasOracula = user ? canAccessFeature(user.portal, 'oracula') : false;
   const isMentorada = user ? canAccessFeature(user.portal, 'assinante') : false;
-
-  // Perfil híbrido: pode alternar domínios
   const isHybrid = hasOracula || isAdmin;
-
-  // Domínio ativo: profissional só para híbridos
   const activeDomain = (isHybrid && domain === 'profissional') ? 'profissional' : 'aluna';
 
   const menuGroups = activeDomain === 'profissional'
@@ -212,16 +136,11 @@ export function Navigation() {
     : alunaMenuGroups(hasOracula);
 
   const handleLogout = () => setRitualSaidaOpen(true);
-  const handleConfirmExit = () => {
-    setRitualSaidaOpen(false);
-    logout();
-    navigate('/');
-  };
+  const handleConfirmExit = () => { setRitualSaidaOpen(false); logout(); navigate('/'); };
 
   const handleToggleDomain = () => {
     const next = activeDomain === 'aluna' ? 'profissional' : 'aluna';
     toggleDomain();
-    // Navegar para home do domínio destino
     if (next === 'profissional') navigate('/casa-das-maquinas');
     else navigate('/jornada');
     setMobileMenuOpen(false);
@@ -232,7 +151,7 @@ export function Navigation() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-primary/10 bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 md:h-20">
             <Link to={user ? (activeDomain === 'profissional' ? '/casa-das-maquinas' : '/jornada') : '/'} className="h-full flex items-center py-2">
@@ -241,12 +160,10 @@ export function Navigation() {
             </Link>
 
             {/* Desktop menu */}
-            <div className="hidden md:flex items-center gap-1">
+            <div className="hidden md:flex items-center gap-0.5">
               {menuGroups.map(group => {
                 const Icon = group.icon;
-                const active = isActive(
-                  group.subitems.length ? group.subitems.map(s => s.path) : [group.path]
-                );
+                const active = isActive(group.subitems.length ? group.subitems.map(s => s.path) : [group.path]);
 
                 if (!group.subitems.length) {
                   return (
@@ -254,10 +171,13 @@ export function Navigation() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className={cn('gap-1.5 transition-all', active && 'bg-secondary text-gold')}
+                        className={cn(
+                          'gap-1.5 transition-all rounded-lg text-foreground/70 hover:text-foreground hover:bg-primary/5',
+                          active && 'bg-primary/10 text-primary border border-primary/15'
+                        )}
                       >
                         <Icon className="w-4 h-4" />
-                        <span>{group.label}</span>
+                        <span className="text-sm">{group.label}</span>
                       </Button>
                     </Link>
                   );
@@ -269,16 +189,23 @@ export function Navigation() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className={cn('gap-1.5 transition-all', active && 'bg-secondary text-gold')}
+                        className={cn(
+                          'gap-1.5 transition-all rounded-lg text-foreground/70 hover:text-foreground hover:bg-primary/5',
+                          active && 'bg-primary/10 text-primary border border-primary/15'
+                        )}
                       >
                         <Icon className="w-4 h-4" />
-                        <span>{group.label}</span>
-                        <ChevronDown className="w-3 h-3 opacity-60" />
+                        <span className="text-sm">{group.label}</span>
+                        <ChevronDown className="w-3 h-3 opacity-50" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" className="w-52">
+                    <DropdownMenuContent align="start" className="w-56 bg-card/95 backdrop-blur-xl border-primary/10">
                       {group.subitems.map(item => (
-                        <DropdownMenuItem key={item.path} onClick={() => navigate(item.path)}>
+                        <DropdownMenuItem
+                          key={item.path}
+                          onClick={() => navigate(item.path)}
+                          className="text-foreground/80 hover:text-foreground focus:bg-primary/10 cursor-pointer"
+                        >
                           {item.label}
                         </DropdownMenuItem>
                       ))}
@@ -292,17 +219,16 @@ export function Navigation() {
             <div className="flex items-center gap-2">
               {user && <NotificationBell />}
 
-              {/* Toggle de domínio — visível apenas para perfis híbridos */}
               {user && isHybrid && (
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={handleToggleDomain}
                   className={cn(
-                    'hidden md:flex gap-1.5 text-xs transition-all border',
+                    'hidden md:flex gap-1.5 text-xs transition-all rounded-lg',
                     activeDomain === 'profissional'
-                      ? 'border-primary/50 text-primary bg-primary/5'
-                      : 'border-border text-muted-foreground'
+                      ? 'border-primary/40 text-primary bg-primary/5 hover:bg-primary/10'
+                      : 'border-border/50 text-muted-foreground hover:border-primary/30'
                   )}
                 >
                   <ArrowLeftRight className="w-3 h-3" />
@@ -313,38 +239,39 @@ export function Navigation() {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="rounded-full">
-                      <User className="w-5 h-5" />
+                    <Button variant="ghost" size="icon" className="rounded-full border border-primary/10 hover:border-primary/30 hover:bg-primary/5">
+                      <User className="w-5 h-5 text-foreground/70" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-64 max-h-[80vh] overflow-y-auto">
-                    <div className="px-2 py-1.5">
-                      <p className="text-sm font-medium">{user.name}</p>
+                  <DropdownMenuContent align="end" className="w-64 max-h-[80vh] overflow-y-auto bg-card/95 backdrop-blur-xl border-primary/10">
+                    <div className="px-3 py-2">
+                      <p className="text-sm font-medium text-foreground">{user.name}</p>
                       <p className="text-xs text-muted-foreground">{user.email}</p>
-                      <p className="text-xs text-gold mt-1">Portal: {user.portal}</p>
+                      <div className="flex items-center gap-1.5 mt-1.5">
+                        <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary" />
+                        <p className="text-xs text-primary">{user.portal}</p>
+                      </div>
                     </div>
 
-                    <DropdownMenuSeparator />
+                    <DropdownMenuSeparator className="bg-primary/10" />
 
-                    {/* Toggle de domínio no user menu */}
                     {isHybrid && (
                       <>
-                        <DropdownMenuItem onClick={handleToggleDomain}>
+                        <DropdownMenuItem onClick={handleToggleDomain} className="cursor-pointer">
                           <ArrowLeftRight className="w-4 h-4 mr-2" />
                           {activeDomain === 'profissional' ? 'Ir para Modo Aluna 🌿' : 'Ir para Espaço Profissional 🧠'}
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator className="bg-primary/10" />
                       </>
                     )}
 
-                    {/* Admin link */}
                     {isAdmin && (
                       <>
-                        <DropdownMenuItem onClick={() => navigate('/admin')}>
+                        <DropdownMenuItem onClick={() => navigate('/admin')} className="cursor-pointer">
                           <Settings className="w-4 h-4 mr-2" />
                           Painel Admin
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator className="bg-primary/10" />
                       </>
                     )}
 
@@ -356,16 +283,16 @@ export function Navigation() {
                               <group.icon className="w-4 h-4 mr-2" />
                               {group.label}
                             </DropdownMenuSubTrigger>
-                            <DropdownMenuSubContent className="w-48">
+                            <DropdownMenuSubContent className="w-48 bg-card/95 backdrop-blur-xl border-primary/10">
                               {group.subitems.map(item => (
-                                <DropdownMenuItem key={item.path} onClick={() => navigate(item.path)}>
+                                <DropdownMenuItem key={item.path} onClick={() => navigate(item.path)} className="cursor-pointer">
                                   {item.label}
                                 </DropdownMenuItem>
                               ))}
                             </DropdownMenuSubContent>
                           </DropdownMenuSub>
                         ) : (
-                          <DropdownMenuItem onClick={() => navigate(group.path)}>
+                          <DropdownMenuItem onClick={() => navigate(group.path)} className="cursor-pointer">
                             <group.icon className="w-4 h-4 mr-2" />
                             {group.label}
                           </DropdownMenuItem>
@@ -373,12 +300,12 @@ export function Navigation() {
                       </div>
                     ))}
 
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => forceFullRefresh()}>
+                    <DropdownMenuSeparator className="bg-primary/10" />
+                    <DropdownMenuItem onClick={() => forceFullRefresh()} className="cursor-pointer">
                       <RefreshCw className="w-4 h-4 mr-2" />
                       Forçar Atualização
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+                    <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer">
                       <LogOut className="w-4 h-4 mr-2" />
                       Sair
                     </DropdownMenuItem>
@@ -386,7 +313,7 @@ export function Navigation() {
                 </DropdownMenu>
               ) : (
                 <Link to="/auth">
-                  <Button variant="ghost" size="sm" className="gap-2">
+                  <Button variant="gold" size="sm" className="gap-2 shadow-gold">
                     <LogIn className="w-4 h-4" />
                     <span>Entrar</span>
                   </Button>
@@ -408,15 +335,13 @@ export function Navigation() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden absolute top-16 left-0 right-0 bg-background border-b border-border animate-slide-up">
+          <div className="md:hidden absolute top-16 left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-primary/10 animate-slide-up">
             <div className="container mx-auto px-4 py-4">
               <div className="flex flex-col gap-1">
-
-                {/* Toggle de domínio mobile */}
                 {user && isHybrid && (
                   <Button
                     variant="outline"
-                    className="w-full justify-start gap-3 mb-2 border-primary/30"
+                    className="w-full justify-start gap-3 mb-3 border-primary/20 hover:bg-primary/5"
                     onClick={handleToggleDomain}
                   >
                     <ArrowLeftRight className="w-5 h-5" />
@@ -430,12 +355,8 @@ export function Navigation() {
 
                   if (!group.subitems.length) {
                     return (
-                      <Link
-                        key={group.key}
-                        to={group.path}
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        <Button variant="ghost" className="w-full justify-start gap-3">
+                      <Link key={group.key} to={group.path} onClick={() => setMobileMenuOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start gap-3 text-foreground/80 hover:text-foreground hover:bg-primary/5">
                           <Icon className="w-5 h-5" />
                           {group.label}
                         </Button>
@@ -447,34 +368,19 @@ export function Navigation() {
                     <div key={group.key}>
                       <Button
                         variant="ghost"
-                        className="w-full justify-start gap-3"
-                        onClick={() =>
-                          setMobileExpandedGroup(expanded ? null : group.key)
-                        }
+                        className="w-full justify-start gap-3 text-foreground/80 hover:text-foreground hover:bg-primary/5"
+                        onClick={() => setMobileExpandedGroup(expanded ? null : group.key)}
                       >
                         <Icon className="w-5 h-5" />
                         {group.label}
-                        <ChevronDown
-                          className={cn('w-4 h-4 ml-auto transition-transform', expanded && 'rotate-180')}
-                        />
+                        <ChevronDown className={cn('w-4 h-4 ml-auto transition-transform', expanded && 'rotate-180')} />
                       </Button>
 
                       {expanded && (
-                        <div className="ml-8 flex flex-col gap-1 mt-1">
+                        <div className="ml-8 flex flex-col gap-1 mt-1 mb-2">
                           {group.subitems.map(item => (
-                            <Link
-                              key={item.path}
-                              to={item.path}
-                              onClick={() => {
-                                setMobileMenuOpen(false);
-                                setMobileExpandedGroup(null);
-                              }}
-                            >
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="w-full justify-start text-sm text-muted-foreground"
-                              >
+                            <Link key={item.path} to={item.path} onClick={() => { setMobileMenuOpen(false); setMobileExpandedGroup(null); }}>
+                              <Button variant="ghost" size="sm" className="w-full justify-start text-sm text-foreground/60 hover:text-foreground hover:bg-primary/5">
                                 {item.label}
                               </Button>
                             </Link>
@@ -485,22 +391,14 @@ export function Navigation() {
                   );
                 })}
 
-                {isAdmin && (
-                  <Link to="/admin" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="ghost" className="w-full justify-start gap-3">
-                      <Settings className="w-5 h-5" />
-                      Admin
+                {user && (
+                  <>
+                    <div className="h-px bg-primary/10 my-2" />
+                    <Button variant="ghost" className="w-full justify-start gap-3 text-destructive hover:bg-destructive/10" onClick={handleLogout}>
+                      <LogOut className="w-5 h-5" />
+                      Sair
                     </Button>
-                  </Link>
-                )}
-
-                {!user && (
-                  <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="default" className="w-full gap-2 mt-2">
-                      <LogIn className="w-4 h-4" />
-                      Entrar
-                    </Button>
-                  </Link>
+                  </>
                 )}
               </div>
             </div>
@@ -508,12 +406,8 @@ export function Navigation() {
         )}
       </nav>
 
+      <RitualSaidaDialog open={ritualSaidaOpen} onClose={() => setRitualSaidaOpen(false)} onConfirmExit={handleConfirmExit} />
       <LockedContentModal open={lockedModalOpen} onOpenChange={setLockedModalOpen} />
-      <RitualSaidaDialog
-        open={ritualSaidaOpen}
-        onClose={() => setRitualSaidaOpen(false)}
-        onConfirmExit={handleConfirmExit}
-      />
     </>
   );
 }
