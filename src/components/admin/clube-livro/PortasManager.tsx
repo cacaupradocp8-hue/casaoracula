@@ -349,7 +349,8 @@ function PortaEscutasManager({ cicloId, portaId, tipoFilter, label }: { cicloId:
 
   const save = useMutation({
     mutationFn: async (form: { titulo: string; audio_url: string; descricao: string }) => {
-      const { error } = await supabase.from('clube_livro_escutas').insert({
+      console.log('=== SALVANDO ESCUTA/PODCAST ===', { cicloId, portaId, tipoFilter, form });
+      const payload = {
         ciclo_id: cicloId,
         porta_id: portaId,
         titulo: form.titulo,
@@ -357,8 +358,12 @@ function PortaEscutasManager({ cicloId, portaId, tipoFilter, label }: { cicloId:
         audio_url: form.audio_url || null,
         descricao: form.descricao || null,
         ordem: (escutas?.length || 0) + 1,
-      });
+      };
+      console.log('Payload:', payload);
+      const { data, error } = await supabase.from('clube_livro_escutas').insert(payload).select();
+      console.log('Resultado insert:', { data, error });
       if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: qk });
