@@ -117,7 +117,36 @@ export default function Auth() {
     setForgotPasswordLoading(false);
   };
 
-  /* ─── Immersive cinematic background ─── */
+  /* ─── Flower of Life SVG pattern (seamless, no borders) ─── */
+  const FlowerOfLifePattern = () => (
+    <svg className="fixed inset-0 w-full h-full pointer-events-none opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="flower-of-life" x="0" y="0" width="120" height="104" patternUnits="userSpaceOnUse">
+          {/* Central circle */}
+          <circle cx="60" cy="52" r="30" fill="none" stroke="hsl(42, 49%, 58%)" strokeWidth="0.5" />
+          {/* 6 petals */}
+          <circle cx="60" cy="22" r="30" fill="none" stroke="hsl(42, 49%, 58%)" strokeWidth="0.5" />
+          <circle cx="60" cy="82" r="30" fill="none" stroke="hsl(42, 49%, 58%)" strokeWidth="0.5" />
+          <circle cx="34" cy="37" r="30" fill="none" stroke="hsl(42, 49%, 58%)" strokeWidth="0.5" />
+          <circle cx="86" cy="37" r="30" fill="none" stroke="hsl(42, 49%, 58%)" strokeWidth="0.5" />
+          <circle cx="34" cy="67" r="30" fill="none" stroke="hsl(42, 49%, 58%)" strokeWidth="0.5" />
+          <circle cx="86" cy="67" r="30" fill="none" stroke="hsl(42, 49%, 58%)" strokeWidth="0.5" />
+        </pattern>
+        {/* Radial fade mask to eliminate edges */}
+        <radialGradient id="flower-fade" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="white" stopOpacity="1" />
+          <stop offset="65%" stopColor="white" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="white" stopOpacity="0" />
+        </radialGradient>
+        <mask id="flower-mask">
+          <rect width="100%" height="100%" fill="url(#flower-fade)" />
+        </mask>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#flower-of-life)" mask="url(#flower-mask)" />
+    </svg>
+  );
+
+  /* ─── Immersive cinematic background (NO scale animations) ─── */
   const ImmersiveBg = () => (
     <>
       {/* Hero image as base layer */}
@@ -127,10 +156,10 @@ export default function Auth() {
         <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-transparent to-background" />
       </div>
 
-      {/* Mandala — breathing focal point */}
-      <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
+      {/* Mandala — OPACITY ONLY animation (no scale = no page movement) */}
+      <div className="fixed inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
         <motion.div
-          animate={{ scale: [1, 1.06, 1], opacity: [0.12, 0.22, 0.12] }}
+          animate={{ opacity: [0.1, 0.2, 0.1] }}
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
           className="w-[600px] h-[600px] md:w-[800px] md:h-[800px]"
         >
@@ -138,20 +167,23 @@ export default function Auth() {
         </motion.div>
       </div>
 
+      {/* Flower of Life sacred geometry */}
+      <FlowerOfLifePattern />
+
       {/* Cinematic vignette */}
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,hsl(var(--background)/0.75)_100%)] pointer-events-none" />
       
-      {/* Ambient glows */}
+      {/* Ambient glows (opacity only, no scale) */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <motion.div
-          animate={{ opacity: [0.1, 0.25, 0.1] }}
+          animate={{ opacity: [0.08, 0.2, 0.08] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[10%] left-[15%] w-[350px] h-[350px] rounded-full bg-primary/8 blur-[120px]"
+          className="absolute top-[10%] left-[15%] w-[350px] h-[350px] rounded-full bg-primary/10 blur-[120px]"
         />
         <motion.div
-          animate={{ opacity: [0.08, 0.2, 0.08] }}
+          animate={{ opacity: [0.06, 0.15, 0.06] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-          className="absolute bottom-[15%] right-[10%] w-[300px] h-[300px] rounded-full bg-accent/6 blur-[100px]"
+          className="absolute bottom-[15%] right-[10%] w-[300px] h-[300px] rounded-full bg-accent/8 blur-[100px]"
         />
       </div>
 
@@ -177,8 +209,8 @@ export default function Auth() {
   /* ─── Premium glass container ─── */
   const GlassContainer = ({ children }: { children: React.ReactNode }) => (
     <motion.div
-      initial={{ opacity: 0, y: 30, scale: 0.96 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       className="relative"
     >
@@ -188,8 +220,6 @@ export default function Auth() {
         {/* Inner decorative accents */}
         <div className="absolute top-0 left-8 w-16 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
         <div className="absolute bottom-0 right-8 w-16 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-        <div className="absolute top-4 right-0 w-px h-8 bg-gradient-to-b from-primary/20 to-transparent" />
-        <div className="absolute bottom-4 left-0 w-px h-8 bg-gradient-to-t from-primary/20 to-transparent" />
         {children}
       </div>
     </motion.div>
@@ -198,7 +228,7 @@ export default function Auth() {
   // ─── Forgot password view ───
   if (showForgotPassword) {
     return (
-      <div className="min-h-screen relative flex items-center justify-center p-4">
+      <div className="min-h-screen relative flex items-center justify-center p-4 overflow-hidden">
         <ImmersiveBg />
         <div className="relative z-10 w-full max-w-md">
           <button 
@@ -252,7 +282,7 @@ export default function Auth() {
 
   // ─── Main auth view ───
   return (
-    <div className="min-h-screen relative flex items-center justify-center p-4">
+    <div className="min-h-screen relative flex items-center justify-center p-4 overflow-hidden">
       <ImmersiveBg />
       
       <div className="relative z-10 w-full max-w-md">

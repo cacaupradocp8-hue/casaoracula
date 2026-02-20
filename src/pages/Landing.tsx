@@ -7,6 +7,32 @@ import { motion } from 'framer-motion';
 import heroPortal from '@/assets/hero-portal.jpg';
 import portalMandala from '@/assets/portal-auth-mandala.jpg';
 
+/* ─── Flower of Life SVG (seamless, faded edges) ─── */
+const FlowerOfLifePattern = () => (
+  <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.035]" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="fol-landing" x="0" y="0" width="120" height="104" patternUnits="userSpaceOnUse">
+        <circle cx="60" cy="52" r="30" fill="none" stroke="hsl(42, 49%, 58%)" strokeWidth="0.5" />
+        <circle cx="60" cy="22" r="30" fill="none" stroke="hsl(42, 49%, 58%)" strokeWidth="0.5" />
+        <circle cx="60" cy="82" r="30" fill="none" stroke="hsl(42, 49%, 58%)" strokeWidth="0.5" />
+        <circle cx="34" cy="37" r="30" fill="none" stroke="hsl(42, 49%, 58%)" strokeWidth="0.5" />
+        <circle cx="86" cy="37" r="30" fill="none" stroke="hsl(42, 49%, 58%)" strokeWidth="0.5" />
+        <circle cx="34" cy="67" r="30" fill="none" stroke="hsl(42, 49%, 58%)" strokeWidth="0.5" />
+        <circle cx="86" cy="67" r="30" fill="none" stroke="hsl(42, 49%, 58%)" strokeWidth="0.5" />
+      </pattern>
+      <radialGradient id="fol-fade-landing" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stopColor="white" stopOpacity="1" />
+        <stop offset="60%" stopColor="white" stopOpacity="0.7" />
+        <stop offset="100%" stopColor="white" stopOpacity="0" />
+      </radialGradient>
+      <mask id="fol-mask-landing">
+        <rect width="100%" height="100%" fill="url(#fol-fade-landing)" />
+      </mask>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#fol-landing)" mask="url(#fol-mask-landing)" />
+  </svg>
+);
+
 export default function Landing() {
   const { getCopyByKey } = useCopy();
 
@@ -20,17 +46,15 @@ export default function Landing() {
           className="w-full h-full object-cover object-center"
           loading="eager"
         />
-        {/* Multi-layer cinematic overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/20" />
         <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-transparent to-transparent" />
-        {/* Side vignette for depth */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,hsl(var(--background)/0.7)_100%)]" />
       </div>
 
-      {/* Central mandala glow — atmospheric focal point */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+      {/* Mandala glow (opacity only — no layout shift) */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
         <motion.div
-          animate={{ scale: [1, 1.08, 1], opacity: [0.08, 0.18, 0.08] }}
+          animate={{ opacity: [0.06, 0.16, 0.06] }}
           transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
           className="w-[500px] h-[500px] md:w-[700px] md:h-[700px]"
         >
@@ -38,39 +62,37 @@ export default function Landing() {
         </motion.div>
       </div>
 
-      {/* Ambient golden particle glows */}
+      {/* Sacred geometry overlay */}
+      <FlowerOfLifePattern />
+
+      {/* Ambient glows */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div
-          animate={{ opacity: [0.15, 0.35, 0.15], scale: [1, 1.2, 1] }}
+          animate={{ opacity: [0.1, 0.25, 0.1] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-[15%] left-[20%] w-[300px] h-[300px] md:w-[500px] md:h-[500px] rounded-full bg-primary/8 blur-[100px]"
         />
         <motion.div
-          animate={{ opacity: [0.1, 0.25, 0.1], scale: [1, 1.15, 1] }}
+          animate={{ opacity: [0.08, 0.18, 0.08] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 3 }}
           className="absolute bottom-[20%] right-[15%] w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full bg-accent/6 blur-[80px]"
-        />
-        <motion.div
-          animate={{ opacity: [0.05, 0.15, 0.05] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 5 }}
-          className="absolute top-[50%] left-[60%] w-[200px] h-[200px] rounded-full bg-gold-light/5 blur-[60px]"
         />
       </div>
 
       {/* Golden dust particles */}
       <div className="absolute inset-0 pointer-events-none">
         {[
-          { top: '18%', left: '25%', size: 'w-1 h-1', delay: '0s', dur: '3s' },
-          { top: '35%', left: '70%', size: 'w-0.5 h-0.5', delay: '1s', dur: '4s' },
-          { top: '55%', left: '15%', size: 'w-1 h-1', delay: '2s', dur: '3.5s' },
-          { top: '70%', left: '80%', size: 'w-0.5 h-0.5', delay: '0.5s', dur: '4.5s' },
-          { top: '25%', left: '55%', size: 'w-0.5 h-0.5', delay: '3s', dur: '3s' },
-          { top: '80%', left: '40%', size: 'w-1 h-1', delay: '1.5s', dur: '5s' },
+          { top: '18%', left: '25%', size: 'w-1 h-1', delay: '0s' },
+          { top: '35%', left: '70%', size: 'w-0.5 h-0.5', delay: '1s' },
+          { top: '55%', left: '15%', size: 'w-1 h-1', delay: '2s' },
+          { top: '70%', left: '80%', size: 'w-0.5 h-0.5', delay: '0.5s' },
+          { top: '25%', left: '55%', size: 'w-0.5 h-0.5', delay: '3s' },
+          { top: '80%', left: '40%', size: 'w-1 h-1', delay: '1.5s' },
         ].map((p, i) => (
           <div
             key={i}
             className={`absolute ${p.size} rounded-full bg-primary/40 animate-pulse`}
-            style={{ top: p.top, left: p.left, animationDelay: p.delay, animationDuration: p.dur }}
+            style={{ top: p.top, left: p.left, animationDelay: p.delay, animationDuration: '4s' }}
           />
         ))}
       </div>
@@ -87,9 +109,8 @@ export default function Landing() {
           <Logo size="xl" variant="vertical" className="justify-center" />
         </motion.div>
 
-        {/* Main content block — positioned at the bottom */}
+        {/* Main content block */}
         <div className="max-w-2xl mx-auto text-center space-y-8">
-          {/* Title */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -102,7 +123,6 @@ export default function Landing() {
             </span>
           </motion.h1>
 
-          {/* Poetic text in a refined glass card */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -124,10 +144,8 @@ export default function Landing() {
             </div>
           </motion.div>
 
-          {/* Ambient Audio */}
           <PageAmbientAudio settingsPrefix="entry" autoPlay />
 
-          {/* CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -147,7 +165,6 @@ export default function Landing() {
           </motion.div>
         </div>
 
-        {/* Bottom decorative line */}
         <motion.div
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
