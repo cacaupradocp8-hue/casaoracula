@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Loader2, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageAmbientAudio } from "@/components/audio/PageAmbientAudio";
+import { cn } from "@/lib/utils";
 
 interface VitrineCard {
   id: string;
@@ -28,61 +29,61 @@ function userCanSeeCard(userPortal: string | undefined, roles: string[]): boolea
   return roles.includes(portal) || roles.includes("visitante");
 }
 
+/* ─── Hero Card — Cinematic Full-Screen ─── */
 function HeroCard({ card, onClick }: { card: VitrineCard; onClick: () => void }) {
   return (
-    <section className="relative w-full min-h-[70vh] overflow-hidden flex items-end">
+    <section className="relative w-full min-h-[85vh] overflow-hidden flex items-end">
       {/* Media background */}
       <div className="absolute inset-0">
         {card.video_url ? (
           <video
             src={card.video_url}
-            autoPlay
-            loop
-            muted
-            playsInline
+            autoPlay loop muted playsInline
             className="w-full h-full object-cover scale-105"
           />
         ) : card.imagem ? (
-          <img
-            src={card.imagem}
-            alt={card.titulo}
-            className="w-full h-full object-cover"
-          />
+          <img src={card.imagem} alt={card.titulo} className="w-full h-full object-cover scale-105" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-primary/20 to-background" />
+          <div className="w-full h-full bg-gradient-to-br from-secondary via-card to-background">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,hsl(var(--gold)/0.12),transparent_60%)]" />
+          </div>
         )}
-        {/* Multi-layered gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/20" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/40 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-40 backdrop-blur-sm [mask-image:linear-gradient(to_top,black_60%,transparent)]" />
+        {/* Cinematic overlay — 4 layers for rich depth */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-60 backdrop-blur-[2px] [mask-image:linear-gradient(to_top,black_40%,transparent)]" />
       </div>
 
+      {/* Ambient glow */}
+      <div className="absolute bottom-32 left-1/4 w-[400px] h-[400px] rounded-full bg-gold/5 blur-[120px] pointer-events-none" />
+
       {/* Content */}
-      <div className="relative z-10 w-full max-w-4xl mx-auto px-6 pb-16 md:pb-24">
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 md:px-10 pb-20 md:pb-28">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-          className="space-y-5"
+          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+          className="space-y-6"
         >
-          {/* Decorative line */}
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-px bg-gradient-to-r from-gold to-transparent" />
-            <Sparkles className="w-3.5 h-3.5 text-gold/60" />
+          {/* Decorative accent */}
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-px bg-gradient-to-r from-gold/80 to-gold/20" />
+            <Sparkles className="w-4 h-4 text-gold/50" />
           </div>
 
-          <h1 className="font-display text-3xl md:text-5xl lg:text-6xl text-foreground tracking-wide font-light leading-[1.15]">
+          <h1 className="font-display text-4xl md:text-6xl lg:text-7xl text-foreground tracking-wide font-light leading-[1.1]">
             {card.titulo}
           </h1>
 
           {card.subtitulo && (
-            <p className="text-muted-foreground text-base md:text-lg max-w-xl leading-relaxed">
+            <p className="text-foreground/70 text-lg md:text-xl max-w-2xl leading-relaxed font-body">
               {card.subtitulo}
             </p>
           )}
 
           {card.descricao_curta && (
-            <p className="text-muted-foreground/60 text-sm max-w-lg">
+            <p className="text-muted-foreground text-sm max-w-lg leading-relaxed">
               {card.descricao_curta}
             </p>
           )}
@@ -91,16 +92,16 @@ function HeroCard({ card, onClick }: { card: VitrineCard; onClick: () => void })
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
+              transition={{ delay: 1, duration: 0.6 }}
               className="pt-4"
             >
               <Button
                 variant="gold"
                 size="lg"
-                className="gap-3 shadow-[0_0_30px_-5px_hsl(var(--gold)/0.3)]"
+                className="gap-3 text-base px-8 shadow-[0_0_40px_-8px_hsl(var(--gold)/0.4)]"
                 onClick={onClick}
               >
-                Acessar
+                Acessar Território
                 <ArrowRight className="w-5 h-5" />
               </Button>
             </motion.div>
@@ -111,56 +112,52 @@ function HeroCard({ card, onClick }: { card: VitrineCard; onClick: () => void })
   );
 }
 
+/* ─── Secondary Card — Editorial Magazine Style ─── */
 function SecondaryCard({ card, onClick, index }: { card: VitrineCard; onClick: () => void; index: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.7, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
       onClick={onClick}
       className="relative group cursor-pointer"
     >
-      {/* Card container */}
-      <div className="relative rounded-xl overflow-hidden border border-border/20 bg-card/80 backdrop-blur-sm transition-all duration-500 group-hover:border-gold/30 group-hover:shadow-[0_8px_40px_-12px_hsl(var(--gold)/0.15)]">
-        {/* Image */}
+      <div className="relative rounded-2xl overflow-hidden border border-border/10 bg-card/60 backdrop-blur-sm transition-all duration-700 group-hover:border-gold/25 group-hover:shadow-[0_16px_60px_-16px_hsl(var(--gold)/0.2)]">
+        {/* Image with parallax-like scale */}
         {card.imagem ? (
-          <div className="aspect-[16/10] overflow-hidden relative">
+          <div className="aspect-[3/2] overflow-hidden relative">
             <img
               src={card.imagem}
               alt={card.titulo}
               loading="lazy"
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
+            {/* Ambient gold overlay on hover */}
+            <div className="absolute inset-0 bg-gradient-to-br from-gold/0 to-gold/0 group-hover:from-gold/5 group-hover:to-transparent transition-all duration-700" />
           </div>
         ) : (
-          <div className="aspect-[16/10] bg-gradient-to-br from-gold/5 via-transparent to-primary/5" />
+          <div className="aspect-[3/2] bg-gradient-to-br from-secondary via-card to-background relative">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,hsl(var(--gold)/0.06),transparent_70%)]" />
+          </div>
         )}
 
         {/* Content */}
-        <div className="p-6 space-y-3 relative">
-          {/* Top accent line */}
-          <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
-
-          <h3 className="font-display text-lg md:text-xl font-medium text-foreground leading-snug tracking-wide group-hover:text-gold transition-colors duration-300">
+        <div className="p-7 md:p-8 space-y-4 relative">
+          <h3 className="font-display text-xl md:text-2xl font-medium text-foreground leading-snug tracking-wide group-hover:text-gold transition-colors duration-500">
             {card.titulo}
           </h3>
 
           {card.subtitulo && (
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm text-foreground/60 leading-relaxed line-clamp-2">
               {card.subtitulo}
             </p>
           )}
 
-          {card.descricao_curta && (
-            <p className="text-xs text-muted-foreground/60 line-clamp-2 leading-relaxed">
-              {card.descricao_curta}
-            </p>
-          )}
-
-          <div className="pt-2 flex items-center gap-2 text-sm text-gold/70 font-medium group-hover:text-gold group-hover:gap-3 transition-all duration-300">
-            <span className="tracking-wide">Explorar</span>
+          <div className="pt-3 flex items-center gap-2 text-sm text-gold/60 font-medium group-hover:text-gold group-hover:gap-4 transition-all duration-500">
+            <div className="w-6 h-px bg-gold/40 group-hover:w-10 transition-all duration-500" />
+            <span className="tracking-widest uppercase text-xs">Explorar</span>
             <ArrowRight className="w-4 h-4" />
           </div>
         </div>
@@ -169,6 +166,7 @@ function SecondaryCard({ card, onClick, index }: { card: VitrineCard; onClick: (
   );
 }
 
+/* ─── Main Page ─── */
 export default function FerramentasVitrine() {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -217,17 +215,25 @@ export default function FerramentasVitrine() {
         )}
 
         {secondaryCards.length > 0 && (
-          <div className="max-w-[1200px] mx-auto px-5 md:px-8 py-16 md:py-24">
+          <div className="max-w-[1200px] mx-auto px-5 md:px-10 py-20 md:py-28">
             {/* Section header */}
-            <div className="flex items-center gap-4 mb-12">
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border/50 to-transparent" />
-              <span className="text-xs uppercase tracking-[0.25em] text-muted-foreground/60 font-medium">
-                Territórios
-              </span>
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border/50 to-transparent" />
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="flex items-center gap-5 mb-16"
+            >
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
+              <div className="text-center space-y-1">
+                <Sparkles className="w-4 h-4 text-gold/40 mx-auto" />
+                <span className="text-xs uppercase tracking-[0.3em] text-muted-foreground/60 font-medium block">
+                  Territórios
+                </span>
+              </div>
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
+            </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
               {secondaryCards.map((card, i) => (
                 <SecondaryCard
                   key={card.id}
