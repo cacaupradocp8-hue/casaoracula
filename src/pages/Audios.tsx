@@ -101,7 +101,7 @@ export default function Audios() {
           <Card>
             <CardContent className="py-12 text-center">
               <Music className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-              <p className="text-foreground/70">
+              <p className="text-muted-foreground">
                 Nenhum áudio disponível no momento.
               </p>
             </CardContent>

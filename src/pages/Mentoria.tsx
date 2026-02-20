@@ -123,7 +123,7 @@ export default function Mentoria() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-foreground/80 whitespace-pre-wrap leading-[1.8]">{post.texto}</p>
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">{post.texto}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -153,7 +153,7 @@ export default function Mentoria() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-foreground/80 mb-3 leading-[1.8]">{post.texto}</p>
+                    <p className="text-sm text-muted-foreground mb-3">{post.texto}</p>
                     {post.link_evento && (
                       <Button variant="outline" size="sm" asChild>
                         <a href={post.link_evento} target="_blank" rel="noopener noreferrer">
@@ -228,7 +228,7 @@ export default function Mentoria() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-foreground/80 whitespace-pre-wrap line-clamp-3 leading-[1.8]">{post.texto}</p>
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap line-clamp-3">{post.texto}</p>
                   </CardContent>
                 </Card>
               ))}

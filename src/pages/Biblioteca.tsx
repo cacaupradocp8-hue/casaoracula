@@ -202,7 +202,7 @@ export default function Biblioteca() {
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <p className="text-foreground/80 text-sm leading-[1.8] mb-4">
+                        <p className="text-muted-foreground text-sm leading-relaxed mb-4">
                           {item.content}
                         </p>
                         

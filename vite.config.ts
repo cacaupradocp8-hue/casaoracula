@@ -60,7 +60,7 @@ export default defineConfig(({ mode }) => ({
         clientsClaim: true,
         // CRITICAL: SPA fallback — all navigation requests must return index.html
         navigateFallback: "/index.html",
-        navigateFallbackDenylist: [/^\/api\//, /^\/supabase\//, /^\/~oauth/],
+        navigateFallbackDenylist: [/^\/api\//, /^\/supabase\//],
         // No runtime caching - let browser handle it naturally
         runtimeCaching: [],
       },

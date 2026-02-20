@@ -10,10 +10,9 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="min-h-screen bg-background relative">
-      {/* Layered ambient depth — seamless luxury */}
+      {/* Subtle ambient texture */}
+      <div className="fixed inset-0 pattern-geometric opacity-40 pointer-events-none" />
       <div className="fixed inset-0 bg-hero-radial pointer-events-none" />
-      <div className="fixed inset-0 pattern-geometric pointer-events-none" />
-      <div className="fixed inset-0 vignette-overlay pointer-events-none" />
       
       <Navigation />
       <main className="relative pt-16 md:pt-20">

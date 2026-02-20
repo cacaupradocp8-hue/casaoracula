@@ -120,7 +120,7 @@ export default function JardimPsique() {
                   {registro.emocao_predominante && (
                     <>
                       <span className="text-muted-foreground/30">•</span>
-                      <span className="italic text-foreground/70">{registro.emocao_predominante}</span>
+                      <span className="italic text-foreground/50">{registro.emocao_predominante}</span>
                     </>
                   )}
                 </div>
@@ -143,14 +143,14 @@ export default function JardimPsique() {
           </CardHeader>
           <CardContent className="pl-[calc(2rem+1.25rem)]">
             {previewText ? (
-              <p className="text-sm text-foreground/80 line-clamp-2 leading-[1.8]">{previewText}</p>
+              <p className="text-sm text-foreground/60 line-clamp-2 leading-relaxed">{previewText}</p>
             ) : (
-              <p className="text-sm text-muted-foreground italic">
+              <p className="text-sm text-muted-foreground/40 italic">
                 {registro.tipo_registro === 'ferramenta' ? 'Sem reflexão adicionada ainda' : 'Sem conteúdo'}
               </p>
             )}
             <div className="flex items-center justify-end mt-3">
-              <span className="text-xs text-gold/0 group-hover:text-gold transition-all duration-500 flex items-center gap-1">
+              <span className="text-xs text-gold/0 group-hover:text-gold/60 transition-all duration-500 flex items-center gap-1">
                 <Eye className="w-3 h-3" />
                 Ver registro
               </span>
@@ -188,7 +188,7 @@ export default function JardimPsique() {
             Jardim da Psique
           </h1>
           
-          <p className="text-foreground/80 max-w-md mx-auto leading-[1.8]">
+          <p className="text-foreground/60 max-w-md mx-auto leading-relaxed">
             Seu diário arquetípico privado — sonhos, oráculos, frases que tocaram
           </p>
 
@@ -247,7 +247,7 @@ export default function JardimPsique() {
               <TabsTrigger value="arquivados" className="gap-2"><Archive className="w-4 h-4" />Arquivados</TabsTrigger>
             </TabsList>
           </Tabs>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm text-muted-foreground/60">
             {registrosFiltrados.length} registro{registrosFiltrados.length !== 1 && 's'}
           </span>
         </div>
@@ -268,7 +268,7 @@ export default function JardimPsique() {
               <CardContent className="py-16 text-center">
                 <Archive className="w-14 h-14 mx-auto text-muted-foreground/20 mb-4" />
                 <h3 className="text-lg font-medium mb-2">Nenhum registro arquivado</h3>
-                <p className="text-muted-foreground text-sm">Registros arquivados aparecerão aqui.</p>
+                <p className="text-muted-foreground/60 text-sm">Registros arquivados aparecerão aqui.</p>
               </CardContent>
             </Card>
           ) : (
@@ -289,7 +289,7 @@ export default function JardimPsique() {
         >
           <div className="absolute -inset-px rounded-xl bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-emerald-500/10" />
           <div className="relative rounded-xl bg-card/40 backdrop-blur-sm border border-emerald-500/10 p-5 text-center">
-            <p className="text-sm text-foreground/80">
+            <p className="text-sm text-foreground/60">
               🔒 Este espaço é <strong className="text-emerald-400">100% privado</strong>. Nenhuma terapeuta, admin ou IA tem acesso aos seus registros.
             </p>
           </div>

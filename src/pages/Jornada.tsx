@@ -189,7 +189,7 @@ export default function Jornada() {
             <div className="w-16 h-16 mx-auto mb-4 rounded-full border border-primary/20 flex items-center justify-center">
               <Moon className="w-8 h-8 text-primary/30 animate-pulse" />
             </div>
-            <p className="text-muted-foreground text-sm font-display italic">Escutando o campo...</p>
+            <p className="text-muted-foreground/50 text-sm font-display italic">Escutando o campo...</p>
           </motion.div>
         </div>
       </AppLayout>
@@ -209,7 +209,7 @@ export default function Jornada() {
               transition={{ duration: 2, ease: 'easeOut' }}
               className="w-[500px] h-[500px] md:w-[650px] md:h-[650px]"
             >
-              <img src={mandalaHome} alt="" className="w-full h-full object-contain animate-ritual-breathe opacity-80 blur-[0.5px]" />
+              <img src={mandalaHome} alt="" className="w-full h-full object-contain animate-ritual-breathe" />
             </motion.div>
           </div>
 
@@ -244,7 +244,7 @@ export default function Jornada() {
             >
               <span className="h-px w-12 bg-primary/30" />
               <span className="text-sm text-primary/70 font-display">{portalInfo.nome}</span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/5 border border-primary/15 text-xs text-foreground/80">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/5 border border-primary/15 text-xs text-foreground/60">
                 <Sparkles className="w-3 h-3 text-primary/50" />
                 {GRAUS_LABEL[grau]}
               </span>
@@ -255,7 +255,7 @@ export default function Jornada() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.8 }}
-              className="text-foreground/80 italic leading-[1.8] text-lg md:text-xl font-display max-w-md mx-auto mb-10"
+              className="text-foreground/60 italic leading-relaxed text-lg md:text-xl font-display max-w-md mx-auto mb-10"
             >
               "{fraseOraculo}"
             </motion.blockquote>
@@ -304,7 +304,7 @@ export default function Jornada() {
                           <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary/25 transition-all">
                             <Icon className={`w-5 h-5 ${link.color} opacity-70 group-hover:opacity-100 transition-opacity`} />
                           </div>
-                          <p className="text-xs font-medium text-foreground/90 group-hover:text-foreground transition-colors">
+                          <p className="text-xs font-medium text-foreground/70 group-hover:text-foreground transition-colors">
                             {link.label}
                           </p>
                         </CardContent>
@@ -324,7 +324,7 @@ export default function Jornada() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
-          className="text-center text-muted-foreground text-xs py-8"
+          className="text-center text-muted-foreground/30 text-xs py-8"
         >
           Este espaço escuta o campo.
         </motion.p>
