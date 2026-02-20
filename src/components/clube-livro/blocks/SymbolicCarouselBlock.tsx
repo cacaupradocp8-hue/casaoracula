@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
@@ -32,31 +31,41 @@ export function SymbolicCarouselBlock({
   const [current, setCurrent] = useState(0);
   const total = slides.length;
 
-  // Fallback to plain text if no slides
+  // Auto-advance every 8s
+  const next = useCallback(() => {
+    setCurrent((c) => (c + 1) % total);
+  }, [total]);
+
+  useEffect(() => {
+    if (total <= 1) return;
+    const timer = setInterval(next, 8000);
+    return () => clearInterval(timer);
+  }, [next, total]);
+
+  // Fallback — elevated card style
   if (!slides.length && fallbackText) {
     return (
-      <Card className={cn(
-        'relative overflow-hidden border-border/20',
-        'bg-gradient-to-br from-card via-card to-card/80',
+      <div className={cn(
+        'relative rounded-2xl overflow-hidden',
+        'bg-gradient-to-br from-card/90 via-card to-secondary/50',
+        'border border-border/20 p-8',
         className
       )}>
-        {/* Decorative corner accents */}
-        <div className="absolute top-0 left-0 w-16 h-16 border-t border-l border-gold/20 rounded-tl-lg" />
-        <div className="absolute bottom-0 right-0 w-16 h-16 border-b border-r border-gold/20 rounded-br-lg" />
-        
-        <CardHeader className="pb-3 relative">
-          <CardTitle className="text-xs uppercase tracking-[0.2em] text-gold/80 flex items-center gap-2.5 font-medium">
+        {/* Ambient glow */}
+        <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-gold/5 blur-[80px] pointer-events-none" />
+        <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-primary/5 blur-[60px] pointer-events-none" />
+
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-6">
             <span className="text-gold">{icon}</span>
-            {title}
-          </CardTitle>
-          <div className="h-px w-full bg-gradient-to-r from-gold/30 via-gold/10 to-transparent mt-2" />
-        </CardHeader>
-        <CardContent className="relative">
-          <p className="text-muted-foreground leading-relaxed whitespace-pre-line text-sm italic">
+            <h3 className="text-xs uppercase tracking-[0.25em] text-gold/80 font-medium">{title}</h3>
+          </div>
+          <div className="h-px w-full bg-gradient-to-r from-gold/30 via-gold/10 to-transparent mb-6" />
+          <p className="text-foreground/80 leading-[1.9] whitespace-pre-line text-base font-body italic">
             {fallbackText}
           </p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
@@ -65,85 +74,105 @@ export function SymbolicCarouselBlock({
   const slide = slides[current];
 
   return (
-    <Card className={cn(
-      'relative overflow-hidden border-border/20',
-      'bg-gradient-to-br from-card via-card to-card/80',
+    <div className={cn(
+      'relative rounded-2xl overflow-hidden',
+      'border border-border/10',
       className
     )}>
-      {/* Decorative corner accents */}
-      <div className="absolute top-0 left-0 w-20 h-20 border-t border-l border-gold/20 rounded-tl-lg pointer-events-none z-10" />
-      <div className="absolute bottom-0 right-0 w-20 h-20 border-b border-r border-gold/20 rounded-br-lg pointer-events-none z-10" />
+      {/* Full-bleed slide area */}
+      <div className="relative aspect-[16/9] min-h-[320px] md:min-h-[420px] overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current}
+            initial={{ opacity: 0, scale: 1.08 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute inset-0"
+          >
+            {/* Background image — full bleed */}
+            {slide.image_url ? (
+              <>
+                <img
+                  src={slide.image_url}
+                  alt={slide.titulo || `Slide ${current + 1}`}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                {/* Cinematic overlay layers */}
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-background/30 via-transparent to-background/30" />
+              </>
+            ) : (
+              /* Gradient placeholder when no image */
+              <div className="absolute inset-0 bg-gradient-to-br from-secondary via-card to-background">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--gold)/0.08),transparent_70%)]" />
+              </div>
+            )}
 
-      <CardHeader className="pb-3 relative z-10">
-        <CardTitle className="text-xs uppercase tracking-[0.2em] text-gold/80 flex items-center gap-2.5 font-medium">
-          <span className="text-gold">{icon}</span>
-          {title}
-        </CardTitle>
-        <div className="h-px w-full bg-gradient-to-r from-gold/30 via-gold/10 to-transparent mt-2" />
-      </CardHeader>
+            {/* Content overlay — positioned at bottom with generous space */}
+            <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12">
+              {/* Title bar with icon */}
+              <div className="flex items-center gap-2.5 mb-6">
+                <span className="text-gold/70">{icon}</span>
+                <span className="text-[10px] uppercase tracking-[0.3em] text-gold/60 font-medium">{title}</span>
+                <div className="h-px flex-1 bg-gradient-to-r from-gold/20 to-transparent" />
+              </div>
 
-      <CardContent className="space-y-4 relative z-10">
-        {/* Slide area — immersive */}
-        <div className="relative rounded-xl overflow-hidden aspect-[16/10] bg-gradient-to-br from-background via-muted/30 to-background ring-1 ring-border/10">
-          {/* Ambient glow behind slide */}
-          <div className="absolute inset-0 bg-gradient-to-t from-gold/5 via-transparent to-transparent pointer-events-none" />
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={current}
-              initial={{ opacity: 0, scale: 1.04 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center"
-            >
-              {/* Background image with sophisticated overlay */}
-              {slide.image_url && (
-                <>
-                  <img
-                    src={slide.image_url}
-                    alt={slide.titulo || `Slide ${current + 1}`}
-                    className="absolute inset-0 w-full h-full object-cover opacity-50"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/50 to-background/30" />
-                  <div className="absolute inset-0 backdrop-blur-[1px]" />
-                </>
-              )}
-
-              {/* Content overlay */}
-              <div className="relative z-10 flex flex-col items-center justify-center gap-4 max-w-[85%]">
-                {/* Decorative symbol */}
-                <div className="w-8 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
-                
+              {/* Main content */}
+              <div className="space-y-4 max-w-2xl">
                 {slide.titulo && (
-                  <h3 className="font-display text-lg md:text-xl font-semibold text-foreground leading-snug tracking-wide">
+                  <h3 className="font-display text-2xl md:text-3xl lg:text-4xl font-semibold text-foreground leading-[1.2] tracking-wide">
                     {slide.titulo}
                   </h3>
                 )}
                 {slide.frase_simbolica && (
-                  <p className="text-sm md:text-base text-muted-foreground italic leading-relaxed max-w-md">
+                  <p className="text-base md:text-lg text-foreground/80 italic leading-relaxed font-body max-w-xl">
                     "{slide.frase_simbolica}"
                   </p>
                 )}
-
-                <div className="w-8 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
               </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
 
-        {/* Navigation — refined */}
-        <div className="flex items-center justify-between px-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            disabled={current === 0}
-            onClick={() => setCurrent(Math.max(0, current - 1))}
-            className="rounded-full h-9 w-9 text-gold/60 hover:text-gold hover:bg-gold/10 disabled:opacity-30"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
+        {/* Navigation arrows — floating on sides */}
+        {total > 1 && (
+          <>
+            <button
+              onClick={() => setCurrent(Math.max(0, current - 1))}
+              disabled={current === 0}
+              className={cn(
+                'absolute left-3 top-1/2 -translate-y-1/2 z-20',
+                'w-10 h-10 rounded-full flex items-center justify-center',
+                'bg-background/40 backdrop-blur-md border border-border/20',
+                'text-foreground/70 hover:text-gold hover:bg-background/60',
+                'transition-all duration-300 disabled:opacity-0'
+              )}
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => setCurrent(Math.min(total - 1, current + 1))}
+              disabled={current === total - 1}
+              className={cn(
+                'absolute right-3 top-1/2 -translate-y-1/2 z-20',
+                'w-10 h-10 rounded-full flex items-center justify-center',
+                'bg-background/40 backdrop-blur-md border border-border/20',
+                'text-foreground/70 hover:text-gold hover:bg-background/60',
+                'transition-all duration-300 disabled:opacity-0'
+              )}
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </>
+        )}
+      </div>
 
+      {/* Bottom bar — indicators + audio */}
+      <div className="bg-card/80 backdrop-blur-sm border-t border-border/10 px-6 py-4">
+        <div className="flex items-center justify-between gap-4">
+          {/* Dot indicators */}
           <div className="flex items-center gap-2">
             {slides.map((_, i) => (
               <button
@@ -152,38 +181,26 @@ export function SymbolicCarouselBlock({
                 className={cn(
                   'rounded-full transition-all duration-500 ease-out',
                   i === current
-                    ? 'w-7 h-2 bg-gradient-to-r from-gold/80 to-gold/50'
-                    : 'w-2 h-2 bg-muted-foreground/20 hover:bg-gold/30'
+                    ? 'w-8 h-1.5 bg-gradient-to-r from-gold to-gold/60'
+                    : 'w-1.5 h-1.5 bg-muted-foreground/25 hover:bg-gold/40'
                 )}
               />
             ))}
           </div>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            disabled={current === total - 1}
-            onClick={() => setCurrent(Math.min(total - 1, current + 1))}
-            className="rounded-full h-9 w-9 text-gold/60 hover:text-gold hover:bg-gold/10 disabled:opacity-30"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-        </div>
-
-        {/* Slide counter */}
-        <div className="text-center">
-          <span className="text-[10px] font-mono text-muted-foreground/50 tracking-wider">
+          {/* Counter */}
+          <span className="text-[10px] font-mono text-muted-foreground/50 tracking-widest">
             {(current + 1).toString().padStart(2, '0')} / {total.toString().padStart(2, '0')}
           </span>
         </div>
 
         {/* Audio player */}
         {audioUrl && (
-          <div className="pt-3 border-t border-gold/10">
+          <div className="mt-4 pt-4 border-t border-border/10">
             <UnifiedAudioPlayer audioUrl={audioUrl} title={title} size="sm" />
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
