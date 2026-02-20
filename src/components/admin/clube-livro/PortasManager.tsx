@@ -24,6 +24,7 @@ import {
   GraduationCap, Headphones, Podcast, Loader2, DoorOpen,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { AudioUpload } from '../AudioUpload';
 
 const JORNADAS_OPTIONS = [
   { value: 'heroina', label: 'Jornada da Heroína', simbolo: '◈', cor: 'text-amber-400' },
@@ -633,10 +634,12 @@ function SimpleEscutaDialog({ open, onOpenChange, label, onSave, isPending }: {
             <Label>Título *</Label>
             <Input value={form.titulo} onChange={(e) => setForm({ ...form, titulo: e.target.value })} />
           </div>
-          <div className="space-y-2">
-            <Label>URL do Áudio</Label>
-            <Input value={form.audio_url} onChange={(e) => setForm({ ...form, audio_url: e.target.value })} placeholder="https://..." />
-          </div>
+          <AudioUpload
+            value={form.audio_url}
+            onChange={(url) => setForm({ ...form, audio_url: url })}
+            folder="clube-livro/escutas"
+            label="Arquivo de Áudio / Podcast"
+          />
           <div className="space-y-2">
             <Label>Descrição</Label>
             <Textarea value={form.descricao} onChange={(e) => setForm({ ...form, descricao: e.target.value })} className="min-h-[60px]" />

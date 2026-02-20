@@ -26,6 +26,7 @@ import {
 import { FaseEditorExpandido } from './clube-livro';
 import { PortasManager } from './clube-livro/PortasManager';
 import { AulaBlocosEditor, type AulaBloco } from './clube-livro/AulaBlocosEditor';
+import { AudioUpload } from './AudioUpload';
 import { CALENDARIO_ANUAL, SEMANAS_PADRAO } from '@/constants/clubeLivroCalendario';
 import { cn } from '@/lib/utils';
 
@@ -1363,7 +1364,7 @@ function EscutaDialog({ cicloId, open, onOpenChange }: { cicloId: string; open: 
   const queryClient = useQueryClient();
   const [form, setForm] = useState({
     titulo: '',
-    tipo: 'audio' as 'audio' | 'texto',
+    tipo: 'audio' as 'audio' | 'podcast' | 'texto',
     audio_url: '',
     texto_conteudo: '',
   });
@@ -1381,7 +1382,7 @@ function EscutaDialog({ cicloId, open, onOpenChange }: { cicloId: string; open: 
       queryClient.invalidateQueries({ queryKey: ['admin-clube-escutas', cicloId] });
       onOpenChange(false);
       setForm({ titulo: '', tipo: 'audio', audio_url: '', texto_conteudo: '' });
-      toast({ title: 'Escuta adicionada' });
+      toast({ title: form.tipo === 'podcast' ? 'Podcast adicionado' : 'Escuta adicionada' });
     },
   });
 
@@ -1398,21 +1399,24 @@ function EscutaDialog({ cicloId, open, onOpenChange }: { cicloId: string; open: 
           </div>
           <div className="space-y-2">
             <Label>Tipo</Label>
-            <Select value={form.tipo} onValueChange={(v) => setForm({ ...form, tipo: v as 'audio' | 'texto' })}>
+            <Select value={form.tipo} onValueChange={(v) => setForm({ ...form, tipo: v as 'audio' | 'podcast' | 'texto' })}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="audio">Áudio</SelectItem>
+                <SelectItem value="podcast">Podcast</SelectItem>
                 <SelectItem value="texto">Texto</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          {form.tipo === 'audio' && (
-            <div className="space-y-2">
-              <Label>URL do Áudio</Label>
-              <Input value={form.audio_url} onChange={(e) => setForm({ ...form, audio_url: e.target.value })} />
-            </div>
+          {(form.tipo === 'audio' || form.tipo === 'podcast') && (
+            <AudioUpload
+              value={form.audio_url}
+              onChange={(url) => setForm({ ...form, audio_url: url })}
+              folder="clube-livro/escutas"
+              label={form.tipo === 'podcast' ? 'Arquivo do Podcast' : 'Arquivo de Áudio'}
+            />
           )}
           {form.tipo === 'texto' && (
             <div className="space-y-2">
