@@ -12,7 +12,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react';
 import { loginSchema, signupSchema, forgotPasswordSchema, getValidationError } from '@/lib/validations';
 import { useCopy } from '@/hooks/useCopy';
-
+import { motion } from 'framer-motion';
+import portalMandala from '@/assets/portal-auth-mandala.jpg';
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
@@ -46,336 +47,261 @@ export default function Auth() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     const validation = loginSchema.safeParse({ email: loginEmail, password: loginPassword });
     const error = getValidationError(validation);
     if (error) {
       toast({ title: 'Erro de validação', description: error, variant: 'destructive' });
       return;
     }
-
     setIsLoading(true);
-
     const result = await login(loginEmail, loginPassword);
-    
     if (result.success) {
-      toast({
-        title: 'Bem-vinda de volta',
-        description: 'A Casa ORÁCULA te recebe.',
-      });
-      
-      // Check if user completed onboarding
+      toast({ title: 'Bem-vinda de volta', description: 'A Casa ORÁCULA te recebe.' });
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('onboarding_completed')
-            .eq('id', user.id)
-            .single();
-          
-          if (!profile?.onboarding_completed) {
-            navigate('/onboarding');
-          } else {
-            navigate('/dashboard');
-          }
-        } else {
-          navigate('/dashboard');
-        }
-      } catch (err) {
-        console.error('Error checking onboarding status:', err);
-        navigate('/dashboard');
-      }
+          const { data: profile } = await supabase.from('profiles').select('onboarding_completed').eq('id', user.id).single();
+          if (!profile?.onboarding_completed) { navigate('/onboarding'); } else { navigate('/dashboard'); }
+        } else { navigate('/dashboard'); }
+      } catch (err) { console.error('Error checking onboarding status:', err); navigate('/dashboard'); }
     } else {
-      toast({
-        title: 'Erro ao entrar',
-        description: result.error,
-        variant: 'destructive',
-      });
+      toast({ title: 'Erro ao entrar', description: result.error, variant: 'destructive' });
     }
-    
     setIsLoading(false);
   };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const validation = signupSchema.safeParse({ 
-      name: signupName, 
-      email: signupEmail, 
-      password: signupPassword 
-    });
+    const validation = signupSchema.safeParse({ name: signupName, email: signupEmail, password: signupPassword });
     const error = getValidationError(validation);
     if (error) {
       toast({ title: 'Erro de validação', description: error, variant: 'destructive' });
       return;
     }
-
     setIsLoading(true);
-
     const result = await signup(signupEmail, signupPassword, signupName);
-    
     if (result.success) {
-      // Send welcome email in background (non-blocking)
       supabase.functions.invoke('send-welcome-email', {
-        body: {
-          email: signupEmail,
-          userName: signupName,
-          includeWaitingListLink: true,
-        },
-      }).then(({ error }) => {
-        if (error) {
-          console.error('Error sending welcome email:', error);
-        } else {
-          console.log('Welcome email sent successfully');
-        }
-      });
-
-      toast({
-        title: 'Conta criada',
-        description: 'Seja bem-vinda à Casa ORÁCULA.',
-      });
-      // New users go to symbolic onboarding
+        body: { email: signupEmail, userName: signupName, includeWaitingListLink: true },
+      }).then(({ error }) => { if (error) console.error('Error sending welcome email:', error); });
+      toast({ title: 'Conta criada', description: 'Seja bem-vinda à Casa ORÁCULA.' });
       navigate('/onboarding');
     } else {
-      toast({
-        title: 'Erro ao criar conta',
-        description: result.error,
-        variant: 'destructive',
-      });
+      toast({ title: 'Erro ao criar conta', description: result.error, variant: 'destructive' });
     }
-    
     setIsLoading(false);
   };
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     const validation = forgotPasswordSchema.safeParse({ email: forgotPasswordEmail });
     const error = getValidationError(validation);
     if (error) {
       toast({ title: 'Erro de validação', description: error, variant: 'destructive' });
       return;
     }
-
     setForgotPasswordLoading(true);
-
     try {
       const redirectUrl = `${window.location.origin}/reset-password`;
-      
-      const { error } = await supabase.auth.resetPasswordForEmail(forgotPasswordEmail, {
-        redirectTo: redirectUrl,
-      });
-
+      const { error } = await supabase.auth.resetPasswordForEmail(forgotPasswordEmail, { redirectTo: redirectUrl });
       if (error) {
-        toast({
-          title: 'Erro ao enviar email',
-          description: error.message,
-          variant: 'destructive',
-        });
+        toast({ title: 'Erro ao enviar email', description: error.message, variant: 'destructive' });
       } else {
         setForgotPasswordSent(true);
-        toast({
-          title: 'Email enviado!',
-          description: 'Verifique sua caixa de entrada para redefinir sua senha.',
-        });
+        toast({ title: 'Email enviado!', description: 'Verifique sua caixa de entrada para redefinir sua senha.' });
       }
     } catch (error) {
-      toast({
-        title: 'Erro',
-        description: 'Ocorreu um erro. Tente novamente.',
-        variant: 'destructive',
-      });
+      toast({ title: 'Erro', description: 'Ocorreu um erro. Tente novamente.', variant: 'destructive' });
     }
-
     setForgotPasswordLoading(false);
   };
 
-  // Forgot password view
+  /* ─── Shared immersive background ─── */
+  const ImmersiveBg = () => (
+    <>
+      {/* Deep cosmic base */}
+      <div className="fixed inset-0 bg-background" />
+      
+      {/* Mandala — central focal point with breathing animation */}
+      <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
+        <motion.div
+          animate={{ scale: [1, 1.06, 1], opacity: [0.15, 0.25, 0.15] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          className="w-[700px] h-[700px] md:w-[900px] md:h-[900px]"
+        >
+          <img src={portalMandala} alt="" className="w-full h-full object-cover rounded-full opacity-30" />
+        </motion.div>
+      </div>
+      
+      {/* Ambient layers */}
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(var(--background))_70%)] pointer-events-none" />
+      <div className="fixed inset-0 bg-gradient-to-b from-background/80 via-transparent to-background pointer-events-none" />
+      
+      {/* Golden dust particles effect */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/3 w-1 h-1 rounded-full bg-gold/40 animate-pulse" />
+        <div className="absolute top-1/3 right-1/4 w-0.5 h-0.5 rounded-full bg-gold/30 animate-pulse [animation-delay:1s]" />
+        <div className="absolute bottom-1/3 left-1/4 w-1 h-1 rounded-full bg-gold/20 animate-pulse [animation-delay:2s]" />
+        <div className="absolute top-2/3 right-1/3 w-0.5 h-0.5 rounded-full bg-gold/30 animate-pulse [animation-delay:3s]" />
+      </div>
+    </>
+  );
+
+  /* ─── Glass form container ─── */
+  const GlassContainer = ({ children }: { children: React.ReactNode }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 30, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className="relative"
+    >
+      {/* Outer glow ring */}
+      <div className="absolute -inset-px rounded-3xl bg-gradient-to-b from-gold/20 via-gold/5 to-transparent" />
+      <div className="relative rounded-3xl bg-card/70 backdrop-blur-2xl border border-border/30 p-8 md:p-10 shadow-[0_24px_80px_-16px_hsl(var(--gold)/0.15)]">
+        {/* Corner accents */}
+        <div className="absolute top-0 left-6 w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+        <div className="absolute bottom-0 right-6 w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+        {children}
+      </div>
+    </motion.div>
+  );
+
+  // ─── Forgot password view ───
   if (showForgotPassword) {
     return (
-      <div className="min-h-screen bg-background pattern-geometric flex items-center justify-center p-4">
-        <div className="absolute inset-0 bg-hero-radial" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" />
-        
-        <div className="relative w-full max-w-md">
+      <div className="min-h-screen relative flex items-center justify-center p-4">
+        <ImmersiveBg />
+        <div className="relative z-10 w-full max-w-md">
           <button 
-            onClick={() => {
-              setShowForgotPassword(false);
-              setForgotPasswordSent(false);
-              setForgotPasswordEmail('');
-            }}
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
+            onClick={() => { setShowForgotPassword(false); setForgotPasswordSent(false); setForgotPasswordEmail(''); }}
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-gold transition-colors mb-8"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Voltar para Login</span>
           </button>
 
-          <div className="text-center mb-6">
-            <Logo size="md" variant="vertical" className="justify-center mb-3" />
-            <h1 className="text-xl font-display text-gold mb-2">Recuperar Senha</h1>
-            <p className="text-muted-foreground text-sm">
-              Digite seu email para receber o link de recuperação
-            </p>
+          <div className="text-center mb-8">
+            <Logo size="md" variant="vertical" className="justify-center mb-4" />
+            <h1 className="text-2xl font-display text-gold mb-2 tracking-wide">Recuperar Senha</h1>
+            <p className="text-muted-foreground text-sm">Digite seu email para receber o link de recuperação</p>
           </div>
 
-          <div className="glass rounded-2xl p-8 shadow-glow">
+          <GlassContainer>
             {forgotPasswordSent ? (
               <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto">
-                  <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto">
+                  <svg className="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
                 <h3 className="text-lg font-medium">Email Enviado!</h3>
                 <p className="text-sm text-muted-foreground">
-                  Enviamos um link de recuperação para <strong>{forgotPasswordEmail}</strong>.
-                  Verifique sua caixa de entrada e spam.
+                  Enviamos um link de recuperação para <strong>{forgotPasswordEmail}</strong>. Verifique sua caixa de entrada e spam.
                 </p>
-                <p className="text-xs text-muted-foreground">
-                  O link expira em 1 hora.
-                </p>
-                <Button 
-                  variant="outline" 
-                  className="w-full mt-4"
-                  onClick={() => {
-                    setShowForgotPassword(false);
-                    setForgotPasswordSent(false);
-                    setForgotPasswordEmail('');
-                  }}
-                >
+                <p className="text-xs text-muted-foreground">O link expira em 1 hora.</p>
+                <Button variant="outline" className="w-full mt-4" onClick={() => { setShowForgotPassword(false); setForgotPasswordSent(false); setForgotPasswordEmail(''); }}>
                   Voltar para Login
                 </Button>
               </div>
             ) : (
-              <form onSubmit={handleForgotPassword} className="space-y-4">
+              <form onSubmit={handleForgotPassword} className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="forgot-email">Email</Label>
-                  <Input
-                    id="forgot-email"
-                    type="email"
-                    placeholder="seu@email.com"
-                    value={forgotPasswordEmail}
-                    onChange={(e) => setForgotPasswordEmail(e.target.value)}
-                    required
-                  />
+                  <Label htmlFor="forgot-email" className="text-foreground/80">Email</Label>
+                  <Input id="forgot-email" type="email" placeholder="seu@email.com" value={forgotPasswordEmail} onChange={(e) => setForgotPasswordEmail(e.target.value)} required className="bg-background/50 border-border/40 focus:border-gold/50" />
                 </div>
-
-                <Button type="submit" variant="gold" className="w-full" disabled={forgotPasswordLoading}>
-                  {forgotPasswordLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Enviando...
-                    </>
-                  ) : (
-                    'Enviar Link de Recuperação'
-                  )}
+                <Button type="submit" variant="gold" className="w-full h-12 text-base shadow-[0_0_30px_-6px_hsl(var(--gold)/0.3)]" disabled={forgotPasswordLoading}>
+                  {forgotPasswordLoading ? (<><Loader2 className="w-4 h-4 mr-2 animate-spin" />Enviando...</>) : 'Enviar Link de Recuperação'}
                 </Button>
-
-                <p className="text-xs text-muted-foreground text-center">
-                  Você receberá um email com instruções para redefinir sua senha.
-                </p>
+                <p className="text-xs text-muted-foreground text-center">Você receberá um email com instruções para redefinir sua senha.</p>
               </form>
             )}
-          </div>
+          </GlassContainer>
         </div>
       </div>
     );
   }
 
+  // ─── Main auth view ───
   return (
-    <div className="min-h-screen bg-background pattern-geometric flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-hero-radial" />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" />
+    <div className="min-h-screen relative flex items-center justify-center p-4">
+      <ImmersiveBg />
       
-      <div className="relative w-full max-w-md">
-        <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8">
+      <div className="relative z-10 w-full max-w-md">
+        <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-gold transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
           <span>Voltar</span>
         </Link>
 
-        <div className="text-center mb-6">
-          <Logo size="md" variant="vertical" className="justify-center mb-3" />
-        </div>
+        {/* Logo + Title */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-center mb-8"
+        >
+          <Logo size="md" variant="vertical" className="justify-center mb-4" />
+          <div className="flex items-center justify-center gap-4 mb-3">
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-gold/40" />
+            <span className="text-[10px] uppercase tracking-[0.4em] text-gold/50 font-medium">Portal de Entrada</span>
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-gold/40" />
+          </div>
+        </motion.div>
 
-        {/* Manifesto */}
-        <div className="glass rounded-2xl p-6 mb-6 border border-gold/20 text-center space-y-4">
-          <p className="text-foreground text-base md:text-sm leading-relaxed">
-            <strong className="text-gold">Antes de conduzir o outro,</strong><br />
-            aprenda a sustentar o campo.
-          </p>
-          
-          <p className="text-foreground/80 text-sm md:text-xs leading-relaxed italic">
-            Aqui, não se aprende a interpretar.<br />
-            Aprende-se a sustentar.
-          </p>
-        </div>
+        {/* Manifesto — elevated */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="relative mb-8 text-center"
+        >
+          <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-gold/15 to-transparent" />
+          <div className="relative rounded-2xl bg-card/40 backdrop-blur-xl border border-gold/10 p-6 md:p-8">
+            <p className="text-foreground/90 text-base leading-relaxed font-display tracking-wide">
+              <span className="text-gold font-medium">Antes de conduzir o outro,</span><br />
+              aprenda a sustentar o campo.
+            </p>
+            <div className="h-px w-16 mx-auto my-4 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+            <p className="text-foreground/60 text-sm leading-relaxed italic">
+              Aqui, não se aprende a interpretar.<br />
+              Aprende-se a sustentar.
+            </p>
+          </div>
+        </motion.div>
 
-        <div className="glass rounded-2xl p-8 shadow-glow">
+        {/* Form */}
+        <GlassContainer>
           <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login">Entrar</TabsTrigger>
-              <TabsTrigger value="signup">Criar Conta</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 mb-8 bg-background/40">
+              <TabsTrigger value="login" className="data-[state=active]:bg-gold/15 data-[state=active]:text-gold">Entrar</TabsTrigger>
+              <TabsTrigger value="signup" className="data-[state=active]:bg-gold/15 data-[state=active]:text-gold">Criar Conta</TabsTrigger>
             </TabsList>
 
             <TabsContent value="login">
-              <form onSubmit={handleLogin} className="space-y-4">
+              <form onSubmit={handleLogin} className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="login-email">Email</Label>
-                  <Input
-                    id="login-email"
-                    type="email"
-                    placeholder="seu@email.com"
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
-                    required
-                  />
+                  <Label htmlFor="login-email" className="text-foreground/80">Email</Label>
+                  <Input id="login-email" type="email" placeholder="seu@email.com" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required className="h-12 bg-background/50 border-border/40 focus:border-gold/50" />
                 </div>
-
                 <div className="space-y-2">
-                  <Label htmlFor="login-password">Senha</Label>
+                  <Label htmlFor="login-password" className="text-foreground/80">Senha</Label>
                   <div className="relative">
-                    <Input
-                      id="login-password"
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="••••••••"
-                      value={loginPassword}
-                      onChange={(e) => setLoginPassword(e.target.value)}
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    >
+                    <Input id="login-password" type={showPassword ? 'text' : 'password'} placeholder="••••••••" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required className="h-12 bg-background/50 border-border/40 focus:border-gold/50" />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                 </div>
-
-                <Button type="submit" variant="gold" className="w-full" disabled={isLoading}>
+                <Button type="submit" variant="gold" className="w-full h-12 text-base shadow-[0_0_40px_-8px_hsl(var(--gold)/0.3)]" disabled={isLoading}>
                   {isLoading ? 'Entrando...' : getCopyByKey('btn_atravessar_limiar', 'Atravessar o limiar')}
                 </Button>
 
-                <div className="relative my-2">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-border" />
-                  </div>
-                  <div className="relative flex justify-center text-xs">
-                    <span className="bg-card px-2 text-muted-foreground">ou</span>
-                  </div>
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border/30" /></div>
+                  <div className="relative flex justify-center text-xs"><span className="bg-card/70 px-3 text-muted-foreground/60">ou</span></div>
                 </div>
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full flex items-center gap-3"
-                  onClick={handleGoogleSignIn}
-                  disabled={googleLoading}
-                >
-                  {googleLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
+                <Button type="button" variant="outline" className="w-full h-12 flex items-center gap-3 bg-background/30 border-border/30 hover:bg-background/50 hover:border-gold/20" onClick={handleGoogleSignIn} disabled={googleLoading}>
+                  {googleLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
                     <svg className="w-4 h-4" viewBox="0 0 24 24">
                       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                       <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -386,93 +312,42 @@ export default function Auth() {
                   Entrar com Google
                 </Button>
 
-                <button
-                  type="button"
-                  onClick={() => setShowForgotPassword(true)}
-                  className="w-full text-sm text-muted-foreground hover:text-gold transition-colors text-center"
-                >
+                <button type="button" onClick={() => setShowForgotPassword(true)} className="w-full text-sm text-muted-foreground hover:text-gold transition-colors text-center pt-2">
                   Esqueci minha senha
                 </button>
               </form>
-
-              <div className="mt-6 p-4 rounded-lg bg-secondary/50 border border-border">
-                <p className="text-xs text-muted-foreground text-center">
-                  Novo por aqui? Crie uma conta na aba "Criar Conta".
-                </p>
-              </div>
             </TabsContent>
 
             <TabsContent value="signup">
-              <form onSubmit={handleSignup} className="space-y-4">
+              <form onSubmit={handleSignup} className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="signup-name">Nome</Label>
-                  <Input
-                    id="signup-name"
-                    type="text"
-                    placeholder="Seu nome"
-                    value={signupName}
-                    onChange={(e) => setSignupName(e.target.value)}
-                    required
-                  />
+                  <Label htmlFor="signup-name" className="text-foreground/80">Nome</Label>
+                  <Input id="signup-name" type="text" placeholder="Seu nome" value={signupName} onChange={(e) => setSignupName(e.target.value)} required className="h-12 bg-background/50 border-border/40 focus:border-gold/50" />
                 </div>
-
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
-                  <Input
-                    id="signup-email"
-                    type="email"
-                    placeholder="seu@email.com"
-                    value={signupEmail}
-                    onChange={(e) => setSignupEmail(e.target.value)}
-                    required
-                  />
+                  <Label htmlFor="signup-email" className="text-foreground/80">Email</Label>
+                  <Input id="signup-email" type="email" placeholder="seu@email.com" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required className="h-12 bg-background/50 border-border/40 focus:border-gold/50" />
                 </div>
-
                 <div className="space-y-2">
-                  <Label htmlFor="signup-password">Senha</Label>
+                  <Label htmlFor="signup-password" className="text-foreground/80">Senha</Label>
                   <div className="relative">
-                    <Input
-                      id="signup-password"
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="••••••••"
-                      value={signupPassword}
-                      onChange={(e) => setSignupPassword(e.target.value)}
-                      required
-                      minLength={6}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    >
+                    <Input id="signup-password" type={showPassword ? 'text' : 'password'} placeholder="••••••••" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required minLength={6} className="h-12 bg-background/50 border-border/40 focus:border-gold/50" />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                 </div>
-
-                <Button type="submit" variant="gold" className="w-full" disabled={isLoading}>
+                <Button type="submit" variant="gold" className="w-full h-12 text-base shadow-[0_0_40px_-8px_hsl(var(--gold)/0.3)]" disabled={isLoading}>
                   {isLoading ? 'Criando conta...' : 'Criar Conta'}
                 </Button>
 
-                <div className="relative my-2">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-border" />
-                  </div>
-                  <div className="relative flex justify-center text-xs">
-                    <span className="bg-card px-2 text-muted-foreground">ou</span>
-                  </div>
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border/30" /></div>
+                  <div className="relative flex justify-center text-xs"><span className="bg-card/70 px-3 text-muted-foreground/60">ou</span></div>
                 </div>
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full flex items-center gap-3"
-                  onClick={handleGoogleSignIn}
-                  disabled={googleLoading}
-                >
-                  {googleLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
+                <Button type="button" variant="outline" className="w-full h-12 flex items-center gap-3 bg-background/30 border-border/30 hover:bg-background/50 hover:border-gold/20" onClick={handleGoogleSignIn} disabled={googleLoading}>
+                  {googleLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
                     <svg className="w-4 h-4" viewBox="0 0 24 24">
                       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                       <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -483,14 +358,14 @@ export default function Auth() {
                   Continuar com Google
                 </Button>
 
-                <p className="text-xs text-muted-foreground text-center">
+                <p className="text-xs text-muted-foreground/60 text-center pt-2 leading-relaxed">
                   Ao criar conta, você inicia como Visitante (Portal 1). 
                   O acesso a outros Portais é liberado pela Guardiã.
                 </p>
               </form>
             </TabsContent>
           </Tabs>
-        </div>
+        </GlassContainer>
       </div>
     </div>
   );
