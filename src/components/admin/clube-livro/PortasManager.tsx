@@ -627,8 +627,13 @@ function SimpleEscutaDialog({ open, onOpenChange, label, onSave, isPending }: {
 }) {
   const [form, setForm] = useState({ titulo: '', audio_url: '', descricao: '' });
 
+  const handleOpenChange = (v: boolean) => {
+    if (!v) setForm({ titulo: '', audio_url: '', descricao: '' });
+    onOpenChange(v);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Adicionar {label}</DialogTitle>
@@ -651,7 +656,7 @@ function SimpleEscutaDialog({ open, onOpenChange, label, onSave, isPending }: {
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-          <Button onClick={() => { onSave(form); setForm({ titulo: '', audio_url: '', descricao: '' }); }} disabled={isPending || !form.titulo.trim()}>Salvar</Button>
+          <Button onClick={() => { const data = { ...form }; onSave(data); }} disabled={isPending || !form.titulo.trim()}>Salvar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
