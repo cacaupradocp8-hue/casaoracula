@@ -13,7 +13,7 @@ import { Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react';
 import { loginSchema, signupSchema, forgotPasswordSchema, getValidationError } from '@/lib/validations';
 import { useCopy } from '@/hooks/useCopy';
 import { motion } from 'framer-motion';
-import portalMandala from '@/assets/portal-auth-mandala.jpg';
+
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
@@ -121,28 +121,11 @@ export default function Auth() {
     <>
       {/* Deep cosmic base */}
       <div className="fixed inset-0 bg-background" />
-      
-      {/* Mandala — central focal point with breathing animation */}
-      <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
-        <motion.div
-          animate={{ scale: [1, 1.06, 1], opacity: [0.15, 0.25, 0.15] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          className="w-[700px] h-[700px] md:w-[900px] md:h-[900px]"
-        >
-          <img src={portalMandala} alt="" className="w-full h-full object-cover rounded-full opacity-30" />
-        </motion.div>
-      </div>
-      
-      {/* Ambient layers */}
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(var(--background))_70%)] pointer-events-none" />
-      <div className="fixed inset-0 bg-gradient-to-b from-background/80 via-transparent to-background pointer-events-none" />
-      
-      {/* Golden dust particles effect */}
+      {/* Ambient mist — opacity only, no scale */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/3 w-1 h-1 rounded-full bg-gold/40 animate-pulse" />
-        <div className="absolute top-1/3 right-1/4 w-0.5 h-0.5 rounded-full bg-gold/30 animate-pulse [animation-delay:1s]" />
-        <div className="absolute bottom-1/3 left-1/4 w-1 h-1 rounded-full bg-gold/20 animate-pulse [animation-delay:2s]" />
-        <div className="absolute top-2/3 right-1/3 w-0.5 h-0.5 rounded-full bg-gold/30 animate-pulse [animation-delay:3s]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_30%,hsl(var(--gold)/0.06),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_20%_70%,hsl(var(--accent)/0.05),transparent_60%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background/80" />
       </div>
     </>
   );
