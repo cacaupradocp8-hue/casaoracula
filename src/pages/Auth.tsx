@@ -14,6 +14,7 @@ import { loginSchema, signupSchema, forgotPasswordSchema, getValidationError } f
 import { useCopy } from '@/hooks/useCopy';
 import { motion } from 'framer-motion';
 import portalMandala from '@/assets/portal-auth-mandala.jpg';
+import heroPortal from '@/assets/hero-portal.jpg';
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
@@ -116,38 +117,64 @@ export default function Auth() {
     setForgotPasswordLoading(false);
   };
 
-  /* ─── Shared immersive background ─── */
+  /* ─── Immersive cinematic background ─── */
   const ImmersiveBg = () => (
     <>
-      {/* Deep cosmic base */}
-      <div className="fixed inset-0 bg-background" />
-      
-      {/* Mandala — central focal point with breathing animation */}
+      {/* Hero image as base layer */}
+      <div className="fixed inset-0">
+        <img src={heroPortal} alt="" className="w-full h-full object-cover object-center opacity-30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-background/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-transparent to-background" />
+      </div>
+
+      {/* Mandala — breathing focal point */}
       <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
         <motion.div
-          animate={{ scale: [1, 1.06, 1], opacity: [0.15, 0.25, 0.15] }}
+          animate={{ scale: [1, 1.06, 1], opacity: [0.12, 0.22, 0.12] }}
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          className="w-[700px] h-[700px] md:w-[900px] md:h-[900px]"
+          className="w-[600px] h-[600px] md:w-[800px] md:h-[800px]"
         >
-          <img src={portalMandala} alt="" className="w-full h-full object-cover rounded-full opacity-30" />
+          <img src={portalMandala} alt="" className="w-full h-full object-cover rounded-full blur-[1px] opacity-35" />
         </motion.div>
       </div>
+
+      {/* Cinematic vignette */}
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,hsl(var(--background)/0.75)_100%)] pointer-events-none" />
       
-      {/* Ambient layers */}
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(var(--background))_70%)] pointer-events-none" />
-      <div className="fixed inset-0 bg-gradient-to-b from-background/80 via-transparent to-background pointer-events-none" />
-      
-      {/* Golden dust particles effect */}
+      {/* Ambient glows */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <motion.div
+          animate={{ opacity: [0.1, 0.25, 0.1] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[10%] left-[15%] w-[350px] h-[350px] rounded-full bg-primary/8 blur-[120px]"
+        />
+        <motion.div
+          animate={{ opacity: [0.08, 0.2, 0.08] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+          className="absolute bottom-[15%] right-[10%] w-[300px] h-[300px] rounded-full bg-accent/6 blur-[100px]"
+        />
+      </div>
+
+      {/* Golden dust particles */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/3 w-1 h-1 rounded-full bg-gold/40 animate-pulse" />
-        <div className="absolute top-1/3 right-1/4 w-0.5 h-0.5 rounded-full bg-gold/30 animate-pulse [animation-delay:1s]" />
-        <div className="absolute bottom-1/3 left-1/4 w-1 h-1 rounded-full bg-gold/20 animate-pulse [animation-delay:2s]" />
-        <div className="absolute top-2/3 right-1/3 w-0.5 h-0.5 rounded-full bg-gold/30 animate-pulse [animation-delay:3s]" />
+        {[
+          { top: '20%', left: '30%', size: 'w-1 h-1', delay: '0s' },
+          { top: '35%', left: '75%', size: 'w-0.5 h-0.5', delay: '1.5s' },
+          { top: '60%', left: '20%', size: 'w-1 h-1', delay: '2.5s' },
+          { top: '75%', left: '65%', size: 'w-0.5 h-0.5', delay: '3.5s' },
+          { top: '45%', left: '50%', size: 'w-0.5 h-0.5', delay: '4s' },
+        ].map((p, i) => (
+          <div
+            key={i}
+            className={`absolute ${p.size} rounded-full bg-primary/30 animate-pulse`}
+            style={{ top: p.top, left: p.left, animationDelay: p.delay, animationDuration: '4s' }}
+          />
+        ))}
       </div>
     </>
   );
 
-  /* ─── Glass form container ─── */
+  /* ─── Premium glass container ─── */
   const GlassContainer = ({ children }: { children: React.ReactNode }) => (
     <motion.div
       initial={{ opacity: 0, y: 30, scale: 0.96 }}
@@ -155,12 +182,14 @@ export default function Auth() {
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       className="relative"
     >
-      {/* Outer glow ring */}
-      <div className="absolute -inset-px rounded-3xl bg-gradient-to-b from-gold/20 via-gold/5 to-transparent" />
-      <div className="relative rounded-3xl bg-card/70 backdrop-blur-2xl border border-border/30 p-8 md:p-10 shadow-[0_24px_80px_-16px_hsl(var(--gold)/0.15)]">
-        {/* Corner accents */}
-        <div className="absolute top-0 left-6 w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
-        <div className="absolute bottom-0 right-6 w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+      {/* Outer glow halo */}
+      <div className="absolute -inset-[2px] rounded-3xl bg-gradient-to-b from-primary/25 via-primary/8 to-transparent blur-[1px]" />
+      <div className="relative rounded-3xl bg-card/60 backdrop-blur-2xl border border-border/20 p-8 md:p-10 shadow-[0_24px_80px_-16px_hsl(var(--gold)/0.2)]">
+        {/* Inner decorative accents */}
+        <div className="absolute top-0 left-8 w-16 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+        <div className="absolute bottom-0 right-8 w-16 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+        <div className="absolute top-4 right-0 w-px h-8 bg-gradient-to-b from-primary/20 to-transparent" />
+        <div className="absolute bottom-4 left-0 w-px h-8 bg-gradient-to-t from-primary/20 to-transparent" />
         {children}
       </div>
     </motion.div>
@@ -174,7 +203,7 @@ export default function Auth() {
         <div className="relative z-10 w-full max-w-md">
           <button 
             onClick={() => { setShowForgotPassword(false); setForgotPasswordSent(false); setForgotPasswordEmail(''); }}
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-gold transition-colors mb-8"
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Voltar para Login</span>
@@ -182,7 +211,7 @@ export default function Auth() {
 
           <div className="text-center mb-8">
             <Logo size="lg" variant="vertical" className="justify-center mb-6" />
-            <h1 className="text-2xl font-display text-gold mb-2 tracking-wide">Recuperar Senha</h1>
+            <h1 className="text-2xl font-display text-primary mb-2 tracking-wide">Recuperar Senha</h1>
             <p className="text-muted-foreground text-sm">Digite seu email para receber o link de recuperação</p>
           </div>
 
@@ -207,7 +236,7 @@ export default function Auth() {
               <form onSubmit={handleForgotPassword} className="space-y-5">
                 <div className="space-y-2">
                   <Label htmlFor="forgot-email" className="text-foreground/80">Email</Label>
-                  <Input id="forgot-email" type="email" placeholder="seu@email.com" value={forgotPasswordEmail} onChange={(e) => setForgotPasswordEmail(e.target.value)} required className="bg-background/50 border-border/40 focus:border-gold/50" />
+                  <Input id="forgot-email" type="email" placeholder="seu@email.com" value={forgotPasswordEmail} onChange={(e) => setForgotPasswordEmail(e.target.value)} required className="bg-background/50 border-border/40 focus:border-primary/50" />
                 </div>
                 <Button type="submit" variant="gold" className="w-full h-12 text-base shadow-[0_0_30px_-6px_hsl(var(--gold)/0.3)]" disabled={forgotPasswordLoading}>
                   {forgotPasswordLoading ? (<><Loader2 className="w-4 h-4 mr-2 animate-spin" />Enviando...</>) : 'Enviar Link de Recuperação'}
@@ -227,7 +256,7 @@ export default function Auth() {
       <ImmersiveBg />
       
       <div className="relative z-10 w-full max-w-md">
-        <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-gold transition-colors mb-8">
+        <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
           <span>Voltar</span>
         </Link>
@@ -241,26 +270,26 @@ export default function Auth() {
         >
           <Logo size="lg" variant="vertical" className="justify-center mb-6" />
           <div className="flex items-center justify-center gap-4 mb-3">
-            <div className="h-px w-12 bg-gradient-to-r from-transparent to-gold/40" />
-            <span className="text-[10px] uppercase tracking-[0.4em] text-gold/50 font-medium">Portal de Entrada</span>
-            <div className="h-px w-12 bg-gradient-to-l from-transparent to-gold/40" />
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary/40" />
+            <span className="text-[10px] uppercase tracking-[0.4em] text-primary/50 font-medium">Portal de Entrada</span>
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary/40" />
           </div>
         </motion.div>
 
-        {/* Manifesto — elevated */}
+        {/* Manifesto */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.5 }}
           className="relative mb-8 text-center"
         >
-          <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-gold/15 to-transparent" />
-          <div className="relative rounded-2xl bg-card/40 backdrop-blur-xl border border-gold/10 p-6 md:p-8">
+          <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-primary/15 to-transparent" />
+          <div className="relative rounded-2xl bg-card/40 backdrop-blur-xl border border-primary/10 p-6 md:p-8">
             <p className="text-foreground/90 text-base leading-relaxed font-display tracking-wide">
-              <span className="text-gold font-medium">Antes de conduzir o outro,</span><br />
+              <span className="text-primary font-medium">Antes de conduzir o outro,</span><br />
               aprenda a sustentar o campo.
             </p>
-            <div className="h-px w-16 mx-auto my-4 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+            <div className="h-px w-16 mx-auto my-4 bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
             <p className="text-foreground/60 text-sm leading-relaxed italic">
               Aqui, não se aprende a interpretar.<br />
               Aprende-se a sustentar.
@@ -272,20 +301,20 @@ export default function Auth() {
         <GlassContainer>
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-8 bg-background/40">
-              <TabsTrigger value="login" className="data-[state=active]:bg-gold/15 data-[state=active]:text-gold">Entrar</TabsTrigger>
-              <TabsTrigger value="signup" className="data-[state=active]:bg-gold/15 data-[state=active]:text-gold">Criar Conta</TabsTrigger>
+              <TabsTrigger value="login" className="data-[state=active]:bg-primary/15 data-[state=active]:text-primary">Entrar</TabsTrigger>
+              <TabsTrigger value="signup" className="data-[state=active]:bg-primary/15 data-[state=active]:text-primary">Criar Conta</TabsTrigger>
             </TabsList>
 
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-5">
                 <div className="space-y-2">
                   <Label htmlFor="login-email" className="text-foreground/80">Email</Label>
-                  <Input id="login-email" type="email" placeholder="seu@email.com" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required className="h-12 bg-background/50 border-border/40 focus:border-gold/50" />
+                  <Input id="login-email" type="email" placeholder="seu@email.com" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required className="h-12 bg-background/50 border-border/40 focus:border-primary/50" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="login-password" className="text-foreground/80">Senha</Label>
                   <div className="relative">
-                    <Input id="login-password" type={showPassword ? 'text' : 'password'} placeholder="••••••••" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required className="h-12 bg-background/50 border-border/40 focus:border-gold/50" />
+                    <Input id="login-password" type={showPassword ? 'text' : 'password'} placeholder="••••••••" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required className="h-12 bg-background/50 border-border/40 focus:border-primary/50" />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -297,10 +326,10 @@ export default function Auth() {
 
                 <div className="relative my-4">
                   <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border/30" /></div>
-                  <div className="relative flex justify-center text-xs"><span className="bg-card/70 px-3 text-muted-foreground/60">ou</span></div>
+                  <div className="relative flex justify-center text-xs"><span className="bg-card/60 px-3 text-muted-foreground/60">ou</span></div>
                 </div>
 
-                <Button type="button" variant="outline" className="w-full h-12 flex items-center gap-3 bg-background/30 border-border/30 hover:bg-background/50 hover:border-gold/20" onClick={handleGoogleSignIn} disabled={googleLoading}>
+                <Button type="button" variant="outline" className="w-full h-12 flex items-center gap-3 bg-background/30 border-border/30 hover:bg-background/50 hover:border-primary/20" onClick={handleGoogleSignIn} disabled={googleLoading}>
                   {googleLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
                     <svg className="w-4 h-4" viewBox="0 0 24 24">
                       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -312,7 +341,7 @@ export default function Auth() {
                   Entrar com Google
                 </Button>
 
-                <button type="button" onClick={() => setShowForgotPassword(true)} className="w-full text-sm text-muted-foreground hover:text-gold transition-colors text-center pt-2">
+                <button type="button" onClick={() => setShowForgotPassword(true)} className="w-full text-sm text-muted-foreground hover:text-primary transition-colors text-center pt-2">
                   Esqueci minha senha
                 </button>
               </form>
@@ -322,16 +351,16 @@ export default function Auth() {
               <form onSubmit={handleSignup} className="space-y-5">
                 <div className="space-y-2">
                   <Label htmlFor="signup-name" className="text-foreground/80">Nome</Label>
-                  <Input id="signup-name" type="text" placeholder="Seu nome" value={signupName} onChange={(e) => setSignupName(e.target.value)} required className="h-12 bg-background/50 border-border/40 focus:border-gold/50" />
+                  <Input id="signup-name" type="text" placeholder="Seu nome" value={signupName} onChange={(e) => setSignupName(e.target.value)} required className="h-12 bg-background/50 border-border/40 focus:border-primary/50" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-email" className="text-foreground/80">Email</Label>
-                  <Input id="signup-email" type="email" placeholder="seu@email.com" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required className="h-12 bg-background/50 border-border/40 focus:border-gold/50" />
+                  <Input id="signup-email" type="email" placeholder="seu@email.com" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required className="h-12 bg-background/50 border-border/40 focus:border-primary/50" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-password" className="text-foreground/80">Senha</Label>
                   <div className="relative">
-                    <Input id="signup-password" type={showPassword ? 'text' : 'password'} placeholder="••••••••" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required minLength={6} className="h-12 bg-background/50 border-border/40 focus:border-gold/50" />
+                    <Input id="signup-password" type={showPassword ? 'text' : 'password'} placeholder="••••••••" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required minLength={6} className="h-12 bg-background/50 border-border/40 focus:border-primary/50" />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -343,10 +372,10 @@ export default function Auth() {
 
                 <div className="relative my-4">
                   <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border/30" /></div>
-                  <div className="relative flex justify-center text-xs"><span className="bg-card/70 px-3 text-muted-foreground/60">ou</span></div>
+                  <div className="relative flex justify-center text-xs"><span className="bg-card/60 px-3 text-muted-foreground/60">ou</span></div>
                 </div>
 
-                <Button type="button" variant="outline" className="w-full h-12 flex items-center gap-3 bg-background/30 border-border/30 hover:bg-background/50 hover:border-gold/20" onClick={handleGoogleSignIn} disabled={googleLoading}>
+                <Button type="button" variant="outline" className="w-full h-12 flex items-center gap-3 bg-background/30 border-border/30 hover:bg-background/50 hover:border-primary/20" onClick={handleGoogleSignIn} disabled={googleLoading}>
                   {googleLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
                     <svg className="w-4 h-4" viewBox="0 0 24 24">
                       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
