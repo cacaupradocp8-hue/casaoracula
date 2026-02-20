@@ -36,7 +36,7 @@ export default function Landing() {
           transition={{ duration: 1, ease: 'easeOut' }}
           className="absolute top-8 left-1/2 -translate-x-1/2"
         >
-          <Logo size="lg" variant="vertical" className="justify-center" />
+          <Logo size="xl" variant="vertical" className="justify-center" />
         </motion.div>
 
         {/* Main content block — positioned at the bottom */}
