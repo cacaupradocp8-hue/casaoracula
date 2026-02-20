@@ -227,7 +227,7 @@ export default function Big5Simbolico() {
           <Card className="glass mb-8">
             <CardContent className="p-6 text-center">
               <Sparkles className="w-8 h-8 text-gold mx-auto mb-4" />
-              <p className="text-lg text-muted-foreground italic">
+              <p className="text-lg text-foreground/80 italic">
                 "Este não é um diagnóstico. É um espelho narrativo do momento atual da sua alma."
               </p>
             </CardContent>
@@ -285,7 +285,7 @@ export default function Big5Simbolico() {
                       "p-4 rounded-lg",
                       isElevated ? "bg-green-500/10 border border-green-500/20" : "bg-orange-500/10 border border-orange-500/20"
                     )}>
-                      <p className="text-sm leading-relaxed">
+                      <p className="text-sm leading-[1.8] text-foreground/80">
                         {isElevated ? force.narrativa_elevada : force.narrativa_fragil}
                       </p>
                     </div>
@@ -384,11 +384,11 @@ export default function Big5Simbolico() {
               <h2 className="text-2xl font-display text-gold mb-4">
                 Bem-vinda à leitura das Forças da Alma
               </h2>
-              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+              <p className="text-foreground/80 mb-6 max-w-md mx-auto leading-[1.8]">
                 Este não é um teste. É um espelho. Não há respostas certas ou erradas — 
                 apenas o reconhecimento do que está vivo em você agora.
               </p>
-              <p className="text-sm text-muted-foreground italic">
+              <p className="text-sm text-foreground/70 italic">
                 "Nem toda força precisa ser dominante. A fragilidade também é movimento."
               </p>
             </CardContent>
