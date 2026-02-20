@@ -1,15 +1,11 @@
 // ============================================
 // JORNADA — Espelho de Jornada Simbólica
 // ============================================
-// Este espaço não mede valor. Ele escuta o campo.
-// "O que está pedindo cuidado agora?"
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  Moon,
-  Sparkles,
-  ArrowRight
+  Moon, Sparkles, ArrowRight, BookOpen, Compass, Wrench, Flower2, Music, Library
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -18,28 +14,19 @@ import { VisitorHomePage } from '@/components/visitor/VisitorHomePage';
 import { useJornadaData } from '@/hooks/useJornadaData';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { canAccessFeature } from '@/types/portal';
+import mandalaHome from '@/assets/mandala-home.jpg';
 
 // ════════════════════════════════════════════════════════════════════════════
-// TIPOS
+// TIPOS & MAPEAMENTOS
 // ════════════════════════════════════════════════════════════════════════════
 
 type JornadaLevel = 'visitante' | 'iniciada' | 'terapeuta' | 'guardia';
-
 type GrauAtual = 'iniciacao' | 'profundizacao' | 'integracao';
 
-interface PortalInfo {
-  nome: string;
-  subtitulo: string;
-}
-
-interface ProximoGesto {
-  texto: string;
-  rota: string;
-}
-
-// ════════════════════════════════════════════════════════════════════════════
-// MAPEAMENTOS
-// ════════════════════════════════════════════════════════════════════════════
+interface PortalInfo { nome: string; subtitulo: string; }
+interface ProximoGesto { texto: string; rota: string; }
 
 const PORTAIS_INFO: Record<string, PortalInfo> = {
   visitante: { nome: 'Portal Zero', subtitulo: 'O Limiar' },
@@ -55,7 +42,6 @@ const GRAUS_LABEL: Record<GrauAtual, string> = {
   integracao: 'Integração',
 };
 
-// Frases-oráculo contextuais por grau
 const FRASES_POR_GRAU: Record<GrauAtual, string[]> = {
   iniciacao: [
     "A jornada começa quando você escolhe olhar para dentro.",
@@ -74,7 +60,6 @@ const FRASES_POR_GRAU: Record<GrauAtual, string[]> = {
   ]
 };
 
-// Gestos possíveis por contexto
 const GESTOS_POSSIVEIS = {
   sem_jardim: { texto: "Escrever no Jardim da Psiquê", rota: "/jardim-psique" },
   sem_travessia: { texto: "Iniciar uma travessia", rota: "/formacao" },
@@ -83,10 +68,6 @@ const GESTOS_POSSIVEIS = {
   praticar: { texto: "Praticar com uma cliente", rota: "/clientes" },
   default: { texto: "Retornar ao centro", rota: "/dashboard" }
 };
-
-// ════════════════════════════════════════════════════════════════════════════
-// HELPERS
-// ════════════════════════════════════════════════════════════════════════════
 
 function getFraseOraculo(grau: GrauAtual): string {
   const frases = FRASES_POR_GRAU[grau];
@@ -97,6 +78,19 @@ function getFraseOraculo(grau: GrauAtual): string {
 function getPortalInfo(portal: string): PortalInfo {
   return PORTAIS_INFO[portal] || PORTAIS_INFO.visitante;
 }
+
+// ════════════════════════════════════════════════════════════════════════════
+// ATALHOS DE NAVEGAÇÃO
+// ════════════════════════════════════════════════════════════════════════════
+
+const quickLinks = [
+  { label: 'Formação', icon: BookOpen, path: '/oracula', color: 'text-primary' },
+  { label: 'Travessias', icon: Compass, path: '/biblioteca-travessias', color: 'text-accent' },
+  { label: 'Ferramentas', icon: Wrench, path: '/ferramentas', color: 'text-emerald-400' },
+  { label: 'Biblioteca', icon: Library, path: '/minha-biblioteca', color: 'text-purple-400' },
+  { label: 'Oráculos', icon: Sparkles, path: '/oraculos', color: 'text-amber-400' },
+  { label: 'Jardim', icon: Flower2, path: '/jardim-da-psique', color: 'text-rose-400' },
+];
 
 // ════════════════════════════════════════════════════════════════════════════
 // COMPONENTE PRINCIPAL
@@ -110,29 +104,24 @@ export default function Jornada() {
   const [grau, setGrau] = useState<GrauAtual>('iniciacao');
   const [proximoGesto, setProximoGesto] = useState<ProximoGesto>(GESTOS_POSSIVEIS.default);
   
-  // Hook para dados dinâmicos do banco
   const jornadaNivel = level !== 'visitante' ? level : null;
   const { fraseSelo } = useJornadaData(jornadaNivel, user?.id);
 
   useEffect(() => {
     const loadData = async () => {
       if (!user) return;
-      
       setLoading(true);
       
       try {
-        // Determinar nível baseado no portal
         let userLevel: JornadaLevel = 'visitante';
         
         if (user.portal === 'admin' || user.portal === 'oracula') {
-          // Verificar se tem clientes
           const { data: clientes } = await supabase
             .from('clientes')
             .select('id')
             .eq('terapeuta_id', user.id)
             .eq('status', 'ativo')
             .limit(1);
-          
           userLevel = clientes && clientes.length > 0 ? 'terapeuta' : 'iniciada';
         } else if (user.portal === 'assinante' || user.portal === 'aluna') {
           userLevel = 'iniciada';
@@ -140,14 +129,12 @@ export default function Jornada() {
         
         setLevel(userLevel);
 
-        // Load Jardim status
         const { data: jardimRecords } = await supabase
           .from('jardim_psique_registros')
           .select('id')
           .eq('user_id', user.id)
           .limit(10);
 
-        // Usar view de progresso
         const { data: formationProgress } = await supabase
           .from('v_formation_progress')
           .select('completed_travessias, completed_rituals')
@@ -159,7 +146,6 @@ export default function Jornada() {
         const rituaisCount = Number(formationProgress?.[0]?.completed_rituals) || 0;
         const progressTotal = travessiasCount + rituaisCount;
         
-        // Lógica de grau
         if (progressTotal >= 10 && jardimCount >= 5) {
           setGrau('integracao');
         } else if (progressTotal >= 3 || jardimCount >= 3) {
@@ -168,7 +154,6 @@ export default function Jornada() {
           setGrau('iniciacao');
         }
 
-        // Determinar próximo gesto
         if (jardimCount === 0) {
           setProximoGesto(GESTOS_POSSIVEIS.sem_jardim);
         } else if (progressTotal === 0) {
@@ -178,7 +163,6 @@ export default function Jornada() {
         } else {
           setProximoGesto(GESTOS_POSSIVEIS.continuar_curso);
         }
-
       } catch (error) {
         console.error('Erro ao carregar dados da jornada:', error);
       } finally {
@@ -189,25 +173,23 @@ export default function Jornada() {
     loadData();
   }, [user]);
 
-  // Visitante → página específica
   if (!user || user.portal === 'visitante') {
     return <VisitorHomePage />;
   }
 
   const portalInfo = getPortalInfo(user.portal || 'visitante');
   const fraseOraculo = fraseSelo || getFraseOraculo(grau);
+  const welcomeName = user?.name?.split(' ')[0] || 'Aluna';
 
   if (loading) {
     return (
       <AppLayout>
-        <div className="min-h-[80vh] flex items-center justify-center bg-background">
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center"
-          >
-            <Moon className="w-10 h-10 text-primary/30 mx-auto mb-4 animate-pulse" />
-            <p className="text-muted-foreground/50 text-sm">Escutando o campo...</p>
+        <div className="min-h-[80vh] flex items-center justify-center">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full border border-primary/20 flex items-center justify-center">
+              <Moon className="w-8 h-8 text-primary/30 animate-pulse" />
+            </div>
+            <p className="text-muted-foreground/50 text-sm font-display italic">Escutando o campo...</p>
           </motion.div>
         </div>
       </AppLayout>
@@ -216,92 +198,136 @@ export default function Jornada() {
 
   return (
     <AppLayout>
-      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 py-12">
+      <div className="relative">
+        {/* ═══ HERO SECTION ═══ */}
+        <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
+          {/* Background mandala */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 0.12, scale: 1 }}
+              transition={{ duration: 2, ease: 'easeOut' }}
+              className="w-[500px] h-[500px] md:w-[650px] md:h-[650px]"
+            >
+              <img src={mandalaHome} alt="" className="w-full h-full object-contain animate-ritual-breathe" />
+            </motion.div>
+          </div>
+
+          {/* Glow effects */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-primary/5 blur-[100px] pointer-events-none" />
+
+          {/* Content */}
+          <div className="relative z-10 text-center px-6 max-w-2xl mx-auto">
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              className="text-xs uppercase tracking-[0.3em] text-primary/60 mb-4"
+            >
+              {portalInfo.subtitulo}
+            </motion.p>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15, duration: 0.7 }}
+              className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground mb-3 leading-tight"
+            >
+              Bem-vinda, <span className="text-gold-gradient">{welcomeName}</span>
+            </motion.h1>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="flex items-center justify-center gap-3 mb-8"
+            >
+              <span className="h-px w-12 bg-primary/30" />
+              <span className="text-sm text-primary/70 font-display">{portalInfo.nome}</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/5 border border-primary/15 text-xs text-foreground/60">
+                <Sparkles className="w-3 h-3 text-primary/50" />
+                {GRAUS_LABEL[grau]}
+              </span>
+              <span className="h-px w-12 bg-primary/30" />
+            </motion.div>
+
+            <motion.blockquote
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="text-foreground/60 italic leading-relaxed text-lg md:text-xl font-display max-w-md mx-auto mb-10"
+            >
+              "{fraseOraculo}"
+            </motion.blockquote>
+
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 0.6 }}
+            >
+              <Button
+                variant="gold"
+                size="xl"
+                onClick={() => navigate(proximoGesto.rota)}
+                className="gap-2 px-8 py-6 text-lg shadow-gold"
+              >
+                {proximoGesto.texto}
+                <ArrowRight className="w-5 h-5" />
+              </Button>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ═══ QUICK NAVIGATION ═══ */}
+        <section className="relative px-4 pb-16 -mt-8">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 0.6 }}
+            >
+              <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+                {quickLinks.map((link, i) => {
+                  const Icon = link.icon;
+                  return (
+                    <motion.div
+                      key={link.path}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1 + i * 0.05, duration: 0.4 }}
+                    >
+                      <Card
+                        className="glass border-border/30 hover:border-primary/30 transition-all duration-300 cursor-pointer group hover:shadow-gold/10 hover:shadow-lg"
+                        onClick={() => navigate(link.path)}
+                      >
+                        <CardContent className="p-4 text-center">
+                          <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary/25 transition-all">
+                            <Icon className={`w-5 h-5 ${link.color} opacity-70 group-hover:opacity-100 transition-opacity`} />
+                          </div>
+                          <p className="text-xs font-medium text-foreground/70 group-hover:text-foreground transition-colors">
+                            {link.label}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ═══ BOTTOM DECORATION ═══ */}
+        <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
         
-        {/* Símbolo Central */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="mb-12"
-        >
-          <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 flex items-center justify-center">
-            <Moon className="w-10 h-10 text-primary/60" />
-          </div>
-        </motion.div>
-
-        {/* Onde Você Está Agora */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-          className="text-center mb-10 max-w-md"
-        >
-          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">
-            Onde você está agora
-          </p>
-          
-          {/* Portal Ativo */}
-          <h1 className="text-2xl md:text-3xl font-display text-foreground mb-1">
-            {portalInfo.nome}
-          </h1>
-          <p className="text-muted-foreground italic mb-6">
-            {portalInfo.subtitulo}
-          </p>
-
-          {/* Grau Atual */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10">
-            <Sparkles className="w-3.5 h-3.5 text-primary/50" />
-            <span className="text-sm text-foreground/70">
-              {GRAUS_LABEL[grau]}
-            </span>
-          </div>
-        </motion.div>
-
-        {/* Frase-Oráculo Contextual */}
-        <motion.div
+        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-          className="text-center mb-12 max-w-sm px-6"
+          transition={{ delay: 1.2 }}
+          className="text-center text-muted-foreground/30 text-xs py-8"
         >
-          <p className="text-foreground/60 italic leading-relaxed text-lg">
-            "{fraseOraculo}"
-          </p>
-        </motion.div>
-
-        {/* Próximo Gesto Possível */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.6 }}
-          className="text-center"
-        >
-          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">
-            Próximo gesto possível
-          </p>
-          
-          <Button
-            variant="outline"
-            onClick={() => navigate(proximoGesto.rota)}
-            className="border-primary/20 hover:border-primary/40 hover:bg-primary/5 text-foreground/80 gap-2 px-6 py-5"
-          >
-            {proximoGesto.texto}
-            <ArrowRight className="w-4 h-4 text-primary/60" />
-          </Button>
-        </motion.div>
-
-        {/* Footer Minimalista */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="mt-16"
-        >
-          <p className="text-xs text-muted-foreground/30 text-center">
-            Este espaço escuta o campo.
-          </p>
-        </motion.div>
+          Este espaço escuta o campo.
+        </motion.p>
       </div>
     </AppLayout>
   );
