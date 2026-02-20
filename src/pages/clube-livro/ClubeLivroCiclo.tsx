@@ -3,7 +3,7 @@
 // Modular: cada seção é um bloco independente
 // ============================================
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
@@ -18,7 +18,7 @@ import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
 import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature } from '@/types/portal';
 import { getPortaisDoLivro, JORNADA_COR } from '@/constants/clubeLivroPortais';
-import { BookOpen, ChevronRight, Home, Stethoscope, DoorOpen, ArrowRight } from 'lucide-react';
+import { BookOpen, ChevronRight, Home, Stethoscope, DoorOpen, ArrowRight, MessageCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -35,6 +35,7 @@ import {
   IntegracoesBlock,
   UsoClinicalBlock,
   AulasEncontrosBlock,
+  EscutaSimbolticaChat,
 } from '@/components/clube-livro/blocks';
 
 export default function ClubeLivroCiclo() {
@@ -46,6 +47,7 @@ export default function ClubeLivroCiclo() {
   const { isProfessional } = useProfessionalStatus();
   const { user } = useAuth();
   const [selectedPortaId, setSelectedPortaId] = useState<string | null>(null);
+  const [showEscutaChat, setShowEscutaChat] = useState(false);
 
   // Fetch portas from DB for multipolar books
   const isMultipolar = (ciclo as any)?.is_multipolar === true;
@@ -132,7 +134,32 @@ export default function ClubeLivroCiclo() {
         {/* BLOCO 1: Header do Livro */}
         <div className="mb-8">
           <CicloHeaderBlock ciclo={ciclo} />
+          
+          {/* Botão Conversar com o Livro */}
+          {ciclo.campo_simbolico && (
+            <div className="mt-4 flex justify-center">
+              <Button
+                variant={showEscutaChat ? 'outline' : 'gold'}
+                className="gap-2"
+                onClick={() => setShowEscutaChat(!showEscutaChat)}
+              >
+                <MessageCircle className="w-4 h-4" />
+                {showEscutaChat ? 'Fechar Escuta' : 'Conversar com o Livro'}
+              </Button>
+            </div>
+          )}
         </div>
+
+        {/* SALA DE ESCUTA SIMBÓLICA */}
+        {showEscutaChat && ciclo.campo_simbolico && (
+          <div className="mb-8">
+            <EscutaSimbolticaChat
+              campoSimbolico={ciclo.campo_simbolico}
+              tituloLivro={ciclo.titulo}
+              onClose={() => setShowEscutaChat(false)}
+            />
+          </div>
+        )}
 
         {/* INFOGRÁFICO */}
         {infograficoUrl && (
