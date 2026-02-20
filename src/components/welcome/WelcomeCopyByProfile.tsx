@@ -70,9 +70,10 @@ export function WelcomeCopyByProfile({ profileTag, userName, onContinue }: Welco
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6 md:p-8">
-      {/* Background Effects */}
+      {/* Layered ambient depth */}
       <div className="fixed inset-0 bg-hero-radial pointer-events-none" />
-      <div className="fixed inset-0 pattern-geometric pointer-events-none" />
+      <div className="fixed inset-0 pattern-geometric-rich pointer-events-none" />
+      <div className="fixed inset-0 vignette-overlay pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}

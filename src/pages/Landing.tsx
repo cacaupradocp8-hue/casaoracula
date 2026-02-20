@@ -24,8 +24,9 @@ export default function Landing() {
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-transparent" />
       </div>
 
-      {/* Subtle animated glow at portal center */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-primary/8 blur-[120px] animate-pulse-slow pointer-events-none" />
+      {/* Cinematic ambient glows */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/10 blur-[150px] animate-pulse-slow pointer-events-none" />
+      <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] rounded-full bg-accent/8 blur-[120px] animate-pulse-slow pointer-events-none" style={{ animationDelay: '2s' }} />
 
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-end pb-12 md:pb-16 px-6">
