@@ -29,6 +29,10 @@ export interface ClubeCiclo {
   orientacao_clinica_contraindicado?: string;
   ritual_aceite_obrigatorio?: boolean;
   portal_minimo_clinico?: string;
+  por_que_slides?: { titulo?: string; frase_simbolica?: string; image_url?: string }[];
+  por_que_audio_url?: string;
+  como_ler_slides?: { titulo?: string; frase_simbolica?: string; image_url?: string }[];
+  como_ler_audio_url?: string;
   campo_simbolico?: string;
 }
 

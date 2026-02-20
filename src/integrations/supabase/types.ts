@@ -1575,6 +1575,8 @@ export type Database = {
           campo_simbolico: string | null
           capa_url: string | null
           como_ler: string | null
+          como_ler_audio_url: string | null
+          como_ler_slides: Json | null
           created_at: string
           data_fim: string | null
           data_inicio: string | null
@@ -1588,7 +1590,9 @@ export type Database = {
           orientacao_clinica_indicado: string | null
           orientacao_clinica_riscos: string | null
           orientacao_clinica_uso: string | null
+          por_que_audio_url: string | null
           por_que_este_livro: string | null
+          por_que_slides: Json | null
           portal_minimo: Database["public"]["Enums"]["portal_type"] | null
           portal_minimo_clinico: string | null
           publicado: boolean | null
@@ -1604,6 +1608,8 @@ export type Database = {
           campo_simbolico?: string | null
           capa_url?: string | null
           como_ler?: string | null
+          como_ler_audio_url?: string | null
+          como_ler_slides?: Json | null
           created_at?: string
           data_fim?: string | null
           data_inicio?: string | null
@@ -1617,7 +1623,9 @@ export type Database = {
           orientacao_clinica_indicado?: string | null
           orientacao_clinica_riscos?: string | null
           orientacao_clinica_uso?: string | null
+          por_que_audio_url?: string | null
           por_que_este_livro?: string | null
+          por_que_slides?: Json | null
           portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
           portal_minimo_clinico?: string | null
           publicado?: boolean | null
@@ -1633,6 +1641,8 @@ export type Database = {
           campo_simbolico?: string | null
           capa_url?: string | null
           como_ler?: string | null
+          como_ler_audio_url?: string | null
+          como_ler_slides?: Json | null
           created_at?: string
           data_fim?: string | null
           data_inicio?: string | null
@@ -1646,7 +1656,9 @@ export type Database = {
           orientacao_clinica_indicado?: string | null
           orientacao_clinica_riscos?: string | null
           orientacao_clinica_uso?: string | null
+          por_que_audio_url?: string | null
           por_que_este_livro?: string | null
+          por_que_slides?: Json | null
           portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
           portal_minimo_clinico?: string | null
           publicado?: boolean | null
