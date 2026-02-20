@@ -257,14 +257,22 @@ export default function ClubeLivroCiclo() {
               onAulaClick={(aulaId) => navigate(`/clube-livro/${id}/aula/${aulaId}`)}
               onEncontroClick={(encontroId) => navigate(`/clube-livro/${id}/encontros`)}
             />
-            {/* BLOCO 2: Por que este livro */}
-            {ciclo.por_que_este_livro && (
-              <PorQueEsteLivroBlock texto={ciclo.por_que_este_livro} />
+            {/* BLOCO 2: Por que este livro (carrossel + áudio) */}
+            {(ciclo.por_que_este_livro || ((ciclo as any).por_que_slides?.length > 0)) && (
+              <PorQueEsteLivroBlock
+                texto={ciclo.por_que_este_livro}
+                slides={(ciclo as any).por_que_slides || []}
+                audioUrl={(ciclo as any).por_que_audio_url}
+              />
             )}
 
-            {/* BLOCO 3: Como ler */}
-            {ciclo.como_ler && (
-              <ComoLerBlock texto={ciclo.como_ler} />
+            {/* BLOCO 3: Como ler (carrossel + áudio) */}
+            {(ciclo.como_ler || ((ciclo as any).como_ler_slides?.length > 0)) && (
+              <ComoLerBlock
+                texto={ciclo.como_ler}
+                slides={(ciclo as any).como_ler_slides || []}
+                audioUrl={(ciclo as any).como_ler_audio_url}
+              />
             )}
 
             {/* BLOCO 4: Fases da Leitura */}
