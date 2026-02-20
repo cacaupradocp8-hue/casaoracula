@@ -217,7 +217,7 @@ export default function Big5Funcional() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* Warning */}
-                  <div className="bg-muted/50 border border-border rounded-lg p-4 text-sm text-muted-foreground">
+                  <div className="bg-muted/50 border border-border rounded-lg p-4 text-sm text-foreground/80">
                     <p>
                       Este questionário descreve <strong>tendências de funcionamento</strong>, 
                       não define personalidade nem substitui avaliação psicológica.

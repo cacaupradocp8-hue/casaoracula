@@ -61,8 +61,8 @@ export default function Landing() {
             transition={{ duration: 1, delay: 0.6 }}
             className="space-y-3 text-foreground/90 text-lg md:text-xl leading-relaxed"
           >
-            <p>{getCopyByKey('landing_texto_1', 'A Casa ORÁCULA não é um curso.')}</p>
-            <p className="text-muted-foreground">
+            <p className="text-foreground">{getCopyByKey('landing_texto_1', 'A Casa ORÁCULA não é um curso.')}</p>
+            <p className="text-foreground/80">
               {getCopyByKey('landing_texto_2', 'É um espaço de formação simbólica, clínica e ética para mulheres que conduzem outras mulheres.')}
             </p>
             <p className="text-primary italic font-display text-xl md:text-2xl mt-6">

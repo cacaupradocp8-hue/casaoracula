@@ -192,7 +192,7 @@ export default function Big5Oracular() {
           <h1 className="font-display text-2xl md:text-3xl text-gold mb-2">
             Mapa Simbólico de Funcionamento Psíquico
           </h1>
-          <p className="text-muted-foreground">Big Five Oracular</p>
+          <p className="text-foreground/70">Big Five Oracular</p>
         </motion.div>
 
         <AnimatePresence mode="wait">
@@ -229,7 +229,7 @@ export default function Big5Oracular() {
                         <p className="font-medium text-amber-200">
                           Este NÃO é um teste psicológico ou diagnóstico.
                         </p>
-                        <p className="text-muted-foreground">
+                        <p className="text-foreground/80">
                           É uma leitura simbólica do seu momento atual. Não substitui 
                           avaliação profissional. O objetivo é oferecer uma linguagem 
                           para o que já se move em você.
@@ -238,7 +238,7 @@ export default function Big5Oracular() {
                     </div>
                   </div>
 
-                  <div className="space-y-4 text-sm text-muted-foreground">
+                  <div className="space-y-4 text-sm text-foreground/80">
                     <p>
                       Você responderá <strong className="text-foreground">30 perguntas</strong>, 
                       distribuídas em 5 territórios simbólicos.
@@ -431,12 +431,12 @@ export default function Big5Oracular() {
                         </CardTitle>
                       </div>
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-foreground/70">
                       Média: {resultado.medias[resultado.predominante.chave].toFixed(1)}/5
                     </p>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm leading-relaxed">
+                    <p className="text-sm leading-[1.8] text-foreground/80">
                       {resultado.predominante.narrativa_elevada}
                     </p>
                   </CardContent>
