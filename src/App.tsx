@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route, Navigate, useParams, useLocation } from "
 import { initRitualSessionTracking, trackRouteForRitual } from "@/hooks/useRitualState";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { AdminPreviewProvider, useAdminPreviewOptional } from "@/contexts/AdminPreviewContext";
+import { AppDomainProvider } from "@/contexts/AppDomainContext";
 import { PortalType, canAccessFeature } from "@/types/portal";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import { LockedForVisitor } from "@/components/shared/LockedForVisitor";
@@ -172,6 +173,7 @@ import {
   ClubeLivroEscutas, 
   ClubeLivroEncontros,
   ClubeLivroRitual,
+  ClubeLivroAula,
   IntegracaoOracular,
   MeuCaminhoClube,
   Integracao8020,
@@ -651,6 +653,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="aluna">
             <ClubeLivroRitual />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/:id/aula/:aulaId"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroAula />
           </ProtectedRoute>
         }
       />
@@ -1680,7 +1690,9 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <AdminPreviewProvider>
-            <AppRoutes />
+            <AppDomainProvider>
+              <AppRoutes />
+            </AppDomainProvider>
           </AdminPreviewProvider>
         </AuthProvider>
       </BrowserRouter>

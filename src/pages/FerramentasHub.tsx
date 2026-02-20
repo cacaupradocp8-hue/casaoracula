@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { SectionHeader } from "@/components/shared/SectionHeader";
+import { MobilePageShell } from "@/components/shared/MobilePageShell";
 import { FerramentaCard, FerramentaCardData } from "@/components/shared/FerramentaCard";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -197,12 +197,11 @@ export default function FerramentasHub() {
           <span className="text-foreground">Ferramentas</span>
         </nav>
 
-        <SectionHeader
-          title="Ferramentas do Método"
-          subtitle="Recursos profissionais para prática simbólica e terapêutica"
-          icon={<Wrench className="w-5 h-5" />}
-          className="mb-10"
-        />
+        <div className="mb-8">
+          <p className="text-xs uppercase tracking-widest text-gold font-medium mb-1">Hub</p>
+          <h1 className="font-display text-2xl md:text-3xl text-foreground">Ferramentas do Método</h1>
+          <p className="text-sm text-muted-foreground mt-1">Recursos profissionais para prática simbólica e terapêutica</p>
+        </div>
 
         {/* Nota: Tríade do Método, Ferramentas Profissionais e Syntheia foram movidas para Travessias */}
 

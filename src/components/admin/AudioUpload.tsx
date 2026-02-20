@@ -83,15 +83,15 @@ export function AudioUpload({
     if (!file) return;
 
     // Validate file type
-    const validTypes = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/mp3', 'audio/mp4', 'audio/webm'];
+    const validTypes = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/mp3', 'audio/mp4', 'audio/webm', 'video/mp4', 'audio/x-m4a', 'audio/aac'];
     if (!validTypes.some(type => file.type.includes(type.split('/')[1]))) {
       toast.error('Por favor, selecione um arquivo de áudio válido (.mp3, .ogg, .wav)');
       return;
     }
 
-    // Validate file size (max 50MB)
-    if (file.size > 50 * 1024 * 1024) {
-      toast.error('O áudio deve ter no máximo 50MB');
+    // Validate file size (max 200MB for podcasts)
+    if (file.size > 200 * 1024 * 1024) {
+      toast.error('O arquivo deve ter no máximo 200MB');
       return;
     }
 
