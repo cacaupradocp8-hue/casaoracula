@@ -145,7 +145,7 @@ export default function BibliotecaDasTravessias() {
 
         {/* Manifesto Block */}
         <Card className="bg-gradient-to-br from-card/80 to-card/40 border-gold/30 overflow-hidden relative">
-          <div className="absolute inset-0 pattern-geometric opacity-30" />
+          <div className="absolute inset-0 pattern-geometric" />
           <CardContent className="p-8 relative">
             <div className="flex items-start gap-6">
               <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center shrink-0">
