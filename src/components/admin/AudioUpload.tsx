@@ -89,9 +89,9 @@ export function AudioUpload({
       return;
     }
 
-    // Validate file size (max 50MB)
-    if (file.size > 50 * 1024 * 1024) {
-      toast.error('O áudio deve ter no máximo 50MB');
+    // Validate file size (max 200MB for podcasts)
+    if (file.size > 200 * 1024 * 1024) {
+      toast.error('O arquivo deve ter no máximo 200MB');
       return;
     }
 
