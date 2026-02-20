@@ -403,6 +403,46 @@
   }
 }
 
+/* ── Auth page: CSS-only animations (no JS loops = no layout shift) ── */
+@keyframes auth-fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes auth-mandala-breathe {
+  0%, 100% { opacity: 0.10; }
+  50%       { opacity: 0.18; }
+}
+
+@keyframes auth-glow-drift {
+  0%, 100% { opacity: 0.08; }
+  50%       { opacity: 0.18; }
+}
+
+.auth-card-enter {
+  animation: auth-fade-up 0.7s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.auth-mandala-pulse {
+  animation: auth-mandala-breathe 14s ease-in-out infinite;
+  /* will-change: opacity prevents repaints from affecting layout */
+  will-change: opacity;
+  /* Isolate to GPU layer so opacity changes don't trigger reflow */
+  transform: translateZ(0);
+}
+
+.auth-glow-1 {
+  animation: auth-glow-drift 9s ease-in-out infinite;
+  will-change: opacity;
+  transform: translateZ(0);
+}
+
+.auth-glow-2 {
+  animation: auth-glow-drift 11s ease-in-out infinite 3s;
+  will-change: opacity;
+  transform: translateZ(0);
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
