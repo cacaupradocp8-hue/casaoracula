@@ -131,6 +131,7 @@ interface Ciclo {
   orientacao_clinica_contraindicado?: string;
   ritual_aceite_obrigatorio?: boolean;
   portal_minimo_clinico?: string;
+  campo_simbolico?: string;
 }
 
 interface Fase {
@@ -224,6 +225,7 @@ export function AdminClubeLivroTab() {
         manifesto: ciclo.manifesto,
         publicado: ciclo.publicado,
         is_multipolar: (ciclo as any).is_multipolar ?? false,
+        campo_simbolico: (ciclo as any).campo_simbolico || null,
       };
       
       if (ciclo.id) {
@@ -1211,6 +1213,7 @@ function CicloDialog({
     manifesto: '',
     publicado: false,
     is_multipolar: false,
+    campo_simbolico: '',
   });
 
   // Reset form when dialog opens
@@ -1227,6 +1230,7 @@ function CicloDialog({
         manifesto: ciclo.manifesto || '',
         publicado: ciclo.publicado || false,
         is_multipolar: (ciclo as any).is_multipolar || false,
+        campo_simbolico: (ciclo as any).campo_simbolico || '',
       });
     }
   });
@@ -1324,6 +1328,24 @@ function CicloDialog({
               placeholder="Texto-manifesto sobre o que é o clube..."
               className="min-h-[120px]"
             />
+          </div>
+
+          <Separator />
+
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-primary" />
+              Campo Simbólico (Sala de Escuta)
+            </Label>
+            <Textarea
+              value={form.campo_simbolico}
+              onChange={(e) => setForm({ ...form, campo_simbolico: e.target.value })}
+              placeholder="Texto do campo simbólico que será injetado como contexto na Sala de Escuta Simbólica ao conversar sobre este livro..."
+              className="min-h-[120px]"
+            />
+            <p className="text-xs text-muted-foreground">
+              Este texto será enviado como contexto ao agente de IA quando a aluna clicar em "Conversar com o Livro".
+            </p>
           </div>
 
           <div className="flex items-center justify-between pt-4 border-t">
