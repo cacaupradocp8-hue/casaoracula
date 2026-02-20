@@ -181,7 +181,7 @@ export default function Auth() {
           </button>
 
           <div className="text-center mb-8">
-            <Logo size="md" variant="vertical" className="justify-center mb-4" />
+            <Logo size="lg" variant="vertical" className="justify-center mb-6" />
             <h1 className="text-2xl font-display text-gold mb-2 tracking-wide">Recuperar Senha</h1>
             <p className="text-muted-foreground text-sm">Digite seu email para receber o link de recuperação</p>
           </div>
@@ -239,7 +239,7 @@ export default function Auth() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-center mb-8"
         >
-          <Logo size="md" variant="vertical" className="justify-center mb-4" />
+          <Logo size="lg" variant="vertical" className="justify-center mb-6" />
           <div className="flex items-center justify-center gap-4 mb-3">
             <div className="h-px w-12 bg-gradient-to-r from-transparent to-gold/40" />
             <span className="text-[10px] uppercase tracking-[0.4em] text-gold/50 font-medium">Portal de Entrada</span>
