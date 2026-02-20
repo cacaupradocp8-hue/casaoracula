@@ -284,7 +284,7 @@ export default function Auth() {
           </button>
 
           <div className="text-center mb-8">
-            <Logo size="lg" variant="vertical" className="justify-center mb-6" />
+          <Logo size="md" variant="vertical" className="justify-center mb-4" />
             <h1 className="text-2xl font-display text-primary mb-2 tracking-wide">Recuperar Senha</h1>
             <p className="text-muted-foreground text-sm">Digite seu email para receber o link de recuperação</p>
           </div>
@@ -292,8 +292,8 @@ export default function Auth() {
           <GlassCard>
             {forgotPasswordSent ? (
               <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto">
-                  <svg className="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+                  <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
@@ -336,7 +336,7 @@ export default function Auth() {
 
         {/* Logo + Portal label */}
         <div className="text-center mb-8 auth-card-enter">
-          <Logo size="lg" variant="vertical" className="justify-center mb-6" />
+          <Logo size="md" variant="vertical" className="justify-center mb-4" />
           <div className="flex items-center justify-center gap-4 mb-2">
             <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary/40" />
             <span className="text-[10px] uppercase tracking-[0.4em] text-primary/50 font-medium">Portal de Entrada</span>
