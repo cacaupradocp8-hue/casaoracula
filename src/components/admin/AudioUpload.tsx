@@ -83,7 +83,7 @@ export function AudioUpload({
     if (!file) return;
 
     // Validate file type
-    const validTypes = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/mp3', 'audio/mp4', 'audio/webm'];
+    const validTypes = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/mp3', 'audio/mp4', 'audio/webm', 'video/mp4', 'audio/x-m4a', 'audio/aac'];
     if (!validTypes.some(type => file.type.includes(type.split('/')[1]))) {
       toast.error('Por favor, selecione um arquivo de áudio válido (.mp3, .ogg, .wav)');
       return;
