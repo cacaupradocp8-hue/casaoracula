@@ -11,7 +11,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
@@ -21,12 +20,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { 
   BookOpen, Plus, Pencil, Trash2, ChevronDown, ChevronUp,
-  Sparkles, Headphones, Video, FileText, Calendar, Loader2, Map, GraduationCap, DoorOpen
+  Sparkles, Headphones, Video, FileText, Calendar, Loader2, Map
 } from 'lucide-react';
 import { FaseEditorExpandido } from './clube-livro';
-import { PortasManager } from './clube-livro/PortasManager';
-import { AulaBlocosEditor, type AulaBloco } from './clube-livro/AulaBlocosEditor';
-import { AudioUpload } from './AudioUpload';
 import { CALENDARIO_ANUAL, SEMANAS_PADRAO } from '@/constants/clubeLivroCalendario';
 import { cn } from '@/lib/utils';
 
@@ -80,28 +76,6 @@ const JORNADAS_ADMIN = [
       'A Condição Humana',
     ],
   },
-  {
-    chave: 'instinto',
-    nome: 'Jornada do Instinto',
-    subtitulo: 'Raiz Corporal',
-    descricao: 'Corpo, sensorialidade, pulsão e presença somática.',
-    corLabel: 'text-rose-400',
-    corBorda: 'border-rose-700/30',
-    corBg: 'from-rose-950/30 to-card',
-    simbolo: '△',
-    livros: [],
-  },
-  {
-    chave: 'lideranca',
-    nome: 'Jornada da Liderança',
-    subtitulo: 'Autoridade Interior',
-    descricao: 'Direção, responsabilidade, poder e serviço.',
-    corLabel: 'text-sky-400',
-    corBorda: 'border-sky-700/30',
-    corBg: 'from-sky-950/30 to-card',
-    simbolo: '⬡',
-    livros: [],
-  },
 ] as const;
 
 function matchLivroAdmin(titulo: string, livroRef: string): boolean {
@@ -131,11 +105,6 @@ interface Ciclo {
   orientacao_clinica_contraindicado?: string;
   ritual_aceite_obrigatorio?: boolean;
   portal_minimo_clinico?: string;
-  campo_simbolico?: string;
-  por_que_slides?: any[];
-  por_que_audio_url?: string;
-  como_ler_slides?: any[];
-  como_ler_audio_url?: string;
 }
 
 interface Fase {
@@ -223,17 +192,10 @@ export function AdminClubeLivroTab() {
         subtitulo: ciclo.subtitulo,
         autor_livro: ciclo.autor_livro,
         capa_url: ciclo.capa_url,
-        infografico_url: (ciclo as any).infografico_url || null,
         por_que_este_livro: ciclo.por_que_este_livro,
         como_ler: ciclo.como_ler,
         manifesto: ciclo.manifesto,
         publicado: ciclo.publicado,
-        is_multipolar: (ciclo as any).is_multipolar ?? false,
-        campo_simbolico: (ciclo as any).campo_simbolico || null,
-        por_que_slides: (ciclo as any).por_que_slides || [],
-        por_que_audio_url: (ciclo as any).por_que_audio_url || null,
-        como_ler_slides: (ciclo as any).como_ler_slides || [],
-        como_ler_audio_url: (ciclo as any).como_ler_audio_url || null,
       };
       
       if (ciclo.id) {
@@ -736,23 +698,15 @@ function CicloCard({
 }
 
 // ============================================
-// CicloDetailTabs - Fases, Escutas, Encontros, Aulas
+// CicloDetailTabs - Fases, Escutas, Encontros
 // ============================================
 function CicloDetailTabs({ cicloId }: { cicloId: string }) {
   return (
     <Tabs defaultValue="fases" className="w-full">
-      <TabsList className="grid w-full grid-cols-5">
+      <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="fases" className="gap-1 text-xs">
           <Sparkles className="w-3 h-3" />
           Fases
-        </TabsTrigger>
-        <TabsTrigger value="portas" className="gap-1 text-xs">
-          <DoorOpen className="w-3 h-3" />
-          Portas
-        </TabsTrigger>
-        <TabsTrigger value="aulas" className="gap-1 text-xs">
-          <GraduationCap className="w-3 h-3" />
-          Aulas
         </TabsTrigger>
         <TabsTrigger value="escutas" className="gap-1 text-xs">
           <Headphones className="w-3 h-3" />
@@ -765,12 +719,6 @@ function CicloDetailTabs({ cicloId }: { cicloId: string }) {
       </TabsList>
       <TabsContent value="fases" className="pt-4">
         <FasesManager cicloId={cicloId} />
-      </TabsContent>
-      <TabsContent value="portas" className="pt-4">
-        <PortasManager cicloId={cicloId} />
-      </TabsContent>
-      <TabsContent value="aulas" className="pt-4">
-        <AulasManager cicloId={cicloId} />
       </TabsContent>
       <TabsContent value="escutas" className="pt-4">
         <EscutasManager cicloId={cicloId} />
@@ -1215,17 +1163,10 @@ function CicloDialog({
     subtitulo: '',
     autor_livro: '',
     capa_url: '',
-    infografico_url: '',
     por_que_este_livro: '',
     como_ler: '',
     manifesto: '',
     publicado: false,
-    is_multipolar: false,
-    campo_simbolico: '',
-    por_que_slides_json: '[]',
-    por_que_audio_url: '',
-    como_ler_slides_json: '[]',
-    como_ler_audio_url: '',
   });
 
   // Reset form when dialog opens
@@ -1236,36 +1177,20 @@ function CicloDialog({
         subtitulo: ciclo.subtitulo || '',
         autor_livro: ciclo.autor_livro || '',
         capa_url: ciclo.capa_url || '',
-        infografico_url: (ciclo as any).infografico_url || '',
         por_que_este_livro: ciclo.por_que_este_livro || '',
         como_ler: ciclo.como_ler || '',
         manifesto: ciclo.manifesto || '',
         publicado: ciclo.publicado || false,
-        is_multipolar: (ciclo as any).is_multipolar || false,
-        campo_simbolico: (ciclo as any).campo_simbolico || '',
-        por_que_slides_json: JSON.stringify((ciclo as any).por_que_slides || [], null, 2),
-        por_que_audio_url: (ciclo as any).por_que_audio_url || '',
-        como_ler_slides_json: JSON.stringify((ciclo as any).como_ler_slides || [], null, 2),
-        como_ler_audio_url: (ciclo as any).como_ler_audio_url || '',
       });
     }
   });
 
   const handleSubmit = () => {
     if (!form.titulo.trim()) return;
-    let porQueSlides = [];
-    let comoLerSlides = [];
-    try { porQueSlides = JSON.parse(form.por_que_slides_json); } catch {}
-    try { comoLerSlides = JSON.parse(form.como_ler_slides_json); } catch {}
-    
     onSave({
       ...form,
-      por_que_slides: porQueSlides,
-      por_que_audio_url: form.por_que_audio_url || undefined,
-      como_ler_slides: comoLerSlides,
-      como_ler_audio_url: form.como_ler_audio_url || undefined,
       ...(ciclo?.id ? { id: ciclo.id } : {}),
-    } as any);
+    });
   };
 
   return (
@@ -1314,76 +1239,22 @@ function CicloDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>URL do Infográfico</Label>
-            <Input
-              value={form.infografico_url}
-              onChange={(e) => setForm({ ...form, infografico_url: e.target.value })}
-              placeholder="https://... (imagem do infográfico do livro)"
-            />
-            {form.infografico_url && (
-              <img src={form.infografico_url} alt="Preview infográfico" className="max-h-40 rounded border border-border mt-2" />
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label>Por que este livro está aqui (texto fallback)</Label>
+            <Label>Por que este livro está aqui</Label>
             <Textarea
               value={form.por_que_este_livro}
               onChange={(e) => setForm({ ...form, por_que_este_livro: e.target.value })}
               placeholder="Texto explicando a escolha do livro..."
-              className="min-h-[80px]"
+              className="min-h-[100px]"
             />
           </div>
 
           <div className="space-y-2">
-            <Label>Slides — "Por que este livro" (JSON)</Label>
-            <Textarea
-              value={form.por_que_slides_json}
-              onChange={(e) => setForm({ ...form, por_que_slides_json: e.target.value })}
-              placeholder={'[\n  { "titulo": "...", "frase_simbolica": "...", "image_url": "https://..." }\n]'}
-              className="min-h-[100px] font-mono text-xs"
-            />
-            <p className="text-xs text-muted-foreground">Array JSON de 6-8 slides. Campos: titulo, frase_simbolica, image_url (todos opcionais).</p>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Áudio — "Por que este livro" (URL)</Label>
-            <Input
-              value={form.por_que_audio_url}
-              onChange={(e) => setForm({ ...form, por_que_audio_url: e.target.value })}
-              placeholder="https://... (URL do áudio MP3)"
-            />
-          </div>
-
-          <Separator />
-
-          <div className="space-y-2">
-            <Label>Como ler este livro (texto fallback)</Label>
+            <Label>Como ler este livro na Casa Orácula</Label>
             <Textarea
               value={form.como_ler}
               onChange={(e) => setForm({ ...form, como_ler: e.target.value })}
               placeholder="Orientações sobre a leitura..."
-              className="min-h-[80px]"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Slides — "Como ler este livro" (JSON)</Label>
-            <Textarea
-              value={form.como_ler_slides_json}
-              onChange={(e) => setForm({ ...form, como_ler_slides_json: e.target.value })}
-              placeholder={'[\n  { "titulo": "...", "frase_simbolica": "...", "image_url": "https://..." }\n]'}
-              className="min-h-[100px] font-mono text-xs"
-            />
-            <p className="text-xs text-muted-foreground">Array JSON de 6-8 slides. Campos: titulo, frase_simbolica, image_url (todos opcionais).</p>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Áudio — "Como ler este livro" (URL)</Label>
-            <Input
-              value={form.como_ler_audio_url}
-              onChange={(e) => setForm({ ...form, como_ler_audio_url: e.target.value })}
-              placeholder="https://... (URL do áudio MP3)"
+              className="min-h-[100px]"
             />
           </div>
 
@@ -1397,40 +1268,13 @@ function CicloDialog({
             />
           </div>
 
-          <Separator />
-
-          <div className="space-y-2">
-            <Label className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-primary" />
-              Campo Simbólico (Sala de Escuta)
-            </Label>
-            <Textarea
-              value={form.campo_simbolico}
-              onChange={(e) => setForm({ ...form, campo_simbolico: e.target.value })}
-              placeholder="Texto do campo simbólico que será injetado como contexto na Sala de Escuta Simbólica ao conversar sobre este livro..."
-              className="min-h-[120px]"
-            />
-            <p className="text-xs text-muted-foreground">
-              Este texto será enviado como contexto ao agente de IA quando a aluna clicar em "Conversar com o Livro".
-            </p>
-          </div>
-
           <div className="flex items-center justify-between pt-4 border-t">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Switch
-                  checked={form.publicado}
-                  onCheckedChange={(checked) => setForm({ ...form, publicado: checked })}
-                />
-                <Label>Publicado</Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Switch
-                  checked={form.is_multipolar}
-                  onCheckedChange={(checked) => setForm({ ...form, is_multipolar: checked })}
-                />
-                <Label>Multipolar</Label>
-              </div>
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={form.publicado}
+                onCheckedChange={(checked) => setForm({ ...form, publicado: checked })}
+              />
+              <Label>Publicado</Label>
             </div>
           </div>
         </div>
@@ -1453,7 +1297,7 @@ function EscutaDialog({ cicloId, open, onOpenChange }: { cicloId: string; open: 
   const queryClient = useQueryClient();
   const [form, setForm] = useState({
     titulo: '',
-    tipo: 'audio' as 'audio' | 'podcast' | 'texto',
+    tipo: 'audio' as 'audio' | 'texto',
     audio_url: '',
     texto_conteudo: '',
   });
@@ -1471,7 +1315,7 @@ function EscutaDialog({ cicloId, open, onOpenChange }: { cicloId: string; open: 
       queryClient.invalidateQueries({ queryKey: ['admin-clube-escutas', cicloId] });
       onOpenChange(false);
       setForm({ titulo: '', tipo: 'audio', audio_url: '', texto_conteudo: '' });
-      toast({ title: form.tipo === 'podcast' ? 'Podcast adicionado' : 'Escuta adicionada' });
+      toast({ title: 'Escuta adicionada' });
     },
   });
 
@@ -1488,24 +1332,21 @@ function EscutaDialog({ cicloId, open, onOpenChange }: { cicloId: string; open: 
           </div>
           <div className="space-y-2">
             <Label>Tipo</Label>
-            <Select value={form.tipo} onValueChange={(v) => setForm({ ...form, tipo: v as 'audio' | 'podcast' | 'texto' })}>
+            <Select value={form.tipo} onValueChange={(v) => setForm({ ...form, tipo: v as 'audio' | 'texto' })}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="audio">Áudio</SelectItem>
-                <SelectItem value="podcast">Podcast</SelectItem>
                 <SelectItem value="texto">Texto</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          {(form.tipo === 'audio' || form.tipo === 'podcast') && (
-            <AudioUpload
-              value={form.audio_url}
-              onChange={(url) => setForm({ ...form, audio_url: url })}
-              folder="clube-livro/escutas"
-              label={form.tipo === 'podcast' ? 'Arquivo do Podcast' : 'Arquivo de Áudio'}
-            />
+          {form.tipo === 'audio' && (
+            <div className="space-y-2">
+              <Label>URL do Áudio</Label>
+              <Input value={form.audio_url} onChange={(e) => setForm({ ...form, audio_url: e.target.value })} />
+            </div>
           )}
           {form.tipo === 'texto' && (
             <div className="space-y-2">
@@ -1580,302 +1421,6 @@ function EncontroDialog({ cicloId, open, onOpenChange }: { cicloId: string; open
             <Label>Orientação para o Encontro</Label>
             <Textarea value={form.orientacao_encontro} onChange={(e) => setForm({ ...form, orientacao_encontro: e.target.value })} className="min-h-[80px]" />
           </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-          <Button onClick={() => save.mutate()} disabled={save.isPending || !form.titulo.trim()}>
-            Salvar
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-// ============================================
-// AulasManager - CRUD de aulas do ciclo
-// ============================================
-interface AulaAdmin {
-  id: string;
-  ciclo_id: string;
-  titulo: string;
-  subtitulo?: string;
-  descricao?: string;
-  duracao?: string;
-  conteudo?: string;
-  media_url?: string;
-  media_type?: string;
-  ordem: number;
-  ativo: boolean;
-  publicado: boolean;
-}
-
-function AulasManager({ cicloId }: { cicloId: string }) {
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editing, setEditing] = useState<AulaAdmin | null>(null);
-
-  const { data: aulas, isLoading } = useQuery({
-    queryKey: ['admin-clube-aulas', cicloId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('clube_livro_aulas')
-        .select('*')
-        .eq('ciclo_id', cicloId)
-        .order('ordem', { ascending: true });
-      if (error) throw error;
-      return data as AulaAdmin[];
-    },
-  });
-
-  const deleteAula = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase.from('clube_livro_aulas').delete().eq('id', id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-clube-aulas', cicloId] });
-      toast({ title: 'Aula removida' });
-    },
-  });
-
-  const togglePublicado = useMutation({
-    mutationFn: async ({ id, publicado }: { id: string; publicado: boolean }) => {
-      const { error } = await supabase.from('clube_livro_aulas').update({ publicado }).eq('id', id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-clube-aulas', cicloId] });
-    },
-  });
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          {aulas?.length || 0} aula(s) cadastrada(s)
-        </p>
-        <Button size="sm" onClick={() => { setEditing(null); setDialogOpen(true); }} className="gap-1">
-          <Plus className="w-3 h-3" />
-          Nova Aula
-        </Button>
-      </div>
-
-      {isLoading ? (
-        <div className="animate-pulse h-16 bg-muted rounded" />
-      ) : aulas && aulas.length > 0 ? (
-        <div className="space-y-2">
-          {aulas.map((aula) => (
-            <div key={aula.id} className="flex items-center gap-3 p-3 rounded-lg border bg-card/50">
-              <div className="shrink-0 w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
-                <span className="text-xs font-mono text-gold font-semibold">{aula.ordem}</span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{aula.titulo}</p>
-                {aula.subtitulo && <p className="text-xs text-muted-foreground truncate">{aula.subtitulo}</p>}
-              </div>
-              <div className="flex items-center gap-1 shrink-0">
-                <Switch
-                  checked={aula.publicado}
-                  onCheckedChange={(v) => togglePublicado.mutate({ id: aula.id, publicado: v })}
-                />
-                <Button size="sm" variant="ghost" onClick={() => { setEditing(aula); setDialogOpen(true); }}>
-                  <Pencil className="w-3.5 h-3.5" />
-                </Button>
-                <Button size="sm" variant="ghost" className="text-destructive" onClick={() => deleteAula.mutate(aula.id)}>
-                  <Trash2 className="w-3.5 h-3.5" />
-                </Button>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-6 text-muted-foreground text-sm">
-          Nenhuma aula cadastrada. Clique em "Nova Aula" para começar.
-        </div>
-      )}
-
-      <AulaDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        aula={editing}
-        cicloId={cicloId}
-        nextOrdem={(aulas?.length || 0) + 1}
-      />
-    </div>
-  );
-}
-
-// ============================================
-// AulaDialog - Criar/Editar aula com blocos de conteúdo
-// ============================================
-function AulaDialog({
-  open,
-  onOpenChange,
-  aula,
-  cicloId,
-  nextOrdem,
-}: {
-  open: boolean;
-  onOpenChange: (v: boolean) => void;
-  aula: AulaAdmin | null;
-  cicloId: string;
-  nextOrdem: number;
-}) {
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
-  const [form, setForm] = useState({
-    titulo: '',
-    subtitulo: '',
-    descricao: '',
-    duracao: '',
-    media_url: '',
-    media_type: 'texto',
-    ordem: nextOrdem,
-  });
-  const [blocos, setBlocos] = useState<AulaBloco[]>([]);
-
-  // Reset form when dialog opens
-  useState(() => {
-    if (open && aula) {
-      setForm({
-        titulo: aula.titulo || '',
-        subtitulo: aula.subtitulo || '',
-        descricao: aula.descricao || '',
-        duracao: aula.duracao || '',
-        media_url: aula.media_url || '',
-        media_type: aula.media_type || 'texto',
-        ordem: aula.ordem,
-      });
-      // Parse blocos from conteudo
-      try {
-        const parsed = aula.conteudo ? (typeof aula.conteudo === 'string' ? JSON.parse(aula.conteudo) : aula.conteudo) : [];
-        setBlocos(Array.isArray(parsed) ? parsed : []);
-      } catch {
-        setBlocos([]);
-      }
-    } else if (open) {
-      setForm({
-        titulo: '',
-        subtitulo: '',
-        descricao: '',
-        duracao: '',
-        media_url: '',
-        media_type: 'texto',
-        ordem: nextOrdem,
-      });
-      setBlocos([]);
-    }
-  });
-
-  const save = useMutation({
-    mutationFn: async () => {
-      const payload = {
-        ciclo_id: cicloId,
-        titulo: form.titulo,
-        subtitulo: form.subtitulo || null,
-        descricao: form.descricao || null,
-        duracao: form.duracao || null,
-        media_url: form.media_url || null,
-        media_type: form.media_type,
-        ordem: form.ordem,
-        conteudo: blocos.length > 0 ? JSON.stringify(blocos) : null,
-      };
-
-      if (aula?.id) {
-        const { error } = await supabase.from('clube_livro_aulas').update(payload).eq('id', aula.id);
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.from('clube_livro_aulas').insert(payload);
-        if (error) throw error;
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-clube-aulas', cicloId] });
-      onOpenChange(false);
-      toast({ title: aula ? 'Aula atualizada' : 'Aula criada' });
-    },
-    onError: () => {
-      toast({ title: 'Erro ao salvar aula', variant: 'destructive' });
-    },
-  });
-
-  // Sync form when aula changes
-  if (open && aula && form.titulo !== aula.titulo && form.titulo === '') {
-    setForm({
-      titulo: aula.titulo || '',
-      subtitulo: aula.subtitulo || '',
-      descricao: aula.descricao || '',
-      duracao: aula.duracao || '',
-      media_url: aula.media_url || '',
-      media_type: aula.media_type || 'texto',
-      ordem: aula.ordem,
-    });
-    try {
-      const parsed = aula.conteudo ? (typeof aula.conteudo === 'string' ? JSON.parse(aula.conteudo) : aula.conteudo) : [];
-      setBlocos(Array.isArray(parsed) ? parsed : []);
-    } catch {
-      setBlocos([]);
-    }
-  }
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{aula ? 'Editar Aula' : 'Nova Aula'}</DialogTitle>
-          <DialogDescription>
-            {aula ? 'Atualize os dados e blocos de conteúdo.' : 'Crie uma aula com blocos estruturados.'}
-          </DialogDescription>
-        </DialogHeader>
-        <div className="space-y-4 py-4">
-          {/* Metadados */}
-          <div className="grid grid-cols-4 gap-4">
-            <div className="col-span-3 space-y-2">
-              <Label>Título *</Label>
-              <Input value={form.titulo} onChange={(e) => setForm({ ...form, titulo: e.target.value })} placeholder="Ex: Aula 1 — O chamado selvagem" />
-            </div>
-            <div className="space-y-2">
-              <Label>Ordem</Label>
-              <Input type="number" value={form.ordem} onChange={(e) => setForm({ ...form, ordem: parseInt(e.target.value) || 0 })} />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label>Subtítulo</Label>
-            <Input value={form.subtitulo} onChange={(e) => setForm({ ...form, subtitulo: e.target.value })} placeholder="Ex: O instinto como linguagem" />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Duração</Label>
-              <Input value={form.duracao} onChange={(e) => setForm({ ...form, duracao: e.target.value })} placeholder="Ex: 45min" />
-            </div>
-            <div className="space-y-2">
-              <Label>Tipo de Mídia</Label>
-              <Select value={form.media_type} onValueChange={(v) => setForm({ ...form, media_type: v })}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="texto">Texto</SelectItem>
-                  <SelectItem value="video">Vídeo</SelectItem>
-                  <SelectItem value="audio">Áudio</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label>URL da Mídia</Label>
-            <Input value={form.media_url} onChange={(e) => setForm({ ...form, media_url: e.target.value })} placeholder="Ex: https://..." />
-          </div>
-          <div className="space-y-2">
-            <Label>Descrição</Label>
-            <Textarea value={form.descricao} onChange={(e) => setForm({ ...form, descricao: e.target.value })} className="min-h-[60px]" placeholder="Breve descrição da aula..." />
-          </div>
-
-          {/* Blocos de Conteúdo */}
-          <Separator className="my-2" />
-          <AulaBlocosEditor blocos={blocos} onChange={setBlocos} />
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>

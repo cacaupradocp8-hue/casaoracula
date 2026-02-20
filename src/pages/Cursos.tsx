@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Link, useNavigate as useNavigateCursos } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { MobilePageShell } from '@/components/shared/MobilePageShell';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { CourseGrid } from '@/components/courses/CourseGrid';
 import { Button } from '@/components/ui/button';
@@ -53,31 +52,36 @@ export default function Cursos() {
 
   return (
     <AppLayout>
-      <MobilePageShell
-        badge="Formação"
-        title="Área de Membros"
-        subtitle="Cursos e formações para sua jornada de desenvolvimento"
-        collapsibles={[
-          {
-            title: "O que encontro aqui?",
-            children: "Cursos completos, módulos aprofundados e formações certificadas para sua prática simbólica e terapêutica.",
-          },
-          {
-            title: "Como usar",
-            children: "Matricule-se nos cursos de interesse e acompanhe seu progresso. Cursos gratuitos estão disponíveis sem inscrição.",
-          },
-        ]}
-      >
-        <div className="pb-20">
-        {/* Search */}
-        <div className="relative mb-6">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Buscar cursos..."
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-            className="pl-10"
+      <div className="container mx-auto px-4 py-8 pb-20">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Cursos</span>
+        </nav>
+
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <SectionHeader
+            title="Área de Membros"
+            subtitle="Cursos e formações para sua jornada de desenvolvimento"
+            icon={<GraduationCap className="w-5 h-5" />}
+            className="mb-6"
           />
+          
+          {/* Search */}
+          <div className="max-w-md mx-auto relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar cursos..."
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
         </div>
 
         {/* Continue Learning Section */}
@@ -164,8 +168,7 @@ export default function Cursos() {
             </Link>
           </div>
         )}
-        </div>
-      </MobilePageShell>
+      </div>
     </AppLayout>
   );
 }

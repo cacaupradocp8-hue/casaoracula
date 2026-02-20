@@ -2,7 +2,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Sparkles, Lock, Loader2, Home, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { MobilePageShell } from '@/components/shared/MobilePageShell';
 import { useOracles } from '@/hooks/useOracles';
 import { OracleDeck } from '@/types/oracle';
 import { cn } from '@/lib/utils';
@@ -25,44 +24,56 @@ export default function Oraculos() {
 
   return (
     <AppLayout>
-      <MobilePageShell
-        badge="Oráculos"
-        title="Oráculos"
-        subtitle="Portas para a sabedoria interior"
-        collapsibles={[
-          {
-            title: "O que são os Oráculos?",
-            children: "Instrumentos de escuta oracular que acessam a linguagem do inconsciente através de cartas, imagens e práticas de leitura simbólica.",
-          },
-          {
-            title: "Como usar",
-            children: "Escolha um oráculo, prepare sua intenção e realize uma tiragem. Cada consulta é registrada no seu histórico.",
-          },
-        ]}
-      >
-        <section className="pb-16">
-          {publishedOracles.length === 0 ? (
-            <div className="text-center py-16 animate-fade-in">
-              <Sparkles className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
-              <p className="text-muted-foreground text-sm">
-                Os oráculos estão sendo preparados
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-              {publishedOracles.map((oracle, index) => (
-                <OracleCard 
-                  key={oracle.id} 
-                  oracle={oracle} 
-                  hasAccess={hasAccess(oracle)} 
-                  onNavigate={() => navigate(`/oraculos/${oracle.slug}`)}
-                  index={index}
-                />
-              ))}
-            </div>
-          )}
-        </section>
-      </MobilePageShell>
+      {/* Breadcrumb Navigation */}
+      <div className="container max-w-5xl mx-auto px-4 pt-6">
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Oráculos</span>
+        </nav>
+      </div>
+
+      {/* Hero Section - Minimal */}
+      <section className="relative py-8 md:py-12 px-4 text-center">
+        <div className="max-w-3xl mx-auto animate-fade-in">
+          <Sparkles className="w-8 h-8 text-primary mx-auto mb-6 animate-float-gentle" />
+          
+          <h1 className="text-3xl md:text-5xl font-display font-medium text-foreground mb-4 tracking-wide">
+            Oráculos
+          </h1>
+          
+          <p className="text-muted-foreground max-w-md mx-auto text-sm md:text-base">
+            Portas para a sabedoria interior
+          </p>
+        </div>
+      </section>
+
+      {/* Oracles Grid */}
+      <section className="max-w-5xl mx-auto px-4 pb-16">
+        {publishedOracles.length === 0 ? (
+          <div className="text-center py-16 animate-fade-in">
+            <Sparkles className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
+            <p className="text-muted-foreground text-sm">
+              Os oráculos estão sendo preparados
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            {publishedOracles.map((oracle, index) => (
+              <OracleCard 
+                key={oracle.id} 
+                oracle={oracle} 
+                hasAccess={hasAccess(oracle)} 
+                onNavigate={() => navigate(`/oraculos/${oracle.slug}`)}
+                index={index}
+              />
+            ))}
+          </div>
+        )}
+      </section>
     </AppLayout>
   );
 }

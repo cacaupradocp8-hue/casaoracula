@@ -7,10 +7,10 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { MobilePageShell } from '@/components/shared/MobilePageShell';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { JardimFirstExperience } from '@/components/jardim/JardimFirstExperience';
+import { ContentPageLayout } from '@/components/shared/ContentPageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -215,25 +215,12 @@ export default function JardimPsique() {
 
   return (
     <AppLayout>
-      <MobilePageShell
-        badge="100% Privado"
+      <ContentPageLayout
         title="Jardim da Psique"
         subtitle="Seu diário arquetípico privado — sonhos, oráculos, frases que tocaram"
-        collapsibles={[
-          {
-            title: "O que é o Jardim?",
-            children: "Espaço 100% privado para registrar sonhos, oráculos, frases que tocaram e fragmentos de sessão. Nenhuma terapeuta, admin ou IA tem acesso.",
-          },
-          {
-            title: "Como usar",
-            children: "Filtre por tipo de registro, busque por palavra-chave e clique em qualquer entrada para ver ou editar. Use o botão 'Nova entrada' para adicionar.",
-          },
-        ]}
-        fixedAction={{
-          label: "Nova entrada",
-          onClick: () => setModalNovaEntrada(true),
-          icon: <Plus className="w-4 h-4" />,
-        }}
+        badge="100% Privado"
+        badgeIcon={<Leaf className="w-4 h-4 text-emerald-500" />}
+        maxWidth="4xl"
       >
         {/* Tabs por tipo de registro */}
         <Tabs
@@ -360,7 +347,16 @@ export default function JardimPsique() {
             🔒 Este espaço é <strong>100% privado</strong>. Nenhuma terapeuta, admin ou IA tem acesso aos seus registros.
           </p>
         </div>
-      </MobilePageShell>
+      </ContentPageLayout>
+
+      {/* Botão flutuante para mobile */}
+      <Button
+        onClick={() => setModalNovaEntrada(true)}
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg bg-emerald-600 hover:bg-emerald-700 sm:hidden"
+        size="icon"
+      >
+        <Plus className="w-6 h-6" />
+      </Button>
 
       {/* Modal de nova entrada */}
       <NovaEntradaJardimModal

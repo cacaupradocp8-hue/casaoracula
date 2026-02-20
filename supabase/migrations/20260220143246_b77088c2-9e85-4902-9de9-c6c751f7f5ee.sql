@@ -1,1 +1,0 @@
-ALTER TABLE public.clube_livro_ciclos ADD COLUMN campo_simbolico TEXT;

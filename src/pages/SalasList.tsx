@@ -3,7 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { MobilePageShell } from "@/components/shared/MobilePageShell";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -183,27 +182,80 @@ export default function SalasList() {
 
   return (
     <AppLayout>
-      <MobilePageShell
-        badge="Formação"
-        title="Bem-vinda à Casa Orácula"
-        subtitle="Aqui se aprende a sustentar campo, antes de guiar o da outra."
-        collapsibles={[
-          {
-            title: "O que é a Casa Orácula?",
-            children: "Um sistema profissional para terapeutas, mentoras e educadoras do feminino que desejam organização, clareza e ética na prática simbólica.",
-          },
-          {
-            title: "Como navegar",
-            children: "Explore os espaços formativos abaixo. Cada sala tem seu nível de acesso. Você não precisa saber tudo agora — apenas onde está.",
-          },
-        ]}
-        primaryAction={{
-          label: "Conhecer a Formação",
-          onClick: () => navigate('/oracula'),
-          icon: <GraduationCap className="w-4 h-4" />,
-        }}
-      >
-      <div className="pb-20">
+      <div className="container mx-auto px-4 py-8 pb-20 max-w-5xl">
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Formação</span>
+        </nav>
+
+        {/* Welcome Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-12"
+        >
+          <Card className="border-gold/20 bg-gradient-to-br from-card via-card to-gold/5 overflow-hidden">
+            <CardContent className="p-8 md:p-12">
+              <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
+                {/* Icon */}
+                <div className="w-16 h-16 rounded-2xl bg-gold/10 flex items-center justify-center mb-6">
+                  <Building2 className="w-8 h-8 text-gold" />
+                </div>
+                
+                {/* Title */}
+                <h1 className="text-2xl md:text-3xl font-display text-foreground mb-6">
+                  Bem-vinda à Casa Orácula
+                </h1>
+                
+                {/* Body Text */}
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    Aqui não se improvisa condução.
+                    <br />
+                    Aqui se aprende a sustentar campo, antes de guiar o da outra.
+                  </p>
+                  
+                  <p className="text-foreground/80">
+                    A Casa Orácula é um sistema profissional para terapeutas, mentoras e educadoras do feminino que desejam organização, clareza e ética na prática simbólica.
+                  </p>
+                  
+                  <p className="text-sm italic text-muted-foreground/80 pt-2">
+                    Você não precisa saber tudo agora.
+                    <br />
+                    Precisa apenas saber onde está.
+                  </p>
+                </div>
+                
+                {/* Action Buttons */}
+                <div className="flex flex-wrap gap-4 justify-center mt-8">
+                  <Button 
+                    variant="gold" 
+                    onClick={() => navigate('/oracula')}
+                    className="gap-2"
+                  >
+                    <GraduationCap className="w-4 h-4" />
+                    Conhecer a Formação
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => navigate('/planos')}
+                    className="gap-2"
+                  >
+                    <MapPin className="w-4 h-4" />
+                    Ver Planos
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
         {/* Espaços Formativos Section */}
         <motion.div
@@ -357,8 +409,7 @@ export default function SalasList() {
             </div>
           </DialogContent>
         </Dialog>
-        </div>
-      </MobilePageShell>
+      </div>
     </AppLayout>
   );
 }

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { MobilePageShell } from "@/components/shared/MobilePageShell";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { LockedContentModal } from "@/components/shared/LockedContentModal";
 import { Button } from "@/components/ui/button";
@@ -238,31 +237,49 @@ export default function Portais() {
 
   return (
     <AppLayout>
-      <MobilePageShell
-        badge="Formação"
-        title="Sala dos Portais"
-        subtitle="Sua formação simbólica em jornadas transformadoras"
-        collapsibles={[
-          {
-            title: "O que são os Portais?",
-            children: "Todo portal se abre quando o mundo conhecido já não oferece respostas. Cada portal inclui aulas, exercícios reflexivos e conteúdos simbólicos para avançar na jornada.",
-          },
-          {
-            title: "Como usar",
-            children: isAdmin
+      <div className="container mx-auto px-4 py-8 pb-20">
+        <SectionHeader
+          title="Sala dos Portais"
+          subtitle="Sua formação simbólica em jornadas transformadoras"
+          icon={<BookOpen className="w-5 h-5" />}
+          className="mb-8"
+        />
+
+        {/* Banner de matrícula (não mostra para admin) */}
+        {!isMatriculada && !isAdmin && (
+          <Card className="mb-8 border-gold/30 bg-gold/5">
+            <CardContent className="py-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center shrink-0">
+                  <GraduationCap className="w-6 h-6 text-gold" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-foreground mb-1">Inicie sua jornada formativa</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Os portais estão disponíveis para alunas matriculadas. Clique em qualquer portal para saber mais.
+                  </p>
+                </div>
+                <Button variant="gold" size="sm" onClick={() => setLockedModalOpen(true)}>
+                  Matricular-se
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Intro */}
+        <div className="glass rounded-2xl p-8 mb-12 text-center">
+          <blockquote className="font-display text-xl md:text-2xl italic text-foreground/90 mb-4">
+            "Todo portal se abre quando o mundo conhecido já não oferece respostas."
+          </blockquote>
+          <p className="text-sm text-muted-foreground">
+            {isAdmin
               ? "Você está como Admin: pode abrir portais e testar a jornada."
               : isMatriculada
-                ? "Complete cada portal para avançar. Os portais são sequenciais — conclua um para desbloquear o próximo."
-                : "Conheça os portais da formação. Matricule-se para iniciar sua jornada transformadora.",
-          },
-        ]}
-        primaryAction={!isMatriculada && !isAdmin ? {
-          label: "Matricular-se",
-          onClick: () => setLockedModalOpen(true),
-          icon: <GraduationCap className="w-4 h-4" />,
-        } : undefined}
-      >
-      <div className="pb-20">
+                ? "Complete cada portal para avançar na jornada. Cada portal inclui aulas, exercícios reflexivos e conteúdos simbólicos."
+                : "Conheça os portais da formação. Matricule-se para iniciar sua jornada transformadora."}
+          </p>
+        </div>
 
         {/* Portais */}
         {portals.length === 0 ? (
@@ -448,8 +465,7 @@ export default function Portais() {
             })}
           </div>
         )}
-        </div>
-      </MobilePageShell>
+      </div>
 
       <LockedContentModal open={lockedModalOpen} onOpenChange={setLockedModalOpen} />
     </AppLayout>
