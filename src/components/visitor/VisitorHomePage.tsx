@@ -39,9 +39,9 @@ export function VisitorHomePage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Ambient background */}
+      {/* Ambient background — seamless */}
       <div className="fixed inset-0 bg-gradient-to-b from-gold/5 via-background to-background pointer-events-none" />
-      <div className="fixed inset-0 pattern-geometric opacity-10 pointer-events-none" />
+      <div className="fixed inset-0 pattern-geometric pointer-events-none" />
 
       <div className="relative z-10 flex-1 flex flex-col items-center px-4 py-8 max-w-2xl mx-auto w-full">
         {/* Logo */}

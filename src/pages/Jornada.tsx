@@ -209,7 +209,7 @@ export default function Jornada() {
               transition={{ duration: 2, ease: 'easeOut' }}
               className="w-[500px] h-[500px] md:w-[650px] md:h-[650px]"
             >
-              <img src={mandalaHome} alt="" className="w-full h-full object-contain animate-ritual-breathe" />
+              <img src={mandalaHome} alt="" className="w-full h-full object-contain animate-ritual-breathe opacity-80 blur-[0.5px]" />
             </motion.div>
           </div>
 
