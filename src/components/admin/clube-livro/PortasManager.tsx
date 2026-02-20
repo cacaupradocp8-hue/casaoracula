@@ -521,26 +521,27 @@ function PortaAulaDialog({ open, onOpenChange, aula, cicloId, portaId, nextOrdem
 }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [form, setForm] = useState({ titulo: '', subtitulo: '', descricao: '', duracao: '', media_url: '', media_type: 'video', ordem: nextOrdem });
+  const [form, setForm] = useState({ titulo: '', subtitulo: '', descricao: '', duracao: '', media_url: '', media_type: 'video', conteudo: '', ordem: nextOrdem });
 
   const save = useMutation({
     mutationFn: async () => {
-      const payload = {
+      const payload: Record<string, unknown> = {
         ciclo_id: cicloId,
         porta_id: portaId,
         titulo: form.titulo,
         subtitulo: form.subtitulo || null,
         descricao: form.descricao || null,
         duracao: form.duracao || null,
-        media_url: form.media_url || null,
+        media_url: form.media_type !== 'texto' ? (form.media_url || null) : null,
         media_type: form.media_type,
+        conteudo: form.media_type === 'texto' ? (form.conteudo || null) : null,
         ordem: form.ordem,
-      };
+      } as any;
       if (aula?.id) {
-        const { error } = await supabase.from('clube_livro_aulas').update(payload).eq('id', aula.id);
+        const { error } = await supabase.from('clube_livro_aulas').update(payload as any).eq('id', aula.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('clube_livro_aulas').insert(payload);
+        const { error } = await supabase.from('clube_livro_aulas').insert(payload as any);
         if (error) throw error;
       }
     },
@@ -562,6 +563,7 @@ function PortaAulaDialog({ open, onOpenChange, aula, cicloId, portaId, nextOrdem
       duracao: aula.duracao || '',
       media_url: aula.media_url || '',
       media_type: aula.media_type || 'video',
+      conteudo: (aula as any).conteudo || '',
       ordem: aula.ordem,
     });
   }
@@ -604,10 +606,17 @@ function PortaAulaDialog({ open, onOpenChange, aula, cicloId, portaId, nextOrdem
               </Select>
             </div>
           </div>
-          <div className="space-y-2">
-            <Label>URL da Mídia</Label>
-            <Input value={form.media_url} onChange={(e) => setForm({ ...form, media_url: e.target.value })} placeholder="https://..." />
-          </div>
+          {form.media_type === 'texto' ? (
+            <div className="space-y-2">
+              <Label>Conteúdo do Texto</Label>
+              <Textarea value={form.conteudo} onChange={(e) => setForm({ ...form, conteudo: e.target.value })} className="min-h-[120px]" placeholder="Digite o conteúdo da aula aqui..." />
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Label>URL da Mídia</Label>
+              <Input value={form.media_url} onChange={(e) => setForm({ ...form, media_url: e.target.value })} placeholder="https://..." />
+            </div>
+          )}
           <div className="space-y-2">
             <Label>Descrição</Label>
             <Textarea value={form.descricao} onChange={(e) => setForm({ ...form, descricao: e.target.value })} className="min-h-[60px]" />
