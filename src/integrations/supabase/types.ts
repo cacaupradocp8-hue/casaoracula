@@ -1572,6 +1572,7 @@ export type Database = {
         Row: {
           ativo: boolean | null
           autor_livro: string | null
+          campo_simbolico: string | null
           capa_url: string | null
           como_ler: string | null
           created_at: string
@@ -1600,6 +1601,7 @@ export type Database = {
         Insert: {
           ativo?: boolean | null
           autor_livro?: string | null
+          campo_simbolico?: string | null
           capa_url?: string | null
           como_ler?: string | null
           created_at?: string
@@ -1628,6 +1630,7 @@ export type Database = {
         Update: {
           ativo?: boolean | null
           autor_livro?: string | null
+          campo_simbolico?: string | null
           capa_url?: string | null
           como_ler?: string | null
           created_at?: string

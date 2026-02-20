@@ -11,3 +11,4 @@ export { PortaisAssociadosBlock } from './PortaisAssociadosBlock';
 export { IntegracoesBlock } from './IntegracoesBlock';
 export { UsoClinicalBlock } from './UsoClinicalBlock';
 export { AulasEncontrosBlock } from './AulasEncontrosBlock';
+export { EscutaSimbolticaChat } from './EscutaSimbolticaChat';

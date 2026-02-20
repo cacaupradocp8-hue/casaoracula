@@ -29,6 +29,7 @@ export interface ClubeCiclo {
   orientacao_clinica_contraindicado?: string;
   ritual_aceite_obrigatorio?: boolean;
   portal_minimo_clinico?: string;
+  campo_simbolico?: string;
 }
 
 export interface ClubeFase {
