@@ -365,6 +365,10 @@ function PortaEscutasManager({ cicloId, portaId, tipoFilter, label }: { cicloId:
       setDialogOpen(false);
       toast({ title: `${label} adicionado` });
     },
+    onError: (error) => {
+      console.error('Erro ao salvar escuta/podcast:', error);
+      toast({ title: `Erro ao salvar ${label.toLowerCase()}`, description: error.message, variant: 'destructive' });
+    },
   });
 
   return (
