@@ -48,6 +48,7 @@ const WELCOME_COPY: Record<ProfileTag, WelcomeCopy> = {
   },
 };
 
+// Fallback for users without a tag
 const DEFAULT_COPY: WelcomeCopy = {
   icon: <Heart className="w-8 h-8" />,
   greeting: 'Bem-vinda à Casa ORÁCULA.',
@@ -69,7 +70,7 @@ export function WelcomeCopyByProfile({ profileTag, userName, onContinue }: Welco
   const copy = (profileTag && WELCOME_COPY[profileTag as ProfileTag]) || DEFAULT_COPY;
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-6 md:p-8">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-hero-radial pointer-events-none" />
       <div className="fixed inset-0 pattern-geometric opacity-20 pointer-events-none" />
@@ -78,7 +79,7 @@ export function WelcomeCopyByProfile({ profileTag, userName, onContinue }: Welco
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="relative z-10 max-w-2xl w-full space-y-10 text-center"
+        className="relative z-10 max-w-xl w-full space-y-8 text-center"
       >
         {/* Logo */}
         <motion.div
@@ -96,13 +97,8 @@ export function WelcomeCopyByProfile({ profileTag, userName, onContinue }: Welco
           transition={{ delay: 0.3 }}
           className="flex justify-center"
         >
-          <div className="relative w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center text-gold">
+          <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center text-gold">
             {copy.icon}
-            <motion.div
-              animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0, 0.2] }}
-              transition={{ duration: 3, repeat: Infinity }}
-              className="absolute inset-0 rounded-full border border-gold/20"
-            />
           </div>
         </motion.div>
 
@@ -112,7 +108,7 @@ export function WelcomeCopyByProfile({ profileTag, userName, onContinue }: Welco
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="text-gold font-display text-xl md:text-2xl tracking-wide"
+            className="text-gold font-display text-xl"
           >
             Olá, {userName.split(' ')[0]}.
           </motion.p>
@@ -123,35 +119,23 @@ export function WelcomeCopyByProfile({ profileTag, userName, onContinue }: Welco
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="font-display text-2xl md:text-4xl text-foreground leading-[1.3] font-semibold tracking-tight"
+          className="font-display text-2xl md:text-3xl text-foreground leading-relaxed"
         >
           {copy.greeting}
         </motion.h1>
 
-        {/* Message paragraphs — improved readability */}
+        {/* Message paragraphs */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="space-y-5 max-w-xl mx-auto"
+          className="space-y-4 text-muted-foreground"
         >
           {copy.message.map((paragraph, index) => (
-            <p key={index} className="text-foreground/70 text-base md:text-lg leading-[1.8] tracking-[0.01em]">
+            <p key={index} className="text-lg leading-relaxed">
               {paragraph}
             </p>
           ))}
-        </motion.div>
-
-        {/* Decorative divider */}
-        <motion.div
-          initial={{ opacity: 0, scaleX: 0 }}
-          animate={{ opacity: 1, scaleX: 1 }}
-          transition={{ delay: 0.65 }}
-          className="flex items-center justify-center gap-3"
-        >
-          <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold/30" />
-          <Sparkles className="w-4 h-4 text-gold/40" />
-          <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold/30" />
         </motion.div>
 
         {/* Closing quote */}
@@ -159,12 +143,12 @@ export function WelcomeCopyByProfile({ profileTag, userName, onContinue }: Welco
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
-          className="border-l-2 border-gold/30 pl-5 text-left max-w-md mx-auto"
+          className="border-l-2 border-gold/30 pl-4 text-left max-w-md mx-auto"
         >
-          <p className="font-display text-lg md:text-xl italic text-foreground/90 leading-[1.5]">
+          <p className="font-display text-lg italic text-foreground">
             "{copy.closing}"
           </p>
-          <p className="text-sm text-foreground/50 mt-3 leading-relaxed">
+          <p className="text-sm text-muted-foreground mt-2">
             Aqui, o caminho se revela passo a passo.
           </p>
         </motion.blockquote>
@@ -174,13 +158,12 @@ export function WelcomeCopyByProfile({ profileTag, userName, onContinue }: Welco
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
-          className="pt-4"
         >
           <Button
             variant="gold"
             size="lg"
             onClick={onContinue}
-            className="gap-2 text-lg px-10 py-6 shadow-lg shadow-gold/10"
+            className="gap-2 text-lg px-8"
           >
             Entrar na Casa
             <ArrowRight className="w-5 h-5" />

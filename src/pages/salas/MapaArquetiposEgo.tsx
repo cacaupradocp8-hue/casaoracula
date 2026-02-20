@@ -20,13 +20,7 @@ export default function MapaArquetiposEgo() {
     >
       <EthicalNotice toolName="Mapa do Ego" className="mb-6" />
       
-      <div className="relative">
-        {/* Ambient background for the tool */}
-        <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-[400px] h-[200px] rounded-full bg-gold/3 blur-[100px] pointer-events-none" />
-        <div className="relative">
-          <MapaEgoFeminino onComplete={handleComplete} />
-        </div>
-      </div>
+      <MapaEgoFeminino onComplete={handleComplete} />
     </ContentPageLayout>
   );
 }

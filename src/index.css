@@ -34,8 +34,8 @@
     /* Casa ORÁCULA - Nova Paleta */
     /* Fundo principal: #0E1A24 */
     --background: 206 44% 10%;
-    /* Off-white legível: ~#F0F0F0 */
-    --foreground: 210 10% 94%;
+    /* Off-white para reduzir fadiga visual: ~#EAEAEA */
+    --foreground: 210 10% 90%;
 
     /* Fundo cards: #142634 */
     --card: 206 43% 14%;
@@ -53,8 +53,8 @@
     --secondary-foreground: 210 10% 90%;
 
     --muted: 206 30% 20%;
-    /* Texto secundário: #D0D0D0 para leitura confortável */
-    --muted-foreground: 0 0% 82%;
+    /* Texto secundário: #B8B8B8 para leitura confortável */
+    --muted-foreground: 0 0% 72%;
 
     /* Acento simbólico: #6F85A6 */
     --accent: 216 25% 54%;
@@ -110,9 +110,9 @@
   .dark {
     /* Same as root - this is a dark-first theme */
     --background: 206 44% 10%;
-    --foreground: 210 10% 94%;
+    --foreground: 210 10% 90%;
     --card: 206 43% 14%;
-    --card-foreground: 210 10% 94%;
+    --card-foreground: 210 10% 90%;
     --popover: 206 43% 14%;
     --popover-foreground: 210 10% 90%;
     --primary: 42 49% 58%;
@@ -120,7 +120,7 @@
     --secondary: 206 35% 18%;
     --secondary-foreground: 210 10% 90%;
     --muted: 206 30% 20%;
-    --muted-foreground: 0 0% 82%;
+    --muted-foreground: 0 0% 72%;
     --accent: 216 25% 54%;
     --accent-foreground: 210 10% 90%;
     --destructive: 0 62% 45%;

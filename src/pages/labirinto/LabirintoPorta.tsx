@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useParams, useNavigate, useSearchParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -67,35 +66,16 @@ const DIALOGO_SOMBRA_SOMATICA = {
 // Tela de Contexto Obrigatória antes de mostrar conteúdo
 function TelaContextoProtocolo({ onProsseguir }: { onProsseguir: () => void }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="max-w-xl mx-auto px-4 py-16 space-y-8"
-    >
+    <div className="max-w-xl mx-auto px-4 py-16 space-y-8">
       <div className="text-center space-y-6">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="relative inline-block"
-        >
-          <AlertTriangle className="w-12 h-12 text-gold mx-auto" />
-          <motion.div
-            animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0, 0.3] }}
-            transition={{ duration: 3, repeat: Infinity }}
-            className="absolute inset-0 rounded-full border border-gold/20"
-          />
-        </motion.div>
+        <AlertTriangle className="w-12 h-12 text-gold mx-auto" />
         
         <h2 className="font-display text-2xl text-gold">
           Contexto da Porta
         </h2>
         
-        <Card className="border-gold/20 bg-card/50 backdrop-blur-sm relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-gold/20 rounded-tl-lg" />
-          <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-gold/20 rounded-br-lg" />
-          <CardContent className="p-8 space-y-4 text-left">
+        <Card className="border-gold/30 bg-card/50">
+          <CardContent className="p-6 space-y-4 text-left">
             <p className="text-foreground leading-relaxed">
               Esta Porta <strong>não oferece significado</strong>.
             </p>
@@ -105,7 +85,6 @@ function TelaContextoProtocolo({ onProsseguir }: { onProsseguir: () => void }) {
             <p className="text-muted-foreground leading-relaxed">
               Se você espera respostas, esta não é a ferramenta adequada.
             </p>
-            <div className="h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
             <p className="text-foreground leading-relaxed font-medium">
               Avance apenas se estiver disposta a sustentar o processo sem concluir.
             </p>
@@ -115,13 +94,13 @@ function TelaContextoProtocolo({ onProsseguir }: { onProsseguir: () => void }) {
         <Button
           onClick={onProsseguir}
           size="lg"
-          className="bg-gold hover:bg-gold/90 text-gold-foreground gap-2 shadow-lg shadow-gold/20"
+          className="bg-gold hover:bg-gold/90 text-background gap-2"
         >
           <Layers className="w-5 h-5" />
           Prosseguir com o Protocolo
         </Button>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -273,15 +252,10 @@ export default function LabirintoPorta() {
           <span className="text-foreground">Porta {porta.numero}</span>
         </nav>
 
-        {/* Door Header — Cinematic */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          className="relative"
-        >
+        {/* Door Header */}
+        <div className="relative">
           {/* Image */}
-          <div className="aspect-video md:aspect-[21/9] rounded-xl overflow-hidden bg-muted border border-gold/10">
+          <div className="aspect-video md:aspect-[21/9] rounded-xl overflow-hidden bg-muted">
             {imageUrl ? (
               <img
                 src={imageUrl}
@@ -289,32 +263,22 @@ export default function LabirintoPorta() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-card/80 to-muted/30">
+              <div className="w-full h-full flex items-center justify-center">
                 <DoorOpen className="w-24 h-24 text-muted-foreground/20" />
               </div>
             )}
             {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/20" />
-            {/* Corner accents */}
-            <div className="absolute top-3 left-3 w-8 h-8 border-t border-l border-gold/30" />
-            <div className="absolute top-3 right-3 w-8 h-8 border-t border-r border-gold/30" />
-            <div className="absolute bottom-3 left-3 w-8 h-8 border-b border-l border-gold/30" />
-            <div className="absolute bottom-3 right-3 w-8 h-8 border-b border-r border-gold/30" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
           </div>
 
           {/* Title overlay */}
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
             <div className="flex items-end gap-4">
-              <motion.span
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="font-display text-6xl md:text-7xl text-gold/80 drop-shadow-lg"
-              >
+              <span className="font-display text-6xl md:text-7xl text-gold/80">
                 {porta.numero}
-              </motion.span>
+              </span>
               <div>
-                <h1 className="font-display text-2xl md:text-3xl text-foreground drop-shadow-md">
+                <h1 className="font-display text-2xl md:text-3xl text-foreground">
                   {porta.nome}
                 </h1>
                 {porta.subtitulo && (
@@ -323,7 +287,7 @@ export default function LabirintoPorta() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Audio Player - Se tiver áudio */}
         {porta.audio_url && (
@@ -335,30 +299,30 @@ export default function LabirintoPorta() {
 
         {/* Content Tabs - CAMADAS como foco principal */}
         <Tabs defaultValue={initialTab} className="space-y-6">
-          <TabsList className="w-full justify-start overflow-x-auto flex-wrap h-auto gap-1 bg-card/50 border border-gold/10">
-            <TabsTrigger value="camadas" className="gap-2 data-[state=active]:bg-gold/10 data-[state=active]:text-gold">
+          <TabsList className="w-full justify-start overflow-x-auto flex-wrap h-auto gap-1 bg-muted/50">
+            <TabsTrigger value="camadas" className="gap-2">
               <Layers className="w-4 h-4" />
               Camadas
             </TabsTrigger>
             {canAccessCasoEspelho && (
-              <TabsTrigger value="caso" className="gap-2 data-[state=active]:bg-gold/10 data-[state=active]:text-gold">
+              <TabsTrigger value="caso" className="gap-2">
                 <BookOpen className="w-4 h-4" />
                 Caso Espelho
               </TabsTrigger>
             )}
             {canAccessChave && (
-              <TabsTrigger value="chave" className="gap-2 data-[state=active]:bg-gold/10 data-[state=active]:text-gold">
+              <TabsTrigger value="chave" className="gap-2">
                 <Key className="w-4 h-4" />
                 Chave
               </TabsTrigger>
             )}
             {canAccessTorreIntegracao && (
-              <TabsTrigger value="estrutural" className="gap-2 data-[state=active]:bg-gold/10 data-[state=active]:text-gold">
+              <TabsTrigger value="estrutural" className="gap-2">
                 <Castle className="w-4 h-4" />
                 Estrutural
               </TabsTrigger>
             )}
-            <TabsTrigger value="anotacoes" className="gap-2 data-[state=active]:bg-gold/10 data-[state=active]:text-gold">
+            <TabsTrigger value="anotacoes" className="gap-2">
               <FileText className="w-4 h-4" />
               Anotações
             </TabsTrigger>
@@ -540,9 +504,7 @@ export default function LabirintoPorta() {
             )}
 
             {/* Rodapé Método ORÁCULA */}
-            <div className="text-center text-sm text-muted-foreground pt-6 mt-8 space-y-2">
-              <div className="h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent mb-6" />
-              <p className="text-gold/60">✧</p>
+            <div className="text-center text-sm text-muted-foreground border-t pt-6 mt-8">
               <p>As Portas não revelam respostas.</p>
               <p>Revelam campos que exigem maturidade para serem sustentados.</p>
             </div>
