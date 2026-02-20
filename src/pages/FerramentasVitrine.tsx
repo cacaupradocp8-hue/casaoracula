@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { Loader2, ArrowRight, Lock } from "lucide-react";
+import { Loader2, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageAmbientAudio } from "@/components/audio/PageAmbientAudio";
 
@@ -30,9 +30,9 @@ function userCanSeeCard(userPortal: string | undefined, roles: string[]): boolea
 
 function HeroCard({ card, onClick }: { card: VitrineCard; onClick: () => void }) {
   return (
-    <section className="w-full">
-      {/* Media */}
-      <div className="relative w-full aspect-video max-h-[65vh] overflow-hidden">
+    <section className="relative w-full min-h-[70vh] overflow-hidden flex items-end">
+      {/* Media background */}
+      <div className="absolute inset-0">
         {card.video_url ? (
           <video
             src={card.video_url}
@@ -40,60 +40,72 @@ function HeroCard({ card, onClick }: { card: VitrineCard; onClick: () => void })
             loop
             muted
             playsInline
-            className="w-full h-full object-cover object-center blur-[2px] scale-105"
+            className="w-full h-full object-cover scale-105"
           />
         ) : card.imagem ? (
           <img
             src={card.imagem}
             alt={card.titulo}
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-[hsl(var(--primary))]/20 to-transparent" />
+          <div className="w-full h-full bg-gradient-to-br from-primary/20 to-background" />
         )}
-        <div className="absolute inset-0 bg-black/15" />
-        {/* Blur + fade transition at the bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 backdrop-blur-md [mask-image:linear-gradient(to_top,black_40%,transparent)]" />
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background via-background/80 to-transparent" />
+        {/* Multi-layered gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/40 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-40 backdrop-blur-sm [mask-image:linear-gradient(to_top,black_60%,transparent)]" />
       </div>
 
-      {/* Text below */}
-      <div className="flex flex-col items-center text-center px-6 py-10 md:py-14 bg-background">
+      {/* Content */}
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-6 pb-16 md:pb-24">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2 }}
-          className="space-y-3 max-w-2xl"
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+          className="space-y-5"
         >
-          <h1 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground/90 tracking-wider font-medium leading-relaxed">
+          {/* Decorative line */}
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-px bg-gradient-to-r from-gold to-transparent" />
+            <Sparkles className="w-3.5 h-3.5 text-gold/60" />
+          </div>
+
+          <h1 className="font-display text-3xl md:text-5xl lg:text-6xl text-foreground tracking-wide font-light leading-[1.15]">
             {card.titulo}
           </h1>
+
           {card.subtitulo && (
-            <p className="text-muted-foreground text-sm md:text-base">{card.subtitulo}</p>
+            <p className="text-muted-foreground text-base md:text-lg max-w-xl leading-relaxed">
+              {card.subtitulo}
+            </p>
           )}
+
           {card.descricao_curta && (
-            <p className="text-muted-foreground/70 text-xs md:text-sm max-w-md mx-auto">{card.descricao_curta}</p>
+            <p className="text-muted-foreground/60 text-sm max-w-lg">
+              {card.descricao_curta}
+            </p>
+          )}
+
+          {card.link_destino && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+              className="pt-4"
+            >
+              <Button
+                variant="gold"
+                size="lg"
+                className="gap-3 shadow-[0_0_30px_-5px_hsl(var(--gold)/0.3)]"
+                onClick={onClick}
+              >
+                Acessar
+                <ArrowRight className="w-5 h-5" />
+              </Button>
+            </motion.div>
           )}
         </motion.div>
-
-        {card.link_destino && (
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1 }}
-            className="mt-8"
-          >
-            <Button
-              variant="hero"
-              size="xl"
-              className="gap-3 border-[hsl(40,35%,60%)]/40 text-[hsl(40,35%,60%)] hover:border-[hsl(40,35%,60%)]/80 hover:bg-[hsl(40,35%,60%)]/10 transition-all duration-300"
-              onClick={onClick}
-            >
-              Acessar
-              <ArrowRight className="w-5 h-5" />
-            </Button>
-          </motion.div>
-        )}
       </div>
     </section>
   );
@@ -102,40 +114,56 @@ function HeroCard({ card, onClick }: { card: VitrineCard; onClick: () => void })
 function SecondaryCard({ card, onClick, index }: { card: VitrineCard; onClick: () => void; index: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.08 }}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
       onClick={onClick}
-      className="relative rounded-lg overflow-hidden cursor-pointer group bg-card border border-border/30 hover:shadow-[0_8px_30px_-8px_hsl(40,35%,60%,0.12)] hover:-translate-y-1 hover:border-[hsl(40,35%,60%)]/20 transition-all duration-300"
+      className="relative group cursor-pointer"
     >
-      {card.imagem ? (
-        <div className="aspect-[16/9] overflow-hidden">
-          <img
-            src={card.imagem}
-            alt={card.titulo}
-            loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        </div>
-      ) : (
-        <div className="aspect-[16/9] bg-gradient-to-br from-primary/10 to-transparent" />
-      )}
+      {/* Card container */}
+      <div className="relative rounded-xl overflow-hidden border border-border/20 bg-card/80 backdrop-blur-sm transition-all duration-500 group-hover:border-gold/30 group-hover:shadow-[0_8px_40px_-12px_hsl(var(--gold)/0.15)]">
+        {/* Image */}
+        {card.imagem ? (
+          <div className="aspect-[16/10] overflow-hidden relative">
+            <img
+              src={card.imagem}
+              alt={card.titulo}
+              loading="lazy"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+          </div>
+        ) : (
+          <div className="aspect-[16/10] bg-gradient-to-br from-gold/5 via-transparent to-primary/5" />
+        )}
 
-      <div className="p-5 space-y-3">
-        <h3 className="font-display text-base md:text-lg font-medium text-foreground leading-snug">
-          {card.titulo}
-        </h3>
-        {card.subtitulo && (
-          <p className="text-sm text-muted-foreground">{card.subtitulo}</p>
-        )}
-        {card.descricao_curta && (
-          <p className="text-sm text-muted-foreground/70 line-clamp-2">{card.descricao_curta}</p>
-        )}
-        <div className="h-px bg-border/30" />
-        <button className="flex items-center gap-2 text-sm text-[hsl(40,35%,60%)] font-medium group-hover:gap-3 transition-all duration-300">
-          Acessar
-          <ArrowRight className="w-4 h-4" />
-        </button>
+        {/* Content */}
+        <div className="p-6 space-y-3 relative">
+          {/* Top accent line */}
+          <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
+
+          <h3 className="font-display text-lg md:text-xl font-medium text-foreground leading-snug tracking-wide group-hover:text-gold transition-colors duration-300">
+            {card.titulo}
+          </h3>
+
+          {card.subtitulo && (
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {card.subtitulo}
+            </p>
+          )}
+
+          {card.descricao_curta && (
+            <p className="text-xs text-muted-foreground/60 line-clamp-2 leading-relaxed">
+              {card.descricao_curta}
+            </p>
+          )}
+
+          <div className="pt-2 flex items-center gap-2 text-sm text-gold/70 font-medium group-hover:text-gold group-hover:gap-3 transition-all duration-300">
+            <span className="tracking-wide">Explorar</span>
+            <ArrowRight className="w-4 h-4" />
+          </div>
+        </div>
       </div>
     </motion.div>
   );
@@ -163,7 +191,7 @@ export default function FerramentasVitrine() {
     return (
       <AppLayout>
         <div className="flex items-center justify-center min-h-[400px]">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          <Loader2 className="w-8 h-8 animate-spin text-gold" />
         </div>
       </AppLayout>
     );
@@ -189,8 +217,17 @@ export default function FerramentasVitrine() {
         )}
 
         {secondaryCards.length > 0 && (
-          <div className="max-w-[1200px] mx-auto px-5 md:px-8 py-12 md:py-20">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+          <div className="max-w-[1200px] mx-auto px-5 md:px-8 py-16 md:py-24">
+            {/* Section header */}
+            <div className="flex items-center gap-4 mb-12">
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border/50 to-transparent" />
+              <span className="text-xs uppercase tracking-[0.25em] text-muted-foreground/60 font-medium">
+                Territórios
+              </span>
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border/50 to-transparent" />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {secondaryCards.map((card, i) => (
                 <SecondaryCard
                   key={card.id}
@@ -204,8 +241,9 @@ export default function FerramentasVitrine() {
         )}
 
         {visibleCards.length === 0 && (
-          <div className="flex items-center justify-center min-h-[400px]">
-            <p className="text-muted-foreground">Nenhum conteúdo disponível no momento.</p>
+          <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
+            <Sparkles className="w-8 h-8 text-gold/30" />
+            <p className="text-muted-foreground text-sm">Nenhum conteúdo disponível no momento.</p>
           </div>
         )}
       </div>
