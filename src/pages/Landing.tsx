@@ -29,22 +29,7 @@ export default function Landing() {
 
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-end pb-12 md:pb-16 px-6">
-        {/* Logo at the top */}
-        {/* Logo safe zone with subtle backdrop */}
-        <div className="absolute top-0 left-0 right-0 z-20 flex justify-center pt-8">
-          <div className="relative">
-            {/* Soft blur behind logo for readability */}
-            <div className="absolute -inset-6 rounded-2xl bg-background/40 backdrop-blur-md" />
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: 'easeOut' }}
-              className="relative"
-            >
-              <Logo size="lg" variant="vertical" className="justify-center" />
-            </motion.div>
-          </div>
-        </div>
+        {/* Logo removed — hero image speaks for itself */}
 
         {/* Main content block — positioned at the bottom */}
         <div className="max-w-2xl mx-auto text-center space-y-8">
