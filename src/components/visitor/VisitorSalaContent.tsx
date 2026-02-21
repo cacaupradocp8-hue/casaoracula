@@ -128,8 +128,8 @@ export function VisitorSalaContent() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Card className="overflow-hidden bg-card/50 border-gold/20">
-          <CardContent className="p-0">
+        <div className="relative rounded-2xl p-[2px] bg-gradient-to-br from-gold/40 via-gold/15 to-gold/40 shadow-[0_0_40px_-10px_hsl(var(--gold)/0.2)]">
+          <div className="rounded-[14px] overflow-hidden bg-black">
             {videoId ? (
               <CloudflareStreamPlayer
                 videoId={videoId}
@@ -152,8 +152,8 @@ export function VisitorSalaContent() {
                 </div>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </motion.div>
 
       {/* Bloco 2: Texto de Acolhimento */}
