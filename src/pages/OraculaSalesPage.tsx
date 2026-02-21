@@ -21,7 +21,7 @@ export default function OraculaSalesPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-gold/20">
+    <div className="min-h-screen bg-black text-foreground overflow-x-hidden selection:bg-gold/20">
       
       {/* ═══ HERO — BANNER IMAGEM ═══ */}
       <section className="relative w-full">
@@ -32,8 +32,32 @@ export default function OraculaSalesPage() {
             className="w-full h-auto block"
           />
           {/* Bottom fade — only covers the very bottom edge */}
-          <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black to-transparent" />
         </div>
+      </section>
+
+      {/* ═══ SEÇÃO DE VÍDEO ═══ */}
+      <section className="py-16 px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="max-w-3xl mx-auto"
+        >
+          <div className="relative aspect-video rounded-2xl overflow-hidden border border-gold/15 shadow-[0_0_60px_-20px_hsl(var(--gold)/0.1)] bg-card/10">
+            <iframe
+              src=""
+              title="Vídeo da Formação Orácula"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="absolute inset-0 w-full h-full"
+            />
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-foreground/30">
+              <p className="text-sm">Insira a URL do vídeo</p>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
       {/* ═══ BLOCO 2 — TÍTULO + INTRODUÇÃO ═══ */}
@@ -650,8 +674,6 @@ export default function OraculaSalesPage() {
           </div>
         </motion.div>
       </section>
-
-
 
       {/* ═══ ENCERRAMENTO ═══ */}
       <section className="relative py-20 px-6 overflow-hidden">
