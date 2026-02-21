@@ -1,7 +1,6 @@
 // ============================================
-// CLUBE DO LIVRO — Página de Aula-Álbum Oracular
-// 100% dinâmica: todo conteúdo vem do banco de dados
-// Estrutura: Header > Player/Faixas > Blocos > Alerta Clínico
+// CLUBE DO LIVRO — Aula-Álbum Oracular
+// Layout ritualístico, mobile-first, 100% dinâmico
 // ============================================
 
 import { useParams, useNavigate } from 'react-router-dom';
@@ -13,14 +12,17 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
-  ArrowLeft, BookOpen, Play, Headphones, Podcast,
+  ArrowLeft, BookOpen, Play, Pause, Headphones,
   Sparkles, Brain, Briefcase, Compass, Sun, FileText,
-  Loader2, AlertTriangle, ChevronDown, Pen,
+  Loader2, AlertTriangle, ChevronDown, Pen, Flower2,
+  SkipBack, SkipForward, Volume2, VolumeX,
 } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
-import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { formatAudioTime, getPublicAudioUrl } from '@/lib/audioUtils';
 import DOMPurify from 'dompurify';
 
 // ============================================
@@ -49,14 +51,6 @@ interface AulaDB {
   publicado: boolean;
 }
 
-interface FaseDB {
-  id: string;
-  titulo: string;
-  alerta_clinico?: string;
-  observacao_clinica?: string;
-  orientacao_curta?: string;
-}
-
 interface EscutaDB {
   id: string;
   titulo: string;
@@ -81,6 +75,14 @@ interface PortaDB {
   descricao?: string;
 }
 
+interface FaseDB {
+  id: string;
+  titulo: string;
+  alerta_clinico?: string;
+  observacao_clinica?: string;
+  orientacao_curta?: string;
+}
+
 const BLOCO_CONFIG: Record<string, { icon: React.ElementType; label: string; accent: string }> = {
   essencia: { icon: Sparkles, label: 'Essência', accent: 'text-amber-400' },
   raiz_psiquica: { icon: Brain, label: 'Raiz Psíquica', accent: 'text-violet-400' },
@@ -99,7 +101,15 @@ export default function ClubeLivroAula() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // Buscar aula
+  // Player state
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [activeFaixaIndex, setActiveFaixaIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
+
+  // Queries
   const { data: aula, isLoading } = useQuery({
     queryKey: ['clube-livro-aula', aulaId],
     queryFn: async () => {
@@ -115,7 +125,6 @@ export default function ClubeLivroAula() {
     enabled: !!aulaId && !!user,
   });
 
-  // Buscar ciclo (título do livro + autor)
   const { data: ciclo } = useQuery({
     queryKey: ['clube-livro-ciclo-meta', aula?.ciclo_id],
     queryFn: async () => {
@@ -130,7 +139,6 @@ export default function ClubeLivroAula() {
     enabled: !!aula?.ciclo_id,
   });
 
-  // Buscar porta (jornada + título)
   const { data: porta } = useQuery({
     queryKey: ['clube-livro-porta-meta', aula?.porta_id],
     queryFn: async () => {
@@ -146,7 +154,6 @@ export default function ClubeLivroAula() {
     enabled: !!aula?.porta_id,
   });
 
-  // Buscar faixas de áudio (escutas vinculadas)
   const { data: faixas } = useQuery({
     queryKey: ['clube-livro-aula-faixas', aula?.porta_id, aula?.ciclo_id],
     queryFn: async () => {
@@ -167,7 +174,6 @@ export default function ClubeLivroAula() {
     enabled: !!aula?.ciclo_id,
   });
 
-  // Buscar fase clínica (alerta + observação)
   const { data: fase } = useQuery({
     queryKey: ['clube-livro-fase-clinica', aula?.porta_id, aula?.ciclo_id],
     queryFn: async () => {
@@ -186,6 +192,80 @@ export default function ClubeLivroAula() {
     enabled: !!aula?.ciclo_id,
   });
 
+  // ── Player Logic ──
+  const activeFaixa = faixas?.[activeFaixaIndex];
+  const activeAudioUrl = getPublicAudioUrl(activeFaixa?.audio_url);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const onPlay = () => setIsPlaying(true);
+    const onPause = () => setIsPlaying(false);
+    const onEnded = () => { setIsPlaying(false); setCurrentTime(0); };
+    const onTime = () => setCurrentTime(audio.currentTime);
+    const onMeta = () => setDuration(audio.duration);
+    audio.addEventListener('play', onPlay);
+    audio.addEventListener('pause', onPause);
+    audio.addEventListener('ended', onEnded);
+    audio.addEventListener('timeupdate', onTime);
+    audio.addEventListener('loadedmetadata', onMeta);
+    return () => {
+      audio.removeEventListener('play', onPlay);
+      audio.removeEventListener('pause', onPause);
+      audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener('timeupdate', onTime);
+      audio.removeEventListener('loadedmetadata', onMeta);
+    };
+  }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio || !activeAudioUrl) return;
+    audio.src = activeAudioUrl;
+    audio.load();
+    setCurrentTime(0);
+    setDuration(0);
+    if (isPlaying) {
+      audio.play().catch(() => {});
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeAudioUrl]);
+
+  const togglePlay = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (isPlaying) audio.pause();
+    else audio.play().catch(() => {});
+  }, [isPlaying]);
+
+  const skip = useCallback((seconds: number) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.currentTime = Math.max(0, Math.min(audio.currentTime + seconds, duration));
+  }, [duration]);
+
+  const selectFaixa = useCallback((index: number) => {
+    setActiveFaixaIndex(index);
+    setIsPlaying(true);
+  }, []);
+
+  const handleSeek = useCallback((v: number[]) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.currentTime = v[0];
+    setCurrentTime(v[0]);
+  }, []);
+
+  // ── Parse blocos ──
+  let blocos: AulaBloco[] = [];
+  try {
+    if (aula?.conteudo) {
+      const parsed = typeof aula.conteudo === 'string' ? JSON.parse(aula.conteudo) : aula.conteudo;
+      if (Array.isArray(parsed)) blocos = parsed.sort((a: AulaBloco, b: AulaBloco) => a.ordem - b.ordem);
+    }
+  } catch { blocos = []; }
+
+  // ── Loading / Empty ──
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -200,40 +280,28 @@ export default function ClubeLivroAula() {
         <BookOpen className="w-10 h-10 text-muted-foreground mx-auto mb-4" />
         <p className="text-muted-foreground">Aula não encontrada.</p>
         <Button variant="ghost" className="mt-4" onClick={() => navigate(-1)}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Voltar
+          <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
         </Button>
       </div>
     );
   }
 
-  // Parse blocos
-  let blocos: AulaBloco[] = [];
-  try {
-    if (aula.conteudo) {
-      const parsed = typeof aula.conteudo === 'string' ? JSON.parse(aula.conteudo) : aula.conteudo;
-      if (Array.isArray(parsed)) {
-        blocos = parsed.sort((a: AulaBloco, b: AulaBloco) => a.ordem - b.ordem);
-      }
-    }
-  } catch {
-    blocos = [];
-  }
+  const hasFaixas = faixas && faixas.length > 0;
 
   return (
-    <div className="max-w-2xl mx-auto px-4 pb-24">
+    <div className="max-w-2xl mx-auto px-4 pb-28">
+      {/* Hidden audio element */}
+      <audio ref={audioRef} preload="metadata" />
 
-      {/* ═══ SEÇÃO 1: Cabeçalho do Álbum (tudo do banco) ═══ */}
-      <div className="pt-6 pb-4">
-        <Button variant="ghost" size="sm" onClick={() => navigate(`/clube-livro/${cicloId}`)} className="mb-4 -ml-2">
-          <ArrowLeft className="w-4 h-4 mr-1" />
-          Voltar ao livro
+      {/* ═══ 1. CABEÇALHO DO ÁLBUM ═══ */}
+      <header className="pt-6 pb-5">
+        <Button variant="ghost" size="sm" onClick={() => navigate(`/clube-livro/${cicloId}`)} className="mb-5 -ml-2 text-muted-foreground">
+          <ArrowLeft className="w-4 h-4 mr-1" /> Voltar ao livro
         </Button>
 
-        {/* Dados do ciclo + porta */}
-        <div className="space-y-1 mb-4">
+        <div className="space-y-2 mb-5">
           {ciclo && (
-            <p className="text-xs uppercase tracking-widest text-gold">
+            <p className="text-xs tracking-widest text-gold/80">
               {ciclo.titulo}{ciclo.autor_livro ? ` — ${ciclo.autor_livro}` : ''}
             </p>
           )}
@@ -244,122 +312,149 @@ export default function ClubeLivroAula() {
           )}
         </div>
 
-        {/* Título da aula */}
-        <div className="flex items-start gap-3">
-          <div className="shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
-            <span className="text-sm font-mono text-gold font-bold">{aula.ordem}</span>
-          </div>
-          <div>
-            <h1 className="text-xl font-display text-foreground leading-tight">{aula.titulo}</h1>
-            {aula.subtitulo && (
-              <p className="text-sm text-muted-foreground mt-1">{aula.subtitulo}</p>
-            )}
-            {aula.duracao && (
-              <Badge variant="outline" className="mt-2 text-xs">{aula.duracao}</Badge>
-            )}
-          </div>
-        </div>
-
-        {/* Descrição curta */}
-        {aula.descricao && (
-          <p className="text-sm text-muted-foreground mt-3">{aula.descricao}</p>
+        <h1 className="text-xl font-display text-foreground leading-tight mb-1">
+          {aula.titulo}
+        </h1>
+        {aula.subtitulo && (
+          <p className="text-sm text-muted-foreground">{aula.subtitulo}</p>
         )}
-      </div>
+        {aula.descricao && (
+          <p className="text-sm text-muted-foreground/70 mt-2 italic">{aula.descricao}</p>
+        )}
+        {aula.duracao && (
+          <Badge variant="outline" className="mt-3 text-xs font-normal">{aula.duracao}</Badge>
+        )}
+      </header>
 
-      <Separator className="mb-6" />
+      <Separator className="mb-6 opacity-30" />
 
-      {/* ═══ SEÇÃO 2: Player Principal (mídia da aula) ═══ */}
-      {aula.media_url && aula.media_type === 'audio' && (
-        <section className="mb-6">
-          <UnifiedAudioPlayer audioUrl={aula.media_url} title={aula.titulo} size="lg" />
-        </section>
-      )}
-
-      {aula.media_url && aula.media_type === 'video' && (
-        <section className="mb-6">
-          <div className="rounded-xl overflow-hidden bg-black aspect-video">
-            <iframe
-              src={aula.media_url}
-              className="w-full h-full"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-              title={aula.titulo}
-            />
-          </div>
-        </section>
-      )}
-
-      {/* ═══ SEÇÃO 3: Lista de Faixas (escutas do banco) ═══ */}
-      {faixas && faixas.length > 0 && (
+      {/* ═══ 2. PLAYER PRINCIPAL ═══ */}
+      {hasFaixas && activeAudioUrl && (
         <section className="mb-8">
-          <h3 className="text-base font-display text-foreground mb-3 flex items-center gap-2">
-            <Headphones className="w-4 h-4 text-gold" />
+          <Card className="bg-card/60 border-border/30 p-5">
+            {/* Track info */}
+            <p className="text-xs text-muted-foreground mb-1">
+              Faixa {activeFaixaIndex + 1} de {faixas.length}
+            </p>
+            <p className="text-sm font-medium text-foreground mb-4 truncate">
+              {activeFaixa?.titulo}
+            </p>
+
+            {/* Progress */}
+            <Slider
+              value={[currentTime]}
+              max={duration || 1}
+              step={0.1}
+              onValueChange={handleSeek}
+              className="mb-2"
+            />
+            <div className="flex justify-between text-xs text-muted-foreground mb-4">
+              <span>{formatAudioTime(currentTime)}</span>
+              <span>{duration > 0 ? formatAudioTime(duration) : '--:--'}</span>
+            </div>
+
+            {/* Controls */}
+            <div className="flex items-center justify-center gap-4">
+              <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground" onClick={() => skip(-15)}>
+                <SkipBack className="w-4 h-4" />
+              </Button>
+              <Button
+                size="icon"
+                onClick={togglePlay}
+                className="h-12 w-12 rounded-full bg-gold/20 text-gold hover:bg-gold/30"
+              >
+                {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
+              </Button>
+              <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground" onClick={() => skip(15)}>
+                <SkipForward className="w-4 h-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground ml-2" onClick={() => { if (audioRef.current) { audioRef.current.muted = !isMuted; setIsMuted(!isMuted); } }}>
+                {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              </Button>
+            </div>
+          </Card>
+        </section>
+      )}
+
+      {/* ═══ 3. LISTA DE FAIXAS ═══ */}
+      {hasFaixas && (
+        <section className="mb-8">
+          <h3 className="text-sm font-display text-foreground/70 mb-3 flex items-center gap-2">
+            <Headphones className="w-4 h-4 text-gold/60" />
             Faixas
           </h3>
-          <div className="space-y-3">
-            {faixas.map((faixa, i) => (
-              <Card key={faixa.id} className="bg-muted/20">
-                <CardContent className="py-3 px-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-xs font-mono text-gold w-5 text-center">{i + 1}</span>
-                    <span className="text-sm font-medium flex-1">{faixa.titulo}</span>
-                    {faixa.duracao_segundos && (
-                      <Badge variant="outline" className="text-[10px]">
-                        {Math.floor(faixa.duracao_segundos / 60)}min
-                      </Badge>
+          <div className="space-y-1">
+            {faixas.map((faixa, i) => {
+              const isActive = i === activeFaixaIndex;
+              return (
+                <button
+                  key={faixa.id}
+                  onClick={() => selectFaixa(i)}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors",
+                    isActive
+                      ? "bg-gold/10 border border-gold/20"
+                      : "hover:bg-muted/20 border border-transparent"
+                  )}
+                >
+                  <span className={cn(
+                    "text-xs font-mono w-5 text-center shrink-0",
+                    isActive ? "text-gold" : "text-muted-foreground"
+                  )}>
+                    {i + 1}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className={cn(
+                      "text-sm truncate",
+                      isActive ? "text-foreground font-medium" : "text-foreground/80"
+                    )}>
+                      {faixa.titulo}
+                    </p>
+                    {faixa.descricao && (
+                      <p className="text-xs text-muted-foreground truncate mt-0.5">{faixa.descricao}</p>
                     )}
                   </div>
-                  {faixa.descricao && (
-                    <p className="text-xs text-muted-foreground mb-2 ml-7">{faixa.descricao}</p>
+                  {faixa.duracao_segundos && (
+                    <span className="text-xs text-muted-foreground shrink-0">
+                      {Math.floor(faixa.duracao_segundos / 60)}min
+                    </span>
                   )}
-                  {faixa.audio_url && (
-                    <div className="ml-7">
-                      <UnifiedAudioPlayer audioUrl={faixa.audio_url} title={faixa.titulo} size="sm" />
-                    </div>
+                  {isActive && isPlaying && (
+                    <span className="w-2 h-2 rounded-full bg-gold shrink-0" />
                   )}
-                </CardContent>
-              </Card>
-            ))}
+                </button>
+              );
+            })}
           </div>
         </section>
       )}
 
-      {/* ═══ SEÇÃO 4: Blocos de Conteúdo Dinâmicos (do JSONB) ═══ */}
+      {/* ═══ 4. BLOCOS DE CONTEÚDO ═══ */}
       {blocos.length > 0 && (
-        <div className="space-y-5 mb-8">
+        <div className="space-y-4 mb-8">
           {blocos.map((bloco, i) => (
             <BlocoRenderer key={i} bloco={bloco} />
           ))}
         </div>
       )}
 
-      {/* ═══ SEÇÃO 5: Botão "Registrar Insight" ═══ */}
-      {blocos.some(b => b.tipo === 'registro') && (
-        <div className="mb-8">
-          <Button className="w-full gap-2 bg-gold/10 hover:bg-gold/20 text-gold border border-gold/30">
-            <Pen className="w-4 h-4" />
-            Registrar Insight
-          </Button>
-        </div>
-      )}
-
-      {/* ═══ SEÇÃO 6: Alerta Clínico (colapsável, do banco) ═══ */}
+      {/* ═══ 5. ALERTA CLÍNICO ═══ */}
       {fase?.alerta_clinico && (
         <section className="mb-8">
           <Collapsible>
-            <CollapsibleTrigger className="w-full flex items-center gap-2 p-3 rounded-lg border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-colors">
-              <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
-              <span className="text-sm font-medium text-amber-300 flex-1 text-left">Alerta Clínico</span>
-              <ChevronDown className="w-4 h-4 text-amber-400" />
+            <CollapsibleTrigger className="w-full flex items-center gap-2 p-3 rounded-lg border border-amber-500/15 bg-amber-500/5 hover:bg-amber-500/8 transition-colors">
+              <AlertTriangle className="w-4 h-4 text-amber-400/70 shrink-0" />
+              <span className="text-sm text-amber-300/80 flex-1 text-left">Alerta de Uso</span>
+              <ChevronDown className="w-4 h-4 text-amber-400/50" />
             </CollapsibleTrigger>
             <CollapsibleContent className="pt-3 px-3">
               <div
-                className="prose prose-sm prose-invert max-w-none text-muted-foreground"
+                className="prose prose-sm prose-invert max-w-none text-muted-foreground leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(fase.alerta_clinico.replace(/\n/g, '<br/>')) }}
               />
               {fase.observacao_clinica && (
-                <div className="mt-3 pt-3 border-t border-border/50">
-                  <p className="text-xs font-medium text-muted-foreground mb-1">Observação Clínica</p>
+                <div className="mt-3 pt-3 border-t border-border/30">
+                  <p className="text-xs font-medium text-muted-foreground/70 mb-1">Observação Clínica</p>
                   <div
                     className="prose prose-sm prose-invert max-w-none text-muted-foreground"
                     dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(fase.observacao_clinica.replace(/\n/g, '<br/>')) }}
@@ -372,20 +467,48 @@ export default function ClubeLivroAula() {
       )}
 
       {/* Empty state */}
-      {blocos.length === 0 && (!faixas || faixas.length === 0) && !aula.media_url && (
-        <Card className="bg-muted/20 border-dashed mb-6">
+      {blocos.length === 0 && !hasFaixas && !aula.media_url && (
+        <Card className="bg-muted/10 border-dashed mb-6">
           <CardContent className="py-8 text-center">
-            <Sparkles className="w-6 h-6 text-muted-foreground/40 mx-auto mb-2" />
-            <p className="text-sm text-muted-foreground italic">Conteúdo em preparação.</p>
+            <Sparkles className="w-6 h-6 text-muted-foreground/30 mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground/60 italic">Conteúdo em preparação.</p>
           </CardContent>
         </Card>
       )}
+
+      {/* ═══ 6. BOTÃO FIXO: REGISTRAR INSIGHT ═══ */}
+      <div className="fixed bottom-6 left-0 right-0 px-4 max-w-2xl mx-auto z-30">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button className="w-full gap-2 bg-gold/15 hover:bg-gold/25 text-gold border border-gold/25 backdrop-blur-sm shadow-lg">
+              <Pen className="w-4 h-4" />
+              Registrar Insight
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-64 p-2" align="center" side="top">
+            <button
+              onClick={() => navigate('/jardim-da-psique')}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-muted/30 transition-colors text-left"
+            >
+              <Flower2 className="w-4 h-4 text-rose-400/70" />
+              <span className="text-sm text-foreground">Jardim da Psique</span>
+            </button>
+            <button
+              onClick={() => navigate('/jardim-do-oficio')}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-muted/30 transition-colors text-left"
+            >
+              <Briefcase className="w-4 h-4 text-teal-400/70" />
+              <span className="text-sm text-foreground">Jardim do Ofício</span>
+            </button>
+          </PopoverContent>
+        </Popover>
+      </div>
     </div>
   );
 }
 
 // ============================================
-// Renderizador de Bloco Individual
+// Renderizador de Bloco
 // ============================================
 function BlocoRenderer({ bloco }: { bloco: AulaBloco }) {
   const [expanded, setExpanded] = useState(true);
@@ -393,18 +516,16 @@ function BlocoRenderer({ bloco }: { bloco: AulaBloco }) {
   const Icon = config.icon;
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden bg-card/40 border-border/30">
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/10 transition-colors"
       >
-        <Icon className={cn('w-5 h-5 shrink-0', config.accent)} />
-        <span className="text-sm font-display font-medium text-foreground flex-1">
+        <Icon className={cn('w-4 h-4 shrink-0', config.accent)} />
+        <span className="text-sm font-display text-foreground flex-1">
           {bloco.titulo || config.label}
         </span>
-        <Badge variant="outline" className="text-[10px] shrink-0">
-          {config.label}
-        </Badge>
+        <ChevronDown className={cn("w-4 h-4 text-muted-foreground transition-transform", expanded && "rotate-180")} />
       </button>
       {expanded && bloco.conteudo && (
         <CardContent className="pt-0 pb-4 px-4">
