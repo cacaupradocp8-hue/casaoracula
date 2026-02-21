@@ -32,7 +32,9 @@ export default function Landing() {
         {/* Logo removed — hero image speaks for itself */}
 
         {/* Main content block — positioned at the bottom */}
-        <div className="max-w-2xl mx-auto text-center space-y-8">
+        <div className="max-w-2xl mx-auto text-center space-y-8 relative">
+          {/* Readability backdrop behind text block */}
+          <div className="absolute -inset-8 rounded-3xl bg-background/60 backdrop-blur-sm -z-10" />
           {/* Title */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
