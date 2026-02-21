@@ -11,6 +11,7 @@ import fundoNarroterapia from "@/assets/formacao/fundo-narroterapia.png";
 import fundoParaQuemE from "@/assets/formacao/fundo-para-quem-e.png";
 import fundoRitual2 from "@/assets/formacao/fundo-ritual-2.png";
 import fundoRetrato01 from "@/assets/formacao/fundo-retrato-01.png";
+import retratoFinal from "@/assets/formacao/retrato-final.png";
 
 /**
  * OraculaSalesPage — Página de Apresentação da Formação Orácula
@@ -704,6 +705,15 @@ export default function OraculaSalesPage() {
             </Button>
           </div>
         </motion.div>
+      </section>
+
+      {/* ═══ IMAGEM FINAL ═══ */}
+      <section className="w-full flex justify-center py-8">
+        <img 
+          src={retratoFinal} 
+          alt="Casa Orácula" 
+          className="w-full max-w-md md:max-w-lg object-contain opacity-80 grayscale"
+        />
       </section>
 
       {/* ═══ FOOTER ═══ */}
