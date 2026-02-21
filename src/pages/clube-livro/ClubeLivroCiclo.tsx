@@ -46,7 +46,6 @@ export default function ClubeLivroCiclo() {
   const { data: integracao8020Record } = useIntegracao8020Record(id);
   const { isProfessional } = useProfessionalStatus();
   const { user } = useAuth();
-  const [selectedPortaId, setSelectedPortaId] = useState<string | null>(null);
   const [showEscutaChat, setShowEscutaChat] = useState(false);
 
   // Fetch portas from DB for multipolar books
@@ -77,14 +76,9 @@ export default function ClubeLivroCiclo() {
 
   const infograficoUrl = (ciclo as any)?.infografico_url;
 
-  // Filter aulas by selected porta for multipolar books
-  const filteredAulas = isMultipolar && selectedPortaId
-    ? (aulas || []).filter((a: any) => a.porta_id === selectedPortaId)
-    : aulas;
-
-  const filteredEscutas = isMultipolar && selectedPortaId
-    ? (escutas || []).filter((e: any) => e.porta_id === selectedPortaId)
-    : escutas;
+  // For multipolar books, show all aulas/escutas on the ciclo page (porta-specific ones are on porta pages)
+  const filteredAulas = aulas;
+  const filteredEscutas = escutas;
 
   if (isLoading) {
     return (
@@ -187,47 +181,31 @@ export default function ClubeLivroCiclo() {
             </h3>
             <div className="grid gap-2 sm:grid-cols-2">
               {portasDB.map((porta: any) => {
-                const isSelected = selectedPortaId === porta.id;
                 const jornadaCorPorta = JORNADA_COR[porta.jornada] || null;
                 return (
                   <Card
                     key={porta.id}
-                    className={cn(
-                      'cursor-pointer transition-all group',
-                      isSelected
-                        ? 'border-primary ring-1 ring-primary/30'
-                        : 'hover:border-primary/40',
-                    )}
-                    onClick={() => setSelectedPortaId(isSelected ? null : porta.id)}
+                    className="cursor-pointer transition-all group hover:border-primary/40"
+                    onClick={() => navigate(`/clube-livro/${id}/porta/${porta.id}`)}
                   >
                     <CardContent className="py-3 flex items-center gap-3">
                       <span className={cn('text-lg leading-none shrink-0', jornadaCorPorta?.corLabel || 'text-primary')}>
                         {porta.icone || jornadaCorPorta?.simbolo || '◈'}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className={cn(
-                          'text-sm font-medium transition-colors',
-                          isSelected ? 'text-primary' : 'text-foreground group-hover:text-primary',
-                        )}>
+                        <p className="text-sm font-medium transition-colors text-foreground group-hover:text-primary">
                           {porta.titulo}
                         </p>
                         {porta.descricao && (
                           <p className="text-xs text-muted-foreground truncate">{porta.descricao}</p>
                         )}
                       </div>
-                      {isSelected && (
-                        <Badge variant="secondary" className="text-xs shrink-0">Selecionada</Badge>
-                      )}
+                      <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary shrink-0" />
                     </CardContent>
                   </Card>
                 );
               })}
             </div>
-            {!selectedPortaId && (
-              <p className="text-xs text-muted-foreground mt-2 text-center italic">
-                Selecione uma porta para ver o conteúdo específico da jornada.
-              </p>
-            )}
           </div>
         )}
 
