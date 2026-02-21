@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AudioUpload } from '../AudioUpload';
+import { AulaBlocosEditor, AulaBloco } from './AulaBlocosEditor';
 
 const JORNADAS_OPTIONS = [
   { value: 'heroina', label: 'Jornada da Heroína', simbolo: '◈', cor: 'text-amber-400' },
@@ -522,6 +523,7 @@ function PortaAulaDialog({ open, onOpenChange, aula, cicloId, portaId, nextOrdem
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [form, setForm] = useState({ titulo: '', subtitulo: '', descricao: '', duracao: '', media_url: '', media_type: 'video', conteudo: '', ordem: nextOrdem });
+  const [blocos, setBlocos] = useState<AulaBloco[]>([]);
 
   const save = useMutation({
     mutationFn: async () => {
@@ -534,7 +536,7 @@ function PortaAulaDialog({ open, onOpenChange, aula, cicloId, portaId, nextOrdem
         duracao: form.duracao || null,
         media_url: form.media_type !== 'texto' ? (form.media_url || null) : null,
         media_type: form.media_type,
-        conteudo: form.media_type === 'texto' ? (form.conteudo || null) : null,
+        conteudo: blocos.length > 0 ? JSON.stringify(blocos) : (form.media_type === 'texto' ? (form.conteudo || null) : null),
         ordem: form.ordem,
       } as any;
       if (aula?.id) {
@@ -563,9 +565,17 @@ function PortaAulaDialog({ open, onOpenChange, aula, cicloId, portaId, nextOrdem
       duracao: aula.duracao || '',
       media_url: aula.media_url || '',
       media_type: aula.media_type || 'video',
-      conteudo: (aula as any).conteudo || '',
+      conteudo: '',
       ordem: aula.ordem,
     });
+    // Parse existing blocos
+    try {
+      const raw = (aula as any).conteudo;
+      if (raw) {
+        const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+        if (Array.isArray(parsed)) setBlocos(parsed);
+      }
+    } catch { setBlocos([]); }
   }
 
   return (
@@ -621,6 +631,8 @@ function PortaAulaDialog({ open, onOpenChange, aula, cicloId, portaId, nextOrdem
             <Label>Descrição</Label>
             <Textarea value={form.descricao} onChange={(e) => setForm({ ...form, descricao: e.target.value })} className="min-h-[60px]" />
           </div>
+          {/* Blocos de conteúdo editáveis */}
+          <AulaBlocosEditor blocos={blocos} onChange={setBlocos} />
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
