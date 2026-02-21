@@ -23,15 +23,14 @@ export default function OraculaSalesPage() {
       
       {/* ═══ HERO — BANNER IMAGEM ═══ */}
       <section className="relative w-full">
-        {/* Banner Image */}
-        <div className="relative w-full aspect-[2.5/1] md:aspect-[3/1] overflow-hidden">
+        <div className="relative w-full overflow-hidden">
           <img
             src={mentoriaBanner}
             alt="Casa Orácula — Formação Iniciática em Terapia Arquetípica"
-            className="w-full h-full object-cover object-center"
+            className="w-full h-auto block"
           />
-          {/* Bottom fade into page */}
-          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background via-background/80 to-transparent" />
+          {/* Bottom fade — only covers the very bottom edge */}
+          <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent" />
         </div>
       </section>
 
