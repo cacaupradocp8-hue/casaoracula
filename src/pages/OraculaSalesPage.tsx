@@ -10,6 +10,7 @@ import finalPagina from "@/assets/formacao/final-pagina.png";
 import fundoNarroterapia from "@/assets/formacao/fundo-narroterapia.png";
 import fundoParaQuemE from "@/assets/formacao/fundo-para-quem-e.png";
 import fundoRitual2 from "@/assets/formacao/fundo-ritual-2.png";
+import fundoRetrato01 from "@/assets/formacao/fundo-retrato-01.png";
 
 /**
  * OraculaSalesPage — Página de Apresentação da Formação Orácula
@@ -117,13 +118,16 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══ BLOCO 3 — AVISO HONESTO (FILTRO) ═══ */}
-      <section className="py-16 px-6">
+      <section className="relative py-16 px-6 overflow-hidden">
+        {/* Background image */}
+        <img src={fundoRetrato01} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover opacity-[0.12]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-background" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="max-w-2xl mx-auto text-center"
+          className="relative z-10 max-w-2xl mx-auto text-center"
         >
           <Shield className="w-8 h-8 text-gold/40 mx-auto mb-6" />
           
@@ -646,62 +650,17 @@ export default function OraculaSalesPage() {
         </motion.div>
       </section>
 
-      {/* ═══ INVESTIMENTO ═══ */}
-      <section className="py-20 px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="max-w-3xl mx-auto"
-        >
-          <h2 className="font-display text-3xl md:text-4xl text-gold mb-14 text-center">
-            Investimento
-          </h2>
-          
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Formação Completa */}
-            <div className="backdrop-blur-sm bg-card/40 border border-gold/20 rounded-2xl p-10 text-center">
-              <h3 className="font-display text-lg text-foreground mb-4">
-                Formação ORÁCULA<br />
-                <span className="text-foreground/50 text-sm">Certificação Completa</span>
-              </h3>
-              <p className="text-3xl text-gold font-display mb-3">
-                R$ 4.997 — R$ 7.997
-              </p>
-              <p className="text-foreground/40 text-sm">(parcelável)</p>
-            </div>
-            
-            {/* Premium */}
-            <div className="backdrop-blur-sm bg-gold/[0.06] border border-gold/30 rounded-2xl p-10 text-center shadow-[0_0_40px_-15px_hsl(var(--gold)/0.1)]">
-              <h3 className="font-display text-lg text-foreground mb-4">
-                Opção Premium<br />
-                <span className="text-gold/60 text-sm">com mentoria individual</span>
-              </h3>
-              <p className="text-3xl text-gold font-display mb-3">
-                R$ 9.997 — R$ 14.997
-              </p>
-            </div>
-          </div>
-          
-          <div className="mt-10 text-center">
-            <p className="text-foreground/50">O acesso à formação é seu.</p>
-            <p className="text-foreground/40 text-sm italic mt-1">
-              O plano mensal é opcional e contratado à parte.
-            </p>
-          </div>
-        </motion.div>
-      </section>
+
 
       {/* ═══ ENCERRAMENTO ═══ */}
       <section className="relative py-20 px-6 overflow-hidden">
         <img 
-          src={fundoRitual2} 
+          src={fundoRetrato01} 
           alt="" 
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover opacity-[0.08]"
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.15] object-top"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-background" />
         
         <motion.div
           initial={{ opacity: 0, y: 20 }}
