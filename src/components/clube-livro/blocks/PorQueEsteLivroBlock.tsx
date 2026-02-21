@@ -1,21 +1,24 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sparkles } from 'lucide-react';
-import { SymbolicCarouselBlock, CarouselSlide } from './SymbolicCarouselBlock';
 
 interface PorQueEsteLivroBlockProps {
-  texto?: string;
-  slides?: CarouselSlide[];
-  audioUrl?: string | null;
+  texto: string;
 }
 
-export function PorQueEsteLivroBlock({ texto, slides = [], audioUrl }: PorQueEsteLivroBlockProps) {
+export function PorQueEsteLivroBlock({ texto }: PorQueEsteLivroBlockProps) {
   return (
-    <SymbolicCarouselBlock
-      title="Por que este livro está aqui"
-      icon={<Sparkles className="w-4 h-4" />}
-      slides={slides}
-      audioUrl={audioUrl}
-      fallbackText={texto}
-      className="border-gold/20"
-    />
+    <Card className="bg-card/50 border-gold/20">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm uppercase tracking-widest text-gold flex items-center gap-2">
+          <Sparkles className="w-4 h-4" />
+          Por que este livro está aqui
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+          {texto}
+        </p>
+      </CardContent>
+    </Card>
   );
 }

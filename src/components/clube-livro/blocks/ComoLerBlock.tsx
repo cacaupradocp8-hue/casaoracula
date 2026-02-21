@@ -1,20 +1,24 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookOpen } from 'lucide-react';
-import { SymbolicCarouselBlock, CarouselSlide } from './SymbolicCarouselBlock';
 
 interface ComoLerBlockProps {
-  texto?: string;
-  slides?: CarouselSlide[];
-  audioUrl?: string | null;
+  texto: string;
 }
 
-export function ComoLerBlock({ texto, slides = [], audioUrl }: ComoLerBlockProps) {
+export function ComoLerBlock({ texto }: ComoLerBlockProps) {
   return (
-    <SymbolicCarouselBlock
-      title="Como ler este livro na Casa Orácula"
-      icon={<BookOpen className="w-4 h-4" />}
-      slides={slides}
-      audioUrl={audioUrl}
-      fallbackText={texto}
-    />
+    <Card className="bg-muted/30">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+          <BookOpen className="w-4 h-4" />
+          Como ler este livro na Casa Orácula
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+          {texto}
+        </p>
+      </CardContent>
+    </Card>
   );
 }
