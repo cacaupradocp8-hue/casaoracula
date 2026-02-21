@@ -132,6 +132,10 @@ interface Ciclo {
   ritual_aceite_obrigatorio?: boolean;
   portal_minimo_clinico?: string;
   campo_simbolico?: string;
+  por_que_slides?: any[];
+  por_que_audio_url?: string;
+  como_ler_slides?: any[];
+  como_ler_audio_url?: string;
 }
 
 interface Fase {
@@ -226,6 +230,10 @@ export function AdminClubeLivroTab() {
         publicado: ciclo.publicado,
         is_multipolar: (ciclo as any).is_multipolar ?? false,
         campo_simbolico: (ciclo as any).campo_simbolico || null,
+        por_que_slides: (ciclo as any).por_que_slides || [],
+        por_que_audio_url: (ciclo as any).por_que_audio_url || null,
+        como_ler_slides: (ciclo as any).como_ler_slides || [],
+        como_ler_audio_url: (ciclo as any).como_ler_audio_url || null,
       };
       
       if (ciclo.id) {
@@ -1214,6 +1222,10 @@ function CicloDialog({
     publicado: false,
     is_multipolar: false,
     campo_simbolico: '',
+    por_que_slides_json: '[]',
+    por_que_audio_url: '',
+    como_ler_slides_json: '[]',
+    como_ler_audio_url: '',
   });
 
   // Reset form when dialog opens
@@ -1231,16 +1243,29 @@ function CicloDialog({
         publicado: ciclo.publicado || false,
         is_multipolar: (ciclo as any).is_multipolar || false,
         campo_simbolico: (ciclo as any).campo_simbolico || '',
+        por_que_slides_json: JSON.stringify((ciclo as any).por_que_slides || [], null, 2),
+        por_que_audio_url: (ciclo as any).por_que_audio_url || '',
+        como_ler_slides_json: JSON.stringify((ciclo as any).como_ler_slides || [], null, 2),
+        como_ler_audio_url: (ciclo as any).como_ler_audio_url || '',
       });
     }
   });
 
   const handleSubmit = () => {
     if (!form.titulo.trim()) return;
+    let porQueSlides = [];
+    let comoLerSlides = [];
+    try { porQueSlides = JSON.parse(form.por_que_slides_json); } catch {}
+    try { comoLerSlides = JSON.parse(form.como_ler_slides_json); } catch {}
+    
     onSave({
       ...form,
+      por_que_slides: porQueSlides,
+      por_que_audio_url: form.por_que_audio_url || undefined,
+      como_ler_slides: comoLerSlides,
+      como_ler_audio_url: form.como_ler_audio_url || undefined,
       ...(ciclo?.id ? { id: ciclo.id } : {}),
-    });
+    } as any);
   };
 
   return (
@@ -1301,22 +1326,64 @@ function CicloDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>Por que este livro está aqui</Label>
+            <Label>Por que este livro está aqui (texto fallback)</Label>
             <Textarea
               value={form.por_que_este_livro}
               onChange={(e) => setForm({ ...form, por_que_este_livro: e.target.value })}
               placeholder="Texto explicando a escolha do livro..."
-              className="min-h-[100px]"
+              className="min-h-[80px]"
             />
           </div>
 
           <div className="space-y-2">
-            <Label>Como ler este livro na Casa Orácula</Label>
+            <Label>Slides — "Por que este livro" (JSON)</Label>
+            <Textarea
+              value={form.por_que_slides_json}
+              onChange={(e) => setForm({ ...form, por_que_slides_json: e.target.value })}
+              placeholder={'[\n  { "titulo": "...", "frase_simbolica": "...", "image_url": "https://..." }\n]'}
+              className="min-h-[100px] font-mono text-xs"
+            />
+            <p className="text-xs text-muted-foreground">Array JSON de 6-8 slides. Campos: titulo, frase_simbolica, image_url (todos opcionais).</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Áudio — "Por que este livro" (URL)</Label>
+            <Input
+              value={form.por_que_audio_url}
+              onChange={(e) => setForm({ ...form, por_que_audio_url: e.target.value })}
+              placeholder="https://... (URL do áudio MP3)"
+            />
+          </div>
+
+          <Separator />
+
+          <div className="space-y-2">
+            <Label>Como ler este livro (texto fallback)</Label>
             <Textarea
               value={form.como_ler}
               onChange={(e) => setForm({ ...form, como_ler: e.target.value })}
               placeholder="Orientações sobre a leitura..."
-              className="min-h-[100px]"
+              className="min-h-[80px]"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Slides — "Como ler este livro" (JSON)</Label>
+            <Textarea
+              value={form.como_ler_slides_json}
+              onChange={(e) => setForm({ ...form, como_ler_slides_json: e.target.value })}
+              placeholder={'[\n  { "titulo": "...", "frase_simbolica": "...", "image_url": "https://..." }\n]'}
+              className="min-h-[100px] font-mono text-xs"
+            />
+            <p className="text-xs text-muted-foreground">Array JSON de 6-8 slides. Campos: titulo, frase_simbolica, image_url (todos opcionais).</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Áudio — "Como ler este livro" (URL)</Label>
+            <Input
+              value={form.como_ler_audio_url}
+              onChange={(e) => setForm({ ...form, como_ler_audio_url: e.target.value })}
+              placeholder="https://... (URL do áudio MP3)"
             />
           </div>
 

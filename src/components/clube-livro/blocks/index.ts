@@ -4,6 +4,8 @@ export { RegrasEticasBlock } from './RegrasEticasBlock';
 export { CicloHeaderBlock } from './CicloHeaderBlock';
 export { PorQueEsteLivroBlock } from './PorQueEsteLivroBlock';
 export { ComoLerBlock } from './ComoLerBlock';
+export { SymbolicCarouselBlock } from './SymbolicCarouselBlock';
+export type { CarouselSlide } from './SymbolicCarouselBlock';
 export { FasesLeituraBlock } from './FasesLeituraBlock';
 export { EscutaGuiadaBlock } from './EscutaGuiadaBlock';
 export { EncontrosBlock } from './EncontrosBlock';
