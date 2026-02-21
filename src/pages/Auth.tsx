@@ -12,7 +12,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react';
 import { loginSchema, signupSchema, forgotPasswordSchema, getValidationError } from '@/lib/validations';
 import { useCopy } from '@/hooks/useCopy';
-import { motion } from 'framer-motion';
 
 
 export default function Auth() {
@@ -132,32 +131,25 @@ export default function Auth() {
 
   /* ─── Glass form container ─── */
   const GlassContainer = ({ children }: { children: React.ReactNode }) => (
-    <motion.div
-      initial={{ opacity: 0, y: 30, scale: 0.96 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className="relative"
-    >
-      {/* Outer glow ring */}
+    <div className="relative">
       <div className="absolute -inset-px rounded-3xl bg-gradient-to-b from-gold/20 via-gold/5 to-transparent" />
       <div className="relative rounded-3xl bg-card/70 backdrop-blur-2xl border border-border/30 p-8 md:p-10 shadow-[0_24px_80px_-16px_hsl(var(--gold)/0.15)]">
-        {/* Corner accents */}
         <div className="absolute top-0 left-6 w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
         <div className="absolute bottom-0 right-6 w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
         {children}
       </div>
-    </motion.div>
+    </div>
   );
 
   // ─── Forgot password view ───
   if (showForgotPassword) {
     return (
-      <div className="min-h-screen relative flex items-center justify-center p-4">
-        <ImmersiveBg />
-        <div className="relative z-10 w-full max-w-md">
-          <button 
-            onClick={() => { setShowForgotPassword(false); setForgotPasswordSent(false); setForgotPasswordEmail(''); }}
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-gold transition-colors mb-8"
+    <div className="min-h-[100dvh] relative flex items-center justify-center p-4">
+      <ImmersiveBg />
+      <div className="relative z-10 w-full max-w-md">
+        <button 
+          onClick={() => { setShowForgotPassword(false); setForgotPasswordSent(false); setForgotPasswordEmail(''); }}
+          className="inline-flex items-center gap-2 text-muted-foreground hover:text-gold transition-colors mb-8"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Voltar para Login</span>
@@ -206,7 +198,7 @@ export default function Auth() {
 
   // ─── Main auth view ───
   return (
-    <div className="min-h-screen relative flex items-center justify-center p-4">
+    <div className="min-h-[100dvh] relative flex items-center justify-center p-4">
       <ImmersiveBg />
       
       <div className="relative z-10 w-full max-w-md">
@@ -216,27 +208,17 @@ export default function Auth() {
         </Link>
 
         {/* Logo + Title */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-center mb-8"
-        >
+        <div className="text-center mb-8">
           <Logo size="md" variant="vertical" className="justify-center mb-4" />
           <div className="flex items-center justify-center gap-4 mb-3">
             <div className="h-px w-12 bg-gradient-to-r from-transparent to-gold/40" />
             <span className="text-[10px] uppercase tracking-[0.4em] text-gold/50 font-medium">Portal de Entrada</span>
             <div className="h-px w-12 bg-gradient-to-l from-transparent to-gold/40" />
           </div>
-        </motion.div>
+        </div>
 
         {/* Manifesto — elevated */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="relative mb-8 text-center"
-        >
+        <div className="relative mb-8 text-center">
           <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-gold/15 to-transparent" />
           <div className="relative rounded-2xl bg-card/40 backdrop-blur-xl border border-gold/10 p-6 md:p-8">
             <p className="text-foreground/90 text-base leading-relaxed font-display tracking-wide">
@@ -249,7 +231,7 @@ export default function Auth() {
               Aprende-se a sustentar.
             </p>
           </div>
-        </motion.div>
+        </div>
 
         {/* Form */}
         <GlassContainer>
