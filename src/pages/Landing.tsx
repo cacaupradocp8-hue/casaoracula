@@ -60,7 +60,7 @@ export default function Landing() {
               {getCopyByKey('landing_texto_2', 'É um espaço de formação simbólica, clínica e ética para mulheres que conduzem outras mulheres.')}
             </p>
             <p className="text-primary italic font-display text-xl md:text-2xl mt-6">
-              {getCopyByKey('landing_convite', 'Sente-se. A Casa se revela passo a passo.')}
+              {getCopyByKey('landing_convite', 'Entre. A Casa se revela passo a passo.')}
             </p>
           </motion.div>
 
