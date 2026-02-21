@@ -748,7 +748,7 @@ export default function OraculaSalesPage() {
         <img 
           src={retratoFinal} 
           alt="Casa Orácula" 
-          className="w-full max-w-md md:max-w-lg object-contain opacity-[0.10] grayscale"
+          className="w-full max-w-md md:max-w-lg object-contain opacity-40 grayscale"
         />
       </section>
 
