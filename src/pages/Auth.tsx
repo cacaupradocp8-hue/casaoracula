@@ -13,6 +13,29 @@ import { Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react';
 import { loginSchema, signupSchema, forgotPasswordSchema, getValidationError } from '@/lib/validations';
 import { useCopy } from '@/hooks/useCopy';
 
+/* ─── Shared immersive background (OUTSIDE component to avoid re-creation) ─── */
+const ImmersiveBg = () => (
+  <>
+    <div className="fixed inset-0 bg-background" />
+    <div className="fixed inset-0 pointer-events-none">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_30%,hsl(var(--gold)/0.06),transparent_70%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_20%_70%,hsl(var(--accent)/0.05),transparent_60%)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background/80" />
+    </div>
+  </>
+);
+
+/* ─── Glass form container (OUTSIDE component to avoid re-creation) ─── */
+const GlassContainer = ({ children }: { children: React.ReactNode }) => (
+  <div className="relative">
+    <div className="absolute -inset-px rounded-3xl bg-gradient-to-b from-gold/20 via-gold/5 to-transparent" />
+    <div className="relative rounded-3xl bg-card/70 backdrop-blur-2xl border border-border/30 p-8 md:p-10 shadow-[0_24px_80px_-16px_hsl(var(--gold)/0.15)]">
+      <div className="absolute top-0 left-6 w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+      <div className="absolute bottom-0 right-6 w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+      {children}
+    </div>
+  </div>
+);
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
@@ -115,41 +138,15 @@ export default function Auth() {
     setForgotPasswordLoading(false);
   };
 
-  /* ─── Shared immersive background ─── */
-  const ImmersiveBg = () => (
-    <>
-      {/* Deep cosmic base */}
-      <div className="fixed inset-0 bg-background" />
-      {/* Ambient mist — opacity only, no scale */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_30%,hsl(var(--gold)/0.06),transparent_70%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_20%_70%,hsl(var(--accent)/0.05),transparent_60%)]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background/80" />
-      </div>
-    </>
-  );
-
-  /* ─── Glass form container ─── */
-  const GlassContainer = ({ children }: { children: React.ReactNode }) => (
-    <div className="relative">
-      <div className="absolute -inset-px rounded-3xl bg-gradient-to-b from-gold/20 via-gold/5 to-transparent" />
-      <div className="relative rounded-3xl bg-card/70 backdrop-blur-2xl border border-border/30 p-8 md:p-10 shadow-[0_24px_80px_-16px_hsl(var(--gold)/0.15)]">
-        <div className="absolute top-0 left-6 w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
-        <div className="absolute bottom-0 right-6 w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
-        {children}
-      </div>
-    </div>
-  );
-
   // ─── Forgot password view ───
   if (showForgotPassword) {
     return (
-    <div className="min-h-[100dvh] relative flex items-center justify-center p-4">
-      <ImmersiveBg />
-      <div className="relative z-10 w-full max-w-md">
-        <button 
-          onClick={() => { setShowForgotPassword(false); setForgotPasswordSent(false); setForgotPasswordEmail(''); }}
-          className="inline-flex items-center gap-2 text-muted-foreground hover:text-gold transition-colors mb-8"
+      <div className="min-h-[100dvh] relative flex items-center justify-center p-4">
+        <ImmersiveBg />
+        <div className="relative z-10 w-full max-w-md">
+          <button
+            onClick={() => { setShowForgotPassword(false); setForgotPasswordSent(false); setForgotPasswordEmail(''); }}
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-gold transition-colors mb-8"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Voltar para Login</span>
@@ -182,7 +179,15 @@ export default function Auth() {
               <form onSubmit={handleForgotPassword} className="space-y-5">
                 <div className="space-y-2">
                   <Label htmlFor="forgot-email" className="text-foreground/80">Email</Label>
-                  <Input id="forgot-email" type="email" placeholder="seu@email.com" value={forgotPasswordEmail} onChange={(e) => setForgotPasswordEmail(e.target.value)} required className="bg-background/50 border-border/40 focus:border-gold/50" />
+                  <input
+                    id="forgot-email"
+                    type="email"
+                    placeholder="seu@email.com"
+                    value={forgotPasswordEmail}
+                    onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                    required
+                    className="flex h-12 w-full rounded-md border border-border/40 bg-background/50 px-3 py-2 text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-gold/40 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                  />
                 </div>
                 <Button type="submit" variant="gold" className="w-full h-12 text-base shadow-[0_0_30px_-6px_hsl(var(--gold)/0.3)]" disabled={forgotPasswordLoading}>
                   {forgotPasswordLoading ? (<><Loader2 className="w-4 h-4 mr-2 animate-spin" />Enviando...</>) : 'Enviar Link de Recuperação'}
@@ -200,14 +205,13 @@ export default function Auth() {
   return (
     <div className="min-h-[100dvh] relative flex items-center justify-center p-4">
       <ImmersiveBg />
-      
+
       <div className="relative z-10 w-full max-w-md">
         <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-gold transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
           <span>Voltar</span>
         </Link>
 
-        {/* Logo + Title */}
         <div className="text-center mb-8">
           <Logo size="md" variant="vertical" className="justify-center mb-4" />
           <div className="flex items-center justify-center gap-4 mb-3">
@@ -217,7 +221,6 @@ export default function Auth() {
           </div>
         </div>
 
-        {/* Manifesto — elevated */}
         <div className="relative mb-8 text-center">
           <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-gold/15 to-transparent" />
           <div className="relative rounded-2xl bg-card/40 backdrop-blur-xl border border-gold/10 p-6 md:p-8">
@@ -233,7 +236,6 @@ export default function Auth() {
           </div>
         </div>
 
-        {/* Form */}
         <GlassContainer>
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-8 bg-background/40">
@@ -245,12 +247,28 @@ export default function Auth() {
               <form onSubmit={handleLogin} className="space-y-5">
                 <div className="space-y-2">
                   <Label htmlFor="login-email" className="text-foreground/80">Email</Label>
-                  <Input id="login-email" type="email" placeholder="seu@email.com" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required className="h-12 bg-background/50 border-border/40 focus:border-gold/50" />
+                  <input
+                    id="login-email"
+                    type="email"
+                    placeholder="seu@email.com"
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
+                    required
+                    className="flex h-12 w-full rounded-md border border-border/40 bg-background/50 px-3 py-2 text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-gold/40 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="login-password" className="text-foreground/80">Senha</Label>
                   <div className="relative">
-                    <Input id="login-password" type={showPassword ? 'text' : 'password'} placeholder="••••••••" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required className="h-12 bg-background/50 border-border/40 focus:border-gold/50" />
+                    <input
+                      id="login-password"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                      required
+                      className="flex h-12 w-full rounded-md border border-border/40 bg-background/50 px-3 py-2 text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-gold/40 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                    />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -287,16 +305,41 @@ export default function Auth() {
               <form onSubmit={handleSignup} className="space-y-5">
                 <div className="space-y-2">
                   <Label htmlFor="signup-name" className="text-foreground/80">Nome</Label>
-                  <Input id="signup-name" type="text" placeholder="Seu nome" value={signupName} onChange={(e) => setSignupName(e.target.value)} required className="h-12 bg-background/50 border-border/40 focus:border-gold/50" />
+                  <input
+                    id="signup-name"
+                    type="text"
+                    placeholder="Seu nome"
+                    value={signupName}
+                    onChange={(e) => setSignupName(e.target.value)}
+                    required
+                    className="flex h-12 w-full rounded-md border border-border/40 bg-background/50 px-3 py-2 text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-gold/40 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-email" className="text-foreground/80">Email</Label>
-                  <Input id="signup-email" type="email" placeholder="seu@email.com" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required className="h-12 bg-background/50 border-border/40 focus:border-gold/50" />
+                  <input
+                    id="signup-email"
+                    type="email"
+                    placeholder="seu@email.com"
+                    value={signupEmail}
+                    onChange={(e) => setSignupEmail(e.target.value)}
+                    required
+                    className="flex h-12 w-full rounded-md border border-border/40 bg-background/50 px-3 py-2 text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-gold/40 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-password" className="text-foreground/80">Senha</Label>
                   <div className="relative">
-                    <Input id="signup-password" type={showPassword ? 'text' : 'password'} placeholder="••••••••" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required minLength={6} className="h-12 bg-background/50 border-border/40 focus:border-gold/50" />
+                    <input
+                      id="signup-password"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      value={signupPassword}
+                      onChange={(e) => setSignupPassword(e.target.value)}
+                      required
+                      minLength={6}
+                      className="flex h-12 w-full rounded-md border border-border/40 bg-background/50 px-3 py-2 text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-gold/40 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                    />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -324,7 +367,7 @@ export default function Auth() {
                 </Button>
 
                 <p className="text-xs text-muted-foreground/60 text-center pt-2 leading-relaxed">
-                  Ao criar conta, você inicia como Visitante (Portal 1). 
+                  Ao criar conta, você inicia como Visitante (Portal 1).
                   O acesso a outros Portais é liberado pela Guardiã.
                 </p>
               </form>
