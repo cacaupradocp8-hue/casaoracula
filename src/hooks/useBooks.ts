@@ -27,7 +27,9 @@ export interface CycleBook {
   id: string;
   cycle_id: string;
   book_id: string;
+  layer: string | null;
   layer_order: number;
+  ring_index: number | null;
   quadrant: string | null;
   is_core: boolean;
   book?: Book;
@@ -137,6 +139,21 @@ export function useBookLessons(bookId: string | undefined) {
         .order('week_number');
       if (error) throw error;
       return data as LessonAlbum[];
+    },
+  });
+}
+
+export function useBookLinksForBook(bookId: string | undefined) {
+  return useQuery({
+    queryKey: ['book-links-for', bookId],
+    enabled: !!bookId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('book_links')
+        .select('*, from_book:books!book_links_from_book_id_fkey(*), to_book:books!book_links_to_book_id_fkey(*)')
+        .or(`from_book_id.eq.${bookId},to_book_id.eq.${bookId}`);
+      if (error) throw error;
+      return data as (BookLink & { from_book: Book; to_book: Book })[];
     },
   });
 }

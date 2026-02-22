@@ -5,29 +5,30 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Lock, X, Key, Columns, Moon } from 'lucide-react';
+import { BookOpen, X, Key, Columns, Moon, List, Circle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { useActiveCycle, useCycleBooks, useBookLinks, type Book, type CycleBook, type BookLink } from '@/hooks/useBooks';
+import { useActiveCycle, useCycleBooks, useBookLinks, type Book, type CycleBook } from '@/hooks/useBooks';
 
 // ============================================
 // CATEGORY CONFIG
 // ============================================
 
-const CATEGORY_CONFIG: Record<string, { label: string; cor: string; corAccent: string; raio: number; nodeSize: number }> = {
-  MATRIZ:    { label: 'Matriz',    cor: 'text-gold',             corAccent: '#D4A843', raio: 0,   nodeSize: 44 },
-  TRAVESSIA: { label: 'Travessia', cor: 'text-gold',             corAccent: '#D4A843', raio: 120, nodeSize: 34 },
-  PORTA:     { label: 'Porta',     cor: 'text-violet-400',       corAccent: '#8B5CF6', raio: 200, nodeSize: 26 },
-  PONTE:     { label: 'Ponte',     cor: 'text-teal-400',         corAccent: '#14B8A6', raio: 260, nodeSize: 20 },
-  FUNDACAO:  { label: 'Fundação',  cor: 'text-muted-foreground', corAccent: '#78716C', raio: 0,   nodeSize: 16 },
+const CATEGORY_CONFIG: Record<string, { label: string; iconLabel: string; cor: string; corAccent: string; raio: number; nodeSize: number }> = {
+  MATRIZ:    { label: 'Matriz',    iconLabel: '☽◯☾', cor: 'text-amber-400',  corAccent: '#D4A843', raio: 0,   nodeSize: 44 },
+  TRAVESSIA: { label: 'Travessia', iconLabel: '◈',   cor: 'text-amber-300',  corAccent: '#D4A843', raio: 120, nodeSize: 32 },
+  PORTA:     { label: 'Porta',     iconLabel: '🗝',   cor: 'text-violet-400', corAccent: '#8B5CF6', raio: 200, nodeSize: 24 },
+  PONTE:     { label: 'Ponte',     iconLabel: '⌒',   cor: 'text-teal-400',   corAccent: '#14B8A6', raio: 260, nodeSize: 18 },
+  FUNDACAO:  { label: 'Fundação',  iconLabel: '⊞',   cor: 'text-muted-foreground', corAccent: '#78716C', raio: 0, nodeSize: 16 },
 };
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   TRAVESSIA: <BookOpen className="w-3 h-3" />,
   PORTA: <Key className="w-3 h-3" />,
-  PONTE: <BookOpen className="w-3 h-3" />,
+  PONTE: <Circle className="w-3 h-3" />,
   FUNDACAO: <Columns className="w-3 h-3" />,
   MATRIZ: <Moon className="w-3 h-3" />,
 };
@@ -50,7 +51,7 @@ function BookSidePanel({ book, onClose, onNavigate }: { book: Book; onClose: () 
       exit={{ opacity: 0, x: 40 }}
       className="fixed inset-y-0 right-0 w-80 max-w-[90vw] z-50 bg-card border-l border-border shadow-2xl overflow-y-auto"
     >
-      <div className="p-6 space-y-6">
+      <div className="p-6 space-y-5">
         <div className="flex items-start justify-between">
           <div>
             <Badge variant="outline" className={cn('text-xs mb-2', cat.cor)}>{cat.label}</Badge>
@@ -61,15 +62,69 @@ function BookSidePanel({ book, onClose, onNavigate }: { book: Book; onClose: () 
         </div>
         {book.cover_url && <img src={book.cover_url} alt={book.title} className="w-full h-48 object-cover rounded-lg shadow-lg" />}
         {book.description_short && (
-          <div className="text-sm text-muted-foreground italic border-l-2 border-gold/30 pl-3">{book.description_short}</div>
+          <div className="text-sm text-muted-foreground italic border-l-2 border-amber-500/30 pl-3">{book.description_short}</div>
         )}
-        <div className="space-y-2">
-          <Button variant="outline" className="w-full justify-start gap-2" onClick={() => onNavigate(`/clube-livro/livro/${book.id}`)}>
-            <BookOpen className="w-4 h-4" /> Ver Livro
-          </Button>
-        </div>
+        {book.manifesto_short && (
+          <p className="text-sm text-foreground/80">{book.manifesto_short}</p>
+        )}
+        <Button variant="outline" className="w-full justify-start gap-2" onClick={() => onNavigate(`/clube-livro/livro/${book.id}`)}>
+          <BookOpen className="w-4 h-4" /> Abrir Página do Livro
+        </Button>
       </div>
     </motion.div>
+  );
+}
+
+// ============================================
+// LIST VIEW
+// ============================================
+
+function LayerListView({ cycleBooks, onSelect }: { cycleBooks: CycleBook[]; onSelect: (b: Book) => void }) {
+  const layers: { key: string; label: string }[] = [
+    { key: 'MATRIZ', label: 'Matriz' },
+    { key: 'TRAVESSIA', label: 'Travessias' },
+    { key: 'PORTA', label: 'Portas' },
+    { key: 'PONTE', label: 'Pontes' },
+    { key: 'FUNDACAO', label: 'Fundação' },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {layers.map(({ key, label }) => {
+        const items = cycleBooks.filter(cb => (cb.layer || cb.book?.category) === key);
+        if (!items.length) return null;
+        const config = CATEGORY_CONFIG[key];
+        return (
+          <div key={key} className="space-y-2">
+            <div className={cn('flex items-center gap-2 px-1', config.cor)}>
+              {CATEGORY_ICONS[key]}
+              <span className="text-xs font-semibold uppercase tracking-widest">{label}</span>
+              <span className="text-xs text-muted-foreground">({items.length})</span>
+            </div>
+            <div className="grid gap-2">
+              {items.map(cb => cb.book && (
+                <Card key={cb.book.id} className="cursor-pointer hover:border-amber-500/40 transition-all" onClick={() => onSelect(cb.book!)}>
+                  <CardContent className="p-3 flex items-center gap-3">
+                    {cb.book.cover_url ? (
+                      <img src={cb.book.cover_url} alt={cb.book.title} className="w-10 h-14 object-cover rounded shadow" />
+                    ) : (
+                      <div className="w-10 h-14 rounded bg-muted flex items-center justify-center shrink-0">
+                        {CATEGORY_ICONS[key] || <BookOpen className="w-4 h-4 text-muted-foreground" />}
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-display text-foreground truncate">{cb.book.title}</p>
+                      <p className="text-xs text-muted-foreground">{cb.book.author}</p>
+                      {cb.book.is_multipolar && <Badge variant="secondary" className="text-[10px] mt-1">Multipolar</Badge>}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
@@ -84,6 +139,7 @@ export function MandalaAnualDB() {
   const { data: links } = useBookLinks(cycle?.id);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'mandala' | 'list'>('mandala');
 
   const size = 660;
   const cx = size / 2;
@@ -97,24 +153,24 @@ export function MandalaAnualDB() {
     return <div className="text-center py-16 text-muted-foreground">Nenhum ciclo encontrado.</div>;
   }
 
-  // Separate by category
-  const matriz = cycleBooks.filter(cb => cb.book?.category === 'MATRIZ');
-  const travessias = cycleBooks.filter(cb => cb.book?.category === 'TRAVESSIA');
-  const portas = cycleBooks.filter(cb => cb.book?.category === 'PORTA');
-  const pontes = cycleBooks.filter(cb => cb.book?.category === 'PONTE');
-  const fundacao = cycleBooks.filter(cb => cb.book?.category === 'FUNDACAO');
+  // Separate by layer (fallback to book.category)
+  const getLayer = (cb: CycleBook) => cb.layer || cb.book?.category || '';
+  const matriz = cycleBooks.filter(cb => getLayer(cb) === 'MATRIZ');
+  const travessias = cycleBooks.filter(cb => getLayer(cb) === 'TRAVESSIA');
+  const portas = cycleBooks.filter(cb => getLayer(cb) === 'PORTA');
+  const pontes = cycleBooks.filter(cb => getLayer(cb) === 'PONTE');
+  const fundacao = cycleBooks.filter(cb => getLayer(cb) === 'FUNDACAO');
 
-  // Assign angles
   const angleStep = (count: number) => 360 / Math.max(count, 1);
 
-  const getNodePos = (category: string, index: number, total: number) => {
-    const config = CATEGORY_CONFIG[category];
+  const getNodePos = (layer: string, index: number, total: number) => {
+    const config = CATEGORY_CONFIG[layer];
     if (!config || config.raio === 0) return null;
     const angle = index * angleStep(total);
     return polarToXY(angle, config.raio, cx, cy);
   };
 
-  // Build link lines (from → to using book_links)
+  // Build link lines
   const linkLines = (links || [])
     .filter(l => l.link_type === 'ABRE' || l.link_type === 'INTEGRA')
     .map(link => {
@@ -122,143 +178,143 @@ export function MandalaAnualDB() {
       const toCB = cycleBooks.find(cb => cb.book_id === link.to_book_id);
       if (!fromCB?.book || !toCB?.book) return null;
 
-      const fromCat = fromCB.book.category;
-      const toCat = toCB.book.category;
-      const fromList = cycleBooks.filter(cb => cb.book?.category === fromCat);
-      const toList = cycleBooks.filter(cb => cb.book?.category === toCat);
+      const fromLayer = getLayer(fromCB);
+      const toLayer = getLayer(toCB);
+      const fromList = cycleBooks.filter(cb => getLayer(cb) === fromLayer);
+      const toList = cycleBooks.filter(cb => getLayer(cb) === toLayer);
       const fromIdx = fromList.indexOf(fromCB);
       const toIdx = toList.indexOf(toCB);
 
-      const fromPos = getNodePos(fromCat, fromIdx, fromList.length);
-      const toPos = getNodePos(toCat, toIdx, toList.length);
+      const fromPos = getNodePos(fromLayer, fromIdx, fromList.length);
+      const toPos = getNodePos(toLayer, toIdx, toList.length);
       if (!fromPos || !toPos) return null;
 
-      return { from: fromPos, to: toPos, type: link.link_type, color: CATEGORY_CONFIG[toCat]?.corAccent || '#666' };
+      return { from: fromPos, to: toPos, color: CATEGORY_CONFIG[toLayer]?.corAccent || '#666' };
     })
     .filter(Boolean);
 
   const renderNode = (cb: CycleBook, index: number, list: CycleBook[]) => {
     const book = cb.book;
     if (!book) return null;
-    const config = CATEGORY_CONFIG[book.category];
+    const layer = getLayer(cb);
+    const config = CATEGORY_CONFIG[layer];
     if (!config || config.raio === 0) return null;
 
-    const pos = getNodePos(book.category, index, list.length);
+    const pos = getNodePos(layer, index, list.length);
     if (!pos) return null;
 
     const ns = config.nodeSize;
     const isHovered = hoveredId === book.id;
+    const tooltipText = `${config.label}: ${book.description_short?.slice(0, 120) || book.title}`;
 
     return (
-      <g
-        key={book.id}
-        className="cursor-pointer"
-        onClick={() => setSelectedBook(book)}
-        onMouseEnter={() => setHoveredId(book.id)}
-        onMouseLeave={() => setHoveredId(null)}
-      >
-        {isHovered && <circle cx={pos.x} cy={pos.y} r={ns + 6} fill="none" stroke={config.corAccent} strokeWidth={1} strokeOpacity={0.4} />}
-        <circle cx={pos.x} cy={pos.y} r={ns} fill={`${config.corAccent}15`} stroke={`${config.corAccent}50`} strokeWidth={1.2} />
-        <foreignObject x={pos.x - ns + 6} y={pos.y - ns + 6} width={(ns - 6) * 2} height={(ns - 6) * 2}>
-          <div className="flex items-center justify-center w-full h-full">
-            {book.cover_url ? (
-              <img src={book.cover_url} alt={book.title} className="rounded-full object-cover" style={{ width: (ns - 8) * 2, height: (ns - 8) * 2 }} />
-            ) : (
-              <BookOpen className={cn('opacity-60', config.cor)} style={{ width: ns * 0.5, height: ns * 0.5 }} />
-            )}
-          </div>
-        </foreignObject>
-        <foreignObject x={pos.x - 48} y={pos.y + ns + 3} width={96} height={32}>
-          <div className="text-center">
-            <span className="text-[8px] text-foreground/80 leading-tight line-clamp-2 font-medium">{book.title}</span>
-          </div>
-        </foreignObject>
-      </g>
+      <TooltipProvider key={book.id}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <g
+              className="cursor-pointer"
+              onClick={() => setSelectedBook(book)}
+              onMouseEnter={() => setHoveredId(book.id)}
+              onMouseLeave={() => setHoveredId(null)}
+            >
+              {isHovered && <circle cx={pos.x} cy={pos.y} r={ns + 6} fill="none" stroke={config.corAccent} strokeWidth={1} strokeOpacity={0.4} />}
+              <circle cx={pos.x} cy={pos.y} r={ns} fill={`${config.corAccent}15`} stroke={`${config.corAccent}50`} strokeWidth={1.2} />
+              <foreignObject x={pos.x - ns + 4} y={pos.y - ns + 4} width={(ns - 4) * 2} height={(ns - 4) * 2}>
+                <div className="flex items-center justify-center w-full h-full">
+                  {book.cover_url ? (
+                    <img src={book.cover_url} alt={book.title} className="rounded-full object-cover" style={{ width: (ns - 6) * 2, height: (ns - 6) * 2 }} />
+                  ) : (
+                    <span className="opacity-60" style={{ fontSize: ns * 0.4 }}>{config.iconLabel}</span>
+                  )}
+                </div>
+              </foreignObject>
+              <foreignObject x={pos.x - 50} y={pos.y + ns + 2} width={100} height={30}>
+                <div className="text-center">
+                  <span className="text-[7px] text-foreground/70 leading-tight line-clamp-2 font-medium">{book.title}</span>
+                </div>
+              </foreignObject>
+            </g>
+          </TooltipTrigger>
+          <TooltipContent side="top" className="max-w-[200px] text-xs">
+            {tooltipText}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     );
   };
 
   return (
     <div className="relative">
-      {/* SVG Mandala */}
-      <div className="flex justify-center">
-        <svg viewBox={`0 0 ${size} ${size}`} className="w-full max-w-[660px] aspect-square">
-          {/* Orbit rings */}
-          {[120, 200, 260].map(r => (
-            <circle key={r} cx={cx} cy={cy} r={r} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth={0.5} strokeOpacity={0.1} strokeDasharray="3 8" />
-          ))}
-
-          {/* Nucleus */}
-          <circle cx={cx} cy={cy} r={50} className="fill-gold/5 stroke-gold/20" strokeWidth={2}>
-            <animate attributeName="opacity" values="0.6;1;0.6" dur="6s" repeatCount="indefinite" />
-          </circle>
-          <circle cx={cx} cy={cy} r={36} className="fill-gold/8 stroke-gold/15" strokeWidth={1} />
-          <foreignObject x={cx - 28} y={cy - 22} width={56} height={44}>
-            <div className="flex flex-col items-center justify-center w-full h-full select-none cursor-pointer" onClick={() => matriz[0]?.book && setSelectedBook(matriz[0].book)}>
-              <span className="text-gold text-xl leading-none" style={{ opacity: 0.85 }}>☽◯☾</span>
-              <span className="text-gold/60 text-[6px] uppercase tracking-[0.2em] mt-1 font-semibold">Matriz</span>
-            </div>
-          </foreignObject>
-
-          {/* Link lines */}
-          {linkLines.map((l, i) => l && (
-            <line key={i} x1={l.from.x} y1={l.from.y} x2={l.to.x} y2={l.to.y} stroke={l.color} strokeWidth={0.8} strokeOpacity={0.18} />
-          ))}
-
-          {/* Nodes */}
-          {travessias.map((cb, i) => renderNode(cb, i, travessias))}
-          {portas.map((cb, i) => renderNode(cb, i, portas))}
-          {pontes.map((cb, i) => renderNode(cb, i, pontes))}
-        </svg>
+      {/* View toggle */}
+      <div className="flex justify-center gap-2 mb-4">
+        <Button
+          variant={viewMode === 'mandala' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setViewMode('mandala')}
+          className="gap-1.5"
+        >
+          <Moon className="w-3.5 h-3.5" /> Mandala
+        </Button>
+        <Button
+          variant={viewMode === 'list' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setViewMode('list')}
+          className="gap-1.5"
+        >
+          <List className="w-3.5 h-3.5" /> Lista
+        </Button>
       </div>
 
-      {/* Fundação sidebar */}
-      {fundacao.length > 0 && (
-        <div className="mt-6 border border-border rounded-lg p-4">
-          <div className="flex items-center gap-2 mb-3 text-muted-foreground">
-            <Columns className="w-4 h-4" />
-            <span className="text-xs font-semibold uppercase tracking-widest">Fundação do Método</span>
-          </div>
-          <div className="grid gap-2 sm:grid-cols-2">
-            {fundacao.map(cb => cb.book && (
-              <Card key={cb.book.id} className="cursor-pointer hover:border-gold/40 transition-all" onClick={() => setSelectedBook(cb.book!)}>
-                <CardContent className="p-3 flex items-center gap-3">
-                  <div className="w-10 h-14 rounded bg-muted flex items-center justify-center shrink-0">
-                    <Columns className="w-4 h-4 text-muted-foreground" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-display text-foreground truncate">{cb.book.title}</p>
-                    <p className="text-xs text-muted-foreground">{cb.book.author}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      )}
+      {viewMode === 'list' ? (
+        <LayerListView cycleBooks={cycleBooks} onSelect={setSelectedBook} />
+      ) : (
+        <>
+          {/* SVG Mandala */}
+          <div className="flex justify-center">
+            <svg viewBox={`0 0 ${size} ${size}`} className="w-full max-w-[660px] aspect-square">
+              {/* Orbit rings */}
+              {[120, 200, 260].map(r => (
+                <circle key={r} cx={cx} cy={cy} r={r} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth={0.5} strokeOpacity={0.1} strokeDasharray="3 8" />
+              ))}
 
-      {/* Mobile list */}
-      <div className="mt-8 space-y-6 md:hidden">
-        {(['TRAVESSIA', 'PORTA', 'PONTE'] as const).map(cat => {
-          const items = cycleBooks.filter(cb => cb.book?.category === cat);
-          if (!items.length) return null;
-          const config = CATEGORY_CONFIG[cat];
-          return (
-            <div key={cat} className="space-y-2">
-              <div className={cn('flex items-center gap-2 px-2', config.cor)}>
-                {CATEGORY_ICONS[cat]}
-                <span className="text-xs font-semibold uppercase tracking-widest">{config.label}</span>
+              {/* Nucleus */}
+              <circle cx={cx} cy={cy} r={50} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth={1.5} strokeOpacity={0.2}>
+                <animate attributeName="stroke-opacity" values="0.1;0.3;0.1" dur="6s" repeatCount="indefinite" />
+              </circle>
+              <circle cx={cx} cy={cy} r={36} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth={0.8} strokeOpacity={0.15} />
+              <foreignObject x={cx - 30} y={cy - 24} width={60} height={48}>
+                <div className="flex flex-col items-center justify-center w-full h-full select-none cursor-pointer" onClick={() => matriz[0]?.book && setSelectedBook(matriz[0].book)}>
+                  <span className="text-amber-400 text-xl leading-none" style={{ opacity: 0.85 }}>☽◯☾</span>
+                  <span className="text-amber-400/60 text-[6px] uppercase tracking-[0.15em] mt-1 font-semibold">Matriz</span>
+                </div>
+              </foreignObject>
+
+              {/* Link lines */}
+              {linkLines.map((l, i) => l && (
+                <line key={i} x1={l.from.x} y1={l.from.y} x2={l.to.x} y2={l.to.y} stroke={l.color} strokeWidth={0.6} strokeOpacity={0.15} />
+              ))}
+
+              {/* Nodes */}
+              {travessias.map((cb, i) => renderNode(cb, i, travessias))}
+              {portas.map((cb, i) => renderNode(cb, i, portas))}
+              {pontes.map((cb, i) => renderNode(cb, i, pontes))}
+            </svg>
+          </div>
+
+          {/* Fundação sidebar */}
+          {fundacao.length > 0 && (
+            <div className="mt-6 border border-border rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-3 text-muted-foreground">
+                <Columns className="w-4 h-4" />
+                <span className="text-xs font-semibold uppercase tracking-widest">Fundação do Método</span>
               </div>
-              <div className="grid gap-2">
-                {items.map(cb => cb.book && (
-                  <Card key={cb.book.id} className="cursor-pointer hover:border-gold/40 transition-all" onClick={() => setSelectedBook(cb.book!)}>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {fundacao.map(cb => cb.book && (
+                  <Card key={cb.book.id} className="cursor-pointer hover:border-amber-500/40 transition-all" onClick={() => setSelectedBook(cb.book!)}>
                     <CardContent className="p-3 flex items-center gap-3">
-                      {cb.book.cover_url ? (
-                        <img src={cb.book.cover_url} alt={cb.book.title} className="w-10 h-14 object-cover rounded shadow" />
-                      ) : (
-                        <div className="w-10 h-14 rounded bg-muted flex items-center justify-center shrink-0">
-                          <BookOpen className="w-4 h-4 text-muted-foreground" />
-                        </div>
-                      )}
+                      <div className="w-10 h-14 rounded bg-muted flex items-center justify-center shrink-0">
+                        <Columns className="w-4 h-4 text-muted-foreground" />
+                      </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-display text-foreground truncate">{cb.book.title}</p>
                         <p className="text-xs text-muted-foreground">{cb.book.author}</p>
@@ -268,8 +324,17 @@ export function MandalaAnualDB() {
                 ))}
               </div>
             </div>
-          );
-        })}
+          )}
+        </>
+      )}
+
+      {/* Legenda */}
+      <div className="mt-4 flex flex-wrap justify-center gap-3 text-[10px] text-muted-foreground">
+        {Object.entries(CATEGORY_CONFIG).map(([key, cfg]) => (
+          <span key={key} className="flex items-center gap-1">
+            {CATEGORY_ICONS[key]} <span className={cfg.cor}>{cfg.label}</span>
+          </span>
+        ))}
       </div>
 
       {/* Side Panel */}
