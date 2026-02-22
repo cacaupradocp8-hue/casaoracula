@@ -2986,8 +2986,10 @@ export type Database = {
           cycle_id: string
           id: string
           is_core: boolean | null
+          layer: string | null
           layer_order: number | null
           quadrant: string | null
+          ring_index: number | null
         }
         Insert: {
           book_id: string
@@ -2995,8 +2997,10 @@ export type Database = {
           cycle_id: string
           id?: string
           is_core?: boolean | null
+          layer?: string | null
           layer_order?: number | null
           quadrant?: string | null
+          ring_index?: number | null
         }
         Update: {
           book_id?: string
@@ -3004,8 +3008,10 @@ export type Database = {
           cycle_id?: string
           id?: string
           is_core?: boolean | null
+          layer?: string | null
           layer_order?: number | null
           quadrant?: string | null
+          ring_index?: number | null
         }
         Relationships: [
           {
