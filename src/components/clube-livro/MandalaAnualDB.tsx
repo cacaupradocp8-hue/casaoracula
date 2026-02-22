@@ -1,60 +1,159 @@
 // ============================================
-// MANDALA ANUAL — Database-Driven Symbolic Map
+// MANDALA ANUAL — Nova Mandala Concêntrica
+// 100% database-driven, layout do zero
 // ============================================
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, X, Key, Columns, Moon, List, Circle } from 'lucide-react';
+import { BookOpen, X, Moon, List, Columns } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { useActiveCycle, useCycleBooks, useBookLinks, type Book, type CycleBook } from '@/hooks/useBooks';
+import { useActiveCycle, useCycleBooks, useBookLinks, type Book, type CycleBook, type BookLink } from '@/hooks/useBooks';
 
 // ============================================
-// CATEGORY CONFIG
+// LAYER CONFIG — cores institucionais
 // ============================================
+const LAYER = {
+  MATRIZ:    { label: 'Matriz',     color: '#C9A84C', bg: 'rgba(201,168,76,0.12)', stroke: 'rgba(201,168,76,0.5)', icon: '☽◯☾', radius: 0,   nodeR: 38 },
+  TRAVESSIA: { label: 'Travessia',  color: '#2E5A88', bg: 'rgba(46,90,136,0.12)',  stroke: 'rgba(46,90,136,0.5)',  icon: '◈',    radius: 130, nodeR: 28 },
+  PORTA:     { label: 'Porta',      color: '#3A7D5C', bg: 'rgba(58,125,92,0.12)',  stroke: 'rgba(58,125,92,0.5)',  icon: '🗝',   radius: 215, nodeR: 20 },
+  PONTE:     { label: 'Ponte',      color: '#9B7EC8', bg: 'rgba(155,126,200,0.12)', stroke: 'rgba(155,126,200,0.5)', icon: '⌒',  radius: 280, nodeR: 15 },
+  FUNDACAO:  { label: 'Fundação',   color: '#78716C', bg: 'rgba(120,113,108,0.12)', stroke: 'rgba(120,113,108,0.5)', icon: '⊞',  radius: 0,   nodeR: 14 },
+} as const;
 
-const CATEGORY_CONFIG: Record<string, { label: string; iconLabel: string; cor: string; corAccent: string; raio: number; nodeSize: number }> = {
-  MATRIZ:    { label: 'Matriz',    iconLabel: '☽◯☾', cor: 'text-amber-400',  corAccent: '#D4A843', raio: 0,   nodeSize: 44 },
-  TRAVESSIA: { label: 'Travessia', iconLabel: '◈',   cor: 'text-amber-300',  corAccent: '#D4A843', raio: 120, nodeSize: 32 },
-  PORTA:     { label: 'Porta',     iconLabel: '🗝',   cor: 'text-violet-400', corAccent: '#8B5CF6', raio: 200, nodeSize: 24 },
-  PONTE:     { label: 'Ponte',     iconLabel: '⌒',   cor: 'text-teal-400',   corAccent: '#14B8A6', raio: 260, nodeSize: 18 },
-  FUNDACAO:  { label: 'Fundação',  iconLabel: '⊞',   cor: 'text-muted-foreground', corAccent: '#78716C', raio: 0, nodeSize: 16 },
-};
+type LayerKey = keyof typeof LAYER;
 
-const CATEGORY_ICONS: Record<string, React.ReactNode> = {
-  TRAVESSIA: <BookOpen className="w-3 h-3" />,
-  PORTA: <Key className="w-3 h-3" />,
-  PONTE: <Circle className="w-3 h-3" />,
-  FUNDACAO: <Columns className="w-3 h-3" />,
-  MATRIZ: <Moon className="w-3 h-3" />,
-};
-
-function polarToXY(angleDeg: number, radius: number, cx: number, cy: number) {
+function polar(angleDeg: number, r: number, cx: number, cy: number) {
   const rad = ((angleDeg - 90) * Math.PI) / 180;
-  return { x: cx + radius * Math.cos(rad), y: cy + radius * Math.sin(rad) };
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
 
 // ============================================
-// SIDE PANEL
+// Compute positions from DB data + links
 // ============================================
+function computePositions(
+  cycleBooks: CycleBook[],
+  links: BookLink[],
+  cx: number,
+  cy: number
+) {
+  const positions = new Map<string, { x: number; y: number }>();
 
+  // Matriz → center
+  const matriz = cycleBooks.filter(cb => cb.layer === 'MATRIZ');
+  matriz.forEach(cb => {
+    if (cb.book) positions.set(cb.book.id, { x: cx, y: cy });
+  });
+
+  // Travessias → cardinal cross (N, E, S, W)
+  const travessias = cycleBooks.filter(cb => cb.layer === 'TRAVESSIA').sort((a, b) => a.layer_order - b.layer_order);
+  const cardinalAngles = [0, 90, 180, 270]; // N, E, S, W
+  travessias.forEach((cb, i) => {
+    if (!cb.book) return;
+    const angle = cardinalAngles[i % 4];
+    positions.set(cb.book.id, polar(angle, LAYER.TRAVESSIA.radius, cx, cy));
+  });
+
+  // Build travessia-link map: which Portas/Pontes connect to which Travessia
+  const travessiaChildren = new Map<string, { portas: string[]; pontes: string[] }>();
+  travessias.forEach(cb => {
+    if (cb.book) travessiaChildren.set(cb.book.id, { portas: [], pontes: [] });
+  });
+
+  // Map: ABRE links → Portas near their Travessia; INTEGRA → Pontes near their Travessia
+  const portaParent = new Map<string, string>();
+  const ponteParent = new Map<string, string>();
+
+  links.forEach(link => {
+    if (link.link_type === 'ABRE') {
+      const children = travessiaChildren.get(link.from_book_id);
+      if (children) {
+        children.portas.push(link.to_book_id);
+        portaParent.set(link.to_book_id, link.from_book_id);
+      }
+    }
+    if (link.link_type === 'INTEGRA') {
+      const children = travessiaChildren.get(link.from_book_id);
+      if (children) {
+        children.pontes.push(link.to_book_id);
+        ponteParent.set(link.to_book_id, link.from_book_id);
+      }
+    }
+  });
+
+  // Position Portas near their parent Travessia
+  const portas = cycleBooks.filter(cb => cb.layer === 'PORTA').sort((a, b) => a.layer_order - b.layer_order);
+  // Group portas by parent travessia
+  const portasByParent = new Map<string, CycleBook[]>();
+  portas.forEach(cb => {
+    if (!cb.book) return;
+    const parent = portaParent.get(cb.book.id);
+    if (parent) {
+      if (!portasByParent.has(parent)) portasByParent.set(parent, []);
+      portasByParent.get(parent)!.push(cb);
+    }
+  });
+
+  // For each travessia, spread its portas around it
+  travessias.forEach((tCb, tIdx) => {
+    if (!tCb.book) return;
+    const parentPos = positions.get(tCb.book.id);
+    if (!parentPos) return;
+    const childPortas = portasByParent.get(tCb.book.id) || [];
+    const baseAngle = cardinalAngles[tIdx % 4];
+    const spread = 30; // degrees spread around the travessia angle
+    childPortas.forEach((cb, i) => {
+      if (!cb.book) return;
+      const offset = childPortas.length === 1 ? 0 : (i - (childPortas.length - 1) / 2) * spread;
+      positions.set(cb.book.id, polar(baseAngle + offset, LAYER.PORTA.radius, cx, cy));
+    });
+  });
+
+  // Position Pontes near their parent Travessia
+  const pontes = cycleBooks.filter(cb => cb.layer === 'PONTE').sort((a, b) => a.layer_order - b.layer_order);
+  const pontesByParent = new Map<string, CycleBook[]>();
+  pontes.forEach(cb => {
+    if (!cb.book) return;
+    const parent = ponteParent.get(cb.book.id);
+    if (parent) {
+      if (!pontesByParent.has(parent)) pontesByParent.set(parent, []);
+      pontesByParent.get(parent)!.push(cb);
+    }
+  });
+
+  travessias.forEach((tCb, tIdx) => {
+    if (!tCb.book) return;
+    const childPontes = pontesByParent.get(tCb.book.id) || [];
+    const baseAngle = cardinalAngles[tIdx % 4];
+    const spread = 25;
+    childPontes.forEach((cb, i) => {
+      if (!cb.book) return;
+      const offset = childPontes.length === 1 ? 0 : (i - (childPontes.length - 1) / 2) * spread;
+      positions.set(cb.book.id, polar(baseAngle + offset, LAYER.PONTE.radius, cx, cy));
+    });
+  });
+
+  return positions;
+}
+
+// ============================================
+// Side Panel
+// ============================================
 function BookSidePanel({ book, onClose, onNavigate }: { book: Book; onClose: () => void; onNavigate: (p: string) => void }) {
-  const cat = CATEGORY_CONFIG[book.category] || CATEGORY_CONFIG.PORTA;
+  const layer = LAYER[book.category as LayerKey] || LAYER.PORTA;
   return (
     <motion.div
-      initial={{ opacity: 0, x: 40 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 40 }}
+      initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 40 }}
       className="fixed inset-y-0 right-0 w-80 max-w-[90vw] z-50 bg-card border-l border-border shadow-2xl overflow-y-auto"
     >
       <div className="p-6 space-y-5">
         <div className="flex items-start justify-between">
           <div>
-            <Badge variant="outline" className={cn('text-xs mb-2', cat.cor)}>{cat.label}</Badge>
+            <Badge variant="outline" className="text-xs mb-2" style={{ color: layer.color, borderColor: layer.color }}>{layer.label}</Badge>
             <h3 className="font-display text-lg text-foreground">{book.title}</h3>
             <p className="text-sm text-muted-foreground">{book.author}</p>
           </div>
@@ -62,11 +161,9 @@ function BookSidePanel({ book, onClose, onNavigate }: { book: Book; onClose: () 
         </div>
         {book.cover_url && <img src={book.cover_url} alt={book.title} className="w-full h-48 object-cover rounded-lg shadow-lg" />}
         {book.description_short && (
-          <div className="text-sm text-muted-foreground italic border-l-2 border-amber-500/30 pl-3">{book.description_short}</div>
+          <div className="text-sm text-muted-foreground italic border-l-2 pl-3" style={{ borderColor: layer.color + '50' }}>{book.description_short}</div>
         )}
-        {book.manifesto_short && (
-          <p className="text-sm text-foreground/80">{book.manifesto_short}</p>
-        )}
+        {book.manifesto_short && <p className="text-sm text-foreground/80">{book.manifesto_short}</p>}
         <Button variant="outline" className="w-full justify-start gap-2" onClick={() => onNavigate(`/clube-livro/livro/${book.id}`)}>
           <BookOpen className="w-4 h-4" /> Abrir Página do Livro
         </Button>
@@ -76,29 +173,21 @@ function BookSidePanel({ book, onClose, onNavigate }: { book: Book; onClose: () 
 }
 
 // ============================================
-// LIST VIEW
+// List View
 // ============================================
-
 function LayerListView({ cycleBooks, onSelect }: { cycleBooks: CycleBook[]; onSelect: (b: Book) => void }) {
-  const layers: { key: string; label: string }[] = [
-    { key: 'MATRIZ', label: 'Matriz' },
-    { key: 'TRAVESSIA', label: 'Travessias' },
-    { key: 'PORTA', label: 'Portas' },
-    { key: 'PONTE', label: 'Pontes' },
-    { key: 'FUNDACAO', label: 'Fundação' },
-  ];
-
+  const layers: LayerKey[] = ['MATRIZ', 'TRAVESSIA', 'PORTA', 'PONTE', 'FUNDACAO'];
   return (
     <div className="space-y-6">
-      {layers.map(({ key, label }) => {
-        const items = cycleBooks.filter(cb => (cb.layer || cb.book?.category) === key);
+      {layers.map(key => {
+        const items = cycleBooks.filter(cb => cb.layer === key);
         if (!items.length) return null;
-        const config = CATEGORY_CONFIG[key];
+        const cfg = LAYER[key];
         return (
           <div key={key} className="space-y-2">
-            <div className={cn('flex items-center gap-2 px-1', config.cor)}>
-              {CATEGORY_ICONS[key]}
-              <span className="text-xs font-semibold uppercase tracking-widest">{label}</span>
+            <div className="flex items-center gap-2 px-1">
+              <span style={{ color: cfg.color }} className="text-sm">{cfg.icon}</span>
+              <span style={{ color: cfg.color }} className="text-xs font-semibold uppercase tracking-widest">{cfg.label}</span>
               <span className="text-xs text-muted-foreground">({items.length})</span>
             </div>
             <div className="grid gap-2">
@@ -108,8 +197,8 @@ function LayerListView({ cycleBooks, onSelect }: { cycleBooks: CycleBook[]; onSe
                     {cb.book.cover_url ? (
                       <img src={cb.book.cover_url} alt={cb.book.title} className="w-10 h-14 object-cover rounded shadow" />
                     ) : (
-                      <div className="w-10 h-14 rounded bg-muted flex items-center justify-center shrink-0">
-                        {CATEGORY_ICONS[key] || <BookOpen className="w-4 h-4 text-muted-foreground" />}
+                      <div className="w-10 h-14 rounded flex items-center justify-center shrink-0" style={{ background: cfg.bg }}>
+                        <span style={{ color: cfg.color }}>{cfg.icon}</span>
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
@@ -129,9 +218,8 @@ function LayerListView({ cycleBooks, onSelect }: { cycleBooks: CycleBook[]; onSe
 }
 
 // ============================================
-// MANDALA COMPONENT
+// MANDALA COMPONENT (NEW FROM SCRATCH)
 // ============================================
-
 export function MandalaAnualDB() {
   const navigate = useNavigate();
   const { data: cycle, isLoading: loadingCycle } = useActiveCycle();
@@ -141,74 +229,54 @@ export function MandalaAnualDB() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'mandala' | 'list'>('mandala');
 
-  const size = 660;
-  const cx = size / 2;
-  const cy = size / 2;
+  const SIZE = 640;
+  const CX = SIZE / 2;
+  const CY = SIZE / 2;
 
   if (loadingCycle || loadingBooks) {
     return <div className="flex justify-center py-16"><span className="text-muted-foreground text-sm animate-pulse">Carregando mandala…</span></div>;
   }
-
   if (!cycleBooks?.length) {
     return <div className="text-center py-16 text-muted-foreground">Nenhum ciclo encontrado.</div>;
   }
 
-  // Separate by layer (fallback to book.category)
-  const getLayer = (cb: CycleBook) => cb.layer || cb.book?.category || '';
-  const matriz = cycleBooks.filter(cb => getLayer(cb) === 'MATRIZ');
-  const travessias = cycleBooks.filter(cb => getLayer(cb) === 'TRAVESSIA');
-  const portas = cycleBooks.filter(cb => getLayer(cb) === 'PORTA');
-  const pontes = cycleBooks.filter(cb => getLayer(cb) === 'PONTE');
-  const fundacao = cycleBooks.filter(cb => getLayer(cb) === 'FUNDACAO');
+  const positions = computePositions(cycleBooks, links || [], CX, CY);
 
-  const angleStep = (count: number) => 360 / Math.max(count, 1);
-
-  const getNodePos = (layer: string, index: number, total: number) => {
-    const config = CATEGORY_CONFIG[layer];
-    if (!config || config.raio === 0) return null;
-    const angle = index * angleStep(total);
-    return polarToXY(angle, config.raio, cx, cy);
-  };
-
-  // Build link lines
-  const linkLines = (links || [])
-    .filter(l => l.link_type === 'ABRE' || l.link_type === 'INTEGRA')
+  // Build connection lines from links (ABRE, INTEGRA, SUPORTA)
+  const connectionLines = (links || [])
+    .filter(l => ['ABRE', 'INTEGRA', 'SUPORTA'].includes(l.link_type))
     .map(link => {
-      const fromCB = cycleBooks.find(cb => cb.book_id === link.from_book_id);
-      const toCB = cycleBooks.find(cb => cb.book_id === link.to_book_id);
-      if (!fromCB?.book || !toCB?.book) return null;
-
-      const fromLayer = getLayer(fromCB);
-      const toLayer = getLayer(toCB);
-      const fromList = cycleBooks.filter(cb => getLayer(cb) === fromLayer);
-      const toList = cycleBooks.filter(cb => getLayer(cb) === toLayer);
-      const fromIdx = fromList.indexOf(fromCB);
-      const toIdx = toList.indexOf(toCB);
-
-      const fromPos = getNodePos(fromLayer, fromIdx, fromList.length);
-      const toPos = getNodePos(toLayer, toIdx, toList.length);
-      if (!fromPos || !toPos) return null;
-
-      return { from: fromPos, to: toPos, color: CATEGORY_CONFIG[toLayer]?.corAccent || '#666' };
+      const from = positions.get(link.from_book_id);
+      const to = positions.get(link.to_book_id);
+      if (!from || !to) return null;
+      // Find target layer for color
+      const toCb = cycleBooks.find(cb => cb.book_id === link.to_book_id);
+      const toLayer = (toCb?.layer || 'PORTA') as LayerKey;
+      return { from, to, color: LAYER[toLayer]?.color || '#666', type: link.link_type };
     })
-    .filter(Boolean);
+    .filter(Boolean) as { from: { x: number; y: number }; to: { x: number; y: number }; color: string; type: string }[];
 
-  const renderNode = (cb: CycleBook, index: number, list: CycleBook[]) => {
+  // Separate layers
+  const fundacao = cycleBooks.filter(cb => cb.layer === 'FUNDACAO');
+  const mandalaBooks = cycleBooks.filter(cb => cb.layer !== 'FUNDACAO');
+
+  const renderNode = (cb: CycleBook) => {
     const book = cb.book;
     if (!book) return null;
-    const layer = getLayer(cb);
-    const config = CATEGORY_CONFIG[layer];
-    if (!config || config.raio === 0) return null;
-
-    const pos = getNodePos(layer, index, list.length);
+    const pos = positions.get(book.id);
     if (!pos) return null;
-
-    const ns = config.nodeSize;
+    const layerKey = (cb.layer || book.category) as LayerKey;
+    const cfg = LAYER[layerKey] || LAYER.PORTA;
+    const r = cfg.nodeR;
     const isHovered = hoveredId === book.id;
-    const tooltipText = `${config.label}: ${book.description_short?.slice(0, 120) || book.title}`;
+    const isMatriz = layerKey === 'MATRIZ';
+
+    // Shorten title for display inside node
+    const displayTitle = book.title.length > 18 ? book.title.slice(0, 16) + '…' : book.title;
+    const tooltipText = `${cfg.label}: ${book.description_short?.slice(0, 120) || book.title}`;
 
     return (
-      <TooltipProvider key={book.id}>
+      <TooltipProvider key={book.id} delayDuration={200}>
         <Tooltip>
           <TooltipTrigger asChild>
             <g
@@ -217,27 +285,43 @@ export function MandalaAnualDB() {
               onMouseEnter={() => setHoveredId(book.id)}
               onMouseLeave={() => setHoveredId(null)}
             >
-              {isHovered && <circle cx={pos.x} cy={pos.y} r={ns + 6} fill="none" stroke={config.corAccent} strokeWidth={1} strokeOpacity={0.4} />}
-              <circle cx={pos.x} cy={pos.y} r={ns} fill={`${config.corAccent}15`} stroke={`${config.corAccent}50`} strokeWidth={1.2} />
-              <foreignObject x={pos.x - ns + 4} y={pos.y - ns + 4} width={(ns - 4) * 2} height={(ns - 4) * 2}>
+              {/* Hover glow */}
+              {isHovered && (
+                <circle cx={pos.x} cy={pos.y} r={r + 6} fill="none" stroke={cfg.color} strokeWidth={1.5} strokeOpacity={0.5} />
+              )}
+              {/* Matriz pulse */}
+              {isMatriz && (
+                <circle cx={pos.x} cy={pos.y} r={r + 10} fill="none" stroke={cfg.color} strokeWidth={1} strokeOpacity={0.2}>
+                  <animate attributeName="r" values={`${r + 6};${r + 14};${r + 6}`} dur="4s" repeatCount="indefinite" />
+                  <animate attributeName="stroke-opacity" values="0.15;0.35;0.15" dur="4s" repeatCount="indefinite" />
+                </circle>
+              )}
+              {/* Node circle */}
+              <circle cx={pos.x} cy={pos.y} r={r} fill={cfg.bg} stroke={cfg.stroke} strokeWidth={isMatriz ? 2 : 1.2} />
+              {/* Icon/cover inside */}
+              <foreignObject x={pos.x - r + 3} y={pos.y - r + 3} width={(r - 3) * 2} height={(r - 3) * 2}>
                 <div className="flex items-center justify-center w-full h-full">
                   {book.cover_url ? (
-                    <img src={book.cover_url} alt={book.title} className="rounded-full object-cover" style={{ width: (ns - 6) * 2, height: (ns - 6) * 2 }} />
+                    <img src={book.cover_url} alt={book.title} className="rounded-full object-cover" style={{ width: (r - 5) * 2, height: (r - 5) * 2 }} />
                   ) : (
-                    <span className="opacity-60" style={{ fontSize: ns * 0.4 }}>{config.iconLabel}</span>
+                    <span className="select-none" style={{ fontSize: isMatriz ? r * 0.5 : r * 0.45, color: cfg.color, opacity: 0.8 }}>{cfg.icon}</span>
                   )}
                 </div>
               </foreignObject>
-              <foreignObject x={pos.x - 50} y={pos.y + ns + 2} width={100} height={30}>
-                <div className="text-center">
-                  <span className="text-[7px] text-foreground/70 leading-tight line-clamp-2 font-medium">{book.title}</span>
+              {/* Title label below */}
+              <foreignObject x={pos.x - 52} y={pos.y + r + 2} width={104} height={isMatriz ? 32 : 26}>
+                <div className="text-center leading-tight">
+                  <span
+                    className="font-medium line-clamp-2"
+                    style={{ fontSize: isMatriz ? 8 : 7, color: cfg.color, opacity: 0.9 }}
+                  >
+                    {isMatriz ? 'A Deusa Tríplice' : displayTitle}
+                  </span>
                 </div>
               </foreignObject>
             </g>
           </TooltipTrigger>
-          <TooltipContent side="top" className="max-w-[200px] text-xs">
-            {tooltipText}
-          </TooltipContent>
+          <TooltipContent side="top" className="max-w-[220px] text-xs">{tooltipText}</TooltipContent>
         </Tooltip>
       </TooltipProvider>
     );
@@ -245,22 +329,12 @@ export function MandalaAnualDB() {
 
   return (
     <div className="relative">
-      {/* View toggle */}
+      {/* Toggle */}
       <div className="flex justify-center gap-2 mb-4">
-        <Button
-          variant={viewMode === 'mandala' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setViewMode('mandala')}
-          className="gap-1.5"
-        >
+        <Button variant={viewMode === 'mandala' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('mandala')} className="gap-1.5">
           <Moon className="w-3.5 h-3.5" /> Mandala
         </Button>
-        <Button
-          variant={viewMode === 'list' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setViewMode('list')}
-          className="gap-1.5"
-        >
+        <Button variant={viewMode === 'list' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('list')} className="gap-1.5">
           <List className="w-3.5 h-3.5" /> Lista
         </Button>
       </div>
@@ -270,41 +344,38 @@ export function MandalaAnualDB() {
       ) : (
         <>
           {/* SVG Mandala */}
-          <div className="flex justify-center">
-            <svg viewBox={`0 0 ${size} ${size}`} className="w-full max-w-[660px] aspect-square">
+          <div className="flex justify-center overflow-auto">
+            <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="w-full max-w-[640px] aspect-square">
               {/* Orbit rings */}
-              {[120, 200, 260].map(r => (
-                <circle key={r} cx={cx} cy={cy} r={r} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth={0.5} strokeOpacity={0.1} strokeDasharray="3 8" />
+              {[LAYER.TRAVESSIA.radius, LAYER.PORTA.radius, LAYER.PONTE.radius].map(r => (
+                <circle key={r} cx={CX} cy={CY} r={r} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth={0.5} strokeOpacity={0.08} strokeDasharray="4 10" />
               ))}
 
-              {/* Nucleus */}
-              <circle cx={cx} cy={cy} r={50} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth={1.5} strokeOpacity={0.2}>
-                <animate attributeName="stroke-opacity" values="0.1;0.3;0.1" dur="6s" repeatCount="indefinite" />
-              </circle>
-              <circle cx={cx} cy={cy} r={36} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth={0.8} strokeOpacity={0.15} />
-              <foreignObject x={cx - 30} y={cy - 24} width={60} height={48}>
-                <div className="flex flex-col items-center justify-center w-full h-full select-none cursor-pointer" onClick={() => matriz[0]?.book && setSelectedBook(matriz[0].book)}>
-                  <span className="text-amber-400 text-xl leading-none" style={{ opacity: 0.85 }}>☽◯☾</span>
-                  <span className="text-amber-400/60 text-[6px] uppercase tracking-[0.15em] mt-1 font-semibold">Matriz</span>
-                </div>
-              </foreignObject>
-
-              {/* Link lines */}
-              {linkLines.map((l, i) => l && (
-                <line key={i} x1={l.from.x} y1={l.from.y} x2={l.to.x} y2={l.to.y} stroke={l.color} strokeWidth={0.6} strokeOpacity={0.15} />
+              {/* Connection lines */}
+              {connectionLines.map((line, i) => (
+                <line
+                  key={i}
+                  x1={line.from.x} y1={line.from.y}
+                  x2={line.to.x} y2={line.to.y}
+                  stroke={line.color}
+                  strokeWidth={line.type === 'SUPORTA' ? 0.8 : 0.6}
+                  strokeOpacity={0.2}
+                  strokeDasharray={line.type === 'SUPORTA' ? '2 4' : 'none'}
+                />
               ))}
 
-              {/* Nodes */}
-              {travessias.map((cb, i) => renderNode(cb, i, travessias))}
-              {portas.map((cb, i) => renderNode(cb, i, portas))}
-              {pontes.map((cb, i) => renderNode(cb, i, pontes))}
+              {/* Render nodes back-to-front: Ponte → Porta → Travessia → Matriz */}
+              {mandalaBooks.filter(cb => cb.layer === 'PONTE').map(renderNode)}
+              {mandalaBooks.filter(cb => cb.layer === 'PORTA').map(renderNode)}
+              {mandalaBooks.filter(cb => cb.layer === 'TRAVESSIA').map(renderNode)}
+              {mandalaBooks.filter(cb => cb.layer === 'MATRIZ').map(renderNode)}
             </svg>
           </div>
 
           {/* Fundação sidebar */}
           {fundacao.length > 0 && (
             <div className="mt-6 border border-border rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-3 text-muted-foreground">
+              <div className="flex items-center gap-2 mb-3" style={{ color: LAYER.FUNDACAO.color }}>
                 <Columns className="w-4 h-4" />
                 <span className="text-xs font-semibold uppercase tracking-widest">Fundação do Método</span>
               </div>
@@ -312,8 +383,8 @@ export function MandalaAnualDB() {
                 {fundacao.map(cb => cb.book && (
                   <Card key={cb.book.id} className="cursor-pointer hover:border-amber-500/40 transition-all" onClick={() => setSelectedBook(cb.book!)}>
                     <CardContent className="p-3 flex items-center gap-3">
-                      <div className="w-10 h-14 rounded bg-muted flex items-center justify-center shrink-0">
-                        <Columns className="w-4 h-4 text-muted-foreground" />
+                      <div className="w-10 h-14 rounded flex items-center justify-center shrink-0" style={{ background: LAYER.FUNDACAO.bg }}>
+                        <Columns className="w-4 h-4" style={{ color: LAYER.FUNDACAO.color }} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-display text-foreground truncate">{cb.book.title}</p>
@@ -329,10 +400,11 @@ export function MandalaAnualDB() {
       )}
 
       {/* Legenda */}
-      <div className="mt-4 flex flex-wrap justify-center gap-3 text-[10px] text-muted-foreground">
-        {Object.entries(CATEGORY_CONFIG).map(([key, cfg]) => (
+      <div className="mt-4 flex flex-wrap justify-center gap-4 text-[10px]">
+        {(['MATRIZ', 'TRAVESSIA', 'PORTA', 'PONTE', 'FUNDACAO'] as LayerKey[]).map(key => (
           <span key={key} className="flex items-center gap-1">
-            {CATEGORY_ICONS[key]} <span className={cfg.cor}>{cfg.label}</span>
+            <span style={{ color: LAYER[key].color }}>{LAYER[key].icon}</span>
+            <span style={{ color: LAYER[key].color }} className="font-medium">{LAYER[key].label}</span>
           </span>
         ))}
       </div>
