@@ -11,7 +11,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature } from '@/types/portal';
 import { useAccessExpiration } from '@/hooks/useAccessExpiration';
 import { LockedForVisitor } from '@/components/shared/LockedForVisitor';
-import { MandalaAnual } from '@/components/clube-livro/MandalaAnual';
+import { MandalaAnualDB } from '@/components/clube-livro/MandalaAnualDB';
 import { BookOpen, ChevronRight, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 // Blocos modulares independentes
@@ -101,10 +101,7 @@ export default function ClubeLivroApresentacao() {
             </div>
           </div>
         ) : (
-          <MandalaAnual
-            ciclos={ciclos || []}
-            cicloAtualId={cicloAtual?.id}
-          />
+          <MandalaAnualDB />
         )}
 
         {/* BLOCO 4: Regras Éticas */}
