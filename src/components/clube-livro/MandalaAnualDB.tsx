@@ -1,9 +1,10 @@
 // ============================================
-// MANDALA ANUAL — Nova Mandala Concêntrica
-// 100% database-driven, layout do zero
+// MANDALA ANUAL — Roda Medicinal + Nós Concêntricos
+// Quadrantes coloridos de fundo + livros em camadas
+// 100% database-driven
 // ============================================
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, X, Moon, List, Columns } from 'lucide-react';
@@ -11,21 +12,30 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
 import { useActiveCycle, useCycleBooks, useBookLinks, type Book, type CycleBook, type BookLink } from '@/hooks/useBooks';
 
 // ============================================
-// LAYER CONFIG — cores institucionais
+// LAYER CONFIG
 // ============================================
 const LAYER = {
-  MATRIZ:    { label: 'Matriz',     color: '#C9A84C', bg: 'rgba(201,168,76,0.12)', stroke: 'rgba(201,168,76,0.5)', icon: '☽◯☾', radius: 0,   nodeR: 38 },
-  TRAVESSIA: { label: 'Travessia',  color: '#2E5A88', bg: 'rgba(46,90,136,0.12)',  stroke: 'rgba(46,90,136,0.5)',  icon: '◈',    radius: 130, nodeR: 28 },
-  PORTA:     { label: 'Porta',      color: '#3A7D5C', bg: 'rgba(58,125,92,0.12)',  stroke: 'rgba(58,125,92,0.5)',  icon: '🗝',   radius: 215, nodeR: 20 },
-  PONTE:     { label: 'Ponte',      color: '#9B7EC8', bg: 'rgba(155,126,200,0.12)', stroke: 'rgba(155,126,200,0.5)', icon: '⌒',  radius: 280, nodeR: 15 },
-  FUNDACAO:  { label: 'Fundação',   color: '#78716C', bg: 'rgba(120,113,108,0.12)', stroke: 'rgba(120,113,108,0.5)', icon: '⊞',  radius: 0,   nodeR: 14 },
+  MATRIZ:    { label: 'Matriz',    color: '#C9A84C', bg: 'rgba(201,168,76,0.18)',  stroke: 'rgba(201,168,76,0.6)',  icon: '☽◯☾', radius: 0,   nodeR: 42 },
+  TRAVESSIA: { label: 'Travessia', color: '#2E5A88', bg: 'rgba(46,90,136,0.18)',   stroke: 'rgba(46,90,136,0.6)',   icon: '◈',    radius: 140, nodeR: 30 },
+  PORTA:     { label: 'Porta',     color: '#3A7D5C', bg: 'rgba(58,125,92,0.18)',   stroke: 'rgba(58,125,92,0.6)',   icon: '🗝',   radius: 230, nodeR: 22 },
+  PONTE:     { label: 'Ponte',     color: '#9B7EC8', bg: 'rgba(155,126,200,0.18)', stroke: 'rgba(155,126,200,0.6)', icon: '⌒',    radius: 295, nodeR: 16 },
+  FUNDACAO:  { label: 'Fundação',  color: '#78716C', bg: 'rgba(120,113,108,0.12)', stroke: 'rgba(120,113,108,0.5)', icon: '⊞',    radius: 0,   nodeR: 14 },
 } as const;
 
 type LayerKey = keyof typeof LAYER;
+
+// Quadrant colors (Medicine Wheel style)
+const QUADRANTS = [
+  { label: 'Corpo Mental',     sublabel: 'Ar',    color: 'hsla(210, 60%, 55%, 0.12)', border: 'hsla(210, 60%, 55%, 0.25)' }, // NW - blue
+  { label: 'Corpo Físico',     sublabel: 'Terra',  color: 'hsla(140, 40%, 45%, 0.12)', border: 'hsla(140, 40%, 45%, 0.25)' }, // NE - green
+  { label: 'Corpo Emocional',  sublabel: 'Água',   color: 'hsla(25, 65%, 50%, 0.12)',  border: 'hsla(25, 65%, 50%, 0.25)' },  // SE - orange
+  { label: 'Corpo Espiritual', sublabel: 'Fogo',   color: 'hsla(45, 60%, 50%, 0.12)',  border: 'hsla(45, 60%, 50%, 0.25)' },  // SW - gold
+];
+
+const DIRECTIONS = ['S', 'O', 'N', 'L']; // top, left, bottom, right (SVG)
 
 function polar(angleDeg: number, r: number, cx: number, cy: number) {
   const rad = ((angleDeg - 90) * Math.PI) / 180;
@@ -35,59 +45,37 @@ function polar(angleDeg: number, r: number, cx: number, cy: number) {
 // ============================================
 // Compute positions from DB data + links
 // ============================================
-function computePositions(
-  cycleBooks: CycleBook[],
-  links: BookLink[],
-  cx: number,
-  cy: number
-) {
+function computePositions(cycleBooks: CycleBook[], links: BookLink[], cx: number, cy: number) {
   const positions = new Map<string, { x: number; y: number }>();
+  const cardinalAngles = [0, 90, 180, 270];
 
   // Matriz → center
-  const matriz = cycleBooks.filter(cb => cb.layer === 'MATRIZ');
-  matriz.forEach(cb => {
+  cycleBooks.filter(cb => cb.layer === 'MATRIZ').forEach(cb => {
     if (cb.book) positions.set(cb.book.id, { x: cx, y: cy });
   });
 
-  // Travessias → cardinal cross (N, E, S, W)
+  // Travessias → cardinal cross
   const travessias = cycleBooks.filter(cb => cb.layer === 'TRAVESSIA').sort((a, b) => a.layer_order - b.layer_order);
-  const cardinalAngles = [0, 90, 180, 270]; // N, E, S, W
   travessias.forEach((cb, i) => {
-    if (!cb.book) return;
-    const angle = cardinalAngles[i % 4];
-    positions.set(cb.book.id, polar(angle, LAYER.TRAVESSIA.radius, cx, cy));
+    if (cb.book) positions.set(cb.book.id, polar(cardinalAngles[i % 4], LAYER.TRAVESSIA.radius, cx, cy));
   });
 
-  // Build travessia-link map: which Portas/Pontes connect to which Travessia
-  const travessiaChildren = new Map<string, { portas: string[]; pontes: string[] }>();
-  travessias.forEach(cb => {
-    if (cb.book) travessiaChildren.set(cb.book.id, { portas: [], pontes: [] });
-  });
-
-  // Map: ABRE links → Portas near their Travessia; INTEGRA → Pontes near their Travessia
+  // Build parent maps from links
   const portaParent = new Map<string, string>();
   const ponteParent = new Map<string, string>();
+  const travessiaIds = new Set(travessias.map(cb => cb.book?.id).filter(Boolean));
 
   links.forEach(link => {
-    if (link.link_type === 'ABRE') {
-      const children = travessiaChildren.get(link.from_book_id);
-      if (children) {
-        children.portas.push(link.to_book_id);
-        portaParent.set(link.to_book_id, link.from_book_id);
-      }
+    if (link.link_type === 'ABRE' && travessiaIds.has(link.from_book_id)) {
+      portaParent.set(link.to_book_id, link.from_book_id);
     }
-    if (link.link_type === 'INTEGRA') {
-      const children = travessiaChildren.get(link.from_book_id);
-      if (children) {
-        children.pontes.push(link.to_book_id);
-        ponteParent.set(link.to_book_id, link.from_book_id);
-      }
+    if (link.link_type === 'INTEGRA' && travessiaIds.has(link.from_book_id)) {
+      ponteParent.set(link.to_book_id, link.from_book_id);
     }
   });
 
-  // Position Portas near their parent Travessia
+  // Group Portas by parent Travessia
   const portas = cycleBooks.filter(cb => cb.layer === 'PORTA').sort((a, b) => a.layer_order - b.layer_order);
-  // Group portas by parent travessia
   const portasByParent = new Map<string, CycleBook[]>();
   portas.forEach(cb => {
     if (!cb.book) return;
@@ -98,22 +86,19 @@ function computePositions(
     }
   });
 
-  // For each travessia, spread its portas around it
   travessias.forEach((tCb, tIdx) => {
     if (!tCb.book) return;
-    const parentPos = positions.get(tCb.book.id);
-    if (!parentPos) return;
-    const childPortas = portasByParent.get(tCb.book.id) || [];
+    const children = portasByParent.get(tCb.book.id) || [];
     const baseAngle = cardinalAngles[tIdx % 4];
-    const spread = 30; // degrees spread around the travessia angle
-    childPortas.forEach((cb, i) => {
+    const spread = 28;
+    children.forEach((cb, i) => {
       if (!cb.book) return;
-      const offset = childPortas.length === 1 ? 0 : (i - (childPortas.length - 1) / 2) * spread;
+      const offset = children.length === 1 ? 0 : (i - (children.length - 1) / 2) * spread;
       positions.set(cb.book.id, polar(baseAngle + offset, LAYER.PORTA.radius, cx, cy));
     });
   });
 
-  // Position Pontes near their parent Travessia
+  // Group Pontes by parent Travessia
   const pontes = cycleBooks.filter(cb => cb.layer === 'PONTE').sort((a, b) => a.layer_order - b.layer_order);
   const pontesByParent = new Map<string, CycleBook[]>();
   pontes.forEach(cb => {
@@ -127,12 +112,12 @@ function computePositions(
 
   travessias.forEach((tCb, tIdx) => {
     if (!tCb.book) return;
-    const childPontes = pontesByParent.get(tCb.book.id) || [];
+    const children = pontesByParent.get(tCb.book.id) || [];
     const baseAngle = cardinalAngles[tIdx % 4];
-    const spread = 25;
-    childPontes.forEach((cb, i) => {
+    const spread = 22;
+    children.forEach((cb, i) => {
       if (!cb.book) return;
-      const offset = childPontes.length === 1 ? 0 : (i - (childPontes.length - 1) / 2) * spread;
+      const offset = children.length === 1 ? 0 : (i - (children.length - 1) / 2) * spread;
       positions.set(cb.book.id, polar(baseAngle + offset, LAYER.PONTE.radius, cx, cy));
     });
   });
@@ -218,7 +203,7 @@ function LayerListView({ cycleBooks, onSelect }: { cycleBooks: CycleBook[]; onSe
 }
 
 // ============================================
-// MANDALA COMPONENT (NEW FROM SCRATCH)
+// MANDALA COMPONENT
 // ============================================
 export function MandalaAnualDB() {
   const navigate = useNavigate();
@@ -229,9 +214,15 @@ export function MandalaAnualDB() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'mandala' | 'list'>('mandala');
 
-  const SIZE = 640;
+  const SIZE = 700;
   const CX = SIZE / 2;
   const CY = SIZE / 2;
+  const OUTER_R = 320;
+
+  const positions = useMemo(() => {
+    if (!cycleBooks?.length) return new Map();
+    return computePositions(cycleBooks, links || [], CX, CY);
+  }, [cycleBooks, links, CX, CY]);
 
   if (loadingCycle || loadingBooks) {
     return <div className="flex justify-center py-16"><span className="text-muted-foreground text-sm animate-pulse">Carregando mandala…</span></div>;
@@ -240,23 +231,19 @@ export function MandalaAnualDB() {
     return <div className="text-center py-16 text-muted-foreground">Nenhum ciclo encontrado.</div>;
   }
 
-  const positions = computePositions(cycleBooks, links || [], CX, CY);
-
-  // Build connection lines from links (ABRE, INTEGRA, SUPORTA)
+  // Connection lines
   const connectionLines = (links || [])
     .filter(l => ['ABRE', 'INTEGRA', 'SUPORTA'].includes(l.link_type))
     .map(link => {
       const from = positions.get(link.from_book_id);
       const to = positions.get(link.to_book_id);
       if (!from || !to) return null;
-      // Find target layer for color
       const toCb = cycleBooks.find(cb => cb.book_id === link.to_book_id);
       const toLayer = (toCb?.layer || 'PORTA') as LayerKey;
       return { from, to, color: LAYER[toLayer]?.color || '#666', type: link.link_type };
     })
     .filter(Boolean) as { from: { x: number; y: number }; to: { x: number; y: number }; color: string; type: string }[];
 
-  // Separate layers
   const fundacao = cycleBooks.filter(cb => cb.layer === 'FUNDACAO');
   const mandalaBooks = cycleBooks.filter(cb => cb.layer !== 'FUNDACAO');
 
@@ -271,8 +258,7 @@ export function MandalaAnualDB() {
     const isHovered = hoveredId === book.id;
     const isMatriz = layerKey === 'MATRIZ';
 
-    // Shorten title for display inside node
-    const displayTitle = book.title.length > 18 ? book.title.slice(0, 16) + '…' : book.title;
+    const displayTitle = book.title.length > 20 ? book.title.slice(0, 18) + '…' : book.title;
     const tooltipText = `${cfg.label}: ${book.description_short?.slice(0, 120) || book.title}`;
 
     return (
@@ -287,33 +273,33 @@ export function MandalaAnualDB() {
             >
               {/* Hover glow */}
               {isHovered && (
-                <circle cx={pos.x} cy={pos.y} r={r + 6} fill="none" stroke={cfg.color} strokeWidth={1.5} strokeOpacity={0.5} />
+                <circle cx={pos.x} cy={pos.y} r={r + 6} fill="none" stroke={cfg.color} strokeWidth={1.5} strokeOpacity={0.6} />
               )}
               {/* Matriz pulse */}
               {isMatriz && (
-                <circle cx={pos.x} cy={pos.y} r={r + 10} fill="none" stroke={cfg.color} strokeWidth={1} strokeOpacity={0.2}>
-                  <animate attributeName="r" values={`${r + 6};${r + 14};${r + 6}`} dur="4s" repeatCount="indefinite" />
-                  <animate attributeName="stroke-opacity" values="0.15;0.35;0.15" dur="4s" repeatCount="indefinite" />
+                <circle cx={pos.x} cy={pos.y} r={r + 12} fill="none" stroke={cfg.color} strokeWidth={1} strokeOpacity={0.2}>
+                  <animate attributeName="r" values={`${r + 8};${r + 18};${r + 8}`} dur="5s" repeatCount="indefinite" />
+                  <animate attributeName="stroke-opacity" values="0.1;0.35;0.1" dur="5s" repeatCount="indefinite" />
                 </circle>
               )}
               {/* Node circle */}
-              <circle cx={pos.x} cy={pos.y} r={r} fill={cfg.bg} stroke={cfg.stroke} strokeWidth={isMatriz ? 2 : 1.2} />
-              {/* Icon/cover inside */}
+              <circle cx={pos.x} cy={pos.y} r={r} fill={cfg.bg} stroke={cfg.stroke} strokeWidth={isMatriz ? 2.5 : 1.5} />
+              {/* Cover / icon */}
               <foreignObject x={pos.x - r + 3} y={pos.y - r + 3} width={(r - 3) * 2} height={(r - 3) * 2}>
                 <div className="flex items-center justify-center w-full h-full">
                   {book.cover_url ? (
                     <img src={book.cover_url} alt={book.title} className="rounded-full object-cover" style={{ width: (r - 5) * 2, height: (r - 5) * 2 }} />
                   ) : (
-                    <span className="select-none" style={{ fontSize: isMatriz ? r * 0.5 : r * 0.45, color: cfg.color, opacity: 0.8 }}>{cfg.icon}</span>
+                    <span className="select-none" style={{ fontSize: isMatriz ? r * 0.45 : r * 0.5, color: cfg.color, opacity: 0.85 }}>{cfg.icon}</span>
                   )}
                 </div>
               </foreignObject>
-              {/* Title label below */}
-              <foreignObject x={pos.x - 52} y={pos.y + r + 2} width={104} height={isMatriz ? 32 : 26}>
+              {/* Title label */}
+              <foreignObject x={pos.x - 56} y={pos.y + r + 3} width={112} height={isMatriz ? 34 : 28}>
                 <div className="text-center leading-tight">
                   <span
                     className="font-medium line-clamp-2"
-                    style={{ fontSize: isMatriz ? 8 : 7, color: cfg.color, opacity: 0.9 }}
+                    style={{ fontSize: isMatriz ? 9 : 7.5, color: cfg.color, opacity: 0.9 }}
                   >
                     {isMatriz ? 'A Deusa Tríplice' : displayTitle}
                   </span>
@@ -343,12 +329,62 @@ export function MandalaAnualDB() {
         <LayerListView cycleBooks={cycleBooks} onSelect={setSelectedBook} />
       ) : (
         <>
-          {/* SVG Mandala */}
           <div className="flex justify-center overflow-auto">
-            <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="w-full max-w-[640px] aspect-square">
+            <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="w-full max-w-[700px] aspect-square">
+              <defs>
+                {/* Quadrant clip paths */}
+                <clipPath id="q-nw"><path d={`M${CX},${CY} L${CX - OUTER_R},${CY} A${OUTER_R},${OUTER_R} 0 0,1 ${CX},${CY - OUTER_R} Z`} /></clipPath>
+                <clipPath id="q-ne"><path d={`M${CX},${CY} L${CX},${CY - OUTER_R} A${OUTER_R},${OUTER_R} 0 0,1 ${CX + OUTER_R},${CY} Z`} /></clipPath>
+                <clipPath id="q-se"><path d={`M${CX},${CY} L${CX + OUTER_R},${CY} A${OUTER_R},${OUTER_R} 0 0,1 ${CX},${CY + OUTER_R} Z`} /></clipPath>
+                <clipPath id="q-sw"><path d={`M${CX},${CY} L${CX},${CY + OUTER_R} A${OUTER_R},${OUTER_R} 0 0,1 ${CX - OUTER_R},${CY} Z`} /></clipPath>
+              </defs>
+
+              {/* Outer border circle */}
+              <circle cx={CX} cy={CY} r={OUTER_R} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth={1.5} strokeOpacity={0.15} />
+
+              {/* Quadrant fills */}
+              {[
+                { clip: 'q-nw', q: QUADRANTS[0] },
+                { clip: 'q-ne', q: QUADRANTS[1] },
+                { clip: 'q-se', q: QUADRANTS[2] },
+                { clip: 'q-sw', q: QUADRANTS[3] },
+              ].map(({ clip, q }) => (
+                <g key={clip}>
+                  <circle cx={CX} cy={CY} r={OUTER_R} fill={q.color} clipPath={`url(#${clip})`} />
+                  <circle cx={CX} cy={CY} r={OUTER_R} fill="none" stroke={q.border} strokeWidth={0.5} clipPath={`url(#${clip})`} />
+                </g>
+              ))}
+
+              {/* Cross divider lines */}
+              <line x1={CX} y1={CY - OUTER_R - 8} x2={CX} y2={CY + OUTER_R + 8} stroke="hsl(var(--muted-foreground))" strokeWidth={0.5} strokeOpacity={0.15} />
+              <line x1={CX - OUTER_R - 8} y1={CY} x2={CX + OUTER_R + 8} y2={CY} stroke="hsl(var(--muted-foreground))" strokeWidth={0.5} strokeOpacity={0.15} />
+
+              {/* Cardinal direction labels */}
+              {[
+                { label: 'S', x: CX, y: CY - OUTER_R - 14 },
+                { label: 'N', x: CX, y: CY + OUTER_R + 20 },
+                { label: 'O', x: CX - OUTER_R - 18, y: CY + 4 },
+                { label: 'L', x: CX + OUTER_R + 18, y: CY + 4 },
+              ].map(d => (
+                <text key={d.label} x={d.x} y={d.y} textAnchor="middle" fontSize={14} fontWeight="bold" fill="hsl(var(--muted-foreground))" fillOpacity={0.4}>{d.label}</text>
+              ))}
+
+              {/* Quadrant body labels */}
+              {[
+                { label: QUADRANTS[0].label, sub: QUADRANTS[0].sublabel, x: CX - OUTER_R * 0.5, y: CY - OUTER_R * 0.55 },
+                { label: QUADRANTS[1].label, sub: QUADRANTS[1].sublabel, x: CX + OUTER_R * 0.5, y: CY - OUTER_R * 0.55 },
+                { label: QUADRANTS[2].label, sub: QUADRANTS[2].sublabel, x: CX + OUTER_R * 0.5, y: CY + OUTER_R * 0.6 },
+                { label: QUADRANTS[3].label, sub: QUADRANTS[3].sublabel, x: CX - OUTER_R * 0.5, y: CY + OUTER_R * 0.6 },
+              ].map((q, i) => (
+                <g key={i}>
+                  <text x={q.x} y={q.y} textAnchor="middle" fontSize={9} fontWeight="600" fill="hsl(var(--muted-foreground))" fillOpacity={0.25}>{q.label}</text>
+                  <text x={q.x} y={q.y + 12} textAnchor="middle" fontSize={7} fill="hsl(var(--muted-foreground))" fillOpacity={0.18}>{q.sub}</text>
+                </g>
+              ))}
+
               {/* Orbit rings */}
               {[LAYER.TRAVESSIA.radius, LAYER.PORTA.radius, LAYER.PONTE.radius].map(r => (
-                <circle key={r} cx={CX} cy={CY} r={r} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth={0.5} strokeOpacity={0.08} strokeDasharray="4 10" />
+                <circle key={r} cx={CX} cy={CY} r={r} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth={0.5} strokeOpacity={0.08} strokeDasharray="3 8" />
               ))}
 
               {/* Connection lines */}
@@ -364,7 +400,7 @@ export function MandalaAnualDB() {
                 />
               ))}
 
-              {/* Render nodes back-to-front: Ponte → Porta → Travessia → Matriz */}
+              {/* Render nodes back-to-front */}
               {mandalaBooks.filter(cb => cb.layer === 'PONTE').map(renderNode)}
               {mandalaBooks.filter(cb => cb.layer === 'PORTA').map(renderNode)}
               {mandalaBooks.filter(cb => cb.layer === 'TRAVESSIA').map(renderNode)}
