@@ -1290,6 +1290,90 @@ export type Database = {
           },
         ]
       }
+      book_links: {
+        Row: {
+          from_book_id: string
+          id: string
+          link_type: string
+          note: string | null
+          to_book_id: string
+        }
+        Insert: {
+          from_book_id: string
+          id?: string
+          link_type: string
+          note?: string | null
+          to_book_id: string
+        }
+        Update: {
+          from_book_id?: string
+          id?: string
+          link_type?: string
+          note?: string | null
+          to_book_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_links_from_book_id_fkey"
+            columns: ["from_book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "book_links_to_book_id_fkey"
+            columns: ["to_book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      books: {
+        Row: {
+          author: string | null
+          category: string
+          cover_url: string | null
+          created_at: string | null
+          description_short: string | null
+          how_to_read: string | null
+          id: string
+          is_multipolar: boolean | null
+          manifesto_short: string | null
+          title: string
+          updated_at: string | null
+          why_here: string | null
+        }
+        Insert: {
+          author?: string | null
+          category: string
+          cover_url?: string | null
+          created_at?: string | null
+          description_short?: string | null
+          how_to_read?: string | null
+          id?: string
+          is_multipolar?: boolean | null
+          manifesto_short?: string | null
+          title: string
+          updated_at?: string | null
+          why_here?: string | null
+        }
+        Update: {
+          author?: string | null
+          category?: string
+          cover_url?: string | null
+          created_at?: string | null
+          description_short?: string | null
+          how_to_read?: string | null
+          id?: string
+          is_multipolar?: boolean | null
+          manifesto_short?: string | null
+          title?: string
+          updated_at?: string | null
+          why_here?: string | null
+        }
+        Relationships: []
+      }
       casa_circulo_replies: {
         Row: {
           autor_id: string
@@ -2894,6 +2978,78 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      cycle_books: {
+        Row: {
+          book_id: string
+          created_at: string | null
+          cycle_id: string
+          id: string
+          is_core: boolean | null
+          layer_order: number | null
+          quadrant: string | null
+        }
+        Insert: {
+          book_id: string
+          created_at?: string | null
+          cycle_id: string
+          id?: string
+          is_core?: boolean | null
+          layer_order?: number | null
+          quadrant?: string | null
+        }
+        Update: {
+          book_id?: string
+          created_at?: string | null
+          cycle_id?: string
+          id?: string
+          is_core?: boolean | null
+          layer_order?: number | null
+          quadrant?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cycle_books_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cycle_books_cycle_id_fkey"
+            columns: ["cycle_id"]
+            isOneToOne: false
+            referencedRelation: "cycles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cycles: {
+        Row: {
+          created_at: string | null
+          id: string
+          label: string
+          status: string
+          updated_at: string | null
+          year: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          label: string
+          status?: string
+          updated_at?: string | null
+          year?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          label?: string
+          status?: string
+          updated_at?: string | null
+          year?: number | null
+        }
+        Relationships: []
       }
       decodificacao_onirica: {
         Row: {
@@ -5649,6 +5805,74 @@ export type Database = {
             columns: ["travessia_id"]
             isOneToOne: false
             referencedRelation: "travessias"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lessons_album: {
+        Row: {
+          audio_script: string | null
+          audio_url: string | null
+          book_id: string
+          clinical_alert: string | null
+          clinical_notes: string | null
+          closing_text: string | null
+          created_at: string | null
+          description: string | null
+          guided_reading: string | null
+          id: string
+          misuse_list: string | null
+          phase: string
+          podcast_url: string | null
+          questions: Json | null
+          title: string
+          updated_at: string | null
+          week_number: number
+        }
+        Insert: {
+          audio_script?: string | null
+          audio_url?: string | null
+          book_id: string
+          clinical_alert?: string | null
+          clinical_notes?: string | null
+          closing_text?: string | null
+          created_at?: string | null
+          description?: string | null
+          guided_reading?: string | null
+          id?: string
+          misuse_list?: string | null
+          phase: string
+          podcast_url?: string | null
+          questions?: Json | null
+          title: string
+          updated_at?: string | null
+          week_number: number
+        }
+        Update: {
+          audio_script?: string | null
+          audio_url?: string | null
+          book_id?: string
+          clinical_alert?: string | null
+          clinical_notes?: string | null
+          closing_text?: string | null
+          created_at?: string | null
+          description?: string | null
+          guided_reading?: string | null
+          id?: string
+          misuse_list?: string | null
+          phase?: string
+          podcast_url?: string | null
+          questions?: Json | null
+          title?: string
+          updated_at?: string | null
+          week_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lessons_album_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
             referencedColumns: ["id"]
           },
         ]
