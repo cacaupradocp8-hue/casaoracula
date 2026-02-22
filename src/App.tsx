@@ -109,6 +109,7 @@ import FerramentaDinamica from "./pages/FerramentaDinamica";
 import CriarFerramenta from "./pages/admin/CriarFerramenta";
 import AtelieConteudo from "./pages/admin/AtelieConteudo";
 import AdminModulosFormativos from "./pages/admin/AdminModulosFormativos";
+import AdminBooks from "./pages/admin/AdminBooks";
 import Big5Simbolico from "./pages/Big5Simbolico";
 import Big5Oracular from "./pages/Big5Oracular";
 import Big5Funcional from "./pages/Big5Funcional";
@@ -178,6 +179,7 @@ import {
   IntegracaoOracular,
   MeuCaminhoClube,
   Integracao8020,
+  ClubeLivroLivro,
 } from "./pages/clube-livro";
 // Labirinto da Heroína Interna®
 import { LabirintoHeroinaPage } from "./pages/labirinto-heroina";
@@ -638,6 +640,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="aluna">
             <ClubeLivroApresentacao />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/livro/:id"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroLivro />
           </ProtectedRoute>
         }
       />
@@ -1607,6 +1617,15 @@ function AppRoutes() {
           element={
             <ProtectedRoute minPortal="admin">
               <AdminModulosFormativos />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/books"
+          element={
+            <ProtectedRoute minPortal="admin">
+              <AdminBooks />
             </ProtectedRoute>
           }
         />
