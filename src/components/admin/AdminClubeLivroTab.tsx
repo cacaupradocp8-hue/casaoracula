@@ -30,77 +30,80 @@ import { AudioUpload } from './AudioUpload';
 import { CALENDARIO_ANUAL, SEMANAS_PADRAO } from '@/constants/clubeLivroCalendario';
 import { cn } from '@/lib/utils';
 
-// Mapeamento canônico de jornadas (espelha CalendarioJornadas.tsx)
-const JORNADAS_ADMIN = [
+// Catálogo 2026 — Camadas da Mandala de Jornada
+const CAMADAS_CATALOGO = [
   {
-    chave: 'heroina',
-    nome: 'Jornada da Heroína',
-    subtitulo: 'Fundadora',
-    descricao: 'Identidade, instinto, voz e sentido.',
+    chave: 'matriz',
+    nome: 'Matriz',
+    subtitulo: 'Âncora Simbólica',
+    descricao: 'O livro-raiz que ancora toda a jornada do ciclo.',
     corLabel: 'text-amber-400',
     corBorda: 'border-amber-700/30',
     corBg: 'from-amber-950/30 to-card',
-    simbolo: '◈',
-    livros: [
-      'Mulheres que Correm com os Lobos',
-      'O Código do Ser',
-      'A Coruja Era Filha do Padeiro',
-      'Água Viva',
-    ],
+    simbolo: '☾◯☽',
+    livros: ['A Deusa Tríplice'],
   },
   {
-    chave: 'sombra',
-    nome: 'Jornada da Sombra',
-    subtitulo: 'Aprofundamento',
-    descricao: 'Projeção, ambivalência, ética e maturidade psíquica.',
+    chave: 'travessia',
+    nome: 'Travessias',
+    subtitulo: 'Multipolares',
+    descricao: 'Obras de travessia profunda com múltiplas portas simbólicas.',
     corLabel: 'text-violet-400',
     corBorda: 'border-violet-700/30',
     corBg: 'from-violet-950/30 to-card',
-    simbolo: '◉',
+    simbolo: '◈',
     livros: [
-      'O Brincar e a Realidade',
-      'A Gravidade e a Graça',
-      'O Acontecimento',
-      'Ficções que Curam',
+      'Mulheres que Correm com os Lobos',
+      'O Anel do Poder',
+      'A Tecelã',
+      'Os Irmãos Karamázov',
     ],
   },
   {
-    chave: 'expressao',
-    nome: 'Jornada da Expressão & Mundo',
-    subtitulo: 'Presença Pública',
-    descricao: 'Linguagem, desejo, ação e presença pública.',
-    corLabel: 'text-teal-400',
-    corBorda: 'border-teal-700/30',
-    corBg: 'from-teal-950/30 to-card',
-    simbolo: '◎',
+    chave: 'porta',
+    nome: 'Portas',
+    subtitulo: 'Eixos Simbólicos',
+    descricao: 'Cada porta abre um eixo de compreensão clínica e simbólica.',
+    corLabel: 'text-emerald-400',
+    corBorda: 'border-emerald-700/30',
+    corBg: 'from-emerald-950/30 to-card',
+    simbolo: '🗝',
     livros: [
-      'O Poder da Escrita',
-      'A Poética do Espaço',
-      'Inteligência Erótica',
+      'A Coruja Era Filha do Padeiro',
+      'O Gato',
+      'O Acontecimento',
+      'Água Viva',
       'A Condição Humana',
     ],
   },
   {
-    chave: 'instinto',
-    nome: 'Jornada do Instinto',
-    subtitulo: 'Raiz Corporal',
-    descricao: 'Corpo, sensorialidade, pulsão e presença somática.',
-    corLabel: 'text-rose-400',
-    corBorda: 'border-rose-700/30',
-    corBg: 'from-rose-950/30 to-card',
-    simbolo: '△',
-    livros: [],
+    chave: 'ponte',
+    nome: 'Pontes',
+    subtitulo: 'Micro-ações',
+    descricao: 'Leituras de apoio, exercícios e práticas complementares.',
+    corLabel: 'text-teal-400',
+    corBorda: 'border-teal-700/30',
+    corBg: 'from-teal-950/30 to-card',
+    simbolo: '⌒',
+    livros: [
+      'Inteligência Erótica',
+      'Apaixone-se por Si Mesmo',
+      'O Poder da Escrita',
+    ],
   },
   {
-    chave: 'lideranca',
-    nome: 'Jornada da Liderança',
-    subtitulo: 'Autoridade Interior',
-    descricao: 'Direção, responsabilidade, poder e serviço.',
+    chave: 'fundacao',
+    nome: 'Fundação',
+    subtitulo: 'Biblioteca de Base',
+    descricao: 'Referências teóricas e leituras de individuação.',
     corLabel: 'text-sky-400',
     corBorda: 'border-sky-700/30',
     corBg: 'from-sky-950/30 to-card',
-    simbolo: '⬡',
-    livros: [],
+    simbolo: '◉',
+    livros: [
+      'Jung e o Caminho da Individuação',
+      'A Individuação nos Contos de Fada',
+    ],
   },
 ] as const;
 
@@ -122,6 +125,7 @@ interface Ciclo {
   ativo: boolean;
   publicado: boolean;
   portal_minimo: string;
+  is_multipolar?: boolean;
   // New clinical fields
   tema_simbolico?: string;
   orientacao_clinica_uso?: string;
@@ -451,39 +455,37 @@ export function AdminClubeLivroTab() {
             </div>
           ) : (
             <div className="space-y-8">
-              {JORNADAS_ADMIN.map((jornada, jornadaIndex) => {
-                const mesBase = jornadaIndex * 4;
+              {CAMADAS_CATALOGO.map((camada) => {
                 return (
-                  <div key={jornada.chave} className="space-y-3">
-                    {/* Cabeçalho da jornada */}
+                  <div key={camada.chave} className="space-y-3">
+                    {/* Cabeçalho da camada */}
                     <div className={cn(
                       'rounded-xl p-4 bg-gradient-to-br border',
-                      jornada.corBg,
-                      jornada.corBorda,
+                      camada.corBg,
+                      camada.corBorda,
                     )}>
                       <div className="flex items-start gap-3">
-                        <span className={cn('text-2xl leading-none mt-0.5', jornada.corLabel)}>
-                          {jornada.simbolo}
+                        <span className={cn('text-2xl leading-none mt-0.5', camada.corLabel)}>
+                          {camada.simbolo}
                         </span>
                         <div>
                           <div className="flex items-center gap-2 flex-wrap">
                             <h3 className="font-display text-base text-foreground">
-                              {jornada.nome}
+                              {camada.nome}
                             </h3>
-                            <Badge variant="outline" className={cn('text-xs', jornada.corLabel, jornada.corBorda)}>
-                              {jornada.subtitulo}
+                            <Badge variant="outline" className={cn('text-xs', camada.corLabel, camada.corBorda)}>
+                              {camada.subtitulo}
                             </Badge>
                           </div>
-                          <p className="text-sm text-muted-foreground mt-0.5">{jornada.descricao}</p>
+                          <p className="text-sm text-muted-foreground mt-0.5">{camada.descricao}</p>
                         </div>
                       </div>
                     </div>
 
                     {/* Grid de livros */}
                     <div className="grid gap-2 sm:grid-cols-2">
-                      {jornada.livros.map((livroRef, i) => {
+                      {camada.livros.map((livroRef, i) => {
                         const ciclo = ciclos?.find(c => matchLivroAdmin(c.titulo, livroRef));
-                        const mes = mesBase + i + 1;
                         return (
                           <div
                             key={livroRef}
@@ -492,7 +494,6 @@ export function AdminClubeLivroTab() {
                               ciclo ? 'border-border' : 'border-dashed border-muted-foreground/30 opacity-60',
                             )}
                           >
-                            {/* Thumbnail */}
                             <div className="shrink-0">
                               {ciclo?.capa_url ? (
                                 <img src={ciclo.capa_url} alt={ciclo.titulo} className="w-10 h-14 object-cover rounded" />
@@ -502,17 +503,17 @@ export function AdminClubeLivroTab() {
                                 </div>
                               )}
                             </div>
-                            {/* Info */}
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-1.5 mb-0.5">
-                                <span className="text-[10px] font-mono text-muted-foreground">
-                                  Mês {mes.toString().padStart(2, '0')}
-                                </span>
+                                {ciclo?.is_multipolar && (
+                                  <Badge variant="outline" className="text-[10px] px-1 py-0 h-4">
+                                    Multipolar
+                                  </Badge>
+                                )}
                                 {ciclo && (
                                   <>
-                                    <span className="text-muted-foreground/40 text-[10px]">·</span>
                                     {ciclo.publicado ? (
-                                      <Badge className="text-[10px] px-1 py-0 h-4 bg-green-500/20 text-green-400 border-0">
+                                      <Badge className="text-[10px] px-1 py-0 h-4 bg-primary/20 text-primary border-0">
                                         Publicado
                                       </Badge>
                                     ) : (
@@ -530,7 +531,6 @@ export function AdminClubeLivroTab() {
                                 {ciclo?.autor_livro || '— não cadastrado'}
                               </p>
                             </div>
-                            {/* Editar */}
                             {ciclo && (
                               <Button
                                 size="sm"
