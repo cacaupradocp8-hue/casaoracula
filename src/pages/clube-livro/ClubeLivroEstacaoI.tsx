@@ -10,6 +10,7 @@ import { BookOpen, ChevronRight, Home, ArrowRight, Loader2 } from 'lucide-react'
 import { motion } from 'framer-motion';
 import { JourneyMediaDisplay } from '@/components/clube-livro/JourneyMediaDisplay';
 import { BookCoverDisplay } from '@/components/clube-livro/BookCoverDisplay';
+import { EstacaoAudioSection } from '@/components/audio/EstacaoAudioSection';
 import { TravessiaEstacaoBlock } from '@/components/clube-livro/TravessiaEstacaoBlock';
 import { ProgressIndicator } from '@/components/clube-livro/ProgressIndicator';
 import { useEstacoes } from '@/hooks/useEstacoes';
@@ -78,6 +79,9 @@ export default function ClubeLivroEstacaoI() {
           titulo={estacaoI.livro_titulo}
           autor={estacaoI.livro_autor}
         />
+
+        {/* Áudio da Estação */}
+        <EstacaoAudioSection estacaoId={estacaoI.id} />
 
         {/* Travessia da Estação — Progresso */}
         <TravessiaEstacaoBlock jornadas={jornadas} portais={portais} portalProgress={progressList} />
