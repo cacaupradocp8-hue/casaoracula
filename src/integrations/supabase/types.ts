@@ -1690,6 +1690,59 @@ export type Database = {
         }
         Relationships: []
       }
+      clube_jornadas: {
+        Row: {
+          ativa: boolean
+          cor: string | null
+          created_at: string
+          descricao: string | null
+          estacao_id: string
+          icone: string | null
+          id: string
+          nome: string
+          ordem: number
+          slug: string
+          subtitulo: string | null
+          updated_at: string
+        }
+        Insert: {
+          ativa?: boolean
+          cor?: string | null
+          created_at?: string
+          descricao?: string | null
+          estacao_id: string
+          icone?: string | null
+          id?: string
+          nome: string
+          ordem?: number
+          slug: string
+          subtitulo?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ativa?: boolean
+          cor?: string | null
+          created_at?: string
+          descricao?: string | null
+          estacao_id?: string
+          icone?: string | null
+          id?: string
+          nome?: string
+          ordem?: number
+          slug?: string
+          subtitulo?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_jornadas_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_livro_aulas: {
         Row: {
           ativo: boolean | null
@@ -2452,6 +2505,77 @@ export type Database = {
             columns: ["ciclo_id"]
             isOneToOne: false
             referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_portais: {
+        Row: {
+          aplicacao_pessoal: string | null
+          aplicacao_profissional: string | null
+          ativo: boolean
+          created_at: string
+          essencia_8020: string | null
+          icone: string | null
+          id: string
+          jardim_heroina: string | null
+          jardim_psique: string | null
+          jornada_id: string
+          laboratorio_8020: string | null
+          nome: string
+          ordem: number
+          raiz_psiquica: string | null
+          slug: string
+          subtitulo: string | null
+          texto_simbolico: string | null
+          updated_at: string
+        }
+        Insert: {
+          aplicacao_pessoal?: string | null
+          aplicacao_profissional?: string | null
+          ativo?: boolean
+          created_at?: string
+          essencia_8020?: string | null
+          icone?: string | null
+          id?: string
+          jardim_heroina?: string | null
+          jardim_psique?: string | null
+          jornada_id: string
+          laboratorio_8020?: string | null
+          nome: string
+          ordem?: number
+          raiz_psiquica?: string | null
+          slug: string
+          subtitulo?: string | null
+          texto_simbolico?: string | null
+          updated_at?: string
+        }
+        Update: {
+          aplicacao_pessoal?: string | null
+          aplicacao_profissional?: string | null
+          ativo?: boolean
+          created_at?: string
+          essencia_8020?: string | null
+          icone?: string | null
+          id?: string
+          jardim_heroina?: string | null
+          jardim_psique?: string | null
+          jornada_id?: string
+          laboratorio_8020?: string | null
+          nome?: string
+          ordem?: number
+          raiz_psiquica?: string | null
+          slug?: string
+          subtitulo?: string | null
+          texto_simbolico?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_portais_jornada_id_fkey"
+            columns: ["jornada_id"]
+            isOneToOne: false
+            referencedRelation: "clube_jornadas"
             referencedColumns: ["id"]
           },
         ]
