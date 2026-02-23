@@ -1329,6 +1329,53 @@ export type Database = {
           },
         ]
       }
+      book_media: {
+        Row: {
+          created_at: string
+          file_kind: string
+          file_url: string
+          id: string
+          order_index: number
+          published: boolean
+          station_id: string
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          file_kind?: string
+          file_url: string
+          id?: string
+          order_index?: number
+          published?: boolean
+          station_id: string
+          title?: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          file_kind?: string
+          file_url?: string
+          id?: string
+          order_index?: number
+          published?: boolean
+          station_id?: string
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_media_station_id_fkey"
+            columns: ["station_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       books: {
         Row: {
           author: string | null
