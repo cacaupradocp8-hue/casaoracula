@@ -24,6 +24,7 @@ import { useAllPortais, useUpdatePortal, type ClubePortal, type ClubeJornada } f
 import { useCreateEstacao, useUpdateEstacao, useDeleteEstacao, useCreateJornada, useUpdateJornada, useDeleteJornada, useCreatePortal, useDeletePortal } from '@/hooks/useClubeLivroAdmin';
 import { AdminAudioAlbumSection } from '@/components/admin/AdminAudioAlbumSection';
 import { AdminBookMediaSection } from '@/components/admin/AdminBookMediaSection';
+import { AdminJourneyMediaSection } from '@/components/admin/AdminJourneyMediaSection';
 
 // ─── Constants ───────────────────────────────
 const BLOCOS_META: { key: keyof Pick<ClubePortal, 'texto_simbolico' | 'essencia_8020' | 'raiz_psiquica' | 'aplicacao_pessoal' | 'aplicacao_profissional' | 'jardim_psique' | 'jardim_heroina' | 'laboratorio_8020'>; label: string; icon: React.ElementType }[] = [
@@ -275,6 +276,8 @@ function JornadaSection({ jornada, portais, onRefresh }: { jornada: ClubeJornada
             <Plus className="w-3 h-3" /> Novo Portal
           </Button>
         )}
+
+        <AdminJourneyMediaSection jornadaId={jornada.id} />
       </div>
     </div>
   );
