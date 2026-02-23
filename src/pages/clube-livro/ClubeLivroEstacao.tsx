@@ -41,7 +41,7 @@ export default function ClubeLivroEstacao() {
       <AppLayout>
         <div className="container mx-auto px-4 py-16 max-w-3xl text-center">
           <p className="text-muted-foreground">Estação não encontrada.</p>
-          <Button variant="ghost" className="mt-4" onClick={() => navigate('/clube-livro/mapa')}>
+          <Button variant="ghost" className="mt-4" onClick={() => navigate('/clube-livro/mandala')}>
             Voltar ao Mapa
           </Button>
         </div>
@@ -76,7 +76,7 @@ export default function ClubeLivroEstacao() {
           <ChevronRight className="w-3 h-3" />
           <Link to="/clube-livro" className="hover:text-foreground transition-colors">Clube do Livro</Link>
           <ChevronRight className="w-3 h-3" />
-          <Link to="/clube-livro/mapa" className="hover:text-foreground transition-colors">Mapa</Link>
+          <Link to="/clube-livro/mandala" className="hover:text-foreground transition-colors">Mandala</Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-foreground truncate">{estacao.titulo}</span>
         </nav>
