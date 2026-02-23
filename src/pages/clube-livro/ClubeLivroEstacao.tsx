@@ -8,6 +8,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { useEstacao, useEstacaoRegistros, useSaveRegistro } from '@/hooks/useEstacoes';
 import { useAuth } from '@/contexts/AuthContext';
 import { BookOpen, ChevronRight, Home, Save, Loader2, PenLine, GraduationCap, User, Lightbulb } from 'lucide-react';
+import { EstacaoAudioSection } from '@/components/audio/EstacaoAudioSection';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -108,6 +109,9 @@ export default function ClubeLivroEstacao() {
             <br />Ele existe para te deslocar.
           </p>
         </motion.div>
+
+        {/* Áudio da Estação */}
+        {id && <EstacaoAudioSection estacaoId={id} />}
 
         <Separator className="my-6" />
 
