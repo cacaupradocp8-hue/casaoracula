@@ -1583,6 +1583,42 @@ export type Database = {
         }
         Relationships: []
       }
+      clube_audit_log: {
+        Row: {
+          acao: string
+          campo_alterado: string | null
+          created_at: string
+          id: string
+          registro_id: string
+          tabela: string
+          user_id: string
+          valor_anterior: string | null
+          valor_novo: string | null
+        }
+        Insert: {
+          acao: string
+          campo_alterado?: string | null
+          created_at?: string
+          id?: string
+          registro_id: string
+          tabela: string
+          user_id: string
+          valor_anterior?: string | null
+          valor_novo?: string | null
+        }
+        Update: {
+          acao?: string
+          campo_alterado?: string | null
+          created_at?: string
+          id?: string
+          registro_id?: string
+          tabela?: string
+          user_id?: string
+          valor_anterior?: string | null
+          valor_novo?: string | null
+        }
+        Relationships: []
+      }
       clube_estacao_registros: {
         Row: {
           created_at: string
@@ -1703,6 +1739,7 @@ export type Database = {
           ordem: number
           slug: string
           subtitulo: string | null
+          tipo: Database["public"]["Enums"]["clube_jornada_tipo"]
           updated_at: string
         }
         Insert: {
@@ -1717,6 +1754,7 @@ export type Database = {
           ordem?: number
           slug: string
           subtitulo?: string | null
+          tipo?: Database["public"]["Enums"]["clube_jornada_tipo"]
           updated_at?: string
         }
         Update: {
@@ -1731,6 +1769,7 @@ export type Database = {
           ordem?: number
           slug?: string
           subtitulo?: string | null
+          tipo?: Database["public"]["Enums"]["clube_jornada_tipo"]
           updated_at?: string
         }
         Relationships: [
@@ -10904,6 +10943,7 @@ export type Database = {
       casa_media_type: "audio" | "text" | "video" | "link" | "pdf"
       casa_room: "sustentacao" | "leitura" | "circulo"
       cliente_status: "ativo" | "pausado" | "encerrado"
+      clube_jornada_tipo: "heroina" | "sombra" | "expressao_mundo"
       content_block_type:
         | "rich_text"
         | "image"
@@ -11115,6 +11155,7 @@ export const Constants = {
       casa_media_type: ["audio", "text", "video", "link", "pdf"],
       casa_room: ["sustentacao", "leitura", "circulo"],
       cliente_status: ["ativo", "pausado", "encerrado"],
+      clube_jornada_tipo: ["heroina", "sombra", "expressao_mundo"],
       content_block_type: [
         "rich_text",
         "image",
