@@ -5521,6 +5521,50 @@ export type Database = {
         }
         Relationships: []
       }
+      journey_media: {
+        Row: {
+          created_at: string
+          gallery_items: Json | null
+          header_image_url: string | null
+          id: string
+          infographic_kind: string | null
+          infographic_url: string | null
+          journey_id: string
+          published: boolean
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          gallery_items?: Json | null
+          header_image_url?: string | null
+          id?: string
+          infographic_kind?: string | null
+          infographic_url?: string | null
+          journey_id: string
+          published?: boolean
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          gallery_items?: Json | null
+          header_image_url?: string | null
+          id?: string
+          infographic_kind?: string | null
+          infographic_url?: string | null
+          journey_id?: string
+          published?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journey_media_journey_id_fkey"
+            columns: ["journey_id"]
+            isOneToOne: true
+            referencedRelation: "clube_jornadas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lab_casos: {
         Row: {
           contexto: string | null

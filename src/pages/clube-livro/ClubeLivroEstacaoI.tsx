@@ -8,6 +8,7 @@ import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { BookOpen, ChevronRight, Home, ArrowRight, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { JourneyMediaDisplay } from '@/components/clube-livro/JourneyMediaDisplay';
 import { useEstacoes } from '@/hooks/useEstacoes';
 import { useAllPortais } from '@/hooks/useClubeLivro';
 
@@ -94,6 +95,9 @@ export default function ClubeLivroEstacaoI() {
                     <p className="text-xs text-muted-foreground">{jornada.subtitulo}</p>
                   </div>
                 </div>
+
+                {/* Mídia da Jornada */}
+                <JourneyMediaDisplay journeyId={jornada.id} />
 
                 <div className="space-y-3 pl-2 border-l-2 border-border ml-3">
                   {jornadaPortais.map((portal) => (
