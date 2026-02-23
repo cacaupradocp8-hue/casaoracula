@@ -658,10 +658,10 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/clube-livro/mapa"
+        path="/clube-livro/mandala"
         element={
           <ProtectedRoute>
-            <ClubeLivroMapa />
+            <ClubeLivroMandala />
           </ProtectedRoute>
         }
       />
@@ -675,7 +675,7 @@ function AppRoutes() {
       />
       {/* Legacy routes — redirect */}
       <Route path="/clube-livro/como-funciona" element={<Navigate to="/clube-livro/como-escolhemos" replace />} />
-      <Route path="/clube-livro/mandala" element={<Navigate to="/clube-livro/mapa" replace />} />
+      <Route path="/clube-livro/mapa" element={<Navigate to="/clube-livro/mandala" replace />} />
       <Route
         path="/clube-livro/travessia/:bookId"
         element={
