@@ -6,20 +6,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { useAuth } from '@/contexts/AuthContext';
-import { canAccessFeature } from '@/types/portal';
-import { useAccessExpiration } from '@/hooks/useAccessExpiration';
-import { LockedForVisitor } from '@/components/shared/LockedForVisitor';
-import { BookOpen, ChevronRight, Home, Map, HelpCircle, Compass } from 'lucide-react';
+import { BookOpen, ChevronRight, Home, Compass, Headphones } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
+import { ESTACAO_PILOTO } from '@/data/clubeLivroData';
 
 export default function ClubeLivroApresentacao() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { isExpired } = useAccessExpiration();
 
-  // Visitantes veem página institucional + mapa
-  const isVisitor = !user || user.portal === 'visitante' || isExpired;
+  const isVisitor = !user || user.portal === 'visitante';
 
   return (
     <AppLayout>
@@ -41,7 +37,7 @@ export default function ClubeLivroApresentacao() {
           className="mb-8"
         />
 
-        {/* Texto-matriz de abertura */}
+        {/* Texto-matriz */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -57,7 +53,7 @@ export default function ClubeLivroApresentacao() {
           </p>
         </motion.div>
 
-        {/* Botões principais */}
+        {/* Botões */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -67,20 +63,20 @@ export default function ClubeLivroApresentacao() {
           <Button
             size="lg"
             className="w-full gap-2 h-14 text-base"
-            onClick={() => navigate('/clube-livro/mapa')}
+            onClick={() => navigate('/clube-livro/estacao')}
           >
             <Compass className="w-5 h-5" />
-            Mapa do Ano Oracular
+            {ESTACAO_PILOTO.nome}
           </Button>
 
           <Button
             variant="outline"
             size="lg"
             className="w-full gap-2 h-14 text-base"
-            onClick={() => navigate('/clube-livro/como-escolhemos')}
+            onClick={() => navigate('/clube-livro/como-ler')}
           >
-            <HelpCircle className="w-5 h-5" />
-            Como Escolhemos os Livros
+            <Headphones className="w-5 h-5" />
+            Como Ler no Clube
           </Button>
         </motion.div>
 
@@ -91,8 +87,8 @@ export default function ClubeLivroApresentacao() {
             transition={{ delay: 0.4 }}
             className="text-center text-xs text-muted-foreground/60 mt-8"
           >
-            Visitantes podem ver o Mapa e a página institucional.
-            <br />Para acessar as Estações, é necessário ser assinante.
+            Visitantes podem ver a página institucional.
+            <br />Para acessar as Jornadas e Portais, é necessário ser assinante.
           </motion.p>
         )}
       </div>

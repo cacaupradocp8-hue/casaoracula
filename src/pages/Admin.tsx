@@ -62,7 +62,7 @@ const AdminBibliotecaCasosTab = lazy(() => import('@/components/admin/AdminBibli
 const AdminAtlasFemininoTab = lazy(() => import('@/components/admin/AdminAtlasFemininoTab').then(m => ({ default: m.AdminAtlasFemininoTab })));
 const AdminNarroterapiaTab = lazy(() => import('@/components/admin/AdminNarroterapiaTab').then(m => ({ default: m.AdminNarroterapiaTab })));
 const AdminNarroterapiaAutorizacaoTab = lazy(() => import('@/components/admin/AdminNarroterapiaAutorizacaoTab'));
-const AdminClubeLivroTab = lazy(() => import('@/components/admin/AdminClubeLivroTab'));
+const AdminClubeLivroTab = lazy(() => import('@/components/admin/AdminClubeLivroTab').then(m => ({ default: m.AdminClubeLivroTab })));
 const AdminVitrineCards = lazy(() => import('@/pages/admin/AdminVitrineCards'));
 const AdminPortalJunguianoTab = lazy(() => import('@/components/admin/AdminPortalJunguianoTab').then(m => ({ default: m.AdminPortalJunguianoTab })));
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
