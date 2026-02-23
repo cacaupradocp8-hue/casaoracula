@@ -8442,6 +8442,50 @@ export type Database = {
           },
         ]
       }
+      portal_progress: {
+        Row: {
+          created_at: string
+          has_minimum_record: boolean
+          id: string
+          last_activity_at: string
+          last_position: number | null
+          portal_id: string
+          state: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          has_minimum_record?: boolean
+          id?: string
+          last_activity_at?: string
+          last_position?: number | null
+          portal_id: string
+          state?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          has_minimum_record?: boolean
+          id?: string
+          last_activity_at?: string
+          last_position?: number | null
+          portal_id?: string
+          state?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portal_progress_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: false
+            referencedRelation: "clube_portais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       portal_salas: {
         Row: {
           created_at: string
@@ -9889,6 +9933,44 @@ export type Database = {
             columns: ["porta_id"]
             isOneToOne: false
             referencedRelation: "labirinto_fases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      station_progress: {
+        Row: {
+          created_at: string
+          id: string
+          last_activity_at: string
+          station_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_activity_at?: string
+          station_id: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_activity_at?: string
+          station_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "station_progress_station_id_fkey"
+            columns: ["station_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
             referencedColumns: ["id"]
           },
         ]

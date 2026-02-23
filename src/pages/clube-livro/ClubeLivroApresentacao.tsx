@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useEstacoes } from '@/hooks/useEstacoes';
 import { useAllPortais } from '@/hooks/useClubeLivro';
+import { useStationProgress, useStationPortalProgress, deriveStationStatus, STATUS_CONFIG } from '@/hooks/useProgress';
+import { ProgressIndicator } from '@/components/clube-livro/ProgressIndicator';
 
 export default function ClubeLivroApresentacao() {
   const navigate = useNavigate();
@@ -22,7 +24,18 @@ export default function ClubeLivroApresentacao() {
   const isVisitor = !user || user.portal === 'visitante';
   const jornadas = allData?.jornadas || [];
   const portais = allData?.portais || [];
-  const primeiroPortal = portais[0];
+  const portalIds = portais.map(p => p.id);
+  const { data: portalProgress } = useStationPortalProgress(estacaoI?.id, portalIds);
+
+  // Derive station status from portal progress
+  const stationStatus = deriveStationStatus(portalProgress || [], portais.length);
+
+  // Find next suggested portal (first non-integrado)
+  const progressMap = new Map((portalProgress || []).map(pp => [pp.portal_id, pp]));
+  const nextPortal = portais.find(p => {
+    const pp = progressMap.get(p.id);
+    return !pp || pp.state !== 'integrado';
+  }) || portais[0];
 
   return (
     <AppLayout>
@@ -66,7 +79,10 @@ export default function ClubeLivroApresentacao() {
             <div className="space-y-5">
               {/* Estação */}
               <div className="border-l-2 border-primary/40 pl-5">
-                <p className="text-sm text-muted-foreground mb-1">Estação atual</p>
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-sm text-muted-foreground">Estação atual</p>
+                  <ProgressIndicator status={stationStatus} />
+                </div>
                 <p className="text-base font-medium text-foreground">
                   {estacaoI?.fase_lunar} {estacaoI?.titulo || 'Estação I'}
                 </p>
@@ -89,13 +105,13 @@ export default function ClubeLivroApresentacao() {
               </div>
 
               {/* Próximo portal */}
-              {primeiroPortal && (
+              {nextPortal && (
                 <div className="border-l-2 border-muted pl-5">
                   <p className="text-sm text-muted-foreground mb-1">Próximo portal sugerido</p>
                   <p className="text-base font-medium text-foreground">
-                    {primeiroPortal.icone} {primeiroPortal.nome}
+                    {nextPortal.icone} {nextPortal.nome}
                   </p>
-                  <p className="text-sm text-muted-foreground">{primeiroPortal.subtitulo}</p>
+                  <p className="text-sm text-muted-foreground">{nextPortal.subtitulo}</p>
                 </div>
               )}
             </div>

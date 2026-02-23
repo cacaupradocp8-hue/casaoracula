@@ -2,6 +2,7 @@
 // PORTAL — Página com 8 Blocos (lê do banco)
 // ============================================
 
+import { useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
@@ -12,8 +13,12 @@ import { motion } from 'framer-motion';
 import DOMPurify from 'dompurify';
 import { usePortalBySlug, useJornadas, type ClubePortal } from '@/hooks/useClubeLivro';
 import { useEstacoes } from '@/hooks/useEstacoes';
+import { useAuth } from '@/contexts/AuthContext';
 import { GuardiaIntegracao8020Chat } from '@/components/clube-livro/GuardiaIntegracao8020Chat';
 import { EscutaSimbolticaChat } from '@/components/clube-livro/blocks/EscutaSimbolticaChat';
+import { useUpdatePortalProgress } from '@/hooks/useProgress';
+import { ProgressIndicator } from '@/components/clube-livro/ProgressIndicator';
+import { useStationPortalProgress } from '@/hooks/useProgress';
 
 const BLOCOS_CONFIG: { key: keyof Pick<ClubePortal, 'texto_simbolico' | 'essencia_8020' | 'raiz_psiquica' | 'aplicacao_pessoal' | 'aplicacao_profissional' | 'jardim_psique' | 'jardim_heroina' | 'laboratorio_8020'>; label: string; icon: React.ElementType; cor: string }[] = [
   { key: 'texto_simbolico', label: 'Texto Simbólico', icon: Lightbulb, cor: 'text-amber-400' },
@@ -54,6 +59,17 @@ export default function ClubeLivroPortalV2() {
   const { data: portal, isLoading } = usePortalBySlug(portalSlug);
   const { data: estacoes } = useEstacoes();
   const estacaoI = estacoes?.find(e => e.numero === 1);
+  const { user } = useAuth();
+  const updateProgress = useUpdatePortalProgress();
+  const { data: portalProgress } = useStationPortalProgress(estacaoI?.id, portal ? [portal.id] : []);
+  const currentState = portalProgress?.[0]?.state || 'nao_iniciado';
+
+  // Mark portal as em_andamento on first visit
+  useEffect(() => {
+    if (portal?.id && user?.id && currentState === 'nao_iniciado') {
+      updateProgress.mutate({ portal_id: portal.id, state: 'em_andamento' });
+    }
+  }, [portal?.id, user?.id, currentState]);
 
   if (isLoading) {
     return (
@@ -88,11 +104,13 @@ export default function ClubeLivroPortalV2() {
           <span className="text-foreground">{portal.nome}</span>
         </nav>
 
-        <SectionHeader
-          title={`${portal.icone} ${portal.nome}`}
-          subtitle={portal.subtitulo || ''}
-          className="mb-8"
-        />
+        <div className="flex items-center justify-between mb-8">
+          <SectionHeader
+            title={`${portal.icone} ${portal.nome}`}
+            subtitle={portal.subtitulo || ''}
+          />
+          <ProgressIndicator status={currentState as any} size="md" />
+        </div>
 
         {/* 8 Blocos de conteúdo */}
         <div className="space-y-4">

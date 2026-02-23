@@ -9,8 +9,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { BookOpen, ChevronRight, Home, ArrowRight, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { JourneyMediaDisplay } from '@/components/clube-livro/JourneyMediaDisplay';
+import { TravessiaEstacaoBlock } from '@/components/clube-livro/TravessiaEstacaoBlock';
+import { ProgressIndicator } from '@/components/clube-livro/ProgressIndicator';
 import { useEstacoes } from '@/hooks/useEstacoes';
 import { useAllPortais } from '@/hooks/useClubeLivro';
+import { useStationPortalProgress, STATUS_CONFIG } from '@/hooks/useProgress';
 
 export default function ClubeLivroEstacaoI() {
   const navigate = useNavigate();
@@ -39,6 +42,10 @@ export default function ClubeLivroEstacaoI() {
   }
 
   const { jornadas, portais } = allData;
+  const portalIds = portais.map(p => p.id);
+  const { data: portalProgress } = useStationPortalProgress(estacaoI?.id, portalIds);
+  const progressList = portalProgress || [];
+  const progressMap = new Map(progressList.map(pp => [pp.portal_id, pp]));
 
   return (
     <AppLayout>
@@ -77,6 +84,9 @@ export default function ClubeLivroEstacaoI() {
           </div>
         </motion.div>
 
+        {/* Travessia da Estação — Progresso */}
+        <TravessiaEstacaoBlock jornadas={jornadas} portais={portais} portalProgress={progressList} />
+
         {/* Jornadas + Portais */}
         <div className="space-y-8">
           {jornadas.map((jornada, ji) => {
@@ -114,7 +124,13 @@ export default function ClubeLivroEstacaoI() {
                             <p className="text-xs text-muted-foreground truncate">{portal.subtitulo}</p>
                           </div>
                         </div>
-                        <ArrowRight className="w-4 h-4 text-muted-foreground shrink-0" />
+                        <div className="flex items-center gap-3 shrink-0">
+                          <ProgressIndicator
+                            status={(progressMap.get(portal.id)?.state || 'nao_iniciado') as any}
+                            size="sm"
+                          />
+                          <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                        </div>
                       </CardContent>
                     </Card>
                   ))}
