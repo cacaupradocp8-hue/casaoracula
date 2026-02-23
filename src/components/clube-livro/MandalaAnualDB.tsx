@@ -1,17 +1,15 @@
 // ============================================
 // MANDALA DE JORNADA DE LEITURA
 // Arquitetura funcional, zero ruído cognitivo
-// A usuária entende: onde está, o que vem, quanto falta
 // ============================================
 
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, X, ChevronRight, Lock, CheckCircle2, Map, List, Columns, Play, MessageCircle, Sparkles } from 'lucide-react';
+import { BookOpen, X, ChevronRight, Lock, CheckCircle2, Map, List, Columns, Play, MessageCircle, Sparkles, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import { useActiveCycle, useCycleBooks, useBookLinks, type Book, type CycleBook, type BookLink } from '@/hooks/useBooks';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -19,11 +17,11 @@ import { useIsMobile } from '@/hooks/use-mobile';
 // LAYER CONFIG
 // ============================================
 const LAYERS = {
-  MATRIZ: { label: 'Matriz', cor: 'hsl(43, 60%, 54%)', bg: 'hsl(43, 60%, 54%, 0.08)', icon: '☽◯☾' },
-  TRAVESSIA: { label: 'Travessia', cor: 'hsl(212, 50%, 36%)', bg: 'hsl(212, 50%, 36%, 0.08)', icon: '◈' },
-  PORTA: { label: 'Porta', cor: 'hsl(152, 37%, 36%)', bg: 'hsl(152, 37%, 36%, 0.08)', icon: '🗝' },
-  PONTE: { label: 'Ponte', cor: 'hsl(268, 38%, 64%)', bg: 'hsl(268, 38%, 64%, 0.08)', icon: '⌒' },
-  FUNDACAO: { label: 'Fundação', cor: 'hsl(30, 6%, 45%)', bg: 'hsl(30, 6%, 45%, 0.06)', icon: '⊞' },
+  MATRIZ: { label: 'Matriz', cor: 'hsl(43, 60%, 54%)', bg: 'hsl(43, 60%, 54%, 0.12)', icon: '☽◯☾' },
+  TRAVESSIA: { label: 'Travessia', cor: 'hsl(212, 50%, 50%)', bg: 'hsl(212, 50%, 36%, 0.12)', icon: '◈' },
+  PORTA: { label: 'Porta', cor: 'hsl(152, 37%, 44%)', bg: 'hsl(152, 37%, 36%, 0.10)', icon: '🗝' },
+  PONTE: { label: 'Ponte', cor: 'hsl(268, 45%, 68%)', bg: 'hsl(268, 38%, 64%, 0.12)', icon: '⌒' },
+  FUNDACAO: { label: 'Fundação', cor: 'hsl(30, 10%, 55%)', bg: 'hsl(30, 6%, 45%, 0.08)', icon: '⊞' },
 } as const;
 
 type LayerKey = keyof typeof LAYERS;
@@ -47,14 +45,14 @@ function MatrizBlock({ book }: { book: Book }) {
   return (
     <div className="text-center mb-8">
       <motion.div
-        className="mx-auto w-20 h-20 rounded-full flex items-center justify-center border-2 relative"
+        className="mx-auto w-24 h-24 rounded-full flex items-center justify-center border-2 relative"
         style={{ borderColor: LAYERS.MATRIZ.cor, background: LAYERS.MATRIZ.bg }}
-        animate={{ boxShadow: ['0 0 20px hsl(43, 60%, 54%, 0.1)', '0 0 40px hsl(43, 60%, 54%, 0.2)', '0 0 20px hsl(43, 60%, 54%, 0.1)'] }}
+        animate={{ boxShadow: ['0 0 20px hsl(43, 60%, 54%, 0.15)', '0 0 45px hsl(43, 60%, 54%, 0.3)', '0 0 20px hsl(43, 60%, 54%, 0.15)'] }}
         transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <span className="text-2xl select-none" style={{ color: LAYERS.MATRIZ.cor }}>☽◯☾</span>
+        <span className="text-3xl select-none" style={{ color: LAYERS.MATRIZ.cor }}>☽◯☾</span>
       </motion.div>
-      <p className="text-xs font-semibold mt-3 uppercase tracking-[0.2em]" style={{ color: LAYERS.MATRIZ.cor }}>
+      <p className="text-xs font-bold mt-3 uppercase tracking-[0.2em]" style={{ color: LAYERS.MATRIZ.cor }}>
         {book.title}
       </p>
       <p className="text-[11px] text-muted-foreground mt-1 max-w-xs mx-auto italic">
@@ -79,7 +77,7 @@ function TravessiaCard({
   index: number;
   isActive: boolean;
   isCompleted: boolean;
-  progress: number; // 0–4
+  progress: number;
   onClick: () => void;
 }) {
   const romanNumerals = ['I', 'II', 'III', 'IV'];
@@ -92,12 +90,12 @@ function TravessiaCard({
       transition={{ delay: index * 0.1 }}
     >
       <Card
-        className={`cursor-pointer transition-all duration-300 overflow-hidden ${
+        className={`cursor-pointer transition-all duration-300 overflow-hidden hover:shadow-lg hover:scale-[1.02] ${
           isActive
-            ? 'ring-2 ring-offset-2 ring-offset-background'
+            ? 'ring-2 ring-offset-2 ring-offset-background shadow-md'
             : isCompleted
             ? 'opacity-90'
-            : 'opacity-40 hover:opacity-60'
+            : 'opacity-50 hover:opacity-80'
         }`}
         style={{
           borderColor: isActive ? LAYERS.TRAVESSIA.cor : isCompleted ? LAYERS.MATRIZ.cor : undefined,
@@ -105,10 +103,10 @@ function TravessiaCard({
         }}
         onClick={onClick}
       >
-        <CardContent className="p-4">
+        <CardContent className="p-5">
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex items-center gap-2 mb-1.5">
                 <span
                   className="text-xs font-bold tracking-widest"
                   style={{ color: isActive ? LAYERS.TRAVESSIA.cor : isCompleted ? LAYERS.MATRIZ.cor : 'hsl(var(--muted-foreground))' }}
@@ -116,7 +114,7 @@ function TravessiaCard({
                   TRAVESSIA {romanNumerals[index]}
                 </span>
                 {isActive && (
-                  <Badge variant="outline" className="text-[10px] py-0 px-1.5 border-current" style={{ color: LAYERS.TRAVESSIA.cor }}>
+                  <Badge variant="outline" className="text-[10px] py-0 px-1.5 border-current font-bold" style={{ color: LAYERS.TRAVESSIA.cor }}>
                     ATIVA
                   </Badge>
                 )}
@@ -124,12 +122,14 @@ function TravessiaCard({
                   <CheckCircle2 className="w-3.5 h-3.5" style={{ color: LAYERS.MATRIZ.cor }} />
                 )}
               </div>
-              <h3 className="text-sm font-display text-foreground truncate">{book.title}</h3>
+              <h3 className="text-base font-display text-foreground truncate">{book.title}</h3>
               <p className="text-xs text-muted-foreground truncate">{book.author}</p>
             </div>
             <div className="shrink-0 flex items-center">
               {isActive ? (
-                <ChevronRight className="w-5 h-5" style={{ color: LAYERS.TRAVESSIA.cor }} />
+                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: LAYERS.TRAVESSIA.bg }}>
+                  <ChevronRight className="w-5 h-5" style={{ color: LAYERS.TRAVESSIA.cor }} />
+                </div>
               ) : isCompleted ? (
                 <CheckCircle2 className="w-5 h-5" style={{ color: LAYERS.MATRIZ.cor }} />
               ) : (
@@ -142,11 +142,11 @@ function TravessiaCard({
           <div className="mt-3">
             <div className="flex justify-between items-center mb-1">
               <span className="text-[10px] text-muted-foreground">Progresso</span>
-              <span className="text-[10px] font-medium" style={{ color: isActive ? LAYERS.TRAVESSIA.cor : 'hsl(var(--muted-foreground))' }}>
+              <span className="text-[10px] font-semibold" style={{ color: isActive ? LAYERS.TRAVESSIA.cor : 'hsl(var(--muted-foreground))' }}>
                 {progress}/4 semanas
               </span>
             </div>
-            <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+            <div className="h-2 rounded-full bg-muted overflow-hidden">
               <motion.div
                 className="h-full rounded-full"
                 style={{ background: isCompleted ? LAYERS.MATRIZ.cor : LAYERS.TRAVESSIA.cor }}
@@ -156,16 +156,16 @@ function TravessiaCard({
               />
             </div>
             {/* Week dots */}
-            <div className="flex gap-1.5 mt-2">
+            <div className="flex gap-2 mt-2">
               {[0, 1, 2, 3].map(w => (
                 <div
                   key={w}
-                  className="w-2 h-2 rounded-full transition-all"
+                  className="w-2.5 h-2.5 rounded-full transition-all"
                   style={{
                     background: w < progress
                       ? (isCompleted ? LAYERS.MATRIZ.cor : LAYERS.TRAVESSIA.cor)
                       : 'hsl(var(--muted))',
-                    opacity: w < progress ? 1 : 0.4,
+                    opacity: w < progress ? 1 : 0.3,
                   }}
                 />
               ))}
@@ -178,7 +178,7 @@ function TravessiaCard({
 }
 
 // ============================================
-// PORTA ITEM — Médio, com estado
+// PORTA ITEM — Borda visível + glow no hover
 // ============================================
 function PortaItem({
   book,
@@ -193,50 +193,62 @@ function PortaItem({
     <motion.div
       initial={{ opacity: 0, x: -8 }}
       animate={{ opacity: 1, x: 0 }}
-      className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
+      whileHover={isUnlocked ? { scale: 1.01, boxShadow: '0 0 16px hsl(152, 37%, 44%, 0.25)' } : undefined}
+      className={`flex items-center gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all ${
         isUnlocked
-          ? 'border-border hover:border-[hsl(152,37%,36%,0.5)] bg-card'
-          : 'border-transparent opacity-40 cursor-default bg-muted/30'
+          ? 'border-[hsl(152,37%,44%,0.4)] hover:border-[hsl(152,37%,44%,0.8)] bg-card'
+          : 'border-border/30 opacity-40 cursor-default bg-muted/30'
       }`}
       onClick={isUnlocked ? onClick : undefined}
     >
       <div
-        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+        className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
         style={{ background: LAYERS.PORTA.bg, color: LAYERS.PORTA.cor }}
       >
-        {isUnlocked ? <span className="text-sm">🗝</span> : <Lock className="w-3.5 h-3.5" />}
+        {isUnlocked ? <span className="text-base">🗝</span> : <Lock className="w-4 h-4" />}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-foreground truncate">{book.title}</p>
+        <p className="text-sm font-medium text-foreground truncate">{book.title}</p>
         <p className="text-xs text-muted-foreground truncate">{book.author}</p>
       </div>
-      {isUnlocked && <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />}
+      {isUnlocked && (
+        <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ background: LAYERS.PORTA.bg }}>
+          <ChevronRight className="w-4 h-4" style={{ color: LAYERS.PORTA.cor }} />
+        </div>
+      )}
     </motion.div>
   );
 }
 
 // ============================================
-// PONTE ITEM — Micro-ações
+// PONTE ITEM — Botão funcional com CTA
 // ============================================
 function PonteItem({ book, onClick }: { book: Book; onClick: () => void }) {
-  const icons = [Play, MessageCircle, Sparkles];
-  const Icon = icons[Math.abs(book.title.length) % icons.length];
-
   return (
-    <motion.button
+    <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="flex items-center gap-2 px-3 py-2 rounded-md border border-border/50 hover:border-[hsl(268,38%,64%,0.4)] bg-card/50 transition-all text-left"
+      whileHover={{ scale: 1.03 }}
+      className="flex items-center gap-3 p-3 rounded-lg border border-[hsl(268,45%,68%,0.3)] hover:border-[hsl(268,45%,68%,0.6)] bg-card/60 transition-all cursor-pointer"
       onClick={onClick}
     >
-      <Icon className="w-3.5 h-3.5 shrink-0" style={{ color: LAYERS.PONTE.cor }} />
-      <span className="text-xs text-foreground truncate">{book.title}</span>
-    </motion.button>
+      <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: LAYERS.PONTE.bg }}>
+        <span className="text-base" style={{ color: LAYERS.PONTE.cor }}>⌒</span>
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-foreground truncate">{book.title}</p>
+        <p className="text-[10px] text-muted-foreground">Usar como apoio</p>
+      </div>
+      <Button variant="outline" size="sm" className="shrink-0 text-xs h-7 gap-1" style={{ borderColor: LAYERS.PONTE.cor, color: LAYERS.PONTE.cor }}>
+        <ArrowRight className="w-3 h-3" />
+        Abrir
+      </Button>
+    </motion.div>
   );
 }
 
 // ============================================
-// DETAIL PANEL
+// DETAIL PANEL — CTA com cor de ação
 // ============================================
 function DetailPanel({ book, onClose, onNavigate }: { book: Book; onClose: () => void; onNavigate: (p: string) => void }) {
   const layer = LAYERS[book.category as LayerKey] || LAYERS.PORTA;
@@ -248,7 +260,7 @@ function DetailPanel({ book, onClose, onNavigate }: { book: Book; onClose: () =>
       <div className="p-6 space-y-5">
         <div className="flex items-start justify-between">
           <div>
-            <Badge variant="outline" className="text-xs mb-2" style={{ color: layer.cor, borderColor: layer.cor }}>
+            <Badge variant="outline" className="text-xs mb-2 font-bold" style={{ color: layer.cor, borderColor: layer.cor }}>
               {layer.label}
             </Badge>
             <h3 className="font-display text-lg text-foreground">{book.title}</h3>
@@ -265,9 +277,17 @@ function DetailPanel({ book, onClose, onNavigate }: { book: Book; onClose: () =>
           </div>
         )}
         {book.manifesto_short && <p className="text-sm text-foreground/80">{book.manifesto_short}</p>}
-        <Button variant="outline" className="w-full justify-start gap-2" onClick={() => onNavigate(`/clube-livro/livro/${book.id}`)}>
+        
+        {/* CTA principal com cor de ação */}
+        <Button
+          className="w-full justify-center gap-2 h-12 text-sm font-semibold"
+          onClick={() => onNavigate(`/clube-livro/livro/${book.id}`)}
+        >
           <BookOpen className="w-4 h-4" /> Abrir Página do Livro
         </Button>
+        <p className="text-[10px] text-center text-muted-foreground -mt-3">
+          Entrar na jornada deste livro
+        </p>
       </div>
     </motion.div>
   );
@@ -290,12 +310,12 @@ function ListView({ cycleBooks, links, onSelect }: { cycleBooks: CycleBook[]; li
         return (
           <div key={tCb.id} className="space-y-2">
             <div
-              className="flex items-center gap-2 px-1 cursor-pointer hover:opacity-80"
+              className="flex items-center gap-2 px-1 cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => onSelect(tCb.book!)}
             >
               <span className="text-base" style={{ color: LAYERS.TRAVESSIA.cor }}>◈</span>
               <div>
-                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: LAYERS.TRAVESSIA.cor }}>
+                <span className="text-xs font-bold uppercase tracking-widest" style={{ color: LAYERS.TRAVESSIA.cor }}>
                   Travessia {romanNumerals[i]}
                 </span>
                 <span className="text-sm text-foreground ml-2">{tCb.book.title}</span>
@@ -304,11 +324,11 @@ function ListView({ cycleBooks, links, onSelect }: { cycleBooks: CycleBook[]; li
 
             {portas.length > 0 && (
               <div className="ml-6 space-y-1">
-                <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Portas</span>
+                <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Portas</span>
                 {portas.map(pCb => pCb.book && (
                   <div
                     key={pCb.id}
-                    className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-muted/50"
+                    className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-muted/50 transition-colors"
                     onClick={() => onSelect(pCb.book!)}
                   >
                     <span className="text-xs" style={{ color: LAYERS.PORTA.cor }}>🗝</span>
@@ -320,11 +340,11 @@ function ListView({ cycleBooks, links, onSelect }: { cycleBooks: CycleBook[]; li
 
             {pontes.length > 0 && (
               <div className="ml-6 space-y-1">
-                <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Pontes</span>
+                <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Pontes</span>
                 {pontes.map(bCb => bCb.book && (
                   <div
                     key={bCb.id}
-                    className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-muted/50"
+                    className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-muted/50 transition-colors"
                     onClick={() => onSelect(bCb.book!)}
                   >
                     <span className="text-xs" style={{ color: LAYERS.PONTE.cor }}>⌒</span>
@@ -362,10 +382,8 @@ export function MandalaAnualDB() {
     return { matriz: m, travessias: t, fundacao: f };
   }, [cycleBooks]);
 
-  // Auto-select first travessia as active
   const activeId = activeTravessiaId || travessias[0]?.book?.id || null;
 
-  // Get children of active travessia
   const activePortas = useMemo(() => {
     if (!activeId || !links || !cycleBooks) return [];
     return getChildBooks(activeId, links, cycleBooks, 'ABRE');
@@ -414,14 +432,13 @@ export function MandalaAnualDB() {
 
           {/* CAMADA 1 — TRAVESSIAS */}
           <div>
-            <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground mb-3 px-1">
+            <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3 px-1">
               Travessias do Ciclo
             </h2>
             <div className="grid gap-3 sm:grid-cols-2">
               {travessias.map((tCb, i) => {
                 if (!tCb.book) return null;
                 const isActive = tCb.book.id === activeId;
-                // TODO: real progress from user data
                 const progress = isActive ? 1 : 0;
                 const isCompleted = false;
 
@@ -440,7 +457,7 @@ export function MandalaAnualDB() {
             </div>
           </div>
 
-          {/* CAMADA 2 — PORTAS (da travessia ativa) */}
+          {/* CAMADA 2 — PORTAS */}
           <AnimatePresence mode="wait">
             {activePortas.length > 0 && (
               <motion.div
@@ -450,7 +467,7 @@ export function MandalaAnualDB() {
                 exit={{ opacity: 0, height: 0 }}
                 className="overflow-hidden"
               >
-                <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] mb-3 px-1" style={{ color: LAYERS.PORTA.cor }}>
+                <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3 px-1" style={{ color: LAYERS.PORTA.cor }}>
                   Portas desta Travessia
                 </h2>
                 <div className="space-y-2">
@@ -458,7 +475,7 @@ export function MandalaAnualDB() {
                     <PortaItem
                       key={pCb.id}
                       book={pCb.book}
-                      isUnlocked={i === 0} // TODO: real unlock logic
+                      isUnlocked={i === 0}
                       onClick={() => setSelectedBook(pCb.book!)}
                     />
                   ))}
@@ -467,7 +484,7 @@ export function MandalaAnualDB() {
             )}
           </AnimatePresence>
 
-          {/* CAMADA 3 — PONTES (da travessia ativa) */}
+          {/* CAMADA 3 — PONTES */}
           <AnimatePresence mode="wait">
             {activePontes.length > 0 && (
               <motion.div
@@ -477,10 +494,10 @@ export function MandalaAnualDB() {
                 exit={{ opacity: 0, height: 0 }}
                 className="overflow-hidden"
               >
-                <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] mb-3 px-1" style={{ color: LAYERS.PONTE.cor }}>
+                <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3 px-1" style={{ color: LAYERS.PONTE.cor }}>
                   Pontes de Integração
                 </h2>
-                <div className="flex flex-wrap gap-2">
+                <div className="space-y-2">
                   {activePontes.map(bCb => bCb.book && (
                     <PonteItem
                       key={bCb.id}
@@ -493,13 +510,13 @@ export function MandalaAnualDB() {
             )}
           </AnimatePresence>
 
-          {/* FORA DA MANDALA — FUNDAÇÃO */}
+          {/* FUNDAÇÃO */}
           {fundacao.length > 0 && (
-            <div className="border border-border rounded-lg p-4 mt-4">
+            <div className="border-2 border-border/60 rounded-lg p-4 mt-4">
               <div className="flex items-center gap-2 mb-3">
                 <Columns className="w-4 h-4" style={{ color: LAYERS.FUNDACAO.cor }} />
                 <div>
-                  <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: LAYERS.FUNDACAO.cor }}>
+                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: LAYERS.FUNDACAO.cor }}>
                     Fundação
                   </span>
                   <span className="text-[10px] text-muted-foreground ml-2">Base teórica do método</span>
@@ -509,15 +526,15 @@ export function MandalaAnualDB() {
                 {fundacao.map(cb => cb.book && (
                   <Card
                     key={cb.book.id}
-                    className="cursor-pointer hover:border-border/80 transition-all"
+                    className="cursor-pointer hover:border-border hover:shadow-sm transition-all"
                     onClick={() => setSelectedBook(cb.book!)}
                   >
                     <CardContent className="p-3 flex items-center gap-3">
-                      <div className="w-8 h-10 rounded flex items-center justify-center shrink-0" style={{ background: LAYERS.FUNDACAO.bg }}>
-                        <Columns className="w-3.5 h-3.5" style={{ color: LAYERS.FUNDACAO.cor }} />
+                      <div className="w-9 h-11 rounded flex items-center justify-center shrink-0" style={{ background: LAYERS.FUNDACAO.bg }}>
+                        <Columns className="w-4 h-4" style={{ color: LAYERS.FUNDACAO.cor }} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-foreground truncate">{cb.book.title}</p>
+                        <p className="text-sm font-medium text-foreground truncate">{cb.book.title}</p>
                         <p className="text-xs text-muted-foreground">{cb.book.author}</p>
                       </div>
                     </CardContent>
@@ -535,8 +552,8 @@ export function MandalaAnualDB() {
           const l = LAYERS[key];
           return (
             <div key={key} className="flex items-center gap-1.5">
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: l.cor, opacity: 0.6 }} />
-              <span className="text-[10px] font-medium" style={{ color: l.cor }}>{l.label}</span>
+              <div className="w-3 h-3 rounded-full" style={{ background: l.cor }} />
+              <span className="text-[10px] font-semibold" style={{ color: l.cor }}>{l.label}</span>
             </div>
           );
         })}
