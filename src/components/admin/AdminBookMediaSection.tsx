@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useBookMedia, useCreateBookMedia, useUpdateBookMedia, useDeleteBookMedia, type BookMedia } from '@/hooks/useBookMedia';
 import { useToast } from '@/hooks/use-toast';
-import { Image, FileText, Plus, Trash2, Eye, EyeOff, ChevronUp, ChevronDown, Loader2 } from 'lucide-react';
+import { Image, FileText, Plus, Trash2, Eye, EyeOff, Loader2, PenLine, Save } from 'lucide-react';
 
 interface Props {
   estacaoId: string;
@@ -17,6 +17,10 @@ function MediaRow({ item, onDelete }: { item: BookMedia; onDelete: () => void })
   const { toast } = useToast();
   const update = useUpdateBookMedia();
   const isImage = item.file_kind === 'image';
+  const [editing, setEditing] = useState(false);
+  const [caption, setCaption] = useState(item.caption || '');
+  const [credit, setCredit] = useState(item.credit || '');
+  const [sourceUrl, setSourceUrl] = useState(item.source_url || '');
 
   const togglePublish = async () => {
     try {
@@ -26,29 +30,64 @@ function MediaRow({ item, onDelete }: { item: BookMedia; onDelete: () => void })
     }
   };
 
+  const saveMeta = async () => {
+    try {
+      await update.mutateAsync({ id: item.id, caption, credit, source_url: sourceUrl });
+      setEditing(false);
+      toast({ title: 'Metadados salvos ✓' });
+    } catch (e: any) {
+      toast({ title: 'Erro', description: e.message, variant: 'destructive' });
+    }
+  };
+
   return (
-    <div className="flex items-center gap-3 p-2 rounded-lg border border-border bg-muted/20">
-      {isImage && item.file_url ? (
-        <img src={item.file_url} alt={item.title} className="w-12 h-12 object-cover rounded" />
-      ) : (
-        <div className="w-12 h-12 rounded bg-muted flex items-center justify-center">
-          <FileText className="w-5 h-5 text-muted-foreground" />
+    <div className="space-y-2 p-2 rounded-lg border border-border bg-muted/20">
+      <div className="flex items-center gap-3">
+        {isImage && item.file_url ? (
+          <img src={item.file_url} alt={item.title} className="w-12 h-12 object-cover rounded" />
+        ) : (
+          <div className="w-12 h-12 rounded bg-muted flex items-center justify-center">
+            <FileText className="w-5 h-5 text-muted-foreground" />
+          </div>
+        )}
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-foreground truncate">{item.title || '(sem título)'}</p>
+          <div className="flex items-center gap-1.5">
+            <Badge variant="outline" className="text-[10px]">{item.type}</Badge>
+            <Badge variant="outline" className="text-[10px]">{item.file_kind}</Badge>
+            {!item.published && <Badge variant="secondary" className="text-[10px]">Rascunho</Badge>}
+          </div>
+        </div>
+        <Button variant="ghost" size="sm" onClick={() => setEditing(!editing)} title="Editar metadados">
+          <PenLine className="w-3.5 h-3.5" />
+        </Button>
+        <Button variant="ghost" size="sm" onClick={togglePublish}>
+          {item.published ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+        </Button>
+        <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={onDelete}>
+          <Trash2 className="w-3.5 h-3.5" />
+        </Button>
+      </div>
+      {editing && (
+        <div className="space-y-2 pt-2 border-t border-border/50">
+          <div>
+            <Label className="text-[10px]">Legenda</Label>
+            <Input value={caption} onChange={e => setCaption(e.target.value)} placeholder="Legenda curta..." className="h-7 text-xs" />
+          </div>
+          <div>
+            <Label className="text-[10px]">Crédito</Label>
+            <Input value={credit} onChange={e => setCredit(e.target.value)} placeholder="Autor da imagem..." className="h-7 text-xs" />
+          </div>
+          <div>
+            <Label className="text-[10px]">Fonte URL (opcional)</Label>
+            <Input value={sourceUrl} onChange={e => setSourceUrl(e.target.value)} placeholder="https://..." className="h-7 text-xs" />
+          </div>
+          <Button size="sm" onClick={saveMeta} disabled={update.isPending} className="gap-1 h-7 text-xs">
+            {update.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
+            Salvar Metadados
+          </Button>
         </div>
       )}
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-foreground truncate">{item.title || '(sem título)'}</p>
-        <div className="flex items-center gap-1.5">
-          <Badge variant="outline" className="text-[10px]">{item.type}</Badge>
-          <Badge variant="outline" className="text-[10px]">{item.file_kind}</Badge>
-          {!item.published && <Badge variant="secondary" className="text-[10px]">Rascunho</Badge>}
-        </div>
-      </div>
-      <Button variant="ghost" size="sm" onClick={togglePublish}>
-        {item.published ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-      </Button>
-      <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={onDelete}>
-        <Trash2 className="w-3.5 h-3.5" />
-      </Button>
     </div>
   );
 }
@@ -72,6 +111,9 @@ function AddMediaForm({ estacaoId, onDone }: { estacaoId: string; onDone: () => 
         file_kind: fileKind,
         order_index: 0,
         published: true,
+        caption: '',
+        credit: '',
+        source_url: '',
       });
       toast({ title: 'Mídia adicionada ✓' });
       setTitle(''); setFileUrl('');

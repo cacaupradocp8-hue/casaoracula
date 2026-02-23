@@ -6,6 +6,9 @@ export interface GalleryItem {
   title: string;
   kind: 'image' | 'pdf';
   order: number;
+  caption?: string;
+  credit?: string;
+  source_url?: string;
 }
 
 export interface JourneyMedia {
