@@ -169,6 +169,9 @@ import BibliotecaTravessiasFamilia from "./pages/BibliotecaTravessiasFamilia";
 // Clube do Livro Oracular
 import { 
   ClubeLivroApresentacao, 
+  ClubeLivroComoEscolhemos,
+  ClubeLivroMapa,
+  ClubeLivroEstacao,
   ClubeLivroComoFunciona,
   ClubeLivroMandala,
   ClubeLivroTravessia,
@@ -637,31 +640,42 @@ function AppRoutes() {
         }
       />
       
-      {/* Clube do Livro Oracular */}
+      {/* Clube do Livro Oracular — Nova estrutura 2026 */}
       <Route
         path="/clube-livro"
         element={
-          <ProtectedRoute minPortal="aluna">
+          <ProtectedRoute>
             <ClubeLivroApresentacao />
           </ProtectedRoute>
         }
       />
       <Route
-        path="/clube-livro/como-funciona"
+        path="/clube-livro/como-escolhemos"
         element={
-          <ProtectedRoute minPortal="aluna">
-            <ClubeLivroComoFunciona />
+          <ProtectedRoute>
+            <ClubeLivroComoEscolhemos />
           </ProtectedRoute>
         }
       />
       <Route
-        path="/clube-livro/mandala"
+        path="/clube-livro/mapa"
         element={
-          <ProtectedRoute minPortal="aluna">
-            <ClubeLivroMandala />
+          <ProtectedRoute>
+            <ClubeLivroMapa />
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/clube-livro/estacao/:id"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroEstacao />
+          </ProtectedRoute>
+        }
+      />
+      {/* Legacy routes — redirect */}
+      <Route path="/clube-livro/como-funciona" element={<Navigate to="/clube-livro/como-escolhemos" replace />} />
+      <Route path="/clube-livro/mandala" element={<Navigate to="/clube-livro/mapa" replace />} />
       <Route
         path="/clube-livro/travessia/:bookId"
         element={
