@@ -1583,6 +1583,113 @@ export type Database = {
         }
         Relationships: []
       }
+      clube_estacao_registros: {
+        Row: {
+          created_at: string
+          estacao_id: string
+          id: string
+          texto: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          estacao_id: string
+          id?: string
+          texto?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          estacao_id?: string
+          id?: string
+          texto?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_estacao_registros_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_estacoes: {
+        Row: {
+          aplicacao_acao: string | null
+          aplicacao_reflexao: string | null
+          ativa: boolean | null
+          created_at: string
+          essencia_nucleo: string | null
+          essencia_tensao: string | null
+          essencia_transformacao: string | null
+          fase_lunar: string | null
+          id: string
+          livro_autor: string | null
+          livro_capa_url: string | null
+          livro_titulo: string
+          numero: number
+          ordem: number
+          publicada: boolean | null
+          subtitulo: string
+          titulo: string
+          traducao_aula: string | null
+          traducao_circulo: string | null
+          traducao_sessao: string | null
+          updated_at: string
+        }
+        Insert: {
+          aplicacao_acao?: string | null
+          aplicacao_reflexao?: string | null
+          ativa?: boolean | null
+          created_at?: string
+          essencia_nucleo?: string | null
+          essencia_tensao?: string | null
+          essencia_transformacao?: string | null
+          fase_lunar?: string | null
+          id?: string
+          livro_autor?: string | null
+          livro_capa_url?: string | null
+          livro_titulo: string
+          numero: number
+          ordem?: number
+          publicada?: boolean | null
+          subtitulo: string
+          titulo: string
+          traducao_aula?: string | null
+          traducao_circulo?: string | null
+          traducao_sessao?: string | null
+          updated_at?: string
+        }
+        Update: {
+          aplicacao_acao?: string | null
+          aplicacao_reflexao?: string | null
+          ativa?: boolean | null
+          created_at?: string
+          essencia_nucleo?: string | null
+          essencia_tensao?: string | null
+          essencia_transformacao?: string | null
+          fase_lunar?: string | null
+          id?: string
+          livro_autor?: string | null
+          livro_capa_url?: string | null
+          livro_titulo?: string
+          numero?: number
+          ordem?: number
+          publicada?: boolean | null
+          subtitulo?: string
+          titulo?: string
+          traducao_aula?: string | null
+          traducao_circulo?: string | null
+          traducao_sessao?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       clube_livro_aulas: {
         Row: {
           ativo: boolean | null
