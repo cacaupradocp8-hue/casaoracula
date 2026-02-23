@@ -9,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { BookOpen, ChevronRight, Home, ArrowRight, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { JourneyMediaDisplay } from '@/components/clube-livro/JourneyMediaDisplay';
+import { BookCoverDisplay } from '@/components/clube-livro/BookCoverDisplay';
 import { TravessiaEstacaoBlock } from '@/components/clube-livro/TravessiaEstacaoBlock';
 import { ProgressIndicator } from '@/components/clube-livro/ProgressIndicator';
 import { useEstacoes } from '@/hooks/useEstacoes';
@@ -71,18 +72,12 @@ export default function ClubeLivroEstacaoI() {
           className="mb-4"
         />
 
-        {/* Livro-eixo */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-3 mb-6 p-3 rounded-lg bg-muted/50 border border-border"
-        >
-          <BookOpen className="w-5 h-5 text-primary shrink-0" />
-          <div>
-            <p className="text-sm font-medium text-foreground">{estacaoI.livro_titulo}</p>
-            <p className="text-xs text-muted-foreground">{estacaoI.livro_autor}</p>
-          </div>
-        </motion.div>
+        {/* Capa do Livro — âncora visual */}
+        <BookCoverDisplay
+          capaUrl={estacaoI.livro_capa_url}
+          titulo={estacaoI.livro_titulo}
+          autor={estacaoI.livro_autor}
+        />
 
         {/* Travessia da Estação — Progresso */}
         <TravessiaEstacaoBlock jornadas={jornadas} portais={portais} portalProgress={progressList} />
