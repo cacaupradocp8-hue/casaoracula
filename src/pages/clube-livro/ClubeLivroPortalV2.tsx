@@ -1,5 +1,5 @@
 // ============================================
-// PORTAL — Página com 8 Blocos de Conteúdo
+// PORTAL — Página com 8 Blocos (lê do banco)
 // ============================================
 
 import { useParams, Link, Navigate } from 'react-router-dom';
@@ -7,30 +7,65 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Home, ChevronRight, Lightbulb, Brain, User, Briefcase, Flower2, Sword, FlaskConical } from 'lucide-react';
+import { Home, ChevronRight, Lightbulb, Brain, User, Briefcase, Flower2, Sword, FlaskConical, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { getPortal, getJornada, ESTACAO_PILOTO } from '@/data/clubeLivroData';
+import DOMPurify from 'dompurify';
+import { usePortalBySlug, useJornadas, type ClubePortal } from '@/hooks/useClubeLivro';
+import { useEstacoes } from '@/hooks/useEstacoes';
 import { GuardiaIntegracao8020Chat } from '@/components/clube-livro/GuardiaIntegracao8020Chat';
 import { EscutaSimbolticaChat } from '@/components/clube-livro/blocks/EscutaSimbolticaChat';
 
-const BLOCOS_CONFIG = [
-  { key: 'textoSimbolico', label: 'Texto Simbólico', icon: Lightbulb, cor: 'text-amber-400' },
-  { key: 'essencia8020', label: 'Essência 80/20', icon: FlaskConical, cor: 'text-emerald-400' },
-  { key: 'raizPsiquica', label: 'Raiz Psíquica', icon: Brain, cor: 'text-violet-400' },
-  { key: 'aplicacaoPessoal', label: 'Aplicação Pessoal', icon: User, cor: 'text-sky-400' },
-  { key: 'aplicacaoProfissional', label: 'Aplicação Profissional', icon: Briefcase, cor: 'text-teal-400' },
-  { key: 'jardimPsique', label: 'Jardim da Psique', icon: Flower2, cor: 'text-pink-400' },
-  { key: 'jardimHeroina', label: 'Jardim da Heroína', icon: Sword, cor: 'text-orange-400' },
-  { key: 'laboratorio8020', label: 'Laboratório 80/20', icon: FlaskConical, cor: 'text-emerald-400' },
-] as const;
+const BLOCOS_CONFIG: { key: keyof Pick<ClubePortal, 'texto_simbolico' | 'essencia_8020' | 'raiz_psiquica' | 'aplicacao_pessoal' | 'aplicacao_profissional' | 'jardim_psique' | 'jardim_heroina' | 'laboratorio_8020'>; label: string; icon: React.ElementType; cor: string }[] = [
+  { key: 'texto_simbolico', label: 'Texto Simbólico', icon: Lightbulb, cor: 'text-amber-400' },
+  { key: 'essencia_8020', label: 'Essência 80/20', icon: FlaskConical, cor: 'text-emerald-400' },
+  { key: 'raiz_psiquica', label: 'Raiz Psíquica', icon: Brain, cor: 'text-violet-400' },
+  { key: 'aplicacao_pessoal', label: 'Aplicação Pessoal', icon: User, cor: 'text-sky-400' },
+  { key: 'aplicacao_profissional', label: 'Aplicação Profissional', icon: Briefcase, cor: 'text-teal-400' },
+  { key: 'jardim_psique', label: 'Jardim da Psique', icon: Flower2, cor: 'text-pink-400' },
+  { key: 'jardim_heroina', label: 'Jardim da Heroína', icon: Sword, cor: 'text-orange-400' },
+  { key: 'laboratorio_8020', label: 'Laboratório 80/20', icon: FlaskConical, cor: 'text-emerald-400' },
+];
+
+function RenderContent({ html }: { html: string | null }) {
+  if (!html) return <p className="text-sm text-muted-foreground italic">Sem conteúdo.</p>;
+
+  // Check if content has HTML tags
+  const hasHtml = /<[a-z][\s\S]*>/i.test(html);
+
+  if (!hasHtml) {
+    return <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">{html}</p>;
+  }
+
+  const sanitized = DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h2', 'h3', 'ul', 'ol', 'li', 'blockquote', 'span'],
+    ALLOWED_ATTR: ['class'],
+  });
+
+  return (
+    <div
+      className="prose prose-sm max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground"
+      dangerouslySetInnerHTML={{ __html: sanitized }}
+    />
+  );
+}
 
 export default function ClubeLivroPortalV2() {
   const { portalSlug } = useParams<{ portalSlug: string }>();
-  const portal = getPortal(portalSlug || '');
+  const { data: portal, isLoading } = usePortalBySlug(portalSlug);
+  const { data: estacoes } = useEstacoes();
+  const estacaoI = estacoes?.find(e => e.numero === 1);
+
+  if (isLoading) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+        </div>
+      </AppLayout>
+    );
+  }
 
   if (!portal) return <Navigate to="/clube-livro/estacao" replace />;
-
-  const jornada = getJornada(portal.jornadaSlug);
 
   return (
     <AppLayout>
@@ -55,21 +90,15 @@ export default function ClubeLivroPortalV2() {
 
         <SectionHeader
           title={`${portal.icone} ${portal.nome}`}
-          subtitle={portal.subtitulo}
-          className="mb-2"
+          subtitle={portal.subtitulo || ''}
+          className="mb-8"
         />
-
-        {jornada && (
-          <p className="text-xs text-muted-foreground mb-8">
-            {jornada.icone} {jornada.nome} · {jornada.subtitulo}
-          </p>
-        )}
 
         {/* 8 Blocos de conteúdo */}
         <div className="space-y-4">
           {BLOCOS_CONFIG.map((bloco, i) => {
             const Icon = bloco.icon;
-            const conteudo = portal.conteudo[bloco.key as keyof typeof portal.conteudo];
+            const conteudo = portal[bloco.key];
 
             return (
               <motion.div
@@ -86,9 +115,7 @@ export default function ClubeLivroPortalV2() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                      {conteudo}
-                    </p>
+                    <RenderContent html={conteudo} />
                   </CardContent>
                 </Card>
               </motion.div>
@@ -103,12 +130,12 @@ export default function ClubeLivroPortalV2() {
           <h3 className="text-sm font-semibold text-foreground">Converse com o Livro</h3>
 
           <EscutaSimbolticaChat
-            campoSimbolico={portal.conteudo.textoSimbolico}
-            tituloLivro={ESTACAO_PILOTO.livroTitulo}
+            campoSimbolico={portal.texto_simbolico || ''}
+            tituloLivro={estacaoI?.livro_titulo || 'Mulheres que Correm com os Lobos'}
           />
 
           <GuardiaIntegracao8020Chat
-            cicloTitulo={ESTACAO_PILOTO.livroTitulo}
+            cicloTitulo={estacaoI?.livro_titulo || 'Mulheres que Correm com os Lobos'}
           />
         </div>
       </div>
