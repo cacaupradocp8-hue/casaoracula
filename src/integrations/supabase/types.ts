@@ -1583,6 +1583,100 @@ export type Database = {
         }
         Relationships: []
       }
+      clube_audio_albums: {
+        Row: {
+          capa_url: string | null
+          created_at: string
+          descricao: string | null
+          estacao_id: string
+          id: string
+          ordem: number
+          status: Database["public"]["Enums"]["album_status"]
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          capa_url?: string | null
+          created_at?: string
+          descricao?: string | null
+          estacao_id: string
+          id?: string
+          ordem?: number
+          status?: Database["public"]["Enums"]["album_status"]
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          capa_url?: string | null
+          created_at?: string
+          descricao?: string | null
+          estacao_id?: string
+          id?: string
+          ordem?: number
+          status?: Database["public"]["Enums"]["album_status"]
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_audio_albums_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_audio_tracks: {
+        Row: {
+          album_id: string
+          audio_url: string
+          created_at: string
+          duracao_segundos: number | null
+          id: string
+          ordem: number
+          publicado: boolean
+          tags: string[] | null
+          tipo: Database["public"]["Enums"]["track_type"]
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          album_id: string
+          audio_url: string
+          created_at?: string
+          duracao_segundos?: number | null
+          id?: string
+          ordem?: number
+          publicado?: boolean
+          tags?: string[] | null
+          tipo?: Database["public"]["Enums"]["track_type"]
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          album_id?: string
+          audio_url?: string
+          created_at?: string
+          duracao_segundos?: number | null
+          id?: string
+          ordem?: number
+          publicado?: boolean
+          tags?: string[] | null
+          tipo?: Database["public"]["Enums"]["track_type"]
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_audio_tracks_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: false
+            referencedRelation: "clube_audio_albums"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_audit_log: {
         Row: {
           acao: string
@@ -10923,6 +11017,7 @@ export type Database = {
     }
     Enums: {
       agente_status: "ativo" | "inativo"
+      album_status: "draft" | "published"
       big5_dimensao:
         | "abertura"
         | "conscienciosidade"
@@ -11005,6 +11100,7 @@ export type Database = {
       status_publicacao: "rascunho" | "publicado"
       status_supervisao: "privado" | "enviado" | "discutido"
       tipo_modulo: "jornada" | "curso" | "circulo" | "travessia" | "biblioteca"
+      track_type: "audio" | "podcast"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -11133,6 +11229,7 @@ export const Constants = {
   public: {
     Enums: {
       agente_status: ["ativo", "inativo"],
+      album_status: ["draft", "published"],
       big5_dimensao: [
         "abertura",
         "conscienciosidade",
@@ -11221,6 +11318,7 @@ export const Constants = {
       status_publicacao: ["rascunho", "publicado"],
       status_supervisao: ["privado", "enviado", "discutido"],
       tipo_modulo: ["jornada", "curso", "circulo", "travessia", "biblioteca"],
+      track_type: ["audio", "podcast"],
     },
   },
 } as const
