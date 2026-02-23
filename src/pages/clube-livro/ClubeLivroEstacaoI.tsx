@@ -1,18 +1,43 @@
 // ============================================
-// ESTAÇÃO I — Matriz · Chamado · Feminino Arcaico
+// ESTAÇÃO I — Lê do banco de dados
 // ============================================
 
 import { Link, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { BookOpen, ChevronRight, Home, ArrowRight } from 'lucide-react';
+import { BookOpen, ChevronRight, Home, ArrowRight, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { ESTACAO_PILOTO, JORNADAS, getPortaisByJornada } from '@/data/clubeLivroData';
+import { useEstacoes } from '@/hooks/useEstacoes';
+import { useAllPortais } from '@/hooks/useClubeLivro';
 
 export default function ClubeLivroEstacaoI() {
   const navigate = useNavigate();
+  const { data: estacoes, isLoading: le } = useEstacoes();
+  const estacaoI = estacoes?.find(e => e.numero === 1);
+  const { data: allData, isLoading: lp } = useAllPortais(estacaoI?.id);
+
+  if (le || lp) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+        </div>
+      </AppLayout>
+    );
+  }
+
+  if (!estacaoI || !allData) {
+    return (
+      <AppLayout>
+        <div className="container mx-auto px-4 py-8 text-center">
+          <p className="text-muted-foreground">Estação não encontrada.</p>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  const { jornadas, portais } = allData;
 
   return (
     <AppLayout>
@@ -32,9 +57,9 @@ export default function ClubeLivroEstacaoI() {
         </nav>
 
         <SectionHeader
-          title={ESTACAO_PILOTO.nome}
-          subtitle={ESTACAO_PILOTO.subtitulo}
-          icon={<span className="text-xl">{ESTACAO_PILOTO.faseLunar}</span>}
+          title={estacaoI.titulo}
+          subtitle={estacaoI.subtitulo}
+          icon={<span className="text-xl">{estacaoI.fase_lunar}</span>}
           className="mb-4"
         />
 
@@ -46,33 +71,22 @@ export default function ClubeLivroEstacaoI() {
         >
           <BookOpen className="w-5 h-5 text-primary shrink-0" />
           <div>
-            <p className="text-sm font-medium text-foreground">{ESTACAO_PILOTO.livroTitulo}</p>
-            <p className="text-xs text-muted-foreground">{ESTACAO_PILOTO.livroAutor}</p>
+            <p className="text-sm font-medium text-foreground">{estacaoI.livro_titulo}</p>
+            <p className="text-xs text-muted-foreground">{estacaoI.livro_autor}</p>
           </div>
         </motion.div>
 
-        {/* Descrição */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="text-sm text-muted-foreground leading-relaxed mb-10"
-        >
-          {ESTACAO_PILOTO.descricao}
-        </motion.p>
-
         {/* Jornadas + Portais */}
         <div className="space-y-8">
-          {JORNADAS.map((jornada, ji) => {
-            const portais = getPortaisByJornada(jornada.slug);
+          {jornadas.map((jornada, ji) => {
+            const jornadaPortais = portais.filter(p => p.jornada_id === jornada.id);
             return (
               <motion.div
-                key={jornada.slug}
+                key={jornada.id}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 + ji * 0.1 }}
               >
-                {/* Jornada header */}
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-lg">{jornada.icone}</span>
                   <div>
@@ -81,11 +95,10 @@ export default function ClubeLivroEstacaoI() {
                   </div>
                 </div>
 
-                {/* Portais */}
                 <div className="space-y-3 pl-2 border-l-2 border-border ml-3">
-                  {portais.map((portal) => (
+                  {jornadaPortais.map((portal) => (
                     <Card
-                      key={portal.slug}
+                      key={portal.id}
                       className="cursor-pointer hover:border-primary/40 transition-colors"
                       onClick={() => navigate(`/clube-livro/portal/${portal.slug}`)}
                     >
