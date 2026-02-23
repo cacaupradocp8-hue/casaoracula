@@ -28,6 +28,7 @@ import { PortasManager } from './clube-livro/PortasManager';
 import { AulaBlocosEditor, type AulaBloco } from './clube-livro/AulaBlocosEditor';
 import { AudioUpload } from './AudioUpload';
 import { CALENDARIO_ANUAL, SEMANAS_PADRAO } from '@/constants/clubeLivroCalendario';
+import { AdminEstacoesManager } from './AdminEstacoesManager';
 import { cn } from '@/lib/utils';
 
 // Catálogo 2026 — Camadas da Mandala de Jornada
@@ -595,12 +596,16 @@ export function AdminClubeLivroTab() {
         </div>
       </div>
 
-      {/* Abas: Mapa de Jornadas + Mandala (Books) + Gerenciar Ciclos */}
-      <Tabs defaultValue="mandala">
+      {/* Abas: Estações 2026 + Mandala (Books) + Gerenciar Ciclos */}
+      <Tabs defaultValue="estacoes">
         <TabsList className="mb-4">
+          <TabsTrigger value="estacoes" className="gap-2">
+            <Sparkles className="w-4 h-4" />
+            Estações 2026
+          </TabsTrigger>
           <TabsTrigger value="mandala" className="gap-2">
             <Map className="w-4 h-4" />
-            Mandala & Livros
+            Mandala & Livros (Legado)
           </TabsTrigger>
           <TabsTrigger value="mapa" className="gap-2">
             <BookOpen className="w-4 h-4" />
@@ -612,20 +617,34 @@ export function AdminClubeLivroTab() {
           </TabsTrigger>
         </TabsList>
 
-        {/* ABA: Mandala & Livros — conteúdo que aparece para a aluna */}
+        {/* ABA: Estações Simbólicas 2026 */}
+        <TabsContent value="estacoes" className="space-y-4">
+          <Card className="bg-muted/20 border-primary/20">
+            <CardContent className="pt-5 pb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles className="w-4 h-4 text-primary" />
+                <span className="text-xs uppercase tracking-widest text-primary font-medium">
+                  Estações Simbólicas do Ano Oracular
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">
+                Gerencie as 8 Estações, os livros-eixo e o conteúdo do Laboratório 80/20.
+              </p>
+              <AdminEstacoesManager />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* ABA: Mandala & Livros — legado */}
         <TabsContent value="mandala" className="space-y-4">
           <Card className="bg-muted/20 border-primary/20">
             <CardContent className="pt-5 pb-4">
               <div className="flex items-center gap-2 mb-3">
                 <Map className="w-4 h-4 text-primary" />
                 <span className="text-xs uppercase tracking-widest text-primary font-medium">
-                  Conteúdo da Mandala Anual (visível para a aluna)
+                  Conteúdo da Mandala Anual (legado)
                 </span>
               </div>
-              <p className="text-sm text-muted-foreground mb-4">
-                Aqui você gerencia os livros, ciclos e aulas-álbum que aparecem na Mandala Anual da aluna.
-                Edite títulos, descrições, manifestos, "por quê" e "como ler" de cada livro.
-              </p>
               <MandalaAdminPreview />
             </CardContent>
           </Card>

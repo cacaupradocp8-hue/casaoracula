@@ -3,6 +3,10 @@
 // ============================================
 
 export { default as ClubeLivroApresentacao } from './ClubeLivroApresentacao';
+export { default as ClubeLivroComoEscolhemos } from './ClubeLivroComoEscolhemos';
+export { default as ClubeLivroMapa } from './ClubeLivroMapa';
+export { default as ClubeLivroEstacao } from './ClubeLivroEstacao';
+// Legacy exports kept for route compatibility
 export { default as ClubeLivroComoFunciona } from './ClubeLivroComoFunciona';
 export { default as ClubeLivroMandala } from './ClubeLivroMandala';
 export { default as ClubeLivroTravessia } from './ClubeLivroTravessia';
