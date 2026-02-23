@@ -169,6 +169,9 @@ import BibliotecaTravessiasFamilia from "./pages/BibliotecaTravessiasFamilia";
 // Clube do Livro Oracular
 import { 
   ClubeLivroApresentacao, 
+  ClubeLivroComoFunciona,
+  ClubeLivroMandala,
+  ClubeLivroTravessia,
   ClubeLivroCiclo, 
   ClubeLivroPorta,
   ClubeLivroFase, 
@@ -640,6 +643,30 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="aluna">
             <ClubeLivroApresentacao />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/como-funciona"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroComoFunciona />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/mandala"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroMandala />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/travessia/:bookId"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroTravessia />
           </ProtectedRoute>
         }
       />
