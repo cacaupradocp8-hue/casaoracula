@@ -23,6 +23,7 @@ import { useEstacoes, type Estacao } from '@/hooks/useEstacoes';
 import { useAllPortais, useUpdatePortal, type ClubePortal, type ClubeJornada } from '@/hooks/useClubeLivro';
 import { useCreateEstacao, useUpdateEstacao, useDeleteEstacao, useCreateJornada, useUpdateJornada, useDeleteJornada, useCreatePortal, useDeletePortal } from '@/hooks/useClubeLivroAdmin';
 import { AdminAudioAlbumSection } from '@/components/admin/AdminAudioAlbumSection';
+import { AdminBookMediaSection } from '@/components/admin/AdminBookMediaSection';
 
 // ─── Constants ───────────────────────────────
 const BLOCOS_META: { key: keyof Pick<ClubePortal, 'texto_simbolico' | 'essencia_8020' | 'raiz_psiquica' | 'aplicacao_pessoal' | 'aplicacao_profissional' | 'jardim_psique' | 'jardim_heroina' | 'laboratorio_8020'>; label: string; icon: React.ElementType }[] = [
@@ -429,6 +430,9 @@ function EstacaoSection({ estacao }: { estacao: Estacao }) {
                   <Plus className="w-3 h-3" /> Nova Jornada
                 </Button>
               )}
+
+              <Separator />
+              <AdminBookMediaSection estacaoId={estacao.id} />
 
               <Separator />
               <AdminAudioAlbumSection estacaoId={estacao.id} />
