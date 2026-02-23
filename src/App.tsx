@@ -9,6 +9,7 @@ import { initRitualSessionTracking, trackRouteForRitual } from "@/hooks/useRitua
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { AdminPreviewProvider, useAdminPreviewOptional } from "@/contexts/AdminPreviewContext";
 import { AppDomainProvider } from "@/contexts/AppDomainContext";
+import { AudioPlayerProvider } from "@/contexts/AudioPlayerContext";
 import { PortalType, canAccessFeature } from "@/types/portal";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import { LockedForVisitor } from "@/components/shared/LockedForVisitor";
@@ -1640,11 +1641,13 @@ const App = () => (
       {import.meta.env.PROD && <ServiceWorkerUpdateToast />}
       <BrowserRouter>
         <AuthProvider>
-          <AdminPreviewProvider>
-            <AppDomainProvider>
-              <AppRoutes />
-            </AppDomainProvider>
-          </AdminPreviewProvider>
+          <AudioPlayerProvider>
+            <AdminPreviewProvider>
+              <AppDomainProvider>
+                <AppRoutes />
+              </AppDomainProvider>
+            </AdminPreviewProvider>
+          </AudioPlayerProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

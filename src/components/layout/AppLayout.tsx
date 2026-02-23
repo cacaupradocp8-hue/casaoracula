@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { Navigation } from './Navigation';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
 import { AccessExpirationBanner } from '@/components/shared/AccessExpirationBanner';
+import { MiniPlayer } from '@/components/audio/MiniPlayer';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -22,6 +23,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         {children}
       </main>
       <EthicalNotice />
+      <MiniPlayer />
     </div>
   );
 }

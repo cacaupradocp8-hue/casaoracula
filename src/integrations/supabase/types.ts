@@ -1627,6 +1627,41 @@ export type Database = {
           },
         ]
       }
+      clube_audio_progress: {
+        Row: {
+          concluido: boolean
+          id: string
+          posicao_segundos: number
+          track_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          concluido?: boolean
+          id?: string
+          posicao_segundos?: number
+          track_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          concluido?: boolean
+          id?: string
+          posicao_segundos?: number
+          track_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_audio_progress_track_id_fkey"
+            columns: ["track_id"]
+            isOneToOne: false
+            referencedRelation: "clube_audio_tracks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_audio_tracks: {
         Row: {
           album_id: string
