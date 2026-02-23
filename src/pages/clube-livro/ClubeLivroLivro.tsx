@@ -9,13 +9,21 @@ import { useBook, useBookLessons, useBookLinksForBook } from '@/hooks/useBooks';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, ChevronRight, Home, AlertTriangle, ExternalLink } from 'lucide-react';
+import { BookOpen, ChevronRight, Home, AlertTriangle, ExternalLink, MapPin } from 'lucide-react';
 
 const PHASE_COLORS: Record<string, string> = {
   CHAMADO: 'bg-amber-500/20 text-amber-300',
   RUPTURA: 'bg-red-500/20 text-red-300',
   REORGANIZACAO: 'bg-blue-500/20 text-blue-300',
   INTEGRACAO: 'bg-emerald-500/20 text-emerald-300',
+};
+
+const CATEGORY_LABEL: Record<string, string> = {
+  TRAVESSIA: 'Travessia',
+  PORTA: 'Porta',
+  PONTE: 'Ponte',
+  FUNDACAO: 'Fundação',
+  MATRIZ: 'Matriz',
 };
 
 export default function ClubeLivroLivro() {
@@ -45,25 +53,41 @@ export default function ClubeLivroLivro() {
     );
   }
 
-  // Connected books
   const connections = (bookLinks || []).map(link => {
     const isFrom = link.from_book_id === id;
     const connectedBook = isFrom ? link.to_book : link.from_book;
     return { ...link, connectedBook, direction: isFrom ? 'para' : 'de' };
   }).filter(c => c.connectedBook);
 
+  const categoryLabel = CATEGORY_LABEL[book.category] || book.category;
+
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
+        {/* Banner de orientação fixo */}
+        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4 p-2.5 rounded-lg bg-muted/40 border border-border/50">
+          <MapPin className="w-3.5 h-3.5 text-primary shrink-0" />
+          <span>
+            Você está em:{' '}
+            <Link to="/clube-livro/mandala" className="hover:text-foreground transition-colors underline underline-offset-2">Mandala</Link>
+            {' → '}
+            <span className="text-foreground font-medium">{categoryLabel}</span>
+            {' → '}
+            <span className="text-foreground font-medium truncate">{book.title}</span>
+          </span>
+        </div>
+
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6 flex-wrap">
           <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
             <Home className="w-3 h-3" /> Casa
           </Link>
           <ChevronRight className="w-3 h-3" />
           <Link to="/clube-livro" className="hover:text-foreground transition-colors">Clube do Livro</Link>
           <ChevronRight className="w-3 h-3" />
-          <span className="text-foreground truncate">{book.title}</span>
+          <Link to="/clube-livro/mandala" className="hover:text-foreground transition-colors">Mandala</Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground truncate max-w-[150px]">{book.title}</span>
         </nav>
 
         <SectionHeader
@@ -78,7 +102,7 @@ export default function ClubeLivroLivro() {
         )}
 
         <div className="flex flex-wrap gap-2 mb-6">
-          <Badge variant="outline">{book.category}</Badge>
+          <Badge variant="outline">{categoryLabel}</Badge>
           {book.is_multipolar && <Badge variant="secondary">Multipolar</Badge>}
         </div>
 
@@ -86,33 +110,20 @@ export default function ClubeLivroLivro() {
           <p className="text-sm text-muted-foreground italic border-l-2 border-amber-500/30 pl-3 mb-6">{book.description_short}</p>
         )}
 
-        <Tabs defaultValue="why" className="w-full">
+        <Tabs defaultValue="lessons" className="w-full">
           <TabsList className="w-full flex flex-wrap h-auto gap-1">
+            <TabsTrigger
+              value="lessons"
+              className="text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-semibold"
+            >
+              Aulas-Álbum
+            </TabsTrigger>
             <TabsTrigger value="why" className="text-xs">Por quê</TabsTrigger>
             <TabsTrigger value="how" className="text-xs">Como ler</TabsTrigger>
             <TabsTrigger value="manifesto" className="text-xs">Manifesto</TabsTrigger>
-            <TabsTrigger value="lessons" className="text-xs">Aulas-Álbum</TabsTrigger>
             <TabsTrigger value="chat" className="text-xs">Chat</TabsTrigger>
             <TabsTrigger value="buy" className="text-xs">Comprar</TabsTrigger>
           </TabsList>
-
-          <TabsContent value="why" className="mt-6">
-            <Card><CardContent className="p-6">
-              <p className="text-foreground whitespace-pre-wrap">{book.why_here || 'Conteúdo em construção.'}</p>
-            </CardContent></Card>
-          </TabsContent>
-
-          <TabsContent value="how" className="mt-6">
-            <Card><CardContent className="p-6">
-              <p className="text-foreground whitespace-pre-wrap">{book.how_to_read || 'Conteúdo em construção.'}</p>
-            </CardContent></Card>
-          </TabsContent>
-
-          <TabsContent value="manifesto" className="mt-6">
-            <Card><CardContent className="p-6">
-              <p className="text-foreground whitespace-pre-wrap">{book.manifesto_short || 'Conteúdo em construção.'}</p>
-            </CardContent></Card>
-          </TabsContent>
 
           <TabsContent value="lessons" className="mt-6 space-y-4">
             {!lessons?.length ? (
@@ -162,6 +173,24 @@ export default function ClubeLivroLivro() {
                 </Card>
               ))
             )}
+          </TabsContent>
+
+          <TabsContent value="why" className="mt-6">
+            <Card><CardContent className="p-6">
+              <p className="text-foreground whitespace-pre-wrap">{book.why_here || 'Conteúdo em construção.'}</p>
+            </CardContent></Card>
+          </TabsContent>
+
+          <TabsContent value="how" className="mt-6">
+            <Card><CardContent className="p-6">
+              <p className="text-foreground whitespace-pre-wrap">{book.how_to_read || 'Conteúdo em construção.'}</p>
+            </CardContent></Card>
+          </TabsContent>
+
+          <TabsContent value="manifesto" className="mt-6">
+            <Card><CardContent className="p-6">
+              <p className="text-foreground whitespace-pre-wrap">{book.manifesto_short || 'Conteúdo em construção.'}</p>
+            </CardContent></Card>
           </TabsContent>
 
           <TabsContent value="chat" className="mt-6">
