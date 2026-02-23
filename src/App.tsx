@@ -166,26 +166,12 @@ import RitualAutorizacao from "./pages/narroterapia/RitualAutorizacao";
 // Biblioteca das Travessias (Symbolic Families)
 import BibliotecaTravessias from "./pages/BibliotecaTravessias";
 import BibliotecaTravessiasFamilia from "./pages/BibliotecaTravessiasFamilia";
-// Clube do Livro Oracular
+// Clube do Livro Oracular — Reset v2026
 import { 
   ClubeLivroApresentacao, 
-  ClubeLivroComoEscolhemos,
-  ClubeLivroMapa,
-  ClubeLivroEstacao,
-  ClubeLivroComoFunciona,
-  ClubeLivroMandala,
-  ClubeLivroTravessia,
-  ClubeLivroCiclo, 
-  ClubeLivroPorta,
-  ClubeLivroFase, 
-  ClubeLivroEscutas, 
-  ClubeLivroEncontros,
-  ClubeLivroRitual,
-  ClubeLivroAula,
-  IntegracaoOracular,
-  MeuCaminhoClube,
-  Integracao8020,
-  ClubeLivroLivro,
+  ClubeLivroEstacaoI,
+  ClubeLivroComoLer,
+  ClubeLivroPortalV2,
 } from "./pages/clube-livro";
 // Labirinto da Heroína Interna®
 import { LabirintoHeroinaPage } from "./pages/labirinto-heroina";
@@ -640,7 +626,7 @@ function AppRoutes() {
         }
       />
       
-      {/* Clube do Livro Oracular — Nova estrutura 2026 */}
+      {/* Clube do Livro Oracular — Reset v2026 */}
       <Route
         path="/clube-livro"
         element={
@@ -650,141 +636,37 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/clube-livro/como-escolhemos"
+        path="/clube-livro/estacao"
         element={
           <ProtectedRoute>
-            <ClubeLivroComoEscolhemos />
+            <ClubeLivroEstacaoI />
           </ProtectedRoute>
         }
       />
       <Route
-        path="/clube-livro/mapa"
+        path="/clube-livro/como-ler"
         element={
           <ProtectedRoute>
-            <ClubeLivroMapa />
+            <ClubeLivroComoLer />
           </ProtectedRoute>
         }
       />
       <Route
-        path="/clube-livro/estacao/:id"
+        path="/clube-livro/portal/:portalSlug"
         element={
-          <ProtectedRoute minPortal="aluna">
-            <ClubeLivroEstacao />
+          <ProtectedRoute>
+            <ClubeLivroPortalV2 />
           </ProtectedRoute>
         }
       />
-      {/* Legacy routes — redirect */}
-      <Route path="/clube-livro/como-funciona" element={<Navigate to="/clube-livro/como-escolhemos" replace />} />
-      <Route path="/clube-livro/mandala" element={<Navigate to="/clube-livro/mapa" replace />} />
-      <Route
-        path="/clube-livro/travessia/:bookId"
-        element={
-          <ProtectedRoute minPortal="aluna">
-            <ClubeLivroTravessia />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/clube-livro/livro/:id"
-        element={
-          <ProtectedRoute minPortal="aluna">
-            <ClubeLivroLivro />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/clube-livro/:id"
-        element={
-          <ProtectedRoute minPortal="aluna">
-            <ClubeLivroCiclo />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/clube-livro/:id/porta/:portaId"
-        element={
-          <ProtectedRoute minPortal="aluna">
-            <ClubeLivroPorta />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/clube-livro/:id/ritual"
-        element={
-          <ProtectedRoute minPortal="aluna">
-            <ClubeLivroRitual />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/clube-livro/:id/aula/:aulaId"
-        element={
-          <ProtectedRoute minPortal="aluna">
-            <ClubeLivroAula />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/clube-livro/:id/fase/:faseId"
-        element={
-          <ProtectedRoute minPortal="aluna">
-            <ClubeLivroFase />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/clube-livro/:id/escutas"
-        element={
-          <ProtectedRoute minPortal="aluna">
-            <ClubeLivroEscutas />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/clube-livro/:id/encontros"
-        element={
-          <ProtectedRoute minPortal="aluna">
-            <ClubeLivroEncontros />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* Integração Oracular */}
-      <Route
-        path="/clube-livro/:id/integracao"
-        element={
-          <ProtectedRoute minPortal="aluna">
-            <IntegracaoOracular />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/clube-livro/:id/meu-caminho"
-        element={
-          <ProtectedRoute minPortal="aluna">
-            <MeuCaminhoClube />
-          </ProtectedRoute>
-        }
-      />
-      {/* Rota global "Meu Caminho" sem ciclo específico */}
-      <Route
-        path="/clube-livro/meu-caminho"
-        element={
-          <ProtectedRoute minPortal="aluna">
-            <MeuCaminhoClube />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* Integração 80/20 */}
-      <Route
-        path="/clube-livro/:id/integracao-8020"
-        element={
-          <ProtectedRoute minPortal="aluna">
-            <Integracao8020 />
-          </ProtectedRoute>
-        }
-      />
+      {/* Legacy redirects */}
+      <Route path="/clube-livro/como-escolhemos" element={<Navigate to="/clube-livro/como-ler" replace />} />
+      <Route path="/clube-livro/como-funciona" element={<Navigate to="/clube-livro/como-ler" replace />} />
+      <Route path="/clube-livro/mapa" element={<Navigate to="/clube-livro/estacao" replace />} />
+      <Route path="/clube-livro/mandala" element={<Navigate to="/clube-livro/estacao" replace />} />
+      <Route path="/clube-livro/meu-caminho" element={<Navigate to="/clube-livro" replace />} />
+      <Route path="/clube-livro/:id" element={<Navigate to="/clube-livro/estacao" replace />} />
+      <Route path="/clube-livro/:id/*" element={<Navigate to="/clube-livro/estacao" replace />} />
 
       <Route
         path="/biblioteca"
