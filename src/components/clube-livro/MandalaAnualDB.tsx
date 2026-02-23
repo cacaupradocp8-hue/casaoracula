@@ -433,7 +433,7 @@ export function MandalaAnualDB() {
                     isActive={isActive}
                     isCompleted={isCompleted}
                     progress={progress}
-                    onClick={() => setActiveTravessiaId(tCb.book!.id)}
+                    onClick={() => navigate(`/clube-livro/travessia/${tCb.book!.id}`)}
                   />
                 );
               })}

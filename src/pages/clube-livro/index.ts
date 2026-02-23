@@ -3,6 +3,9 @@
 // ============================================
 
 export { default as ClubeLivroApresentacao } from './ClubeLivroApresentacao';
+export { default as ClubeLivroComoFunciona } from './ClubeLivroComoFunciona';
+export { default as ClubeLivroMandala } from './ClubeLivroMandala';
+export { default as ClubeLivroTravessia } from './ClubeLivroTravessia';
 export { default as ClubeLivroCiclo } from './ClubeLivroCiclo';
 export { default as ClubeLivroAula } from './ClubeLivroAula';
 export { default as ClubeLivroPorta } from './ClubeLivroPorta';
@@ -14,4 +17,3 @@ export { default as IntegracaoOracular } from './IntegracaoOracular';
 export { default as MeuCaminhoClube } from './MeuCaminhoClube';
 export { default as Integracao8020 } from './Integracao8020';
 export { default as ClubeLivroLivro } from './ClubeLivroLivro';
-
