@@ -10,6 +10,9 @@ export interface BookMedia {
   file_kind: 'image' | 'pdf';
   order_index: number;
   published: boolean;
+  caption: string;
+  credit: string;
+  source_url: string;
   created_at: string;
   updated_at: string;
 }

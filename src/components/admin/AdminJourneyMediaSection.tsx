@@ -29,6 +29,8 @@ export function AdminJourneyMediaSection({ jornadaId }: Props) {
   const [newUrl, setNewUrl] = useState('');
   const [newTitle, setNewTitle] = useState('');
   const [newKind, setNewKind] = useState<'image' | 'pdf'>('image');
+  const [newCaption, setNewCaption] = useState('');
+  const [newCredit, setNewCredit] = useState('');
 
   useEffect(() => {
     if (media) {
@@ -64,8 +66,8 @@ export function AdminJourneyMediaSection({ jornadaId }: Props) {
       toast({ title: 'Máximo 5 itens na galeria' });
       return;
     }
-    setGallery([...gallery, { url: newUrl.trim(), title: newTitle.trim() || 'Material', kind: newKind, order: gallery.length }]);
-    setNewUrl(''); setNewTitle('');
+    setGallery([...gallery, { url: newUrl.trim(), title: newTitle.trim() || 'Material', kind: newKind, order: gallery.length, caption: newCaption.trim(), credit: newCredit.trim() }]);
+    setNewUrl(''); setNewTitle(''); setNewCaption(''); setNewCredit('');
     setDirty(true);
   };
 
@@ -136,23 +138,29 @@ export function AdminJourneyMediaSection({ jornadaId }: Props) {
           ))}
         </div>
         {gallery.length < 5 && (
-          <div className="flex items-end gap-1.5 mt-2">
-            <div className="flex-1">
-              <Input value={newUrl} onChange={e => setNewUrl(e.target.value)} placeholder="URL" className="h-7 text-xs" />
+          <div className="space-y-1.5 mt-2">
+            <div className="flex items-end gap-1.5">
+              <div className="flex-1">
+                <Input value={newUrl} onChange={e => setNewUrl(e.target.value)} placeholder="URL" className="h-7 text-xs" />
+              </div>
+              <div className="w-24">
+                <Input value={newTitle} onChange={e => setNewTitle(e.target.value)} placeholder="Título" className="h-7 text-xs" />
+              </div>
+              <Select value={newKind} onValueChange={v => setNewKind(v as any)}>
+                <SelectTrigger className="h-7 text-xs w-20"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="image">Img</SelectItem>
+                  <SelectItem value="pdf">PDF</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button size="sm" variant="outline" className="h-7 text-xs" onClick={addGalleryItem} disabled={!newUrl.trim()}>
+                <Plus className="w-3 h-3" />
+              </Button>
             </div>
-            <div className="w-24">
-              <Input value={newTitle} onChange={e => setNewTitle(e.target.value)} placeholder="Título" className="h-7 text-xs" />
+            <div className="flex gap-1.5">
+              <Input value={newCaption} onChange={e => setNewCaption(e.target.value)} placeholder="Legenda (opcional)" className="h-7 text-xs" />
+              <Input value={newCredit} onChange={e => setNewCredit(e.target.value)} placeholder="Crédito (opcional)" className="h-7 text-xs" />
             </div>
-            <Select value={newKind} onValueChange={v => setNewKind(v as any)}>
-              <SelectTrigger className="h-7 text-xs w-20"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="image">Img</SelectItem>
-                <SelectItem value="pdf">PDF</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button size="sm" variant="outline" className="h-7 text-xs" onClick={addGalleryItem} disabled={!newUrl.trim()}>
-              <Plus className="w-3 h-3" />
-            </Button>
           </div>
         )}
       </div>

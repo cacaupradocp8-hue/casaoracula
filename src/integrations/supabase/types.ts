@@ -1331,36 +1331,45 @@ export type Database = {
       }
       book_media: {
         Row: {
+          caption: string | null
           created_at: string
+          credit: string | null
           file_kind: string
           file_url: string
           id: string
           order_index: number
           published: boolean
+          source_url: string | null
           station_id: string
           title: string
           type: string
           updated_at: string
         }
         Insert: {
+          caption?: string | null
           created_at?: string
+          credit?: string | null
           file_kind?: string
           file_url: string
           id?: string
           order_index?: number
           published?: boolean
+          source_url?: string | null
           station_id: string
           title?: string
           type: string
           updated_at?: string
         }
         Update: {
+          caption?: string | null
           created_at?: string
+          credit?: string | null
           file_kind?: string
           file_url?: string
           id?: string
           order_index?: number
           published?: boolean
+          source_url?: string | null
           station_id?: string
           title?: string
           type?: string
