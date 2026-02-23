@@ -197,6 +197,200 @@ interface Encontro {
   ativo: boolean;
 }
 
+// ============================================
+// MandalaAdminPreview — CRUD inline dos livros da Mandala
+// ============================================
+function MandalaAdminPreview() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [editingBook, setEditingBook] = useState<any | null>(null);
+  const [editField, setEditField] = useState<Record<string, string>>({});
+
+  const { data: books, isLoading } = useQuery({
+    queryKey: ['admin-mandala-books'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('books')
+        .select('*')
+        .order('category, title');
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const saveBook = useMutation({
+    mutationFn: async ({ id, fields }: { id: string; fields: Record<string, any> }) => {
+      const { error } = await supabase.from('books').update(fields).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-mandala-books'] });
+      queryClient.invalidateQueries({ queryKey: ['all-books'] });
+      setEditingBook(null);
+      setEditField({});
+      toast({ title: 'Livro atualizado ✓' });
+    },
+    onError: () => {
+      toast({ title: 'Erro ao salvar', variant: 'destructive' });
+    },
+  });
+
+  const LAYER_COLORS: Record<string, string> = {
+    MATRIZ: 'border-l-amber-500',
+    TRAVESSIA: 'border-l-violet-500',
+    PORTA: 'border-l-emerald-500',
+    PONTE: 'border-l-purple-400',
+    FUNDACAO: 'border-l-sky-500',
+  };
+
+  const LAYER_LABELS: Record<string, string> = {
+    MATRIZ: 'Matriz',
+    TRAVESSIA: 'Travessia',
+    PORTA: 'Porta',
+    PONTE: 'Ponte',
+    FUNDACAO: 'Fundação',
+  };
+
+  if (isLoading) return <div className="animate-pulse text-muted-foreground text-sm">Carregando livros…</div>;
+
+  const categories = ['MATRIZ', 'TRAVESSIA', 'PORTA', 'PONTE', 'FUNDACAO'];
+
+  return (
+    <div className="space-y-6">
+      {categories.map(cat => {
+        const catBooks = books?.filter((b: any) => b.category === cat) || [];
+        if (!catBooks.length) return null;
+        return (
+          <div key={cat} className="space-y-2">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+              {LAYER_LABELS[cat] || cat} ({catBooks.length})
+            </h3>
+            {catBooks.map((book: any) => {
+              const isEditing = editingBook?.id === book.id;
+              return (
+                <Card key={book.id} className={cn('border-l-4', LAYER_COLORS[cat] || 'border-l-border')}>
+                  <CardContent className="p-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-foreground truncate">{book.title}</p>
+                        <p className="text-xs text-muted-foreground">{book.author || '—'}</p>
+                        {book.is_multipolar && <Badge variant="secondary" className="text-[10px] mt-1">Multipolar</Badge>}
+                      </div>
+                      <div className="flex gap-1 shrink-0">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            if (isEditing) {
+                              setEditingBook(null);
+                              setEditField({});
+                            } else {
+                              setEditingBook(book);
+                              setEditField({
+                                title: book.title || '',
+                                author: book.author || '',
+                                description_short: book.description_short || '',
+                                why_here: book.why_here || '',
+                                how_to_read: book.how_to_read || '',
+                                manifesto_short: book.manifesto_short || '',
+                                cover_url: book.cover_url || '',
+                              });
+                            }
+                          }}
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Preview do que a aluna vê */}
+                    {!isEditing && (
+                      <div className="mt-2 space-y-1">
+                        {book.description_short && (
+                          <p className="text-xs text-muted-foreground italic truncate">📝 {book.description_short}</p>
+                        )}
+                        {book.why_here && (
+                          <p className="text-xs text-muted-foreground truncate">❓ Por quê: {book.why_here.slice(0, 80)}…</p>
+                        )}
+                        {book.how_to_read && (
+                          <p className="text-xs text-muted-foreground truncate">📖 Como ler: {book.how_to_read.slice(0, 80)}…</p>
+                        )}
+                        {book.manifesto_short && (
+                          <p className="text-xs text-muted-foreground truncate">✦ Manifesto: {book.manifesto_short.slice(0, 80)}…</p>
+                        )}
+                        {!book.description_short && !book.why_here && !book.how_to_read && !book.manifesto_short && (
+                          <p className="text-xs text-destructive/70">⚠ Sem conteúdo — a aluna verá "Conteúdo em construção"</p>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Editor inline */}
+                    {isEditing && (
+                      <div className="mt-3 space-y-3 border-t border-border pt-3">
+                        <div>
+                          <Label className="text-xs">Título</Label>
+                          <Input value={editField.title} onChange={e => setEditField(prev => ({ ...prev, title: e.target.value }))} />
+                        </div>
+                        <div>
+                          <Label className="text-xs">Autor</Label>
+                          <Input value={editField.author} onChange={e => setEditField(prev => ({ ...prev, author: e.target.value }))} />
+                        </div>
+                        <div>
+                          <Label className="text-xs">URL da Capa</Label>
+                          <Input value={editField.cover_url} onChange={e => setEditField(prev => ({ ...prev, cover_url: e.target.value }))} />
+                        </div>
+                        <div>
+                          <Label className="text-xs">Descrição Curta (visível na mandala)</Label>
+                          <Textarea value={editField.description_short} onChange={e => setEditField(prev => ({ ...prev, description_short: e.target.value }))} rows={2} />
+                        </div>
+                        <div>
+                          <Label className="text-xs">Por que este livro está aqui</Label>
+                          <Textarea value={editField.why_here} onChange={e => setEditField(prev => ({ ...prev, why_here: e.target.value }))} rows={3} />
+                        </div>
+                        <div>
+                          <Label className="text-xs">Como ler este livro</Label>
+                          <Textarea value={editField.how_to_read} onChange={e => setEditField(prev => ({ ...prev, how_to_read: e.target.value }))} rows={3} />
+                        </div>
+                        <div>
+                          <Label className="text-xs">Manifesto breve</Label>
+                          <Textarea value={editField.manifesto_short} onChange={e => setEditField(prev => ({ ...prev, manifesto_short: e.target.value }))} rows={3} />
+                        </div>
+                        <div className="flex gap-2 justify-end">
+                          <Button variant="outline" size="sm" onClick={() => { setEditingBook(null); setEditField({}); }}>
+                            Cancelar
+                          </Button>
+                          <Button
+                            size="sm"
+                            disabled={saveBook.isPending}
+                            onClick={() => saveBook.mutate({
+                              id: book.id,
+                              fields: {
+                                title: editField.title?.trim() || book.title,
+                                author: editField.author?.trim() || null,
+                                cover_url: editField.cover_url?.trim() || null,
+                                description_short: editField.description_short?.trim() || null,
+                                why_here: editField.why_here?.trim() || null,
+                                how_to_read: editField.how_to_read?.trim() || null,
+                                manifesto_short: editField.manifesto_short?.trim() || null,
+                              },
+                            })}
+                          >
+                            {saveBook.isPending ? 'Salvando…' : 'Salvar'}
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export function AdminClubeLivroTab() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -401,18 +595,41 @@ export function AdminClubeLivroTab() {
         </div>
       </div>
 
-      {/* Abas: Mapa de Jornadas + Gerenciar Ciclos */}
-      <Tabs defaultValue="mapa">
+      {/* Abas: Mapa de Jornadas + Mandala (Books) + Gerenciar Ciclos */}
+      <Tabs defaultValue="mandala">
         <TabsList className="mb-4">
-          <TabsTrigger value="mapa" className="gap-2">
+          <TabsTrigger value="mandala" className="gap-2">
             <Map className="w-4 h-4" />
-            Mapa de Jornadas
+            Mandala & Livros
+          </TabsTrigger>
+          <TabsTrigger value="mapa" className="gap-2">
+            <BookOpen className="w-4 h-4" />
+            Ciclos Legado
           </TabsTrigger>
           <TabsTrigger value="ciclos" className="gap-2">
             <BookOpen className="w-4 h-4" />
             Gerenciar Ciclos
           </TabsTrigger>
         </TabsList>
+
+        {/* ABA: Mandala & Livros — conteúdo que aparece para a aluna */}
+        <TabsContent value="mandala" className="space-y-4">
+          <Card className="bg-muted/20 border-primary/20">
+            <CardContent className="pt-5 pb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Map className="w-4 h-4 text-primary" />
+                <span className="text-xs uppercase tracking-widest text-primary font-medium">
+                  Conteúdo da Mandala Anual (visível para a aluna)
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">
+                Aqui você gerencia os livros, ciclos e aulas-álbum que aparecem na Mandala Anual da aluna.
+                Edite títulos, descrições, manifestos, "por quê" e "como ler" de cada livro.
+              </p>
+              <MandalaAdminPreview />
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         {/* ABA: Mapa de Jornadas */}
         <TabsContent value="mapa" className="space-y-6">
