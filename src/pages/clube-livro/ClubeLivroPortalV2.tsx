@@ -27,7 +27,7 @@ const BLOCOS_CONFIG: { key: keyof Pick<ClubePortal, 'texto_simbolico' | 'essenci
   { key: 'aplicacao_pessoal', label: 'Aplicação Pessoal', icon: User, cor: 'text-sky-400' },
   { key: 'aplicacao_profissional', label: 'Aplicação Profissional', icon: Briefcase, cor: 'text-teal-400' },
   { key: 'jardim_psique', label: 'Jardim da Psique', icon: Flower2, cor: 'text-pink-400' },
-  { key: 'jardim_heroina', label: 'Jardim da Heroína', icon: Sword, cor: 'text-orange-400' },
+  { key: 'jardim_heroina', label: 'Jardim do Ofício', icon: Sword, cor: 'text-orange-400' },
   { key: 'laboratorio_8020', label: 'Laboratório 80/20', icon: FlaskConical, cor: 'text-emerald-400' },
 ];
 

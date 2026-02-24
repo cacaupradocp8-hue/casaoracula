@@ -34,7 +34,7 @@ const BLOCOS_META: { key: keyof Pick<ClubePortal, 'texto_simbolico' | 'essencia_
   { key: 'aplicacao_pessoal', label: 'Aplicação Pessoal', icon: User },
   { key: 'aplicacao_profissional', label: 'Aplicação Profissional', icon: Briefcase },
   { key: 'jardim_psique', label: 'Jardim da Psique', icon: Flower2 },
-  { key: 'jardim_heroina', label: 'Jardim da Heroína', icon: Sword },
+  { key: 'jardim_heroina', label: 'Jardim do Ofício', icon: Sword },
   { key: 'laboratorio_8020', label: 'Laboratório 80/20', icon: FlaskConical },
 ];
 
