@@ -92,64 +92,6 @@ export default function ClubeLivroEstacaoI() {
           ]}
         />
 
-        {/* Áudio da Estação */}
-        <EstacaoAudioSection estacaoId={estacaoI.id} />
-
-        {/* Travessia da Estação — Progresso */}
-        <TravessiaEstacaoBlock jornadas={jornadas} portais={portais} portalProgress={progressList} />
-
-        {/* Jornadas + Portais */}
-        <div className="space-y-8">
-          {jornadas.map((jornada, ji) => {
-            const jornadaPortais = portais.filter(p => p.jornada_id === jornada.id);
-            return (
-              <motion.div
-                key={jornada.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15 + ji * 0.1 }}
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="text-lg">{jornada.icone}</span>
-                  <div>
-                    <h2 className="text-base font-semibold text-foreground">{jornada.nome}</h2>
-                    <p className="text-xs text-muted-foreground">{jornada.subtitulo}</p>
-                  </div>
-                </div>
-
-                {/* Mídia da Jornada */}
-                <JourneyMediaDisplay journeyId={jornada.id} />
-
-                <div className="space-y-3 pl-2 border-l-2 border-border ml-3">
-                  {jornadaPortais.map((portal) => (
-                    <Card
-                      key={portal.id}
-                      className="cursor-pointer hover:border-primary/40 transition-colors"
-                      onClick={() => navigate(`/clube-livro/portal/${portal.slug}`)}
-                    >
-                      <CardContent className="p-4 flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-3 min-w-0">
-                          <span className="text-lg">{portal.icone}</span>
-                          <div className="min-w-0">
-                            <p className="text-sm font-medium text-foreground">{portal.nome}</p>
-                            <p className="text-xs text-muted-foreground truncate">{portal.subtitulo}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3 shrink-0">
-                          <ProgressIndicator
-                            status={(progressMap.get(portal.id)?.state || 'nao_iniciado') as any}
-                            size="sm"
-                          />
-                          <ArrowRight className="w-4 h-4 text-muted-foreground" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
       </div>
     </AppLayout>
   );
