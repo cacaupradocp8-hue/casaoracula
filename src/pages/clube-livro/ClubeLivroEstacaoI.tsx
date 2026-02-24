@@ -78,6 +78,11 @@ export default function ClubeLivroEstacaoI() {
           capaUrl={estacaoI.livro_capa_url}
           titulo={estacaoI.livro_titulo}
           autor={estacaoI.livro_autor}
+          navLinks={jornadas.map(j => ({
+            label: j.nome,
+            icon: j.icone || '📖',
+            to: `/clube-livro/portal/${portais.find(p => p.jornada_id === j.id)?.slug || ''}`,
+          }))}
         />
 
         {/* Áudio da Estação */}
