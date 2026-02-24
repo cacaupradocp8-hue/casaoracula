@@ -9,7 +9,6 @@ import { initRitualSessionTracking, trackRouteForRitual } from "@/hooks/useRitua
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { AdminPreviewProvider, useAdminPreviewOptional } from "@/contexts/AdminPreviewContext";
 import { AppDomainProvider } from "@/contexts/AppDomainContext";
-import { AudioPlayerProvider } from "@/contexts/AudioPlayerContext";
 import { PortalType, canAccessFeature } from "@/types/portal";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import { LockedForVisitor } from "@/components/shared/LockedForVisitor";
@@ -167,12 +166,20 @@ import RitualAutorizacao from "./pages/narroterapia/RitualAutorizacao";
 // Biblioteca das Travessias (Symbolic Families)
 import BibliotecaTravessias from "./pages/BibliotecaTravessias";
 import BibliotecaTravessiasFamilia from "./pages/BibliotecaTravessiasFamilia";
-// Clube do Livro Oracular — Reset v2026
+// Clube do Livro Oracular
 import { 
   ClubeLivroApresentacao, 
-  ClubeLivroEstacaoI,
-  ClubeLivroComoLer,
-  ClubeLivroPortalV2,
+  ClubeLivroCiclo, 
+  ClubeLivroPorta,
+  ClubeLivroFase, 
+  ClubeLivroEscutas, 
+  ClubeLivroEncontros,
+  ClubeLivroRitual,
+  ClubeLivroAula,
+  IntegracaoOracular,
+  MeuCaminhoClube,
+  Integracao8020,
+  ClubeLivroLivro,
 } from "./pages/clube-livro";
 // Labirinto da Heroína Interna®
 import { LabirintoHeroinaPage } from "./pages/labirinto-heroina";
@@ -627,47 +634,116 @@ function AppRoutes() {
         }
       />
       
-      {/* Clube do Livro Oracular — Reset v2026 */}
+      {/* Clube do Livro Oracular */}
       <Route
         path="/clube-livro"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute minPortal="aluna">
             <ClubeLivroApresentacao />
           </ProtectedRoute>
         }
       />
       <Route
-        path="/clube-livro/estacao"
+        path="/clube-livro/livro/:id"
         element={
-          <ProtectedRoute>
-            <ClubeLivroEstacaoI />
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroLivro />
           </ProtectedRoute>
         }
       />
       <Route
-        path="/clube-livro/como-ler"
+        path="/clube-livro/:id"
         element={
-          <ProtectedRoute>
-            <ClubeLivroComoLer />
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroCiclo />
           </ProtectedRoute>
         }
       />
       <Route
-        path="/clube-livro/portal/:portalSlug"
+        path="/clube-livro/:id/porta/:portaId"
         element={
-          <ProtectedRoute>
-            <ClubeLivroPortalV2 />
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroPorta />
           </ProtectedRoute>
         }
       />
-      {/* Legacy redirects */}
-      <Route path="/clube-livro/como-escolhemos" element={<Navigate to="/clube-livro/como-ler" replace />} />
-      <Route path="/clube-livro/como-funciona" element={<Navigate to="/clube-livro/como-ler" replace />} />
-      <Route path="/clube-livro/mapa" element={<Navigate to="/clube-livro/estacao" replace />} />
-      <Route path="/clube-livro/mandala" element={<Navigate to="/clube-livro/estacao" replace />} />
-      <Route path="/clube-livro/meu-caminho" element={<Navigate to="/clube-livro" replace />} />
-      <Route path="/clube-livro/:id" element={<Navigate to="/clube-livro/estacao" replace />} />
-      <Route path="/clube-livro/:id/*" element={<Navigate to="/clube-livro/estacao" replace />} />
+      <Route
+        path="/clube-livro/:id/ritual"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroRitual />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/:id/aula/:aulaId"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroAula />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/:id/fase/:faseId"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroFase />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/:id/escutas"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroEscutas />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/:id/encontros"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroEncontros />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Integração Oracular */}
+      <Route
+        path="/clube-livro/:id/integracao"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <IntegracaoOracular />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/:id/meu-caminho"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <MeuCaminhoClube />
+          </ProtectedRoute>
+        }
+      />
+      {/* Rota global "Meu Caminho" sem ciclo específico */}
+      <Route
+        path="/clube-livro/meu-caminho"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <MeuCaminhoClube />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Integração 80/20 */}
+      <Route
+        path="/clube-livro/:id/integracao-8020"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <Integracao8020 />
+          </ProtectedRoute>
+        }
+      />
 
       <Route
         path="/biblioteca"
@@ -1641,13 +1717,11 @@ const App = () => (
       {import.meta.env.PROD && <ServiceWorkerUpdateToast />}
       <BrowserRouter>
         <AuthProvider>
-          <AudioPlayerProvider>
-            <AdminPreviewProvider>
-              <AppDomainProvider>
-                <AppRoutes />
-              </AppDomainProvider>
-            </AdminPreviewProvider>
-          </AudioPlayerProvider>
+          <AdminPreviewProvider>
+            <AppDomainProvider>
+              <AppRoutes />
+            </AppDomainProvider>
+          </AdminPreviewProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

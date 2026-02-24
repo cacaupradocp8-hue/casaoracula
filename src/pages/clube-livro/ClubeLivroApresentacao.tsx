@@ -1,166 +1,112 @@
 // ============================================
-// CLUBE DO LIVRO ORACULAR — Página de Entrada
-// Redesign: legibilidade, silêncio visual, ordem
+// CLUBE DO LIVRO ORACULAR - Tela de Apresentação
+// Modular: cada seção é um bloco independente
 // ============================================
 
 import { Link, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { SectionHeader } from '@/components/shared/SectionHeader';
+import { useClubeLivro, useRitualAceite } from '@/hooks/useClubeLivro';
 import { useAuth } from '@/contexts/AuthContext';
-import { ChevronRight, Home, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
-import { useEstacoes } from '@/hooks/useEstacoes';
-import { useAllPortais } from '@/hooks/useClubeLivro';
-import { useStationProgress, useStationPortalProgress, deriveStationStatus, STATUS_CONFIG } from '@/hooks/useProgress';
-import { ProgressIndicator } from '@/components/clube-livro/ProgressIndicator';
+import { canAccessFeature } from '@/types/portal';
+import { useAccessExpiration } from '@/hooks/useAccessExpiration';
+import { LockedForVisitor } from '@/components/shared/LockedForVisitor';
+import { MandalaAnualDB } from '@/components/clube-livro/MandalaAnualDB';
+import { BookOpen, ChevronRight, Home } from 'lucide-react';
+import { cn } from '@/lib/utils';
+// Blocos modulares independentes
+import {
+  ManifestoBlock,
+  CicloAtualCtaBlock,
+  RegrasEticasBlock,
+} from '@/components/clube-livro/blocks';
+
+// Filtros removidos — mandala anual organiza por quadrantes simbólicos
 
 export default function ClubeLivroApresentacao() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { data: estacoes } = useEstacoes();
-  const estacaoI = estacoes?.find(e => e.numero === 1);
-  const { data: allData } = useAllPortais(estacaoI?.id);
+  const { isExpired } = useAccessExpiration();
+  const { ciclos, cicloAtual, loadingCiclos } = useClubeLivro();
+  const { hasAccepted } = useRitualAceite(cicloAtual?.id);
+  // Mandala anual não usa filtro por jornada
 
-  const isVisitor = !user || user.portal === 'visitante';
-  const jornadas = allData?.jornadas || [];
-  const portais = allData?.portais || [];
-  const portalIds = portais.map(p => p.id);
-  const { data: portalProgress } = useStationPortalProgress(estacaoI?.id, portalIds);
+  const hasAccess = user && canAccessFeature(user.portal, 'aluna') && !isExpired;
 
-  // Derive station status from portal progress
-  const stationStatus = deriveStationStatus(portalProgress || [], portais.length);
+  if (!hasAccess) {
+    return (
+      <AppLayout>
+        <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
+          <SectionHeader
+            title="Círculo de Leitura Oracular"
+            subtitle="Este espaço é exclusivo para alunas e assinantes."
+            icon={<BookOpen className="w-5 h-5" />}
+          />
+          <LockedForVisitor />
+        </div>
+      </AppLayout>
+    );
+  }
 
-  // Find next suggested portal (first non-integrado)
-  const progressMap = new Map((portalProgress || []).map(pp => [pp.portal_id, pp]));
-  const nextPortal = portais.find(p => {
-    const pp = progressMap.get(p.id);
-    return !pp || pp.state !== 'integrado';
-  }) || portais[0];
+  const handleEnterCycle = () => {
+    if (!cicloAtual) return;
+    if (cicloAtual.ritual_aceite_obrigatorio !== false && !hasAccepted) {
+      navigate(`/clube-livro/${cicloAtual.id}/ritual`);
+    } else {
+      navigate(`/clube-livro/${cicloAtual.id}`);
+    }
+  };
 
   return (
     <AppLayout>
-      <div className="min-h-[80dvh] flex flex-col justify-center">
-        <div className="container mx-auto px-6 py-12 pb-20 max-w-[620px]">
+      <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <Link to="/biblioteca" className="hover:text-foreground transition-colors">
+            Biblioteca
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Círculo de Leitura Oracular</span>
+        </nav>
 
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-12">
-            <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
-              <Home className="w-3.5 h-3.5" />
-              Casa
-            </Link>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-foreground font-medium">Clube do Livro</span>
-          </nav>
+        <SectionHeader
+          title="Círculo de Leitura Oracular"
+          subtitle="Território de leitura viva e atravessamento simbólico."
+          icon={<BookOpen className="w-5 h-5" />}
+          className="mb-8"
+        />
 
-          {/* Título */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-16"
-          >
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight leading-tight mb-4">
-              Clube do Livro Oracular
-            </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Leitura como travessia. Aplicação como responsabilidade.
-            </p>
-          </motion.div>
+        {/* BLOCO 1: Manifesto */}
+        <div className="mb-8">
+          <ManifestoBlock manifesto={cicloAtual?.manifesto || ''} />
+        </div>
 
-          {/* Bloco: Onde você está */}
-          <motion.section
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="mb-14"
-          >
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-6">
-              Onde você está
-            </h2>
-            <div className="space-y-5">
-              {/* Estação */}
-              <div className="border-l-2 border-primary/40 pl-5">
-                <div className="flex items-center justify-between mb-1">
-                  <p className="text-sm text-muted-foreground">Estação atual</p>
-                  <ProgressIndicator status={stationStatus} />
-                </div>
-                <p className="text-base font-medium text-foreground">
-                  {estacaoI?.fase_lunar} {estacaoI?.titulo || 'Estação I'}
-                </p>
-                <p className="text-sm text-muted-foreground mt-0.5">
-                  {estacaoI?.livro_titulo} — {estacaoI?.livro_autor}
-                </p>
-              </div>
+        {/* BLOCO 2: Ciclo atual CTA */}
+        {!loadingCiclos && cicloAtual && (
+          <div className="mb-10">
+            <CicloAtualCtaBlock ciclo={cicloAtual} onEnter={handleEnterCycle} />
+          </div>
+        )}
 
-              {/* Jornadas */}
-              <div className="border-l-2 border-muted pl-5">
-                <p className="text-sm text-muted-foreground mb-1">Jornadas disponíveis</p>
-                {jornadas.map(j => (
-                  <p key={j.id} className="text-base text-foreground">
-                    {j.icone} {j.nome}
-                  </p>
-                ))}
-                {jornadas.length === 0 && (
-                  <p className="text-sm text-muted-foreground italic">Carregando…</p>
-                )}
-              </div>
-
-              {/* Próximo portal */}
-              {nextPortal && (
-                <div className="border-l-2 border-muted pl-5">
-                  <p className="text-sm text-muted-foreground mb-1">Próximo portal sugerido</p>
-                  <p className="text-base font-medium text-foreground">
-                    {nextPortal.icone} {nextPortal.nome}
-                  </p>
-                  <p className="text-sm text-muted-foreground">{nextPortal.subtitulo}</p>
-                </div>
-              )}
+        {/* BLOCO 3: Mandala Anual */}
+        {loadingCiclos ? (
+          <div className="flex justify-center py-16">
+            <div className="animate-pulse text-muted-foreground text-sm">
+              Carregando mapa de jornadas…
             </div>
-          </motion.section>
+          </div>
+        ) : (
+          <MandalaAnualDB />
+        )}
 
-          {/* Bloco: Como funciona */}
-          <motion.section
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="mb-14"
-          >
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-6">
-              Como funciona
-            </h2>
-            <div className="space-y-3">
-              <p className="text-base text-foreground leading-relaxed">Você atravessa ciclos de leitura.</p>
-              <p className="text-base text-foreground leading-relaxed">Cada leitura vira prática.</p>
-              <p className="text-base text-foreground leading-relaxed">O avanço acontece por integração.</p>
-            </div>
-          </motion.section>
-
-          {/* CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Button
-              size="lg"
-              className="w-full h-14 text-base gap-2"
-              onClick={() => navigate('/clube-livro/estacao')}
-            >
-              Entrar na Estação Atual
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-          </motion.div>
-
-          {isVisitor && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="text-center text-sm text-muted-foreground mt-8"
-            >
-              Visitantes podem ver a página institucional.
-              <br />Para acessar Jornadas e Portais, é necessário ser assinante.
-            </motion.p>
-          )}
+        {/* BLOCO 4: Regras Éticas */}
+        <div className="mt-10">
+          <RegrasEticasBlock />
         </div>
       </div>
     </AppLayout>

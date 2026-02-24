@@ -1329,62 +1329,6 @@ export type Database = {
           },
         ]
       }
-      book_media: {
-        Row: {
-          caption: string | null
-          created_at: string
-          credit: string | null
-          file_kind: string
-          file_url: string
-          id: string
-          order_index: number
-          published: boolean
-          source_url: string | null
-          station_id: string
-          title: string
-          type: string
-          updated_at: string
-        }
-        Insert: {
-          caption?: string | null
-          created_at?: string
-          credit?: string | null
-          file_kind?: string
-          file_url: string
-          id?: string
-          order_index?: number
-          published?: boolean
-          source_url?: string | null
-          station_id: string
-          title?: string
-          type: string
-          updated_at?: string
-        }
-        Update: {
-          caption?: string | null
-          created_at?: string
-          credit?: string | null
-          file_kind?: string
-          file_url?: string
-          id?: string
-          order_index?: number
-          published?: boolean
-          source_url?: string | null
-          station_id?: string
-          title?: string
-          type?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "book_media_station_id_fkey"
-            columns: ["station_id"]
-            isOneToOne: false
-            referencedRelation: "clube_estacoes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       books: {
         Row: {
           author: string | null
@@ -1638,334 +1582,6 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
-      }
-      clube_audio_albums: {
-        Row: {
-          capa_url: string | null
-          created_at: string
-          descricao: string | null
-          estacao_id: string
-          id: string
-          ordem: number
-          status: Database["public"]["Enums"]["album_status"]
-          titulo: string
-          updated_at: string
-        }
-        Insert: {
-          capa_url?: string | null
-          created_at?: string
-          descricao?: string | null
-          estacao_id: string
-          id?: string
-          ordem?: number
-          status?: Database["public"]["Enums"]["album_status"]
-          titulo: string
-          updated_at?: string
-        }
-        Update: {
-          capa_url?: string | null
-          created_at?: string
-          descricao?: string | null
-          estacao_id?: string
-          id?: string
-          ordem?: number
-          status?: Database["public"]["Enums"]["album_status"]
-          titulo?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "clube_audio_albums_estacao_id_fkey"
-            columns: ["estacao_id"]
-            isOneToOne: false
-            referencedRelation: "clube_estacoes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      clube_audio_progress: {
-        Row: {
-          concluido: boolean
-          id: string
-          posicao_segundos: number
-          track_id: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          concluido?: boolean
-          id?: string
-          posicao_segundos?: number
-          track_id: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          concluido?: boolean
-          id?: string
-          posicao_segundos?: number
-          track_id?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "clube_audio_progress_track_id_fkey"
-            columns: ["track_id"]
-            isOneToOne: false
-            referencedRelation: "clube_audio_tracks"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      clube_audio_tracks: {
-        Row: {
-          album_id: string
-          audio_url: string
-          created_at: string
-          duracao_segundos: number | null
-          id: string
-          ordem: number
-          publicado: boolean
-          tags: string[] | null
-          tipo: Database["public"]["Enums"]["track_type"]
-          titulo: string
-          updated_at: string
-        }
-        Insert: {
-          album_id: string
-          audio_url: string
-          created_at?: string
-          duracao_segundos?: number | null
-          id?: string
-          ordem?: number
-          publicado?: boolean
-          tags?: string[] | null
-          tipo?: Database["public"]["Enums"]["track_type"]
-          titulo: string
-          updated_at?: string
-        }
-        Update: {
-          album_id?: string
-          audio_url?: string
-          created_at?: string
-          duracao_segundos?: number | null
-          id?: string
-          ordem?: number
-          publicado?: boolean
-          tags?: string[] | null
-          tipo?: Database["public"]["Enums"]["track_type"]
-          titulo?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "clube_audio_tracks_album_id_fkey"
-            columns: ["album_id"]
-            isOneToOne: false
-            referencedRelation: "clube_audio_albums"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      clube_audit_log: {
-        Row: {
-          acao: string
-          campo_alterado: string | null
-          created_at: string
-          id: string
-          registro_id: string
-          tabela: string
-          user_id: string
-          valor_anterior: string | null
-          valor_novo: string | null
-        }
-        Insert: {
-          acao: string
-          campo_alterado?: string | null
-          created_at?: string
-          id?: string
-          registro_id: string
-          tabela: string
-          user_id: string
-          valor_anterior?: string | null
-          valor_novo?: string | null
-        }
-        Update: {
-          acao?: string
-          campo_alterado?: string | null
-          created_at?: string
-          id?: string
-          registro_id?: string
-          tabela?: string
-          user_id?: string
-          valor_anterior?: string | null
-          valor_novo?: string | null
-        }
-        Relationships: []
-      }
-      clube_estacao_registros: {
-        Row: {
-          created_at: string
-          estacao_id: string
-          id: string
-          texto: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          estacao_id: string
-          id?: string
-          texto?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          estacao_id?: string
-          id?: string
-          texto?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "clube_estacao_registros_estacao_id_fkey"
-            columns: ["estacao_id"]
-            isOneToOne: false
-            referencedRelation: "clube_estacoes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      clube_estacoes: {
-        Row: {
-          aplicacao_acao: string | null
-          aplicacao_reflexao: string | null
-          ativa: boolean | null
-          created_at: string
-          essencia_nucleo: string | null
-          essencia_tensao: string | null
-          essencia_transformacao: string | null
-          fase_lunar: string | null
-          id: string
-          livro_autor: string | null
-          livro_capa_url: string | null
-          livro_titulo: string
-          numero: number
-          ordem: number
-          publicada: boolean | null
-          subtitulo: string
-          titulo: string
-          traducao_aula: string | null
-          traducao_circulo: string | null
-          traducao_sessao: string | null
-          updated_at: string
-        }
-        Insert: {
-          aplicacao_acao?: string | null
-          aplicacao_reflexao?: string | null
-          ativa?: boolean | null
-          created_at?: string
-          essencia_nucleo?: string | null
-          essencia_tensao?: string | null
-          essencia_transformacao?: string | null
-          fase_lunar?: string | null
-          id?: string
-          livro_autor?: string | null
-          livro_capa_url?: string | null
-          livro_titulo: string
-          numero: number
-          ordem?: number
-          publicada?: boolean | null
-          subtitulo: string
-          titulo: string
-          traducao_aula?: string | null
-          traducao_circulo?: string | null
-          traducao_sessao?: string | null
-          updated_at?: string
-        }
-        Update: {
-          aplicacao_acao?: string | null
-          aplicacao_reflexao?: string | null
-          ativa?: boolean | null
-          created_at?: string
-          essencia_nucleo?: string | null
-          essencia_tensao?: string | null
-          essencia_transformacao?: string | null
-          fase_lunar?: string | null
-          id?: string
-          livro_autor?: string | null
-          livro_capa_url?: string | null
-          livro_titulo?: string
-          numero?: number
-          ordem?: number
-          publicada?: boolean | null
-          subtitulo?: string
-          titulo?: string
-          traducao_aula?: string | null
-          traducao_circulo?: string | null
-          traducao_sessao?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      clube_jornadas: {
-        Row: {
-          ativa: boolean
-          cor: string | null
-          created_at: string
-          descricao: string | null
-          estacao_id: string
-          icone: string | null
-          id: string
-          nome: string
-          ordem: number
-          slug: string
-          subtitulo: string | null
-          tipo: Database["public"]["Enums"]["clube_jornada_tipo"]
-          updated_at: string
-        }
-        Insert: {
-          ativa?: boolean
-          cor?: string | null
-          created_at?: string
-          descricao?: string | null
-          estacao_id: string
-          icone?: string | null
-          id?: string
-          nome: string
-          ordem?: number
-          slug: string
-          subtitulo?: string | null
-          tipo?: Database["public"]["Enums"]["clube_jornada_tipo"]
-          updated_at?: string
-        }
-        Update: {
-          ativa?: boolean
-          cor?: string | null
-          created_at?: string
-          descricao?: string | null
-          estacao_id?: string
-          icone?: string | null
-          id?: string
-          nome?: string
-          ordem?: number
-          slug?: string
-          subtitulo?: string | null
-          tipo?: Database["public"]["Enums"]["clube_jornada_tipo"]
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "clube_jornadas_estacao_id_fkey"
-            columns: ["estacao_id"]
-            isOneToOne: false
-            referencedRelation: "clube_estacoes"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       clube_livro_aulas: {
         Row: {
@@ -2729,77 +2345,6 @@ export type Database = {
             columns: ["ciclo_id"]
             isOneToOne: false
             referencedRelation: "clube_livro_ciclos"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      clube_portais: {
-        Row: {
-          aplicacao_pessoal: string | null
-          aplicacao_profissional: string | null
-          ativo: boolean
-          created_at: string
-          essencia_8020: string | null
-          icone: string | null
-          id: string
-          jardim_heroina: string | null
-          jardim_psique: string | null
-          jornada_id: string
-          laboratorio_8020: string | null
-          nome: string
-          ordem: number
-          raiz_psiquica: string | null
-          slug: string
-          subtitulo: string | null
-          texto_simbolico: string | null
-          updated_at: string
-        }
-        Insert: {
-          aplicacao_pessoal?: string | null
-          aplicacao_profissional?: string | null
-          ativo?: boolean
-          created_at?: string
-          essencia_8020?: string | null
-          icone?: string | null
-          id?: string
-          jardim_heroina?: string | null
-          jardim_psique?: string | null
-          jornada_id: string
-          laboratorio_8020?: string | null
-          nome: string
-          ordem?: number
-          raiz_psiquica?: string | null
-          slug: string
-          subtitulo?: string | null
-          texto_simbolico?: string | null
-          updated_at?: string
-        }
-        Update: {
-          aplicacao_pessoal?: string | null
-          aplicacao_profissional?: string | null
-          ativo?: boolean
-          created_at?: string
-          essencia_8020?: string | null
-          icone?: string | null
-          id?: string
-          jardim_heroina?: string | null
-          jardim_psique?: string | null
-          jornada_id?: string
-          laboratorio_8020?: string | null
-          nome?: string
-          ordem?: number
-          raiz_psiquica?: string | null
-          slug?: string
-          subtitulo?: string | null
-          texto_simbolico?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "clube_portais_jornada_id_fkey"
-            columns: ["jornada_id"]
-            isOneToOne: false
-            referencedRelation: "clube_jornadas"
             referencedColumns: ["id"]
           },
         ]
@@ -5529,50 +5074,6 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
-      }
-      journey_media: {
-        Row: {
-          created_at: string
-          gallery_items: Json | null
-          header_image_url: string | null
-          id: string
-          infographic_kind: string | null
-          infographic_url: string | null
-          journey_id: string
-          published: boolean
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          gallery_items?: Json | null
-          header_image_url?: string | null
-          id?: string
-          infographic_kind?: string | null
-          infographic_url?: string | null
-          journey_id: string
-          published?: boolean
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          gallery_items?: Json | null
-          header_image_url?: string | null
-          id?: string
-          infographic_kind?: string | null
-          infographic_url?: string | null
-          journey_id?: string
-          published?: boolean
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "journey_media_journey_id_fkey"
-            columns: ["journey_id"]
-            isOneToOne: true
-            referencedRelation: "clube_jornadas"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       lab_casos: {
         Row: {
@@ -8442,50 +7943,6 @@ export type Database = {
           },
         ]
       }
-      portal_progress: {
-        Row: {
-          created_at: string
-          has_minimum_record: boolean
-          id: string
-          last_activity_at: string
-          last_position: number | null
-          portal_id: string
-          state: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          has_minimum_record?: boolean
-          id?: string
-          last_activity_at?: string
-          last_position?: number | null
-          portal_id: string
-          state?: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          has_minimum_record?: boolean
-          id?: string
-          last_activity_at?: string
-          last_position?: number | null
-          portal_id?: string
-          state?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "portal_progress_portal_id_fkey"
-            columns: ["portal_id"]
-            isOneToOne: false
-            referencedRelation: "clube_portais"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       portal_salas: {
         Row: {
           created_at: string
@@ -9937,44 +9394,6 @@ export type Database = {
           },
         ]
       }
-      station_progress: {
-        Row: {
-          created_at: string
-          id: string
-          last_activity_at: string
-          station_id: string
-          status: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          last_activity_at?: string
-          station_id: string
-          status?: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          last_activity_at?: string
-          station_id?: string
-          status?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "station_progress_station_id_fkey"
-            columns: ["station_id"]
-            isOneToOne: false
-            referencedRelation: "clube_estacoes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       subscriptions: {
         Row: {
           created_at: string
@@ -11234,7 +10653,6 @@ export type Database = {
     }
     Enums: {
       agente_status: "ativo" | "inativo"
-      album_status: "draft" | "published"
       big5_dimensao:
         | "abertura"
         | "conscienciosidade"
@@ -11255,7 +10673,6 @@ export type Database = {
       casa_media_type: "audio" | "text" | "video" | "link" | "pdf"
       casa_room: "sustentacao" | "leitura" | "circulo"
       cliente_status: "ativo" | "pausado" | "encerrado"
-      clube_jornada_tipo: "heroina" | "sombra" | "expressao_mundo"
       content_block_type:
         | "rich_text"
         | "image"
@@ -11317,7 +10734,6 @@ export type Database = {
       status_publicacao: "rascunho" | "publicado"
       status_supervisao: "privado" | "enviado" | "discutido"
       tipo_modulo: "jornada" | "curso" | "circulo" | "travessia" | "biblioteca"
-      track_type: "audio" | "podcast"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -11446,7 +10862,6 @@ export const Constants = {
   public: {
     Enums: {
       agente_status: ["ativo", "inativo"],
-      album_status: ["draft", "published"],
       big5_dimensao: [
         "abertura",
         "conscienciosidade",
@@ -11469,7 +10884,6 @@ export const Constants = {
       casa_media_type: ["audio", "text", "video", "link", "pdf"],
       casa_room: ["sustentacao", "leitura", "circulo"],
       cliente_status: ["ativo", "pausado", "encerrado"],
-      clube_jornada_tipo: ["heroina", "sombra", "expressao_mundo"],
       content_block_type: [
         "rich_text",
         "image",
@@ -11535,7 +10949,6 @@ export const Constants = {
       status_publicacao: ["rascunho", "publicado"],
       status_supervisao: ["privado", "enviado", "discutido"],
       tipo_modulo: ["jornada", "curso", "circulo", "travessia", "biblioteca"],
-      track_type: ["audio", "podcast"],
     },
   },
 } as const

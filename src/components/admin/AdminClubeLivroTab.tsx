@@ -1,568 +1,1891 @@
 // ============================================
-// ADMIN TAB - CLUBE DO LIVRO ORACULAR (Avançado)
-// CRUD: Estações → Jornadas → Portais + Editor Rico
+// ADMIN TAB - CLUBE DO LIVRO ORACULAR
 // ============================================
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription 
+} from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
-import { RichTextEditor } from '@/components/ui/rich-text-editor';
-import {
-  BookOpen, ChevronDown, ChevronUp, Lightbulb, Brain, User,
-  Briefcase, Flower2, Sword, FlaskConical, Save, Loader2,
-  Plus, Trash2, Eye, EyeOff
+import { 
+  BookOpen, Plus, Pencil, Trash2, ChevronDown, ChevronUp,
+  Sparkles, Headphones, Video, FileText, Calendar, Loader2, Map, GraduationCap, DoorOpen
 } from 'lucide-react';
-import { useEstacoes, type Estacao } from '@/hooks/useEstacoes';
-import { useAllPortais, useUpdatePortal, type ClubePortal, type ClubeJornada } from '@/hooks/useClubeLivro';
-import { useCreateEstacao, useUpdateEstacao, useDeleteEstacao, useCreateJornada, useUpdateJornada, useDeleteJornada, useCreatePortal, useDeletePortal } from '@/hooks/useClubeLivroAdmin';
-import { AdminAudioAlbumSection } from '@/components/admin/AdminAudioAlbumSection';
-import { AdminBookMediaSection } from '@/components/admin/AdminBookMediaSection';
-import { AdminJourneyMediaSection } from '@/components/admin/AdminJourneyMediaSection';
+import { FaseEditorExpandido } from './clube-livro';
+import { PortasManager } from './clube-livro/PortasManager';
+import { AulaBlocosEditor, type AulaBloco } from './clube-livro/AulaBlocosEditor';
+import { AudioUpload } from './AudioUpload';
+import { CALENDARIO_ANUAL, SEMANAS_PADRAO } from '@/constants/clubeLivroCalendario';
+import { cn } from '@/lib/utils';
 
-// ─── Constants ───────────────────────────────
-const BLOCOS_META: { key: keyof Pick<ClubePortal, 'texto_simbolico' | 'essencia_8020' | 'raiz_psiquica' | 'aplicacao_pessoal' | 'aplicacao_profissional' | 'jardim_psique' | 'jardim_heroina' | 'laboratorio_8020'>; label: string; icon: React.ElementType }[] = [
-  { key: 'texto_simbolico', label: 'Texto Simbólico', icon: Lightbulb },
-  { key: 'essencia_8020', label: 'Essência 80/20', icon: FlaskConical },
-  { key: 'raiz_psiquica', label: 'Raiz Psíquica', icon: Brain },
-  { key: 'aplicacao_pessoal', label: 'Aplicação Pessoal', icon: User },
-  { key: 'aplicacao_profissional', label: 'Aplicação Profissional', icon: Briefcase },
-  { key: 'jardim_psique', label: 'Jardim da Psique', icon: Flower2 },
-  { key: 'jardim_heroina', label: 'Jardim do Ofício', icon: Sword },
-  { key: 'laboratorio_8020', label: 'Laboratório 80/20', icon: FlaskConical },
-];
-
-const JORNADA_TIPOS = [
-  { value: 'heroina', label: 'Heroína', icone: '🌿' },
-  { value: 'sombra', label: 'Sombra', icone: '🌘' },
-  { value: 'expressao_mundo', label: 'Expressão & Mundo', icone: '🌍' },
+// Mapeamento canônico de jornadas (espelha CalendarioJornadas.tsx)
+const JORNADAS_ADMIN = [
+  {
+    chave: 'heroina',
+    nome: 'Jornada da Heroína',
+    subtitulo: 'Fundadora',
+    descricao: 'Identidade, instinto, voz e sentido.',
+    corLabel: 'text-amber-400',
+    corBorda: 'border-amber-700/30',
+    corBg: 'from-amber-950/30 to-card',
+    simbolo: '◈',
+    livros: [
+      'Mulheres que Correm com os Lobos',
+      'O Código do Ser',
+      'A Coruja Era Filha do Padeiro',
+      'Água Viva',
+    ],
+  },
+  {
+    chave: 'sombra',
+    nome: 'Jornada da Sombra',
+    subtitulo: 'Aprofundamento',
+    descricao: 'Projeção, ambivalência, ética e maturidade psíquica.',
+    corLabel: 'text-violet-400',
+    corBorda: 'border-violet-700/30',
+    corBg: 'from-violet-950/30 to-card',
+    simbolo: '◉',
+    livros: [
+      'O Brincar e a Realidade',
+      'A Gravidade e a Graça',
+      'O Acontecimento',
+      'Ficções que Curam',
+    ],
+  },
+  {
+    chave: 'expressao',
+    nome: 'Jornada da Expressão & Mundo',
+    subtitulo: 'Presença Pública',
+    descricao: 'Linguagem, desejo, ação e presença pública.',
+    corLabel: 'text-teal-400',
+    corBorda: 'border-teal-700/30',
+    corBg: 'from-teal-950/30 to-card',
+    simbolo: '◎',
+    livros: [
+      'O Poder da Escrita',
+      'A Poética do Espaço',
+      'Inteligência Erótica',
+      'A Condição Humana',
+    ],
+  },
+  {
+    chave: 'instinto',
+    nome: 'Jornada do Instinto',
+    subtitulo: 'Raiz Corporal',
+    descricao: 'Corpo, sensorialidade, pulsão e presença somática.',
+    corLabel: 'text-rose-400',
+    corBorda: 'border-rose-700/30',
+    corBg: 'from-rose-950/30 to-card',
+    simbolo: '△',
+    livros: [],
+  },
+  {
+    chave: 'lideranca',
+    nome: 'Jornada da Liderança',
+    subtitulo: 'Autoridade Interior',
+    descricao: 'Direção, responsabilidade, poder e serviço.',
+    corLabel: 'text-sky-400',
+    corBorda: 'border-sky-700/30',
+    corBg: 'from-sky-950/30 to-card',
+    simbolo: '⬡',
+    livros: [],
+  },
 ] as const;
 
-// ─── Portal Editor ──────────────────────────
-function PortalEditor({ portal, onDelete }: { portal: ClubePortal; onDelete: () => void }) {
-  const { toast } = useToast();
-  const [expanded, setExpanded] = useState(false);
-  const [draft, setDraft] = useState<Partial<ClubePortal>>({});
-  const updatePortal = useUpdatePortal();
-
-  const getValue = (key: string) => (draft as any)[key] ?? (portal as any)[key] ?? '';
-  const handleChange = (key: string, value: string) => setDraft(prev => ({ ...prev, [key]: value }));
-  const hasDraft = Object.keys(draft).length > 0;
-
-  const handleSave = async () => {
-    if (!hasDraft) return;
-    try {
-      await updatePortal.mutateAsync({ id: portal.id, ...draft });
-      setDraft({});
-      toast({ title: 'Salvo', description: `Portal "${portal.nome}" atualizado.` });
-    } catch (err: any) {
-      toast({ title: 'Erro', description: err.message, variant: 'destructive' });
-    }
-  };
-
-  const togglePublish = async () => {
-    try {
-      await updatePortal.mutateAsync({ id: portal.id, ativo: !portal.ativo });
-      toast({ title: portal.ativo ? 'Despublicado' : 'Publicado' });
-    } catch (err: any) {
-      toast({ title: 'Erro', description: err.message, variant: 'destructive' });
-    }
-  };
-
-  return (
-    <Card className="border-l-4 border-l-primary/30">
-      <CardContent className="p-3">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-lg">{portal.icone}</span>
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <p className="text-sm font-semibold text-foreground">{portal.nome}</p>
-                <Badge variant={portal.ativo ? 'default' : 'secondary'} className="text-[10px]">
-                  {portal.ativo ? 'Publicado' : 'Rascunho'}
-                </Badge>
-              </div>
-              <p className="text-xs text-muted-foreground">{portal.subtitulo}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm" onClick={togglePublish} title={portal.ativo ? 'Despublicar' : 'Publicar'}>
-              {portal.ativo ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-            </Button>
-            {hasDraft && (
-              <Button size="sm" onClick={handleSave} disabled={updatePortal.isPending} className="gap-1">
-                {updatePortal.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
-                Salvar
-              </Button>
-            )}
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
-                  <Trash2 className="w-3.5 h-3.5" />
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Excluir portal "{portal.nome}"?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Esta ação é irreversível. Todo o conteúdo dos 8 blocos será perdido.
-                    Tem certeza absoluta?
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction onClick={onDelete} className="bg-destructive text-destructive-foreground">
-                    Sim, excluir portal
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-            <Button variant="ghost" size="sm" onClick={() => setExpanded(!expanded)}>
-              {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-            </Button>
-          </div>
-        </div>
-
-        {expanded && (
-          <div className="mt-4 space-y-4 border-t border-border pt-4">
-            {/* Meta fields */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label className="text-xs">Nome</Label>
-                <Input value={getValue('nome')} onChange={e => handleChange('nome', e.target.value)} className="h-8 text-sm" />
-              </div>
-              <div>
-                <Label className="text-xs">Ícone</Label>
-                <Input value={getValue('icone')} onChange={e => handleChange('icone', e.target.value)} className="h-8 text-sm" />
-              </div>
-              <div className="col-span-2">
-                <Label className="text-xs">Subtítulo</Label>
-                <Input value={getValue('subtitulo')} onChange={e => handleChange('subtitulo', e.target.value)} className="h-8 text-sm" />
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* 8 blocos — editor rico */}
-            {BLOCOS_META.map(({ key, label, icon: Icon }) => (
-              <div key={key}>
-                <Label className="text-xs flex items-center gap-1 mb-1">
-                  <Icon className="w-3 h-3" />
-                  {label}
-                </Label>
-                <RichTextEditor
-                  content={getValue(key)}
-                  onChange={(html) => handleChange(key, html)}
-                  placeholder={`${label}...`}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
+function matchLivroAdmin(titulo: string, livroRef: string): boolean {
+  return titulo.toLowerCase().includes(livroRef.toLowerCase()) ||
+    livroRef.toLowerCase().includes(titulo.toLowerCase());
 }
 
-// ─── Create Portal Form ─────────────────────
-function CreatePortalForm({ jornadaId, onCreated }: { jornadaId: string; onCreated: () => void }) {
-  const { toast } = useToast();
-  const [nome, setNome] = useState('');
-  const [icone, setIcone] = useState('');
-  const createPortal = useCreatePortal();
+interface Ciclo {
+  id: string;
+  titulo: string;
+  subtitulo?: string;
+  autor_livro?: string;
+  capa_url?: string;
+  por_que_este_livro?: string;
+  como_ler?: string;
+  manifesto?: string;
+  ordem: number;
+  ativo: boolean;
+  publicado: boolean;
+  portal_minimo: string;
+  // New clinical fields
+  tema_simbolico?: string;
+  orientacao_clinica_uso?: string;
+  orientacao_clinica_evitar?: string;
+  orientacao_clinica_riscos?: string;
+  orientacao_clinica_indicado?: string;
+  orientacao_clinica_contraindicado?: string;
+  ritual_aceite_obrigatorio?: boolean;
+  portal_minimo_clinico?: string;
+  campo_simbolico?: string;
+  por_que_slides?: any[];
+  por_que_audio_url?: string;
+  como_ler_slides?: any[];
+  como_ler_audio_url?: string;
+}
 
-  const handleCreate = async () => {
-    if (!nome.trim()) return;
-    const slug = nome.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
-    try {
-      await createPortal.mutateAsync({ jornada_id: jornadaId, nome: nome.trim(), slug, icone: icone || '🔮' });
-      setNome('');
-      setIcone('');
-      onCreated();
-      toast({ title: 'Portal criado' });
-    } catch (err: any) {
-      toast({ title: 'Erro', description: err.message, variant: 'destructive' });
-    }
+interface Fase {
+  id: string;
+  ciclo_id: string;
+  titulo: string;
+  descricao?: string;
+  icone?: string;
+  ordem: number;
+  ativo: boolean;
+  tipo_fase?: string;
+  orientacao_curta?: string;
+  // New week-based structure fields
+  numero_semana?: number;
+  leitura_orientada?: string;
+  alerta_clinico?: string;
+  observacao_clinica?: string;
+  lista_uso_inadequado?: string[];
+  ponte_sala_id?: string;
+  ponte_sala_texto?: string;
+  texto_fechamento?: string;
+}
+
+interface Pergunta {
+  id: string;
+  fase_id: string;
+  texto_pergunta: string;
+  ordem: number;
+  ativo: boolean;
+}
+
+interface Escuta {
+  id: string;
+  ciclo_id: string;
+  fase_id?: string;
+  titulo: string;
+  descricao?: string;
+  tipo: 'audio' | 'texto';
+  audio_url?: string;
+  texto_conteudo?: string;
+  duracao_segundos?: number;
+  ordem: number;
+  ativo: boolean;
+}
+
+interface Encontro {
+  id: string;
+  ciclo_id: string;
+  titulo: string;
+  descricao?: string;
+  orientacao_encontro?: string;
+  data_encontro?: string;
+  link_ao_vivo?: string;
+  replay_url?: string;
+  ativo: boolean;
+}
+
+export function AdminClubeLivroTab() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [selectedCiclo, setSelectedCiclo] = useState<string | null>(null);
+  const [cicloDialogOpen, setCicloDialogOpen] = useState(false);
+  const [editingCiclo, setEditingCiclo] = useState<Ciclo | null>(null);
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+
+  // Fetch ciclos
+  const { data: ciclos, isLoading } = useQuery({
+    queryKey: ['admin-clube-ciclos'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('clube_livro_ciclos')
+        .select('*')
+        .order('ordem', { ascending: true });
+
+      if (error) throw error;
+      return data as Ciclo[];
+    },
+  });
+
+  // Create/Update ciclo
+  const saveCiclo = useMutation({
+    mutationFn: async (ciclo: Partial<Ciclo>) => {
+      const payload = {
+        titulo: ciclo.titulo,
+        subtitulo: ciclo.subtitulo,
+        autor_livro: ciclo.autor_livro,
+        capa_url: ciclo.capa_url,
+        infografico_url: (ciclo as any).infografico_url || null,
+        por_que_este_livro: ciclo.por_que_este_livro,
+        como_ler: ciclo.como_ler,
+        manifesto: ciclo.manifesto,
+        publicado: ciclo.publicado,
+        is_multipolar: (ciclo as any).is_multipolar ?? false,
+        campo_simbolico: (ciclo as any).campo_simbolico || null,
+        por_que_slides: (ciclo as any).por_que_slides || [],
+        por_que_audio_url: (ciclo as any).por_que_audio_url || null,
+        como_ler_slides: (ciclo as any).como_ler_slides || [],
+        como_ler_audio_url: (ciclo as any).como_ler_audio_url || null,
+      };
+      
+      if (ciclo.id) {
+        const { error } = await supabase
+          .from('clube_livro_ciclos')
+          .update(payload)
+          .eq('id', ciclo.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('clube_livro_ciclos')
+          .insert(payload);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-ciclos'] });
+      setCicloDialogOpen(false);
+      setEditingCiclo(null);
+      toast({ title: 'Ciclo salvo com sucesso' });
+    },
+    onError: () => {
+      toast({ title: 'Erro ao salvar ciclo', variant: 'destructive' });
+    },
+  });
+
+  // Delete ciclo
+  const deleteCiclo = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('clube_livro_ciclos')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-ciclos'] });
+      if (selectedCiclo) setSelectedCiclo(null);
+      toast({ title: 'Ciclo removido' });
+    },
+  });
+
+  const handleNewCiclo = () => {
+    setEditingCiclo(null);
+    setCicloDialogOpen(true);
   };
 
-  return (
-    <div className="flex items-end gap-2 p-3 rounded-md border border-dashed border-border">
-      <div className="flex-1">
-        <Label className="text-xs">Nome do portal (verbo)</Label>
-        <Input value={nome} onChange={e => setNome(e.target.value)} placeholder="Ex: Transformar" className="h-8 text-sm" />
-      </div>
-      <div className="w-16">
-        <Label className="text-xs">Ícone</Label>
-        <Input value={icone} onChange={e => setIcone(e.target.value)} placeholder="🔮" className="h-8 text-sm" />
-      </div>
-      <Button size="sm" onClick={handleCreate} disabled={createPortal.isPending || !nome.trim()} className="gap-1">
-        <Plus className="w-3 h-3" /> Criar
-      </Button>
-    </div>
-  );
-}
+  const handleEditCiclo = (ciclo: Ciclo) => {
+    setEditingCiclo(ciclo);
+    setCicloDialogOpen(true);
+  };
 
-// ─── Jornada Section ────────────────────────
-function JornadaSection({ jornada, portais, onRefresh }: { jornada: ClubeJornada; portais: ClubePortal[]; onRefresh: () => void }) {
-  const { toast } = useToast();
-  const updateJornada = useUpdateJornada();
-  const deleteJornada = useDeleteJornada();
-  const deletePortalMut = useDeletePortal();
-  const [showCreate, setShowCreate] = useState(false);
-
-  const tipoInfo = JORNADA_TIPOS.find(t => t.value === (jornada as any).tipo) || JORNADA_TIPOS[0];
-
-  return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-lg">{jornada.icone || tipoInfo.icone}</span>
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm font-bold text-foreground">{jornada.nome}</h3>
-              <Badge variant="outline" className="text-[10px]">{tipoInfo.label}</Badge>
-              {!jornada.ativa && <Badge variant="secondary" className="text-[10px]">Inativa</Badge>}
-            </div>
-            <p className="text-xs text-muted-foreground">{jornada.subtitulo}</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-1">
-          <Button variant="ghost" size="sm" onClick={() => updateJornada.mutate({ id: jornada.id, ativa: !jornada.ativa })}>
-            {jornada.ativa ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-          </Button>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
-                <Trash2 className="w-3.5 h-3.5" />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Excluir jornada "{jornada.nome}"?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Todos os portais dentro desta jornada serão excluídos permanentemente.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction onClick={() => deleteJornada.mutate(jornada.id)} className="bg-destructive text-destructive-foreground">
-                  Sim, excluir jornada
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-      </div>
-
-      <div className="space-y-2 ml-4 border-l-2 border-border pl-4">
-        {portais.map((portal) => (
-          <PortalEditor
-            key={portal.id}
-            portal={portal}
-            onDelete={() => deletePortalMut.mutate(portal.id)}
-          />
-        ))}
-
-        {showCreate ? (
-          <CreatePortalForm jornadaId={jornada.id} onCreated={() => setShowCreate(false)} />
-        ) : (
-          <Button variant="outline" size="sm" onClick={() => setShowCreate(true)} className="gap-1 w-full border-dashed">
-            <Plus className="w-3 h-3" /> Novo Portal
-          </Button>
-        )}
-
-        <AdminJourneyMediaSection jornadaId={jornada.id} />
-      </div>
-    </div>
-  );
-}
-
-// ─── Create Jornada Form ────────────────────
-function CreateJornadaForm({ estacaoId, onCreated }: { estacaoId: string; onCreated: () => void }) {
-  const { toast } = useToast();
-  const [nome, setNome] = useState('');
-  const [tipo, setTipo] = useState<'heroina' | 'sombra' | 'expressao_mundo'>('heroina');
-  const createJornada = useCreateJornada();
-
-  const handleCreate = async () => {
-    if (!nome.trim()) return;
-    const slug = nome.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
-    const tipoInfo = JORNADA_TIPOS.find(t => t.value === tipo)!;
-    try {
-      await createJornada.mutateAsync({
-        estacao_id: estacaoId,
-        nome: nome.trim(),
-        slug,
-        tipo,
-        icone: tipoInfo.icone,
+  // ============================================
+  // Importação em Massa - 12 Ciclos do Calendário
+  // ============================================
+  const importarCalendario = useMutation({
+    mutationFn: async () => {
+      // 1. Buscar ciclos existentes para evitar duplicatas
+      const { data: ciclosExistentes } = await supabase
+        .from('clube_livro_ciclos')
+        .select('titulo');
+      
+      const titulosExistentes = new Set(ciclosExistentes?.map(c => c.titulo) || []);
+      
+      // 2. Filtrar apenas ciclos que não existem
+      const ciclosParaCriar = CALENDARIO_ANUAL.filter(
+        c => !titulosExistentes.has(c.titulo)
+      );
+      
+      if (ciclosParaCriar.length === 0) {
+        throw new Error('Todos os 12 ciclos já estão cadastrados.');
+      }
+      
+      // 3. Inserir os ciclos
+      const ciclosPayload = ciclosParaCriar.map(c => ({
+        titulo: c.titulo,
+        autor_livro: c.autor,
+        tema_simbolico: c.tema,
+        ordem: c.ordem,
+        publicado: false,
+        ativo: c.ordem === 1, // Primeiro ciclo ativo
+        orientacao_clinica_uso: c.orientacao_clinica_uso || null,
+        orientacao_clinica_evitar: c.orientacao_clinica_evitar || null,
+        orientacao_clinica_riscos: c.orientacao_clinica_riscos || null,
+      }));
+      
+      const { data: novosCiclos, error: ciclosError } = await supabase
+        .from('clube_livro_ciclos')
+        .insert(ciclosPayload)
+        .select('id, ordem');
+      
+      if (ciclosError) throw ciclosError;
+      
+      // 4. Para cada ciclo criado, gerar as 4 semanas padrão
+      if (novosCiclos && novosCiclos.length > 0) {
+        const fasesPayload = novosCiclos.flatMap(ciclo => 
+          SEMANAS_PADRAO.map(semana => ({
+            ciclo_id: ciclo.id,
+            titulo: semana.titulo,
+            tipo_fase: semana.tipo_fase,
+            descricao: semana.descricao,
+            numero_semana: semana.numero_semana,
+            alerta_clinico: semana.alerta_clinico,
+            ordem: semana.numero_semana,
+            ativo: true,
+          }))
+        );
+        
+        const { error: fasesError } = await supabase
+          .from('clube_livro_fases')
+          .insert(fasesPayload);
+        
+        if (fasesError) throw fasesError;
+      }
+      
+      return { ciclosCriados: novosCiclos?.length || 0 };
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-ciclos'] });
+      setImportDialogOpen(false);
+      toast({ 
+        title: 'Calendário importado com sucesso!',
+        description: `${data.ciclosCriados} ciclos criados com 4 semanas cada.`,
       });
-      setNome('');
-      onCreated();
-      toast({ title: 'Jornada criada' });
-    } catch (err: any) {
-      toast({ title: 'Erro', description: err.message, variant: 'destructive' });
-    }
-  };
+    },
+    onError: (error: Error) => {
+      toast({ 
+        title: 'Erro na importação', 
+        description: error.message,
+        variant: 'destructive' 
+      });
+    },
+  });
 
   return (
-    <div className="flex items-end gap-2 p-3 rounded-md border border-dashed border-border bg-muted/30">
-      <div className="flex-1">
-        <Label className="text-xs">Nome da jornada</Label>
-        <Input value={nome} onChange={e => setNome(e.target.value)} placeholder="Ex: Jornada da Expressão" className="h-8 text-sm" />
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <div>
+          <h2 className="text-lg font-display text-foreground flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-gold" />
+            Clube do Livro Oracular
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            Gerencie ciclos, fases, perguntas, escutas e encontros.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            onClick={() => setImportDialogOpen(true)} 
+            className="gap-2"
+          >
+            <Calendar className="w-4 h-4" />
+            Importar Calendário Anual
+          </Button>
+          <Button onClick={handleNewCiclo} className="gap-2">
+            <Plus className="w-4 h-4" />
+            Novo Ciclo
+          </Button>
+        </div>
       </div>
-      <div className="w-44">
-        <Label className="text-xs">Tipo</Label>
-        <Select value={tipo} onValueChange={v => setTipo(v as any)}>
-          <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            {JORNADA_TIPOS.map(t => (
-              <SelectItem key={t.value} value={t.value}>{t.icone} {t.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <Button size="sm" onClick={handleCreate} disabled={createJornada.isPending || !nome.trim()} className="gap-1">
-        <Plus className="w-3 h-3" /> Criar
-      </Button>
+
+      {/* Abas: Mapa de Jornadas + Gerenciar Ciclos */}
+      <Tabs defaultValue="mapa">
+        <TabsList className="mb-4">
+          <TabsTrigger value="mapa" className="gap-2">
+            <Map className="w-4 h-4" />
+            Mapa de Jornadas
+          </TabsTrigger>
+          <TabsTrigger value="ciclos" className="gap-2">
+            <BookOpen className="w-4 h-4" />
+            Gerenciar Ciclos
+          </TabsTrigger>
+        </TabsList>
+
+        {/* ABA: Mapa de Jornadas */}
+        <TabsContent value="mapa" className="space-y-6">
+
+          {/* Bloco: Como usar este calendário */}
+          <Card className="bg-muted/20 border-gold/20">
+            <CardContent className="pt-5 pb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles className="w-4 h-4 text-gold" />
+                <span className="text-xs uppercase tracking-widest text-gold font-medium">
+                  Como usar este calendário
+                </span>
+              </div>
+              <p className="text-sm font-medium text-foreground mb-2">
+                Este não é um calendário de leitura.
+              </p>
+              <p className="text-sm text-muted-foreground mb-3">
+                É um mapa de travessia formativa. Cada livro existe para desenvolver uma habilidade simbólica,
+                fortalecer a prática profissional e ampliar a capacidade de sustentar processos — em si e no outro.
+              </p>
+              <div className="flex flex-wrap gap-2 items-center text-xs text-muted-foreground">
+                <span className="font-medium text-foreground">Fluxo esperado:</span>
+                {['Calendário', 'Livro', 'Portal', 'Laboratório 80/20', 'Jardins'].map((step, i, arr) => (
+                  <span key={step} className="flex items-center gap-1">
+                    <span className="px-2 py-0.5 rounded bg-muted text-foreground text-xs">{step}</span>
+                    {i < arr.length - 1 && <span className="text-muted-foreground/50">→</span>}
+                  </span>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground/60 mt-3 italic">
+                Leia menos. Integre mais. Aplique com consciência.
+              </p>
+            </CardContent>
+          </Card>
+
+          {isLoading ? (
+            <div className="animate-pulse space-y-4">
+              <div className="h-20 bg-muted rounded" />
+              <div className="h-20 bg-muted rounded" />
+            </div>
+          ) : (
+            <div className="space-y-8">
+              {JORNADAS_ADMIN.map((jornada, jornadaIndex) => {
+                const mesBase = jornadaIndex * 4;
+                return (
+                  <div key={jornada.chave} className="space-y-3">
+                    {/* Cabeçalho da jornada */}
+                    <div className={cn(
+                      'rounded-xl p-4 bg-gradient-to-br border',
+                      jornada.corBg,
+                      jornada.corBorda,
+                    )}>
+                      <div className="flex items-start gap-3">
+                        <span className={cn('text-2xl leading-none mt-0.5', jornada.corLabel)}>
+                          {jornada.simbolo}
+                        </span>
+                        <div>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h3 className="font-display text-base text-foreground">
+                              {jornada.nome}
+                            </h3>
+                            <Badge variant="outline" className={cn('text-xs', jornada.corLabel, jornada.corBorda)}>
+                              {jornada.subtitulo}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mt-0.5">{jornada.descricao}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Grid de livros */}
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {jornada.livros.map((livroRef, i) => {
+                        const ciclo = ciclos?.find(c => matchLivroAdmin(c.titulo, livroRef));
+                        const mes = mesBase + i + 1;
+                        return (
+                          <div
+                            key={livroRef}
+                            className={cn(
+                              'flex items-center gap-3 p-3 rounded-lg border bg-card/50',
+                              ciclo ? 'border-border' : 'border-dashed border-muted-foreground/30 opacity-60',
+                            )}
+                          >
+                            {/* Thumbnail */}
+                            <div className="shrink-0">
+                              {ciclo?.capa_url ? (
+                                <img src={ciclo.capa_url} alt={ciclo.titulo} className="w-10 h-14 object-cover rounded" />
+                              ) : (
+                                <div className="w-10 h-14 bg-muted rounded flex items-center justify-center">
+                                  <BookOpen className="w-4 h-4 text-muted-foreground" />
+                                </div>
+                              )}
+                            </div>
+                            {/* Info */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-1.5 mb-0.5">
+                                <span className="text-[10px] font-mono text-muted-foreground">
+                                  Mês {mes.toString().padStart(2, '0')}
+                                </span>
+                                {ciclo && (
+                                  <>
+                                    <span className="text-muted-foreground/40 text-[10px]">·</span>
+                                    {ciclo.publicado ? (
+                                      <Badge className="text-[10px] px-1 py-0 h-4 bg-green-500/20 text-green-400 border-0">
+                                        Publicado
+                                      </Badge>
+                                    ) : (
+                                      <Badge variant="outline" className="text-[10px] px-1 py-0 h-4">
+                                        Rascunho
+                                      </Badge>
+                                    )}
+                                  </>
+                                )}
+                              </div>
+                              <p className="text-sm font-medium text-foreground truncate">
+                                {ciclo?.titulo || livroRef}
+                              </p>
+                              <p className="text-xs text-muted-foreground truncate">
+                                {ciclo?.autor_livro || '— não cadastrado'}
+                              </p>
+                            </div>
+                            {/* Editar */}
+                            {ciclo && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="shrink-0"
+                                onClick={() => { setEditingCiclo(ciclo); setCicloDialogOpen(true); }}
+                              >
+                                <Pencil className="w-3.5 h-3.5" />
+                              </Button>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </TabsContent>
+
+        {/* ABA: Gerenciar Ciclos (lista completa original) */}
+        <TabsContent value="ciclos">
+          {isLoading ? (
+            <div className="animate-pulse space-y-4">
+              <div className="h-20 bg-muted rounded" />
+              <div className="h-20 bg-muted rounded" />
+            </div>
+          ) : ciclos && ciclos.length > 0 ? (
+            <div className="space-y-4">
+              {ciclos.map((ciclo) => (
+                <CicloCard
+                  key={ciclo.id}
+                  ciclo={ciclo}
+                  isExpanded={selectedCiclo === ciclo.id}
+                  onToggle={() => setSelectedCiclo(selectedCiclo === ciclo.id ? null : ciclo.id)}
+                  onEdit={() => handleEditCiclo(ciclo)}
+                  onDelete={() => deleteCiclo.mutate(ciclo.id)}
+                />
+              ))}
+            </div>
+          ) : (
+            <Card className="bg-muted/30 border-dashed">
+              <CardContent className="py-8 text-center">
+                <BookOpen className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+                <p className="text-muted-foreground">Nenhum ciclo cadastrado.</p>
+                <div className="flex justify-center gap-2 mt-4">
+                  <Button variant="outline" onClick={() => setImportDialogOpen(true)}>
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Importar 12 Ciclos
+                  </Button>
+                  <Button variant="ghost" onClick={handleNewCiclo}>
+                    Criar manualmente
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+      </Tabs>
+
+      {/* Dialog para criar/editar ciclo */}
+      <CicloDialog
+        open={cicloDialogOpen}
+        onOpenChange={setCicloDialogOpen}
+        ciclo={editingCiclo}
+        onSave={(data) => saveCiclo.mutate(data)}
+        isLoading={saveCiclo.isPending}
+      />
+
+      {/* Dialog para importação em massa */}
+      <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-gold" />
+              Importar Calendário Anual
+            </DialogTitle>
+            <DialogDescription>
+              Esta ação irá criar os 12 ciclos do calendário oficial do Clube do Livro Oracular,
+              cada um com 4 semanas estruturadas (Chamado, Ruptura, Reorganização, Integração).
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="bg-muted/50 rounded-lg p-4 max-h-60 overflow-y-auto">
+              <p className="text-xs text-muted-foreground mb-3">Ciclos que serão criados:</p>
+              <div className="space-y-2">
+                {CALENDARIO_ANUAL.map((c) => (
+                  <div key={c.ordem} className="flex items-center gap-2 text-sm">
+                    <Badge variant="outline" className="text-xs shrink-0">
+                      {c.ordem}
+                    </Badge>
+                    <span className="font-medium truncate">{c.titulo}</span>
+                    <span className="text-muted-foreground text-xs truncate">— {c.autor}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="text-sm text-muted-foreground">
+              <ul className="list-disc list-inside space-y-1">
+                <li>Ciclos existentes serão mantidos (sem duplicatas)</li>
+                <li>Todos serão criados como <strong>rascunho</strong></li>
+                <li>O primeiro ciclo será marcado como <strong>ativo</strong></li>
+                <li>Cada ciclo terá 4 semanas com alertas clínicos</li>
+              </ul>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setImportDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button 
+              onClick={() => importarCalendario.mutate()}
+              disabled={importarCalendario.isPending}
+              className="gap-2"
+            >
+              {importarCalendario.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Importando...
+                </>
+              ) : (
+                <>
+                  <Calendar className="w-4 h-4" />
+                  Confirmar Importação
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
+
 }
 
-// ─── Estação Section ────────────────────────
-function EstacaoSection({ estacao }: { estacao: Estacao }) {
-  const { toast } = useToast();
-  const [expanded, setExpanded] = useState(false);
-  const [showCreateJornada, setShowCreateJornada] = useState(false);
-  const { data: allData, isLoading, refetch } = useAllPortais(estacao.id);
-  const updateEstacao = useUpdateEstacao();
-  const deleteEstacao = useDeleteEstacao();
-
-  const jornadas = allData?.jornadas || [];
-  const portais = allData?.portais || [];
-
-  const statusLabel = estacao.ativa ? 'Ativa' : estacao.publicada ? 'Publicada' : 'Rascunho';
-  const statusVariant = estacao.ativa ? 'default' as const : 'secondary' as const;
-
-  const toggleActive = async () => {
-    try {
-      await updateEstacao.mutateAsync({ id: estacao.id, ativa: !estacao.ativa, publicada: !estacao.ativa ? true : estacao.publicada });
-      toast({ title: estacao.ativa ? 'Estação desativada' : 'Estação ativada' });
-    } catch (err: any) {
-      toast({ title: 'Erro', description: err.message, variant: 'destructive' });
-    }
-  };
-
+// ============================================
+// CicloCard Component
+// ============================================
+function CicloCard({
+  ciclo,
+  isExpanded,
+  onToggle,
+  onEdit,
+  onDelete,
+}: {
+  ciclo: Ciclo;
+  isExpanded: boolean;
+  onToggle: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+}) {
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-base flex items-center gap-2">
-            <span className="text-lg">{estacao.fase_lunar || '🌑'}</span>
-            {estacao.titulo}
-            <Badge variant={statusVariant} className="text-[10px] ml-2">{statusLabel}</Badge>
-          </CardTitle>
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm" onClick={toggleActive} title={estacao.ativa ? 'Desativar' : 'Ativar'}>
-              {estacao.ativa ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-            </Button>
-            {!estacao.ativa && (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Excluir estação "{estacao.titulo}"?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Todas as jornadas e portais serão excluídos permanentemente. Esta ação é irreversível.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => deleteEstacao.mutate(estacao.id)} className="bg-destructive text-destructive-foreground">
-                      Sim, excluir estação
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+    <Card className={isExpanded ? 'border-gold/50' : ''}>
+      <CardHeader className="pb-2">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3 flex-1">
+            {ciclo.capa_url ? (
+              <img src={ciclo.capa_url} alt="" className="w-12 h-16 object-cover rounded" />
+            ) : (
+              <div className="w-12 h-16 bg-muted rounded flex items-center justify-center">
+                <BookOpen className="w-5 h-5 text-muted-foreground" />
+              </div>
             )}
-            <Button variant="ghost" size="sm" onClick={() => setExpanded(!expanded)}>
-              {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <CardTitle className="text-base truncate">{ciclo.titulo}</CardTitle>
+                {ciclo.publicado ? (
+                  <Badge className="bg-green-500/20 text-green-400">Publicado</Badge>
+                ) : (
+                  <Badge variant="outline">Rascunho</Badge>
+                )}
+              </div>
+              {ciclo.autor_livro && (
+                <CardDescription className="text-sm">{ciclo.autor_livro}</CardDescription>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <Button size="sm" variant="ghost" onClick={onEdit}>
+              <Pencil className="w-4 h-4" />
+            </Button>
+            <Button size="sm" variant="ghost" onClick={onDelete} className="text-destructive">
+              <Trash2 className="w-4 h-4" />
+            </Button>
+            <Button size="sm" variant="ghost" onClick={onToggle}>
+              {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </Button>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-2">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <BookOpen className="w-4 h-4" />
-          <span>{estacao.livro_titulo}{estacao.livro_autor ? ` — ${estacao.livro_autor}` : ''}</span>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          {jornadas.length} jornada(s) · {portais.length} portal(is)
-        </p>
-      </CardContent>
 
-      {expanded && (
-        <CardContent className="pt-0 space-y-6">
-          <Separator />
-          {isLoading ? (
-            <div className="flex justify-center py-4"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
-          ) : (
-            <>
-              {jornadas.map(jornada => (
-                <JornadaSection
-                  key={jornada.id}
-                  jornada={jornada}
-                  portais={portais.filter(p => p.jornada_id === jornada.id)}
-                  onRefresh={() => refetch()}
-                />
-              ))}
-
-              {showCreateJornada ? (
-                <CreateJornadaForm estacaoId={estacao.id} onCreated={() => setShowCreateJornada(false)} />
-              ) : (
-                <Button variant="outline" size="sm" onClick={() => setShowCreateJornada(true)} className="gap-1 w-full border-dashed">
-                  <Plus className="w-3 h-3" /> Nova Jornada
-                </Button>
-              )}
-
-              <Separator />
-              <AdminBookMediaSection estacaoId={estacao.id} />
-
-              <Separator />
-              <AdminAudioAlbumSection estacaoId={estacao.id} />
-            </>
-          )}
+      {isExpanded && (
+        <CardContent className="pt-4 border-t">
+          <CicloDetailTabs cicloId={ciclo.id} />
         </CardContent>
       )}
     </Card>
   );
 }
 
-// ─── Create Estação Form ────────────────────
-function CreateEstacaoForm({ onCreated }: { onCreated: () => void }) {
-  const { toast } = useToast();
-  const [titulo, setTitulo] = useState('');
-  const [subtitulo, setSubtitulo] = useState('');
-  const [livroTitulo, setLivroTitulo] = useState('');
-  const [livroAutor, setLivroAutor] = useState('');
-  const [faseLunar, setFaseLunar] = useState('🌑');
-  const createEstacao = useCreateEstacao();
-
-  const handleCreate = async () => {
-    if (!titulo.trim() || !livroTitulo.trim()) return;
-    try {
-      await createEstacao.mutateAsync({
-        titulo: titulo.trim(),
-        subtitulo: subtitulo.trim(),
-        livro_titulo: livroTitulo.trim(),
-        livro_autor: livroAutor.trim() || undefined,
-        fase_lunar: faseLunar || undefined,
-      });
-      setTitulo(''); setSubtitulo(''); setLivroTitulo(''); setLivroAutor('');
-      onCreated();
-      toast({ title: 'Estação criada como rascunho' });
-    } catch (err: any) {
-      toast({ title: 'Erro', description: err.message, variant: 'destructive' });
-    }
-  };
-
+// ============================================
+// CicloDetailTabs - Fases, Escutas, Encontros, Aulas
+// ============================================
+function CicloDetailTabs({ cicloId }: { cicloId: string }) {
   return (
-    <Card className="border-dashed">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm flex items-center gap-2">
-          <Plus className="w-4 h-4" /> Nova Estação
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="grid grid-cols-2 gap-3">
-          <div className="col-span-2">
-            <Label className="text-xs">Nome da estação *</Label>
-            <Input value={titulo} onChange={e => setTitulo(e.target.value)} placeholder="Ex: Estação II — Fogo & Renascimento" className="h-9" />
-          </div>
-          <div className="col-span-2">
-            <Label className="text-xs">Subtítulo / Tema simbólico</Label>
-            <Input value={subtitulo} onChange={e => setSubtitulo(e.target.value)} placeholder="Ex: O território da transformação" className="h-9" />
-          </div>
-          <div>
-            <Label className="text-xs">Livro-eixo *</Label>
-            <Input value={livroTitulo} onChange={e => setLivroTitulo(e.target.value)} placeholder="Título do livro" className="h-9" />
-          </div>
-          <div>
-            <Label className="text-xs">Autor</Label>
-            <Input value={livroAutor} onChange={e => setLivroAutor(e.target.value)} placeholder="Autor(a)" className="h-9" />
-          </div>
-          <div className="w-20">
-            <Label className="text-xs">Fase lunar</Label>
-            <Input value={faseLunar} onChange={e => setFaseLunar(e.target.value)} className="h-9 text-center" />
-          </div>
-        </div>
-        <div className="flex justify-end gap-2 pt-2">
-          <Button variant="outline" size="sm" onClick={onCreated}>Cancelar</Button>
-          <Button size="sm" onClick={handleCreate} disabled={createEstacao.isPending || !titulo.trim() || !livroTitulo.trim()} className="gap-1">
-            {createEstacao.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
-            Criar como Rascunho
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+    <Tabs defaultValue="fases" className="w-full">
+      <TabsList className="grid w-full grid-cols-5">
+        <TabsTrigger value="fases" className="gap-1 text-xs">
+          <Sparkles className="w-3 h-3" />
+          Fases
+        </TabsTrigger>
+        <TabsTrigger value="portas" className="gap-1 text-xs">
+          <DoorOpen className="w-3 h-3" />
+          Portas
+        </TabsTrigger>
+        <TabsTrigger value="aulas" className="gap-1 text-xs">
+          <GraduationCap className="w-3 h-3" />
+          Aulas
+        </TabsTrigger>
+        <TabsTrigger value="escutas" className="gap-1 text-xs">
+          <Headphones className="w-3 h-3" />
+          Escutas
+        </TabsTrigger>
+        <TabsTrigger value="encontros" className="gap-1 text-xs">
+          <Video className="w-3 h-3" />
+          Encontros
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="fases" className="pt-4">
+        <FasesManager cicloId={cicloId} />
+      </TabsContent>
+      <TabsContent value="portas" className="pt-4">
+        <PortasManager cicloId={cicloId} />
+      </TabsContent>
+      <TabsContent value="aulas" className="pt-4">
+        <AulasManager cicloId={cicloId} />
+      </TabsContent>
+      <TabsContent value="escutas" className="pt-4">
+        <EscutasManager cicloId={cicloId} />
+      </TabsContent>
+      <TabsContent value="encontros" className="pt-4">
+        <EncontrosManager cicloId={cicloId} />
+      </TabsContent>
+    </Tabs>
   );
 }
 
-// ─── Main Tab ───────────────────────────────
-export function AdminClubeLivroTab() {
-  const { data: estacoes, isLoading } = useEstacoes();
-  const [showCreate, setShowCreate] = useState(false);
+// ============================================
+// FasesManager
+// ============================================
+function FasesManager({ cicloId }: { cicloId: string }) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [newFaseTitulo, setNewFaseTitulo] = useState('');
+  const [expandedFase, setExpandedFase] = useState<string | null>(null);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
+  const { data: fases, isLoading } = useQuery({
+    queryKey: ['admin-clube-fases', cicloId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('clube_livro_fases')
+        .select('*')
+        .eq('ciclo_id', cicloId)
+        .order('ordem', { ascending: true });
+
+      if (error) throw error;
+      return data as Fase[];
+    },
+  });
+
+  const addFase = useMutation({
+    mutationFn: async () => {
+      if (!newFaseTitulo.trim()) return;
+      const ordem = (fases?.length || 0) + 1;
+      const { error } = await supabase
+        .from('clube_livro_fases')
+        .insert({ ciclo_id: cicloId, titulo: newFaseTitulo, ordem });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-fases', cicloId] });
+      setNewFaseTitulo('');
+      toast({ title: 'Fase adicionada' });
+    },
+  });
+
+  // Generate standard 4 weeks (semanas)
+  const gerarFasesPadrao = useMutation({
+    mutationFn: async () => {
+      const fasesExistentes = fases?.length || 0;
+      const fasesPadrao = [
+        { 
+          ciclo_id: cicloId, 
+          titulo: 'O Arquétipo Não É a Cliente', 
+          tipo_fase: 'chamado', 
+          descricao: 'Início da jornada - diferença entre símbolo e identidade', 
+          ordem: fasesExistentes + 1,
+          numero_semana: 1,
+        },
+        { 
+          ciclo_id: cicloId, 
+          titulo: 'O Risco da Projeção da Facilitadora', 
+          tipo_fase: 'ruptura', 
+          descricao: 'Momento de crise ou desorganização interna', 
+          ordem: fasesExistentes + 2,
+          numero_semana: 2,
+        },
+        { 
+          ciclo_id: cicloId, 
+          titulo: 'Quando Não Usar um Conto', 
+          tipo_fase: 'reorganizacao', 
+          descricao: 'Uso inadequado e contraindicações', 
+          ordem: fasesExistentes + 3,
+          numero_semana: 3,
+        },
+        { 
+          ciclo_id: cicloId, 
+          titulo: 'Integração e Fechamento', 
+          tipo_fase: 'integracao', 
+          descricao: 'Consolidação e encerramento do ciclo', 
+          ordem: fasesExistentes + 4,
+          numero_semana: 4,
+        },
+      ];
+      
+      const { error } = await supabase
+        .from('clube_livro_fases')
+        .insert(fasesPadrao);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-fases', cicloId] });
+      toast({ title: '4 semanas padrão criadas' });
+    },
+    onError: () => {
+      toast({ title: 'Erro ao criar semanas', variant: 'destructive' });
+    },
+  });
+
+  const deleteFase = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('clube_livro_fases').delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-fases', cicloId] });
+      toast({ title: 'Fase removida' });
+    },
+  });
+
+
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-            <BookOpen className="w-5 h-5" />
-            Clube do Livro Oracular
-          </h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            Gerenciamento de estações, jornadas e portais
-          </p>
-        </div>
-        {!showCreate && (
-          <Button size="sm" onClick={() => setShowCreate(true)} className="gap-1">
-            <Plus className="w-3.5 h-3.5" /> Nova Estação
-          </Button>
-        )}
+    <div className="space-y-4">
+      {/* Generate standard weeks button */}
+      <div className="flex gap-2 items-center">
+        <Button 
+          size="sm" 
+          variant="outline" 
+          onClick={() => gerarFasesPadrao.mutate()}
+          disabled={gerarFasesPadrao.isPending}
+          className="text-xs"
+        >
+          <Plus className="w-3 h-3 mr-1" />
+          Gerar 4 Semanas Padrão
+        </Button>
+        <span className="text-xs text-muted-foreground">
+          (Estrutura canônica do Clube)
+        </span>
       </div>
 
-      {/* Create form */}
-      {showCreate && <CreateEstacaoForm onCreated={() => setShowCreate(false)} />}
+      {/* Add fase manually */}
+      <div className="flex gap-2">
+        <Input
+          placeholder="Nome da nova fase..."
+          value={newFaseTitulo}
+          onChange={(e) => setNewFaseTitulo(e.target.value)}
+          className="flex-1"
+        />
+        <Button onClick={() => addFase.mutate()} disabled={addFase.isPending || !newFaseTitulo.trim()}>
+          <Plus className="w-4 h-4" />
+        </Button>
+      </div>
 
-      {/* Estações list */}
-      {(estacoes || []).map(estacao => (
-        <EstacaoSection key={estacao.id} estacao={estacao} />
-      ))}
-
-      {(!estacoes || estacoes.length === 0) && !showCreate && (
-        <p className="text-sm text-muted-foreground text-center py-8">
-          Nenhuma estação encontrada. Crie a primeira.
+      {/* Lista de fases */}
+      {isLoading ? (
+        <div className="animate-pulse h-16 bg-muted rounded" />
+      ) : fases && fases.length > 0 ? (
+        <div className="space-y-2">
+          {fases.map((fase, i) => (
+            <div key={fase.id} className="border rounded-lg p-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-gold/10 text-gold flex items-center justify-center text-xs">
+                    {i + 1}
+                  </span>
+                  <span className="font-medium text-sm">{fase.titulo}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setExpandedFase(expandedFase === fase.id ? null : fase.id)}
+                  >
+                    {expandedFase === fase.id ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => deleteFase.mutate(fase.id)} className="text-destructive">
+                    <Trash2 className="w-3 h-3" />
+                  </Button>
+                </div>
+              </div>
+              {expandedFase === fase.id && (
+                <div className="mt-3 pt-3 border-t">
+                  <FaseEditorExpandido faseId={fase.id} cicloId={cicloId} />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-muted-foreground text-center py-4">
+          Nenhuma fase cadastrada.
         </p>
       )}
     </div>
   );
 }
+
+// ============================================
+// PerguntasManager
+// ============================================
+function PerguntasManager({ faseId }: { faseId: string }) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [newPergunta, setNewPergunta] = useState('');
+
+  const { data: perguntas, isLoading } = useQuery({
+    queryKey: ['admin-clube-perguntas', faseId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('clube_livro_perguntas')
+        .select('*')
+        .eq('fase_id', faseId)
+        .order('ordem', { ascending: true });
+
+      if (error) throw error;
+      return data as Pergunta[];
+    },
+  });
+
+  const addPergunta = useMutation({
+    mutationFn: async () => {
+      if (!newPergunta.trim()) return;
+      const ordem = (perguntas?.length || 0) + 1;
+      const { error } = await supabase
+        .from('clube_livro_perguntas')
+        .insert({ fase_id: faseId, texto_pergunta: newPergunta, ordem });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-perguntas', faseId] });
+      setNewPergunta('');
+      toast({ title: 'Pergunta adicionada' });
+    },
+  });
+
+  const deletePergunta = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('clube_livro_perguntas').delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-perguntas', faseId] });
+    },
+  });
+
+  return (
+    <div className="space-y-3">
+      <Label className="text-xs text-muted-foreground">Perguntas Oraculares</Label>
+
+      {isLoading ? (
+        <div className="animate-pulse h-8 bg-muted/50 rounded" />
+      ) : perguntas && perguntas.length > 0 ? (
+        <div className="space-y-2">
+          {perguntas.map((p, i) => (
+            <div key={p.id} className="flex items-start gap-2 text-sm bg-muted/30 p-2 rounded">
+              <span className="text-xs text-muted-foreground pt-0.5">{i + 1}.</span>
+              <span className="flex-1">{p.texto_pergunta}</span>
+              <Button size="sm" variant="ghost" onClick={() => deletePergunta.mutate(p.id)} className="h-6 w-6 p-0 text-destructive">
+                <Trash2 className="w-3 h-3" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      <div className="flex gap-2">
+        <Textarea
+          placeholder="Nova pergunta oracular..."
+          value={newPergunta}
+          onChange={(e) => setNewPergunta(e.target.value)}
+          className="min-h-[60px] text-sm"
+        />
+        <Button size="sm" onClick={() => addPergunta.mutate()} disabled={addPergunta.isPending || !newPergunta.trim()}>
+          <Plus className="w-3 h-3" />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// EscutasManager
+// ============================================
+function EscutasManager({ cicloId }: { cicloId: string }) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const { data: escutas, isLoading } = useQuery({
+    queryKey: ['admin-clube-escutas', cicloId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('clube_livro_escutas')
+        .select('*')
+        .eq('ciclo_id', cicloId)
+        .order('ordem', { ascending: true });
+
+      if (error) throw error;
+      return data as Escuta[];
+    },
+  });
+
+  const deleteEscuta = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('clube_livro_escutas').delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-escutas', cicloId] });
+      toast({ title: 'Escuta removida' });
+    },
+  });
+
+  return (
+    <div className="space-y-4">
+      <Button size="sm" variant="outline" onClick={() => setDialogOpen(true)}>
+        <Plus className="w-3 h-3 mr-1" />
+        Adicionar Escuta
+      </Button>
+
+      {isLoading ? (
+        <div className="animate-pulse h-16 bg-muted rounded" />
+      ) : escutas && escutas.length > 0 ? (
+        <div className="space-y-2">
+          {escutas.map((e) => (
+            <div key={e.id} className="flex items-center justify-between p-3 border rounded-lg">
+              <div className="flex items-center gap-3">
+                {e.tipo === 'audio' ? (
+                  <Headphones className="w-4 h-4 text-gold" />
+                ) : (
+                  <FileText className="w-4 h-4 text-gold" />
+                )}
+                <div>
+                  <p className="text-sm font-medium">{e.titulo}</p>
+                  <p className="text-xs text-muted-foreground">{e.tipo === 'audio' ? 'Áudio' : 'Texto'}</p>
+                </div>
+              </div>
+              <Button size="sm" variant="ghost" onClick={() => deleteEscuta.mutate(e.id)} className="text-destructive">
+                <Trash2 className="w-3 h-3" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-muted-foreground text-center py-4">
+          Nenhuma escuta cadastrada.
+        </p>
+      )}
+
+      <EscutaDialog cicloId={cicloId} open={dialogOpen} onOpenChange={setDialogOpen} />
+    </div>
+  );
+}
+
+// ============================================
+// EncontrosManager
+// ============================================
+function EncontrosManager({ cicloId }: { cicloId: string }) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const { data: encontros, isLoading } = useQuery({
+    queryKey: ['admin-clube-encontros', cicloId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('clube_livro_encontros')
+        .select('*')
+        .eq('ciclo_id', cicloId)
+        .order('data_encontro', { ascending: true });
+
+      if (error) throw error;
+      return data as Encontro[];
+    },
+  });
+
+  const deleteEncontro = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('clube_livro_encontros').delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-encontros', cicloId] });
+      toast({ title: 'Encontro removido' });
+    },
+  });
+
+  return (
+    <div className="space-y-4">
+      <Button size="sm" variant="outline" onClick={() => setDialogOpen(true)}>
+        <Plus className="w-3 h-3 mr-1" />
+        Adicionar Encontro
+      </Button>
+
+      {isLoading ? (
+        <div className="animate-pulse h-16 bg-muted rounded" />
+      ) : encontros && encontros.length > 0 ? (
+        <div className="space-y-2">
+          {encontros.map((e) => (
+            <div key={e.id} className="flex items-center justify-between p-3 border rounded-lg">
+              <div className="flex items-center gap-3">
+                <Video className="w-4 h-4 text-gold" />
+                <div>
+                  <p className="text-sm font-medium">{e.titulo}</p>
+                  {e.data_encontro && (
+                    <p className="text-xs text-muted-foreground">
+                      {new Date(e.data_encontro).toLocaleDateString('pt-BR')}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <Button size="sm" variant="ghost" onClick={() => deleteEncontro.mutate(e.id)} className="text-destructive">
+                <Trash2 className="w-3 h-3" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-muted-foreground text-center py-4">
+          Nenhum encontro agendado.
+        </p>
+      )}
+
+      <EncontroDialog cicloId={cicloId} open={dialogOpen} onOpenChange={setDialogOpen} />
+    </div>
+  );
+}
+
+// ============================================
+// Dialogs
+// ============================================
+function CicloDialog({
+  open,
+  onOpenChange,
+  ciclo,
+  onSave,
+  isLoading,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  ciclo: Ciclo | null;
+  onSave: (data: Partial<Ciclo>) => void;
+  isLoading: boolean;
+}) {
+  const [form, setForm] = useState({
+    titulo: '',
+    subtitulo: '',
+    autor_livro: '',
+    capa_url: '',
+    infografico_url: '',
+    por_que_este_livro: '',
+    como_ler: '',
+    manifesto: '',
+    publicado: false,
+    is_multipolar: false,
+    campo_simbolico: '',
+    por_que_slides_json: '[]',
+    por_que_audio_url: '',
+    como_ler_slides_json: '[]',
+    como_ler_audio_url: '',
+  });
+
+  // Reset form when dialog opens
+  useState(() => {
+    if (ciclo) {
+      setForm({
+        titulo: ciclo.titulo || '',
+        subtitulo: ciclo.subtitulo || '',
+        autor_livro: ciclo.autor_livro || '',
+        capa_url: ciclo.capa_url || '',
+        infografico_url: (ciclo as any).infografico_url || '',
+        por_que_este_livro: ciclo.por_que_este_livro || '',
+        como_ler: ciclo.como_ler || '',
+        manifesto: ciclo.manifesto || '',
+        publicado: ciclo.publicado || false,
+        is_multipolar: (ciclo as any).is_multipolar || false,
+        campo_simbolico: (ciclo as any).campo_simbolico || '',
+        por_que_slides_json: JSON.stringify((ciclo as any).por_que_slides || [], null, 2),
+        por_que_audio_url: (ciclo as any).por_que_audio_url || '',
+        como_ler_slides_json: JSON.stringify((ciclo as any).como_ler_slides || [], null, 2),
+        como_ler_audio_url: (ciclo as any).como_ler_audio_url || '',
+      });
+    }
+  });
+
+  const handleSubmit = () => {
+    if (!form.titulo.trim()) return;
+    let porQueSlides = [];
+    let comoLerSlides = [];
+    try { porQueSlides = JSON.parse(form.por_que_slides_json); } catch {}
+    try { comoLerSlides = JSON.parse(form.como_ler_slides_json); } catch {}
+    
+    onSave({
+      ...form,
+      por_que_slides: porQueSlides,
+      por_que_audio_url: form.por_que_audio_url || undefined,
+      como_ler_slides: comoLerSlides,
+      como_ler_audio_url: form.como_ler_audio_url || undefined,
+      ...(ciclo?.id ? { id: ciclo.id } : {}),
+    } as any);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{ciclo ? 'Editar Ciclo' : 'Novo Ciclo'}</DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Título do Livro *</Label>
+              <Input
+                value={form.titulo}
+                onChange={(e) => setForm({ ...form, titulo: e.target.value })}
+                placeholder="Ex: A Heroína de Mil Faces"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Autor</Label>
+              <Input
+                value={form.autor_livro}
+                onChange={(e) => setForm({ ...form, autor_livro: e.target.value })}
+                placeholder="Ex: Maria Tatar"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Subtítulo</Label>
+            <Input
+              value={form.subtitulo}
+              onChange={(e) => setForm({ ...form, subtitulo: e.target.value })}
+              placeholder="Opcional"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>URL da Capa do Livro</Label>
+            <Input
+              value={form.capa_url}
+              onChange={(e) => setForm({ ...form, capa_url: e.target.value })}
+              placeholder="https://..."
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>URL do Infográfico</Label>
+            <Input
+              value={form.infografico_url}
+              onChange={(e) => setForm({ ...form, infografico_url: e.target.value })}
+              placeholder="https://... (imagem do infográfico do livro)"
+            />
+            {form.infografico_url && (
+              <img src={form.infografico_url} alt="Preview infográfico" className="max-h-40 rounded border border-border mt-2" />
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label>Por que este livro está aqui (texto fallback)</Label>
+            <Textarea
+              value={form.por_que_este_livro}
+              onChange={(e) => setForm({ ...form, por_que_este_livro: e.target.value })}
+              placeholder="Texto explicando a escolha do livro..."
+              className="min-h-[80px]"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Slides — "Por que este livro" (JSON)</Label>
+            <Textarea
+              value={form.por_que_slides_json}
+              onChange={(e) => setForm({ ...form, por_que_slides_json: e.target.value })}
+              placeholder={'[\n  { "titulo": "...", "frase_simbolica": "...", "image_url": "https://..." }\n]'}
+              className="min-h-[100px] font-mono text-xs"
+            />
+            <p className="text-xs text-muted-foreground">Array JSON de 6-8 slides. Campos: titulo, frase_simbolica, image_url (todos opcionais).</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Áudio — "Por que este livro" (URL)</Label>
+            <Input
+              value={form.por_que_audio_url}
+              onChange={(e) => setForm({ ...form, por_que_audio_url: e.target.value })}
+              placeholder="https://... (URL do áudio MP3)"
+            />
+          </div>
+
+          <Separator />
+
+          <div className="space-y-2">
+            <Label>Como ler este livro (texto fallback)</Label>
+            <Textarea
+              value={form.como_ler}
+              onChange={(e) => setForm({ ...form, como_ler: e.target.value })}
+              placeholder="Orientações sobre a leitura..."
+              className="min-h-[80px]"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Slides — "Como ler este livro" (JSON)</Label>
+            <Textarea
+              value={form.como_ler_slides_json}
+              onChange={(e) => setForm({ ...form, como_ler_slides_json: e.target.value })}
+              placeholder={'[\n  { "titulo": "...", "frase_simbolica": "...", "image_url": "https://..." }\n]'}
+              className="min-h-[100px] font-mono text-xs"
+            />
+            <p className="text-xs text-muted-foreground">Array JSON de 6-8 slides. Campos: titulo, frase_simbolica, image_url (todos opcionais).</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Áudio — "Como ler este livro" (URL)</Label>
+            <Input
+              value={form.como_ler_audio_url}
+              onChange={(e) => setForm({ ...form, como_ler_audio_url: e.target.value })}
+              placeholder="https://... (URL do áudio MP3)"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Manifesto (texto da apresentação)</Label>
+            <Textarea
+              value={form.manifesto}
+              onChange={(e) => setForm({ ...form, manifesto: e.target.value })}
+              placeholder="Texto-manifesto sobre o que é o clube..."
+              className="min-h-[120px]"
+            />
+          </div>
+
+          <Separator />
+
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-primary" />
+              Campo Simbólico (Sala de Escuta)
+            </Label>
+            <Textarea
+              value={form.campo_simbolico}
+              onChange={(e) => setForm({ ...form, campo_simbolico: e.target.value })}
+              placeholder="Texto do campo simbólico que será injetado como contexto na Sala de Escuta Simbólica ao conversar sobre este livro..."
+              className="min-h-[120px]"
+            />
+            <p className="text-xs text-muted-foreground">
+              Este texto será enviado como contexto ao agente de IA quando a aluna clicar em "Conversar com o Livro".
+            </p>
+          </div>
+
+          <div className="flex items-center justify-between pt-4 border-t">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={form.publicado}
+                  onCheckedChange={(checked) => setForm({ ...form, publicado: checked })}
+                />
+                <Label>Publicado</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={form.is_multipolar}
+                  onCheckedChange={(checked) => setForm({ ...form, is_multipolar: checked })}
+                />
+                <Label>Multipolar</Label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Cancelar
+          </Button>
+          <Button onClick={handleSubmit} disabled={isLoading || !form.titulo.trim()}>
+            {isLoading ? 'Salvando...' : 'Salvar'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function EscutaDialog({ cicloId, open, onOpenChange }: { cicloId: string; open: boolean; onOpenChange: (open: boolean) => void }) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [form, setForm] = useState({
+    titulo: '',
+    tipo: 'audio' as 'audio' | 'podcast' | 'texto',
+    audio_url: '',
+    texto_conteudo: '',
+  });
+
+  const save = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from('clube_livro_escutas').insert({
+        ciclo_id: cicloId,
+        ...form,
+        ordem: 0,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-escutas', cicloId] });
+      onOpenChange(false);
+      setForm({ titulo: '', tipo: 'audio', audio_url: '', texto_conteudo: '' });
+      toast({ title: form.tipo === 'podcast' ? 'Podcast adicionado' : 'Escuta adicionada' });
+    },
+  });
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Adicionar Escuta</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label>Título *</Label>
+            <Input value={form.titulo} onChange={(e) => setForm({ ...form, titulo: e.target.value })} />
+          </div>
+          <div className="space-y-2">
+            <Label>Tipo</Label>
+            <Select value={form.tipo} onValueChange={(v) => setForm({ ...form, tipo: v as 'audio' | 'podcast' | 'texto' })}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="audio">Áudio</SelectItem>
+                <SelectItem value="podcast">Podcast</SelectItem>
+                <SelectItem value="texto">Texto</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          {(form.tipo === 'audio' || form.tipo === 'podcast') && (
+            <AudioUpload
+              value={form.audio_url}
+              onChange={(url) => setForm({ ...form, audio_url: url })}
+              folder="clube-livro/escutas"
+              label={form.tipo === 'podcast' ? 'Arquivo do Podcast' : 'Arquivo de Áudio'}
+            />
+          )}
+          {form.tipo === 'texto' && (
+            <div className="space-y-2">
+              <Label>Conteúdo</Label>
+              <Textarea value={form.texto_conteudo} onChange={(e) => setForm({ ...form, texto_conteudo: e.target.value })} className="min-h-[120px]" />
+            </div>
+          )}
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button onClick={() => save.mutate()} disabled={save.isPending || !form.titulo.trim()}>
+            Salvar
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function EncontroDialog({ cicloId, open, onOpenChange }: { cicloId: string; open: boolean; onOpenChange: (open: boolean) => void }) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [form, setForm] = useState({
+    titulo: '',
+    data_encontro: '',
+    link_ao_vivo: '',
+    replay_url: '',
+    orientacao_encontro: '',
+  });
+
+  const save = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from('clube_livro_encontros').insert({
+        ciclo_id: cicloId,
+        ...form,
+        data_encontro: form.data_encontro ? new Date(form.data_encontro).toISOString() : null,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-encontros', cicloId] });
+      onOpenChange(false);
+      setForm({ titulo: '', data_encontro: '', link_ao_vivo: '', replay_url: '', orientacao_encontro: '' });
+      toast({ title: 'Encontro adicionado' });
+    },
+  });
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Adicionar Encontro</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label>Título *</Label>
+            <Input value={form.titulo} onChange={(e) => setForm({ ...form, titulo: e.target.value })} />
+          </div>
+          <div className="space-y-2">
+            <Label>Data e Hora</Label>
+            <Input type="datetime-local" value={form.data_encontro} onChange={(e) => setForm({ ...form, data_encontro: e.target.value })} />
+          </div>
+          <div className="space-y-2">
+            <Label>Link Ao Vivo</Label>
+            <Input value={form.link_ao_vivo} onChange={(e) => setForm({ ...form, link_ao_vivo: e.target.value })} placeholder="Ex: https://zoom.us/..." />
+          </div>
+          <div className="space-y-2">
+            <Label>URL do Replay</Label>
+            <Input value={form.replay_url} onChange={(e) => setForm({ ...form, replay_url: e.target.value })} />
+          </div>
+          <div className="space-y-2">
+            <Label>Orientação para o Encontro</Label>
+            <Textarea value={form.orientacao_encontro} onChange={(e) => setForm({ ...form, orientacao_encontro: e.target.value })} className="min-h-[80px]" />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button onClick={() => save.mutate()} disabled={save.isPending || !form.titulo.trim()}>
+            Salvar
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ============================================
+// AulasManager - CRUD de aulas do ciclo
+// ============================================
+interface AulaAdmin {
+  id: string;
+  ciclo_id: string;
+  titulo: string;
+  subtitulo?: string;
+  descricao?: string;
+  duracao?: string;
+  conteudo?: string;
+  media_url?: string;
+  media_type?: string;
+  ordem: number;
+  ativo: boolean;
+  publicado: boolean;
+}
+
+function AulasManager({ cicloId }: { cicloId: string }) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editing, setEditing] = useState<AulaAdmin | null>(null);
+
+  const { data: aulas, isLoading } = useQuery({
+    queryKey: ['admin-clube-aulas', cicloId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('clube_livro_aulas')
+        .select('*')
+        .eq('ciclo_id', cicloId)
+        .order('ordem', { ascending: true });
+      if (error) throw error;
+      return data as AulaAdmin[];
+    },
+  });
+
+  const deleteAula = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('clube_livro_aulas').delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-aulas', cicloId] });
+      toast({ title: 'Aula removida' });
+    },
+  });
+
+  const togglePublicado = useMutation({
+    mutationFn: async ({ id, publicado }: { id: string; publicado: boolean }) => {
+      const { error } = await supabase.from('clube_livro_aulas').update({ publicado }).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-aulas', cicloId] });
+    },
+  });
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          {aulas?.length || 0} aula(s) cadastrada(s)
+        </p>
+        <Button size="sm" onClick={() => { setEditing(null); setDialogOpen(true); }} className="gap-1">
+          <Plus className="w-3 h-3" />
+          Nova Aula
+        </Button>
+      </div>
+
+      {isLoading ? (
+        <div className="animate-pulse h-16 bg-muted rounded" />
+      ) : aulas && aulas.length > 0 ? (
+        <div className="space-y-2">
+          {aulas.map((aula) => (
+            <div key={aula.id} className="flex items-center gap-3 p-3 rounded-lg border bg-card/50">
+              <div className="shrink-0 w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
+                <span className="text-xs font-mono text-gold font-semibold">{aula.ordem}</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">{aula.titulo}</p>
+                {aula.subtitulo && <p className="text-xs text-muted-foreground truncate">{aula.subtitulo}</p>}
+              </div>
+              <div className="flex items-center gap-1 shrink-0">
+                <Switch
+                  checked={aula.publicado}
+                  onCheckedChange={(v) => togglePublicado.mutate({ id: aula.id, publicado: v })}
+                />
+                <Button size="sm" variant="ghost" onClick={() => { setEditing(aula); setDialogOpen(true); }}>
+                  <Pencil className="w-3.5 h-3.5" />
+                </Button>
+                <Button size="sm" variant="ghost" className="text-destructive" onClick={() => deleteAula.mutate(aula.id)}>
+                  <Trash2 className="w-3.5 h-3.5" />
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-6 text-muted-foreground text-sm">
+          Nenhuma aula cadastrada. Clique em "Nova Aula" para começar.
+        </div>
+      )}
+
+      <AulaDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        aula={editing}
+        cicloId={cicloId}
+        nextOrdem={(aulas?.length || 0) + 1}
+      />
+    </div>
+  );
+}
+
+// ============================================
+// AulaDialog - Criar/Editar aula com blocos de conteúdo
+// ============================================
+function AulaDialog({
+  open,
+  onOpenChange,
+  aula,
+  cicloId,
+  nextOrdem,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  aula: AulaAdmin | null;
+  cicloId: string;
+  nextOrdem: number;
+}) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [form, setForm] = useState({
+    titulo: '',
+    subtitulo: '',
+    descricao: '',
+    duracao: '',
+    media_url: '',
+    media_type: 'texto',
+    ordem: nextOrdem,
+  });
+  const [blocos, setBlocos] = useState<AulaBloco[]>([]);
+
+  // Reset form when dialog opens
+  useState(() => {
+    if (open && aula) {
+      setForm({
+        titulo: aula.titulo || '',
+        subtitulo: aula.subtitulo || '',
+        descricao: aula.descricao || '',
+        duracao: aula.duracao || '',
+        media_url: aula.media_url || '',
+        media_type: aula.media_type || 'texto',
+        ordem: aula.ordem,
+      });
+      // Parse blocos from conteudo
+      try {
+        const parsed = aula.conteudo ? (typeof aula.conteudo === 'string' ? JSON.parse(aula.conteudo) : aula.conteudo) : [];
+        setBlocos(Array.isArray(parsed) ? parsed : []);
+      } catch {
+        setBlocos([]);
+      }
+    } else if (open) {
+      setForm({
+        titulo: '',
+        subtitulo: '',
+        descricao: '',
+        duracao: '',
+        media_url: '',
+        media_type: 'texto',
+        ordem: nextOrdem,
+      });
+      setBlocos([]);
+    }
+  });
+
+  const save = useMutation({
+    mutationFn: async () => {
+      const payload = {
+        ciclo_id: cicloId,
+        titulo: form.titulo,
+        subtitulo: form.subtitulo || null,
+        descricao: form.descricao || null,
+        duracao: form.duracao || null,
+        media_url: form.media_url || null,
+        media_type: form.media_type,
+        ordem: form.ordem,
+        conteudo: blocos.length > 0 ? JSON.stringify(blocos) : null,
+      };
+
+      if (aula?.id) {
+        const { error } = await supabase.from('clube_livro_aulas').update(payload).eq('id', aula.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('clube_livro_aulas').insert(payload);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-aulas', cicloId] });
+      onOpenChange(false);
+      toast({ title: aula ? 'Aula atualizada' : 'Aula criada' });
+    },
+    onError: () => {
+      toast({ title: 'Erro ao salvar aula', variant: 'destructive' });
+    },
+  });
+
+  // Sync form when aula changes
+  if (open && aula && form.titulo !== aula.titulo && form.titulo === '') {
+    setForm({
+      titulo: aula.titulo || '',
+      subtitulo: aula.subtitulo || '',
+      descricao: aula.descricao || '',
+      duracao: aula.duracao || '',
+      media_url: aula.media_url || '',
+      media_type: aula.media_type || 'texto',
+      ordem: aula.ordem,
+    });
+    try {
+      const parsed = aula.conteudo ? (typeof aula.conteudo === 'string' ? JSON.parse(aula.conteudo) : aula.conteudo) : [];
+      setBlocos(Array.isArray(parsed) ? parsed : []);
+    } catch {
+      setBlocos([]);
+    }
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{aula ? 'Editar Aula' : 'Nova Aula'}</DialogTitle>
+          <DialogDescription>
+            {aula ? 'Atualize os dados e blocos de conteúdo.' : 'Crie uma aula com blocos estruturados.'}
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 py-4">
+          {/* Metadados */}
+          <div className="grid grid-cols-4 gap-4">
+            <div className="col-span-3 space-y-2">
+              <Label>Título *</Label>
+              <Input value={form.titulo} onChange={(e) => setForm({ ...form, titulo: e.target.value })} placeholder="Ex: Aula 1 — O chamado selvagem" />
+            </div>
+            <div className="space-y-2">
+              <Label>Ordem</Label>
+              <Input type="number" value={form.ordem} onChange={(e) => setForm({ ...form, ordem: parseInt(e.target.value) || 0 })} />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>Subtítulo</Label>
+            <Input value={form.subtitulo} onChange={(e) => setForm({ ...form, subtitulo: e.target.value })} placeholder="Ex: O instinto como linguagem" />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Duração</Label>
+              <Input value={form.duracao} onChange={(e) => setForm({ ...form, duracao: e.target.value })} placeholder="Ex: 45min" />
+            </div>
+            <div className="space-y-2">
+              <Label>Tipo de Mídia</Label>
+              <Select value={form.media_type} onValueChange={(v) => setForm({ ...form, media_type: v })}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="texto">Texto</SelectItem>
+                  <SelectItem value="video">Vídeo</SelectItem>
+                  <SelectItem value="audio">Áudio</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>URL da Mídia</Label>
+            <Input value={form.media_url} onChange={(e) => setForm({ ...form, media_url: e.target.value })} placeholder="Ex: https://..." />
+          </div>
+          <div className="space-y-2">
+            <Label>Descrição</Label>
+            <Textarea value={form.descricao} onChange={(e) => setForm({ ...form, descricao: e.target.value })} className="min-h-[60px]" placeholder="Breve descrição da aula..." />
+          </div>
+
+          {/* Blocos de Conteúdo */}
+          <Separator className="my-2" />
+          <AulaBlocosEditor blocos={blocos} onChange={setBlocos} />
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button onClick={() => save.mutate()} disabled={save.isPending || !form.titulo.trim()}>
+            Salvar
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export default AdminClubeLivroTab;

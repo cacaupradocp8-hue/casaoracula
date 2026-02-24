@@ -1,257 +1,175 @@
 // ============================================
-// MANDALA DE JORNADA DE LEITURA
-// Arquitetura funcional, zero ruído cognitivo
+// MANDALA ANUAL — Mandala Simbólica Funcional
+// Camadas concêntricas com função clara
+// Sem decoração. Sem cronologia. Mapa de consciência.
+// 100% database-driven
 // ============================================
 
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, X, ChevronRight, Lock, CheckCircle2, Map, List, Columns, Play, MessageCircle, Sparkles, ArrowRight } from 'lucide-react';
+import { BookOpen, X, Moon, List, Columns } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { useActiveCycle, useCycleBooks, useBookLinks, type Book, type CycleBook, type BookLink } from '@/hooks/useBooks';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 // ============================================
-// LAYER CONFIG
+// CAMADAS — cada uma tem FUNÇÃO, COR, TAMANHO
 // ============================================
-const LAYERS = {
-  MATRIZ: { label: 'Matriz', cor: 'hsl(43, 60%, 54%)', bg: 'hsl(43, 60%, 54%, 0.12)', icon: '☽◯☾' },
-  TRAVESSIA: { label: 'Travessia', cor: 'hsl(212, 50%, 50%)', bg: 'hsl(212, 50%, 36%, 0.12)', icon: '◈' },
-  PORTA: { label: 'Porta', cor: 'hsl(152, 37%, 44%)', bg: 'hsl(152, 37%, 36%, 0.10)', icon: '🗝' },
-  PONTE: { label: 'Ponte', cor: 'hsl(268, 45%, 68%)', bg: 'hsl(268, 38%, 64%, 0.12)', icon: '⌒' },
-  FUNDACAO: { label: 'Fundação', cor: 'hsl(30, 10%, 55%)', bg: 'hsl(30, 6%, 45%, 0.08)', icon: '⊞' },
+const CAMADAS = {
+  MATRIZ: {
+    label: 'Matriz',
+    funcao: 'Origem simbólica do ciclo',
+    cor: '#C9A84C',
+    corBg: 'rgba(201,168,76,0.20)',
+    corStroke: 'rgba(201,168,76,0.55)',
+    icon: '☽◯☾',
+    nodeR: 44,
+    ringInner: 0,
+    ringOuter: 60,
+  },
+  TRAVESSIA: {
+    label: 'Travessia',
+    funcao: 'Eixos da jornada anual',
+    cor: '#2E5A88',
+    corBg: 'rgba(46,90,136,0.18)',
+    corStroke: 'rgba(46,90,136,0.50)',
+    icon: '◈',
+    nodeR: 32,
+    ringInner: 65,
+    ringOuter: 160,
+  },
+  PORTA: {
+    label: 'Porta',
+    funcao: 'Aberturas de experiência',
+    cor: '#3A7D5C',
+    corBg: 'rgba(58,125,92,0.16)',
+    corStroke: 'rgba(58,125,92,0.45)',
+    icon: '🗝',
+    nodeR: 24,
+    ringInner: 165,
+    ringOuter: 255,
+  },
+  PONTE: {
+    label: 'Ponte',
+    funcao: 'Integração prática',
+    cor: '#9B7EC8',
+    corBg: 'rgba(155,126,200,0.14)',
+    corStroke: 'rgba(155,126,200,0.40)',
+    icon: '⌒',
+    nodeR: 18,
+    ringInner: 260,
+    ringOuter: 325,
+  },
+  FUNDACAO: {
+    label: 'Fundação',
+    funcao: 'Base teórica do método',
+    cor: '#78716C',
+    corBg: 'rgba(120,113,108,0.10)',
+    corStroke: 'rgba(120,113,108,0.40)',
+    icon: '⊞',
+    nodeR: 14,
+    ringInner: 0,
+    ringOuter: 0,
+  },
 } as const;
 
-type LayerKey = keyof typeof LAYERS;
+type CamadaKey = keyof typeof CAMADAS;
 
-// ============================================
-// HELPERS
-// ============================================
-function getChildBooks(parentBookId: string, links: BookLink[], cycleBooks: CycleBook[], linkType: string) {
-  const childIds = links
-    .filter(l => l.from_book_id === parentBookId && l.link_type === linkType)
-    .map(l => l.to_book_id);
-  return cycleBooks
-    .filter(cb => cb.book && childIds.includes(cb.book.id))
-    .sort((a, b) => a.layer_order - b.layer_order);
+const SIZE = 720;
+const CX = SIZE / 2;
+const CY = SIZE / 2;
+
+function polarXY(angleDeg: number, r: number) {
+  const rad = ((angleDeg - 90) * Math.PI) / 180;
+  return { x: CX + r * Math.cos(rad), y: CY + r * Math.sin(rad) };
 }
 
 // ============================================
-// MATRIZ — Centro fixo, não clicável
+// Position computation — pure functional
 // ============================================
-function MatrizBlock({ book }: { book: Book }) {
-  return (
-    <div className="text-center mb-8">
-      <motion.div
-        className="mx-auto w-24 h-24 rounded-full flex items-center justify-center border-2 relative"
-        style={{ borderColor: LAYERS.MATRIZ.cor, background: LAYERS.MATRIZ.bg }}
-        animate={{ boxShadow: ['0 0 20px hsl(43, 60%, 54%, 0.15)', '0 0 45px hsl(43, 60%, 54%, 0.3)', '0 0 20px hsl(43, 60%, 54%, 0.15)'] }}
-        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-      >
-        <span className="text-3xl select-none" style={{ color: LAYERS.MATRIZ.cor }}>☽◯☾</span>
-      </motion.div>
-      <p className="text-xs font-bold mt-3 uppercase tracking-[0.2em]" style={{ color: LAYERS.MATRIZ.cor }}>
-        {book.title}
-      </p>
-      <p className="text-[11px] text-muted-foreground mt-1 max-w-xs mx-auto italic">
-        Toda leitura é uma travessia da consciência
-      </p>
-    </div>
-  );
+function computePositions(cycleBooks: CycleBook[], links: BookLink[]) {
+  const positions = new Map<string, { x: number; y: number }>();
+  const cardinals = [270, 0, 90, 180]; // S, L, N, O — qualidade, não cronologia
+
+  // MATRIZ → centro absoluto
+  cycleBooks.filter(cb => cb.layer === 'MATRIZ').forEach(cb => {
+    if (cb.book) positions.set(cb.book.id, { x: CX, y: CY });
+  });
+
+  // TRAVESSIAS → cruz simbólica
+  const travessias = cycleBooks.filter(cb => cb.layer === 'TRAVESSIA').sort((a, b) => a.layer_order - b.layer_order);
+  const midT = (CAMADAS.TRAVESSIA.ringInner + CAMADAS.TRAVESSIA.ringOuter) / 2;
+  travessias.forEach((cb, i) => {
+    if (cb.book) positions.set(cb.book.id, polarXY(cardinals[i % 4], midT));
+  });
+
+  // Build parent maps from links
+  const portaParent = new Map<string, string>();
+  const ponteParent = new Map<string, string>();
+  const travIds = new Set(travessias.map(cb => cb.book?.id).filter(Boolean));
+
+  links.forEach(link => {
+    if (link.link_type === 'ABRE' && travIds.has(link.from_book_id))
+      portaParent.set(link.to_book_id, link.from_book_id);
+    if (link.link_type === 'INTEGRA' && travIds.has(link.from_book_id))
+      ponteParent.set(link.to_book_id, link.from_book_id);
+  });
+
+  // Helper: group children by parent
+  const groupByParent = (items: CycleBook[], parentMap: Map<string, string>) => {
+    const g = new Map<string, CycleBook[]>();
+    items.forEach(cb => {
+      if (!cb.book) return;
+      const p = parentMap.get(cb.book.id);
+      if (p) { if (!g.has(p)) g.set(p, []); g.get(p)!.push(cb); }
+    });
+    return g;
+  };
+
+  // PORTAS → anel 2, próximas da Travessia que as ABRE
+  const portas = cycleBooks.filter(cb => cb.layer === 'PORTA').sort((a, b) => a.layer_order - b.layer_order);
+  const portasByParent = groupByParent(portas, portaParent);
+  const midP = (CAMADAS.PORTA.ringInner + CAMADAS.PORTA.ringOuter) / 2;
+
+  travessias.forEach((tCb, tIdx) => {
+    if (!tCb.book) return;
+    const children = portasByParent.get(tCb.book.id) || [];
+    const base = cardinals[tIdx % 4];
+    const spread = 26;
+    children.forEach((cb, i) => {
+      if (!cb.book) return;
+      const offset = children.length === 1 ? 0 : (i - (children.length - 1) / 2) * spread;
+      positions.set(cb.book.id, polarXY(base + offset, midP));
+    });
+  });
+
+  // PONTES → anel 3, próximas da Travessia que as INTEGRA
+  const pontes = cycleBooks.filter(cb => cb.layer === 'PONTE').sort((a, b) => a.layer_order - b.layer_order);
+  const pontesByParent = groupByParent(pontes, ponteParent);
+  const midB = (CAMADAS.PONTE.ringInner + CAMADAS.PONTE.ringOuter) / 2;
+
+  travessias.forEach((tCb, tIdx) => {
+    if (!tCb.book) return;
+    const children = pontesByParent.get(tCb.book.id) || [];
+    const base = cardinals[tIdx % 4];
+    const spread = 20;
+    children.forEach((cb, i) => {
+      if (!cb.book) return;
+      const offset = children.length === 1 ? 0 : (i - (children.length - 1) / 2) * spread;
+      positions.set(cb.book.id, polarXY(base + offset, midB));
+    });
+  });
+
+  return positions;
 }
 
 // ============================================
-// TRAVESSIA CARD — Grande, com progresso
+// Side Panel
 // ============================================
-function TravessiaCard({
-  book,
-  index,
-  isActive,
-  isCompleted,
-  progress,
-  onClick,
-}: {
-  book: Book;
-  index: number;
-  isActive: boolean;
-  isCompleted: boolean;
-  progress: number;
-  onClick: () => void;
-}) {
-  const romanNumerals = ['I', 'II', 'III', 'IV'];
-  const progressPct = (progress / 4) * 100;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1 }}
-    >
-      <Card
-        className={`cursor-pointer transition-all duration-300 overflow-hidden hover:shadow-lg hover:scale-[1.02] ${
-          isActive
-            ? 'ring-2 ring-offset-2 ring-offset-background shadow-md'
-            : isCompleted
-            ? 'opacity-90'
-            : 'opacity-50 hover:opacity-80'
-        }`}
-        style={{
-          borderColor: isActive ? LAYERS.TRAVESSIA.cor : isCompleted ? LAYERS.MATRIZ.cor : undefined,
-          ...(isActive ? { '--tw-ring-color': LAYERS.TRAVESSIA.cor } as any : {}),
-        }}
-        onClick={onClick}
-      >
-        <CardContent className="p-5">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1.5">
-                <span
-                  className="text-xs font-bold tracking-widest"
-                  style={{ color: isActive ? LAYERS.TRAVESSIA.cor : isCompleted ? LAYERS.MATRIZ.cor : 'hsl(var(--muted-foreground))' }}
-                >
-                  TRAVESSIA {romanNumerals[index]}
-                </span>
-                {isActive && (
-                  <Badge variant="outline" className="text-[10px] py-0 px-1.5 border-current font-bold" style={{ color: LAYERS.TRAVESSIA.cor }}>
-                    ATIVA
-                  </Badge>
-                )}
-                {isCompleted && (
-                  <CheckCircle2 className="w-3.5 h-3.5" style={{ color: LAYERS.MATRIZ.cor }} />
-                )}
-              </div>
-              <h3 className="text-base font-display text-foreground truncate">{book.title}</h3>
-              <p className="text-xs text-muted-foreground truncate">{book.author}</p>
-            </div>
-            <div className="shrink-0 flex items-center">
-              {isActive ? (
-                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: LAYERS.TRAVESSIA.bg }}>
-                  <ChevronRight className="w-5 h-5" style={{ color: LAYERS.TRAVESSIA.cor }} />
-                </div>
-              ) : isCompleted ? (
-                <CheckCircle2 className="w-5 h-5" style={{ color: LAYERS.MATRIZ.cor }} />
-              ) : (
-                <Lock className="w-4 h-4 text-muted-foreground/40" />
-              )}
-            </div>
-          </div>
-
-          {/* Progress bar */}
-          <div className="mt-3">
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-[10px] text-muted-foreground">Progresso</span>
-              <span className="text-[10px] font-semibold" style={{ color: isActive ? LAYERS.TRAVESSIA.cor : 'hsl(var(--muted-foreground))' }}>
-                {progress}/4 semanas
-              </span>
-            </div>
-            <div className="h-2 rounded-full bg-muted overflow-hidden">
-              <motion.div
-                className="h-full rounded-full"
-                style={{ background: isCompleted ? LAYERS.MATRIZ.cor : LAYERS.TRAVESSIA.cor }}
-                initial={{ width: 0 }}
-                animate={{ width: `${progressPct}%` }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-              />
-            </div>
-            {/* Week dots */}
-            <div className="flex gap-2 mt-2">
-              {[0, 1, 2, 3].map(w => (
-                <div
-                  key={w}
-                  className="w-2.5 h-2.5 rounded-full transition-all"
-                  style={{
-                    background: w < progress
-                      ? (isCompleted ? LAYERS.MATRIZ.cor : LAYERS.TRAVESSIA.cor)
-                      : 'hsl(var(--muted))',
-                    opacity: w < progress ? 1 : 0.3,
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
-}
-
-// ============================================
-// PORTA ITEM — Borda visível + glow no hover
-// ============================================
-function PortaItem({
-  book,
-  isUnlocked,
-  onClick,
-}: {
-  book: Book;
-  isUnlocked: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: -8 }}
-      animate={{ opacity: 1, x: 0 }}
-      whileHover={isUnlocked ? { scale: 1.01, boxShadow: '0 0 16px hsl(152, 37%, 44%, 0.25)' } : undefined}
-      className={`flex items-center gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all ${
-        isUnlocked
-          ? 'border-[hsl(152,37%,44%,0.4)] hover:border-[hsl(152,37%,44%,0.8)] bg-card'
-          : 'border-border/30 opacity-40 cursor-default bg-muted/30'
-      }`}
-      onClick={isUnlocked ? onClick : undefined}
-    >
-      <div
-        className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-        style={{ background: LAYERS.PORTA.bg, color: LAYERS.PORTA.cor }}
-      >
-        {isUnlocked ? <span className="text-base">🗝</span> : <Lock className="w-4 h-4" />}
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-foreground truncate">{book.title}</p>
-        <p className="text-xs text-muted-foreground truncate">{book.author}</p>
-      </div>
-      {isUnlocked && (
-        <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ background: LAYERS.PORTA.bg }}>
-          <ChevronRight className="w-4 h-4" style={{ color: LAYERS.PORTA.cor }} />
-        </div>
-      )}
-    </motion.div>
-  );
-}
-
-// ============================================
-// PONTE ITEM — Botão funcional com CTA
-// ============================================
-function PonteItem({ book, onClick }: { book: Book; onClick: () => void }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      whileHover={{ scale: 1.03 }}
-      className="flex items-center gap-3 p-3 rounded-lg border border-[hsl(268,45%,68%,0.3)] hover:border-[hsl(268,45%,68%,0.6)] bg-card/60 transition-all cursor-pointer"
-      onClick={onClick}
-    >
-      <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: LAYERS.PONTE.bg }}>
-        <span className="text-base" style={{ color: LAYERS.PONTE.cor }}>⌒</span>
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-foreground truncate">{book.title}</p>
-        <p className="text-[10px] text-muted-foreground">Usar como apoio</p>
-      </div>
-      <Button variant="outline" size="sm" className="shrink-0 text-xs h-7 gap-1" style={{ borderColor: LAYERS.PONTE.cor, color: LAYERS.PONTE.cor }}>
-        <ArrowRight className="w-3 h-3" />
-        Abrir
-      </Button>
-    </motion.div>
-  );
-}
-
-// ============================================
-// DETAIL PANEL — CTA com cor de ação
-// ============================================
-function DetailPanel({ book, onClose, onNavigate }: { book: Book; onClose: () => void; onNavigate: (p: string) => void }) {
-  const layer = LAYERS[book.category as LayerKey] || LAYERS.PORTA;
+function BookSidePanel({ book, onClose, onNavigate }: { book: Book; onClose: () => void; onNavigate: (p: string) => void }) {
+  const cam = CAMADAS[book.category as CamadaKey] || CAMADAS.PORTA;
   return (
     <motion.div
       initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 40 }}
@@ -260,99 +178,65 @@ function DetailPanel({ book, onClose, onNavigate }: { book: Book; onClose: () =>
       <div className="p-6 space-y-5">
         <div className="flex items-start justify-between">
           <div>
-            <Badge variant="outline" className="text-xs mb-2 font-bold" style={{ color: layer.cor, borderColor: layer.cor }}>
-              {layer.label}
-            </Badge>
+            <Badge variant="outline" className="text-xs mb-2" style={{ color: cam.cor, borderColor: cam.cor }}>{cam.label}</Badge>
             <h3 className="font-display text-lg text-foreground">{book.title}</h3>
             <p className="text-sm text-muted-foreground">{book.author}</p>
           </div>
           <Button variant="ghost" size="icon" onClick={onClose}><X className="w-4 h-4" /></Button>
         </div>
-        {book.cover_url && (
-          <img src={book.cover_url} alt={book.title} className="w-full h-48 object-cover rounded-lg shadow-lg" />
-        )}
+        <p className="text-xs text-muted-foreground italic" style={{ color: cam.cor }}>{cam.funcao}</p>
+        {book.cover_url && <img src={book.cover_url} alt={book.title} className="w-full h-48 object-cover rounded-lg shadow-lg" />}
         {book.description_short && (
-          <div className="text-sm text-muted-foreground italic border-l-2 pl-3" style={{ borderColor: `${layer.cor}50` }}>
-            {book.description_short}
-          </div>
+          <div className="text-sm text-muted-foreground italic border-l-2 pl-3" style={{ borderColor: cam.cor + '50' }}>{book.description_short}</div>
         )}
         {book.manifesto_short && <p className="text-sm text-foreground/80">{book.manifesto_short}</p>}
-        
-        {/* CTA principal com cor de ação */}
-        <Button
-          className="w-full justify-center gap-2 h-12 text-sm font-semibold"
-          onClick={() => onNavigate(`/clube-livro/livro/${book.id}`)}
-        >
+        <Button variant="outline" className="w-full justify-start gap-2" onClick={() => onNavigate(`/clube-livro/livro/${book.id}`)}>
           <BookOpen className="w-4 h-4" /> Abrir Página do Livro
         </Button>
-        <p className="text-[10px] text-center text-muted-foreground -mt-3">
-          Entrar na jornada deste livro
-        </p>
       </div>
     </motion.div>
   );
 }
 
 // ============================================
-// LIST VIEW
+// List View
 // ============================================
-function ListView({ cycleBooks, links, onSelect }: { cycleBooks: CycleBook[]; links: BookLink[]; onSelect: (b: Book) => void }) {
-  const travessias = cycleBooks.filter(cb => cb.layer === 'TRAVESSIA').sort((a, b) => a.layer_order - b.layer_order);
-
+function LayerListView({ cycleBooks, onSelect }: { cycleBooks: CycleBook[]; onSelect: (b: Book) => void }) {
+  const ordem: CamadaKey[] = ['MATRIZ', 'TRAVESSIA', 'PORTA', 'PONTE', 'FUNDACAO'];
   return (
     <div className="space-y-6">
-      {travessias.map((tCb, i) => {
-        if (!tCb.book) return null;
-        const portas = getChildBooks(tCb.book.id, links, cycleBooks, 'ABRE');
-        const pontes = getChildBooks(tCb.book.id, links, cycleBooks, 'INTEGRA');
-        const romanNumerals = ['I', 'II', 'III', 'IV'];
-
+      {ordem.map(key => {
+        const items = cycleBooks.filter(cb => cb.layer === key);
+        if (!items.length) return null;
+        const cam = CAMADAS[key];
         return (
-          <div key={tCb.id} className="space-y-2">
-            <div
-              className="flex items-center gap-2 px-1 cursor-pointer hover:opacity-80 transition-opacity"
-              onClick={() => onSelect(tCb.book!)}
-            >
-              <span className="text-base" style={{ color: LAYERS.TRAVESSIA.cor }}>◈</span>
+          <div key={key} className="space-y-2">
+            <div className="flex items-center gap-2 px-1">
+              <span style={{ color: cam.cor }} className="text-base">{cam.icon}</span>
               <div>
-                <span className="text-xs font-bold uppercase tracking-widest" style={{ color: LAYERS.TRAVESSIA.cor }}>
-                  Travessia {romanNumerals[i]}
-                </span>
-                <span className="text-sm text-foreground ml-2">{tCb.book.title}</span>
+                <span style={{ color: cam.cor }} className="text-xs font-semibold uppercase tracking-widest">{cam.label}</span>
+                <span className="text-[10px] text-muted-foreground ml-2">{cam.funcao}</span>
               </div>
             </div>
-
-            {portas.length > 0 && (
-              <div className="ml-6 space-y-1">
-                <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Portas</span>
-                {portas.map(pCb => pCb.book && (
-                  <div
-                    key={pCb.id}
-                    className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-muted/50 transition-colors"
-                    onClick={() => onSelect(pCb.book!)}
-                  >
-                    <span className="text-xs" style={{ color: LAYERS.PORTA.cor }}>🗝</span>
-                    <span className="text-sm text-foreground truncate">{pCb.book.title}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {pontes.length > 0 && (
-              <div className="ml-6 space-y-1">
-                <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Pontes</span>
-                {pontes.map(bCb => bCb.book && (
-                  <div
-                    key={bCb.id}
-                    className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-muted/50 transition-colors"
-                    onClick={() => onSelect(bCb.book!)}
-                  >
-                    <span className="text-xs" style={{ color: LAYERS.PONTE.cor }}>⌒</span>
-                    <span className="text-sm text-foreground truncate">{bCb.book.title}</span>
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="grid gap-2">
+              {items.map(cb => cb.book && (
+                <Card key={cb.book.id} className="cursor-pointer hover:border-amber-500/40 transition-all" onClick={() => onSelect(cb.book!)}>
+                  <CardContent className="p-3 flex items-center gap-3">
+                    {cb.book.cover_url ? (
+                      <img src={cb.book.cover_url} alt="" className="w-10 h-14 object-cover rounded shadow" />
+                    ) : (
+                      <div className="w-10 h-14 rounded flex items-center justify-center shrink-0" style={{ background: cam.corBg }}>
+                        <span style={{ color: cam.cor }} className="text-lg">{cam.icon}</span>
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-display text-foreground truncate">{cb.book.title}</p>
+                      <p className="text-xs text-muted-foreground">{cb.book.author}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         );
       })}
@@ -361,180 +245,212 @@ function ListView({ cycleBooks, links, onSelect }: { cycleBooks: CycleBook[]; li
 }
 
 // ============================================
-// MAIN COMPONENT
+// MANDALA — Componente Principal
 // ============================================
 export function MandalaAnualDB() {
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
   const { data: cycle, isLoading: loadingCycle } = useActiveCycle();
   const { data: cycleBooks, isLoading: loadingBooks } = useCycleBooks(cycle?.id);
   const { data: links } = useBookLinks(cycle?.id);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-  const [activeTravessiaId, setActiveTravessiaId] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'mandala' | 'list'>('mandala');
 
-  // Organize data
-  const { matriz, travessias, fundacao } = useMemo(() => {
-    if (!cycleBooks?.length) return { matriz: null, travessias: [], fundacao: [] };
-    const m = cycleBooks.find(cb => cb.layer === 'MATRIZ');
-    const t = cycleBooks.filter(cb => cb.layer === 'TRAVESSIA').sort((a, b) => a.layer_order - b.layer_order);
-    const f = cycleBooks.filter(cb => cb.layer === 'FUNDACAO');
-    return { matriz: m, travessias: t, fundacao: f };
-  }, [cycleBooks]);
-
-  const activeId = activeTravessiaId || travessias[0]?.book?.id || null;
-
-  const activePortas = useMemo(() => {
-    if (!activeId || !links || !cycleBooks) return [];
-    return getChildBooks(activeId, links, cycleBooks, 'ABRE');
-  }, [activeId, links, cycleBooks]);
-
-  const activePontes = useMemo(() => {
-    if (!activeId || !links || !cycleBooks) return [];
-    return getChildBooks(activeId, links, cycleBooks, 'INTEGRA');
-  }, [activeId, links, cycleBooks]);
+  const positions = useMemo(() => {
+    if (!cycleBooks?.length) return new Map();
+    return computePositions(cycleBooks, links || []);
+  }, [cycleBooks, links]);
 
   if (loadingCycle || loadingBooks) {
-    return <div className="flex justify-center py-16"><span className="text-muted-foreground text-sm animate-pulse">Carregando jornada…</span></div>;
+    return <div className="flex justify-center py-16"><span className="text-muted-foreground text-sm animate-pulse">Carregando mandala…</span></div>;
   }
   if (!cycleBooks?.length) {
     return <div className="text-center py-16 text-muted-foreground">Nenhum ciclo encontrado.</div>;
   }
 
+  // Conexões
+  const conexoes = (links || [])
+    .filter(l => ['ABRE', 'INTEGRA', 'SUPORTA'].includes(l.link_type))
+    .map(link => {
+      const from = positions.get(link.from_book_id);
+      const to = positions.get(link.to_book_id);
+      if (!from || !to) return null;
+      const toCb = cycleBooks.find(cb => cb.book_id === link.to_book_id);
+      const toLayer = (toCb?.layer || 'PORTA') as CamadaKey;
+      return { from, to, cor: CAMADAS[toLayer]?.cor || '#666', tipo: link.link_type };
+    })
+    .filter(Boolean) as { from: { x: number; y: number }; to: { x: number; y: number }; cor: string; tipo: string }[];
+
+  const fundacao = cycleBooks.filter(cb => cb.layer === 'FUNDACAO');
+  const mandalaBooks = cycleBooks.filter(cb => cb.layer !== 'FUNDACAO');
+
+  // Render a book node
+  const renderNode = (cb: CycleBook) => {
+    const book = cb.book;
+    if (!book) return null;
+    const pos = positions.get(book.id);
+    if (!pos) return null;
+    const key = (cb.layer || book.category) as CamadaKey;
+    const cam = CAMADAS[key] || CAMADAS.PORTA;
+    const r = cam.nodeR;
+    const isMatriz = key === 'MATRIZ';
+    const hovered = hoveredId === book.id;
+    const title = isMatriz ? 'A Deusa Tríplice' : (book.title.length > 18 ? book.title.slice(0, 16) + '…' : book.title);
+
+    return (
+      <g
+        key={book.id}
+        className="cursor-pointer"
+        onClick={() => setSelectedBook(book)}
+        onMouseEnter={() => setHoveredId(book.id)}
+        onMouseLeave={() => setHoveredId(null)}
+      >
+        {/* MATRIZ — pulso contínuo */}
+        {isMatriz && (
+          <>
+            <circle cx={pos.x} cy={pos.y} r={r + 14} fill="none" stroke={cam.cor} strokeWidth={0.8} strokeOpacity={0.1}>
+              <animate attributeName="r" values={`${r + 8};${r + 20};${r + 8}`} dur="5s" repeatCount="indefinite" />
+              <animate attributeName="stroke-opacity" values="0.05;0.25;0.05" dur="5s" repeatCount="indefinite" />
+            </circle>
+            <circle cx={pos.x} cy={pos.y} r={r + 6} fill="none" stroke={cam.cor} strokeWidth={0.5} strokeOpacity={0.12}>
+              <animate attributeName="r" values={`${r + 4};${r + 10};${r + 4}`} dur="3s" repeatCount="indefinite" />
+            </circle>
+          </>
+        )}
+
+        {/* Hover glow */}
+        {hovered && (
+          <circle cx={pos.x} cy={pos.y} r={r + 5} fill="none" stroke={cam.cor} strokeWidth={2} strokeOpacity={0.6}>
+            <animate attributeName="stroke-opacity" values="0.3;0.7;0.3" dur="1.2s" repeatCount="indefinite" />
+          </circle>
+        )}
+
+        {/* Nó */}
+        <circle cx={pos.x} cy={pos.y} r={r} fill={cam.corBg} stroke={cam.corStroke} strokeWidth={isMatriz ? 2.5 : 1.5} />
+
+        {/* Conteúdo: cover ou ícone */}
+        <foreignObject x={pos.x - r + 3} y={pos.y - r + 3} width={(r - 3) * 2} height={(r - 3) * 2}>
+          <div className="flex items-center justify-center w-full h-full rounded-full overflow-hidden">
+            {book.cover_url ? (
+              <img src={book.cover_url} alt="" className="w-full h-full object-cover rounded-full" />
+            ) : (
+              <span className="select-none" style={{ fontSize: r * 0.45, color: cam.cor }}>{cam.icon}</span>
+            )}
+          </div>
+        </foreignObject>
+
+        {/* Título */}
+        <foreignObject x={pos.x - 52} y={pos.y + r + 3} width={104} height={isMatriz ? 36 : 28}>
+          <div className="text-center leading-tight">
+            <span className="font-semibold line-clamp-2 drop-shadow-sm" style={{ fontSize: isMatriz ? 9 : 7, color: cam.cor }}>{title}</span>
+          </div>
+        </foreignObject>
+
+        {/* Tooltip */}
+        {hovered && (
+          <foreignObject x={pos.x - 100} y={pos.y - r - 48} width={200} height={44}>
+            <div className="bg-card/95 backdrop-blur-sm border border-border rounded-lg px-3 py-2 text-center shadow-xl">
+              <p className="text-[10px] text-foreground font-semibold truncate">{book.title}</p>
+              <p className="text-[9px] text-muted-foreground">{cam.label} · {book.author}</p>
+            </div>
+          </foreignObject>
+        )}
+      </g>
+    );
+  };
+
   return (
-    <div className="space-y-6">
-      {/* Toggle: Mapa | Lista */}
-      <div className="flex justify-center gap-1 p-1 bg-muted/50 rounded-lg w-fit mx-auto">
-        <Button
-          variant={viewMode === 'map' ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => setViewMode('map')}
-          className="gap-1.5 text-xs h-8"
-        >
-          <Map className="w-3.5 h-3.5" /> Mapa
+    <div className="relative">
+      {/* Toggle */}
+      <div className="flex justify-center gap-2 mb-5">
+        <Button variant={viewMode === 'mandala' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('mandala')} className="gap-1.5">
+          <Moon className="w-3.5 h-3.5" /> Mandala
         </Button>
-        <Button
-          variant={viewMode === 'list' ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => setViewMode('list')}
-          className="gap-1.5 text-xs h-8"
-        >
-          <List className="w-3.5 h-3.5" /> Lista
+        <Button variant={viewMode === 'list' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('list')} className="gap-1.5">
+          <List className="w-3.5 h-3.5" /> Lista por Camada
         </Button>
       </div>
 
       {viewMode === 'list' ? (
-        <ListView cycleBooks={cycleBooks} links={links || []} onSelect={setSelectedBook} />
+        <LayerListView cycleBooks={cycleBooks} onSelect={setSelectedBook} />
       ) : (
-        <div className="space-y-8">
-          {/* CAMADA 0 — MATRIZ */}
-          {matriz?.book && <MatrizBlock book={matriz.book} />}
+        <>
+          <div className="flex justify-center overflow-auto">
+            <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="w-full max-w-[720px] aspect-square">
 
-          {/* CAMADA 1 — TRAVESSIAS */}
-          <div>
-            <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3 px-1">
-              Travessias do Ciclo
-            </h2>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {travessias.map((tCb, i) => {
-                if (!tCb.book) return null;
-                const isActive = tCb.book.id === activeId;
-                const progress = isActive ? 1 : 0;
-                const isCompleted = false;
-
+              {/* Anéis de camada — preenchidos sutilmente */}
+              {(['PONTE', 'PORTA', 'TRAVESSIA', 'MATRIZ'] as CamadaKey[]).map(key => {
+                const cam = CAMADAS[key];
+                if (!cam.ringOuter) return null;
                 return (
-                  <TravessiaCard
-                    key={tCb.id}
-                    book={tCb.book}
-                    index={i}
-                    isActive={isActive}
-                    isCompleted={isCompleted}
-                    progress={progress}
-                    onClick={() => navigate(`/clube-livro/travessia/${tCb.book!.id}`)}
-                  />
+                  <g key={key}>
+                    <circle cx={CX} cy={CY} r={cam.ringOuter} fill={cam.corBg} stroke={cam.corStroke} strokeWidth={1} strokeOpacity={0.25} />
+                    {/* Label do anel */}
+                    {key !== 'MATRIZ' && (
+                      <text
+                        x={CX + cam.ringOuter - 4}
+                        y={CY - 6}
+                        textAnchor="end"
+                        fontSize={7}
+                        fill={cam.cor}
+                        fillOpacity={0.3}
+                        fontWeight="600"
+                        letterSpacing="1"
+                      >
+                        {cam.label.toUpperCase()}
+                      </text>
+                    )}
+                  </g>
                 );
               })}
-            </div>
+
+              {/* Linhas da cruz simbólica — eixos, não cronologia */}
+              {[0, 90, 180, 270].map(angle => {
+                const inner = polarXY(angle, CAMADAS.MATRIZ.ringOuter);
+                const outer = polarXY(angle, CAMADAS.PONTE.ringOuter);
+                return (
+                  <line key={angle} x1={inner.x} y1={inner.y} x2={outer.x} y2={outer.y}
+                    stroke="hsl(var(--muted-foreground))" strokeWidth={0.5} strokeOpacity={0.08}
+                    strokeDasharray="4 8" />
+                );
+              })}
+
+              {/* Conexões */}
+              {conexoes.map((c, i) => (
+                <line key={i} x1={c.from.x} y1={c.from.y} x2={c.to.x} y2={c.to.y}
+                  stroke={c.cor}
+                  strokeWidth={c.tipo === 'SUPORTA' ? 1.2 : 0.8}
+                  strokeOpacity={c.tipo === 'SUPORTA' ? 0.2 : 0.15}
+                  strokeDasharray={c.tipo === 'SUPORTA' ? '3 6' : 'none'} />
+              ))}
+
+              {/* Nós — back-to-front: Ponte → Porta → Travessia → Matriz */}
+              {mandalaBooks.filter(cb => cb.layer === 'PONTE').map(renderNode)}
+              {mandalaBooks.filter(cb => cb.layer === 'PORTA').map(renderNode)}
+              {mandalaBooks.filter(cb => cb.layer === 'TRAVESSIA').map(renderNode)}
+              {mandalaBooks.filter(cb => cb.layer === 'MATRIZ').map(renderNode)}
+            </svg>
           </div>
 
-          {/* CAMADA 2 — PORTAS */}
-          <AnimatePresence mode="wait">
-            {activePortas.length > 0 && (
-              <motion.div
-                key={`portas-${activeId}`}
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="overflow-hidden"
-              >
-                <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3 px-1" style={{ color: LAYERS.PORTA.cor }}>
-                  Portas desta Travessia
-                </h2>
-                <div className="space-y-2">
-                  {activePortas.map((pCb, i) => pCb.book && (
-                    <PortaItem
-                      key={pCb.id}
-                      book={pCb.book}
-                      isUnlocked={i === 0}
-                      onClick={() => setSelectedBook(pCb.book!)}
-                    />
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* CAMADA 3 — PONTES */}
-          <AnimatePresence mode="wait">
-            {activePontes.length > 0 && (
-              <motion.div
-                key={`pontes-${activeId}`}
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="overflow-hidden"
-              >
-                <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3 px-1" style={{ color: LAYERS.PONTE.cor }}>
-                  Pontes de Integração
-                </h2>
-                <div className="space-y-2">
-                  {activePontes.map(bCb => bCb.book && (
-                    <PonteItem
-                      key={bCb.id}
-                      book={bCb.book}
-                      onClick={() => setSelectedBook(bCb.book!)}
-                    />
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* FUNDAÇÃO */}
+          {/* Fundação — FORA da mandala */}
           {fundacao.length > 0 && (
-            <div className="border-2 border-border/60 rounded-lg p-4 mt-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Columns className="w-4 h-4" style={{ color: LAYERS.FUNDACAO.cor }} />
+            <div className="mt-6 border border-border rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-3" style={{ color: CAMADAS.FUNDACAO.cor }}>
+                <Columns className="w-4 h-4" />
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: LAYERS.FUNDACAO.cor }}>
-                    Fundação
-                  </span>
-                  <span className="text-[10px] text-muted-foreground ml-2">Base teórica do método</span>
+                  <span className="text-xs font-semibold uppercase tracking-widest">Fundação do Método</span>
+                  <span className="text-[10px] text-muted-foreground ml-2">Base teórica e estrutural</span>
                 </div>
               </div>
               <div className="grid gap-2 sm:grid-cols-2">
                 {fundacao.map(cb => cb.book && (
-                  <Card
-                    key={cb.book.id}
-                    className="cursor-pointer hover:border-border hover:shadow-sm transition-all"
-                    onClick={() => setSelectedBook(cb.book!)}
-                  >
+                  <Card key={cb.book.id} className="cursor-pointer hover:border-amber-500/40 transition-all" onClick={() => setSelectedBook(cb.book!)}>
                     <CardContent className="p-3 flex items-center gap-3">
-                      <div className="w-9 h-11 rounded flex items-center justify-center shrink-0" style={{ background: LAYERS.FUNDACAO.bg }}>
-                        <Columns className="w-4 h-4" style={{ color: LAYERS.FUNDACAO.cor }} />
+                      <div className="w-10 h-14 rounded flex items-center justify-center shrink-0" style={{ background: CAMADAS.FUNDACAO.corBg }}>
+                        <Columns className="w-4 h-4" style={{ color: CAMADAS.FUNDACAO.cor }} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate">{cb.book.title}</p>
+                        <p className="text-sm font-display text-foreground truncate">{cb.book.title}</p>
                         <p className="text-xs text-muted-foreground">{cb.book.author}</p>
                       </div>
                     </CardContent>
@@ -543,36 +459,33 @@ export function MandalaAnualDB() {
               </div>
             </div>
           )}
-        </div>
+        </>
       )}
 
-      {/* Legend */}
-      <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 pt-2">
-        {(['MATRIZ', 'TRAVESSIA', 'PORTA', 'PONTE', 'FUNDACAO'] as LayerKey[]).map(key => {
-          const l = LAYERS[key];
+      {/* Legenda funcional */}
+      <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2">
+        {(['MATRIZ', 'TRAVESSIA', 'PORTA', 'PONTE', 'FUNDACAO'] as CamadaKey[]).map(key => {
+          const cam = CAMADAS[key];
           return (
             <div key={key} className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full" style={{ background: l.cor }} />
-              <span className="text-[10px] font-semibold" style={{ color: l.cor }}>{l.label}</span>
+              <span style={{ color: cam.cor }} className="text-sm">{cam.icon}</span>
+              <div className="leading-tight">
+                <span style={{ color: cam.cor }} className="text-[10px] font-semibold">{cam.label}</span>
+                <span className="text-[9px] text-muted-foreground ml-1">{cam.funcao}</span>
+              </div>
             </div>
           );
         })}
       </div>
 
-      {/* Detail Panel */}
+      {/* Side Panel */}
       <AnimatePresence>
         {selectedBook && (
           <>
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 z-40"
-              onClick={() => setSelectedBook(null)}
-            />
-            <DetailPanel
-              book={selectedBook}
-              onClose={() => setSelectedBook(null)}
-              onNavigate={(p) => { setSelectedBook(null); navigate(p); }}
-            />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-40" onClick={() => setSelectedBook(null)} />
+            <BookSidePanel book={selectedBook} onClose={() => setSelectedBook(null)}
+              onNavigate={(p) => { setSelectedBook(null); navigate(p); }} />
           </>
         )}
       </AnimatePresence>
