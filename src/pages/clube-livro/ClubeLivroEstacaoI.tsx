@@ -78,11 +78,17 @@ export default function ClubeLivroEstacaoI() {
           capaUrl={estacaoI.livro_capa_url}
           titulo={estacaoI.livro_titulo}
           autor={estacaoI.livro_autor}
-          navLinks={jornadas.map(j => ({
-            label: j.nome,
-            icon: j.icone || '📖',
-            to: `/clube-livro/portal/${portais.find(p => p.jornada_id === j.id)?.slug || ''}`,
-          }))}
+          navLinks={[
+            { label: 'Álbum de Áudio', icon: '🎧', to: `/clube-livro/estacao/1/audio` },
+            { label: 'Podcast', icon: '🎙️', to: `/clube-livro/estacao/1/podcast` },
+            { label: 'Fale com o Livro', icon: '💬', to: `/clube-livro/estacao/1/fale-com-livro` },
+            { label: '80-20', icon: '🎯', to: `/clube-livro/estacao/1/80-20` },
+            ...jornadas.map(j => ({
+              label: j.nome,
+              icon: j.icone || '📖',
+              to: `/clube-livro/portal/${portais.find(p => p.jornada_id === j.id)?.slug || ''}`,
+            })),
+          ]}
         />
 
         {/* Áudio da Estação */}
