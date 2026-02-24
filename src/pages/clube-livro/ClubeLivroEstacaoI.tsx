@@ -87,6 +87,7 @@ export default function ClubeLivroEstacaoI() {
             { label: 'Álbum de Áudio', icon: '🎧', to: `/clube-livro/estacao/1/audio` },
             { label: '80-20', icon: '🎯', to: `/clube-livro/estacao/1/80-20` },
             { label: 'Fale com o Livro', icon: '💬', to: `/clube-livro/estacao/1/fale-com-livro` },
+            { label: 'Romper', icon: '🔥', to: `/clube-livro/estacao/1/romper` },
             { label: 'Jardim da Psique', icon: '🌸', to: `/jardim-psique` },
             { label: 'Jardim do Ofício', icon: '⚔️', to: `/jardim-oficio` },
           ]}
