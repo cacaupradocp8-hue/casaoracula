@@ -31,6 +31,26 @@ export default function Landing() {
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-end pb-12 md:pb-16 px-6">
         {/* Logo removed — hero image speaks for itself */}
 
+      {/* Certification block */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="max-w-3xl mx-auto text-center mb-8"
+        >
+          <div className="relative px-6 py-8 rounded-2xl bg-background/70 backdrop-blur-sm border border-primary/20">
+            <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-semibold text-gold-gradient leading-tight">
+              CERTIFICAÇÃO ORÁCULA
+            </h2>
+            <p className="text-muted-foreground text-base md:text-lg mt-2 italic font-display">
+              em Leitura e Condução Simbólica Feminina
+            </p>
+            <p className="text-foreground/80 text-sm md:text-base mt-4 max-w-xl mx-auto leading-relaxed">
+              Formação estruturante para terapeutas que desejam reorganizar o eixo da própria escuta antes de conduzir outras mulheres.
+            </p>
+          </div>
+        </motion.div>
+
         {/* Main content block — positioned at the bottom */}
         <div className="max-w-2xl mx-auto text-center space-y-8 relative">
           {/* Readability backdrop behind text block */}
