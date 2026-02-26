@@ -14,7 +14,7 @@ import { useOnboarding } from "@/hooks/useOnboarding";
 import { LockedForVisitor } from "@/components/shared/LockedForVisitor";
 
 // Pages
-import Landing from "./pages/Landing";
+// Landing page removed - route "/" now goes to Auth
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
@@ -296,7 +296,7 @@ function AppRoutes() {
         path="/"
         element={
           <PublicRoute>
-            <Landing />
+            <Auth />
           </PublicRoute>
         }
       />
