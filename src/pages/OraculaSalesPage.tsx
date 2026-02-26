@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Shield, BookOpen, Users, Star, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Sparkles, Shield, BookOpen, Users, Star, CheckCircle2, Ear, Compass, Scale, AlertTriangle, Eye, Heart, Layers, Flame, Moon, Sunrise, Crown } from "lucide-react";
 
 // Imagens
 import mentoriaBanner from "@/assets/formacao/mentoria-banner-horizontal.png";
@@ -31,7 +31,7 @@ export default function OraculaSalesPage() {
         <div className="relative w-full overflow-hidden">
           <img
             src={mentoriaBanner}
-            alt="Casa Orácula — Formação Iniciática em Terapia Arquetípica"
+            alt="Casa Orácula — Certificação ORÁCULA em Leitura e Condução Simbólica Feminina"
             className="w-full h-auto block"
           />
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
@@ -39,8 +39,7 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══ SEÇÃO DE VÍDEO ═══ */}
-      <section className="relative py-16 px-6 overflow-hidden">
-        {/* Ambient mist */}
+      <section className="relative py-20 md:py-24 px-6 overflow-hidden">
         <div className="absolute top-0 left-0 w-[600px] h-[400px] rounded-full bg-primary/[0.04] blur-[150px] pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-[500px] h-[350px] rounded-full bg-accent/[0.03] blur-[130px] pointer-events-none" />
 
@@ -66,11 +65,15 @@ export default function OraculaSalesPage() {
         </motion.div>
       </section>
 
+      {/* ═══ DIVISOR ═══ */}
+      <div className="w-full flex justify-center py-4">
+        <div className="w-32 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+      </div>
+
       {/* ═══ TÍTULO + INTRODUÇÃO — com imagem de fundo ═══ */}
-      <section className="relative py-20 md:py-28 px-6 overflow-hidden">
+      <section className="relative py-24 md:py-32 px-6 overflow-hidden">
         <img src={heroOracula} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover opacity-[0.08]" />
         <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-black" />
-        {/* Ambient mist */}
         <div className="absolute top-1/4 left-1/4 w-[600px] h-[400px] rounded-full bg-primary/[0.05] blur-[160px] pointer-events-none" />
         <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[300px] rounded-full bg-accent/[0.04] blur-[120px] pointer-events-none" />
 
@@ -99,62 +102,83 @@ export default function OraculaSalesPage() {
         </motion.div>
       </section>
 
-      {/* ═══ O PROBLEMA REAL — com imagem de fundo ═══ */}
-      <section className="relative py-20 px-6 overflow-hidden">
+      {/* ═══ O PROBLEMA REAL — 2 COLUNAS — com imagem de fundo ═══ */}
+      <section className="relative py-24 md:py-32 px-6 overflow-hidden">
         <img src={atmosferaRitual01} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover opacity-[0.06]" />
         <div className="absolute inset-0 bg-gradient-to-b from-black via-black/90 to-black" />
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="relative z-10 max-w-2xl mx-auto"
-        >
-          <div className="border border-primary/15 rounded-2xl p-10 md:p-14 bg-white/[0.02] backdrop-blur-sm shadow-[0_0_80px_-30px_hsl(var(--gold)/0.1)]">
-            <h2 className="font-display text-3xl md:text-4xl text-white mb-10 text-center leading-snug">
-              Você não precisa de mais técnicas.<br />
-              <span className="text-gold-gradient">Precisa de critério.</span>
-            </h2>
-            
-            <p className="text-white/50 mb-6 text-center text-sm uppercase tracking-widest">
-              Muitas mulheres conduzem outras mulheres com
-            </p>
-            
-            <div className="flex flex-wrap justify-center gap-4 mb-10">
-              {["sensibilidade", "intuição", "símbolos", "histórias"].map((item) => (
-                <span key={item} className="px-5 py-2.5 rounded-full border border-primary/20 text-white/70 text-sm font-medium">
-                  {item}
-                </span>
-              ))}
-            </div>
-            
-            <p className="text-white/40 text-center mb-6 text-sm">
-              Mas sem método, isso vira:
-            </p>
-            
-            <div className="flex flex-wrap justify-center gap-3 mb-10">
-              {["confusão", "dependência", "excesso", "invasão silenciosa"].map((item) => (
-                <span key={item} className="text-white/30 text-sm px-3 py-1 border border-white/10 rounded-full">
-                  {item}
-                </span>
-              ))}
-            </div>
-            
-            <div className="w-16 h-px bg-primary/30 mx-auto mb-8" />
-            
-            <p className="text-primary/80 italic text-xl text-center font-display">
-              A Formação ORÁCULA nasce para organizar o campo.
-            </p>
+        <div className="relative z-10 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+            {/* Coluna esquerda — Texto principal */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <h2 className="font-display text-3xl md:text-4xl text-white mb-10 leading-snug">
+                Você não precisa de mais técnicas.<br />
+                <span className="text-gold-gradient">Precisa de critério.</span>
+              </h2>
+              
+              <p className="text-white/50 mb-8 text-lg leading-relaxed">
+                Muitas mulheres conduzem outras mulheres com sensibilidade, intuição, símbolos e histórias.
+              </p>
+              
+              <p className="text-primary/80 italic text-xl font-display">
+                A Formação ORÁCULA nasce para organizar o campo.
+              </p>
+            </motion.div>
+
+            {/* Coluna direita — Bloco visual com lista */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.15 }}
+            >
+              <div className="border border-primary/15 rounded-2xl p-8 md:p-10 bg-white/[0.02] backdrop-blur-sm shadow-[0_0_80px_-30px_hsl(var(--gold)/0.1)]">
+                <p className="text-white/40 text-sm uppercase tracking-widest mb-8">
+                  Mas sem método, isso vira:
+                </p>
+                
+                <div className="space-y-5">
+                  {[
+                    { icon: AlertTriangle, label: "confusão" },
+                    { icon: Eye, label: "dependência" },
+                    { icon: Heart, label: "excesso" },
+                    { icon: Shield, label: "invasão silenciosa" },
+                  ].map((item, i) => (
+                    <motion.div 
+                      key={item.label}
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: i * 0.08 }}
+                      className="flex items-center gap-4"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-white/[0.05] flex items-center justify-center flex-shrink-0">
+                        <item.icon className="w-4 h-4 text-white/30" strokeWidth={1.5} />
+                      </div>
+                      <span className="text-white/50 text-sm">{item.label}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
+      {/* ═══ DIVISOR ═══ */}
+      <div className="w-full flex justify-center py-4">
+        <div className="w-32 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+      </div>
+
       {/* ═══ AVISO HONESTO (FILTRO) — com imagem de fundo ═══ */}
-      <section className="relative py-20 px-6 overflow-hidden">
+      <section className="relative py-24 md:py-32 px-6 overflow-hidden">
         <img src={fundoRetrato01} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover opacity-[0.15]" />
         <div className="absolute inset-0 bg-gradient-to-b from-black via-black/60 to-black" />
-        {/* Ambient glow */}
         <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full bg-primary/[0.04] blur-[120px] pointer-events-none" />
 
         <motion.div
@@ -193,8 +217,8 @@ export default function OraculaSalesPage() {
         </motion.div>
       </section>
 
-      {/* ═══ O QUE É A FORMAÇÃO — com imagem de fundo ═══ */}
-      <section className="relative py-24 px-6 overflow-hidden">
+      {/* ═══ O QUE É A FORMAÇÃO — CARDS VISUAIS — com imagem de fundo ═══ */}
+      <section className="relative py-28 md:py-36 px-6 overflow-hidden">
         <img src={atmosferaRitual02} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover opacity-[0.07]" />
         <div className="absolute inset-0 bg-gradient-to-b from-black via-black/85 to-black" />
         <div className="absolute top-0 left-1/3 w-[500px] h-[400px] rounded-full bg-primary/[0.04] blur-[140px] pointer-events-none" />
@@ -204,37 +228,45 @@ export default function OraculaSalesPage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="relative z-10 max-w-4xl mx-auto"
+          className="relative z-10 max-w-5xl mx-auto"
         >
-          <div className="text-center mb-14">
+          <div className="text-center mb-16">
             <Sparkles className="w-10 h-10 text-primary/40 mx-auto mb-6" />
             <h2 className="font-display text-3xl md:text-5xl text-primary mb-6">
               O que é a Formação ORÁCULA
             </h2>
-            <p className="text-white/50 text-lg">
+            <p className="text-white/50 text-lg max-w-xl mx-auto">
               A Formação ORÁCULA não é um curso rápido.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6 mb-14">
+          {/* 3 Cards de competências */}
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
             {[
-              { label: "Um percurso de autorização progressiva", icon: "🌱" },
-              { label: "Um método simbólico estruturado", icon: "🔮" },
-              { label: "Uma formação ética para quem guia", icon: "🛡️" },
-            ].map((item) => (
-              <div
+              { label: "Um percurso de autorização progressiva", icon: Compass, desc: "Cada etapa habilita a próxima. Não há atalhos." },
+              { label: "Um método simbólico estruturado", icon: Layers, desc: "Portas, Torres, Travessias — tudo mapeado." },
+              { label: "Uma formação ética para quem guia", icon: Shield, desc: "Limite, presença e responsabilidade clínica." },
+            ].map((item, i) => (
+              <motion.div
                 key={item.label}
-                className="border border-white/10 rounded-xl p-8 text-center hover:border-primary/25 transition-all duration-500 bg-white/[0.02] backdrop-blur-sm hover:shadow-[0_0_40px_-15px_hsl(var(--gold)/0.1)]"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.12 }}
+                className="border border-white/10 rounded-2xl p-10 text-center hover:border-primary/25 transition-all duration-500 bg-white/[0.02] backdrop-blur-sm hover:shadow-[0_0_40px_-15px_hsl(var(--gold)/0.1)]"
               >
-                <span className="text-4xl mb-5 block">{item.icon}</span>
-                <p className="text-white/70 text-sm leading-relaxed">{item.label}</p>
-              </div>
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
+                  <item.icon className="w-6 h-6 text-primary/60" strokeWidth={1.5} />
+                </div>
+                <h3 className="font-display text-lg text-white mb-3">{item.label}</h3>
+                <p className="text-white/40 text-sm leading-relaxed">{item.desc}</p>
+              </motion.div>
             ))}
           </div>
 
           <p className="text-primary/70 text-center mb-8 text-sm uppercase tracking-widest">Aqui, você aprende:</p>
           
-          <div className="flex flex-wrap justify-center gap-6 text-white/60 mb-14">
+          <div className="flex flex-wrap justify-center gap-6 text-white/60 mb-16">
             {["quando conduzir", "quando silenciar", "quando sustentar", "quando encerrar"].map((item, i) => (
               <span key={item} className="flex items-center gap-3">
                 {i > 0 && <span className="w-1.5 h-1.5 rounded-full bg-primary/30" />}
@@ -246,7 +278,7 @@ export default function OraculaSalesPage() {
           {/* Card principal */}
           <div className="border border-primary/20 rounded-2xl p-10 md:p-14 bg-white/[0.02] backdrop-blur-sm shadow-[0_0_80px_-20px_hsl(var(--gold)/0.1)]">
             <h3 className="font-display text-2xl md:text-3xl text-primary text-center mb-8">
-              🏛️ FORMAÇÃO ORÁCULA
+              FORMAÇÃO ORÁCULA
             </h3>
             
             <p className="text-white/50 text-center mb-10 max-w-lg mx-auto text-lg">
@@ -279,8 +311,13 @@ export default function OraculaSalesPage() {
         </motion.div>
       </section>
 
-      {/* ═══ NÍVEIS DA FORMAÇÃO ═══ */}
-      <section className="relative py-20 px-6 overflow-hidden">
+      {/* ═══ DIVISOR ═══ */}
+      <div className="w-full flex justify-center py-4">
+        <div className="w-32 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+      </div>
+
+      {/* ═══ NÍVEIS DA FORMAÇÃO — Linha do tempo horizontal ═══ */}
+      <section className="relative py-28 md:py-36 px-6 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-[#080e14] to-black" />
         <div className="absolute bottom-1/3 left-1/4 w-[500px] h-[400px] rounded-full bg-accent/[0.04] blur-[140px] pointer-events-none" />
         
@@ -289,9 +326,9 @@ export default function OraculaSalesPage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="relative z-10 max-w-4xl mx-auto"
+          className="relative z-10 max-w-5xl mx-auto"
         >
-          <div className="text-center mb-14">
+          <div className="text-center mb-16">
             <h2 className="font-display text-3xl md:text-5xl text-primary mb-4">
               Os Níveis da Formação
             </h2>
@@ -300,26 +337,40 @@ export default function OraculaSalesPage() {
             </p>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {[
-              { icon: "🌱", name: "Iniciada", desc: "presença e contenção" },
-              { icon: "🌒", name: "Praticante", desc: "estrutura e linguagem" },
-              { icon: "🔥", name: "Condutora", desc: "decisão e travessia" },
-              { icon: "🌌", name: "Guia de Grupos", desc: "campo coletivo" },
-              { icon: "🧝🏽‍♀️", name: "Formadora", desc: "transmissão e linhagem" },
-            ].map((level) => (
-              <div
-                key={level.name}
-                className="border border-white/10 rounded-xl p-6 text-center hover:border-primary/25 transition-all duration-500 group bg-white/[0.02] hover:shadow-[0_0_40px_-15px_hsl(var(--gold)/0.08)]"
-              >
-                <span className="text-3xl block mb-3 group-hover:scale-110 transition-transform duration-300">{level.icon}</span>
-                <h3 className="font-display text-sm text-white mb-1">{level.name}</h3>
-                <p className="text-white/40 text-xs">{level.desc}</p>
-              </div>
-            ))}
+          {/* Timeline horizontal */}
+          <div className="relative">
+            {/* Linha conectora */}
+            <div className="hidden md:block absolute top-12 left-[10%] right-[10%] h-px bg-gradient-to-r from-primary/10 via-primary/30 to-primary/10" />
+            
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+              {[
+                { icon: Sunrise, name: "Iniciada", desc: "presença e contenção" },
+                { icon: Moon, name: "Praticante", desc: "estrutura e linguagem" },
+                { icon: Flame, name: "Condutora", desc: "decisão e travessia" },
+                { icon: Users, name: "Guia de Grupos", desc: "campo coletivo" },
+                { icon: Crown, name: "Formadora", desc: "transmissão e linhagem" },
+              ].map((level, i) => (
+                <motion.div
+                  key={level.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="border border-white/10 rounded-xl p-6 text-center hover:border-primary/25 transition-all duration-500 group bg-white/[0.02] hover:shadow-[0_0_40px_-15px_hsl(var(--gold)/0.08)] relative"
+                >
+                  {/* Dot connector */}
+                  <div className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-primary/40 border-2 border-black" />
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                    <level.icon className="w-5 h-5 text-primary/60" strokeWidth={1.5} />
+                  </div>
+                  <h3 className="font-display text-sm text-white mb-1">{level.name}</h3>
+                  <p className="text-white/40 text-xs">{level.desc}</p>
+                </motion.div>
+              ))}
+            </div>
           </div>
           
-          <div className="mt-14 text-center">
+          <div className="mt-16 text-center">
             <p className="text-white/40 text-sm mb-4">Cada nível exige:</p>
             <div className="flex justify-center gap-8 text-white/50 text-sm mb-8">
               <span>prática</span>
@@ -335,8 +386,13 @@ export default function OraculaSalesPage() {
         </motion.div>
       </section>
 
+      {/* ═══ DIVISOR ═══ */}
+      <div className="w-full flex justify-center py-4">
+        <div className="w-32 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+      </div>
+
       {/* ═══ COMO A FORMAÇÃO FUNCIONA — com imagem de fundo ═══ */}
-      <section className="relative py-24 px-6 overflow-hidden">
+      <section className="relative py-28 md:py-36 px-6 overflow-hidden">
         <img src={travessiasSection} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover opacity-[0.08]" />
         <div className="absolute inset-0 bg-gradient-to-b from-black via-black/85 to-black" />
         <div className="absolute top-1/4 right-1/3 w-[500px] h-[400px] rounded-full bg-primary/[0.04] blur-[130px] pointer-events-none" />
@@ -348,7 +404,7 @@ export default function OraculaSalesPage() {
           transition={{ duration: 0.8 }}
           className="relative z-10 max-w-5xl mx-auto"
         >
-          <div className="text-center mb-14">
+          <div className="text-center mb-16">
             <BookOpen className="w-10 h-10 text-primary/40 mx-auto mb-6" />
             <h2 className="font-display text-3xl md:text-5xl text-primary mb-4">
               Como a Formação Funciona
@@ -358,13 +414,13 @@ export default function OraculaSalesPage() {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="border border-primary/15 rounded-2xl p-10 bg-white/[0.02] backdrop-blur-sm hover:shadow-[0_0_60px_-15px_hsl(var(--gold)/0.1)] transition-shadow duration-700">
+          <div className="grid md:grid-cols-2 gap-10">
+            <div className="border border-primary/15 rounded-2xl p-10 md:p-12 bg-white/[0.02] backdrop-blur-sm hover:shadow-[0_0_60px_-15px_hsl(var(--gold)/0.1)] transition-shadow duration-700">
               <h3 className="font-display text-2xl md:text-3xl text-primary mb-6">TRAVESSIAS</h3>
               <p className="text-white/50 italic mb-8 text-sm">
                 O mergulho na própria psique da facilitadora.
               </p>
-              <ul className="space-y-3 text-white/50 text-sm">
+              <ul className="space-y-4 text-white/50 text-sm">
                 <li className="flex items-start gap-3"><span className="text-primary/40">✦</span> atravessa o método em si mesma</li>
                 <li className="flex items-start gap-3"><span className="text-primary/40">✦</span> constrói seu Mapa Vivo</li>
                 <li className="flex items-start gap-3"><span className="text-primary/40">✦</span> reconhece limites, defesas e potências</li>
@@ -375,12 +431,12 @@ export default function OraculaSalesPage() {
               </div>
             </div>
             
-            <div className="border border-primary/15 rounded-2xl p-10 bg-white/[0.02] backdrop-blur-sm hover:shadow-[0_0_60px_-15px_hsl(var(--gold)/0.1)] transition-shadow duration-700">
+            <div className="border border-primary/15 rounded-2xl p-10 md:p-12 bg-white/[0.02] backdrop-blur-sm hover:shadow-[0_0_60px_-15px_hsl(var(--gold)/0.1)] transition-shadow duration-700">
               <h3 className="font-display text-2xl md:text-3xl text-primary mb-6">PORTAIS</h3>
               <p className="text-white/50 italic mb-8 text-sm">
                 O espaço do aprendizado estruturado.
               </p>
-              <ul className="space-y-3 text-white/50 text-sm">
+              <ul className="space-y-4 text-white/50 text-sm">
                 <li className="flex items-start gap-3"><span className="text-primary/40">✦</span> fundamentos teóricos e simbólicos</li>
                 <li className="flex items-start gap-3"><span className="text-primary/40">✦</span> aulas didáticas</li>
                 <li className="flex items-start gap-3"><span className="text-primary/40">✦</span> registros orientados</li>
@@ -395,8 +451,8 @@ export default function OraculaSalesPage() {
         </motion.div>
       </section>
 
-      {/* ═══ AS TRAVESSIAS ═══ */}
-      <section className="relative py-20 px-6 overflow-hidden">
+      {/* ═══ AS TRAVESSIAS — Grid 2x2 ═══ */}
+      <section className="relative py-28 md:py-36 px-6 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-[#0a1018] to-black" />
         <div className="absolute top-1/2 left-1/4 w-[400px] h-[400px] rounded-full bg-accent/[0.05] blur-[120px] pointer-events-none" />
 
@@ -405,42 +461,50 @@ export default function OraculaSalesPage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="relative z-10 max-w-3xl mx-auto"
+          className="relative z-10 max-w-5xl mx-auto"
         >
-          <h2 className="font-display text-3xl md:text-5xl text-primary mb-14 text-center">
+          <h2 className="font-display text-3xl md:text-5xl text-primary mb-16 text-center">
             As Travessias da Formação
           </h2>
           
-          <div className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-8">
             {[
-              { num: "I", title: "A Jornada Ritual da Heroína", desc: "As 14 Portas da Psique Feminina. A base iniciática da formação e a criação do seu Mapa Pessoal." },
-              { num: "II", title: "Neuroplasticidade & Competências do Ego", desc: "O corpo que sustenta o símbolo. Aqui você aprende quando não conduzir." },
-              { num: "III", title: "Mito Pessoal & Linguagem Arquetípica", desc: "A história que te atravessa e posiciona. Sem romantização. Sem projeção." },
-              { num: "IV", title: "A Guardiã da Leitura", desc: "A passagem da vivência pessoal para a condução ética. A facilitadora nasce quando sabe não agir." },
+              { num: "I", title: "A Jornada Ritual da Heroína", desc: "As 14 Portas da Psique Feminina. A base iniciática da formação e a criação do seu Mapa Pessoal.", icon: Compass },
+              { num: "II", title: "Neuroplasticidade & Competências do Ego", desc: "O corpo que sustenta o símbolo. Aqui você aprende quando não conduzir.", icon: Ear },
+              { num: "III", title: "Mito Pessoal & Linguagem Arquetípica", desc: "A história que te atravessa e posiciona. Sem romantização. Sem projeção.", icon: BookOpen },
+              { num: "IV", title: "A Guardiã da Leitura", desc: "A passagem da vivência pessoal para a condução ética. A facilitadora nasce quando sabe não agir.", icon: Scale },
             ].map((t, i) => (
               <motion.div
                 key={t.num}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="flex gap-6 items-start border border-white/10 rounded-xl p-8 hover:border-primary/25 transition-all duration-500 bg-white/[0.02] hover:shadow-[0_0_40px_-15px_hsl(var(--gold)/0.08)]"
+                className="border border-white/10 rounded-2xl p-8 md:p-10 hover:border-primary/25 transition-all duration-500 bg-white/[0.02] hover:shadow-[0_0_40px_-15px_hsl(var(--gold)/0.08)]"
               >
-                <span className="font-display text-4xl text-primary/30 shrink-0 w-14 text-right">{t.num}</span>
-                <div>
-                  <h3 className="font-display text-lg md:text-xl text-white mb-2">
-                    Travessia {t.num} — {t.title}
-                  </h3>
-                  <p className="text-white/50 text-sm leading-relaxed">{t.desc}</p>
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="font-display text-4xl text-primary/30">{t.num}</span>
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <t.icon className="w-5 h-5 text-primary/60" strokeWidth={1.5} />
+                  </div>
                 </div>
+                <h3 className="font-display text-lg md:text-xl text-white mb-3">
+                  Travessia {t.num} — {t.title}
+                </h3>
+                <p className="text-white/50 text-sm leading-relaxed">{t.desc}</p>
               </motion.div>
             ))}
           </div>
         </motion.div>
       </section>
 
+      {/* ═══ DIVISOR ═══ */}
+      <div className="w-full flex justify-center py-4">
+        <div className="w-32 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+      </div>
+
       {/* ═══ NARROTERAPIA — com imagem de fundo ═══ */}
-      <section className="relative py-24 px-6 overflow-hidden">
+      <section className="relative py-28 md:py-36 px-6 overflow-hidden">
         <img 
           src={fundoNarroterapia} 
           alt="" 
@@ -461,19 +525,19 @@ export default function OraculaSalesPage() {
             Portal da Narroterapia Oracular
           </h2>
           
-          <p className="text-white/60 leading-relaxed text-xl mb-12 font-display">
+          <p className="text-white/60 leading-relaxed text-xl mb-14 font-display">
             A Narroterapia Oracular não é contar histórias.<br />
             <span className="text-gold-gradient">É ler a psique através delas.</span>
           </p>
           
-          <div className="grid sm:grid-cols-2 gap-4 max-w-xl mx-auto mb-12">
+          <div className="grid sm:grid-cols-2 gap-5 max-w-xl mx-auto mb-14">
             {[
               "escuta narrativa profunda",
               "uso terapêutico de contos e mitos",
               "condução simbólica sem sugestão",
               "criação de ritos narrativos seguros",
             ].map((item) => (
-              <div key={item} className="border border-white/10 rounded-lg p-5 text-white/50 text-sm bg-white/[0.02] backdrop-blur-sm hover:border-primary/20 transition-colors duration-300">
+              <div key={item} className="border border-white/10 rounded-xl p-6 text-white/50 text-sm bg-white/[0.02] backdrop-blur-sm hover:border-primary/20 transition-colors duration-300">
                 {item}
               </div>
             ))}
@@ -487,7 +551,7 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══ FERRAMENTAS DA CASA — com imagem de fundo ═══ */}
-      <section className="relative py-20 px-6 overflow-hidden">
+      <section className="relative py-28 md:py-36 px-6 overflow-hidden">
         <img src={ferramentasSection} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover opacity-[0.06]" />
         <div className="absolute inset-0 bg-gradient-to-b from-black via-black/90 to-black" />
         <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[350px] rounded-full bg-primary/[0.04] blur-[120px] pointer-events-none" />
@@ -499,7 +563,7 @@ export default function OraculaSalesPage() {
           transition={{ duration: 0.8 }}
           className="relative z-10 max-w-4xl mx-auto"
         >
-          <div className="text-center mb-14">
+          <div className="text-center mb-16">
             <Star className="w-10 h-10 text-primary/40 mx-auto mb-6" />
             <h2 className="font-display text-3xl md:text-5xl text-primary mb-4">
               As Ferramentas da Casa
@@ -509,7 +573,7 @@ export default function OraculaSalesPage() {
             </p>
           </div>
           
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5">
             {[
               "Mapa Vivo da Heroína",
               "Jardim da Psique",
@@ -520,21 +584,26 @@ export default function OraculaSalesPage() {
             ].map((tool) => (
               <div
                 key={tool}
-                className="border border-white/10 rounded-xl p-7 text-center hover:border-primary/25 transition-all duration-500 bg-white/[0.02] backdrop-blur-sm hover:shadow-[0_0_40px_-15px_hsl(var(--gold)/0.08)]"
+                className="border border-white/10 rounded-xl p-8 text-center hover:border-primary/25 transition-all duration-500 bg-white/[0.02] backdrop-blur-sm hover:shadow-[0_0_40px_-15px_hsl(var(--gold)/0.08)]"
               >
                 <p className="text-white/60 text-sm">{tool}</p>
               </div>
             ))}
           </div>
           
-          <p className="text-primary/60 text-center italic mt-12 font-display text-xl">
+          <p className="text-primary/60 text-center italic mt-14 font-display text-xl">
             Tudo criado para não depender de improviso.
           </p>
         </motion.div>
       </section>
 
-      {/* ═══ ÉTICA E SUSTENTAÇÃO ═══ */}
-      <section className="relative py-24 px-6 overflow-hidden">
+      {/* ═══ DIVISOR ═══ */}
+      <div className="w-full flex justify-center py-4">
+        <div className="w-32 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+      </div>
+
+      {/* ═══ ÉTICA E SUSTENTAÇÃO — 2 colunas ═══ */}
+      <section className="relative py-28 md:py-36 px-6 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-[#080c12] to-black" />
         <div className="absolute top-1/3 left-1/4 w-[400px] h-[300px] rounded-full bg-primary/[0.04] blur-[120px] pointer-events-none" />
 
@@ -555,7 +624,7 @@ export default function OraculaSalesPage() {
               <span className="text-gold-gradient">Certifica integração.</span>
             </p>
             
-            <ul className="space-y-4 text-white/50 mb-8">
+            <ul className="space-y-5 text-white/50 mb-8">
               {[
                 "critérios claros de passagem",
                 "termos éticos desde o onboarding",
@@ -589,8 +658,8 @@ export default function OraculaSalesPage() {
         </div>
       </section>
 
-      {/* ═══ PARA QUEM É / PARA QUEM NÃO É — com imagem de fundo ═══ */}
-      <section className="relative py-24 px-6 overflow-hidden">
+      {/* ═══ PARA QUEM É / PARA QUEM NÃO É — 2 colunas com divisor ═══ */}
+      <section className="relative py-28 md:py-36 px-6 overflow-hidden">
         <img 
           src={fundoParaQuemE} 
           alt="" 
@@ -607,12 +676,15 @@ export default function OraculaSalesPage() {
           transition={{ duration: 0.8 }}
           className="relative z-10 max-w-4xl mx-auto"
         >
-          <div className="grid md:grid-cols-2 gap-10">
-            <div className="border border-primary/15 rounded-2xl p-10 bg-white/[0.02] backdrop-blur-sm shadow-[0_0_60px_-20px_hsl(var(--gold)/0.08)]">
+          <div className="grid md:grid-cols-2 gap-0 relative">
+            {/* Linha vertical central */}
+            <div className="hidden md:block absolute top-0 bottom-0 left-1/2 w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
+            
+            <div className="border border-primary/15 md:border-r-0 rounded-2xl md:rounded-r-none p-10 md:p-12 bg-white/[0.02] backdrop-blur-sm shadow-[0_0_60px_-20px_hsl(var(--gold)/0.08)]">
               <Users className="w-8 h-8 text-primary/40 mb-4" />
               <h2 className="font-display text-2xl md:text-3xl text-primary mb-8">Para quem é</h2>
               
-              <ul className="space-y-4 text-white/60 mb-8">
+              <ul className="space-y-5 text-white/60 mb-8">
                 {["terapeutas", "psicólogas", "mentoras do feminino", "facilitadoras de grupos"].map((item) => (
                   <li key={item} className="flex items-center gap-3">
                     <span className="w-2 h-2 rounded-full bg-primary/40" />
@@ -627,10 +699,10 @@ export default function OraculaSalesPage() {
               </p>
             </div>
 
-            <div className="border border-white/10 rounded-2xl p-10 bg-white/[0.01]">
+            <div className="border border-white/10 md:border-l-0 rounded-2xl md:rounded-l-none p-10 md:p-12 bg-white/[0.01]">
               <h2 className="font-display text-2xl md:text-3xl text-white/30 mb-8">Para quem não é</h2>
               
-              <ul className="space-y-4 text-white/30">
+              <ul className="space-y-5 text-white/30">
                 {[
                   "busca atalhos",
                   "copia métodos",
@@ -648,8 +720,13 @@ export default function OraculaSalesPage() {
         </motion.div>
       </section>
 
+      {/* ═══ DIVISOR ═══ */}
+      <div className="w-full flex justify-center py-4">
+        <div className="w-32 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+      </div>
+
       {/* ═══ O QUE VOCÊ RECEBE ═══ */}
-      <section className="relative py-20 px-6 overflow-hidden">
+      <section className="relative py-28 md:py-36 px-6 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-[#08101a] to-black" />
         <div className="absolute top-1/3 left-1/3 w-[400px] h-[300px] rounded-full bg-primary/[0.04] blur-[120px] pointer-events-none" />
 
@@ -660,7 +737,7 @@ export default function OraculaSalesPage() {
           transition={{ duration: 0.8 }}
           className="relative z-10 max-w-2xl mx-auto"
         >
-          <div className="text-center mb-12">
+          <div className="text-center mb-14">
             <CheckCircle2 className="w-10 h-10 text-primary/40 mx-auto mb-6" />
             <h2 className="font-display text-3xl md:text-5xl text-primary">
               O que você recebe
@@ -688,8 +765,8 @@ export default function OraculaSalesPage() {
         </motion.div>
       </section>
 
-      {/* ═══ ENCERRAMENTO — com imagem de fundo ═══ */}
-      <section className="relative py-28 px-6 overflow-hidden">
+      {/* ═══ ENCERRAMENTO CTA — fundo mais escuro ═══ */}
+      <section className="relative py-32 md:py-40 px-6 overflow-hidden">
         <img 
           src={fundoRetrato01} 
           alt="" 
@@ -717,7 +794,7 @@ export default function OraculaSalesPage() {
             Lugar profissional.
           </p>
           
-          <p className="text-gold-gradient italic text-2xl md:text-3xl font-display mb-14">
+          <p className="text-gold-gradient italic text-2xl md:text-3xl font-display mb-16">
             Você não entra para aprender.<br />
             Você entra para atravessar.
           </p>
@@ -727,14 +804,14 @@ export default function OraculaSalesPage() {
               variant="outline"
               size="lg"
               onClick={() => navigate('/auth')}
-              className="border-white/20 hover:border-primary/30 text-white/70 hover:text-white"
+              className="border-white/20 hover:border-primary/30 text-white/70 hover:text-white px-10 py-6 text-lg"
             >
               Entrar
             </Button>
             <Button 
               size="lg"
               onClick={() => navigate('/planos')}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_40px_-8px_hsl(var(--gold)/0.3)]"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_40px_-8px_hsl(var(--gold)/0.3)] px-10 py-6 text-lg"
             >
               Ver Planos
               <ArrowRight className="w-4 h-4 ml-2" />
@@ -753,10 +830,10 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="py-12 px-6 border-t border-white/5">
+      <footer className="py-14 px-6 border-t border-white/5">
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-xs text-white/30 leading-relaxed">
-            🔒 A Casa Orácula não substitui terapia, acompanhamento psicológico 
+            A Casa Orácula não substitui terapia, acompanhamento psicológico 
             ou tratamento clínico quando necessário.
           </p>
         </div>
