@@ -375,7 +375,7 @@ export function AdminClubeLivroTab() {
         <div>
           <h2 className="text-lg font-display text-foreground flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-gold" />
-            Clube do Livro Oracular
+            Círculos de Leitura Simbólica
           </h2>
           <p className="text-sm text-muted-foreground">
             Gerencie ciclos, fases, perguntas, escutas e encontros.

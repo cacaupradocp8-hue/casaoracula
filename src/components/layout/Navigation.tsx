@@ -44,7 +44,7 @@ const alunaMenuGroups = (hasOracula: boolean) => [
       { label: 'Biblioteca das Travessias', path: '/biblioteca-travessias' },
       { label: 'Família das Travessias', path: '/biblioteca-travessias/familias' },
       { label: 'Portais', path: '/portais' },
-      { label: 'Clube do Livro', path: '/clube-livro' },
+      { label: 'Círculos de Leitura Simbólica', path: '/clube-livro' },
       { label: 'Torre Viva™', path: '/torre-viva' },
     ],
   },
