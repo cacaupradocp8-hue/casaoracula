@@ -110,12 +110,12 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit }: RitualSaidaD
         <MilkyWayBackground />
 
         {/* Two-block layout: top = visual, bottom = text */}
-        <div className="relative flex flex-col h-full" style={{ zIndex: 4 }}>
+        <div className="relative flex flex-col h-full" style={{ zIndex: 10 }}>
           {/* Top block: visual space */}
-          <div className="flex-none h-[35vh] md:h-[42vh]" />
+          <div className="flex-none h-[30vh] md:h-[38vh]" />
 
-          {/* Bottom block: text + buttons */}
-          <div className="flex-1 flex flex-col items-center justify-start px-6 text-center gap-6 pb-8">
+          {/* Bottom block: text + buttons — solid bg to ensure readability */}
+          <div className="flex-1 flex flex-col items-center justify-start px-6 text-center gap-6 pb-8 bg-gradient-to-t from-[#0F2A33] via-[#0F2A33]/95 to-transparent">
             
             <AnimatePresence mode="wait">
               {phase === 'initial' && (
