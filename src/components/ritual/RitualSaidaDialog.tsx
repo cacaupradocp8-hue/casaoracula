@@ -112,7 +112,7 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit }: RitualSaidaD
         {/* Two-block layout: top = visual, bottom = text */}
         <div className="relative flex flex-col h-full" style={{ zIndex: 10 }}>
           {/* Top block: mandala area */}
-          <div className="flex-none h-[50vh]" />
+          <div className="flex-none h-[55vh]" />
 
           {/* Bottom block: text + buttons */}
           <div className="flex-1 flex flex-col items-center justify-start px-6 text-center gap-6 pb-8">

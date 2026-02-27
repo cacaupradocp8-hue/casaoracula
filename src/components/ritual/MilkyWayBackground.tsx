@@ -96,10 +96,10 @@ function MilkyWayBackgroundRaw() {
         aria-hidden="true"
       />
 
-      {/* MANDALA + HALO container — top area only */}
+      {/* MANDALA + HALO container — top 40% only */}
       <div
         className="absolute left-0 right-0 top-0 flex items-center justify-center"
-        style={{ zIndex: 3, pointerEvents: 'none', height: '50vh' }}
+        style={{ zIndex: 3, pointerEvents: 'none', height: '40vh' }}
       >
         {/* OUTER HALO — large diffuse glow ring */}
         <div
@@ -189,7 +189,7 @@ function MilkyWayBackgroundRaw() {
           alt=""
           className="absolute animate-ritual-breathe"
           style={{
-            width: 'min(84vw, 560px)',
+            width: 'min(70vw, 420px)',
             height: 'auto',
             objectFit: 'contain',
             transformOrigin: 'center center',
