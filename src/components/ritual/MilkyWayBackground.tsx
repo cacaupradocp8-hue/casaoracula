@@ -5,28 +5,76 @@ import mandalaImg from '@/assets/ritual-mandala-breathe.png';
 function MilkyWayBackgroundRaw() {
   return (
     <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 0, backgroundColor: '#0F2A33' }}>
-      {/* RAYS — amber conic, synced with breathing */}
+      {/* RAYS — visible rotating conic beams */}
       <div
-        className="absolute animate-ritual-breathe"
+        className="absolute animate-ritual-rays"
         style={{
-          inset: '-20%',
+          inset: '-30%',
           zIndex: 1,
           pointerEvents: 'none',
           background: `
-            radial-gradient(circle at 50% 30%, rgba(200,138,61,0.18), rgba(200,138,61,0) 50%),
-            conic-gradient(from 0deg at 50% 30%,
-              rgba(200,138,61,0.00) 0deg,
-              rgba(200,138,61,0.12) 20deg,
-              rgba(200,138,61,0.00) 40deg,
-              rgba(200,138,61,0.10) 70deg,
-              rgba(200,138,61,0.00) 110deg,
-              rgba(200,138,61,0.09) 160deg,
-              rgba(200,138,61,0.00) 220deg,
-              rgba(200,138,61,0.10) 280deg,
-              rgba(200,138,61,0.00) 360deg
+            conic-gradient(from 0deg at 50% 50%,
+              rgba(140,185,230,0.00) 0deg,
+              rgba(140,185,230,0.18) 8deg,
+              rgba(140,185,230,0.00) 16deg,
+              rgba(160,200,240,0.00) 45deg,
+              rgba(160,200,240,0.14) 53deg,
+              rgba(160,200,240,0.00) 61deg,
+              rgba(140,185,230,0.00) 90deg,
+              rgba(140,185,230,0.16) 98deg,
+              rgba(140,185,230,0.00) 106deg,
+              rgba(160,200,240,0.00) 135deg,
+              rgba(160,200,240,0.12) 143deg,
+              rgba(160,200,240,0.00) 151deg,
+              rgba(140,185,230,0.00) 180deg,
+              rgba(140,185,230,0.18) 188deg,
+              rgba(140,185,230,0.00) 196deg,
+              rgba(160,200,240,0.00) 225deg,
+              rgba(160,200,240,0.14) 233deg,
+              rgba(160,200,240,0.00) 241deg,
+              rgba(140,185,230,0.00) 270deg,
+              rgba(140,185,230,0.16) 278deg,
+              rgba(140,185,230,0.00) 286deg,
+              rgba(160,200,240,0.00) 315deg,
+              rgba(160,200,240,0.12) 323deg,
+              rgba(160,200,240,0.00) 331deg,
+              rgba(140,185,230,0.00) 360deg
             )
           `,
           willChange: 'transform',
+          maskImage: 'radial-gradient(circle, transparent 15%, black 35%, black 70%, transparent 95%)',
+          WebkitMaskImage: 'radial-gradient(circle, transparent 15%, black 35%, black 70%, transparent 95%)',
+        }}
+        aria-hidden="true"
+      />
+      {/* Secondary rays — amber warm, counter-rotating */}
+      <div
+        className="absolute"
+        style={{
+          inset: '-25%',
+          zIndex: 1,
+          pointerEvents: 'none',
+          background: `
+            conic-gradient(from 22deg at 50% 50%,
+              rgba(200,150,80,0.00) 0deg,
+              rgba(200,150,80,0.10) 12deg,
+              rgba(200,150,80,0.00) 24deg,
+              rgba(200,150,80,0.00) 90deg,
+              rgba(200,150,80,0.08) 102deg,
+              rgba(200,150,80,0.00) 114deg,
+              rgba(200,150,80,0.00) 180deg,
+              rgba(200,150,80,0.10) 192deg,
+              rgba(200,150,80,0.00) 204deg,
+              rgba(200,150,80,0.00) 270deg,
+              rgba(200,150,80,0.08) 282deg,
+              rgba(200,150,80,0.00) 294deg,
+              rgba(200,150,80,0.00) 360deg
+            )
+          `,
+          animation: 'ritual-rays-rotate 90s linear infinite reverse, ritual-rays-pulse 8s ease-in-out infinite',
+          willChange: 'transform',
+          maskImage: 'radial-gradient(circle, transparent 20%, black 40%, black 65%, transparent 90%)',
+          WebkitMaskImage: 'radial-gradient(circle, transparent 20%, black 40%, black 65%, transparent 90%)',
         }}
         aria-hidden="true"
       />
