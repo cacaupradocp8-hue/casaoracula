@@ -124,21 +124,8 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit }: RitualSaidaD
                   {...fadeUp}
                   className="flex flex-col items-center gap-6"
                 >
-                  {/* Decorative divider */}
-                  <div className="flex items-center gap-3">
-                    <div className="h-px w-10 bg-gradient-to-r from-transparent to-gold/30" />
-                    <Feather className="w-4 h-4 text-gold/40" />
-                    <div className="h-px w-10 bg-gradient-to-l from-transparent to-gold/30" />
-                  </div>
-
                   <div className="space-y-4 max-w-[420px]">
-                    <h2 className="text-2xl md:text-3xl font-display text-foreground tracking-wide">
-                      Antes de partir…
-                    </h2>
-                    <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
-                      Respire fundo. O que foi vivido hoje permanece em você.
-                    </p>
-                    <p className="text-muted-foreground/60 text-xs leading-relaxed italic">
+                    <p className="text-muted-foreground/60 text-sm leading-relaxed italic">
                       Não há pressa. Apenas um instante de pausa.
                     </p>
                   </div>
