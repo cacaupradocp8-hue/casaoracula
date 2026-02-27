@@ -99,7 +99,7 @@ function MilkyWayBackgroundRaw() {
       {/* MANDALA + HALO container — shifted upward */}
       <div
         className="absolute inset-0 flex items-center justify-center"
-        style={{ zIndex: 3, pointerEvents: 'none' as const, transform: 'translateY(-12vh)' }}
+        style={{ zIndex: 3, pointerEvents: 'none' as const, transform: 'translateY(-25vh)' }}
       >
         {/* OUTER HALO — large diffuse glow ring */}
         <div
