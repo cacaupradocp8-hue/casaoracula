@@ -61,7 +61,7 @@ export default function ClubeLivroLivro() {
             <Home className="w-3 h-3" /> Casa
           </Link>
           <ChevronRight className="w-3 h-3" />
-          <Link to="/clube-livro" className="hover:text-foreground transition-colors">Clube do Livro</Link>
+          <Link to="/clube-livro" className="hover:text-foreground transition-colors">Círculos de Leitura Simbólica</Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-foreground truncate">{book.title}</span>
         </nav>

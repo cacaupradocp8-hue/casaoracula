@@ -44,7 +44,7 @@ export default function MeuCaminhoClube() {
           </Link>
           <ChevronRight className="w-3 h-3" />
           <Link to="/clube-livro" className="hover:text-foreground transition-colors">
-            Clube do Livro
+            Círculos de Leitura Simbólica
           </Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-foreground">Meu Caminho</span>
@@ -145,7 +145,7 @@ export default function MeuCaminhoClube() {
               </p>
               <Button variant="outline" onClick={() => navigate('/clube-livro')}>
                 <BookOpen className="w-4 h-4 mr-2" />
-                Ir para o Clube do Livro
+                Ir para os Círculos de Leitura
               </Button>
             </CardContent>
           </Card>

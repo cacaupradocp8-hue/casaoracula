@@ -243,7 +243,7 @@ export default function Integracao8020() {
           </Link>
           <ChevronRight className="w-3 h-3" />
           <Link to="/clube-livro" className="hover:text-foreground transition-colors">
-            Clube do Livro
+            Círculos de Leitura Simbólica
           </Link>
           <ChevronRight className="w-3 h-3" />
           <Link to={`/clube-livro/${cicloId}`} className="hover:text-foreground transition-colors">

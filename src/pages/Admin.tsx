@@ -309,7 +309,7 @@ export default function Admin() {
             </TabsTrigger>
             <TabsTrigger value="clube-livro" className="gap-2">
               <BookOpen className="w-4 h-4 text-emerald-400" />
-              Clube do Livro
+              Círculos de Leitura
             </TabsTrigger>
             <TabsTrigger value="portal-junguiano" className="gap-2">
               <Zap className="w-4 h-4 text-gold" />
