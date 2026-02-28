@@ -132,6 +132,8 @@ interface Ciclo {
   ritual_aceite_obrigatorio?: boolean;
   portal_minimo_clinico?: string;
   campo_simbolico?: string;
+  mensagem_campo_url?: string;
+  mensagem_campo_texto?: string;
   por_que_slides?: any[];
   por_que_audio_url?: string;
   como_ler_slides?: any[];
@@ -230,6 +232,8 @@ export function AdminClubeLivroTab() {
         publicado: ciclo.publicado,
         is_multipolar: (ciclo as any).is_multipolar ?? false,
         campo_simbolico: (ciclo as any).campo_simbolico || null,
+        mensagem_campo_url: (ciclo as any).mensagem_campo_url || null,
+        mensagem_campo_texto: (ciclo as any).mensagem_campo_texto || null,
         por_que_slides: (ciclo as any).por_que_slides || [],
         por_que_audio_url: (ciclo as any).por_que_audio_url || null,
         como_ler_slides: (ciclo as any).como_ler_slides || [],
@@ -1222,6 +1226,8 @@ function CicloDialog({
     publicado: false,
     is_multipolar: false,
     campo_simbolico: '',
+    mensagem_campo_url: '',
+    mensagem_campo_texto: '',
     por_que_slides_json: '[]',
     por_que_audio_url: '',
     como_ler_slides_json: '[]',
@@ -1243,6 +1249,8 @@ function CicloDialog({
         publicado: ciclo.publicado || false,
         is_multipolar: (ciclo as any).is_multipolar || false,
         campo_simbolico: (ciclo as any).campo_simbolico || '',
+        mensagem_campo_url: (ciclo as any).mensagem_campo_url || '',
+        mensagem_campo_texto: (ciclo as any).mensagem_campo_texto || '',
         por_que_slides_json: JSON.stringify((ciclo as any).por_que_slides || [], null, 2),
         por_que_audio_url: (ciclo as any).por_que_audio_url || '',
         como_ler_slides_json: JSON.stringify((ciclo as any).como_ler_slides || [], null, 2),
@@ -1413,6 +1421,30 @@ function CicloDialog({
             <p className="text-xs text-muted-foreground">
               Este texto será enviado como contexto ao agente de IA quando a aluna clicar em "Conversar com o Livro".
             </p>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <Headphones className="w-4 h-4 text-primary" />
+              Mensagem do Campo (Áudio semanal)
+            </Label>
+            <Input
+              value={form.mensagem_campo_url}
+              onChange={(e) => setForm({ ...form, mensagem_campo_url: e.target.value })}
+              placeholder="URL do áudio da mensagem do campo..."
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Descrição da Mensagem do Campo</Label>
+            <Textarea
+              value={form.mensagem_campo_texto}
+              onChange={(e) => setForm({ ...form, mensagem_campo_texto: e.target.value })}
+              placeholder="Breve descrição ou orientação sobre a mensagem do campo desta semana..."
+              className="min-h-[80px]"
+            />
           </div>
 
           <div className="flex items-center justify-between pt-4 border-t">
