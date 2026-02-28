@@ -9977,6 +9977,7 @@ export type Database = {
       }
       studio_episodes: {
         Row: {
+          audio_final_url: string | null
           audio_full_url: string | null
           audio_narradora_url: string | null
           audio_oracular_url: string | null
@@ -10003,6 +10004,7 @@ export type Database = {
           voz_escolhida: string | null
         }
         Insert: {
+          audio_final_url?: string | null
           audio_full_url?: string | null
           audio_narradora_url?: string | null
           audio_oracular_url?: string | null
@@ -10029,6 +10031,7 @@ export type Database = {
           voz_escolhida?: string | null
         }
         Update: {
+          audio_final_url?: string | null
           audio_full_url?: string | null
           audio_narradora_url?: string | null
           audio_oracular_url?: string | null

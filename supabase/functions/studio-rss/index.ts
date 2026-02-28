@@ -17,7 +17,7 @@ serve(async (req) => {
       .limit(100);
 
     const items = (episodes || []).map((ep: any) => {
-      const audioUrl = ep.visibility === "public_full" ? (ep.audio_full_url || ep.audio_public_url) : ep.audio_public_url;
+      const audioUrl = ep.audio_final_url || (ep.visibility === "public_full" ? (ep.audio_full_url || ep.audio_public_url) : ep.audio_public_url);
       const description = ep.visibility === "public_full" ? (ep.roteiro_completo || ep.versao_resumida) : ep.versao_resumida;
       
       return `

@@ -218,12 +218,14 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
   const [axes, setAxes] = useState<any[]>([]);
   const [generating, setGenerating] = useState(false);
   const [generatingAudio, setGeneratingAudio] = useState<string | null>(null);
+  const [merging, setMerging] = useState(false);
   const [saving, setSaving] = useState(false);
   const [audioUrls, setAudioUrls] = useState({
     full: episode?.audio_full_url || null,
     public: episode?.audio_public_url || null,
     narradora: episode?.audio_narradora_url || null,
     oracular: episode?.audio_oracular_url || null,
+    final: episode?.audio_final_url || null,
   });
   const [showDialogueView, setShowDialogueView] = useState(false);
 
@@ -321,6 +323,30 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
     }
   };
 
+  const handleMergeAudio = async () => {
+    if (!episode?.id) {
+      toast.error('Salve o episódio antes de finalizar');
+      return;
+    }
+    if (!audioUrls.narradora || !audioUrls.oracular) {
+      toast.error('É necessário ter áudio da Narradora e da Voz Oracular');
+      return;
+    }
+    setMerging(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('studio-merge-audio', {
+        body: { episodeId: episode.id },
+      });
+      if (error) throw error;
+      setAudioUrls(p => ({ ...p, final: data.url }));
+      toast.success('Episódio finalizado! Áudio combinado gerado.');
+    } catch (e: any) {
+      toast.error(e.message || 'Erro ao finalizar episódio');
+    } finally {
+      setMerging(false);
+    }
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -340,6 +366,7 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
         formato: form.formato,
         audio_narradora_url: audioUrls.narradora,
         audio_oracular_url: audioUrls.oracular,
+        audio_final_url: audioUrls.final,
       };
 
       if (form.status === 'published' && !episode?.published_at) {
@@ -478,6 +505,18 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
                   </Button>
                   {audioUrls.oracular && <UnifiedAudioPlayer audioUrl={audioUrls.oracular} title="Voz Oracular" size="sm" />}
                 </div>
+
+                {audioUrls.narradora && audioUrls.oracular && (
+                  <div className="space-y-2 pt-2 border-t border-border/50">
+                    <Label>🎬 Finalizar Episódio</Label>
+                    <p className="text-xs text-muted-foreground">Combinar áudio da Narradora + Voz Oracular em ordem do roteiro.</p>
+                    <Button onClick={handleMergeAudio} disabled={merging} size="sm" className="gap-2" variant="gold">
+                      {merging ? <Loader2 className="w-4 h-4 animate-spin" /> : <Music className="w-4 h-4" />}
+                      {merging ? 'Processando...' : 'Finalizar Episódio'}
+                    </Button>
+                    {audioUrls.final && <UnifiedAudioPlayer audioUrl={audioUrls.final} title="🎬 Áudio Final" size="md" />}
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex gap-2">
