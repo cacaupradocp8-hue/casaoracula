@@ -1600,6 +1600,50 @@ export type Database = {
         }
         Relationships: []
       }
+      certificates: {
+        Row: {
+          carga_horaria_total: number | null
+          certificado_url: string | null
+          ciclo_id: string | null
+          created_at: string | null
+          id: string
+          issue_date: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          carga_horaria_total?: number | null
+          certificado_url?: string | null
+          ciclo_id?: string | null
+          created_at?: string | null
+          id?: string
+          issue_date?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          carga_horaria_total?: number | null
+          certificado_url?: string | null
+          ciclo_id?: string | null
+          created_at?: string | null
+          id?: string
+          issue_date?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "certificates_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clientes: {
         Row: {
           codigo_interno: string | null
@@ -2048,11 +2092,14 @@ export type Database = {
           como_ler_audio_url: string | null
           como_ler_slides: Json | null
           created_at: string
+          data_encontro: string | null
           data_fim: string | null
           data_inicio: string | null
           id: string
           infografico_url: string | null
           is_multipolar: boolean | null
+          link_encontro: string | null
+          link_gravacao: string | null
           manifesto: string | null
           mensagem_campo_texto: string | null
           mensagem_campo_url: string | null
@@ -2085,11 +2132,14 @@ export type Database = {
           como_ler_audio_url?: string | null
           como_ler_slides?: Json | null
           created_at?: string
+          data_encontro?: string | null
           data_fim?: string | null
           data_inicio?: string | null
           id?: string
           infografico_url?: string | null
           is_multipolar?: boolean | null
+          link_encontro?: string | null
+          link_gravacao?: string | null
           manifesto?: string | null
           mensagem_campo_texto?: string | null
           mensagem_campo_url?: string | null
@@ -2122,11 +2172,14 @@ export type Database = {
           como_ler_audio_url?: string | null
           como_ler_slides?: Json | null
           created_at?: string
+          data_encontro?: string | null
           data_fim?: string | null
           data_inicio?: string | null
           id?: string
           infografico_url?: string | null
           is_multipolar?: boolean | null
+          link_encontro?: string | null
+          link_gravacao?: string | null
           manifesto?: string | null
           mensagem_campo_texto?: string | null
           mensagem_campo_url?: string | null
@@ -7991,7 +8044,9 @@ export type Database = {
           ordem: number
           periodo: string | null
           simbolo: string | null
+          status: string | null
           updated_at: string
+          visivel: boolean | null
         }
         Insert: {
           aplicacao_profissional?: string | null
@@ -8002,7 +8057,9 @@ export type Database = {
           ordem?: number
           periodo?: string | null
           simbolo?: string | null
+          status?: string | null
           updated_at?: string
+          visivel?: boolean | null
         }
         Update: {
           aplicacao_profissional?: string | null
@@ -8013,7 +8070,9 @@ export type Database = {
           ordem?: number
           periodo?: string | null
           simbolo?: string | null
+          status?: string | null
           updated_at?: string
+          visivel?: boolean | null
         }
         Relationships: []
       }

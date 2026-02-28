@@ -11,11 +11,13 @@ import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature } from '@/types/portal';
 import { useAccessExpiration } from '@/hooks/useAccessExpiration';
 import { LockedForVisitor } from '@/components/shared/LockedForVisitor';
-import { BookOpen, ChevronRight, Home, Map, Route, Play, Calendar } from 'lucide-react';
+import { BookOpen, ChevronRight, Home, Map, Route, Play, Calendar, Sparkles } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { differenceInDays } from 'date-fns';
+import { useSeasonForBook } from '@/hooks/useOracularSeasons';
 
 export default function ClubeLivroApresentacao() {
   const navigate = useNavigate();
@@ -23,7 +25,7 @@ export default function ClubeLivroApresentacao() {
   const { isExpired } = useAccessExpiration();
   const { ciclos, cicloAtual, ciclosProximos, ciclosAnteriores, loadingCiclos } = useClubeLivro();
   const { hasAccepted } = useRitualAceite(cicloAtual?.id);
-
+  const seasonAtual = useSeasonForBook(cicloAtual?.id);
   const hasAccess = user && canAccessFeature(user.portal, 'aluna') && !isExpired;
 
   if (!hasAccess) {
@@ -85,9 +87,16 @@ export default function ClubeLivroApresentacao() {
             {cicloAtual && (
               <Card className="border-gold/30 bg-gradient-to-br from-gold/5 to-card overflow-hidden">
                 <CardContent className="p-6">
-                  <p className="text-xs uppercase tracking-[0.2em] text-gold font-medium mb-4">
+                  <p className="text-xs uppercase tracking-[0.2em] text-gold font-medium mb-1">
                     Travessia em Curso
                   </p>
+                  {seasonAtual && (
+                    <Badge variant="outline" className="text-xs text-muted-foreground border-border/50 mb-3">
+                      {seasonAtual.simbolo && <span className="mr-1">{seasonAtual.simbolo}</span>}
+                      {seasonAtual.nome_estacao}
+                      {seasonAtual.periodo && <span className="ml-1 text-muted-foreground/60">· {seasonAtual.periodo}</span>}
+                    </Badge>
+                  )}
                   <div className="flex flex-col sm:flex-row items-center gap-5">
                     {cicloAtual.capa_url ? (
                       <img
@@ -217,7 +226,7 @@ export default function ClubeLivroApresentacao() {
             )}
 
             {/* ── 5. NAVEGAÇÃO DISCRETA ── */}
-            <div className="flex items-center justify-center gap-4 pt-4">
+            <div className="flex items-center justify-center gap-3 pt-4 flex-wrap">
               <Button
                 variant="ghost"
                 size="sm"
@@ -235,6 +244,15 @@ export default function ClubeLivroApresentacao() {
               >
                 <Route className="w-4 h-4" />
                 Minha Travessia
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground hover:text-foreground gap-2"
+                onClick={() => navigate('/clube-livro/ano-oracular')}
+              >
+                <Sparkles className="w-4 h-4" />
+                Ano Oracular
               </Button>
             </div>
           </div>
