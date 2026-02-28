@@ -183,6 +183,7 @@ import {
   ClubeLivroLivro,
   MapaJornadas,
   MinhaTravessia,
+  CertificadoTravessia,
 } from "./pages/clube-livro";
 // Labirinto da Heroína Interna®
 import { LabirintoHeroinaPage } from "./pages/labirinto-heroina";
@@ -760,6 +761,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="aluna">
             <Integracao8020 />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/:id/certificado"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <CertificadoTravessia />
           </ProtectedRoute>
         }
       />

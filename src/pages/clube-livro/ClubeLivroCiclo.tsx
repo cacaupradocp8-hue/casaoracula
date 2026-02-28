@@ -276,10 +276,18 @@ export default function ClubeLivroCiclo() {
             {/* Marcar como concluído — summary */}
             {integracaoConcluida && integracao8020Concluida && (
               <Card className="mt-4 border-gold/40 bg-gradient-to-br from-gold/10 to-card">
-                <CardContent className="p-5 text-center">
+                <CardContent className="p-5 text-center space-y-3">
                   <p className="text-sm text-gold font-medium">
                     ✦ Travessia completa — todas as integrações foram concluídas
                   </p>
+                  <Button
+                    variant="outline"
+                    className="border-gold/30 text-gold hover:bg-gold/10 gap-2"
+                    onClick={() => navigate(`/clube-livro/${id}/certificado`)}
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    Ver Certificado de Travessia
+                  </Button>
                 </CardContent>
               </Card>
             )}

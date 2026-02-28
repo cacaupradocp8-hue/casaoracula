@@ -16,4 +16,5 @@ export { default as Integracao8020 } from './Integracao8020';
 export { default as ClubeLivroLivro } from './ClubeLivroLivro';
 export { default as MapaJornadas } from './MapaJornadas';
 export { default as MinhaTravessia } from './MinhaTravessia';
+export { default as CertificadoTravessia } from './CertificadoTravessia';
 
