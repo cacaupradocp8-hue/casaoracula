@@ -2194,6 +2194,41 @@ export type Database = {
           },
         ]
       }
+      clube_livro_escuta_progress: {
+        Row: {
+          concluido: boolean
+          escuta_id: string
+          id: string
+          posicao_segundos: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          concluido?: boolean
+          escuta_id: string
+          id?: string
+          posicao_segundos?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          concluido?: boolean
+          escuta_id?: string
+          id?: string
+          posicao_segundos?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_livro_escuta_progress_escuta_id_fkey"
+            columns: ["escuta_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_escutas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_livro_escutas: {
         Row: {
           ativo: boolean | null

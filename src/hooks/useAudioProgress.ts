@@ -1,7 +1,7 @@
 // ============================================
 // AUDIO PROGRESS HOOK
 // Tracks listening position and completion
-// Works with clube_audio_tracks via clube_audio_progress
+// Uses clube_livro_escuta_progress table
 // ============================================
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -9,9 +9,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCallback, useRef } from 'react';
 
-interface AudioProgress {
+interface EscutaProgress {
   id: string;
-  track_id: string;
+  escuta_id: string;
   user_id: string;
   posicao_segundos: number;
   concluido: boolean;
@@ -19,90 +19,74 @@ interface AudioProgress {
 }
 
 /**
- * Hook for tracking audio progress for a list of track IDs.
- * Saves position periodically and marks as completed when >90% listened.
+ * Hook for tracking audio listening progress.
+ * Auto-saves position every 10s and marks >90% as completed.
  */
-export function useAudioProgress(trackIds: string[]) {
+export function useAudioProgress(escutaIds: string[]) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const lastSavedRef = useRef<number>(0);
 
   const { data: progressMap, isLoading } = useQuery({
-    queryKey: ['audio-progress', user?.id, trackIds],
+    queryKey: ['escuta-progress', user?.id, escutaIds],
     queryFn: async () => {
-      if (!user?.id || trackIds.length === 0) return {};
+      if (!user?.id || escutaIds.length === 0) return {};
       const { data, error } = await supabase
-        .from('clube_audio_progress')
+        .from('clube_livro_escuta_progress')
         .select('*')
         .eq('user_id', user.id)
-        .in('track_id', trackIds);
+        .in('escuta_id', escutaIds);
       if (error) throw error;
-      const map: Record<string, AudioProgress> = {};
-      (data || []).forEach((p: AudioProgress) => { map[p.track_id] = p; });
+      const map: Record<string, EscutaProgress> = {};
+      (data || []).forEach((p) => { map[p.escuta_id] = p as EscutaProgress; });
       return map;
     },
-    enabled: !!user?.id && trackIds.length > 0,
+    enabled: !!user?.id && escutaIds.length > 0,
   });
 
   const upsertProgress = useMutation({
-    mutationFn: async ({ trackId, posicao, concluido }: { trackId: string; posicao: number; concluido: boolean }) => {
+    mutationFn: async ({ escutaId, posicao, concluido }: { escutaId: string; posicao: number; concluido: boolean }) => {
       if (!user?.id) throw new Error('Not authenticated');
       const { error } = await supabase
-        .from('clube_audio_progress')
+        .from('clube_livro_escuta_progress')
         .upsert({
-          track_id: trackId,
+          escuta_id: escutaId,
           user_id: user.id,
           posicao_segundos: Math.floor(posicao),
           concluido,
           updated_at: new Date().toISOString(),
-        }, { onConflict: 'track_id,user_id' });
+        }, { onConflict: 'user_id,escuta_id' });
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['audio-progress', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['escuta-progress', user?.id] });
     },
   });
 
-  /**
-   * Save current position (throttled — saves at most every 10s)
-   */
-  const savePosition = useCallback((trackId: string, currentTime: number, duration: number) => {
+  /** Save position (throttled — max every 10s) */
+  const savePosition = useCallback((escutaId: string, currentTime: number, duration: number) => {
     const now = Date.now();
     if (now - lastSavedRef.current < 10000) return;
     lastSavedRef.current = now;
-
     const concluido = duration > 0 && currentTime / duration > 0.9;
-    upsertProgress.mutate({ trackId, posicao: currentTime, concluido });
+    upsertProgress.mutate({ escutaId, posicao: currentTime, concluido });
   }, [upsertProgress]);
 
-  /**
-   * Force-save (e.g. on pause or track change)
-   */
-  const forceSave = useCallback((trackId: string, currentTime: number, duration: number) => {
+  /** Force-save (on pause, track change, or unmount) */
+  const forceSave = useCallback((escutaId: string, currentTime: number, duration: number) => {
     lastSavedRef.current = Date.now();
     const concluido = duration > 0 && currentTime / duration > 0.9;
-    upsertProgress.mutate({ trackId, posicao: currentTime, concluido });
+    upsertProgress.mutate({ escutaId, posicao: currentTime, concluido });
   }, [upsertProgress]);
 
-  /**
-   * Mark a track as completed manually
-   */
-  const markCompleted = useCallback((trackId: string) => {
-    upsertProgress.mutate({ trackId, posicao: 0, concluido: true });
-  }, [upsertProgress]);
-
-  /**
-   * Get saved position for a track
-   */
-  const getSavedPosition = useCallback((trackId: string): number => {
-    return progressMap?.[trackId]?.posicao_segundos || 0;
+  /** Get saved position for a track */
+  const getSavedPosition = useCallback((escutaId: string): number => {
+    return progressMap?.[escutaId]?.posicao_segundos || 0;
   }, [progressMap]);
 
-  /**
-   * Check if a track is completed
-   */
-  const isCompleted = useCallback((trackId: string): boolean => {
-    return progressMap?.[trackId]?.concluido || false;
+  /** Check if a track is completed */
+  const isCompleted = useCallback((escutaId: string): boolean => {
+    return progressMap?.[escutaId]?.concluido || false;
   }, [progressMap]);
 
   return {
@@ -110,7 +94,6 @@ export function useAudioProgress(trackIds: string[]) {
     isLoading,
     savePosition,
     forceSave,
-    markCompleted,
     getSavedPosition,
     isCompleted,
   };
