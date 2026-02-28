@@ -85,6 +85,7 @@ export const adminNavGroups: AdminNavGroup[] = [
     emoji: '📜',
     icon: UserCheck,
     items: [
+      { key: 'certificacao', label: 'Certificação', icon: UserCheck },
       { key: 'matriculas', label: 'Matrículas', icon: UserCheck },
       { key: 'progresso', label: 'Evolução', icon: TrendingUp },
       { key: 'degustacao', label: 'Degustação', icon: Gift },
