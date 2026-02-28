@@ -10362,6 +10362,7 @@ export type Database = {
           audio_oracular_url: string | null
           audio_public_url: string | null
           capitulo: string
+          ciclo_id: string | null
           created_at: string
           created_by: string | null
           descricao: string | null
@@ -10378,6 +10379,7 @@ export type Database = {
           roteiro_completo: string | null
           status: Database["public"]["Enums"]["studio_episode_status"]
           texto_base: string
+          tipo_episodio: string
           titulo: string | null
           trilha_ativa: boolean | null
           trilha_fundo_url: string | null
@@ -10396,6 +10398,7 @@ export type Database = {
           audio_oracular_url?: string | null
           audio_public_url?: string | null
           capitulo?: string
+          ciclo_id?: string | null
           created_at?: string
           created_by?: string | null
           descricao?: string | null
@@ -10412,6 +10415,7 @@ export type Database = {
           roteiro_completo?: string | null
           status?: Database["public"]["Enums"]["studio_episode_status"]
           texto_base?: string
+          tipo_episodio?: string
           titulo?: string | null
           trilha_ativa?: boolean | null
           trilha_fundo_url?: string | null
@@ -10430,6 +10434,7 @@ export type Database = {
           audio_oracular_url?: string | null
           audio_public_url?: string | null
           capitulo?: string
+          ciclo_id?: string | null
           created_at?: string
           created_by?: string | null
           descricao?: string | null
@@ -10446,6 +10451,7 @@ export type Database = {
           roteiro_completo?: string | null
           status?: Database["public"]["Enums"]["studio_episode_status"]
           texto_base?: string
+          tipo_episodio?: string
           titulo?: string | null
           trilha_ativa?: boolean | null
           trilha_fundo_url?: string | null
@@ -10458,6 +10464,13 @@ export type Database = {
           voz_escolhida?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "studio_episodes_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "studio_episodes_eixo_id_fkey"
             columns: ["eixo_id"]

@@ -218,8 +218,11 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
     trilha_volume: episode?.trilha_volume || 20,
     fade_in_seconds: episode?.fade_in_seconds || 2,
     fade_out_seconds: episode?.fade_out_seconds || 3,
+    tipo_episodio: episode?.tipo_episodio || 'podcast',
+    ciclo_id: episode?.ciclo_id || '',
   });
   const [axes, setAxes] = useState<any[]>([]);
+  const [ciclos, setCiclos] = useState<any[]>([]);
   const [generating, setGenerating] = useState(false);
   const [generatingAudio, setGeneratingAudio] = useState<string | null>(null);
   const [merging, setMerging] = useState(false);
@@ -241,6 +244,8 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
   useEffect(() => {
     supabase.from('studio_method_axes').select('*').eq('ativo', true).order('ordem')
       .then(({ data }) => setAxes(data || []));
+    supabase.from('clube_livro_ciclos').select('id, titulo, autor_livro, ativo').order('ordem')
+      .then(({ data }) => setCiclos(data || []));
   }, []);
 
   const handleGenerate = async () => {
@@ -381,6 +386,8 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
         trilha_volume: form.trilha_volume,
         fade_in_seconds: form.fade_in_seconds,
         fade_out_seconds: form.fade_out_seconds,
+        tipo_episodio: form.tipo_episodio,
+        ciclo_id: form.ciclo_id || null,
       };
 
       if (form.status === 'published' && !episode?.published_at) {
@@ -410,6 +417,34 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
           <Label>Título do Episódio</Label>
           <Input value={form.titulo} onChange={(e) => setForm(p => ({ ...p, titulo: e.target.value }))} placeholder="Título para exibição" />
         </div>
+        <div className="space-y-2">
+          <Label>Tipo de Episódio</Label>
+          <Select value={form.tipo_episodio} onValueChange={(v) => setForm(p => ({ ...p, tipo_episodio: v }))}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="clube_livro">📖 Clube do Livro</SelectItem>
+              <SelectItem value="podcast">🎙️ Podcast Público</SelectItem>
+              <SelectItem value="formacao">🎓 Formação</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        {form.tipo_episodio === 'clube_livro' && (
+          <div className="space-y-2 md:col-span-2">
+            <Label>Livro Vinculado (Ciclo)</Label>
+            <Select value={form.ciclo_id || "none"} onValueChange={(v) => setForm(p => ({ ...p, ciclo_id: v === "none" ? "" : v }))}>
+              <SelectTrigger><SelectValue placeholder="Selecione o livro do Círculo" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Nenhum</SelectItem>
+                {ciclos.map(c => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.titulo} {c.autor_livro ? `— ${c.autor_livro}` : ''} {c.ativo ? '✅' : ''}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">Ao publicar, o episódio será inserido automaticamente na Travessia deste livro.</p>
+          </div>
+        )}
         <div className="space-y-2">
           <Label>Formato do Episódio</Label>
           <Select value={form.formato} onValueChange={(v) => setForm(p => ({ ...p, formato: v }))}>
@@ -703,6 +738,9 @@ function EpisodesList() {
                 <span className="font-medium text-foreground truncate">{ep.titulo || ep.livro}</span>
                 <Badge variant={ep.status === 'published' ? 'default' : 'secondary'} className="shrink-0">
                   {ep.status === 'published' ? 'Publicado' : 'Rascunho'}
+                </Badge>
+                <Badge variant="outline" className="shrink-0">
+                  {ep.tipo_episodio === 'clube_livro' ? '📖 Clube' : ep.tipo_episodio === 'formacao' ? '🎓 Formação' : '🎙️ Podcast'}
                 </Badge>
                 <Badge variant="outline" className="shrink-0">
                   {ep.formato === 'dialogo' ? '💬 Diálogo' : '🎙️ Narrativo'}
