@@ -2042,6 +2042,8 @@ export type Database = {
           autor_livro: string | null
           campo_simbolico: string | null
           capa_url: string | null
+          carga_horaria_ajuste: number
+          carga_horaria_base: number
           como_ler: string | null
           como_ler_audio_url: string | null
           como_ler_slides: Json | null
@@ -2077,6 +2079,8 @@ export type Database = {
           autor_livro?: string | null
           campo_simbolico?: string | null
           capa_url?: string | null
+          carga_horaria_ajuste?: number
+          carga_horaria_base?: number
           como_ler?: string | null
           como_ler_audio_url?: string | null
           como_ler_slides?: Json | null
@@ -2112,6 +2116,8 @@ export type Database = {
           autor_livro?: string | null
           campo_simbolico?: string | null
           capa_url?: string | null
+          carga_horaria_ajuste?: number
+          carga_horaria_base?: number
           como_ler?: string | null
           como_ler_audio_url?: string | null
           como_ler_slides?: Json | null

@@ -165,6 +165,20 @@ export default function CertificadoTravessia() {
 
             <div className="w-16 h-px bg-gold/30 mx-auto" />
 
+            {/* Carga horária */}
+            {(() => {
+              const ch = ((ciclo as any).carga_horaria_base || 20) + ((ciclo as any).carga_horaria_ajuste || 0);
+              return (
+                <p className="text-sm text-foreground font-medium">
+                  Carga horária: {ch}h
+                </p>
+              );
+            })()}
+
+            <div className="text-xs text-muted-foreground space-y-0.5">
+              <p>Componentes: Episódios de Escuta ✦ Laboratório 80/20 ✦ Integração Oracular ✦ Encontro ao Vivo</p>
+            </div>
+
             <div className="space-y-1">
               <p className="text-xs text-muted-foreground">
                 Integrações concluídas: Oracular ✦ Laboratório 80/20

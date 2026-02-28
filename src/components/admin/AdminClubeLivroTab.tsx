@@ -1228,6 +1228,8 @@ function CicloDialog({
     campo_simbolico: '',
     mensagem_campo_url: '',
     mensagem_campo_texto: '',
+    carga_horaria_base: 20,
+    carga_horaria_ajuste: 0,
     por_que_slides_json: '[]',
     por_que_audio_url: '',
     como_ler_slides_json: '[]',
@@ -1251,6 +1253,8 @@ function CicloDialog({
         campo_simbolico: (ciclo as any).campo_simbolico || '',
         mensagem_campo_url: (ciclo as any).mensagem_campo_url || '',
         mensagem_campo_texto: (ciclo as any).mensagem_campo_texto || '',
+        carga_horaria_base: (ciclo as any).carga_horaria_base ?? 20,
+        carga_horaria_ajuste: (ciclo as any).carga_horaria_ajuste ?? 0,
         por_que_slides_json: JSON.stringify((ciclo as any).por_que_slides || [], null, 2),
         por_que_audio_url: (ciclo as any).por_que_audio_url || '',
         como_ler_slides_json: JSON.stringify((ciclo as any).como_ler_slides || [], null, 2),
@@ -1268,6 +1272,8 @@ function CicloDialog({
     
     onSave({
       ...form,
+      carga_horaria_base: form.carga_horaria_base,
+      carga_horaria_ajuste: form.carga_horaria_ajuste,
       por_que_slides: porQueSlides,
       por_que_audio_url: form.por_que_audio_url || undefined,
       como_ler_slides: comoLerSlides,
@@ -1403,6 +1409,40 @@ function CicloDialog({
               placeholder="Texto-manifesto sobre o que é o clube..."
               className="min-h-[120px]"
             />
+          </div>
+
+          <Separator />
+
+          {/* Carga Horária */}
+          <div className="space-y-3">
+            <Label className="flex items-center gap-2 text-sm font-semibold">
+              <GraduationCap className="w-4 h-4 text-gold" />
+              Carga Horária
+            </Label>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="space-y-1">
+                <Label className="text-xs text-muted-foreground">Base (h)</Label>
+                <Input
+                  type="number"
+                  value={form.carga_horaria_base}
+                  onChange={(e) => setForm({ ...form, carga_horaria_base: parseInt(e.target.value) || 0 })}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs text-muted-foreground">Ajuste (h)</Label>
+                <Input
+                  type="number"
+                  value={form.carga_horaria_ajuste}
+                  onChange={(e) => setForm({ ...form, carga_horaria_ajuste: parseInt(e.target.value) || 0 })}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs text-muted-foreground">Total</Label>
+                <div className="h-9 flex items-center px-3 rounded-md bg-muted text-sm font-medium">
+                  {(form.carga_horaria_base || 0) + (form.carga_horaria_ajuste || 0)}h
+                </div>
+              </div>
+            </div>
           </div>
 
           <Separator />
