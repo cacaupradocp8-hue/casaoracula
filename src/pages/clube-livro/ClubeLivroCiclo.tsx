@@ -1,41 +1,33 @@
 // ============================================
-// CLUBE DO LIVRO ORACULAR - Livro do Ciclo
-// Modular: cada seção é um bloco independente
+// CÍRCULO DE LEITURA ORACULAR - Estrutura Interna do Livro (v2)
+// 6 abas: Portal | Travessia | Converse | Lab 80/20 | Registros | Integração
 // ============================================
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useClubeCicloDetalhe } from '@/hooks/useClubeLivro';
-import { useIntegracaoRecord } from '@/hooks/useIntegracaoOracular';
+import { Textarea } from '@/components/ui/textarea';
+import { useClubeCicloDetalhe, useClubeFasePerguntas } from '@/hooks/useClubeLivro';
+import { useIntegracaoRecord, useSalvarIntegracao } from '@/hooks/useIntegracaoOracular';
 import { useIntegracao8020Record } from '@/hooks/useIntegracao8020';
-import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
 import { useAuth } from '@/contexts/AuthContext';
-import { canAccessFeature } from '@/types/portal';
-import { getPortaisDoLivro, JORNADA_COR } from '@/constants/clubeLivroPortais';
-import { BookOpen, ChevronRight, Home, Stethoscope, DoorOpen, ArrowRight, MessageCircle } from 'lucide-react';
+import {
+  BookOpen, ChevronRight, Home, DoorOpen, Headphones, MessageCircle,
+  Target, PenLine, Sparkles, Loader2, ArrowRight, Play, CheckCircle2,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-
-// Blocos modulares independentes
 import {
   CicloHeaderBlock,
   PorQueEsteLivroBlock,
   ComoLerBlock,
-  FasesLeituraBlock,
+  AulasEncontrosBlock,
   EscutaGuiadaBlock,
   EncontrosBlock,
-  PortaisAssociadosBlock,
-  IntegracoesBlock,
-  UsoClinicalBlock,
-  AulasEncontrosBlock,
   EscutaSimbolticaChat,
+  FasesLeituraBlock,
 } from '@/components/clube-livro/blocks';
 
 export default function ClubeLivroCiclo() {
@@ -44,41 +36,10 @@ export default function ClubeLivroCiclo() {
   const { ciclo, fases, escutas, encontros, aulas, isLoading } = useClubeCicloDetalhe(id);
   const { data: integracaoRecord } = useIntegracaoRecord(id);
   const { data: integracao8020Record } = useIntegracao8020Record(id);
-  const { isProfessional } = useProfessionalStatus();
   const { user } = useAuth();
-  const [showEscutaChat, setShowEscutaChat] = useState(false);
 
-  // Fetch portas from DB for multipolar books
-  const isMultipolar = (ciclo as any)?.is_multipolar === true;
-  const { data: portasDB } = useQuery({
-    queryKey: ['clube-livro-portas', id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('clube_livro_portas')
-        .select('*')
-        .eq('ciclo_id', id!)
-        .eq('ativo', true)
-        .order('ordem', { ascending: true });
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!id && isMultipolar,
-  });
-
-  const portalMinimoClin = ciclo?.portal_minimo_clinico || 'aluna_formacao';
-  const canSeeClinical = isProfessional && user && canAccessFeature(user.portal, portalMinimoClin as any);
-  const hasClinicalContent = ciclo?.orientacao_clinica_uso || ciclo?.orientacao_clinica_evitar;
   const integracaoConcluida = integracaoRecord?.status === 'concluida';
   const integracao8020Concluida = integracao8020Record?.status === 'concluida';
-
-  const portaisConfig = ciclo ? getPortaisDoLivro(ciclo.titulo) : null;
-  const jornadaCor = portaisConfig ? JORNADA_COR[portaisConfig.jornada] : null;
-
-  const infograficoUrl = (ciclo as any)?.infografico_url;
-
-  // For multipolar books, show all aulas/escutas on the ciclo page (porta-specific ones are on porta pages)
-  const filteredAulas = aulas;
-  const filteredEscutas = escutas;
 
   if (isLoading) {
     return (
@@ -98,8 +59,7 @@ export default function ClubeLivroCiclo() {
       <AppLayout>
         <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl text-center">
           <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <h2 className="text-xl font-display mb-2">Ciclo não encontrado</h2>
-          <p className="text-muted-foreground mb-4">Este livro não está disponível.</p>
+          <h2 className="text-xl font-display mb-2">Livro não encontrado</h2>
           <Button variant="outline" onClick={() => navigate('/clube-livro')}>
             Voltar ao Clube
           </Button>
@@ -112,131 +72,57 @@ export default function ClubeLivroCiclo() {
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6 flex-wrap">
           <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
             <Home className="w-3 h-3" />
             Casa
           </Link>
           <ChevronRight className="w-3 h-3" />
           <Link to="/clube-livro" className="hover:text-foreground transition-colors">
-            Círculos de Leitura Simbólica
+            Círculo de Leitura
           </Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-foreground">{ciclo.titulo}</span>
         </nav>
 
-        {/* BLOCO 1: Header do Livro */}
-        <div className="mb-8">
+        {/* Header do Livro */}
+        <div className="mb-6">
           <CicloHeaderBlock ciclo={ciclo} />
-          
-          {/* Botão Conversar com o Livro */}
-          {ciclo.campo_simbolico && (
-            <div className="mt-4 flex justify-center">
-              <Button
-                variant={showEscutaChat ? 'outline' : 'gold'}
-                className="gap-2"
-                onClick={() => setShowEscutaChat(!showEscutaChat)}
-              >
-                <MessageCircle className="w-4 h-4" />
-                {showEscutaChat ? 'Fechar Escuta' : 'Conversar com o Livro'}
-              </Button>
-            </div>
-          )}
         </div>
 
-        {/* SALA DE ESCUTA SIMBÓLICA */}
-        {showEscutaChat && ciclo.campo_simbolico && (
-          <div className="mb-8">
-            <EscutaSimbolticaChat
-              campoSimbolico={ciclo.campo_simbolico}
-              tituloLivro={ciclo.titulo}
-              onClose={() => setShowEscutaChat(false)}
-            />
-          </div>
-        )}
-
-        {/* INFOGRÁFICO */}
-        {infograficoUrl && (
-          <div className="mb-8">
-            <figure className="mx-auto max-w-2xl">
-              <img
-                src={infograficoUrl}
-                alt={`Infográfico — ${ciclo.titulo}`}
-                className="w-full rounded-lg border border-border/50 shadow-sm"
-                loading="lazy"
-              />
-              <figcaption className="mt-2 text-center text-xs text-muted-foreground italic">
-                Mapa de travessia deste livro
-              </figcaption>
-            </figure>
-          </div>
-        )}
-
-        {/* SELEÇÃO DE PORTA — para livros multipolares */}
-        {isMultipolar && portasDB && portasDB.length > 0 && (
-          <div className="mb-8">
-            <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
-              <DoorOpen className="w-3.5 h-3.5" />
-              Escolha sua Porta de Travessia
-            </h3>
-            <div className="grid gap-2 sm:grid-cols-2">
-              {portasDB.map((porta: any) => {
-                const jornadaCorPorta = JORNADA_COR[porta.jornada] || null;
-                return (
-                  <Card
-                    key={porta.id}
-                    className="cursor-pointer transition-all group hover:border-primary/40"
-                    onClick={() => navigate(`/clube-livro/${id}/porta/${porta.id}`)}
-                  >
-                    <CardContent className="py-3 flex items-center gap-3">
-                      <span className={cn('text-lg leading-none shrink-0', jornadaCorPorta?.corLabel || 'text-primary')}>
-                        {porta.icone || jornadaCorPorta?.simbolo || '◈'}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium transition-colors text-foreground group-hover:text-primary">
-                          {porta.titulo}
-                        </p>
-                        {porta.descricao && (
-                          <p className="text-xs text-muted-foreground truncate">{porta.descricao}</p>
-                        )}
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary shrink-0" />
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Tabs: Leitura / Uso Clínico */}
-        <Tabs defaultValue="leitura" className="mb-8">
-          <TabsList className={cn(canSeeClinical && hasClinicalContent ? 'grid grid-cols-2' : 'hidden')}>
-            <TabsTrigger value="leitura" className="gap-2">
-              <BookOpen className="w-4 h-4" />
-              Leitura
+        {/* ── 6 ABAS ── */}
+        <Tabs defaultValue="portal" className="space-y-6">
+          <TabsList className="grid grid-cols-3 sm:grid-cols-6 h-auto gap-1 bg-muted/50 p-1">
+            <TabsTrigger value="portal" className="text-xs gap-1 py-2">
+              <DoorOpen className="w-3.5 h-3.5 hidden sm:block" />
+              Portal
             </TabsTrigger>
-            {canSeeClinical && hasClinicalContent && (
-              <TabsTrigger value="clinico" className="gap-2">
-                <Stethoscope className="w-4 h-4" />
-                Uso Clínico
-              </TabsTrigger>
-            )}
+            <TabsTrigger value="travessia" className="text-xs gap-1 py-2">
+              <Play className="w-3.5 h-3.5 hidden sm:block" />
+              Travessia
+            </TabsTrigger>
+            <TabsTrigger value="converse" className="text-xs gap-1 py-2">
+              <MessageCircle className="w-3.5 h-3.5 hidden sm:block" />
+              Converse
+            </TabsTrigger>
+            <TabsTrigger value="lab8020" className="text-xs gap-1 py-2">
+              <Target className="w-3.5 h-3.5 hidden sm:block" />
+              Lab 80/20
+            </TabsTrigger>
+            <TabsTrigger value="registros" className="text-xs gap-1 py-2">
+              <PenLine className="w-3.5 h-3.5 hidden sm:block" />
+              Registros
+            </TabsTrigger>
+            <TabsTrigger value="integracao" className="text-xs gap-1 py-2">
+              <Sparkles className="w-3.5 h-3.5 hidden sm:block" />
+              Integração
+            </TabsTrigger>
           </TabsList>
 
-          {/* Tab: Leitura — composição de blocos independentes */}
-          <TabsContent value="leitura" className="mt-6 space-y-6">
-            {/* BLOCO: Aulas e Encontros */}
-            <AulasEncontrosBlock
-              aulas={filteredAulas || []}
-              encontros={encontros || []}
-              dataInicioCiclo={ciclo.data_inicio ?? undefined}
-              intervaloLiberacaoDias={7}
-              onAulaClick={(aulaId) => navigate(`/clube-livro/${id}/aula/${aulaId}`)}
-              onEncontroClick={(encontroId) => navigate(`/clube-livro/${id}/encontros`)}
-            />
-            {/* BLOCO 2: Por que este livro (carrossel + áudio) */}
-            {(ciclo.por_que_este_livro || ((ciclo as any).por_que_slides?.length > 0)) && (
+          {/* ── ABA 1: Portal do Livro ── */}
+          <TabsContent value="portal" className="space-y-6">
+            {/* Apresentação */}
+            {(ciclo.por_que_este_livro || (ciclo as any).por_que_slides?.length > 0) && (
               <PorQueEsteLivroBlock
                 texto={ciclo.por_que_este_livro}
                 slides={(ciclo as any).por_que_slides || []}
@@ -244,8 +130,8 @@ export default function ClubeLivroCiclo() {
               />
             )}
 
-            {/* BLOCO 3: Como ler (carrossel + áudio) */}
-            {(ciclo.como_ler || ((ciclo as any).como_ler_slides?.length > 0)) && (
+            {/* Como Atravessar */}
+            {(ciclo.como_ler || (ciclo as any).como_ler_slides?.length > 0) && (
               <ComoLerBlock
                 texto={ciclo.como_ler}
                 slides={(ciclo as any).como_ler_slides || []}
@@ -253,50 +139,151 @@ export default function ClubeLivroCiclo() {
               />
             )}
 
-            {/* BLOCO 4: Fases da Leitura */}
+            {/* Fallback quando não há conteúdo */}
+            {!ciclo.por_que_este_livro && !ciclo.como_ler && (
+              <Card className="bg-muted/20 border-dashed">
+                <CardContent className="py-8 text-center">
+                  <DoorOpen className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+                  <p className="text-muted-foreground text-sm">
+                    O portal deste livro será aberto em breve.
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          {/* ── ABA 2: Travessia (Episódios) ── */}
+          <TabsContent value="travessia" className="space-y-6">
+            {/* Aulas / Episódios */}
+            <AulasEncontrosBlock
+              aulas={aulas || []}
+              encontros={encontros || []}
+              dataInicioCiclo={ciclo.data_inicio ?? undefined}
+              intervaloLiberacaoDias={7}
+              onAulaClick={(aulaId) => navigate(`/clube-livro/${id}/aula/${aulaId}`)}
+              onEncontroClick={() => navigate(`/clube-livro/${id}/encontros`)}
+            />
+
+            {/* Escutas */}
+            <EscutaGuiadaBlock
+              escutas={escutas || []}
+              onNavigate={() => navigate(`/clube-livro/${id}/escutas`)}
+            />
+
+            {/* Encontros ao vivo */}
+            <EncontrosBlock
+              encontros={encontros || []}
+              onNavigate={() => navigate(`/clube-livro/${id}/encontros`)}
+            />
+          </TabsContent>
+
+          {/* ── ABA 3: Converse com o Livro ── */}
+          <TabsContent value="converse">
+            {ciclo.campo_simbolico ? (
+              <EscutaSimbolticaChat
+                campoSimbolico={ciclo.campo_simbolico}
+                tituloLivro={ciclo.titulo}
+                onClose={() => {}}
+              />
+            ) : (
+              <Card className="bg-muted/20 border-dashed">
+                <CardContent className="py-8 text-center">
+                  <MessageCircle className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+                  <p className="text-muted-foreground text-sm">
+                    A escuta simbólica deste livro ainda não foi ativada.
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          {/* ── ABA 4: Laboratório 80/20 ── */}
+          <TabsContent value="lab8020">
+            <Card className={cn(
+              'transition-all cursor-pointer hover:border-gold/40',
+              integracao8020Concluida && 'border-gold/30 bg-gold/5'
+            )}>
+              <CardContent className="p-6 text-center" onClick={() => navigate(`/clube-livro/${id}/integracao-8020`)}>
+                <Target className="w-10 h-10 text-gold mx-auto mb-3" />
+                <h3 className="font-display text-lg text-foreground mb-2">
+                  Laboratório de Integração 80/20
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
+                  Transforme o que leu em aplicação real — profissional, emocional e comportamental.
+                </p>
+                {integracao8020Concluida ? (
+                  <div className="flex items-center justify-center gap-2 text-gold text-sm">
+                    <CheckCircle2 className="w-4 h-4" />
+                    Integração concluída
+                  </div>
+                ) : (
+                  <Button className="bg-gold hover:bg-gold/90 text-primary-foreground gap-2">
+                    Acessar Laboratório
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* ── ABA 5: Registros (Diário privado) ── */}
+          <TabsContent value="registros" className="space-y-6">
             <FasesLeituraBlock
               fases={fases || []}
               onFaseClick={(faseId) => navigate(`/clube-livro/${id}/fase/${faseId}`)}
             />
 
-            {/* BLOCO 5: Escuta Guiada */}
-            <EscutaGuiadaBlock
-              escutas={filteredEscutas || []}
-              onNavigate={() => navigate(`/clube-livro/${id}/escutas`)}
-            />
-
-            {/* BLOCO 6: Encontros */}
-            <EncontrosBlock
-              encontros={encontros || []}
-              onNavigate={() => navigate(`/clube-livro/${id}/encontros`)}
-            />
-
-            {/* BLOCO 7: Portais Associados */}
-            {portaisConfig && jornadaCor && (
-              <PortaisAssociadosBlock
-                portais={portaisConfig.portais}
-                jornadaCor={jornadaCor}
-                orientacaoCurta={portaisConfig.orientacaoCurta}
-                onNavigate={(rota) => navigate(rota)}
-              />
+            {(!fases || fases.length === 0) && (
+              <Card className="bg-muted/20 border-dashed">
+                <CardContent className="py-8 text-center">
+                  <PenLine className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+                  <p className="text-muted-foreground text-sm">
+                    Os registros desta travessia serão abertos conforme as fases avançam.
+                  </p>
+                </CardContent>
+              </Card>
             )}
-
-            {/* BLOCO 8: Integrações */}
-            <IntegracoesBlock
-              cicloId={id!}
-              integracaoConcluida={integracaoConcluida}
-              integracao8020Concluida={integracao8020Concluida}
-              onNavigate={(path) => navigate(path)}
-            />
           </TabsContent>
 
-          {/* Tab: Uso Clínico — bloco independente */}
-          {canSeeClinical && hasClinicalContent && (
-            <TabsContent value="clinico" className="mt-6">
-              {/* BLOCO 9: Uso Clínico */}
-              <UsoClinicalBlock ciclo={ciclo} />
-            </TabsContent>
-          )}
+          {/* ── ABA 6: Integração Final ── */}
+          <TabsContent value="integracao">
+            <Card className={cn(
+              'transition-all cursor-pointer hover:border-gold/40',
+              integracaoConcluida && 'border-gold/30 bg-gold/5'
+            )}>
+              <CardContent className="p-6 text-center" onClick={() => navigate(`/clube-livro/${id}/integracao`)}>
+                <Sparkles className="w-10 h-10 text-gold mx-auto mb-3" />
+                <h3 className="font-display text-lg text-foreground mb-2">
+                  Integração Oracular
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
+                  Campo de síntese pessoal — movimentos, ritual e registro final desta travessia.
+                </p>
+                {integracaoConcluida ? (
+                  <div className="flex items-center justify-center gap-2 text-gold text-sm">
+                    <CheckCircle2 className="w-4 h-4" />
+                    Integração concluída
+                  </div>
+                ) : (
+                  <Button className="bg-gold hover:bg-gold/90 text-primary-foreground gap-2">
+                    Iniciar Integração
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Marcar como concluído — summary */}
+            {integracaoConcluida && integracao8020Concluida && (
+              <Card className="mt-4 border-gold/40 bg-gradient-to-br from-gold/10 to-card">
+                <CardContent className="p-5 text-center">
+                  <p className="text-sm text-gold font-medium">
+                    ✦ Travessia completa — todas as integrações foram concluídas
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
         </Tabs>
       </div>
     </AppLayout>
