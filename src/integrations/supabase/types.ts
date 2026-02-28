@@ -5621,6 +5621,53 @@ export type Database = {
           },
         ]
       }
+      lab_8020_progress: {
+        Row: {
+          concluido: boolean
+          concluido_em: string | null
+          created_at: string
+          id: string
+          insight_livre: string | null
+          resposta_1: string | null
+          resposta_2: string | null
+          season_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          concluido?: boolean
+          concluido_em?: string | null
+          created_at?: string
+          id?: string
+          insight_livre?: string | null
+          resposta_1?: string | null
+          resposta_2?: string | null
+          season_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          concluido?: boolean
+          concluido_em?: string | null
+          created_at?: string
+          id?: string
+          insight_livre?: string | null
+          resposta_1?: string | null
+          resposta_2?: string | null
+          season_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lab_8020_progress_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "oracular_seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lab_casos: {
         Row: {
           contexto: string | null
@@ -9712,6 +9759,59 @@ export type Database = {
             foreignKeyName: "season_books_season_id_fkey"
             columns: ["season_id"]
             isOneToOne: false
+            referencedRelation: "oracular_seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      season_labs: {
+        Row: {
+          created_at: string
+          essencia_transformadora: string | null
+          id: string
+          nucleo_vivo: string | null
+          pergunta_aplicacao_1: string | null
+          pergunta_aplicacao_2: string | null
+          season_id: string
+          tensao_central: string | null
+          traducao_aula: string | null
+          traducao_circulo: string | null
+          traducao_sessao: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          essencia_transformadora?: string | null
+          id?: string
+          nucleo_vivo?: string | null
+          pergunta_aplicacao_1?: string | null
+          pergunta_aplicacao_2?: string | null
+          season_id: string
+          tensao_central?: string | null
+          traducao_aula?: string | null
+          traducao_circulo?: string | null
+          traducao_sessao?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          essencia_transformadora?: string | null
+          id?: string
+          nucleo_vivo?: string | null
+          pergunta_aplicacao_1?: string | null
+          pergunta_aplicacao_2?: string | null
+          season_id?: string
+          tensao_central?: string | null
+          traducao_aula?: string | null
+          traducao_circulo?: string | null
+          traducao_sessao?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "season_labs_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: true
             referencedRelation: "oracular_seasons"
             referencedColumns: ["id"]
           },

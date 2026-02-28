@@ -10,11 +10,13 @@ import { useClubeLivro } from '@/hooks/useClubeLivro';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, ChevronRight, Home, Route, Circle, CircleDot, CheckCircle2 } from 'lucide-react';
+import { BookOpen, ChevronRight, Home, Route, Circle, CircleDot, CheckCircle2, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { CLUBE_LIVRO_PORTAIS, JORNADA_COR, type JornadaType } from '@/constants/clubeLivroPortais';
+import { useAllLabProgress } from '@/hooks/useSeasonLab';
+import { format } from 'date-fns';
 
 type StatusTravessia = 'latente' | 'em_travessia' | 'integrado';
 
@@ -236,7 +238,47 @@ export default function MinhaTravessia() {
             })}
           </div>
         )}
+
+        {/* Histórico de Laboratórios 80/20 */}
+        <LabHistorySection />
       </div>
     </AppLayout>
+  );
+}
+
+function LabHistorySection() {
+  const { data: labs } = useAllLabProgress();
+
+  if (!labs || labs.length === 0) return null;
+
+  return (
+    <section className="mt-10">
+      <div className="flex items-center gap-2 mb-4">
+        <Target className="w-4 h-4 text-gold" />
+        <h3 className="font-display text-sm text-foreground">Laboratórios 80/20 Concluídos</h3>
+      </div>
+      <div className="space-y-2">
+        {labs.map((lab) => (
+          <Card key={lab.id} className="border-gold/20 bg-gold/5">
+            <CardContent className="p-4 flex items-center gap-3">
+              <CheckCircle2 className="w-4 h-4 text-gold shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-foreground">
+                  {lab.oracular_seasons?.simbolo} {lab.oracular_seasons?.nome_estacao}
+                </p>
+                {lab.oracular_seasons?.periodo && (
+                  <p className="text-xs text-muted-foreground">{lab.oracular_seasons.periodo}</p>
+                )}
+              </div>
+              {lab.concluido_em && (
+                <span className="text-[10px] text-muted-foreground shrink-0">
+                  {format(new Date(lab.concluido_em), 'dd/MM/yyyy')}
+                </span>
+              )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </section>
   );
 }

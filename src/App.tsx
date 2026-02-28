@@ -185,6 +185,7 @@ import {
   MinhaTravessia,
   CertificadoTravessia,
   AnoOracular,
+  Lab8020Season,
 } from "./pages/clube-livro";
 // Labirinto da Heroína Interna®
 import { LabirintoHeroinaPage } from "./pages/labirinto-heroina";
@@ -764,12 +765,21 @@ function AppRoutes() {
         }
       />
 
-      {/* Integração 80/20 */}
+      {/* Integração 80/20 (legado) */}
       <Route
         path="/clube-livro/:id/integracao-8020"
         element={
           <ProtectedRoute minPortal="aluna">
             <Integracao8020 />
+          </ProtectedRoute>
+        }
+      />
+      {/* Lab 80/20 por estação */}
+      <Route
+        path="/clube-livro/:id/lab-8020"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <Lab8020Season />
           </ProtectedRoute>
         }
       />

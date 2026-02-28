@@ -18,4 +18,5 @@ export { default as MapaJornadas } from './MapaJornadas';
 export { default as MinhaTravessia } from './MinhaTravessia';
 export { default as CertificadoTravessia } from './CertificadoTravessia';
 export { default as AnoOracular } from './AnoOracular';
+export { default as Lab8020Season } from './Lab8020Season';
 
