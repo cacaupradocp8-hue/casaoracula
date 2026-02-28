@@ -9975,6 +9975,149 @@ export type Database = {
           },
         ]
       }
+      studio_episodes: {
+        Row: {
+          audio_full_url: string | null
+          audio_public_url: string | null
+          capitulo: string
+          created_at: string
+          created_by: string | null
+          descricao: string | null
+          duracao_segundos: number | null
+          eixo_id: string | null
+          id: string
+          imagem_capa_url: string | null
+          intencao_terapeutica: string
+          livro: string
+          published_at: string | null
+          roteiro_completo: string | null
+          status: Database["public"]["Enums"]["studio_episode_status"]
+          texto_base: string
+          titulo: string | null
+          updated_at: string
+          versao_resumida: string | null
+          visibility: Database["public"]["Enums"]["studio_episode_visibility"]
+          voz_escolhida: string | null
+        }
+        Insert: {
+          audio_full_url?: string | null
+          audio_public_url?: string | null
+          capitulo?: string
+          created_at?: string
+          created_by?: string | null
+          descricao?: string | null
+          duracao_segundos?: number | null
+          eixo_id?: string | null
+          id?: string
+          imagem_capa_url?: string | null
+          intencao_terapeutica?: string
+          livro: string
+          published_at?: string | null
+          roteiro_completo?: string | null
+          status?: Database["public"]["Enums"]["studio_episode_status"]
+          texto_base?: string
+          titulo?: string | null
+          updated_at?: string
+          versao_resumida?: string | null
+          visibility?: Database["public"]["Enums"]["studio_episode_visibility"]
+          voz_escolhida?: string | null
+        }
+        Update: {
+          audio_full_url?: string | null
+          audio_public_url?: string | null
+          capitulo?: string
+          created_at?: string
+          created_by?: string | null
+          descricao?: string | null
+          duracao_segundos?: number | null
+          eixo_id?: string | null
+          id?: string
+          imagem_capa_url?: string | null
+          intencao_terapeutica?: string
+          livro?: string
+          published_at?: string | null
+          roteiro_completo?: string | null
+          status?: Database["public"]["Enums"]["studio_episode_status"]
+          texto_base?: string
+          titulo?: string | null
+          updated_at?: string
+          versao_resumida?: string | null
+          visibility?: Database["public"]["Enums"]["studio_episode_visibility"]
+          voz_escolhida?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_episodes_eixo_id_fkey"
+            columns: ["eixo_id"]
+            isOneToOne: false
+            referencedRelation: "studio_method_axes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_method_axes: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          descricao: string
+          id: string
+          instrucao_especifica: string
+          nome: string
+          ordem: number
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string
+          id?: string
+          instrucao_especifica?: string
+          nome: string
+          ordem?: number
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string
+          id?: string
+          instrucao_especifica?: string
+          nome?: string
+          ordem?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      studio_method_blocks: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          id: string
+          instrucao: string
+          nome: string
+          ordem: number
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          instrucao?: string
+          nome: string
+          ordem?: number
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          instrucao?: string
+          nome?: string
+          ordem?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           created_at: string
@@ -11316,6 +11459,8 @@ export type Database = {
       ritual_type: "abertura" | "transicao" | "consagracao"
       status_publicacao: "rascunho" | "publicado"
       status_supervisao: "privado" | "enviado" | "discutido"
+      studio_episode_status: "draft" | "published"
+      studio_episode_visibility: "exclusive" | "public" | "public_full"
       tipo_modulo: "jornada" | "curso" | "circulo" | "travessia" | "biblioteca"
       track_type: "audio" | "podcast"
     }
@@ -11534,6 +11679,8 @@ export const Constants = {
       ritual_type: ["abertura", "transicao", "consagracao"],
       status_publicacao: ["rascunho", "publicado"],
       status_supervisao: ["privado", "enviado", "discutido"],
+      studio_episode_status: ["draft", "published"],
+      studio_episode_visibility: ["exclusive", "public", "public_full"],
       tipo_modulo: ["jornada", "curso", "circulo", "travessia", "biblioteca"],
       track_type: ["audio", "podcast"],
     },
