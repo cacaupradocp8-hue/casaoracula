@@ -16,13 +16,15 @@ import {
   ExternalLink,
   Volume2,
   Sparkles,
-  MessageCircle
+  MessageCircle,
+  Sprout
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { motion } from 'framer-motion';
+import CanteiroEstacao from '@/components/canteiro/CanteiroEstacao';
 
 interface EscutaContent {
   id: string;
@@ -81,6 +83,14 @@ export default function CasaTecelaInterior() {
   };
 
   const areaConfig = {
+    canteiro: {
+      icon: Sprout,
+      title: 'Canteiro da Estação',
+      subtitle: 'Partilhas selecionadas para o campo coletivo',
+      color: 'text-gold',
+      bgColor: 'bg-gold/10',
+      borderColor: 'border-gold/30',
+    },
     sustentacao: {
       icon: Ear,
       title: 'Sala da Sustentação',
@@ -345,8 +355,8 @@ export default function CasaTecelaInterior() {
           />
         </motion.div>
 
-        <Tabs defaultValue="sustentacao" className="space-y-6">
-          <TabsList className="w-full grid grid-cols-3 h-auto p-1">
+        <Tabs defaultValue="canteiro" className="space-y-6">
+          <TabsList className="w-full grid grid-cols-4 h-auto p-1">
             {Object.entries(areaConfig).map(([key, config]) => {
               const Icon = config.icon;
               return (
@@ -361,6 +371,16 @@ export default function CasaTecelaInterior() {
               );
             })}
           </TabsList>
+
+          <TabsContent value="canteiro" className="mt-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <CanteiroEstacao />
+            </motion.div>
+          </TabsContent>
 
           <TabsContent value="sustentacao" className="mt-6">
             <motion.div
