@@ -76,6 +76,7 @@ import Billing from "./pages/Billing";
 import CheckoutSucesso from "./pages/CheckoutSucesso";
 import CheckoutCancelado from "./pages/CheckoutCancelado";
 import Audios from "./pages/Audios";
+import EstudioOracular from "./pages/EstudioOracular";
 import Notificacoes from "./pages/Notificacoes";
 // Ferramentas (salas)
 import Big5 from "./pages/salas/Big5";
@@ -1626,6 +1627,16 @@ function AppRoutes() {
           element={
             <ProtectedRoute minPortal="admin">
               <AdminBooks />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Estúdio Oracular */}
+        <Route
+          path="/estudio-oracular"
+          element={
+            <ProtectedRoute>
+              <EstudioOracular />
             </ProtectedRoute>
           }
         />

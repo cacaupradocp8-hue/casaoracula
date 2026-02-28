@@ -1,0 +1,544 @@
+import React, { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
+import { toast } from 'sonner';
+import { Plus, Trash2, GripVertical, Loader2, Play, Mic, Send, Eye, Pencil, Music } from 'lucide-react';
+import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
+
+// ============ Method Blocks Manager ============
+function MethodBlocksManager() {
+  const [blocks, setBlocks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [newBlock, setNewBlock] = useState({ nome: '', instrucao: '' });
+
+  const fetchBlocks = async () => {
+    const { data } = await supabase.from('studio_method_blocks').select('*').order('ordem');
+    setBlocks(data || []);
+    setLoading(false);
+  };
+
+  useEffect(() => { fetchBlocks(); }, []);
+
+  const addBlock = async () => {
+    if (!newBlock.nome) return;
+    const ordem = blocks.length;
+    await supabase.from('studio_method_blocks').insert({ ...newBlock, ordem });
+    setNewBlock({ nome: '', instrucao: '' });
+    fetchBlocks();
+    toast.success('Bloco adicionado');
+  };
+
+  const updateBlock = async (id: string, field: string, value: any) => {
+    await supabase.from('studio_method_blocks').update({ [field]: value }).eq('id', id);
+    fetchBlocks();
+  };
+
+  const deleteBlock = async (id: string) => {
+    await supabase.from('studio_method_blocks').delete().eq('id', id);
+    fetchBlocks();
+    toast.success('Bloco removido');
+  };
+
+  if (loading) return <div className="flex justify-center py-8"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>;
+
+  return (
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-foreground">Blocos do Método</h3>
+      <p className="text-sm text-muted-foreground">Defina a estrutura base da leitura terapêutica. Estes blocos serão combinados com o eixo escolhido para gerar o roteiro.</p>
+      
+      {blocks.map((block, i) => (
+        <Card key={block.id} className="bg-card/50">
+          <CardContent className="pt-4 space-y-3">
+            <div className="flex items-center gap-3">
+              <GripVertical className="w-4 h-4 text-muted-foreground shrink-0" />
+              <Badge variant="outline" className="shrink-0">{i + 1}</Badge>
+              <Input
+                value={block.nome}
+                onChange={(e) => updateBlock(block.id, 'nome', e.target.value)}
+                className="font-medium"
+              />
+              <Switch
+                checked={block.ativo}
+                onCheckedChange={(v) => updateBlock(block.id, 'ativo', v)}
+              />
+              <Button variant="ghost" size="icon" onClick={() => deleteBlock(block.id)}>
+                <Trash2 className="w-4 h-4 text-destructive" />
+              </Button>
+            </div>
+            <Textarea
+              value={block.instrucao}
+              onChange={(e) => updateBlock(block.id, 'instrucao', e.target.value)}
+              placeholder="Instrução para este bloco..."
+              className="min-h-[60px]"
+            />
+          </CardContent>
+        </Card>
+      ))}
+
+      <Card className="border-dashed border-2 border-muted">
+        <CardContent className="pt-4 space-y-3">
+          <Input
+            placeholder="Nome do novo bloco"
+            value={newBlock.nome}
+            onChange={(e) => setNewBlock(p => ({ ...p, nome: e.target.value }))}
+          />
+          <Textarea
+            placeholder="Instrução..."
+            value={newBlock.instrucao}
+            onChange={(e) => setNewBlock(p => ({ ...p, instrucao: e.target.value }))}
+          />
+          <Button onClick={addBlock} size="sm" className="gap-2">
+            <Plus className="w-4 h-4" /> Adicionar Bloco
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// ============ Method Axes Manager ============
+function MethodAxesManager() {
+  const [axes, setAxes] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [newAxis, setNewAxis] = useState({ nome: '', descricao: '', instrucao_especifica: '' });
+
+  const fetchAxes = async () => {
+    const { data } = await supabase.from('studio_method_axes').select('*').order('ordem');
+    setAxes(data || []);
+    setLoading(false);
+  };
+
+  useEffect(() => { fetchAxes(); }, []);
+
+  const addAxis = async () => {
+    if (!newAxis.nome) return;
+    await supabase.from('studio_method_axes').insert({ ...newAxis, ordem: axes.length });
+    setNewAxis({ nome: '', descricao: '', instrucao_especifica: '' });
+    fetchAxes();
+    toast.success('Eixo adicionado');
+  };
+
+  const updateAxis = async (id: string, field: string, value: any) => {
+    await supabase.from('studio_method_axes').update({ [field]: value }).eq('id', id);
+    fetchAxes();
+  };
+
+  const deleteAxis = async (id: string) => {
+    await supabase.from('studio_method_axes').delete().eq('id', id);
+    fetchAxes();
+    toast.success('Eixo removido');
+  };
+
+  if (loading) return <div className="flex justify-center py-8"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>;
+
+  return (
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-foreground">Eixos do Método</h3>
+      <p className="text-sm text-muted-foreground">Cada eixo adiciona instruções específicas à estrutura base, gerando variações na leitura.</p>
+
+      {axes.map((axis) => (
+        <Card key={axis.id} className="bg-card/50">
+          <CardContent className="pt-4 space-y-3">
+            <div className="flex items-center gap-3">
+              <Input
+                value={axis.nome}
+                onChange={(e) => updateAxis(axis.id, 'nome', e.target.value)}
+                className="font-medium"
+              />
+              <Switch checked={axis.ativo} onCheckedChange={(v) => updateAxis(axis.id, 'ativo', v)} />
+              <Button variant="ghost" size="icon" onClick={() => deleteAxis(axis.id)}>
+                <Trash2 className="w-4 h-4 text-destructive" />
+              </Button>
+            </div>
+            <Input
+              value={axis.descricao}
+              onChange={(e) => updateAxis(axis.id, 'descricao', e.target.value)}
+              placeholder="Descrição do eixo..."
+            />
+            <Textarea
+              value={axis.instrucao_especifica}
+              onChange={(e) => updateAxis(axis.id, 'instrucao_especifica', e.target.value)}
+              placeholder="Instruções específicas deste eixo..."
+              className="min-h-[80px]"
+            />
+          </CardContent>
+        </Card>
+      ))}
+
+      <Card className="border-dashed border-2 border-muted">
+        <CardContent className="pt-4 space-y-3">
+          <Input placeholder="Nome do eixo" value={newAxis.nome} onChange={(e) => setNewAxis(p => ({ ...p, nome: e.target.value }))} />
+          <Input placeholder="Descrição" value={newAxis.descricao} onChange={(e) => setNewAxis(p => ({ ...p, descricao: e.target.value }))} />
+          <Textarea placeholder="Instrução específica..." value={newAxis.instrucao_especifica} onChange={(e) => setNewAxis(p => ({ ...p, instrucao_especifica: e.target.value }))} />
+          <Button onClick={addAxis} size="sm" className="gap-2">
+            <Plus className="w-4 h-4" /> Adicionar Eixo
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// ============ Episode Editor ============
+function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => void }) {
+  const [form, setForm] = useState({
+    livro: episode?.livro || '',
+    capitulo: episode?.capitulo || '',
+    eixo_id: episode?.eixo_id || '',
+    texto_base: episode?.texto_base || '',
+    intencao_terapeutica: episode?.intencao_terapeutica || '',
+    visibility: episode?.visibility || 'exclusive',
+    titulo: episode?.titulo || '',
+    descricao: episode?.descricao || '',
+    voz_escolhida: episode?.voz_escolhida || 'suave',
+    roteiro_completo: episode?.roteiro_completo || '',
+    versao_resumida: episode?.versao_resumida || '',
+    status: episode?.status || 'draft',
+  });
+  const [axes, setAxes] = useState<any[]>([]);
+  const [generating, setGenerating] = useState(false);
+  const [generatingAudio, setGeneratingAudio] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [audioUrls, setAudioUrls] = useState({
+    full: episode?.audio_full_url || null,
+    public: episode?.audio_public_url || null,
+  });
+
+  useEffect(() => {
+    supabase.from('studio_method_axes').select('*').eq('ativo', true).order('ordem')
+      .then(({ data }) => setAxes(data || []));
+  }, []);
+
+  const handleGenerate = async () => {
+    if (!form.livro || !form.texto_base) {
+      toast.error('Preencha pelo menos o livro e o texto base');
+      return;
+    }
+    setGenerating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('studio-generate-episode', {
+        body: {
+          livro: form.livro,
+          capitulo: form.capitulo,
+          eixoId: form.eixo_id || null,
+          textoBase: form.texto_base,
+          intencaoTerapeutica: form.intencao_terapeutica,
+          visibility: form.visibility,
+        },
+      });
+      if (error) throw error;
+      setForm(p => ({
+        ...p,
+        roteiro_completo: data.roteiroCompleto || '',
+        versao_resumida: data.versaoResumida || '',
+      }));
+      toast.success('Roteiro gerado com sucesso!');
+    } catch (e: any) {
+      toast.error(e.message || 'Erro ao gerar roteiro');
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const handleGenerateAudio = async (type: 'full' | 'public') => {
+    const text = type === 'full' ? form.roteiro_completo : form.versao_resumida;
+    if (!text) {
+      toast.error(`Sem ${type === 'full' ? 'roteiro completo' : 'versão resumida'} para gerar áudio`);
+      return;
+    }
+    if (!episode?.id) {
+      toast.error('Salve o episódio antes de gerar áudio');
+      return;
+    }
+    setGeneratingAudio(type);
+    try {
+      const { data, error } = await supabase.functions.invoke('studio-tts', {
+        body: {
+          text,
+          voice: form.voz_escolhida,
+          episodeId: episode.id,
+          audioType: type,
+        },
+      });
+      if (error) throw error;
+      setAudioUrls(p => ({ ...p, [type]: data.url }));
+      toast.success('Áudio gerado com sucesso!');
+    } catch (e: any) {
+      toast.error(e.message || 'Erro ao gerar áudio');
+    } finally {
+      setGeneratingAudio(null);
+    }
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const payload: any = {
+        livro: form.livro,
+        capitulo: form.capitulo,
+        eixo_id: form.eixo_id || null,
+        texto_base: form.texto_base,
+        intencao_terapeutica: form.intencao_terapeutica,
+        visibility: form.visibility,
+        titulo: form.titulo || form.livro,
+        descricao: form.descricao,
+        voz_escolhida: form.voz_escolhida,
+        roteiro_completo: form.roteiro_completo,
+        versao_resumida: form.versao_resumida,
+        status: form.status,
+      };
+
+      if (form.status === 'published' && !episode?.published_at) {
+        payload.published_at = new Date().toISOString();
+      }
+
+      if (episode?.id) {
+        await supabase.from('studio_episodes').update(payload).eq('id', episode.id);
+      } else {
+        const { data: { user } } = await supabase.auth.getUser();
+        payload.created_by = user?.id;
+        await supabase.from('studio_episodes').insert(payload);
+      }
+      toast.success('Episódio salvo!');
+      onSaved();
+    } catch (e: any) {
+      toast.error(e.message || 'Erro ao salvar');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label>Título do Episódio</Label>
+          <Input value={form.titulo} onChange={(e) => setForm(p => ({ ...p, titulo: e.target.value }))} placeholder="Título para exibição" />
+        </div>
+        <div className="space-y-2">
+          <Label>Livro</Label>
+          <Input value={form.livro} onChange={(e) => setForm(p => ({ ...p, livro: e.target.value }))} placeholder="Nome do livro" />
+        </div>
+        <div className="space-y-2">
+          <Label>Capítulo</Label>
+          <Input value={form.capitulo} onChange={(e) => setForm(p => ({ ...p, capitulo: e.target.value }))} placeholder="Capítulo ou seção" />
+        </div>
+        <div className="space-y-2">
+          <Label>Eixo</Label>
+          <Select value={form.eixo_id} onValueChange={(v) => setForm(p => ({ ...p, eixo_id: v }))}>
+            <SelectTrigger><SelectValue placeholder="Selecione um eixo" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">Nenhum (apenas estrutura base)</SelectItem>
+              {axes.map(a => <SelectItem key={a.id} value={a.id}>{a.nome}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2">
+          <Label>Visibilidade</Label>
+          <Select value={form.visibility} onValueChange={(v) => setForm(p => ({ ...p, visibility: v }))}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="exclusive">Exclusivo (membros)</SelectItem>
+              <SelectItem value="public">Público (resumido)</SelectItem>
+              <SelectItem value="public_full">Público + Completo</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2">
+          <Label>Voz</Label>
+          <Select value={form.voz_escolhida} onValueChange={(v) => setForm(p => ({ ...p, voz_escolhida: v }))}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="suave">🌙 Voz Suave</SelectItem>
+              <SelectItem value="contemplativa">🌿 Voz Contemplativa</SelectItem>
+              <SelectItem value="casa_oracula">✨ Voz Casa Orácula</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Intenção Terapêutica</Label>
+        <Textarea value={form.intencao_terapeutica} onChange={(e) => setForm(p => ({ ...p, intencao_terapeutica: e.target.value }))} placeholder="Qual a intenção terapêutica desta leitura?" className="min-h-[60px]" />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Texto Base / Ideias-chave</Label>
+        <Textarea value={form.texto_base} onChange={(e) => setForm(p => ({ ...p, texto_base: e.target.value }))} placeholder="Texto base, citações, ideias-chave para a geração do roteiro..." className="min-h-[120px]" />
+      </div>
+
+      <Button onClick={handleGenerate} disabled={generating} className="gap-2" variant="gold">
+        {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+        {generating ? 'Gerando roteiro...' : 'Gerar Episódio'}
+      </Button>
+
+      {form.roteiro_completo && (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label>Roteiro Completo</Label>
+            <Textarea value={form.roteiro_completo} onChange={(e) => setForm(p => ({ ...p, roteiro_completo: e.target.value }))} className="min-h-[300px] font-mono text-sm" />
+            <div className="flex gap-2">
+              <Button onClick={() => handleGenerateAudio('full')} disabled={!!generatingAudio} size="sm" variant="outline" className="gap-2">
+                {generatingAudio === 'full' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mic className="w-4 h-4" />}
+                Gerar Áudio Completo
+              </Button>
+            </div>
+            {audioUrls.full && <UnifiedAudioPlayer audioUrl={audioUrls.full} title="Áudio Completo" size="sm" />}
+          </div>
+
+          <div className="space-y-2">
+            <Label>Versão Resumida (Público)</Label>
+            <Textarea value={form.versao_resumida} onChange={(e) => setForm(p => ({ ...p, versao_resumida: e.target.value }))} className="min-h-[200px] font-mono text-sm" />
+            <div className="flex gap-2">
+              <Button onClick={() => handleGenerateAudio('public')} disabled={!!generatingAudio} size="sm" variant="outline" className="gap-2">
+                {generatingAudio === 'public' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mic className="w-4 h-4" />}
+                Gerar Áudio Público
+              </Button>
+            </div>
+            {audioUrls.public && <UnifiedAudioPlayer audioUrl={audioUrls.public} title="Áudio Público" size="sm" />}
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-2">
+        <Label>Descrição</Label>
+        <Textarea value={form.descricao} onChange={(e) => setForm(p => ({ ...p, descricao: e.target.value }))} placeholder="Descrição curta do episódio" className="min-h-[60px]" />
+      </div>
+
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
+          <Label>Status:</Label>
+          <Select value={form.status} onValueChange={(v) => setForm(p => ({ ...p, status: v }))}>
+            <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="draft">Rascunho</SelectItem>
+              <SelectItem value="published">Publicado</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <Button onClick={handleSave} disabled={saving} className="gap-2">
+          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Pencil className="w-4 h-4" />}
+          Salvar
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+// ============ Episodes List ============
+function EpisodesList() {
+  const [episodes, setEpisodes] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<any | null>(null);
+  const [creating, setCreating] = useState(false);
+
+  const fetchEpisodes = async () => {
+    const { data } = await supabase.from('studio_episodes').select('*, studio_method_axes(nome)').order('created_at', { ascending: false });
+    setEpisodes(data || []);
+    setLoading(false);
+  };
+
+  useEffect(() => { fetchEpisodes(); }, []);
+
+  if (editing) {
+    return (
+      <div>
+        <Button variant="ghost" onClick={() => setEditing(null)} className="mb-4">← Voltar</Button>
+        <EpisodeEditor episode={editing} onSaved={() => { setEditing(null); fetchEpisodes(); }} />
+      </div>
+    );
+  }
+
+  if (creating) {
+    return (
+      <div>
+        <Button variant="ghost" onClick={() => setCreating(false)} className="mb-4">← Voltar</Button>
+        <EpisodeEditor onSaved={() => { setCreating(false); fetchEpisodes(); }} />
+      </div>
+    );
+  }
+
+  if (loading) return <div className="flex justify-center py-8"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold text-foreground">Episódios</h3>
+        <Button onClick={() => setCreating(true)} className="gap-2">
+          <Plus className="w-4 h-4" /> Novo Episódio
+        </Button>
+      </div>
+
+      {episodes.length === 0 && (
+        <p className="text-muted-foreground text-center py-8">Nenhum episódio criado ainda.</p>
+      )}
+
+      {episodes.map((ep) => (
+        <Card key={ep.id} className="bg-card/50 hover:bg-card/80 transition-colors cursor-pointer" onClick={() => setEditing(ep)}>
+          <CardContent className="py-4 flex items-center justify-between">
+            <div className="space-y-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="font-medium text-foreground truncate">{ep.titulo || ep.livro}</span>
+                <Badge variant={ep.status === 'published' ? 'default' : 'secondary'} className="shrink-0">
+                  {ep.status === 'published' ? 'Publicado' : 'Rascunho'}
+                </Badge>
+                <Badge variant="outline" className="shrink-0">
+                  {ep.visibility === 'exclusive' ? '🔒 Exclusivo' : ep.visibility === 'public' ? '🌐 Público' : '🌐 Público+'}
+                </Badge>
+              </div>
+              <p className="text-sm text-muted-foreground truncate">
+                {ep.livro} {ep.capitulo ? `— ${ep.capitulo}` : ''} {ep.studio_method_axes?.nome ? `• Eixo: ${ep.studio_method_axes.nome}` : ''}
+              </p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              {ep.audio_full_url && <Music className="w-4 h-4 text-gold" />}
+              <Pencil className="w-4 h-4 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+// ============ Main Admin Tab ============
+export function AdminEstudioOracular() {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-display font-bold text-foreground">Estúdio Oracular</h2>
+        <p className="text-muted-foreground">Produção e distribuição de leituras terapêuticas simbólicas.</p>
+      </div>
+
+      <Tabs defaultValue="episodes" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="episodes" className="gap-2"><Music className="w-4 h-4" /> Episódios</TabsTrigger>
+          <TabsTrigger value="method" className="gap-2"><Pencil className="w-4 h-4" /> Método</TabsTrigger>
+          <TabsTrigger value="axes" className="gap-2"><Eye className="w-4 h-4" /> Eixos</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="episodes">
+          <EpisodesList />
+        </TabsContent>
+
+        <TabsContent value="method">
+          <MethodBlocksManager />
+        </TabsContent>
+
+        <TabsContent value="axes">
+          <MethodAxesManager />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+export default AdminEstudioOracular;
