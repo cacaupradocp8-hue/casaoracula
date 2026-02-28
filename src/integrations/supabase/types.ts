@@ -7934,6 +7934,42 @@ export type Database = {
         }
         Relationships: []
       }
+      oracular_seasons: {
+        Row: {
+          aplicacao_profissional: string | null
+          created_at: string
+          foco_travessia: string | null
+          id: string
+          nome_estacao: string
+          ordem: number
+          periodo: string | null
+          simbolo: string | null
+          updated_at: string
+        }
+        Insert: {
+          aplicacao_profissional?: string | null
+          created_at?: string
+          foco_travessia?: string | null
+          id?: string
+          nome_estacao: string
+          ordem?: number
+          periodo?: string | null
+          simbolo?: string | null
+          updated_at?: string
+        }
+        Update: {
+          aplicacao_profissional?: string | null
+          created_at?: string
+          foco_travessia?: string | null
+          id?: string
+          nome_estacao?: string
+          ordem?: number
+          periodo?: string | null
+          simbolo?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       oraculo_aplicacoes: {
         Row: {
           caso_id: string | null
@@ -9641,6 +9677,45 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      season_books: {
+        Row: {
+          book_id: string
+          created_at: string
+          id: string
+          season_id: string
+          tipo: string
+        }
+        Insert: {
+          book_id: string
+          created_at?: string
+          id?: string
+          season_id: string
+          tipo?: string
+        }
+        Update: {
+          book_id?: string
+          created_at?: string
+          id?: string
+          season_id?: string
+          tipo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "season_books_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "season_books_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "oracular_seasons"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       session_cases: {
         Row: {

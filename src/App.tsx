@@ -184,6 +184,7 @@ import {
   MapaJornadas,
   MinhaTravessia,
   CertificadoTravessia,
+  AnoOracular,
 } from "./pages/clube-livro";
 // Labirinto da Heroína Interna®
 import { LabirintoHeroinaPage } from "./pages/labirinto-heroina";
@@ -644,6 +645,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="aluna">
             <ClubeLivroApresentacao />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/ano-oracular"
+        element={
+          <ProtectedRoute minPortal="visitante">
+            <AnoOracular />
           </ProtectedRoute>
         }
       />
