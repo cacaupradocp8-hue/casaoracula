@@ -8,16 +8,18 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useClubeCicloDetalhe } from '@/hooks/useClubeLivro';
+import { useAudioProgress } from '@/hooks/useAudioProgress';
 import { 
   BookOpen, ChevronRight, Home, Headphones, 
-  Play, FileText, ArrowLeft, Clock
+  Play, FileText, ArrowLeft, Clock, CheckCircle2
 } from 'lucide-react';
 
 export default function ClubeLivroEscutas() {
   const { id: cicloId } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { ciclo, escutas, fases, isLoading } = useClubeCicloDetalhe(cicloId);
-
+  const escutaIds = (escutas || []).map(e => e.id);
+  const { isCompleted } = useAudioProgress(escutaIds);
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -123,6 +125,12 @@ export default function ClubeLivroEscutas() {
                         {faseTitulo && (
                           <Badge variant="outline" className="text-xs">
                             {faseTitulo}
+                          </Badge>
+                        )}
+                        {isCompleted(escuta.id) && (
+                          <Badge variant="secondary" className="text-xs flex items-center gap-1 bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                            <CheckCircle2 className="w-3 h-3" />
+                            Ouvido
                           </Badge>
                         )}
                         {escuta.tipo === 'audio' && escuta.duracao_segundos && (

@@ -23,6 +23,7 @@ import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { formatAudioTime, getPublicAudioUrl } from '@/lib/audioUtils';
+import { useAudioProgress } from '@/hooks/useAudioProgress';
 import DOMPurify from 'dompurify';
 
 // ============================================
@@ -174,6 +175,10 @@ export default function ClubeLivroAula() {
     enabled: !!aula?.ciclo_id,
   });
 
+  // Audio progress tracking
+  const escutaIds = (faixas || []).map(f => f.id);
+  const { savePosition, forceSave, getSavedPosition, isCompleted } = useAudioProgress(escutaIds);
+
   const { data: fase } = useQuery({
     queryKey: ['clube-livro-fase-clinica', aula?.porta_id, aula?.ciclo_id],
     queryFn: async () => {
@@ -200,9 +205,28 @@ export default function ClubeLivroAula() {
     const audio = audioRef.current;
     if (!audio) return;
     const onPlay = () => setIsPlaying(true);
-    const onPause = () => setIsPlaying(false);
-    const onEnded = () => { setIsPlaying(false); setCurrentTime(0); };
-    const onTime = () => setCurrentTime(audio.currentTime);
+    const onPause = () => {
+      setIsPlaying(false);
+      // Save progress on pause
+      if (activeFaixa) {
+        forceSave(activeFaixa.id, audio.currentTime, audio.duration || 0);
+      }
+    };
+    const onEnded = () => {
+      setIsPlaying(false);
+      setCurrentTime(0);
+      // Mark as completed on end
+      if (activeFaixa) {
+        forceSave(activeFaixa.id, audio.duration || 0, audio.duration || 0);
+      }
+    };
+    const onTime = () => {
+      setCurrentTime(audio.currentTime);
+      // Auto-save position periodically
+      if (activeFaixa) {
+        savePosition(activeFaixa.id, audio.currentTime, audio.duration || 0);
+      }
+    };
     const onMeta = () => setDuration(audio.duration);
     audio.addEventListener('play', onPlay);
     audio.addEventListener('pause', onPause);
@@ -216,18 +240,23 @@ export default function ClubeLivroAula() {
       audio.removeEventListener('timeupdate', onTime);
       audio.removeEventListener('loadedmetadata', onMeta);
     };
-  }, []);
+  }, [activeFaixa, forceSave, savePosition]);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !activeAudioUrl) return;
     audio.src = activeAudioUrl;
     audio.load();
-    setCurrentTime(0);
+    // Resume from saved position
+    const savedPos = activeFaixa ? getSavedPosition(activeFaixa.id) : 0;
+    setCurrentTime(savedPos);
     setDuration(0);
-    if (isPlaying) {
-      audio.play().catch(() => {});
-    }
+    const onCanPlay = () => {
+      if (savedPos > 0) audio.currentTime = savedPos;
+      if (isPlaying) audio.play().catch(() => {});
+      audio.removeEventListener('canplay', onCanPlay);
+    };
+    audio.addEventListener('canplay', onCanPlay);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeAudioUrl]);
 
@@ -245,9 +274,14 @@ export default function ClubeLivroAula() {
   }, [duration]);
 
   const selectFaixa = useCallback((index: number) => {
+    // Save progress of current track before switching
+    const audio = audioRef.current;
+    if (audio && activeFaixa) {
+      forceSave(activeFaixa.id, audio.currentTime, audio.duration || 0);
+    }
     setActiveFaixaIndex(index);
     setIsPlaying(true);
-  }, []);
+  }, [activeFaixa, forceSave]);
 
   const handleSeek = useCallback((v: number[]) => {
     const audio = audioRef.current;
@@ -386,6 +420,7 @@ export default function ClubeLivroAula() {
           <div className="space-y-1">
             {faixas.map((faixa, i) => {
               const isActive = i === activeFaixaIndex;
+              const completed = isCompleted(faixa.id);
               return (
                 <button
                   key={faixa.id}
@@ -399,9 +434,9 @@ export default function ClubeLivroAula() {
                 >
                   <span className={cn(
                     "text-xs font-mono w-5 text-center shrink-0",
-                    isActive ? "text-gold" : "text-muted-foreground"
+                    completed ? "text-emerald-400" : isActive ? "text-gold" : "text-muted-foreground"
                   )}>
-                    {i + 1}
+                    {completed ? '✓' : i + 1}
                   </span>
                   <div className="flex-1 min-w-0">
                     <p className={cn(
