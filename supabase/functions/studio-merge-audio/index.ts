@@ -6,6 +6,35 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+async function downloadAudio(url: string): Promise<Uint8Array> {
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error(`Failed to download: ${url}`);
+  return new Uint8Array(await resp.arrayBuffer());
+}
+
+function splitBuffer(buffer: Uint8Array, segments: number): Uint8Array[] {
+  if (segments <= 0) return [];
+  const segmentSize = Math.floor(buffer.length / segments);
+  const parts: Uint8Array[] = [];
+  for (let i = 0; i < segments; i++) {
+    const start = i * segmentSize;
+    const end = i === segments - 1 ? buffer.length : (i + 1) * segmentSize;
+    parts.push(buffer.slice(start, end));
+  }
+  return parts;
+}
+
+function concatBuffers(buffers: Uint8Array[]): Uint8Array {
+  const totalLength = buffers.reduce((sum, b) => sum + b.length, 0);
+  const result = new Uint8Array(totalLength);
+  let offset = 0;
+  for (const buf of buffers) {
+    result.set(buf, offset);
+    offset += buf.length;
+  }
+  return result;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -41,10 +70,9 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Fetch episode
     const { data: episode, error: epError } = await serviceClient
       .from("studio_episodes")
-      .select("audio_narradora_url, audio_oracular_url, roteiro_completo, formato")
+      .select("audio_narradora_url, audio_oracular_url, roteiro_completo, formato, vinheta_abertura_url, vinheta_encerramento_url")
       .eq("id", episodeId)
       .single();
 
@@ -53,53 +81,39 @@ serve(async (req) => {
       throw new Error("Both narradora and oracular audio are required");
     }
 
-    // Parse script to determine voice order
+    // Parse script voice order
     const blocks: { voice: string }[] = [];
     const regex = /\[(NARRADORA|VOZ_ORACULAR)\]/gi;
     let match;
     while ((match = regex.exec(episode.roteiro_completo || "")) !== null) {
       blocks.push({ voice: match[1].toUpperCase() });
     }
-
-    // If no blocks found or not dialogue, just concatenate narradora + oracular
     if (blocks.length === 0) {
       blocks.push({ voice: "NARRADORA" }, { voice: "VOZ_ORACULAR" });
     }
 
-    // Download both audio files
-    console.log("Downloading narradora audio...");
-    const narradoraResp = await fetch(episode.audio_narradora_url);
-    if (!narradoraResp.ok) throw new Error("Failed to download narradora audio");
-    const narradoraBuffer = new Uint8Array(await narradoraResp.arrayBuffer());
+    // Download all audio files in parallel
+    const downloadPromises: Promise<Uint8Array>[] = [
+      downloadAudio(episode.audio_narradora_url),
+      downloadAudio(episode.audio_oracular_url),
+    ];
+    if (episode.vinheta_abertura_url) downloadPromises.push(downloadAudio(episode.vinheta_abertura_url));
+    if (episode.vinheta_encerramento_url) downloadPromises.push(downloadAudio(episode.vinheta_encerramento_url));
 
-    console.log("Downloading oracular audio...");
-    const oracularResp = await fetch(episode.audio_oracular_url);
-    if (!oracularResp.ok) throw new Error("Failed to download oracular audio");
-    const oracularBuffer = new Uint8Array(await oracularResp.arrayBuffer());
+    const downloaded = await Promise.all(downloadPromises);
+    const narradoraBuffer = downloaded[0];
+    const oracularBuffer = downloaded[1];
+    const vinhetaAberturaBuffer = episode.vinheta_abertura_url ? downloaded[2] : null;
+    const vinhetaEncerramentoBuffer = episode.vinheta_encerramento_url ? downloaded[episode.vinheta_abertura_url ? 3 : 2] : null;
 
-    // For MP3 byte-level concatenation we need to split each audio into
-    // roughly equal segments based on the number of blocks for each voice.
-    // Count blocks per voice
+    console.log(`Downloaded: narradora=${narradoraBuffer.length}b, oracular=${oracularBuffer.length}b`);
+
+    // Split and interleave voice segments
     const narradoraBlockCount = blocks.filter(b => b.voice === "NARRADORA").length;
     const oracularBlockCount = blocks.filter(b => b.voice === "VOZ_ORACULAR").length;
-
-    // Split audio buffer into N roughly equal segments
-    function splitBuffer(buffer: Uint8Array, segments: number): Uint8Array[] {
-      if (segments <= 0) return [];
-      const segmentSize = Math.floor(buffer.length / segments);
-      const parts: Uint8Array[] = [];
-      for (let i = 0; i < segments; i++) {
-        const start = i * segmentSize;
-        const end = i === segments - 1 ? buffer.length : (i + 1) * segmentSize;
-        parts.push(buffer.slice(start, end));
-      }
-      return parts;
-    }
-
     const narradoraSegments = splitBuffer(narradoraBuffer, narradoraBlockCount);
     const oracularSegments = splitBuffer(oracularBuffer, oracularBlockCount);
 
-    // Interleave segments according to script order
     let narrIdx = 0;
     let oracIdx = 0;
     const orderedSegments: Uint8Array[] = [];
@@ -112,33 +126,25 @@ serve(async (req) => {
       }
     }
 
-    // Concatenate all segments
-    const totalLength = orderedSegments.reduce((sum, s) => sum + s.length, 0);
-    const finalBuffer = new Uint8Array(totalLength);
-    let offset = 0;
-    for (const segment of orderedSegments) {
-      finalBuffer.set(segment, offset);
-      offset += segment.length;
-    }
+    // Build final: vinheta_abertura + interleaved voices + vinheta_encerramento
+    const finalParts: Uint8Array[] = [];
+    if (vinhetaAberturaBuffer) finalParts.push(vinhetaAberturaBuffer);
+    finalParts.push(...orderedSegments);
+    if (vinhetaEncerramentoBuffer) finalParts.push(vinhetaEncerramentoBuffer);
 
-    console.log(`Final audio: ${finalBuffer.length} bytes from ${orderedSegments.length} segments`);
+    const finalBuffer = concatBuffers(finalParts);
+    console.log(`Final audio: ${finalBuffer.length} bytes (${finalParts.length} parts)`);
 
-    // Upload final audio
+    // Upload
     const fileName = `studio/${episodeId}/final_${Date.now()}.mp3`;
     const { error: uploadError } = await serviceClient.storage
       .from("audios")
-      .upload(fileName, finalBuffer, {
-        contentType: "audio/mpeg",
-        upsert: true,
-      });
+      .upload(fileName, finalBuffer, { contentType: "audio/mpeg", upsert: true });
 
     if (uploadError) throw new Error(`Upload error: ${uploadError.message}`);
 
-    const { data: publicUrl } = serviceClient.storage
-      .from("audios")
-      .getPublicUrl(fileName);
+    const { data: publicUrl } = serviceClient.storage.from("audios").getPublicUrl(fileName);
 
-    // Update episode with final URL
     await serviceClient
       .from("studio_episodes")
       .update({ audio_final_url: publicUrl.publicUrl })
