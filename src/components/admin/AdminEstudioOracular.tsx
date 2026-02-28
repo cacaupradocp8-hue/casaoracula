@@ -10,8 +10,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { Plus, Trash2, GripVertical, Loader2, Play, Mic, Send, Eye, Pencil, Music } from 'lucide-react';
+import { Plus, Trash2, GripVertical, Loader2, Play, Mic, Send, Eye, Pencil, Music, Upload } from 'lucide-react';
 import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
+import { AudioUpload } from '@/components/admin/AudioUpload';
 
 // ============ Method Blocks Manager ============
 function MethodBlocksManager() {
@@ -60,41 +61,21 @@ function MethodBlocksManager() {
             <div className="flex items-center gap-3">
               <GripVertical className="w-4 h-4 text-muted-foreground shrink-0" />
               <Badge variant="outline" className="shrink-0">{i + 1}</Badge>
-              <Input
-                value={block.nome}
-                onChange={(e) => updateBlock(block.id, 'nome', e.target.value)}
-                className="font-medium"
-              />
-              <Switch
-                checked={block.ativo}
-                onCheckedChange={(v) => updateBlock(block.id, 'ativo', v)}
-              />
+              <Input value={block.nome} onChange={(e) => updateBlock(block.id, 'nome', e.target.value)} className="font-medium" />
+              <Switch checked={block.ativo} onCheckedChange={(v) => updateBlock(block.id, 'ativo', v)} />
               <Button variant="ghost" size="icon" onClick={() => deleteBlock(block.id)}>
                 <Trash2 className="w-4 h-4 text-destructive" />
               </Button>
             </div>
-            <Textarea
-              value={block.instrucao}
-              onChange={(e) => updateBlock(block.id, 'instrucao', e.target.value)}
-              placeholder="Instrução para este bloco..."
-              className="min-h-[60px]"
-            />
+            <Textarea value={block.instrucao} onChange={(e) => updateBlock(block.id, 'instrucao', e.target.value)} placeholder="Instrução para este bloco..." className="min-h-[60px]" />
           </CardContent>
         </Card>
       ))}
 
       <Card className="border-dashed border-2 border-muted">
         <CardContent className="pt-4 space-y-3">
-          <Input
-            placeholder="Nome do novo bloco"
-            value={newBlock.nome}
-            onChange={(e) => setNewBlock(p => ({ ...p, nome: e.target.value }))}
-          />
-          <Textarea
-            placeholder="Instrução..."
-            value={newBlock.instrucao}
-            onChange={(e) => setNewBlock(p => ({ ...p, instrucao: e.target.value }))}
-          />
+          <Input placeholder="Nome do novo bloco" value={newBlock.nome} onChange={(e) => setNewBlock(p => ({ ...p, nome: e.target.value }))} />
+          <Textarea placeholder="Instrução..." value={newBlock.instrucao} onChange={(e) => setNewBlock(p => ({ ...p, instrucao: e.target.value }))} />
           <Button onClick={addBlock} size="sm" className="gap-2">
             <Plus className="w-4 h-4" /> Adicionar Bloco
           </Button>
@@ -148,27 +129,14 @@ function MethodAxesManager() {
         <Card key={axis.id} className="bg-card/50">
           <CardContent className="pt-4 space-y-3">
             <div className="flex items-center gap-3">
-              <Input
-                value={axis.nome}
-                onChange={(e) => updateAxis(axis.id, 'nome', e.target.value)}
-                className="font-medium"
-              />
+              <Input value={axis.nome} onChange={(e) => updateAxis(axis.id, 'nome', e.target.value)} className="font-medium" />
               <Switch checked={axis.ativo} onCheckedChange={(v) => updateAxis(axis.id, 'ativo', v)} />
               <Button variant="ghost" size="icon" onClick={() => deleteAxis(axis.id)}>
                 <Trash2 className="w-4 h-4 text-destructive" />
               </Button>
             </div>
-            <Input
-              value={axis.descricao}
-              onChange={(e) => updateAxis(axis.id, 'descricao', e.target.value)}
-              placeholder="Descrição do eixo..."
-            />
-            <Textarea
-              value={axis.instrucao_especifica}
-              onChange={(e) => updateAxis(axis.id, 'instrucao_especifica', e.target.value)}
-              placeholder="Instruções específicas deste eixo..."
-              className="min-h-[80px]"
-            />
+            <Input value={axis.descricao} onChange={(e) => updateAxis(axis.id, 'descricao', e.target.value)} placeholder="Descrição do eixo..." />
+            <Textarea value={axis.instrucao_especifica} onChange={(e) => updateAxis(axis.id, 'instrucao_especifica', e.target.value)} placeholder="Instruções específicas deste eixo..." className="min-h-[80px]" />
           </CardContent>
         </Card>
       ))}
@@ -183,6 +151,49 @@ function MethodAxesManager() {
           </Button>
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+// ============ Dialogue Voice Blocks Parser ============
+function parseDialogueBlocks(text: string): { voice: string; content: string }[] {
+  const blocks: { voice: string; content: string }[] = [];
+  const regex = /\[(NARRADORA|VOZ_ORACULAR)\]\s*/gi;
+  let lastIndex = 0;
+  let lastVoice = '';
+  let match;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (lastVoice && lastIndex < match.index) {
+      const content = text.slice(lastIndex, match.index).trim();
+      if (content) blocks.push({ voice: lastVoice, content });
+    }
+    lastVoice = match[1].toUpperCase();
+    lastIndex = regex.lastIndex;
+  }
+
+  if (lastVoice && lastIndex < text.length) {
+    const content = text.slice(lastIndex).trim();
+    if (content) blocks.push({ voice: lastVoice, content });
+  }
+
+  return blocks;
+}
+
+function DialogueBlocksView({ text }: { text: string }) {
+  const blocks = parseDialogueBlocks(text);
+  if (blocks.length === 0) return <p className="text-sm text-muted-foreground">Nenhum bloco de diálogo encontrado. O roteiro deve conter marcadores [NARRADORA] e [VOZ_ORACULAR].</p>;
+
+  return (
+    <div className="space-y-3">
+      {blocks.map((block, i) => (
+        <div key={i} className={`p-3 rounded-lg border-l-4 ${block.voice === 'NARRADORA' ? 'border-l-primary bg-primary/5' : 'border-l-accent bg-accent/10'}`}>
+          <Badge variant={block.voice === 'NARRADORA' ? 'default' : 'secondary'} className="mb-2">
+            {block.voice === 'NARRADORA' ? '🎙️ Narradora' : '✨ Voz Oracular'}
+          </Badge>
+          <p className="text-sm whitespace-pre-wrap">{block.content}</p>
+        </div>
+      ))}
     </div>
   );
 }
@@ -202,6 +213,7 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
     roteiro_completo: episode?.roteiro_completo || '',
     versao_resumida: episode?.versao_resumida || '',
     status: episode?.status || 'draft',
+    formato: episode?.formato || 'narrativo',
   });
   const [axes, setAxes] = useState<any[]>([]);
   const [generating, setGenerating] = useState(false);
@@ -210,7 +222,12 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
   const [audioUrls, setAudioUrls] = useState({
     full: episode?.audio_full_url || null,
     public: episode?.audio_public_url || null,
+    narradora: episode?.audio_narradora_url || null,
+    oracular: episode?.audio_oracular_url || null,
   });
+  const [showDialogueView, setShowDialogueView] = useState(false);
+
+  const isDialogo = form.formato === 'dialogo';
 
   useEffect(() => {
     supabase.from('studio_method_axes').select('*').eq('ativo', true).order('ordem')
@@ -232,6 +249,7 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
           textoBase: form.texto_base,
           intencaoTerapeutica: form.intencao_terapeutica,
           visibility: form.visibility,
+          formato: form.formato,
         },
       });
       if (error) throw error;
@@ -248,6 +266,11 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
     }
   };
 
+  const extractVoiceText = (voice: 'NARRADORA' | 'VOZ_ORACULAR') => {
+    const blocks = parseDialogueBlocks(form.roteiro_completo);
+    return blocks.filter(b => b.voice === voice).map(b => b.content).join('\n\n');
+  };
+
   const handleGenerateAudio = async (type: 'full' | 'public') => {
     const text = type === 'full' ? form.roteiro_completo : form.versao_resumida;
     if (!text) {
@@ -261,18 +284,38 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
     setGeneratingAudio(type);
     try {
       const { data, error } = await supabase.functions.invoke('studio-tts', {
-        body: {
-          text,
-          voice: form.voz_escolhida,
-          episodeId: episode.id,
-          audioType: type,
-        },
+        body: { text, voice: form.voz_escolhida, episodeId: episode.id, audioType: type },
       });
       if (error) throw error;
       setAudioUrls(p => ({ ...p, [type]: data.url }));
       toast.success('Áudio gerado com sucesso!');
     } catch (e: any) {
       toast.error(e.message || 'Erro ao gerar áudio');
+    } finally {
+      setGeneratingAudio(null);
+    }
+  };
+
+  const handleGenerateOracularAudio = async () => {
+    const oracularText = extractVoiceText('VOZ_ORACULAR');
+    if (!oracularText) {
+      toast.error('Nenhum bloco [VOZ_ORACULAR] encontrado no roteiro');
+      return;
+    }
+    if (!episode?.id) {
+      toast.error('Salve o episódio antes de gerar áudio');
+      return;
+    }
+    setGeneratingAudio('oracular');
+    try {
+      const { data, error } = await supabase.functions.invoke('studio-tts', {
+        body: { text: oracularText, voice: form.voz_escolhida, episodeId: episode.id, audioType: 'oracular' },
+      });
+      if (error) throw error;
+      setAudioUrls(p => ({ ...p, oracular: data.url }));
+      toast.success('Áudio da Voz Oracular gerado!');
+    } catch (e: any) {
+      toast.error(e.message || 'Erro ao gerar áudio oracular');
     } finally {
       setGeneratingAudio(null);
     }
@@ -294,6 +337,9 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
         roteiro_completo: form.roteiro_completo,
         versao_resumida: form.versao_resumida,
         status: form.status,
+        formato: form.formato,
+        audio_narradora_url: audioUrls.narradora,
+        audio_oracular_url: audioUrls.oracular,
       };
 
       if (form.status === 'published' && !episode?.published_at) {
@@ -322,6 +368,16 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
         <div className="space-y-2">
           <Label>Título do Episódio</Label>
           <Input value={form.titulo} onChange={(e) => setForm(p => ({ ...p, titulo: e.target.value }))} placeholder="Título para exibição" />
+        </div>
+        <div className="space-y-2">
+          <Label>Formato do Episódio</Label>
+          <Select value={form.formato} onValueChange={(v) => setForm(p => ({ ...p, formato: v }))}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="narrativo">🎙️ Narrativo Único</SelectItem>
+              <SelectItem value="dialogo">💬 Diálogo Oracular</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="space-y-2">
           <Label>Livro</Label>
@@ -353,7 +409,7 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
           </Select>
         </div>
         <div className="space-y-2">
-          <Label>Voz</Label>
+          <Label>{isDialogo ? 'Voz Oracular (IA)' : 'Voz'}</Label>
           <Select value={form.voz_escolhida} onValueChange={(v) => setForm(p => ({ ...p, voz_escolhida: v }))}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
@@ -377,21 +433,61 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
 
       <Button onClick={handleGenerate} disabled={generating} className="gap-2" variant="gold">
         {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-        {generating ? 'Gerando roteiro...' : 'Gerar Episódio'}
+        {generating ? 'Gerando roteiro...' : `Gerar Episódio (${isDialogo ? 'Diálogo' : 'Narrativo'})`}
       </Button>
 
       {form.roteiro_completo && (
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>Roteiro Completo</Label>
-            <Textarea value={form.roteiro_completo} onChange={(e) => setForm(p => ({ ...p, roteiro_completo: e.target.value }))} className="min-h-[300px] font-mono text-sm" />
-            <div className="flex gap-2">
-              <Button onClick={() => handleGenerateAudio('full')} disabled={!!generatingAudio} size="sm" variant="outline" className="gap-2">
-                {generatingAudio === 'full' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mic className="w-4 h-4" />}
-                Gerar Áudio Completo
-              </Button>
+            <div className="flex items-center justify-between">
+              <Label>Roteiro Completo</Label>
+              {isDialogo && (
+                <Button variant="outline" size="sm" onClick={() => setShowDialogueView(!showDialogueView)} className="gap-2">
+                  <Eye className="w-4 h-4" />
+                  {showDialogueView ? 'Ver Texto' : 'Ver Diálogo'}
+                </Button>
+              )}
             </div>
-            {audioUrls.full && <UnifiedAudioPlayer audioUrl={audioUrls.full} title="Áudio Completo" size="sm" />}
+
+            {isDialogo && showDialogueView ? (
+              <DialogueBlocksView text={form.roteiro_completo} />
+            ) : (
+              <Textarea value={form.roteiro_completo} onChange={(e) => setForm(p => ({ ...p, roteiro_completo: e.target.value }))} className="min-h-[300px] font-mono text-sm" />
+            )}
+
+            {isDialogo ? (
+              <div className="space-y-4 p-4 rounded-lg border bg-muted/30">
+                <h4 className="font-semibold text-foreground">🎙️ Áudio — Diálogo Oracular</h4>
+                
+                <div className="space-y-2">
+                  <Label>Áudio da Narradora (upload manual)</Label>
+                  <AudioUpload
+                    value={audioUrls.narradora || ''}
+                    onChange={(url) => setAudioUrls(p => ({ ...p, narradora: url }))}
+                    folder="studio/narradora"
+                    label=""
+                    showLibrary={false}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Áudio da Voz Oracular (gerado por IA)</Label>
+                  <Button onClick={handleGenerateOracularAudio} disabled={!!generatingAudio} size="sm" variant="outline" className="gap-2">
+                    {generatingAudio === 'oracular' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mic className="w-4 h-4" />}
+                    Gerar Áudio Voz Oracular
+                  </Button>
+                  {audioUrls.oracular && <UnifiedAudioPlayer audioUrl={audioUrls.oracular} title="Voz Oracular" size="sm" />}
+                </div>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Button onClick={() => handleGenerateAudio('full')} disabled={!!generatingAudio} size="sm" variant="outline" className="gap-2">
+                  {generatingAudio === 'full' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mic className="w-4 h-4" />}
+                  Gerar Áudio Completo
+                </Button>
+              </div>
+            )}
+            {!isDialogo && audioUrls.full && <UnifiedAudioPlayer audioUrl={audioUrls.full} title="Áudio Completo" size="sm" />}
           </div>
 
           <div className="space-y-2">
@@ -489,6 +585,9 @@ function EpisodesList() {
                 <span className="font-medium text-foreground truncate">{ep.titulo || ep.livro}</span>
                 <Badge variant={ep.status === 'published' ? 'default' : 'secondary'} className="shrink-0">
                   {ep.status === 'published' ? 'Publicado' : 'Rascunho'}
+                </Badge>
+                <Badge variant="outline" className="shrink-0">
+                  {ep.formato === 'dialogo' ? '💬 Diálogo' : '🎙️ Narrativo'}
                 </Badge>
                 <Badge variant="outline" className="shrink-0">
                   {ep.visibility === 'exclusive' ? '🔒 Exclusivo' : ep.visibility === 'public' ? '🌐 Público' : '🌐 Público+'}

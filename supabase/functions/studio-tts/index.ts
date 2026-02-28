@@ -100,7 +100,12 @@ serve(async (req) => {
       .getPublicUrl(fileName);
 
     // Update episode
-    const updateField = audioType === "full" ? "audio_full_url" : "audio_public_url";
+    const updateFieldMap: Record<string, string> = {
+      full: "audio_full_url",
+      public: "audio_public_url",
+      oracular: "audio_oracular_url",
+    };
+    const updateField = updateFieldMap[audioType] || "audio_full_url";
     await serviceClient
       .from("studio_episodes")
       .update({ [updateField]: publicUrl.publicUrl })

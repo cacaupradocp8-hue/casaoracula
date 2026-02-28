@@ -9978,6 +9978,8 @@ export type Database = {
       studio_episodes: {
         Row: {
           audio_full_url: string | null
+          audio_narradora_url: string | null
+          audio_oracular_url: string | null
           audio_public_url: string | null
           capitulo: string
           created_at: string
@@ -9985,6 +9987,7 @@ export type Database = {
           descricao: string | null
           duracao_segundos: number | null
           eixo_id: string | null
+          formato: string
           id: string
           imagem_capa_url: string | null
           intencao_terapeutica: string
@@ -10001,6 +10004,8 @@ export type Database = {
         }
         Insert: {
           audio_full_url?: string | null
+          audio_narradora_url?: string | null
+          audio_oracular_url?: string | null
           audio_public_url?: string | null
           capitulo?: string
           created_at?: string
@@ -10008,6 +10013,7 @@ export type Database = {
           descricao?: string | null
           duracao_segundos?: number | null
           eixo_id?: string | null
+          formato?: string
           id?: string
           imagem_capa_url?: string | null
           intencao_terapeutica?: string
@@ -10024,6 +10030,8 @@ export type Database = {
         }
         Update: {
           audio_full_url?: string | null
+          audio_narradora_url?: string | null
+          audio_oracular_url?: string | null
           audio_public_url?: string | null
           capitulo?: string
           created_at?: string
@@ -10031,6 +10039,7 @@ export type Database = {
           descricao?: string | null
           duracao_segundos?: number | null
           eixo_id?: string | null
+          formato?: string
           id?: string
           imagem_capa_url?: string | null
           intencao_terapeutica?: string
