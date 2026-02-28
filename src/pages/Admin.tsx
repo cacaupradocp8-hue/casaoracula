@@ -1,21 +1,16 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Users, Library, Megaphone, Bot, FileText, Wrench, DoorOpen, GraduationCap, UserCheck, Cog, CreditCard, Sparkles, ClipboardList, BookOpen, TrendingUp, PenLine, Video, Layers, LayoutGrid, Brain, Compass, Eye, EyeOff, AlertTriangle, FolderTree, Moon, Flower2, Headphones, MessageSquare, Target, Flame, FolderOpen, Link, Gift, Image as ImageIcon, Castle, Zap } from 'lucide-react';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { PortalType } from '@/types/portal';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Settings, Eye, EyeOff, AlertTriangle, Sparkles } from 'lucide-react';
+import { AdminSidebar } from '@/components/admin/AdminSidebar';
 
-// Lazy load all admin tabs for better performance
+// Lazy load all admin tabs
 const AdminCursosTab = lazy(() => import('@/components/admin/AdminCursosTab').then(m => ({ default: m.AdminCursosTab })));
 const AdminUsersTab = lazy(() => import('@/components/admin/AdminUsersTab').then(m => ({ default: m.AdminUsersTab })));
 const AdminBibliotecaTab = lazy(() => import('@/components/admin/AdminBibliotecaTab').then(m => ({ default: m.AdminBibliotecaTab })));
@@ -25,7 +20,6 @@ const AdminModelosTab = lazy(() => import('@/components/admin/AdminModelosTab').
 const AdminFerramentasTab = lazy(() => import('@/components/admin/AdminFerramentasTab').then(m => ({ default: m.AdminFerramentasTab })));
 const AdminSalasTab = lazy(() => import('@/components/admin/AdminSalasTab').then(m => ({ default: m.AdminSalasTab })));
 const AdminConteudosTab = lazy(() => import('@/components/admin/AdminConteudosTab').then(m => ({ default: m.AdminConteudosTab })));
-
 const AdminMatriculasTab = lazy(() => import('@/components/admin/AdminMatriculasTab').then(m => ({ default: m.AdminMatriculasTab })));
 const AdminSettingsTab = lazy(() => import('@/components/admin/AdminSettingsTab').then(m => ({ default: m.AdminSettingsTab })));
 const AdminAssinaturasTab = lazy(() => import('@/components/admin/AdminAssinaturasTab').then(m => ({ default: m.AdminAssinaturasTab })));
@@ -66,6 +60,7 @@ const AdminClubeLivroTab = lazy(() => import('@/components/admin/AdminClubeLivro
 const AdminEstudioOracular = lazy(() => import('@/components/admin/AdminEstudioOracular'));
 const AdminVitrineCards = lazy(() => import('@/pages/admin/AdminVitrineCards'));
 const AdminPortalJunguianoTab = lazy(() => import('@/components/admin/AdminPortalJunguianoTab').then(m => ({ default: m.AdminPortalJunguianoTab })));
+
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
   { value: 'aluna', label: '👁 Aluna' },
@@ -73,565 +68,139 @@ const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'assinante', label: '👁 Assinante' },
 ];
 
-// Tab loading fallback
 const TabLoader = () => (
   <div className="flex items-center justify-center py-12">
     <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
   </div>
 );
 
+// Map tab keys to their lazy components
+const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentType<any>>> = {
+  'users': AdminUsersTab,
+  'matriculas': AdminMatriculasTab,
+  'degustacao': AdminDegustacaoTab,
+  'assinaturas': AdminAssinaturasTab,
+  'leituras': AdminLeiturasTab,
+  'conteudos': AdminConteudosTab,
+  'cursos': AdminCursosTab,
+  'biblioteca': AdminBibliotecaTab,
+  'mentoria': AdminMentoriaTab,
+  'agentes': AdminAgentesTab,
+  'modelos': AdminModelosTab,
+  'ferramentas': AdminFerramentasTab,
+  'salas': AdminSalasTab,
+  'quiz': AdminQuizTab,
+  'lab': AdminLabCasosTab,
+  'planos': AdminPlanosTab,
+  'ofertas': AdminOfertasTab,
+  'progresso': AdminProgressoTab,
+  'oraculos': AdminOraculosTab,
+  'blocos': AdminBlocksTab,
+  'travessias': AdminTravessiasTab,
+  'travessias-conteudo': AdminBibliotecaTravessiasTab,
+  'familias': AdminFamiliasTab,
+  'labirinto': AdminLabirintoTab,
+  'labirinto-heroina': AdminLabirintoHeroinaTab,
+  'big5-simbolico': AdminBig5SymbolicTab,
+  'eneagrama-feminino': AdminEneagramaFemininoTab,
+  'jornada-heroina': AdminJornadaHeroinaTab,
+  'radiestesia': AdminRadiestesiaTab,
+  'ia-config': AdminAISettingsTab,
+  'audios': AdminAudiosTab,
+  'comunicacao': AdminComunicacaoTab,
+  'formacao': AdminFormacaoTab,
+  'area-formacao': AdminAreaFormacaoTab,
+  'casa-oracula': AdminCasaOraculaTab,
+  'sessoes': AdminSessoesTab,
+  'grupos': AdminGruposTab,
+  'galeria': AdminGaleriaTab,
+  'torre-viva': AdminTorreVivaTab,
+  'biblioteca-casos': AdminBibliotecaCasosTab,
+  'atlas-feminino': AdminAtlasFemininoTab,
+  'narroterapia': AdminNarroterapiaTab,
+  'narroterapia-autorizacao': AdminNarroterapiaAutorizacaoTab,
+  'clube-livro': AdminClubeLivroTab,
+  'estudio-oracular': AdminEstudioOracular,
+  'portal-junguiano': AdminPortalJunguianoTab,
+  'vitrine': AdminVitrineCards,
+  'settings': AdminSettingsTab,
+  'copy': AdminCopyTab,
+};
+
 export default function Admin() {
   const { isPreviewMode, previewPortal, enablePreviewMode, disablePreviewMode } = useAdminPreview();
+  const [activeTab, setActiveTab] = useState('users');
+
+  const ActiveComponent = TAB_COMPONENTS[activeTab];
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
-          <SectionHeader
-            title="Painel da Guardiã"
-            subtitle="Gerencie usuárias, conteúdo e portais da Casa ORÁCULA"
-            icon={<Settings className="w-5 h-5" />}
-          />
-          
-          {/* Preview Mode Control */}
-          <div className="flex items-center gap-2 shrink-0">
-            {isPreviewMode ? (
-              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-amber-500/20 border border-amber-500/50">
-                <AlertTriangle className="w-4 h-4 text-amber-500" />
-                <span className="text-sm text-amber-200">
-                  Preview: <strong>{PREVIEW_PORTALS.find(p => p.value === previewPortal)?.label?.replace('👁 ', '') || previewPortal}</strong>
-                </span>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-7 px-2 text-amber-200 hover:text-amber-100 hover:bg-amber-500/30"
-                  onClick={disablePreviewMode}
-                >
-                  <EyeOff className="w-4 h-4" />
-                </Button>
+      <div className="flex min-h-[calc(100vh-5rem)]">
+        <AdminSidebar activeTab={activeTab} onTabChange={setActiveTab} />
+
+        <div className="flex-1 min-w-0 overflow-auto">
+          <div className="px-6 py-6 pb-20">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
+              <SectionHeader
+                title="Painel da Guardiã"
+                subtitle="Gerencie a Casa ORÁCULA com clareza e cuidado"
+                icon={<Settings className="w-5 h-5" />}
+              />
+
+              {/* Preview Mode Control */}
+              <div className="flex items-center gap-2 shrink-0">
+                {isPreviewMode ? (
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-amber-500/20 border border-amber-500/50">
+                    <AlertTriangle className="w-4 h-4 text-amber-500" />
+                    <span className="text-sm text-amber-200">
+                      Preview: <strong>{PREVIEW_PORTALS.find(p => p.value === previewPortal)?.label?.replace('👁 ', '') || previewPortal}</strong>
+                    </span>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-7 px-2 text-amber-200 hover:text-amber-100 hover:bg-amber-500/30"
+                      onClick={disablePreviewMode}
+                    >
+                      <EyeOff className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <Select value="" onValueChange={(value) => enablePreviewMode(value as PortalType)}>
+                    <SelectTrigger className="w-48 h-9 text-sm bg-muted/50">
+                      <Eye className="w-4 h-4 mr-2 text-muted-foreground" />
+                      <SelectValue placeholder="Simular visão de..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {PREVIEW_PORTALS.map((p) => (
+                        <SelectItem key={p.value} value={p.value}>
+                          {p.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
               </div>
-            ) : (
-              <Select value="" onValueChange={(value) => enablePreviewMode(value as PortalType)}>
-                <SelectTrigger className="w-48 h-9 text-sm bg-muted/50">
-                  <Eye className="w-4 h-4 mr-2 text-muted-foreground" />
-                  <SelectValue placeholder="Simular visão de..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {PREVIEW_PORTALS.map((p) => (
-                    <SelectItem key={p.value} value={p.value}>
-                      {p.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            </div>
+
+            {/* Copy tab special header */}
+            {activeTab === 'copy' && (
+              <div className="mb-4 flex justify-end">
+                <a href="/admin/atelie-conteudo" className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gold bg-gold/10 hover:bg-gold/20 rounded-md transition-colors">
+                  <Sparkles className="w-4 h-4" />
+                  Ateliê de Conteúdo (IA)
+                </a>
+              </div>
+            )}
+
+            {/* Active tab content */}
+            {ActiveComponent && (
+              <Suspense fallback={<TabLoader />}>
+                <ActiveComponent />
+              </Suspense>
             )}
           </div>
         </div>
-
-        <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="w-full justify-start overflow-x-auto flex-wrap h-auto gap-1">
-            <TabsTrigger value="users" className="gap-2">
-              <Users className="w-4 h-4" />
-              Usuárias
-            </TabsTrigger>
-            <TabsTrigger value="matriculas" className="gap-2">
-              <UserCheck className="w-4 h-4" />
-              Matrículas
-            </TabsTrigger>
-            <TabsTrigger value="degustacao" className="gap-2">
-              <Gift className="w-4 h-4 text-gold" />
-              Degustação
-            </TabsTrigger>
-            <TabsTrigger value="assinaturas" className="gap-2">
-              <CreditCard className="w-4 h-4" />
-              Assinaturas
-            </TabsTrigger>
-            <TabsTrigger value="leituras" className="gap-2">
-              <Sparkles className="w-4 h-4" />
-              Leituras
-            </TabsTrigger>
-            <TabsTrigger value="conteudos" className="gap-2">
-              <GraduationCap className="w-4 h-4" />
-              Conteúdo
-            </TabsTrigger>
-            <TabsTrigger value="cursos" className="gap-2">
-              <Video className="w-4 h-4" />
-              Cursos
-            </TabsTrigger>
-            <TabsTrigger value="biblioteca" className="gap-2">
-              <Library className="w-4 h-4" />
-              Biblioteca
-            </TabsTrigger>
-            <TabsTrigger value="mentoria" className="gap-2">
-              <Megaphone className="w-4 h-4" />
-              Mentoria
-            </TabsTrigger>
-            <TabsTrigger value="casa-oracula" className="gap-2">
-              <Flame className="w-4 h-4" />
-              Casa das Tecelãs
-            </TabsTrigger>
-            <TabsTrigger value="sessoes" className="gap-2">
-              <FolderOpen className="w-4 h-4 text-purple-400" />
-              Sessões
-            </TabsTrigger>
-            <TabsTrigger value="grupos" className="gap-2">
-              <Users className="w-4 h-4 text-purple-400" />
-              Grupos
-              <Users className="w-4 h-4 text-purple-400" />
-              Grupos
-            </TabsTrigger>
-            <TabsTrigger value="agentes" className="gap-2">
-              <Bot className="w-4 h-4" />
-              Agentes
-            </TabsTrigger>
-            <TabsTrigger value="modelos" className="gap-2">
-              <FileText className="w-4 h-4" />
-              Modelos
-            </TabsTrigger>
-            <TabsTrigger value="copy" className="gap-2">
-              <PenLine className="w-4 h-4" />
-              Copy & Narrativas
-            </TabsTrigger>
-            <TabsTrigger value="ferramentas" className="gap-2">
-              <Wrench className="w-4 h-4" />
-              Ferramentas
-            </TabsTrigger>
-            <TabsTrigger value="salas" className="gap-2">
-              <DoorOpen className="w-4 h-4" />
-              Salas
-            </TabsTrigger>
-            <TabsTrigger value="quiz" className="gap-2">
-              <ClipboardList className="w-4 h-4" />
-              Quiz
-            </TabsTrigger>
-            <TabsTrigger value="lab" className="gap-2">
-              <BookOpen className="w-4 h-4" />
-              Laboratório
-            </TabsTrigger>
-            <TabsTrigger value="planos" className="gap-2">
-              <CreditCard className="w-4 h-4" />
-              Limites
-            </TabsTrigger>
-            <TabsTrigger value="ofertas" className="gap-2">
-              <Gift className="w-4 h-4 text-gold" />
-              Ofertas
-            </TabsTrigger>
-            <TabsTrigger value="progresso" className="gap-2">
-              <TrendingUp className="w-4 h-4" />
-              Evolução
-            </TabsTrigger>
-            <TabsTrigger value="oraculos" className="gap-2">
-              <Layers className="w-4 h-4" />
-              Oráculos
-            </TabsTrigger>
-            <TabsTrigger value="blocos" className="gap-2">
-              <LayoutGrid className="w-4 h-4" />
-              Blocos
-            </TabsTrigger>
-            <TabsTrigger value="travessias" className="gap-2">
-              <Compass className="w-4 h-4" />
-              Travessias
-            </TabsTrigger>
-            <TabsTrigger value="travessias-conteudo" className="gap-2">
-              <BookOpen className="w-4 h-4" />
-              Biblioteca Travessias
-            </TabsTrigger>
-            <TabsTrigger value="familias" className="gap-2">
-              <FolderTree className="w-4 h-4" />
-              Famílias
-            </TabsTrigger>
-            <TabsTrigger value="labirinto" className="gap-2">
-              <DoorOpen className="w-4 h-4 text-gold" />
-              🜂 Labirinto 39P
-            </TabsTrigger>
-            <TabsTrigger value="labirinto-heroina" className="gap-2">
-              <Compass className="w-4 h-4 text-gold" />
-              Heroína Interna®
-            </TabsTrigger>
-            <TabsTrigger value="big5-simbolico" className="gap-2">
-              <Moon className="w-4 h-4" />
-              Mapa 5 Territórios
-            </TabsTrigger>
-            <TabsTrigger value="eneagrama-feminino" className="gap-2">
-              <Flower2 className="w-4 h-4" />
-              Oráculo 9 Arquétipos
-            </TabsTrigger>
-            <TabsTrigger value="jornada-heroina" className="gap-2">
-              <Compass className="w-4 h-4 text-purple-400" />
-              Caminho da Mulher
-            </TabsTrigger>
-            <TabsTrigger value="radiestesia" className="gap-2">
-              <Target className="w-4 h-4 text-purple-400" />
-              Radiestesia
-            </TabsTrigger>
-            <TabsTrigger value="ia-config" className="gap-2">
-              <Brain className="w-4 h-4" />
-              IA Config
-            </TabsTrigger>
-            <TabsTrigger value="audios" className="gap-2">
-              <Headphones className="w-4 h-4" />
-              Áudios
-            </TabsTrigger>
-            <TabsTrigger value="galeria" className="gap-2">
-              <ImageIcon className="w-4 h-4" />
-              Galeria
-            </TabsTrigger>
-            <TabsTrigger value="comunicacao" className="gap-2">
-              <MessageSquare className="w-4 h-4" />
-              Comunicação
-            </TabsTrigger>
-            <TabsTrigger value="formacao" className="gap-2">
-              <GraduationCap className="w-4 h-4 text-gold" />
-              Pág. Vendas
-            </TabsTrigger>
-            <TabsTrigger value="area-formacao" className="gap-2">
-              <DoorOpen className="w-4 h-4 text-purple-400" />
-              Área Formação
-            </TabsTrigger>
-            <TabsTrigger value="torre-viva" className="gap-2">
-              <Castle className="w-4 h-4 text-gold" />
-              Torre Viva™
-            </TabsTrigger>
-            <TabsTrigger value="biblioteca-casos" className="gap-2">
-              <FolderOpen className="w-4 h-4 text-emerald-400" />
-              Biblioteca Casos
-            </TabsTrigger>
-            <TabsTrigger value="atlas-feminino" className="gap-2">
-              <Flower2 className="w-4 h-4 text-gold" />
-              Atlas Arquétipos
-            </TabsTrigger>
-            <TabsTrigger value="narroterapia" className="gap-2">
-              <BookOpen className="w-4 h-4 text-burgundy-light" />
-              Narroterapia
-            </TabsTrigger>
-            <TabsTrigger value="narroterapia-autorizacao" className="gap-2">
-              <Sparkles className="w-4 h-4 text-gold" />
-              Autorizações
-            </TabsTrigger>
-            <TabsTrigger value="clube-livro" className="gap-2">
-              <BookOpen className="w-4 h-4 text-emerald-400" />
-              Círculos de Leitura
-            </TabsTrigger>
-            <TabsTrigger value="estudio-oracular" className="gap-2">
-              <Headphones className="w-4 h-4 text-gold" />
-              Estúdio Oracular
-            </TabsTrigger>
-            <TabsTrigger value="portal-junguiano" className="gap-2">
-              <Zap className="w-4 h-4 text-gold" />
-              Portal Junguiano
-            </TabsTrigger>
-            <TabsTrigger value="vitrine" className="gap-2">
-              <LayoutGrid className="w-4 h-4 text-gold" />
-              Vitrine
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="gap-2">
-              <Cog className="w-4 h-4" />
-              Configurações
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="users">
-            <Suspense fallback={<TabLoader />}>
-              <AdminUsersTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="matriculas">
-            <Suspense fallback={<TabLoader />}>
-              <AdminMatriculasTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="degustacao">
-            <Suspense fallback={<TabLoader />}>
-              <AdminDegustacaoTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="assinaturas">
-            <Suspense fallback={<TabLoader />}>
-              <AdminAssinaturasTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="leituras">
-            <Suspense fallback={<TabLoader />}>
-              <AdminLeiturasTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="conteudos">
-            <Suspense fallback={<TabLoader />}>
-              <AdminConteudosTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="cursos">
-            <Suspense fallback={<TabLoader />}>
-              <AdminCursosTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="biblioteca">
-            <Suspense fallback={<TabLoader />}>
-              <AdminBibliotecaTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="mentoria">
-            <Suspense fallback={<TabLoader />}>
-              <AdminMentoriaTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="agentes">
-            <Suspense fallback={<TabLoader />}>
-              <AdminAgentesTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="modelos">
-            <Suspense fallback={<TabLoader />}>
-              <AdminModelosTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="copy">
-            <div className="mb-4 flex justify-end">
-              <a href="/admin/atelie-conteudo" className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gold bg-gold/10 hover:bg-gold/20 rounded-md transition-colors">
-                <Sparkles className="w-4 h-4" />
-                Ateliê de Conteúdo (IA)
-              </a>
-            </div>
-            <Suspense fallback={<TabLoader />}>
-              <AdminCopyTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="ferramentas">
-            <Suspense fallback={<TabLoader />}>
-              <AdminFerramentasTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="salas">
-            <Suspense fallback={<TabLoader />}>
-              <AdminSalasTab />
-            </Suspense>
-          </TabsContent>
-
-
-          <TabsContent value="quiz">
-            <Suspense fallback={<TabLoader />}>
-              <AdminQuizTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="lab">
-            <Suspense fallback={<TabLoader />}>
-              <AdminLabCasosTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="planos">
-            <Suspense fallback={<TabLoader />}>
-              <AdminPlanosTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="ofertas">
-            <Suspense fallback={<TabLoader />}>
-              <AdminOfertasTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="progresso">
-            <Suspense fallback={<TabLoader />}>
-              <AdminProgressoTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="oraculos">
-            <Suspense fallback={<TabLoader />}>
-              <AdminOraculosTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="blocos">
-            <Suspense fallback={<TabLoader />}>
-              <AdminBlocksTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="travessias">
-            <Suspense fallback={<TabLoader />}>
-              <AdminTravessiasTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="travessias-conteudo">
-            <Suspense fallback={<TabLoader />}>
-              <AdminBibliotecaTravessiasTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="familias">
-            <Suspense fallback={<TabLoader />}>
-              <AdminFamiliasTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="labirinto">
-            <Suspense fallback={<TabLoader />}>
-              <AdminLabirintoTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="labirinto-heroina">
-            <Suspense fallback={<TabLoader />}>
-              <AdminLabirintoHeroinaTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="big5-simbolico">
-            <Suspense fallback={<TabLoader />}>
-              <AdminBig5SymbolicTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="eneagrama-feminino">
-            <Suspense fallback={<TabLoader />}>
-              <AdminEneagramaFemininoTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="jornada-heroina">
-            <Suspense fallback={<TabLoader />}>
-              <AdminJornadaHeroinaTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="radiestesia">
-            <Suspense fallback={<TabLoader />}>
-              <AdminRadiestesiaTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="ia-config">
-            <Suspense fallback={<TabLoader />}>
-              <AdminAISettingsTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="audios">
-            <Suspense fallback={<TabLoader />}>
-              <AdminAudiosTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="comunicacao">
-            <Suspense fallback={<TabLoader />}>
-              <AdminComunicacaoTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="formacao">
-            <Suspense fallback={<TabLoader />}>
-              <AdminFormacaoTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="area-formacao">
-            <Suspense fallback={<TabLoader />}>
-              <AdminAreaFormacaoTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="casa-oracula">
-            <Suspense fallback={<TabLoader />}>
-              <AdminCasaOraculaTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="sessoes">
-            <Suspense fallback={<TabLoader />}>
-              <AdminSessoesTab />
-            </Suspense>
-          </TabsContent>
-
-
-          <TabsContent value="grupos">
-            <Suspense fallback={<TabLoader />}>
-              <AdminGruposTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="galeria">
-            <Suspense fallback={<TabLoader />}>
-              <AdminGaleriaTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="torre-viva">
-            <Suspense fallback={<TabLoader />}>
-              <AdminTorreVivaTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="biblioteca-casos">
-            <Suspense fallback={<TabLoader />}>
-              <AdminBibliotecaCasosTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="atlas-feminino">
-            <Suspense fallback={<TabLoader />}>
-              <AdminAtlasFemininoTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="narroterapia-autorizacao">
-            <Suspense fallback={<TabLoader />}>
-              <AdminNarroterapiaAutorizacaoTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="narroterapia">
-            <Suspense fallback={<TabLoader />}>
-              <AdminNarroterapiaTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="clube-livro">
-            <Suspense fallback={<TabLoader />}>
-              <AdminClubeLivroTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="estudio-oracular">
-            <Suspense fallback={<TabLoader />}>
-              <AdminEstudioOracular />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="portal-junguiano">
-            <Suspense fallback={<TabLoader />}>
-              <AdminPortalJunguianoTab />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="vitrine">
-            <Suspense fallback={<TabLoader />}>
-              <AdminVitrineCards />
-            </Suspense>
-          </TabsContent>
-
-          <TabsContent value="settings">
-            <Suspense fallback={<TabLoader />}>
-              <AdminSettingsTab />
-            </Suspense>
-          </TabsContent>
-        </Tabs>
       </div>
     </AppLayout>
   );
