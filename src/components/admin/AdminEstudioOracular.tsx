@@ -214,6 +214,10 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
     versao_resumida: episode?.versao_resumida || '',
     status: episode?.status || 'draft',
     formato: episode?.formato || 'narrativo',
+    trilha_ativa: episode?.trilha_ativa || false,
+    trilha_volume: episode?.trilha_volume || 20,
+    fade_in_seconds: episode?.fade_in_seconds || 2,
+    fade_out_seconds: episode?.fade_out_seconds || 3,
   });
   const [axes, setAxes] = useState<any[]>([]);
   const [generating, setGenerating] = useState(false);
@@ -226,6 +230,9 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
     narradora: episode?.audio_narradora_url || null,
     oracular: episode?.audio_oracular_url || null,
     final: episode?.audio_final_url || null,
+    vinheta_abertura: episode?.vinheta_abertura_url || null,
+    vinheta_encerramento: episode?.vinheta_encerramento_url || null,
+    trilha_fundo: episode?.trilha_fundo_url || null,
   });
   const [showDialogueView, setShowDialogueView] = useState(false);
 
@@ -367,6 +374,13 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
         audio_narradora_url: audioUrls.narradora,
         audio_oracular_url: audioUrls.oracular,
         audio_final_url: audioUrls.final,
+        vinheta_abertura_url: audioUrls.vinheta_abertura,
+        vinheta_encerramento_url: audioUrls.vinheta_encerramento,
+        trilha_fundo_url: audioUrls.trilha_fundo,
+        trilha_ativa: form.trilha_ativa,
+        trilha_volume: form.trilha_volume,
+        fade_in_seconds: form.fade_in_seconds,
+        fade_out_seconds: form.fade_out_seconds,
       };
 
       if (form.status === 'published' && !episode?.published_at) {
@@ -507,14 +521,79 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
                 </div>
 
                 {audioUrls.narradora && audioUrls.oracular && (
-                  <div className="space-y-2 pt-2 border-t border-border/50">
-                    <Label>🎬 Finalizar Episódio</Label>
-                    <p className="text-xs text-muted-foreground">Combinar áudio da Narradora + Voz Oracular em ordem do roteiro.</p>
-                    <Button onClick={handleMergeAudio} disabled={merging} size="sm" className="gap-2" variant="gold">
-                      {merging ? <Loader2 className="w-4 h-4 animate-spin" /> : <Music className="w-4 h-4" />}
-                      {merging ? 'Processando...' : 'Finalizar Episódio'}
-                    </Button>
-                    {audioUrls.final && <UnifiedAudioPlayer audioUrl={audioUrls.final} title="🎬 Áudio Final" size="md" />}
+                  <div className="space-y-4 pt-3 border-t border-border/50">
+                    <h4 className="font-semibold text-foreground">🎬 Finalização do Episódio</h4>
+
+                    {/* Vinhetas */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>🔔 Vinheta de Abertura (opcional)</Label>
+                        <AudioUpload
+                          value={audioUrls.vinheta_abertura || ''}
+                          onChange={(url) => setAudioUrls(p => ({ ...p, vinheta_abertura: url }))}
+                          folder="studio/vinhetas"
+                          label=""
+                          showLibrary={false}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>🔔 Vinheta de Encerramento (opcional)</Label>
+                        <AudioUpload
+                          value={audioUrls.vinheta_encerramento || ''}
+                          onChange={(url) => setAudioUrls(p => ({ ...p, vinheta_encerramento: url }))}
+                          folder="studio/vinhetas"
+                          label=""
+                          showLibrary={false}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Trilha de fundo (config salva, mas mixagem requer processamento externo) */}
+                    <div className="space-y-3 p-3 rounded-lg border bg-muted/20">
+                      <div className="flex items-center justify-between">
+                        <Label>🎵 Trilha de Fundo</Label>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-muted-foreground">Ativar</span>
+                          <Switch checked={form.trilha_ativa} onCheckedChange={(v) => setForm(p => ({ ...p, trilha_ativa: v }))} />
+                        </div>
+                      </div>
+                      {form.trilha_ativa && (
+                        <div className="space-y-3">
+                          <AudioUpload
+                            value={audioUrls.trilha_fundo || ''}
+                            onChange={(url) => setAudioUrls(p => ({ ...p, trilha_fundo: url }))}
+                            folder="studio/trilhas"
+                            label=""
+                            showLibrary={false}
+                          />
+                          <div className="grid grid-cols-3 gap-3">
+                            <div className="space-y-1">
+                              <Label className="text-xs">Volume ({form.trilha_volume}%)</Label>
+                              <Input type="number" min={0} max={40} value={form.trilha_volume} onChange={(e) => setForm(p => ({ ...p, trilha_volume: parseInt(e.target.value) || 0 }))} />
+                            </div>
+                            <div className="space-y-1">
+                              <Label className="text-xs">Fade In ({form.fade_in_seconds}s)</Label>
+                              <Input type="number" min={0} max={10} value={form.fade_in_seconds} onChange={(e) => setForm(p => ({ ...p, fade_in_seconds: parseInt(e.target.value) || 0 }))} />
+                            </div>
+                            <div className="space-y-1">
+                              <Label className="text-xs">Fade Out ({form.fade_out_seconds}s)</Label>
+                              <Input type="number" min={0} max={10} value={form.fade_out_seconds} onChange={(e) => setForm(p => ({ ...p, fade_out_seconds: parseInt(e.target.value) || 0 }))} />
+                            </div>
+                          </div>
+                          <p className="text-xs text-amber-500/80">⚠️ A mixagem de trilha de fundo (loop, volume, fade) requer pós-produção externa. As configurações são salvas para referência.</p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Botão Finalizar */}
+                    <div className="space-y-2">
+                      <p className="text-xs text-muted-foreground">Concatenar: {audioUrls.vinheta_abertura ? 'Vinheta + ' : ''}Narradora ↔ Voz Oracular{audioUrls.vinheta_encerramento ? ' + Vinheta' : ''}</p>
+                      <Button onClick={handleMergeAudio} disabled={merging} size="sm" className="gap-2" variant="gold">
+                        {merging ? <Loader2 className="w-4 h-4 animate-spin" /> : <Music className="w-4 h-4" />}
+                        {merging ? 'Processando...' : 'Finalizar Episódio'}
+                      </Button>
+                      {audioUrls.final && <UnifiedAudioPlayer audioUrl={audioUrls.final} title="🎬 Áudio Final" size="md" />}
+                    </div>
                   </div>
                 )}
               </div>

@@ -9988,6 +9988,8 @@ export type Database = {
           descricao: string | null
           duracao_segundos: number | null
           eixo_id: string | null
+          fade_in_seconds: number | null
+          fade_out_seconds: number | null
           formato: string
           id: string
           imagem_capa_url: string | null
@@ -9998,8 +10000,13 @@ export type Database = {
           status: Database["public"]["Enums"]["studio_episode_status"]
           texto_base: string
           titulo: string | null
+          trilha_ativa: boolean | null
+          trilha_fundo_url: string | null
+          trilha_volume: number | null
           updated_at: string
           versao_resumida: string | null
+          vinheta_abertura_url: string | null
+          vinheta_encerramento_url: string | null
           visibility: Database["public"]["Enums"]["studio_episode_visibility"]
           voz_escolhida: string | null
         }
@@ -10015,6 +10022,8 @@ export type Database = {
           descricao?: string | null
           duracao_segundos?: number | null
           eixo_id?: string | null
+          fade_in_seconds?: number | null
+          fade_out_seconds?: number | null
           formato?: string
           id?: string
           imagem_capa_url?: string | null
@@ -10025,8 +10034,13 @@ export type Database = {
           status?: Database["public"]["Enums"]["studio_episode_status"]
           texto_base?: string
           titulo?: string | null
+          trilha_ativa?: boolean | null
+          trilha_fundo_url?: string | null
+          trilha_volume?: number | null
           updated_at?: string
           versao_resumida?: string | null
+          vinheta_abertura_url?: string | null
+          vinheta_encerramento_url?: string | null
           visibility?: Database["public"]["Enums"]["studio_episode_visibility"]
           voz_escolhida?: string | null
         }
@@ -10042,6 +10056,8 @@ export type Database = {
           descricao?: string | null
           duracao_segundos?: number | null
           eixo_id?: string | null
+          fade_in_seconds?: number | null
+          fade_out_seconds?: number | null
           formato?: string
           id?: string
           imagem_capa_url?: string | null
@@ -10052,8 +10068,13 @@ export type Database = {
           status?: Database["public"]["Enums"]["studio_episode_status"]
           texto_base?: string
           titulo?: string | null
+          trilha_ativa?: boolean | null
+          trilha_fundo_url?: string | null
+          trilha_volume?: number | null
           updated_at?: string
           versao_resumida?: string | null
+          vinheta_abertura_url?: string | null
+          vinheta_encerramento_url?: string | null
           visibility?: Database["public"]["Enums"]["studio_episode_visibility"]
           voz_escolhida?: string | null
         }
