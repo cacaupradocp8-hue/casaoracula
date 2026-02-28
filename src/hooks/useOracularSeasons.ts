@@ -8,7 +8,24 @@ export interface OracularSeason {
   periodo: string | null;
   foco_travessia: string | null;
   aplicacao_profissional: string | null;
+  status: string | null;
+  visivel: boolean;
   ordem: number;
+}
+
+export function useActiveSeason() {
+  return useQuery({
+    queryKey: ['oracular-season-active'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('oracular_seasons')
+        .select('*')
+        .eq('status', 'ativa')
+        .maybeSingle();
+      if (error) throw error;
+      return data as OracularSeason | null;
+    },
+  });
 }
 
 export interface SeasonBook {

@@ -80,6 +80,12 @@ export default function AnoOracular() {
                               {season.periodo}
                             </Badge>
                           )}
+                          {season.status === 'ativa' && (
+                            <Badge className="bg-gold/20 text-gold border-gold/30 text-[10px]">Ativa</Badge>
+                          )}
+                          {season.status === 'concluida' && (
+                            <Badge variant="outline" className="text-[10px] text-muted-foreground/60">Concluída</Badge>
+                          )}
                         </div>
                         {season.foco_travessia && (
                           <p className="text-sm text-muted-foreground mt-1">{season.foco_travessia}</p>
