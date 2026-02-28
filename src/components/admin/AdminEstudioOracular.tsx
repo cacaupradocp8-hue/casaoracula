@@ -333,10 +333,10 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
         </div>
         <div className="space-y-2">
           <Label>Eixo</Label>
-          <Select value={form.eixo_id} onValueChange={(v) => setForm(p => ({ ...p, eixo_id: v }))}>
+          <Select value={form.eixo_id || "none"} onValueChange={(v) => setForm(p => ({ ...p, eixo_id: v === "none" ? "" : v }))}>
             <SelectTrigger><SelectValue placeholder="Selecione um eixo" /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Nenhum (apenas estrutura base)</SelectItem>
+              <SelectItem value="none">Nenhum (apenas estrutura base)</SelectItem>
               {axes.map(a => <SelectItem key={a.id} value={a.id}>{a.nome}</SelectItem>)}
             </SelectContent>
           </Select>
