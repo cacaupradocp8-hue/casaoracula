@@ -34,6 +34,8 @@ export interface ClubeCiclo {
   como_ler_slides?: { titulo?: string; frase_simbolica?: string; image_url?: string }[];
   como_ler_audio_url?: string;
   campo_simbolico?: string;
+  mensagem_campo_url?: string;
+  mensagem_campo_texto?: string;
 }
 
 export interface ClubeFase {

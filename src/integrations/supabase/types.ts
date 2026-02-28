@@ -2052,6 +2052,8 @@ export type Database = {
           infografico_url: string | null
           is_multipolar: boolean | null
           manifesto: string | null
+          mensagem_campo_texto: string | null
+          mensagem_campo_url: string | null
           ordem: number | null
           orientacao_clinica_contraindicado: string | null
           orientacao_clinica_evitar: string | null
@@ -2085,6 +2087,8 @@ export type Database = {
           infografico_url?: string | null
           is_multipolar?: boolean | null
           manifesto?: string | null
+          mensagem_campo_texto?: string | null
+          mensagem_campo_url?: string | null
           ordem?: number | null
           orientacao_clinica_contraindicado?: string | null
           orientacao_clinica_evitar?: string | null
@@ -2118,6 +2122,8 @@ export type Database = {
           infografico_url?: string | null
           is_multipolar?: boolean | null
           manifesto?: string | null
+          mensagem_campo_texto?: string | null
+          mensagem_campo_url?: string | null
           ordem?: number | null
           orientacao_clinica_contraindicado?: string | null
           orientacao_clinica_evitar?: string | null
