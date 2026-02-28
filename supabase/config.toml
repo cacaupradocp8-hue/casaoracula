@@ -56,3 +56,6 @@ verify_jwt = false
 
 [functions.studio-rss]
 verify_jwt = false
+
+[functions.studio-merge-audio]
+verify_jwt = false
