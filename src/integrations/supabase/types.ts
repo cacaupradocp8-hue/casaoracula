@@ -2904,6 +2904,104 @@ export type Database = {
           },
         ]
       }
+      collective_bed_entries: {
+        Row: {
+          aprovado_por_admin: boolean
+          bed_id: string
+          created_at: string | null
+          exibicao_anonima: boolean
+          id: string
+          origem: string
+          publicado_em: string | null
+          rejeitado: boolean
+          season_id: string
+          texto: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          aprovado_por_admin?: boolean
+          bed_id: string
+          created_at?: string | null
+          exibicao_anonima?: boolean
+          id?: string
+          origem?: string
+          publicado_em?: string | null
+          rejeitado?: boolean
+          season_id: string
+          texto: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          aprovado_por_admin?: boolean
+          bed_id?: string
+          created_at?: string | null
+          exibicao_anonima?: boolean
+          id?: string
+          origem?: string
+          publicado_em?: string | null
+          rejeitado?: boolean
+          season_id?: string
+          texto?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collective_bed_entries_bed_id_fkey"
+            columns: ["bed_id"]
+            isOneToOne: false
+            referencedRelation: "collective_beds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "collective_bed_entries_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "oracular_seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collective_beds: {
+        Row: {
+          aberto_em: string
+          created_at: string | null
+          encerrado_em: string | null
+          id: string
+          season_id: string
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          aberto_em?: string
+          created_at?: string | null
+          encerrado_em?: string | null
+          id?: string
+          season_id: string
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          aberto_em?: string
+          created_at?: string | null
+          encerrado_em?: string | null
+          id?: string
+          season_id?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collective_beds_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: true
+            referencedRelation: "oracular_seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       confirmacao_profissional: {
         Row: {
           aceita_codigo_etico: boolean
