@@ -64,31 +64,56 @@ serve(async (req) => {
 
     const dialogoInstructions = isDialogo ? `
 
-## FORMATO: DIÁLOGO ORACULAR
-O roteiro deve ser dividido em DUAS VOZES claramente marcadas:
+## FORMATO: DIÁLOGO ORACULAR (OBRIGATÓRIO)
+O roteiro DEVE ser estruturado como um diálogo entre duas vozes, intercaladas em blocos CURTOS.
+
+### REGRAS DE INTERCALAÇÃO (CRÍTICO):
+- Cada bloco de fala deve ter entre 2 e 6 frases, NUNCA mais.
+- Alterne frequentemente entre [NARRADORA] e [VOZ_ORACULAR]. Mínimo de 15 alternâncias no roteiro completo.
+- NÃO escreva blocos longos contínuos de uma mesma voz.
+- O ritmo deve parecer uma conversa real entre duas mulheres sábias — reflexiva e didática.
+- Cada bloco DEVE começar com [NARRADORA] ou [VOZ_ORACULAR] em linha separada, sozinho.
+
+### Marcação obrigatória:
 
 [NARRADORA]
-Texto da Narradora...
+(2 a 6 frases)
 
 [VOZ_ORACULAR]
-Texto da Voz Oracular...
+(2 a 6 frases)
 
-### NARRADORA conduz:
-- Abertura do campo
+[NARRADORA]
+(2 a 6 frases)
+
+...e assim por diante.
+
+### NARRADORA conduz (tom emocional, sensível):
+- Abertura do campo e acolhimento
 - Conexões pessoais e sensíveis
-- Perguntas reflexivas
+- Perguntas reflexivas que provocam pausa
 - Transições entre temas
-- Encerramento
+- Encerramento com convite à observação
 
-### VOZ ORACULAR conduz:
-- Sínteses didáticas
-- Explicações conceituais
-- Aplicação do eixo arquetípico
-- Estrutura analítica
-- Conteúdo formativo denso
+### VOZ ORACULAR conduz (tom conceitual, organizador):
+- Sínteses didáticas e estruturais
+- Explicações conceituais precisas
+- Aplicação do eixo arquetípico ao tema
+- Estrutura analítica e formativa
+- Organização do campo simbólico
 
-Alterne entre as duas vozes de forma natural, como uma conversa profunda entre duas mulheres sábias.
-Cada bloco deve começar com [NARRADORA] ou [VOZ_ORACULAR] em linha separada.
+### EXEMPLO DE RITMO CORRETO:
+
+[NARRADORA]
+Antes de começarmos, quero fazer um convite. Respire fundo. Não tente entender tudo agora. Permita que o campo se abra aos poucos.
+
+[VOZ_ORACULAR]
+O que vamos percorrer hoje é um eixo que atravessa toda a obra. Não se trata de resumir o livro, mas de localizar o ponto onde ele nos toca — e onde ele nos desorganiza.
+
+[NARRADORA]
+E essa desorganização é bem-vinda. Às vezes, o que mais nos ensina é justamente aquilo que não conseguimos encaixar.
+
+[VOZ_ORACULAR]
+Clinicamente, chamamos isso de campo de estranhamento. É onde a narrativa pessoal encontra resistência — e onde o trabalho simbólico começa.
 ` : "";
 
     const systemPrompt = `Você é a Mestra Oracular da Casa Orácula, especialista em leitura terapêutica simbólica.
