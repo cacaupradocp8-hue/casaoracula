@@ -203,7 +203,7 @@ export default function ClubeLivroCiclo() {
               'transition-all cursor-pointer hover:border-gold/40',
               integracao8020Concluida && 'border-gold/30 bg-gold/5'
             )}>
-              <CardContent className="p-6 text-center" onClick={() => navigate(`/clube-livro/${id}/integracao-8020`)}>
+              <CardContent className="p-6 text-center" onClick={() => navigate(`/clube-livro/${id}/lab-8020`)}>
                 <Target className="w-10 h-10 text-gold mx-auto mb-3" />
                 <h3 className="font-display text-lg text-foreground mb-2">
                   Laboratório de Integração 80/20
