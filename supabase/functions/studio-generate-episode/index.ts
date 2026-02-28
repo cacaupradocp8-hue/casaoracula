@@ -29,13 +29,12 @@ serve(async (req) => {
 
     const userId = claimsData.claims.sub;
 
-    // Check admin
     const { data: isAdmin } = await supabase.rpc("is_admin", { _user_id: userId });
     if (!isAdmin) {
       return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const { livro, capitulo, eixoId, textoBase, intencaoTerapeutica, visibility } = await req.json();
+    const { livro, capitulo, eixoId, textoBase, intencaoTerapeutica, visibility, formato } = await req.json();
 
     // Fetch active method blocks
     const { data: blocks } = await supabase
@@ -61,12 +60,44 @@ serve(async (req) => {
       .map((b: any, i: number) => `${i + 1}. ${b.nome}: ${b.instrucao}`)
       .join("\n");
 
+    const isDialogo = formato === "dialogo";
+
+    const dialogoInstructions = isDialogo ? `
+
+## FORMATO: DIÁLOGO ORACULAR
+O roteiro deve ser dividido em DUAS VOZES claramente marcadas:
+
+[NARRADORA]
+Texto da Narradora...
+
+[VOZ_ORACULAR]
+Texto da Voz Oracular...
+
+### NARRADORA conduz:
+- Abertura do campo
+- Conexões pessoais e sensíveis
+- Perguntas reflexivas
+- Transições entre temas
+- Encerramento
+
+### VOZ ORACULAR conduz:
+- Sínteses didáticas
+- Explicações conceituais
+- Aplicação do eixo arquetípico
+- Estrutura analítica
+- Conteúdo formativo denso
+
+Alterne entre as duas vozes de forma natural, como uma conversa profunda entre duas mulheres sábias.
+Cada bloco deve começar com [NARRADORA] ou [VOZ_ORACULAR] em linha separada.
+` : "";
+
     const systemPrompt = `Você é a Mestra Oracular da Casa Orácula, especialista em leitura terapêutica simbólica.
 Seu papel é criar roteiros de aulas-álbum oraculares seguindo o Método Casa Orácula de Leitura Terapêutica.
 
 ## ESTRUTURA BASE DO MÉTODO
 ${methodStructure}
 ${axisInstructions}
+${dialogoInstructions}
 
 ## RESTRIÇÕES
 - Não resumir o livro
@@ -75,6 +106,9 @@ ${axisInstructions}
 - Arquétipo é campo, não rótulo
 - Tom: profundo, ético, humano, sem misticismo performático
 - Linguagem falada, natural, pronta para gravação de áudio
+- Frases curtas e pontuação clara
+- Evitar exagero místico
+- Tom reflexivo e didático
 
 ## OUTPUT
 Gere DOIS textos separados por "---VERSAO_RESUMIDA---":
@@ -85,6 +119,7 @@ Gere DOIS textos separados por "---VERSAO_RESUMIDA---":
 Capítulo: ${capitulo}
 Intenção Terapêutica: ${intencaoTerapeutica}
 Visibilidade: ${visibility}
+Formato: ${isDialogo ? "Diálogo Oracular (duas vozes)" : "Narrativo Único"}
 
 Texto base / Ideias-chave:
 ${textoBase}
