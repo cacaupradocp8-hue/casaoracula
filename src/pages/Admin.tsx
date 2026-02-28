@@ -63,6 +63,7 @@ const AdminAtlasFemininoTab = lazy(() => import('@/components/admin/AdminAtlasFe
 const AdminNarroterapiaTab = lazy(() => import('@/components/admin/AdminNarroterapiaTab').then(m => ({ default: m.AdminNarroterapiaTab })));
 const AdminNarroterapiaAutorizacaoTab = lazy(() => import('@/components/admin/AdminNarroterapiaAutorizacaoTab'));
 const AdminClubeLivroTab = lazy(() => import('@/components/admin/AdminClubeLivroTab'));
+const AdminEstudioOracular = lazy(() => import('@/components/admin/AdminEstudioOracular'));
 const AdminVitrineCards = lazy(() => import('@/pages/admin/AdminVitrineCards'));
 const AdminPortalJunguianoTab = lazy(() => import('@/components/admin/AdminPortalJunguianoTab').then(m => ({ default: m.AdminPortalJunguianoTab })));
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
@@ -310,6 +311,10 @@ export default function Admin() {
             <TabsTrigger value="clube-livro" className="gap-2">
               <BookOpen className="w-4 h-4 text-emerald-400" />
               Círculos de Leitura
+            </TabsTrigger>
+            <TabsTrigger value="estudio-oracular" className="gap-2">
+              <Headphones className="w-4 h-4 text-gold" />
+              Estúdio Oracular
             </TabsTrigger>
             <TabsTrigger value="portal-junguiano" className="gap-2">
               <Zap className="w-4 h-4 text-gold" />
@@ -600,6 +605,12 @@ export default function Admin() {
           <TabsContent value="clube-livro">
             <Suspense fallback={<TabLoader />}>
               <AdminClubeLivroTab />
+            </Suspense>
+          </TabsContent>
+
+          <TabsContent value="estudio-oracular">
+            <Suspense fallback={<TabLoader />}>
+              <AdminEstudioOracular />
             </Suspense>
           </TabsContent>
 

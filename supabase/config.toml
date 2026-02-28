@@ -47,3 +47,12 @@ verify_jwt = false
 
 [functions.ethical-review-content]
 verify_jwt = false
+
+[functions.studio-generate-episode]
+verify_jwt = false
+
+[functions.studio-tts]
+verify_jwt = false
+
+[functions.studio-rss]
+verify_jwt = false
