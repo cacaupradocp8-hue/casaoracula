@@ -1,6 +1,6 @@
 // ============================================
-// CÍRCULO DE LEITURA ORACULAR - Página Principal (v2)
-// Modelo: Travessia Atual → Mensagem do Campo → Próxima → Anteriores → Navegação
+// CÍRCULO DE LEITURA ORACULAR - Home Simplificada
+// Modelo: Travessia Atual + Régua + Navegação mínima
 // ============================================
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -11,21 +11,22 @@ import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature } from '@/types/portal';
 import { useAccessExpiration } from '@/hooks/useAccessExpiration';
 import { LockedForVisitor } from '@/components/shared/LockedForVisitor';
-import { BookOpen, ChevronRight, Home, Map, Route, Play, Calendar, Sparkles } from 'lucide-react';
+import { useCirculoProgressao } from '@/hooks/useCirculoProgressao';
+import { ReguaSimbolica } from '@/components/clube-livro/ReguaSimbolica';
+import { BookOpen, ChevronRight, Home, Map, Route, Sparkles } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-import { differenceInDays } from 'date-fns';
 import { useSeasonForBook } from '@/hooks/useOracularSeasons';
 
 export default function ClubeLivroApresentacao() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { isExpired } = useAccessExpiration();
-  const { ciclos, cicloAtual, ciclosProximos, ciclosAnteriores, loadingCiclos } = useClubeLivro();
+  const { cicloAtual, loadingCiclos } = useClubeLivro();
   const { hasAccepted } = useRitualAceite(cicloAtual?.id);
   const seasonAtual = useSeasonForBook(cicloAtual?.id);
+  const { steps } = useCirculoProgressao(cicloAtual?.id);
   const hasAccess = user && canAccessFeature(user.portal, 'aluna') && !isExpired;
 
   if (!hasAccess) {
@@ -51,11 +52,6 @@ export default function ClubeLivroApresentacao() {
       navigate(`/clube-livro/${cicloAtual.id}`);
     }
   };
-
-  const proximoCiclo = ciclosProximos?.[0];
-  const diasParaAbertura = proximoCiclo?.data_inicio
-    ? differenceInDays(new Date(proximoCiclo.data_inicio), new Date())
-    : null;
 
   return (
     <AppLayout>
@@ -83,8 +79,8 @@ export default function ClubeLivroApresentacao() {
           </div>
         ) : (
           <div className="space-y-8">
-            {/* ── 1. TRAVESSIA ATUAL ── */}
-            {cicloAtual && (
+            {/* ── 1. TRAVESSIA EM CURSO ── */}
+            {cicloAtual ? (
               <Card className="border-gold/30 bg-gradient-to-br from-gold/5 to-card overflow-hidden">
                 <CardContent className="p-6">
                   <p className="text-xs uppercase tracking-[0.2em] text-gold font-medium mb-1">
@@ -131,110 +127,38 @@ export default function ClubeLivroApresentacao() {
                       </Button>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            )}
 
-            {/* ── 2. MENSAGEM DO CAMPO ── */}
-            {cicloAtual?.mensagem_campo_url && (
-              <Card className="border-border/50">
-                <CardContent className="p-5">
-                  <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-3">
-                    Mensagem do Campo
-                  </p>
-                  <audio
-                    controls
-                    src={cicloAtual.mensagem_campo_url}
-                    className="w-full h-10"
-                  />
-                  {cicloAtual.mensagem_campo_texto && (
-                    <p className="text-sm text-muted-foreground mt-2 italic">
-                      {cicloAtual.mensagem_campo_texto}
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-
-            {/* ── 3. PRÓXIMA TRAVESSIA ── */}
-            {proximoCiclo && (
-              <Card className="border-border/30 bg-muted/30">
-                <CardContent className="p-5 flex items-center gap-4">
-                  <Calendar className="w-5 h-5 text-muted-foreground shrink-0" />
-                  <div className="flex-1">
-                    <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium">
-                      Próxima Travessia
-                    </p>
-                    <p className="text-foreground font-medium mt-0.5">{proximoCiclo.titulo}</p>
-                    {proximoCiclo.autor_livro && (
-                      <p className="text-xs text-muted-foreground">{proximoCiclo.autor_livro}</p>
-                    )}
+                  {/* ── 2. RÉGUA SIMBÓLICA ── */}
+                  <div className="mt-6 pt-4 border-t border-border/20">
+                    <ReguaSimbolica
+                      steps={steps}
+                      activeTab=""
+                      onTabChange={() => handleEnterCycle()}
+                    />
                   </div>
-                  {diasParaAbertura !== null && diasParaAbertura > 0 && (
-                    <div className="text-center shrink-0">
-                      <p className="text-2xl font-display text-gold">{diasParaAbertura}</p>
-                      <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                        {diasParaAbertura === 1 ? 'dia' : 'dias'}
-                      </p>
-                    </div>
-                  )}
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="border-dashed border-border/30">
+                <CardContent className="py-12 text-center">
+                  <BookOpen className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
+                  <p className="text-muted-foreground text-sm">
+                    Nenhuma travessia em curso neste momento.
+                  </p>
                 </CardContent>
               </Card>
             )}
 
-            {/* ── 4. TRAVESSIAS ANTERIORES ── */}
-            {ciclosAnteriores && ciclosAnteriores.length > 0 && (
-              <div>
-                <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-3">
-                  Travessias Anteriores
-                </p>
-                <div className="space-y-2">
-                  {ciclosAnteriores.map(ciclo => (
-                    <Card
-                      key={ciclo.id}
-                      className="border-border/20 hover:border-border/40 transition-colors cursor-pointer"
-                      onClick={() => navigate(`/clube-livro/${ciclo.id}`)}
-                    >
-                      <CardContent className="p-4 flex items-center gap-3">
-                        {ciclo.capa_url ? (
-                          <img
-                            src={ciclo.capa_url}
-                            alt={ciclo.titulo}
-                            className="w-10 h-14 object-cover rounded shadow-sm shrink-0 opacity-70"
-                          />
-                        ) : (
-                          <div className="w-10 h-14 bg-muted/50 rounded flex items-center justify-center shrink-0">
-                            <BookOpen className="w-4 h-4 text-muted-foreground/50" />
-                          </div>
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm text-foreground/80 font-medium truncate">
-                            {ciclo.titulo}
-                          </p>
-                          {ciclo.autor_livro && (
-                            <p className="text-xs text-muted-foreground truncate">
-                              {ciclo.autor_livro}
-                            </p>
-                          )}
-                        </div>
-                        <ChevronRight className="w-4 h-4 text-muted-foreground/40 shrink-0" />
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* ── 5. NAVEGAÇÃO DISCRETA ── */}
-            <div className="flex items-center justify-center gap-3 pt-4 flex-wrap">
+            {/* ── 3. NAVEGAÇÃO ESSENCIAL ── */}
+            <div className="flex items-center justify-center gap-3 pt-2 flex-wrap">
               <Button
                 variant="ghost"
                 size="sm"
                 className="text-muted-foreground hover:text-foreground gap-2"
-                onClick={() => navigate('/clube-livro/mapa-jornadas')}
+                onClick={() => navigate('/clube-livro/ano-oracular')}
               >
-                <Map className="w-4 h-4" />
-                Mapa das Jornadas
+                <Sparkles className="w-4 h-4" />
+                Mapa do Ano Oracular
               </Button>
               <Button
                 variant="ghost"
@@ -244,15 +168,6 @@ export default function ClubeLivroApresentacao() {
               >
                 <Route className="w-4 h-4" />
                 Minha Travessia
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground hover:text-foreground gap-2"
-                onClick={() => navigate('/clube-livro/ano-oracular')}
-              >
-                <Sparkles className="w-4 h-4" />
-                Ano Oracular
               </Button>
             </div>
           </div>

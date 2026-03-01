@@ -148,14 +148,14 @@ export function useCirculoProgressao(cicloId: string | undefined) {
       label: 'Escuta',
       emoji: '🌓',
       concluido: !!hasConversation,
-      desbloqueado: isAdmin || travessiaPercent >= 70,
+      desbloqueado: isAdmin || travessiaPercent >= 30,
     },
     {
       key: 'lab8020',
       label: 'Laboratório',
       emoji: '🌔',
       concluido: !!lab8020Done,
-      desbloqueado: isAdmin || !!hasConversation,
+      desbloqueado: isAdmin || travessiaPercent >= 70,
     },
     {
       key: 'registros',

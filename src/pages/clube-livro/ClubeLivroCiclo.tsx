@@ -37,10 +37,7 @@ function LockedTabContent() {
       <CardContent className="py-12 text-center space-y-3">
         <Lock className="w-8 h-8 text-muted-foreground/40 mx-auto" />
         <p className="text-sm text-muted-foreground/70 italic max-w-sm mx-auto">
-          Ainda não é tempo de avançar.
-        </p>
-        <p className="text-xs text-muted-foreground/50">
-          Complete as etapas anteriores para desbloquear esta fase da travessia.
+          Permaneça na etapa anterior. A travessia ainda está em curso.
         </p>
       </CardContent>
     </Card>
