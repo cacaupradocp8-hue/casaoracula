@@ -3,13 +3,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { Target, Loader2, Search, Brain, Sparkles, Link2, AlertCircle } from 'lucide-react';
+import { Loader2, Search, Brain, Sparkles } from 'lucide-react';
 
 interface LabConfigManagerProps {
   cicloId: string;
@@ -19,77 +17,41 @@ export function LabConfigManager({ cicloId }: LabConfigManagerProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // 1. Find the season linked to this ciclo via season_books table
-  const { data: seasonLink, isLoading: linkLoading } = useQuery({
-    queryKey: ['admin-season-link-for-ciclo', cicloId],
+  // Load lab config directly by ciclo_id
+  const { data: labConfig, isLoading } = useQuery({
+    queryKey: ['admin-lab-config', cicloId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('season_books')
-        .select('season_id')
-        .eq('book_id', cicloId)
-        .maybeSingle();
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  const { data: season, isLoading: seasonLoading } = useQuery({
-    queryKey: ['admin-season-detail', seasonLink?.season_id],
-    queryFn: async () => {
-      if (!seasonLink?.season_id) return null;
-      const { data, error } = await supabase
-        .from('oracular_seasons')
-        .select('id, nome_estacao, simbolo, periodo, status')
-        .eq('id', seasonLink.season_id)
-        .single();
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!seasonLink?.season_id,
-  });
-
-  // 2. Load season_labs config
-  const { data: labConfig, isLoading: configLoading } = useQuery({
-    queryKey: ['admin-season-lab', season?.id],
-    queryFn: async () => {
-      if (!season?.id) return null;
       const { data, error } = await supabase
         .from('season_labs')
         .select('*')
-        .eq('season_id', season.id)
+        .eq('ciclo_id', cicloId)
         .maybeSingle();
       if (error) throw error;
       return data;
     },
-    enabled: !!season?.id,
   });
 
   const [form, setForm] = useState({
-    // Bloco 1
     arquetipo_central: '',
     nucleo_vivo: '',
     tensao_central: '',
     imagem_organizadora: '',
     essencia_transformadora: '',
     transformacao_exigida: '',
-    // Bloco 2 - Aula
     traducao_aula: '',
     aula_objetivo: '',
     aula_vivencia: '',
     aula_pergunta_fechamento: '',
-    // Bloco 2 - Sessão
     traducao_sessao: '',
     sessao_tema: '',
     sessao_pergunta_acesso: '',
     sessao_cuidado_etico: '',
     sessao_resistencia: '',
-    // Bloco 2 - Palestra
     traducao_circulo: '',
     palestra_imagem: '',
     palestra_narrativa: '',
     palestra_chamada: '',
     palestra_encerramento: '',
-    // Perguntas
     pergunta_aplicacao_1: '',
     pergunta_aplicacao_2: '',
   });
@@ -125,9 +87,7 @@ export function LabConfigManager({ cicloId }: LabConfigManagerProps) {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      if (!season?.id) throw new Error('Estação não vinculada');
-
-      const payload = { ...form, season_id: season.id };
+      const payload = { ...form, ciclo_id: cicloId };
 
       if (labConfig?.id) {
         const { error } = await supabase
@@ -143,7 +103,7 @@ export function LabConfigManager({ cicloId }: LabConfigManagerProps) {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-season-lab', season?.id] });
+      queryClient.invalidateQueries({ queryKey: ['admin-lab-config', cicloId] });
       toast({ title: 'Configuração do Lab 80/20 salva' });
     },
     onError: () => {
@@ -153,7 +113,7 @@ export function LabConfigManager({ cicloId }: LabConfigManagerProps) {
 
   const update = (field: string, value: string) => setForm(prev => ({ ...prev, [field]: value }));
 
-  if (linkLoading || seasonLoading || configLoading) {
+  if (isLoading) {
     return (
       <div className="flex justify-center py-8">
         <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
@@ -161,38 +121,13 @@ export function LabConfigManager({ cicloId }: LabConfigManagerProps) {
     );
   }
 
-  if (!season) {
-    return (
-      <Card className="border-dashed border-destructive/30 bg-destructive/5">
-        <CardContent className="py-6 text-center space-y-3">
-          <AlertCircle className="w-8 h-8 text-destructive mx-auto" />
-          <div>
-            <p className="text-sm font-medium text-foreground">Estação Oracular não vinculada</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Para configurar o Lab 80/20, este ciclo precisa estar vinculado a uma Estação Oracular.
-              Crie a estação com o mesmo título do livro no menu "Conteúdo".
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
     <div className="space-y-6">
-      {/* Season link info */}
-      <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/30 rounded-lg px-3 py-2">
-        <Link2 className="w-3.5 h-3.5" />
-        <span>Vinculado à estação:</span>
-        <Badge variant="outline" className="text-xs">{season.simbolo} {season.nome_estacao}</Badge>
-        <Badge variant="outline" className="text-xs">{season.status}</Badge>
-      </div>
-
       {/* Bloco 1 — Essência Simbólica */}
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-sm">
-            <Search className="w-4 h-4 text-gold" />
+            <Search className="w-4 h-4 text-primary" />
             Bloco 1 — Essência Simbólica
           </CardTitle>
         </CardHeader>
@@ -210,12 +145,11 @@ export function LabConfigManager({ cicloId }: LabConfigManagerProps) {
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-sm">
-            <Brain className="w-4 h-4 text-gold" />
+            <Brain className="w-4 h-4 text-primary" />
             Bloco 2 — Tradução Profissional
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
-          {/* Aula */}
           <div className="space-y-3">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Seção Aula</p>
             <Field label="Conceito-Matriz" value={form.traducao_aula} onChange={v => update('traducao_aula', v)} />
@@ -223,10 +157,7 @@ export function LabConfigManager({ cicloId }: LabConfigManagerProps) {
             <Field label="Vivência Sugerida" value={form.aula_vivencia} onChange={v => update('aula_vivencia', v)} />
             <Field label="Pergunta de Fechamento" value={form.aula_pergunta_fechamento} onChange={v => update('aula_pergunta_fechamento', v)} />
           </div>
-
           <Separator />
-
-          {/* Sessão */}
           <div className="space-y-3">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Seção Sessão</p>
             <Field label="Tema Recorrente" value={form.sessao_tema} onChange={v => update('sessao_tema', v)} />
@@ -234,10 +165,7 @@ export function LabConfigManager({ cicloId }: LabConfigManagerProps) {
             <Field label="Cuidado Ético" value={form.sessao_cuidado_etico} onChange={v => update('sessao_cuidado_etico', v)} />
             <Field label="Resistência Comum" value={form.sessao_resistencia} onChange={v => update('sessao_resistencia', v)} />
           </div>
-
           <Separator />
-
-          {/* Palestra */}
           <div className="space-y-3">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Seção Palestra / Círculo</p>
             <Field label="Imagem de Abertura" value={form.palestra_imagem} onChange={v => update('palestra_imagem', v)} />
@@ -252,8 +180,8 @@ export function LabConfigManager({ cicloId }: LabConfigManagerProps) {
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-sm">
-            <Sparkles className="w-4 h-4 text-gold" />
-            Perguntas de Aplicação (Legacy)
+            <Sparkles className="w-4 h-4 text-primary" />
+            Perguntas de Aplicação
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -262,7 +190,6 @@ export function LabConfigManager({ cicloId }: LabConfigManagerProps) {
         </CardContent>
       </Card>
 
-      {/* Save */}
       <Button
         onClick={() => saveMutation.mutate()}
         disabled={saveMutation.isPending}

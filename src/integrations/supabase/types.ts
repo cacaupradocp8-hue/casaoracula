@@ -9942,6 +9942,7 @@ export type Database = {
           aula_objetivo: string | null
           aula_pergunta_fechamento: string | null
           aula_vivencia: string | null
+          ciclo_id: string | null
           created_at: string
           essencia_transformadora: string | null
           id: string
@@ -9953,7 +9954,7 @@ export type Database = {
           palestra_narrativa: string | null
           pergunta_aplicacao_1: string | null
           pergunta_aplicacao_2: string | null
-          season_id: string
+          season_id: string | null
           sessao_cuidado_etico: string | null
           sessao_pergunta_acesso: string | null
           sessao_resistencia: string | null
@@ -9970,6 +9971,7 @@ export type Database = {
           aula_objetivo?: string | null
           aula_pergunta_fechamento?: string | null
           aula_vivencia?: string | null
+          ciclo_id?: string | null
           created_at?: string
           essencia_transformadora?: string | null
           id?: string
@@ -9981,7 +9983,7 @@ export type Database = {
           palestra_narrativa?: string | null
           pergunta_aplicacao_1?: string | null
           pergunta_aplicacao_2?: string | null
-          season_id: string
+          season_id?: string | null
           sessao_cuidado_etico?: string | null
           sessao_pergunta_acesso?: string | null
           sessao_resistencia?: string | null
@@ -9998,6 +10000,7 @@ export type Database = {
           aula_objetivo?: string | null
           aula_pergunta_fechamento?: string | null
           aula_vivencia?: string | null
+          ciclo_id?: string | null
           created_at?: string
           essencia_transformadora?: string | null
           id?: string
@@ -10009,7 +10012,7 @@ export type Database = {
           palestra_narrativa?: string | null
           pergunta_aplicacao_1?: string | null
           pergunta_aplicacao_2?: string | null
-          season_id?: string
+          season_id?: string | null
           sessao_cuidado_etico?: string | null
           sessao_pergunta_acesso?: string | null
           sessao_resistencia?: string | null
@@ -10022,6 +10025,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "season_labs_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: true
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "season_labs_season_id_fkey"
             columns: ["season_id"]
