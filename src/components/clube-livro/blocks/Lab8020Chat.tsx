@@ -41,8 +41,8 @@ const SUGGESTIONS = [
     prompt: `A partir do conteúdo simbólico deste portal, ajude-me a explorar o Campo Pessoal – Jardim da Psique:\n- Onde esse arquétipo ou tema atua em mim?\n- Que emoções, resistências ou imagens surgem?\n- Que aspecto meu pede cuidado ou transformação?\n\nResponda de forma clara, ética, não diagnóstica e aplicável. Nunca trate percepções como verdades absolutas.`,
   },
   {
-    label: 'Jardim da Heroína',
-    prompt: `A partir do conteúdo simbólico deste portal, ajude-me a explorar o Campo Profissional – Jardim da Heroína:\n- Que tipo de movimento esse tema costuma ativar em clientes?\n- Que imagens simbólicas podem emergir em sessão?\n- Que perguntas éticas podem sustentar a escuta?\n- Que cuidado clínico deve ser observado?\n\nResponda de forma clara, ética, não diagnóstica e aplicável. Nunca trate percepções como verdades absolutas.`,
+    label: 'Jardim do Ofício',
+    prompt: `A partir do conteúdo simbólico deste portal, ajude-me a explorar o Campo Profissional – Jardim do Ofício:\n- Que tipo de movimento esse tema costuma ativar em clientes?\n- Que imagens simbólicas podem emergir em sessão?\n- Que perguntas éticas podem sustentar a escuta?\n- Que cuidado clínico deve ser observado?\n\nResponda de forma clara, ética, não diagnóstica e aplicável. Nunca trate percepções como verdades absolutas.`,
   },
   {
     label: 'Tradução Aplicável',
