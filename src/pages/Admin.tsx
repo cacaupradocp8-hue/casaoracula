@@ -61,6 +61,7 @@ const AdminEstudioOracular = lazy(() => import('@/components/admin/AdminEstudioO
 const AdminVitrineCards = lazy(() => import('@/pages/admin/AdminVitrineCards'));
 const AdminPortalJunguianoTab = lazy(() => import('@/components/admin/AdminPortalJunguianoTab').then(m => ({ default: m.AdminPortalJunguianoTab })));
 const AdminCertificacaoTab = lazy(() => import('@/components/admin/AdminCertificacaoTab').then(m => ({ default: m.AdminCertificacaoTab })));
+const AdminEstacoesTab = lazy(() => import('@/components/admin/AdminEstacoesTab').then(m => ({ default: m.AdminEstacoesTab })));
 
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
   { value: 'visitante', label: '👁 Visitante' },
@@ -125,6 +126,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'portal-junguiano': AdminPortalJunguianoTab,
   'certificacao': AdminCertificacaoTab,
   'vitrine': AdminVitrineCards,
+  'estacoes': AdminEstacoesTab,
   'settings': AdminSettingsTab,
   'copy': AdminCopyTab,
 };
