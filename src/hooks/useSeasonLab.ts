@@ -6,12 +6,31 @@ import { toast } from 'sonner';
 export interface SeasonLab {
   id: string;
   season_id: string;
+  // Bloco 1 — Essência Simbólica
   nucleo_vivo: string | null;
   tensao_central: string | null;
   essencia_transformadora: string | null;
+  arquetipo_central: string | null;
+  imagem_organizadora: string | null;
+  transformacao_exigida: string | null;
+  // Bloco 2 — Tradução Profissional: Aula
   traducao_aula: string | null;
+  aula_objetivo: string | null;
+  aula_vivencia: string | null;
+  aula_pergunta_fechamento: string | null;
+  // Bloco 2 — Tradução Profissional: Sessão
   traducao_sessao: string | null;
+  sessao_tema: string | null;
+  sessao_pergunta_acesso: string | null;
+  sessao_cuidado_etico: string | null;
+  sessao_resistencia: string | null;
+  // Bloco 2 — Tradução Profissional: Palestra / Círculo
   traducao_circulo: string | null;
+  palestra_imagem: string | null;
+  palestra_narrativa: string | null;
+  palestra_chamada: string | null;
+  palestra_encerramento: string | null;
+  // Perguntas de aplicação (legacy)
   pergunta_aplicacao_1: string | null;
   pergunta_aplicacao_2: string | null;
 }
@@ -20,9 +39,17 @@ export interface Lab8020Progress {
   id: string;
   user_id: string;
   season_id: string;
+  // Legacy fields
   resposta_1: string | null;
   resposta_2: string | null;
   insight_livre: string | null;
+  // Bloco 3 — Aplicação Encarnada
+  aplicacao_onde: string | null;
+  aplicacao_comportamento: string | null;
+  aplicacao_gesto: string | null;
+  // Bloco 4 — Registro Vivo
+  registro_reflexivo: string | null;
+  notas_profissionais: string | null;
   concluido: boolean;
   concluido_em: string | null;
   created_at: string;
@@ -86,10 +113,15 @@ export function useAllLabProgress() {
   });
 }
 
-interface SaveLabPayload {
+export interface SaveLabPayload {
   resposta_1?: string;
   resposta_2?: string;
   insight_livre?: string;
+  aplicacao_onde?: string;
+  aplicacao_comportamento?: string;
+  aplicacao_gesto?: string;
+  registro_reflexivo?: string;
+  notas_profissionais?: string;
   concluido?: boolean;
 }
 
