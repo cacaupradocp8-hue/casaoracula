@@ -12,6 +12,7 @@ import {
   Home, ChevronRight, ChevronDown, Search, Brain, Moon, CheckCircle2,
   Loader2, Target, BookOpen, Sparkles, GraduationCap, Heart, Feather,
 } from 'lucide-react';
+import { Lab8020Chat } from '@/components/clube-livro/blocks/Lab8020Chat';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -367,6 +368,9 @@ export default function Lab8020Season() {
 
           {/* BLOCO 2 — Tradução Profissional */}
           <BlocoTraducao config={labConfig} />
+
+          {/* BLOCO AI — Guardiã da Integração */}
+          <Lab8020Chat livroTitulo={ciclo.titulo} labConfig={labConfig} />
 
           {/* BLOCO 3 — Aplicação Encarnada */}
           <BlocoAplicacao
