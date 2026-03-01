@@ -17,7 +17,8 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BookOpen, Plus, Pencil, Trash2, Columns } from 'lucide-react';
+import { BookOpen, Plus, Pencil, Trash2, Columns, Map } from 'lucide-react';
+import type { BookTour } from '@/hooks/useBooks';
 
 const CATEGORIES = ['MATRIZ', 'TRAVESSIA', 'PORTA', 'PONTE', 'FUNDACAO'] as const;
 
@@ -114,6 +115,61 @@ function GenerateLessonsButton({ bookId }: { bookId: string }) {
   );
 }
 
+const JORNADAS = ['Heroína', 'Sombra', 'Instinto', 'Liderança', 'Mundo'] as const;
+
+function BookTourForm({ bookId, books, existingTour, onSave }: { bookId: string; books: Book[]; existingTour?: BookTour | null; onSave: () => void }) {
+  const [jornada, setJornada] = useState(existingTour?.jornada || 'Heroína');
+  const [ondeEntra, setOndeEntra] = useState(existingTour?.onde_entra_jornada || '');
+  const [habilidade, setHabilidade] = useState(existingTour?.habilidade_simbolica || '');
+  const [oQueNao, setOQueNao] = useState(existingTour?.o_que_nao_fazer || '');
+  const [comoAtravessar, setComoAtravessar] = useState(existingTour?.como_atravessar || '');
+  const [quandoEncerrar, setQuandoEncerrar] = useState(existingTour?.quando_encerrar || '');
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = async () => {
+    setSaving(true);
+    const payload = {
+      book_id: bookId,
+      jornada,
+      onde_entra_jornada: ondeEntra.trim() || null,
+      habilidade_simbolica: habilidade.trim() || null,
+      o_que_nao_fazer: oQueNao.trim() || null,
+      como_atravessar: comoAtravessar.trim() || null,
+      quando_encerrar: quandoEncerrar.trim() || null,
+      ativo: true,
+    };
+
+    const { error } = existingTour
+      ? await supabase.from('book_tours' as any).update(payload).eq('id', existingTour.id)
+      : await supabase.from('book_tours' as any).insert(payload);
+
+    setSaving(false);
+    if (error) { toast.error(error.message); return; }
+    toast.success(existingTour ? 'Tour atualizado' : 'Tour criado');
+    onSave();
+  };
+
+  const bookTitle = books.find(b => b.id === bookId)?.title || '';
+
+  return (
+    <div className="space-y-3">
+      <p className="text-sm font-medium text-muted-foreground">{bookTitle}</p>
+      <Select value={jornada} onValueChange={setJornada}>
+        <SelectTrigger><SelectValue placeholder="Jornada" /></SelectTrigger>
+        <SelectContent>{JORNADAS.map(j => <SelectItem key={j} value={j}>{j}</SelectItem>)}</SelectContent>
+      </Select>
+      <Textarea placeholder="Onde esta obra entra na Jornada" value={ondeEntra} onChange={e => setOndeEntra(e.target.value)} rows={2} />
+      <Textarea placeholder="Habilidade simbólica desenvolvida" value={habilidade} onChange={e => setHabilidade(e.target.value)} rows={2} />
+      <Textarea placeholder="O que NÃO fazer com esta obra" value={oQueNao} onChange={e => setOQueNao(e.target.value)} rows={2} />
+      <Textarea placeholder="Como atravessar esta obra" value={comoAtravessar} onChange={e => setComoAtravessar(e.target.value)} rows={2} />
+      <Textarea placeholder="Quando encerrar a travessia" value={quandoEncerrar} onChange={e => setQuandoEncerrar(e.target.value)} rows={2} />
+      <div className="flex justify-end">
+        <Button onClick={handleSave} disabled={saving}>{saving ? 'Salvando…' : 'Salvar Tour'}</Button>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminBooks() {
   const { data: books, isLoading } = useAllBooks();
   const { data: cycles } = useAllCycles();
@@ -121,8 +177,19 @@ export default function AdminBooks() {
   const [editingBook, setEditingBook] = useState<Book | undefined>();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
+  const [tourBookId, setTourBookId] = useState<string | null>(null);
+  const [existingTour, setExistingTour] = useState<BookTour | null>(null);
+  const [loadingTour, setLoadingTour] = useState(false);
 
   const { data: lessons } = useBookLessons(selectedBookId || undefined);
+
+  const loadTourForBook = async (bookId: string) => {
+    setTourBookId(bookId);
+    setLoadingTour(true);
+    const { data } = await supabase.from('book_tours' as any).select('*').eq('book_id', bookId).maybeSingle();
+    setExistingTour(data as unknown as BookTour | null);
+    setLoadingTour(false);
+  };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Apagar este livro?')) return;
@@ -144,6 +211,7 @@ export default function AdminBooks() {
             <TabsTrigger value="books">Livros</TabsTrigger>
             <TabsTrigger value="cycles">Ciclos</TabsTrigger>
             <TabsTrigger value="lessons">Aulas-Álbum</TabsTrigger>
+            <TabsTrigger value="tours">Tours</TabsTrigger>
           </TabsList>
 
           {/* === LIVROS === */}
@@ -228,7 +296,7 @@ export default function AdminBooks() {
               </div>
             )}
 
-            {lessons?.map(l => (
+          {lessons?.map(l => (
               <Card key={l.id}>
                 <CardContent className="p-3">
                   <div className="flex items-center gap-2 mb-1">
@@ -240,6 +308,30 @@ export default function AdminBooks() {
                 </CardContent>
               </Card>
             ))}
+          </TabsContent>
+
+          {/* === TOURS === */}
+          <TabsContent value="tours" className="mt-4 space-y-4">
+            <Select value={tourBookId || ''} onValueChange={v => loadTourForBook(v)}>
+              <SelectTrigger><SelectValue placeholder="Selecione um livro para editar o Tour" /></SelectTrigger>
+              <SelectContent>
+                {books?.map(b => <SelectItem key={b.id} value={b.id}>{b.title}</SelectItem>)}
+              </SelectContent>
+            </Select>
+
+            {loadingTour && <p className="text-sm text-muted-foreground animate-pulse">Carregando…</p>}
+
+            {tourBookId && !loadingTour && (
+              <BookTourForm
+                bookId={tourBookId}
+                books={books || []}
+                existingTour={existingTour}
+                onSave={() => {
+                  loadTourForBook(tourBookId);
+                  qc.invalidateQueries({ queryKey: ['book-tour', tourBookId] });
+                }}
+              />
+            )}
           </TabsContent>
         </Tabs>
       </div>
