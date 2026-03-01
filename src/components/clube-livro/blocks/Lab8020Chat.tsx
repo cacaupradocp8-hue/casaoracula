@@ -36,6 +36,18 @@ const SUGGESTIONS = [
     label: 'Aplicar pessoalmente',
     prompt: `Ajude-me a aplicar pessoalmente o conteúdo deste portal:\n- Onde esse arquétipo aparece na minha vida hoje?\n- Qual comportamento pede consciência?\n- Qual gesto concreto posso realizar esta semana?`,
   },
+  {
+    label: 'Jardim da Psique',
+    prompt: `A partir do conteúdo simbólico deste portal, ajude-me a explorar o Campo Pessoal – Jardim da Psique:\n- Onde esse arquétipo ou tema atua em mim?\n- Que emoções, resistências ou imagens surgem?\n- Que aspecto meu pede cuidado ou transformação?\n\nResponda de forma clara, ética, não diagnóstica e aplicável. Nunca trate percepções como verdades absolutas.`,
+  },
+  {
+    label: 'Jardim da Heroína',
+    prompt: `A partir do conteúdo simbólico deste portal, ajude-me a explorar o Campo Profissional – Jardim da Heroína:\n- Que tipo de movimento esse tema costuma ativar em clientes?\n- Que imagens simbólicas podem emergir em sessão?\n- Que perguntas éticas podem sustentar a escuta?\n- Que cuidado clínico deve ser observado?\n\nResponda de forma clara, ética, não diagnóstica e aplicável. Nunca trate percepções como verdades absolutas.`,
+  },
+  {
+    label: 'Tradução Aplicável',
+    prompt: `A partir do conteúdo simbólico deste portal, ajude-me com a Tradução Aplicável:\n- Como esse conteúdo pode virar uma aula?\n- Como pode ser trabalhado em sessão ou círculo?\n- Como pode ser apresentado em palestra ou vivência?\n\nResponda de forma clara, ética, não diagnóstica e aplicável. Nunca trate percepções como verdades absolutas.`,
+  },
 ];
 
 export function Lab8020Chat({ livroTitulo, labConfig }: Lab8020ChatProps) {
