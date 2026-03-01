@@ -5774,11 +5774,16 @@ export type Database = {
       }
       lab_8020_progress: {
         Row: {
+          aplicacao_comportamento: string | null
+          aplicacao_gesto: string | null
+          aplicacao_onde: string | null
           concluido: boolean
           concluido_em: string | null
           created_at: string
           id: string
           insight_livre: string | null
+          notas_profissionais: string | null
+          registro_reflexivo: string | null
           resposta_1: string | null
           resposta_2: string | null
           season_id: string
@@ -5786,11 +5791,16 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          aplicacao_comportamento?: string | null
+          aplicacao_gesto?: string | null
+          aplicacao_onde?: string | null
           concluido?: boolean
           concluido_em?: string | null
           created_at?: string
           id?: string
           insight_livre?: string | null
+          notas_profissionais?: string | null
+          registro_reflexivo?: string | null
           resposta_1?: string | null
           resposta_2?: string | null
           season_id: string
@@ -5798,11 +5808,16 @@ export type Database = {
           user_id: string
         }
         Update: {
+          aplicacao_comportamento?: string | null
+          aplicacao_gesto?: string | null
+          aplicacao_onde?: string | null
           concluido?: boolean
           concluido_em?: string | null
           created_at?: string
           id?: string
           insight_livre?: string | null
+          notas_profissionais?: string | null
+          registro_reflexivo?: string | null
           resposta_1?: string | null
           resposta_2?: string | null
           season_id?: string
@@ -9923,45 +9938,87 @@ export type Database = {
       }
       season_labs: {
         Row: {
+          arquetipo_central: string | null
+          aula_objetivo: string | null
+          aula_pergunta_fechamento: string | null
+          aula_vivencia: string | null
           created_at: string
           essencia_transformadora: string | null
           id: string
+          imagem_organizadora: string | null
           nucleo_vivo: string | null
+          palestra_chamada: string | null
+          palestra_encerramento: string | null
+          palestra_imagem: string | null
+          palestra_narrativa: string | null
           pergunta_aplicacao_1: string | null
           pergunta_aplicacao_2: string | null
           season_id: string
+          sessao_cuidado_etico: string | null
+          sessao_pergunta_acesso: string | null
+          sessao_resistencia: string | null
+          sessao_tema: string | null
           tensao_central: string | null
           traducao_aula: string | null
           traducao_circulo: string | null
           traducao_sessao: string | null
+          transformacao_exigida: string | null
           updated_at: string
         }
         Insert: {
+          arquetipo_central?: string | null
+          aula_objetivo?: string | null
+          aula_pergunta_fechamento?: string | null
+          aula_vivencia?: string | null
           created_at?: string
           essencia_transformadora?: string | null
           id?: string
+          imagem_organizadora?: string | null
           nucleo_vivo?: string | null
+          palestra_chamada?: string | null
+          palestra_encerramento?: string | null
+          palestra_imagem?: string | null
+          palestra_narrativa?: string | null
           pergunta_aplicacao_1?: string | null
           pergunta_aplicacao_2?: string | null
           season_id: string
+          sessao_cuidado_etico?: string | null
+          sessao_pergunta_acesso?: string | null
+          sessao_resistencia?: string | null
+          sessao_tema?: string | null
           tensao_central?: string | null
           traducao_aula?: string | null
           traducao_circulo?: string | null
           traducao_sessao?: string | null
+          transformacao_exigida?: string | null
           updated_at?: string
         }
         Update: {
+          arquetipo_central?: string | null
+          aula_objetivo?: string | null
+          aula_pergunta_fechamento?: string | null
+          aula_vivencia?: string | null
           created_at?: string
           essencia_transformadora?: string | null
           id?: string
+          imagem_organizadora?: string | null
           nucleo_vivo?: string | null
+          palestra_chamada?: string | null
+          palestra_encerramento?: string | null
+          palestra_imagem?: string | null
+          palestra_narrativa?: string | null
           pergunta_aplicacao_1?: string | null
           pergunta_aplicacao_2?: string | null
           season_id?: string
+          sessao_cuidado_etico?: string | null
+          sessao_pergunta_acesso?: string | null
+          sessao_resistencia?: string | null
+          sessao_tema?: string | null
           tensao_central?: string | null
           traducao_aula?: string | null
           traducao_circulo?: string | null
           traducao_sessao?: string | null
+          transformacao_exigida?: string | null
           updated_at?: string
         }
         Relationships: [
