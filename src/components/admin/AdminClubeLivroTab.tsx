@@ -21,10 +21,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { 
   BookOpen, Plus, Pencil, Trash2, ChevronDown, ChevronUp,
-  Sparkles, Headphones, Video, FileText, Calendar, Loader2, Map, GraduationCap, DoorOpen
+  Sparkles, Headphones, Video, FileText, Calendar, Loader2, Map, GraduationCap, DoorOpen, Target
 } from 'lucide-react';
 import { FaseEditorExpandido } from './clube-livro';
 import { PortasManager } from './clube-livro/PortasManager';
+import { LabConfigManager } from './clube-livro/LabConfigManager';
 import { AulaBlocosEditor, type AulaBloco } from './clube-livro/AulaBlocosEditor';
 import { AudioUpload } from './AudioUpload';
 import { CALENDARIO_ANUAL, SEMANAS_PADRAO } from '@/constants/clubeLivroCalendario';
@@ -745,7 +746,7 @@ function CicloCard({
 function CicloDetailTabs({ cicloId }: { cicloId: string }) {
   return (
     <Tabs defaultValue="fases" className="w-full">
-      <TabsList className="grid w-full grid-cols-5">
+      <TabsList className="grid w-full grid-cols-6">
         <TabsTrigger value="fases" className="gap-1 text-xs">
           <Sparkles className="w-3 h-3" />
           Fases
@@ -766,6 +767,10 @@ function CicloDetailTabs({ cicloId }: { cicloId: string }) {
           <Video className="w-3 h-3" />
           Encontros
         </TabsTrigger>
+        <TabsTrigger value="lab8020" className="gap-1 text-xs">
+          <Target className="w-3 h-3" />
+          Lab 80/20
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="fases" className="pt-4">
         <FasesManager cicloId={cicloId} />
@@ -781,6 +786,9 @@ function CicloDetailTabs({ cicloId }: { cicloId: string }) {
       </TabsContent>
       <TabsContent value="encontros" className="pt-4">
         <EncontrosManager cicloId={cicloId} />
+      </TabsContent>
+      <TabsContent value="lab8020" className="pt-4">
+        <LabConfigManager cicloId={cicloId} />
       </TabsContent>
     </Tabs>
   );
