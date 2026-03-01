@@ -5,7 +5,8 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
-import { useBook, useBookLessons, useBookLinksForBook } from '@/hooks/useBooks';
+import { useBook, useBookLessons, useBookLinksForBook, useBookTour } from '@/hooks/useBooks';
+import { BookTourBlock } from '@/components/clube-livro/blocks';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -24,6 +25,7 @@ export default function ClubeLivroLivro() {
   const { data: book, isLoading } = useBook(id);
   const { data: lessons } = useBookLessons(id);
   const { data: bookLinks } = useBookLinksForBook(id);
+  const { data: tour } = useBookTour(id);
 
   if (isLoading) {
     return (
@@ -84,6 +86,22 @@ export default function ClubeLivroLivro() {
 
         {book.description_short && (
           <p className="text-sm text-muted-foreground italic border-l-2 border-amber-500/30 pl-3 mb-6">{book.description_short}</p>
+        )}
+
+        {/* Tour pela Obra — antes dos Portais */}
+        {tour && (
+          <Card className="mb-6">
+            <CardContent className="p-6">
+              <BookTourBlock
+                tour={tour}
+                bookTitle={book.title}
+                onEnterTravessia={() => {
+                  const tabsTrigger = document.querySelector('[data-value="lessons"]') as HTMLElement;
+                  tabsTrigger?.click();
+                }}
+              />
+            </CardContent>
+          </Card>
         )}
 
         <Tabs defaultValue="why" className="w-full">

@@ -1385,6 +1385,56 @@ export type Database = {
           },
         ]
       }
+      book_tours: {
+        Row: {
+          ativo: boolean
+          book_id: string
+          como_atravessar: string | null
+          created_at: string
+          habilidade_simbolica: string | null
+          id: string
+          jornada: string
+          o_que_nao_fazer: string | null
+          onde_entra_jornada: string | null
+          quando_encerrar: string | null
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          book_id: string
+          como_atravessar?: string | null
+          created_at?: string
+          habilidade_simbolica?: string | null
+          id?: string
+          jornada?: string
+          o_que_nao_fazer?: string | null
+          onde_entra_jornada?: string | null
+          quando_encerrar?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          book_id?: string
+          como_atravessar?: string | null
+          created_at?: string
+          habilidade_simbolica?: string | null
+          id?: string
+          jornada?: string
+          o_que_nao_fazer?: string | null
+          onde_entra_jornada?: string | null
+          quando_encerrar?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_tours_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: true
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       books: {
         Row: {
           author: string | null

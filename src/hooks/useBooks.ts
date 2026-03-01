@@ -185,3 +185,32 @@ export function useAllCycles() {
     },
   });
 }
+
+export interface BookTour {
+  id: string;
+  book_id: string;
+  jornada: string;
+  onde_entra_jornada: string | null;
+  habilidade_simbolica: string | null;
+  o_que_nao_fazer: string | null;
+  como_atravessar: string | null;
+  quando_encerrar: string | null;
+  ativo: boolean;
+}
+
+export function useBookTour(bookId: string | undefined) {
+  return useQuery({
+    queryKey: ['book-tour', bookId],
+    enabled: !!bookId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('book_tours' as any)
+        .select('*')
+        .eq('book_id', bookId!)
+        .eq('ativo', true)
+        .maybeSingle() as { data: BookTour | null; error: any };
+      if (error) throw error;
+      return data;
+    },
+  });
+}
