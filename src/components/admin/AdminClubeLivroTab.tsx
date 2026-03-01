@@ -383,48 +383,47 @@ export function AdminClubeLivroTab() {
             Círculos de Leitura Simbólica
           </h2>
           <p className="text-sm text-muted-foreground">
-            Gerencie ciclos, fases, perguntas, escutas e encontros.
+            Governança, ciclos, portais, experiência e ritmo do Clube.
           </p>
-        </div>
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            onClick={() => setImportDialogOpen(true)} 
-            className="gap-2"
-          >
-            <Calendar className="w-4 h-4" />
-            Importar Calendário Anual
-          </Button>
-          <Button onClick={handleNewCiclo} className="gap-2">
-            <Plus className="w-4 h-4" />
-            Novo Ciclo
-          </Button>
         </div>
       </div>
 
-      {/* Abas: Mapa de Jornadas + Gerenciar Ciclos */}
-      <Tabs defaultValue="mapa">
-        <TabsList className="mb-4">
-          <TabsTrigger value="mapa" className="gap-2">
+      {/* 5 Abas principais */}
+      <Tabs defaultValue="estrutura-mae">
+        <TabsList className="mb-4 flex-wrap h-auto gap-1">
+          <TabsTrigger value="estrutura-mae" className="gap-2 text-xs">
             <Map className="w-4 h-4" />
-            Mapa de Jornadas
+            Estrutura-Mãe
           </TabsTrigger>
-          <TabsTrigger value="ciclos" className="gap-2">
+          <TabsTrigger value="ciclos" className="gap-2 text-xs">
             <BookOpen className="w-4 h-4" />
-            Gerenciar Ciclos
+            Ciclos
+          </TabsTrigger>
+          <TabsTrigger value="portais" className="gap-2 text-xs">
+            <DoorOpen className="w-4 h-4" />
+            Portais
+          </TabsTrigger>
+          <TabsTrigger value="experiencia" className="gap-2 text-xs">
+            <Sparkles className="w-4 h-4" />
+            Experiência da Aluna
+          </TabsTrigger>
+          <TabsTrigger value="tempo-ritmo" className="gap-2 text-xs">
+            <Calendar className="w-4 h-4" />
+            Tempo & Ritmo
           </TabsTrigger>
         </TabsList>
 
-        {/* ABA: Mapa de Jornadas */}
-        <TabsContent value="mapa" className="space-y-6">
-
-          {/* Bloco: Como usar este calendário */}
+        {/* ============================================ */}
+        {/* ABA 1 — ESTRUTURA-MÃE (Governança)          */}
+        {/* ============================================ */}
+        <TabsContent value="estrutura-mae" className="space-y-6">
+          {/* Como usar */}
           <Card className="bg-muted/20 border-gold/20">
             <CardContent className="pt-5 pb-4">
               <div className="flex items-center gap-2 mb-3">
                 <Sparkles className="w-4 h-4 text-gold" />
                 <span className="text-xs uppercase tracking-widest text-gold font-medium">
-                  Como usar este calendário
+                  Governança do Clube
                 </span>
               </div>
               <p className="text-sm font-medium text-foreground mb-2">
@@ -436,7 +435,7 @@ export function AdminClubeLivroTab() {
               </p>
               <div className="flex flex-wrap gap-2 items-center text-xs text-muted-foreground">
                 <span className="font-medium text-foreground">Fluxo esperado:</span>
-                {['Calendário', 'Livro', 'Portal', 'Laboratório 80/20', 'Jardins'].map((step, i, arr) => (
+                {['Calendário', 'Livro', 'Tour', 'Portais', 'Laboratório 80/20', 'Jardins'].map((step, i, arr) => (
                   <span key={step} className="flex items-center gap-1">
                     <span className="px-2 py-0.5 rounded bg-muted text-foreground text-xs">{step}</span>
                     {i < arr.length - 1 && <span className="text-muted-foreground/50">→</span>}
@@ -449,116 +448,173 @@ export function AdminClubeLivroTab() {
             </CardContent>
           </Card>
 
-          {isLoading ? (
-            <div className="animate-pulse space-y-4">
-              <div className="h-20 bg-muted rounded" />
-              <div className="h-20 bg-muted rounded" />
-            </div>
-          ) : (
-            <div className="space-y-8">
-              {JORNADAS_ADMIN.map((jornada, jornadaIndex) => {
-                const mesBase = jornadaIndex * 4;
-                return (
-                  <div key={jornada.chave} className="space-y-3">
-                    {/* Cabeçalho da jornada */}
-                    <div className={cn(
-                      'rounded-xl p-4 bg-gradient-to-br border',
-                      jornada.corBg,
-                      jornada.corBorda,
-                    )}>
-                      <div className="flex items-start gap-3">
-                        <span className={cn('text-2xl leading-none mt-0.5', jornada.corLabel)}>
-                          {jornada.simbolo}
-                        </span>
-                        <div>
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className="font-display text-base text-foreground">
-                              {jornada.nome}
-                            </h3>
-                            <Badge variant="outline" className={cn('text-xs', jornada.corLabel, jornada.corBorda)}>
-                              {jornada.subtitulo}
-                            </Badge>
+          {/* Mapa de Jornadas */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <Map className="w-4 h-4 text-gold" />
+              Mapa do Ano Oracular — Jornadas
+            </h3>
+            {isLoading ? (
+              <div className="animate-pulse space-y-4">
+                <div className="h-20 bg-muted rounded" />
+                <div className="h-20 bg-muted rounded" />
+              </div>
+            ) : (
+              <div className="space-y-8">
+                {JORNADAS_ADMIN.map((jornada, jornadaIndex) => {
+                  const mesBase = jornadaIndex * 4;
+                  return (
+                    <div key={jornada.chave} className="space-y-3">
+                      <div className={cn(
+                        'rounded-xl p-4 bg-gradient-to-br border',
+                        jornada.corBg,
+                        jornada.corBorda,
+                      )}>
+                        <div className="flex items-start gap-3">
+                          <span className={cn('text-2xl leading-none mt-0.5', jornada.corLabel)}>
+                            {jornada.simbolo}
+                          </span>
+                          <div>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <h3 className="font-display text-base text-foreground">
+                                {jornada.nome}
+                              </h3>
+                              <Badge variant="outline" className={cn('text-xs', jornada.corLabel, jornada.corBorda)}>
+                                {jornada.subtitulo}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground mt-0.5">{jornada.descricao}</p>
                           </div>
-                          <p className="text-sm text-muted-foreground mt-0.5">{jornada.descricao}</p>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Grid de livros */}
-                    <div className="grid gap-2 sm:grid-cols-2">
-                      {jornada.livros.map((livroRef, i) => {
-                        const ciclo = ciclos?.find(c => matchLivroAdmin(c.titulo, livroRef));
-                        const mes = mesBase + i + 1;
-                        return (
-                          <div
-                            key={livroRef}
-                            className={cn(
-                              'flex items-center gap-3 p-3 rounded-lg border bg-card/50',
-                              ciclo ? 'border-border' : 'border-dashed border-muted-foreground/30 opacity-60',
-                            )}
-                          >
-                            {/* Thumbnail */}
-                            <div className="shrink-0">
-                              {ciclo?.capa_url ? (
-                                <img src={ciclo.capa_url} alt={ciclo.titulo} className="w-10 h-14 object-cover rounded" />
-                              ) : (
-                                <div className="w-10 h-14 bg-muted rounded flex items-center justify-center">
-                                  <BookOpen className="w-4 h-4 text-muted-foreground" />
-                                </div>
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        {jornada.livros.map((livroRef, i) => {
+                          const ciclo = ciclos?.find(c => matchLivroAdmin(c.titulo, livroRef));
+                          const mes = mesBase + i + 1;
+                          return (
+                            <div
+                              key={livroRef}
+                              className={cn(
+                                'flex items-center gap-3 p-3 rounded-lg border bg-card/50',
+                                ciclo ? 'border-border' : 'border-dashed border-muted-foreground/30 opacity-60',
                               )}
-                            </div>
-                            {/* Info */}
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-1.5 mb-0.5">
-                                <span className="text-[10px] font-mono text-muted-foreground">
-                                  Mês {mes.toString().padStart(2, '0')}
-                                </span>
-                                {ciclo && (
-                                  <>
-                                    <span className="text-muted-foreground/40 text-[10px]">·</span>
-                                    {ciclo.publicado ? (
-                                      <Badge className="text-[10px] px-1 py-0 h-4 bg-green-500/20 text-green-400 border-0">
-                                        Publicado
-                                      </Badge>
-                                    ) : (
-                                      <Badge variant="outline" className="text-[10px] px-1 py-0 h-4">
-                                        Rascunho
-                                      </Badge>
-                                    )}
-                                  </>
+                            >
+                              <div className="shrink-0">
+                                {ciclo?.capa_url ? (
+                                  <img src={ciclo.capa_url} alt={ciclo.titulo} className="w-10 h-14 object-cover rounded" />
+                                ) : (
+                                  <div className="w-10 h-14 bg-muted rounded flex items-center justify-center">
+                                    <BookOpen className="w-4 h-4 text-muted-foreground" />
+                                  </div>
                                 )}
                               </div>
-                              <p className="text-sm font-medium text-foreground truncate">
-                                {ciclo?.titulo || livroRef}
-                              </p>
-                              <p className="text-xs text-muted-foreground truncate">
-                                {ciclo?.autor_livro || '— não cadastrado'}
-                              </p>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-1.5 mb-0.5">
+                                  <span className="text-[10px] font-mono text-muted-foreground">
+                                    Mês {mes.toString().padStart(2, '0')}
+                                  </span>
+                                  {ciclo && (
+                                    <>
+                                      <span className="text-muted-foreground/40 text-[10px]">·</span>
+                                      {ciclo.publicado ? (
+                                        <Badge className="text-[10px] px-1 py-0 h-4 bg-green-500/20 text-green-400 border-0">
+                                          Publicado
+                                        </Badge>
+                                      ) : (
+                                        <Badge variant="outline" className="text-[10px] px-1 py-0 h-4">
+                                          Rascunho
+                                        </Badge>
+                                      )}
+                                    </>
+                                  )}
+                                </div>
+                                <p className="text-sm font-medium text-foreground truncate">
+                                  {ciclo?.titulo || livroRef}
+                                </p>
+                                <p className="text-xs text-muted-foreground truncate">
+                                  {ciclo?.autor_livro || '— não cadastrado'}
+                                </p>
+                              </div>
+                              {ciclo && (
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="shrink-0"
+                                  onClick={() => { setEditingCiclo(ciclo); setCicloDialogOpen(true); }}
+                                >
+                                  <Pencil className="w-3.5 h-3.5" />
+                                </Button>
+                              )}
                             </div>
-                            {/* Editar */}
-                            {ciclo && (
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="shrink-0"
-                                onClick={() => { setEditingCiclo(ciclo); setCicloDialogOpen(true); }}
-                              >
-                                <Pencil className="w-3.5 h-3.5" />
-                              </Button>
-                            )}
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Regras de Progressão */}
+          <Card className="border-primary/10">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Target className="w-4 h-4 text-gold" />
+                Regras de Progressão
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm text-muted-foreground">
+              <p>🌑 <strong>Portal</strong> — sempre aberto</p>
+              <p>🌒 <strong>Travessia</strong> — aberta</p>
+              <p>🌓 <strong>Escuta</strong> — desbloqueia após 30% da Travessia</p>
+              <p>🌔 <strong>Laboratório</strong> — desbloqueia após 70% da Travessia</p>
+              <p>🌕 <strong>Registro</strong> — desbloqueia após Laboratório concluído</p>
+              <p>✨ <strong>Integração</strong> — desbloqueia após Registro salvo</p>
+            </CardContent>
+          </Card>
+
+          {/* Níveis de Acesso */}
+          <Card className="border-primary/10">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <GraduationCap className="w-4 h-4 text-gold" />
+                Níveis de Acesso
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm text-muted-foreground">
+              <p>👁 <strong>Visitante</strong> — página institucional, Mapa do Ano, Mensagem do Campo</p>
+              <p>📖 <strong>Assinante</strong> — travessia do livro ativo + Lab 80/20 da estação atual</p>
+              <p>🎓 <strong>Aluna/Formação</strong> — acesso irrestrito a estações, laboratórios e ferramentas</p>
+            </CardContent>
+          </Card>
         </TabsContent>
 
-        {/* ABA: Gerenciar Ciclos (lista completa original) */}
-        <TabsContent value="ciclos">
+        {/* ============================================ */}
+        {/* ABA 2 — CICLOS                              */}
+        {/* ============================================ */}
+        <TabsContent value="ciclos" className="space-y-4">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <p className="text-sm text-muted-foreground">
+              {ciclos?.length || 0} ciclo(s) cadastrado(s)
+            </p>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                onClick={() => setImportDialogOpen(true)} 
+                className="gap-2"
+              >
+                <Calendar className="w-4 h-4" />
+                Importar Calendário Anual
+              </Button>
+              <Button onClick={handleNewCiclo} className="gap-2">
+                <Plus className="w-4 h-4" />
+                Novo Ciclo
+              </Button>
+            </div>
+          </div>
+
           {isLoading ? (
             <div className="animate-pulse space-y-4">
               <div className="h-20 bg-muted rounded" />
@@ -594,6 +650,141 @@ export function AdminClubeLivroTab() {
               </CardContent>
             </Card>
           )}
+        </TabsContent>
+
+        {/* ============================================ */}
+        {/* ABA 3 — PORTAIS                             */}
+        {/* ============================================ */}
+        <TabsContent value="portais" className="space-y-4">
+          <Card className="bg-muted/20 border-gold/20">
+            <CardContent className="pt-5 pb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <DoorOpen className="w-4 h-4 text-gold" />
+                <span className="text-xs uppercase tracking-widest text-gold font-medium">
+                  Portais por Ciclo
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Selecione um ciclo abaixo para gerenciar seus portais. Todo portal deve estar vinculado a um ciclo e a uma jornada.
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Filtro por ciclo */}
+          <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground">Filtrar por Ciclo</Label>
+            <Select
+              value={selectedCiclo || ''}
+              onValueChange={(v) => setSelectedCiclo(v || null)}
+            >
+              <SelectTrigger className="w-full sm:w-80">
+                <SelectValue placeholder="Selecione um ciclo..." />
+              </SelectTrigger>
+              <SelectContent>
+                {ciclos?.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.titulo} {c.autor_livro ? `— ${c.autor_livro}` : ''}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {selectedCiclo ? (
+            <PortasManager cicloId={selectedCiclo} />
+          ) : (
+            <div className="text-center py-8 text-muted-foreground text-sm">
+              <DoorOpen className="w-8 h-8 mx-auto mb-3 opacity-40" />
+              Selecione um ciclo para ver e gerenciar os portais.
+            </div>
+          )}
+        </TabsContent>
+
+        {/* ============================================ */}
+        {/* ABA 4 — EXPERIÊNCIA DA ALUNA                */}
+        {/* ============================================ */}
+        <TabsContent value="experiencia" className="space-y-4">
+          <Card className="bg-muted/20 border-gold/20">
+            <CardContent className="pt-5 pb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles className="w-4 h-4 text-gold" />
+                <span className="text-xs uppercase tracking-widest text-gold font-medium">
+                  Orientação da Aluna
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Conteúdos que orientam a aluna sobre como navegar e aproveitar o Clube de Leitura.
+              </p>
+            </CardContent>
+          </Card>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Card className="border-primary/10">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">🏠 Tour da Casa Orácula</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-xs text-muted-foreground">
+                  Página institucional de boas-vindas com apresentação da casa, regras e cultura.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-primary/10">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">📚 Tour do Clube de Leitura</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-xs text-muted-foreground">
+                  Tour pela Obra — orientação simbólica obrigatória antes dos portais. Gerenciar em Admin → Livros → Tours.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-primary/10">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">🎧 Como Ler no Clube</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-xs text-muted-foreground">
+                  Áudio e slides "Como ler este livro" — configurável dentro de cada Ciclo (aba Ciclos → editar ciclo).
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-primary/10">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">📖 Como Escolhemos os Livros</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-xs text-muted-foreground">
+                  Manifesto e slides "Por que este livro" — configurável dentro de cada Ciclo (aba Ciclos → editar ciclo).
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* ============================================ */}
+        {/* ABA 5 — TEMPO & RITMO                       */}
+        {/* ============================================ */}
+        <TabsContent value="tempo-ritmo" className="space-y-4">
+          <Card className="bg-muted/20 border-gold/20">
+            <CardContent className="pt-5 pb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Calendar className="w-4 h-4 text-gold" />
+                <span className="text-xs uppercase tracking-widest text-gold font-medium">
+                  Liberação Simbólica
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Gerencie estações ativas, futuras e pausas. A estação ativa define qual conteúdo está liberado para assinantes.
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Estações resumo inline */}
+          <TempoRitmoEstacoes ciclos={ciclos || []} />
         </TabsContent>
       </Tabs>
 
@@ -673,6 +864,94 @@ export function AdminClubeLivroTab() {
     </div>
   );
 
+}
+
+// ============================================
+// TempoRitmoEstacoes - Resumo de estações para aba Tempo & Ritmo
+// ============================================
+function TempoRitmoEstacoes({ ciclos }: { ciclos: Ciclo[] }) {
+  const { data: seasons, isLoading } = useQuery({
+    queryKey: ['admin-oracular-seasons-resumo'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('oracular_seasons')
+        .select('*')
+        .order('ordem', { ascending: true });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  if (isLoading) return <div className="animate-pulse h-20 bg-muted rounded" />;
+
+  const ativa = seasons?.find((s: any) => s.status === 'ativa');
+  const futuras = seasons?.filter((s: any) => s.status === 'planejada') || [];
+  const concluidas = seasons?.filter((s: any) => s.status === 'concluida') || [];
+
+  return (
+    <div className="space-y-4">
+      {/* Estação Ativa */}
+      {ativa ? (
+        <Card className="border-gold/30 bg-gold/5">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm flex items-center gap-2">
+              <span className="text-lg">{(ativa as any).simbolo || '☀️'}</span>
+              Estação Ativa: {(ativa as any).nome_estacao}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-xs text-muted-foreground space-y-1">
+            {(ativa as any).periodo && <p>📅 Período: {(ativa as any).periodo}</p>}
+            {(ativa as any).foco_travessia && <p>🎯 Foco: {(ativa as any).foco_travessia}</p>}
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="border-dashed">
+          <CardContent className="py-6 text-center text-sm text-muted-foreground">
+            Nenhuma estação ativa. Ative uma em Casa da Formação → Estações Oráculares.
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Estações Futuras */}
+      {futuras.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Estações Futuras</h4>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {futuras.map((s: any) => (
+              <Card key={s.id} className="border-primary/10">
+                <CardContent className="py-3 px-4">
+                  <p className="text-sm font-medium flex items-center gap-2">
+                    <span>{s.simbolo || '🌙'}</span>
+                    {s.nome_estacao}
+                  </p>
+                  {s.periodo && <p className="text-xs text-muted-foreground mt-1">{s.periodo}</p>}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Concluídas */}
+      {concluidas.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Concluídas</h4>
+          <div className="grid gap-2 sm:grid-cols-3">
+            {concluidas.map((s: any) => (
+              <div key={s.id} className="flex items-center gap-2 text-xs text-muted-foreground p-2 rounded bg-muted/30">
+                <span>{s.simbolo || '✓'}</span>
+                <span>{s.nome_estacao}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <p className="text-xs text-muted-foreground italic">
+        Para gerenciar estações completas, vá em Casa da Formação → Estações Oráculares.
+      </p>
+    </div>
+  );
 }
 
 // ============================================
