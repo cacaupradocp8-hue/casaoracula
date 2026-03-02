@@ -30,45 +30,43 @@ serve(async (req) => {
       `Phase ${e.numero}: "${e.titulo}" (${e.fase}) - ${e.tema_central}`
     ).join(". ");
 
-    const imagePrompt = `Create a WIDE PANORAMIC illustrated mind-map infographic, 16:9 landscape format. This is NOT a card or poster — it is a VISUAL JOURNEY MAP with interconnected illustrated scenes flowing horizontally from left to right.
+    const imagePrompt = `Create a WIDE HORIZONTAL PANORAMIC illustrated journey map. The image MUST be in LANDSCAPE orientation (wider than tall, 16:9 ratio). Fill the ENTIRE canvas edge-to-edge with no empty margins.
 
-TITLE (large, elegant, centered at top): "${estrutura.titulo_pedagogico || livro_titulo}"
-SUBTITLE: "Método de Leitura Oracular — ${livro_titulo}"
+CRITICAL LAYOUT RULES:
+- HORIZONTAL layout only. Width is much greater than height.
+- NO cards, NO boxes, NO grids, NO vertical stacking.
+- Content flows LEFT to RIGHT as ONE continuous illustrated landscape.
+- Every area of the canvas must contain visual detail — no large blank spaces.
+- All text labels must be SHORT (max 4 words) and in CORRECT Portuguese (Brazil).
 
-LAYOUT STRUCTURE — CRITICAL:
-- The entire image is ONE continuous panoramic illustration, like a narrative mural or story map
-- The background is a continuous mystical landscape: enchanted forests, ancient paths, moonlit clearings, mystical doorways
-- There are ${encontros.length} MAJOR VISUAL SCENES arranged left-to-right, each representing a phase of the journey
-- Scenes flow into each other organically through paths, vines, roots, rivers — NO hard borders or card frames
-- Each scene has a TITLE LABEL and a SHORT DESCRIPTION overlaid on scroll/parchment elements
-- Between scenes, symbolic creatures or objects serve as visual bridges (wolves, owls, serpents, keys, doors)
+STRUCTURE — ${encontros.length} connected zones flowing left to right across the full width:
+${encontros.map((e: any, i: number) => `Zone ${i + 1}: "${e.titulo}" (${e.fase})`).join(' → ')}
 
-THE ${encontros.length} SCENES (left to right):
-${encontros.map((e: any, i: number) => `Scene ${i + 1}: "${e.titulo}" — Phase: ${e.fase}. Theme: ${e.tema_central}. Visual motif: symbolic scene representing this transformation stage.`).join('\n')}
+Each zone is a distinct illustrated scene blending into the next through organic transitions (paths, rivers, roots, vines). NO hard borders between zones.
 
-SYMBOLIC ELEMENTS TO INCLUDE:
-- Archetypal fields: ${arquetipos.slice(0, 4).join(', ')}
-- Central tensions (shown as contrasting visual pairs): ${tensoes.slice(0, 3).join(', ')}
-- At bottom center: a comparison area showing two psychic states side by side (connected vs disconnected)
+VISUAL ELEMENTS PER ZONE:
+- A unique symbolic scene (mystical forest, moonlit clearing, ancient doorway, sacred garden)
+- A small parchment banner with the zone title in Portuguese
+- Symbolic creatures or objects as bridges between zones (owl, wolf, serpent, key, door)
 
-ART STYLE — MANDATORY:
-- Rich, organic watercolor-style illustrations with flowing botanical elements (vines, ancient trees, roots, flowers)
-- Mystical feminine silhouettes (NO realistic faces) — hooded figures, dancing silhouettes, seated meditation poses
-- Symbolic animals: wolves, owls, serpents, deer
-- Parchment scroll overlays for text labels
-- Color palette: warm earth tones (bone white, sepia, warm browns), deep forest greens, muted burgundy, soft gold accents
-- Ethereal lighting with moonlight and firefly-like particles
-- Overall mood: contemplative, ritualistic, archetypal — like an illustrated fairy tale map
+BOTTOM STRIP: A thin decorative banner spanning full width: "✦ Método de Leitura Oracular — Casa Orácula ✦"
 
-DO NOT create:
-- Flat cards, grids, or boxed layouts
-- Modern/corporate infographic styles
-- Realistic human faces
-- Bright neon colors
+TOP: Title "${estrutura.titulo_pedagogico || livro_titulo}" centered, elegant serif font on parchment ribbon.
 
-Footer banner: "✦ Método de Leitura Oracular — Casa Orácula ✦"
+MANDATORY ART STYLE:
+- Watercolor illustration, botanical details (vines, ancient trees, flowers, roots)
+- Mystical feminine silhouettes only (hooded figures, meditation poses) — NO realistic faces
+- Color palette: bone white, warm sepia, deep forest green, muted burgundy, soft gold
+- Ethereal moonlight atmosphere with firefly particles
+- Mood: contemplative, ritualistic, archetypal fairy-tale map
 
-Ultra high resolution, professional illustrated mind-map infographic quality.`;
+FORBIDDEN:
+- Vertical or square compositions
+- Cards, grids, boxed layouts, modern/corporate styles
+- Realistic human faces or bright neon colors
+- Large empty areas — fill the entire canvas
+
+Ultra high resolution panoramic illustration.`;
 
     console.log("Generating infographic image...");
 
