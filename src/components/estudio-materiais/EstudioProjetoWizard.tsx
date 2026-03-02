@@ -10,12 +10,11 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import {
   ArrowLeft, ArrowRight, BookOpen, Upload, Loader2, Sparkles,
-  FileText, Network, Image, Check, Download,
+  FileText, Image, Check, Download,
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import EstudioEstruturaView from './EstudioEstruturaView';
 import EstudioPlaybookPreview from './EstudioPlaybookPreview';
-import EstudioMapaMental from './EstudioMapaMental';
 import EstudioInfografico from './EstudioInfografico';
 
 interface Props {
@@ -419,15 +418,12 @@ export default function EstudioProjetoWizard({ projectId, onClose }: Props) {
         {step === 'results' && estrutura && (
           <div className="space-y-6">
             <Tabs defaultValue="estrutura" className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="estrutura" className="gap-1 text-xs sm:text-sm">
                   <Check className="w-3.5 h-3.5" /> Estrutura
                 </TabsTrigger>
                 <TabsTrigger value="playbook" className="gap-1 text-xs sm:text-sm">
                   <FileText className="w-3.5 h-3.5" /> Playbook
-                </TabsTrigger>
-                <TabsTrigger value="mapa" className="gap-1 text-xs sm:text-sm">
-                  <Network className="w-3.5 h-3.5" /> Mapa Mental
                 </TabsTrigger>
                 <TabsTrigger value="infografico" className="gap-1 text-xs sm:text-sm">
                   <Image className="w-3.5 h-3.5" /> Infográfico
@@ -458,9 +454,8 @@ export default function EstudioProjetoWizard({ projectId, onClose }: Props) {
                 />
               </TabsContent>
 
-              <TabsContent value="mapa">
-                <EstudioMapaMental estrutura={estrutura} />
-              </TabsContent>
+
+
 
               <TabsContent value="infografico">
                 <EstudioInfografico
