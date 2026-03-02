@@ -19,33 +19,37 @@ const FASE_ICONS: Record<string, string> = {
 
 export default function EstudioPlaybookPreview({ estrutura, nomeMentora, nomeGrupo, livroTitulo }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
-
   const handlePrint = () => window.print();
-
   const handleDownload = async () => {
     if (!contentRef.current) return;
     try {
-      const canvas = await html2canvas(contentRef.current, {
-        scale: 2,
-        backgroundColor: '#0A0A0A',
-        useCORS: true,
-      });
+      const canvas = await html2canvas(contentRef.current, { scale: 2, backgroundColor: '#000000', useCORS: true });
       const link = document.createElement('a');
       link.download = `playbook-${livroTitulo.toLowerCase().replace(/\s+/g, '-')}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
-    } catch (err) {
-      console.error('Download error:', err);
-    }
+    } catch (err) { console.error('Download error:', err); }
   };
 
   if (!estrutura) return null;
-
   const jornada = estrutura.jornada_predominante || 'Individuação';
+
+  // Shared inline styles for the self-contained printable document
+  const gold = '#C6A75E';
+  const goldDim = '#C6A75E66';
+  const goldFaint = '#C6A75E22';
+  const cream = '#F0E8D8';
+  const creamDim = '#D4C9B899';
+  const bg = '#000000';
+  const cardBg = 'rgba(255,255,255,0.02)';
+  const cardBorder = 'rgba(198,167,94,0.15)';
+  const alertBg = 'rgba(180,60,60,0.08)';
+  const alertBorder = 'rgba(180,60,60,0.25)';
+  const ritualBg = 'rgba(198,167,94,0.06)';
 
   return (
     <div className="space-y-4 mt-4">
-      <div className="flex gap-2 justify-end">
+      <div className="flex gap-2 justify-end print:hidden">
         <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
           <Printer className="w-4 h-4" /> Imprimir
         </Button>
@@ -57,78 +61,80 @@ export default function EstudioPlaybookPreview({ estrutura, nomeMentora, nomeGru
       <div
         ref={contentRef}
         className="mx-auto max-w-2xl print:max-w-none"
-        style={{ fontFamily: "'Georgia', 'Garamond', serif", color: '#E8E0D4' }}
+        style={{ fontFamily: "'Cormorant Garamond', 'Georgia', serif", color: cream, background: bg }}
       >
-        {/* ═══ CAPA ═══ */}
+        {/* ═══════════ CAPA ═══════════ */}
         <div
-          className="rounded-t-lg p-10 text-center space-y-5"
           style={{
-            background: 'linear-gradient(180deg, #0A0F0A 0%, #1A2A1F 50%, #0A0F0A 100%)',
-            minHeight: '340px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            borderBottom: '2px solid #C6A75E',
+            background: `radial-gradient(ellipse at 50% 30%, rgba(198,167,94,0.12) 0%, transparent 60%), ${bg}`,
+            padding: '64px 40px',
+            textAlign: 'center',
+            borderBottom: `1px solid ${goldFaint}`,
+            minHeight: '380px',
+            display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '16px',
           }}
         >
-          <p className="text-xs tracking-[0.4em] uppercase" style={{ color: '#C6A75E' }}>
-            Círculo de Leitura Simbólica
-          </p>
-          <h1 className="text-2xl font-bold leading-tight" style={{ color: '#F4EFE6' }}>
-            {estrutura.titulo_pedagogico || livroTitulo}
-          </h1>
-          <p className="text-sm opacity-70">{livroTitulo}</p>
-          <div className="flex justify-center gap-6 pt-2">
-            <span className="text-xs px-3 py-1 rounded-full" style={{ border: '1px solid #C6A75E44', color: '#C6A75E' }}>
+          {/* Ambient mist glow */}
+          <div style={{ position: 'relative' }}>
+            <p style={{ fontSize: '10px', letterSpacing: '0.45em', textTransform: 'uppercase', color: goldDim, marginBottom: '8px' }}>
+              Círculo de Leitura Simbólica
+            </p>
+            <h1 style={{ fontSize: '28px', fontWeight: 700, color: cream, lineHeight: 1.3, margin: '0 0 8px' }}>
+              {estrutura.titulo_pedagogico || livroTitulo}
+            </h1>
+            <p style={{ fontSize: '14px', color: creamDim }}>{livroTitulo}</p>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '12px' }}>
+            <span style={{ fontSize: '11px', padding: '4px 14px', borderRadius: '20px', border: `1px solid ${goldFaint}`, color: gold }}>
               Jornada: {jornada}
             </span>
-            <span className="text-xs px-3 py-1 rounded-full" style={{ border: '1px solid #C6A75E44', color: '#C6A75E' }}>
+            <span style={{ fontSize: '11px', padding: '4px 14px', borderRadius: '20px', border: `1px solid ${goldFaint}`, color: gold }}>
               {estrutura.encontros?.length || 4} Encontros
             </span>
           </div>
-          <div className="pt-3 space-y-1">
-            {nomeMentora && <p className="text-sm" style={{ color: '#C6A75E' }}>{nomeMentora}</p>}
-            {nomeGrupo && <p className="text-xs opacity-60">{nomeGrupo}</p>}
-          </div>
-        </div>
 
-        {/* ═══ CORPO ═══ */}
-        <div className="rounded-b-lg" style={{ backgroundColor: '#0F1410' }}>
-
-          {/* Essência 80/20 */}
-          <div className="p-8" style={{ borderBottom: '1px solid #C6A75E22' }}>
-            <div className="flex items-center gap-2 mb-4">
-              <span style={{ color: '#C6A75E', fontSize: '18px' }}>✦</span>
-              <h2 className="text-sm font-bold tracking-wide uppercase" style={{ color: '#C6A75E' }}>
-                Essência 80/20
-              </h2>
-            </div>
-            <p className="text-sm leading-relaxed" style={{ color: '#D4C9B8', lineHeight: '1.8' }}>
-              {estrutura.essencia_8020}
-            </p>
-          </div>
-
-          {/* Mapa Simbólico */}
-          {estrutura.mapa_simbolico && (
-            <div className="px-8 py-6" style={{ borderBottom: '1px solid #C6A75E22' }}>
-              <h2 className="text-sm font-bold mb-3" style={{ color: '#8B9E82' }}>
-                ◈ Paisagem Interior
-              </h2>
-              <p className="text-xs leading-relaxed italic" style={{ color: '#A89B88', lineHeight: '1.8' }}>
-                {estrutura.mapa_simbolico}
-              </p>
+          {(nomeMentora || nomeGrupo) && (
+            <div style={{ marginTop: '16px' }}>
+              {nomeMentora && <p style={{ fontSize: '14px', color: gold }}>{nomeMentora}</p>}
+              {nomeGrupo && <p style={{ fontSize: '12px', color: goldDim }}>{nomeGrupo}</p>}
             </div>
           )}
+        </div>
 
-          {/* Tensões & Campos */}
-          <div className="px-8 py-6 grid grid-cols-2 gap-6" style={{ borderBottom: '1px solid #C6A75E22' }}>
+        {/* ═══════════ ESSÊNCIA 80/20 ═══════════ */}
+        <div style={{ padding: '40px 36px', borderBottom: `1px solid ${goldFaint}` }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+            <span style={{ color: gold, fontSize: '20px' }}>✦</span>
+            <h2 style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: gold, margin: 0 }}>
+              Essência 80/20
+            </h2>
+          </div>
+          <p style={{ fontSize: '14px', lineHeight: 1.9, color: cream, margin: 0 }}>
+            {estrutura.essencia_8020}
+          </p>
+        </div>
+
+        {/* Paisagem Interior */}
+        {estrutura.mapa_simbolico && (
+          <div style={{ padding: '32px 36px', borderBottom: `1px solid ${goldFaint}`, background: cardBg }}>
+            <h2 style={{ fontSize: '12px', fontWeight: 700, color: goldDim, marginBottom: '12px' }}>◈ Paisagem Interior</h2>
+            <p style={{ fontSize: '13px', lineHeight: 1.85, color: creamDim, fontStyle: 'italic' }}>
+              {estrutura.mapa_simbolico}
+            </p>
+          </div>
+        )}
+
+        {/* Tensões & Campos */}
+        {(estrutura.tensoes_centrais?.length > 0 || estrutura.arquetipos_envolvidos?.length > 0) && (
+          <div style={{ padding: '32px 36px', borderBottom: `1px solid ${goldFaint}`, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
             {estrutura.tensoes_centrais?.length > 0 && (
               <div>
-                <h3 className="text-xs font-bold mb-3 uppercase tracking-wide" style={{ color: '#C6A75E' }}>
+                <h3 style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: gold, marginBottom: '12px' }}>
                   Tensões Centrais
                 </h3>
                 {estrutura.tensoes_centrais.map((t: string, i: number) => (
-                  <p key={i} className="text-xs mb-2 pl-3" style={{ color: '#B8A998', borderLeft: '2px solid #C6A75E44' }}>
+                  <p key={i} style={{ fontSize: '12px', color: creamDim, marginBottom: '8px', paddingLeft: '12px', borderLeft: `2px solid ${goldFaint}` }}>
                     {t}
                   </p>
                 ))}
@@ -136,12 +142,12 @@ export default function EstudioPlaybookPreview({ estrutura, nomeMentora, nomeGru
             )}
             {estrutura.arquetipos_envolvidos?.length > 0 && (
               <div>
-                <h3 className="text-xs font-bold mb-3 uppercase tracking-wide" style={{ color: '#8B9E82' }}>
+                <h3 style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: goldDim, marginBottom: '12px' }}>
                   Campos Arquetípicos
                 </h3>
-                <div className="flex flex-wrap gap-2">
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                   {estrutura.arquetipos_envolvidos.map((a: string, i: number) => (
-                    <span key={i} className="text-xs px-2 py-1 rounded" style={{ backgroundColor: '#1A2A1F', color: '#8B9E82', border: '1px solid #8B9E8244' }}>
+                    <span key={i} style={{ fontSize: '11px', padding: '3px 10px', borderRadius: '4px', background: cardBg, color: goldDim, border: `1px solid ${cardBorder}` }}>
                       {a}
                     </span>
                   ))}
@@ -149,165 +155,151 @@ export default function EstudioPlaybookPreview({ estrutura, nomeMentora, nomeGru
               </div>
             )}
           </div>
+        )}
 
-          {/* ═══ ENCONTROS ═══ */}
-          {estrutura.encontros?.map((enc: any, i: number) => (
-            <div key={i} className="px-8 py-8" style={{ borderBottom: '1px solid #C6A75E22' }}>
-              {/* Header do encontro */}
-              <div className="flex items-center gap-3 mb-5">
-                <span className="text-lg">{FASE_ICONS[enc.fase] || '◉'}</span>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-base font-bold" style={{ color: '#F4EFE6' }}>
-                      Encontro {enc.numero}
-                    </h3>
-                    <span className="text-xs px-2 py-0.5 rounded" style={{ backgroundColor: '#C6A75E22', color: '#C6A75E' }}>
-                      {enc.fase}
-                    </span>
-                  </div>
-                  <p className="text-sm" style={{ color: '#C6A75E' }}>{enc.titulo}</p>
+        {/* ═══════════ ENCONTROS ═══════════ */}
+        {estrutura.encontros?.map((enc: any, i: number) => (
+          <div key={i} style={{ padding: '40px 36px', borderBottom: `1px solid ${goldFaint}` }}>
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+              <span style={{ fontSize: '22px' }}>{FASE_ICONS[enc.fase] || '◉'}</span>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <h3 style={{ fontSize: '17px', fontWeight: 700, color: cream, margin: 0 }}>
+                    Encontro {enc.numero}
+                  </h3>
+                  <span style={{ fontSize: '10px', padding: '2px 10px', borderRadius: '10px', background: goldFaint, color: gold }}>
+                    {enc.fase}
+                  </span>
                 </div>
+                <p style={{ fontSize: '14px', color: gold, margin: '2px 0 0' }}>{enc.titulo}</p>
               </div>
-
-              {/* Tema */}
-              <p className="text-xs mb-5 leading-relaxed" style={{ color: '#B8A998', lineHeight: '1.7' }}>
-                {enc.tema_central}
-              </p>
-
-              {/* Abertura */}
-              {enc.abertura_ritual && (
-                <div className="mb-5 p-4 rounded-lg" style={{ backgroundColor: '#1A2A1F', border: '1px solid #8B9E8233' }}>
-                  <p className="text-xs font-bold mb-1" style={{ color: '#8B9E82' }}>
-                    🜂 Abertura do Campo
-                  </p>
-                  <p className="text-xs" style={{ color: '#A89B88' }}>{enc.abertura_ritual}</p>
-                </div>
-              )}
-
-              {/* Perguntas */}
-              <div className="mb-5">
-                <p className="text-xs font-bold mb-3 uppercase tracking-wide" style={{ color: '#C6A75E' }}>
-                  Perguntas de Travessia
-                </p>
-                {enc.perguntas_guiadas?.map((p: string, j: number) => (
-                  <p key={j} className="text-xs pl-4 mb-2 leading-relaxed" style={{ color: '#D4C9B8', borderLeft: '2px solid #C6A75E55', lineHeight: '1.6' }}>
-                    {p}
-                  </p>
-                ))}
-              </div>
-
-              {/* Aplicação */}
-              {enc.aplicacao_profissional && (
-                <div className="mb-5">
-                  <p className="text-xs font-bold mb-2" style={{ color: '#8B9E82' }}>
-                    ◈ Aplicação em Sessão / Círculo
-                  </p>
-                  <p className="text-xs leading-relaxed" style={{ color: '#A89B88', lineHeight: '1.6' }}>
-                    {enc.aplicacao_profissional}
-                  </p>
-                </div>
-              )}
-
-              {/* O que NÃO fazer */}
-              {enc.o_que_nao_fazer && (
-                <div className="mb-5 p-3 rounded-lg" style={{ backgroundColor: '#1A0A0A', border: '1px solid #8B3A3A33' }}>
-                  <p className="text-xs font-bold mb-1" style={{ color: '#C47A7A' }}>
-                    ⚠ O que NÃO fazer
-                  </p>
-                  <p className="text-xs" style={{ color: '#B8A998' }}>{enc.o_que_nao_fazer}</p>
-                </div>
-              )}
-
-              {/* Alerta */}
-              {enc.alerta_clinico && (
-                <div className="mb-5 p-3 rounded-lg" style={{ backgroundColor: '#1A1008', border: '1px solid #C6A75E33' }}>
-                  <p className="text-xs font-bold mb-1" style={{ color: '#C6A75E' }}>
-                    ⚕ Alerta Clínico
-                  </p>
-                  <p className="text-xs" style={{ color: '#B8A998' }}>{enc.alerta_clinico}</p>
-                </div>
-              )}
-
-              {/* Espaço para anotações */}
-              <div className="mt-4 p-4 rounded-lg" style={{ border: '1px dashed #C6A75E33', minHeight: '60px' }}>
-                <p className="text-xs italic" style={{ color: '#C6A75E44' }}>Espaço para anotações da mentora</p>
-              </div>
-
-              {/* Encerramento */}
-              {enc.encerramento_ritual && (
-                <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: '#1A2A1F', border: '1px solid #8B9E8233' }}>
-                  <p className="text-xs font-bold mb-1" style={{ color: '#8B9E82' }}>
-                    🜃 Fechamento do Campo
-                  </p>
-                  <p className="text-xs" style={{ color: '#A89B88' }}>{enc.encerramento_ritual}</p>
-                </div>
-              )}
             </div>
-          ))}
 
-          {/* ═══ USOS INADEQUADOS ═══ */}
-          {estrutura.usos_inadequados?.length > 0 && (
-            <div className="px-8 py-6" style={{ borderBottom: '1px solid #C6A75E22' }}>
-              <h2 className="text-sm font-bold mb-4 uppercase tracking-wide" style={{ color: '#C47A7A' }}>
-                ⚠ Usos Inadequados deste Material
-              </h2>
-              {estrutura.usos_inadequados.map((u: string, i: number) => (
-                <p key={i} className="text-xs mb-2 pl-3" style={{ color: '#B8A998', borderLeft: '2px solid #C47A7A44' }}>
-                  {u}
+            {/* Tema */}
+            <p style={{ fontSize: '13px', lineHeight: 1.8, color: creamDim, marginBottom: '20px' }}>{enc.tema_central}</p>
+
+            {/* Abertura */}
+            {enc.abertura_ritual && (
+              <div style={{ marginBottom: '20px', padding: '16px', borderRadius: '8px', background: ritualBg, border: `1px solid ${goldFaint}` }}>
+                <p style={{ fontSize: '11px', fontWeight: 700, color: gold, marginBottom: '4px' }}>🜂 Abertura do Campo</p>
+                <p style={{ fontSize: '12px', color: creamDim, margin: 0 }}>{enc.abertura_ritual}</p>
+              </div>
+            )}
+
+            {/* Perguntas */}
+            <div style={{ marginBottom: '20px' }}>
+              <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: gold, marginBottom: '12px' }}>
+                Perguntas de Travessia
+              </p>
+              {enc.perguntas_guiadas?.map((p: string, j: number) => (
+                <p key={j} style={{ fontSize: '12px', paddingLeft: '14px', marginBottom: '10px', lineHeight: 1.7, color: cream, borderLeft: `2px solid ${goldDim}` }}>
+                  {p}
+                </p>
+              ))}
+            </div>
+
+            {/* Aplicação */}
+            {enc.aplicacao_profissional && (
+              <div style={{ marginBottom: '20px' }}>
+                <p style={{ fontSize: '11px', fontWeight: 700, color: goldDim, marginBottom: '6px' }}>◈ Aplicação em Sessão / Círculo</p>
+                <p style={{ fontSize: '12px', lineHeight: 1.7, color: creamDim }}>{enc.aplicacao_profissional}</p>
+              </div>
+            )}
+
+            {/* O que NÃO fazer */}
+            {enc.o_que_nao_fazer && (
+              <div style={{ marginBottom: '20px', padding: '14px', borderRadius: '8px', background: alertBg, border: `1px solid ${alertBorder}` }}>
+                <p style={{ fontSize: '11px', fontWeight: 700, color: '#D4797A', marginBottom: '4px' }}>⚠ O que NÃO fazer</p>
+                <p style={{ fontSize: '12px', color: creamDim, margin: 0 }}>{enc.o_que_nao_fazer}</p>
+              </div>
+            )}
+
+            {/* Alerta Clínico */}
+            {enc.alerta_clinico && (
+              <div style={{ marginBottom: '20px', padding: '14px', borderRadius: '8px', background: 'rgba(198,167,94,0.05)', border: `1px solid ${goldFaint}` }}>
+                <p style={{ fontSize: '11px', fontWeight: 700, color: gold, marginBottom: '4px' }}>⚕ Alerta Clínico</p>
+                <p style={{ fontSize: '12px', color: creamDim, margin: 0 }}>{enc.alerta_clinico}</p>
+              </div>
+            )}
+
+            {/* Anotações */}
+            <div style={{ marginTop: '16px', padding: '16px', borderRadius: '8px', border: `1px dashed ${goldFaint}`, minHeight: '56px' }}>
+              <p style={{ fontSize: '11px', fontStyle: 'italic', color: 'rgba(198,167,94,0.3)', margin: 0 }}>Espaço para anotações da mentora</p>
+            </div>
+
+            {/* Encerramento */}
+            {enc.encerramento_ritual && (
+              <div style={{ marginTop: '16px', padding: '16px', borderRadius: '8px', background: ritualBg, border: `1px solid ${goldFaint}` }}>
+                <p style={{ fontSize: '11px', fontWeight: 700, color: gold, marginBottom: '4px' }}>🜃 Fechamento do Campo</p>
+                <p style={{ fontSize: '12px', color: creamDim, margin: 0 }}>{enc.encerramento_ritual}</p>
+              </div>
+            )}
+          </div>
+        ))}
+
+        {/* ═══════════ USOS INADEQUADOS ═══════════ */}
+        {estrutura.usos_inadequados?.length > 0 && (
+          <div style={{ padding: '32px 36px', borderBottom: `1px solid ${goldFaint}` }}>
+            <h2 style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#D4797A', marginBottom: '16px' }}>
+              ⚠ Usos Inadequados deste Material
+            </h2>
+            {estrutura.usos_inadequados.map((u: string, i: number) => (
+              <p key={i} style={{ fontSize: '12px', color: creamDim, marginBottom: '8px', paddingLeft: '12px', borderLeft: '2px solid rgba(212,121,122,0.3)' }}>
+                {u}
+              </p>
+            ))}
+          </div>
+        )}
+
+        {/* Observação Clínica */}
+        {estrutura.observacao_clinica && (
+          <div style={{ padding: '32px 36px', borderBottom: `1px solid ${goldFaint}`, background: cardBg }}>
+            <h2 style={{ fontSize: '12px', fontWeight: 700, color: gold, marginBottom: '12px' }}>⚕ Observação Clínica</h2>
+            <p style={{ fontSize: '13px', lineHeight: 1.8, color: creamDim }}>{estrutura.observacao_clinica}</p>
+          </div>
+        )}
+
+        {/* ═══════════ JARDINS ═══════════ */}
+        <div style={{ padding: '32px 36px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', borderBottom: `1px solid ${goldFaint}` }}>
+          {estrutura.convites_jardim_psique?.length > 0 && (
+            <div>
+              <h3 style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: goldDim, marginBottom: '14px' }}>
+                🌿 Jardim da Psique
+              </h3>
+              {estrutura.convites_jardim_psique.map((c: string, i: number) => (
+                <p key={i} style={{ fontSize: '12px', fontStyle: 'italic', lineHeight: 1.7, color: creamDim, marginBottom: '10px' }}>
+                  "{c}"
                 </p>
               ))}
             </div>
           )}
-
-          {/* Observação Clínica */}
-          {estrutura.observacao_clinica && (
-            <div className="px-8 py-6" style={{ borderBottom: '1px solid #C6A75E22' }}>
-              <h2 className="text-sm font-bold mb-3" style={{ color: '#C6A75E' }}>
-                ⚕ Observação Clínica
-              </h2>
-              <p className="text-xs leading-relaxed" style={{ color: '#B8A998', lineHeight: '1.7' }}>
-                {estrutura.observacao_clinica}
-              </p>
+          {estrutura.convites_jardim_oficio?.length > 0 && (
+            <div>
+              <h3 style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: gold, marginBottom: '14px' }}>
+                ⚒ Jardim do Ofício
+              </h3>
+              {estrutura.convites_jardim_oficio.map((c: string, i: number) => (
+                <p key={i} style={{ fontSize: '12px', fontStyle: 'italic', lineHeight: 1.7, color: creamDim, marginBottom: '10px' }}>
+                  "{c}"
+                </p>
+              ))}
             </div>
           )}
+        </div>
 
-          {/* ═══ JARDINS ═══ */}
-          <div className="px-8 py-6 grid grid-cols-2 gap-8" style={{ borderBottom: '1px solid #C6A75E22' }}>
-            {estrutura.convites_jardim_psique?.length > 0 && (
-              <div>
-                <h3 className="text-xs font-bold mb-3 uppercase tracking-wide" style={{ color: '#8B9E82' }}>
-                  🌿 Jardim da Psique
-                </h3>
-                {estrutura.convites_jardim_psique.map((c: string, i: number) => (
-                  <p key={i} className="text-xs mb-3 italic leading-relaxed" style={{ color: '#A89B88', lineHeight: '1.6' }}>
-                    "{c}"
-                  </p>
-                ))}
-              </div>
-            )}
-            {estrutura.convites_jardim_oficio?.length > 0 && (
-              <div>
-                <h3 className="text-xs font-bold mb-3 uppercase tracking-wide" style={{ color: '#C6A75E' }}>
-                  ⚒ Jardim do Ofício
-                </h3>
-                {estrutura.convites_jardim_oficio.map((c: string, i: number) => (
-                  <p key={i} className="text-xs mb-3 italic leading-relaxed" style={{ color: '#A89B88', lineHeight: '1.6' }}>
-                    "{c}"
-                  </p>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* ═══ RODAPÉ ═══ */}
-          <div className="p-5 text-center" style={{ background: 'linear-gradient(180deg, #0F1410 0%, #0A0A0A 100%)' }}>
-            <p className="text-xs tracking-[0.3em] uppercase" style={{ color: '#C6A75E' }}>
-              Método de Leitura Oracular — Casa Orácula
-            </p>
-            <p className="text-xs mt-1" style={{ color: '#C6A75E44' }}>
-              Círculo de Leitura Simbólica · Material de Uso Formativo
-            </p>
-          </div>
+        {/* ═══════════ RODAPÉ ═══════════ */}
+        <div style={{
+          padding: '24px 36px',
+          textAlign: 'center',
+          background: `radial-gradient(ellipse at 50% 100%, rgba(198,167,94,0.08) 0%, transparent 70%), ${bg}`,
+        }}>
+          <p style={{ fontSize: '10px', letterSpacing: '0.35em', textTransform: 'uppercase', color: gold, margin: '0 0 4px' }}>
+            Método de Leitura Oracular — Casa Orácula
+          </p>
+          <p style={{ fontSize: '10px', color: 'rgba(198,167,94,0.3)', margin: 0 }}>
+            Círculo de Leitura Simbólica · Material de Uso Formativo
+          </p>
         </div>
       </div>
     </div>
