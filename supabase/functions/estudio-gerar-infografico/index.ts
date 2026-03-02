@@ -26,8 +26,8 @@ serve(async (req) => {
     const arquetipos = estrutura.arquetipos_envolvidos || [];
 
     // Pre-compute SHORT labels - max 4-5 words each to avoid AI text errors
-    const mainTitle = (estrutura.titulo_pedagogico || livroTitulo).substring(0, 50);
-    const subtitle = livroTitulo.substring(0, 40);
+    const mainTitle = (estrutura.titulo_pedagogico || livro_titulo).substring(0, 50);
+    const subtitle = livro_titulo.substring(0, 40);
     
     // Build very short scene labels (just number + short title)
     const sceneLabels = encontros.slice(0, 6).map((e: any) => {
