@@ -17,58 +17,74 @@ serve(async (req) => {
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) throw new Error("Supabase config missing");
 
-    const { estrutura, livro_titulo, project_id } = await req.json();
+    const { estrutura, livro_titulo, project_id, reference_image_url } = await req.json();
 
     if (!estrutura || !livro_titulo) throw new Error("Dados insuficientes");
 
-    // Build a rich prompt from the pedagogical structure
     const encontros = estrutura.encontros || [];
     const tensoes = estrutura.tensoes_centrais || [];
     const arquetipos = estrutura.arquetipos_envolvidos || [];
 
-    const fasesText = encontros.map((e: any) => 
-      `Phase ${e.numero}: "${e.titulo}" (${e.fase}) - ${e.tema_central}`
-    ).join(". ");
+    // Build encounter descriptions in Portuguese for the prompt
+    const encounterDescriptions = encontros.map((e: any, i: number) => {
+      const title = e.titulo || `Encontro ${e.numero}`;
+      const phase = e.fase || '';
+      const theme = e.tema_central || '';
+      return `"${title}" (${phase}): ${theme}`;
+    }).join('\n');
 
-    const imagePrompt = `Create a WIDE HORIZONTAL PANORAMIC illustrated journey map. The image MUST be in LANDSCAPE orientation (wider than tall, 16:9 ratio). Fill the ENTIRE canvas edge-to-edge with no empty margins.
+    const tensionText = tensoes.slice(0, 3).join(', ');
+    const archetypeText = arquetipos.slice(0, 4).join(', ');
+    const mainTitle = estrutura.titulo_pedagogico || livro_titulo;
 
-CRITICAL LAYOUT RULES:
-- HORIZONTAL layout only. Width is much greater than height.
-- NO cards, NO boxes, NO grids, NO vertical stacking.
-- Content flows LEFT to RIGHT as ONE continuous illustrated landscape.
-- Every area of the canvas must contain visual detail — no large blank spaces.
-- All text labels must be SHORT (max 4 words) and in CORRECT Portuguese (Brazil).
+    const imagePrompt = `Crie um infográfico panorâmico horizontal ilustrado no estilo de um MAPA DE JORNADA VISUAL, exatamente como os infográficos do NotebookLM sobre livros de psicologia arquetípica.
 
-STRUCTURE — ${encontros.length} connected zones flowing left to right across the full width:
-${encontros.map((e: any, i: number) => `Zone ${i + 1}: "${e.titulo}" (${e.fase})`).join(' → ')}
+FORMATO OBRIGATÓRIO: Paisagem (landscape), proporção 16:9, largura muito maior que altura. Preencher TODO o canvas sem margens vazias.
 
-Each zone is a distinct illustrated scene blending into the next through organic transitions (paths, rivers, roots, vines). NO hard borders between zones.
+TÍTULO PRINCIPAL no topo, grande, elegante, em fonte serif decorativa sobre fundo claro:
+"${mainTitle}"
+Subtítulo menor abaixo: "${livro_titulo}"
 
-VISUAL ELEMENTS PER ZONE:
-- A unique symbolic scene (mystical forest, moonlit clearing, ancient doorway, sacred garden)
-- A small parchment banner with the zone title in Portuguese
-- Symbolic creatures or objects as bridges between zones (owl, wolf, serpent, key, door)
+LAYOUT — NÃO usar cards, caixas ou grids. O infográfico é UMA ilustração contínua com cenas que fluem organicamente da esquerda para a direita, como um mural narrativo. Os textos descritivos ficam INTEGRADOS na ilustração, posicionados ao lado ou sobre as cenas — não dentro de caixas.
 
-BOTTOM STRIP: A thin decorative banner spanning full width: "✦ Método de Leitura Oracular — Casa Orácula ✦"
+CONTEÚDO — ${encontros.length} seções temáticas distribuídas pelo canvas:
+${encounterDescriptions}
 
-TOP: Title "${estrutura.titulo_pedagogico || livro_titulo}" centered, elegant serif font on parchment ribbon.
+${tensionText ? `TENSÕES CENTRAIS para representar visualmente: ${tensionText}` : ''}
+${archetypeText ? `CAMPOS ARQUETÍPICOS presentes: ${archetypeText}` : ''}
 
-MANDATORY ART STYLE:
-- Watercolor illustration, botanical details (vines, ancient trees, flowers, roots)
-- Mystical feminine silhouettes only (hooded figures, meditation poses) — NO realistic faces
-- Color palette: bone white, warm sepia, deep forest green, muted burgundy, soft gold
-- Ethereal moonlight atmosphere with firefly particles
-- Mood: contemplative, ritualistic, archetypal fairy-tale map
+ELEMENTOS VISUAIS OBRIGATÓRIOS:
+- Árvores antigas com raízes e galhos que conectam as seções
+- Silhuetas femininas místicas (sem rostos realistas) — figuras encapuzadas, em meditação, dançando
+- Animais simbólicos: lobas, corujas, serpentes, cervos
+- Portas antigas, caminhos, clareiras iluminadas pela lua
+- Pergaminhos e rolos com textos curtos em português
+- Vegetação abundante: vinhas, flores, raízes, folhas
+- Partículas luminosas como vagalumes
 
-FORBIDDEN:
-- Vertical or square compositions
-- Cards, grids, boxed layouts, modern/corporate styles
-- Realistic human faces or bright neon colors
-- Large empty areas — fill the entire canvas
+PALETA DE CORES: fundo creme/osso claro (#F5F0E8), marrom escuro para textos, verde floresta profundo, sépia quente, bordô suave, dourado para detalhes e acentos. Iluminação etérea com luar.
 
-Ultra high resolution panoramic illustration.`;
+ESTILO: Ilustração digital detalhada com traços artísticos, misturando aquarela com arte digital. Cada seção tem uma cena ilustrada única que se funde organicamente com a próxima através de elementos naturais (raízes, caminhos, água).
 
-    console.log("Generating infographic image...");
+RODAPÉ: faixa decorativa fina na base com "✦ Método de Leitura Oracular — Casa Orácula ✦"
+
+TODO texto visível deve estar em PORTUGUÊS BRASILEIRO correto.
+
+PROIBIDO: composições verticais ou quadradas, cards/caixas/grids, rostos humanos realistas, cores neon, espaços vazios grandes, estilo corporativo/moderno.
+
+Ultra alta resolução, qualidade profissional de infográfico ilustrado.`;
+
+    console.log("Generating infographic image with pro model...");
+
+    // Build the message content - optionally include reference image
+    const messageContent: any[] = [{ type: "text", text: imagePrompt }];
+    
+    if (reference_image_url) {
+      messageContent.push({
+        type: "image_url",
+        image_url: { url: reference_image_url }
+      });
+    }
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -77,9 +93,9 @@ Ultra high resolution panoramic illustration.`;
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash-image",
+        model: "google/gemini-3-pro-image-preview",
         messages: [
-          { role: "user", content: imagePrompt },
+          { role: "user", content: messageContent },
         ],
         modalities: ["image", "text"],
       }),
@@ -113,7 +129,6 @@ Ultra high resolution panoramic illustration.`;
     // Upload to storage
     const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    // Extract base64 data
     const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, "");
     const binaryData = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
     
