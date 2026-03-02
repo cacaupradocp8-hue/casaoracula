@@ -4335,6 +4335,92 @@ export type Database = {
         }
         Relationships: []
       }
+      estudio_projetos: {
+        Row: {
+          book_id: string | null
+          created_at: string
+          estacao_simbolica: string | null
+          estrutura_gerada: Json | null
+          id: string
+          infografico_url: string | null
+          jornada: string | null
+          livro_externo_autor: string | null
+          livro_externo_nome: string | null
+          livro_externo_texto: string | null
+          logo_aluna_url: string | null
+          mapa_mental_url: string | null
+          modo: string
+          nome_grupo: string | null
+          nome_mentora: string | null
+          num_encontros: number | null
+          owner_id: string
+          paleta_secundaria: string | null
+          playbook_url: string | null
+          publico_alvo: string | null
+          status: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          book_id?: string | null
+          created_at?: string
+          estacao_simbolica?: string | null
+          estrutura_gerada?: Json | null
+          id?: string
+          infografico_url?: string | null
+          jornada?: string | null
+          livro_externo_autor?: string | null
+          livro_externo_nome?: string | null
+          livro_externo_texto?: string | null
+          logo_aluna_url?: string | null
+          mapa_mental_url?: string | null
+          modo?: string
+          nome_grupo?: string | null
+          nome_mentora?: string | null
+          num_encontros?: number | null
+          owner_id: string
+          paleta_secundaria?: string | null
+          playbook_url?: string | null
+          publico_alvo?: string | null
+          status?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Update: {
+          book_id?: string | null
+          created_at?: string
+          estacao_simbolica?: string | null
+          estrutura_gerada?: Json | null
+          id?: string
+          infografico_url?: string | null
+          jornada?: string | null
+          livro_externo_autor?: string | null
+          livro_externo_nome?: string | null
+          livro_externo_texto?: string | null
+          logo_aluna_url?: string | null
+          mapa_mental_url?: string | null
+          modo?: string
+          nome_grupo?: string | null
+          nome_mentora?: string | null
+          num_encontros?: number | null
+          owner_id?: string
+          paleta_secundaria?: string | null
+          playbook_url?: string | null
+          publico_alvo?: string | null
+          status?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estudio_projetos_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       exercise_responses: {
         Row: {
           created_at: string

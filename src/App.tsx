@@ -126,6 +126,7 @@ import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
 // Casa das Máquinas
 import { CasaDasMaquinas, SessoesPage, GestosIntegracaoPage, MapaVivoClientePage, PainelInstitucionalPage } from "./pages/casa-maquinas";
+import EstudioMateriaisPage from "./pages/casa-maquinas/EstudioMateriaisPage";
 // Jardim do Ofício
 import { JardimOficioPage, PainelSupervisaoPage } from "./pages/jardim-oficio";
 import Jornada from "./pages/Jornada";
@@ -1445,6 +1446,16 @@ function AppRoutes() {
           }
         />
         
+        {/* Estúdio de Materiais Oraculares */}
+        <Route
+          path="/casa-das-maquinas/estudio"
+          element={
+            <ProtectedRoute minPortal="aluna">
+              <EstudioMateriaisPage />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Jardim do Ofício */}
         <Route
           path="/casa-das-maquinas/jardim-oficio"

@@ -59,3 +59,6 @@ verify_jwt = false
 
 [functions.studio-merge-audio]
 verify_jwt = false
+
+[functions.estudio-gerar-estrutura]
+verify_jwt = false
