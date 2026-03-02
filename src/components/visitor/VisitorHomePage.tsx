@@ -16,7 +16,7 @@ export function VisitorHomePage() {
   const cards = [
     {
       title: 'Comece por Aqui',
-      description: 'Assista ao vídeo de boas-vindas e entenda como funciona a Casa.',
+      description: 'Um caminho. Sem ruído. Só direção.',
       action: 'Assistir e Começar',
       icon: Play,
       route: '/comece-aqui',
@@ -24,7 +24,7 @@ export function VisitorHomePage() {
     },
     {
       title: 'Experiência Gratuita',
-      description: 'Descubra seu eixo, entenda sua estrutura e viva sua primeira travessia.',
+      description: 'Descubra seu eixo. Entenda sua estrutura. Viva a travessia.',
       action: 'Iniciar Experiência',
       icon: Sparkles,
       route: '/experiencia-gratuita',
@@ -32,7 +32,7 @@ export function VisitorHomePage() {
     },
     {
       title: 'Habitar o Clube',
-      description: 'Conheça o Clube de Leitura Simbólica e aprofunde sua jornada.',
+      description: 'Leitura vira competência. Portal vira prática.',
       action: 'Conhecer o Clube',
       icon: BookOpen,
       route: '/clube-livro',
