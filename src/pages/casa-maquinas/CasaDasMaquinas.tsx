@@ -20,6 +20,7 @@ import {
   Eye,
   UserCheck,
   FileText,
+  BookOpen,
 } from 'lucide-react';
 
 const TABS = [
@@ -28,6 +29,7 @@ const TABS = [
   { label: 'Sala de Sessão', to: '/casa-das-maquinas/sessoes', icon: Calendar, minPortal: 'oracula' as const },
   { label: 'Mapa Vivo', to: '/casa-das-maquinas/mapa-vivo', icon: Map, minPortal: 'oracula' as const },
   { label: 'Histórico', to: '/casa-das-maquinas/historico', icon: Clock, minPortal: 'oracula' as const },
+  { label: 'Estúdio', to: '/casa-das-maquinas/estudio', icon: BookOpen, minPortal: 'aluna' as const },
   { label: 'Supervisão', to: '/casa-das-maquinas/supervisao', icon: Eye, minPortal: 'assinante' as const },
   { label: 'Painel Institucional', to: '/casa-das-maquinas/painel', icon: Crown, minPortal: 'admin' as const },
 ];
@@ -226,6 +228,23 @@ export default function CasaDasMaquinas() {
               </CardContent>
             </Card>
           </Link>
+
+          {/* Estúdio de Materiais - formação e acima */}
+          {(user && canAccessFeature(user.portal, 'aluna')) && (
+            <Link to="/casa-das-maquinas/estudio">
+              <Card className="hover:border-primary/30 transition-all cursor-pointer h-full border-border">
+                <CardContent className="p-5 flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <BookOpen className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-1">Estúdio de Materiais</h3>
+                    <p className="text-sm text-muted-foreground">Playbooks, Mapas Mentais e Infográficos</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          )}
 
           {/* Supervisão - visível apenas para mentoradas e admin */}
           {isMentorada && (
