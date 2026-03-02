@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessExpiration } from '@/hooks/useAccessExpiration';
+import { useAppSettings } from '@/hooks/useAppSettings';
 import { canAccessFeature } from '@/types/portal';
 import { motion } from 'framer-motion';
 import { Check, ChevronRight, Play } from 'lucide-react';
@@ -25,19 +26,21 @@ const fadeUp = {
   transition: { duration: 0.5 },
 };
 
-// Placeholders configuráveis
-const VSL_URL = ''; // Inserir URL do vídeo (YouTube/Vimeo embed)
-const CHECKOUT_MENSAL_URL = '#';
-const CHECKOUT_ANUAL_URL = '#';
-const PORTAL_ATUAL_ROUTE = '/clube-livro';
-const ASSINATURA_ROUTE = '/minha-conta';
-
 export default function PlanosClubeOracular() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { subscriptionStatus, accessExpiresAt } = useAccessExpiration();
+  const { getSetting } = useAppSettings();
   const planosRef = useRef<HTMLDivElement>(null);
   const [showSticky, setShowSticky] = useState(false);
+
+  const VSL_URL = getSetting('planos_clube_vsl_url', '');
+  const CHECKOUT_MENSAL_URL = getSetting('planos_clube_checkout_mensal_url', '#');
+  const CHECKOUT_ANUAL_URL = getSetting('planos_clube_checkout_anual_url', '#');
+  const PORTAL_ATUAL_ROUTE = getSetting('planos_clube_portal_atual_route', '/clube-livro');
+  const ASSINATURA_ROUTE = getSetting('planos_clube_assinatura_route', '/minha-conta');
+  const PRECO_MENSAL = getSetting('planos_clube_preco_mensal', 'R$ 67/mês');
+  const PRECO_ANUAL = getSetting('planos_clube_preco_anual', 'R$ 497/ano');
 
   const isAssinante = user && canAccessFeature(user.portal, 'assinante');
 
@@ -76,13 +79,17 @@ export default function PlanosClubeOracular() {
             <div className="max-w-xl mx-auto rounded-lg overflow-hidden border border-border/30 bg-card/30">
               <AspectRatio ratio={16 / 9}>
                 {VSL_URL ? (
-                  <iframe
-                    src={VSL_URL}
-                    className="w-full h-full"
-                    allow="autoplay; fullscreen"
-                    allowFullScreen
-                    title="VSL Círculo de Leitura"
-                  />
+                  VSL_URL.match(/\.(mp4|webm|mov)(\?|$)/i) ? (
+                    <video src={VSL_URL} controls className="w-full h-full object-cover" playsInline />
+                  ) : (
+                    <iframe
+                      src={VSL_URL}
+                      className="w-full h-full"
+                      allow="autoplay; fullscreen"
+                      allowFullScreen
+                      title="VSL Círculo de Leitura"
+                    />
+                  )
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-card/50">
                     <button
@@ -225,7 +232,7 @@ export default function PlanosClubeOracular() {
                 {[
                   {
                     name: 'Mensal',
-                    price: 'R$ 67/mês',
+                    price: PRECO_MENSAL,
                     destaque: false,
                     benefits: ['Acesso ao Portal Atual', 'Biblioteca de Portais', 'Laboratório 80/20', 'Jardins de registro'],
                     cta: 'Assinar Mensal',
@@ -233,7 +240,7 @@ export default function PlanosClubeOracular() {
                   },
                   {
                     name: 'Anual — Melhor escolha',
-                    price: 'R$ 497/ano',
+                    price: PRECO_ANUAL,
                     destaque: true,
                     badge: 'Mais vantajoso',
                     benefits: ['Tudo do Mensal', 'Mais economia', 'Ritmo contínuo de travessia', 'Compromisso com maturidade simbólica'],
