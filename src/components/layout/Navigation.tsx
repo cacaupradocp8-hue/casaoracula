@@ -21,32 +21,34 @@ import {
   DropdownMenuSubTrigger, DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu';
 
-// ── MUNDO 1: Experiência da Aluna ───────────────────────────────────────────
-const alunaMenuGroups = (hasOracula: boolean) => [
+// ── VISITANTE / GRATUITO (máx 5 itens) ──────────────────────────────────────
+const visitanteMenuGroups = () => [
+  { key: 'inicio', label: 'Início', icon: Home, path: '/jornada', subitems: [] },
+  { key: 'comece-aqui', label: 'Comece por Aqui', icon: Compass, path: '/comece-aqui', subitems: [] },
+  { key: 'experiencia', label: 'Experiência Gratuita', icon: Sparkles, path: '/experiencia-gratuita', subitems: [] },
+  { key: 'clube', label: 'Clube Oracular', icon: BookOpen, path: '/clube-livro', subitems: [] },
+  { key: 'conta', label: 'Minha Conta', icon: User, path: '/assinatura', subitems: [] },
+];
+
+// ── ASSINANTE DO CLUBE (máx 6 itens) ────────────────────────────────────────
+const assinanteMenuGroups = () => [
+  { key: 'portal-atual', label: 'Portal Atual', icon: Compass, path: '/clube-livro', subitems: [] },
+  { key: 'biblioteca-portais', label: 'Biblioteca de Portais', icon: BookOpen, path: '/biblioteca-travessias', subitems: [] },
+  { key: 'jardim', label: 'Meu Jardim', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+  { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/casa-tecelas', subitems: [] },
+  { key: 'assinatura', label: 'Minha Assinatura', icon: Crown, path: '/assinatura', subitems: [] },
+  { key: 'conta', label: 'Minha Conta', icon: User, path: '/billing', subitems: [] },
+];
+
+// ── ALUNA DE FORMAÇÃO (máx 6 itens) ─────────────────────────────────────────
+const alunaMenuGroups = () => [
   { key: 'inicio', label: 'Início', icon: Home, path: '/jornada', subitems: [] },
   {
     key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/oracula',
     subitems: [
       { label: 'Formação Orácula', path: '/oracula' },
-      { label: 'Salas', path: '/salas' },
-      { label: 'Portal Junguiano', path: '/portal-junguiano' },
       { label: 'Travessias', path: '/travessias' },
-      { label: 'Oráculos', path: '/oraculos' },
-      { label: 'Labirinto das 39 Portas', path: '/labirinto' },
-      { label: 'Labirinto da Heroína Interna®', path: '/labirinto-heroina' },
-      { label: 'Mapa da Heroína', path: '/mapa-heroina' },
-      { label: 'Cartas da Jornada', path: '/cartas-jornada' },
-    ],
-  },
-  {
-    key: 'travessias', label: 'Travessias', icon: Compass, path: '/biblioteca-travessias',
-    subitems: [
-      { label: 'Biblioteca das Travessias', path: '/biblioteca-travessias' },
-      { label: 'Família das Travessias', path: '/biblioteca-travessias/familias' },
-      { label: 'Portais', path: '/portais' },
-      { label: 'Círculos de Leitura Simbólica', path: '/clube-livro' },
-      { label: 'Estúdio Oracular', path: '/estudio-oracular' },
-      { label: 'Torre Viva™', path: '/torre-viva' },
+      { label: 'Círculos de Leitura', path: '/clube-livro' },
     ],
   },
   {
@@ -54,30 +56,11 @@ const alunaMenuGroups = (hasOracula: boolean) => [
     subitems: [
       { label: 'Hub do Método', path: '/ferramentas-metodo' },
       { label: 'Sala de Ferramentas', path: '/ferramentas' },
-      { label: 'Big Five Oracular', path: '/ferramenta/big5-oracular' },
-      { label: 'Escala MAIA', path: '/ferramentas/escala-maia' },
-      { label: 'Atlas de Arquétipos', path: '/atlas-arquetipos' },
-      { label: 'Narroterapia Oracular™', path: '/narroterapia' },
-      { label: 'Radiestesia', path: '/radiestesia' },
-      { label: 'Vitrine', path: '/ferramentas-vitrine' },
     ],
   },
-  {
-    key: 'biblioteca', label: 'Biblioteca', icon: BookOpen, path: '/minha-biblioteca',
-    subitems: [
-      { label: 'Minha Biblioteca', path: '/minha-biblioteca' },
-      { label: 'Áudios', path: '/audios' },
-    ],
-  },
-  {
-    key: 'jardim', label: 'Meu Jardim', icon: Flower2, path: '/jardim-da-psique',
-    subitems: [
-      { label: 'Jardim da Psique', path: '/jardim-da-psique' },
-      { label: 'Casa / Sustentação', path: '/casa' },
-      { label: 'Mapas Simbólicos', path: '/mapas-simbolicos' },
-      { label: 'Mapas Vivos', path: '/mapas-vivos' },
-    ],
-  },
+  { key: 'biblioteca', label: 'Biblioteca', icon: BookOpen, path: '/minha-biblioteca', subitems: [] },
+  { key: 'jardim', label: 'Meu Jardim', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+  { key: 'conta', label: 'Minha Conta', icon: User, path: '/assinatura', subitems: [] },
 ];
 
 // ── MUNDO 2: Casa das Máquinas (Espaço Profissional) ────────────────────────
@@ -89,7 +72,6 @@ const profissionalMenuGroups = (isAdmin: boolean, isMentorada: boolean) => [
     subitems: [
       { label: 'Sala de Sessão', path: '/casa-das-maquinas/sessoes' },
       { label: 'Mapa Vivo', path: '/casa-das-maquinas/mapa-vivo' },
-      { label: 'Histórico', path: '/casa-das-maquinas/historico' },
       { label: 'Gestos de Integração', path: '/casa-das-maquinas/gestos' },
     ],
   },
@@ -99,9 +81,6 @@ const profissionalMenuGroups = (isAdmin: boolean, isMentorada: boolean) => [
       { label: 'Sala de Sessão Clínica', path: '/session-room' },
       { label: 'Big Five Oracular', path: '/ferramenta/big5-oracular' },
       { label: 'Narroterapia Oracular™', path: '/narroterapia' },
-      { label: 'Atlas de Arquétipos', path: '/atlas-arquetipos' },
-      { label: 'Radiestesia', path: '/radiestesia' },
-      { label: 'Labirinto da Heroína Interna®', path: '/labirinto-heroina' },
     ],
   },
   ...(isMentorada ? [{
@@ -132,9 +111,17 @@ export function Navigation() {
   const isHybrid = hasOracula || isAdmin;
   const activeDomain = (isHybrid && domain === 'profissional') ? 'profissional' : 'aluna';
 
-  const menuGroups = activeDomain === 'profissional'
-    ? profissionalMenuGroups(isAdmin, isMentorada)
-    : alunaMenuGroups(hasOracula);
+  // Profile-based menu selection
+  const getMenuForProfile = () => {
+    if (activeDomain === 'profissional') return profissionalMenuGroups(isAdmin, isMentorada);
+    if (isAdmin || hasOracula) return alunaMenuGroups(); // Aluna de formação
+    const isAssinante = user ? canAccessFeature(user.portal, 'assinante') : false;
+    const isAluna = user ? canAccessFeature(user.portal, 'aluna') : false;
+    if (isAssinante) return assinanteMenuGroups();
+    if (isAluna) return alunaMenuGroups();
+    return visitanteMenuGroups(); // Visitante / Gratuito
+  };
+  const menuGroups = getMenuForProfile();
 
   const handleLogout = () => setRitualSaidaOpen(true);
   const handleConfirmExit = () => { setRitualSaidaOpen(false); logout(); navigate('/'); };

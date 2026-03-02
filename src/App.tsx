@@ -194,6 +194,8 @@ import MapaHeroinaPage from "./pages/mapa-heroina";
 import CartasJornadaPage from "./pages/CartasJornadaPage";
 import PortalJunguiano from "./pages/PortalJunguiano";
 import PortalJunguianoPorta from "./pages/PortalJunguianoPorta";
+// Novas páginas de navegação simplificada
+import ExperienciaGratuita from "./pages/ExperienciaGratuita";
 
 const queryClient = new QueryClient();
 
@@ -357,6 +359,22 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Jornada />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/experiencia-gratuita"
+        element={
+          <ProtectedRoute>
+            <ExperienciaGratuita />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/comece-aqui"
+        element={
+          <ProtectedRoute>
+            <Navigate to="/sala-da-visitante" replace />
           </ProtectedRoute>
         }
       />
