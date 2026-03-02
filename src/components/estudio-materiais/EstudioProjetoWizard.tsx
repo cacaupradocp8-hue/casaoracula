@@ -466,6 +466,15 @@ export default function EstudioProjetoWizard({ projectId, onClose }: Props) {
                 <EstudioInfografico
                   estrutura={estrutura}
                   livroTitulo={modo === 'casa' ? livros.find(l => l.id === bookId)?.title || '' : livroNome}
+                  projectId={currentProjectId}
+                  onImageGenerated={(url) => {
+                    if (currentProjectId) {
+                      supabase.from('estudio_projetos')
+                        .update({ infografico_url: url } as any)
+                        .eq('id', currentProjectId)
+                        .then();
+                    }
+                  }}
                 />
               </TabsContent>
             </Tabs>
