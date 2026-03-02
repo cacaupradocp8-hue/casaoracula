@@ -23,7 +23,7 @@ const fadeUp = {
   transition: { duration: 0.5 },
 };
 
-const CHECKOUT_MENSAL_URL = '#'; // placeholder — substituir por URL real
+const CHECKOUT_MENSAL_URL = '#';
 const CHECKOUT_ANUAL_URL = '#';
 
 export default function PlanosClubeOracular() {
@@ -44,7 +44,7 @@ export default function PlanosClubeOracular() {
           Círculo de Leitura Oracular
         </h1>
         <p className="text-lg text-muted-foreground max-w-lg mx-auto">
-          Leitura que se torna competência clínica. Um livro por vez, um portal por travessia.
+          Um clube para transformar leitura em competência — com método, profundidade simbólica e aplicação profissional.
         </p>
 
         {isAssinante ? (
@@ -54,7 +54,7 @@ export default function PlanosClubeOracular() {
         ) : (
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Button variant="gold" size="lg" onClick={scrollToPlanos}>
-              Assinar agora
+              Assinar e Entrar
             </Button>
             <Button variant="outline" size="lg" className="border-gold/30 hover:bg-gold/10" onClick={scrollToPlanos}>
               Ver como funciona
@@ -65,7 +65,7 @@ export default function PlanosClubeOracular() {
 
         {!isAssinante && (
           <p className="text-xs text-muted-foreground/60 pt-2">
-            Cancele quando quiser. Sem fidelidade.
+            Cancele quando quiser. Sem excesso. Sem ruído.
           </p>
         )}
       </motion.div>
@@ -77,13 +77,16 @@ export default function PlanosClubeOracular() {
     <section className="py-12 px-6">
       <motion.div {...fadeUp} className="max-w-xl mx-auto text-center space-y-6">
         <h2 className="font-display text-xl sm:text-2xl font-semibold text-foreground">
-          O que é o Círculo
+          Não é um clube do livro.
         </h2>
+        <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+          É um mapa de travessia formativa. Você lê menos, integra mais e aplica com consciência — em si e no outro.
+        </p>
         <ul className="space-y-3 text-left max-w-md mx-auto">
           {[
-            'Você deixa de consumir livros — e começa a habitar a leitura.',
-            'Cada portal transforma um eixo real da sua prática profissional.',
-            'Leitura simbólica vira competência clínica aplicável.',
+            'Leitura vira habilidade.',
+            'Símbolo vira prática.',
+            'Conteúdo vira estrutura clínica.',
           ].map((t, i) => (
             <li key={i} className="flex items-start gap-3 text-sm text-foreground/80">
               <Check className="w-4 h-4 text-gold/70 mt-0.5 flex-shrink-0" />
@@ -97,19 +100,27 @@ export default function PlanosClubeOracular() {
 
   // ─── COMO FUNCIONA ────────────────────────────────────
   const ComoFunciona = () => {
-    const steps = ['Calendário', 'Livro', 'Tour', 'Portais', 'Lab 80/20', 'Jardins'];
+    const steps = [
+      { label: 'Calendário', desc: 'escolha a travessia' },
+      { label: 'Livro', desc: 'entra no campo simbólico' },
+      { label: 'Tour', desc: 'entende o lugar da obra na jornada' },
+      { label: 'Portais', desc: 'atravessa em etapas' },
+      { label: 'Lab 80/20', desc: 'destila e aplica' },
+      { label: 'Jardins', desc: 'registra e sustenta' },
+    ];
     return (
       <section className="py-12 px-6 border-y border-border/20">
         <motion.div {...fadeUp} className="max-w-3xl mx-auto text-center space-y-8">
           <h2 className="font-display text-xl sm:text-2xl font-semibold text-foreground">
-            Como funciona
+            Como funciona dentro da Casa Orácula
           </h2>
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-1">
             {steps.map((s, i) => (
-              <div key={s} className="flex items-center gap-1 sm:gap-2">
-                <span className="px-3 py-1.5 rounded-full bg-card border border-border/40 text-xs sm:text-sm font-medium text-foreground/80">
-                  {s}
-                </span>
+              <div key={s.label} className="flex items-center gap-1 sm:gap-2">
+                <div className="px-3 py-2 rounded-lg bg-card border border-border/40 text-center">
+                  <span className="text-xs sm:text-sm font-medium text-foreground/90 block">{s.label}</span>
+                  <span className="text-[10px] sm:text-xs text-muted-foreground">{s.desc}</span>
+                </div>
                 {i < steps.length - 1 && (
                   <ChevronRight className="w-3.5 h-3.5 text-gold/50 flex-shrink-0" />
                 )}
@@ -124,16 +135,16 @@ export default function PlanosClubeOracular() {
   // ─── O QUE VOCÊ RECEBE ────────────────────────────────
   const OQueRecebe = () => {
     const items = [
-      { title: 'Portal Atual', desc: 'Áudios, aula, prática guiada e jardim de escrita.' },
-      { title: 'Biblioteca de Portais', desc: 'Acesso a todos os portais anteriores.' },
-      { title: 'Comunidade', desc: 'Espaço de troca entre leitoras e facilitadoras.' },
-      { title: 'Rituais & Checklists', desc: 'Ferramentas de integração para cada travessia.' },
+      { title: 'Portal Atual', desc: 'Áudios, aula, prática e integração — com foco no que você faz agora.' },
+      { title: 'Biblioteca de Portais', desc: 'Portais anteriores organizados por jornada. Sem bagunça. Sem lista infinita.' },
+      { title: 'Laboratório 80/20', desc: 'Extrai o essencial e transforma em sessão, aula, círculo ou palestra.' },
+      { title: 'Jardim da Psique & Jardim da Heroína', desc: 'Um para você. Um para sua prática. Sem mistura. Com ética.' },
     ];
     return (
       <section className="py-12 px-6">
         <motion.div {...fadeUp} className="max-w-3xl mx-auto space-y-8">
           <h2 className="font-display text-xl sm:text-2xl font-semibold text-foreground text-center">
-            O que você recebe
+            O que você recebe como assinante
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {items.map((item) => (
@@ -151,7 +162,7 @@ export default function PlanosClubeOracular() {
   };
 
   // ─── PLANOS ───────────────────────────────────────────
-  const Planos = () => {
+  const PlanosSection = () => {
     if (isAssinante) return null;
 
     const plans = [
@@ -162,22 +173,24 @@ export default function PlanosClubeOracular() {
         benefits: [
           'Acesso ao Portal Atual',
           'Biblioteca de Portais',
-          'Comunidade',
-          'Cancele quando quiser',
+          'Laboratório 80/20',
+          'Jardins de registro',
         ],
+        cta: 'Assinar Mensal',
         url: CHECKOUT_MENSAL_URL,
       },
       {
-        name: 'Anual',
+        name: 'Anual — Melhor escolha',
         price: 'R$ 497/ano',
         destaque: true,
         badge: 'Mais vantajoso',
         benefits: [
-          'Tudo do plano mensal',
-          'Economia de mais de 30%',
-          'Acesso garantido a todos os portais do ciclo',
-          'Prioridade em eventos ao vivo',
+          'Tudo do Mensal',
+          'Mais economia',
+          'Ritmo contínuo de travessia',
+          'Compromisso com maturidade simbólica',
         ],
+        cta: 'Assinar Anual',
         url: CHECKOUT_ANUAL_URL,
       },
     ];
@@ -207,7 +220,7 @@ export default function PlanosClubeOracular() {
                 )}
                 <CardContent className="p-6 flex flex-col flex-1">
                   <h3 className="font-display text-lg font-semibold text-foreground mb-1">
-                    Plano {plan.name}
+                    {plan.name}
                   </h3>
                   <p className="text-2xl font-bold text-foreground mb-5">{plan.price}</p>
                   <ul className="space-y-2 flex-1 mb-6">
@@ -224,7 +237,7 @@ export default function PlanosClubeOracular() {
                     className={cn('w-full', !plan.destaque && 'border-gold/30 hover:bg-gold/10')}
                     onClick={() => window.open(plan.url, '_blank')}
                   >
-                    Assinar {plan.name}
+                    {plan.cta}
                   </Button>
                 </CardContent>
                 {plan.destaque && (
@@ -233,6 +246,9 @@ export default function PlanosClubeOracular() {
               </Card>
             ))}
           </div>
+          <p className="text-xs text-muted-foreground/60 text-center pt-2">
+            Você entra quando quiser. O método organiza o caminho.
+          </p>
         </motion.div>
       </section>
     );
@@ -243,13 +259,13 @@ export default function PlanosClubeOracular() {
     <section className="py-12 px-6 border-t border-border/20">
       <motion.div {...fadeUp} className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div className="space-y-3">
-          <h3 className="font-display text-base font-semibold text-foreground">Para quem é</h3>
+          <h3 className="font-display text-base font-semibold text-foreground">Este círculo é para você se…</h3>
           <ul className="space-y-2 text-sm text-foreground/80">
             {[
-              'Terapeutas que querem aprofundar a escuta simbólica.',
-              'Psicólogas interessadas em leitura como ferramenta clínica.',
-              'Mentoras do feminino que buscam repertório ético.',
-              'Mulheres que lêem com intenção, não por consumo.',
+              'Você quer profundidade sem confusão.',
+              'Você quer aplicar leitura em prática profissional.',
+              'Você quer sustentar processos sem depender de conteúdo.',
+              'Você quer método, não inspiração passageira.',
             ].map((t, i) => (
               <li key={i} className="flex items-start gap-2">
                 <Check className="w-4 h-4 text-gold/70 mt-0.5 flex-shrink-0" />
@@ -259,12 +275,13 @@ export default function PlanosClubeOracular() {
           </ul>
         </div>
         <div className="space-y-3">
-          <h3 className="font-display text-base font-semibold text-foreground">Para quem não é</h3>
+          <h3 className="font-display text-base font-semibold text-foreground">Não é para você se…</h3>
           <ul className="space-y-2 text-sm text-muted-foreground">
             {[
-              'Quem busca resumos rápidos de livros.',
-              'Quem quer entretenimento literário sem prática.',
-              'Quem não tem interesse em desenvolvimento profissional.',
+              'Você quer só resumos rápidos.',
+              'Você quer consumir mais do que integrar.',
+              'Você busca validação por citação.',
+              'Você quer atalhos sem travessia.',
             ].map((t, i) => (
               <li key={i} className="flex items-start gap-2">
                 <span className="text-muted-foreground/50 mt-0.5">✕</span>
@@ -280,12 +297,12 @@ export default function PlanosClubeOracular() {
   // ─── FAQ ──────────────────────────────────────────────
   const Faq = () => {
     const items = [
-      { q: 'Preciso ler o livro inteiro?', a: 'Não. O Círculo trabalha com trechos simbólicos e traduções práticas — você não precisa terminar o livro para participar.' },
-      { q: 'Tenho acesso aos portais anteriores?', a: 'Sim. Todos os portais já publicados ficam disponíveis na Biblioteca de Portais.' },
-      { q: 'Posso cancelar a qualquer momento?', a: 'Sim. Sem fidelidade, sem multa. Você mantém acesso até o fim do período pago.' },
-      { q: 'É para psicólogas ou terapeutas holísticas?', a: 'Para ambas. O Círculo trabalha com leitura simbólica aplicada — útil em qualquer abordagem terapêutica.' },
-      { q: 'O que é o Laboratório 80/20?', a: 'É a ferramenta que transforma o livro em aplicação profissional: 80% prática, 20% teoria.' },
-      { q: 'Posso participar sendo iniciante?', a: 'Sim. O Círculo é progressivo. Cada portal tem seu próprio ponto de entrada.' },
+      { q: 'Posso entrar em qualquer momento?', a: 'Sim. A assinatura é contínua e o Portal Atual sempre te mostra por onde começar.' },
+      { q: 'Preciso ler o livro inteiro?', a: 'Não. Você atravessa por Portais e integra pelo 80/20. Leia menos, integre mais.' },
+      { q: 'Isso serve para minha prática profissional?', a: 'Sim. Cada Portal tem tradução para aula, sessão, círculo e palestra.' },
+      { q: 'Como funciona o Laboratório 80/20?', a: 'Ele organiza essência, raiz psíquica e aplicação — e envia seus insights para os Jardins.' },
+      { q: 'O que são os Jardins?', a: 'Jardim da Psique (seu processo) e Jardim da Heroína (sua prática).' },
+      { q: 'Posso cancelar?', a: 'Sim. Você controla sua assinatura.' },
     ];
     return (
       <section className="py-12 px-6">
@@ -315,7 +332,7 @@ export default function PlanosClubeOracular() {
     <section className="py-16 px-6 text-center">
       <motion.div {...fadeUp} className="max-w-lg mx-auto space-y-5">
         <p className="font-display text-lg sm:text-xl text-foreground font-medium">
-          A próxima travessia já começou. Sua cadeira está reservada.
+          Menos opções. Mais direção. Você entra para atravessar.
         </p>
         {isAssinante ? (
           <Button variant="gold" size="lg" onClick={() => navigate('/clube-livro')}>
@@ -337,13 +354,13 @@ export default function PlanosClubeOracular() {
         <OQueE />
         <ComoFunciona />
         <OQueRecebe />
-        <Planos />
+        <PlanosSection />
         <ParaQuem />
         <Faq />
         <CtaFinal />
         <footer className="py-6 text-center">
           <p className="text-xs text-muted-foreground/50 px-6">
-            O Círculo forma pela leitura. A condução simbólica depende do nível de formação.
+            Leitura vira competência. Portal vira prática.
           </p>
         </footer>
       </div>
