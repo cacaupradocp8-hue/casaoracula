@@ -70,6 +70,7 @@ import LabirintoTiposCampo from "./pages/labirinto/LabirintoTiposCampo";
 import LabirintoTabela from "./pages/labirinto/LabirintoTabela";
 import InstallApp from "./pages/InstallApp";
 import Planos from "./pages/Planos";
+import PlanosClubeOracular from "./pages/PlanosClubeOracular";
 import PosCompra from "./pages/PosCompra";
 import Assinatura from "./pages/Assinatura";
 import Billing from "./pages/Billing";
@@ -1701,6 +1702,7 @@ function AppRoutes() {
 
         {/* Planos e Assinatura */}
         <Route path="/planos" element={<Planos />} />
+        <Route path="/planos-clube" element={<PlanosClubeOracular />} />
         <Route 
           path="/pos-compra" 
           element={
