@@ -24,8 +24,9 @@ import {
   Sparkles, Brain, Briefcase, Compass, Sun, FileText,
   Loader2, AlertTriangle, ChevronDown, ChevronRight,
   SkipBack, SkipForward, Volume2, VolumeX,
-  Flower2, Home, Music, Stethoscope, Pen,
+  Flower2, Home, Music, Stethoscope, Pen, Download,
 } from 'lucide-react';
+import { ClubeMateriaisTab } from '@/components/clube-livro/ClubeMateriaisTab';
 
 // ── Types ──
 interface AulaBloco {
@@ -303,7 +304,7 @@ export default function ClubeLivroPorta() {
 
         {/* ═══ TABS ═══ */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="w-full grid grid-cols-5 h-auto gap-0 bg-muted/50 rounded-lg p-1">
+          <TabsList className="w-full grid grid-cols-6 h-auto gap-0 bg-muted/50 rounded-lg p-1">
             <TabsTrigger value="aula-album" className="text-xs px-1 py-2 flex flex-col gap-1 data-[state=active]:bg-background">
               <Headphones className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Aula</span>
@@ -323,6 +324,10 @@ export default function ClubeLivroPorta() {
             <TabsTrigger value="jardim-oficio" className="text-xs px-1 py-2 flex flex-col gap-1 data-[state=active]:bg-background">
               <Briefcase className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Ofício</span>
+            </TabsTrigger>
+            <TabsTrigger value="materiais" className="text-xs px-1 py-2 flex flex-col gap-1 data-[state=active]:bg-background">
+              <Download className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Materiais</span>
             </TabsTrigger>
           </TabsList>
 
@@ -477,6 +482,11 @@ export default function ClubeLivroPorta() {
                 Ir ao Jardim do Ofício
               </Button>
             </div>
+          </TabsContent>
+
+          {/* ── TAB: Materiais ── */}
+          <TabsContent value="materiais" className="mt-5">
+            <ClubeMateriaisTab cicloId={cicloId!} livroTitulo={ciclo?.titulo || ''} />
           </TabsContent>
         </Tabs>
       </div>
