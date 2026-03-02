@@ -1,155 +1,105 @@
 import { motion } from 'framer-motion';
-import { useNavigate, Link } from 'react-router-dom';
-import { ArrowRight, Lock, Scroll } from 'lucide-react';
-import { Logo } from '@/components/layout/Logo';
+import { useNavigate } from 'react-router-dom';
+import { ArrowRight, Play, Sparkles, BookOpen } from 'lucide-react';
+import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { useCopy } from '@/hooks/useCopy';
-import { cn } from '@/lib/utils';
-
-// Portas da Casa (todas bloqueadas para visitante)
-const PORTAS_CASA = [
-  { id: 'mentoria', nome: 'Sala da Mentoria', locked: true },
-  { id: 'formacao', nome: 'Sala de Treinamento', locked: true },
-  { id: 'ferramentas', nome: 'Ferramentas do Método', locked: true },
-  { id: 'sessao', nome: 'Sala de Sessão', locked: true },
-  { id: 'oracula', nome: 'Círculo da Orácula', locked: true },
-];
 
 /**
- * VisitorHomePage - Tela inicial para visitantes
+ * VisitorHomePage — Home para visitante/gratuito
  * 
- * Contém APENAS:
- * 1. Logo Casa Orácula
- * 2. Frase-manifesto curta
- * 3. Botão único: "Entrar pela Porta Gratuita"
- * 4. Mapa visual da Casa (portas bloqueadas, não clicáveis)
- * 5. Documento Fundador (leitura livre)
- * 
- * Nada mais é clicável.
+ * 3 cards grandes, 1 mensagem, nada mais.
  */
 export function VisitorHomePage() {
   const navigate = useNavigate();
-  const { getCopyByKey } = useCopy();
 
-  const handleEnterFreeGate = () => {
-    // Vai DIRETAMENTE para a Sala de Visita (Sala da Visitante no banco)
-    navigate('/sala-da-visitante');
-  };
+  const cards = [
+    {
+      title: 'Comece por Aqui',
+      description: 'Assista ao vídeo de boas-vindas e entenda como funciona a Casa.',
+      action: 'Assistir e Começar',
+      icon: Play,
+      route: '/comece-aqui',
+      delay: 0.3,
+    },
+    {
+      title: 'Experiência Gratuita',
+      description: 'Descubra seu eixo, entenda sua estrutura e viva sua primeira travessia.',
+      action: 'Iniciar Experiência',
+      icon: Sparkles,
+      route: '/experiencia-gratuita',
+      delay: 0.45,
+    },
+    {
+      title: 'Habitar o Clube',
+      description: 'Conheça o Clube de Leitura Simbólica e aprofunde sua jornada.',
+      action: 'Conhecer o Clube',
+      icon: BookOpen,
+      route: '/clube-livro',
+      delay: 0.6,
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Ambient background */}
-      <div className="fixed inset-0 bg-gradient-to-b from-gold/5 via-background to-background pointer-events-none" />
-      <div className="fixed inset-0 pattern-geometric opacity-10 pointer-events-none" />
-
-      <div className="relative z-10 flex-1 flex flex-col items-center px-4 py-8 max-w-2xl mx-auto w-full">
-        {/* Logo */}
+    <AppLayout>
+      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 py-12 max-w-2xl mx-auto">
+        {/* Mensagem fixa */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-8"
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12"
         >
-          <Logo size="lg" variant="vertical" />
-        </motion.div>
-
-        {/* Frase-manifesto */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-center text-muted-foreground font-display italic text-lg mb-10 max-w-md"
-        >
-          {getCopyByKey('manifesto_visitante', 'Uma Casa não é um lugar. É um método de escuta.')}
-        </motion.p>
-
-        {/* Botão principal - ÚNICO elemento de ação */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5, duration: 0.4 }}
-          className="mb-12"
-        >
-          <Button
-            variant="gold"
-            size="lg"
-            onClick={handleEnterFreeGate}
-            className="gap-3 text-lg px-8 py-6 rounded-full shadow-lg shadow-gold/20"
-          >
-            Entrar pela Porta Gratuita
-            <ArrowRight className="w-5 h-5" />
-          </Button>
-        </motion.div>
-
-        {/* Mapa visual da Casa - Portas bloqueadas (não clicáveis) */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.5 }}
-          className="w-full mb-12"
-        >
-          <h2 className="text-center text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wider">
-            Mapa da Casa
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {PORTAS_CASA.map((porta) => (
-              <Card
-                key={porta.id}
-                className={cn(
-                  "bg-muted/20 border-border/30 pointer-events-none",
-                  "opacity-50"
-                )}
-              >
-                <CardContent className="p-4 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-muted/30 flex items-center justify-center shrink-0">
-                    <Lock className="w-4 h-4 text-muted-foreground/50" />
-                  </div>
-                  <span className="text-sm text-muted-foreground truncate">
-                    {porta.nome}
-                  </span>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          <p className="text-center text-xs text-muted-foreground/60 mt-3">
-            Portas acessíveis após atravessar a Sala de Visita
+          <h1 className="font-display text-3xl md:text-4xl text-foreground mb-3">
+            Bem-vinda à Casa.
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Comece pelo caminho abaixo.
           </p>
         </motion.div>
 
-        {/* Documento Fundador - Leitura livre */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9, duration: 0.5 }}
-          className="w-full"
-        >
-          <Card className="bg-card/50 border-gold/10">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center shrink-0">
-                  <Scroll className="w-5 h-5 text-gold" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-display text-foreground mb-2">
-                    Documento Fundador
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {getCopyByKey('documento_fundador_resumo', 
-                      'A Casa ORÁCULA é um espaço de formação simbólica para mulheres que atuam no cuidado de outras mulheres. Aqui, você não consome conteúdo — você atravessa processos com estrutura, linguagem e cuidado simbólico.'
-                    )}
-                  </p>
-                  <blockquote className="mt-4 pl-4 border-l-2 border-gold/30 italic text-muted-foreground text-sm">
-                    {getCopyByKey('documento_fundador_citacao',
-                      '"Não é terapia. Não é coaching. É um método de escuta que sustenta quem sustenta."'
-                    )}
-                  </blockquote>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        {/* 3 Cards grandes */}
+        <div className="w-full space-y-4">
+          {cards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <motion.div
+                key={card.route}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: card.delay, duration: 0.5 }}
+              >
+                <Card className="glass border-primary/10 hover:border-primary/25 transition-all duration-300">
+                  <CardContent className="p-6 md:p-8">
+                    <div className="flex items-start gap-5">
+                      <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/15 flex items-center justify-center shrink-0">
+                        <Icon className="w-6 h-6 text-primary/70" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h2 className="font-display text-xl font-semibold text-foreground mb-2">
+                          {card.title}
+                        </h2>
+                        <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                          {card.description}
+                        </p>
+                        <Button
+                          variant="gold"
+                          size="sm"
+                          onClick={() => navigate(card.route)}
+                          className="gap-2"
+                        >
+                          {card.action}
+                          <ArrowRight className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </AppLayout>
   );
 }

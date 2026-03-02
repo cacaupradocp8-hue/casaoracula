@@ -1,16 +1,17 @@
 // ============================================
-// JORNADA — Espelho de Jornada Simbólica
+// JORNADA — Roteamento por perfil
 // ============================================
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  Moon, Sparkles, ArrowRight, BookOpen, Compass, Wrench, Flower2, Music, Library
+  Moon, Sparkles, ArrowRight, BookOpen, Compass, Wrench, Flower2, Library
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { supabase } from '@/integrations/supabase/client';
 import { VisitorHomePage } from '@/components/visitor/VisitorHomePage';
+import { ClubeHomePage } from '@/components/clube-livro/ClubeHomePage';
 import { useJornadaData } from '@/hooks/useJornadaData';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -22,11 +23,9 @@ import mandalaHome from '@/assets/mandala-home.jpg';
 // TIPOS & MAPEAMENTOS
 // ════════════════════════════════════════════════════════════════════════════
 
-type JornadaLevel = 'visitante' | 'iniciada' | 'terapeuta' | 'guardia';
 type GrauAtual = 'iniciacao' | 'profundizacao' | 'integracao';
 
 interface PortalInfo { nome: string; subtitulo: string; }
-interface ProximoGesto { texto: string; rota: string; }
 
 const PORTAIS_INFO: Record<string, PortalInfo> = {
   visitante: { nome: 'Portal Zero', subtitulo: 'O Limiar' },
@@ -60,15 +59,6 @@ const FRASES_POR_GRAU: Record<GrauAtual, string[]> = {
   ]
 };
 
-const GESTOS_POSSIVEIS = {
-  sem_jardim: { texto: "Escrever no Jardim da Psiquê", rota: "/jardim-psique" },
-  sem_travessia: { texto: "Iniciar uma travessia", rota: "/formacao" },
-  sem_ferramenta: { texto: "Explorar uma ferramenta", rota: "/ferramentas" },
-  continuar_curso: { texto: "Continuar sua formação", rota: "/formacao" },
-  praticar: { texto: "Praticar com uma cliente", rota: "/clientes" },
-  default: { texto: "Retornar ao centro", rota: "/dashboard" }
-};
-
 function getFraseOraculo(grau: GrauAtual): string {
   const frases = FRASES_POR_GRAU[grau];
   const weekNumber = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
@@ -79,17 +69,14 @@ function getPortalInfo(portal: string): PortalInfo {
   return PORTAIS_INFO[portal] || PORTAIS_INFO.visitante;
 }
 
-// ════════════════════════════════════════════════════════════════════════════
-// ATALHOS DE NAVEGAÇÃO
-// ════════════════════════════════════════════════════════════════════════════
-
+// Quick navigation for aluna/formação
 const quickLinks = [
   { label: 'Formação', icon: BookOpen, path: '/oracula', color: 'text-primary' },
   { label: 'Travessias', icon: Compass, path: '/biblioteca-travessias', color: 'text-accent' },
-  { label: 'Ferramentas', icon: Wrench, path: '/ferramentas', color: 'text-emerald-400' },
-  { label: 'Biblioteca', icon: Library, path: '/minha-biblioteca', color: 'text-purple-400' },
-  { label: 'Oráculos', icon: Sparkles, path: '/oraculos', color: 'text-amber-400' },
-  { label: 'Jardim', icon: Flower2, path: '/jardim-da-psique', color: 'text-rose-400' },
+  { label: 'Ferramentas', icon: Wrench, path: '/ferramentas', color: 'text-primary' },
+  { label: 'Biblioteca', icon: Library, path: '/minha-biblioteca', color: 'text-primary' },
+  { label: 'Oráculos', icon: Sparkles, path: '/oraculos', color: 'text-primary' },
+  { label: 'Jardim', icon: Flower2, path: '/jardim-da-psique', color: 'text-primary' },
 ];
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -100,12 +87,10 @@ export default function Jornada() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [level, setLevel] = useState<JornadaLevel>('visitante');
   const [grau, setGrau] = useState<GrauAtual>('iniciacao');
-  const [proximoGesto, setProximoGesto] = useState<ProximoGesto>(GESTOS_POSSIVEIS.default);
+  const [proximoGesto, setProximoGesto] = useState({ texto: 'Continuar sua formação', rota: '/oracula' });
   
-  const jornadaNivel = level !== 'visitante' ? level : null;
-  const { fraseSelo } = useJornadaData(jornadaNivel, user?.id);
+  const { fraseSelo } = useJornadaData(user && user.portal !== 'visitante' ? 'iniciada' : null, user?.id);
 
   useEffect(() => {
     const loadData = async () => {
@@ -113,22 +98,6 @@ export default function Jornada() {
       setLoading(true);
       
       try {
-        let userLevel: JornadaLevel = 'visitante';
-        
-        if (user.portal === 'admin' || user.portal === 'oracula') {
-          const { data: clientes } = await supabase
-            .from('clientes')
-            .select('id')
-            .eq('terapeuta_id', user.id)
-            .eq('status', 'ativo')
-            .limit(1);
-          userLevel = clientes && clientes.length > 0 ? 'terapeuta' : 'iniciada';
-        } else if (user.portal === 'assinante' || user.portal === 'aluna') {
-          userLevel = 'iniciada';
-        }
-        
-        setLevel(userLevel);
-
         const { data: jardimRecords } = await supabase
           .from('jardim_psique_registros')
           .select('id')
@@ -155,13 +124,11 @@ export default function Jornada() {
         }
 
         if (jardimCount === 0) {
-          setProximoGesto(GESTOS_POSSIVEIS.sem_jardim);
+          setProximoGesto({ texto: 'Escrever no Jardim da Psiquê', rota: '/jardim-da-psique' });
         } else if (progressTotal === 0) {
-          setProximoGesto(GESTOS_POSSIVEIS.sem_travessia);
-        } else if (userLevel === 'terapeuta') {
-          setProximoGesto(GESTOS_POSSIVEIS.praticar);
+          setProximoGesto({ texto: 'Iniciar uma travessia', rota: '/travessias' });
         } else {
-          setProximoGesto(GESTOS_POSSIVEIS.continuar_curso);
+          setProximoGesto({ texto: 'Continuar sua formação', rota: '/oracula' });
         }
       } catch (error) {
         console.error('Erro ao carregar dados da jornada:', error);
@@ -173,10 +140,19 @@ export default function Jornada() {
     loadData();
   }, [user]);
 
+  // ═══ VISITANTE → VisitorHomePage ═══
   if (!user || user.portal === 'visitante') {
     return <VisitorHomePage />;
   }
 
+  // ═══ ASSINANTE → ClubeHomePage ═══
+  const isAssinante = user.portal === 'assinante';
+  const isAluna = canAccessFeature(user.portal, 'aluna');
+  if (isAssinante && !canAccessFeature(user.portal, 'oracula')) {
+    return <ClubeHomePage />;
+  }
+
+  // ═══ ALUNA / ORÁCULA / ADMIN → Jornada completa ═══
   const portalInfo = getPortalInfo(user.portal || 'visitante');
   const fraseOraculo = fraseSelo || getFraseOraculo(grau);
   const welcomeName = user?.name?.split(' ')[0] || 'Aluna';
@@ -201,7 +177,6 @@ export default function Jornada() {
       <div className="relative">
         {/* ═══ HERO SECTION ═══ */}
         <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
-          {/* Background mandala */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -213,10 +188,8 @@ export default function Jornada() {
             </motion.div>
           </div>
 
-          {/* Glow effects */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-primary/5 blur-[100px] pointer-events-none" />
 
-          {/* Content */}
           <div className="relative z-10 text-center px-6 max-w-2xl mx-auto">
             <motion.p
               initial={{ opacity: 0 }}
@@ -297,7 +270,7 @@ export default function Jornada() {
                       transition={{ delay: 1 + i * 0.05, duration: 0.4 }}
                     >
                       <Card
-                        className="glass border-border/30 hover:border-primary/30 transition-all duration-300 cursor-pointer group hover:shadow-gold/10 hover:shadow-lg"
+                        className="glass border-border/30 hover:border-primary/30 transition-all duration-300 cursor-pointer group hover:shadow-lg"
                         onClick={() => navigate(link.path)}
                       >
                         <CardContent className="p-4 text-center">
@@ -317,17 +290,7 @@ export default function Jornada() {
           </div>
         </section>
 
-        {/* ═══ BOTTOM DECORATION ═══ */}
         <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-        
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          className="text-center text-muted-foreground/30 text-xs py-8"
-        >
-          Este espaço escuta o campo.
-        </motion.p>
       </div>
     </AppLayout>
   );
