@@ -14,8 +14,8 @@ interface Props {
   cicloId: string;
 }
 
-const JORNADAS = ['Individuação', 'Descida', 'Retorno', 'Travessia', 'Integração'];
-const PUBLICOS = ['grupo terapêutico', 'mentoria individual', 'formação profissional', 'círculo de mulheres'];
+const JORNADAS = ['Heroína', 'Instinto', 'Sombra', 'Liderança', 'Corpo'];
+const PUBLICO_FIXO = 'terapeutas, mentoras do feminino, psicólogas, terapeutas holísticas e mulheres buscadoras interessadas em literatura';
 
 export function ClubePlaybookGenerator({ cicloId }: Props) {
   const { toast } = useToast();
@@ -69,7 +69,7 @@ export function ClubePlaybookGenerator({ cicloId }: Props) {
   const [livroNome, setLivroNome] = useState('');
   const [livroAutor, setLivroAutor] = useState('');
   const [livroTexto, setLivroTexto] = useState('');
-  const [publicoAlvo, setPublicoAlvo] = useState('grupo terapêutico');
+  const [publicoAlvo] = useState(PUBLICO_FIXO);
   const [jornada, setJornada] = useState('Individuação');
   const [numEncontros, setNumEncontros] = useState(4);
 
@@ -219,15 +219,11 @@ export function ClubePlaybookGenerator({ cicloId }: Props) {
               <Label className="text-xs">Autor</Label>
               <Input value={livroAutor} onChange={e => setLivroAutor(e.target.value)} />
             </div>
-            <div>
+            <div className="col-span-2">
               <Label className="text-xs">Público-alvo</Label>
-              <select
-                className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
-                value={publicoAlvo}
-                onChange={e => setPublicoAlvo(e.target.value)}
-              >
-                {PUBLICOS.map(p => <option key={p} value={p}>{p}</option>)}
-              </select>
+              <p className="text-xs text-muted-foreground mt-1 p-2 bg-muted/50 rounded-md">
+                {PUBLICO_FIXO}
+              </p>
             </div>
             <div>
               <Label className="text-xs">Jornada</Label>
