@@ -72,7 +72,7 @@ export default function PlanosClubeOracular() {
               Círculo de Leitura Oracular
             </h1>
             <p className="text-lg text-muted-foreground max-w-lg mx-auto">
-              Um clube para transformar leitura em competência — com método, profundidade simbólica e aplicação profissional.
+              Leitura vira competência. Portal vira prática.
             </p>
 
             {/* VSL Embed */}
@@ -106,7 +106,7 @@ export default function PlanosClubeOracular() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <Button variant="gold" size="lg" onClick={handlePrimaryCta}>
-                {isAssinante ? 'Ir para o Portal Atual' : 'Assinar e Entrar'}
+                {isAssinante ? 'Ir para Portal Atual' : 'Assinar e Entrar'}
               </Button>
               {!isAssinante && (
                 <Button variant="outline" size="lg" className="border-gold/30 hover:bg-gold/10" onClick={scrollToPlanos}>
@@ -363,7 +363,7 @@ export default function PlanosClubeOracular() {
               Menos opções. Mais direção. Você entra para atravessar.
             </p>
             <Button variant="gold" size="lg" onClick={handlePrimaryCta}>
-              {isAssinante ? 'Ir para o Portal Atual' : 'Assinar e Entrar no Portal Atual'}
+              {isAssinante ? 'Ir para Portal Atual' : 'Assinar e Entrar'}
             </Button>
           </motion.div>
         </section>
@@ -382,7 +382,7 @@ export default function PlanosClubeOracular() {
           )}
         >
           <Button variant="gold" size="lg" onClick={handlePrimaryCta}>
-            {isAssinante ? 'Ir para o Portal Atual' : 'Assinar e Entrar'}
+            {isAssinante ? 'Ir para Portal Atual' : 'Assinar e Entrar'}
           </Button>
         </div>
       </div>
