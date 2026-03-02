@@ -106,12 +106,10 @@ export default function MinhaConta() {
                   </Badge>
                 </div>
 
-                {subscriptionStatus === 'active' && (
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Plano</span>
-                    <span className="font-medium">Ativo</span>
-                  </div>
-                )}
+                 <div className="flex items-center justify-between text-sm">
+                   <span className="text-muted-foreground">Plano ativo</span>
+                   <span className="font-medium">{subscriptionStatus === 'active' ? 'Ativo' : subscriptionStatus || '—'}</span>
+                 </div>
 
                 {accessExpiresAt && (
                   <div className="flex items-center justify-between text-sm">
@@ -146,15 +144,15 @@ export default function MinhaConta() {
                   <Badge variant="outline">Gratuito</Badge>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Você está no modo Gratuito. Assine para acessar todo o conteúdo.
-                </p>
-                <div className="grid gap-2 pt-2">
-                  <Button className="w-full" asChild>
-                    <Link to="/planos-clube">
-                      <ArrowUpRight className="w-4 h-4 mr-2" />
-                      Ver Planos do Clube
-                    </Link>
-                  </Button>
+                   Você está no modo Gratuito.
+                 </p>
+                 <div className="grid gap-2 pt-2">
+                   <Button className="w-full" asChild>
+                     <Link to="/planos-clube">
+                       <ArrowUpRight className="w-4 h-4 mr-2" />
+                       Ver Planos
+                     </Link>
+                   </Button>
                 </div>
               </div>
             )}
