@@ -30,26 +30,45 @@ serve(async (req) => {
       `Phase ${e.numero}: "${e.titulo}" (${e.fase}) - ${e.tema_central}`
     ).join(". ");
 
-    const imagePrompt = `Create a premium illustrated infographic in a mystical, archetypal art style. Landscape format 16:9 aspect ratio.
+    const imagePrompt = `Create a WIDE PANORAMIC illustrated mind-map infographic, 16:9 landscape format. This is NOT a card or poster — it is a VISUAL JOURNEY MAP with interconnected illustrated scenes flowing horizontally from left to right.
 
-Title: "${estrutura.titulo_pedagogico || livro_titulo}"
-Subtitle: "Método de Leitura Oracular"
+TITLE (large, elegant, centered at top): "${estrutura.titulo_pedagogico || livro_titulo}"
+SUBTITLE: "Método de Leitura Oracular — ${livro_titulo}"
 
-The infographic should have:
-- A panoramic illustrated scene split into ${encontros.length} visual sections flowing left to right
-- Each section represents a phase of symbolic journey: ${fasesText}
-- Central symbolic motifs: ${arquetipos.slice(0, 4).join(", ")}
-- Core tensions illustrated symbolically: ${tensoes.slice(0, 3).join(", ")}
-- Art style: rich, organic illustrations with flowing vines, trees, mystical creatures, archetypal feminine figures
-- Color palette: deep forest greens, warm earth browns, muted golds, bone whites, soft indigo
-- Each phase has a small title label and brief description text
-- Bottom center: a comparison box showing two states (connected vs disconnected)
-- Footer bar with "Método de Leitura Oracular — Casa Orácula"
-- NO realistic human faces. Use silhouettes, symbolic figures, animals (wolves, owls, serpents)
-- Ritualistic and contemplative mood
-- Ultra high resolution, professional infographic quality
+LAYOUT STRUCTURE — CRITICAL:
+- The entire image is ONE continuous panoramic illustration, like a narrative mural or story map
+- The background is a continuous mystical landscape: enchanted forests, ancient paths, moonlit clearings, mystical doorways
+- There are ${encontros.length} MAJOR VISUAL SCENES arranged left-to-right, each representing a phase of the journey
+- Scenes flow into each other organically through paths, vines, roots, rivers — NO hard borders or card frames
+- Each scene has a TITLE LABEL and a SHORT DESCRIPTION overlaid on scroll/parchment elements
+- Between scenes, symbolic creatures or objects serve as visual bridges (wolves, owls, serpents, keys, doors)
 
-This is inspired by Jungian archetypal psychology applied to "${livro_titulo}". The visual narrative should flow like a journey map through symbolic transformation.`;
+THE ${encontros.length} SCENES (left to right):
+${encontros.map((e: any, i: number) => `Scene ${i + 1}: "${e.titulo}" — Phase: ${e.fase}. Theme: ${e.tema_central}. Visual motif: symbolic scene representing this transformation stage.`).join('\n')}
+
+SYMBOLIC ELEMENTS TO INCLUDE:
+- Archetypal fields: ${arquetipos.slice(0, 4).join(', ')}
+- Central tensions (shown as contrasting visual pairs): ${tensoes.slice(0, 3).join(', ')}
+- At bottom center: a comparison area showing two psychic states side by side (connected vs disconnected)
+
+ART STYLE — MANDATORY:
+- Rich, organic watercolor-style illustrations with flowing botanical elements (vines, ancient trees, roots, flowers)
+- Mystical feminine silhouettes (NO realistic faces) — hooded figures, dancing silhouettes, seated meditation poses
+- Symbolic animals: wolves, owls, serpents, deer
+- Parchment scroll overlays for text labels
+- Color palette: warm earth tones (bone white, sepia, warm browns), deep forest greens, muted burgundy, soft gold accents
+- Ethereal lighting with moonlight and firefly-like particles
+- Overall mood: contemplative, ritualistic, archetypal — like an illustrated fairy tale map
+
+DO NOT create:
+- Flat cards, grids, or boxed layouts
+- Modern/corporate infographic styles
+- Realistic human faces
+- Bright neon colors
+
+Footer banner: "✦ Método de Leitura Oracular — Casa Orácula ✦"
+
+Ultra high resolution, professional illustrated mind-map infographic quality.`;
 
     console.log("Generating infographic image...");
 
