@@ -24,6 +24,7 @@ import {
   Sparkles, Headphones, Video, FileText, Calendar, Loader2, GraduationCap, DoorOpen, Target
 } from 'lucide-react';
 import { FaseEditorExpandido } from './clube-livro';
+import { ClubePlaybookGenerator } from './clube-livro/ClubePlaybookGenerator';
 import { PortasManager } from './clube-livro/PortasManager';
 import { LabConfigManager } from './clube-livro/LabConfigManager';
 import { AulaBlocosEditor, type AulaBloco } from './clube-livro/AulaBlocosEditor';
@@ -642,7 +643,7 @@ function CicloCard({
 function CicloDetailTabs({ cicloId }: { cicloId: string }) {
   return (
     <Tabs defaultValue="fases" className="w-full">
-      <TabsList className="grid w-full grid-cols-6">
+      <TabsList className="grid w-full grid-cols-7">
         <TabsTrigger value="fases" className="gap-1 text-xs">
           <Sparkles className="w-3 h-3" />
           Fases
@@ -667,6 +668,10 @@ function CicloDetailTabs({ cicloId }: { cicloId: string }) {
           <Target className="w-3 h-3" />
           Lab 80/20
         </TabsTrigger>
+        <TabsTrigger value="playbook" className="gap-1 text-xs">
+          <FileText className="w-3 h-3" />
+          Playbook
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="fases" className="pt-4">
         <FasesManager cicloId={cicloId} />
@@ -685,6 +690,9 @@ function CicloDetailTabs({ cicloId }: { cicloId: string }) {
       </TabsContent>
       <TabsContent value="lab8020" className="pt-4">
         <LabConfigManager cicloId={cicloId} />
+      </TabsContent>
+      <TabsContent value="playbook" className="pt-4">
+        <ClubePlaybookGenerator cicloId={cicloId} />
       </TabsContent>
     </Tabs>
   );
