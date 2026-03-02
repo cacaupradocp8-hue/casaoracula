@@ -13,6 +13,7 @@ import {
   Home, Settings, LogOut, Menu, X, User, LogIn, RefreshCw,
   BookOpen, Compass, Wrench, Flower2, GraduationCap, ChevronDown,
   Cog, Users, Calendar, Sparkles, Map, Clock, Eye, Crown, ArrowLeftRight,
+  Headphones,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -28,6 +29,7 @@ const visitanteMenuGroups = () => [
   { key: 'experiencia', label: 'Experiência Gratuita', icon: Sparkles, path: '/experiencia-gratuita', subitems: [] },
   { key: 'clube', label: 'Clube Oracular', icon: BookOpen, path: '/clube-livro', subitems: [] },
   { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
+  { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
 
 // ── ASSINANTE DO CLUBE (máx 6 itens) ────────────────────────────────────────
@@ -38,6 +40,7 @@ const assinanteMenuGroups = () => [
   { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/casa-tecelas', subitems: [] },
   { key: 'assinatura', label: 'Minha Assinatura', icon: Crown, path: '/assinatura', subitems: [] },
   { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
+  { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
 
 // ── ALUNA DE FORMAÇÃO (máx 6 itens) ─────────────────────────────────────────
@@ -61,6 +64,7 @@ const alunaMenuGroups = () => [
   { key: 'biblioteca', label: 'Biblioteca', icon: BookOpen, path: '/minha-biblioteca', subitems: [] },
   { key: 'jardim', label: 'Meu Jardim', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
   { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
+  { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
 
 // ── MUNDO 2: Casa das Máquinas (Espaço Profissional) ────────────────────────

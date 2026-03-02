@@ -75,6 +75,7 @@ import PosCompra from "./pages/PosCompra";
 import Assinatura from "./pages/Assinatura";
 import Billing from "./pages/Billing";
 import MinhaConta from "./pages/MinhaConta";
+import Suporte from "./pages/Suporte";
 import CheckoutSucesso from "./pages/CheckoutSucesso";
 import CheckoutCancelado from "./pages/CheckoutCancelado";
 import Audios from "./pages/Audios";
@@ -1733,6 +1734,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <MinhaConta />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/suporte"
+          element={
+            <ProtectedRoute>
+              <Suporte />
             </ProtectedRoute>
           }
         />
