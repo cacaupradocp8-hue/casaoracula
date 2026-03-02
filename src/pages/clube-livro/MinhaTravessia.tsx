@@ -264,11 +264,8 @@ function LabHistorySection() {
               <CheckCircle2 className="w-4 h-4 text-gold shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-foreground">
-                  {lab.oracular_seasons?.simbolo} {lab.oracular_seasons?.nome_estacao}
+                  Lab 80/20 Concluído
                 </p>
-                {lab.oracular_seasons?.periodo && (
-                  <p className="text-xs text-muted-foreground">{lab.oracular_seasons.periodo}</p>
-                )}
               </div>
               {lab.concluido_em && (
                 <span className="text-[10px] text-muted-foreground shrink-0">

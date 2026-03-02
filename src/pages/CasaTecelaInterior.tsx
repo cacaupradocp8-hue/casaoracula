@@ -85,7 +85,7 @@ export default function CasaTecelaInterior() {
   const areaConfig = {
     canteiro: {
       icon: Sprout,
-      title: 'Canteiro da Estação',
+      title: 'Canteiro',
       subtitle: 'Partilhas selecionadas para o campo coletivo',
       color: 'text-gold',
       bgColor: 'bg-gold/10',

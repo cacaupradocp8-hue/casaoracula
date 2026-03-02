@@ -13,11 +13,11 @@ import { useAccessExpiration } from '@/hooks/useAccessExpiration';
 import { LockedForVisitor } from '@/components/shared/LockedForVisitor';
 import { useCirculoProgressao } from '@/hooks/useCirculoProgressao';
 import { ReguaSimbolica } from '@/components/clube-livro/ReguaSimbolica';
-import { BookOpen, ChevronRight, Home, Map, Route, Sparkles } from 'lucide-react';
+import { BookOpen, ChevronRight, Home, Map, Route } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useSeasonForBook } from '@/hooks/useOracularSeasons';
+
 
 export default function ClubeLivroApresentacao() {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ export default function ClubeLivroApresentacao() {
   const { isExpired } = useAccessExpiration();
   const { cicloAtual, loadingCiclos } = useClubeLivro();
   const { hasAccepted } = useRitualAceite(cicloAtual?.id);
-  const seasonAtual = useSeasonForBook(cicloAtual?.id);
+  
   const { steps } = useCirculoProgressao(cicloAtual?.id);
   const hasAccess = user && canAccessFeature(user.portal, 'aluna') && !isExpired;
 
@@ -86,13 +86,6 @@ export default function ClubeLivroApresentacao() {
                   <p className="text-xs uppercase tracking-[0.2em] text-gold font-medium mb-1">
                     Travessia em Curso
                   </p>
-                  {seasonAtual && (
-                    <Badge variant="outline" className="text-xs text-muted-foreground border-border/50 mb-3">
-                      {seasonAtual.simbolo && <span className="mr-1">{seasonAtual.simbolo}</span>}
-                      {seasonAtual.nome_estacao}
-                      {seasonAtual.periodo && <span className="ml-1 text-muted-foreground/60">· {seasonAtual.periodo}</span>}
-                    </Badge>
-                  )}
                   <div className="flex flex-col sm:flex-row items-center gap-5">
                     {cicloAtual.capa_url ? (
                       <img
@@ -151,15 +144,6 @@ export default function ClubeLivroApresentacao() {
 
             {/* ── 3. NAVEGAÇÃO ESSENCIAL ── */}
             <div className="flex items-center justify-center gap-3 pt-2 flex-wrap">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground hover:text-foreground gap-2"
-                onClick={() => navigate('/clube-livro/ano-oracular')}
-              >
-                <Sparkles className="w-4 h-4" />
-                Mapa do Ano Oracular
-              </Button>
               <Button
                 variant="ghost"
                 size="sm"
