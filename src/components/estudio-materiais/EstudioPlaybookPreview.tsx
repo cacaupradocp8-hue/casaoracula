@@ -35,17 +35,17 @@ export default function EstudioPlaybookPreview({ estrutura, nomeMentora, nomeGru
   const jornada = estrutura.jornada_predominante || 'Individuação';
 
   // Shared inline styles for the self-contained printable document
-  const gold = '#C6A75E';
-  const goldDim = '#C6A75E66';
-  const goldFaint = '#C6A75E22';
-  const cream = '#F0E8D8';
-  const creamDim = '#D4C9B899';
-  const bg = '#000000';
-  const cardBg = 'rgba(255,255,255,0.02)';
-  const cardBorder = 'rgba(198,167,94,0.15)';
-  const alertBg = 'rgba(180,60,60,0.08)';
-  const alertBorder = 'rgba(180,60,60,0.25)';
-  const ritualBg = 'rgba(198,167,94,0.06)';
+  const gold = '#D4B06A';
+  const goldDim = '#C6A75ECC';
+  const goldFaint = '#C6A75E44';
+  const cream = '#F5F0E6';
+  const creamDim = '#E0D6C4';
+  const bg = '#0A0A0A';
+  const cardBg = 'rgba(255,255,255,0.04)';
+  const cardBorder = 'rgba(198,167,94,0.25)';
+  const alertBg = 'rgba(180,60,60,0.12)';
+  const alertBorder = 'rgba(180,60,60,0.4)';
+  const ritualBg = 'rgba(198,167,94,0.1)';
 
   return (
     <div className="space-y-4 mt-4">
