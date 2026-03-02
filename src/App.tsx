@@ -74,6 +74,7 @@ import PlanosClubeOracular from "./pages/PlanosClubeOracular";
 import PosCompra from "./pages/PosCompra";
 import Assinatura from "./pages/Assinatura";
 import Billing from "./pages/Billing";
+import MinhaConta from "./pages/MinhaConta";
 import CheckoutSucesso from "./pages/CheckoutSucesso";
 import CheckoutCancelado from "./pages/CheckoutCancelado";
 import Audios from "./pages/Audios";
@@ -1724,6 +1725,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <Billing />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/minha-conta"
+          element={
+            <ProtectedRoute>
+              <MinhaConta />
             </ProtectedRoute>
           }
         />
