@@ -40,18 +40,25 @@ export default function EstudioMateriaisPage() {
   const [showWizard, setShowWizard] = useState(false);
   const [editingProject, setEditingProject] = useState<string | null>(null);
 
+  const isAdmin = user?.portal === 'admin';
+
   useEffect(() => {
     if (user) loadProjetos();
   }, [user]);
 
   const loadProjetos = async () => {
     setLoading(true);
-    const { data, error } = await supabase
+    let query = supabase
       .from('estudio_projetos')
       .select('*')
-      .eq('owner_id', user!.id)
       .order('updated_at', { ascending: false });
 
+    // Admin vê todos os projetos; demais veem apenas os próprios
+    if (!isAdmin) {
+      query = query.eq('owner_id', user!.id);
+    }
+
+    const { data, error } = await query;
     if (!error && data) setProjetos(data as any);
     setLoading(false);
   };
