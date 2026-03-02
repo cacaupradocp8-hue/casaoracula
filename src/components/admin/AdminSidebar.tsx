@@ -33,7 +33,6 @@ export const adminNavGroups: AdminNavGroup[] = [
     icon: GraduationCap,
     items: [
       { key: 'clube-livro', label: 'Círculos de Leitura', icon: BookOpen },
-      { key: 'estacoes', label: 'Estações Oráculares', icon: Compass },
       { key: 'conteudos', label: 'Conteúdo', icon: GraduationCap },
       { key: 'cursos', label: 'Cursos', icon: Video },
       { key: 'travessias', label: 'Travessias', icon: Compass },

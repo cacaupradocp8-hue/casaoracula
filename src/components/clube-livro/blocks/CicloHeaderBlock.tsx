@@ -1,15 +1,12 @@
 import { Badge } from '@/components/ui/badge';
 import { BookMarked } from 'lucide-react';
 import { ClubeCiclo } from '@/hooks/useClubeLivro';
-import { useSeasonForBook } from '@/hooks/useOracularSeasons';
 
 interface CicloHeaderBlockProps {
   ciclo: ClubeCiclo;
 }
 
 export function CicloHeaderBlock({ ciclo }: CicloHeaderBlockProps) {
-  const season = useSeasonForBook(ciclo.id);
-
   return (
     <div className="flex flex-col md:flex-row gap-6">
       {ciclo.capa_url ? (
@@ -31,12 +28,6 @@ export function CicloHeaderBlock({ ciclo }: CicloHeaderBlockProps) {
           {ciclo.tema_simbolico && (
             <Badge variant="outline" className="text-gold border-gold/30">
               {ciclo.tema_simbolico}
-            </Badge>
-          )}
-          {season && (
-            <Badge variant="outline" className="text-muted-foreground border-border/50 text-xs">
-              {season.simbolo && <span className="mr-1">{season.simbolo}</span>}
-              {season.nome_estacao}
             </Badge>
           )}
         </div>

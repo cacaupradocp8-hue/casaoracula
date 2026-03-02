@@ -39,7 +39,7 @@ export default function CanteiroEstacao() {
         <CardContent className="py-10 text-center space-y-2">
           <Sprout className="w-8 h-8 text-muted-foreground/40 mx-auto" />
           <p className="text-sm text-muted-foreground">
-            Nenhum Canteiro ativo nesta estação.
+            Nenhum Canteiro ativo no momento.
           </p>
         </CardContent>
       </Card>
@@ -52,14 +52,11 @@ export default function CanteiroEstacao() {
       <div className="text-center space-y-2">
         <div className="flex items-center justify-center gap-2">
           <Sprout className="w-5 h-5 text-gold" />
-          <h2 className="font-display text-lg text-foreground">Canteiro da Estação</h2>
+          <h2 className="font-display text-lg text-foreground">Canteiro</h2>
         </div>
-        {canteiro.oracular_seasons && (
+        {canteiro.ciclo_nome && (
           <Badge variant="outline" className="text-xs text-muted-foreground border-border/50">
-            {canteiro.oracular_seasons.simbolo && (
-              <span className="mr-1">{canteiro.oracular_seasons.simbolo}</span>
-            )}
-            {canteiro.oracular_seasons.nome_estacao}
+            {canteiro.ciclo_nome}
           </Badge>
         )}
         <p className="text-xs text-muted-foreground/70 italic max-w-md mx-auto">
@@ -87,7 +84,7 @@ export default function CanteiroEstacao() {
       </Tabs>
 
       {/* Submit dialog */}
-      <SubmitPartilhaDialog bedId={canteiro.id} seasonId={canteiro.season_id} />
+      <SubmitPartilhaDialog bedId={canteiro.id} cicloId={canteiro.ciclo_id} />
 
       {/* Arquivo de canteiros encerrados (formação only) */}
       {isFormacao && <ArquivoCanteiros />}
@@ -147,7 +144,7 @@ function EntryCard({ entry }: { entry: CollectiveBedEntry }) {
   );
 }
 
-function SubmitPartilhaDialog({ bedId, seasonId }: { bedId: string; seasonId: string }) {
+function SubmitPartilhaDialog({ bedId, cicloId }: { bedId: string; cicloId?: string | null }) {
   const [open, setOpen] = useState(false);
   const [texto, setTexto] = useState('');
   const [origem, setOrigem] = useState<'psique' | 'oficio'>('psique');
@@ -157,7 +154,7 @@ function SubmitPartilhaDialog({ bedId, seasonId }: { bedId: string; seasonId: st
   const handleSubmit = () => {
     if (!texto.trim()) return;
     submitMutation.mutate(
-      { bed_id: bedId, season_id: seasonId, origem, texto: texto.trim(), exibicao_anonima: anonima },
+      { bed_id: bedId, ciclo_id: cicloId || undefined, origem, texto: texto.trim(), exibicao_anonima: anonima },
       {
         onSuccess: () => {
           setTexto('');
@@ -172,7 +169,7 @@ function SubmitPartilhaDialog({ bedId, seasonId }: { bedId: string; seasonId: st
       <DialogTrigger asChild>
         <Button variant="outline" className="w-full gap-2 text-sm border-gold/20 hover:border-gold/40">
           <Send className="w-4 h-4" />
-          Levar ao Canteiro da Estação
+          Levar ao Canteiro
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-lg">
@@ -254,11 +251,8 @@ function ArquivoCanteiros() {
             <Sprout className="w-4 h-4 text-muted-foreground/40 shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-sm text-foreground/70 truncate">
-                {bed.oracular_seasons?.simbolo} {bed.oracular_seasons?.nome_estacao}
+                {bed.ciclo_nome || 'Canteiro'}
               </p>
-              {bed.oracular_seasons?.periodo && (
-                <p className="text-[10px] text-muted-foreground">{bed.oracular_seasons.periodo}</p>
-              )}
             </div>
             <Badge variant="outline" className="text-[10px] text-muted-foreground/60">Encerrado</Badge>
           </CardContent>
