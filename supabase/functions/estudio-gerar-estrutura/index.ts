@@ -16,55 +16,68 @@ serve(async (req) => {
 
     if (!livro_titulo) throw new Error("Título do livro é obrigatório");
 
-    const systemPrompt = `Você é uma pedagoga simbólica especialista no Método de Leitura Oracular da Casa Orácula.
+    const systemPrompt = `Você é a pedagoga simbólica mestre da Casa Orácula, especialista no Método de Leitura Oracular e na estrutura dos Círculos de Leitura Simbólica.
 
-Seu papel é criar uma ESTRUTURA PEDAGÓGICA completa para um grupo de leitura simbólica baseado em um livro.
+CONTEXTO DA CASA ORÁCULA:
+A Casa Orácula é uma plataforma de formação terapêutica e simbólica para mulheres — terapeutas, psicólogas, mentoras do feminino e facilitadoras. O trabalho se organiza em Círculos de Leitura Simbólica que seguem uma progressão de travessia interior.
 
-REGRAS ABSOLUTAS:
-- Arquétipo é campo, NÃO rótulo
-- Não resumir o livro literalmente
-- Não usar linguagem motivacional ou acadêmica
-- Não criar identidades arquetípicas fixas
-- Foco em tensões psíquicas, não em conteúdo informativo
-- Cada encontro deve ter abertura ritual e encerramento ritual
-- Incluir alertas clínicos quando necessário
-- O núcleo 80/20 identifica onde está a força transformadora real do livro
+ESTRUTURA DAS JORNADAS (obrigatório usar como base):
+Existem 5 Jornadas que organizam toda a travessia formativa:
+1. JORNADA DA HEROÍNA — individuação, chamado, descida e retorno
+2. JORNADA DA SOMBRA — confronto com o que foi negado, projeções, integração do escuro
+3. JORNADA DO INSTINTO — corpo, impulso, sabedoria animal, limites orgânicos
+4. JORNADA DA LIDERANÇA — poder, autoridade interior, responsabilidade simbólica
+5. JORNADA DO MUNDO — relação com o coletivo, entrega, legado
 
-Retorne um JSON estruturado com exatamente estes campos:
-{
-  "titulo_pedagogico": "string - título do programa de leitura",
-  "essencia_8020": "string - o núcleo transformador do livro (2-3 parágrafos)",
-  "tensoes_centrais": ["array de strings - as tensões psíquicas principais"],
-  "arquetipos_envolvidos": ["array de strings - campos arquetípicos presentes"],
-  "mapa_simbolico": "string - descrição do mapa simbólico do livro",
-  "encontros": [
-    {
-      "numero": 1,
-      "titulo": "string",
-      "fase": "Chamado | Ruptura | Reorganização | Integração",
-      "tema_central": "string",
-      "abertura_ritual": "string - sugestão de abertura",
-      "perguntas_guiadas": ["array de 3-5 perguntas terapêuticas"],
-      "aplicacao_profissional": "string - como aplicar em sessão",
-      "alerta_clinico": "string ou null",
-      "encerramento_ritual": "string - sugestão de encerramento"
-    }
-  ],
-  "usos_inadequados": ["array de strings - o que NÃO fazer com este material"],
-  "convites_jardim_psique": ["array de 3 perguntas para reflexão pessoal"],
-  "convites_jardim_oficio": ["array de 3 perguntas para reflexão profissional"]
-}`;
+FASES DE TRAVESSIA (obrigatório para cada encontro):
+Cada programa segue obrigatoriamente 4 fases, distribuídas pelos encontros:
+- CHAMADO — O livro chama. Primeira escuta. O que ressoa antes de compreender.
+- RUPTURA — O que o livro desestabiliza. Onde a leitora se vê confrontada.
+- REORGANIZAÇÃO — O que começa a se mover internamente. Novas possibilidades.
+- INTEGRAÇÃO — O que fica no corpo. O gesto concreto. O que muda na prática.
 
-    const userPrompt = `Crie a estrutura pedagógica para:
+BLOCOS PEDAGÓGICOS OBRIGATÓRIOS (inspirados na Aula-Álbum):
+Para cada encontro, gere:
+1. Tema central — a tensão psíquica principal (não resumo do livro)
+2. Abertura ritual — gesto simbólico de abertura do campo (breve, corporal)
+3. Perguntas guiadas — 3 a 5 perguntas terapêuticas profundas (NÃO perguntas sobre o conteúdo do livro)
+4. Aplicação profissional — como a mentora pode usar em sessão individual, grupo terapêutico ou círculo
+5. O que NÃO fazer — erros comuns de facilitadoras iniciantes neste tema
+6. Alerta clínico — quando houver risco de projeção, interpretação literal ou uso inadequado
+7. Encerramento ritual — gesto de fechamento do campo
+
+REGRAS DE LINGUAGEM (CRÍTICO):
+- Escreva em português brasileiro fluente, correto e natural
+- Tom: profundo, ético, humano — sem misticismo performático
+- NUNCA use linguagem motivacional ("você pode!", "desperte seu potencial")
+- NUNCA use tom acadêmico ou didático excessivo
+- Arquétipo é CAMPO, nunca rótulo — não diga "você é a Selvagem"
+- Não resuma o livro — trabalhe com as TENSÕES que ele ativa
+- Frases curtas e precisas, sem floreio desnecessário
+
+O NÚCLEO 80/20:
+É o coração do método. Identifique: dos muitos temas do livro, qual é O ÚNICO eixo transformador que, se bem trabalhado, gera 80% do amadurecimento possível? Isso deve ser claro, prático e aplicável.
+
+QUALIDADE EXIGIDA:
+Este material será usado por profissionais em formação. Cada frase precisa ter peso clínico e ético. Prefira silêncio a enchimento. Se uma seção não se aplica, deixe em branco — não invente conteúdo genérico.`;
+
+    const userPrompt = `Crie a estrutura pedagógica completa para um Círculo de Leitura Simbólica:
 
 LIVRO: "${livro_titulo}" ${livro_autor ? `de ${livro_autor}` : ''}
-${livro_texto ? `\nTRECHO/RESUMO DO LIVRO:\n${livro_texto.substring(0, 8000)}` : ''}
+${livro_texto ? `\nCONTEXTO/TRECHOS DO LIVRO:\n${livro_texto.substring(0, 8000)}` : ''}
 
-CONFIGURAÇÃO:
+CONFIGURAÇÃO DO CÍRCULO:
 - Público-alvo: ${publico_alvo || 'grupo terapêutico'}
 - Jornada predominante: ${jornada || 'Individuação'}
 - Estação simbólica: ${estacao_simbolica || 'Primavera'}
 - Número de encontros: ${num_encontros || 4}
+
+INSTRUÇÕES FINAIS:
+- Distribua as 4 fases (Chamado, Ruptura, Reorganização, Integração) pelos ${num_encontros || 4} encontros
+- Se houver mais de 4 encontros, repita ou aprofunde fases conforme necessário
+- Cada pergunta guiada deve ser uma pergunta que provoque movimento interno, não compreensão intelectual
+- A essência 80/20 deve caber em 2-3 frases diretas e poderosas
+- O mapa simbólico deve descrever a paisagem interior que o livro ativa
 
 Gere a estrutura completa em JSON.`;
 
@@ -75,7 +88,7 @@ Gere a estrutura completa em JSON.`;
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "google/gemini-2.5-pro",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -85,38 +98,41 @@ Gere a estrutura completa em JSON.`;
             type: "function",
             function: {
               name: "gerar_estrutura_pedagogica",
-              description: "Retorna a estrutura pedagógica completa para um programa de leitura simbólica",
+              description: "Retorna a estrutura pedagógica completa para um Círculo de Leitura Simbólica da Casa Orácula",
               parameters: {
                 type: "object",
                 properties: {
-                  titulo_pedagogico: { type: "string" },
-                  essencia_8020: { type: "string" },
-                  tensoes_centrais: { type: "array", items: { type: "string" } },
-                  arquetipos_envolvidos: { type: "array", items: { type: "string" } },
-                  mapa_simbolico: { type: "string" },
+                  titulo_pedagogico: { type: "string", description: "Título do programa — breve e simbólico" },
+                  jornada_predominante: { type: "string", description: "Uma das 5 jornadas: Heroína, Sombra, Instinto, Liderança, Mundo" },
+                  essencia_8020: { type: "string", description: "O núcleo transformador do livro em 2-3 frases diretas" },
+                  tensoes_centrais: { type: "array", items: { type: "string" }, description: "3-5 tensões psíquicas que o livro ativa" },
+                  arquetipos_envolvidos: { type: "array", items: { type: "string" }, description: "Campos arquetípicos presentes (como campos, não rótulos)" },
+                  mapa_simbolico: { type: "string", description: "A paisagem interior que o livro ativa — descrição poética e precisa" },
                   encontros: {
                     type: "array",
                     items: {
                       type: "object",
                       properties: {
                         numero: { type: "number" },
-                        titulo: { type: "string" },
-                        fase: { type: "string" },
-                        tema_central: { type: "string" },
-                        abertura_ritual: { type: "string" },
-                        perguntas_guiadas: { type: "array", items: { type: "string" } },
-                        aplicacao_profissional: { type: "string" },
-                        alerta_clinico: { type: "string" },
-                        encerramento_ritual: { type: "string" },
+                        titulo: { type: "string", description: "Título breve e evocativo" },
+                        fase: { type: "string", enum: ["Chamado", "Ruptura", "Reorganização", "Integração"] },
+                        tema_central: { type: "string", description: "A tensão psíquica deste encontro — não resumo do livro" },
+                        abertura_ritual: { type: "string", description: "Gesto corporal ou simbólico breve para abrir o campo" },
+                        perguntas_guiadas: { type: "array", items: { type: "string" }, description: "3-5 perguntas terapêuticas profundas" },
+                        aplicacao_profissional: { type: "string", description: "Como usar em sessão, grupo ou círculo" },
+                        o_que_nao_fazer: { type: "string", description: "Erros comuns de facilitadoras iniciantes neste tema" },
+                        alerta_clinico: { type: "string", description: "Risco de projeção ou uso inadequado, se houver" },
+                        encerramento_ritual: { type: "string", description: "Gesto de fechamento do campo" },
                       },
-                      required: ["numero", "titulo", "fase", "tema_central", "perguntas_guiadas"],
+                      required: ["numero", "titulo", "fase", "tema_central", "perguntas_guiadas", "abertura_ritual", "encerramento_ritual"],
                     },
                   },
-                  usos_inadequados: { type: "array", items: { type: "string" } },
-                  convites_jardim_psique: { type: "array", items: { type: "string" } },
-                  convites_jardim_oficio: { type: "array", items: { type: "string" } },
+                  usos_inadequados: { type: "array", items: { type: "string" }, description: "5-7 usos inadequados deste material" },
+                  convites_jardim_psique: { type: "array", items: { type: "string" }, description: "3 perguntas para reflexão pessoal profunda" },
+                  convites_jardim_oficio: { type: "array", items: { type: "string" }, description: "3 perguntas para reflexão profissional" },
+                  observacao_clinica: { type: "string", description: "Nota sobre cuidados éticos ao facilitar este livro" },
                 },
-                required: ["titulo_pedagogico", "essencia_8020", "encontros"],
+                required: ["titulo_pedagogico", "jornada_predominante", "essencia_8020", "encontros", "usos_inadequados"],
               },
             },
           },
@@ -128,14 +144,12 @@ Gere a estrutura completa em JSON.`;
     if (!response.ok) {
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Limite de requisições atingido. Tente novamente em alguns minutos." }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
         return new Response(JSON.stringify({ error: "Créditos de IA esgotados." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       const t = await response.text();
@@ -150,7 +164,6 @@ Gere a estrutura completa em JSON.`;
     if (toolCall) {
       estrutura = JSON.parse(toolCall.function.arguments);
     } else {
-      // Fallback: try to parse content as JSON
       const content = data.choices?.[0]?.message?.content || "";
       const jsonMatch = content.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
@@ -166,8 +179,7 @@ Gere a estrutura completa em JSON.`;
   } catch (e) {
     console.error("estudio-gerar-estrutura error:", e);
     return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Erro desconhecido" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });
