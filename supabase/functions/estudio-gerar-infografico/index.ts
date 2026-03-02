@@ -25,54 +25,58 @@ serve(async (req) => {
     const tensoes = estrutura.tensoes_centrais || [];
     const arquetipos = estrutura.arquetipos_envolvidos || [];
 
-    // Build encounter descriptions in Portuguese for the prompt
-    const encounterDescriptions = encontros.map((e: any, i: number) => {
-      const title = e.titulo || `Encontro ${e.numero}`;
-      const phase = e.fase || '';
-      const theme = e.tema_central || '';
-      return `"${title}" (${phase}): ${theme}`;
-    }).join('\n');
+    // Pre-compute SHORT labels - max 4-5 words each to avoid AI text errors
+    const mainTitle = (estrutura.titulo_pedagogico || livroTitulo).substring(0, 50);
+    const subtitle = livroTitulo.substring(0, 40);
+    
+    // Build very short scene labels (just number + short title)
+    const sceneLabels = encontros.slice(0, 6).map((e: any) => {
+      const num = e.numero || '';
+      const title = (e.titulo || '').substring(0, 25);
+      return `${num}. ${title}`;
+    }).join(' | ');
 
-    const tensionText = tensoes.slice(0, 3).join(', ');
-    const archetypeText = arquetipos.slice(0, 4).join(', ');
-    const mainTitle = estrutura.titulo_pedagogico || livro_titulo;
+    const phaseLabels = encontros.slice(0, 6).map((e: any) => {
+      return (e.fase || '').substring(0, 15);
+    }).join(' → ');
 
-    const imagePrompt = `Crie um infográfico panorâmico horizontal ilustrado no estilo de um MAPA DE JORNADA VISUAL, exatamente como os infográficos do NotebookLM sobre livros de psicologia arquetípica.
+    const tensionShort = tensoes.slice(0, 2).map((t: string) => t.substring(0, 20)).join(' × ');
+    const archetypeShort = arquetipos.slice(0, 3).map((a: string) => a.substring(0, 15)).join(', ');
 
-FORMATO OBRIGATÓRIO: Paisagem (landscape), proporção 16:9, largura muito maior que altura. Preencher TODO o canvas sem margens vazias.
+    const imagePrompt = `Create a single WIDE PANORAMIC horizontal illustrated infographic (16:9 landscape ratio, width much larger than height).
 
-TÍTULO PRINCIPAL no topo, grande, elegante, em fonte serif decorativa sobre fundo claro:
-"${mainTitle}"
-Subtítulo menor abaixo: "${livro_titulo}"
+STYLE: Hand-painted watercolor and ink illustration. Dark mystical aesthetic with rich botanical details. Colors: deep black (#0A0A0A) background fading to dark forest green (#1F3D3A), with gold (#C6A75E) accents, bone white (#F5F0E8) for text areas, and warm sepia tones. Ethereal moonlight illumination throughout.
 
-LAYOUT — NÃO usar cards, caixas ou grids. O infográfico é UMA ilustração contínua com cenas que fluem organicamente da esquerda para a direita, como um mural narrativo. Os textos descritivos ficam INTEGRADOS na ilustração, posicionados ao lado ou sobre as cenas — não dentro de caixas.
+COMPOSITION: One continuous illustrated landscape flowing LEFT to RIGHT across the entire canvas. NO cards, NO boxes, NO grids, NO separated sections. Scenes blend into each other through organic transitions: ancient tree roots, winding forest paths, flowing rivers, climbing vines.
 
-CONTEÚDO — ${encontros.length} seções temáticas distribuídas pelo canvas:
-${encounterDescriptions}
+VISUAL ELEMENTS throughout the landscape:
+- Ancient twisted trees with golden leaves connecting scenes
+- Hooded feminine silhouettes (no realistic faces) in meditation, walking, or ritual poses
+- Symbolic animals: wolves, owls, serpents woven into the landscape
+- Ancient doorways and stone arches marking transitions between scenes
+- Glowing fireflies and golden particles floating in the air
+- Parchment scrolls and aged paper fragments with text
+- Moon phases in the sky marking progression
+- Dense vegetation: moss, ferns, wildflowers, mushrooms
 
-${tensionText ? `TENSÕES CENTRAIS para representar visualmente: ${tensionText}` : ''}
-${archetypeText ? `CAMPOS ARQUETÍPICOS presentes: ${archetypeText}` : ''}
+TEXT PLACEMENT (CRITICAL - use EXACT text below, no changes):
+- Top center on an elegant parchment banner: "${mainTitle}"
+- Smaller subtitle below: "${subtitle}"
+- ${encontros.length} small aged parchment labels placed along the journey path, each with SHORT text: ${sceneLabels}
+- Phase progression shown as a subtle golden thread: ${phaseLabels}
+${tensionShort ? `- One small scroll near center with: "${tensionShort}"` : ''}
+${archetypeShort ? `- Delicate golden text near bottom: "${archetypeShort}"` : ''}
+- Bottom decorative strip: "✦ Casa Orácula ✦"
 
-ELEMENTOS VISUAIS OBRIGATÓRIOS:
-- Árvores antigas com raízes e galhos que conectam as seções
-- Silhuetas femininas místicas (sem rostos realistas) — figuras encapuzadas, em meditação, dançando
-- Animais simbólicos: lobas, corujas, serpentes, cervos
-- Portas antigas, caminhos, clareiras iluminadas pela lua
-- Pergaminhos e rolos com textos curtos em português
-- Vegetação abundante: vinhas, flores, raízes, folhas
-- Partículas luminosas como vagalumes
+CRITICAL TEXT RULES:
+- Copy ALL text EXACTLY as provided above - do not translate, rephrase or invent new text
+- Keep text SHORT - never more than 5 words per label
+- Text must be LEGIBLE against dark backgrounds (use light/gold colors)
+- Use elegant serif typography style
 
-PALETA DE CORES: fundo creme/osso claro (#F5F0E8), marrom escuro para textos, verde floresta profundo, sépia quente, bordô suave, dourado para detalhes e acentos. Iluminação etérea com luar.
+FORBIDDEN: vertical orientation, square format, modern/corporate style, bright neon colors, realistic human faces, large empty spaces, card layouts, grid layouts, separated boxes.
 
-ESTILO: Ilustração digital detalhada com traços artísticos, misturando aquarela com arte digital. Cada seção tem uma cena ilustrada única que se funde organicamente com a próxima através de elementos naturais (raízes, caminhos, água).
-
-RODAPÉ: faixa decorativa fina na base com "✦ Método de Leitura Oracular — Casa Orácula ✦"
-
-TODO texto visível deve estar em PORTUGUÊS BRASILEIRO correto.
-
-PROIBIDO: composições verticais ou quadradas, cards/caixas/grids, rostos humanos realistas, cores neon, espaços vazios grandes, estilo corporativo/moderno.
-
-Ultra alta resolução, qualidade profissional de infográfico ilustrado.`;
+Ultra high resolution, professional quality.`;
 
     console.log("Generating infographic image with pro model...");
 
