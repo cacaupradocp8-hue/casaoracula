@@ -27,7 +27,7 @@ const visitanteMenuGroups = () => [
   { key: 'comece-aqui', label: 'Comece por Aqui', icon: Compass, path: '/comece-aqui', subitems: [] },
   { key: 'experiencia', label: 'Experiência Gratuita', icon: Sparkles, path: '/experiencia-gratuita', subitems: [] },
   { key: 'clube', label: 'Clube Oracular', icon: BookOpen, path: '/clube-livro', subitems: [] },
-  { key: 'conta', label: 'Minha Conta', icon: User, path: '/assinatura', subitems: [] },
+  { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
 ];
 
 // ── ASSINANTE DO CLUBE (máx 6 itens) ────────────────────────────────────────
@@ -37,7 +37,7 @@ const assinanteMenuGroups = () => [
   { key: 'jardim', label: 'Meu Jardim', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
   { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/casa-tecelas', subitems: [] },
   { key: 'assinatura', label: 'Minha Assinatura', icon: Crown, path: '/assinatura', subitems: [] },
-  { key: 'conta', label: 'Minha Conta', icon: User, path: '/billing', subitems: [] },
+  { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
 ];
 
 // ── ALUNA DE FORMAÇÃO (máx 6 itens) ─────────────────────────────────────────
@@ -60,7 +60,7 @@ const alunaMenuGroups = () => [
   },
   { key: 'biblioteca', label: 'Biblioteca', icon: BookOpen, path: '/minha-biblioteca', subitems: [] },
   { key: 'jardim', label: 'Meu Jardim', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
-  { key: 'conta', label: 'Minha Conta', icon: User, path: '/assinatura', subitems: [] },
+  { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
 ];
 
 // ── MUNDO 2: Casa das Máquinas (Espaço Profissional) ────────────────────────
