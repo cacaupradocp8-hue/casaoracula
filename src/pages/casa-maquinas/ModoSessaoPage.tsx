@@ -299,6 +299,20 @@ export default function ModoSessaoPage() {
                   ) : null;
                 })()}
               </div>
+              {/* Intervention Suggestions */}
+              <SessionInterventionSuggestions
+                districtId={selectedDistrict || undefined}
+                checkinState={checkinState}
+                onUse={(id) => {
+                  if (!usedInterventionIds.includes(id)) {
+                    setUsedInterventionIds(prev => [...prev, id]);
+                    toast.success('Intervenção adicionada à sessão');
+                  }
+                }}
+              />
+              {usedInterventionIds.length > 0 && (
+                <p className="text-[10px] text-[#C9A24A]/40 text-center">{usedInterventionIds.length} intervenção(ões) selecionada(s)</p>
+              )}
               <div className="flex gap-2">
                 <Button variant="outline" onClick={() => setStep(2)} className="flex-1 border-[#C9A24A]/10 text-[#F5F1E8]/60">Voltar</Button>
                 <Button onClick={() => setStep(4)} className="flex-1 bg-[#C9A24A] hover:bg-[#C9A24A]/80 text-[#0B1B2B]">Avançar</Button>
