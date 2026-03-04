@@ -1439,6 +1439,22 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route path="/casa-das-maquinas/clientes" element={<ProtectedRoute minPortal="oracula"><ClientesPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/clientes/:clienteId" element={<ProtectedRoute minPortal="oracula"><ClienteDetailPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/nova-sessao" element={<ProtectedRoute minPortal="oracula"><ModoSessaoPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/ferramentas" element={<ProtectedRoute minPortal="oracula"><FerramentasPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/grupos" element={<ProtectedRoute minPortal="oracula"><GruposPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/ferramentas/cartografia" element={<ProtectedRoute minPortal="oracula"><CartografiaPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/ferramentas/torre-viva" element={<ProtectedRoute minPortal="oracula"><TorreVivaPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/ferramentas/labirinto" element={<ProtectedRoute minPortal="oracula"><LabirintoPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/ferramentas/decodificacao-onirica" element={<ProtectedRoute minPortal="oracula"><DecodificacaoOniricaPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/ferramentas/atlas-arquetipos" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/ferramentas/escrita-simbolica" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/ferramentas/espelho-relacional" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/ferramentas/ritual-simbolico" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/ferramentas/dialogo-partes" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/ferramentas/mapa-transformacao" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/ferramentas/ritual-passagem" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
         <Route
           path="/casa-das-maquinas/sessoes"
           element={
