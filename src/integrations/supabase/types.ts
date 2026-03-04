@@ -7750,6 +7750,48 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_preferences: {
+        Row: {
+          atividade_comunidade: boolean
+          created_at: string
+          email: boolean
+          expiracao_assinatura: boolean
+          id: string
+          in_app: boolean
+          mensagens_suporte: boolean
+          novo_conteudo: boolean
+          push: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          atividade_comunidade?: boolean
+          created_at?: string
+          email?: boolean
+          expiracao_assinatura?: boolean
+          id?: string
+          in_app?: boolean
+          mensagens_suporte?: boolean
+          novo_conteudo?: boolean
+          push?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          atividade_comunidade?: boolean
+          created_at?: string
+          email?: boolean
+          expiracao_assinatura?: boolean
+          id?: string
+          in_app?: boolean
+          mensagens_suporte?: boolean
+          novo_conteudo?: boolean
+          push?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           body: string
