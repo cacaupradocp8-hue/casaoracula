@@ -176,25 +176,81 @@ export default function MinhaConta() {
           </CardContent>
         </Card>
 
-        {/* ─── SEÇÃO 3 — PREFERÊNCIAS E SEGURANÇA ─── */}
+        {/* ─── SEÇÃO 3 — PREFERÊNCIAS DE NOTIFICAÇÃO ─── */}
+        <Card>
+          <CardContent className="pt-6 pb-6 space-y-5">
+            <div className="flex items-center gap-3">
+              <Bell className="w-5 h-5 text-primary" />
+              <h3 className="text-lg font-display font-bold">Notificações</h3>
+            </div>
+
+            {/* Canais */}
+            <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Canais</p>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="pref-inapp" className="flex items-center gap-2 cursor-pointer text-sm">
+                  <Bell className="w-4 h-4 text-muted-foreground" />
+                  In-app (sino)
+                </Label>
+                <Switch id="pref-inapp" checked={preferences.in_app} onCheckedChange={(v) => updatePreference({ in_app: v })} />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="pref-email" className="flex items-center gap-2 cursor-pointer text-sm">
+                  <Mail className="w-4 h-4 text-muted-foreground" />
+                  Email
+                </Label>
+                <Switch id="pref-email" checked={preferences.email} onCheckedChange={(v) => updatePreference({ email: v })} />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="pref-push" className="flex items-center gap-2 cursor-pointer text-sm">
+                  <Smartphone className="w-4 h-4 text-muted-foreground" />
+                  Push (navegador)
+                </Label>
+                <Switch id="pref-push" checked={preferences.push} onCheckedChange={(v) => updatePreference({ push: v })} />
+              </div>
+            </div>
+
+            {/* Tipos de evento */}
+            <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium pt-2">Eventos</p>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="pref-conteudo" className="flex items-center gap-2 cursor-pointer text-sm">
+                  <BookOpen className="w-4 h-4 text-muted-foreground" />
+                  Novo conteúdo
+                </Label>
+                <Switch id="pref-conteudo" checked={preferences.novo_conteudo} onCheckedChange={(v) => updatePreference({ novo_conteudo: v })} />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="pref-expiracao" className="flex items-center gap-2 cursor-pointer text-sm">
+                  <Clock className="w-4 h-4 text-muted-foreground" />
+                  Vencimento de assinatura
+                </Label>
+                <Switch id="pref-expiracao" checked={preferences.expiracao_assinatura} onCheckedChange={(v) => updatePreference({ expiracao_assinatura: v })} />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="pref-suporte" className="flex items-center gap-2 cursor-pointer text-sm">
+                  <MessageSquare className="w-4 h-4 text-muted-foreground" />
+                  Mensagens do suporte
+                </Label>
+                <Switch id="pref-suporte" checked={preferences.mensagens_suporte} onCheckedChange={(v) => updatePreference({ mensagens_suporte: v })} />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="pref-comunidade" className="flex items-center gap-2 cursor-pointer text-sm">
+                  <Users className="w-4 h-4 text-muted-foreground" />
+                  Atividade na comunidade
+                </Label>
+                <Switch id="pref-comunidade" checked={preferences.atividade_comunidade} onCheckedChange={(v) => updatePreference({ atividade_comunidade: v })} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* ─── SEÇÃO 4 — SEGURANÇA ─── */}
         <Card>
           <CardContent className="pt-6 pb-6 space-y-5">
             <div className="flex items-center gap-3">
               <Shield className="w-5 h-5 text-primary" />
-              <h3 className="text-lg font-display font-bold">Preferências</h3>
-            </div>
-
-            {/* Notificações */}
-            <div className="flex items-center justify-between">
-              <Label htmlFor="notif" className="flex items-center gap-2 cursor-pointer">
-                <Bell className="w-4 h-4 text-muted-foreground" />
-                Notificações
-              </Label>
-              <Switch
-                id="notif"
-                checked={notificacoes}
-                onCheckedChange={setNotificacoes}
-              />
+              <h3 className="text-lg font-display font-bold">Segurança</h3>
             </div>
 
             {/* Alterar senha */}
