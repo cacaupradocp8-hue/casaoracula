@@ -13,6 +13,8 @@ import { toast } from 'sonner';
 import { GpsSuggestionCard } from '@/components/casa-maquinas/GpsSuggestionCard';
 import type { GpsSuggestion } from '@/lib/gps-cidadela';
 import { SessionInterventionSuggestions } from '@/components/casa-maquinas/SessionInterventionSuggestions';
+import { OracleSessionWidget } from '@/components/cidadela-oracle/OracleSessionWidget';
+import { useCidadelaOracle, type CidadelaCard } from '@/hooks/useCidadelaOracle';
 
 const CHECKIN_STATES = [
   { value: 'contraida', label: 'Contraída', color: '#EF4444' },
