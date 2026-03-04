@@ -3,3 +3,8 @@ export { default as SessoesPage } from './SessoesPage';
 export { default as GestosIntegracaoPage } from './GestosIntegracaoPage';
 export { default as MapaVivoClientePage } from './MapaVivoClientePage';
 export { default as PainelInstitucionalPage } from './PainelInstitucionalPage';
+export { default as ClientesPage } from './ClientesPage';
+export { default as ClienteDetailPage } from './ClienteDetailPage';
+export { default as ModoSessaoPage } from './ModoSessaoPage';
+export { default as FerramentasPage } from './FerramentasPage';
+export { default as GruposPage } from './GruposPage';
