@@ -128,7 +128,7 @@ import { AsPortas, OsCamposPsiquicos, AsTorres, TriadeMetodo } from "./pages/met
 import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
 // Casa das Máquinas
-import { CasaDasMaquinas, SessoesPage, GestosIntegracaoPage, MapaVivoClientePage, PainelInstitucionalPage, ClientesPage, ClienteDetailPage, ModoSessaoPage, FerramentasPage, GruposPage, GrupoDetailPage } from "./pages/casa-maquinas";
+import { CasaDasMaquinas, SessoesPage, GestosIntegracaoPage, MapaVivoClientePage, PainelInstitucionalPage, ClientesPage, ClienteDetailPage, ModoSessaoPage, FerramentasPage, GruposPage, GrupoDetailPage, BibliotecaIntervPage } from "./pages/casa-maquinas";
 import CartografiaPage from "./pages/casa-maquinas/ferramentas/CartografiaPage";
 import TorreVivaPage from "./pages/casa-maquinas/ferramentas/TorreVivaPage";
 import LabirintoPage from "./pages/casa-maquinas/ferramentas/LabirintoPage";
