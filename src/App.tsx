@@ -128,12 +128,14 @@ import { AsPortas, OsCamposPsiquicos, AsTorres, TriadeMetodo } from "./pages/met
 import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
 // Casa das Máquinas
-import { CasaDasMaquinas, SessoesPage, GestosIntegracaoPage, MapaVivoClientePage, PainelInstitucionalPage, ClientesPage, ClienteDetailPage, ModoSessaoPage, FerramentasPage, GruposPage } from "./pages/casa-maquinas";
+import { CasaDasMaquinas, SessoesPage, GestosIntegracaoPage, MapaVivoClientePage, PainelInstitucionalPage, ClientesPage, ClienteDetailPage, ModoSessaoPage, FerramentasPage, GruposPage, GrupoDetailPage } from "./pages/casa-maquinas";
 import CartografiaPage from "./pages/casa-maquinas/ferramentas/CartografiaPage";
 import TorreVivaPage from "./pages/casa-maquinas/ferramentas/TorreVivaPage";
 import LabirintoPage from "./pages/casa-maquinas/ferramentas/LabirintoPage";
 import DecodificacaoOniricaPage from "./pages/casa-maquinas/ferramentas/DecodificacaoOniricaPage";
+import AtlasArquetiposPage from "./pages/casa-maquinas/ferramentas/AtlasArquetiposPage";
 import PlaceholderToolPage from "./pages/casa-maquinas/ferramentas/PlaceholderToolPage";
+import SectionPlaceholder from "./pages/casa-maquinas/SectionPlaceholder";
 
 // Jardim do Ofício
 import { JardimOficioPage, PainelSupervisaoPage } from "./pages/jardim-oficio";
