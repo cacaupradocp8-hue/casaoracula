@@ -1,47 +1,52 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { AppLayout } from '@/components/layout/AppLayout';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { canAccessFeature } from '@/types/portal';
-import {
-  Cog,
-  Users,
-  Calendar,
-  Sparkles,
-  Map,
-  Clock,
-  Plus,
-  ChevronRight,
-  Loader2,
-  Crown,
-  Eye,
-  UserCheck,
-  FileText,
-  BookOpen,
-} from 'lucide-react';
+import { CasaMaquinasLayout } from '@/components/casa-maquinas/CasaMaquinasLayout';
+import { DashboardStats } from '@/components/casa-maquinas/DashboardStats';
+import { DashboardAgenda } from '@/components/casa-maquinas/DashboardAgenda';
+import { DashboardClientCard } from '@/components/casa-maquinas/DashboardClientCard';
+import { DashboardJornadas } from '@/components/casa-maquinas/DashboardJornadas';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Loader2, Plus, Users } from 'lucide-react';
 
-const TABS = [
-  { label: 'Visão Geral', to: '/casa-das-maquinas', icon: Cog, minPortal: 'oracula' as const },
-  { label: 'Clientes', to: '/minhas-clientes', icon: Users, minPortal: 'oracula' as const },
-  { label: 'Sala de Sessão', to: '/casa-das-maquinas/sessoes', icon: Calendar, minPortal: 'oracula' as const },
-  { label: 'Mapa Vivo', to: '/casa-das-maquinas/mapa-vivo', icon: Map, minPortal: 'oracula' as const },
-  { label: 'Histórico', to: '/casa-das-maquinas/historico', icon: Clock, minPortal: 'oracula' as const },
-  
-  { label: 'Supervisão', to: '/casa-das-maquinas/supervisao', icon: Eye, minPortal: 'assinante' as const },
-  { label: 'Painel Institucional', to: '/casa-das-maquinas/painel', icon: Crown, minPortal: 'admin' as const },
+const mockClientes = [
+  {
+    nome: 'Helena M.',
+    ultimaSessao: '28 fev 2026',
+    distritoAtual: 'Torres',
+    torrePredominante: 'Controle',
+    estado: 'travessia' as const,
+  },
+  {
+    nome: 'Isabela R.',
+    ultimaSessao: '01 mar 2026',
+    distritoAtual: 'Labirinto',
+    torrePredominante: 'Silêncio',
+    estado: 'crise' as const,
+  },
+  {
+    nome: 'Marina S.',
+    ultimaSessao: '03 mar 2026',
+    distritoAtual: 'Jardim dos Arquétipos',
+    torrePredominante: 'Adaptação',
+    estado: 'integração' as const,
+  },
+  {
+    nome: 'Camila F.',
+    ultimaSessao: '25 fev 2026',
+    distritoAtual: 'Casa dos Sonhos',
+    torrePredominante: 'Performance',
+    estado: 'travessia' as const,
+  },
 ];
 
 export default function CasaDasMaquinas() {
   const { user } = useAuth();
-  const location = useLocation();
+  const navigate = useNavigate();
   const [stats, setStats] = useState({ clientes: 0, sessoesMes: 0, gestosAtivos: 0 });
   const [loading, setLoading] = useState(true);
-
-  const isAdmin = user?.portal === 'admin';
-  const isMentorada = user ? canAccessFeature(user.portal, 'assinante') : false;
 
   useEffect(() => {
     if (!user) return;
@@ -69,202 +74,69 @@ export default function CasaDasMaquinas() {
     setLoading(false);
   };
 
-  const visibleTabs = TABS.filter(tab => {
-    if (!user) return false;
-    return canAccessFeature(user.portal, tab.minPortal);
-  });
-
   if (loading) {
     return (
-      <AppLayout>
-        <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-[50vh]">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <CasaMaquinasLayout title="Dashboard">
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <Loader2 className="w-6 h-6 animate-spin text-[#C9A24A]" />
         </div>
-      </AppLayout>
+      </CasaMaquinasLayout>
     );
   }
 
   return (
-    <AppLayout>
-      <div className="container mx-auto px-4 py-6 pb-20">
-        {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center gap-3 mb-1">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Cog className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-display font-bold text-foreground">Casa das Máquinas</h1>
-              <p className="text-sm text-muted-foreground">Centro administrativo profissional</p>
-            </div>
-          </div>
+    <CasaMaquinasLayout title="Dashboard" subtitle="Visão geral do espaço profissional">
+      {/* Stats */}
+      <DashboardStats
+        clientes={stats.clientes || mockClientes.length}
+        sessoesMes={stats.sessoesMes || 12}
+        gestosAtivos={stats.gestosAtivos || 4}
+        alertas={1}
+      />
+
+      {/* Main grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6">
+        {/* Left: Agenda + Jornadas */}
+        <div className="lg:col-span-1 space-y-4">
+          <DashboardAgenda />
+          <DashboardJornadas />
         </div>
 
-        {/* Tab Navigation */}
-        <nav className="flex items-center gap-1 border-b border-border mb-6 overflow-x-auto pb-px">
-          {visibleTabs.map(tab => {
-            const isActive = location.pathname === tab.to;
-            return (
-              <Link
-                key={tab.to}
-                to={tab.to}
-                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
-                  isActive
-                    ? 'border-primary text-primary'
-                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
-                }`}
-              >
-                <tab.icon className="w-4 h-4" />
-                {tab.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Dashboard Content - Visão Geral */}
-        {/* Quick Actions */}
-        <div className="flex flex-wrap gap-3 mb-6">
-          <Link to="/minhas-clientes">
-            <Button size="sm" className="gap-2">
-              <Plus className="w-4 h-4" />
-              Novo Cliente
-            </Button>
-          </Link>
-          <Link to="/casa-das-maquinas/sessoes">
-            <Button size="sm" variant="outline" className="gap-2">
-              <Calendar className="w-4 h-4" />
-              Nova Sessão
-            </Button>
-          </Link>
-          <Link to="/casa-das-maquinas/gestos">
-            <Button size="sm" variant="outline" className="gap-2">
-              <Sparkles className="w-4 h-4" />
-              Gestos de Integração
-            </Button>
-          </Link>
-        </div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <Card className="border-border">
-            <CardContent className="p-5">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Users className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-2xl font-display font-bold text-foreground">{stats.clientes}</p>
-                  <p className="text-xs text-muted-foreground">Clientes ativos</p>
-                </div>
+        {/* Right: Clientes recentes */}
+        <div className="lg:col-span-2">
+          <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60 backdrop-blur-sm">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-[#F5F1E8]/80 flex items-center gap-2">
+                  <Users className="w-4 h-4 text-[#C9A24A]" />
+                  Clientes Recentes
+                </CardTitle>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 text-xs text-[#C9A24A] hover:text-[#C9A24A] hover:bg-[#C9A24A]/10 gap-1"
+                  onClick={() => navigate('/casa-das-maquinas/clientes')}
+                >
+                  <Plus className="w-3 h-3" />
+                  Novo
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {mockClientes.map((c, i) => (
+                  <DashboardClientCard
+                    key={i}
+                    {...c}
+                    onOpenCity={() => navigate(`/casa-das-maquinas/clientes/${i + 1}`)}
+                    onStartSession={() => navigate('/casa-das-maquinas/sessoes')}
+                  />
+                ))}
               </div>
             </CardContent>
           </Card>
-          <Card className="border-border">
-            <CardContent className="p-5">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Calendar className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-2xl font-display font-bold text-foreground">{stats.sessoesMes}</p>
-                  <p className="text-xs text-muted-foreground">Sessões este mês</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="border-border">
-            <CardContent className="p-5">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-2xl font-display font-bold text-foreground">{stats.gestosAtivos}</p>
-                  <p className="text-xs text-muted-foreground">Gestos ativos</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Section Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Link to="/minhas-clientes">
-            <Card className="hover:border-primary/30 transition-all cursor-pointer h-full border-border">
-              <CardContent className="p-5 flex items-start gap-4">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                  <Users className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground mb-1">Clientes</h3>
-                  <p className="text-sm text-muted-foreground">Gerencie clientes e acompanhamentos</p>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-          <Link to="/casa-das-maquinas/sessoes">
-            <Card className="hover:border-primary/30 transition-all cursor-pointer h-full border-border">
-              <CardContent className="p-5 flex items-start gap-4">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                  <Calendar className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground mb-1">Sala de Sessão</h3>
-                  <p className="text-sm text-muted-foreground">Registre sessões e observações</p>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-          <Link to="/casa-das-maquinas/gestos">
-            <Card className="hover:border-primary/30 transition-all cursor-pointer h-full border-border">
-              <CardContent className="p-5 flex items-start gap-4">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                  <Sparkles className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground mb-1">Gestos de Integração</h3>
-                  <p className="text-sm text-muted-foreground">Ações de integração terapêutica</p>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-
-
-          {/* Supervisão - visível apenas para mentoradas e admin */}
-          {isMentorada && (
-            <Link to="/casa-das-maquinas/supervisao">
-              <Card className="hover:border-primary/30 transition-all cursor-pointer h-full border-border">
-                <CardContent className="p-5 flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-accent/50 flex items-center justify-center shrink-0">
-                    <Eye className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-1">Supervisão</h3>
-                    <p className="text-sm text-muted-foreground">Reflexões e registros de supervisão</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          )}
-
-          {/* Painel Institucional - admin only */}
-          {isAdmin && (
-            <Link to="/casa-das-maquinas/painel">
-              <Card className="hover:border-primary/30 transition-all cursor-pointer h-full border-border border-l-4 border-l-primary">
-                <CardContent className="p-5 flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                    <Crown className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-1">Painel Institucional</h3>
-                    <p className="text-sm text-muted-foreground">Métricas e gestão de acessos</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          )}
         </div>
       </div>
-    </AppLayout>
+    </CasaMaquinasLayout>
   );
 }
