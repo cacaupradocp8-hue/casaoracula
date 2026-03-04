@@ -1724,8 +1724,8 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route path="/admin/oracle-cards" element={<ProtectedRoute minPortal="admin"><AdminOracleCardsPage /></ProtectedRoute>} />
 
-        {/* Estúdio Oracular */}
         <Route
           path="/estudio-oracular"
           element={
