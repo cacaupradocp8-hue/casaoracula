@@ -10941,6 +10941,42 @@ export type Database = {
           },
         ]
       }
+      session_interventions: {
+        Row: {
+          created_at: string
+          id: string
+          intervention_id: string
+          session_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          intervention_id: string
+          session_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          intervention_id?: string
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_interventions_intervention_id_fkey"
+            columns: ["intervention_id"]
+            isOneToOne: false
+            referencedRelation: "interventions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_interventions_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       session_oracle_draws: {
         Row: {
           axis_archetype: string | null
