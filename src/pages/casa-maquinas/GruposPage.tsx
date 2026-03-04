@@ -13,6 +13,7 @@ import { Plus, Users, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function GruposPage() {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [groups, setGroups] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
