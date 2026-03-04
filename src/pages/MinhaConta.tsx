@@ -38,7 +38,8 @@ export default function MinhaConta() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const { accessExpiresAt, subscriptionStatus, hasActiveSubscription } = useAccessExpiration();
-  const [notificacoes, setNotificacoes] = useState(true);
+  const { preferences, updatePreference } = useNotificationPreferences();
+  const [resetLoading, setResetLoading] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
 
   if (!user) return null;
