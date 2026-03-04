@@ -155,14 +155,15 @@ export function useAcademyProgress() {
       setProgress(progressData);
 
       // Upsert to database
-      await supabase.from('academy_progress').upsert({
+      const upsertData = {
         user_id: user.id,
         level,
         points,
-        badges_json: badges,
+        badges_json: badges as any,
         specialties: currentStats.toolsUsed,
         updated_at: new Date().toISOString(),
-      }, { onConflict: 'user_id' });
+      };
+      await (supabase.from('academy_progress') as any).upsert(upsertData, { onConflict: 'user_id' });
     } catch (error) {
       console.error('Error refreshing academy progress:', error);
     } finally {
