@@ -1787,6 +1787,7 @@ export type Database = {
           name: string
           ordem: number
           suggested_intervention_id: string | null
+          suggested_tool: string | null
           suggested_tool_id: string | null
           updated_at: string
         }
@@ -1804,6 +1805,7 @@ export type Database = {
           name: string
           ordem?: number
           suggested_intervention_id?: string | null
+          suggested_tool?: string | null
           suggested_tool_id?: string | null
           updated_at?: string
         }
@@ -1821,6 +1823,7 @@ export type Database = {
           name?: string
           ordem?: number
           suggested_intervention_id?: string | null
+          suggested_tool?: string | null
           suggested_tool_id?: string | null
           updated_at?: string
         }

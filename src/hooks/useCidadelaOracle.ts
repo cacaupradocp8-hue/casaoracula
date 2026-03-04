@@ -9,6 +9,7 @@ export interface CidadelaCard {
   keyword: string | null;
   description: string | null;
   base_question: string | null;
+  suggested_tool: string | null;
   suggested_tool_id: string | null;
   suggested_intervention_id: string | null;
   color_hex: string | null;

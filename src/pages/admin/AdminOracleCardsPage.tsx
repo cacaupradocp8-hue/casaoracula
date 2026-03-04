@@ -138,6 +138,7 @@ export default function AdminOracleCardsPage() {
               <Input placeholder="Palavra-chave" value={editCard.keyword || ''} onChange={e => setEditCard((c: any) => ({ ...c, keyword: e.target.value }))} />
               <Textarea placeholder="Descrição simbólica" value={editCard.description || ''} onChange={e => setEditCard((c: any) => ({ ...c, description: e.target.value }))} />
               <Input placeholder="Pergunta clínica" value={editCard.base_question || ''} onChange={e => setEditCard((c: any) => ({ ...c, base_question: e.target.value }))} />
+              <Input placeholder="Ferramenta sugerida" value={editCard.suggested_tool || ''} onChange={e => setEditCard((c: any) => ({ ...c, suggested_tool: e.target.value }))} />
               <Input placeholder="Cor (hex)" value={editCard.color_hex || ''} onChange={e => setEditCard((c: any) => ({ ...c, color_hex: e.target.value }))} />
               <Input placeholder="Imagem URL" value={editCard.image_url || ''} onChange={e => setEditCard((c: any) => ({ ...c, image_url: e.target.value }))} />
               <Input type="number" placeholder="Ordem" value={editCard.ordem} onChange={e => setEditCard((c: any) => ({ ...c, ordem: parseInt(e.target.value) || 0 }))} />
