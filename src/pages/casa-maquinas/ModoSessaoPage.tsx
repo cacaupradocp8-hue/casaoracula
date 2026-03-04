@@ -76,6 +76,7 @@ export default function ModoSessaoPage() {
       checkin_state: checkinState || null,
       checkin_notes: checkinNotes || null,
       gps_suggestion_json: gpsSuggestion ? JSON.parse(JSON.stringify(gpsSuggestion)) : null,
+      used_intervention_ids: usedInterventionIds.length > 0 ? usedInterventionIds : [],
       insight: insight || null,
       task: task || null,
       notes: notes || null,
