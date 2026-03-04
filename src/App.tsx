@@ -1446,6 +1446,11 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/nova-sessao" element={<ProtectedRoute minPortal="oracula"><ModoSessaoPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas" element={<ProtectedRoute minPortal="oracula"><FerramentasPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/grupos" element={<ProtectedRoute minPortal="oracula"><GruposPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/grupos/:groupId" element={<ProtectedRoute minPortal="oracula"><GrupoDetailPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/biblioteca" element={<ProtectedRoute minPortal="oracula"><SectionPlaceholder title="Biblioteca de Intervenções" description="Acervo de intervenções clínicas e materiais de suporte. Em desenvolvimento." /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/tecelãs" element={<ProtectedRoute minPortal="oracula"><SectionPlaceholder title="Casa das Tecelãs" description="Comunidade de facilitadoras — tramas, supervisões e trocas. Em desenvolvimento." /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/academia" element={<ProtectedRoute minPortal="oracula"><SectionPlaceholder title="Academia Orácula" description="Formação continuada e aprofundamento no Método Orácula. Em desenvolvimento." /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SectionPlaceholder title="Sala de Treinamento" description="Ambiente simulado para prática com clientes fictícias. Em desenvolvimento." /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/cartografia" element={<ProtectedRoute minPortal="oracula"><CartografiaPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/torre-viva" element={<ProtectedRoute minPortal="oracula"><TorreVivaPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/labirinto" element={<ProtectedRoute minPortal="oracula"><LabirintoPage /></ProtectedRoute>} />
