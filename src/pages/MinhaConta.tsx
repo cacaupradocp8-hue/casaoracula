@@ -9,6 +9,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessExpiration } from '@/hooks/useAccessExpiration';
+import { useNotificationPreferences } from '@/hooks/useNotificationPreferences';
 import { canAccessFeature } from '@/types/portal';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -25,6 +26,12 @@ import {
   Sparkles,
   Calendar,
   Loader2,
+  Mail,
+  Smartphone,
+  BookOpen,
+  Clock,
+  MessageSquare,
+  Users,
 } from 'lucide-react';
 
 export default function MinhaConta() {
