@@ -10834,6 +10834,7 @@ export type Database = {
           created_at: string
           date: string
           district_id: string | null
+          gps_suggestion_json: Json | null
           id: string
           insight: string | null
           notes: string | null
@@ -10849,6 +10850,7 @@ export type Database = {
           created_at?: string
           date?: string
           district_id?: string | null
+          gps_suggestion_json?: Json | null
           id?: string
           insight?: string | null
           notes?: string | null
@@ -10864,6 +10866,7 @@ export type Database = {
           created_at?: string
           date?: string
           district_id?: string | null
+          gps_suggestion_json?: Json | null
           id?: string
           insight?: string | null
           notes?: string | null
