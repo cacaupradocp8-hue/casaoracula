@@ -78,30 +78,24 @@ export function SessionInterventionSuggestions({
   const loadData = async () => {
     if (!user) return;
 
-    const promises: Promise<any>[] = [
-      // All active interventions
+    const [intRes, favRes, distRes] = await Promise.all([
       supabase.from('interventions').select('*').eq('ativa', true).order('title'),
-      // Favorites
       supabase.from('intervention_favorites').select('intervention_id').eq('user_id', user.id),
-      // Districts for filter
       supabase.from('districts').select('id, nome, numero').order('numero'),
-    ];
+    ]);
 
-    // Usage history for this client
+    let sessionsData: any[] = [];
     if (clientId) {
-      promises.push(
-        supabase
-          .from('sessions')
-          .select('used_intervention_ids')
-          .eq('client_id', clientId)
-          .order('date', { ascending: false })
-          .limit(20)
-      );
+      const { data } = await supabase
+        .from('sessions')
+        .select('used_intervention_ids')
+        .eq('client_id', clientId)
+        .order('date', { ascending: false })
+        .limit(20);
+      sessionsData = data || [];
     }
 
-    const results = await Promise.all(promises);
-
-    setAllInterventions(results[0].data || []);
+    setAllInterventions(intRes.data || []);
     setFavorites(new Set((results[1].data || []).map((f: any) => f.intervention_id)));
     setDistricts(results[2].data || []);
 
