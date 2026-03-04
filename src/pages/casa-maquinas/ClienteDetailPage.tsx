@@ -60,6 +60,7 @@ export default function ClienteDetailPage() {
           <TabsTrigger value="historico" className={tabClass}>Histórico</TabsTrigger>
           <TabsTrigger value="cartografia" className={tabClass}>Cartografia</TabsTrigger>
           <TabsTrigger value="sonhos" className={tabClass}>Sonhos</TabsTrigger>
+          <TabsTrigger value="arquetipo" className={tabClass}>Arquétipo</TabsTrigger>
           <TabsTrigger value="perfil" className={tabClass}>Perfil</TabsTrigger>
         </TabsList>
 
