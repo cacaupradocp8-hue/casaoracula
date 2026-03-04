@@ -45,7 +45,7 @@ interface NavItem {
 const mainNav: NavItem[] = [
   { label: 'Dashboard', path: '/casa-das-maquinas', icon: LayoutDashboard },
   { label: 'Clientes', path: '/casa-das-maquinas/clientes', icon: Users },
-  { label: 'Sessões', path: '/casa-das-maquinas/sessoes', icon: Calendar },
+  { label: 'Nova Sessão', path: '/casa-das-maquinas/nova-sessao', icon: Calendar },
   { label: 'Grupos', path: '/casa-das-maquinas/grupos', icon: UsersRound },
 ];
 

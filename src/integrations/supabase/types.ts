@@ -1480,6 +1480,51 @@ export type Database = {
         }
         Relationships: []
       }
+      cartographies: {
+        Row: {
+          classification_json: Json | null
+          client_id: string
+          created_at: string
+          date: string
+          id: string
+          scores_json: Json
+          session_id: string | null
+        }
+        Insert: {
+          classification_json?: Json | null
+          client_id: string
+          created_at?: string
+          date?: string
+          id?: string
+          scores_json?: Json
+          session_id?: string | null
+        }
+        Update: {
+          classification_json?: Json | null
+          client_id?: string
+          created_at?: string
+          date?: string
+          id?: string
+          scores_json?: Json
+          session_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cartographies_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cartographies_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       casa_circulo_replies: {
         Row: {
           autor_id: string
@@ -3889,6 +3934,93 @@ export type Database = {
         }
         Relationships: []
       }
+      districts: {
+        Row: {
+          cor: string | null
+          created_at: string
+          descricao: string | null
+          icone: string | null
+          id: string
+          nome: string
+          numero: number
+          posicao_relogio: string | null
+        }
+        Insert: {
+          cor?: string | null
+          created_at?: string
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          nome: string
+          numero: number
+          posicao_relogio?: string | null
+        }
+        Update: {
+          cor?: string | null
+          created_at?: string
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          nome?: string
+          numero?: number
+          posicao_relogio?: string | null
+        }
+        Relationships: []
+      }
+      dreams: {
+        Row: {
+          central_image: string | null
+          client_id: string
+          created_at: string
+          date: string
+          dream_text: string | null
+          id: string
+          interrupted_movement: string | null
+          psychic_force: string | null
+          session_id: string | null
+          symbolic_message: string | null
+        }
+        Insert: {
+          central_image?: string | null
+          client_id: string
+          created_at?: string
+          date?: string
+          dream_text?: string | null
+          id?: string
+          interrupted_movement?: string | null
+          psychic_force?: string | null
+          session_id?: string | null
+          symbolic_message?: string | null
+        }
+        Update: {
+          central_image?: string | null
+          client_id?: string
+          created_at?: string
+          date?: string
+          dream_text?: string | null
+          id?: string
+          interrupted_movement?: string | null
+          psychic_force?: string | null
+          session_id?: string | null
+          symbolic_message?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dreams_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dreams_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_logs: {
         Row: {
           data_envio: string
@@ -4804,6 +4936,80 @@ export type Database = {
             columns: ["sessao_id"]
             isOneToOne: false
             referencedRelation: "sessoes_casa_maquinas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_encounters: {
+        Row: {
+          archetype_worked: string | null
+          created_at: string
+          date: string
+          group_id: string
+          id: string
+          notes: string | null
+          theme: string | null
+        }
+        Insert: {
+          archetype_worked?: string | null
+          created_at?: string
+          date?: string
+          group_id: string
+          id?: string
+          notes?: string | null
+          theme?: string | null
+        }
+        Update: {
+          archetype_worked?: string | null
+          created_at?: string
+          date?: string
+          group_id?: string
+          id?: string
+          notes?: string | null
+          theme?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_encounters_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "therapy_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_members: {
+        Row: {
+          client_id: string
+          group_id: string
+          id: string
+          joined_at: string
+        }
+        Insert: {
+          client_id: string
+          group_id: string
+          id?: string
+          joined_at?: string
+        }
+        Update: {
+          client_id?: string
+          group_id?: string
+          id?: string
+          joined_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "therapy_groups"
             referencedColumns: ["id"]
           },
         ]
@@ -5864,6 +6070,48 @@ export type Database = {
         }
         Relationships: []
       }
+      journey_districts: {
+        Row: {
+          district_id: string
+          id: string
+          journey_id: string
+          last_session_at: string | null
+          sessions_count: number | null
+          state: string
+        }
+        Insert: {
+          district_id: string
+          id?: string
+          journey_id: string
+          last_session_at?: string | null
+          sessions_count?: number | null
+          state?: string
+        }
+        Update: {
+          district_id?: string
+          id?: string
+          journey_id?: string
+          last_session_at?: string | null
+          sessions_count?: number | null
+          state?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journey_districts_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "districts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journey_districts_journey_id_fkey"
+            columns: ["journey_id"]
+            isOneToOne: false
+            referencedRelation: "journeys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       journey_media: {
         Row: {
           created_at: string
@@ -5904,6 +6152,48 @@ export type Database = {
             columns: ["journey_id"]
             isOneToOne: true
             referencedRelation: "clube_jornadas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journeys: {
+        Row: {
+          client_id: string
+          created_at: string
+          current_district_id: string | null
+          id: string
+          process_state: string
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          current_district_id?: string | null
+          id?: string
+          process_state?: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          current_district_id?: string | null
+          id?: string
+          process_state?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journeys_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journeys_current_district_id_fkey"
+            columns: ["current_district_id"]
+            isOneToOne: false
+            referencedRelation: "districts"
             referencedColumns: ["id"]
           },
         ]
@@ -6662,6 +6952,57 @@ export type Database = {
             columns: ["session_case_id"]
             isOneToOne: false
             referencedRelation: "session_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      labyrinth_records: {
+        Row: {
+          archetypal_image: string | null
+          client_id: string
+          created_at: string
+          crossing: string | null
+          emotional_field: string | null
+          facilitator_support: string | null
+          fact: string | null
+          id: string
+          session_id: string | null
+        }
+        Insert: {
+          archetypal_image?: string | null
+          client_id: string
+          created_at?: string
+          crossing?: string | null
+          emotional_field?: string | null
+          facilitator_support?: string | null
+          fact?: string | null
+          id?: string
+          session_id?: string | null
+        }
+        Update: {
+          archetypal_image?: string | null
+          client_id?: string
+          created_at?: string
+          crossing?: string | null
+          emotional_field?: string | null
+          facilitator_support?: string | null
+          fact?: string | null
+          id?: string
+          session_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "labyrinth_records_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "labyrinth_records_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
             referencedColumns: ["id"]
           },
         ]
@@ -10485,6 +10826,76 @@ export type Database = {
           },
         ]
       }
+      sessions: {
+        Row: {
+          checkin_notes: string | null
+          checkin_state: string | null
+          client_id: string
+          created_at: string
+          date: string
+          district_id: string | null
+          id: string
+          insight: string | null
+          notes: string | null
+          task: string | null
+          tool_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          checkin_notes?: string | null
+          checkin_state?: string | null
+          client_id: string
+          created_at?: string
+          date?: string
+          district_id?: string | null
+          id?: string
+          insight?: string | null
+          notes?: string | null
+          task?: string | null
+          tool_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          checkin_notes?: string | null
+          checkin_state?: string | null
+          client_id?: string
+          created_at?: string
+          date?: string
+          district_id?: string | null
+          id?: string
+          insight?: string | null
+          notes?: string | null
+          task?: string | null
+          tool_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sessions_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sessions_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "districts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sessions_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sessoes_casa_maquinas: {
         Row: {
           cliente_id: string
@@ -11237,6 +11648,80 @@ export type Database = {
         }
         Relationships: []
       }
+      therapy_groups: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          theme: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          theme?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          theme?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tools: {
+        Row: {
+          ativa: boolean | null
+          created_at: string
+          descricao: string | null
+          district_id: string | null
+          icone: string | null
+          id: string
+          nome: string
+          ordem: number | null
+          rota: string | null
+          tipo: string | null
+        }
+        Insert: {
+          ativa?: boolean | null
+          created_at?: string
+          descricao?: string | null
+          district_id?: string | null
+          icone?: string | null
+          id?: string
+          nome: string
+          ordem?: number | null
+          rota?: string | null
+          tipo?: string | null
+        }
+        Update: {
+          ativa?: boolean | null
+          created_at?: string
+          descricao?: string | null
+          district_id?: string | null
+          icone?: string | null
+          id?: string
+          nome?: string
+          ordem?: number | null
+          rota?: string | null
+          tipo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tools_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "districts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       torre_arquetipo_sugestao: {
         Row: {
           arquetipo_id: string | null
@@ -11399,6 +11884,57 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      towers: {
+        Row: {
+          client_id: string
+          clinical_posture: string | null
+          created_at: string
+          date: string
+          id: string
+          notes: string | null
+          session_id: string | null
+          tower_primary: string | null
+          tower_secondary: string | null
+        }
+        Insert: {
+          client_id: string
+          clinical_posture?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          notes?: string | null
+          session_id?: string | null
+          tower_primary?: string | null
+          tower_secondary?: string | null
+        }
+        Update: {
+          client_id?: string
+          clinical_posture?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          notes?: string | null
+          session_id?: string | null
+          tower_primary?: string | null
+          tower_secondary?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "towers_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "towers_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       travessia_comentarios: {
         Row: {
