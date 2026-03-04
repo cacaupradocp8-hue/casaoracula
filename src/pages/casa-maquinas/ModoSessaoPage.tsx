@@ -269,8 +269,9 @@ export default function ModoSessaoPage() {
                 <Button variant="outline" onClick={() => setStep(1)} className="flex-1 border-[#C9A24A]/10 text-[#F5F1E8]/60">Voltar</Button>
                 <Button onClick={() => setStep(3)} className="flex-1 bg-[#C9A24A] hover:bg-[#C9A24A]/80 text-[#0B1B2B]">Avançar</Button>
               </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </>
         )}
 
         {/* Step 3: Execution placeholder */}
