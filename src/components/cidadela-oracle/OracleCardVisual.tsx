@@ -55,6 +55,13 @@ export function OracleCardVisual({ card, isRevealing, recurrenceCount, onClick, 
             </div>
           </div>
 
+          {/* Description */}
+          {!compact && card.description && (
+            <p className="text-[9px] text-[#F5F1E8]/40 text-center mt-1 leading-tight">
+              {card.description}
+            </p>
+          )}
+
           {/* Base question */}
           {!compact && card.base_question && (
             <div className="mt-auto pt-2 border-t border-[#F5F1E8]/10">
@@ -62,6 +69,13 @@ export function OracleCardVisual({ card, isRevealing, recurrenceCount, onClick, 
                 "{card.base_question}"
               </p>
             </div>
+          )}
+
+          {/* Suggested tool */}
+          {!compact && card.suggested_tool && (
+            <p className="text-[8px] text-[#C9A24A]/40 text-center mt-1">
+              🔧 {card.suggested_tool}
+            </p>
           )}
         </div>
       </motion.div>

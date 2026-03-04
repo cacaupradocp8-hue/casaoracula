@@ -78,6 +78,9 @@ export function OracleSessionWidget({ clientId, districtId, checkinState, onUseC
             {drawnCard ? (
               <>
                 <OracleCardVisual card={drawnCard} isRevealing={isRevealing} />
+                {drawnCard.suggested_tool && (
+                  <p className="text-[10px] text-[#C9A24A]/50 mt-1">Ferramenta sugerida: {drawnCard.suggested_tool}</p>
+                )}
                 <div className="flex gap-2">
                   <Button variant="gold" size="sm" onClick={() => onUseCard(drawnCard)}>
                     Usar esta carta
