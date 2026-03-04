@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      academy_progress: {
+        Row: {
+          badges_json: Json
+          created_at: string
+          id: string
+          level: number
+          points: number
+          specialties: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          badges_json?: Json
+          created_at?: string
+          id?: string
+          level?: number
+          points?: number
+          specialties?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          badges_json?: Json
+          created_at?: string
+          id?: string
+          level?: number
+          points?: number
+          specialties?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       access_expiration_logs: {
         Row: {
           expired_at: string
