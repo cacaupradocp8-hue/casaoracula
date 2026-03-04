@@ -42,7 +42,8 @@ export default function ModoSessaoPage() {
   const [loading, setLoading] = useState(true);
   const [gpsSuggestion, setGpsSuggestion] = useState<GpsSuggestion | null>(null);
   const [usedInterventionIds, setUsedInterventionIds] = useState<string[]>([]);
-
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const { recordUsage } = useCidadelaOracle();
   useEffect(() => {
     if (user) loadData();
   }, [user]);
