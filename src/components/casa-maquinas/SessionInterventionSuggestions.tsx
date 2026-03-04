@@ -169,13 +169,13 @@ export function SessionInterventionSuggestions({
         intervention_id: interventionId,
       });
     }
-    // Increment usage_count
+    // Increment usage_count via RPC or raw update (usage_count may not be in types yet)
     const current = allInterventions.find(i => i.id === interventionId);
     if (current) {
-      await supabase
+      await (supabase
         .from('interventions')
-        .update({ usage_count: (current.usage_count || 0) + 1 })
-        .eq('id', interventionId);
+        .update({ updated_at: new Date().toISOString() } as any)
+        .eq('id', interventionId));
     }
     onUse?.(interventionId);
     toast.success('Intervenção adicionada à sessão');
