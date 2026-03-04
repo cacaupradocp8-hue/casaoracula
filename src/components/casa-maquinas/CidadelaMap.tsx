@@ -27,6 +27,7 @@ interface JourneyDistrict {
 interface DistrictTool {
   id: string;
   nome: string;
+  district_id: string;
   rota: string;
   tipo: string;
 }
