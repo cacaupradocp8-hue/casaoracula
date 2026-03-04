@@ -128,7 +128,7 @@ import { AsPortas, OsCamposPsiquicos, AsTorres, TriadeMetodo } from "./pages/met
 import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
 // Casa das Máquinas
-import { CasaDasMaquinas, SessoesPage, GestosIntegracaoPage, MapaVivoClientePage, PainelInstitucionalPage, ClientesPage, ClienteDetailPage, ModoSessaoPage, FerramentasPage, GruposPage, GrupoDetailPage } from "./pages/casa-maquinas";
+import { CasaDasMaquinas, SessoesPage, GestosIntegracaoPage, MapaVivoClientePage, PainelInstitucionalPage, ClientesPage, ClienteDetailPage, ModoSessaoPage, FerramentasPage, GruposPage, GrupoDetailPage, BibliotecaIntervPage } from "./pages/casa-maquinas";
 import CartografiaPage from "./pages/casa-maquinas/ferramentas/CartografiaPage";
 import TorreVivaPage from "./pages/casa-maquinas/ferramentas/TorreVivaPage";
 import LabirintoPage from "./pages/casa-maquinas/ferramentas/LabirintoPage";
@@ -1447,7 +1447,7 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/ferramentas" element={<ProtectedRoute minPortal="oracula"><FerramentasPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/grupos" element={<ProtectedRoute minPortal="oracula"><GruposPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/grupos/:groupId" element={<ProtectedRoute minPortal="oracula"><GrupoDetailPage /></ProtectedRoute>} />
-        <Route path="/casa-das-maquinas/biblioteca" element={<ProtectedRoute minPortal="oracula"><SectionPlaceholder title="Biblioteca de Intervenções" description="Acervo de intervenções clínicas e materiais de suporte. Em desenvolvimento." /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/biblioteca" element={<ProtectedRoute minPortal="oracula"><BibliotecaIntervPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/tecelãs" element={<ProtectedRoute minPortal="oracula"><SectionPlaceholder title="Casa das Tecelãs" description="Comunidade de facilitadoras — tramas, supervisões e trocas. Em desenvolvimento." /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/academia" element={<ProtectedRoute minPortal="oracula"><SectionPlaceholder title="Academia Orácula" description="Formação continuada e aprofundamento no Método Orácula. Em desenvolvimento." /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SectionPlaceholder title="Sala de Treinamento" description="Ambiente simulado para prática com clientes fictícias. Em desenvolvimento." /></ProtectedRoute>} />

@@ -12,6 +12,7 @@ import { CheckCircle, ChevronRight, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { GpsSuggestionCard } from '@/components/casa-maquinas/GpsSuggestionCard';
 import type { GpsSuggestion } from '@/lib/gps-cidadela';
+import { SessionInterventionSuggestions } from '@/components/casa-maquinas/SessionInterventionSuggestions';
 
 const CHECKIN_STATES = [
   { value: 'contraida', label: 'Contraída', color: '#EF4444' },
@@ -38,6 +39,7 @@ export default function ModoSessaoPage() {
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [gpsSuggestion, setGpsSuggestion] = useState<GpsSuggestion | null>(null);
+  const [usedInterventionIds, setUsedInterventionIds] = useState<string[]>([]);
 
   useEffect(() => {
     if (user) loadData();
@@ -74,6 +76,7 @@ export default function ModoSessaoPage() {
       checkin_state: checkinState || null,
       checkin_notes: checkinNotes || null,
       gps_suggestion_json: gpsSuggestion ? JSON.parse(JSON.stringify(gpsSuggestion)) : null,
+      used_intervention_ids: usedInterventionIds.length > 0 ? usedInterventionIds : [],
       insight: insight || null,
       task: task || null,
       notes: notes || null,
@@ -296,6 +299,20 @@ export default function ModoSessaoPage() {
                   ) : null;
                 })()}
               </div>
+              {/* Intervention Suggestions */}
+              <SessionInterventionSuggestions
+                districtId={selectedDistrict || undefined}
+                checkinState={checkinState}
+                onUse={(id) => {
+                  if (!usedInterventionIds.includes(id)) {
+                    setUsedInterventionIds(prev => [...prev, id]);
+                    toast.success('Intervenção adicionada à sessão');
+                  }
+                }}
+              />
+              {usedInterventionIds.length > 0 && (
+                <p className="text-[10px] text-[#C9A24A]/40 text-center">{usedInterventionIds.length} intervenção(ões) selecionada(s)</p>
+              )}
               <div className="flex gap-2">
                 <Button variant="outline" onClick={() => setStep(2)} className="flex-1 border-[#C9A24A]/10 text-[#F5F1E8]/60">Voltar</Button>
                 <Button onClick={() => setStep(4)} className="flex-1 bg-[#C9A24A] hover:bg-[#C9A24A]/80 text-[#0B1B2B]">Avançar</Button>

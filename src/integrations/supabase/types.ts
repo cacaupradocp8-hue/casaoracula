@@ -5294,6 +5294,91 @@ export type Database = {
         }
         Relationships: []
       }
+      intervention_favorites: {
+        Row: {
+          created_at: string
+          id: string
+          intervention_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          intervention_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          intervention_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intervention_favorites_intervention_id_fkey"
+            columns: ["intervention_id"]
+            isOneToOne: false
+            referencedRelation: "interventions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      interventions: {
+        Row: {
+          archetype_key: string | null
+          ativa: boolean
+          content: string
+          contraindications: string | null
+          created_at: string
+          district_id: string | null
+          id: string
+          level: Database["public"]["Enums"]["intervention_level"]
+          tags: string[] | null
+          title: string
+          tower_key: string | null
+          type: Database["public"]["Enums"]["intervention_type"]
+          updated_at: string
+        }
+        Insert: {
+          archetype_key?: string | null
+          ativa?: boolean
+          content: string
+          contraindications?: string | null
+          created_at?: string
+          district_id?: string | null
+          id?: string
+          level?: Database["public"]["Enums"]["intervention_level"]
+          tags?: string[] | null
+          title: string
+          tower_key?: string | null
+          type: Database["public"]["Enums"]["intervention_type"]
+          updated_at?: string
+        }
+        Update: {
+          archetype_key?: string | null
+          ativa?: boolean
+          content?: string
+          contraindications?: string | null
+          created_at?: string
+          district_id?: string | null
+          id?: string
+          level?: Database["public"]["Enums"]["intervention_level"]
+          tags?: string[] | null
+          title?: string
+          tower_key?: string | null
+          type?: Database["public"]["Enums"]["intervention_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interventions_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "districts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       jardim_do_oficio: {
         Row: {
           aprendizado_tecnico: string | null
@@ -10847,6 +10932,7 @@ export type Database = {
           task: string | null
           tool_id: string | null
           updated_at: string
+          used_intervention_ids: string[] | null
           user_id: string
         }
         Insert: {
@@ -10863,6 +10949,7 @@ export type Database = {
           task?: string | null
           tool_id?: string | null
           updated_at?: string
+          used_intervention_ids?: string[] | null
           user_id?: string
         }
         Update: {
@@ -10879,6 +10966,7 @@ export type Database = {
           task?: string | null
           tool_id?: string | null
           updated_at?: string
+          used_intervention_ids?: string[] | null
           user_id?: string
         }
         Relationships: [
@@ -12672,6 +12760,12 @@ export type Database = {
         | "porta_familias"
       content_type: "text" | "video" | "audio" | "file" | "mixed" | "ritual"
       gesto_status: "ativo" | "em_pratica" | "integrado" | "em_revisao"
+      intervention_level: "basico" | "intermediario" | "avancado"
+      intervention_type:
+        | "pergunta_clinica"
+        | "micro_ritual"
+        | "exercicio_narrativo"
+        | "intervencao_simbolica"
       jardim_gesto_tipo:
         | "observacao"
         | "limite"
@@ -12889,6 +12983,13 @@ export const Constants = {
       ],
       content_type: ["text", "video", "audio", "file", "mixed", "ritual"],
       gesto_status: ["ativo", "em_pratica", "integrado", "em_revisao"],
+      intervention_level: ["basico", "intermediario", "avancado"],
+      intervention_type: [
+        "pergunta_clinica",
+        "micro_ritual",
+        "exercicio_narrativo",
+        "intervencao_simbolica",
+      ],
       jardim_gesto_tipo: [
         "observacao",
         "limite",
