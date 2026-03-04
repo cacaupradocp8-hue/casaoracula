@@ -220,9 +220,25 @@ export default function ModoSessaoPage() {
 
         {/* Step 2: District & Tool */}
         {step === 2 && (
-          <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
-            <CardHeader><CardTitle className="text-sm text-[#F5F1E8]/80">Distrito & Ferramenta</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
+          <>
+            {selectedClient && (
+              <GpsSuggestionCard
+                clientId={selectedClient}
+                checkin={checkinState}
+                onApply={(s) => {
+                  setGpsSuggestion(s);
+                  // Try to auto-select matching district/tool from lists
+                  const matchDist = districts.find(d => d.nome === s.distrito_sugerido);
+                  if (matchDist) setSelectedDistrict(matchDist.id);
+                  const matchTool = tools.find(t => t.nome === s.ferramenta_recomendada);
+                  if (matchTool) setSelectedTool(matchTool.id);
+                  toast.success('Sugestão aplicada');
+                }}
+              />
+            )}
+            <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
+              <CardHeader><CardTitle className="text-sm text-[#F5F1E8]/80">Distrito & Ferramenta</CardTitle></CardHeader>
+              <CardContent className="space-y-4">
               <div>
                 <label className="text-xs text-[#F5F1E8]/60 mb-2 block">Distrito</label>
                 <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>
