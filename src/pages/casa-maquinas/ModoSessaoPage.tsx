@@ -12,6 +12,7 @@ import { CheckCircle, ChevronRight, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { GpsSuggestionCard } from '@/components/casa-maquinas/GpsSuggestionCard';
 import type { GpsSuggestion } from '@/lib/gps-cidadela';
+import { SessionInterventionSuggestions } from '@/components/casa-maquinas/SessionInterventionSuggestions';
 
 const CHECKIN_STATES = [
   { value: 'contraida', label: 'Contraída', color: '#EF4444' },
