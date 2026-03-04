@@ -40,10 +40,15 @@ export async function gatherReportData(clientId: string, userId: string): Promis
     classification: (carto[0].classification_json || {}) as Record<string, string>,
   } : null;
 
-  // 4. Torres (from tower_records)
+  // 4. Torres
   const { data: towerRecs } = await supabase
-    .from('tower_records').select('tower_name').eq('client_id', clientId).order('created_at', { ascending: false }).limit(5);
-  const torres = [...new Set((towerRecs || []).map(t => t.tower_name))].slice(0, 3);
+    .from('towers').select('tower_primary, tower_secondary').eq('client_id', clientId).order('created_at', { ascending: false }).limit(5);
+  const torreSet = new Set<string>();
+  (towerRecs || []).forEach(t => {
+    if (t.tower_primary) torreSet.add(t.tower_primary);
+    if (t.tower_secondary) torreSet.add(t.tower_secondary);
+  });
+  const torres = [...torreSet].slice(0, 3);
 
   // 5. Journey districts
   const { data: journeys } = await supabase
