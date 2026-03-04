@@ -96,12 +96,11 @@ export function SessionInterventionSuggestions({
     }
 
     setAllInterventions(intRes.data || []);
-    setFavorites(new Set((results[1].data || []).map((f: any) => f.intervention_id)));
-    setDistricts(results[2].data || []);
+    setFavorites(new Set((favRes.data || []).map((f: any) => f.intervention_id)));
+    setDistricts(distRes.data || []);
 
     // Build usage map & last session IDs
-    if (clientId && results[3]?.data) {
-      const sessionsData = results[3].data as any[];
+    if (clientId && sessionsData.length > 0) {
       const uMap: Record<string, number> = {};
       let lastIds: string[] = [];
 
