@@ -81,7 +81,8 @@ export default function GruposPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {groups.map(g => (
-            <Card key={g.id} className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
+            <Card key={g.id} className="border-[#C9A24A]/10 bg-[#0B1B2B]/60 hover:border-[#C9A24A]/20 cursor-pointer transition-all"
+              onClick={() => navigate(`/casa-das-maquinas/grupos/${g.id}`)}>
               <CardContent className="p-4">
                 <h3 className="text-sm font-semibold text-[#F5F1E8] mb-1">{g.name}</h3>
                 {g.theme && <p className="text-xs text-[#F5F1E8]/40 mb-2">{g.theme}</p>}
