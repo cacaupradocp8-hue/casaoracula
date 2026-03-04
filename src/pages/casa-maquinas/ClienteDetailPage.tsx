@@ -9,6 +9,7 @@ import { ClienteHistorico } from '@/components/casa-maquinas/ClienteHistorico';
 import { ClientePerfil as ClientePerfilTab } from '@/components/casa-maquinas/ClientePerfilTab';
 import { ClienteCartografias } from '@/components/casa-maquinas/ClienteCartografias';
 import { ClienteSonhos } from '@/components/casa-maquinas/ClienteSonhos';
+import { ClientePerfilArquetipico } from '@/components/casa-maquinas/ClientePerfilArquetipico';
 import { Loader2 } from 'lucide-react';
 
 export default function ClienteDetailPage() {
@@ -59,6 +60,7 @@ export default function ClienteDetailPage() {
           <TabsTrigger value="historico" className={tabClass}>Histórico</TabsTrigger>
           <TabsTrigger value="cartografia" className={tabClass}>Cartografia</TabsTrigger>
           <TabsTrigger value="sonhos" className={tabClass}>Sonhos</TabsTrigger>
+          <TabsTrigger value="arquetipo" className={tabClass}>Arquétipo</TabsTrigger>
           <TabsTrigger value="perfil" className={tabClass}>Perfil</TabsTrigger>
         </TabsList>
 
@@ -66,6 +68,7 @@ export default function ClienteDetailPage() {
         <TabsContent value="historico"><ClienteHistorico clienteId={clienteId!} /></TabsContent>
         <TabsContent value="cartografia"><ClienteCartografias clienteId={clienteId!} /></TabsContent>
         <TabsContent value="sonhos"><ClienteSonhos clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="arquetipo"><ClientePerfilArquetipico clienteId={clienteId!} /></TabsContent>
         <TabsContent value="perfil"><ClientePerfilTab cliente={cliente} onUpdate={loadCliente} /></TabsContent>
       </Tabs>
     </CasaMaquinasLayout>

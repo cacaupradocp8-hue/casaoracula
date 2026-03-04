@@ -1741,6 +1741,8 @@ export type Database = {
       }
       clientes: {
         Row: {
+          archetypal_profile_history: Json | null
+          archetypal_profile_json: Json | null
           codigo_interno: string | null
           created_at: string
           data_inicio: string | null
@@ -1753,6 +1755,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          archetypal_profile_history?: Json | null
+          archetypal_profile_json?: Json | null
           codigo_interno?: string | null
           created_at?: string
           data_inicio?: string | null
@@ -1765,6 +1769,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          archetypal_profile_history?: Json | null
+          archetypal_profile_json?: Json | null
           codigo_interno?: string | null
           created_at?: string
           data_inicio?: string | null
