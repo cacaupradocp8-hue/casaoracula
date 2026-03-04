@@ -325,12 +325,11 @@ export default function ModoSessaoPage() {
               </div>
               {/* Intervention Suggestions */}
               <SessionInterventionSuggestions
-                districtId={selectedDistrict || undefined}
+                sessionDistrictId={selectedDistrict || undefined}
                 checkinState={checkinState}
                 onUse={(id) => {
                   if (!usedInterventionIds.includes(id)) {
                     setUsedInterventionIds(prev => [...prev, id]);
-                    toast.success('Intervenção adicionada à sessão');
                   }
                 }}
               />
