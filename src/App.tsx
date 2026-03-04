@@ -114,6 +114,7 @@ import CriarFerramenta from "./pages/admin/CriarFerramenta";
 import AtelieConteudo from "./pages/admin/AtelieConteudo";
 import AdminModulosFormativos from "./pages/admin/AdminModulosFormativos";
 import AdminBooks from "./pages/admin/AdminBooks";
+import AdminOracleCardsPage from "./pages/admin/AdminOracleCardsPage";
 import Big5Simbolico from "./pages/Big5Simbolico";
 import Big5Oracular from "./pages/Big5Oracular";
 import Big5Funcional from "./pages/Big5Funcional";
