@@ -76,6 +76,7 @@ export default function ModoSessaoPage() {
       user_id: user!.id,
       district_id: selectedDistrict || null,
       tool_id: selectedTool || null,
+      cidadela_card_id: selectedCardId || null,
       checkin_state: checkinState || null,
       checkin_notes: checkinNotes || null,
       gps_suggestion_json: gpsSuggestion ? JSON.parse(JSON.stringify(gpsSuggestion)) : null,
