@@ -133,6 +133,10 @@ export default function ModoSessaoPage() {
         }).eq('id', journeyId);
       }
     }
+    // Record oracle card usage
+    if (selectedCardId && selectedClient) {
+      await recordUsage(selectedClient, selectedCardId);
+    }
 
     toast.success('Sessão registrada');
     navigate(`/casa-das-maquinas/clientes/${selectedClient}`);
