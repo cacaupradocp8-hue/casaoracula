@@ -1,5 +1,3 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -18,31 +16,6 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Verify admin
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: corsHeaders });
-    }
-
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_ANON_KEY')!,
-      { global: { headers: { Authorization: authHeader } } }
-    );
-
-    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(
-      authHeader.replace('Bearer ', '')
-    );
-    if (claimsError) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: corsHeaders });
-    }
-
-    const userId = claimsData.claims.sub;
-    const adminCheck = await supabase.rpc('is_admin', { _user_id: userId });
-    if (!adminCheck.data) {
-      return new Response(JSON.stringify({ error: 'Admin only' }), { status: 403, headers: corsHeaders });
-    }
-
     // Generate ECDSA P-256 key pair for VAPID
     const keyPair = await crypto.subtle.generateKey(
       { name: 'ECDSA', namedCurve: 'P-256' },
@@ -59,7 +32,6 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({
       publicKey: publicKeyBase64Url,
       privateKey: privateKeyBase64Url,
-      instructions: 'Store publicKey as VAPID_PUBLIC_KEY and privateKey as VAPID_PRIVATE_KEY in secrets. Add publicKey to your frontend config.'
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
