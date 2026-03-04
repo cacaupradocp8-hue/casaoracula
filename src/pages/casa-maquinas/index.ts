@@ -8,3 +8,4 @@ export { default as ClienteDetailPage } from './ClienteDetailPage';
 export { default as ModoSessaoPage } from './ModoSessaoPage';
 export { default as FerramentasPage } from './FerramentasPage';
 export { default as GruposPage } from './GruposPage';
+export { default as GrupoDetailPage } from './GrupoDetailPage';

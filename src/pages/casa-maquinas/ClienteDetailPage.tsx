@@ -7,6 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CidadelaMap } from '@/components/casa-maquinas/CidadelaMap';
 import { ClienteHistorico } from '@/components/casa-maquinas/ClienteHistorico';
 import { ClientePerfil as ClientePerfilTab } from '@/components/casa-maquinas/ClientePerfilTab';
+import { ClienteCartografias } from '@/components/casa-maquinas/ClienteCartografias';
+import { ClienteSonhos } from '@/components/casa-maquinas/ClienteSonhos';
 import { Loader2 } from 'lucide-react';
 
 export default function ClienteDetailPage() {
@@ -47,32 +49,24 @@ export default function ClienteDetailPage() {
     );
   }
 
+  const tabClass = "data-[state=active]:bg-[#C9A24A]/15 data-[state=active]:text-[#C9A24A] text-[#F5F1E8]/60";
+
   return (
     <CasaMaquinasLayout title={cliente.nome} subtitle="Jornada interior">
       <Tabs defaultValue="cidadela" className="w-full">
-        <TabsList className="bg-[#0B1B2B]/80 border border-[#C9A24A]/10 mb-6">
-          <TabsTrigger value="cidadela" className="data-[state=active]:bg-[#C9A24A]/15 data-[state=active]:text-[#C9A24A] text-[#F5F1E8]/60">
-            CidaDELA
-          </TabsTrigger>
-          <TabsTrigger value="historico" className="data-[state=active]:bg-[#C9A24A]/15 data-[state=active]:text-[#C9A24A] text-[#F5F1E8]/60">
-            Histórico
-          </TabsTrigger>
-          <TabsTrigger value="perfil" className="data-[state=active]:bg-[#C9A24A]/15 data-[state=active]:text-[#C9A24A] text-[#F5F1E8]/60">
-            Perfil
-          </TabsTrigger>
+        <TabsList className="bg-[#0B1B2B]/80 border border-[#C9A24A]/10 mb-6 flex-wrap h-auto">
+          <TabsTrigger value="cidadela" className={tabClass}>CidaDELA</TabsTrigger>
+          <TabsTrigger value="historico" className={tabClass}>Histórico</TabsTrigger>
+          <TabsTrigger value="cartografia" className={tabClass}>Cartografia</TabsTrigger>
+          <TabsTrigger value="sonhos" className={tabClass}>Sonhos</TabsTrigger>
+          <TabsTrigger value="perfil" className={tabClass}>Perfil</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="cidadela">
-          <CidadelaMap clienteId={clienteId!} />
-        </TabsContent>
-
-        <TabsContent value="historico">
-          <ClienteHistorico clienteId={clienteId!} />
-        </TabsContent>
-
-        <TabsContent value="perfil">
-          <ClientePerfilTab cliente={cliente} onUpdate={loadCliente} />
-        </TabsContent>
+        <TabsContent value="cidadela"><CidadelaMap clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="historico"><ClienteHistorico clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="cartografia"><ClienteCartografias clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="sonhos"><ClienteSonhos clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="perfil"><ClientePerfilTab cliente={cliente} onUpdate={loadCliente} /></TabsContent>
       </Tabs>
     </CasaMaquinasLayout>
   );
