@@ -129,6 +129,7 @@ import MapaVivoList from "./pages/MapaVivoList";
 import MapaVivoEditor from "./pages/MapaVivoEditor";
 // Casa das Máquinas
 import { CasaDasMaquinas, SessoesPage, GestosIntegracaoPage, MapaVivoClientePage, PainelInstitucionalPage, ClientesPage, ClienteDetailPage, ModoSessaoPage, FerramentasPage, GruposPage, GrupoDetailPage, BibliotecaIntervPage } from "./pages/casa-maquinas";
+import CasaTecelasPage from "./pages/casa-maquinas/CasaTecelasPage";
 import AcademiaPage from "./pages/casa-maquinas/AcademiaPage";
 import PerfilProfissionalPage from "./pages/casa-maquinas/PerfilProfissionalPage";
 import CartografiaPage from "./pages/casa-maquinas/ferramentas/CartografiaPage";
@@ -1450,7 +1451,7 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/grupos" element={<ProtectedRoute minPortal="oracula"><GruposPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/grupos/:groupId" element={<ProtectedRoute minPortal="oracula"><GrupoDetailPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/biblioteca" element={<ProtectedRoute minPortal="oracula"><BibliotecaIntervPage /></ProtectedRoute>} />
-        <Route path="/casa-das-maquinas/tecelãs" element={<ProtectedRoute minPortal="oracula"><SectionPlaceholder title="Casa das Tecelãs" description="Comunidade de facilitadoras — tramas, supervisões e trocas. Em desenvolvimento." /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/tecelãs" element={<ProtectedRoute minPortal="aluna"><CasaTecelasPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/academia" element={<ProtectedRoute minPortal="oracula"><AcademiaPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/perfil-profissional" element={<ProtectedRoute minPortal="oracula"><PerfilProfissionalPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SectionPlaceholder title="Sala de Treinamento" description="Ambiente simulado para prática com clientes fictícias. Em desenvolvimento." /></ProtectedRoute>} />

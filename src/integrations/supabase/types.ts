@@ -11673,6 +11673,245 @@ export type Database = {
         }
         Relationships: []
       }
+      tecela_casos_espelho: {
+        Row: {
+          alerta_etico: string | null
+          aprovado: boolean
+          contexto_anonimizado: string
+          created_at: string
+          created_by: string
+          demanda_simbolica: string
+          district_id: string | null
+          erro_evitar: string | null
+          id: string
+          leitura_oracula: string | null
+          resultado: string | null
+          tags: string[] | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          alerta_etico?: string | null
+          aprovado?: boolean
+          contexto_anonimizado: string
+          created_at?: string
+          created_by: string
+          demanda_simbolica: string
+          district_id?: string | null
+          erro_evitar?: string | null
+          id?: string
+          leitura_oracula?: string | null
+          resultado?: string | null
+          tags?: string[] | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          alerta_etico?: string | null
+          aprovado?: boolean
+          contexto_anonimizado?: string
+          created_at?: string
+          created_by?: string
+          demanda_simbolica?: string
+          district_id?: string | null
+          erro_evitar?: string | null
+          id?: string
+          leitura_oracula?: string | null
+          resultado?: string | null
+          tags?: string[] | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      tecela_comentarios: {
+        Row: {
+          autor_id: string
+          conteudo: string
+          created_at: string
+          id: string
+          ref_id: string
+          ref_type: string
+        }
+        Insert: {
+          autor_id: string
+          conteudo: string
+          created_at?: string
+          id?: string
+          ref_id: string
+          ref_type: string
+        }
+        Update: {
+          autor_id?: string
+          conteudo?: string
+          created_at?: string
+          id?: string
+          ref_id?: string
+          ref_type?: string
+        }
+        Relationships: []
+      }
+      tecela_favoritos: {
+        Row: {
+          created_at: string
+          id: string
+          ref_id: string
+          ref_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ref_id: string
+          ref_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ref_id?: string
+          ref_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tecela_intervencoes: {
+        Row: {
+          aprovado: boolean
+          conteudo: string
+          contraindicacoes: string | null
+          created_at: string
+          created_by: string
+          district_id: string | null
+          id: string
+          nivel: string
+          tags: string[] | null
+          tipo: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          aprovado?: boolean
+          conteudo: string
+          contraindicacoes?: string | null
+          created_at?: string
+          created_by: string
+          district_id?: string | null
+          id?: string
+          nivel?: string
+          tags?: string[] | null
+          tipo?: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          aprovado?: boolean
+          conteudo?: string
+          contraindicacoes?: string | null
+          created_at?: string
+          created_by?: string
+          district_id?: string | null
+          id?: string
+          nivel?: string
+          tags?: string[] | null
+          tipo?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      tecela_supervisoes: {
+        Row: {
+          caso_id: string | null
+          created_at: string
+          created_by: string
+          data_evento: string
+          descricao: string | null
+          id: string
+          link_ao_vivo: string | null
+          link_replay: string | null
+          status: string
+          tema: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          caso_id?: string | null
+          created_at?: string
+          created_by: string
+          data_evento: string
+          descricao?: string | null
+          id?: string
+          link_ao_vivo?: string | null
+          link_replay?: string | null
+          status?: string
+          tema?: string | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          caso_id?: string | null
+          created_at?: string
+          created_by?: string
+          data_evento?: string
+          descricao?: string | null
+          id?: string
+          link_ao_vivo?: string | null
+          link_replay?: string | null
+          status?: string
+          tema?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tecela_supervisoes_caso_id_fkey"
+            columns: ["caso_id"]
+            isOneToOne: false
+            referencedRelation: "tecela_casos_espelho"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tecela_tramas: {
+        Row: {
+          created_at: string
+          created_by: string
+          district_id: string | null
+          id: string
+          month: string
+          objective: string | null
+          pinned: boolean
+          prompt: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          district_id?: string | null
+          id?: string
+          month: string
+          objective?: string | null
+          pinned?: boolean
+          prompt?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          district_id?: string | null
+          id?: string
+          month?: string
+          objective?: string | null
+          pinned?: boolean
+          prompt?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       templates: {
         Row: {
           action_prompt: string
