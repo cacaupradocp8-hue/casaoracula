@@ -13,6 +13,8 @@ import { toast } from 'sonner';
 import { GpsSuggestionCard } from '@/components/casa-maquinas/GpsSuggestionCard';
 import type { GpsSuggestion } from '@/lib/gps-cidadela';
 import { SessionInterventionSuggestions } from '@/components/casa-maquinas/SessionInterventionSuggestions';
+import { OracleSessionWidget } from '@/components/cidadela-oracle/OracleSessionWidget';
+import { useCidadelaOracle, type CidadelaCard } from '@/hooks/useCidadelaOracle';
 
 const CHECKIN_STATES = [
   { value: 'contraida', label: 'Contraída', color: '#EF4444' },
@@ -40,7 +42,8 @@ export default function ModoSessaoPage() {
   const [loading, setLoading] = useState(true);
   const [gpsSuggestion, setGpsSuggestion] = useState<GpsSuggestion | null>(null);
   const [usedInterventionIds, setUsedInterventionIds] = useState<string[]>([]);
-
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const { recordUsage } = useCidadelaOracle();
   useEffect(() => {
     if (user) loadData();
   }, [user]);
@@ -73,6 +76,7 @@ export default function ModoSessaoPage() {
       user_id: user!.id,
       district_id: selectedDistrict || null,
       tool_id: selectedTool || null,
+      cidadela_card_id: selectedCardId || null,
       checkin_state: checkinState || null,
       checkin_notes: checkinNotes || null,
       gps_suggestion_json: gpsSuggestion ? JSON.parse(JSON.stringify(gpsSuggestion)) : null,
@@ -128,6 +132,10 @@ export default function ModoSessaoPage() {
           updated_at: new Date().toISOString(),
         }).eq('id', journeyId);
       }
+    }
+    // Record oracle card usage
+    if (selectedCardId && selectedClient) {
+      await recordUsage(selectedClient, selectedCardId);
     }
 
     toast.success('Sessão registrada');
@@ -242,6 +250,22 @@ export default function ModoSessaoPage() {
             <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
               <CardHeader><CardTitle className="text-sm text-[#F5F1E8]/80">Distrito & Ferramenta</CardTitle></CardHeader>
               <CardContent className="space-y-4">
+              {/* Oracle Session Widget */}
+              <OracleSessionWidget
+                clientId={selectedClient}
+                districtId={selectedDistrict}
+                checkinState={checkinState}
+                onUseCard={(card: CidadelaCard) => {
+                  setSelectedCardId(card.id);
+                  if (card.district_id) {
+                    setSelectedDistrict(card.district_id);
+                  }
+                  toast.success(`Carta "${card.name}" selecionada`);
+                }}
+              />
+              {selectedCardId && (
+                <p className="text-[10px] text-[#C9A24A]/60 text-center">✦ Carta vinculada à sessão</p>
+              )}
               <div>
                 <label className="text-xs text-[#F5F1E8]/60 mb-2 block">Distrito</label>
                 <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>

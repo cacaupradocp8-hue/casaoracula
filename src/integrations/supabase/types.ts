@@ -1772,6 +1772,114 @@ export type Database = {
           },
         ]
       }
+      cidadela_oracle_cards: {
+        Row: {
+          base_question: string | null
+          color_hex: string | null
+          created_at: string
+          description: string | null
+          district_id: string | null
+          family: string
+          id: string
+          image_url: string | null
+          is_active: boolean
+          keyword: string | null
+          name: string
+          ordem: number
+          suggested_intervention_id: string | null
+          suggested_tool_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          base_question?: string | null
+          color_hex?: string | null
+          created_at?: string
+          description?: string | null
+          district_id?: string | null
+          family: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          keyword?: string | null
+          name: string
+          ordem?: number
+          suggested_intervention_id?: string | null
+          suggested_tool_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          base_question?: string | null
+          color_hex?: string | null
+          created_at?: string
+          description?: string | null
+          district_id?: string | null
+          family?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          keyword?: string | null
+          name?: string
+          ordem?: number
+          suggested_intervention_id?: string | null
+          suggested_tool_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cidadela_oracle_cards_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "districts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cidadela_oracle_cards_suggested_tool_id_fkey"
+            columns: ["suggested_tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cidadela_oracle_usage: {
+        Row: {
+          card_id: string
+          client_id: string
+          count: number
+          id: string
+          last_used_at: string
+        }
+        Insert: {
+          card_id: string
+          client_id: string
+          count?: number
+          id?: string
+          last_used_at?: string
+        }
+        Update: {
+          card_id?: string
+          client_id?: string
+          count?: number
+          id?: string
+          last_used_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cidadela_oracle_usage_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "cidadela_oracle_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cidadela_oracle_usage_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clientes: {
         Row: {
           archetypal_profile_history: Json | null
@@ -8357,13 +8465,16 @@ export type Database = {
         Row: {
           ai_generated_image_url: string | null
           back_image_url: string | null
+          base_question: string | null
           care_notes: string | null
           category_id: string | null
+          color_hex: string | null
           created_at: string
           deep_reading: string | null
           id: string
           image_variants_json: Json | null
           is_sensitive: boolean | null
+          keyword: string | null
           keywords_json: Json | null
           level: Database["public"]["Enums"]["oracle_card_level"] | null
           main_image_url: string | null
@@ -8376,6 +8487,8 @@ export type Database = {
           short_message: string | null
           status: Database["public"]["Enums"]["oracle_content_status"] | null
           subtitle: string | null
+          suggested_intervention_id: string | null
+          suggested_tool_id: string | null
           symbolic_focus: string | null
           title: string
           updated_at: string
@@ -8383,13 +8496,16 @@ export type Database = {
         Insert: {
           ai_generated_image_url?: string | null
           back_image_url?: string | null
+          base_question?: string | null
           care_notes?: string | null
           category_id?: string | null
+          color_hex?: string | null
           created_at?: string
           deep_reading?: string | null
           id?: string
           image_variants_json?: Json | null
           is_sensitive?: boolean | null
+          keyword?: string | null
           keywords_json?: Json | null
           level?: Database["public"]["Enums"]["oracle_card_level"] | null
           main_image_url?: string | null
@@ -8402,6 +8518,8 @@ export type Database = {
           short_message?: string | null
           status?: Database["public"]["Enums"]["oracle_content_status"] | null
           subtitle?: string | null
+          suggested_intervention_id?: string | null
+          suggested_tool_id?: string | null
           symbolic_focus?: string | null
           title: string
           updated_at?: string
@@ -8409,13 +8527,16 @@ export type Database = {
         Update: {
           ai_generated_image_url?: string | null
           back_image_url?: string | null
+          base_question?: string | null
           care_notes?: string | null
           category_id?: string | null
+          color_hex?: string | null
           created_at?: string
           deep_reading?: string | null
           id?: string
           image_variants_json?: Json | null
           is_sensitive?: boolean | null
+          keyword?: string | null
           keywords_json?: Json | null
           level?: Database["public"]["Enums"]["oracle_card_level"] | null
           main_image_url?: string | null
@@ -8428,6 +8549,8 @@ export type Database = {
           short_message?: string | null
           status?: Database["public"]["Enums"]["oracle_content_status"] | null
           subtitle?: string | null
+          suggested_intervention_id?: string | null
+          suggested_tool_id?: string | null
           symbolic_focus?: string | null
           title?: string
           updated_at?: string
@@ -8445,6 +8568,13 @@ export type Database = {
             columns: ["oracle_id"]
             isOneToOne: false
             referencedRelation: "oracle_decks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "oracle_cards_suggested_tool_id_fkey"
+            columns: ["suggested_tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
             referencedColumns: ["id"]
           },
         ]
@@ -8750,6 +8880,45 @@ export type Database = {
           ordem?: number | null
         }
         Relationships: []
+      }
+      oracle_usage_stats: {
+        Row: {
+          client_id: string
+          count: number
+          id: string
+          last_used_at: string
+          oracle_card_id: string
+        }
+        Insert: {
+          client_id: string
+          count?: number
+          id?: string
+          last_used_at?: string
+          oracle_card_id: string
+        }
+        Update: {
+          client_id?: string
+          count?: number
+          id?: string
+          last_used_at?: string
+          oracle_card_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oracle_usage_stats_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "oracle_usage_stats_oracle_card_id_fkey"
+            columns: ["oracle_card_id"]
+            isOneToOne: false
+            referencedRelation: "oracle_cards"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       oracular_readings: {
         Row: {
@@ -10954,6 +11123,7 @@ export type Database = {
         Row: {
           checkin_notes: string | null
           checkin_state: string | null
+          cidadela_card_id: string | null
           client_id: string
           created_at: string
           date: string
@@ -10962,6 +11132,7 @@ export type Database = {
           id: string
           insight: string | null
           notes: string | null
+          oracle_card_id: string | null
           task: string | null
           tool_id: string | null
           updated_at: string
@@ -10971,6 +11142,7 @@ export type Database = {
         Insert: {
           checkin_notes?: string | null
           checkin_state?: string | null
+          cidadela_card_id?: string | null
           client_id: string
           created_at?: string
           date?: string
@@ -10979,6 +11151,7 @@ export type Database = {
           id?: string
           insight?: string | null
           notes?: string | null
+          oracle_card_id?: string | null
           task?: string | null
           tool_id?: string | null
           updated_at?: string
@@ -10988,6 +11161,7 @@ export type Database = {
         Update: {
           checkin_notes?: string | null
           checkin_state?: string | null
+          cidadela_card_id?: string | null
           client_id?: string
           created_at?: string
           date?: string
@@ -10996,6 +11170,7 @@ export type Database = {
           id?: string
           insight?: string | null
           notes?: string | null
+          oracle_card_id?: string | null
           task?: string | null
           tool_id?: string | null
           updated_at?: string
@@ -11003,6 +11178,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "sessions_cidadela_card_id_fkey"
+            columns: ["cidadela_card_id"]
+            isOneToOne: false
+            referencedRelation: "cidadela_oracle_cards"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "sessions_client_id_fkey"
             columns: ["client_id"]
@@ -11015,6 +11197,13 @@ export type Database = {
             columns: ["district_id"]
             isOneToOne: false
             referencedRelation: "districts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sessions_oracle_card_id_fkey"
+            columns: ["oracle_card_id"]
+            isOneToOne: false
+            referencedRelation: "oracle_cards"
             referencedColumns: ["id"]
           },
           {
