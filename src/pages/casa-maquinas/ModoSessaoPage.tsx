@@ -250,6 +250,22 @@ export default function ModoSessaoPage() {
             <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
               <CardHeader><CardTitle className="text-sm text-[#F5F1E8]/80">Distrito & Ferramenta</CardTitle></CardHeader>
               <CardContent className="space-y-4">
+              {/* Oracle Session Widget */}
+              <OracleSessionWidget
+                clientId={selectedClient}
+                districtId={selectedDistrict}
+                checkinState={checkinState}
+                onUseCard={(card: CidadelaCard) => {
+                  setSelectedCardId(card.id);
+                  if (card.district_id) {
+                    setSelectedDistrict(card.district_id);
+                  }
+                  toast.success(`Carta "${card.name}" selecionada`);
+                }}
+              />
+              {selectedCardId && (
+                <p className="text-[10px] text-[#C9A24A]/60 text-center">✦ Carta vinculada à sessão</p>
+              )}
               <div>
                 <label className="text-xs text-[#F5F1E8]/60 mb-2 block">Distrito</label>
                 <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>
