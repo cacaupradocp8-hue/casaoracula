@@ -34,19 +34,36 @@ export function SessionInterventionSuggestions({ districtId, checkinState, onUse
   const loadSuggestions = async () => {
     if (!user) return;
 
-    // Load suggestions matching district
-    let query = supabase.from('interventions').select('*').eq('ativa', true).limit(5);
-    if (districtId) {
-      query = query.eq('district_id', districtId);
-    }
-    const { data: suggested } = await query.order('title');
+    // Prioritize level based on check-in state
+    const preferredLevel = checkinState === 'instavel' ? 'basico'
+      : checkinState === 'presente' ? 'intermediario'
+      : null;
 
-    // If not enough from district, fill with general
-    let items = suggested || [];
+    // Load suggestions matching district + preferred level first
+    let items: any[] = [];
+    if (districtId) {
+      let q = supabase.from('interventions').select('*').eq('ativa', true).eq('district_id', districtId);
+      if (preferredLevel) q = q.eq('level', preferredLevel);
+      const { data } = await q.order('title').limit(5);
+      items = data || [];
+
+      // Fill with same district, any level
+      if (items.length < 5) {
+        const existingIds = items.map(i => i.id);
+        const { data: more } = await supabase.from('interventions').select('*')
+          .eq('ativa', true).eq('district_id', districtId)
+          .not('id', 'in', `(${existingIds.join(',')})`)
+          .order('title').limit(5 - items.length);
+        items = [...items, ...(more || [])];
+      }
+    }
+
+    // Fill remaining with general items
     if (items.length < 5) {
-      const { data: general } = await supabase
-        .from('interventions').select('*').eq('ativa', true)
-        .is('district_id', null).limit(5 - items.length).order('title');
+      const existingIds = items.map(i => i.id);
+      const { data: general } = await supabase.from('interventions').select('*').eq('ativa', true)
+        .not('id', 'in', `(${existingIds.length ? existingIds.join(',') : '00000000-0000-0000-0000-000000000000'})`)
+        .order('title').limit(5 - items.length);
       items = [...items, ...(general || [])];
     }
 
