@@ -30,10 +30,10 @@ function applyRules(
   hasRecentDream: boolean,
   currentDistrictName: string | null,
 ): GpsSuggestion {
-  // R0 — sonho recente
+  // R4 — sonho recente (prioridade)
   if (hasRecentDream) {
     return {
-      rule: 'R0',
+      rule: 'R4-Sonho',
       distrito_sugerido: 'Casa dos Sonhos',
       ferramenta_recomendada: 'Decodificação Onírica',
       pergunta_clinica: 'Que imagem do sonho ainda habita você?',
@@ -47,9 +47,9 @@ function applyRules(
       return {
         rule: 'R1',
         distrito_sugerido: 'Praça do Abalo',
-        ferramenta_recomendada: 'Labirinto das 39 Portas',
-        pergunta_clinica: 'O que dentro de você pede acolhimento neste momento?',
-        postura: { sustentar: 'presença silenciosa, continência', evitar: 'racionalização do sofrimento' },
+        ferramenta_recomendada: 'Escrita simbólica',
+        pergunta_clinica: 'O que dentro de você pede acolhimento agora?',
+        postura: { sustentar: 'presença e escuta lenta', evitar: 'confronto' },
       };
     }
 
@@ -59,8 +59,8 @@ function applyRules(
         rule: 'R2',
         distrito_sugerido: 'Torres',
         ferramenta_recomendada: 'Torre Viva',
-        pergunta_clinica: 'O que em você acredita que precisa manter tudo sob controle?',
-        postura: { sustentar: 'presença, curiosidade', evitar: 'confronto prematuro' },
+        pergunta_clinica: 'O que você acredita que precisa controlar?',
+        postura: { sustentar: 'curiosidade', evitar: 'interpretação rápida' },
       };
     }
 
@@ -70,19 +70,8 @@ function applyRules(
         rule: 'R3',
         distrito_sugerido: 'Espelho dos Vínculos',
         ferramenta_recomendada: 'Atlas de Arquétipos',
-        pergunta_clinica: 'O que nesta relação revela algo sobre você?',
-        postura: { sustentar: 'espelhamento empático', evitar: 'julgamento relacional' },
-      };
-    }
-
-    // R4 — Voz no Mundo alta + Torre Interna baixa
-    if (isHigh(scores.voz_mundo) && isLow(scores.torre_interna)) {
-      return {
-        rule: 'R4',
-        distrito_sugerido: 'A Forja',
-        ferramenta_recomendada: 'Ritual Simbólico',
-        pergunta_clinica: 'Que verdade sua quer nascer no mundo?',
-        postura: { sustentar: 'encorajamento simbólico', evitar: 'pressa de concretizar' },
+        pergunta_clinica: 'O que essa relação revela sobre você?',
+        postura: { sustentar: 'reflexão', evitar: 'aconselhamento direto' },
       };
     }
   }
