@@ -73,11 +73,11 @@ export default function ModoSessaoPage() {
       tool_id: selectedTool || null,
       checkin_state: checkinState || null,
       checkin_notes: checkinNotes || null,
-      gps_suggestion_json: gpsSuggestion || null,
+      gps_suggestion_json: gpsSuggestion ? JSON.parse(JSON.stringify(gpsSuggestion)) : null,
       insight: insight || null,
       task: task || null,
       notes: notes || null,
-    });
+    } as any);
 
     if (error) {
       toast.error('Erro ao salvar sessão');
