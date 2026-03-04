@@ -10,6 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, ChevronRight, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { GpsSuggestionCard } from '@/components/casa-maquinas/GpsSuggestionCard';
+import type { GpsSuggestion } from '@/lib/gps-cidadela';
 
 const CHECKIN_STATES = [
   { value: 'contraida', label: 'Contraída', color: '#EF4444' },
@@ -35,6 +37,7 @@ export default function ModoSessaoPage() {
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [gpsSuggestion, setGpsSuggestion] = useState<GpsSuggestion | null>(null);
 
   useEffect(() => {
     if (user) loadData();
@@ -70,10 +73,11 @@ export default function ModoSessaoPage() {
       tool_id: selectedTool || null,
       checkin_state: checkinState || null,
       checkin_notes: checkinNotes || null,
+      gps_suggestion_json: gpsSuggestion ? JSON.parse(JSON.stringify(gpsSuggestion)) : null,
       insight: insight || null,
       task: task || null,
       notes: notes || null,
-    });
+    } as any);
 
     if (error) {
       toast.error('Erro ao salvar sessão');
@@ -216,9 +220,25 @@ export default function ModoSessaoPage() {
 
         {/* Step 2: District & Tool */}
         {step === 2 && (
-          <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
-            <CardHeader><CardTitle className="text-sm text-[#F5F1E8]/80">Distrito & Ferramenta</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
+          <>
+            {selectedClient && (
+              <GpsSuggestionCard
+                clientId={selectedClient}
+                checkin={checkinState}
+                onApply={(s) => {
+                  setGpsSuggestion(s);
+                  // Try to auto-select matching district/tool from lists
+                  const matchDist = districts.find(d => d.nome === s.distrito_sugerido);
+                  if (matchDist) setSelectedDistrict(matchDist.id);
+                  const matchTool = tools.find(t => t.nome === s.ferramenta_recomendada);
+                  if (matchTool) setSelectedTool(matchTool.id);
+                  toast.success('Sugestão aplicada');
+                }}
+              />
+            )}
+            <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
+              <CardHeader><CardTitle className="text-sm text-[#F5F1E8]/80">Distrito & Ferramenta</CardTitle></CardHeader>
+              <CardContent className="space-y-4">
               <div>
                 <label className="text-xs text-[#F5F1E8]/60 mb-2 block">Distrito</label>
                 <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>
@@ -249,8 +269,9 @@ export default function ModoSessaoPage() {
                 <Button variant="outline" onClick={() => setStep(1)} className="flex-1 border-[#C9A24A]/10 text-[#F5F1E8]/60">Voltar</Button>
                 <Button onClick={() => setStep(3)} className="flex-1 bg-[#C9A24A] hover:bg-[#C9A24A]/80 text-[#0B1B2B]">Avançar</Button>
               </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </>
         )}
 
         {/* Step 3: Execution placeholder */}
