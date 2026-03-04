@@ -1,0 +1,1 @@
+ALTER TABLE public.cidadela_oracle_cards ADD COLUMN IF NOT EXISTS suggested_tool TEXT;
