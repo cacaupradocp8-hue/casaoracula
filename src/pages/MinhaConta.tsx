@@ -134,6 +134,13 @@ export default function MinhaConta() {
                       Gerenciar Assinatura
                     </Link>
                   </Button>
+                  <Button
+                    variant="ghost"
+                    className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
+                    onClick={() => window.open('mailto:suporte@casaoracula.com.br?subject=Solicita%C3%A7%C3%A3o%20de%20Cancelamento&body=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20o%20cancelamento%20da%20minha%20assinatura.%0A%0AEmail%3A%20' + encodeURIComponent(user.email), '_blank')}
+                  >
+                    Solicitar Cancelamento
+                  </Button>
                 </div>
               </div>
             ) : (
