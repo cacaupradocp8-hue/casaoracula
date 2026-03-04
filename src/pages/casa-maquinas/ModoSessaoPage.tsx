@@ -39,6 +39,7 @@ export default function ModoSessaoPage() {
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [gpsSuggestion, setGpsSuggestion] = useState<GpsSuggestion | null>(null);
+  const [usedInterventionIds, setUsedInterventionIds] = useState<string[]>([]);
 
   useEffect(() => {
     if (user) loadData();
