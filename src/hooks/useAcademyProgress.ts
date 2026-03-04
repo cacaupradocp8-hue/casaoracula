@@ -100,13 +100,11 @@ export function useAcademyProgress() {
   const fetchStats = useCallback(async (): Promise<AcademyStats | null> => {
     if (!user) return null;
 
-    const [sessions, clients, dreams, labyrinth, cartography] = await Promise.all([
-      supabase.from('sessions').select('id', { count: 'exact', head: true }).eq('therapist_id', user.id),
-      supabase.from('clientes').select('id', { count: 'exact', head: true }).eq('terapeuta_id', user.id),
-      supabase.from('sessions').select('id', { count: 'exact', head: true }).eq('therapist_id', user.id).not('dream_record', 'is', null),
-      supabase.from('sessions').select('id', { count: 'exact', head: true }).eq('therapist_id', user.id).not('labyrinth_record', 'is', null),
-      supabase.from('cartographies').select('id, client_id').limit(100),
-    ]);
+    const sessions = await supabase.from('sessions').select('id', { count: 'exact', head: true }).eq('therapist_id', user.id);
+    const clients = await supabase.from('clientes').select('id', { count: 'exact', head: true }).eq('terapeuta_id', user.id);
+    const dreams = await supabase.from('sessions').select('id', { count: 'exact', head: true }).eq('therapist_id', user.id).not('dream_record', 'is', null);
+    const labyrinth = await supabase.from('sessions').select('id', { count: 'exact', head: true }).eq('therapist_id', user.id).not('labyrinth_record', 'is', null);
+    const cartography = await supabase.from('cartographies').select('id, client_id').limit(100);
 
     // Determine tools used by checking various record tables
     const toolsUsed: string[] = [];
