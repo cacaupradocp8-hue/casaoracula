@@ -1,0 +1,1 @@
+UPDATE public.sala_ferramentas SET rota = '/salas/big5' WHERE id = '7803626e-0762-47f1-9d57-f7012b69a6ff';
