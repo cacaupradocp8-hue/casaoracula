@@ -162,9 +162,9 @@ export async function generateArchetypalProfile(clientId: string): Promise<Arche
 
   // PSYCHIC MOVEMENT
   let psychicMovement: string | null = null;
-  const activeDistricts = journeyDistricts
-    ?.filter((jd: any) => jd.status === 'ativo')
-    .map((jd: any) => jd.districts?.slug || '') || [];
+  const activeDistricts = (journeyDistricts as any[] || [])
+    .filter((jd: any) => jd.status === 'ativo')
+    .map((jd: any) => jd.district_id || '');
 
   if (activeDistricts.length > 0) {
     const primaryDistrict = activeDistricts[0];
