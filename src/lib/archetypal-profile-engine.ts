@@ -147,7 +147,7 @@ export async function generateArchetypalProfile(clientId: string): Promise<Arche
     const topTower = towerPatterns[0].pattern_name.toLowerCase();
     const mapped = Object.entries(TOWER_SHADOW_MAP).find(([key]) => topTower.includes(key));
     if (mapped) {
-      shadowArchetype = mapped[1];
+      shadowArchetype = { name: mapped[1].archetype, description: mapped[1].description };
     } else {
       // Fallback: use least frequent archetype as shadow
       if (sortedArchetypes.length > 1) {
