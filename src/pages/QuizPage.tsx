@@ -75,6 +75,7 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState<Record<string, Opcao>>({});
   const [showResult, setShowResult] = useState(false);
   const [finalResult, setFinalResult] = useState<Resultado | null>(null);
+  const [secondaryResult, setSecondaryResult] = useState<Resultado | null>(null);
   const [saving, setSaving] = useState(false);
   const [previousResponse, setPreviousResponse] = useState<UserResponse | null>(null);
   const [showDebug, setShowDebug] = useState(false);
