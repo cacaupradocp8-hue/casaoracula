@@ -197,8 +197,7 @@ export default function QuizPage() {
     setAnswers((prev) => ({ ...prev, [perguntaId]: opcao }));
   };
 
-  const calculateResult = (): Resultado | null => {
-    // Calculate total score
+  const calculateResult = (): { primary: Resultado | null; secondary: Resultado | null } => {
     let totalScore = 0;
     const categoryCounts: Record<string, number> = {};
 
@@ -209,36 +208,39 @@ export default function QuizPage() {
       }
     });
 
-    // Find dominant category
-    let dominantCategory: string | null = null;
-    let maxCount = 0;
-    Object.entries(categoryCounts).forEach(([cat, count]) => {
-      if (count > maxCount) {
-        maxCount = count;
-        dominantCategory = cat;
-      }
-    });
+    // Sort categories by count descending
+    const sortedCategories = Object.entries(categoryCounts)
+      .sort(([, a], [, b]) => b - a)
+      .map(([cat]) => cat);
 
-    // Find matching result
-    // First try by category
+    const dominantCategory = sortedCategories[0] || null;
+    const secondCategory = sortedCategories[1] || null;
+
+    // Find primary result
+    let primary: Resultado | null = null;
     if (dominantCategory) {
-      const categoryResult = resultados.find((r) => r.categoria === dominantCategory);
-      if (categoryResult) return categoryResult;
+      primary = resultados.find((r) => r.categoria === dominantCategory) || null;
+    }
+    if (!primary) {
+      primary = resultados.find(
+        (r) =>
+          r.pontuacao_minima !== null &&
+          r.pontuacao_maxima !== null &&
+          totalScore >= r.pontuacao_minima &&
+          totalScore <= r.pontuacao_maxima
+      ) || resultados[0] || null;
     }
 
-    // Then try by score range
-    const scoreResult = resultados.find(
-      (r) =>
-        r.pontuacao_minima !== null &&
-        r.pontuacao_maxima !== null &&
-        totalScore >= r.pontuacao_minima &&
-        totalScore <= r.pontuacao_maxima
-    );
+    // Find secondary result (support voice)
+    let secondary: Resultado | null = null;
+    if (secondCategory) {
+      secondary = resultados.find((r) => r.categoria === secondCategory && r.id !== primary?.id) || null;
+    }
+    if (!secondary && resultados.length > 1 && primary) {
+      secondary = resultados.find((r) => r.id !== primary!.id) || null;
+    }
 
-    if (scoreResult) return scoreResult;
-
-    // Fallback to first result
-    return resultados[0] || null;
+    return { primary, secondary };
   };
 
   const handleSubmit = async () => {
