@@ -367,6 +367,34 @@ export default function Big5() {
     );
   }
 
+  // Visitor already used their free evaluation
+  if (visitorAlreadyUsed) {
+    return (
+      <AppLayout>
+        <div className="container mx-auto px-4 py-16 max-w-lg text-center">
+          <div className="w-16 h-16 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-6">
+            <Brain className="w-8 h-8 text-gold" />
+          </div>
+          <h1 className="font-display text-2xl text-foreground mb-3">
+            Avaliação já realizada
+          </h1>
+          <p className="text-muted-foreground leading-relaxed mb-4">
+            Você já completou sua avaliação Big Five gratuita. Para realizar novas avaliações e acessar análises aprofundadas, avance na sua jornada.
+          </p>
+          <p className="text-sm text-muted-foreground/60 mb-8">
+            Sua avaliação anterior está registrada e pode ser consultada pela sua facilitadora.
+          </p>
+          <div className="flex flex-col gap-3 items-center">
+            <Button variant="gold" onClick={() => navigate('/experiencia-gratuita')} className="gap-2">
+              Voltar à Experiência
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
