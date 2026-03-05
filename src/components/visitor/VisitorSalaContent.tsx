@@ -127,8 +127,9 @@ export function VisitorSalaContent() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        className="flex justify-center"
       >
-        <div className="relative rounded-2xl p-[2px] bg-gradient-to-br from-gold/40 via-gold/15 to-gold/40 shadow-[0_0_40px_-10px_hsl(var(--gold)/0.2)]">
+        <div className="relative rounded-2xl p-[2px] bg-gradient-to-br from-gold/40 via-gold/15 to-gold/40 shadow-[0_0_40px_-10px_hsl(var(--gold)/0.2)] w-full max-w-2xl">
           <div className="rounded-[14px] overflow-hidden bg-black">
             {videoId ? (
               <CloudflareStreamPlayer
