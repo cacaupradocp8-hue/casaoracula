@@ -9116,6 +9116,45 @@ export type Database = {
         }
         Relationships: []
       }
+      pattern_flags: {
+        Row: {
+          created_at: string
+          flag_type: Database["public"]["Enums"]["pattern_flag_type"]
+          id: string
+          last_seen_at: string
+          message: string
+          scope_id: string
+          scope_type: Database["public"]["Enums"]["pattern_scope_type"]
+          severity: Database["public"]["Enums"]["pattern_severity"]
+          supporting_data_json: Json | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          flag_type: Database["public"]["Enums"]["pattern_flag_type"]
+          id?: string
+          last_seen_at?: string
+          message: string
+          scope_id: string
+          scope_type?: Database["public"]["Enums"]["pattern_scope_type"]
+          severity?: Database["public"]["Enums"]["pattern_severity"]
+          supporting_data_json?: Json | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          flag_type?: Database["public"]["Enums"]["pattern_flag_type"]
+          id?: string
+          last_seen_at?: string
+          message?: string
+          scope_id?: string
+          scope_type?: Database["public"]["Enums"]["pattern_scope_type"]
+          severity?: Database["public"]["Enums"]["pattern_severity"]
+          supporting_data_json?: Json | null
+          title?: string
+        }
+        Relationships: []
+      }
       personal_symbolic_maps: {
         Row: {
           content: Json
@@ -11635,6 +11674,33 @@ export type Database = {
         }
         Relationships: []
       }
+      symbolic_insights: {
+        Row: {
+          created_at: string
+          generated_for_range: string
+          id: string
+          insights_json: Json
+          scope_id: string
+          scope_type: Database["public"]["Enums"]["pattern_scope_type"]
+        }
+        Insert: {
+          created_at?: string
+          generated_for_range: string
+          id?: string
+          insights_json?: Json
+          scope_id: string
+          scope_type?: Database["public"]["Enums"]["pattern_scope_type"]
+        }
+        Update: {
+          created_at?: string
+          generated_for_range?: string
+          id?: string
+          insights_json?: Json
+          scope_id?: string
+          scope_type?: Database["public"]["Enums"]["pattern_scope_type"]
+        }
+        Relationships: []
+      }
       symbolic_template_sessions: {
         Row: {
           case_id: string | null
@@ -13285,6 +13351,16 @@ export type Database = {
       oracle_card_level: "beginner" | "intermediate" | "advanced"
       oracle_content_status: "draft" | "published" | "archived"
       oracle_spread_layout: "line" | "cross" | "circle" | "spiral" | "custom"
+      pattern_flag_type:
+        | "district_recurrence"
+        | "door_recurrence"
+        | "tower_recurrence"
+        | "loop_detected"
+        | "abalo_persistente"
+        | "integration_signal"
+        | "conduction_risk"
+      pattern_scope_type: "client" | "group"
+      pattern_severity: "low" | "medium" | "high"
       portal_type:
         | "visitante"
         | "mentorada"
@@ -13511,6 +13587,17 @@ export const Constants = {
       oracle_card_level: ["beginner", "intermediate", "advanced"],
       oracle_content_status: ["draft", "published", "archived"],
       oracle_spread_layout: ["line", "cross", "circle", "spiral", "custom"],
+      pattern_flag_type: [
+        "district_recurrence",
+        "door_recurrence",
+        "tower_recurrence",
+        "loop_detected",
+        "abalo_persistente",
+        "integration_signal",
+        "conduction_risk",
+      ],
+      pattern_scope_type: ["client", "group"],
+      pattern_severity: ["low", "medium", "high"],
       portal_type: [
         "visitante",
         "mentorada",
