@@ -186,6 +186,11 @@ export default function GrupoDetailPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Group CidaDELA Map */}
+      <div className="mt-6">
+        <CidadelaMapGroup groupId={groupId!} />
+      </div>
     </CasaMaquinasLayout>
   );
 }
