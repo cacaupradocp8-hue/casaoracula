@@ -57,6 +57,7 @@ interface UserResponse {
   resultado_id: string;
   pontuacao_total: number;
   resultado?: Resultado;
+  categoryCounts?: Record<string, number>;
 }
 
 export default function QuizPage() {
