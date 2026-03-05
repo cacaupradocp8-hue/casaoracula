@@ -10,6 +10,7 @@ import { Loader2, ArrowLeft, ArrowRight, Sparkles, RefreshCw, ExternalLink, Bug 
 import { toast } from "sonner";
 import { ModularPageRenderer } from "@/components/modular/ModularPageRenderer";
 import { ContentPageLayout } from "@/components/shared/ContentPageLayout";
+import { QuizResultView } from "@/components/quiz/QuizResultView";
 import { useContentBlocks } from "@/hooks/useContentBlocks";
 import { UnifiedAudioPlayer } from "@/components/audio/UnifiedAudioPlayer";
  import { SyntheiaChatModal } from "@/components/syntheia/SyntheiaChatModal";
@@ -56,6 +57,7 @@ interface UserResponse {
   resultado_id: string;
   pontuacao_total: number;
   resultado?: Resultado;
+  categoryCounts?: Record<string, number>;
 }
 
 export default function QuizPage() {
@@ -73,6 +75,7 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState<Record<string, Opcao>>({});
   const [showResult, setShowResult] = useState(false);
   const [finalResult, setFinalResult] = useState<Resultado | null>(null);
+  const [secondaryResult, setSecondaryResult] = useState<Resultado | null>(null);
   const [saving, setSaving] = useState(false);
   const [previousResponse, setPreviousResponse] = useState<UserResponse | null>(null);
   const [showDebug, setShowDebug] = useState(false);
@@ -194,8 +197,7 @@ export default function QuizPage() {
     setAnswers((prev) => ({ ...prev, [perguntaId]: opcao }));
   };
 
-  const calculateResult = (): Resultado | null => {
-    // Calculate total score
+  const calculateResult = (): { primary: Resultado | null; secondary: Resultado | null } => {
     let totalScore = 0;
     const categoryCounts: Record<string, number> = {};
 
@@ -206,46 +208,50 @@ export default function QuizPage() {
       }
     });
 
-    // Find dominant category
-    let dominantCategory: string | null = null;
-    let maxCount = 0;
-    Object.entries(categoryCounts).forEach(([cat, count]) => {
-      if (count > maxCount) {
-        maxCount = count;
-        dominantCategory = cat;
-      }
-    });
+    // Sort categories by count descending
+    const sortedCategories = Object.entries(categoryCounts)
+      .sort(([, a], [, b]) => b - a)
+      .map(([cat]) => cat);
 
-    // Find matching result
-    // First try by category
+    const dominantCategory = sortedCategories[0] || null;
+    const secondCategory = sortedCategories[1] || null;
+
+    // Find primary result
+    let primary: Resultado | null = null;
     if (dominantCategory) {
-      const categoryResult = resultados.find((r) => r.categoria === dominantCategory);
-      if (categoryResult) return categoryResult;
+      primary = resultados.find((r) => r.categoria === dominantCategory) || null;
+    }
+    if (!primary) {
+      primary = resultados.find(
+        (r) =>
+          r.pontuacao_minima !== null &&
+          r.pontuacao_maxima !== null &&
+          totalScore >= r.pontuacao_minima &&
+          totalScore <= r.pontuacao_maxima
+      ) || resultados[0] || null;
     }
 
-    // Then try by score range
-    const scoreResult = resultados.find(
-      (r) =>
-        r.pontuacao_minima !== null &&
-        r.pontuacao_maxima !== null &&
-        totalScore >= r.pontuacao_minima &&
-        totalScore <= r.pontuacao_maxima
-    );
+    // Find secondary result (support voice)
+    let secondary: Resultado | null = null;
+    if (secondCategory) {
+      secondary = resultados.find((r) => r.categoria === secondCategory && r.id !== primary?.id) || null;
+    }
+    if (!secondary && resultados.length > 1 && primary) {
+      secondary = resultados.find((r) => r.id !== primary!.id) || null;
+    }
 
-    if (scoreResult) return scoreResult;
-
-    // Fallback to first result
-    return resultados[0] || null;
+    return { primary, secondary };
   };
 
   const handleSubmit = async () => {
-    const result = calculateResult();
+    const { primary: result, secondary } = calculateResult();
     if (!result) {
       toast.error("Nenhum resultado configurado");
       return;
     }
 
     setFinalResult(result);
+    setSecondaryResult(secondary);
     setShowResult(true);
 
     // Save to database
@@ -523,31 +529,24 @@ export default function QuizPage() {
             { label: quiz.titulo, href: quiz.sala_id ? `/salas/${quiz.sala_id}` : undefined },
             { label: 'Resultado' },
           ]}
-          badge="Seu Arquétipo"
+          badge="Seu Resultado Simbólico"
           badgeIcon={<Sparkles className="w-4 h-4 text-gold" />}
           title={prevResult.titulo_simbolico}
           subtitle={prevResult.categoria || undefined}
           maxWidth="4xl"
           showNavigation={false}
         >
-          {/* 1. Imagem Banner - impacto visual imediato */}
-          <ResultImageBanner result={prevResult} />
+          <QuizResultView
+            primaryResult={prevResult}
+            secondaryResult={resultados.length > 1 ? resultados.find(r => r.id !== prevResult.id) || null : null}
+            allResults={resultados}
+            quizTitle={quiz.titulo}
+          />
 
-          {/* 2. Texto interpretativo (igual AulaPage) */}
-          <Card>
-            <CardContent className="pt-6">
-              <div className="prose prose-invert max-w-none">
-                <p className="text-foreground/90 leading-relaxed text-lg whitespace-pre-line">
-                  {prevResult.texto_interpretativo}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 3. Mídia direta (video/audio) dos campos quiz_resultados */}
+          {/* Mídia direta (video/audio) dos campos quiz_resultados */}
           <DirectMediaContent result={prevResult} />
 
-          {/* 3. Blocos modulares EXTRAS do Admin */}
+          {/* Blocos modulares EXTRAS do Admin */}
           <ModularPageRenderer
             contextType="quiz_result"
             contextId={prevResult.id}
@@ -559,10 +558,7 @@ export default function QuizPage() {
             showLoading={false}
           />
 
-          {/* 4. CTA principal (se existir) */}
-          <ResultCTA result={prevResult} />
-
-          {/* 5. Action buttons */}
+          {/* Action buttons */}
           <div className="flex gap-4 justify-center pt-4">
             <Button variant="outline" onClick={() => navigate(-1)}>
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -590,31 +586,24 @@ export default function QuizPage() {
             { label: quiz.titulo, href: quiz.sala_id ? `/salas/${quiz.sala_id}` : undefined },
             { label: 'Resultado' },
           ]}
-          badge="Seu Arquétipo"
+          badge="Seu Resultado Simbólico"
           badgeIcon={<Sparkles className="w-4 h-4 text-gold" />}
           title={finalResult.titulo_simbolico}
           subtitle={finalResult.categoria || undefined}
           maxWidth="4xl"
           showNavigation={false}
         >
-          {/* 1. Imagem Banner - impacto visual imediato */}
-          <ResultImageBanner result={finalResult} />
+          <QuizResultView
+            primaryResult={finalResult}
+            secondaryResult={secondaryResult}
+            allResults={resultados}
+            quizTitle={quiz.titulo}
+          />
 
-          {/* 2. Texto interpretativo (igual AulaPage) */}
-          <Card>
-            <CardContent className="pt-6">
-              <div className="prose prose-invert max-w-none">
-                <p className="text-foreground/90 leading-relaxed text-lg whitespace-pre-line">
-                  {finalResult.texto_interpretativo}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 3. Mídia direta (video/audio) dos campos quiz_resultados */}
+          {/* Mídia direta (video/audio) dos campos quiz_resultados */}
           <DirectMediaContent result={finalResult} />
 
-          {/* 3. Blocos modulares EXTRAS do Admin */}
+          {/* Blocos modulares EXTRAS do Admin */}
           <ModularPageRenderer
             contextType="quiz_result"
             contextId={finalResult.id}
@@ -626,9 +615,6 @@ export default function QuizPage() {
             showLoading={false}
           />
 
-          {/* 4. CTA principal (se existir) */}
-          <ResultCTA result={finalResult} />
-
           {saving && (
             <div className="flex items-center justify-center gap-2 text-muted-foreground">
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -636,7 +622,7 @@ export default function QuizPage() {
             </div>
           )}
 
-         {/* 5. Syntheia Chat Button */}
+         {/* Syntheia Chat Button */}
          <div className="flex justify-center">
            <Button
              variant="gold"
@@ -648,8 +634,8 @@ export default function QuizPage() {
              Explorar com Syntheia
            </Button>
          </div>
- 
-         {/* 6. Action buttons */}
+
+         {/* Action buttons */}
           <div className="flex gap-4 justify-center pt-4">
             <Button variant="outline" onClick={() => navigate(-1)}>
               <ArrowLeft className="w-4 h-4 mr-2" />
