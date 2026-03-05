@@ -133,6 +133,7 @@ import { CasaDasMaquinas, SessoesPage, GestosIntegracaoPage, MapaVivoClientePage
 import CasaTecelasPage from "./pages/casa-maquinas/CasaTecelasPage";
 import AcademiaPage from "./pages/casa-maquinas/AcademiaPage";
 import PerfilProfissionalPage from "./pages/casa-maquinas/PerfilProfissionalPage";
+import SalaTreinamentoPage from "./pages/SalaTreinamentoPage";
 import CartografiaPage from "./pages/casa-maquinas/ferramentas/CartografiaPage";
 import TorreVivaPage from "./pages/casa-maquinas/ferramentas/TorreVivaPage";
 import LabirintoPage from "./pages/casa-maquinas/ferramentas/LabirintoPage";
@@ -1455,7 +1456,7 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/tecelãs" element={<ProtectedRoute minPortal="aluna"><CasaTecelasPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/academia" element={<ProtectedRoute minPortal="oracula"><AcademiaPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/perfil-profissional" element={<ProtectedRoute minPortal="oracula"><PerfilProfissionalPage /></ProtectedRoute>} />
-        <Route path="/casa-das-maquinas/treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SectionPlaceholder title="Sala de Treinamento" description="Ambiente simulado para prática com clientes fictícias. Em desenvolvimento." /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SalaTreinamentoPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/cartografia" element={<ProtectedRoute minPortal="oracula"><CartografiaPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/torre-viva" element={<ProtectedRoute minPortal="oracula"><TorreVivaPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/labirinto" element={<ProtectedRoute minPortal="oracula"><LabirintoPage /></ProtectedRoute>} />
