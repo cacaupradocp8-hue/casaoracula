@@ -529,31 +529,24 @@ export default function QuizPage() {
             { label: quiz.titulo, href: quiz.sala_id ? `/salas/${quiz.sala_id}` : undefined },
             { label: 'Resultado' },
           ]}
-          badge="Seu Arquétipo"
+          badge="Seu Resultado Simbólico"
           badgeIcon={<Sparkles className="w-4 h-4 text-gold" />}
           title={prevResult.titulo_simbolico}
           subtitle={prevResult.categoria || undefined}
           maxWidth="4xl"
           showNavigation={false}
         >
-          {/* 1. Imagem Banner - impacto visual imediato */}
-          <ResultImageBanner result={prevResult} />
+          <QuizResultView
+            primaryResult={prevResult}
+            secondaryResult={resultados.length > 1 ? resultados.find(r => r.id !== prevResult.id) || null : null}
+            allResults={resultados}
+            quizTitle={quiz.titulo}
+          />
 
-          {/* 2. Texto interpretativo (igual AulaPage) */}
-          <Card>
-            <CardContent className="pt-6">
-              <div className="prose prose-invert max-w-none">
-                <p className="text-foreground/90 leading-relaxed text-lg whitespace-pre-line">
-                  {prevResult.texto_interpretativo}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 3. Mídia direta (video/audio) dos campos quiz_resultados */}
+          {/* Mídia direta (video/audio) dos campos quiz_resultados */}
           <DirectMediaContent result={prevResult} />
 
-          {/* 3. Blocos modulares EXTRAS do Admin */}
+          {/* Blocos modulares EXTRAS do Admin */}
           <ModularPageRenderer
             contextType="quiz_result"
             contextId={prevResult.id}
@@ -565,10 +558,7 @@ export default function QuizPage() {
             showLoading={false}
           />
 
-          {/* 4. CTA principal (se existir) */}
-          <ResultCTA result={prevResult} />
-
-          {/* 5. Action buttons */}
+          {/* Action buttons */}
           <div className="flex gap-4 justify-center pt-4">
             <Button variant="outline" onClick={() => navigate(-1)}>
               <ArrowLeft className="w-4 h-4 mr-2" />
