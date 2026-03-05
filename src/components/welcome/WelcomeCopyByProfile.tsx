@@ -187,6 +187,29 @@ export function WelcomeCopyByProfile({ profileTag, userName, onContinue }: Welco
             <ArrowRight className="w-5 h-5" />
           </Button>
         </motion.div>
+
+        {/* Quick navigation hints */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="pt-6 flex items-center justify-center gap-6 text-xs text-foreground/30"
+        >
+          <Link to="/sala-de-visita" className="flex items-center gap-1.5 hover:text-gold/60 transition-colors">
+            <Home className="w-3 h-3" />
+            Sala de Visita
+          </Link>
+          <span className="w-px h-3 bg-foreground/10" />
+          <Link to="/experiencia-gratuita" className="flex items-center gap-1.5 hover:text-gold/60 transition-colors">
+            <Sparkles className="w-3 h-3" />
+            Experiência
+          </Link>
+          <span className="w-px h-3 bg-foreground/10" />
+          <Link to="/clube-livro" className="flex items-center gap-1.5 hover:text-gold/60 transition-colors">
+            <BookOpen className="w-3 h-3" />
+            Clube
+          </Link>
+        </motion.div>
       </motion.div>
     </div>
   );
