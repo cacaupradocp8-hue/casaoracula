@@ -84,6 +84,7 @@ export default function Big5() {
   const [notas, setNotas] = useState('');
   const [impactoClinico, setImpactoClinico] = useState('');
   const [saving, setSaving] = useState(false);
+  const [visitorAlreadyUsed, setVisitorAlreadyUsed] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -92,6 +93,7 @@ export default function Big5() {
   const isSelfAssessment = !casoId && !clienteId && !sessionCaseId;
   const isClienteMode = !!clienteId && !casoId && !sessionCaseId;
   const isSessionCaseMode = !!sessionCaseId;
+  const isVisitor = user?.portal === 'visitante';
 
   useEffect(() => {
     fetchData();
@@ -131,6 +133,21 @@ export default function Big5() {
 
   const fetchData = async () => {
     if (!user) return;
+
+    // Visitor one-use check: if visitor + self-assessment, check for existing records
+    if (isVisitor && isSelfAssessment) {
+      const { data: existingRecords } = await supabase
+        .from('big5_registros')
+        .select('id')
+        .eq('user_id', user.id)
+        .limit(1);
+      
+      if (existingRecords && existingRecords.length > 0) {
+        setVisitorAlreadyUsed(true);
+        setLoading(false);
+        return;
+      }
+    }
 
     const [perguntasRes, dimensoesRes] = await Promise.all([
       supabase
@@ -345,6 +362,34 @@ export default function Big5() {
       <AppLayout>
         <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-[50vh]">
           <Loader2 className="w-8 h-8 animate-spin text-gold" />
+        </div>
+      </AppLayout>
+    );
+  }
+
+  // Visitor already used their free evaluation
+  if (visitorAlreadyUsed) {
+    return (
+      <AppLayout>
+        <div className="container mx-auto px-4 py-16 max-w-lg text-center">
+          <div className="w-16 h-16 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-6">
+            <Brain className="w-8 h-8 text-gold" />
+          </div>
+          <h1 className="font-display text-2xl text-foreground mb-3">
+            Avaliação já realizada
+          </h1>
+          <p className="text-muted-foreground leading-relaxed mb-4">
+            Você já completou sua avaliação Big Five gratuita. Para realizar novas avaliações e acessar análises aprofundadas, avance na sua jornada.
+          </p>
+          <p className="text-sm text-muted-foreground/60 mb-8">
+            Sua avaliação anterior está registrada e pode ser consultada pela sua facilitadora.
+          </p>
+          <div className="flex flex-col gap-3 items-center">
+            <Button variant="gold" onClick={() => navigate('/experiencia-gratuita')} className="gap-2">
+              Voltar à Experiência
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </AppLayout>
     );
