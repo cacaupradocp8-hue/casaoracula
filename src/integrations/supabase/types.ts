@@ -4166,6 +4166,54 @@ export type Database = {
         }
         Relationships: []
       }
+      district_state_changes: {
+        Row: {
+          changed_by_user_id: string
+          client_id: string
+          created_at: string
+          district_id: string
+          from_state: string
+          id: string
+          reason: string
+          to_state: string
+        }
+        Insert: {
+          changed_by_user_id: string
+          client_id: string
+          created_at?: string
+          district_id: string
+          from_state: string
+          id?: string
+          reason: string
+          to_state: string
+        }
+        Update: {
+          changed_by_user_id?: string
+          client_id?: string
+          created_at?: string
+          district_id?: string
+          from_state?: string
+          id?: string
+          reason?: string
+          to_state?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "district_state_changes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "district_state_changes_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "districts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       districts: {
         Row: {
           cor: string | null
