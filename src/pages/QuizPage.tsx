@@ -244,13 +244,14 @@ export default function QuizPage() {
   };
 
   const handleSubmit = async () => {
-    const result = calculateResult();
+    const { primary: result, secondary } = calculateResult();
     if (!result) {
       toast.error("Nenhum resultado configurado");
       return;
     }
 
     setFinalResult(result);
+    setSecondaryResult(secondary);
     setShowResult(true);
 
     // Save to database
