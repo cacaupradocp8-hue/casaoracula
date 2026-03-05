@@ -10354,7 +10354,6 @@ export type Database = {
           id: string
           portal_id: string | null
           sala_id: string | null
-          slug: string | null
           titulo: string
           updated_at: string
         }
@@ -10366,7 +10365,6 @@ export type Database = {
           id?: string
           portal_id?: string | null
           sala_id?: string | null
-          slug?: string | null
           titulo: string
           updated_at?: string
         }
@@ -10378,7 +10376,6 @@ export type Database = {
           id?: string
           portal_id?: string | null
           sala_id?: string | null
-          slug?: string | null
           titulo?: string
           updated_at?: string
         }
