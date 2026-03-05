@@ -113,10 +113,10 @@ export async function generateArchetypalProfile(clientId: string): Promise<Arche
 
   // From session_archetypes
   sessionArchetypes?.forEach((sa: any) => {
-    const name = sa.atlas_arquetipos_femininos?.nome;
-    if (name) {
-      archetypeCounts[name] = (archetypeCounts[name] || 0) + 1;
-      archetypeDescriptions[name] = sa.atlas_arquetipos_femininos?.descricao_clinica || '';
+    const arch = archetypeMap.get(sa.archetype_id);
+    if (arch) {
+      archetypeCounts[arch.nome] = (archetypeCounts[arch.nome] || 0) + 1;
+      archetypeDescriptions[arch.nome] = arch.descricao_clinica || '';
     }
   });
 
