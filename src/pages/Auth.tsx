@@ -9,17 +9,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, ArrowLeft, Loader2, Sparkles, BookOpen, Play } from 'lucide-react';
 import { loginSchema, signupSchema, forgotPasswordSchema, getValidationError } from '@/lib/validations';
 import { useCopy } from '@/hooks/useCopy';
+import { motion } from 'framer-motion';
 
-/* ─── Shared immersive background (OUTSIDE component to avoid re-creation) ─── */
+/* ─── Shared immersive background ─── */
 const ImmersiveBg = () => (
   <>
     <div className="fixed inset-0 bg-background" />
     <div className="fixed inset-0 pointer-events-none">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_30%,hsl(var(--gold)/0.06),transparent_70%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_20%_70%,hsl(var(--accent)/0.05),transparent_60%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_30%,hsl(var(--gold)/0.08),transparent_70%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_20%_70%,hsl(var(--accent)/0.06),transparent_60%)]" />
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background/80" />
     </div>
   </>
