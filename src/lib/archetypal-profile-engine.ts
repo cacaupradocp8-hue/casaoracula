@@ -76,8 +76,16 @@ export async function generateArchetypalProfile(clientId: string): Promise<Arche
   // 1. Fetch archetype occurrences from session_archetypes
   const { data: sessionArchetypes } = await supabase
     .from('session_archetypes')
-    .select('archetype_id, atlas_arquetipos_femininos(nome, descricao_clinica)')
+    .select('archetype_id')
     .eq('client_id', clientId);
+
+  // Fetch archetype details separately
+  const { data: allArchetypes } = await supabase
+    .from('atlas_arquetipos_femininos')
+    .select('id, nome, descricao_clinica')
+    .eq('ativo', true);
+
+  const archetypeMap = new Map((allArchetypes || []).map(a => [a.id, a]));
 
   // 2. Fetch pattern stats (archetypes tracked)
   const { data: patternStats } = await supabase
