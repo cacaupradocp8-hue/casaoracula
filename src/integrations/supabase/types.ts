@@ -1883,6 +1883,44 @@ export type Database = {
           },
         ]
       }
+      client_pattern_stats: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          last_seen_at: string
+          occurrence_count: number
+          pattern_name: string
+          pattern_type: Database["public"]["Enums"]["pattern_stat_type"]
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          last_seen_at?: string
+          occurrence_count?: number
+          pattern_name: string
+          pattern_type: Database["public"]["Enums"]["pattern_stat_type"]
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          last_seen_at?: string
+          occurrence_count?: number
+          pattern_name?: string
+          pattern_type?: Database["public"]["Enums"]["pattern_stat_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_pattern_stats_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clientes: {
         Row: {
           archetypal_profile_history: Json | null
@@ -13272,6 +13310,14 @@ export type Database = {
         Args: { _user_id: string }
         Returns: boolean
       }
+      upsert_pattern_stat: {
+        Args: {
+          _client_id: string
+          _pattern_name: string
+          _pattern_type: Database["public"]["Enums"]["pattern_stat_type"]
+        }
+        Returns: undefined
+      }
       user_has_portal_access: {
         Args: { required_portal: Database["public"]["Enums"]["portal_type"] }
         Returns: boolean
@@ -13361,6 +13407,13 @@ export type Database = {
         | "conduction_risk"
       pattern_scope_type: "client" | "group"
       pattern_severity: "low" | "medium" | "high"
+      pattern_stat_type:
+        | "district"
+        | "tower"
+        | "oracle_card"
+        | "intervention"
+        | "archetype"
+        | "tool"
       portal_type:
         | "visitante"
         | "mentorada"
@@ -13598,6 +13651,14 @@ export const Constants = {
       ],
       pattern_scope_type: ["client", "group"],
       pattern_severity: ["low", "medium", "high"],
+      pattern_stat_type: [
+        "district",
+        "tower",
+        "oracle_card",
+        "intervention",
+        "archetype",
+        "tool",
+      ],
       portal_type: [
         "visitante",
         "mentorada",
