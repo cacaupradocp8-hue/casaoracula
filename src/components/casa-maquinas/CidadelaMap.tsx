@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Loader2, CheckCircle } from 'lucide-react';
+import { Loader2, Clock, Sparkles } from 'lucide-react';
 import { DistrictPanel } from './DistrictPanel';
+import { JourneyTimeline } from './JourneyTimeline';
 
 interface District {
   id: string;
@@ -24,40 +25,40 @@ interface JourneyDistrict {
 
 // Minimalist SVG icons per district number (clock position 1-12)
 const DISTRICT_ICONS: Record<number, (color: string) => JSX.Element> = {
-  1: (c) => ( // Portão da Chegada - door
+  1: (c) => (
     <g><rect x="8" y="5" width="8" height="14" rx="1" fill="none" stroke={c} strokeWidth="1.5"/><circle cx="14" cy="12" r="1" fill={c}/></g>
   ),
-  2: (c) => ( // Torres - tower
+  2: (c) => (
     <g><rect x="9" y="7" width="6" height="12" rx="0.5" fill="none" stroke={c} strokeWidth="1.5"/><line x1="12" y1="4" x2="12" y2="7" stroke={c} strokeWidth="1.5"/><line x1="10" y1="5" x2="14" y2="5" stroke={c} strokeWidth="1.5"/></g>
   ),
-  3: (c) => ( // Portas - key
+  3: (c) => (
     <g><circle cx="12" cy="8" r="3" fill="none" stroke={c} strokeWidth="1.5"/><line x1="12" y1="11" x2="12" y2="18" stroke={c} strokeWidth="1.5"/><line x1="12" y1="15" x2="14" y2="15" stroke={c} strokeWidth="1.2"/></g>
   ),
-  4: (c) => ( // Jardim dos Arquétipos - flower
+  4: (c) => (
     <g><circle cx="12" cy="10" r="2" fill="none" stroke={c} strokeWidth="1.5"/><circle cx="10" cy="8" r="1.5" fill="none" stroke={c} strokeWidth="1"/><circle cx="14" cy="8" r="1.5" fill="none" stroke={c} strokeWidth="1"/><line x1="12" y1="12" x2="12" y2="18" stroke={c} strokeWidth="1.5"/></g>
   ),
-  5: (c) => ( // Praça do Abalo - crack/lightning
+  5: (c) => (
     <g><polyline points="14,4 10,11 13,11 9,20" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></g>
   ),
-  6: (c) => ( // Casa dos Sonhos - moon
+  6: (c) => (
     <g><path d="M14 6 A6 6 0 1 0 14 18 A4 4 0 1 1 14 6" fill="none" stroke={c} strokeWidth="1.5"/></g>
   ),
-  7: (c) => ( // Espelho dos Vínculos - mirror
+  7: (c) => (
     <g><ellipse cx="12" cy="10" rx="4" ry="5" fill="none" stroke={c} strokeWidth="1.5"/><line x1="12" y1="15" x2="12" y2="19" stroke={c} strokeWidth="1.5"/><line x1="9" y1="19" x2="15" y2="19" stroke={c} strokeWidth="1.5"/></g>
   ),
-  8: (c) => ( // A Forja - anvil/hammer
+  8: (c) => (
     <g><rect x="8" y="12" width="8" height="3" rx="0.5" fill="none" stroke={c} strokeWidth="1.5"/><line x1="12" y1="5" x2="12" y2="12" stroke={c} strokeWidth="1.5"/><circle cx="12" cy="5" r="1.5" fill="none" stroke={c} strokeWidth="1.2"/></g>
   ),
-  9: (c) => ( // Conselho Interior - circle of dots
+  9: (c) => (
     <g><circle cx="12" cy="12" r="5" fill="none" stroke={c} strokeWidth="1.2" strokeDasharray="2 2"/><circle cx="12" cy="7" r="1" fill={c}/><circle cx="12" cy="17" r="1" fill={c}/><circle cx="7" cy="12" r="1" fill={c}/><circle cx="17" cy="12" r="1" fill={c}/></g>
   ),
-  10: (c) => ( // Labirinto - spiral
+  10: (c) => (
     <g><path d="M12 12 m-1,0 a1,1 0 1,1 2,0 a2,2 0 1,1 -4,0 a3,3 0 1,1 6,0 a4,4 0 1,1 -8,0 a5,5 0 1,1 10,0" fill="none" stroke={c} strokeWidth="1.2"/></g>
   ),
-  11: (c) => ( // Praça da Integração - mandala
+  11: (c) => (
     <g><circle cx="12" cy="12" r="5" fill="none" stroke={c} strokeWidth="1.2"/><line x1="12" y1="7" x2="12" y2="17" stroke={c} strokeWidth="1"/><line x1="7" y1="12" x2="17" y2="12" stroke={c} strokeWidth="1"/><circle cx="12" cy="12" r="2" fill="none" stroke={c} strokeWidth="1"/></g>
   ),
-  12: (c) => ( // Portal de Renascimento - rising sun
+  12: (c) => (
     <g><path d="M6 16 Q12 6 18 16" fill="none" stroke={c} strokeWidth="1.5"/><line x1="12" y1="8" x2="12" y2="5" stroke={c} strokeWidth="1.2"/><line x1="8" y1="10" x2="6" y2="8" stroke={c} strokeWidth="1.2"/><line x1="16" y1="10" x2="18" y2="8" stroke={c} strokeWidth="1.2"/></g>
   ),
 };
@@ -86,14 +87,40 @@ const STATE_STYLES = {
   },
 };
 
+// Generate floating particles for ambient effect
+function Particles() {
+  const particles = useMemo(() => 
+    Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      cx: Math.random() * 100,
+      cy: Math.random() * 100,
+      r: 0.15 + Math.random() * 0.25,
+      dur: 8 + Math.random() * 12,
+      delay: Math.random() * 5,
+    })), []
+  );
+  return (
+    <>
+      {particles.map(p => (
+        <circle key={p.id} cx={p.cx} cy={p.cy} r={p.r} fill="#C9A24A" opacity="0">
+          <animate attributeName="opacity" values="0;0.25;0" dur={`${p.dur}s`} begin={`${p.delay}s`} repeatCount="indefinite" />
+          <animate attributeName="cy" values={`${p.cy};${p.cy - 8};${p.cy}`} dur={`${p.dur}s`} begin={`${p.delay}s`} repeatCount="indefinite" />
+        </circle>
+      ))}
+    </>
+  );
+}
+
 export function CidadelaMap({ clienteId }: { clienteId: string }) {
   const navigate = useNavigate();
   const [districts, setDistricts] = useState<District[]>([]);
   const [journeyDistricts, setJourneyDistricts] = useState<JourneyDistrict[]>([]);
   const [tools, setTools] = useState<any[]>([]);
   const [sessions, setSessions] = useState<any[]>([]);
+  const [oracleCards, setOracleCards] = useState<any[]>([]);
   const [selectedDistrict, setSelectedDistrict] = useState<District | null>(null);
   const [panelOpen, setPanelOpen] = useState(false);
+  const [showTimeline, setShowTimeline] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -104,12 +131,20 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
     const [distRes, toolsRes, sessRes] = await Promise.all([
       supabase.from('districts').select('*').order('numero'),
       supabase.from('tools').select('*').eq('ativa', true).order('ordem'),
-      supabase.from('sessions').select('id, district_id, created_at, checkin_state, tool_id').eq('client_id', clienteId).order('created_at', { ascending: false }),
+      supabase.from('sessions').select('id, district_id, created_at, checkin_state, tool_id, oracle_card_id, insight, task').eq('client_id', clienteId).order('created_at', { ascending: true }),
     ]);
 
     setDistricts(distRes.data || []);
     setTools(toolsRes.data || []);
     setSessions(sessRes.data || []);
+
+    // Load oracle cards used in sessions
+    const cardIds = (sessRes.data || []).map(s => s.oracle_card_id).filter(Boolean);
+    if (cardIds.length > 0) {
+      const { data: cards } = await supabase
+        .from('cidadela_oracle_cards').select('id, name, family, district_id').in('id', cardIds);
+      setOracleCards(cards || []);
+    }
 
     const { data: journeys } = await supabase
       .from('journeys').select('id').eq('client_id', clienteId).limit(1);
@@ -124,6 +159,29 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
 
   const getState = (id: string) => journeyDistricts.find(j => j.district_id === id)?.state || 'inativo';
   const getSessionCount = (id: string) => journeyDistricts.find(j => j.district_id === id)?.sessions_count || 0;
+
+  // Cards per district
+  const cardsByDistrict = useMemo(() => {
+    const map: Record<string, number> = {};
+    sessions.forEach(s => {
+      if (s.oracle_card_id) {
+        const card = oracleCards.find(c => c.id === s.oracle_card_id);
+        if (card?.district_id) {
+          map[card.district_id] = (map[card.district_id] || 0) + 1;
+        }
+      }
+    });
+    return map;
+  }, [sessions, oracleCards]);
+
+  // Recurrence: district visit counts from sessions
+  const visitCounts = useMemo(() => {
+    const map: Record<string, number> = {};
+    sessions.forEach(s => {
+      if (s.district_id) map[s.district_id] = (map[s.district_id] || 0) + 1;
+    });
+    return map;
+  }, [sessions]);
 
   const visitedPath = journeyDistricts
     .filter(jd => jd.state !== 'inativo' && jd.last_session_at)
@@ -157,13 +215,46 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
     ? `M ${pathPoints.map(p => `${p.x},${p.y}`).join(' L ')}`
     : '';
 
+  // Sacred geometry decorative lines (subtle cross / compass)
+  const compassLines = [0, 30, 60, 90, 120, 150].map(angle => {
+    const rad = angle * (Math.PI / 180);
+    return {
+      x1: cx + (r - 8) * Math.cos(rad), y1: cy + (r - 8) * Math.sin(rad),
+      x2: cx + (r + 5) * Math.cos(rad), y2: cy + (r + 5) * Math.sin(rad),
+      x3: cx - (r - 8) * Math.cos(rad), y3: cy - (r - 8) * Math.sin(rad),
+      x4: cx - (r + 5) * Math.cos(rad), y4: cy - (r + 5) * Math.sin(rad),
+    };
+  });
+
   return (
-    <div className="relative">
-      <div className="relative w-full max-w-[500px] mx-auto" style={{ aspectRatio: '1/1' }}>
+    <div className="relative space-y-4">
+      {/* Title & timeline button */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-[#C9A24A]/60" />
+          <h3 className="text-sm font-medium text-[#F5F1E8]/70">Mapa Evolutivo da CidaDELA Interior</h3>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-[#C9A24A]/15 text-[#C9A24A]/70 hover:text-[#C9A24A] hover:border-[#C9A24A]/30 text-xs h-8 gap-1.5"
+          onClick={() => setShowTimeline(true)}
+        >
+          <Clock className="w-3 h-3" />
+          Ver linha do tempo
+        </Button>
+      </div>
+
+      {/* Map */}
+      <div className="relative w-full max-w-[520px] mx-auto" style={{ aspectRatio: '1/1' }}>
         <svg viewBox="0 0 100 100" className="w-full h-full">
           <defs>
             <filter id="glow-gold">
               <feGaussianBlur stdDeviation="0.8" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+            <filter id="halo-recurrence">
+              <feGaussianBlur stdDeviation="1.5" result="blur" />
               <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
             </filter>
             <linearGradient id="path-grad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -171,25 +262,46 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
               <stop offset="50%" stopColor="#C9A24A" stopOpacity="0.6" />
               <stop offset="100%" stopColor="#C9A24A" stopOpacity="0.2" />
             </linearGradient>
+            <radialGradient id="center-glow">
+              <stop offset="0%" stopColor="#C9A24A" stopOpacity="0.08" />
+              <stop offset="100%" stopColor="#C9A24A" stopOpacity="0" />
+            </radialGradient>
           </defs>
 
+          {/* Ambient particles */}
+          <Particles />
+
+          {/* Sacred geometry - subtle compass lines */}
+          {compassLines.map((l, i) => (
+            <g key={i}>
+              <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke="rgba(201,162,74,0.04)" strokeWidth="0.1" />
+              <line x1={l.x3} y1={l.y3} x2={l.x4} y2={l.y4} stroke="rgba(201,162,74,0.04)" strokeWidth="0.1" />
+            </g>
+          ))}
+
           {/* Outer decorative rings */}
+          <circle cx={cx} cy={cy} r={r + 5} fill="none" stroke="rgba(201,162,74,0.03)" strokeWidth="0.15" />
           <circle cx={cx} cy={cy} r={r + 3} fill="none" stroke="rgba(201,162,74,0.06)" strokeWidth="0.2" />
           <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(201,162,74,0.08)" strokeWidth="0.15" strokeDasharray="0.8 1.2" />
 
-          {/* Luminous path */}
+          {/* Luminous journey path */}
           {pathD && (
             <>
               <path d={pathD} fill="none" stroke="url(#path-grad)" strokeWidth="0.6" strokeLinecap="round" strokeLinejoin="round" filter="url(#glow-gold)">
                 <animate attributeName="stroke-dashoffset" from="20" to="0" dur="3s" repeatCount="indefinite" />
               </path>
-              <path d={pathD} fill="none" stroke="#C9A24A" strokeWidth="0.3" strokeOpacity="0.4" strokeDasharray="1.5 1" strokeLinecap="round" />
+              <path d={pathD} fill="none" stroke="#C9A24A" strokeWidth="0.3" strokeOpacity="0.4" strokeDasharray="1.5 1" strokeLinecap="round">
+                <animate attributeName="stroke-dashoffset" values="0;-3" dur="2s" repeatCount="indefinite" />
+              </path>
             </>
           )}
 
           {/* Center - Praça do Ser */}
+          <circle cx={cx} cy={cy} r="8" fill="url(#center-glow)" />
           <circle cx={cx} cy={cy} r="6" fill="rgba(201,162,74,0.05)" stroke="rgba(201,162,74,0.15)" strokeWidth="0.3" />
-          <circle cx={cx} cy={cy} r="3" fill="rgba(201,162,74,0.08)" stroke="rgba(201,162,74,0.2)" strokeWidth="0.2" />
+          <circle cx={cx} cy={cy} r="3" fill="rgba(201,162,74,0.08)" stroke="rgba(201,162,74,0.2)" strokeWidth="0.2">
+            <animate attributeName="r" values="2.8;3.2;2.8" dur="4s" repeatCount="indefinite" />
+          </circle>
           <text x={cx} y={cy - 1} textAnchor="middle" fill="#C9A24A" fontSize="2" fontWeight="600" opacity="0.7">Praça</text>
           <text x={cx} y={cy + 1.5} textAnchor="middle" fill="#C9A24A" fontSize="2" fontWeight="600" opacity="0.7">do Ser</text>
 
@@ -200,10 +312,27 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
             const style = STATE_STYLES[state as keyof typeof STATE_STYLES] || STATE_STYLES.inativo;
             const isIntegrado = state === 'integrado';
             const sessCount = getSessionCount(d.id);
+            const realVisits = visitCounts[d.id] || 0;
+            const isRecurrent = realVisits >= 5;
+            const hasCard = !!cardsByDistrict[d.id];
 
             return (
-              <g key={d.id} className="cursor-pointer" onClick={() => handleClick(d)}
-                style={{ transition: 'transform 0.2s ease' }}>
+              <g key={d.id} className="cursor-pointer" onClick={() => handleClick(d)}>
+                {/* Recurrence halo (>= 5 visits) */}
+                {isRecurrent && (
+                  <>
+                    <circle cx={pos.x} cy={pos.y} r={nodeR + 3} fill="none"
+                      stroke="#C9A24A" strokeWidth="0.12" strokeOpacity="0.15" filter="url(#halo-recurrence)">
+                      <animate attributeName="r" values={`${nodeR + 2};${nodeR + 4};${nodeR + 2}`} dur="4s" repeatCount="indefinite" />
+                      <animate attributeName="stroke-opacity" values="0.1;0.25;0.1" dur="4s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx={pos.x} cy={pos.y} r={nodeR + 2} fill="none"
+                      stroke="#C9A24A" strokeWidth="0.08" strokeOpacity="0.1">
+                      <animate attributeName="r" values={`${nodeR + 1.5};${nodeR + 2.8};${nodeR + 1.5}`} dur="3s" repeatCount="indefinite" />
+                    </circle>
+                  </>
+                )}
+
                 {/* Glow ring for active/integrado */}
                 {state !== 'inativo' && (
                   <circle cx={pos.x} cy={pos.y} r={nodeR + 1.2} fill="none"
@@ -233,6 +362,14 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
                   </g>
                 )}
 
+                {/* Oracle card indicator */}
+                {hasCard && (
+                  <g transform={`translate(${pos.x - nodeR * 0.7}, ${pos.y - nodeR * 0.7})`}>
+                    <circle r="1.2" fill="#556B57" stroke="#C9A24A" strokeWidth="0.2" />
+                    <text x="0" y="0.5" textAnchor="middle" fill="#F5F1E8" fontSize="1.4">✦</text>
+                  </g>
+                )}
+
                 {/* Label */}
                 <text x={pos.x} y={pos.y + nodeR + 2.5} textAnchor="middle" fill={style.textColor}
                   fontSize="1.8" fontWeight="500" opacity="0.8">
@@ -246,6 +383,14 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
                     {sessCount}s
                   </text>
                 )}
+
+                {/* Recurrence label */}
+                {isRecurrent && (
+                  <text x={pos.x} y={pos.y + nodeR + 5.5} textAnchor="middle" fill="#C9A24A"
+                    fontSize="1" opacity="0.4" fontStyle="italic">
+                    revisitado
+                  </text>
+                )}
               </g>
             );
           })}
@@ -253,7 +398,7 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-center gap-5 mt-3">
+      <div className="flex items-center justify-center gap-5 mt-1">
         {(['inativo', 'ativo', 'integrado'] as const).map(s => {
           const st = STATE_STYLES[s];
           return (
@@ -263,9 +408,30 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
             </div>
           );
         })}
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#556B57] border border-[#C9A24A]/30 flex items-center justify-center text-[6px] text-[#F5F1E8]">✦</div>
+          <span className="text-[10px] text-[#F5F1E8]/40">Carta usada</span>
+        </div>
       </div>
 
-      {/* District Panel (bottom sheet on mobile) */}
+      {/* Recurrence insights */}
+      {Object.entries(visitCounts).filter(([, c]) => c >= 5).length > 0 && (
+        <div className="bg-[#C9A24A]/[0.05] border border-[#C9A24A]/10 rounded-lg p-3 mx-auto max-w-[520px]">
+          <p className="text-[10px] uppercase tracking-wider text-[#C9A24A]/60 mb-1.5">Padrões observados</p>
+          {Object.entries(visitCounts)
+            .filter(([, c]) => c >= 5)
+            .map(([distId, count]) => {
+              const d = districts.find(dd => dd.id === distId);
+              return d ? (
+                <p key={distId} className="text-xs text-[#F5F1E8]/50 italic leading-relaxed">
+                  "{d.nome}" está sendo revisitado ({count} sessões). Isso pode indicar um ciclo de trabalho em curso.
+                </p>
+              ) : null;
+            })}
+        </div>
+      )}
+
+      {/* District Panel */}
       <DistrictPanel
         district={selectedDistrict}
         open={panelOpen}
@@ -275,6 +441,16 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
         tools={selectedDistrict ? tools.filter(t => t.district_id === selectedDistrict.id) : []}
         sessions={selectedDistrict ? sessions.filter(s => s.district_id === selectedDistrict?.id) : []}
         clienteId={clienteId}
+      />
+
+      {/* Journey Timeline */}
+      <JourneyTimeline
+        open={showTimeline}
+        onClose={() => setShowTimeline(false)}
+        sessions={sessions}
+        districts={districts}
+        oracleCards={oracleCards}
+        tools={tools}
       />
     </div>
   );
