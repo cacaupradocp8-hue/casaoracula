@@ -327,6 +327,50 @@ export type Database = {
         }
         Relationships: []
       }
+      archetypal_profile_snapshots: {
+        Row: {
+          client_id: string
+          clinical_question: string | null
+          dominant_archetype: string | null
+          evolution_call: string | null
+          generated_at: string
+          id: string
+          psychic_movement: string | null
+          shadow_archetype: string | null
+          source_data_json: Json | null
+        }
+        Insert: {
+          client_id: string
+          clinical_question?: string | null
+          dominant_archetype?: string | null
+          evolution_call?: string | null
+          generated_at?: string
+          id?: string
+          psychic_movement?: string | null
+          shadow_archetype?: string | null
+          source_data_json?: Json | null
+        }
+        Update: {
+          client_id?: string
+          clinical_question?: string | null
+          dominant_archetype?: string | null
+          evolution_call?: string | null
+          generated_at?: string
+          id?: string
+          psychic_movement?: string | null
+          shadow_archetype?: string | null
+          source_data_json?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "archetypal_profile_snapshots_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       atelie_conteudos: {
         Row: {
           conteudo_gerado: Json | null
