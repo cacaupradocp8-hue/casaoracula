@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { Compass, Sparkles, Heart, ArrowRight } from 'lucide-react';
+import { Compass, Sparkles, Heart, ArrowRight, Home, BookOpen, Play } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Logo } from '@/components/layout/Logo';
 import { Button } from '@/components/ui/button';
 
