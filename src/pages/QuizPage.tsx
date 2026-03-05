@@ -108,10 +108,12 @@ export default function QuizPage() {
   const fetchQuizData = async () => {
     try {
       // Fetch quiz
+      // Support both UUID and slug lookup
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(quizId!);
       const { data: quizData, error: quizError } = await supabase
         .from("quizzes")
         .select("*")
-        .eq("id", quizId)
+        .eq(isUuid ? "id" : "slug", quizId)
         .eq("ativo", true)
         .single();
 
