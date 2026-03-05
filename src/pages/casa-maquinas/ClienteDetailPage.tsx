@@ -10,6 +10,7 @@ import { ClientePerfil as ClientePerfilTab } from '@/components/casa-maquinas/Cl
 import { ClienteCartografias } from '@/components/casa-maquinas/ClienteCartografias';
 import { ClienteSonhos } from '@/components/casa-maquinas/ClienteSonhos';
 import { ClientePerfilArquetipico } from '@/components/casa-maquinas/ClientePerfilArquetipico';
+import { SinaisDaJornada } from '@/components/casa-maquinas/SinaisDaJornada';
 import { Loader2 } from 'lucide-react';
 
 export default function ClienteDetailPage() {
