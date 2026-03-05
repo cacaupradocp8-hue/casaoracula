@@ -586,31 +586,24 @@ export default function QuizPage() {
             { label: quiz.titulo, href: quiz.sala_id ? `/salas/${quiz.sala_id}` : undefined },
             { label: 'Resultado' },
           ]}
-          badge="Seu Arquétipo"
+          badge="Seu Resultado Simbólico"
           badgeIcon={<Sparkles className="w-4 h-4 text-gold" />}
           title={finalResult.titulo_simbolico}
           subtitle={finalResult.categoria || undefined}
           maxWidth="4xl"
           showNavigation={false}
         >
-          {/* 1. Imagem Banner - impacto visual imediato */}
-          <ResultImageBanner result={finalResult} />
+          <QuizResultView
+            primaryResult={finalResult}
+            secondaryResult={secondaryResult}
+            allResults={resultados}
+            quizTitle={quiz.titulo}
+          />
 
-          {/* 2. Texto interpretativo (igual AulaPage) */}
-          <Card>
-            <CardContent className="pt-6">
-              <div className="prose prose-invert max-w-none">
-                <p className="text-foreground/90 leading-relaxed text-lg whitespace-pre-line">
-                  {finalResult.texto_interpretativo}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 3. Mídia direta (video/audio) dos campos quiz_resultados */}
+          {/* Mídia direta (video/audio) dos campos quiz_resultados */}
           <DirectMediaContent result={finalResult} />
 
-          {/* 3. Blocos modulares EXTRAS do Admin */}
+          {/* Blocos modulares EXTRAS do Admin */}
           <ModularPageRenderer
             contextType="quiz_result"
             contextId={finalResult.id}
@@ -622,9 +615,6 @@ export default function QuizPage() {
             showLoading={false}
           />
 
-          {/* 4. CTA principal (se existir) */}
-          <ResultCTA result={finalResult} />
-
           {saving && (
             <div className="flex items-center justify-center gap-2 text-muted-foreground">
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -632,7 +622,7 @@ export default function QuizPage() {
             </div>
           )}
 
-         {/* 5. Syntheia Chat Button */}
+         {/* Syntheia Chat Button */}
          <div className="flex justify-center">
            <Button
              variant="gold"
@@ -644,8 +634,8 @@ export default function QuizPage() {
              Explorar com Syntheia
            </Button>
          </div>
- 
-         {/* 6. Action buttons */}
+
+         {/* Action buttons */}
           <div className="flex gap-4 justify-center pt-4">
             <Button variant="outline" onClick={() => navigate(-1)}>
               <ArrowLeft className="w-4 h-4 mr-2" />
