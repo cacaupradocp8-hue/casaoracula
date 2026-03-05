@@ -134,6 +134,21 @@ export default function Big5() {
   const fetchData = async () => {
     if (!user) return;
 
+    // Visitor one-use check: if visitor + self-assessment, check for existing records
+    if (isVisitor && isSelfAssessment) {
+      const { data: existingRecords } = await supabase
+        .from('big5_registros')
+        .select('id')
+        .eq('user_id', user.id)
+        .limit(1);
+      
+      if (existingRecords && existingRecords.length > 0) {
+        setVisitorAlreadyUsed(true);
+        setLoading(false);
+        return;
+      }
+    }
+
     const [perguntasRes, dimensoesRes] = await Promise.all([
       supabase
         .from('big5_questionario')
