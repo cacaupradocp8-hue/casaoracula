@@ -10,6 +10,7 @@ import { Loader2, ArrowLeft, ArrowRight, Sparkles, RefreshCw, ExternalLink, Bug 
 import { toast } from "sonner";
 import { ModularPageRenderer } from "@/components/modular/ModularPageRenderer";
 import { ContentPageLayout } from "@/components/shared/ContentPageLayout";
+import { QuizResultView } from "@/components/quiz/QuizResultView";
 import { useContentBlocks } from "@/hooks/useContentBlocks";
 import { UnifiedAudioPlayer } from "@/components/audio/UnifiedAudioPlayer";
  import { SyntheiaChatModal } from "@/components/syntheia/SyntheiaChatModal";
