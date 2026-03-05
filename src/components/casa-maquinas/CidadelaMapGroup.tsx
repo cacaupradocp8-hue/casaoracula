@@ -30,36 +30,25 @@ export function CidadelaMapGroup({ groupId }: Props) {
     const { data: dists } = await supabase.from('districts').select('id, numero, nome').order('numero');
     setDistricts(dists || []);
 
-    // Get group participants and their latest session district
-    const { data: groupData } = await supabase
-      .from('groups').select('id').eq('id', groupId).single();
+    // Get group members and their latest session district
+    const { data: membersData } = await supabase
+      .from('group_members').select('client_id').eq('group_id', groupId);
 
-    if (groupData) {
-      const { data: encounters } = await supabase
-        .from('group_encounters').select('id').eq('group_id', groupId).order('date', { ascending: false }).limit(1);
+    if (membersData?.length) {
+      const positions: MemberPosition[] = [];
 
-      if (encounters?.length) {
-        const { data: participants } = await supabase
-          .from('encounter_participants').select('client_id').eq('encounter_id', encounters[0].id);
+      for (const m of membersData) {
+        const { data: client } = await supabase
+          .from('clientes').select('nome').eq('id', m.client_id).single();
+        const { data: lastSession } = await supabase
+          .from('sessions').select('district_id').eq('client_id', m.client_id)
+          .order('created_at', { ascending: false }).limit(1);
 
-        if (participants?.length) {
-          const clientIds = participants.map(p => p.client_id);
-          const positions: MemberPosition[] = [];
-
-          for (const cid of clientIds) {
-            const { data: client } = await supabase
-              .from('clientes').select('nome').eq('id', cid).single();
-            const { data: lastSession } = await supabase
-              .from('sessions').select('district_id').eq('client_id', cid)
-              .order('created_at', { ascending: false }).limit(1);
-
-            if (client && lastSession?.[0]?.district_id) {
-              positions.push({ clientName: client.nome, districtId: lastSession[0].district_id });
-            }
-          }
-          setMembers(positions);
+        if (client && lastSession?.[0]?.district_id) {
+          positions.push({ clientName: client.nome, districtId: lastSession[0].district_id });
         }
       }
+      setMembers(positions);
     }
     setLoading(false);
   };
