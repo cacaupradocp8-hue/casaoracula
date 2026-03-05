@@ -10966,6 +10966,55 @@ export type Database = {
           },
         ]
       }
+      session_archetypes: {
+        Row: {
+          archetype_id: string
+          client_id: string
+          created_at: string
+          id: string
+          notes: string | null
+          session_id: string
+        }
+        Insert: {
+          archetype_id: string
+          client_id: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          session_id: string
+        }
+        Update: {
+          archetype_id?: string
+          client_id?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_archetypes_archetype_id_fkey"
+            columns: ["archetype_id"]
+            isOneToOne: false
+            referencedRelation: "atlas_arquetipos_femininos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_archetypes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_archetypes_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       session_cases: {
         Row: {
           client_id: string
