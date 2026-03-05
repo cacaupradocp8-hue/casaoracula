@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Users, Calendar, Loader2, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
+import { CidadelaMapGroup } from '@/components/casa-maquinas/CidadelaMapGroup';
 
 export default function GrupoDetailPage() {
   const { groupId } = useParams<{ groupId: string }>();
@@ -184,6 +185,11 @@ export default function GrupoDetailPage() {
             ))}
           </CardContent>
         </Card>
+      </div>
+
+      {/* Group CidaDELA Map */}
+      <div className="mt-6">
+        <CidadelaMapGroup groupId={groupId!} />
       </div>
     </CasaMaquinasLayout>
   );
