@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Select,
   SelectContent,
@@ -25,10 +26,12 @@ import {
   Cog,
   Save,
   Calendar,
+  Brain,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { FASES_JORNADA } from '@/types/mapa-vivo';
+import { MapaVivoPanel } from '@/components/casa-maquinas/MapaVivoPanel';
 
 type MovimentoPercebido = 'avancou' | 'tensao' | 'ciclo_repetido' | 'observacao';
 
