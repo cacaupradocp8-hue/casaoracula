@@ -84,6 +84,7 @@ export default function Big5() {
   const [notas, setNotas] = useState('');
   const [impactoClinico, setImpactoClinico] = useState('');
   const [saving, setSaving] = useState(false);
+  const [visitorAlreadyUsed, setVisitorAlreadyUsed] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -92,6 +93,7 @@ export default function Big5() {
   const isSelfAssessment = !casoId && !clienteId && !sessionCaseId;
   const isClienteMode = !!clienteId && !casoId && !sessionCaseId;
   const isSessionCaseMode = !!sessionCaseId;
+  const isVisitor = user?.portal === 'visitante';
 
   useEffect(() => {
     fetchData();
