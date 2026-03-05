@@ -72,9 +72,6 @@ export function VisitorSalaContent() {
   const { getSetting } = useAppSettings();
   const { extractVideoId, isCloudflareVideoId } = useCloudflareVideo();
 
-  const [ferramentas, setFerramentas] = useState<Ferramenta[]>([]);
-  const [loading, setLoading] = useState(true);
-
   // URL do vídeo configurada pelo Admin (pode ser ID ou URL do Cloudflare Stream)
   const videoUrl = getSetting('sala_visita_video_url', '');
   
@@ -82,43 +79,6 @@ export function VisitorSalaContent() {
   const videoId = videoUrl ? (
     isCloudflareVideoId(videoUrl) ? videoUrl : extractVideoId(videoUrl)
   ) : null;
-
-  // Fetch ferramentas da Sala da Visitante (NIVEL_0)
-  useEffect(() => {
-    const fetchFerramentas = async () => {
-      try {
-        // Primeiro busca a sala da visitante
-        const { data: sala } = await supabase
-          .from('salas')
-          .select('id')
-          .eq('nivel_minimo', 'NIVEL_0')
-          .eq('ativa', true)
-          .maybeSingle();
-
-        if (sala) {
-          // Busca as ferramentas associadas à sala
-          const { data: ferramentasData } = await supabase
-            .from('sala_ferramentas')
-            .select('id, ferramenta_nome, ferramenta_descricao, icone, rota, ordem')
-            .eq('sala_id', sala.id)
-            .eq('ativa', true)
-            .order('ordem');
-
-          setFerramentas(ferramentasData || []);
-        }
-      } catch (error) {
-        console.error('Error fetching ferramentas:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFerramentas();
-  }, []);
-
-  const handleIniciarTravessia = () => {
-    navigate('/travessia/travessia-zero-o-limiar-da-casa');
-  };
 
   return (
     <div className="space-y-8">
@@ -157,113 +117,32 @@ export function VisitorSalaContent() {
         </div>
       </motion.div>
 
-      {/* Bloco 2: Texto de Acolhimento */}
+      {/* Bloco 2: Texto + CTA */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        className="text-center px-4"
+        className="text-center px-4 max-w-lg mx-auto"
       >
         <h2 className="font-display text-xl text-foreground mb-3">
           {getCopyByKey('sala_visita_titulo', 'Sala de Visita')}
         </h2>
-        <p className="text-muted-foreground max-w-md mx-auto leading-relaxed">
-          {getCopyByKey('sala_visita_texto', 
-            'Este é o espaço onde você pode experimentar o método antes de atravessar. Sem pressa. Sem compromisso. Apenas presença.'
-          )}
+        <p className="text-muted-foreground leading-relaxed mb-2">
+          Este é o espaço onde você pode experimentar o método antes de atravessar.
         </p>
-      </motion.div>
+        <p className="text-muted-foreground/70 text-sm italic mb-8">
+          Sem pressa. Sem compromisso. Apenas presença.
+        </p>
 
-      {/* Bloco 3: Ferramentas (dinâmico do banco de dados) */}
-      {loading ? (
-        <div className="flex justify-center py-8">
-          <Loader2 className="w-6 h-6 animate-spin text-gold" />
-        </div>
-      ) : (
-        ferramentas.map((ferramenta, index) => {
-          const colors = colorPalette[index % colorPalette.length];
-          const stepLabel = index === 0 ? 'Primeiro Passo' : index === 1 ? 'Segundo Passo' : `Passo ${index + 1}`;
-          
-          return (
-            <motion.div
-              key={ferramenta.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 + (index * 0.1), duration: 0.5 }}
-            >
-              <Card 
-                className={`bg-gradient-to-br ${colors.bg} via-card to-card ${colors.border} ${colors.hoverBorder} transition-colors cursor-pointer group`}
-                onClick={() => navigate(ferramenta.rota)}
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <div className={`w-12 h-12 rounded-xl ${colors.iconBg} flex items-center justify-center shrink-0 ${colors.iconHover} transition-colors`}>
-                      <DynamicIcon name={ferramenta.icone || 'wrench'} className={`w-6 h-6 ${colors.text}`} />
-                    </div>
-                    <div className="flex-1">
-                      <span className={`text-xs font-medium ${colors.text} uppercase tracking-wider`}>
-                        {stepLabel}
-                      </span>
-                      <h3 className="font-display text-lg text-foreground mt-1 mb-2">
-                        {ferramenta.ferramenta_nome}
-                      </h3>
-                      {ferramenta.ferramenta_descricao && (
-                        <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                          {ferramenta.ferramenta_descricao}
-                        </p>
-                      )}
-                      <Button
-                        variant="outline"
-                        className={`gap-2 ${colors.btnBorder} ${colors.text} ${colors.btnHover}`}
-                      >
-                        Acessar
-                        <ArrowRight className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          );
-        })
-      )}
-
-      {/* Bloco 4: Convite para Travessia 00 */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 + (ferramentas.length * 0.1) + 0.1, duration: 0.5 }}
-      >
-        <Card className="bg-gradient-to-br from-gold/5 via-card to-card border-gold/30">
-          <CardContent className="p-6">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gold/20 flex items-center justify-center shrink-0">
-                <Sparkles className="w-6 h-6 text-gold" />
-              </div>
-              <div className="flex-1">
-                <span className="text-xs font-medium text-gold uppercase tracking-wider">
-                  Travessia Zero
-                </span>
-                <h3 className="font-display text-lg text-foreground mt-1 mb-2">
-                  {getCopyByKey('travessia_zero_titulo', 'Onde estou antes de tentar mudar?')}
-                </h3>
-                <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                  {getCopyByKey('travessia_zero_descricao',
-                    'Uma jornada de 7 dias para mapear seu ponto de partida. Sem fórmulas. Sem promessas. Apenas clareza sobre onde você está agora.'
-                  )}
-                </p>
-                <Button
-                  variant="gold"
-                  onClick={handleIniciarTravessia}
-                  className="gap-2"
-                >
-                  Iniciar Travessia 00
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <Button
+          variant="gold"
+          size="lg"
+          onClick={() => navigate('/experiencia-gratuita')}
+          className="gap-2 w-full sm:w-auto"
+        >
+          Entrar na Sala de Visita
+          <ArrowRight className="w-4 h-4" />
+        </Button>
       </motion.div>
     </div>
   );
