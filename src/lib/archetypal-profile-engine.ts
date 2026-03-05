@@ -103,8 +103,8 @@ export async function generateArchetypalProfile(clientId: string): Promise<Arche
 
   // 4. Fetch journey districts
   const { data: journeyDistricts } = await supabase
-    .from('journey_districts')
-    .select('district_id, status, districts(name, slug)')
+    .from('journey_districts' as any)
+    .select('district_id, status')
     .eq('client_id', clientId);
 
   // Count archetype frequencies
