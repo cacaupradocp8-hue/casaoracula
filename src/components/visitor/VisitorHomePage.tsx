@@ -165,7 +165,7 @@ export function VisitorHomePage() {
               <Button
                 variant="gold"
                 size="lg"
-                onClick={() => navigate('/salas/big5')}
+                onClick={() => navigate('/quiz/descubra-seu-eixo')}
                 className="gap-2 px-8"
               >
                 Fazer o teste da Voz
