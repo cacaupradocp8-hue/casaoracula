@@ -71,7 +71,7 @@ const STEPS = [
     num: 1,
     title: 'Descubra seu Eixo',
     description: 'Responda ao Quiz da Voz e comece a se escutar.',
-    route: '/salas/big5',
+    route: '/quiz/descubra-seu-eixo',
   },
   {
     key: 'big5' as const,
