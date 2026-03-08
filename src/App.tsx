@@ -1507,6 +1507,7 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/ferramentas/dialogo-partes" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/mapa-transformacao" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/ritual-passagem" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/ferramentas/inventario-personas/:clienteId" element={<ProtectedRoute minPortal="aluna_formacao"><InventarioPersonasPage /></ProtectedRoute>} />
         <Route
           path="/casa-das-maquinas/sessoes"
           element={
