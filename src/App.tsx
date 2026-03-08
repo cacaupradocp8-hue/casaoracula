@@ -154,6 +154,7 @@ import LabirintoPage from "./pages/casa-maquinas/ferramentas/LabirintoPage";
 import DecodificacaoOniricaPage from "./pages/casa-maquinas/ferramentas/DecodificacaoOniricaPage";
 import AtlasArquetiposPage from "./pages/casa-maquinas/ferramentas/AtlasArquetiposPage";
 import PlaceholderToolPage from "./pages/casa-maquinas/ferramentas/PlaceholderToolPage";
+import InventarioPersonasPage from "./pages/casa-maquinas/ferramentas/InventarioPersonasPage";
 import SectionPlaceholder from "./pages/casa-maquinas/SectionPlaceholder";
 
 // Jardim do Ofício
