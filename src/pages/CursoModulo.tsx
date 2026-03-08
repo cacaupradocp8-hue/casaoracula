@@ -126,6 +126,11 @@ export default function CursoModulo() {
           courseId={courseId!}
           onBack={() => navigate(`/cursos/${courseId}`)}
         />
+
+        {/* Forum per module */}
+        <div className="mt-10 max-w-3xl mx-auto">
+          <ModuleForumSection moduleId={moduleId!} moduleTitle={module.titulo} />
+        </div>
       </div>
     </AppLayout>
   );
