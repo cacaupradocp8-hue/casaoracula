@@ -34,11 +34,10 @@ const visitanteMenuGroups = () => [
 
 // ── ASSINANTE DO CLUBE (máx 6 itens) ────────────────────────────────────────
 const assinanteMenuGroups = () => [
-  { key: 'portal-atual', label: 'Portal Atual', icon: Compass, path: '/clube-livro', subitems: [] },
-  { key: 'biblioteca-portais', label: 'Biblioteca de Portais', icon: BookOpen, path: '/biblioteca-travessias', subitems: [] },
-  { key: 'jardim', label: 'Meu Jardim', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+  { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
+  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/clube-livro', subitems: [] },
   { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/casa-tecelas', subitems: [] },
-  { key: 'assinatura', label: 'Minha Assinatura', icon: Crown, path: '/assinatura', subitems: [] },
   { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
   { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
