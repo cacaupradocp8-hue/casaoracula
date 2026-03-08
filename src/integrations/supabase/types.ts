@@ -1584,6 +1584,77 @@ export type Database = {
         }
         Relationships: []
       }
+      cartografia_psiquica: {
+        Row: {
+          atmosfera: string[]
+          client_id: string | null
+          conflitos_tensoes: string | null
+          cor_predominante: string
+          created_at: string
+          id: string
+          indice_equilibrio: number | null
+          metadata_json: Json | null
+          ponto_partida: string | null
+          por_que_simbolo: string | null
+          recursos_internos: string | null
+          resumo_narrativo: string | null
+          simbolo_pessoal: string | null
+          sugestao_proximo_passo: string | null
+          territorios_principais: string[]
+          therapist_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          atmosfera?: string[]
+          client_id?: string | null
+          conflitos_tensoes?: string | null
+          cor_predominante: string
+          created_at?: string
+          id?: string
+          indice_equilibrio?: number | null
+          metadata_json?: Json | null
+          ponto_partida?: string | null
+          por_que_simbolo?: string | null
+          recursos_internos?: string | null
+          resumo_narrativo?: string | null
+          simbolo_pessoal?: string | null
+          sugestao_proximo_passo?: string | null
+          territorios_principais?: string[]
+          therapist_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          atmosfera?: string[]
+          client_id?: string | null
+          conflitos_tensoes?: string | null
+          cor_predominante?: string
+          created_at?: string
+          id?: string
+          indice_equilibrio?: number | null
+          metadata_json?: Json | null
+          ponto_partida?: string | null
+          por_que_simbolo?: string | null
+          recursos_internos?: string | null
+          resumo_narrativo?: string | null
+          simbolo_pessoal?: string | null
+          sugestao_proximo_passo?: string | null
+          territorios_principais?: string[]
+          therapist_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cartografia_psiquica_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cartographies: {
         Row: {
           classification_json: Json | null
