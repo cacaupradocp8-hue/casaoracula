@@ -4701,6 +4701,53 @@ export type Database = {
         }
         Relationships: []
       }
+      diagnostico_ego: {
+        Row: {
+          cliente_id: string
+          contagem_deflacao: number | null
+          contagem_inflacao: number | null
+          created_at: string
+          id: string
+          pergunta_integracao_resposta: string | null
+          respostas_deflacao: boolean[] | null
+          respostas_inflacao: boolean[] | null
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          cliente_id: string
+          contagem_deflacao?: number | null
+          contagem_inflacao?: number | null
+          created_at?: string
+          id?: string
+          pergunta_integracao_resposta?: string | null
+          respostas_deflacao?: boolean[] | null
+          respostas_inflacao?: boolean[] | null
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          cliente_id?: string
+          contagem_deflacao?: number | null
+          contagem_inflacao?: number | null
+          created_at?: string
+          id?: string
+          pergunta_integracao_resposta?: string | null
+          respostas_deflacao?: boolean[] | null
+          respostas_inflacao?: boolean[] | null
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "diagnostico_ego_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       diario_bordo_aulas: {
         Row: {
           aula_id: string
