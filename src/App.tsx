@@ -1009,6 +1009,14 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/ferramenta/cartografia-psiquica"
+        element={
+          <ProtectedRoute minPortal="mentorada">
+            <CartografiaPsiquicaPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/ferramentas/oraculo-perguntas"
         element={
           <ProtectedRoute minPortal="mentorada">
