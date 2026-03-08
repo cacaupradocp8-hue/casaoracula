@@ -133,6 +133,7 @@ import { CasaDasMaquinas, SessoesPage, GestosIntegracaoPage, MapaVivoClientePage
 import PainelClinicoPage from "./pages/casa-maquinas/PainelClinicoPage";
 import ModoSessaoImersivo from "./pages/casa-maquinas/ModoSessaoImersivo";
 import MapaCidadelaPage from "./pages/casa-maquinas/MapaCidadelaPage";
+import RelatorioJornadaPage from "./pages/RelatorioJornadaPage";
 import CasaTecelasPage from "./pages/casa-maquinas/CasaTecelasPage";
 import AcademiaPage from "./pages/casa-maquinas/AcademiaPage";
 import PerfilProfissionalPage from "./pages/casa-maquinas/PerfilProfissionalPage";
