@@ -133,6 +133,7 @@ import { CasaDasMaquinas, SessoesPage, GestosIntegracaoPage, MapaVivoClientePage
 import PainelClinicoPage from "./pages/casa-maquinas/PainelClinicoPage";
 import ModoSessaoImersivo from "./pages/casa-maquinas/ModoSessaoImersivo";
 import MapaCidadelaPage from "./pages/casa-maquinas/MapaCidadelaPage";
+import RelatorioJornadaPage from "./pages/RelatorioJornadaPage";
 import CasaTecelasPage from "./pages/casa-maquinas/CasaTecelasPage";
 import AcademiaPage from "./pages/casa-maquinas/AcademiaPage";
 import PerfilProfissionalPage from "./pages/casa-maquinas/PerfilProfissionalPage";
@@ -1454,6 +1455,7 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/clientes" element={<ProtectedRoute minPortal="oracula"><ClientesPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/clientes/:clienteId" element={<ProtectedRoute minPortal="oracula"><ClienteDetailPage /></ProtectedRoute>} />
         <Route path="/saas/clientes/:clienteId/mapa-cidadela" element={<ProtectedRoute minPortal="oracula"><MapaCidadelaPage /></ProtectedRoute>} />
+        <Route path="/saas/clientes/:clienteId/relatorio-jornada" element={<ProtectedRoute minPortal="oracula"><RelatorioJornadaPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/nova-sessao" element={<ProtectedRoute minPortal="oracula"><ModoSessaoPage /></ProtectedRoute>} />
         <Route path="/saas/sessao/:clienteId" element={<ProtectedRoute minPortal="oracula"><ModoSessaoImersivo /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas" element={<ProtectedRoute minPortal="oracula"><FerramentasPage /></ProtectedRoute>} />
