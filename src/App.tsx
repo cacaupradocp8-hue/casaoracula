@@ -159,6 +159,7 @@ import MapeamentoComplexosPage from "./pages/casa-maquinas/ferramentas/Mapeament
 import MapaSombraPage from "./pages/casa-maquinas/ferramentas/MapaSombraPage";
 import DiagnosticoEgoPage from "./pages/casa-maquinas/ferramentas/DiagnosticoEgoPage";
 import SonhoEstruturadoPage from "./pages/casa-maquinas/ferramentas/SonhoEstruturadoPage";
+import ImaginacaoAtivaPage from "./pages/casa-maquinas/ferramentas/ImaginacaoAtivaPage";
 import SectionPlaceholder from "./pages/casa-maquinas/SectionPlaceholder";
 
 // Jardim do Ofício
@@ -1516,6 +1517,7 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/ferramentas/mapa-sombra/:clienteId" element={<ProtectedRoute minPortal="aluna_formacao"><MapaSombraPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/diagnostico-ego/:clienteId" element={<ProtectedRoute minPortal="aluna_formacao"><DiagnosticoEgoPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/sonho-estruturado/:clienteId" element={<ProtectedRoute minPortal="aluna_formacao"><SonhoEstruturadoPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/ferramentas/imaginacao-ativa/:clienteId" element={<ProtectedRoute minPortal="aluna_formacao"><ImaginacaoAtivaPage /></ProtectedRoute>} />
         <Route
           path="/casa-das-maquinas/sessoes"
           element={
