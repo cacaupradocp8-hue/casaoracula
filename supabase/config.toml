@@ -65,3 +65,6 @@ verify_jwt = false
 
 [functions.estudio-gerar-infografico]
 verify_jwt = false
+
+[functions.bussola-onirica]
+verify_jwt = false
