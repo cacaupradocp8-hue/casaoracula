@@ -143,6 +143,7 @@ import SalaTreinamentoPage from "./pages/SalaTreinamentoPage";
 import ComunidadePage from "./pages/ComunidadePage";
 import AcademiaFormacaoPage from "./pages/AcademiaFormacaoPage";
 import CartografiaPage from "./pages/casa-maquinas/ferramentas/CartografiaPage";
+import CartografiaPsiquicaPage from "./pages/CartografiaPsiquicaPage";
 import TorreVivaPage from "./pages/casa-maquinas/ferramentas/TorreVivaPage";
 import LabirintoPage from "./pages/casa-maquinas/ferramentas/LabirintoPage";
 import DecodificacaoOniricaPage from "./pages/casa-maquinas/ferramentas/DecodificacaoOniricaPage";
