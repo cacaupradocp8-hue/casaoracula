@@ -2025,6 +2025,48 @@ export type Database = {
           },
         ]
       }
+      circulos_sagrados: {
+        Row: {
+          created_at: string
+          data_hora: string
+          distritos_ativados: string[] | null
+          facilitadora_id: string
+          id: string
+          local_link: string | null
+          nome_circulo: string
+          participantes_ids: string[] | null
+          ritual_base: string
+          status_circulo: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          data_hora: string
+          distritos_ativados?: string[] | null
+          facilitadora_id: string
+          id?: string
+          local_link?: string | null
+          nome_circulo: string
+          participantes_ids?: string[] | null
+          ritual_base: string
+          status_circulo?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          data_hora?: string
+          distritos_ativados?: string[] | null
+          facilitadora_id?: string
+          id?: string
+          local_link?: string | null
+          nome_circulo?: string
+          participantes_ids?: string[] | null
+          ritual_base?: string
+          status_circulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       client_pattern_stats: {
         Row: {
           client_id: string
