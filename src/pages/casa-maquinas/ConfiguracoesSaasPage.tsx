@@ -312,7 +312,7 @@ function TabConta() {
               </div>
               <Switch
                 checked={preferences?.[item.key] ?? false}
-                onCheckedChange={v => updatePreference.mutate({ [item.key]: v })}
+                onCheckedChange={v => updatePreference({ [item.key]: v })}
               />
             </div>
           ))}
