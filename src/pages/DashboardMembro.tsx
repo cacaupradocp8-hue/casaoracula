@@ -153,7 +153,7 @@ export default function DashboardMembro() {
 
       const { data: subs } = await supabase
         .from("subscriptions")
-        .select("id, status, plan_type")
+        .select("id, status, plan_id")
         .eq("user_id", user!.id)
         .order("created_at", { ascending: false })
         .limit(3);
