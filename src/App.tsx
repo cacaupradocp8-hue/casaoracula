@@ -1501,6 +1501,14 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/casa-das-maquinas/painel-clinico"
+          element={
+            <ProtectedRoute minPortal="oracula">
+              <PainelClinicoPage />
+            </ProtectedRoute>
+          }
+        />
         
 
         {/* Jardim do Ofício */}

@@ -50,6 +50,7 @@ const mainNav: NavItem[] = [
 ];
 
 const toolsNav: NavItem[] = [
+  { label: 'Painel Clínico', path: '/casa-das-maquinas/painel-clinico', icon: Compass },
   { label: 'Ferramentas', path: '/casa-das-maquinas/ferramentas', icon: Wrench },
   { label: 'Biblioteca', path: '/casa-das-maquinas/biblioteca', icon: BookOpen },
   { label: 'Mapa Vivo', path: '/casa-das-maquinas/mapa-vivo', icon: Map },
