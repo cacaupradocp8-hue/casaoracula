@@ -1694,7 +1694,32 @@ function AppRoutes() {
           }
         />
 
-        {/* Biblioteca das Travessias */}
+        {/* Formação no Método Orácula (LMS) */}
+        <Route
+          path="/formacao-metodo"
+          element={
+            <ProtectedRoute minPortal="mentorada">
+              <FormacaoMetodoPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/formacao-metodo/forum"
+          element={
+            <ProtectedRoute minPortal="mentorada">
+              <FormacaoForumPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/formacao-metodo/avaliacoes"
+          element={
+            <ProtectedRoute minPortal="mentorada">
+              <FormacaoAvaliacoesPage />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/biblioteca-das-travessias"
           element={
