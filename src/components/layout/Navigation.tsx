@@ -259,30 +259,14 @@ export function Navigation() {
                       </>
                     )}
 
-                    {menuGroups.map(group => (
-                      <div key={group.key}>
-                        {group.subitems.length ? (
-                          <DropdownMenuSub>
-                            <DropdownMenuSubTrigger>
-                              <group.icon className="w-4 h-4 mr-2" />
-                              {group.label}
-                            </DropdownMenuSubTrigger>
-                            <DropdownMenuSubContent className="w-48 bg-card/95 backdrop-blur-xl border-primary/10">
-                              {group.subitems.map(item => (
-                                <DropdownMenuItem key={item.path} onClick={() => navigate(item.path)} className="cursor-pointer">
-                                  {item.label}
-                                </DropdownMenuItem>
-                              ))}
-                            </DropdownMenuSubContent>
-                          </DropdownMenuSub>
-                        ) : (
-                          <DropdownMenuItem onClick={() => navigate(group.path)} className="cursor-pointer">
-                            <group.icon className="w-4 h-4 mr-2" />
-                            {group.label}
-                          </DropdownMenuItem>
-                        )}
-                      </div>
-                    ))}
+                    <DropdownMenuItem onClick={() => navigate('/minha-conta')} className="cursor-pointer">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Configurações
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/suporte')} className="cursor-pointer">
+                      <Headphones className="w-4 h-4 mr-2" />
+                      Ajuda
+                    </DropdownMenuItem>
 
                     <DropdownMenuSeparator className="bg-primary/10" />
                     <DropdownMenuItem onClick={() => forceFullRefresh()} className="cursor-pointer">
