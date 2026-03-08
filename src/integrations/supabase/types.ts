@@ -8476,6 +8476,50 @@ export type Database = {
           },
         ]
       }
+      mapa_sombra: {
+        Row: {
+          admiracoes: Json
+          cliente_id: string
+          created_at: string
+          id: string
+          irritacoes: Json
+          sintese_sombra_dourada: string | null
+          sintese_sombra_negativa: string | null
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          admiracoes?: Json
+          cliente_id: string
+          created_at?: string
+          id?: string
+          irritacoes?: Json
+          sintese_sombra_dourada?: string | null
+          sintese_sombra_negativa?: string | null
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          admiracoes?: Json
+          cliente_id?: string
+          created_at?: string
+          id?: string
+          irritacoes?: Json
+          sintese_sombra_dourada?: string | null
+          sintese_sombra_negativa?: string | null
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mapa_sombra_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mapa_vivo_heroina: {
         Row: {
           arquetipo_emergente: string | null
