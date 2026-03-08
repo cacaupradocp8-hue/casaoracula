@@ -630,6 +630,33 @@ export type Database = {
           },
         ]
       }
+      auto_mapeamento: {
+        Row: {
+          anotacoes: string | null
+          created_at: string | null
+          distritos_json: Json | null
+          id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          anotacoes?: string | null
+          created_at?: string | null
+          distritos_json?: Json | null
+          id?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          anotacoes?: string | null
+          created_at?: string | null
+          distritos_json?: Json | null
+          id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       automation_settings: {
         Row: {
           id: string
@@ -2007,6 +2034,48 @@ export type Database = {
           status?: Database["public"]["Enums"]["cliente_status"]
           terapeuta_id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      clientes_piloto: {
+        Row: {
+          created_at: string | null
+          id: string
+          nome_cliente: string
+          numero_sessao: number
+          prontuario: string
+          reflexoes: string | null
+          status_supervisao: string
+          supervisor_feedback: string | null
+          supervisor_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          nome_cliente: string
+          numero_sessao?: number
+          prontuario?: string
+          reflexoes?: string | null
+          status_supervisao?: string
+          supervisor_feedback?: string | null
+          supervisor_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          nome_cliente?: string
+          numero_sessao?: number
+          prontuario?: string
+          reflexoes?: string | null
+          status_supervisao?: string
+          supervisor_feedback?: string | null
+          supervisor_id?: string | null
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -4829,6 +4898,80 @@ export type Database = {
             columns: ["book_id"]
             isOneToOne: false
             referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      estudos_caso: {
+        Row: {
+          ativo: boolean | null
+          created_at: string | null
+          feedback_especialista: string
+          id: string
+          mapa_cidadela_json: Json | null
+          nivel: string
+          ordem: number | null
+          perguntas_analise: string[] | null
+          prontuario_ficticio: string
+          titulo: string
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string | null
+          feedback_especialista: string
+          id?: string
+          mapa_cidadela_json?: Json | null
+          nivel?: string
+          ordem?: number | null
+          perguntas_analise?: string[] | null
+          prontuario_ficticio: string
+          titulo: string
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string | null
+          feedback_especialista?: string
+          id?: string
+          mapa_cidadela_json?: Json | null
+          nivel?: string
+          ordem?: number | null
+          perguntas_analise?: string[] | null
+          prontuario_ficticio?: string
+          titulo?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      estudos_caso_respostas: {
+        Row: {
+          created_at: string | null
+          estudo_caso_id: string
+          id: string
+          resposta: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          estudo_caso_id: string
+          id?: string
+          resposta: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          estudo_caso_id?: string
+          id?: string
+          resposta?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estudos_caso_respostas_estudo_caso_id_fkey"
+            columns: ["estudo_caso_id"]
+            isOneToOne: false
+            referencedRelation: "estudos_caso"
             referencedColumns: ["id"]
           },
         ]
@@ -11604,6 +11747,80 @@ export type Database = {
             columns: ["porta_id"]
             isOneToOne: false
             referencedRelation: "labirinto_fases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      simulador_cenarios: {
+        Row: {
+          ativo: boolean | null
+          contexto: string
+          created_at: string | null
+          id: string
+          nivel: string
+          ordem: number | null
+          passos_json: Json
+          titulo: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          contexto: string
+          created_at?: string | null
+          id?: string
+          nivel?: string
+          ordem?: number | null
+          passos_json?: Json
+          titulo: string
+        }
+        Update: {
+          ativo?: boolean | null
+          contexto?: string
+          created_at?: string | null
+          id?: string
+          nivel?: string
+          ordem?: number | null
+          passos_json?: Json
+          titulo?: string
+        }
+        Relationships: []
+      }
+      simulador_progresso: {
+        Row: {
+          cenario_id: string
+          concluido: boolean | null
+          created_at: string | null
+          id: string
+          pontuacao: number | null
+          respostas_json: Json | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          cenario_id: string
+          concluido?: boolean | null
+          created_at?: string | null
+          id?: string
+          pontuacao?: number | null
+          respostas_json?: Json | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          cenario_id?: string
+          concluido?: boolean | null
+          created_at?: string | null
+          id?: string
+          pontuacao?: number | null
+          respostas_json?: Json | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "simulador_progresso_cenario_id_fkey"
+            columns: ["cenario_id"]
+            isOneToOne: false
+            referencedRelation: "simulador_cenarios"
             referencedColumns: ["id"]
           },
         ]
