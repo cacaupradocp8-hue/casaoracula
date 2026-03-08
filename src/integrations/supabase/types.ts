@@ -12504,6 +12504,56 @@ export type Database = {
           },
         ]
       }
+      sonhos_cabalisticos: {
+        Row: {
+          client_id: string
+          created_at: string
+          data_registro: string
+          descricao_sonho: string
+          distritos_relacionados: string[] | null
+          id: string
+          interpretacao_ia: string | null
+          labirintos_potenciais: string[] | null
+          praticas_sugeridas: string[] | null
+          simbolos_chave: string[]
+          therapist_id: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          data_registro?: string
+          descricao_sonho: string
+          distritos_relacionados?: string[] | null
+          id?: string
+          interpretacao_ia?: string | null
+          labirintos_potenciais?: string[] | null
+          praticas_sugeridas?: string[] | null
+          simbolos_chave?: string[]
+          therapist_id: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          data_registro?: string
+          descricao_sonho?: string
+          distritos_relacionados?: string[] | null
+          id?: string
+          interpretacao_ia?: string | null
+          labirintos_potenciais?: string[] | null
+          praticas_sugeridas?: string[] | null
+          simbolos_chave?: string[]
+          therapist_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sonhos_cabalisticos_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       station_progress: {
         Row: {
           created_at: string
