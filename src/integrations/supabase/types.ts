@@ -4390,6 +4390,54 @@ export type Database = {
           },
         ]
       }
+      course_module_forum_posts: {
+        Row: {
+          conteudo: string
+          created_at: string
+          id: string
+          is_instructor_reply: boolean | null
+          module_id: string
+          parent_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          conteudo: string
+          created_at?: string
+          id?: string
+          is_instructor_reply?: boolean | null
+          module_id: string
+          parent_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          conteudo?: string
+          created_at?: string
+          id?: string
+          is_instructor_reply?: boolean | null
+          module_id?: string
+          parent_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_module_forum_posts_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "course_modules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_module_forum_posts_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "course_module_forum_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_modules: {
         Row: {
           cards_leitura: Json | null
@@ -4463,6 +4511,62 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "course_modules_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_work_submissions: {
+        Row: {
+          course_id: string
+          created_at: string
+          descricao: string | null
+          feedback: string | null
+          file_url: string | null
+          id: string
+          nota: number | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          titulo: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          descricao?: string | null
+          feedback?: string | null
+          file_url?: string | null
+          id?: string
+          nota?: number | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          titulo: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          descricao?: string | null
+          feedback?: string | null
+          file_url?: string | null
+          id?: string
+          nota?: number | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          titulo?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_work_submissions_course_id_fkey"
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
