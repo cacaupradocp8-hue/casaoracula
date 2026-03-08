@@ -6287,6 +6287,56 @@ export type Database = {
         }
         Relationships: []
       }
+      imaginacao_ativa: {
+        Row: {
+          cliente_id: string
+          created_at: string
+          descricao_figura: string | null
+          dialogo_registros: Json | null
+          id: string
+          negociacao_registro: string | null
+          ponto_partida_detalhes: string | null
+          ponto_partida_tipo: string | null
+          registro_pos_sessao: string | null
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          cliente_id: string
+          created_at?: string
+          descricao_figura?: string | null
+          dialogo_registros?: Json | null
+          id?: string
+          negociacao_registro?: string | null
+          ponto_partida_detalhes?: string | null
+          ponto_partida_tipo?: string | null
+          registro_pos_sessao?: string | null
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          cliente_id?: string
+          created_at?: string
+          descricao_figura?: string | null
+          dialogo_registros?: Json | null
+          id?: string
+          negociacao_registro?: string | null
+          ponto_partida_detalhes?: string | null
+          ponto_partida_tipo?: string | null
+          registro_pos_sessao?: string | null
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imaginacao_ativa_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       intervention_favorites: {
         Row: {
           created_at: string
