@@ -6441,6 +6441,7 @@ export type Database = {
           id: string
           journey_id: string
           last_session_at: string | null
+          notes: string | null
           sessions_count: number | null
           state: string
         }
@@ -6449,6 +6450,7 @@ export type Database = {
           id?: string
           journey_id: string
           last_session_at?: string | null
+          notes?: string | null
           sessions_count?: number | null
           state?: string
         }
@@ -6457,6 +6459,7 @@ export type Database = {
           id?: string
           journey_id?: string
           last_session_at?: string | null
+          notes?: string | null
           sessions_count?: number | null
           state?: string
         }

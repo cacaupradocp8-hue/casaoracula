@@ -1,0 +1,1 @@
+ALTER TABLE public.journey_districts ADD COLUMN IF NOT EXISTS notes text;
