@@ -6917,6 +6917,53 @@ export type Database = {
           },
         ]
       }
+      jornada_individuacao: {
+        Row: {
+          arquetipos_emergentes: string[] | null
+          client_id: string
+          created_at: string
+          data_registro: string
+          distritos_ativos: string[] | null
+          etapa_jornada: string
+          id: string
+          reflexao_cliente: string
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          arquetipos_emergentes?: string[] | null
+          client_id: string
+          created_at?: string
+          data_registro?: string
+          distritos_ativos?: string[] | null
+          etapa_jornada: string
+          id?: string
+          reflexao_cliente?: string
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          arquetipos_emergentes?: string[] | null
+          client_id?: string
+          created_at?: string
+          data_registro?: string
+          distritos_ativos?: string[] | null
+          etapa_jornada?: string
+          id?: string
+          reflexao_cliente?: string
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jornada_individuacao_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       jornada_progressao: {
         Row: {
           created_at: string | null
