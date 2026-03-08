@@ -5356,6 +5356,44 @@ export type Database = {
         }
         Relationships: []
       }
+      escrita_nao_censurada: {
+        Row: {
+          cliente_id: string
+          conteudo_escrita: string | null
+          created_at: string
+          id: string
+          prompt_utilizado: string | null
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          cliente_id: string
+          conteudo_escrita?: string | null
+          created_at?: string
+          id?: string
+          prompt_utilizado?: string | null
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          cliente_id?: string
+          conteudo_escrita?: string | null
+          created_at?: string
+          id?: string
+          prompt_utilizado?: string | null
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "escrita_nao_censurada_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       estudio_projetos: {
         Row: {
           book_id: string | null
