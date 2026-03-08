@@ -301,9 +301,9 @@ function TabConta() {
         <CardHeader><CardTitle className="text-base flex items-center gap-2"><Bell className="w-4 h-4" />Notificações</CardTitle></CardHeader>
         <CardContent className="space-y-4">
           {[
-            { key: 'email_novidades' as const, label: 'Novidades por email', desc: 'Portais, travessias e conteúdos novos' },
-            { key: 'email_sessoes' as const, label: 'Lembretes de sessão', desc: 'Avisos sobre sessões agendadas' },
-            { key: 'push_enabled' as const, label: 'Notificações push', desc: 'Alertas no navegador' },
+            { key: 'novo_conteudo' as const, label: 'Novidades por email', desc: 'Portais, travessias e conteúdos novos' },
+            { key: 'email' as const, label: 'Emails gerais', desc: 'Comunicações e lembretes' },
+            { key: 'push' as const, label: 'Notificações push', desc: 'Alertas no navegador' },
           ].map(item => (
             <div key={item.key} className="flex items-center justify-between">
               <div>
@@ -311,8 +311,8 @@ function TabConta() {
                 <p className="text-xs text-muted-foreground">{item.desc}</p>
               </div>
               <Switch
-                checked={preferences[item.key]}
-                onCheckedChange={v => updatePreference(item.key, v)}
+                checked={preferences?.[item.key] ?? false}
+                onCheckedChange={v => updatePreference.mutate({ [item.key]: v })}
               />
             </div>
           ))}
