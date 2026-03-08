@@ -4149,6 +4149,47 @@ export type Database = {
           },
         ]
       }
+      corpo_inconsciente: {
+        Row: {
+          cliente_id: string
+          created_at: string
+          diario_corpo_mente: Json | null
+          id: string
+          mapeamento_tensoes: Json | null
+          therapist_id: string
+          tipo: string
+          updated_at: string
+        }
+        Insert: {
+          cliente_id: string
+          created_at?: string
+          diario_corpo_mente?: Json | null
+          id?: string
+          mapeamento_tensoes?: Json | null
+          therapist_id: string
+          tipo?: string
+          updated_at?: string
+        }
+        Update: {
+          cliente_id?: string
+          created_at?: string
+          diario_corpo_mente?: Json | null
+          id?: string
+          mapeamento_tensoes?: Json | null
+          therapist_id?: string
+          tipo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "corpo_inconsciente_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_enrollments: {
         Row: {
           ativo: boolean
