@@ -6,6 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Lock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { ModuleForumSection } from '@/components/courses/ModuleForumSection';
 import { useCourseAccess } from '@/hooks/useCourseAccess';
 import { useCourseDetail } from '@/hooks/useCourseDetail';
 import { PedagogicalModuleData } from '@/types/pedagogical-module';
@@ -125,6 +126,11 @@ export default function CursoModulo() {
           courseId={courseId!}
           onBack={() => navigate(`/cursos/${courseId}`)}
         />
+
+        {/* Forum per module */}
+        <div className="mt-10 max-w-3xl mx-auto">
+          <ModuleForumSection moduleId={moduleId!} moduleTitle={module.titulo} />
+        </div>
       </div>
     </AppLayout>
   );

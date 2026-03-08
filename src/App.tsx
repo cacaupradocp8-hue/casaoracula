@@ -165,6 +165,9 @@ import EscritaNaoCensuradaPage from "./pages/casa-maquinas/ferramentas/EscritaNa
 import CorpoInconscientePage from "./pages/casa-maquinas/ferramentas/CorpoInconscientePage";
 import SectionPlaceholder from "./pages/casa-maquinas/SectionPlaceholder";
 import ConfiguracoesSaasPage from "./pages/casa-maquinas/ConfiguracoesSaasPage";
+import FormacaoMetodoPage from "./pages/FormacaoMetodoPage";
+import FormacaoForumPage from "./pages/FormacaoForumPage";
+import FormacaoAvaliacoesPage from "./pages/FormacaoAvaliacoesPage";
 
 // Jardim do Ofício
 import { JardimOficioPage, PainelSupervisaoPage } from "./pages/jardim-oficio";
@@ -1691,7 +1694,32 @@ function AppRoutes() {
           }
         />
 
-        {/* Biblioteca das Travessias */}
+        {/* Formação no Método Orácula (LMS) */}
+        <Route
+          path="/formacao-metodo"
+          element={
+            <ProtectedRoute minPortal="mentorada">
+              <FormacaoMetodoPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/formacao-metodo/forum"
+          element={
+            <ProtectedRoute minPortal="mentorada">
+              <FormacaoForumPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/formacao-metodo/avaliacoes"
+          element={
+            <ProtectedRoute minPortal="mentorada">
+              <FormacaoAvaliacoesPage />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/biblioteca-das-travessias"
           element={
