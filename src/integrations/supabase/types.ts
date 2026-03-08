@@ -4298,11 +4298,13 @@ export type Database = {
           pricing_model: Database["public"]["Enums"]["pricing_model"]
           publicado: boolean
           requer_matricula: boolean
+          requisitos: string | null
           sala_id: string | null
           stripe_price_id: string | null
           stripe_product_id: string | null
           subtitulo: string | null
           tags: string[] | null
+          tipo_curso: string | null
           titulo: string
           updated_at: string
           video_preview_url: string | null
@@ -4323,11 +4325,13 @@ export type Database = {
           pricing_model?: Database["public"]["Enums"]["pricing_model"]
           publicado?: boolean
           requer_matricula?: boolean
+          requisitos?: string | null
           sala_id?: string | null
           stripe_price_id?: string | null
           stripe_product_id?: string | null
           subtitulo?: string | null
           tags?: string[] | null
+          tipo_curso?: string | null
           titulo: string
           updated_at?: string
           video_preview_url?: string | null
@@ -4348,11 +4352,13 @@ export type Database = {
           pricing_model?: Database["public"]["Enums"]["pricing_model"]
           publicado?: boolean
           requer_matricula?: boolean
+          requisitos?: string | null
           sala_id?: string | null
           stripe_price_id?: string | null
           stripe_product_id?: string | null
           subtitulo?: string | null
           tags?: string[] | null
+          tipo_curso?: string | null
           titulo?: string
           updated_at?: string
           video_preview_url?: string | null
@@ -10567,6 +10573,56 @@ export type Database = {
             columns: ["modulo_id"]
             isOneToOne: false
             referencedRelation: "formacao_modulos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      projetos_mestria: {
+        Row: {
+          arquivo_url: string | null
+          avaliador_id: string | null
+          course_id: string
+          created_at: string | null
+          descricao: string | null
+          feedback: string | null
+          id: string
+          status: string
+          titulo: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          arquivo_url?: string | null
+          avaliador_id?: string | null
+          course_id: string
+          created_at?: string | null
+          descricao?: string | null
+          feedback?: string | null
+          id?: string
+          status?: string
+          titulo: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          arquivo_url?: string | null
+          avaliador_id?: string | null
+          course_id?: string
+          created_at?: string | null
+          descricao?: string | null
+          feedback?: string | null
+          id?: string
+          status?: string
+          titulo?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projetos_mestria_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
             referencedColumns: ["id"]
           },
         ]
