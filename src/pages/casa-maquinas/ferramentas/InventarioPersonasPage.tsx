@@ -89,15 +89,15 @@ export default function InventarioPersonasPage() {
   const salvarAnalise = async () => {
     if (!clienteId || !user) return;
     setLoading(true);
-    const { error } = await supabase.from('inventario_personas').insert({
+    const { error } = await (supabase.from('inventario_personas' as any).insert({
       cliente_id: clienteId,
       therapist_id: user.id,
-      contextos_personas: contextos as unknown as Record<string, unknown>[],
+      contextos_personas: contextos,
       analise_discrepancia: analise.discrepancia || null,
       custo_energetico: analise.custo || null,
       sombra_revelada: analise.sombra || null,
       pergunta_incomoda_resposta: analise.pergunta || null,
-    });
+    }) as any);
     setLoading(false);
     if (error) { toast.error('Erro ao salvar inventário'); return; }
     toast.success('Inventário salvo com sucesso');
