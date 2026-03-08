@@ -18,6 +18,7 @@ import { LockedForVisitor } from "@/components/shared/LockedForVisitor";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
+import DashboardMembro from "./pages/DashboardMembro";
 import Welcome from "./pages/Welcome";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
