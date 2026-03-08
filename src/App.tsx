@@ -158,6 +158,7 @@ import InventarioPersonasPage from "./pages/casa-maquinas/ferramentas/Inventario
 import MapeamentoComplexosPage from "./pages/casa-maquinas/ferramentas/MapeamentoComplexosPage";
 import MapaSombraPage from "./pages/casa-maquinas/ferramentas/MapaSombraPage";
 import DiagnosticoEgoPage from "./pages/casa-maquinas/ferramentas/DiagnosticoEgoPage";
+import SonhoEstruturadoPage from "./pages/casa-maquinas/ferramentas/SonhoEstruturadoPage";
 import SectionPlaceholder from "./pages/casa-maquinas/SectionPlaceholder";
 
 // Jardim do Ofício
