@@ -147,6 +147,7 @@ import CartografiaPsiquicaPage from "./pages/CartografiaPsiquicaPage";
 import RituaisMudraPage from "./pages/RituaisMudraPage";
 import BussolaOniricaPage from "./pages/BussolaOniricaPage";
 import CirculoSagradoPage from "./pages/CirculoSagradoPage";
+import CursoDeusasPage from "./pages/CursoDeusasPage";
 import TorreVivaPage from "./pages/casa-maquinas/ferramentas/TorreVivaPage";
 import LabirintoPage from "./pages/casa-maquinas/ferramentas/LabirintoPage";
 import DecodificacaoOniricaPage from "./pages/casa-maquinas/ferramentas/DecodificacaoOniricaPage";
