@@ -148,12 +148,14 @@ export default function RelatorioJornadaPage() {
 
   async function loadReflections() {
     const { data } = await supabase
-      .from('journey_reflections')
-      .select('conteudo')
+      .from('reflexoes_jornada')
+      .select('texto')
       .eq('client_id', clienteId!)
       .eq('therapist_id', user!.id)
+      .order('created_at', { ascending: false })
+      .limit(1)
       .maybeSingle();
-    if (data) setReflections(data.conteudo);
+    if (data) setReflections(data.texto);
   }
 
   async function loadPatterns() {
