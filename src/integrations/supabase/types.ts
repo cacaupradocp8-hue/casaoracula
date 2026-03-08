@@ -10673,6 +10673,47 @@ export type Database = {
         }
         Relationships: []
       }
+      praticas_mudra: {
+        Row: {
+          anotacoes_pratica: string | null
+          client_id: string
+          created_at: string
+          data_pratica: string
+          distrito_associado: string | null
+          id: string
+          mudra_nome: string
+          therapist_id: string
+        }
+        Insert: {
+          anotacoes_pratica?: string | null
+          client_id: string
+          created_at?: string
+          data_pratica?: string
+          distrito_associado?: string | null
+          id?: string
+          mudra_nome: string
+          therapist_id: string
+        }
+        Update: {
+          anotacoes_pratica?: string | null
+          client_id?: string
+          created_at?: string
+          data_pratica?: string
+          distrito_associado?: string | null
+          id?: string
+          mudra_nome?: string
+          therapist_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "praticas_mudra_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           access_expires_at: string | null
