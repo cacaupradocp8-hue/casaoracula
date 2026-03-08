@@ -161,6 +161,7 @@ import DiagnosticoEgoPage from "./pages/casa-maquinas/ferramentas/DiagnosticoEgo
 import SonhoEstruturadoPage from "./pages/casa-maquinas/ferramentas/SonhoEstruturadoPage";
 import ImaginacaoAtivaPage from "./pages/casa-maquinas/ferramentas/ImaginacaoAtivaPage";
 import EscritaNaoCensuradaPage from "./pages/casa-maquinas/ferramentas/EscritaNaoCensuradaPage";
+import CorpoInconscientePage from "./pages/casa-maquinas/ferramentas/CorpoInconscientePage";
 import SectionPlaceholder from "./pages/casa-maquinas/SectionPlaceholder";
 
 // Jardim do Ofício
