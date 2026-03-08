@@ -156,6 +156,7 @@ import AtlasArquetiposPage from "./pages/casa-maquinas/ferramentas/AtlasArquetip
 import PlaceholderToolPage from "./pages/casa-maquinas/ferramentas/PlaceholderToolPage";
 import InventarioPersonasPage from "./pages/casa-maquinas/ferramentas/InventarioPersonasPage";
 import MapeamentoComplexosPage from "./pages/casa-maquinas/ferramentas/MapeamentoComplexosPage";
+import MapaSombraPage from "./pages/casa-maquinas/ferramentas/MapaSombraPage";
 import SectionPlaceholder from "./pages/casa-maquinas/SectionPlaceholder";
 
 // Jardim do Ofício
