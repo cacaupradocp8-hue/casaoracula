@@ -6346,6 +6346,53 @@ export type Database = {
           },
         ]
       }
+      inventario_personas: {
+        Row: {
+          analise_discrepancia: string | null
+          cliente_id: string
+          contextos_personas: Json
+          created_at: string
+          custo_energetico: string | null
+          id: string
+          pergunta_incomoda_resposta: string | null
+          sombra_revelada: string | null
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          analise_discrepancia?: string | null
+          cliente_id: string
+          contextos_personas?: Json
+          created_at?: string
+          custo_energetico?: string | null
+          id?: string
+          pergunta_incomoda_resposta?: string | null
+          sombra_revelada?: string | null
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          analise_discrepancia?: string | null
+          cliente_id?: string
+          contextos_personas?: Json
+          created_at?: string
+          custo_energetico?: string | null
+          id?: string
+          pergunta_incomoda_resposta?: string | null
+          sombra_revelada?: string | null
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventario_personas_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       jardim_do_oficio: {
         Row: {
           aprendizado_tecnico: string | null

@@ -154,6 +154,7 @@ import LabirintoPage from "./pages/casa-maquinas/ferramentas/LabirintoPage";
 import DecodificacaoOniricaPage from "./pages/casa-maquinas/ferramentas/DecodificacaoOniricaPage";
 import AtlasArquetiposPage from "./pages/casa-maquinas/ferramentas/AtlasArquetiposPage";
 import PlaceholderToolPage from "./pages/casa-maquinas/ferramentas/PlaceholderToolPage";
+import InventarioPersonasPage from "./pages/casa-maquinas/ferramentas/InventarioPersonasPage";
 import SectionPlaceholder from "./pages/casa-maquinas/SectionPlaceholder";
 
 // Jardim do Ofício
@@ -1506,6 +1507,7 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/ferramentas/dialogo-partes" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/mapa-transformacao" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/ritual-passagem" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/ferramentas/inventario-personas/:clienteId" element={<ProtectedRoute minPortal="aluna_formacao"><InventarioPersonasPage /></ProtectedRoute>} />
         <Route
           path="/casa-das-maquinas/sessoes"
           element={
