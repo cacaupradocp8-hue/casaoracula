@@ -161,7 +161,7 @@ export default function DashboardMembro() {
       subs?.forEach((s) => {
         items.push({
           id: s.id,
-          titulo: s.plan_type || "Assinatura",
+          titulo: s.plan_id || "Assinatura",
           tipo: "assinatura",
           status: s.status === "active" ? "Ativa" : s.status === "past_due" ? "Pendente" : "Inativa",
         });
