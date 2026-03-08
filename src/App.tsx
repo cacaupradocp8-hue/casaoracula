@@ -137,6 +137,7 @@ import CasaTecelasPage from "./pages/casa-maquinas/CasaTecelasPage";
 import AcademiaPage from "./pages/casa-maquinas/AcademiaPage";
 import PerfilProfissionalPage from "./pages/casa-maquinas/PerfilProfissionalPage";
 import SalaTreinamentoPage from "./pages/SalaTreinamentoPage";
+import ComunidadePage from "./pages/ComunidadePage";
 import CartografiaPage from "./pages/casa-maquinas/ferramentas/CartografiaPage";
 import TorreVivaPage from "./pages/casa-maquinas/ferramentas/TorreVivaPage";
 import LabirintoPage from "./pages/casa-maquinas/ferramentas/LabirintoPage";
