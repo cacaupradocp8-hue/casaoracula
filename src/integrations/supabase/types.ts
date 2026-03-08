@@ -8619,6 +8619,50 @@ export type Database = {
           },
         ]
       }
+      mapeamento_complexos: {
+        Row: {
+          cliente_id: string
+          created_at: string
+          id: string
+          nome_complexo: string | null
+          padroes_identificados: string | null
+          personagem_ativado: string | null
+          registros_gatilhos: Json
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          cliente_id: string
+          created_at?: string
+          id?: string
+          nome_complexo?: string | null
+          padroes_identificados?: string | null
+          personagem_ativado?: string | null
+          registros_gatilhos?: Json
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          cliente_id?: string
+          created_at?: string
+          id?: string
+          nome_complexo?: string | null
+          padroes_identificados?: string | null
+          personagem_ativado?: string | null
+          registros_gatilhos?: Json
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mapeamento_complexos_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       matriculas: {
         Row: {
           ativa: boolean
