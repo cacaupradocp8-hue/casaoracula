@@ -163,6 +163,7 @@ import ImaginacaoAtivaPage from "./pages/casa-maquinas/ferramentas/ImaginacaoAti
 import EscritaNaoCensuradaPage from "./pages/casa-maquinas/ferramentas/EscritaNaoCensuradaPage";
 import CorpoInconscientePage from "./pages/casa-maquinas/ferramentas/CorpoInconscientePage";
 import SectionPlaceholder from "./pages/casa-maquinas/SectionPlaceholder";
+import ConfiguracoesSaasPage from "./pages/casa-maquinas/ConfiguracoesSaasPage";
 
 // Jardim do Ofício
 import { JardimOficioPage, PainelSupervisaoPage } from "./pages/jardim-oficio";
