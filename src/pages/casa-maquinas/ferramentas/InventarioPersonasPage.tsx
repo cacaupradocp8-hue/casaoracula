@@ -63,12 +63,12 @@ export default function InventarioPersonasPage() {
 
   const loadHistorico = async () => {
     if (!clienteId) return;
-    const { data } = await supabase
-      .from('inventario_personas')
+    const { data } = await (supabase
+      .from('inventario_personas' as any)
       .select('*')
       .eq('cliente_id', clienteId)
-      .order('created_at', { ascending: false });
-    if (data) setHistorico(data as unknown as Inventario[]);
+      .order('created_at', { ascending: false }) as any);
+    if (data) setHistorico(data as Inventario[]);
   };
 
   useEffect(() => { loadHistorico(); }, [clienteId]);
