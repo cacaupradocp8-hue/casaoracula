@@ -11484,6 +11484,41 @@ export type Database = {
         }
         Relationships: []
       }
+      reflexoes_jornada: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          texto: string
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          texto: string
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          texto?: string
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reflexoes_jornada_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       respostas_exercicios: {
         Row: {
           campo_corporal: string | null

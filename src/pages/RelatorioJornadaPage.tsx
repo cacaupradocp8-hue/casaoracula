@@ -148,12 +148,14 @@ export default function RelatorioJornadaPage() {
 
   async function loadReflections() {
     const { data } = await supabase
-      .from('journey_reflections')
-      .select('conteudo')
+      .from('reflexoes_jornada')
+      .select('texto')
       .eq('client_id', clienteId!)
       .eq('therapist_id', user!.id)
+      .order('created_at', { ascending: false })
+      .limit(1)
       .maybeSingle();
-    if (data) setReflections(data.conteudo);
+    if (data) setReflections(data.texto);
   }
 
   async function loadPatterns() {
@@ -171,16 +173,15 @@ export default function RelatorioJornadaPage() {
 
   // ── Save reflections ──────────────────────────────────────
   async function handleSaveReflections() {
-    if (!clienteId || !user) return;
+    if (!clienteId || !user || !reflections.trim()) return;
     setSavingReflections(true);
     const { error } = await supabase
-      .from('journey_reflections')
-      .upsert({
+      .from('reflexoes_jornada')
+      .insert({
         client_id: clienteId,
         therapist_id: user.id,
-        conteudo: reflections,
-        updated_at: new Date().toISOString(),
-      }, { onConflict: 'client_id,therapist_id' });
+        texto: reflections.trim(),
+      } as any);
 
     if (error) toast.error('Erro ao salvar reflexões');
     else toast.success('Reflexões salvas');
