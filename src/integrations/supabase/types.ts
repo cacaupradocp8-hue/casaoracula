@@ -3398,6 +3398,345 @@ export type Database = {
           },
         ]
       }
+      community_comments: {
+        Row: {
+          autor_id: string
+          conteudo: string
+          created_at: string | null
+          id: string
+          post_id: string
+        }
+        Insert: {
+          autor_id: string
+          conteudo: string
+          created_at?: string | null
+          id?: string
+          post_id: string
+        }
+        Update: {
+          autor_id?: string
+          conteudo?: string
+          created_at?: string | null
+          id?: string
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_event_participants: {
+        Row: {
+          created_at: string | null
+          event_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          event_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_event_participants_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "community_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_events: {
+        Row: {
+          ativo: boolean | null
+          created_at: string | null
+          criador_id: string | null
+          data_evento: string
+          descricao: string | null
+          id: string
+          link: string | null
+          nome: string
+          participantes_count: number | null
+          tipo: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string | null
+          criador_id?: string | null
+          data_evento: string
+          descricao?: string | null
+          id?: string
+          link?: string | null
+          nome: string
+          participantes_count?: number | null
+          tipo?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string | null
+          criador_id?: string | null
+          data_evento?: string
+          descricao?: string | null
+          id?: string
+          link?: string | null
+          nome?: string
+          participantes_count?: number | null
+          tipo?: string | null
+        }
+        Relationships: []
+      }
+      community_forums: {
+        Row: {
+          ativo: boolean | null
+          created_at: string | null
+          descricao: string | null
+          icone: string | null
+          id: string
+          nome: string
+          ordem: number | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string | null
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          nome: string
+          ordem?: number | null
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string | null
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          nome?: string
+          ordem?: number | null
+        }
+        Relationships: []
+      }
+      community_group_members: {
+        Row: {
+          group_id: string
+          id: string
+          joined_at: string | null
+          role: string | null
+          user_id: string
+        }
+        Insert: {
+          group_id: string
+          id?: string
+          joined_at?: string | null
+          role?: string | null
+          user_id: string
+        }
+        Update: {
+          group_id?: string
+          id?: string
+          joined_at?: string | null
+          role?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "community_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_groups: {
+        Row: {
+          ativo: boolean | null
+          created_at: string | null
+          criador_id: string
+          descricao: string | null
+          id: string
+          membros_count: number | null
+          nome: string
+          privado: boolean | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string | null
+          criador_id: string
+          descricao?: string | null
+          id?: string
+          membros_count?: number | null
+          nome: string
+          privado?: boolean | null
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string | null
+          criador_id?: string
+          descricao?: string | null
+          id?: string
+          membros_count?: number | null
+          nome?: string
+          privado?: boolean | null
+        }
+        Relationships: []
+      }
+      community_likes: {
+        Row: {
+          created_at: string | null
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_posts: {
+        Row: {
+          autor_id: string
+          comentarios_count: number | null
+          conteudo: string
+          created_at: string | null
+          curtidas_count: number | null
+          id: string
+          imagem_url: string | null
+          publicado: boolean | null
+          updated_at: string | null
+          video_url: string | null
+        }
+        Insert: {
+          autor_id: string
+          comentarios_count?: number | null
+          conteudo: string
+          created_at?: string | null
+          curtidas_count?: number | null
+          id?: string
+          imagem_url?: string | null
+          publicado?: boolean | null
+          updated_at?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          autor_id?: string
+          comentarios_count?: number | null
+          conteudo?: string
+          created_at?: string | null
+          curtidas_count?: number | null
+          id?: string
+          imagem_url?: string | null
+          publicado?: boolean | null
+          updated_at?: string | null
+          video_url?: string | null
+        }
+        Relationships: []
+      }
+      community_topic_replies: {
+        Row: {
+          autor_id: string
+          conteudo: string
+          created_at: string | null
+          id: string
+          topic_id: string
+        }
+        Insert: {
+          autor_id: string
+          conteudo: string
+          created_at?: string | null
+          id?: string
+          topic_id: string
+        }
+        Update: {
+          autor_id?: string
+          conteudo?: string
+          created_at?: string | null
+          id?: string
+          topic_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_topic_replies_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "community_topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_topics: {
+        Row: {
+          autor_id: string
+          conteudo: string
+          created_at: string | null
+          fixado: boolean | null
+          forum_id: string
+          id: string
+          respostas_count: number | null
+          titulo: string
+          ultima_atividade: string | null
+        }
+        Insert: {
+          autor_id: string
+          conteudo: string
+          created_at?: string | null
+          fixado?: boolean | null
+          forum_id: string
+          id?: string
+          respostas_count?: number | null
+          titulo: string
+          ultima_atividade?: string | null
+        }
+        Update: {
+          autor_id?: string
+          conteudo?: string
+          created_at?: string | null
+          fixado?: boolean | null
+          forum_id?: string
+          id?: string
+          respostas_count?: number | null
+          titulo?: string
+          ultima_atividade?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_topics_forum_id_fkey"
+            columns: ["forum_id"]
+            isOneToOne: false
+            referencedRelation: "community_forums"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       confirmacao_profissional: {
         Row: {
           aceita_codigo_etico: boolean
@@ -5045,6 +5384,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      facilitadora_profiles: {
+        Row: {
+          bio: string | null
+          cidade: string | null
+          created_at: string | null
+          especializacoes: string[] | null
+          id: string
+          perfil_publico: boolean | null
+          updated_at: string | null
+          user_id: string
+          voz_conducao: string | null
+        }
+        Insert: {
+          bio?: string | null
+          cidade?: string | null
+          created_at?: string | null
+          especializacoes?: string[] | null
+          id?: string
+          perfil_publico?: boolean | null
+          updated_at?: string | null
+          user_id: string
+          voz_conducao?: string | null
+        }
+        Update: {
+          bio?: string | null
+          cidade?: string | null
+          created_at?: string | null
+          especializacoes?: string[] | null
+          id?: string
+          perfil_publico?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+          voz_conducao?: string | null
+        }
+        Relationships: []
       }
       ferramenta_registros: {
         Row: {
