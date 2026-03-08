@@ -12798,6 +12798,65 @@ export type Database = {
           },
         ]
       }
+      sonho_estruturado: {
+        Row: {
+          amplificacao_arquetipica: Json | null
+          amplificacao_pessoal: Json | null
+          cliente_id: string
+          created_at: string
+          emocao_predominante: string | null
+          id: string
+          imagens_principais: string | null
+          pergunta_compensar: string | null
+          pergunta_conselho: string | null
+          pergunta_perspectiva: string | null
+          resposta_ao_sonho: string | null
+          sensacao_corporal: string | null
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          amplificacao_arquetipica?: Json | null
+          amplificacao_pessoal?: Json | null
+          cliente_id: string
+          created_at?: string
+          emocao_predominante?: string | null
+          id?: string
+          imagens_principais?: string | null
+          pergunta_compensar?: string | null
+          pergunta_conselho?: string | null
+          pergunta_perspectiva?: string | null
+          resposta_ao_sonho?: string | null
+          sensacao_corporal?: string | null
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          amplificacao_arquetipica?: Json | null
+          amplificacao_pessoal?: Json | null
+          cliente_id?: string
+          created_at?: string
+          emocao_predominante?: string | null
+          id?: string
+          imagens_principais?: string | null
+          pergunta_compensar?: string | null
+          pergunta_conselho?: string | null
+          pergunta_perspectiva?: string | null
+          resposta_ao_sonho?: string | null
+          sensacao_corporal?: string | null
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sonho_estruturado_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sonhos_cabalisticos: {
         Row: {
           client_id: string
