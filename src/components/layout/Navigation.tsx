@@ -44,24 +44,17 @@ const assinanteMenuGroups = () => [
 
 // ── ALUNA DE FORMAÇÃO (máx 6 itens) ─────────────────────────────────────────
 const alunaMenuGroups = () => [
-  { key: 'inicio', label: 'Início', icon: Home, path: '/jornada', subitems: [] },
+  { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
   {
     key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/oracula',
     subitems: [
       { label: 'Formação Orácula', path: '/oracula' },
       { label: 'Travessias', path: '/travessias' },
-      { label: 'Círculos de Leitura', path: '/clube-livro' },
+      { label: 'Cursos', path: '/cursos' },
     ],
   },
-  {
-    key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas',
-    subitems: [
-      { label: 'Hub do Método', path: '/ferramentas-metodo' },
-      { label: 'Sala de Ferramentas', path: '/ferramentas' },
-    ],
-  },
-  { key: 'biblioteca', label: 'Biblioteca', icon: BookOpen, path: '/minha-biblioteca', subitems: [] },
-  { key: 'jardim', label: 'Meu Jardim', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/clube-livro', subitems: [] },
+  { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/casa-tecelas', subitems: [] },
   { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
   { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
