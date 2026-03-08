@@ -7025,6 +7025,60 @@ export type Database = {
           },
         ]
       }
+      journey_events: {
+        Row: {
+          client_id: string
+          created_at: string
+          data_evento: string
+          descricao: string | null
+          id: string
+          metadata_json: Json | null
+          session_id: string | null
+          therapist_id: string
+          tipo: string
+          titulo: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          data_evento?: string
+          descricao?: string | null
+          id?: string
+          metadata_json?: Json | null
+          session_id?: string | null
+          therapist_id: string
+          tipo: string
+          titulo: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          data_evento?: string
+          descricao?: string | null
+          id?: string
+          metadata_json?: Json | null
+          session_id?: string | null
+          therapist_id?: string
+          tipo?: string
+          titulo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journey_events_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journey_events_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       journey_media: {
         Row: {
           created_at: string
@@ -7065,6 +7119,41 @@ export type Database = {
             columns: ["journey_id"]
             isOneToOne: true
             referencedRelation: "clube_jornadas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journey_reflections: {
+        Row: {
+          client_id: string
+          conteudo: string
+          created_at: string
+          id: string
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          conteudo?: string
+          created_at?: string
+          id?: string
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          conteudo?: string
+          created_at?: string
+          id?: string
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journey_reflections_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
         ]
