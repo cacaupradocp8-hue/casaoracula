@@ -6,6 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Lock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { ModuleForumSection } from '@/components/courses/ModuleForumSection';
 import { useCourseAccess } from '@/hooks/useCourseAccess';
 import { useCourseDetail } from '@/hooks/useCourseDetail';
 import { PedagogicalModuleData } from '@/types/pedagogical-module';
