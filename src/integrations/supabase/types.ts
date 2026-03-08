@@ -5600,48 +5600,69 @@ export type Database = {
       interventions: {
         Row: {
           archetype_key: string | null
+          arquetipos_relacionados: string[] | null
           ativa: boolean
           content: string
           contraindications: string | null
           created_at: string
+          descricao_breve: string | null
           district_id: string | null
           id: string
           level: Database["public"]["Enums"]["intervention_level"]
+          materiais: string[] | null
+          objetivo: string | null
+          passo_a_passo: string | null
+          perguntas_chave: string[] | null
           tags: string[] | null
           title: string
           tower_key: string | null
           type: Database["public"]["Enums"]["intervention_type"]
           updated_at: string
+          usage_count: number | null
         }
         Insert: {
           archetype_key?: string | null
+          arquetipos_relacionados?: string[] | null
           ativa?: boolean
           content: string
           contraindications?: string | null
           created_at?: string
+          descricao_breve?: string | null
           district_id?: string | null
           id?: string
           level?: Database["public"]["Enums"]["intervention_level"]
+          materiais?: string[] | null
+          objetivo?: string | null
+          passo_a_passo?: string | null
+          perguntas_chave?: string[] | null
           tags?: string[] | null
           title: string
           tower_key?: string | null
           type: Database["public"]["Enums"]["intervention_type"]
           updated_at?: string
+          usage_count?: number | null
         }
         Update: {
           archetype_key?: string | null
+          arquetipos_relacionados?: string[] | null
           ativa?: boolean
           content?: string
           contraindications?: string | null
           created_at?: string
+          descricao_breve?: string | null
           district_id?: string | null
           id?: string
           level?: Database["public"]["Enums"]["intervention_level"]
+          materiais?: string[] | null
+          objetivo?: string | null
+          passo_a_passo?: string | null
+          perguntas_chave?: string[] | null
           tags?: string[] | null
           title?: string
           tower_key?: string | null
           type?: Database["public"]["Enums"]["intervention_type"]
           updated_at?: string
+          usage_count?: number | null
         }
         Relationships: [
           {
