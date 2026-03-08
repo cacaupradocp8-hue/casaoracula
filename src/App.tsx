@@ -426,6 +426,14 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/dashboard-membro"
+        element={
+          <ProtectedRoute>
+            <DashboardMembro />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/salas/:id"
         element={
           <ProtectedRoute>
