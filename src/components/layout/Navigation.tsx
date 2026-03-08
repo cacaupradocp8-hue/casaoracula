@@ -34,35 +34,27 @@ const visitanteMenuGroups = () => [
 
 // ── ASSINANTE DO CLUBE (máx 6 itens) ────────────────────────────────────────
 const assinanteMenuGroups = () => [
-  { key: 'portal-atual', label: 'Portal Atual', icon: Compass, path: '/clube-livro', subitems: [] },
-  { key: 'biblioteca-portais', label: 'Biblioteca de Portais', icon: BookOpen, path: '/biblioteca-travessias', subitems: [] },
-  { key: 'jardim', label: 'Meu Jardim', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+  { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
+  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/clube-livro', subitems: [] },
   { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/casa-tecelas', subitems: [] },
-  { key: 'assinatura', label: 'Minha Assinatura', icon: Crown, path: '/assinatura', subitems: [] },
   { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
   { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
 
 // ── ALUNA DE FORMAÇÃO (máx 6 itens) ─────────────────────────────────────────
 const alunaMenuGroups = () => [
-  { key: 'inicio', label: 'Início', icon: Home, path: '/jornada', subitems: [] },
+  { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
   {
     key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/oracula',
     subitems: [
       { label: 'Formação Orácula', path: '/oracula' },
       { label: 'Travessias', path: '/travessias' },
-      { label: 'Círculos de Leitura', path: '/clube-livro' },
+      { label: 'Cursos', path: '/cursos' },
     ],
   },
-  {
-    key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas',
-    subitems: [
-      { label: 'Hub do Método', path: '/ferramentas-metodo' },
-      { label: 'Sala de Ferramentas', path: '/ferramentas' },
-    ],
-  },
-  { key: 'biblioteca', label: 'Biblioteca', icon: BookOpen, path: '/minha-biblioteca', subitems: [] },
-  { key: 'jardim', label: 'Meu Jardim', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/clube-livro', subitems: [] },
+  { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/casa-tecelas', subitems: [] },
   { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
   { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
@@ -267,30 +259,14 @@ export function Navigation() {
                       </>
                     )}
 
-                    {menuGroups.map(group => (
-                      <div key={group.key}>
-                        {group.subitems.length ? (
-                          <DropdownMenuSub>
-                            <DropdownMenuSubTrigger>
-                              <group.icon className="w-4 h-4 mr-2" />
-                              {group.label}
-                            </DropdownMenuSubTrigger>
-                            <DropdownMenuSubContent className="w-48 bg-card/95 backdrop-blur-xl border-primary/10">
-                              {group.subitems.map(item => (
-                                <DropdownMenuItem key={item.path} onClick={() => navigate(item.path)} className="cursor-pointer">
-                                  {item.label}
-                                </DropdownMenuItem>
-                              ))}
-                            </DropdownMenuSubContent>
-                          </DropdownMenuSub>
-                        ) : (
-                          <DropdownMenuItem onClick={() => navigate(group.path)} className="cursor-pointer">
-                            <group.icon className="w-4 h-4 mr-2" />
-                            {group.label}
-                          </DropdownMenuItem>
-                        )}
-                      </div>
-                    ))}
+                    <DropdownMenuItem onClick={() => navigate('/minha-conta')} className="cursor-pointer">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Configurações
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/suporte')} className="cursor-pointer">
+                      <Headphones className="w-4 h-4 mr-2" />
+                      Ajuda
+                    </DropdownMenuItem>
 
                     <DropdownMenuSeparator className="bg-primary/10" />
                     <DropdownMenuItem onClick={() => forceFullRefresh()} className="cursor-pointer">
