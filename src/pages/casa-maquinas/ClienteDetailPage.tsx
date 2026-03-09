@@ -19,6 +19,7 @@ import { RelacionamentosEspelho } from '@/components/casa-maquinas/relacionament
 import { CartografiaComplexos } from '@/components/casa-maquinas/cartografia-complexos/CartografiaComplexos';
 import { ConselhoPartesInternas } from '@/components/casa-maquinas/conselho-partes/ConselhoPartesInternas';
 import { RitualIntegracao } from '@/components/casa-maquinas/ritual-integracao/RitualIntegracao';
+import { CartografiaPsiquicaOracula } from '@/components/casa-maquinas/cartografia-psiquica/CartografiaPsiquicaOracula';
 import { Loader2 } from 'lucide-react';
 
 export default function ClienteDetailPage() {
@@ -80,6 +81,7 @@ export default function ClienteDetailPage() {
           <TabsTrigger value="conselho" className={tabClass}>Conselho</TabsTrigger>
           <TabsTrigger value="ritual" className={tabClass}>Ritual</TabsTrigger>
           <TabsTrigger value="perfil" className={tabClass}>Perfil</TabsTrigger>
+          <TabsTrigger value="mapa-psiquico" className={tabClass}>Mapa Psíquico</TabsTrigger>
         </TabsList>
 
         <TabsContent value="cidadela"><CidadelaMap clienteId={clienteId!} /></TabsContent>
@@ -97,6 +99,7 @@ export default function ClienteDetailPage() {
         <TabsContent value="conselho"><ConselhoPartesInternas clienteId={clienteId!} /></TabsContent>
         <TabsContent value="ritual"><RitualIntegracao clienteId={clienteId!} /></TabsContent>
         <TabsContent value="perfil"><ClientePerfilTab cliente={cliente} onUpdate={loadCliente} /></TabsContent>
+        <TabsContent value="mapa-psiquico"><CartografiaPsiquicaOracula clienteId={clienteId!} /></TabsContent>
       </Tabs>
     </CasaMaquinasLayout>
   );
