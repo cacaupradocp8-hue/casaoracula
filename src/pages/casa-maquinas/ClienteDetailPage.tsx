@@ -17,6 +17,7 @@ import { Labirinto39Portas } from '@/components/casa-maquinas/labirinto-39/Labir
 import { AtlasArquetipos } from '@/components/casa-maquinas/atlas-arquetipos/AtlasArquetipos';
 import { RelacionamentosEspelho } from '@/components/casa-maquinas/relacionamentos-espelho/RelacionamentosEspelho';
 import { CartografiaComplexos } from '@/components/casa-maquinas/cartografia-complexos/CartografiaComplexos';
+import { ConselhoPartesInternas } from '@/components/casa-maquinas/conselho-partes/ConselhoPartesInternas';
 import { Loader2 } from 'lucide-react';
 
 export default function ClienteDetailPage() {
