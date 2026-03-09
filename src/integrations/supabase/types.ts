@@ -1652,6 +1652,59 @@ export type Database = {
         }
         Relationships: []
       }
+      cartografia_complexos: {
+        Row: {
+          client_id: string
+          complexo_dominante: string | null
+          complexo_latente: string | null
+          complexos_json: Json
+          created_at: string
+          gatilhos_gerais: string | null
+          id: string
+          padrao_central: string | null
+          reflexao_final: string | null
+          reflexao_origem: string | null
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          complexo_dominante?: string | null
+          complexo_latente?: string | null
+          complexos_json?: Json
+          created_at?: string
+          gatilhos_gerais?: string | null
+          id?: string
+          padrao_central?: string | null
+          reflexao_final?: string | null
+          reflexao_origem?: string | null
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          complexo_dominante?: string | null
+          complexo_latente?: string | null
+          complexos_json?: Json
+          created_at?: string
+          gatilhos_gerais?: string | null
+          id?: string
+          padrao_central?: string | null
+          reflexao_final?: string | null
+          reflexao_origem?: string | null
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cartografia_complexos_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cartografia_psiquica: {
         Row: {
           atmosfera: string[]
