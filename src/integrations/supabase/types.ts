@@ -520,6 +520,74 @@ export type Database = {
         }
         Relationships: []
       }
+      atlas_arquetipos_registros: {
+        Row: {
+          arquetipo_dominante: string | null
+          arquetipo_dormindo: string | null
+          arquetipos_atividade: Json
+          arquetipos_descricao: Json
+          arquetipos_selecionados: string[]
+          arquetipos_situacoes: Json
+          atividade_media: number | null
+          client_id: string
+          conflitos_arquetipos: string | null
+          created_at: string
+          dinamica_geral: string | null
+          harmonias_arquetipos: string | null
+          id: string
+          o_que_poderia_trazer: string | null
+          reflexao_dominante: string | null
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          arquetipo_dominante?: string | null
+          arquetipo_dormindo?: string | null
+          arquetipos_atividade?: Json
+          arquetipos_descricao?: Json
+          arquetipos_selecionados?: string[]
+          arquetipos_situacoes?: Json
+          atividade_media?: number | null
+          client_id: string
+          conflitos_arquetipos?: string | null
+          created_at?: string
+          dinamica_geral?: string | null
+          harmonias_arquetipos?: string | null
+          id?: string
+          o_que_poderia_trazer?: string | null
+          reflexao_dominante?: string | null
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          arquetipo_dominante?: string | null
+          arquetipo_dormindo?: string | null
+          arquetipos_atividade?: Json
+          arquetipos_descricao?: Json
+          arquetipos_selecionados?: string[]
+          arquetipos_situacoes?: Json
+          atividade_media?: number | null
+          client_id?: string
+          conflitos_arquetipos?: string | null
+          created_at?: string
+          dinamica_geral?: string | null
+          harmonias_arquetipos?: string | null
+          id?: string
+          o_que_poderia_trazer?: string | null
+          reflexao_dominante?: string | null
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "atlas_arquetipos_registros_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audio_assets: {
         Row: {
           capa_url: string | null
