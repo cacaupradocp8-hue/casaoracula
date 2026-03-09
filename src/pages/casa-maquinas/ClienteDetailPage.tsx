@@ -80,6 +80,7 @@ export default function ClienteDetailPage() {
         <TabsContent value="estacoes"><OraculoEstacoes clienteId={clienteId!} /></TabsContent>
         <TabsContent value="ariadne"><FioDeAriadne clienteId={clienteId!} /></TabsContent>
         <TabsContent value="sinais"><SinaisDaJornada clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="39portas"><Labirinto39Portas clienteId={clienteId!} /></TabsContent>
         <TabsContent value="perfil"><ClientePerfilTab cliente={cliente} onUpdate={loadCliente} /></TabsContent>
       </Tabs>
     </CasaMaquinasLayout>
