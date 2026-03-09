@@ -95,6 +95,7 @@ export default function ClienteDetailPage() {
         <TabsContent value="espelho"><RelacionamentosEspelho clienteId={clienteId!} /></TabsContent>
         <TabsContent value="complexos"><CartografiaComplexos clienteId={clienteId!} /></TabsContent>
         <TabsContent value="conselho"><ConselhoPartesInternas clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="ritual"><RitualIntegracao clienteId={clienteId!} /></TabsContent>
         <TabsContent value="perfil"><ClientePerfilTab cliente={cliente} onUpdate={loadCliente} /></TabsContent>
       </Tabs>
     </CasaMaquinasLayout>
