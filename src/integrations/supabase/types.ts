@@ -7941,6 +7941,71 @@ export type Database = {
         }
         Relationships: []
       }
+      labirinto_39_portas: {
+        Row: {
+          client_id: string
+          created_at: string
+          grupo_mais_acessivel: string | null
+          grupo_menos_acessivel: string | null
+          id: string
+          portas_json: Json
+          reflexao_abertas: string | null
+          reflexao_fechadas: string | null
+          reflexao_grupo_acessivel: string | null
+          reflexao_grupo_inacessivel: string | null
+          reflexao_trancadas: string | null
+          therapist_id: string
+          total_abertas: number
+          total_fechadas: number
+          total_trancadas: number
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          grupo_mais_acessivel?: string | null
+          grupo_menos_acessivel?: string | null
+          id?: string
+          portas_json?: Json
+          reflexao_abertas?: string | null
+          reflexao_fechadas?: string | null
+          reflexao_grupo_acessivel?: string | null
+          reflexao_grupo_inacessivel?: string | null
+          reflexao_trancadas?: string | null
+          therapist_id: string
+          total_abertas?: number
+          total_fechadas?: number
+          total_trancadas?: number
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          grupo_mais_acessivel?: string | null
+          grupo_menos_acessivel?: string | null
+          id?: string
+          portas_json?: Json
+          reflexao_abertas?: string | null
+          reflexao_fechadas?: string | null
+          reflexao_grupo_acessivel?: string | null
+          reflexao_grupo_inacessivel?: string | null
+          reflexao_trancadas?: string | null
+          therapist_id?: string
+          total_abertas?: number
+          total_fechadas?: number
+          total_trancadas?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "labirinto_39_portas_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       labirinto_anotacoes: {
         Row: {
           anotacao: string
