@@ -72,6 +72,7 @@ export default function ClienteDetailPage() {
           <TabsTrigger value="sinais" className={tabClass}>Sinais</TabsTrigger>
           <TabsTrigger value="39portas" className={tabClass}>39 Portas</TabsTrigger>
           <TabsTrigger value="atlas" className={tabClass}>Atlas</TabsTrigger>
+          <TabsTrigger value="espelho" className={tabClass}>Espelho</TabsTrigger>
           <TabsTrigger value="perfil" className={tabClass}>Perfil</TabsTrigger>
         </TabsList>
 
