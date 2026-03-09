@@ -14,6 +14,7 @@ import { SinaisDaJornada } from '@/components/casa-maquinas/SinaisDaJornada';
 import { OraculoEstacoes } from '@/components/casa-maquinas/OraculoEstacoes';
 import { FioDeAriadne } from '@/components/casa-maquinas/FioDeAriadne';
 import { Labirinto39Portas } from '@/components/casa-maquinas/labirinto-39/Labirinto39Portas';
+import { AtlasArquetipos } from '@/components/casa-maquinas/atlas-arquetipos/AtlasArquetipos';
 import { Loader2 } from 'lucide-react';
 
 export default function ClienteDetailPage() {
