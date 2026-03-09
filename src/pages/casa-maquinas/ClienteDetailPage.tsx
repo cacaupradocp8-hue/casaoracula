@@ -89,6 +89,7 @@ export default function ClienteDetailPage() {
         <TabsContent value="39portas"><Labirinto39Portas clienteId={clienteId!} /></TabsContent>
         <TabsContent value="atlas"><AtlasArquetipos clienteId={clienteId!} /></TabsContent>
         <TabsContent value="espelho"><RelacionamentosEspelho clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="complexos"><CartografiaComplexos clienteId={clienteId!} /></TabsContent>
         <TabsContent value="perfil"><ClientePerfilTab cliente={cliente} onUpdate={loadCliente} /></TabsContent>
       </Tabs>
     </CasaMaquinasLayout>
