@@ -2067,6 +2067,68 @@ export type Database = {
         }
         Relationships: []
       }
+      client_labyrinths: {
+        Row: {
+          acoes_ruptura: string[] | null
+          client_id: string
+          created_at: string
+          descricao: string | null
+          gatilhos: string[] | null
+          id: string
+          nome_padrao: string
+          notas: string | null
+          sessoes_relacionadas: number | null
+          severidade: string
+          status: string
+          therapist_id: string
+          tipo: string
+          ultima_ocorrencia: string | null
+          updated_at: string
+        }
+        Insert: {
+          acoes_ruptura?: string[] | null
+          client_id: string
+          created_at?: string
+          descricao?: string | null
+          gatilhos?: string[] | null
+          id?: string
+          nome_padrao: string
+          notas?: string | null
+          sessoes_relacionadas?: number | null
+          severidade?: string
+          status?: string
+          therapist_id: string
+          tipo?: string
+          ultima_ocorrencia?: string | null
+          updated_at?: string
+        }
+        Update: {
+          acoes_ruptura?: string[] | null
+          client_id?: string
+          created_at?: string
+          descricao?: string | null
+          gatilhos?: string[] | null
+          id?: string
+          nome_padrao?: string
+          notas?: string | null
+          sessoes_relacionadas?: number | null
+          severidade?: string
+          status?: string
+          therapist_id?: string
+          tipo?: string
+          ultima_ocorrencia?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_labyrinths_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_pattern_stats: {
         Row: {
           client_id: string
@@ -2098,6 +2160,59 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "client_pattern_stats_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_seasons: {
+        Row: {
+          client_id: string
+          created_at: string
+          data_registro: string
+          descricao: string | null
+          energia_predominante: string | null
+          estacao: string
+          id: string
+          intervencao_sugerida: string | null
+          necessidade_central: string | null
+          notas: string | null
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          data_registro?: string
+          descricao?: string | null
+          energia_predominante?: string | null
+          estacao: string
+          id?: string
+          intervencao_sugerida?: string | null
+          necessidade_central?: string | null
+          notas?: string | null
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          data_registro?: string
+          descricao?: string | null
+          energia_predominante?: string | null
+          estacao?: string
+          id?: string
+          intervencao_sugerida?: string | null
+          necessidade_central?: string | null
+          notas?: string | null
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_seasons_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
