@@ -15,6 +15,7 @@ import { OraculoEstacoes } from '@/components/casa-maquinas/OraculoEstacoes';
 import { FioDeAriadne } from '@/components/casa-maquinas/FioDeAriadne';
 import { Labirinto39Portas } from '@/components/casa-maquinas/labirinto-39/Labirinto39Portas';
 import { AtlasArquetipos } from '@/components/casa-maquinas/atlas-arquetipos/AtlasArquetipos';
+import { RelacionamentosEspelho } from '@/components/casa-maquinas/relacionamentos-espelho/RelacionamentosEspelho';
 import { Loader2 } from 'lucide-react';
 
 export default function ClienteDetailPage() {
@@ -71,6 +72,7 @@ export default function ClienteDetailPage() {
           <TabsTrigger value="sinais" className={tabClass}>Sinais</TabsTrigger>
           <TabsTrigger value="39portas" className={tabClass}>39 Portas</TabsTrigger>
           <TabsTrigger value="atlas" className={tabClass}>Atlas</TabsTrigger>
+          <TabsTrigger value="espelho" className={tabClass}>Espelho</TabsTrigger>
           <TabsTrigger value="perfil" className={tabClass}>Perfil</TabsTrigger>
         </TabsList>
 
@@ -84,6 +86,7 @@ export default function ClienteDetailPage() {
         <TabsContent value="sinais"><SinaisDaJornada clienteId={clienteId!} /></TabsContent>
         <TabsContent value="39portas"><Labirinto39Portas clienteId={clienteId!} /></TabsContent>
         <TabsContent value="atlas"><AtlasArquetipos clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="espelho"><RelacionamentosEspelho clienteId={clienteId!} /></TabsContent>
         <TabsContent value="perfil"><ClientePerfilTab cliente={cliente} onUpdate={loadCliente} /></TabsContent>
       </Tabs>
     </CasaMaquinasLayout>

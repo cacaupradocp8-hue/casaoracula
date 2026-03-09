@@ -12182,6 +12182,62 @@ export type Database = {
           },
         ]
       }
+      relacionamentos_espelho: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          padrao_central: string | null
+          padroes_recorrentes: string | null
+          projecoes_json: Json
+          qualidades_admiradas: Json
+          qualidades_irritantes: Json
+          reflexao_final: string | null
+          relacionamentos_json: Json
+          sintese_json: Json | null
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          padrao_central?: string | null
+          padroes_recorrentes?: string | null
+          projecoes_json?: Json
+          qualidades_admiradas?: Json
+          qualidades_irritantes?: Json
+          reflexao_final?: string | null
+          relacionamentos_json?: Json
+          sintese_json?: Json | null
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          padrao_central?: string | null
+          padroes_recorrentes?: string | null
+          projecoes_json?: Json
+          qualidades_admiradas?: Json
+          qualidades_irritantes?: Json
+          reflexao_final?: string | null
+          relacionamentos_json?: Json
+          sintese_json?: Json | null
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relacionamentos_espelho_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       respostas_exercicios: {
         Row: {
           campo_corporal: string | null
