@@ -4122,6 +4122,56 @@ export type Database = {
         }
         Relationships: []
       }
+      conselho_partes_internas: {
+        Row: {
+          client_id: string
+          created_at: string
+          decisao_conselho: string | null
+          dialogos_json: Json
+          id: string
+          partes_json: Json
+          reflexao_final: string | null
+          sabedoria_integrada: string | null
+          tema_conselho: string | null
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          decisao_conselho?: string | null
+          dialogos_json?: Json
+          id?: string
+          partes_json?: Json
+          reflexao_final?: string | null
+          sabedoria_integrada?: string | null
+          tema_conselho?: string | null
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          decisao_conselho?: string | null
+          dialogos_json?: Json
+          id?: string
+          partes_json?: Json
+          reflexao_final?: string | null
+          sabedoria_integrada?: string | null
+          tema_conselho?: string | null
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conselho_partes_internas_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content_blocks: {
         Row: {
           agente_id: string | null
