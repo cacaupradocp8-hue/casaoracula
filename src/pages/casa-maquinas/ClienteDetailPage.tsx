@@ -78,6 +78,7 @@ export default function ClienteDetailPage() {
           <TabsTrigger value="espelho" className={tabClass}>Espelho</TabsTrigger>
           <TabsTrigger value="complexos" className={tabClass}>Complexos</TabsTrigger>
           <TabsTrigger value="conselho" className={tabClass}>Conselho</TabsTrigger>
+          <TabsTrigger value="ritual" className={tabClass}>Ritual</TabsTrigger>
           <TabsTrigger value="perfil" className={tabClass}>Perfil</TabsTrigger>
         </TabsList>
 
