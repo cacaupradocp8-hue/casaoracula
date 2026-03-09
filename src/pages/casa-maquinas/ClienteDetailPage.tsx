@@ -18,6 +18,7 @@ import { AtlasArquetipos } from '@/components/casa-maquinas/atlas-arquetipos/Atl
 import { RelacionamentosEspelho } from '@/components/casa-maquinas/relacionamentos-espelho/RelacionamentosEspelho';
 import { CartografiaComplexos } from '@/components/casa-maquinas/cartografia-complexos/CartografiaComplexos';
 import { ConselhoPartesInternas } from '@/components/casa-maquinas/conselho-partes/ConselhoPartesInternas';
+import { RitualIntegracao } from '@/components/casa-maquinas/ritual-integracao/RitualIntegracao';
 import { Loader2 } from 'lucide-react';
 
 export default function ClienteDetailPage() {
