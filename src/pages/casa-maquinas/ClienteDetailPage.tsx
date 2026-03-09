@@ -11,6 +11,8 @@ import { ClienteCartografias } from '@/components/casa-maquinas/ClienteCartograf
 import { ClienteSonhos } from '@/components/casa-maquinas/ClienteSonhos';
 import { ClientePerfilArquetipico } from '@/components/casa-maquinas/ClientePerfilArquetipico';
 import { SinaisDaJornada } from '@/components/casa-maquinas/SinaisDaJornada';
+import { OraculoEstacoes } from '@/components/casa-maquinas/OraculoEstacoes';
+import { FioDeAriadne } from '@/components/casa-maquinas/FioDeAriadne';
 import { Loader2 } from 'lucide-react';
 
 export default function ClienteDetailPage() {
@@ -37,7 +39,7 @@ export default function ClienteDetailPage() {
     return (
       <CasaMaquinasLayout title="Cliente">
         <div className="flex items-center justify-center min-h-[50vh]">
-          <Loader2 className="w-6 h-6 animate-spin text-[#C9A24A]" />
+          <Loader2 className="w-6 h-6 animate-spin text-primary" />
         </div>
       </CasaMaquinasLayout>
     );
@@ -46,22 +48,24 @@ export default function ClienteDetailPage() {
   if (!cliente) {
     return (
       <CasaMaquinasLayout title="Cliente não encontrada">
-        <p className="text-[#F5F1E8]/40 text-center py-20">Cliente não encontrada</p>
+        <p className="text-muted-foreground text-center py-20">Cliente não encontrada</p>
       </CasaMaquinasLayout>
     );
   }
 
-  const tabClass = "data-[state=active]:bg-[#C9A24A]/15 data-[state=active]:text-[#C9A24A] text-[#F5F1E8]/60";
+  const tabClass = "data-[state=active]:bg-primary/15 data-[state=active]:text-primary text-muted-foreground";
 
   return (
     <CasaMaquinasLayout title={cliente.nome} subtitle="Jornada interior">
       <Tabs defaultValue="cidadela" className="w-full">
-        <TabsList className="bg-[#0B1B2B]/80 border border-[#C9A24A]/10 mb-6 flex-wrap h-auto">
+        <TabsList className="bg-card/80 border border-border/30 mb-6 flex-wrap h-auto gap-0.5">
           <TabsTrigger value="cidadela" className={tabClass}>CidaDELA</TabsTrigger>
           <TabsTrigger value="historico" className={tabClass}>Histórico</TabsTrigger>
           <TabsTrigger value="cartografia" className={tabClass}>Cartografia</TabsTrigger>
           <TabsTrigger value="sonhos" className={tabClass}>Sonhos</TabsTrigger>
           <TabsTrigger value="arquetipo" className={tabClass}>Arquétipo</TabsTrigger>
+          <TabsTrigger value="estacoes" className={tabClass}>Estações</TabsTrigger>
+          <TabsTrigger value="ariadne" className={tabClass}>Fio de Ariadne</TabsTrigger>
           <TabsTrigger value="sinais" className={tabClass}>Sinais</TabsTrigger>
           <TabsTrigger value="perfil" className={tabClass}>Perfil</TabsTrigger>
         </TabsList>
@@ -71,6 +75,8 @@ export default function ClienteDetailPage() {
         <TabsContent value="cartografia"><ClienteCartografias clienteId={clienteId!} /></TabsContent>
         <TabsContent value="sonhos"><ClienteSonhos clienteId={clienteId!} /></TabsContent>
         <TabsContent value="arquetipo"><ClientePerfilArquetipico clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="estacoes"><OraculoEstacoes clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="ariadne"><FioDeAriadne clienteId={clienteId!} /></TabsContent>
         <TabsContent value="sinais"><SinaisDaJornada clienteId={clienteId!} /></TabsContent>
         <TabsContent value="perfil"><ClientePerfilTab cliente={cliente} onUpdate={loadCliente} /></TabsContent>
       </Tabs>
