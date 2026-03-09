@@ -18,6 +18,7 @@ import { AtlasArquetipos } from '@/components/casa-maquinas/atlas-arquetipos/Atl
 import { RelacionamentosEspelho } from '@/components/casa-maquinas/relacionamentos-espelho/RelacionamentosEspelho';
 import { CartografiaComplexos } from '@/components/casa-maquinas/cartografia-complexos/CartografiaComplexos';
 import { ConselhoPartesInternas } from '@/components/casa-maquinas/conselho-partes/ConselhoPartesInternas';
+import { RitualIntegracao } from '@/components/casa-maquinas/ritual-integracao/RitualIntegracao';
 import { Loader2 } from 'lucide-react';
 
 export default function ClienteDetailPage() {
@@ -77,6 +78,7 @@ export default function ClienteDetailPage() {
           <TabsTrigger value="espelho" className={tabClass}>Espelho</TabsTrigger>
           <TabsTrigger value="complexos" className={tabClass}>Complexos</TabsTrigger>
           <TabsTrigger value="conselho" className={tabClass}>Conselho</TabsTrigger>
+          <TabsTrigger value="ritual" className={tabClass}>Ritual</TabsTrigger>
           <TabsTrigger value="perfil" className={tabClass}>Perfil</TabsTrigger>
         </TabsList>
 
@@ -93,6 +95,7 @@ export default function ClienteDetailPage() {
         <TabsContent value="espelho"><RelacionamentosEspelho clienteId={clienteId!} /></TabsContent>
         <TabsContent value="complexos"><CartografiaComplexos clienteId={clienteId!} /></TabsContent>
         <TabsContent value="conselho"><ConselhoPartesInternas clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="ritual"><RitualIntegracao clienteId={clienteId!} /></TabsContent>
         <TabsContent value="perfil"><ClientePerfilTab cliente={cliente} onUpdate={loadCliente} /></TabsContent>
       </Tabs>
     </CasaMaquinasLayout>
