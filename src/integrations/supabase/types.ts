@@ -12379,6 +12379,65 @@ export type Database = {
           },
         ]
       }
+      rituais_integracao: {
+        Row: {
+          aprendizados_json: Json
+          client_id: string
+          compromisso: string | null
+          created_at: string
+          data_ritual: string | null
+          elementos_ritual: Json
+          id: string
+          intencao: string | null
+          o_que_deixo: string | null
+          o_que_levo: string | null
+          reflexao_final: string | null
+          simbolo_transicao: string | null
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          aprendizados_json?: Json
+          client_id: string
+          compromisso?: string | null
+          created_at?: string
+          data_ritual?: string | null
+          elementos_ritual?: Json
+          id?: string
+          intencao?: string | null
+          o_que_deixo?: string | null
+          o_que_levo?: string | null
+          reflexao_final?: string | null
+          simbolo_transicao?: string | null
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          aprendizados_json?: Json
+          client_id?: string
+          compromisso?: string | null
+          created_at?: string
+          data_ritual?: string | null
+          elementos_ritual?: Json
+          id?: string
+          intencao?: string | null
+          o_que_deixo?: string | null
+          o_que_levo?: string | null
+          reflexao_final?: string | null
+          simbolo_transicao?: string | null
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rituais_integracao_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rituais_simbolicos: {
         Row: {
           ativo: boolean | null
