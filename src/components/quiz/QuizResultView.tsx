@@ -2,8 +2,8 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
-  Sparkles, Heart, DoorOpen, BookOpen, 
-  Compass, Users, ArrowRight, Crown
+  Sparkles, Heart, DoorOpen, 
+  Compass, ArrowRight
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -151,164 +151,19 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
         </Card>
       </motion.section>
 
-      {/* ── BLOCO 4: APRESENTAÇÃO DO CLUBE ── */}
+      {/* ── CTA: ENTRAR NO CLUBE ── */}
       <motion.section {...fade(0.3)}>
-        <div className="text-center mb-8">
-          <p className="text-xs uppercase tracking-[0.25em] text-gold/60 mb-3">
-            O próximo passo natural
-          </p>
-          <h2 className="font-display text-2xl md:text-3xl text-gold">
-            Clube de Leitura Oracular
-          </h2>
+        <div className="text-center">
+          <Button
+            variant="gold"
+            size="lg"
+            onClick={() => navigate('/planos-clube')}
+            className="gap-2 px-8 py-6 text-base"
+          >
+            Entrar no Clube de Leitura Oracular
+            <ArrowRight className="w-4 h-4" />
+          </Button>
         </div>
-
-        <Card className="border-gold/20 bg-card/80 backdrop-blur">
-          <CardContent className="pt-8 pb-8 space-y-6">
-            <p className="text-foreground/85 leading-relaxed text-center max-w-2xl mx-auto">
-              O Clube é o espaço onde a jornada que começou aqui ganha corpo.
-              Cada ciclo de leitura é uma travessia guiada — com escuta, reflexão
-              e aplicação prática para quem deseja habitar a linguagem simbólica
-              com profundidade.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto">
-              {[
-                { icon: BookOpen, text: 'Leituras simbólicas guiadas' },
-                { icon: Sparkles, text: 'Reflexões semanais' },
-                { icon: Heart, text: 'Carta da semana' },
-                { icon: Compass, text: 'Aplicação prática' },
-                { icon: Users, text: 'Comunidade de mulheres em travessia' },
-              ].map(({ icon: Icon, text }, i) => (
-                <div key={i} className="flex items-center gap-3 text-foreground/80">
-                  <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center shrink-0">
-                    <Icon className="w-4 h-4 text-gold" />
-                  </div>
-                  <span className="text-sm">{text}</span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </motion.section>
-
-      {/* ── BLOCO 5: PARA QUEM É ── */}
-      <motion.section {...fade(0.35)}>
-        <div className="text-center mb-6">
-          <h2 className="font-display text-2xl text-foreground">
-            Para quem é
-          </h2>
-        </div>
-
-        <Card className="border-border/20 bg-card/60 backdrop-blur">
-          <CardContent className="py-8 px-6">
-            <div className="flex flex-wrap justify-center gap-3">
-              {[
-                'Mulheres em autoconhecimento',
-                'Terapeutas',
-                'Psicólogas',
-                'Mentoras do feminino',
-                'Facilitadoras',
-              ].map((perfil, i) => (
-                <span
-                  key={i}
-                  className="px-4 py-2 rounded-full border border-gold/20 bg-gold/5 text-foreground/80 text-sm font-medium"
-                >
-                  {perfil}
-                </span>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </motion.section>
-
-      {/* ── BLOCO 6: PLANOS ── */}
-      <motion.section {...fade(0.4)}>
-        <div className="text-center mb-8">
-          <h2 className="font-display text-2xl text-foreground">
-            Escolha seu ritmo
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-lg mx-auto">
-          {/* Mensal */}
-          <Card className="border-border/30 bg-card/80 backdrop-blur text-center">
-            <CardContent className="pt-8 pb-8 space-y-3">
-              <p className="text-xs uppercase tracking-widest text-muted-foreground">Plano Mensal</p>
-              <p className="font-display text-3xl text-foreground">
-                R$59<span className="text-lg text-muted-foreground">,97</span>
-              </p>
-              <p className="text-sm text-muted-foreground">/mês</p>
-              <Button
-                variant="outline"
-                className="mt-4 w-full border-gold/30 hover:bg-gold/10 hover:border-gold/50"
-                onClick={() => navigate('/planos')}
-              >
-                Começar agora
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Anual */}
-          <Card className="border-gold/30 bg-gradient-to-br from-gold/[0.06] to-card backdrop-blur text-center relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 bg-gold/20 py-1">
-              <p className="text-[10px] uppercase tracking-widest text-gold font-semibold flex items-center justify-center gap-1">
-                <Crown className="w-3 h-3" /> Melhor valor
-              </p>
-            </div>
-            <CardContent className="pt-10 pb-8 space-y-3">
-              <p className="text-xs uppercase tracking-widest text-muted-foreground">Plano Anual</p>
-              <p className="font-display text-3xl text-gold">
-                R$599<span className="text-lg text-gold/70">,97</span>
-              </p>
-              <p className="text-sm text-muted-foreground">/ano</p>
-              <Button
-                variant="gold"
-                className="mt-4 w-full"
-                onClick={() => navigate('/planos')}
-              >
-                Escolher anual
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </motion.section>
-
-      {/* ── BLOCO 7: CTA FINAL ── */}
-      <motion.section {...fade(0.5)}>
-        <Card className="border-gold/20 bg-gradient-to-br from-gold/[0.05] to-card backdrop-blur overflow-hidden">
-          <CardContent className="py-12 px-6 md:px-10 space-y-8 text-center">
-            <Sparkles className="w-8 h-8 text-gold mx-auto" />
-            <div className="space-y-3 max-w-lg mx-auto">
-              <p className="font-display text-xl md:text-2xl text-foreground leading-relaxed">
-                A Casa Orácula não é apenas um espaço de estudo.
-              </p>
-              <p className="font-display text-xl md:text-2xl text-gold leading-relaxed">
-                É um lugar de travessia simbólica.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-              <Button
-                variant="gold"
-                size="lg"
-                onClick={() => navigate('/planos')}
-                className="gap-2"
-              >
-                Habitar a Casa Orácula
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={() => navigate('/clube-leitura')}
-                className="gap-2 border-gold/30 hover:bg-gold/10"
-              >
-                <BookOpen className="w-4 h-4" />
-                Conhecer o Clube
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </motion.section>
     </div>
   );
