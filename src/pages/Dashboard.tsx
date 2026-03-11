@@ -11,6 +11,14 @@ import { canAccessFeature } from "@/types/portal";
 
 export default function Dashboard() {
   const { user } = useAuth();
+
+  // Route members (non-visitor, non-admin) to member dashboard
+  const isMember = user && user.portal !== 'visitante' && user.portal !== 'admin';
+  if (isMember) {
+    return <Navigate to="/dashboard-membro" replace />;
+  }
+
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { getCopyByKey } = useCopy();
   const [isProfessionalVerified, setIsProfessionalVerified] = useState(false);
