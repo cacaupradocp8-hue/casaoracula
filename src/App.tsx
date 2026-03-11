@@ -538,6 +538,14 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/minha-jornada"
+        element={
+          <ProtectedRoute>
+            <MinhaJornada />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/comece-aqui"
         element={
           <ProtectedRoute>
