@@ -238,6 +238,7 @@ import PortalJunguiano from "./pages/PortalJunguiano";
 import PortalJunguianoPorta from "./pages/PortalJunguianoPorta";
 // Novas páginas de navegação simplificada
 import ExperienciaGratuita from "./pages/ExperienciaGratuita";
+import MapaCasaOracula from "./pages/MapaCasaOracula";
 
 const queryClient = new QueryClient();
 const BOOT_ROUTE_LOG_PREFIX = '[boot-debug][routes]';
