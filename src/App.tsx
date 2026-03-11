@@ -289,39 +289,11 @@ class RootErrorBoundary extends React.Component<{ children: React.ReactNode }, R
     errorMessage: null,
   };
 
-  private handleWindowError = (event: ErrorEvent) => {
-    this.setState({
-      hasError: true,
-      errorMessage: event.error?.message || event.message || 'Erro inesperado de execução.',
-    });
-  };
-
-  private handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-    const reason = event.reason;
-    const message = reason instanceof Error
-      ? reason.message
-      : typeof reason === 'string'
-        ? reason
-        : 'Erro inesperado de execução.';
-
-    this.setState({ hasError: true, errorMessage: message });
-  };
-
   static getDerivedStateFromError(error: Error): RootErrorBoundaryState {
     return {
       hasError: true,
       errorMessage: error?.message || 'Ocorreu um erro inesperado.',
     };
-  }
-
-  componentDidMount() {
-    window.addEventListener('error', this.handleWindowError);
-    window.addEventListener('unhandledrejection', this.handleUnhandledRejection);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('error', this.handleWindowError);
-    window.removeEventListener('unhandledrejection', this.handleUnhandledRejection);
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
