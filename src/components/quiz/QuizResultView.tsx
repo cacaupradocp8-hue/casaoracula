@@ -151,18 +151,21 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
         </Card>
       </motion.section>
 
-      {/* ── CTA: ENTRAR NO CLUBE ── */}
+      {/* ── CTA: HABITAR A CASA ── */}
       <motion.section {...fade(0.3)}>
-        <div className="text-center">
+        <div className="text-center space-y-3">
           <Button
             variant="gold"
             size="lg"
             onClick={() => navigate('/planos-clube')}
             className="gap-2 px-8 py-6 text-base"
           >
-            Entrar no Clube de Leitura Oracular
+            Habitar a Casa Orácula
             <ArrowRight className="w-4 h-4" />
           </Button>
+          <p className="text-muted-foreground text-sm">
+            Continue sua jornada com acesso ao Clube de Leitura Oracular
+          </p>
         </div>
       </motion.section>
     </div>

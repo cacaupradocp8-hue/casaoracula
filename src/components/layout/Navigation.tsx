@@ -43,20 +43,21 @@ const assinanteMenuGroups = () => [
   { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
 
-// ── ALUNA DE FORMAÇÃO (máx 6 itens) ─────────────────────────────────────────
+// ── ALUNA DE FORMAÇÃO (máx 7 itens) ─────────────────────────────────────────
 const alunaMenuGroups = () => [
   { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'clube', label: 'Clube de Leitura', icon: BookOpen, path: '/clube-livro', subitems: [] },
   {
-    key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/oracula',
+    key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/formacao-metodo',
     subitems: [
       { label: 'Formação Orácula', path: '/oracula' },
       { label: 'Travessias', path: '/travessias' },
       { label: 'Cursos', path: '/cursos' },
     ],
   },
-  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/clube-livro', subitems: [] },
-  { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/casa-tecelas', subitems: [] },
-  { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
+  { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/comunidade', subitems: [] },
+  { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas', subitems: [] },
+  { key: 'conta', label: 'Perfil', icon: User, path: '/minha-conta', subitems: [] },
   { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
 
