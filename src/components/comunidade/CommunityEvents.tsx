@@ -6,8 +6,8 @@ import { Calendar, ExternalLink, CheckCircle2, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { formatDateSafe, parseDateSafe } from '@/lib/date-safe';
 
 interface Evento {
   id: string; nome: string; descricao: string | null; data_evento: string;
