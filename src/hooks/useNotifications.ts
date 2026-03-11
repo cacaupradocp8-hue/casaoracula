@@ -20,18 +20,24 @@ export function useNotifications() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  const { data: notifications = [], isLoading, refetch } = useQuery({
+  const {
+    data: notifications = [],
+    isLoading,
+    refetch,
+    error,
+    isError,
+  } = useQuery({
     queryKey: ['notifications', user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
-      
-      const { data, error } = await supabase
+
+      const { data, error: queryError } = await supabase
         .from('notifications')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
-      
-      if (error) throw error;
+
+      if (queryError) throw queryError;
       return data as Notification[];
     },
     enabled: !!user?.id,
@@ -71,7 +77,7 @@ export function useNotifications() {
         .from('notifications')
         .update({ is_read: true, read_at: new Date().toISOString() })
         .eq('id', notificationId);
-      
+
       if (error) throw error;
     },
     onSuccess: () => {
@@ -82,13 +88,13 @@ export function useNotifications() {
   const markAllAsRead = useMutation({
     mutationFn: async () => {
       if (!user?.id) return;
-      
+
       const { error } = await supabase
         .from('notifications')
         .update({ is_read: true, read_at: new Date().toISOString() })
         .eq('user_id', user.id)
         .eq('is_read', false);
-      
+
       if (error) throw error;
     },
     onSuccess: () => {
@@ -96,11 +102,16 @@ export function useNotifications() {
     },
   });
 
+  const errorMessage = isError
+    ? (error instanceof Error ? error.message : 'Não foi possível carregar notificações.')
+    : null;
+
   return {
     notifications,
     unreadCount,
     isLoading,
     refetch,
+    error: errorMessage,
     markAsRead: markAsRead.mutate,
     markAllAsRead: markAllAsRead.mutate,
     isMarkingAsRead: markAsRead.isPending,
