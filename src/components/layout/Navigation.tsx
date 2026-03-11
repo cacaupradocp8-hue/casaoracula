@@ -32,13 +32,14 @@ const visitanteMenuGroups = () => [
   { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
 
-// ── ASSINANTE DO CLUBE (máx 6 itens) ────────────────────────────────────────
+// ── ASSINANTE DO CLUBE (máx 7 itens) ────────────────────────────────────────
 const assinanteMenuGroups = () => [
   { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'clube', label: 'Clube de Leitura', icon: BookOpen, path: '/clube-livro', subitems: [] },
   { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
-  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/clube-livro', subitems: [] },
-  { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/casa-tecelas', subitems: [] },
-  { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
+  { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/comunidade', subitems: [] },
+  { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas', subitems: [] },
+  { key: 'conta', label: 'Perfil', icon: User, path: '/minha-conta', subitems: [] },
   { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
 
