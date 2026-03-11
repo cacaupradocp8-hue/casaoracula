@@ -344,11 +344,28 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
   const location = useLocation();
   const { onboardingCompleted, isLoading: onboardingLoading, error: onboardingError } = useOnboarding();
 
-  if (!isAuthReady || isLoading) return <AuthLoading />;
-  if (!isAuthenticated) return <Navigate to="/auth" replace />;
-  if (authError) return <AppRouteError title="Erro na autenticação" message={authError} />;
-  if (onboardingLoading) return <AuthLoading />;
+  if (!isAuthReady || isLoading) {
+    logRouteStep('boot auth pendente', { path: location.pathname, isAuthReady, isLoading });
+    return <AuthLoading />;
+  }
+
+  if (authError) {
+    logRouteStep('falha no boot de autenticação', { path: location.pathname, authError }, 'error');
+    return <AppRouteError title="Erro na autenticação" message={authError} />;
+  }
+
+  if (!isAuthenticated) {
+    logRouteStep('usuária não autenticada, redirecionando para /auth', { path: location.pathname }, 'warn');
+    return <Navigate to="/auth" replace />;
+  }
+
+  if (onboardingLoading) {
+    logRouteStep('onboarding pendente', { path: location.pathname, userId: user?.id ?? null });
+    return <AuthLoading />;
+  }
+
   if (onboardingError && location.pathname !== '/onboarding') {
+    logRouteStep('falha ao carregar onboarding', { path: location.pathname, onboardingError }, 'error');
     return <AppRouteError title="Erro ao abrir sua jornada" message={onboardingError} />;
   }
 
@@ -358,6 +375,11 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
   const isVisitor = user?.portal === 'visitante';
 
   if (!onboardingCompleted && !isOnboardingRoute && !isAdmin) {
+    logRouteStep('definição da rota pós-login: /onboarding', {
+      from: location.pathname,
+      userId: user?.id ?? null,
+      onboardingCompleted,
+    }, 'warn');
     return <Navigate to="/onboarding" replace />;
   }
 
@@ -369,29 +391,67 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
   const hasAccess = canAccessFeature(effectivePortal, minPortal);
 
   if (isVisitor && !isAdmin && !hasAccess && !isPosCompraRoute) {
+    logRouteStep('visitante bloqueada por permissão', { path: location.pathname, minPortal }, 'warn');
     return <LockedForVisitor />;
   }
 
-  if (!hasAccess) return <Navigate to="/dashboard" replace />;
+  if (!hasAccess) {
+    logRouteStep('fallback autenticado: redirecionando para /dashboard', {
+      from: location.pathname,
+      effectivePortal,
+      minPortal,
+    }, 'warn');
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return <>{children}</>;
 }
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading, user, isAuthReady, authError } = useAuth();
+  const location = useLocation();
   const { onboardingCompleted, isLoading: onboardingLoading, error: onboardingError } = useOnboarding();
 
-  if (!isAuthReady || isLoading) return <AuthLoading />;
-  if (!isAuthenticated) return <>{children}</>;
-  if (authError) return <AppRouteError title="Erro na autenticação" message={authError} />;
-  if (onboardingLoading) return <AuthLoading />;
-  if (onboardingError) return <AppRouteError title="Erro ao abrir sua jornada" message={onboardingError} />;
+  if (!isAuthReady || isLoading) {
+    logRouteStep('PublicRoute aguardando auth boot', { path: location.pathname, isAuthReady, isLoading });
+    return <AuthLoading />;
+  }
+
+  if (authError) {
+    logRouteStep('PublicRoute recebeu erro de autenticação', { path: location.pathname, authError }, 'error');
+    return <AppRouteError title="Erro na autenticação" message={authError} />;
+  }
+
+  if (!isAuthenticated) {
+    logRouteStep('PublicRoute sem sessão, exibindo rota pública', { path: location.pathname });
+    return <>{children}</>;
+  }
+
+  if (onboardingLoading) {
+    logRouteStep('PublicRoute aguardando onboarding', { path: location.pathname, userId: user?.id ?? null });
+    return <AuthLoading />;
+  }
+
+  if (onboardingError) {
+    logRouteStep('PublicRoute erro no onboarding', { path: location.pathname, onboardingError }, 'error');
+    return <AppRouteError title="Erro ao abrir sua jornada" message={onboardingError} />;
+  }
 
   const isAdmin = user?.portal === 'admin';
   if (!onboardingCompleted && !isAdmin) {
+    logRouteStep('definição da rota pós-login: /onboarding', {
+      from: location.pathname,
+      userId: user?.id ?? null,
+      onboardingCompleted,
+    }, 'warn');
     return <Navigate to="/onboarding" replace />;
   }
 
+  logRouteStep('definição da rota pós-login: /dashboard', {
+    from: location.pathname,
+    userId: user?.id ?? null,
+    portal: user?.portal ?? null,
+  });
   return <Navigate to="/dashboard" replace />;
 }
 
