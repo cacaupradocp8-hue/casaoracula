@@ -178,6 +178,8 @@ export function ClubeHomePage() {
             </Button>
           </motion.div>
         )}
+
+        <ExplorarCasaSection />
       </div>
     </AppLayout>
   );

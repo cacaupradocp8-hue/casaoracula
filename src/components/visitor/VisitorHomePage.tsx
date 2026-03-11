@@ -308,6 +308,8 @@ export function VisitorHomePage() {
             Ela ensina como sustentar processos humanos com consciência.
           </p>
         </motion.section>
+
+        <ExplorarCasaSection />
       </div>
     </AppLayout>
   );
