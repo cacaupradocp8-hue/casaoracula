@@ -121,7 +121,7 @@ export default function Notificacoes() {
                             {getTypeLabel(notification.type)}
                           </span>
                           <span className="text-xs text-muted-foreground">
-                            {format(new Date(notification.created_at), "dd 'de' MMMM 'às' HH:mm", { locale: ptBR })}
+                            {formatDateSafe(notification.created_at, "dd 'de' MMMM 'às' HH:mm", { locale: ptBR }, 'Data indisponível', 'notificacoes.created_at')}
                           </span>
                           <span className="text-xs text-muted-foreground">
                             ({formatDistanceToNow(new Date(notification.created_at), { addSuffix: true, locale: ptBR })})
