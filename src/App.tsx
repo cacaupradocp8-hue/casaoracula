@@ -364,9 +364,9 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
     return <AuthLoading />;
   }
 
+  // Onboarding error: fail-open — let user through to dashboard instead of blocking
   if (onboardingError && location.pathname !== '/onboarding') {
-    logRouteStep('falha ao carregar onboarding', { path: location.pathname, onboardingError }, 'error');
-    return <AppRouteError title="Erro ao abrir sua jornada" message={onboardingError} />;
+    logRouteStep('falha no onboarding, fail-open para dashboard', { path: location.pathname, onboardingError }, 'warn');
   }
 
   const isOnboardingRoute = location.pathname === '/onboarding';
