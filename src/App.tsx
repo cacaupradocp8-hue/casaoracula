@@ -1002,11 +1002,11 @@ function AppRoutes() {
         }
       />
 
-      {/* Ferramentas - Professional tools hub */}
+      {/* Ferramentas - Tools hub (accessible to all authenticated members) */}
       <Route
         path="/ferramentas"
         element={
-          <ProtectedRoute minPortal="mentorada">
+          <ProtectedRoute>
             <FerramentasHub />
           </ProtectedRoute>
         }
