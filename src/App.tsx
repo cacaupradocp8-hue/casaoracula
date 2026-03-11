@@ -250,15 +250,60 @@ function AuthLoading() {
   );
 }
 
+interface RootErrorBoundaryState {
+  hasError: boolean;
+  errorMessage: string | null;
+}
+
+class RootErrorBoundary extends React.Component<{ children: React.ReactNode }, RootErrorBoundaryState> {
+  state: RootErrorBoundaryState = {
+    hasError: false,
+    errorMessage: null,
+  };
+
+  static getDerivedStateFromError(error: Error): RootErrorBoundaryState {
+    return {
+      hasError: true,
+      errorMessage: error?.message || 'Ocorreu um erro inesperado.',
+    };
+  }
+
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    console.error('[root-error-boundary]', error, info);
+  }
+
+  render() {
+    if (!this.state.hasError) {
+      return this.props.children;
+    }
+
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-6">
+        <div className="w-full max-w-md rounded-xl border border-border bg-card p-6 text-center space-y-4">
+          <h1 className="text-xl font-semibold text-foreground">Aconteceu um erro na abertura</h1>
+          <p className="text-sm text-muted-foreground">{this.state.errorMessage}</p>
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
+          >
+            Recarregar app
+          </button>
+        </div>
+      </div>
+    );
+  }
+}
+
 // ProtectedRoute with preview mode support AND onboarding enforcement
 function ProtectedRoute({ children, minPortal = "visitante" }: { children: React.ReactNode; minPortal?: PortalType }) {
-  const { isLoading, isAuthenticated, user } = useAuth();
+  const { isLoading, isAuthenticated, user, isAuthReady } = useAuth();
   const preview = useAdminPreviewOptional();
   const location = useLocation();
   const { onboardingCompleted, isLoading: onboardingLoading } = useOnboarding();
 
-  // Wait for both auth and onboarding status to load
-  if (isLoading || onboardingLoading) return <AuthLoading />;
+  // Wait for auth session restoration + profile + onboarding status
+  if (!isAuthReady || isLoading || onboardingLoading) return <AuthLoading />;
   if (!isAuthenticated) return <Navigate to="/auth" replace />;
   
   const isOnboardingRoute = location.pathname === '/onboarding';
@@ -301,10 +346,10 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
 }
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading, user } = useAuth();
+  const { isAuthenticated, isLoading, user, isAuthReady } = useAuth();
   const { onboardingCompleted, isLoading: onboardingLoading } = useOnboarding();
 
-  if (isLoading || onboardingLoading) return <AuthLoading />;
+  if (!isAuthReady || isLoading || onboardingLoading) return <AuthLoading />;
   
   if (isAuthenticated) {
     const isAdmin = user?.portal === 'admin';
