@@ -21,16 +21,15 @@ export function HomeFormacaoSections({ userId }: Props) {
       try {
         const { data } = await supabase
           .from('v_formation_progress')
-          .select('completed_travessias, completed_rituals, total_travessias, total_rituals')
+          .select('completed_travessias, completed_rituals')
           .eq('user_id', userId)
           .limit(1);
 
         if (data && data[0]) {
           const t = Number(data[0].completed_travessias) || 0;
           const r = Number(data[0].completed_rituals) || 0;
-          const tt = Number(data[0].total_travessias) || 1;
-          const tr = Number(data[0].total_rituals) || 1;
-          setProgress({ travessias: t, rituals: r, total: Math.round(((t + r) / (tt + tr)) * 100) });
+          const estimatedTotal = Math.max(t + r, 1);
+          setProgress({ travessias: t, rituals: r, total: Math.min(Math.round((estimatedTotal / 20) * 100), 100) });
         }
       } catch (e) {
         console.error('Error loading formation progress:', e);
