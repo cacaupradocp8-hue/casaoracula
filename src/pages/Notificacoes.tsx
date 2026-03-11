@@ -154,7 +154,7 @@ export default function Notificacoes() {
                   
                   {notification.read_at && (
                     <p className="text-xs text-muted-foreground mt-4">
-                      Lida em {format(new Date(notification.read_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                      Lida em {formatDateSafe(notification.read_at, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }, 'data indisponível', 'notificacoes.read_at')}
                     </p>
                   )}
                 </CardContent>

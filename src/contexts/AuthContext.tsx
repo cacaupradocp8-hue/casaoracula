@@ -99,7 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           email: profile.email || '',
           name: profile.nome || '',
           portal: (role?.portal as PortalType) || 'visitante',
-          createdAt: new Date(profile.created_at),
+          createdAt: parseDateSafe(profile.created_at, 'auth-context.profile.created_at') ?? new Date(),
           avatarUrl: profile.avatar_url || undefined,
           isMatriculada: !!matricula,
         });

@@ -206,7 +206,7 @@ export default function DashboardMembro() {
                       </p>
                       <p className="text-xs text-muted-foreground/60 mt-1 flex items-center gap-1">
                         <Clock className="w-3 h-3" />
-                        {format(new Date(lastProgress.updatedAt), "dd/MM 'às' HH:mm")}
+                        {formatDateSafe(lastProgress.updatedAt, "dd/MM 'às' HH:mm", undefined, 'Data indisponível', 'dashboard-membro.last-progress.updated-at')}
                       </p>
                     </div>
                     <Button
