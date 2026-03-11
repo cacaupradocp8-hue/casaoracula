@@ -21,7 +21,7 @@ export function RitualSymbolicScreen({
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [timerStarted, setTimerStarted] = useState(false);
   const [timerCompleted, setTimerCompleted] = useState(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const duration = ritual?.duracao_segundos || 60;
 

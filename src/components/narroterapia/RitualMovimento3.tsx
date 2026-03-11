@@ -19,7 +19,7 @@ export default function RitualMovimento3({
   const [isLoading, setIsLoading] = useState(false);
   const [pausaIniciada, setPausaIniciada] = useState(pausaJaIniciada);
   const [mostrarBotao, setMostrarBotao] = useState(pausaJaIniciada);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Iniciar pausa automaticamente ao montar
   useEffect(() => {
