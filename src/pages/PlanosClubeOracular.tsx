@@ -230,20 +230,20 @@ export default function PlanosClubeOracular() {
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {[
-                  {
-                    name: 'Mensal',
-                    price: PRECO_MENSAL,
+                   {
+                    name: 'Plano Mensal',
+                    price: 'R$ 59,97/mês',
                     destaque: false,
-                    benefits: ['Acesso ao Portal Atual', 'Biblioteca de Portais', 'Laboratório 80/20', 'Jardins de registro'],
+                    benefits: ['Acesso ao Clube de Leitura Oracular', 'Reflexões semanais', 'Carta simbólica da semana', 'Comunidade da Casa Orácula'],
                     cta: 'Assinar Mensal',
                     url: CHECKOUT_MENSAL_URL,
                   },
                   {
-                    name: 'Anual — Melhor escolha',
-                    price: PRECO_ANUAL,
+                    name: 'Plano Anual',
+                    price: 'R$ 599,97/ano',
                     destaque: true,
-                    badge: 'Mais vantajoso',
-                    benefits: ['Tudo do Mensal', 'Mais economia', 'Ritmo contínuo de travessia', 'Compromisso com maturidade simbólica'],
+                    badge: 'Melhor valor',
+                    benefits: ['Acesso ao Clube de Leitura Oracular', 'Reflexões semanais', 'Carta simbólica da semana', 'Comunidade da Casa Orácula'],
                     cta: 'Assinar Anual',
                     url: CHECKOUT_ANUAL_URL,
                   },
