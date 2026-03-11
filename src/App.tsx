@@ -329,73 +329,60 @@ class RootErrorBoundary extends React.Component<{ children: React.ReactNode }, R
 
 // ProtectedRoute with preview mode support AND onboarding enforcement
 function ProtectedRoute({ children, minPortal = "visitante" }: { children: React.ReactNode; minPortal?: PortalType }) {
-  const { isLoading, isAuthenticated, user, isAuthReady } = useAuth();
+  const { isLoading, isAuthenticated, user, isAuthReady, authError } = useAuth();
   const preview = useAdminPreviewOptional();
   const location = useLocation();
-  const { onboardingCompleted, isLoading: onboardingLoading } = useOnboarding();
+  const { onboardingCompleted, isLoading: onboardingLoading, error: onboardingError } = useOnboarding();
 
-  // Wait for auth session restoration + profile + onboarding status
-  if (!isAuthReady || isLoading || onboardingLoading) return <AuthLoading />;
+  if (!isAuthReady || isLoading) return <AuthLoading />;
   if (!isAuthenticated) return <Navigate to="/auth" replace />;
-  
+  if (authError) return <AppRouteError title="Erro na autenticação" message={authError} />;
+  if (onboardingLoading) return <AuthLoading />;
+  if (onboardingError && location.pathname !== '/onboarding') {
+    return <AppRouteError title="Erro ao abrir sua jornada" message={onboardingError} />;
+  }
+
   const isOnboardingRoute = location.pathname === '/onboarding';
-  const isJornadaRoute = location.pathname === '/jornada';
-  const isSalaVisitanteRoute = location.pathname === '/sala-da-visitante';
-  const isPlanosRoute = location.pathname === '/planos';
   const isPosCompraRoute = location.pathname === '/pos-compra';
   const isAdmin = user?.portal === 'admin';
   const isVisitor = user?.portal === 'visitante';
-  
-  // FIRST TIME ONLY: Force onboarding if not completed (except if already on /onboarding)
-  // Once completed, user NEVER goes back to onboarding
+
   if (!onboardingCompleted && !isOnboardingRoute && !isAdmin) {
     return <Navigate to="/onboarding" replace />;
   }
-  
-  // ADMIN ALWAYS has access to admin routes, even in preview mode
-  // Preview mode only affects non-admin content visibility
+
   const isAdminRoute = minPortal === 'admin';
-  
-  // For admin routes: check ACTUAL portal, not effective portal
-  // For other routes: use effective portal (respects preview mode)
   const effectivePortal = preview?.isPreviewMode && preview?.previewPortal && user?.portal === 'admin' && !isAdminRoute
     ? preview.previewPortal
     : user?.portal || 'visitante';
-  
-  // Check access with appropriate portal
+
   const hasAccess = canAccessFeature(effectivePortal, minPortal);
-  
-  // VISITORS: Show blocking component for restricted content (not redirect!)
-  // Allowed routes for visitors: /jornada, /sala-da-visitante, /planos, /pos-compra, /onboarding
+
   if (isVisitor && !isAdmin && !hasAccess && !isPosCompraRoute) {
     return <LockedForVisitor />;
   }
-  
-  // Non-visitors without access go to dashboard (safe authenticated landing)
+
   if (!hasAccess) return <Navigate to="/dashboard" replace />;
 
   return <>{children}</>;
 }
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading, user, isAuthReady } = useAuth();
-  const { onboardingCompleted, isLoading: onboardingLoading } = useOnboarding();
+  const { isAuthenticated, isLoading, user, isAuthReady, authError } = useAuth();
+  const { onboardingCompleted, isLoading: onboardingLoading, error: onboardingError } = useOnboarding();
 
-  if (!isAuthReady || isLoading || onboardingLoading) return <AuthLoading />;
-  
-  if (isAuthenticated) {
-    const isAdmin = user?.portal === 'admin';
-    
-    // FIRST TIME ONLY: If onboarding NOT completed → force to onboarding
-    if (!onboardingCompleted && !isAdmin) {
-      return <Navigate to="/onboarding" replace />;
-    }
-    
-    // Authenticated home fallback
-    return <Navigate to="/dashboard" replace />;
+  if (!isAuthReady || isLoading) return <AuthLoading />;
+  if (!isAuthenticated) return <>{children}</>;
+  if (authError) return <AppRouteError title="Erro na autenticação" message={authError} />;
+  if (onboardingLoading) return <AuthLoading />;
+  if (onboardingError) return <AppRouteError title="Erro ao abrir sua jornada" message={onboardingError} />;
+
+  const isAdmin = user?.portal === 'admin';
+  if (!onboardingCompleted && !isAdmin) {
+    return <Navigate to="/onboarding" replace />;
   }
 
-  return <>{children}</>;
+  return <Navigate to="/dashboard" replace />;
 }
 
 // Legacy redirect components for old /curso/ routes
