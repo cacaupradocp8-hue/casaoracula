@@ -529,6 +529,14 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/mapa-casa"
+        element={
+          <ProtectedRoute>
+            <MapaCasaOracula />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/comece-aqui"
         element={
           <ProtectedRoute>
