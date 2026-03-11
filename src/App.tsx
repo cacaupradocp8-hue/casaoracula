@@ -434,13 +434,14 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
     return <AuthLoading />;
   }
 
+  // Onboarding error: fail-open — send to dashboard instead of blocking
   if (onboardingError) {
-    logRouteStep('PublicRoute erro no onboarding', { path: location.pathname, onboardingError }, 'error');
-    return <AppRouteError title="Erro ao abrir sua jornada" message={onboardingError} />;
+    logRouteStep('PublicRoute erro no onboarding, fail-open para dashboard', { path: location.pathname, onboardingError }, 'warn');
   }
 
   const isAdmin = user?.portal === 'admin';
-  if (!onboardingCompleted && !isAdmin) {
+  // Only redirect to onboarding if we successfully loaded status AND it's not completed
+  if (!onboardingCompleted && !onboardingError && !isAdmin) {
     logRouteStep('definição da rota pós-login: /onboarding', {
       from: location.pathname,
       userId: user?.id ?? null,
