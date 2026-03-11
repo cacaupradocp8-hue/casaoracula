@@ -250,6 +250,24 @@ function AuthLoading() {
   );
 }
 
+function AppRouteError({ title, message }: { title: string; message: string }) {
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center p-6">
+      <div className="w-full max-w-md rounded-xl border border-destructive/40 bg-destructive/10 p-6 text-center space-y-4">
+        <h1 className="text-xl font-semibold text-destructive">{title}</h1>
+        <p className="text-sm text-destructive/90">{message}</p>
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
+        >
+          Recarregar app
+        </button>
+      </div>
+    </div>
+  );
+}
+
 interface RootErrorBoundaryState {
   hasError: boolean;
   errorMessage: string | null;
@@ -261,11 +279,39 @@ class RootErrorBoundary extends React.Component<{ children: React.ReactNode }, R
     errorMessage: null,
   };
 
+  private handleWindowError = (event: ErrorEvent) => {
+    this.setState({
+      hasError: true,
+      errorMessage: event.error?.message || event.message || 'Erro inesperado de execução.',
+    });
+  };
+
+  private handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+    const reason = event.reason;
+    const message = reason instanceof Error
+      ? reason.message
+      : typeof reason === 'string'
+        ? reason
+        : 'Erro inesperado de execução.';
+
+    this.setState({ hasError: true, errorMessage: message });
+  };
+
   static getDerivedStateFromError(error: Error): RootErrorBoundaryState {
     return {
       hasError: true,
       errorMessage: error?.message || 'Ocorreu um erro inesperado.',
     };
+  }
+
+  componentDidMount() {
+    window.addEventListener('error', this.handleWindowError);
+    window.addEventListener('unhandledrejection', this.handleUnhandledRejection);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('error', this.handleWindowError);
+    window.removeEventListener('unhandledrejection', this.handleUnhandledRejection);
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
@@ -277,21 +323,7 @@ class RootErrorBoundary extends React.Component<{ children: React.ReactNode }, R
       return this.props.children;
     }
 
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-6">
-        <div className="w-full max-w-md rounded-xl border border-border bg-card p-6 text-center space-y-4">
-          <h1 className="text-xl font-semibold text-foreground">Aconteceu um erro na abertura</h1>
-          <p className="text-sm text-muted-foreground">{this.state.errorMessage}</p>
-          <button
-            type="button"
-            onClick={() => window.location.reload()}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
-          >
-            Recarregar app
-          </button>
-        </div>
-      </div>
-    );
+    return <AppRouteError title="Aconteceu um erro na abertura" message={this.state.errorMessage || 'Erro desconhecido.'} />;
   }
 }
 
