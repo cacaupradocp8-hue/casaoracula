@@ -242,6 +242,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { success: false, error: error.message };
       }
 
+      setAuthError(null);
       return { success: true };
     } catch (error) {
       return { success: false, error: 'Erro ao fazer login. Tente novamente.' };
