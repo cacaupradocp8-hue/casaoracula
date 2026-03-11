@@ -124,7 +124,7 @@ export default function Notificacoes() {
                             {formatDateSafe(notification.created_at, "dd 'de' MMMM 'às' HH:mm", { locale: ptBR }, 'Data indisponível', 'notificacoes.created_at')}
                           </span>
                           <span className="text-xs text-muted-foreground">
-                            ({formatDistanceToNow(new Date(notification.created_at), { addSuffix: true, locale: ptBR })})
+                            ({formatDistanceToNowSafe(notification.created_at, { addSuffix: true, locale: ptBR }, 'Agora há pouco', 'notificacoes.created_at.distance')})
                           </span>
                         </div>
                       </div>
