@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
 
-  const fetchUserProfile = async (userId: string) => {
+  const fetchUserProfile = async (userId: string): Promise<boolean> => {
     try {
       const [
         { data: profile, error: profileError },
@@ -76,9 +76,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         avatarUrl: profile.avatar_url || undefined,
         isMatriculada: !!matricula,
       });
+      setAuthError(null);
+      return true;
     } catch (error) {
       console.error('Error fetching user profile:', error);
       setUser(null);
+      setAuthError('Não foi possível carregar seu perfil agora. Tente recarregar.');
+      return false;
     }
   };
 
