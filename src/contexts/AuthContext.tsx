@@ -311,6 +311,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isLoading,
       isAuthReady,
       isAuthenticated: !!user && !!session,
+      authError,
       login,
       signup,
       logout,
