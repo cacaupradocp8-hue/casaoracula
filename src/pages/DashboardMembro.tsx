@@ -7,8 +7,8 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Play, Calendar, MessageCircle, ShoppingBag, BookOpen, Clock, ArrowRight, Users } from "lucide-react";
-import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { formatDateSafe } from "@/lib/date-safe";
 
 interface LastProgress {
   lessonTitle: string;
@@ -182,7 +182,7 @@ export default function DashboardMembro() {
             Bem-vinda, <span className="text-primary">{welcomeName}</span>
           </h1>
           <p className="text-muted-foreground text-sm">
-            {format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR })}
+            {formatDateSafe(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR }, 'Hoje', 'dashboard-membro.header-date')}
           </p>
         </motion.div>
 
@@ -206,7 +206,7 @@ export default function DashboardMembro() {
                       </p>
                       <p className="text-xs text-muted-foreground/60 mt-1 flex items-center gap-1">
                         <Clock className="w-3 h-3" />
-                        {format(new Date(lastProgress.updatedAt), "dd/MM 'às' HH:mm")}
+                        {formatDateSafe(lastProgress.updatedAt, "dd/MM 'às' HH:mm", undefined, 'Data indisponível', 'dashboard-membro.last-progress.updated-at')}
                       </p>
                     </div>
                     <Button

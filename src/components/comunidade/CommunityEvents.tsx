@@ -6,8 +6,8 @@ import { Calendar, ExternalLink, CheckCircle2, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { formatDateSafe, parseDateSafe } from '@/lib/date-safe';
 
 interface Evento {
   id: string; nome: string; descricao: string | null; data_evento: string;
@@ -63,42 +63,65 @@ export function CommunityEvents() {
     );
   }
 
-  const now = new Date();
-  const upcoming = events.filter(e => new Date(e.data_evento) >= now);
-  const past = events.filter(e => new Date(e.data_evento) < now);
+  const nowTime = Date.now();
+  const eventsWithParsedDate = events
+    .map((event) => ({
+      event,
+      parsedDate: parseDateSafe(event.data_evento, `community-events.${event.id}.data_evento`),
+    }))
+    .filter((item): item is { event: Evento; parsedDate: Date } => item.parsedDate !== null);
+
+  if (eventsWithParsedDate.length !== events.length) {
+    console.warn('[boot-debug][community-events] eventos ignorados por data inválida', {
+      total: events.length,
+      validos: eventsWithParsedDate.length,
+    });
+  }
+
+  if (eventsWithParsedDate.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <Calendar className="w-10 h-10 mx-auto text-primary/40 mb-3" />
+        <p className="text-muted-foreground">Eventos disponíveis, mas com data indisponível no momento.</p>
+      </div>
+    );
+  }
+
+  const upcoming = eventsWithParsedDate.filter(({ parsedDate }) => parsedDate.getTime() >= nowTime);
+  const past = eventsWithParsedDate.filter(({ parsedDate }) => parsedDate.getTime() < nowTime);
 
   return (
     <div className="space-y-6">
       {upcoming.length > 0 && (
         <div className="space-y-3">
           <h3 className="text-sm font-medium text-foreground">Próximos Eventos</h3>
-          {upcoming.map(e => (
-            <Card key={e.id} className="bg-[#0F2438] border-primary/10">
+          {upcoming.map(({ event, parsedDate }) => (
+            <Card key={event.id} className="bg-[#0F2438] border-primary/10">
               <CardContent className="py-4 space-y-2">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <p className="text-sm font-medium text-foreground">{e.nome}</p>
+                    <p className="text-sm font-medium text-foreground">{event.nome}</p>
                     <p className="text-xs text-primary flex items-center gap-1 mt-0.5">
                       <Calendar className="w-3 h-3" />
-                      {format(new Date(e.data_evento), "dd 'de' MMMM, HH:mm", { locale: ptBR })}
+                      {formatDateSafe(parsedDate, "dd 'de' MMMM, HH:mm", { locale: ptBR }, 'Data indisponível', `community-events.${event.id}.upcoming`)}
                     </p>
                   </div>
-                  <Badge className={TIPO_STYLES[e.tipo] || 'bg-muted text-muted-foreground'}>{e.tipo}</Badge>
+                  <Badge className={TIPO_STYLES[event.tipo] || 'bg-muted text-muted-foreground'}>{event.tipo}</Badge>
                 </div>
-                {e.descricao && <p className="text-xs text-muted-foreground">{e.descricao}</p>}
+                {event.descricao && <p className="text-xs text-muted-foreground">{event.descricao}</p>}
                 <div className="flex items-center gap-2 pt-1">
-                  <Button size="sm" onClick={() => toggleParticipation(e)}
-                    variant={e.participating ? 'outline' : 'default'}
-                    className={e.participating ? 'border-emerald-500/30 text-emerald-400' : 'bg-primary text-primary-foreground'}>
-                    {e.participating && <CheckCircle2 className="w-3 h-3 mr-1" />}
-                    {e.participating ? 'Participando' : 'Participar'}
+                  <Button size="sm" onClick={() => toggleParticipation(event)}
+                    variant={event.participating ? 'outline' : 'default'}
+                    className={event.participating ? 'border-emerald-500/30 text-emerald-400' : 'bg-primary text-primary-foreground'}>
+                    {event.participating && <CheckCircle2 className="w-3 h-3 mr-1" />}
+                    {event.participating ? 'Participando' : 'Participar'}
                   </Button>
-                  {e.link && (
+                  {event.link && (
                     <Button size="sm" variant="ghost" asChild className="text-muted-foreground">
-                      <a href={e.link} target="_blank" rel="noopener noreferrer"><ExternalLink className="w-3 h-3 mr-1" /> Link</a>
+                      <a href={event.link} target="_blank" rel="noopener noreferrer"><ExternalLink className="w-3 h-3 mr-1" /> Link</a>
                     </Button>
                   )}
-                  <span className="text-xs text-muted-foreground ml-auto">{e.participantes_count} participantes</span>
+                  <span className="text-xs text-muted-foreground ml-auto">{event.participantes_count} participantes</span>
                 </div>
               </CardContent>
             </Card>
@@ -109,14 +132,16 @@ export function CommunityEvents() {
       {past.length > 0 && (
         <div className="space-y-3">
           <h3 className="text-sm font-medium text-muted-foreground">Eventos Passados</h3>
-          {past.map(e => (
-            <Card key={e.id} className="bg-[#0F2438] border-muted/10 opacity-60">
+          {past.map(({ event, parsedDate }) => (
+            <Card key={event.id} className="bg-[#0F2438] border-muted/10 opacity-60">
               <CardContent className="py-3 flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-foreground">{e.nome}</p>
-                  <p className="text-xs text-muted-foreground">{format(new Date(e.data_evento), "dd/MM/yyyy", { locale: ptBR })}</p>
+                  <p className="text-sm text-foreground">{event.nome}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {formatDateSafe(parsedDate, 'dd/MM/yyyy', { locale: ptBR }, 'Data indisponível', `community-events.${event.id}.past`)}
+                  </p>
                 </div>
-                <Badge className={TIPO_STYLES[e.tipo] || ''} variant="outline">{e.tipo}</Badge>
+                <Badge className={TIPO_STYLES[event.tipo] || ''} variant="outline">{event.tipo}</Badge>
               </CardContent>
             </Card>
           ))}

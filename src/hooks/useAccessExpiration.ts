@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { parseISO, isValid } from 'date-fns';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import { parseDateSafe } from '@/lib/date-safe';
 
 interface AccessExpirationInfo {
   daysUntilExpiration: number | null;
@@ -74,8 +74,12 @@ export function useAccessExpiration(): AccessExpirationInfo {
           accessExpiresAtRaw: profile.access_expires_at,
         });
 
-        const parsedDate = parseISO(profile.access_expires_at);
-        if (!isValid(parsedDate)) {
+        const parsedDate = parseDateSafe(
+          profile.access_expires_at,
+          'access-expiration.access_expires_at'
+        );
+
+        if (!parsedDate) {
           console.warn(`${LOG_PREFIX} parsing de datas inválido`, {
             accessExpiresAtRaw: profile.access_expires_at,
           });

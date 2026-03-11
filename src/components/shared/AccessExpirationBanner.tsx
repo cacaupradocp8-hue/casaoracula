@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, Clock, XCircle, CreditCard } from 'lucide-react';
-import { format, isValid } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { formatDateSafe } from '@/lib/date-safe';
 
 export function AccessExpirationBanner() {
   const navigate = useNavigate();
@@ -48,9 +48,9 @@ export function AccessExpirationBanner() {
             {daysUntilExpiration === 1
               ? 'Seu acesso expira amanhã.'
               : `Seu acesso expira em ${daysUntilExpiration} dias.`}
-            {accessExpiresAt && isValid(accessExpiresAt) && (
+            {accessExpiresAt && (
               <span className="ml-1 text-muted-foreground">
-                ({format(accessExpiresAt, "dd 'de' MMMM", { locale: ptBR })})
+                ({formatDateSafe(accessExpiresAt, "dd 'de' MMMM", { locale: ptBR }, 'data indisponível', 'access-expiration-banner')})
               </span>
             )}
             <span className="ml-1">Deseja manter seu espaço ativo?</span>

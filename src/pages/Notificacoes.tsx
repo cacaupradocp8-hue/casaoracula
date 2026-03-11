@@ -3,8 +3,8 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useNotifications } from '@/hooks/useNotifications';
-import { formatDistanceToNow, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { formatDateSafe, formatDistanceToNowSafe } from '@/lib/date-safe';
 import { Bell, Check, CheckCheck, Home, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -121,10 +121,10 @@ export default function Notificacoes() {
                             {getTypeLabel(notification.type)}
                           </span>
                           <span className="text-xs text-muted-foreground">
-                            {format(new Date(notification.created_at), "dd 'de' MMMM 'às' HH:mm", { locale: ptBR })}
+                            {formatDateSafe(notification.created_at, "dd 'de' MMMM 'às' HH:mm", { locale: ptBR }, 'Data indisponível', 'notificacoes.created_at')}
                           </span>
                           <span className="text-xs text-muted-foreground">
-                            ({formatDistanceToNow(new Date(notification.created_at), { addSuffix: true, locale: ptBR })})
+                            ({formatDistanceToNowSafe(notification.created_at, { addSuffix: true, locale: ptBR }, 'Agora há pouco', 'notificacoes.created_at.distance')})
                           </span>
                         </div>
                       </div>
@@ -154,7 +154,7 @@ export default function Notificacoes() {
                   
                   {notification.read_at && (
                     <p className="text-xs text-muted-foreground mt-4">
-                      Lida em {format(new Date(notification.read_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                      Lida em {formatDateSafe(notification.read_at, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }, 'data indisponível', 'notificacoes.read_at')}
                     </p>
                   )}
                 </CardContent>
