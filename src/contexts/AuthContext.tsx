@@ -161,6 +161,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!isMounted) return;
         setSession(null);
         setUser(null);
+        setAuthError('Não conseguimos restaurar sua sessão. Recarregue para tentar novamente.');
         setIsLoading(false);
         setIsAuthReady(true);
       });
