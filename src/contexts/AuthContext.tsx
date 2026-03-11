@@ -281,6 +281,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut();
     setUser(null);
     setSession(null);
+    setAuthError(null);
   };
 
   const canAccess = (requiredPortal: PortalType): boolean => {
