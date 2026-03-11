@@ -18,6 +18,7 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthReady: boolean;
   isAuthenticated: boolean;
+  authError: string | null;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signup: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
@@ -34,8 +35,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthReady, setIsAuthReady] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
-  const fetchUserProfile = async (userId: string) => {
+  const fetchUserProfile = async (userId: string): Promise<boolean> => {
     try {
       const [
         { data: profile, error: profileError },
@@ -74,9 +76,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         avatarUrl: profile.avatar_url || undefined,
         isMatriculada: !!matricula,
       });
+      setAuthError(null);
+      return true;
     } catch (error) {
       console.error('Error fetching user profile:', error);
       setUser(null);
+      setAuthError('Não foi possível carregar seu perfil agora. Tente recarregar.');
+      return false;
     }
   };
 
@@ -123,12 +129,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (!nextSession?.user) {
         setUser(null);
+        setAuthError(null);
         setIsLoading(false);
         if (isInitialSync) setIsAuthReady(true);
         return;
       }
 
       setIsLoading(true);
+      setAuthError(null);
       setTimeout(() => {
         void fetchUserProfile(nextSession.user.id).finally(() => {
           if (!isMounted) return;
@@ -153,6 +161,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!isMounted) return;
         setSession(null);
         setUser(null);
+        setAuthError('Não conseguimos restaurar sua sessão. Recarregue para tentar novamente.');
         setIsLoading(false);
         setIsAuthReady(true);
       });
@@ -233,6 +242,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { success: false, error: error.message };
       }
 
+      setAuthError(null);
       return { success: true };
     } catch (error) {
       return { success: false, error: 'Erro ao fazer login. Tente novamente.' };
@@ -271,6 +281,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut();
     setUser(null);
     setSession(null);
+    setAuthError(null);
   };
 
   const canAccess = (requiredPortal: PortalType): boolean => {
@@ -300,6 +311,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isLoading,
       isAuthReady,
       isAuthenticated: !!user && !!session,
+      authError,
       login,
       signup,
       logout,

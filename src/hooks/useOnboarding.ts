@@ -28,7 +28,7 @@ const ARCHETYPE_SYMBOLS: Record<ArchetypeType, { symbol: string; phrase: string 
 };
 
 export function useOnboarding() {
-  const { user } = useAuth();
+  const { user, isAuthReady, isAuthenticated } = useAuth();
   const [data, setData] = useState<OnboardingData>({
     entryArchetype: null,
     entrySymbol: null,
@@ -36,25 +36,35 @@ export function useOnboarding() {
     isLoading: true,
     error: null,
   });
-  
-  // Track if we've already fetched to prevent duplicate calls
+
   const hasFetchedRef = useRef(false);
   const currentUserIdRef = useRef<string | null>(null);
 
   const fetchOnboardingStatus = useCallback(async () => {
-    if (!user?.id) {
-      setData(prev => ({ ...prev, isLoading: false }));
+    if (!isAuthReady) {
+      setData(prev => ({ ...prev, isLoading: true, error: null }));
       return;
     }
 
-    // Prevent duplicate fetches for the same user
+    if (!isAuthenticated || !user?.id) {
+      setData(prev => ({
+        ...prev,
+        entryArchetype: null,
+        entrySymbol: null,
+        onboardingCompleted: false,
+        isLoading: false,
+        error: null,
+      }));
+      return;
+    }
+
     if (hasFetchedRef.current && currentUserIdRef.current === user.id) {
       return;
     }
 
     try {
       setData(prev => ({ ...prev, isLoading: true, error: null }));
-      
+
       const { data: profile, error } = await supabase
         .from('profiles')
         .select('entry_archetype, entry_symbol, onboarding_completed')
@@ -75,27 +85,21 @@ export function useOnboarding() {
       });
     } catch (error) {
       console.error('Error fetching onboarding status:', error);
-      setData(prev => ({ 
-        ...prev, 
-        isLoading: false, 
-        error: 'Erro ao carregar status. Tente novamente.' 
+      setData(prev => ({
+        ...prev,
+        isLoading: false,
+        error: 'Erro ao carregar o onboarding. Recarregue para tentar novamente.',
       }));
     }
-  }, [user?.id]);
+  }, [isAuthReady, isAuthenticated, user?.id]);
 
   useEffect(() => {
-    // Reset fetch state when user changes
     if (user?.id !== currentUserIdRef.current) {
       hasFetchedRef.current = false;
     }
 
-    if (!user?.id) {
-      setData(prev => ({ ...prev, isLoading: false }));
-      return;
-    }
-
-    fetchOnboardingStatus();
-  }, [user?.id, fetchOnboardingStatus]);
+    void fetchOnboardingStatus();
+  }, [user?.id, isAuthReady, isAuthenticated, fetchOnboardingStatus]);
 
   const saveArchetype = useCallback(async (archetype: ArchetypeType): Promise<boolean> => {
     if (!user?.id) return false;

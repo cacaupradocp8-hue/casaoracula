@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { parseISO, isValid } from 'date-fns';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -9,65 +10,91 @@ interface AccessExpirationInfo {
   accessExpiresAt: Date | null;
   subscriptionStatus: string;
   hasActiveSubscription: boolean;
+  error: string | null;
 }
+
+const INITIAL_INFO: AccessExpirationInfo = {
+  daysUntilExpiration: null,
+  isExpired: false,
+  isExpiringSoon: false,
+  accessExpiresAt: null,
+  subscriptionStatus: 'none',
+  hasActiveSubscription: false,
+  error: null,
+};
 
 export function useAccessExpiration(): AccessExpirationInfo {
   const { user } = useAuth();
-  const [info, setInfo] = useState<AccessExpirationInfo>({
-    daysUntilExpiration: null,
-    isExpired: false,
-    isExpiringSoon: false,
-    accessExpiresAt: null,
-    subscriptionStatus: 'none',
-    hasActiveSubscription: false,
-  });
+  const [info, setInfo] = useState<AccessExpirationInfo>(INITIAL_INFO);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setInfo(INITIAL_INFO);
+      return;
+    }
 
     const fetchExpirationInfo = async () => {
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('access_expires_at, subscription_status, portal')
-        .eq('id', user.id)
-        .single();
+      try {
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('access_expires_at, subscription_status, portal')
+          .eq('id', user.id)
+          .single();
 
-      if (error || !profile) {
-        console.error('Error fetching profile:', error);
-        return;
-      }
+        if (error || !profile) {
+          throw error;
+        }
 
-      const subscriptionStatus = profile.subscription_status || 'none';
-      const hasActiveSubscription = subscriptionStatus === 'active';
-      
-      if (hasActiveSubscription || !profile.access_expires_at) {
+        const subscriptionStatus = profile.subscription_status || 'none';
+        const hasActiveSubscription = subscriptionStatus === 'active';
+
+        if (hasActiveSubscription || !profile.access_expires_at) {
+          setInfo({
+            daysUntilExpiration: null,
+            isExpired: false,
+            isExpiringSoon: false,
+            accessExpiresAt: null,
+            subscriptionStatus,
+            hasActiveSubscription,
+            error: null,
+          });
+          return;
+        }
+
+        const parsedDate = parseISO(profile.access_expires_at);
+        if (!isValid(parsedDate)) {
+          setInfo({
+            ...INITIAL_INFO,
+            subscriptionStatus,
+            hasActiveSubscription,
+            error: 'Não foi possível interpretar a data de expiração do acesso.',
+          });
+          return;
+        }
+
+        const now = new Date();
+        const diffTime = parsedDate.getTime() - now.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
         setInfo({
-          daysUntilExpiration: null,
-          isExpired: false,
-          isExpiringSoon: false,
-          accessExpiresAt: null,
+          daysUntilExpiration: diffDays,
+          isExpired: diffDays <= 0,
+          isExpiringSoon: diffDays > 0 && diffDays <= 7,
+          accessExpiresAt: parsedDate,
           subscriptionStatus,
           hasActiveSubscription,
+          error: null,
         });
-        return;
+      } catch (fetchError) {
+        console.error('Error fetching profile:', fetchError);
+        setInfo({
+          ...INITIAL_INFO,
+          error: 'Não foi possível carregar o status do seu acesso.',
+        });
       }
-
-      const expiresAt = new Date(profile.access_expires_at);
-      const now = new Date();
-      const diffTime = expiresAt.getTime() - now.getTime();
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      
-      setInfo({
-        daysUntilExpiration: diffDays,
-        isExpired: diffDays <= 0,
-        isExpiringSoon: diffDays > 0 && diffDays <= 7,
-        accessExpiresAt: expiresAt,
-        subscriptionStatus,
-        hasActiveSubscription,
-      });
     };
 
-    fetchExpirationInfo();
+    void fetchExpirationInfo();
   }, [user]);
 
   return info;

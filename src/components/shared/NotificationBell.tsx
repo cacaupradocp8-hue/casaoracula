@@ -1,4 +1,4 @@
-import { Bell } from 'lucide-react';
+import { Bell, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
@@ -30,7 +30,7 @@ function formatNotificationTime(createdAt: string) {
 }
 
 export function NotificationBell() {
-  const { notifications, unreadCount, markAsRead, markAllAsRead, isLoading } = useNotifications();
+  const { notifications, unreadCount, markAsRead, markAllAsRead, isLoading, error, refetch } = useNotifications();
 
   const recentNotifications = notifications.slice(0, 5);
 
@@ -65,6 +65,17 @@ export function NotificationBell() {
           {isLoading ? (
             <div className="p-4 text-center text-muted-foreground">
               Carregando...
+            </div>
+          ) : error ? (
+            <div className="p-4 space-y-2 text-center text-destructive">
+              <div className="flex items-center justify-center gap-2">
+                <AlertTriangle className="h-4 w-4" />
+                <span className="text-sm">Erro ao carregar notificações</span>
+              </div>
+              <p className="text-xs text-destructive/80">{error}</p>
+              <Button size="sm" variant="outline" onClick={() => refetch()}>
+                Tentar novamente
+              </Button>
             </div>
           ) : recentNotifications.length === 0 ? (
             <div className="p-4 text-center text-muted-foreground">
