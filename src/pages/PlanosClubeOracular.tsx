@@ -69,7 +69,7 @@ export default function PlanosClubeOracular() {
         <section className="py-12 sm:py-20 text-center px-6">
           <motion.div {...fadeUp} className="max-w-2xl mx-auto space-y-6">
             <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground tracking-tight leading-tight">
-              Círculo de Leitura Oracular
+              Clube de Leitura Oracular
             </h1>
             <p className="text-lg text-muted-foreground max-w-lg mx-auto">
               Leitura vira competência. Portal vira prática.
