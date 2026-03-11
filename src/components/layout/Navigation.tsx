@@ -22,7 +22,7 @@ import {
   DropdownMenuSubTrigger, DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu';
 
-// ── VISITANTE / GRATUITO (máx 5 itens) ──────────────────────────────────────
+// ── VISITANTE / GRATUITO ─────────────────────────────────────────────────────
 const visitanteMenuGroups = () => [
   { key: 'inicio', label: 'Início', icon: Home, path: '/jornada', subitems: [] },
   { key: 'comece-aqui', label: 'Comece por Aqui', icon: Compass, path: '/comece-aqui', subitems: [] },
@@ -32,9 +32,10 @@ const visitanteMenuGroups = () => [
   { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
 
-// ── ASSINANTE DO CLUBE (máx 7 itens) ────────────────────────────────────────
+// ── ASSINANTE DO CLUBE ──────────────────────────────────────────────────────
 const assinanteMenuGroups = () => [
   { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'mapa', label: 'Mapa da Casa', icon: Map, path: '/mapa-casa', subitems: [] },
   { key: 'clube', label: 'Clube de Leitura', icon: BookOpen, path: '/clube-livro', subitems: [] },
   { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
   { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/comunidade', subitems: [] },
@@ -43,9 +44,10 @@ const assinanteMenuGroups = () => [
   { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
 
-// ── ALUNA DE FORMAÇÃO (máx 7 itens) ─────────────────────────────────────────
+// ── ALUNA DE FORMAÇÃO ───────────────────────────────────────────────────────
 const alunaMenuGroups = () => [
   { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'mapa', label: 'Mapa da Casa', icon: Map, path: '/mapa-casa', subitems: [] },
   { key: 'clube', label: 'Clube de Leitura', icon: BookOpen, path: '/clube-livro', subitems: [] },
   {
     key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/formacao-metodo',
@@ -55,8 +57,9 @@ const alunaMenuGroups = () => [
       { label: 'Cursos', path: '/cursos' },
     ],
   },
+  { key: 'treinamento', label: 'Sala de Treinamento', icon: Compass, path: '/sala-treinamento', subitems: [] },
+  { key: 'casa-maquinas', label: 'Casa das Máquinas', icon: Cog, path: '/casa-das-maquinas', subitems: [] },
   { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/comunidade', subitems: [] },
-  { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas', subitems: [] },
   { key: 'conta', label: 'Perfil', icon: User, path: '/minha-conta', subitems: [] },
   { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
