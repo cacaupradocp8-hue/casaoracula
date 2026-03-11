@@ -3,10 +3,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { Sparkles, Heart, Shield, Compass, Moon, Eye, Users, ClipboardList, Library, BookOpen, Music } from "lucide-react";
+import { Sparkles, Heart, Shield, Compass, Moon, Eye, Users, ClipboardList, Library, BookOpen, Music, Wrench } from "lucide-react";
 import { useCopy } from "@/hooks/useCopy";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { canAccessFeature } from "@/types/portal";
 
 export default function Dashboard() {
@@ -18,6 +18,9 @@ export default function Dashboard() {
   const welcomeName = user?.name?.split(' ')[0] || 'Visitante';
   const isProfessionalLevel = user && canAccessFeature(user.portal, 'aluna');
 
+  // Route members (non-visitor, non-admin) to member dashboard
+  const isMember = user && user.portal !== 'visitante' && user.portal !== 'admin';
+
   useEffect(() => {
     console.info('[boot-debug][dashboard] render do dashboard', {
       userId: user?.id ?? null,
@@ -28,19 +31,16 @@ export default function Dashboard() {
   useEffect(() => {
     const checkProfessionalStatus = async () => {
       if (!user) {
-        console.info('[boot-debug][dashboard] sem usuário, pulando validação profissional');
         setIsProfessionalVerified(false);
         return;
       }
 
       if (user.portal === 'admin') {
-        console.info('[boot-debug][dashboard] admin detectada, validação profissional bypass');
         setIsProfessionalVerified(true);
         return;
       }
 
       try {
-        console.info('[boot-debug][dashboard] carregando status profissional');
         const { data: profile } = await supabase
           .from('profiles')
           .select('is_professional_verified, role')
@@ -57,6 +57,11 @@ export default function Dashboard() {
 
     checkProfessionalStatus();
   }, [user]);
+
+  // Redirect members to their dashboard after hooks
+  if (isMember) {
+    return <Navigate to="/dashboard-membro" replace />;
+  }
 
   const showProfessionalShortcuts = isProfessionalLevel && isProfessionalVerified;
 
