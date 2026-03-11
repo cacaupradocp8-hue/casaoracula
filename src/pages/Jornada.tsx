@@ -293,7 +293,18 @@ export default function Jornada() {
           </div>
         </section>
 
+        {/* ═══ SEÇÕES POR ESTÁGIO ═══ */}
+        {canAccessFeature(user.portal, 'oracula') && user.id && (
+          <HomeTerapeutaSections userId={user.id} />
+        )}
+        {canAccessFeature(user.portal, 'aluna') && user.id && (
+          <HomeFormacaoSections userId={user.id} />
+        )}
+
         <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+
+        {/* ═══ EXPLORAR A CASA ═══ */}
+        <ExplorarCasaSection />
       </div>
     </AppLayout>
   );
