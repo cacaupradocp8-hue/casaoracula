@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { parseISO, isValid } from 'date-fns';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import { parseDateSafe } from '@/lib/date-safe';
 
 interface AccessExpirationInfo {
   daysUntilExpiration: number | null;

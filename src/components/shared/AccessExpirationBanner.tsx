@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, Clock, XCircle, CreditCard } from 'lucide-react';
-import { format, isValid } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { formatDateSafe } from '@/lib/date-safe';
 
 export function AccessExpirationBanner() {
   const navigate = useNavigate();

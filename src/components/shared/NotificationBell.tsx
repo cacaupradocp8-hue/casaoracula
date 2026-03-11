@@ -7,8 +7,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { useNotifications } from '@/hooks/useNotifications';
-import { formatDistanceToNow, parseISO, isValid } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { formatDistanceToNowSafe } from '@/lib/date-safe';
 import { cn } from '@/lib/utils';
 
 function formatNotificationTime(createdAt: string | null | undefined) {

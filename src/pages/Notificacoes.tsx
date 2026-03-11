@@ -3,8 +3,8 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useNotifications } from '@/hooks/useNotifications';
-import { formatDistanceToNow, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { formatDateSafe, formatDistanceToNowSafe } from '@/lib/date-safe';
 import { Bell, Check, CheckCheck, Home, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { PortalType, canAccessFeature, getCaseLimit } from '@/types/portal';
+import { parseDateSafe } from '@/lib/date-safe';
 
 interface User {
   id: string;
