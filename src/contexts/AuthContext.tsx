@@ -36,6 +36,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
+  const AUTH_BOOT_LOG_PREFIX = '[boot-debug][auth-context]';
+
+  const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const fetchUserProfile = async (userId: string): Promise<boolean> => {
     try {
