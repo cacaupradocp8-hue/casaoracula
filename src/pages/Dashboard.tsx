@@ -3,10 +3,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { Sparkles, Heart, Shield, Compass, Moon, Eye, Users, ClipboardList, Library, BookOpen, Music } from "lucide-react";
+import { Sparkles, Heart, Shield, Compass, Moon, Eye, Users, ClipboardList, Library, BookOpen, Music, Wrench } from "lucide-react";
 import { useCopy } from "@/hooks/useCopy";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { canAccessFeature } from "@/types/portal";
 
 export default function Dashboard() {
