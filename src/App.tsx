@@ -1987,7 +1987,9 @@ const App = () => (
         <AuthProvider>
           <AdminPreviewProvider>
             <AppDomainProvider>
-              <AppRoutes />
+              <RootErrorBoundary>
+                <AppRoutes />
+              </RootErrorBoundary>
             </AppDomainProvider>
           </AdminPreviewProvider>
         </AuthProvider>
