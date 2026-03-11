@@ -34,7 +34,7 @@ export function AccessExpirationBanner() {
             {daysUntilExpiration === 1 
               ? 'Seu acesso expira amanhã.' 
               : `Seu acesso expira em ${daysUntilExpiration} dias.`}
-            {accessExpiresAt && (
+            {accessExpiresAt && isValid(accessExpiresAt) && (
               <span className="ml-1 text-muted-foreground">
                 ({format(accessExpiresAt, "dd 'de' MMMM", { locale: ptBR })})
               </span>
