@@ -129,12 +129,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (!nextSession?.user) {
         setUser(null);
+        setAuthError(null);
         setIsLoading(false);
         if (isInitialSync) setIsAuthReady(true);
         return;
       }
 
       setIsLoading(true);
+      setAuthError(null);
       setTimeout(() => {
         void fetchUserProfile(nextSession.user.id).finally(() => {
           if (!isMounted) return;
