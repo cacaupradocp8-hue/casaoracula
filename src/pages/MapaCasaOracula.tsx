@@ -2,253 +2,191 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { useEffectivePortal } from '@/hooks/useEffectivePortal';
 import {
   DoorOpen, BookOpen, GraduationCap, Wrench, Cog, Users,
-  ArrowRight, ChevronRight, Compass, Map,
+  Sparkles, ChevronRight, MapPin, ArrowRight,
 } from 'lucide-react';
 
 const fade = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
-  transition: { duration: 0.6, delay },
+  transition: { duration: 0.5, delay },
 });
 
-/* ── DADOS DOS CAMINHOS ─────────────────────────────────────────── */
-const caminhos = [
+const espacos = [
   {
     titulo: 'Sala de Visitas',
-    descricao: 'Porta de entrada para visitantes. Inclui vídeo de boas-vindas, quiz da voz e travessia inicial.',
+    descricao: 'Primeiro contato com a Casa Orácula. Aqui acontecem o Quiz da Voz e as primeiras travessias simbólicas.',
     icon: DoorOpen,
     cta: 'Explorar',
     rota: '/experiencia-gratuita',
+    portalMin: 'visitante' as const,
   },
   {
     titulo: 'Clube de Leitura Oracular',
-    descricao: 'Espaço de leitura simbólica, reflexão e comunidade.',
+    descricao: 'Espaço de estudo simbólico e reflexão junguiana aplicada.',
     icon: BookOpen,
     cta: 'Entrar no Clube',
     rota: '/clube-livro',
+    portalMin: 'assinante' as const,
   },
   {
-    titulo: 'Formação no Método Orácula',
-    descricao: 'Formação profissional para terapeutas e facilitadoras.',
+    titulo: 'Formação no Método',
+    descricao: 'Programa de formação para terapeutas que desejam aprender o Método Orácula.',
     icon: GraduationCap,
     cta: 'Conhecer a Formação',
     rota: '/cursos',
+    portalMin: 'aluna' as const,
   },
   {
     titulo: 'Sala de Treinamento',
-    descricao: 'Ambiente de prática das ferramentas do método.',
+    descricao: 'Ambiente seguro para praticar ferramentas e estudar casos.',
     icon: Wrench,
     cta: 'Acessar Treinamento',
     rota: '/sala-treinamento',
+    portalMin: 'aluna' as const,
   },
   {
     titulo: 'Casa das Máquinas',
-    descricao: 'SaaS profissional para terapeutas acompanharem clientes e conduzirem sessões.',
+    descricao: 'SaaS profissional para condução de sessões e acompanhamento de clientes.',
     icon: Cog,
     cta: 'Acessar o SaaS',
     rota: '/casa-das-maquinas',
+    portalMin: 'oracula' as const,
   },
   {
-    titulo: 'Comunidade',
-    descricao: 'Espaço de partilha, trocas e aprofundamento coletivo.',
+    titulo: 'Comunidade (Casa das Tecelãs)',
+    descricao: 'Rede de facilitadoras e espaço de trocas profissionais.',
     icon: Users,
     cta: 'Entrar na Comunidade',
     rota: '/comunidade',
+    portalMin: 'aluna' as const,
+  },
+  {
+    titulo: 'Portais de Especialização',
+    descricao: 'Caminhos avançados de aprofundamento dentro do método.',
+    icon: Sparkles,
+    cta: 'Explorar Portais',
+    rota: '/portais-especializacao',
+    portalMin: 'oracula' as const,
   },
 ];
 
-const estagios = [
-  'Visitante',
-  'Buscadora',
-  'Habitante da Casa',
-  'Aluna em Formação',
-  'Facilitadora',
-  'Terapeuta na Casa das Máquinas',
-];
+function getUserStage(portal: string) {
+  if (portal === 'admin' || portal === 'oracula' || portal === 'iniciada') return 'oracula';
+  if (portal === 'aluna' || portal === 'aluna_formacao' || portal === 'pre_iniciada') return 'aluna';
+  if (portal === 'assinante') return 'assinante';
+  return 'visitante';
+}
 
-const camadas = [
-  {
-    numero: 1,
-    titulo: 'Exploração',
-    descricao: 'Sala de Visitas e Travessia 00',
-    cor: 'from-emerald-900/30 to-emerald-800/10',
-    borda: 'border-emerald-700/30',
-  },
-  {
-    numero: 2,
-    titulo: 'Estudo e Pertencimento',
-    descricao: 'Clube, Formação, Comunidade',
-    cor: 'from-blue-900/30 to-blue-800/10',
-    borda: 'border-blue-700/30',
-  },
-  {
-    numero: 3,
-    titulo: 'Prática Profissional',
-    descricao: 'Sala de Treinamento e Casa das Máquinas',
-    cor: 'from-amber-900/30 to-amber-800/10',
-    borda: 'border-amber-700/30',
-  },
-];
+function getHighlightIndex(stage: string): number {
+  if (stage === 'oracula') return 4; // Casa das Máquinas
+  if (stage === 'aluna') return 2;   // Formação
+  if (stage === 'assinante') return 1; // Clube
+  return 0; // Sala de Visitas
+}
 
 export default function MapaCasaOracula() {
   const navigate = useNavigate();
+  const { effectivePortal } = useEffectivePortal();
+  const stage = getUserStage(effectivePortal);
+  const highlightIdx = getHighlightIndex(stage);
 
   return (
     <AppLayout>
-      <div className="mx-auto w-full max-w-5xl px-4 py-12 space-y-24">
+      <div className="mx-auto w-full max-w-5xl px-4 py-12 space-y-16">
 
-        {/* ══════════ BLOCO 1 — ABERTURA ══════════ */}
-        <motion.section className="text-center space-y-6" {...fade()}>
-          <div className="inline-flex items-center gap-2 text-gold/60 text-xs uppercase tracking-[0.3em]">
-            <Map className="w-4 h-4" />
-            Cartografia do Ecossistema
-          </div>
-
+        {/* ── ABERTURA ── */}
+        <motion.section className="text-center space-y-5" {...fade()}>
           <h1 className="font-display text-4xl md:text-5xl text-foreground leading-tight">
             Mapa da Casa Orácula
           </h1>
-
           <p className="text-foreground/80 text-lg max-w-2xl mx-auto leading-relaxed">
             A Casa Orácula é um ecossistema de travessia, estudo e prática terapêutica.
             <br />
-            Cada espaço da Casa sustenta um momento diferente da jornada.
+            Cada espaço sustenta um momento diferente da jornada.
           </p>
-
-          <div className="pt-4 space-y-1">
-            <p className="text-gold/70 italic font-display text-base">Algumas chegam para escutar.</p>
-            <p className="text-gold/70 italic font-display text-base">Outras chegam para aprender.</p>
-            <p className="text-gold/70 italic font-display text-base">Outras chegam para conduzir travessias.</p>
+          <div className="pt-2 space-y-1">
+            <p className="text-primary/70 italic font-display text-base">Algumas chegam para escutar.</p>
+            <p className="text-primary/70 italic font-display text-base">Outras chegam para aprender.</p>
+            <p className="text-primary/70 italic font-display text-base">Outras chegam para conduzir travessias.</p>
           </div>
         </motion.section>
 
-        {/* ══════════ BLOCO 2 — MAPA DOS CAMINHOS ══════════ */}
-        <section className="space-y-8">
+        {/* ── MAPA DOS ESPAÇOS ── */}
+        <section className="space-y-6">
           <motion.h2 className="font-display text-2xl md:text-3xl text-center text-foreground" {...fade()}>
-            Os Caminhos da Casa
+            Os Espaços da Casa
           </motion.h2>
 
-          {/* Linha central vertical (decorativa) */}
-          <div className="relative">
-            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-gold/0 via-gold/20 to-gold/0 hidden md:block" />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {espacos.map((e, i) => {
+              const Icon = e.icon;
+              const isHere = i === highlightIdx;
 
-            <div className="space-y-6 md:space-y-10">
-              {caminhos.map((c, i) => {
-                const Icon = c.icon;
-                const isLeft = i % 2 === 0;
-
-                return (
-                  <motion.div
-                    key={c.titulo}
-                    {...fade(i * 0.08)}
-                    className={`relative flex flex-col md:flex-row items-center gap-4 md:gap-8 ${
-                      isLeft ? 'md:flex-row' : 'md:flex-row-reverse'
+              return (
+                <motion.div key={e.titulo} {...fade(i * 0.06)}>
+                  <Card
+                    className={`relative h-full border transition-all duration-300 bg-card/60 backdrop-blur hover:shadow-lg ${
+                      isHere
+                        ? 'border-primary/40 ring-1 ring-primary/20 shadow-md'
+                        : 'border-border/30 hover:border-primary/20'
                     }`}
                   >
-                    {/* Card */}
-                    <div
-                      className={`flex-1 rounded-2xl border border-gold/10 bg-card/60 backdrop-blur p-6 hover:border-gold/25 transition-colors ${
-                        isLeft ? 'md:text-right' : 'md:text-left'
-                      }`}
-                    >
-                      <div className={`flex items-center gap-3 mb-3 ${isLeft ? 'md:justify-end' : ''}`}>
-                        <Icon className="w-5 h-5 text-gold shrink-0" />
-                        <h3 className="font-display text-xl text-foreground">{c.titulo}</h3>
+                    {isHere && (
+                      <div className="absolute -top-3 left-4 flex items-center gap-1 rounded-full bg-primary/10 border border-primary/30 px-3 py-0.5 text-xs text-primary font-medium">
+                        <MapPin className="w-3 h-3" />
+                        Você está aqui
                       </div>
-                      <p className="text-foreground/70 text-sm leading-relaxed mb-4">{c.descricao}</p>
+                    )}
+                    <CardContent className="p-5 flex flex-col h-full">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className={`w-9 h-9 rounded-full flex items-center justify-center border ${
+                          isHere ? 'bg-primary/10 border-primary/30' : 'bg-primary/5 border-primary/10'
+                        }`}>
+                          <Icon className="w-4.5 h-4.5 text-primary" />
+                        </div>
+                        <h3 className="font-display text-lg text-foreground">{e.titulo}</h3>
+                      </div>
+                      <p className="text-muted-foreground text-sm leading-relaxed flex-1 mb-4">
+                        {e.descricao}
+                      </p>
                       <Button
                         variant="outline"
                         size="sm"
-                        className="gap-1.5 border-gold/20 text-gold hover:bg-gold/10"
-                        onClick={() => navigate(c.rota)}
+                        className="gap-1.5 border-primary/20 text-primary hover:bg-primary/10 self-start"
+                        onClick={() => navigate(e.rota)}
                       >
-                        {c.cta}
+                        {e.cta}
                         <ChevronRight className="w-3.5 h-3.5" />
                       </Button>
-                    </div>
-
-                    {/* Node na linha central */}
-                    <div className="hidden md:flex w-10 h-10 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-background z-10">
-                      <span className="text-gold font-display text-sm">{i + 1}</span>
-                    </div>
-
-                    {/* Spacer para o outro lado */}
-                    <div className="flex-1 hidden md:block" />
-                  </motion.div>
-                );
-              })}
-            </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </div>
         </section>
 
-        {/* ══════════ BLOCO 3 — JORNADA DA USUÁRIA ══════════ */}
-        <motion.section className="space-y-8" {...fade()}>
-          <h2 className="font-display text-2xl md:text-3xl text-center text-foreground">
-            A Jornada da Usuária
-          </h2>
-
-          <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-0 flex-wrap">
-            {estagios.map((e, i) => (
-              <div key={e} className="flex items-center gap-2">
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-gold/15 bg-card/50">
-                  <Compass className="w-3.5 h-3.5 text-gold/60" />
-                  <span className="text-foreground/90 text-sm font-medium whitespace-nowrap">{e}</span>
-                </div>
-                {i < estagios.length - 1 && (
-                  <ArrowRight className="w-4 h-4 text-gold/30 hidden md:block" />
-                )}
-              </div>
-            ))}
-          </div>
-        </motion.section>
-
-        {/* ══════════ BLOCO 4 — COMO A CASA SE ORGANIZA ══════════ */}
-        <section className="space-y-8">
-          <motion.h2 className="font-display text-2xl md:text-3xl text-center text-foreground" {...fade()}>
-            Como a Casa se Organiza
-          </motion.h2>
-
-          <div className="grid md:grid-cols-3 gap-5">
-            {camadas.map((c, i) => (
-              <motion.div
-                key={c.numero}
-                {...fade(i * 0.1)}
-                className={`rounded-2xl border ${c.borda} bg-gradient-to-br ${c.cor} p-6 text-center space-y-3`}
-              >
-                <span className="text-gold/50 text-xs uppercase tracking-widest">
-                  Camada {c.numero}
-                </span>
-                <h3 className="font-display text-lg text-foreground">{c.titulo}</h3>
-                <p className="text-foreground/60 text-sm">{c.descricao}</p>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        {/* ══════════ BLOCO FINAL — CTA ══════════ */}
-        <motion.section className="text-center space-y-6 pb-8" {...fade()}>
+        {/* ── CTA FINAL ── */}
+        <motion.section className="text-center space-y-5 pb-8" {...fade()}>
           <p className="text-foreground/80 italic font-display text-lg max-w-xl mx-auto leading-relaxed">
             A Casa Orácula não é apenas um curso ou um software.
             <br />
             É uma travessia organizada em espaços vivos.
           </p>
-
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button
-              variant="gold"
-              size="lg"
-              className="gap-2 px-8"
-              onClick={() => navigate('/dashboard')}
-            >
+            <Button variant="gold" size="lg" className="gap-2 px-8" onClick={() => navigate('/dashboard')}>
               Continuar minha jornada
               <ArrowRight className="w-4 h-4" />
             </Button>
             <Button
               variant="outline"
               size="lg"
-              className="gap-2 border-gold/20 text-gold hover:bg-gold/10"
+              className="gap-2 border-primary/20 text-primary hover:bg-primary/10"
               onClick={() => navigate('/jornada')}
             >
               Ver meus próximos passos
