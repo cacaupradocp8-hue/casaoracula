@@ -182,7 +182,7 @@ export default function DashboardMembro() {
             Bem-vinda, <span className="text-primary">{welcomeName}</span>
           </h1>
           <p className="text-muted-foreground text-sm">
-            {format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR })}
+            {formatDateSafe(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR }, 'Hoje', 'dashboard-membro.header-date')}
           </p>
         </motion.div>
 
