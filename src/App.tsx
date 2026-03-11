@@ -374,7 +374,9 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
   const isAdmin = user?.portal === 'admin';
   const isVisitor = user?.portal === 'visitante';
 
-  if (!onboardingCompleted && !isOnboardingRoute && !isAdmin) {
+  // Only redirect to onboarding if we successfully loaded status AND it's not completed
+  // If there was an error loading onboarding, skip redirect (fail-open)
+  if (!onboardingCompleted && !onboardingError && !isOnboardingRoute && !isAdmin) {
     logRouteStep('definição da rota pós-login: /onboarding', {
       from: location.pathname,
       userId: user?.id ?? null,
