@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, BookOpen, Headphones, Flower2, Loader2 } from 'lucide-react';
+import { ExplorarCasaSection } from '@/components/home/ExplorarCasaSection';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -177,6 +178,8 @@ export function ClubeHomePage() {
             </Button>
           </motion.div>
         )}
+
+        <ExplorarCasaSection />
       </div>
     </AppLayout>
   );

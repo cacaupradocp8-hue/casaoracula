@@ -12,6 +12,9 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { supabase } from '@/integrations/supabase/client';
 import { VisitorHomePage } from '@/components/visitor/VisitorHomePage';
 import { ClubeHomePage } from '@/components/clube-livro/ClubeHomePage';
+import { HomeFormacaoSections } from '@/components/home/HomeFormacaoSections';
+import { HomeTerapeutaSections } from '@/components/home/HomeTerapeutaSections';
+import { ExplorarCasaSection } from '@/components/home/ExplorarCasaSection';
 import { useJornadaData } from '@/hooks/useJornadaData';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -290,7 +293,18 @@ export default function Jornada() {
           </div>
         </section>
 
+        {/* ═══ SEÇÕES POR ESTÁGIO ═══ */}
+        {canAccessFeature(user.portal, 'oracula') && user.id && (
+          <HomeTerapeutaSections userId={user.id} />
+        )}
+        {canAccessFeature(user.portal, 'aluna') && user.id && (
+          <HomeFormacaoSections userId={user.id} />
+        )}
+
         <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+
+        {/* ═══ EXPLORAR A CASA ═══ */}
+        <ExplorarCasaSection />
       </div>
     </AppLayout>
   );

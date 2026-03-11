@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Compass, Ear, Route, Radio, BookOpen, Users, Wrench, Sparkles } from 'lucide-react';
+import { ExplorarCasaSection } from '@/components/home/ExplorarCasaSection';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -307,6 +308,8 @@ export function VisitorHomePage() {
             Ela ensina como sustentar processos humanos com consciência.
           </p>
         </motion.section>
+
+        <ExplorarCasaSection />
       </div>
     </AppLayout>
   );
