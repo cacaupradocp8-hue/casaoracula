@@ -12,11 +12,15 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { supabase } from '@/integrations/supabase/client';
 import { VisitorHomePage } from '@/components/visitor/VisitorHomePage';
 import { ClubeHomePage } from '@/components/clube-livro/ClubeHomePage';
+import { HomeFormacaoSections } from '@/components/home/HomeFormacaoSections';
+import { HomeTerapeutaSections } from '@/components/home/HomeTerapeutaSections';
+import { ExplorarCasaSection } from '@/components/home/ExplorarCasaSection';
 import { useJornadaData } from '@/hooks/useJornadaData';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { canAccessFeature } from '@/types/portal';
+import mandalaHome from '@/assets/mandala-home.jpg';
 import mandalaHome from '@/assets/mandala-home.jpg';
 
 // ════════════════════════════════════════════════════════════════════════════
