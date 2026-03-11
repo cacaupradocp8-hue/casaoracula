@@ -7,13 +7,31 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { useNotifications } from '@/hooks/useNotifications';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, parseISO, isValid } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 
+function formatNotificationTime(createdAt: string) {
+  try {
+    const normalized = createdAt.includes(' ') ? createdAt.replace(' ', 'T') : createdAt;
+    const parsed = parseISO(normalized);
+
+    if (!isValid(parsed)) {
+      return 'Agora há pouco';
+    }
+
+    return formatDistanceToNow(parsed, {
+      addSuffix: true,
+      locale: ptBR,
+    });
+  } catch {
+    return 'Agora há pouco';
+  }
+}
+
 export function NotificationBell() {
   const { notifications, unreadCount, markAsRead, markAllAsRead, isLoading } = useNotifications();
-  
+
   const recentNotifications = notifications.slice(0, 5);
 
   return (
@@ -42,7 +60,7 @@ export function NotificationBell() {
             </Button>
           )}
         </div>
-        
+
         <div className="max-h-80 overflow-y-auto">
           {isLoading ? (
             <div className="p-4 text-center text-muted-foreground">
@@ -73,10 +91,7 @@ export function NotificationBell() {
                       {notification.body}
                     </p>
                     <p className="text-xs text-muted-foreground mt-2">
-                      {formatDistanceToNow(new Date(notification.created_at), {
-                        addSuffix: true,
-                        locale: ptBR
-                      })}
+                      {formatNotificationTime(notification.created_at)}
                     </p>
                     {notification.cta_url && notification.cta_label && (
                       <Link
@@ -92,7 +107,7 @@ export function NotificationBell() {
             ))
           )}
         </div>
-        
+
         {notifications.length > 5 && (
           <div className="p-3 border-t">
             <Link
