@@ -240,6 +240,16 @@ import PortalJunguianoPorta from "./pages/PortalJunguianoPorta";
 import ExperienciaGratuita from "./pages/ExperienciaGratuita";
 
 const queryClient = new QueryClient();
+const BOOT_ROUTE_LOG_PREFIX = '[boot-debug][routes]';
+
+const logRouteStep = (
+  stage: string,
+  payload?: Record<string, unknown>,
+  level: 'info' | 'warn' | 'error' = 'info'
+) => {
+  const logger = level === 'error' ? console.error : level === 'warn' ? console.warn : console.info;
+  logger(`${BOOT_ROUTE_LOG_PREFIX} ${stage}`, payload ?? {});
+};
 
 // Loading component for auth states
 function AuthLoading() {
