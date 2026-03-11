@@ -1,9 +1,10 @@
 import React from "react";
 import { createRoot, Root } from "react-dom/client";
-import App from "./App.tsx";
 import "./index.css";
 
 const PRELOAD_RETRY_KEY = "vite-preload-retried";
+const BOOT_IMPORT_RETRY_KEY = "vite-boot-import-retried";
+const BOOT_STALL_RETRY_KEY = "vite-boot-stall-retried";
 const BOOT_LOG_PREFIX = "[boot-debug][main]";
 
 function BootFatalFallback({ message }: { message: string }) {
@@ -83,20 +84,53 @@ window.addEventListener("vite:preloadError", async (event) => {
 window.addEventListener("error", (event) => {
   console.error(`${BOOT_LOG_PREFIX} [global-error]`, event.error ?? event.message);
   if (!bootWindowOpen) return;
-  // Only show fatal fallback for synchronous render errors during boot
-  if (event.error instanceof Error && event.error.stack?.includes('createElement')) {
+  if (event.error instanceof Error && event.error.stack?.includes("createElement")) {
     renderFatalBootFallback(event.error);
   }
 });
 
 window.addEventListener("unhandledrejection", (event) => {
   console.error(`${BOOT_LOG_PREFIX} [unhandled-rejection]`, event.reason);
-  // Don't show fatal fallback for async rejections — they are handled by React Query / error boundaries
 });
 
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+window.setTimeout(async () => {
+  const rootStillEmpty = rootElement.innerHTML.trim().length === 0;
+  if (!rootStillEmpty) return;
+
+  const alreadyRetried = sessionStorage.getItem(BOOT_STALL_RETRY_KEY) === "1";
+  if (alreadyRetried) {
+    renderFatalBootFallback("A aplicação não conseguiu renderizar a interface inicial.");
+    return;
+  }
+
+  console.warn(`${BOOT_LOG_PREFIX} boot stall detectado, limpando cache e recarregando`);
+  sessionStorage.setItem(BOOT_STALL_RETRY_KEY, "1");
+  await clearClientCaches();
+  window.location.reload();
+}, 6000);
+
+async function bootstrapApp() {
+  try {
+    const { default: App } = await import("./App.tsx");
+    root.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    );
+  } catch (error) {
+    const alreadyRetried = sessionStorage.getItem(BOOT_IMPORT_RETRY_KEY) === "1";
+
+    if (!alreadyRetried) {
+      console.warn(`${BOOT_LOG_PREFIX} falha ao carregar App.tsx, tentando autocorreção`, error);
+      sessionStorage.setItem(BOOT_IMPORT_RETRY_KEY, "1");
+      await clearClientCaches();
+      window.location.reload();
+      return;
+    }
+
+    renderFatalBootFallback(error);
+  }
+}
+
+void bootstrapApp();
 
