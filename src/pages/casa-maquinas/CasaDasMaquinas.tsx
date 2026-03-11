@@ -7,70 +7,57 @@ import { DashboardStats } from '@/components/casa-maquinas/DashboardStats';
 import { DashboardAgenda } from '@/components/casa-maquinas/DashboardAgenda';
 import { DashboardClientCard } from '@/components/casa-maquinas/DashboardClientCard';
 import { DashboardJornadas } from '@/components/casa-maquinas/DashboardJornadas';
+import { DashboardDistrictChart } from '@/components/casa-maquinas/DashboardDistrictChart';
+import { DashboardArchetypes } from '@/components/casa-maquinas/DashboardArchetypes';
+import { DashboardQuickActions } from '@/components/casa-maquinas/DashboardQuickActions';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, Plus, Users } from 'lucide-react';
 
-const mockClientes = [
-  {
-    nome: 'Helena M.',
-    ultimaSessao: '28 fev 2026',
-    distritoAtual: 'Torres',
-    torrePredominante: 'Controle',
-    estado: 'travessia' as const,
-  },
-  {
-    nome: 'Isabela R.',
-    ultimaSessao: '01 mar 2026',
-    distritoAtual: 'Labirinto',
-    torrePredominante: 'Silêncio',
-    estado: 'crise' as const,
-  },
-  {
-    nome: 'Marina S.',
-    ultimaSessao: '03 mar 2026',
-    distritoAtual: 'Jardim dos Arquétipos',
-    torrePredominante: 'Adaptação',
-    estado: 'integração' as const,
-  },
-  {
-    nome: 'Camila F.',
-    ultimaSessao: '25 fev 2026',
-    distritoAtual: 'Casa dos Sonhos',
-    torrePredominante: 'Performance',
-    estado: 'travessia' as const,
-  },
-];
+interface ClienteRecente {
+  id: string;
+  nome: string;
+  status: string;
+  updated_at: string;
+}
 
 export default function CasaDasMaquinas() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [stats, setStats] = useState({ clientes: 0, sessoesMes: 0, gestosAtivos: 0 });
+  const [stats, setStats] = useState({ clientes: 0, sessoesMes: 0, gestosAtivos: 0, alertas: 0 });
+  const [clientesRecentes, setClientesRecentes] = useState<ClienteRecente[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
-    loadStats();
+    loadData();
   }, [user]);
 
-  const loadStats = async () => {
+  const loadData = async () => {
     if (!user) return;
     setLoading(true);
 
     const now = new Date();
     const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
 
-    const [clientesRes, sessoesRes, gestosRes] = await Promise.all([
+    const [clientesRes, sessoesRes, gestosRes, recentesRes] = await Promise.all([
       supabase.from('clientes').select('id', { count: 'exact', head: true }).eq('terapeuta_id', user.id),
       supabase.from('sessoes_casa_maquinas').select('id', { count: 'exact', head: true }).eq('owner_id', user.id).gte('data_sessao', firstOfMonth.split('T')[0]),
       supabase.from('gestos_integracao').select('id', { count: 'exact', head: true }).eq('owner_id', user.id).eq('status', 'ativo'),
+      supabase.from('clientes').select('id, nome, status, updated_at').eq('terapeuta_id', user.id).order('updated_at', { ascending: false }).limit(4),
     ]);
 
     setStats({
       clientes: clientesRes.count ?? 0,
       sessoesMes: sessoesRes.count ?? 0,
       gestosAtivos: gestosRes.count ?? 0,
+      alertas: 0,
     });
+
+    if (recentesRes.data) {
+      setClientesRecentes(recentesRes.data as ClienteRecente[]);
+    }
+
     setLoading(false);
   };
 
@@ -84,26 +71,39 @@ export default function CasaDasMaquinas() {
     );
   }
 
+  const estadoMap: Record<string, 'crise' | 'travessia' | 'integração'> = {
+    ativo: 'travessia',
+    pausado: 'crise',
+    encerrado: 'integração',
+  };
+
   return (
     <CasaMaquinasLayout title="Dashboard" subtitle="Visão geral do espaço profissional">
+      {/* Quick Actions */}
+      <DashboardQuickActions />
+
       {/* Stats */}
-      <DashboardStats
-        clientes={stats.clientes || mockClientes.length}
-        sessoesMes={stats.sessoesMes || 12}
-        gestosAtivos={stats.gestosAtivos || 4}
-        alertas={1}
-      />
+      <div className="mt-4">
+        <DashboardStats
+          clientes={stats.clientes}
+          sessoesMes={stats.sessoesMes}
+          gestosAtivos={stats.gestosAtivos}
+          alertas={stats.alertas}
+        />
+      </div>
 
       {/* Main grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6">
-        {/* Left: Agenda + Jornadas */}
+        {/* Left column */}
         <div className="lg:col-span-1 space-y-4">
           <DashboardAgenda />
           <DashboardJornadas />
+          <DashboardArchetypes />
         </div>
 
-        {/* Right: Clientes recentes */}
-        <div className="lg:col-span-2">
+        {/* Right column */}
+        <div className="lg:col-span-2 space-y-4">
+          {/* Clientes recentes */}
           <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -123,18 +123,31 @@ export default function CasaDasMaquinas() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {mockClientes.map((c, i) => (
-                  <DashboardClientCard
-                    key={i}
-                    {...c}
-                    onOpenCity={() => navigate(`/casa-das-maquinas/clientes/${i + 1}`)}
-                    onStartSession={() => navigate('/casa-das-maquinas/sessoes')}
-                  />
-                ))}
-              </div>
+              {clientesRecentes.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {clientesRecentes.map(c => (
+                    <DashboardClientCard
+                      key={c.id}
+                      nome={c.nome}
+                      ultimaSessao={new Date(c.updated_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                      distritoAtual=""
+                      torrePredominante=""
+                      estado={estadoMap[c.status] || 'travessia'}
+                      onOpenCity={() => navigate(`/casa-das-maquinas/clientes/${c.id}`)}
+                      onStartSession={() => navigate('/casa-das-maquinas/sessoes')}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-[#F5F1E8]/30 text-center py-6">
+                  Nenhuma cliente cadastrada ainda
+                </p>
+              )}
             </CardContent>
           </Card>
+
+          {/* District Chart */}
+          <DashboardDistrictChart />
         </div>
       </div>
     </CasaMaquinasLayout>
