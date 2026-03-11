@@ -36,54 +36,116 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
+  const AUTH_BOOT_LOG_PREFIX = '[boot-debug][auth-context]';
+
+  const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const fetchUserProfile = async (userId: string): Promise<boolean> => {
-    try {
-      const [
-        { data: profile, error: profileError },
-        { data: role },
-        { data: matricula },
-      ] = await Promise.all([
-        supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', userId)
-          .single(),
-        supabase
-          .from('user_roles')
-          .select('portal')
-          .eq('user_id', userId)
-          .single(),
-        supabase
-          .from('matriculas')
-          .select('id')
-          .eq('user_id', userId)
-          .eq('curso_id', 'formacao_oracula')
-          .eq('ativa', true)
-          .maybeSingle(),
-      ]);
+    const maxAttempts = 2;
 
-      if (profileError || !profile) {
-        throw profileError;
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      try {
+        console.info(`${AUTH_BOOT_LOG_PREFIX} carregando perfil`, { userId, attempt, maxAttempts });
+
+        const [
+          { data: profile, error: profileError },
+          { data: role },
+          { data: matricula },
+        ] = await Promise.all([
+          supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', userId)
+            .single(),
+          supabase
+            .from('user_roles')
+            .select('portal')
+            .eq('user_id', userId)
+            .single(),
+          supabase
+            .from('matriculas')
+            .select('id')
+            .eq('user_id', userId)
+            .eq('curso_id', 'formacao_oracula')
+            .eq('ativa', true)
+            .maybeSingle(),
+        ]);
+
+        if (profileError || !profile) {
+          const errorCode = typeof profileError === 'object' && profileError !== null && 'code' in profileError
+            ? (profileError as { code?: string }).code
+            : undefined;
+
+          const shouldRetry = attempt < maxAttempts && (!profile || errorCode === 'PGRST116');
+          console.error(`${AUTH_BOOT_LOG_PREFIX} falha ao ler perfil`, {
+            userId,
+            attempt,
+            shouldRetry,
+            errorCode,
+            profileError,
+          });
+
+          if (shouldRetry) {
+            await wait(250);
+            continue;
+          }
+
+          throw profileError ?? new Error('Perfil não encontrado.');
+        }
+
+        setUser({
+          id: userId,
+          email: profile.email || '',
+          name: profile.nome || '',
+          portal: (role?.portal as PortalType) || 'visitante',
+          createdAt: new Date(profile.created_at),
+          avatarUrl: profile.avatar_url || undefined,
+          isMatriculada: !!matricula,
+        });
+
+        setAuthError(null);
+        console.info(`${AUTH_BOOT_LOG_PREFIX} perfil carregado`, {
+          userId,
+          portal: role?.portal || 'visitante',
+          isMatriculada: !!matricula,
+        });
+        return true;
+      } catch (error) {
+        if (attempt === maxAttempts) {
+          console.error(`${AUTH_BOOT_LOG_PREFIX} falha final ao carregar perfil`, error);
+        }
       }
-
-      setUser({
-        id: userId,
-        email: profile.email || '',
-        name: profile.nome || '',
-        portal: (role?.portal as PortalType) || 'visitante',
-        createdAt: new Date(profile.created_at),
-        avatarUrl: profile.avatar_url || undefined,
-        isMatriculada: !!matricula,
-      });
-      setAuthError(null);
-      return true;
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
-      setUser(null);
-      setAuthError('Não foi possível carregar seu perfil agora. Tente recarregar.');
-      return false;
     }
+
+    try {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+
+      if (authUser?.id === userId) {
+        const fallbackName = typeof authUser.user_metadata?.nome === 'string' && authUser.user_metadata.nome.trim().length > 0
+          ? authUser.user_metadata.nome
+          : authUser.email?.split('@')[0] ?? 'Usuária';
+
+        setUser({
+          id: userId,
+          email: authUser.email || '',
+          name: fallbackName,
+          portal: 'visitante',
+          createdAt: new Date(),
+          avatarUrl: typeof authUser.user_metadata?.avatar_url === 'string' ? authUser.user_metadata.avatar_url : undefined,
+          isMatriculada: false,
+        });
+
+        setAuthError(null);
+        console.warn(`${AUTH_BOOT_LOG_PREFIX} perfil indisponível; fallback seguro ativado`, { userId });
+        return true;
+      }
+    } catch (fallbackError) {
+      console.error(`${AUTH_BOOT_LOG_PREFIX} falha ao montar fallback do usuário`, fallbackError);
+    }
+
+    setUser(null);
+    setAuthError('Não foi possível carregar seu perfil agora. Tente recarregar.');
+    return false;
   };
 
   // Refresh user portal from database
@@ -122,8 +184,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let isMounted = true;
 
+    console.info(`${AUTH_BOOT_LOG_PREFIX} inicializando fluxo de boot da autenticação`);
+
     const syncSession = (nextSession: Session | null, isInitialSync = false) => {
       if (!isMounted) return;
+
+      console.info(`${AUTH_BOOT_LOG_PREFIX} syncSession`, {
+        isInitialSync,
+        hasSession: !!nextSession,
+        userId: nextSession?.user?.id ?? null,
+      });
 
       setSession(nextSession);
 
@@ -147,6 +217,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, nextSession) => {
+      console.info(`${AUTH_BOOT_LOG_PREFIX} evento auth recebido`, {
+        event,
+        hasSession: !!nextSession,
+        userId: nextSession?.user?.id ?? null,
+      });
+
       if (event === 'INITIAL_SESSION') return;
       syncSession(nextSession, false);
     });
@@ -154,10 +230,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     void supabase.auth
       .getSession()
       .then(({ data: { session: initialSession } }) => {
+        console.info(`${AUTH_BOOT_LOG_PREFIX} leitura do usuário autenticado`, {
+          hasSession: !!initialSession,
+          userId: initialSession?.user?.id ?? null,
+        });
         syncSession(initialSession, true);
       })
       .catch((error) => {
-        console.error('Error restoring auth session:', error);
+        console.error(`${AUTH_BOOT_LOG_PREFIX} falha ao restaurar sessão`, error);
         if (!isMounted) return;
         setSession(null);
         setUser(null);

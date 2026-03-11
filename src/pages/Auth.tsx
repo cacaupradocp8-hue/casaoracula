@@ -76,20 +76,46 @@ export default function Auth() {
       toast({ title: 'Erro de validação', description: error, variant: 'destructive' });
       return;
     }
+
+    console.info('[boot-debug][auth-page] tentativa de login iniciada');
     setIsLoading(true);
     const result = await login(loginEmail, loginPassword);
+
     if (result.success) {
       toast({ title: 'Bem-vinda de volta', description: 'A Casa ORÁCULA te recebe.' });
       try {
         const { data: { user } } = await supabase.auth.getUser();
+        console.info('[boot-debug][auth-page] leitura do usuário autenticado', {
+          userId: user?.id ?? null,
+          hasUser: !!user,
+        });
+
         if (user) {
-          const { data: profile } = await supabase.from('profiles').select('onboarding_completed').eq('id', user.id).single();
-          if (!profile?.onboarding_completed) { navigate('/onboarding'); } else { navigate('/dashboard'); }
-        } else { navigate('/dashboard'); }
-      } catch (err) { console.error('Error checking onboarding status:', err); navigate('/dashboard'); }
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('onboarding_completed')
+            .eq('id', user.id)
+            .single();
+
+          const postLoginRoute = !profile?.onboarding_completed ? '/onboarding' : '/dashboard';
+          console.info('[boot-debug][auth-page] definição da rota pós-login', {
+            userId: user.id,
+            onboardingCompleted: !!profile?.onboarding_completed,
+            postLoginRoute,
+          });
+          navigate(postLoginRoute);
+        } else {
+          console.warn('[boot-debug][auth-page] usuário não encontrado após login, fallback /dashboard');
+          navigate('/dashboard');
+        }
+      } catch (err) {
+        console.error('[boot-debug][auth-page] falha ao definir rota pós-login', err);
+        navigate('/dashboard');
+      }
     } else {
       toast({ title: 'Erro ao entrar', description: result.error, variant: 'destructive' });
     }
+
     setIsLoading(false);
   };
 

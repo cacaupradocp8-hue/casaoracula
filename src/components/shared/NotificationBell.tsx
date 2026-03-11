@@ -11,12 +11,18 @@ import { formatDistanceToNow, parseISO, isValid } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 
-function formatNotificationTime(createdAt: string) {
+function formatNotificationTime(createdAt: string | null | undefined) {
   try {
+    if (!createdAt || typeof createdAt !== 'string') {
+      console.warn('[boot-debug][notifications] parsing de datas inválido: valor ausente');
+      return 'Agora há pouco';
+    }
+
     const normalized = createdAt.includes(' ') ? createdAt.replace(' ', 'T') : createdAt;
     const parsed = parseISO(normalized);
 
     if (!isValid(parsed)) {
+      console.warn('[boot-debug][notifications] parsing de datas inválido', { createdAt });
       return 'Agora há pouco';
     }
 
@@ -24,7 +30,8 @@ function formatNotificationTime(createdAt: string) {
       addSuffix: true,
       locale: ptBR,
     });
-  } catch {
+  } catch (error) {
+    console.error('[boot-debug][notifications] erro no parsing de datas', error);
     return 'Agora há pouco';
   }
 }

@@ -19,14 +19,42 @@ export default function Dashboard() {
   const isProfessionalLevel = user && canAccessFeature(user.portal, 'aluna');
 
   useEffect(() => {
+    console.info('[boot-debug][dashboard] render do dashboard', {
+      userId: user?.id ?? null,
+      portal: user?.portal ?? null,
+    });
+  }, [user?.id, user?.portal]);
+
+  useEffect(() => {
     const checkProfessionalStatus = async () => {
-      if (!user) { setIsProfessionalVerified(false); return; }
-      if (user.portal === 'admin') { setIsProfessionalVerified(true); return; }
+      if (!user) {
+        console.info('[boot-debug][dashboard] sem usuário, pulando validação profissional');
+        setIsProfessionalVerified(false);
+        return;
+      }
+
+      if (user.portal === 'admin') {
+        console.info('[boot-debug][dashboard] admin detectada, validação profissional bypass');
+        setIsProfessionalVerified(true);
+        return;
+      }
+
       try {
-        const { data: profile } = await supabase.from('profiles').select('is_professional_verified, role').eq('id', user.id).single();
-        if (profile) setIsProfessionalVerified(profile.is_professional_verified === true || profile.role === 'terapeuta');
-      } catch (error) { console.error('Error checking professional status:', error); }
+        console.info('[boot-debug][dashboard] carregando status profissional');
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('is_professional_verified, role')
+          .eq('id', user.id)
+          .single();
+
+        if (profile) {
+          setIsProfessionalVerified(profile.is_professional_verified === true || profile.role === 'terapeuta');
+        }
+      } catch (error) {
+        console.error('[boot-debug][dashboard] falha ao carregar status profissional', error);
+      }
     };
+
     checkProfessionalStatus();
   }, [user]);
 
