@@ -48,6 +48,10 @@ if (!rootElement) {
 }
 
 const root: Root = createRoot(rootElement);
+let bootWindowOpen = true;
+window.setTimeout(() => {
+  bootWindowOpen = false;
+}, 10000);
 
 const renderFatalBootFallback = (reason: unknown) => {
   const message = reason instanceof Error
@@ -78,11 +82,13 @@ window.addEventListener("vite:preloadError", async (event) => {
 
 window.addEventListener("error", (event) => {
   console.error(`${BOOT_LOG_PREFIX} [global-error]`, event.error ?? event.message);
+  if (!bootWindowOpen) return;
   renderFatalBootFallback(event.error ?? event.message);
 });
 
 window.addEventListener("unhandledrejection", (event) => {
   console.error(`${BOOT_LOG_PREFIX} [unhandled-rejection]`, event.reason);
+  if (!bootWindowOpen) return;
   renderFatalBootFallback(event.reason);
 });
 
