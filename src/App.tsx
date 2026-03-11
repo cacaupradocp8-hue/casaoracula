@@ -294,8 +294,8 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
     return <LockedForVisitor />;
   }
   
-  // Non-visitors without access go to jornada (their home)
-  if (!hasAccess) return <Navigate to="/jornada" replace />;
+  // Non-visitors without access go to dashboard (safe authenticated landing)
+  if (!hasAccess) return <Navigate to="/dashboard" replace />;
 
   return <>{children}</>;
 }
@@ -314,9 +314,8 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
       return <Navigate to="/onboarding" replace />;
     }
     
-    // ALL users (including visitors) go to /jornada (Meu Caminho) as the real home
-    // No intermediate pages, no loops, no redirects to /welcome
-    return <Navigate to="/jornada" replace />;
+    // Authenticated home fallback
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;
