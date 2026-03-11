@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User as SupabaseUser, Session } from '@supabase/supabase-js';
+import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { PortalType, canAccessFeature, getCaseLimit } from '@/types/portal';
-import { useAdminPreviewOptional } from './AdminPreviewContext';
 
 interface User {
   id: string;
@@ -17,6 +16,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
+  isAuthReady: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signup: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string }>;
@@ -33,54 +33,50 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthReady, setIsAuthReady] = useState(false);
 
-  const fetchUserProfile = async (userId: string, markLoaded = false) => {
+  const fetchUserProfile = async (userId: string) => {
     try {
-      // Fetch profile
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
+      const [
+        { data: profile, error: profileError },
+        { data: role },
+        { data: matricula },
+      ] = await Promise.all([
+        supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', userId)
+          .single(),
+        supabase
+          .from('user_roles')
+          .select('portal')
+          .eq('user_id', userId)
+          .single(),
+        supabase
+          .from('matriculas')
+          .select('id')
+          .eq('user_id', userId)
+          .eq('curso_id', 'formacao_oracula')
+          .eq('ativa', true)
+          .maybeSingle(),
+      ]);
 
-      // Fetch role
-      const { data: role } = await supabase
-        .from('user_roles')
-        .select('portal')
-        .eq('user_id', userId)
-        .single();
-
-      // Check matricula
-      const { data: matricula } = await supabase
-        .from('matriculas')
-        .select('id')
-        .eq('user_id', userId)
-        .eq('curso_id', 'formacao_oracula')
-        .eq('ativa', true)
-        .maybeSingle();
-
-      if (profile) {
-        setUser({
-          id: userId,
-          email: profile.email || '',
-          name: profile.nome || '',
-          portal: (role?.portal as PortalType) || 'visitante',
-          createdAt: new Date(profile.created_at),
-          avatarUrl: profile.avatar_url || undefined,
-          isMatriculada: !!matricula,
-        });
+      if (profileError || !profile) {
+        throw profileError;
       }
-      
-      // Only mark loading as complete AFTER user profile is loaded
-      if (markLoaded) {
-        setIsLoading(false);
-      }
+
+      setUser({
+        id: userId,
+        email: profile.email || '',
+        name: profile.nome || '',
+        portal: (role?.portal as PortalType) || 'visitante',
+        createdAt: new Date(profile.created_at),
+        avatarUrl: profile.avatar_url || undefined,
+        isMatriculada: !!matricula,
+      });
     } catch (error) {
       console.error('Error fetching user profile:', error);
-      // Still mark as loaded on error to prevent infinite loading
-      if (markLoaded) {
-        setIsLoading(false);
-      }
+      setUser(null);
     }
   };
 
@@ -118,36 +114,53 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        
-        if (session?.user) {
-          // Defer Supabase calls with setTimeout to prevent deadlock
-          // Pass markLoaded=true so loading state is set after profile loads
-          setTimeout(() => {
-            fetchUserProfile(session.user.id, true);
-          }, 0);
-        } else {
-          setUser(null);
-          setIsLoading(false);
-        }
-      }
-    );
+    let isMounted = true;
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session?.user) {
-        // Pass markLoaded=true so loading state is set after profile loads
-        fetchUserProfile(session.user.id, true);
-      } else {
+    const syncSession = (nextSession: Session | null, isInitialSync = false) => {
+      if (!isMounted) return;
+
+      setSession(nextSession);
+
+      if (!nextSession?.user) {
+        setUser(null);
         setIsLoading(false);
+        if (isInitialSync) setIsAuthReady(true);
+        return;
       }
+
+      setIsLoading(true);
+      setTimeout(() => {
+        void fetchUserProfile(nextSession.user.id).finally(() => {
+          if (!isMounted) return;
+          setIsLoading(false);
+          if (isInitialSync) setIsAuthReady(true);
+        });
+      }, 0);
+    };
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, nextSession) => {
+      if (event === 'INITIAL_SESSION') return;
+      syncSession(nextSession, false);
     });
 
-    return () => subscription.unsubscribe();
+    void supabase.auth
+      .getSession()
+      .then(({ data: { session: initialSession } }) => {
+        syncSession(initialSession, true);
+      })
+      .catch((error) => {
+        console.error('Error restoring auth session:', error);
+        if (!isMounted) return;
+        setSession(null);
+        setUser(null);
+        setIsLoading(false);
+        setIsAuthReady(true);
+      });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   // Real-time subscription to user_roles changes
