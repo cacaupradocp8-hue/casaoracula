@@ -470,8 +470,15 @@ function AppRoutes() {
   const location = useLocation();
 
   // Init session tracking once + track deep routes
-  React.useEffect(() => { initRitualSessionTracking(); }, []);
-  React.useEffect(() => { trackRouteForRitual(location.pathname); }, [location.pathname]);
+  React.useEffect(() => {
+    console.info('[boot-debug][routes] AppRoutes montado');
+    initRitualSessionTracking();
+  }, []);
+
+  React.useEffect(() => {
+    console.info('[boot-debug][routes] navegação detectada', { pathname: location.pathname });
+    trackRouteForRitual(location.pathname);
+  }, [location.pathname]);
 
   return (
     <Routes>
