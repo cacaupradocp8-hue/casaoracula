@@ -184,8 +184,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let isMounted = true;
 
+    console.info(`${AUTH_BOOT_LOG_PREFIX} inicializando fluxo de boot da autenticação`);
+
     const syncSession = (nextSession: Session | null, isInitialSync = false) => {
       if (!isMounted) return;
+
+      console.info(`${AUTH_BOOT_LOG_PREFIX} syncSession`, {
+        isInitialSync,
+        hasSession: !!nextSession,
+        userId: nextSession?.user?.id ?? null,
+      });
 
       setSession(nextSession);
 
@@ -209,6 +217,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, nextSession) => {
+      console.info(`${AUTH_BOOT_LOG_PREFIX} evento auth recebido`, {
+        event,
+        hasSession: !!nextSession,
+        userId: nextSession?.user?.id ?? null,
+      });
+
       if (event === 'INITIAL_SESSION') return;
       syncSession(nextSession, false);
     });
@@ -216,10 +230,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     void supabase.auth
       .getSession()
       .then(({ data: { session: initialSession } }) => {
+        console.info(`${AUTH_BOOT_LOG_PREFIX} leitura do usuário autenticado`, {
+          hasSession: !!initialSession,
+          userId: initialSession?.user?.id ?? null,
+        });
         syncSession(initialSession, true);
       })
       .catch((error) => {
-        console.error('Error restoring auth session:', error);
+        console.error(`${AUTH_BOOT_LOG_PREFIX} falha ao restaurar sessão`, error);
         if (!isMounted) return;
         setSession(null);
         setUser(null);
