@@ -289,39 +289,11 @@ class RootErrorBoundary extends React.Component<{ children: React.ReactNode }, R
     errorMessage: null,
   };
 
-  private handleWindowError = (event: ErrorEvent) => {
-    this.setState({
-      hasError: true,
-      errorMessage: event.error?.message || event.message || 'Erro inesperado de execução.',
-    });
-  };
-
-  private handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-    const reason = event.reason;
-    const message = reason instanceof Error
-      ? reason.message
-      : typeof reason === 'string'
-        ? reason
-        : 'Erro inesperado de execução.';
-
-    this.setState({ hasError: true, errorMessage: message });
-  };
-
   static getDerivedStateFromError(error: Error): RootErrorBoundaryState {
     return {
       hasError: true,
       errorMessage: error?.message || 'Ocorreu um erro inesperado.',
     };
-  }
-
-  componentDidMount() {
-    window.addEventListener('error', this.handleWindowError);
-    window.addEventListener('unhandledrejection', this.handleUnhandledRejection);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('error', this.handleWindowError);
-    window.removeEventListener('unhandledrejection', this.handleUnhandledRejection);
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
@@ -364,9 +336,9 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
     return <AuthLoading />;
   }
 
+  // Onboarding error: fail-open — let user through to dashboard instead of blocking
   if (onboardingError && location.pathname !== '/onboarding') {
-    logRouteStep('falha ao carregar onboarding', { path: location.pathname, onboardingError }, 'error');
-    return <AppRouteError title="Erro ao abrir sua jornada" message={onboardingError} />;
+    logRouteStep('falha no onboarding, fail-open para dashboard', { path: location.pathname, onboardingError }, 'warn');
   }
 
   const isOnboardingRoute = location.pathname === '/onboarding';
@@ -374,7 +346,9 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
   const isAdmin = user?.portal === 'admin';
   const isVisitor = user?.portal === 'visitante';
 
-  if (!onboardingCompleted && !isOnboardingRoute && !isAdmin) {
+  // Only redirect to onboarding if we successfully loaded status AND it's not completed
+  // If there was an error loading onboarding, skip redirect (fail-open)
+  if (!onboardingCompleted && !onboardingError && !isOnboardingRoute && !isAdmin) {
     logRouteStep('definição da rota pós-login: /onboarding', {
       from: location.pathname,
       userId: user?.id ?? null,
@@ -432,13 +406,14 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
     return <AuthLoading />;
   }
 
+  // Onboarding error: fail-open — send to dashboard instead of blocking
   if (onboardingError) {
-    logRouteStep('PublicRoute erro no onboarding', { path: location.pathname, onboardingError }, 'error');
-    return <AppRouteError title="Erro ao abrir sua jornada" message={onboardingError} />;
+    logRouteStep('PublicRoute erro no onboarding, fail-open para dashboard', { path: location.pathname, onboardingError }, 'warn');
   }
 
   const isAdmin = user?.portal === 'admin';
-  if (!onboardingCompleted && !isAdmin) {
+  // Only redirect to onboarding if we successfully loaded status AND it's not completed
+  if (!onboardingCompleted && !onboardingError && !isAdmin) {
     logRouteStep('definição da rota pós-login: /onboarding', {
       from: location.pathname,
       userId: user?.id ?? null,

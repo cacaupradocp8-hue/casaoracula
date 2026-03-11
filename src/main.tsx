@@ -83,13 +83,15 @@ window.addEventListener("vite:preloadError", async (event) => {
 window.addEventListener("error", (event) => {
   console.error(`${BOOT_LOG_PREFIX} [global-error]`, event.error ?? event.message);
   if (!bootWindowOpen) return;
-  renderFatalBootFallback(event.error ?? event.message);
+  // Only show fatal fallback for synchronous render errors during boot
+  if (event.error instanceof Error && event.error.stack?.includes('createElement')) {
+    renderFatalBootFallback(event.error);
+  }
 });
 
 window.addEventListener("unhandledrejection", (event) => {
   console.error(`${BOOT_LOG_PREFIX} [unhandled-rejection]`, event.reason);
-  if (!bootWindowOpen) return;
-  renderFatalBootFallback(event.reason);
+  // Don't show fatal fallback for async rejections — they are handled by React Query / error boundaries
 });
 
 root.render(
