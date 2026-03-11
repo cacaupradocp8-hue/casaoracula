@@ -19,6 +19,7 @@ export interface Notification {
 export function useNotifications() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const LOG_PREFIX = '[boot-debug][notifications]';
 
   const {
     data: notifications = [],
@@ -29,15 +30,24 @@ export function useNotifications() {
   } = useQuery({
     queryKey: ['notifications', user?.id],
     queryFn: async () => {
-      if (!user?.id) return [];
+      if (!user?.id) {
+        console.info(`${LOG_PREFIX} sem usuário autenticado, query ignorada`);
+        return [];
+      }
 
+      console.info(`${LOG_PREFIX} carregamento de notificações iniciado`, { userId: user.id });
       const { data, error: queryError } = await supabase
         .from('notifications')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (queryError) throw queryError;
+      if (queryError) {
+        console.error(`${LOG_PREFIX} falha no carregamento`, queryError);
+        throw queryError;
+      }
+
+      console.info(`${LOG_PREFIX} carregamento concluído`, { count: data?.length ?? 0 });
       return data as Notification[];
     },
     enabled: !!user?.id,
@@ -48,6 +58,7 @@ export function useNotifications() {
   useEffect(() => {
     if (!user?.id) return;
 
+    console.info(`${LOG_PREFIX} assinando realtime`, { userId: user.id });
     const channel = supabase
       .channel(`notifications-${user.id}`)
       .on(
@@ -59,12 +70,14 @@ export function useNotifications() {
           filter: `user_id=eq.${user.id}`,
         },
         () => {
+          console.info(`${LOG_PREFIX} novo evento realtime, invalidando cache`, { userId: user.id });
           queryClient.invalidateQueries({ queryKey: ['notifications', user.id] });
         }
       )
       .subscribe();
 
     return () => {
+      console.info(`${LOG_PREFIX} removendo assinatura realtime`, { userId: user.id });
       supabase.removeChannel(channel);
     };
   }, [user?.id, queryClient]);
