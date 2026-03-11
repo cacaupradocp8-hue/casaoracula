@@ -51,7 +51,7 @@ export function DashboardDistrictChart() {
       .from('client_pattern_stats')
       .select('pattern_name, pattern_type, occurrence_count')
       .in('client_id', clientIds)
-      .eq('pattern_type', 'distrito')
+      .eq('pattern_type', 'district')
       .order('occurrence_count', { ascending: false })
       .limit(8);
 

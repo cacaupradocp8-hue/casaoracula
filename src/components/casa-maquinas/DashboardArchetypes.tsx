@@ -39,7 +39,7 @@ export function DashboardArchetypes() {
       .from('client_pattern_stats')
       .select('pattern_name, occurrence_count')
       .in('client_id', clientIds)
-      .eq('pattern_type', 'arquetipo')
+      .eq('pattern_type', 'archetype')
       .order('occurrence_count', { ascending: false })
       .limit(20);
 
