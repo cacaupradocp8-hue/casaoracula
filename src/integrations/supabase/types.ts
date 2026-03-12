@@ -2188,6 +2188,65 @@ export type Database = {
         }
         Relationships: []
       }
+      client_cidadela_map: {
+        Row: {
+          arquetipos_emergentes: string[] | null
+          client_id: string
+          created_at: string
+          distrito_atual: string | null
+          ferramentas_utilizadas: string[] | null
+          historico_sessoes: Json | null
+          id: string
+          insights_ia: Json | null
+          labirintos_visitados: string[] | null
+          portas_cruzadas: string[] | null
+          therapist_id: string
+          torres_identificadas: string[] | null
+          ultima_sessao: string | null
+          updated_at: string
+        }
+        Insert: {
+          arquetipos_emergentes?: string[] | null
+          client_id: string
+          created_at?: string
+          distrito_atual?: string | null
+          ferramentas_utilizadas?: string[] | null
+          historico_sessoes?: Json | null
+          id?: string
+          insights_ia?: Json | null
+          labirintos_visitados?: string[] | null
+          portas_cruzadas?: string[] | null
+          therapist_id: string
+          torres_identificadas?: string[] | null
+          ultima_sessao?: string | null
+          updated_at?: string
+        }
+        Update: {
+          arquetipos_emergentes?: string[] | null
+          client_id?: string
+          created_at?: string
+          distrito_atual?: string | null
+          ferramentas_utilizadas?: string[] | null
+          historico_sessoes?: Json | null
+          id?: string
+          insights_ia?: Json | null
+          labirintos_visitados?: string[] | null
+          portas_cruzadas?: string[] | null
+          therapist_id?: string
+          torres_identificadas?: string[] | null
+          ultima_sessao?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_cidadela_map_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_labyrinths: {
         Row: {
           acoes_ruptura: string[] | null
@@ -15496,6 +15555,20 @@ export type Database = {
       is_profissional_confirmada: {
         Args: { _user_id: string }
         Returns: boolean
+      }
+      update_cidadela_from_session: {
+        Args: {
+          _arquetipo?: string
+          _client_id: string
+          _distrito?: string
+          _ferramenta?: string
+          _insight?: string
+          _labirinto?: string
+          _porta?: string
+          _therapist_id: string
+          _torre?: string
+        }
+        Returns: undefined
       }
       upsert_pattern_stat: {
         Args: {
