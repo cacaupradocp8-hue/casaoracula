@@ -989,8 +989,8 @@ function AppRoutes() {
       <Route
         path="/biblioteca"
         element={
-          <ProtectedRoute minPortal="mentorada">
-            <Biblioteca />
+          <ProtectedRoute>
+            <BibliotecaUnificada />
           </ProtectedRoute>
         }
       />
