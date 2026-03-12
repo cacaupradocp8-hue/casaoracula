@@ -39,6 +39,31 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 
+// Agentes unificados (seletor principal)
+const AGENTES = [
+  {
+    id: 'analista',
+    name: 'Analista',
+    description: 'Análise de casos clínicos e identificação de padrões.',
+    icon: '🔍',
+    intelligenceDefault: 'ferramenteira',
+  },
+  {
+    id: 'curador',
+    name: 'Curador',
+    description: 'Sugestão de práticas terapêuticas personalizadas.',
+    icon: '🌿',
+    intelligenceDefault: 'archetypos',
+  },
+  {
+    id: 'simbolico',
+    name: 'Simbólico',
+    description: 'Tradução de linguagem simbólica e arquetípica.',
+    icon: '🎭',
+    intelligenceDefault: 'aracne_arcano',
+  },
+];
+
 // Três inteligências internas da SYNTHEIA
 const INTELLIGENCES = [
   {
