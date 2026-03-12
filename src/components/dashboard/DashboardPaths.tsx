@@ -27,6 +27,7 @@ const paths: PathCard[] = [
     links: [
       { label: "Oráculos", path: "/oraculos" },
       { label: "Jardim da Psique", path: "/jardim-da-psique" },
+      { label: "Quiz", path: "/quiz" },
       { label: "Mapa da Casa", path: "/mapa-casa" },
     ],
     cta: "Explorar a Casa",
