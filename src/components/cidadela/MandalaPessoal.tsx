@@ -16,23 +16,24 @@ export function MandalaPessoal() {
   }, [user?.id]);
 
   const loadData = async () => {
-    const distRes = await supabase
+    // Use raw query approach to avoid deep TS instantiation
+    const { data: rawDists } = await (supabase as any)
       .from('districts')
       .select('id, numero, nome, descricao, icone, cor')
       .order('numero');
-    const dists = (distRes.data || []) as unknown as MandalaDistrict[];
+    const dists = (rawDists || []) as MandalaDistrict[];
     setDistricts(dists);
 
     // Check if user has a linked client record
-    const clienteRes: any = await supabase
+    const { data: rawClientes } = await (supabase as any)
       .from('clientes')
       .select('id')
       .eq('email', user!.email!)
       .limit(1);
-    const clientId = (clienteRes.data as any)?.[0]?.id as string | undefined;
+    const clientId = rawClientes?.[0]?.id as string | undefined;
 
     // Check personal cartografia
-    const cartoRes = await supabase
+    const { data: rawCarto } = await (supabase as any)
       .from('cartografia_psiquica')
       .select('territorios_principais')
       .eq('user_id', user!.id)
@@ -40,15 +41,15 @@ export function MandalaPessoal() {
       .limit(1);
 
     if (clientId) {
-      const journeyRes = await supabase
+      const { data: rawJourneys } = await (supabase as any)
         .from('journeys').select('id').eq('client_id', clientId).limit(1);
 
-      if (journeyRes.data?.length) {
-        const jdRes = await supabase
+      if (rawJourneys?.length) {
+        const { data: rawJd } = await (supabase as any)
           .from('journey_districts')
           .select('district_id, state, sessions_count, last_session_at')
-          .eq('journey_id', journeyRes.data[0].id);
-        setDistrictStates((jdRes.data || []) as unknown as MandalaDistrictState[]);
+          .eq('journey_id', rawJourneys[0].id);
+        setDistrictStates((rawJd || []) as MandalaDistrictState[]);
       }
     }
 
