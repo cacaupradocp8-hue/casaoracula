@@ -2032,12 +2032,12 @@ function AppRoutes() {
           }
         />
 
-        {/* Biblioteca das Travessias - Symbolic Families */}
+        {/* Biblioteca das Travessias - Redirect to unified biblioteca */}
         <Route
           path="/biblioteca-travessias"
           element={
             <ProtectedRoute>
-              <BibliotecaTravessias />
+              <Navigate to="/biblioteca?aba=travessias" replace />
             </ProtectedRoute>
           }
         />
