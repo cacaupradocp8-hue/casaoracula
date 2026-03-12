@@ -21,8 +21,9 @@ export function MandalaPessoal() {
   }, [user?.id]);
 
   const loadData = async () => {
-    const { data: dists } = await supabase
-      .from('districts').select('*').order('numero') as { data: MandalaDistrict[] | null };
+    const distRes = await supabase
+      .from('districts').select('id, numero, nome, descricao, icone, cor').order('numero');
+    setDistricts((distRes.data as MandalaDistrict[] | null) || []);
     setDistricts(dists || []);
 
     // Try to find user's journey (they may be a client or self-exploring)
