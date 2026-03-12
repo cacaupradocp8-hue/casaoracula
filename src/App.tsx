@@ -1619,9 +1619,9 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SalaTreinamentoPage /></ProtectedRoute>} />
         <Route path="/treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SalaTreinamentoPage /></ProtectedRoute>} />
         <Route path="/comunidade" element={<ProtectedRoute><ComunidadePage /></ProtectedRoute>} />
-        <Route path="/casa-das-maquinas/comunidade" element={<ProtectedRoute minPortal="aluna_formacao"><ComunidadePage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/comunidade" element={<Navigate to="/comunidade" replace />} />
         <Route path="/academia" element={<ProtectedRoute minPortal="aluna_formacao"><AcademiaFormacaoPage /></ProtectedRoute>} />
-        <Route path="/casa-das-maquinas/academia-formacao" element={<ProtectedRoute minPortal="aluna_formacao"><AcademiaFormacaoPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/academia-formacao" element={<Navigate to="/academia" replace />} />
         <Route path="/casa-das-maquinas/ferramentas/cartografia" element={<ProtectedRoute minPortal="oracula"><CartografiaPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/torre-viva" element={<ProtectedRoute minPortal="oracula"><TorreVivaPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/labirinto" element={<ProtectedRoute minPortal="oracula"><LabirintoPage /></ProtectedRoute>} />
