@@ -32,6 +32,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { FASES_JORNADA } from '@/types/mapa-vivo';
 import { MapaVivoPanel } from '@/components/casa-maquinas/MapaVivoPanel';
+import { MapaVivoCidadela } from '@/components/casa-maquinas/MapaVivoCidadela';
 
 type MovimentoPercebido = 'avancou' | 'tensao' | 'ciclo_repetido' | 'observacao';
 
