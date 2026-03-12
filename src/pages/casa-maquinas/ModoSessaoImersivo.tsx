@@ -228,7 +228,7 @@ export default function ModoSessaoImersivo() {
       client_id: client.id,
       user_id: user.id,
       notes: prontuario || null,
-      insight: null,
+      insight: sessInsight || null,
       task: null,
     } as any);
 
@@ -236,6 +236,18 @@ export default function ModoSessaoImersivo() {
       toast.error('Erro ao salvar sessão');
       setSaving(false);
       return;
+    }
+
+    // Update CidaDELA map automatically
+    if (finalize && clienteId) {
+      await updateFromSession(clienteId, {
+        distrito: sessDistrict || undefined,
+        torre: sessTorre || undefined,
+        porta: sessPorta || undefined,
+        arquetipo: sessArquetipo || undefined,
+        ferramenta: sessFerramenta || undefined,
+        insight: sessInsight || undefined,
+      });
     }
 
     toast.success(finalize ? 'Sessão finalizada' : 'Sessão salva');
