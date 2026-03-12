@@ -54,8 +54,8 @@ export function MandalaPessoal() {
     }
 
     // Fallback: derive states from cartografia territories
-    if (!clientId && cartoRes.data?.[0]?.territorios_principais) {
-      const territories = cartoRes.data[0].territorios_principais as string[];
+    if (!clientId && rawCarto?.[0]?.territorios_principais) {
+      const territories = rawCarto[0].territorios_principais as string[];
       setDistrictStates(
         dists.map(d => ({
           district_id: d.id,
