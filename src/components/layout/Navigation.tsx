@@ -142,7 +142,7 @@ export function Navigation() {
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-primary/10 bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 md:h-20">
-            <Link to={user ? (activeDomain === 'profissional' ? '/casa-das-maquinas' : '/jornada') : '/'} className="h-full flex items-center py-2">
+            <Link to={user ? (activeDomain === 'profissional' ? '/casa-das-maquinas' : '/dashboard-membro') : '/'} className="h-full flex items-center py-2">
               <Logo size="xl" variant="combined" className="md:hidden" />
               <Logo size="xl" variant="horizontal" className="hidden md:flex" />
             </Link>

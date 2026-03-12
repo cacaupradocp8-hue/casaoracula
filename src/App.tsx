@@ -377,7 +377,7 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
       effectivePortal,
       minPortal,
     }, 'warn');
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/dashboard-membro" replace />;
   }
 
   return <>{children}</>;
