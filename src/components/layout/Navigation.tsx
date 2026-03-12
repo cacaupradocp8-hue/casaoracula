@@ -130,7 +130,7 @@ export function Navigation() {
     const next = activeDomain === 'aluna' ? 'profissional' : 'aluna';
     toggleDomain();
     if (next === 'profissional') navigate('/casa-das-maquinas');
-    else navigate('/jornada');
+    else navigate('/dashboard-membro');
     setMobileMenuOpen(false);
   };
 
