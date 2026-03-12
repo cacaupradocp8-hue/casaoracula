@@ -1030,12 +1030,12 @@ function AppRoutes() {
         }
       />
 
-      {/* Ferramentas Vitrine - Showcase for visitors */}
+      {/* Ferramentas Vitrine - Redirect to unified hub */}
       <Route
         path="/ferramentas-vitrine"
         element={
-          <ProtectedRoute minPortal="visitante">
-            <FerramentasVitrine />
+          <ProtectedRoute>
+            <Navigate to="/ferramentas" replace />
           </ProtectedRoute>
         }
       />
