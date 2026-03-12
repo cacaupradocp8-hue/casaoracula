@@ -97,6 +97,13 @@ export default function MapaCasaOracula() {
           </p>
         </motion.section>
 
+        {/* Mandala Pessoal da CidaDELA */}
+        <motion.section {...fade(0.1)}>
+          <div className="mx-auto max-w-lg rounded-2xl border border-border/20 bg-card/40 backdrop-blur p-6">
+            <MandalaPessoal />
+          </div>
+        </motion.section>
+
         {/* Territórios */}
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {territorios.map((t, i) => {
