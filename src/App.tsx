@@ -1010,12 +1010,12 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      {/* Salas - Experiential content listing */}
+      {/* Salas - Redirect to Mapa da Casa */}
       <Route
         path="/salas"
         element={
           <ProtectedRoute>
-            <SalasList />
+            <Navigate to="/mapa-casa" replace />
           </ProtectedRoute>
         }
       />
