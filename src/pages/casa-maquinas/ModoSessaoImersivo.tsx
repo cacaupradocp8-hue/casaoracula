@@ -84,6 +84,7 @@ export default function ModoSessaoImersivo() {
   const navigate = useNavigate();
   const timer = useSessionTimer();
   const autoSaveRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { updateFromSession } = useCidadelaMap();
 
   // State
   const [loading, setLoading] = useState(true);
@@ -96,6 +97,14 @@ export default function ModoSessaoImersivo() {
   const [suggestedTools, setSuggestedTools] = useState<SuggestedTool[]>([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [autoSaved, setAutoSaved] = useState(false);
+
+  // Session registration fields
+  const [sessDistrict, setSessDistrict] = useState('');
+  const [sessTorre, setSessTorre] = useState('');
+  const [sessPorta, setSessPorta] = useState('');
+  const [sessArquetipo, setSessArquetipo] = useState('');
+  const [sessInsight, setSessInsight] = useState('');
+  const [sessFerramenta, setSessFerramenta] = useState('');
 
   // ─── Load Data ───
   useEffect(() => {
