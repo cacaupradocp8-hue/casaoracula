@@ -27,6 +27,7 @@ const paths: PathCard[] = [
     links: [
       { label: "Oráculos", path: "/oraculos" },
       { label: "Jardim da Psique", path: "/jardim-da-psique" },
+      { label: "Quiz", path: "/quiz" },
       { label: "Mapa da Casa", path: "/mapa-casa" },
     ],
     cta: "Explorar a Casa",
@@ -39,6 +40,7 @@ const paths: PathCard[] = [
     links: [
       { label: "Clube do Livro", path: "/clube-livro" },
       { label: "Cursos", path: "/cursos" },
+      { label: "Sala de Treinamento", path: "/sala-treinamento" },
       { label: "Narroterapia", path: "/narroterapia" },
       { label: "Portal Junguiano", path: "/portal-junguiano" },
     ],
@@ -53,6 +55,7 @@ const paths: PathCard[] = [
       { label: "Visão Geral", path: "/casa-das-maquinas" },
       { label: "Clientes", path: "/casa-das-maquinas/clientes" },
       { label: "Sessões", path: "/casa-das-maquinas/sessoes" },
+      { label: "Biblioteca", path: "/casa-das-maquinas/biblioteca" },
       { label: "Painel Clínico", path: "/casa-das-maquinas/painel-clinico" },
     ],
     cta: "Abrir Casa das Máquinas",
