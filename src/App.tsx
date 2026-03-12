@@ -756,8 +756,8 @@ function AppRoutes() {
       <Route
         path="/sala-do-metodo"
         element={
-          <ProtectedRoute minPortal="oracula">
-            <FerramentasMetodo />
+          <ProtectedRoute>
+            <Navigate to="/ferramentas" replace />
           </ProtectedRoute>
         }
       />
