@@ -40,6 +40,7 @@ const paths: PathCard[] = [
     links: [
       { label: "Clube do Livro", path: "/clube-livro" },
       { label: "Cursos", path: "/cursos" },
+      { label: "Sala de Treinamento", path: "/sala-treinamento" },
       { label: "Narroterapia", path: "/narroterapia" },
       { label: "Portal Junguiano", path: "/portal-junguiano" },
     ],
