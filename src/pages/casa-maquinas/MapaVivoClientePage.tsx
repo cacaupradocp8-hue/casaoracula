@@ -32,6 +32,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { FASES_JORNADA } from '@/types/mapa-vivo';
 import { MapaVivoPanel } from '@/components/casa-maquinas/MapaVivoPanel';
+import { MapaVivoCidadela } from '@/components/casa-maquinas/MapaVivoCidadela';
 
 type MovimentoPercebido = 'avancou' | 'tensao' | 'ciclo_repetido' | 'observacao';
 
@@ -179,8 +180,12 @@ export default function MapaVivoClientePage() {
           className="mb-8"
         />
 
-        <Tabs defaultValue="inteligencia" className="w-full">
+        <Tabs defaultValue="cidadela" className="w-full">
           <TabsList className="bg-[#0B1B2B]/80 border border-[#C9A24A]/10 mb-4">
+            <TabsTrigger value="cidadela" className="data-[state=active]:bg-[#C9A24A]/15 data-[state=active]:text-[#C9A24A] text-[#F5F1E8]/60 text-xs">
+              <Map className="w-3 h-3 mr-1" />
+              Mapa da CidaDELA
+            </TabsTrigger>
             <TabsTrigger value="inteligencia" className="data-[state=active]:bg-[#C9A24A]/15 data-[state=active]:text-[#C9A24A] text-[#F5F1E8]/60 text-xs">
               <Brain className="w-3 h-3 mr-1" />
               Inteligência Simbólica
@@ -190,6 +195,10 @@ export default function MapaVivoClientePage() {
               Mapa Manual
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="cidadela">
+            {clienteId && <MapaVivoCidadela clienteId={clienteId} />}
+          </TabsContent>
 
           <TabsContent value="inteligencia">
             {clienteId && <MapaVivoPanel clientId={clienteId} />}

@@ -2,16 +2,19 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCidadelaMap } from '@/hooks/useCidadelaMap';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import {
   Loader2, Save, Play, Pause, Square, BookOpen, Map, FileText,
-  Clock, ArrowLeft, Hash, Sparkles, User, AlertCircle
+  Clock, ArrowLeft, Hash, Sparkles, User, AlertCircle, Castle, Key, Brain, Compass
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -81,6 +84,7 @@ export default function ModoSessaoImersivo() {
   const navigate = useNavigate();
   const timer = useSessionTimer();
   const autoSaveRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { updateFromSession } = useCidadelaMap();
 
   // State
   const [loading, setLoading] = useState(true);
@@ -93,6 +97,14 @@ export default function ModoSessaoImersivo() {
   const [suggestedTools, setSuggestedTools] = useState<SuggestedTool[]>([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [autoSaved, setAutoSaved] = useState(false);
+
+  // Session registration fields
+  const [sessDistrict, setSessDistrict] = useState('');
+  const [sessTorre, setSessTorre] = useState('');
+  const [sessPorta, setSessPorta] = useState('');
+  const [sessArquetipo, setSessArquetipo] = useState('');
+  const [sessInsight, setSessInsight] = useState('');
+  const [sessFerramenta, setSessFerramenta] = useState('');
 
   // ─── Load Data ───
   useEffect(() => {
@@ -216,7 +228,7 @@ export default function ModoSessaoImersivo() {
       client_id: client.id,
       user_id: user.id,
       notes: prontuario || null,
-      insight: null,
+      insight: sessInsight || null,
       task: null,
     } as any);
 
@@ -224,6 +236,18 @@ export default function ModoSessaoImersivo() {
       toast.error('Erro ao salvar sessão');
       setSaving(false);
       return;
+    }
+
+    // Update CidaDELA map automatically
+    if (finalize && clienteId) {
+      await updateFromSession(clienteId, {
+        distrito: sessDistrict || undefined,
+        torre: sessTorre || undefined,
+        porta: sessPorta || undefined,
+        arquetipo: sessArquetipo || undefined,
+        ferramenta: sessFerramenta || undefined,
+        insight: sessInsight || undefined,
+      });
     }
 
     toast.success(finalize ? 'Sessão finalizada' : 'Sessão salva');
@@ -419,6 +443,39 @@ export default function ModoSessaoImersivo() {
                 ) : (
                   <p className="text-xs text-muted-foreground">Nenhum distrito ativo</p>
                 )}
+              </div>
+
+              <Separator className="bg-border/20" />
+
+              {/* Session Registration Fields */}
+              <div>
+                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1">
+                  <Castle className="w-3 h-3 text-primary" />
+                  Registro da CidaDELA
+                </h3>
+                <div className="space-y-2">
+                  <div>
+                    <Label className="text-[10px] text-muted-foreground">Distrito visitado</Label>
+                    <Input value={sessDistrict} onChange={e => setSessDistrict(e.target.value)} placeholder="Ex: Torres" className="h-7 text-xs bg-background/30 border-border/30" />
+                  </div>
+                  <div>
+                    <Label className="text-[10px] text-muted-foreground">Porta trabalhada</Label>
+                    <Input value={sessPorta} onChange={e => setSessPorta(e.target.value)} placeholder="Ex: Porta do Medo" className="h-7 text-xs bg-background/30 border-border/30" />
+                  </div>
+                  <div>
+                    <Label className="text-[10px] text-muted-foreground">Arquétipo emergente</Label>
+                    <Input value={sessArquetipo} onChange={e => setSessArquetipo(e.target.value)} placeholder="Ex: Guardiã" className="h-7 text-xs bg-background/30 border-border/30" />
+                  </div>
+                  <div>
+                    <Label className="text-[10px] text-muted-foreground">Ferramenta utilizada</Label>
+                    <Input value={sessFerramenta} onChange={e => setSessFerramenta(e.target.value)} placeholder="Ex: Atlas de Arquétipos" className="h-7 text-xs bg-background/30 border-border/30" />
+                  </div>
+                  <div>
+                    <Label className="text-[10px] text-muted-foreground">Insight clínico</Label>
+                    <Textarea value={sessInsight} onChange={e => setSessInsight(e.target.value)} placeholder="Insight desta sessão..." className="min-h-[50px] text-xs bg-background/30 border-border/30" />
+                  </div>
+                </div>
+                <p className="text-[8px] text-muted-foreground/40 mt-1 italic">Ao finalizar, o mapa da CidaDELA será atualizado automaticamente.</p>
               </div>
 
               <Separator className="bg-border/20" />

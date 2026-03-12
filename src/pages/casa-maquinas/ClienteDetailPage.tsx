@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { CasaMaquinasLayout } from '@/components/casa-maquinas/CasaMaquinasLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CidadelaMap } from '@/components/casa-maquinas/CidadelaMap';
+import { MapaVivoCidadela } from '@/components/casa-maquinas/MapaVivoCidadela';
 import { ClienteHistorico } from '@/components/casa-maquinas/ClienteHistorico';
 import { ClientePerfil as ClientePerfilTab } from '@/components/casa-maquinas/ClientePerfilTab';
 import { ClienteCartografias } from '@/components/casa-maquinas/ClienteCartografias';
@@ -84,7 +85,7 @@ export default function ClienteDetailPage() {
           <TabsTrigger value="mapa-psiquico" className={tabClass}>Mapa Psíquico</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="cidadela"><CidadelaMap clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="cidadela"><MapaVivoCidadela clienteId={clienteId!} /></TabsContent>
         <TabsContent value="historico"><ClienteHistorico clienteId={clienteId!} /></TabsContent>
         <TabsContent value="cartografia"><ClienteCartografias clienteId={clienteId!} /></TabsContent>
         <TabsContent value="sonhos"><ClienteSonhos clienteId={clienteId!} /></TabsContent>
