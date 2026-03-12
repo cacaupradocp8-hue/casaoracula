@@ -748,8 +748,8 @@ function AppRoutes() {
       <Route
         path="/ferramentas-metodo"
         element={
-          <ProtectedRoute minPortal="aluna_formacao">
-            <FerramentasMetodoHub />
+          <ProtectedRoute>
+            <Navigate to="/ferramentas" replace />
           </ProtectedRoute>
         }
       />
@@ -1030,12 +1030,12 @@ function AppRoutes() {
         }
       />
 
-      {/* Ferramentas Vitrine - Showcase for visitors */}
+      {/* Ferramentas Vitrine - Redirect to unified hub */}
       <Route
         path="/ferramentas-vitrine"
         element={
-          <ProtectedRoute minPortal="visitante">
-            <FerramentasVitrine />
+          <ProtectedRoute>
+            <Navigate to="/ferramentas" replace />
           </ProtectedRoute>
         }
       />

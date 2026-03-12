@@ -1,195 +1,271 @@
-import { Link } from "react-router-dom";
-import { AppLayout } from "@/components/layout/AppLayout";
-import { MobilePageShell } from "@/components/shared/MobilePageShell";
-import { FerramentaCard, FerramentaCardData } from "@/components/shared/FerramentaCard";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { motion } from "framer-motion";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { AppLayout } from '@/components/layout/AppLayout';
+import { useAuth } from '@/contexts/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { motion } from 'framer-motion';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
-  Wrench,
-  Loader2,
-  Compass,
-  Shield,
-  Brain,
-  Sparkles,
-  Map,
-  Home,
-  ChevronRight,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { canAccessFeature, PortalType } from "@/types/portal";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
+  Loader2, Home, ChevronRight, ArrowRight, Lock,
+  Stethoscope, Drama, Eclipse, BookOpen, Sparkles, Map,
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { canAccessFeature, PortalType } from '@/types/portal';
 
-interface Ferramenta {
+// ═══════════════════════════════════════════════════════════════
+// CATEGORIAS
+// ═══════════════════════════════════════════════════════════════
+
+type CategoryKey = 'diagnostico' | 'arquetipos' | 'sombras' | 'narrativas' | 'oraculos' | 'cartografia';
+
+const CATEGORIES: {
+  key: CategoryKey;
+  label: string;
+  description: string;
+  icon: React.ElementType;
+  tipoFerramenta: string[];
+}[] = [
+  {
+    key: 'diagnostico',
+    label: 'Diagnóstico',
+    description: 'Mapas e avaliações para leitura do campo psíquico.',
+    icon: Stethoscope,
+    tipoFerramenta: ['diagnostico', 'autoleitura'],
+  },
+  {
+    key: 'arquetipos',
+    label: 'Arquétipos',
+    description: 'Ferramentas de identificação e trabalho arquetípico.',
+    icon: Drama,
+    tipoFerramenta: ['arquetipos'],
+  },
+  {
+    key: 'sombras',
+    label: 'Sombras',
+    description: 'Instrumentos para acessar e integrar a sombra.',
+    icon: Eclipse,
+    tipoFerramenta: ['sombra', 'ritual_simbolico'],
+  },
+  {
+    key: 'narrativas',
+    label: 'Narrativas',
+    description: 'Protocolos narrativos e de mito pessoal.',
+    icon: BookOpen,
+    tipoFerramenta: ['ferramenta_narrativa', 'conducao_terapeutica'],
+  },
+  {
+    key: 'oraculos',
+    label: 'Oráculos',
+    description: 'Leitura simbólica e divinação.',
+    icon: Sparkles,
+    tipoFerramenta: ['leitura_simbolica', 'oraculo'],
+  },
+  {
+    key: 'cartografia',
+    label: 'Cartografia',
+    description: 'Mapeamento de territórios e estruturas psíquicas.',
+    icon: Map,
+    tipoFerramenta: ['cartografia', 'mapeamento'],
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// FERRAMENTAS FIXAS (do FerramentasMetodoHub)
+// ═══════════════════════════════════════════════════════════════
+
+interface FixedTool {
+  id: string;
+  nome: string;
+  descricao: string;
+  rota: string;
+  portalMinimo: PortalType;
+  categoria: CategoryKey;
+}
+
+const FIXED_TOOLS: FixedTool[] = [
+  {
+    id: 'labirinto',
+    nome: 'Labirinto das 39 Portas',
+    descricao: 'Protocolo de leitura simbólica — onde a psique está.',
+    rota: '/labirinto',
+    portalMinimo: 'aluna',
+    categoria: 'diagnostico',
+  },
+  {
+    id: 'big5-oracular',
+    nome: 'Big Five Oracular',
+    descricao: 'Mapa simbólico dos 5 territórios com ritual de ancoragem.',
+    rota: '/ferramenta/big5-oracular',
+    portalMinimo: 'aluna',
+    categoria: 'diagnostico',
+  },
+  {
+    id: 'torre-viva',
+    nome: 'Torre Viva™',
+    descricao: 'Identifique as 7 Torres de defesa que organizam a psique.',
+    rota: '/ferramentas/torre-viva',
+    portalMinimo: 'oracula',
+    categoria: 'sombras',
+  },
+  {
+    id: 'cartografia-torre',
+    nome: 'Cartografia das Torres',
+    descricao: 'Explore as 5 Famílias de Torres e seus padrões.',
+    rota: '/ferramentas/cartografia-torre',
+    portalMinimo: 'aluna',
+    categoria: 'cartografia',
+  },
+  {
+    id: 'atlas-arquetipos',
+    nome: 'Atlas dos Arquétipos Femininos',
+    descricao: 'Mapeamento dos arquétipos dominantes e latentes.',
+    rota: '/atlas-arquetipos-femininos',
+    portalMinimo: 'aluna',
+    categoria: 'arquetipos',
+  },
+  {
+    id: 'leitura-5-camadas',
+    nome: 'Leitura em 5 Camadas',
+    descricao: 'Ferramenta central do Método — do sintoma ao portal.',
+    rota: '/sala-do-metodo?tab=5-camadas',
+    portalMinimo: 'oracula',
+    categoria: 'narrativas',
+  },
+  {
+    id: 'radar-eixo',
+    nome: 'Radar de Eixo',
+    descricao: 'Mapeamento de 6 competências estruturais da psique.',
+    rota: '/sala-do-metodo?tab=radar',
+    portalMinimo: 'oracula',
+    categoria: 'diagnostico',
+  },
+  {
+    id: 'mapas-reflexivos',
+    nome: 'Mapas Reflexivos Pessoais',
+    descricao: 'Big5, Eneagrama, Constelação e Tarô — modelos de reflexão.',
+    rota: '/mapas-pessoais',
+    portalMinimo: 'visitante',
+    categoria: 'cartografia',
+  },
+  {
+    id: 'oraculos',
+    nome: 'Oráculos da Casa',
+    descricao: 'Tiragem de cartas e leitura simbólica.',
+    rota: '/oraculos',
+    portalMinimo: 'visitante',
+    categoria: 'oraculos',
+  },
+  {
+    id: 'narroterapia',
+    nome: 'Narroterapia Oracular™',
+    descricao: 'Protocolos narrativos e biblioteca de contos clínicos.',
+    rota: '/narroterapia',
+    portalMinimo: 'aluna',
+    categoria: 'narrativas',
+  },
+  {
+    id: 'cartografia-psiquica',
+    nome: 'Cartografia Psíquica',
+    descricao: 'Mapeamento simbólico do mundo interior.',
+    rota: '/cartografia-psiquica',
+    portalMinimo: 'visitante',
+    categoria: 'cartografia',
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// COMPONENTE
+// ═══════════════════════════════════════════════════════════════
+
+interface DBFerramenta {
   id: string;
   ferramenta_nome: string;
   ferramenta_descricao: string | null;
   rota: string | null;
-  icone: string | null;
-  tipo: string | null;
   tipo_ferramenta: string | null;
-  origem_metodologica: string | null;
-  finalidade_pratica: string | null;
   portal_minimo: string;
   ordem: number;
-  ativa: boolean;
 }
-
-// Using centralized portal hierarchy from types
-
-// Define the 4 sections with metadata
-const SECTIONS = [
-  {
-    key: 'travessia',
-    title: 'Travessia Simbólica',
-    subtitle: 'Ferramentas para jornadas de transformação profunda',
-    description: 'Instrumentos que acompanham processos de passagem, crise e renascimento. Cada travessia é única e guiada pela narrativa da própria psique.',
-    icon: Compass,
-    color: 'purple',
-    // Categories that belong to this section
-    categories: ['Jornadas', 'Travessias', 'Processos', 'Caminho'],
-  },
-  {
-    key: 'estrutura',
-    title: 'Estrutura & Sobrevivência',
-    subtitle: 'Suporte para momentos de reorganização',
-    description: 'Recursos para quando o ego precisa se reorganizar. Contêm estrutura, ancoragem e práticas de sustentação durante períodos difíceis.',
-    icon: Shield,
-    color: 'emerald',
-    categories: ['Estrutura', 'Sobrevivência', 'Suporte', 'Ancoragem', 'Protocolos'],
-  },
-  {
-    key: 'mapas',
-    title: 'Mapas da Psique',
-    subtitle: 'Cartografias do mundo interior',
-    description: 'Ferramentas de mapeamento simbólico que revelam territórios internos, arquétipos dominantes e padrões inconscientes.',
-    icon: Brain,
-    color: 'gold',
-    categories: ['Mapas', 'Visualizações', 'Diagnóstico', 'Perfil', 'Territórios'],
-  },
-  {
-    key: 'oracular',
-    title: 'Prática Oracular',
-    subtitle: 'Leitura e interpretação simbólica',
-    description: 'Instrumentos de escuta oracular: cartas, imagens e práticas de leitura que acessam a linguagem do inconsciente.',
-    icon: Sparkles,
-    color: 'rose',
-    categories: ['Oráculos', 'Leituras', 'Cartas', 'Divinação', 'Simbólico'],
-  },
-];
-
-// Determine which section a ferramenta belongs to based on tipo_ferramenta (standardized)
-const getSectionForTipoFerramenta = (tipoFerramenta: string | null): string => {
-  if (!tipoFerramenta) return 'mapas'; // Default
-  
-  switch (tipoFerramenta) {
-    case 'diagnostico':
-      return 'mapas'; // Mapas da Psique
-    case 'leitura_simbolica':
-      return 'oracular'; // Prática Oracular
-    case 'autoleitura':
-      return 'mapas'; // Mapas da Psique (autorreflexão)
-    case 'conducao_terapeutica':
-      return 'travessia'; // Travessia Simbólica
-    case 'ritual_simbolico':
-      return 'estrutura'; // Estrutura & Sustentação
-    case 'ferramenta_narrativa':
-      return 'travessia'; // Travessia Simbólica
-    default:
-      return 'mapas';
-  }
-};
-
-const colorClasses = {
-  purple: {
-    bg: 'bg-purple-500/10',
-    border: 'border-purple-500/30',
-    icon: 'bg-purple-500/20 text-purple-400',
-    text: 'text-purple-400',
-  },
-  emerald: {
-    bg: 'bg-emerald-500/10',
-    border: 'border-emerald-500/30',
-    icon: 'bg-emerald-500/20 text-emerald-400',
-    text: 'text-emerald-400',
-  },
-  gold: {
-    bg: 'bg-gold/10',
-    border: 'border-gold/30',
-    icon: 'bg-gold/20 text-gold',
-    text: 'text-gold',
-  },
-  rose: {
-    bg: 'bg-rose-500/10',
-    border: 'border-rose-500/30',
-    icon: 'bg-rose-500/20 text-rose-400',
-    text: 'text-rose-400',
-  },
-};
 
 export default function FerramentasHub() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [activeCategory, setActiveCategory] = useState<CategoryKey | 'todas'>('todas');
 
-  const userPortal = user?.portal || 'visitante';
+  const userPortal = (user?.portal || 'visitante') as PortalType;
   const isAdmin = userPortal === 'admin';
-  const canAccessSyntheia = canAccessFeature(userPortal as PortalType, 'aluna');
 
-  // Fetch ferramentas from database with new classification fields
-  // Only show complete, active tools (must have tipo_ferramenta and finalidade_pratica)
-  const { data: ferramentas, isLoading } = useQuery({
-    queryKey: ['ferramentas-hub'],
+  // DB ferramentas
+  const { data: dbFerramentas, isLoading } = useQuery({
+    queryKey: ['ferramentas-hub-unified'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('sala_ferramentas')
-        .select('id, ferramenta_nome, ferramenta_descricao, rota, icone, tipo, tipo_ferramenta, origem_metodologica, finalidade_pratica, portal_minimo, ordem, ativa')
+        .select('id, ferramenta_nome, ferramenta_descricao, rota, tipo_ferramenta, portal_minimo, ordem')
         .eq('ativa', true)
-        .not('tipo_ferramenta', 'is', null)
-        .not('finalidade_pratica', 'is', null)
         .order('ordem', { ascending: true });
-
       if (error) throw error;
-      return data as Ferramenta[];
+      return data as DBFerramenta[];
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes - prevent flickering from refetches
+    staleTime: 5 * 60 * 1000,
   });
 
   const canAccess = (minPortal: string): boolean => {
     if (isAdmin) return true;
-    return canAccessFeature(userPortal as PortalType, minPortal as PortalType);
+    return canAccessFeature(userPortal, minPortal as PortalType);
   };
 
-  // Group ferramentas by section using tipo_ferramenta (standardized field)
-  const groupedBySection = ferramentas?.reduce((acc, ferramenta) => {
-    const sectionKey = getSectionForTipoFerramenta(ferramenta.tipo_ferramenta);
-    if (!acc[sectionKey]) {
-      acc[sectionKey] = [];
-    }
-    acc[sectionKey].push(ferramenta);
-    return acc;
-  }, {} as Record<string, Ferramenta[]>) || {};
+  // Map DB tools to categories
+  const mapDBToolCategory = (tipo: string | null): CategoryKey => {
+    if (!tipo) return 'diagnostico';
+    if (['diagnostico', 'autoleitura'].includes(tipo)) return 'diagnostico';
+    if (['arquetipos'].includes(tipo)) return 'arquetipos';
+    if (['sombra', 'ritual_simbolico'].includes(tipo)) return 'sombras';
+    if (['ferramenta_narrativa', 'conducao_terapeutica'].includes(tipo)) return 'narrativas';
+    if (['leitura_simbolica', 'oraculo'].includes(tipo)) return 'oraculos';
+    if (['cartografia', 'mapeamento'].includes(tipo)) return 'cartografia';
+    return 'diagnostico';
+  };
+
+  // Merge fixed + DB tools, dedup by id
+  const allTools = (() => {
+    const fixedIds = new Set(FIXED_TOOLS.map(t => t.id));
+    const dbMapped = (dbFerramentas || [])
+      .filter(t => t.rota && !fixedIds.has(t.id))
+      .map(t => ({
+        id: t.id,
+        nome: t.ferramenta_nome,
+        descricao: t.ferramenta_descricao || '',
+        rota: t.rota!,
+        portalMinimo: t.portal_minimo as PortalType,
+        categoria: mapDBToolCategory(t.tipo_ferramenta),
+      }));
+    return [...FIXED_TOOLS, ...dbMapped];
+  })();
+
+  const filteredTools = activeCategory === 'todas'
+    ? allTools
+    : allTools.filter(t => t.categoria === activeCategory);
 
   if (isLoading) {
     return (
       <AppLayout>
         <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-[400px]">
-          <Loader2 className="w-8 h-8 animate-spin text-gold" />
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
       </AppLayout>
     );
   }
 
-  const hasAnyTools = ferramentas && ferramentas.length > 0;
-
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-6xl">
-        {/* Breadcrumb Navigation */}
+        {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
+          <Link to="/dashboard-membro" className="hover:text-foreground transition-colors flex items-center gap-1">
             <Home className="w-3 h-3" />
             Casa
           </Link>
@@ -197,141 +273,120 @@ export default function FerramentasHub() {
           <span className="text-foreground">Ferramentas</span>
         </nav>
 
-        <div className="mb-8">
-          <p className="text-xs uppercase tracking-widest text-gold font-medium mb-1">Hub</p>
-          <h1 className="font-display text-2xl md:text-3xl text-foreground">Ferramentas do Método</h1>
-          <p className="text-sm text-muted-foreground mt-1">Recursos profissionais para prática simbólica e terapêutica</p>
-        </div>
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <h1 className="font-display text-3xl md:text-4xl text-foreground mb-2">
+            Ferramentas Orácula
+          </h1>
+          <p className="text-muted-foreground max-w-2xl">
+            Todos os instrumentos da Casa Orácula em um só lugar.
+            Explore por categoria ou navegue livremente.
+          </p>
+        </motion.div>
 
-        {/* Nota: Tríade do Método, Ferramentas Profissionais e Syntheia foram movidas para Travessias */}
+        {/* Category Filter */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="flex flex-wrap gap-2 mb-10"
+        >
+          <button
+            onClick={() => setActiveCategory('todas')}
+            className={cn(
+              'px-4 py-2 rounded-full text-sm font-medium border transition-all',
+              activeCategory === 'todas'
+                ? 'bg-primary/10 border-primary/30 text-primary'
+                : 'bg-card/50 border-border/30 text-muted-foreground hover:border-primary/20 hover:text-foreground'
+            )}
+          >
+            Todas
+          </button>
+          {CATEGORIES.map(cat => {
+            const Icon = cat.icon;
+            return (
+              <button
+                key={cat.key}
+                onClick={() => setActiveCategory(cat.key)}
+                className={cn(
+                  'px-4 py-2 rounded-full text-sm font-medium border transition-all flex items-center gap-1.5',
+                  activeCategory === cat.key
+                    ? 'bg-primary/10 border-primary/30 text-primary'
+                    : 'bg-card/50 border-border/30 text-muted-foreground hover:border-primary/20 hover:text-foreground'
+                )}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                {cat.label}
+              </button>
+            );
+          })}
+        </motion.div>
 
-        {!hasAnyTools ? (
+        {/* Tools Grid */}
+        {filteredTools.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">
-              Nenhuma ferramenta disponível no momento.
-            </p>
+            <p className="text-muted-foreground">Nenhuma ferramenta nesta categoria.</p>
           </div>
         ) : (
-          <div className="space-y-16">
-            {SECTIONS.map((section, sectionIndex) => {
-              const sectionTools = groupedBySection[section.key] || [];
-              const IconComponent = section.icon;
-              const colors = colorClasses[section.color as keyof typeof colorClasses];
-
-              // Only render section if it has tools
-              if (sectionTools.length === 0) return null;
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredTools.map((tool, i) => {
+              const hasAccess = canAccess(tool.portalMinimo);
+              const catMeta = CATEGORIES.find(c => c.key === tool.categoria);
+              const CatIcon = catMeta?.icon || Sparkles;
 
               return (
-                <motion.section
-                  key={section.key}
-                  initial={{ opacity: 0, y: 20 }}
+                <motion.div
+                  key={tool.id}
+                  initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: sectionIndex * 0.1 }}
+                  transition={{ delay: 0.05 * Math.min(i, 12) }}
                 >
-                  {/* Section Header */}
-                  <div className={cn("rounded-xl p-6 mb-6", colors.bg, "border", colors.border)}>
-                    <div className="flex items-start gap-4">
-                      <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0", colors.icon)}>
-                        <IconComponent className="w-6 h-6" />
+                  <Card
+                    className={cn(
+                      'h-full transition-all duration-300 group',
+                      hasAccess
+                        ? 'cursor-pointer hover:border-primary/30 hover:shadow-lg'
+                        : 'opacity-60'
+                    )}
+                    onClick={() => hasAccess && navigate(tool.rota)}
+                  >
+                    <CardHeader className="pb-2">
+                      <div className="flex items-start justify-between">
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <CatIcon className="w-5 h-5 text-primary" />
+                        </div>
+                        {!hasAccess && (
+                          <Badge variant="secondary" className="gap-1 text-xs">
+                            <Lock className="w-3 h-3" />
+                            Bloqueada
+                          </Badge>
+                        )}
                       </div>
-                      <div className="flex-1">
-                        <h2 className={cn("font-display text-xl font-semibold mb-1", colors.text)}>
-                          {section.title}
-                        </h2>
-                        <p className="text-sm text-muted-foreground mb-2">
-                          {section.subtitle}
-                        </p>
-                        <p className="text-sm text-foreground/70 leading-relaxed">
-                          {section.description}
-                        </p>
+                    </CardHeader>
+                    <CardContent>
+                      <CardTitle className="text-base mb-1 group-hover:text-primary transition-colors">
+                        {tool.nome}
+                      </CardTitle>
+                      <CardDescription className="text-sm line-clamp-2 mb-3">
+                        {tool.descricao}
+                      </CardDescription>
+                      <div className="flex items-center justify-between">
+                        <Badge variant="outline" className="text-xs text-muted-foreground">
+                          {catMeta?.label || 'Geral'}
+                        </Badge>
+                        {hasAccess && (
+                          <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                        )}
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Tools Grid - Using FerramentaCard */}
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {sectionTools.map((ferramenta) => {
-                      const isAccessible = canAccess(ferramenta.portal_minimo);
-
-                      const cardData: FerramentaCardData = {
-                        id: ferramenta.id,
-                        nome: ferramenta.ferramenta_nome,
-                        icone: ferramenta.icone,
-                        tipo: ferramenta.tipo_ferramenta,
-                        finalidade: ferramenta.finalidade_pratica || ferramenta.ferramenta_descricao,
-                        origem: ferramenta.origem_metodologica,
-                        rota: ferramenta.rota,
-                        acessivel: isAccessible,
-                        portalMinimo: ferramenta.portal_minimo,
-                      };
-
-                      return (
-                        <FerramentaCard
-                          key={ferramenta.id}
-                          ferramenta={cardData}
-                          colorScheme={section.color as 'gold' | 'purple' | 'emerald' | 'rose'}
-                          onClick={() => {
-                            if (ferramenta.rota) navigate(ferramenta.rota);
-                          }}
-                        />
-                      );
-                    })}
-                  </div>
-                </motion.section>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               );
             })}
-
-            {/* Personal Symbolic Maps - Fixed Internal Tool */}
-            <motion.section
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: SECTIONS.length * 0.1 }}
-            >
-              <div className={cn("rounded-xl p-6 mb-6", colorClasses.gold.bg, "border", colorClasses.gold.border)}>
-                <div className="flex items-start gap-4">
-                  <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0", colorClasses.gold.icon)}>
-                    <Map className="w-6 h-6" />
-                  </div>
-                  <div className="flex-1">
-                    <h2 className={cn("font-display text-xl font-semibold mb-1", colorClasses.gold.text)}>
-                      Mapas Reflexivos Pessoais
-                    </h2>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      Espaço privado de reflexão simbólica
-                    </p>
-                    <p className="text-sm text-foreground/70 leading-relaxed">
-                      Ferramentas de autorreflexão baseadas em modelos simbólicos. Totalmente privadas — somente você tem acesso ao conteúdo.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <Card
-                  className="group transition-all duration-300 cursor-pointer hover:shadow-gold hover:border-gold/30"
-                  onClick={() => navigate('/mapas-pessoais')}
-                >
-                  <CardHeader className="pb-2">
-                    <div className="flex items-start justify-between">
-                      <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center text-lg", colorClasses.gold.icon)}>
-                        <Map className="w-5 h-5" />
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <CardTitle className="text-base mb-1 group-hover:text-gold transition-colors">
-                      Mapas Reflexivos
-                    </CardTitle>
-                    <CardDescription className="text-sm line-clamp-2">
-                      Big5, Eneagrama, Antroposofia, Constelação e Tarô — modelos de reflexão simbólica pessoal.
-                    </CardDescription>
-                    <div className="flex items-center justify-end mt-3">
-                      <ArrowRight className="w-4 h-4 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-gold" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </motion.section>
           </div>
         )}
       </div>
