@@ -557,7 +557,7 @@ function AppRoutes() {
         path="/dashboard"
         element={
           <ProtectedRoute>
-            <Dashboard />
+            <Navigate to="/dashboard-membro" replace />
           </ProtectedRoute>
         }
       />
