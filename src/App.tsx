@@ -1750,7 +1750,7 @@ function AppRoutes() {
           path="/minha-biblioteca"
           element={
             <ProtectedRoute>
-              <MinhaBiblioteca />
+              <Navigate to="/biblioteca?aba=pessoal" replace />
             </ProtectedRoute>
           }
         />
