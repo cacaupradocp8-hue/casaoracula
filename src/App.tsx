@@ -1276,39 +1276,11 @@ function AppRoutes() {
         }
       />
       
-      {/* Legacy routes /salas/ - for backwards compatibility */}
-      <Route
-        path="/salas/big5"
-        element={
-          <ProtectedRoute minPortal="visitante">
-            <Big5 />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/salas/eneagrama"
-        element={
-          <ProtectedRoute minPortal="visitante">
-            <Eneagrama />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/salas/oraculo-perguntas"
-        element={
-          <ProtectedRoute minPortal="visitante">
-            <OraculoPerguntas />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/salas/mapa-oracula"
-        element={
-          <ProtectedRoute minPortal="mentorada">
-            <MapaOracula />
-          </ProtectedRoute>
-        }
-      />
+      {/* Legacy routes /salas/ - redirect to /ferramentas/ */}
+      <Route path="/salas/big5" element={<Navigate to="/ferramentas/big5" replace />} />
+      <Route path="/salas/eneagrama" element={<Navigate to="/ferramentas/eneagrama" replace />} />
+      <Route path="/salas/oraculo-perguntas" element={<Navigate to="/ferramentas/oraculo-perguntas" replace />} />
+      <Route path="/salas/mapa-oracula" element={<Navigate to="/ferramentas/mapa-oracula" replace />} />
       <Route
         path="/ferramentas/chakras"
         element={
