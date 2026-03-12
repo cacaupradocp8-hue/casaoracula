@@ -24,7 +24,7 @@ export function MandalaPessoal() {
     setDistricts(dists);
 
     // Check if user has a linked client record
-    const clienteRes = await supabase
+    const clienteRes: any = await supabase
       .from('clientes')
       .select('id')
       .eq('email', user!.email!)
