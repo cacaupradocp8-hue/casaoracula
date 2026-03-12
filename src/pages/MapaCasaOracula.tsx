@@ -7,6 +7,7 @@ import {
   Compass, GraduationCap, BookOpen, Cog, Users,
   ChevronRight, ArrowRight,
 } from 'lucide-react';
+import { MandalaPessoal } from '@/components/cidadela/MandalaPessoal';
 
 const fade = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
