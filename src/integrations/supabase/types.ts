@@ -7434,6 +7434,27 @@ export type Database = {
         }
         Relationships: []
       }
+      jornada_habitante_eventos: {
+        Row: {
+          created_at: string
+          evento: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          evento: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          evento?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       jornada_heroina_fases: {
         Row: {
           arquetipos_sugeridos: string[] | null
