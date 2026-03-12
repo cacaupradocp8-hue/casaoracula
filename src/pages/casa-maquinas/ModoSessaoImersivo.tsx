@@ -2,16 +2,19 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCidadelaMap } from '@/hooks/useCidadelaMap';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import {
   Loader2, Save, Play, Pause, Square, BookOpen, Map, FileText,
-  Clock, ArrowLeft, Hash, Sparkles, User, AlertCircle
+  Clock, ArrowLeft, Hash, Sparkles, User, AlertCircle, Castle, Key, Brain, Compass
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
