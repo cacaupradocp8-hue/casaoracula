@@ -1465,7 +1465,7 @@ function AppRoutes() {
         path="/ferramentas/agente-analista"
         element={
           <ProtectedRoute minPortal="mentorada">
-            <AgenteAnalista />
+            <Navigate to="/syntheia?agente=analista" replace />
           </ProtectedRoute>
         }
       />
@@ -1473,7 +1473,7 @@ function AppRoutes() {
         path="/ferramentas/agente-curador"
         element={
           <ProtectedRoute minPortal="mentorada">
-            <AgenteCurador />
+            <Navigate to="/syntheia?agente=curador" replace />
           </ProtectedRoute>
         }
       />
@@ -1481,7 +1481,7 @@ function AppRoutes() {
         path="/ferramentas/agente-simbolico"
         element={
           <ProtectedRoute minPortal="mentorada">
-            <AgenteSimbólico />
+            <Navigate to="/syntheia?agente=simbolico" replace />
           </ProtectedRoute>
         }
       />

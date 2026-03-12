@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -38,6 +38,31 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+
+// Agentes unificados (seletor principal)
+const AGENTES = [
+  {
+    id: 'analista',
+    name: 'Analista',
+    description: 'Análise de casos clínicos e identificação de padrões.',
+    icon: '🔍',
+    intelligenceDefault: 'ferramenteira',
+  },
+  {
+    id: 'curador',
+    name: 'Curador',
+    description: 'Sugestão de práticas terapêuticas personalizadas.',
+    icon: '🌿',
+    intelligenceDefault: 'archetypos',
+  },
+  {
+    id: 'simbolico',
+    name: 'Simbólico',
+    description: 'Tradução de linguagem simbólica e arquetípica.',
+    icon: '🎭',
+    intelligenceDefault: 'aracne_arcano',
+  },
+];
 
 // Três inteligências internas da SYNTHEIA
 const INTELLIGENCES = [
@@ -130,6 +155,14 @@ interface Message {
 type InputMode = 'livre' | 'guiado';
 
 export default function Syntheia() {
+  const [searchParams] = useSearchParams();
+  
+  // Agent selector state
+  const [selectedAgente, setSelectedAgente] = useState(() => {
+    const param = searchParams.get('agente');
+    return AGENTES.find(a => a.id === param)?.id || 'analista';
+  });
+
   // Mode and free input state
   const [mode, setMode] = useState<InputMode>('livre');
   const [input, setInput] = useState('');
@@ -150,6 +183,14 @@ export default function Syntheia() {
   
   const { toast } = useToast();
   const { user } = useAuth();
+
+  // Sync agente from URL
+  useEffect(() => {
+    const param = searchParams.get('agente');
+    if (param && AGENTES.find(a => a.id === param)) {
+      setSelectedAgente(param);
+    }
+  }, [searchParams]);
 
   // Auto-scroll para última mensagem
   useEffect(() => {
@@ -188,9 +229,9 @@ export default function Syntheia() {
         lower.includes('sombra') || lower.includes('luz')) {
       return 'aracne_arcano';
     }
-    
-    // Default: Ferramenteira (mais comum)
-    return 'ferramenteira';
+    // Default based on selected agent
+    const agente = AGENTES.find(a => a.id === selectedAgente);
+    return agente?.intelligenceDefault || 'ferramenteira';
   };
 
   // Get intelligence from guided form tipo
@@ -430,12 +471,42 @@ ${lastAssistant.content}
               </div>
             </div>
             <h1 className="text-4xl md:text-5xl font-display text-gold mb-3">SYNTHEIA</h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-2">
-              A inteligência que transforma intenção em estrutura.
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-1">
+              Templo de Inteligência Simbólica
             </p>
             <p className="text-sm text-muted-foreground/70 max-w-xl mx-auto">
-              Você fala. Ela organiza. Você conduz.
+              Três agentes. Uma interface. Você escolhe quem escuta.
             </p>
+          </div>
+
+          {/* Agent Selector */}
+          <div className="mb-8">
+            <p className="text-center text-sm text-muted-foreground mb-3">Escolha o agente</p>
+            <div className="flex justify-center gap-3">
+              {AGENTES.map((agente) => {
+                const isActive = selectedAgente === agente.id;
+                return (
+                  <button
+                    key={agente.id}
+                    onClick={() => { setSelectedAgente(agente.id); handleReset(); }}
+                    className={cn(
+                      'flex flex-col items-center gap-2 px-5 py-4 rounded-xl border transition-all duration-200',
+                      isActive
+                        ? 'bg-primary/10 border-primary/30 shadow-lg shadow-primary/5'
+                        : 'bg-card/50 border-border/30 hover:border-primary/20 hover:bg-primary/5'
+                    )}
+                  >
+                    <span className="text-2xl">{agente.icon}</span>
+                    <span className={cn('text-sm font-medium', isActive ? 'text-primary' : 'text-foreground/70')}>
+                      {agente.name}
+                    </span>
+                    <span className="text-xs text-muted-foreground max-w-[120px] text-center leading-tight">
+                      {agente.description}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Flow Indicator */}
