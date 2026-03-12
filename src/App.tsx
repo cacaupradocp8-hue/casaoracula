@@ -1985,7 +1985,7 @@ function AppRoutes() {
           path="/assinatura"
           element={
             <ProtectedRoute>
-              <Assinatura />
+              <Navigate to="/minha-conta" replace />
             </ProtectedRoute>
           }
         />
@@ -1993,7 +1993,7 @@ function AppRoutes() {
           path="/billing"
           element={
             <ProtectedRoute>
-              <Billing />
+              <Navigate to="/minha-conta" replace />
             </ProtectedRoute>
           }
         />
