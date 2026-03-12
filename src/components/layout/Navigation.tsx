@@ -45,21 +45,21 @@ const assinanteMenuGroups = () => [
 // ── ALUNA DE FORMAÇÃO ───────────────────────────────────────────────────────
 const alunaMenuGroups = () => [
   { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'jornada', label: 'Minha Jornada', icon: Compass, path: '/minha-jornada', subitems: [] },
   { key: 'mapa', label: 'Mapa da Casa', icon: Map, path: '/mapa-casa', subitems: [] },
   { key: 'clube', label: 'Clube de Leitura', icon: BookOpen, path: '/clube-livro', subitems: [] },
   {
-    key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/formacao-metodo',
+    key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos',
     subitems: [
+      { label: 'Cursos', path: '/cursos' },
       { label: 'Formação Orácula', path: '/oracula' },
       { label: 'Travessias', path: '/travessias' },
-      { label: 'Cursos', path: '/cursos' },
     ],
   },
   { key: 'treinamento', label: 'Sala de Treinamento', icon: Compass, path: '/sala-treinamento', subitems: [] },
   { key: 'casa-maquinas', label: 'Casa das Máquinas', icon: Cog, path: '/casa-das-maquinas', subitems: [] },
   { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/comunidade', subitems: [] },
   { key: 'conta', label: 'Perfil', icon: User, path: '/minha-conta', subitems: [] },
-  { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
 
 // ── MUNDO 2: Casa das Máquinas (Espaço Profissional) ────────────────────────
