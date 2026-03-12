@@ -155,6 +155,14 @@ interface Message {
 type InputMode = 'livre' | 'guiado';
 
 export default function Syntheia() {
+  const [searchParams] = useSearchParams();
+  
+  // Agent selector state
+  const [selectedAgente, setSelectedAgente] = useState(() => {
+    const param = searchParams.get('agente');
+    return AGENTES.find(a => a.id === param)?.id || 'analista';
+  });
+
   // Mode and free input state
   const [mode, setMode] = useState<InputMode>('livre');
   const [input, setInput] = useState('');
@@ -175,6 +183,14 @@ export default function Syntheia() {
   
   const { toast } = useToast();
   const { user } = useAuth();
+
+  // Sync agente from URL
+  useEffect(() => {
+    const param = searchParams.get('agente');
+    if (param && AGENTES.find(a => a.id === param)) {
+      setSelectedAgente(param);
+    }
+  }, [searchParams]);
 
   // Auto-scroll para última mensagem
   useEffect(() => {
