@@ -748,8 +748,8 @@ function AppRoutes() {
       <Route
         path="/ferramentas-metodo"
         element={
-          <ProtectedRoute minPortal="aluna_formacao">
-            <FerramentasMetodoHub />
+          <ProtectedRoute>
+            <Navigate to="/ferramentas" replace />
           </ProtectedRoute>
         }
       />
