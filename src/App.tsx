@@ -22,7 +22,7 @@ import DashboardMembro from "./pages/DashboardMembro";
 import Welcome from "./pages/Welcome";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
-import Biblioteca from "./pages/Biblioteca";
+import BibliotecaUnificada from "./pages/BibliotecaUnificada";
 import Mentoria from "./pages/Mentoria";
 import CasaTecelaAtrio from "./pages/CasaTecelaAtrio";
 import CasaTecelaInterior from "./pages/CasaTecelaInterior";
