@@ -447,6 +447,39 @@ export default function ModoSessaoImersivo() {
 
               <Separator className="bg-border/20" />
 
+              {/* Session Registration Fields */}
+              <div>
+                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1">
+                  <Castle className="w-3 h-3 text-primary" />
+                  Registro da CidaDELA
+                </h3>
+                <div className="space-y-2">
+                  <div>
+                    <Label className="text-[10px] text-muted-foreground">Distrito visitado</Label>
+                    <Input value={sessDistrict} onChange={e => setSessDistrict(e.target.value)} placeholder="Ex: Torres" className="h-7 text-xs bg-background/30 border-border/30" />
+                  </div>
+                  <div>
+                    <Label className="text-[10px] text-muted-foreground">Porta trabalhada</Label>
+                    <Input value={sessPorta} onChange={e => setSessPorta(e.target.value)} placeholder="Ex: Porta do Medo" className="h-7 text-xs bg-background/30 border-border/30" />
+                  </div>
+                  <div>
+                    <Label className="text-[10px] text-muted-foreground">Arquétipo emergente</Label>
+                    <Input value={sessArquetipo} onChange={e => setSessArquetipo(e.target.value)} placeholder="Ex: Guardiã" className="h-7 text-xs bg-background/30 border-border/30" />
+                  </div>
+                  <div>
+                    <Label className="text-[10px] text-muted-foreground">Ferramenta utilizada</Label>
+                    <Input value={sessFerramenta} onChange={e => setSessFerramenta(e.target.value)} placeholder="Ex: Atlas de Arquétipos" className="h-7 text-xs bg-background/30 border-border/30" />
+                  </div>
+                  <div>
+                    <Label className="text-[10px] text-muted-foreground">Insight clínico</Label>
+                    <Textarea value={sessInsight} onChange={e => setSessInsight(e.target.value)} placeholder="Insight desta sessão..." className="min-h-[50px] text-xs bg-background/30 border-border/30" />
+                  </div>
+                </div>
+                <p className="text-[8px] text-muted-foreground/40 mt-1 italic">Ao finalizar, o mapa da CidaDELA será atualizado automaticamente.</p>
+              </div>
+
+              <Separator className="bg-border/20" />
+
               {/* Suggested Tools */}
               <div>
                 <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1">
