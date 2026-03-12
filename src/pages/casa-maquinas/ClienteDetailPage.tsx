@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { CasaMaquinasLayout } from '@/components/casa-maquinas/CasaMaquinasLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CidadelaMap } from '@/components/casa-maquinas/CidadelaMap';
+import { MapaVivoCidadela } from '@/components/casa-maquinas/MapaVivoCidadela';
 import { ClienteHistorico } from '@/components/casa-maquinas/ClienteHistorico';
 import { ClientePerfil as ClientePerfilTab } from '@/components/casa-maquinas/ClientePerfilTab';
 import { ClienteCartografias } from '@/components/casa-maquinas/ClienteCartografias';
