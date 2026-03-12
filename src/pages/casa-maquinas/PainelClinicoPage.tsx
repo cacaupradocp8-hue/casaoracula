@@ -26,6 +26,39 @@ const CHART_COLORS = [
 ];
 
 type PeriodFilter = '7' | '30' | '90' | 'all';
+
+// Inline collective mandala that reuses districtCounts from the dashboard
+function MandalaColetivaPainel({ districtCounts }: { districtCounts: { name: string; count: number }[] }) {
+  const [districts, setDistricts] = useState<MandalaDistrict[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    (supabase as any).from('districts').select('id, numero, nome, descricao, icone, cor').order('numero')
+      .then(({ data }: any) => { setDistricts(data || []); setLoaded(true); });
+  }, []);
+
+  const collectiveData = useMemo<MandalaCollectiveData[]>(() => {
+    return districtCounts.map(dc => {
+      const d = districts.find(dd => dd.nome === dc.name);
+      return d ? { district_id: d.id, client_count: dc.count } : null;
+    }).filter(Boolean) as MandalaCollectiveData[];
+  }, [districtCounts, districts]);
+
+  if (!loaded || districts.length === 0) return null;
+
+  return (
+    <div className="space-y-3">
+      <MandalaCidadela
+        districts={districts}
+        collectiveData={collectiveData}
+        mode="coletivo"
+        className="w-full max-w-[400px] mx-auto"
+      />
+      <MandalaLegend mode="coletivo" />
+    </div>
+  );
+}
+
 type InsightType = 'all' | 'labirintos' | 'portas' | 'arquetipos' | 'torres' | 'distritos';
 
 interface ArchetypeCount {
