@@ -511,7 +511,26 @@ export default function PainelClinicoPage() {
             )}
           </motion.div>
 
-          {/* SECTION 4 — Client Table */}
+          {/* SECTION 3.5 — Mandala Coletiva */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.25 }}
+          >
+            <Card className="bg-card/80 border-border/50">
+              <CardHeader>
+                <CardTitle className="text-sm flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-primary" />
+                  Mandala Coletiva — CidaDELA
+                </CardTitle>
+                <CardDescription className="text-xs">Distribuição visual das clientes nos distritos</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <MandalaColetivaPainel districtCounts={districtCounts} />
+              </CardContent>
+            </Card>
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
