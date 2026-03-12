@@ -424,12 +424,12 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
     return <Navigate to="/onboarding" replace />;
   }
 
-  logRouteStep('definição da rota pós-login: /dashboard', {
+  logRouteStep('definição da rota pós-login: /dashboard-membro', {
     from: location.pathname,
     userId: user?.id ?? null,
     portal: user?.portal ?? null,
   });
-  return <Navigate to="/dashboard" replace />;
+  return <Navigate to="/dashboard-membro" replace />;
 }
 
 // Legacy redirect components for old /curso/ routes
