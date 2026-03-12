@@ -1544,12 +1544,12 @@ function AppRoutes() {
         }
       />
 
-      {/* Biblioteca de Casos - Vinhetas clínicas para treino */}
+      {/* Biblioteca de Casos - Redirect to unified biblioteca */}
       <Route
         path="/biblioteca-casos"
         element={
-          <ProtectedRoute minPortal="oracula">
-            <BibliotecaCasos />
+          <ProtectedRoute>
+            <Navigate to="/biblioteca?aba=casos" replace />
           </ProtectedRoute>
         }
       />
