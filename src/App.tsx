@@ -1276,39 +1276,11 @@ function AppRoutes() {
         }
       />
       
-      {/* Legacy routes /salas/ - for backwards compatibility */}
-      <Route
-        path="/salas/big5"
-        element={
-          <ProtectedRoute minPortal="visitante">
-            <Big5 />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/salas/eneagrama"
-        element={
-          <ProtectedRoute minPortal="visitante">
-            <Eneagrama />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/salas/oraculo-perguntas"
-        element={
-          <ProtectedRoute minPortal="visitante">
-            <OraculoPerguntas />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/salas/mapa-oracula"
-        element={
-          <ProtectedRoute minPortal="mentorada">
-            <MapaOracula />
-          </ProtectedRoute>
-        }
-      />
+      {/* Legacy routes /salas/ - redirect to /ferramentas/ */}
+      <Route path="/salas/big5" element={<Navigate to="/ferramentas/big5" replace />} />
+      <Route path="/salas/eneagrama" element={<Navigate to="/ferramentas/eneagrama" replace />} />
+      <Route path="/salas/oraculo-perguntas" element={<Navigate to="/ferramentas/oraculo-perguntas" replace />} />
+      <Route path="/salas/mapa-oracula" element={<Navigate to="/ferramentas/mapa-oracula" replace />} />
       <Route
         path="/ferramentas/chakras"
         element={
@@ -1647,9 +1619,9 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SalaTreinamentoPage /></ProtectedRoute>} />
         <Route path="/treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SalaTreinamentoPage /></ProtectedRoute>} />
         <Route path="/comunidade" element={<ProtectedRoute><ComunidadePage /></ProtectedRoute>} />
-        <Route path="/casa-das-maquinas/comunidade" element={<ProtectedRoute minPortal="aluna_formacao"><ComunidadePage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/comunidade" element={<Navigate to="/comunidade" replace />} />
         <Route path="/academia" element={<ProtectedRoute minPortal="aluna_formacao"><AcademiaFormacaoPage /></ProtectedRoute>} />
-        <Route path="/casa-das-maquinas/academia-formacao" element={<ProtectedRoute minPortal="aluna_formacao"><AcademiaFormacaoPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/academia-formacao" element={<Navigate to="/academia" replace />} />
         <Route path="/casa-das-maquinas/ferramentas/cartografia" element={<ProtectedRoute minPortal="oracula"><CartografiaPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/torre-viva" element={<ProtectedRoute minPortal="oracula"><TorreVivaPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/labirinto" element={<ProtectedRoute minPortal="oracula"><LabirintoPage /></ProtectedRoute>} />
