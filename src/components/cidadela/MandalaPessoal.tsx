@@ -22,16 +22,15 @@ export function MandalaPessoal() {
 
   const loadData = async () => {
     const { data: dists } = await supabase
-      .from('districts').select('*').order('numero');
+      .from('districts').select('*').order('numero') as { data: MandalaDistrict[] | null };
     setDistricts(dists || []);
 
     // Try to find user's journey (they may be a client or self-exploring)
-    // First check if the user has a profile-linked client record
     const { data: clienteData } = await supabase
       .from('clientes')
       .select('id')
-      .eq('email', user!.email)
-      .limit(1);
+      .eq('email', user!.email!)
+      .limit(1) as { data: { id: string }[] | null };
 
     let clientId = clienteData?.[0]?.id;
 
