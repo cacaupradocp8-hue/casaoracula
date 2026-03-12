@@ -1856,8 +1856,8 @@ function AppRoutes() {
         <Route
           path="/biblioteca-das-travessias"
           element={
-            <ProtectedRoute minPortal="visitante">
-              <BibliotecaDasTravessias />
+            <ProtectedRoute>
+              <Navigate to="/biblioteca?aba=travessias" replace />
             </ProtectedRoute>
           }
         />
