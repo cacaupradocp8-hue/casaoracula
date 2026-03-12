@@ -55,6 +55,7 @@ const paths: PathCard[] = [
       { label: "Visão Geral", path: "/casa-das-maquinas" },
       { label: "Clientes", path: "/casa-das-maquinas/clientes" },
       { label: "Sessões", path: "/casa-das-maquinas/sessoes" },
+      { label: "Biblioteca", path: "/casa-das-maquinas/biblioteca" },
       { label: "Painel Clínico", path: "/casa-das-maquinas/painel-clinico" },
     ],
     cta: "Abrir Casa das Máquinas",
