@@ -517,7 +517,7 @@ function AppRoutes() {
         path="/jornada"
         element={
           <ProtectedRoute>
-            <Jornada />
+            <Navigate to="/minha-jornada" replace />
           </ProtectedRoute>
         }
       />
