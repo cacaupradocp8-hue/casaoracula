@@ -24,9 +24,8 @@ import {
 
 // ── VISITANTE / GRATUITO ─────────────────────────────────────────────────────
 const visitanteMenuGroups = () => [
-  { key: 'inicio', label: 'Início', icon: Home, path: '/jornada', subitems: [] },
-  { key: 'comece-aqui', label: 'Comece por Aqui', icon: Compass, path: '/comece-aqui', subitems: [] },
-  { key: 'experiencia', label: 'Experiência Gratuita', icon: Sparkles, path: '/experiencia-gratuita', subitems: [] },
+  { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'mapa', label: 'Mapa da Casa', icon: Map, path: '/mapa-casa', subitems: [] },
   { key: 'clube', label: 'Clube Oracular', icon: BookOpen, path: '/clube-livro', subitems: [] },
   { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
   { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
