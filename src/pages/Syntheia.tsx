@@ -229,9 +229,9 @@ export default function Syntheia() {
         lower.includes('sombra') || lower.includes('luz')) {
       return 'aracne_arcano';
     }
-    
-    // Default: Ferramenteira (mais comum)
-    return 'ferramenteira';
+    // Default based on selected agent
+    const agente = AGENTES.find(a => a.id === selectedAgente);
+    return agente?.intelligenceDefault || 'ferramenteira';
   };
 
   // Get intelligence from guided form tipo
