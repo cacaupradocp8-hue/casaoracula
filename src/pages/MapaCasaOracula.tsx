@@ -7,6 +7,7 @@ import {
   Compass, GraduationCap, BookOpen, Cog, Users,
   ChevronRight, ArrowRight,
 } from 'lucide-react';
+import { MandalaPessoal } from '@/components/cidadela/MandalaPessoal';
 
 const fade = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
@@ -94,6 +95,13 @@ export default function MapaCasaOracula() {
             Cada território da Casa sustenta um momento diferente da jornada.
             Escolha o caminho que deseja atravessar.
           </p>
+        </motion.section>
+
+        {/* Mandala Pessoal da CidaDELA */}
+        <motion.section {...fade(0.1)}>
+          <div className="mx-auto max-w-lg rounded-2xl border border-border/20 bg-card/40 backdrop-blur p-6">
+            <MandalaPessoal />
+          </div>
         </motion.section>
 
         {/* Territórios */}
