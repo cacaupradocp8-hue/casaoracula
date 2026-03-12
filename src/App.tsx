@@ -377,7 +377,7 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
       effectivePortal,
       minPortal,
     }, 'warn');
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/dashboard-membro" replace />;
   }
 
   return <>{children}</>;
@@ -424,12 +424,12 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
     return <Navigate to="/onboarding" replace />;
   }
 
-  logRouteStep('definição da rota pós-login: /dashboard', {
+  logRouteStep('definição da rota pós-login: /dashboard-membro', {
     from: location.pathname,
     userId: user?.id ?? null,
     portal: user?.portal ?? null,
   });
-  return <Navigate to="/dashboard" replace />;
+  return <Navigate to="/dashboard-membro" replace />;
 }
 
 // Legacy redirect components for old /curso/ routes
@@ -481,7 +481,7 @@ function AppRoutes() {
       {/* Rotas legadas /formacao-oracula, /formacao-viva, /formacao removidas - usar /oracula */}
       <Route path="/formacao-oracula" element={<Navigate to="/oracula" replace />} />
       <Route path="/formacao-viva" element={<Navigate to="/oracula" replace />} />
-      <Route path="/formacao" element={<Navigate to="/oracula" replace />} />
+      <Route path="/formacao" element={<Navigate to="/cursos" replace />} />
       <Route path="/tour" element={<Tour />} />
 
       {/* Onboarding Route - First-time experience (before completing) */}
@@ -517,7 +517,7 @@ function AppRoutes() {
         path="/jornada"
         element={
           <ProtectedRoute>
-            <Jornada />
+            <Navigate to="/minha-jornada" replace />
           </ProtectedRoute>
         }
       />
@@ -549,7 +549,7 @@ function AppRoutes() {
         path="/comece-aqui"
         element={
           <ProtectedRoute>
-            <Navigate to="/sala-da-visitante" replace />
+            <Navigate to="/onboarding" replace />
           </ProtectedRoute>
         }
       />
@@ -557,7 +557,7 @@ function AppRoutes() {
         path="/dashboard"
         element={
           <ProtectedRoute>
-            <Dashboard />
+            <Navigate to="/dashboard-membro" replace />
           </ProtectedRoute>
         }
       />
@@ -1010,12 +1010,12 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      {/* Salas - Experiential content listing */}
+      {/* Salas - Redirect to Mapa da Casa */}
       <Route
         path="/salas"
         element={
           <ProtectedRoute>
-            <SalasList />
+            <Navigate to="/mapa-casa" replace />
           </ProtectedRoute>
         }
       />

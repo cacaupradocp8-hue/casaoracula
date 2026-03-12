@@ -24,9 +24,8 @@ import {
 
 // ── VISITANTE / GRATUITO ─────────────────────────────────────────────────────
 const visitanteMenuGroups = () => [
-  { key: 'inicio', label: 'Início', icon: Home, path: '/jornada', subitems: [] },
-  { key: 'comece-aqui', label: 'Comece por Aqui', icon: Compass, path: '/comece-aqui', subitems: [] },
-  { key: 'experiencia', label: 'Experiência Gratuita', icon: Sparkles, path: '/experiencia-gratuita', subitems: [] },
+  { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'mapa', label: 'Mapa da Casa', icon: Map, path: '/mapa-casa', subitems: [] },
   { key: 'clube', label: 'Clube Oracular', icon: BookOpen, path: '/clube-livro', subitems: [] },
   { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
   { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
@@ -35,33 +34,32 @@ const visitanteMenuGroups = () => [
 // ── ASSINANTE DO CLUBE ──────────────────────────────────────────────────────
 const assinanteMenuGroups = () => [
   { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'jornada', label: 'Minha Jornada', icon: Compass, path: '/minha-jornada', subitems: [] },
   { key: 'mapa', label: 'Mapa da Casa', icon: Map, path: '/mapa-casa', subitems: [] },
   { key: 'clube', label: 'Clube de Leitura', icon: BookOpen, path: '/clube-livro', subitems: [] },
   { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
   { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/comunidade', subitems: [] },
-  { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas', subitems: [] },
   { key: 'conta', label: 'Perfil', icon: User, path: '/minha-conta', subitems: [] },
-  { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
 
 // ── ALUNA DE FORMAÇÃO ───────────────────────────────────────────────────────
 const alunaMenuGroups = () => [
   { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'jornada', label: 'Minha Jornada', icon: Compass, path: '/minha-jornada', subitems: [] },
   { key: 'mapa', label: 'Mapa da Casa', icon: Map, path: '/mapa-casa', subitems: [] },
   { key: 'clube', label: 'Clube de Leitura', icon: BookOpen, path: '/clube-livro', subitems: [] },
   {
-    key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/formacao-metodo',
+    key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos',
     subitems: [
+      { label: 'Cursos', path: '/cursos' },
       { label: 'Formação Orácula', path: '/oracula' },
       { label: 'Travessias', path: '/travessias' },
-      { label: 'Cursos', path: '/cursos' },
     ],
   },
   { key: 'treinamento', label: 'Sala de Treinamento', icon: Compass, path: '/sala-treinamento', subitems: [] },
   { key: 'casa-maquinas', label: 'Casa das Máquinas', icon: Cog, path: '/casa-das-maquinas', subitems: [] },
   { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/comunidade', subitems: [] },
   { key: 'conta', label: 'Perfil', icon: User, path: '/minha-conta', subitems: [] },
-  { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
 
 // ── MUNDO 2: Casa das Máquinas (Espaço Profissional) ────────────────────────
@@ -131,7 +129,7 @@ export function Navigation() {
     const next = activeDomain === 'aluna' ? 'profissional' : 'aluna';
     toggleDomain();
     if (next === 'profissional') navigate('/casa-das-maquinas');
-    else navigate('/jornada');
+    else navigate('/dashboard-membro');
     setMobileMenuOpen(false);
   };
 
@@ -143,7 +141,7 @@ export function Navigation() {
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-primary/10 bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 md:h-20">
-            <Link to={user ? (activeDomain === 'profissional' ? '/casa-das-maquinas' : '/jornada') : '/'} className="h-full flex items-center py-2">
+            <Link to={user ? (activeDomain === 'profissional' ? '/casa-das-maquinas' : '/dashboard-membro') : '/'} className="h-full flex items-center py-2">
               <Logo size="xl" variant="combined" className="md:hidden" />
               <Logo size="xl" variant="horizontal" className="hidden md:flex" />
             </Link>
