@@ -481,7 +481,7 @@ function AppRoutes() {
       {/* Rotas legadas /formacao-oracula, /formacao-viva, /formacao removidas - usar /oracula */}
       <Route path="/formacao-oracula" element={<Navigate to="/oracula" replace />} />
       <Route path="/formacao-viva" element={<Navigate to="/oracula" replace />} />
-      <Route path="/formacao" element={<Navigate to="/oracula" replace />} />
+      <Route path="/formacao" element={<Navigate to="/cursos" replace />} />
       <Route path="/tour" element={<Tour />} />
 
       {/* Onboarding Route - First-time experience (before completing) */}
