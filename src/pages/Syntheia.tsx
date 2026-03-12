@@ -479,6 +479,36 @@ ${lastAssistant.content}
             </p>
           </div>
 
+          {/* Agent Selector */}
+          <div className="mb-8">
+            <p className="text-center text-sm text-muted-foreground mb-3">Escolha o agente</p>
+            <div className="flex justify-center gap-3">
+              {AGENTES.map((agente) => {
+                const isActive = selectedAgente === agente.id;
+                return (
+                  <button
+                    key={agente.id}
+                    onClick={() => { setSelectedAgente(agente.id); handleReset(); }}
+                    className={cn(
+                      'flex flex-col items-center gap-2 px-5 py-4 rounded-xl border transition-all duration-200',
+                      isActive
+                        ? 'bg-primary/10 border-primary/30 shadow-lg shadow-primary/5'
+                        : 'bg-card/50 border-border/30 hover:border-primary/20 hover:bg-primary/5'
+                    )}
+                  >
+                    <span className="text-2xl">{agente.icon}</span>
+                    <span className={cn('text-sm font-medium', isActive ? 'text-primary' : 'text-foreground/70')}>
+                      {agente.name}
+                    </span>
+                    <span className="text-xs text-muted-foreground max-w-[120px] text-center leading-tight">
+                      {agente.description}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Flow Indicator */}
           <div className="flex items-center justify-center gap-2 mb-8">
             <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/50 border border-border/50">
