@@ -36,7 +36,7 @@ export function useCidadelaMap() {
       console.error('Error fetching cidadela map:', error);
       return null;
     }
-    return data as ClientCidadelaMap | null;
+    return data as unknown as ClientCidadelaMap | null;
   }, [user]);
 
   const updateFromSession = useCallback(async (
