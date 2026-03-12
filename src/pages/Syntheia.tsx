@@ -471,11 +471,11 @@ ${lastAssistant.content}
               </div>
             </div>
             <h1 className="text-4xl md:text-5xl font-display text-gold mb-3">SYNTHEIA</h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-2">
-              A inteligência que transforma intenção em estrutura.
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-1">
+              Templo de Inteligência Simbólica
             </p>
             <p className="text-sm text-muted-foreground/70 max-w-xl mx-auto">
-              Você fala. Ela organiza. Você conduz.
+              Três agentes. Uma interface. Você escolhe quem escuta.
             </p>
           </div>
 
