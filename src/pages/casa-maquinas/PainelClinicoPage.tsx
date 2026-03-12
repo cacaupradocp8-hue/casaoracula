@@ -11,6 +11,8 @@ import { Loader2, Users, MapPin, Sparkles, Lightbulb, Download, Filter, ArrowRig
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { motion } from 'framer-motion';
 import { subDays, format } from 'date-fns';
+import { MandalaCidadela, MandalaLegend } from '@/components/cidadela/MandalaCidadela';
+import type { MandalaDistrict, MandalaCollectiveData } from '@/components/cidadela/MandalaCidadela';
 
 const CHART_COLORS = [
   'hsl(var(--primary))',
