@@ -22,7 +22,7 @@ import DashboardMembro from "./pages/DashboardMembro";
 import Welcome from "./pages/Welcome";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
-import Biblioteca from "./pages/Biblioteca";
+import BibliotecaUnificada from "./pages/BibliotecaUnificada";
 import Mentoria from "./pages/Mentoria";
 import CasaTecelaAtrio from "./pages/CasaTecelaAtrio";
 import CasaTecelaInterior from "./pages/CasaTecelaInterior";
@@ -756,8 +756,8 @@ function AppRoutes() {
       <Route
         path="/sala-do-metodo"
         element={
-          <ProtectedRoute minPortal="oracula">
-            <FerramentasMetodo />
+          <ProtectedRoute>
+            <Navigate to="/ferramentas" replace />
           </ProtectedRoute>
         }
       />
@@ -989,8 +989,8 @@ function AppRoutes() {
       <Route
         path="/biblioteca"
         element={
-          <ProtectedRoute minPortal="mentorada">
-            <Biblioteca />
+          <ProtectedRoute>
+            <BibliotecaUnificada />
           </ProtectedRoute>
         }
       />
@@ -1544,12 +1544,12 @@ function AppRoutes() {
         }
       />
 
-      {/* Biblioteca de Casos - Vinhetas clínicas para treino */}
+      {/* Biblioteca de Casos - Redirect to unified biblioteca */}
       <Route
         path="/biblioteca-casos"
         element={
-          <ProtectedRoute minPortal="oracula">
-            <BibliotecaCasos />
+          <ProtectedRoute>
+            <Navigate to="/biblioteca?aba=casos" replace />
           </ProtectedRoute>
         }
       />
@@ -1750,7 +1750,7 @@ function AppRoutes() {
           path="/minha-biblioteca"
           element={
             <ProtectedRoute>
-              <MinhaBiblioteca />
+              <Navigate to="/biblioteca?aba=pessoal" replace />
             </ProtectedRoute>
           }
         />
@@ -1856,8 +1856,8 @@ function AppRoutes() {
         <Route
           path="/biblioteca-das-travessias"
           element={
-            <ProtectedRoute minPortal="visitante">
-              <BibliotecaDasTravessias />
+            <ProtectedRoute>
+              <Navigate to="/biblioteca?aba=travessias" replace />
             </ProtectedRoute>
           }
         />
@@ -1985,7 +1985,7 @@ function AppRoutes() {
           path="/assinatura"
           element={
             <ProtectedRoute>
-              <Assinatura />
+              <Navigate to="/minha-conta" replace />
             </ProtectedRoute>
           }
         />
@@ -1993,7 +1993,7 @@ function AppRoutes() {
           path="/billing"
           element={
             <ProtectedRoute>
-              <Billing />
+              <Navigate to="/minha-conta" replace />
             </ProtectedRoute>
           }
         />
@@ -2032,12 +2032,12 @@ function AppRoutes() {
           }
         />
 
-        {/* Biblioteca das Travessias - Symbolic Families */}
+        {/* Biblioteca das Travessias - Redirect to unified biblioteca */}
         <Route
           path="/biblioteca-travessias"
           element={
             <ProtectedRoute>
-              <BibliotecaTravessias />
+              <Navigate to="/biblioteca?aba=travessias" replace />
             </ProtectedRoute>
           }
         />
