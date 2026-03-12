@@ -85,7 +85,7 @@ export default function ClienteDetailPage() {
           <TabsTrigger value="mapa-psiquico" className={tabClass}>Mapa Psíquico</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="cidadela"><CidadelaMap clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="cidadela"><MapaVivoCidadela clienteId={clienteId!} /></TabsContent>
         <TabsContent value="historico"><ClienteHistorico clienteId={clienteId!} /></TabsContent>
         <TabsContent value="cartografia"><ClienteCartografias clienteId={clienteId!} /></TabsContent>
         <TabsContent value="sonhos"><ClienteSonhos clienteId={clienteId!} /></TabsContent>
