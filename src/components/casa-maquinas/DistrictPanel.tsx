@@ -79,8 +79,8 @@ export function DistrictPanel({ district, open, onClose, state, sessionCount, to
     }
 
     // Load gates from cidadela map
-    const { data: mapData } = await supabase
-      .from('client_cidadela_map' as any)
+    const { data: mapData } = await (supabase as any)
+      .from('client_cidadela_map')
       .select('portas_cruzadas')
       .eq('client_id', clienteId)
       .maybeSingle();
