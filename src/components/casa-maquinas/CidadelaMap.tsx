@@ -7,6 +7,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { DistrictPanel } from './DistrictPanel';
 import { JourneyTimeline } from './JourneyTimeline';
 import { ReplayJornada } from './ReplayJornada';
+import { RelatorioNarrativo } from './RelatorioNarrativo';
 import { MandalaCidadela, MandalaLegend } from '@/components/cidadela/MandalaCidadela';
 import { MandalaMobile } from '@/components/cidadela/MandalaMobile';
 import { useIsMobile } from '@/hooks/use-mobile';
