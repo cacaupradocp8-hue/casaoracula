@@ -23,9 +23,11 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
   const [selectedDistrict, setSelectedDistrict] = useState<MandalaDistrict | null>(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [showTimeline, setShowTimeline] = useState(false);
+  const [showReplay, setShowReplay] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [manualChanges, setManualChanges] = useState<Record<string, boolean>>({});
+  const [stateChangesList, setStateChangesList] = useState<any[]>([]);
 
   useEffect(() => { loadData(); }, [clienteId]);
 
