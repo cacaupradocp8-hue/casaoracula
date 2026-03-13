@@ -238,6 +238,7 @@ import PortalJunguiano from "./pages/PortalJunguiano";
 import PortalJunguianoPorta from "./pages/PortalJunguianoPorta";
 // Novas páginas de navegação simplificada
 import ExperienciaGratuita from "./pages/ExperienciaGratuita";
+import ClubeOracular from "./pages/ClubeOracular";
 import MapaCasaOracula from "./pages/MapaCasaOracula";
 import MinhaJornada from "./pages/MinhaJornada";
 
