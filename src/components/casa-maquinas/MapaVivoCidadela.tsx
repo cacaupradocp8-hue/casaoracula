@@ -38,6 +38,7 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
   const [fullscreen, setFullscreen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [manualChanges, setManualChanges] = useState<Record<string, boolean>>({});
+  const [stateChangesList, setStateChangesList] = useState<any[]>([]);
 
   useEffect(() => { loadData(); }, [clienteId]);
 
