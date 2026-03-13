@@ -68,7 +68,7 @@ export function DistrictPanel({ district, open, onClose, state, sessionCount, to
     // Load archetypes activated in this district's sessions
     const sessionIds = sessions.map(s => s.id);
     if (sessionIds.length > 0) {
-      const { data: archs } = await supabase
+      const { data: archs } = await (supabase as any)
         .from('session_archetypes')
         .select('archetype_id, atlas_arquetipos_femininos!session_archetypes_archetype_id_fkey(nome, chave, cor_acento)')
         .eq('client_id', clienteId)
@@ -79,18 +79,18 @@ export function DistrictPanel({ district, open, onClose, state, sessionCount, to
     }
 
     // Load gates from cidadela map
-    const { data: mapData } = await supabase
-      .from('client_cidadela_map' as any)
+    const { data: mapData } = await (supabase as any)
+      .from('client_cidadela_map')
       .select('portas_cruzadas')
       .eq('client_id', clienteId)
       .maybeSingle();
     setGates((mapData as any)?.portas_cruzadas || []);
 
     // Load district notes from journey_districts
-    const { data: journeys } = await supabase
+    const { data: journeys } = await (supabase as any)
       .from('journeys').select('id').eq('client_id', clienteId).limit(1);
     if (journeys?.length) {
-      const { data: jd } = await supabase
+      const { data: jd } = await (supabase as any)
         .from('journey_districts')
         .select('notes')
         .eq('journey_id', journeys[0].id)
@@ -128,7 +128,7 @@ export function DistrictPanel({ district, open, onClose, state, sessionCount, to
     }
     setSaving(true);
     try {
-      await supabase.from('district_state_changes').insert({
+      await (supabase as any).from('district_state_changes').insert({
         client_id: clienteId,
         district_id: district.id,
         changed_by_user_id: user?.id || '',
@@ -137,11 +137,11 @@ export function DistrictPanel({ district, open, onClose, state, sessionCount, to
         reason: reason.trim(),
       });
 
-      const { data: journeys } = await supabase
+      const { data: journeys } = await (supabase as any)
         .from('journeys').select('id').eq('client_id', clienteId).limit(1);
 
       if (journeys?.length) {
-        await supabase
+        await (supabase as any)
           .from('journey_districts')
           .update({ state: targetState })
           .eq('journey_id', journeys[0].id)
@@ -161,12 +161,12 @@ export function DistrictPanel({ district, open, onClose, state, sessionCount, to
   const handleSaveNotes = async () => {
     setSavingNotes(true);
     try {
-      const { data: journeys } = await supabase
+      const { data: journeys } = await (supabase as any)
         .from('journeys').select('id').eq('client_id', clienteId).limit(1);
       if (journeys?.length) {
-        await supabase
+        await (supabase as any)
           .from('journey_districts')
-          .update({ notes: notes || null } as any)
+          .update({ notes: notes || null })
           .eq('journey_id', journeys[0].id)
           .eq('district_id', district.id);
         toast.success('Anotações salvas.');
