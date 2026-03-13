@@ -87,10 +87,10 @@ export function DistrictPanel({ district, open, onClose, state, sessionCount, to
     setGates((mapData as any)?.portas_cruzadas || []);
 
     // Load district notes from journey_districts
-    const { data: journeys } = await supabase
+    const { data: journeys } = await (supabase as any)
       .from('journeys').select('id').eq('client_id', clienteId).limit(1);
     if (journeys?.length) {
-      const { data: jd } = await supabase
+      const { data: jd } = await (supabase as any)
         .from('journey_districts')
         .select('notes')
         .eq('journey_id', journeys[0].id)
