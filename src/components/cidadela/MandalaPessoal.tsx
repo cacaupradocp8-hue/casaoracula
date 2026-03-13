@@ -9,6 +9,7 @@ import type { MandalaDistrict, MandalaDistrictState } from '@/components/cidadel
 
 export function MandalaPessoal() {
   const { user } = useAuth();
+  const isMobile = useIsMobile();
   const [districts, setDistricts] = useState<MandalaDistrict[]>([]);
   const [districtStates, setDistrictStates] = useState<MandalaDistrictState[]>([]);
   const [loading, setLoading] = useState(true);
@@ -18,7 +19,6 @@ export function MandalaPessoal() {
   }, [user?.id]);
 
   const loadData = async () => {
-    // Use raw query approach to avoid deep TS instantiation
     const { data: rawDists } = await (supabase as any)
       .from('districts')
       .select('id, numero, nome, descricao, icone, cor')
@@ -26,7 +26,6 @@ export function MandalaPessoal() {
     const dists = (rawDists || []) as MandalaDistrict[];
     setDistricts(dists);
 
-    // Check if user has a linked client record
     const { data: rawClientes } = await (supabase as any)
       .from('clientes')
       .select('id')
@@ -34,7 +33,6 @@ export function MandalaPessoal() {
       .limit(1);
     const clientId = rawClientes?.[0]?.id as string | undefined;
 
-    // Check personal cartografia
     const { data: rawCarto } = await (supabase as any)
       .from('cartografia_psiquica')
       .select('territorios_principais')
@@ -55,7 +53,6 @@ export function MandalaPessoal() {
       }
     }
 
-    // Fallback: derive states from cartografia territories
     if (!clientId && rawCarto?.[0]?.territorios_principais) {
       const territories = rawCarto[0].territorios_principais as string[];
       setDistrictStates(
@@ -84,7 +81,6 @@ export function MandalaPessoal() {
   if (districts.length === 0) return null;
 
   const hasJourneyData = districtStates.some(s => s.state !== 'inativo');
-  const isMobile = useIsMobile();
 
   return (
     <div className="space-y-4">
