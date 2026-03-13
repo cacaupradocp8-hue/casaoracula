@@ -6,6 +6,7 @@ import { MandalaCidadela, MandalaLegend } from '@/components/cidadela/MandalaCid
 import type { MandalaDistrict, MandalaDistrictState } from '@/components/cidadela/MandalaCidadela';
 import { DistrictPanel } from './DistrictPanel';
 import { JourneyTimeline } from './JourneyTimeline';
+import { ReplayJornada } from './ReplayJornada';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
