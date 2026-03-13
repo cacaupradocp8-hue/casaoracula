@@ -353,6 +353,18 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
         oracleCards={oracleCards}
         tools={tools}
       />
+
+      {/* Replay da Jornada */}
+      <ReplayJornada
+        open={showReplay}
+        onClose={() => setShowReplay(false)}
+        sessions={sessions}
+        districts={districts}
+        journeyDistricts={journeyDistricts}
+        tools={tools}
+        oracleCards={oracleCards}
+        stateChanges={stateChangesList}
+      />
     </div>
   );
 }
