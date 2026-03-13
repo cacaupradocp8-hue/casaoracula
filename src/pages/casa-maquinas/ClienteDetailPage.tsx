@@ -103,6 +103,7 @@ export default function ClienteDetailPage() {
         <TabsContent value="ritual"><RitualIntegracao clienteId={clienteId!} /></TabsContent>
         <TabsContent value="perfil"><ClientePerfilTab cliente={cliente} onUpdate={loadCliente} /></TabsContent>
         <TabsContent value="mapa-psiquico"><CartografiaPsiquicaOracula clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="relatorio-jornada"><RelatorioJornadaPage clienteId={clienteId!} /></TabsContent>
       </Tabs>
     </CasaMaquinasLayout>
   );
