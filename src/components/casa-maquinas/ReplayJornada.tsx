@@ -86,7 +86,7 @@ export function ReplayJornada({
 
     // Initialize all districts as inativo
     districts.forEach(d => {
-      cumulative[d.id] = { district_id: d.id, state: 'inativo', sessions_count: 0 };
+      cumulative[d.id] = { district_id: d.id, state: 'inativo', sessions_count: 0, last_session_at: null };
     });
 
     orderedSessions.forEach((session, i) => {
