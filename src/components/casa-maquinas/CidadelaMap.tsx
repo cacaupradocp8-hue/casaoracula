@@ -7,10 +7,13 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { DistrictPanel } from './DistrictPanel';
 import { JourneyTimeline } from './JourneyTimeline';
 import { MandalaCidadela, MandalaLegend } from '@/components/cidadela/MandalaCidadela';
+import { MandalaMobile } from '@/components/cidadela/MandalaMobile';
+import { useIsMobile } from '@/hooks/use-mobile';
 import type { MandalaDistrict, MandalaDistrictState } from '@/components/cidadela/MandalaCidadela';
 
 export function CidadelaMap({ clienteId }: { clienteId: string }) {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [districts, setDistricts] = useState<MandalaDistrict[]>([]);
   const [journeyDistricts, setJourneyDistricts] = useState<MandalaDistrictState[]>([]);
   const [tools, setTools] = useState<any[]>([]);
@@ -110,17 +113,29 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
 
   const mapContent = (maxW: string) => (
     <>
-      <MandalaCidadela
-        districts={districts}
-        districtStates={journeyDistricts}
-        mode="clinico"
-        selectedId={selectedDistrict?.id}
-        pathPoints={pathPoints}
-        onDistrictClick={handleClick}
-        showConnections={true}
-        className={`w-full ${maxW} mx-auto`}
-      />
-      <MandalaLegend mode="clinico" />
+      {isMobile ? (
+        <MandalaMobile
+          districts={districts}
+          districtStates={journeyDistricts}
+          mode="clinico"
+          selectedId={selectedDistrict?.id}
+          onDistrictClick={handleClick}
+        />
+      ) : (
+        <>
+          <MandalaCidadela
+            districts={districts}
+            districtStates={journeyDistricts}
+            mode="clinico"
+            selectedId={selectedDistrict?.id}
+            pathPoints={pathPoints}
+            onDistrictClick={handleClick}
+            showConnections={true}
+            className={`w-full ${maxW} mx-auto`}
+          />
+          <MandalaLegend mode="clinico" />
+        </>
+      )}
     </>
   );
 

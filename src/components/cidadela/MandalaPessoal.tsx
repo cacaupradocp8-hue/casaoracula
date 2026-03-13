@@ -3,6 +3,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2, Sparkles } from 'lucide-react';
 import { MandalaCidadela, MandalaLegend } from '@/components/cidadela/MandalaCidadela';
+import { MandalaMobile } from '@/components/cidadela/MandalaMobile';
+import { useIsMobile } from '@/hooks/use-mobile';
 import type { MandalaDistrict, MandalaDistrictState } from '@/components/cidadela/MandalaCidadela';
 
 export function MandalaPessoal() {
@@ -82,6 +84,7 @@ export function MandalaPessoal() {
   if (districts.length === 0) return null;
 
   const hasJourneyData = districtStates.some(s => s.state !== 'inativo');
+  const isMobile = useIsMobile();
 
   return (
     <div className="space-y-4">
@@ -90,13 +93,23 @@ export function MandalaPessoal() {
         <h3 className="text-sm font-medium text-foreground/70">Sua CidaDELA Interior</h3>
       </div>
 
-      <MandalaCidadela
-        districts={districts}
-        districtStates={districtStates}
-        mode="explorar"
-        className="w-full max-w-[420px] mx-auto"
-      />
-      <MandalaLegend mode="explorar" />
+      {isMobile ? (
+        <MandalaMobile
+          districts={districts}
+          districtStates={districtStates}
+          mode="explorar"
+        />
+      ) : (
+        <>
+          <MandalaCidadela
+            districts={districts}
+            districtStates={districtStates}
+            mode="explorar"
+            className="w-full max-w-[420px] mx-auto"
+          />
+          <MandalaLegend mode="explorar" />
+        </>
+      )}
 
       {!hasJourneyData && (
         <p className="text-center text-xs text-muted-foreground/60 italic">
