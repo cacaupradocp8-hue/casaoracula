@@ -13,6 +13,7 @@ import type { MandalaDistrict, MandalaDistrictState } from '@/components/cidadel
 
 export function CidadelaMap({ clienteId }: { clienteId: string }) {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [districts, setDistricts] = useState<MandalaDistrict[]>([]);
   const [journeyDistricts, setJourneyDistricts] = useState<MandalaDistrictState[]>([]);
   const [tools, setTools] = useState<any[]>([]);
