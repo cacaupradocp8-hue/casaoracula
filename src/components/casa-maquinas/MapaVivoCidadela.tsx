@@ -14,7 +14,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
   Loader2, Clock, Sparkles, Maximize2, Minimize2,
-  Castle, Key, Brain, Compass, Wrench, Eye
+  Castle, Key, Brain, Compass, Wrench, Eye, PlayCircle
 } from 'lucide-react';
 
 interface Props {
