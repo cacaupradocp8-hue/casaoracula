@@ -21,6 +21,7 @@ import { CartografiaComplexos } from '@/components/casa-maquinas/cartografia-com
 import { ConselhoPartesInternas } from '@/components/casa-maquinas/conselho-partes/ConselhoPartesInternas';
 import { RitualIntegracao } from '@/components/casa-maquinas/ritual-integracao/RitualIntegracao';
 import { CartografiaPsiquicaOracula } from '@/components/casa-maquinas/cartografia-psiquica/CartografiaPsiquicaOracula';
+import { RelatorioJornadaPage } from '@/components/casa-maquinas/relatorio-jornada/RelatorioJornadaPage';
 import { Loader2 } from 'lucide-react';
 
 export default function ClienteDetailPage() {
