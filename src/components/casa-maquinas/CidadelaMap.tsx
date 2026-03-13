@@ -2,11 +2,12 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Loader2, Clock, Sparkles, Maximize2, Minimize2, PlayCircle } from 'lucide-react';
+import { Loader2, Clock, Sparkles, Maximize2, Minimize2, PlayCircle, FileText } from 'lucide-react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { DistrictPanel } from './DistrictPanel';
 import { JourneyTimeline } from './JourneyTimeline';
 import { ReplayJornada } from './ReplayJornada';
+import { RelatorioNarrativo } from './RelatorioNarrativo';
 import { MandalaCidadela, MandalaLegend } from '@/components/cidadela/MandalaCidadela';
 import { MandalaMobile } from '@/components/cidadela/MandalaMobile';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -24,6 +25,7 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
   const [panelOpen, setPanelOpen] = useState(false);
   const [showTimeline, setShowTimeline] = useState(false);
   const [showReplay, setShowReplay] = useState(false);
+  const [showNarrativo, setShowNarrativo] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [manualChanges, setManualChanges] = useState<Record<string, boolean>>({});
@@ -163,6 +165,11 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
               <PlayCircle className="w-3 h-3" /> Replay
             </Button>
           )}
+          {sessions.length >= 1 && (
+            <Button variant="outline" size="sm" className="border-[#556B57]/20 text-[#556B57]/70 hover:text-[#556B57] hover:border-[#556B57]/30 text-xs h-8 gap-1.5" onClick={() => setShowNarrativo(true)}>
+              <FileText className="w-3 h-3" /> Narrativa
+            </Button>
+          )}
         </div>
       </div>
 
@@ -220,6 +227,13 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
         tools={tools}
         oracleCards={oracleCards}
         stateChanges={stateChangesList}
+      />
+
+      {/* Relatório Narrativo */}
+      <RelatorioNarrativo
+        open={showNarrativo}
+        onClose={() => setShowNarrativo(false)}
+        clienteId={clienteId}
       />
     </div>
   );

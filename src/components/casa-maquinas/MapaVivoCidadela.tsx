@@ -7,6 +7,7 @@ import type { MandalaDistrict, MandalaDistrictState } from '@/components/cidadel
 import { DistrictPanel } from './DistrictPanel';
 import { JourneyTimeline } from './JourneyTimeline';
 import { ReplayJornada } from './ReplayJornada';
+import { RelatorioNarrativo } from './RelatorioNarrativo';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -14,7 +15,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
   Loader2, Clock, Sparkles, Maximize2, Minimize2,
-  Castle, Key, Brain, Compass, Wrench, Eye, PlayCircle
+  Castle, Key, Brain, Compass, Wrench, Eye, PlayCircle, FileText
 } from 'lucide-react';
 
 interface Props {
@@ -35,6 +36,7 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
   const [panelOpen, setPanelOpen] = useState(false);
   const [showTimeline, setShowTimeline] = useState(false);
   const [showReplay, setShowReplay] = useState(false);
+  const [showNarrativo, setShowNarrativo] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [manualChanges, setManualChanges] = useState<Record<string, boolean>>({});
@@ -208,6 +210,11 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
               <PlayCircle className="w-3 h-3" /> Replay
             </Button>
           )}
+          {sessions.length >= 1 && (
+            <Button variant="outline" size="sm" className="border-[#556B57]/20 text-[#556B57]/70 hover:text-[#556B57] hover:border-[#556B57]/30 text-xs h-8 gap-1.5" onClick={() => setShowNarrativo(true)}>
+              <FileText className="w-3 h-3" /> Narrativa
+            </Button>
+          )}
         </div>
       </div>
 
@@ -364,6 +371,13 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
         tools={tools}
         oracleCards={oracleCards}
         stateChanges={stateChangesList}
+      />
+
+      {/* Relatório Narrativo */}
+      <RelatorioNarrativo
+        open={showNarrativo}
+        onClose={() => setShowNarrativo(false)}
+        clienteId={clienteId}
       />
     </div>
   );
