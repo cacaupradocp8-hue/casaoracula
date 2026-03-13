@@ -165,6 +165,11 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
               <PlayCircle className="w-3 h-3" /> Replay
             </Button>
           )}
+          {sessions.length >= 1 && (
+            <Button variant="outline" size="sm" className="border-[#556B57]/20 text-[#556B57]/70 hover:text-[#556B57] hover:border-[#556B57]/30 text-xs h-8 gap-1.5" onClick={() => setShowNarrativo(true)}>
+              <FileText className="w-3 h-3" /> Narrativa
+            </Button>
+          )}
         </div>
       </div>
 
