@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Loader2, Clock, Sparkles, Maximize2, Minimize2 } from 'lucide-react';
+import { Loader2, Clock, Sparkles, Maximize2, Minimize2, PlayCircle } from 'lucide-react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { DistrictPanel } from './DistrictPanel';
 import { JourneyTimeline } from './JourneyTimeline';
