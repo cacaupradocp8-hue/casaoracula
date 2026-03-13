@@ -6,6 +6,7 @@ import { Loader2, Clock, Sparkles, Maximize2, Minimize2, PlayCircle } from 'luci
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { DistrictPanel } from './DistrictPanel';
 import { JourneyTimeline } from './JourneyTimeline';
+import { ReplayJornada } from './ReplayJornada';
 import { MandalaCidadela, MandalaLegend } from '@/components/cidadela/MandalaCidadela';
 import { MandalaMobile } from '@/components/cidadela/MandalaMobile';
 import { useIsMobile } from '@/hooks/use-mobile';
