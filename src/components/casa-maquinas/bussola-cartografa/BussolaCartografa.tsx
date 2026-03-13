@@ -267,7 +267,10 @@ export function BussolaCartografa({ clienteId }: Props) {
         </div>
       </div>
 
-      <EthicalNotice text="Bússola clínica — organiza padrões da jornada simbólica. Não substitui a leitura da facilitadora." />
+      <div className="flex items-center gap-2 px-4 py-2 rounded-lg border border-primary/15 bg-primary/5 text-[11px] text-muted-foreground">
+        <AlertTriangle className="w-3.5 h-3.5 text-primary/60 shrink-0" />
+        Bússola clínica — organiza padrões da jornada simbólica. Não substitui a leitura da facilitadora.
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
