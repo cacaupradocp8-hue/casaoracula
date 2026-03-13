@@ -1,10 +1,11 @@
 import { useMemo } from 'react';
+import { Badge } from '@/components/ui/badge';
 import type { MandalaDistrict, MandalaDistrictState, MandalaMode, MandalaCollectiveData } from './MandalaCidadela';
 
 const STATE_COLORS = {
   inativo: { bg: 'bg-muted/30', border: 'border-muted/40', text: 'text-muted-foreground/50', dot: 'bg-muted-foreground/30' },
-  ativo: { bg: 'bg-primary/10', border: 'border-primary/40', text: 'text-primary', dot: 'bg-primary' },
-  integrado: { bg: 'bg-accent/10', border: 'border-primary/50', text: 'text-accent-foreground', dot: 'bg-[#556B57]' },
+  ativo: { bg: 'bg-primary/10', border: 'border-primary/40', text: 'text-primary', dot: 'bg-primary animate-pulse' },
+  integrado: { bg: 'bg-[#556B57]/10', border: 'border-[#556B57]/40', text: 'text-[#556B57]', dot: 'bg-[#556B57]' },
 };
 
 const STATE_LABELS = {
@@ -45,6 +46,15 @@ export function MandalaMobile({
     return collectiveData.find(c => c.district_id === id);
   };
 
+  // Summary stats
+  const stats = useMemo(() => {
+    const active = districtStates.filter(s => s.state === 'ativo').length;
+    const integrated = districtStates.filter(s => s.state === 'integrado').length;
+    const total = districts.length;
+    const explored = active + integrated;
+    return { active, integrated, total, explored };
+  }, [districtStates, districts]);
+
   const renderDistrict = (d: MandalaDistrict) => {
     const state = getState(d.id);
     const colors = STATE_COLORS[state];
@@ -59,12 +69,17 @@ export function MandalaMobile({
         className={`
           flex items-center gap-3 p-3 rounded-lg border transition-all text-left w-full
           ${colors.bg} ${colors.border}
-          ${isSelected ? 'ring-2 ring-primary shadow-md' : ''}
+          ${isSelected ? 'ring-2 ring-primary shadow-md scale-[1.01]' : ''}
           ${onDistrictClick ? 'hover:scale-[1.02] active:scale-[0.98]' : ''}
         `}
       >
-        {/* State dot */}
-        <div className={`w-3 h-3 rounded-full shrink-0 ${colors.dot}`} />
+        {/* State dot with glow for integrado */}
+        <div className="relative shrink-0">
+          <div className={`w-3 h-3 rounded-full ${colors.dot}`} />
+          {state === 'integrado' && (
+            <div className="absolute inset-0 w-3 h-3 rounded-full bg-[#556B57]/30 animate-ping" />
+          )}
+        </div>
 
         {/* Info */}
         <div className="flex-1 min-w-0">
@@ -105,17 +120,30 @@ export function MandalaMobile({
 
   return (
     <div className="space-y-4">
-      {/* Center label */}
-      <div className="text-center py-3 rounded-lg border border-primary/15 bg-primary/5">
+      {/* Summary stats bar */}
+      <div className="flex items-center justify-between px-3 py-2.5 rounded-lg border border-primary/10 bg-primary/5">
         <span className="text-xs font-medium text-primary/70">
           {mode === 'clinico' ? 'Praça da Integração' : 'Praça do Ser'}
         </span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 rounded-full bg-primary" />
+            <span className="text-[10px] text-primary/60">{stats.active}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 rounded-full bg-[#556B57]" />
+            <span className="text-[10px] text-[#556B57]">{stats.integrated}</span>
+          </div>
+          <span className="text-[10px] text-muted-foreground/40">
+            {stats.explored}/{stats.total}
+          </span>
+        </div>
       </div>
 
       {/* Inner ring */}
       <div>
         <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 mb-2 px-1">
-          Anel Interior
+          Anel Interior — Distritos 1–6
         </p>
         <div className="grid grid-cols-1 gap-2">
           {innerDistricts.map(renderDistrict)}
@@ -125,12 +153,34 @@ export function MandalaMobile({
       {/* Outer ring */}
       <div>
         <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 mb-2 px-1">
-          Anel Exterior
+          Anel Exterior — Distritos 7–12
         </p>
         <div className="grid grid-cols-1 gap-2">
           {outerDistricts.map(renderDistrict)}
         </div>
       </div>
+
+      {/* Legend */}
+      <div className="flex items-center justify-center gap-4 pt-1">
+        <div className="flex items-center gap-1.5">
+          <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+          <span className="text-[9px] text-muted-foreground/40">Não explorado</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2 h-2 rounded-full bg-primary" />
+          <span className="text-[9px] text-primary/60">Ativo</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2 h-2 rounded-full bg-[#556B57]" />
+          <span className="text-[9px] text-[#556B57]">Integrado</span>
+        </div>
+      </div>
+
+      <p className="text-[9px] text-muted-foreground/30 text-center italic">
+        {mode === 'clinico'
+          ? 'Ferramenta de leitura simbólica. Não substitui julgamento clínico.'
+          : 'Estados indicam o movimento da jornada.'}
+      </p>
     </div>
   );
 }
