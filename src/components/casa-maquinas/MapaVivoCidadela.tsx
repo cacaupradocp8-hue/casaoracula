@@ -372,6 +372,13 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
         oracleCards={oracleCards}
         stateChanges={stateChangesList}
       />
+
+      {/* Relatório Narrativo */}
+      <RelatorioNarrativo
+        open={showNarrativo}
+        onClose={() => setShowNarrativo(false)}
+        clienteId={clienteId}
+      />
     </div>
   );
 }
