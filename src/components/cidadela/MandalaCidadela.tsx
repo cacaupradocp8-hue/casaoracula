@@ -1,9 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useRef, useCallback } from 'react';
 
 // ============================================
 // MANDALA DA CIDADELA INTERIOR
 // Shared SVG mandala with 2 concentric rings
-// Used across: /mapa-casa, ClienteDetail, PainelClinico
+// Zoom/Pan + Symbolic Connections
 // ============================================
 
 export interface MandalaDistrict {
@@ -39,6 +39,7 @@ interface Props {
   pathPoints?: { x: number; y: number }[];
   onDistrictClick?: (district: MandalaDistrict) => void;
   className?: string;
+  showConnections?: boolean;
 }
 
 // Ring assignment: inner (1-6), outer (7-12)
@@ -65,6 +66,20 @@ const STATE_STYLES = {
     textColor: '#556B57',
   },
 };
+
+// Symbolic connections between districts with therapeutic descriptions
+const SYMBOLIC_CONNECTIONS: { from: number; to: number; label: string }[] = [
+  { from: 1, to: 2, label: 'Da defesa ao limiar' },
+  { from: 2, to: 6, label: 'Do limiar ao labirinto' },
+  { from: 6, to: 8, label: 'Do labirinto à forja' },
+  { from: 8, to: 11, label: 'Da forja à integração' },
+  { from: 3, to: 4, label: 'Do arquétipo ao sonho' },
+  { from: 4, to: 5, label: 'Do sonho à travessia' },
+  { from: 7, to: 9, label: 'Do espelho ao conselho' },
+  { from: 9, to: 10, label: 'Do conselho ao abalo' },
+  { from: 10, to: 12, label: 'Do abalo ao renascimento' },
+  { from: 12, to: 11, label: 'Do renascimento à integração' },
+];
 
 // SVG mini-icons per district number
 const DISTRICT_ICONS: Record<number, (color: string) => JSX.Element> = {
@@ -116,12 +131,58 @@ export function MandalaCidadela({
   pathPoints = [],
   onDistrictClick,
   className,
+  showConnections = false,
 }: Props) {
   const cx = 50;
   const cy = 50;
   const innerR = 24;
   const outerR = 40;
   const nodeR = 4.2;
+
+  // Zoom/Pan state
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [viewBox, setViewBox] = useState({ x: 0, y: 0, w: 100, h: 100 });
+  const [isPanning, setIsPanning] = useState(false);
+  const panStart = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
+  const [hoveredConnection, setHoveredConnection] = useState<number | null>(null);
+
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    e.preventDefault();
+    const svg = svgRef.current;
+    if (!svg) return;
+    const rect = svg.getBoundingClientRect();
+    const mx = ((e.clientX - rect.left) / rect.width) * viewBox.w + viewBox.x;
+    const my = ((e.clientY - rect.top) / rect.height) * viewBox.h + viewBox.y;
+    const scale = e.deltaY > 0 ? 1.15 : 0.87;
+    const nw = Math.min(120, Math.max(30, viewBox.w * scale));
+    const nh = Math.min(120, Math.max(30, viewBox.h * scale));
+    const nx = mx - ((mx - viewBox.x) / viewBox.w) * nw;
+    const ny = my - ((my - viewBox.y) / viewBox.h) * nh;
+    setViewBox({ x: nx, y: ny, w: nw, h: nh });
+  }, [viewBox]);
+
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    if ((e.target as Element).closest('[data-district]')) return;
+    setIsPanning(true);
+    panStart.current = { x: e.clientX, y: e.clientY, vx: viewBox.x, vy: viewBox.y };
+    (e.target as Element).setPointerCapture?.(e.pointerId);
+  }, [viewBox]);
+
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (!isPanning || !svgRef.current) return;
+    const rect = svgRef.current.getBoundingClientRect();
+    const dx = ((e.clientX - panStart.current.x) / rect.width) * viewBox.w;
+    const dy = ((e.clientY - panStart.current.y) / rect.height) * viewBox.h;
+    setViewBox(prev => ({ ...prev, x: panStart.current.vx - dx, y: panStart.current.vy - dy }));
+  }, [isPanning, viewBox.w, viewBox.h]);
+
+  const handlePointerUp = useCallback(() => {
+    setIsPanning(false);
+  }, []);
+
+  const resetZoom = useCallback(() => {
+    setViewBox({ x: 0, y: 0, w: 100, h: 100 });
+  }, []);
 
   const centerLabel = mode === 'clinico' ? ['Praça da', 'Integração'] : ['Praça', 'do Ser'];
 
@@ -153,6 +214,21 @@ export function MandalaCidadela({
     return `M ${pathPoints.map((p) => `${p.x},${p.y}`).join(' L ')}`;
   }, [pathPoints]);
 
+  // Build connection positions from district numbers
+  const connectionPaths = useMemo(() => {
+    if (!showConnections || districts.length === 0) return [];
+    return SYMBOLIC_CONNECTIONS.map((conn, i) => {
+      const fromD = districts.find(d => d.numero === conn.from);
+      const toD = districts.find(d => d.numero === conn.to);
+      if (!fromD || !toD) return null;
+      const p1 = getPos(conn.from);
+      const p2 = getPos(conn.to);
+      const midX = (p1.x + p2.x) / 2;
+      const midY = (p1.y + p2.y) / 2;
+      return { ...conn, p1, p2, midX, midY, idx: i };
+    }).filter(Boolean) as (typeof SYMBOLIC_CONNECTIONS[0] & { p1: { x: number; y: number }; p2: { x: number; y: number }; midX: number; midY: number; idx: number })[];
+  }, [showConnections, districts]);
+
   // Compass reference lines
   const compassLines = [0, 60, 120].map((angle) => {
     const rad = (angle * Math.PI) / 180;
@@ -168,9 +244,31 @@ export function MandalaCidadela({
     };
   });
 
+  const isZoomed = viewBox.w !== 100 || viewBox.h !== 100 || viewBox.x !== 0 || viewBox.y !== 0;
+
   return (
-    <div className={className} style={{ aspectRatio: '1/1' }}>
-      <svg viewBox="0 0 100 100" className="w-full h-full">
+    <div className={`relative ${className || ''}`} style={{ aspectRatio: '1/1' }}>
+      {/* Zoom controls */}
+      {isZoomed && (
+        <button
+          onClick={resetZoom}
+          className="absolute top-2 right-2 z-10 px-2 py-1 rounded text-[9px] bg-[#C9A24A]/10 border border-[#C9A24A]/20 text-[#C9A24A]/70 hover:text-[#C9A24A] transition-colors"
+        >
+          Reset zoom
+        </button>
+      )}
+
+      <svg
+        ref={svgRef}
+        viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`}
+        className={`w-full h-full ${isPanning ? 'cursor-grabbing' : 'cursor-grab'}`}
+        onWheel={handleWheel}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
+        style={{ touchAction: 'none' }}
+      >
         <defs>
           <filter id="mandala-glow">
             <feGaussianBlur stdDeviation="0.8" result="blur" />
@@ -188,6 +286,9 @@ export function MandalaCidadela({
             <stop offset="0%" stopColor="#C9A24A" stopOpacity="0.1" />
             <stop offset="100%" stopColor="#C9A24A" stopOpacity="0" />
           </radialGradient>
+          <marker id="conn-arrow" markerWidth="4" markerHeight="3" refX="3" refY="1.5" orient="auto">
+            <polygon points="0 0, 4 1.5, 0 3" fill="rgba(201,162,74,0.3)" />
+          </marker>
         </defs>
 
         <Particles />
@@ -208,6 +309,64 @@ export function MandalaCidadela({
 
         {/* Inner ring guide */}
         <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="rgba(201,162,74,0.08)" strokeWidth="0.15" strokeDasharray="0.8 1.2" />
+
+        {/* Symbolic connections between districts */}
+        {connectionPaths.map((conn) => {
+          const isHovered = hoveredConnection === conn.idx;
+          return (
+            <g key={`conn-${conn.idx}`}>
+              <line
+                x1={conn.p1.x}
+                y1={conn.p1.y}
+                x2={conn.p2.x}
+                y2={conn.p2.y}
+                stroke={isHovered ? 'rgba(201,162,74,0.5)' : 'rgba(201,162,74,0.08)'}
+                strokeWidth={isHovered ? '0.4' : '0.15'}
+                strokeDasharray={isHovered ? 'none' : '1 1'}
+                markerEnd="url(#conn-arrow)"
+                style={{ transition: 'all 0.3s ease' }}
+              />
+              {/* Invisible wider hitbox for hover */}
+              <line
+                x1={conn.p1.x}
+                y1={conn.p1.y}
+                x2={conn.p2.x}
+                y2={conn.p2.y}
+                stroke="transparent"
+                strokeWidth="2"
+                onPointerEnter={() => setHoveredConnection(conn.idx)}
+                onPointerLeave={() => setHoveredConnection(null)}
+                className="cursor-help"
+              />
+              {/* Tooltip */}
+              {isHovered && (
+                <g>
+                  <rect
+                    x={conn.midX - 14}
+                    y={conn.midY - 3}
+                    width="28"
+                    height="5"
+                    rx="1"
+                    fill="rgba(11,27,43,0.9)"
+                    stroke="rgba(201,162,74,0.3)"
+                    strokeWidth="0.2"
+                  />
+                  <text
+                    x={conn.midX}
+                    y={conn.midY + 0.8}
+                    textAnchor="middle"
+                    fill="#C9A24A"
+                    fontSize="1.8"
+                    fontWeight="500"
+                    opacity="0.9"
+                  >
+                    {conn.label}
+                  </text>
+                </g>
+              )}
+            </g>
+          );
+        })}
 
         {/* Journey path (clinical mode) */}
         {pathD && (
@@ -247,9 +406,16 @@ export function MandalaCidadela({
           return (
             <g
               key={d.id}
+              data-district={d.id}
               className={onDistrictClick ? 'cursor-pointer' : ''}
-              onClick={() => onDistrictClick?.(d)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDistrictClick?.(d);
+              }}
             >
+              {/* Tooltip on hover */}
+              <title>{d.nome}</title>
+
               {/* Selection ring */}
               {isSelected && (
                 <circle cx={pos.x} cy={pos.y} r={nodeR + 2} fill="none" stroke="#C9A24A" strokeWidth="0.4" strokeDasharray="1 0.5">
@@ -299,7 +465,6 @@ export function MandalaCidadela({
               {/* Collective count */}
               {mode === 'coletivo' && collective && collective.client_count > 0 && (
                 <>
-                  {/* Glow dots for members */}
                   {Array.from({ length: Math.min(collective.client_count, 5) }).map((_, i) => {
                     const angle = (i / Math.max(collective.client_count, 1)) * Math.PI * 2;
                     const dotR = 2;
