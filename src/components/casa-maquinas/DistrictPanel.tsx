@@ -128,7 +128,7 @@ export function DistrictPanel({ district, open, onClose, state, sessionCount, to
     }
     setSaving(true);
     try {
-      await supabase.from('district_state_changes').insert({
+      await (supabase as any).from('district_state_changes').insert({
         client_id: clienteId,
         district_id: district.id,
         changed_by_user_id: user?.id || '',
@@ -137,11 +137,11 @@ export function DistrictPanel({ district, open, onClose, state, sessionCount, to
         reason: reason.trim(),
       });
 
-      const { data: journeys } = await supabase
+      const { data: journeys } = await (supabase as any)
         .from('journeys').select('id').eq('client_id', clienteId).limit(1);
 
       if (journeys?.length) {
-        await supabase
+        await (supabase as any)
           .from('journey_districts')
           .update({ state: targetState })
           .eq('journey_id', journeys[0].id)
