@@ -68,7 +68,7 @@ export function DistrictPanel({ district, open, onClose, state, sessionCount, to
     // Load archetypes activated in this district's sessions
     const sessionIds = sessions.map(s => s.id);
     if (sessionIds.length > 0) {
-      const { data: archs } = await supabase
+      const { data: archs } = await (supabase as any)
         .from('session_archetypes')
         .select('archetype_id, atlas_arquetipos_femininos!session_archetypes_archetype_id_fkey(nome, chave, cor_acento)')
         .eq('client_id', clienteId)
