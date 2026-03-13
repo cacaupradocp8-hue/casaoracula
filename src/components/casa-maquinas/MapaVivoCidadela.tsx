@@ -231,6 +231,7 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
         selectedId={selectedDistrict?.id}
         pathPoints={pathPoints}
         onDistrictClick={handleClick}
+        showConnections={true}
         className="w-full max-w-[520px] mx-auto"
       />
       <MandalaLegend mode="clinico" />
