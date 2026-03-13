@@ -843,7 +843,16 @@ function AppRoutes() {
         }
       />
       
-      {/* Clube do Livro Oracular */}
+      {/* Clube de Leitura Oracular — Nova Home */}
+      <Route
+        path="/app/clube"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeOracular />
+          </ProtectedRoute>
+        }
+      />
+      {/* Clube do Livro Oracular (legado) */}
       <Route
         path="/clube-livro"
         element={
