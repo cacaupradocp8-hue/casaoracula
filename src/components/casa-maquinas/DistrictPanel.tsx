@@ -161,12 +161,12 @@ export function DistrictPanel({ district, open, onClose, state, sessionCount, to
   const handleSaveNotes = async () => {
     setSavingNotes(true);
     try {
-      const { data: journeys } = await supabase
+      const { data: journeys } = await (supabase as any)
         .from('journeys').select('id').eq('client_id', clienteId).limit(1);
       if (journeys?.length) {
-        await supabase
+        await (supabase as any)
           .from('journey_districts')
-          .update({ notes: notes || null } as any)
+          .update({ notes: notes || null })
           .eq('journey_id', journeys[0].id)
           .eq('district_id', district.id);
         toast.success('Anotações salvas.');
