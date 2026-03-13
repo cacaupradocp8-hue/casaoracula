@@ -3,6 +3,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2, Sparkles } from 'lucide-react';
 import { MandalaCidadela, MandalaLegend } from '@/components/cidadela/MandalaCidadela';
+import { MandalaMobile } from '@/components/cidadela/MandalaMobile';
+import { useIsMobile } from '@/hooks/use-mobile';
 import type { MandalaDistrict, MandalaDistrictState } from '@/components/cidadela/MandalaCidadela';
 
 export function MandalaPessoal() {
