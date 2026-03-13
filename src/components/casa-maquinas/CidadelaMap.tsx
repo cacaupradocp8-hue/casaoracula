@@ -117,6 +117,7 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
         selectedId={selectedDistrict?.id}
         pathPoints={pathPoints}
         onDistrictClick={handleClick}
+        showConnections={true}
         className={`w-full ${maxW} mx-auto`}
       />
       <MandalaLegend mode="clinico" />
