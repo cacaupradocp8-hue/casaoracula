@@ -7,6 +7,8 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { DistrictPanel } from './DistrictPanel';
 import { JourneyTimeline } from './JourneyTimeline';
 import { MandalaCidadela, MandalaLegend } from '@/components/cidadela/MandalaCidadela';
+import { MandalaMobile } from '@/components/cidadela/MandalaMobile';
+import { useIsMobile } from '@/hooks/use-mobile';
 import type { MandalaDistrict, MandalaDistrictState } from '@/components/cidadela/MandalaCidadela';
 
 export function CidadelaMap({ clienteId }: { clienteId: string }) {
