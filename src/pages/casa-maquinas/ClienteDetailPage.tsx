@@ -106,6 +106,7 @@ export default function ClienteDetailPage() {
         <TabsContent value="perfil"><ClientePerfilTab cliente={cliente} onUpdate={loadCliente} /></TabsContent>
         <TabsContent value="mapa-psiquico"><CartografiaPsiquicaOracula clienteId={clienteId!} /></TabsContent>
         <TabsContent value="relatorio-jornada"><RelatorioJornadaPage clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="bussola"><BussolaCartografa clienteId={clienteId!} /></TabsContent>
       </Tabs>
     </CasaMaquinasLayout>
   );
