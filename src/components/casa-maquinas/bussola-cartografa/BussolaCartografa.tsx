@@ -18,8 +18,6 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
-import { EthicalNotice } from '@/components/shared/EthicalNotice';
-
 interface Props {
   clienteId: string;
 }
