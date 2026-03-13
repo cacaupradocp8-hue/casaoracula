@@ -78,12 +78,14 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
 
     const { data: stateChanges } = await supabase
       .from('district_state_changes')
-      .select('district_id, to_state')
+      .select('district_id, to_state, created_at')
       .eq('client_id', clienteId)
-      .eq('to_state', 'integrado');
+      .order('created_at', { ascending: true });
+
+    setStateChangesList(stateChanges || []);
 
     const manualMap: Record<string, boolean> = {};
-    (stateChanges || []).forEach((sc: any) => { manualMap[sc.district_id] = true; });
+    (stateChanges || []).filter((sc: any) => sc.to_state === 'integrado').forEach((sc: any) => { manualMap[sc.district_id] = true; });
     setManualChanges(manualMap);
 
     setLoading(false);
