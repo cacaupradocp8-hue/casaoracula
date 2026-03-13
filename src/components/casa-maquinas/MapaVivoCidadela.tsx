@@ -6,6 +6,7 @@ import { MandalaCidadela, MandalaLegend } from '@/components/cidadela/MandalaCid
 import type { MandalaDistrict, MandalaDistrictState } from '@/components/cidadela/MandalaCidadela';
 import { DistrictPanel } from './DistrictPanel';
 import { JourneyTimeline } from './JourneyTimeline';
+import { ReplayJornada } from './ReplayJornada';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,7 +14,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
   Loader2, Clock, Sparkles, Maximize2, Minimize2,
-  Castle, Key, Brain, Compass, Wrench, Eye
+  Castle, Key, Brain, Compass, Wrench, Eye, PlayCircle
 } from 'lucide-react';
 
 interface Props {
@@ -33,9 +34,11 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
   const [selectedDistrict, setSelectedDistrict] = useState<MandalaDistrict | null>(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [showTimeline, setShowTimeline] = useState(false);
+  const [showReplay, setShowReplay] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [manualChanges, setManualChanges] = useState<Record<string, boolean>>({});
+  const [stateChangesList, setStateChangesList] = useState<any[]>([]);
 
   useEffect(() => { loadData(); }, [clienteId]);
 
@@ -75,12 +78,14 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
 
     const { data: stateChanges } = await supabase
       .from('district_state_changes')
-      .select('district_id, to_state')
+      .select('district_id, to_state, created_at')
       .eq('client_id', clienteId)
-      .eq('to_state', 'integrado');
+      .order('created_at', { ascending: true });
+
+    setStateChangesList(stateChanges || []);
 
     const manualMap: Record<string, boolean> = {};
-    (stateChanges || []).forEach((sc: any) => { manualMap[sc.district_id] = true; });
+    (stateChanges || []).filter((sc: any) => sc.to_state === 'integrado').forEach((sc: any) => { manualMap[sc.district_id] = true; });
     setManualChanges(manualMap);
 
     setLoading(false);
@@ -198,6 +203,11 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
           <Button variant="outline" size="sm" className="border-[#C9A24A]/15 text-[#C9A24A]/70 hover:text-[#C9A24A] hover:border-[#C9A24A]/30 text-xs h-8 gap-1.5" onClick={() => setShowTimeline(true)}>
             <Clock className="w-3 h-3" /> Linha do tempo
           </Button>
+          {sessions.length >= 2 && (
+            <Button variant="outline" size="sm" className="border-[#6366F1]/20 text-[#6366F1]/70 hover:text-[#6366F1] hover:border-[#6366F1]/30 text-xs h-8 gap-1.5" onClick={() => setShowReplay(true)}>
+              <PlayCircle className="w-3 h-3" /> Replay
+            </Button>
+          )}
         </div>
       </div>
 
@@ -342,6 +352,18 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
         districts={districts}
         oracleCards={oracleCards}
         tools={tools}
+      />
+
+      {/* Replay da Jornada */}
+      <ReplayJornada
+        open={showReplay}
+        onClose={() => setShowReplay(false)}
+        sessions={sessions}
+        districts={districts}
+        journeyDistricts={journeyDistricts}
+        tools={tools}
+        oracleCards={oracleCards}
+        stateChanges={stateChangesList}
       />
     </div>
   );
