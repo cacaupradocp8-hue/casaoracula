@@ -36,6 +36,7 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
   const [panelOpen, setPanelOpen] = useState(false);
   const [showTimeline, setShowTimeline] = useState(false);
   const [showReplay, setShowReplay] = useState(false);
+  const [showNarrativo, setShowNarrativo] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [manualChanges, setManualChanges] = useState<Record<string, boolean>>({});
