@@ -238,6 +238,7 @@ import PortalJunguiano from "./pages/PortalJunguiano";
 import PortalJunguianoPorta from "./pages/PortalJunguianoPorta";
 // Novas páginas de navegação simplificada
 import ExperienciaGratuita from "./pages/ExperienciaGratuita";
+import ClubeOracular from "./pages/ClubeOracular";
 import MapaCasaOracula from "./pages/MapaCasaOracula";
 import MinhaJornada from "./pages/MinhaJornada";
 
@@ -842,7 +843,16 @@ function AppRoutes() {
         }
       />
       
-      {/* Clube do Livro Oracular */}
+      {/* Clube de Leitura Oracular — Nova Home */}
+      <Route
+        path="/app/clube"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeOracular />
+          </ProtectedRoute>
+        }
+      />
+      {/* Clube do Livro Oracular (legado) */}
       <Route
         path="/clube-livro"
         element={

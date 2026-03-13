@@ -2652,6 +2652,124 @@ export type Database = {
         }
         Relationships: []
       }
+      clube_conteudo_semanal: {
+        Row: {
+          ativo: boolean
+          carta_descricao_simbolica: string | null
+          carta_imagem_url: string | null
+          carta_nome: string | null
+          ciclo_id: string
+          created_at: string
+          data_fim: string | null
+          data_inicio: string
+          id: string
+          pergunta_contemplativa: string | null
+          podcast_audio_url: string | null
+          podcast_descricao: string | null
+          podcast_externo_url: string | null
+          podcast_titulo: string | null
+          pratica_descricao: string | null
+          pratica_guia_url: string | null
+          pratica_titulo: string | null
+          semana_numero: number
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          carta_descricao_simbolica?: string | null
+          carta_imagem_url?: string | null
+          carta_nome?: string | null
+          ciclo_id: string
+          created_at?: string
+          data_fim?: string | null
+          data_inicio?: string
+          id?: string
+          pergunta_contemplativa?: string | null
+          podcast_audio_url?: string | null
+          podcast_descricao?: string | null
+          podcast_externo_url?: string | null
+          podcast_titulo?: string | null
+          pratica_descricao?: string | null
+          pratica_guia_url?: string | null
+          pratica_titulo?: string | null
+          semana_numero?: number
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          carta_descricao_simbolica?: string | null
+          carta_imagem_url?: string | null
+          carta_nome?: string | null
+          ciclo_id?: string
+          created_at?: string
+          data_fim?: string | null
+          data_inicio?: string
+          id?: string
+          pergunta_contemplativa?: string | null
+          podcast_audio_url?: string | null
+          podcast_descricao?: string | null
+          podcast_externo_url?: string | null
+          podcast_titulo?: string | null
+          pratica_descricao?: string | null
+          pratica_guia_url?: string | null
+          pratica_titulo?: string | null
+          semana_numero?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_conteudo_semanal_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_engajamento: {
+        Row: {
+          acessos: number
+          ciclo_id: string | null
+          encontros_participados: number
+          id: string
+          nivel: string
+          progresso: number
+          reflexoes_salvas: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          acessos?: number
+          ciclo_id?: string | null
+          encontros_participados?: number
+          id?: string
+          nivel?: string
+          progresso?: number
+          reflexoes_salvas?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          acessos?: number
+          ciclo_id?: string | null
+          encontros_participados?: number
+          id?: string
+          nivel?: string
+          progresso?: number
+          reflexoes_salvas?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_engajamento_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_estacao_registros: {
         Row: {
           created_at: string
@@ -3704,6 +3822,51 @@ export type Database = {
             columns: ["jornada_id"]
             isOneToOne: false
             referencedRelation: "clube_jornadas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_reflexoes: {
+        Row: {
+          ciclo_id: string | null
+          conteudo_semanal_id: string | null
+          created_at: string
+          id: string
+          texto: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ciclo_id?: string | null
+          conteudo_semanal_id?: string | null
+          created_at?: string
+          id?: string
+          texto: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ciclo_id?: string | null
+          conteudo_semanal_id?: string | null
+          created_at?: string
+          id?: string
+          texto?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_reflexoes_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_reflexoes_conteudo_semanal_id_fkey"
+            columns: ["conteudo_semanal_id"]
+            isOneToOne: false
+            referencedRelation: "clube_conteudo_semanal"
             referencedColumns: ["id"]
           },
         ]
