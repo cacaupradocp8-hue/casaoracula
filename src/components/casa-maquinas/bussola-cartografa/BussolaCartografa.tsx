@@ -87,47 +87,41 @@ export function BussolaCartografa({ clienteId }: Props) {
       setCidadelaMap((cidRes.data as any)?.[0] || null);
 
       // Build district summaries from sessions
-      const distMap = new Map<string, DistrictInfo>();
+      const distMap: Record<string, DistrictInfo> = {};
       const journeyData = (journeysRes.data || []) as any[];
 
       for (const s of (sessRes.data || [])) {
         if (!s.district_id) continue;
-        const existing = distMap.get(s.district_id);
-        if (existing) {
-          existing.sessions_count++;
+        if (distMap[s.district_id]) {
+          distMap[s.district_id].sessions_count++;
         } else {
-          distMap.set(s.district_id, {
+          distMap[s.district_id] = {
             id: s.district_id,
             nome: s.district_id,
             sessions_count: 1,
             state: 'ativo',
-          });
+          };
         }
       }
 
-      // Merge journey states
       for (const jd of journeyData) {
-        const d = distMap.get(jd.district_id);
-        if (d) d.state = jd.state || 'ativo';
+        if (distMap[jd.district_id]) distMap[jd.district_id].state = jd.state || 'ativo';
       }
 
-      // Fetch district names
-      const distIds = Array.from(distMap.keys());
+      const distIds = Object.keys(distMap);
       if (distIds.length > 0) {
         const { data: distNames } = await supabase
           .from('districts')
           .select('id, nome')
           .in('id', distIds);
         for (const dn of (distNames || [])) {
-          const d = distMap.get(dn.id);
-          if (d) d.nome = dn.nome;
+          if (distMap[dn.id]) distMap[dn.id].nome = dn.nome;
         }
       }
 
-      const sorted = Array.from(distMap.values()).sort((a, b) => b.sessions_count - a.sessions_count);
+      const sorted = Object.values(distMap).sort((a, b) => b.sessions_count - a.sessions_count);
       setDistricts(sorted);
 
-      // Generate local observations
       generateLocalObservations(
         (patternsRes.data || []) as PatternItem[],
         sorted,
