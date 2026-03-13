@@ -228,6 +228,13 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
         oracleCards={oracleCards}
         stateChanges={stateChangesList}
       />
+
+      {/* Relatório Narrativo */}
+      <RelatorioNarrativo
+        open={showNarrativo}
+        onClose={() => setShowNarrativo(false)}
+        clienteId={clienteId}
+      />
     </div>
   );
 }
