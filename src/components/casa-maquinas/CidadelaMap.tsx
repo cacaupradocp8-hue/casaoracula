@@ -158,6 +158,11 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
           <Button variant="outline" size="sm" className="border-[#C9A24A]/15 text-[#C9A24A]/70 hover:text-[#C9A24A] hover:border-[#C9A24A]/30 text-xs h-8 gap-1.5" onClick={() => setShowTimeline(true)}>
             <Clock className="w-3 h-3" /> Linha do tempo
           </Button>
+          {sessions.length >= 2 && (
+            <Button variant="outline" size="sm" className="border-[#6366F1]/20 text-[#6366F1]/70 hover:text-[#6366F1] hover:border-[#6366F1]/30 text-xs h-8 gap-1.5" onClick={() => setShowReplay(true)}>
+              <PlayCircle className="w-3 h-3" /> Replay
+            </Button>
+          )}
         </div>
       </div>
 
