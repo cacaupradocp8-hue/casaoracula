@@ -1,7 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, Users } from 'lucide-react';
 import { MandalaCidadela, MandalaLegend } from '@/components/cidadela/MandalaCidadela';
+import { DistrictDetailSheet } from '@/components/cidadela/DistrictDetailSheet';
 import type { MandalaDistrict, MandalaCollectiveData } from '@/components/cidadela/MandalaCidadela';
 
 interface Props {
@@ -12,6 +13,7 @@ export function CidadelaMapGroup({ groupId }: Props) {
   const [districts, setDistricts] = useState<MandalaDistrict[]>([]);
   const [collectiveData, setCollectiveData] = useState<MandalaCollectiveData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedDistrict, setSelectedDistrict] = useState<MandalaDistrict | null>(null);
 
   useEffect(() => { loadData(); }, [groupId]);
 
@@ -42,9 +44,7 @@ export function CidadelaMapGroup({ groupId }: Props) {
 
       setCollectiveData(
         Object.entries(countMap).map(([district_id, { count, names }]) => ({
-          district_id,
-          client_count: count,
-          client_names: names,
+          district_id, client_count: count, client_names: names,
         }))
       );
     }
@@ -52,39 +52,50 @@ export function CidadelaMapGroup({ groupId }: Props) {
   };
 
   if (loading) {
-    return <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-[#C9A24A]" /></div>;
+    return <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin" style={{ color: '#C9A24A' }} /></div>;
   }
+
+  const selectedCollective = selectedDistrict ? collectiveData.find(c => c.district_id === selectedDistrict.id) : undefined;
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Users className="w-4 h-4 text-[#C9A24A]/60" />
-        <h3 className="text-sm font-medium text-[#F5F1E8]/70">Mapa do Grupo — CidaDELA</h3>
+        <Users className="w-4 h-4" style={{ color: 'rgba(201,162,74,0.5)' }} />
+        <h3 className="text-sm font-medium" style={{ color: 'rgba(245,241,232,0.6)', fontFamily: "'Playfair Display', serif" }}>
+          Mapa do Grupo — CidaDELA
+        </h3>
       </div>
 
       <MandalaCidadela
         districts={districts}
         collectiveData={collectiveData}
         mode="coletivo"
-        className="w-full max-w-[520px] mx-auto"
+        className="w-full"
+        onDistrictClick={d => setSelectedDistrict(d)}
       />
       <MandalaLegend mode="coletivo" />
 
-      {/* Members list */}
       {collectiveData.length > 0 && (
-        <div className="bg-[#F5F1E8]/[0.03] border border-[#C9A24A]/8 rounded-lg p-3 max-w-[520px] mx-auto">
-          <p className="text-[10px] uppercase tracking-wider text-[#C9A24A]/50 mb-2">Participantes por distrito</p>
+        <div className="rounded-xl p-3.5 max-w-[420px] mx-auto" style={{ background: 'rgba(245,241,232,0.02)', border: '1px solid rgba(201,162,74,0.08)' }}>
+          <p className="text-[10px] uppercase tracking-wider mb-2" style={{ color: 'rgba(201,162,74,0.35)' }}>Participantes por distrito</p>
           {collectiveData.map(cd => {
             const d = districts.find(dd => dd.id === cd.district_id);
             return (
               <div key={cd.district_id} className="flex items-start gap-2 mb-1.5">
-                <span className="text-xs text-[#C9A24A]/70 font-medium shrink-0">{d?.nome}:</span>
-                <span className="text-xs text-[#F5F1E8]/40">{cd.client_names?.join(', ')}</span>
+                <span className="text-xs font-medium shrink-0" style={{ color: 'rgba(201,162,74,0.6)' }}>{d?.nome}:</span>
+                <span className="text-xs" style={{ color: 'rgba(245,241,232,0.35)' }}>{cd.client_names?.join(', ')}</span>
               </div>
             );
           })}
         </div>
       )}
+
+      <DistrictDetailSheet
+        district={selectedDistrict}
+        collectiveData={selectedCollective}
+        open={!!selectedDistrict}
+        onClose={() => setSelectedDistrict(null)}
+      />
     </div>
   );
 }
