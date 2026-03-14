@@ -194,6 +194,7 @@ export default function JardimPsiqueDetalhe() {
     );
   };
 
+  const renderResultadoSimbolico = () => {
     if (!registro?.resultado_simbolico) return null;
 
     const entries = Object.entries(registro.resultado_simbolico);
