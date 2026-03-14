@@ -562,7 +562,7 @@ export default function CartografiaPsiquicaPage() {
             <Button variant="ghost" size="sm" onClick={() => setStep(7)}>
               <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
+            <Button variant="ghost" size="sm" onClick={() => navigate('/mapa-casa')}>
               Revisitar depois
             </Button>
           </div>
