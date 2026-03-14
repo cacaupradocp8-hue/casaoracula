@@ -113,8 +113,8 @@ export function MandalaMobile({ districts, districtStates = [], collectiveData =
             <span className="text-[10px]" style={{ color: 'rgba(201,162,74,0.5)' }}>{stats.active}</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#b8a4d8' }} />
-            <span className="text-[10px]" style={{ color: 'rgba(184,164,216,0.6)' }}>{stats.integrated}</span>
+            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#6bc48f' }} />
+            <span className="text-[10px]" style={{ color: 'rgba(125,217,160,0.6)' }}>{stats.integrated}</span>
           </div>
           <span className="text-[10px]" style={{ color: 'rgba(245,241,232,0.2)' }}>{stats.explored}/{stats.total}</span>
         </div>
