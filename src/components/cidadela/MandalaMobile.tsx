@@ -142,10 +142,23 @@ export function MandalaMobile({
         </div>
       </div>
 
+      {/* Center + Entry */}
+      {(centerDistrict || entryDistrict) && (
+        <div>
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 mb-2 px-1">
+            Centro da CidaDELA
+          </p>
+          <div className="grid grid-cols-1 gap-2">
+            {centerDistrict && renderDistrict(centerDistrict)}
+            {entryDistrict && renderDistrict(entryDistrict)}
+          </div>
+        </div>
+      )}
+
       {/* Inner ring */}
       <div>
         <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 mb-2 px-1">
-          Anel Interior — Distritos 1–6
+          Primeiro Anel — Torres, Portas, Arquétipos, Sonhos
         </p>
         <div className="grid grid-cols-1 gap-2">
           {innerDistricts.map(renderDistrict)}
@@ -155,7 +168,7 @@ export function MandalaMobile({
       {/* Outer ring */}
       <div>
         <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 mb-2 px-1">
-          Anel Exterior — Distritos 7–12
+          Segundo Anel — Labirinto, Forja, Espelho, Conselho, Abalo, Renascimento
         </p>
         <div className="grid grid-cols-1 gap-2">
           {outerDistricts.map(renderDistrict)}
