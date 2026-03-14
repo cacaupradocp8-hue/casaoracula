@@ -26,7 +26,7 @@ import {
 const visitanteMenuGroups = () => [
   { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
   { key: 'mapa', label: 'Mapa da Casa', icon: Map, path: '/mapa-casa', subitems: [] },
-  { key: 'clube', label: 'Clube Oracular', icon: BookOpen, path: '/clube-livro', subitems: [] },
+  { key: 'clube', label: 'Clube Oracular', icon: BookOpen, path: '/app/clube', subitems: [] },
   { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
   { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
 ];
@@ -36,7 +36,7 @@ const assinanteMenuGroups = () => [
   { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
   { key: 'jornada', label: 'Minha Jornada', icon: Compass, path: '/minha-jornada', subitems: [] },
   { key: 'mapa', label: 'Mapa da Casa', icon: Map, path: '/mapa-casa', subitems: [] },
-  { key: 'clube', label: 'Clube de Leitura', icon: BookOpen, path: '/clube-livro', subitems: [] },
+  { key: 'clube', label: 'Clube de Leitura', icon: BookOpen, path: '/app/clube', subitems: [] },
   { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
   { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/comunidade', subitems: [] },
   { key: 'conta', label: 'Perfil', icon: User, path: '/minha-conta', subitems: [] },
@@ -47,7 +47,7 @@ const alunaMenuGroups = () => [
   { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
   { key: 'jornada', label: 'Minha Jornada', icon: Compass, path: '/minha-jornada', subitems: [] },
   { key: 'mapa', label: 'Mapa da Casa', icon: Map, path: '/mapa-casa', subitems: [] },
-  { key: 'clube', label: 'Clube de Leitura', icon: BookOpen, path: '/clube-livro', subitems: [] },
+  { key: 'clube', label: 'Clube de Leitura', icon: BookOpen, path: '/app/clube', subitems: [] },
   {
     key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos',
     subitems: [
