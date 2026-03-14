@@ -126,6 +126,14 @@ export default {
           "0%, 100%": { transform: "scale(1)", opacity: "0.4" },
           "50%": { transform: "scale(1.08)", opacity: "0.7" },
         },
+        "breathe-oracular": {
+          "0%, 100%": { transform: "scale(1)", opacity: "0.6" },
+          "50%": { transform: "scale(1.08)", opacity: "1" },
+        },
+        "sound-wave": {
+          "0%, 100%": { transform: "scaleY(0.3)" },
+          "50%": { transform: "scaleY(1)" },
+        },
         "float-gentle": {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-8px)" },
