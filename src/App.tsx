@@ -1179,14 +1179,9 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/ferramenta/cartografia-psiquica"
-        element={
-          <ProtectedRoute minPortal="mentorada">
-            <CartografiaPsiquicaPage />
-          </ProtectedRoute>
-        }
-      />
+      {/* Legacy redirect */}
+      <Route path="/ferramenta/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
+      <Route path="/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route
         path="/ferramentas/oraculo-perguntas"
         element={

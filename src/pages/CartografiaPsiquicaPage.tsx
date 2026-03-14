@@ -132,8 +132,8 @@ export default function CartografiaPsiquicaPage() {
       console.error(error);
       toast.error('Erro ao salvar cartografia');
     } else {
-      toast.success('Cartografia salva com sucesso ✨');
-      navigate('/dashboard');
+      toast.success('Cartografia salva com sucesso ✨ Sua CidaDELA Interior foi gerada.');
+      navigate('/mapa-casa');
     }
     setSaving(false);
   };

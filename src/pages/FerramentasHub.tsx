@@ -170,7 +170,7 @@ const FIXED_TOOLS: FixedTool[] = [
     id: 'cartografia-psiquica',
     nome: 'Cartografia Psíquica',
     descricao: 'Mapeamento simbólico do mundo interior.',
-    rota: '/cartografia-psiquica',
+    rota: '/ferramenta/cartografia-psiquica-oracula',
     portalMinimo: 'visitante',
     categoria: 'cartografia',
   },
