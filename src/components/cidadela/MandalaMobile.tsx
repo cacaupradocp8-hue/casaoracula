@@ -31,8 +31,10 @@ export function MandalaMobile({
   selectedId,
   onDistrictClick,
 }: Props) {
-  const innerDistricts = useMemo(() => districts.filter(d => d.numero <= 6), [districts]);
-  const outerDistricts = useMemo(() => districts.filter(d => d.numero > 6), [districts]);
+  const centerDistrict = useMemo(() => districts.find(d => d.numero === 11), [districts]);
+  const entryDistrict = useMemo(() => districts.find(d => d.numero === 1), [districts]);
+  const innerDistricts = useMemo(() => districts.filter(d => [2, 3, 4, 6].includes(d.numero)), [districts]);
+  const outerDistricts = useMemo(() => districts.filter(d => [5, 7, 8, 9, 10, 12].includes(d.numero)), [districts]);
 
   const getState = (id: string): 'inativo' | 'ativo' | 'integrado' => {
     return (districtStates.find(s => s.district_id === id)?.state as any) || 'inativo';
