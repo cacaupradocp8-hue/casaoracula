@@ -327,22 +327,38 @@ export function MandalaCidadela({
 
         <Particles />
 
+        {/* Radial lines from center to outer ring */}
+        {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle, i) => {
+          const rad = (angle * Math.PI) / 180;
+          return (
+            <line key={`radial-${i}`}
+              x1={cx + 8 * Math.cos(rad)} y1={cy + 8 * Math.sin(rad)}
+              x2={cx + (outerR + 2) * Math.cos(rad)} y2={cy + (outerR + 2) * Math.sin(rad)}
+              stroke="rgba(201,162,74,0.04)" strokeWidth="0.12"
+            />
+          );
+        })}
+
         {/* Compass lines */}
         {compassLines.map((l, i) => (
           <g key={i}>
-            <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke="rgba(201,162,74,0.04)" strokeWidth="0.1" />
-            <line x1={l.x3} y1={l.y3} x2={l.x4} y2={l.y4} stroke="rgba(201,162,74,0.04)" strokeWidth="0.1" />
+            <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke="rgba(201,162,74,0.06)" strokeWidth="0.15" />
+            <line x1={l.x3} y1={l.y3} x2={l.x4} y2={l.y4} stroke="rgba(201,162,74,0.06)" strokeWidth="0.15" />
           </g>
         ))}
 
         {/* Outer decorative ring */}
-        <circle cx={cx} cy={cy} r={outerR + 4} fill="none" stroke="rgba(201,162,74,0.03)" strokeWidth="0.15" />
+        <circle cx={cx} cy={cy} r={outerR + 4} fill="none" stroke="rgba(201,162,74,0.05)" strokeWidth="0.2" />
+        <circle cx={cx} cy={cy} r={outerR + 6} fill="none" stroke="rgba(201,162,74,0.02)" strokeWidth="0.1" />
 
         {/* Outer ring guide */}
-        <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="rgba(201,162,74,0.06)" strokeWidth="0.15" strokeDasharray="1 1.5" />
+        <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="rgba(201,162,74,0.1)" strokeWidth="0.2" strokeDasharray="1.5 1" />
+
+        {/* Inner ring ambient glow */}
+        <circle cx={cx} cy={cy} r={innerR} fill="url(#mandala-inner-ring-glow)" />
 
         {/* Inner ring guide */}
-        <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="rgba(201,162,74,0.08)" strokeWidth="0.15" strokeDasharray="0.8 1.2" />
+        <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="rgba(201,162,74,0.12)" strokeWidth="0.2" strokeDasharray="1 1" />
 
         {/* Symbolic connections between districts */}
         {connectionPaths.map((conn) => {
