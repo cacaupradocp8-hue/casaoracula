@@ -320,7 +320,7 @@ export function MandalaCidadela({
     const sessCount = getSessionCount(d.id);
     const collective = getCollective(d.id);
     const iconSize = NODE_R * 2.2;
-    const hoverScale = isHovered ? 1.15 : 1;
+    const hoverScale = isHovered ? 1.05 : 1;
     const labelPos = getLabelPos(d.numero);
     const nameLines = splitName(d.nome);
 
