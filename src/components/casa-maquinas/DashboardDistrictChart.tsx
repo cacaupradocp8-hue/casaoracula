@@ -5,14 +5,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
-const DISTRICT_COLORS: Record<string, string> = {
-  'distrito': '#C9A24A',
-  'torre': '#E85A5A',
-  'arquetipo': '#556B57',
-  'carta_oraculo': '#8B5CF6',
-  'intervencao': '#3B82F6',
-};
-
 interface PatternData {
   name: string;
   count: number;
@@ -32,7 +24,6 @@ export function DashboardDistrictChart() {
   const loadDistrictData = async () => {
     if (!user) return;
 
-    // Get client IDs for this therapist
     const { data: clients } = await supabase
       .from('clientes')
       .select('id')
@@ -46,7 +37,6 @@ export function DashboardDistrictChart() {
 
     const clientIds = clients.map(c => c.id);
 
-    // Get pattern stats for districts
     const { data: patterns, error } = await supabase
       .from('client_pattern_stats')
       .select('pattern_name, pattern_type, occurrence_count')
@@ -56,7 +46,6 @@ export function DashboardDistrictChart() {
       .limit(8);
 
     if (!error && patterns) {
-      // Aggregate by pattern_name
       const aggregated: Record<string, number> = {};
       patterns.forEach((p: any) => {
         aggregated[p.pattern_name] = (aggregated[p.pattern_name] || 0) + p.occurrence_count;
@@ -73,20 +62,20 @@ export function DashboardDistrictChart() {
   };
 
   return (
-    <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60 backdrop-blur-sm">
+    <Card className="border-border/30 bg-card/70 backdrop-blur-sm">
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-medium text-[#F5F1E8]/80 flex items-center gap-2">
-          <MapPin className="w-4 h-4 text-[#C9A24A]" />
+        <CardTitle className="text-sm font-medium text-foreground/80 flex items-center gap-2">
+          <MapPin className="w-4 h-4 text-primary" />
           Distritos Mais Visitados
         </CardTitle>
       </CardHeader>
       <CardContent>
         {loading ? (
           <div className="flex justify-center py-8">
-            <Loader2 className="w-4 h-4 animate-spin text-[#C9A24A]" />
+            <Loader2 className="w-4 h-4 animate-spin text-primary" />
           </div>
         ) : data.length === 0 ? (
-          <p className="text-sm text-[#F5F1E8]/30 text-center py-8">
+          <p className="text-sm text-muted-foreground text-center py-8">
             Dados simbólicos aparecerão conforme as sessões avançarem
           </p>
         ) : (
@@ -97,23 +86,23 @@ export function DashboardDistrictChart() {
                 type="category"
                 dataKey="name"
                 width={100}
-                tick={{ fill: '#F5F1E8', fontSize: 11, opacity: 0.6 }}
+                tick={{ fill: '#8B4513', fontSize: 11, opacity: 0.7 }}
                 axisLine={false}
                 tickLine={false}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#0B1B2B',
-                  border: '1px solid rgba(201,162,74,0.2)',
+                  backgroundColor: '#F5F5DC',
+                  border: '1px solid #B8A78F',
                   borderRadius: 8,
-                  color: '#F5F1E8',
+                  color: '#8B4513',
                   fontSize: 12,
                 }}
                 formatter={(value: number) => [`${value} visitas`, 'Frequência']}
               />
               <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={16}>
                 {data.map((_, index) => (
-                  <Cell key={index} fill={index === 0 ? '#C9A24A' : '#C9A24A80'} />
+                  <Cell key={index} fill={index === 0 ? '#DAA520' : '#DAA52080'} />
                 ))}
               </Bar>
             </BarChart>
