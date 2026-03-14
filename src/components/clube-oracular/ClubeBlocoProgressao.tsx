@@ -49,45 +49,39 @@ const CENARIOS = [
 
 export function ClubeBlocoProgressao({ portal, engajamento }: Props) {
   const navigate = useNavigate();
-
-  // Show even for "baixo" with a gentler message — this is the funnel heart
   const cenario = CENARIOS.find(c => c.match(portal)) || CENARIOS[0];
   const Icon = cenario.icon;
 
   return (
-    <Card className="border-gold/20 bg-gradient-to-br from-gold/[0.04] via-card to-mystic/[0.03] hover:shadow-lg hover:shadow-gold/5 transition-all duration-500">
-      <CardContent className="p-6">
-        {/* Header */}
-        <div className="flex items-center gap-2.5 mb-4">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gold/20 to-mystic/10 flex items-center justify-center">
+    <Card className="border-gold/12 bg-card/40 backdrop-blur-sm hover:-translate-y-1.5 hover:shadow-[0_10px_30px_-8px_hsl(var(--gold)/0.1)] transition-all duration-500">
+      <CardContent className="p-7">
+        <div className="flex items-center gap-2.5 mb-5">
+          <div className="w-9 h-9 rounded-full bg-gold/10 border border-gold/12 flex items-center justify-center">
             <Icon className="w-4 h-4 text-gold" />
           </div>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-gold/70 font-medium">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-gold/60 font-medium">
             Seu Próximo Passo na Casa
           </p>
         </div>
 
-        {/* Content */}
-        <h3 className="font-display text-base text-foreground mb-2.5 leading-snug">
+        <h3 className="font-display text-base text-foreground mb-3 leading-snug">
           {cenario.titulo}
         </h3>
-        <p className="text-xs text-muted-foreground leading-relaxed mb-5">
+        <p className="text-xs text-muted-foreground/70 leading-relaxed mb-6">
           {cenario.texto}
         </p>
 
-        {/* CTA */}
         <Button
           size="sm"
-          className="w-full gap-2 bg-gradient-to-r from-gold to-mystic hover:from-gold/90 hover:to-mystic/90 text-primary-foreground shadow-sm"
+          className="w-full gap-2 bg-gradient-to-r from-gold to-mystic hover:scale-105 text-primary-foreground border border-gold/20 transition-all duration-300 shadow-[0_0_20px_-6px_hsl(var(--gold)/0.2)]"
           onClick={() => navigate(cenario.rota)}
         >
           {cenario.botao}
           <ArrowRight className="w-3.5 h-3.5" />
         </Button>
 
-        {/* Engagement hint for low engagement */}
         {engajamento === 'baixo' && (
-          <p className="text-[10px] text-muted-foreground/50 text-center mt-3 italic">
+          <p className="text-[10px] text-muted-foreground/40 text-center mt-4 italic">
             Participe mais do Clube para desbloquear convites personalizados.
           </p>
         )}

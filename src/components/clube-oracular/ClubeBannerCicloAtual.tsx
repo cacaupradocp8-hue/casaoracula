@@ -11,18 +11,18 @@ interface Props {
 export function ClubeBannerCicloAtual({ ciclo, onAcessar }: Props) {
   if (!ciclo) {
     return (
-      <Card className="border-dashed border-border/25">
-        <CardContent className="py-14 text-center">
-          <BookOpen className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
+      <Card className="border-dashed border-border/20 bg-card/30 backdrop-blur-sm">
+        <CardContent className="py-16 text-center">
+          <BookOpen className="w-10 h-10 text-muted-foreground/25 mx-auto mb-4" />
           <p className="text-muted-foreground text-sm">Nenhuma travessia em curso neste momento.</p>
-          <p className="text-muted-foreground/50 text-xs mt-1">O próximo ciclo será anunciado em breve.</p>
+          <p className="text-muted-foreground/40 text-xs mt-1.5">O próximo ciclo será anunciado em breve.</p>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="overflow-hidden border-gold/20 bg-gradient-to-br from-gold/[0.04] via-card to-mystic/[0.03] hover:shadow-lg hover:shadow-gold/5 transition-all duration-500">
+    <Card className="overflow-hidden border-gold/15 bg-card/40 backdrop-blur-sm hover:-translate-y-1.5 hover:shadow-[0_12px_40px_-10px_hsl(var(--gold)/0.1)] transition-all duration-500">
       <CardContent className="p-0">
         <div className="flex flex-col sm:flex-row">
           {/* Book cover */}
@@ -35,15 +35,15 @@ export function ClubeBannerCicloAtual({ ciclo, onAcessar }: Props) {
                 loading="lazy"
               />
             ) : (
-              <div className="w-full h-52 sm:h-full bg-muted/50 flex items-center justify-center">
-                <BookOpen className="w-10 h-10 text-muted-foreground/30" />
+              <div className="w-full h-52 sm:h-full bg-muted/30 flex items-center justify-center">
+                <BookOpen className="w-10 h-10 text-muted-foreground/20" />
               </div>
             )}
           </div>
 
           {/* Info */}
-          <div className="p-7 flex-1 flex flex-col justify-center">
-            <p className="text-[10px] uppercase tracking-[0.3em] text-gold/70 font-medium mb-2.5">
+          <div className="p-8 flex-1 flex flex-col justify-center">
+            <p className="text-[10px] uppercase tracking-[0.3em] text-gold/60 font-medium mb-3">
               Ciclo Atual
             </p>
             <h2 className="font-display text-xl md:text-2xl text-foreground mb-1.5 leading-snug">
@@ -53,11 +53,11 @@ export function ClubeBannerCicloAtual({ ciclo, onAcessar }: Props) {
               <p className="text-sm text-muted-foreground mb-1">{ciclo.subtitulo}</p>
             )}
             {ciclo.autor_livro && (
-              <p className="text-xs text-muted-foreground/60 italic mb-5">{ciclo.autor_livro}</p>
+              <p className="text-xs text-muted-foreground/50 italic mb-6">{ciclo.autor_livro}</p>
             )}
             <Button
               onClick={onAcessar}
-              className="w-fit gap-2 bg-gradient-to-r from-gold to-mystic hover:from-gold/90 hover:to-mystic/90 text-primary-foreground shadow-sm"
+              className="w-fit gap-2 bg-gradient-to-r from-gold to-mystic hover:scale-105 text-primary-foreground border border-gold/20 transition-all duration-300 shadow-[0_0_20px_-6px_hsl(var(--gold)/0.2)]"
             >
               Entrar na Travessia
               <ArrowRight className="w-4 h-4" />

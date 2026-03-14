@@ -12,7 +12,7 @@ import { BookOpen, Loader2, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const fadeInUp = {
-  initial: { opacity: 0, y: 24 },
+  initial: { opacity: 0, y: 20 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
 };
@@ -30,7 +30,7 @@ export default function ClubeOracular() {
     return (
       <AppLayout>
         <div className="min-h-[60vh] flex items-center justify-center">
-          <Loader2 className="w-6 h-6 text-primary animate-spin" />
+          <Loader2 className="w-6 h-6 text-gold animate-spin" />
         </div>
       </AppLayout>
     );
@@ -39,16 +39,12 @@ export default function ClubeOracular() {
   return (
     <AppLayout>
       <div className="min-h-screen">
-        {/* Hero Section — Immersive & Contemplative */}
-        <section className="relative py-24 md:py-32 overflow-hidden">
-          {/* Layered background */}
-          <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-background/80" />
-          
-          {/* Breathing orb — primary */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-gradient-to-br from-mystic/10 via-gold/6 to-transparent blur-3xl animate-breathe pointer-events-none" />
-          
-          {/* Secondary subtle orb */}
-          <div className="absolute top-1/3 left-1/4 w-48 h-48 rounded-full bg-gold/5 blur-2xl animate-breathe-subtle pointer-events-none" />
+        {/* Hero Section */}
+        <section className="relative py-28 md:py-36 overflow-hidden">
+          <div className="absolute inset-0 bg-background" />
+
+          {/* Breathing orb — ONLY here */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-gradient-to-br from-mystic/8 via-gold/5 to-transparent blur-3xl animate-breathe pointer-events-none" />
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -56,10 +52,9 @@ export default function ClubeOracular() {
             transition={{ duration: 1.2, ease: "easeOut" }}
             className="relative z-10 container mx-auto px-6 text-center max-w-3xl"
           >
-            {/* Icon badge */}
             <div className="inline-flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold/20 to-mystic/15 flex items-center justify-center shadow-lg shadow-gold/10">
-                <BookOpen className="w-6 h-6 text-gold" />
+              <div className="w-14 h-14 rounded-full bg-gold/10 border border-gold/15 flex items-center justify-center">
+                <BookOpen className="w-7 h-7 text-gold" />
               </div>
             </div>
 
@@ -67,7 +62,7 @@ export default function ClubeOracular() {
               Clube de Leitura Oracular
             </p>
 
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground mb-5 tracking-wide leading-tight">
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 tracking-wide leading-tight">
               Território de Leitura Viva
             </h1>
 
@@ -75,22 +70,20 @@ export default function ClubeOracular() {
               Reflexão, prática e atravessamento simbólico — cada livro é uma travessia, cada encontro é um portal.
             </p>
 
-            {/* Subtle decorative divider */}
             <div className="flex items-center justify-center gap-3 mt-8">
-              <div className="w-12 h-px bg-gradient-to-r from-transparent to-gold/30" />
-              <Sparkles className="w-3 h-3 text-gold/40" />
-              <div className="w-12 h-px bg-gradient-to-l from-transparent to-gold/30" />
+              <div className="w-12 h-px bg-gradient-to-r from-transparent to-gold/25" />
+              <Sparkles className="w-3 h-3 text-gold/30" />
+              <div className="w-12 h-px bg-gradient-to-l from-transparent to-gold/25" />
             </div>
           </motion.div>
         </section>
 
         {/* Content Grid */}
-        <div className="container mx-auto px-6 pb-28 max-w-6xl">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12">
-            
+        <div className="container mx-auto px-6 pb-32 max-w-6xl">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-14">
+
             {/* Main column */}
-            <div className="lg:col-span-2 space-y-12">
-              {/* Ciclo Atual Banner */}
+            <div className="lg:col-span-2 space-y-14">
               <motion.div {...fadeInUp} transition={{ duration: 0.8 }}>
                 <ClubeBannerCicloAtual
                   ciclo={cicloAtual}
@@ -98,7 +91,6 @@ export default function ClubeOracular() {
                 />
               </motion.div>
 
-              {/* Conteúdo Semanal — Core engagement */}
               <motion.div {...fadeInUp} transition={{ duration: 0.8, delay: 0.1 }}>
                 <ClubeConteudoSemanal
                   conteudo={conteudoSemanal}
@@ -110,14 +102,12 @@ export default function ClubeOracular() {
               </motion.div>
             </div>
 
-            {/* Sidebar — Journey & Progression */}
-            <div className="space-y-8">
-              {/* Próximo Encontro */}
+            {/* Sidebar */}
+            <div className="space-y-10">
               <motion.div {...fadeInUp} transition={{ duration: 0.8, delay: 0.15 }}>
                 <ClubeProximoEncontro encontro={proximoEncontro} />
               </motion.div>
 
-              {/* Progresso da Travessia */}
               <motion.div {...fadeInUp} transition={{ duration: 0.8, delay: 0.2 }}>
                 <ClubeProgressoTravessia
                   progresso={engajamento?.progresso ?? 0}
@@ -126,7 +116,6 @@ export default function ClubeOracular() {
                 />
               </motion.div>
 
-              {/* Bloco de Progressão — Funnel heart */}
               <motion.div {...fadeInUp} transition={{ duration: 0.8, delay: 0.25 }}>
                 <ClubeBlocoProgressao
                   portal={user?.portal}
