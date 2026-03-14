@@ -126,25 +126,33 @@ function arcPath(cx: number, cy: number, r: number, startAngleDeg: number, endAn
   return `M ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2}`;
 }
 
-// Subtle cosmos particles
+// Floating cosmos particles with gentle drift
 function CosmosLayer() {
-  const stars = useMemo(
-    () => Array.from({ length: 24 }, (_, i) => ({
-      id: i,
-      cx: 5 + Math.random() * 90,
-      cy: 5 + Math.random() * 90,
-      r: 0.08 + Math.random() * 0.14,
-      dur: 12 + Math.random() * 18,
-      delay: Math.random() * 10,
-      isGold: Math.random() > 0.6,
-    })),
+  const particles = useMemo(
+    () => Array.from({ length: 32 }, (_, i) => {
+      const cx = 5 + Math.random() * 90;
+      const cy = 5 + Math.random() * 90;
+      const driftX = (Math.random() - 0.5) * 6;
+      const driftY = (Math.random() - 0.5) * 6;
+      return {
+        id: i,
+        cx, cy, driftX, driftY,
+        r: 0.06 + Math.random() * 0.16,
+        fadeDur: 14 + Math.random() * 20,
+        moveDur: 20 + Math.random() * 30,
+        delay: Math.random() * 12,
+        isGold: Math.random() > 0.55,
+      };
+    }),
     []
   );
   return (
     <>
-      {stars.map((s) => (
-        <circle key={s.id} cx={s.cx} cy={s.cy} r={s.r} fill={s.isGold ? '#C9A24A' : '#F5F1E8'} opacity="0">
-          <animate attributeName="opacity" values="0;0.12;0" dur={`${s.dur}s`} begin={`${s.delay}s`} repeatCount="indefinite" />
+      {particles.map((p) => (
+        <circle key={p.id} cx={p.cx} cy={p.cy} r={p.r} fill={p.isGold ? '#C9A24A' : '#F5F1E8'} opacity="0">
+          <animate attributeName="opacity" values="0;0.10;0.06;0.10;0" dur={`${p.fadeDur}s`} begin={`${p.delay}s`} repeatCount="indefinite" />
+          <animate attributeName="cx" values={`${p.cx};${p.cx + p.driftX};${p.cx}`} dur={`${p.moveDur}s`} begin={`${p.delay}s`} repeatCount="indefinite" />
+          <animate attributeName="cy" values={`${p.cy};${p.cy + p.driftY};${p.cy}`} dur={`${p.moveDur * 1.1}s`} begin={`${p.delay}s`} repeatCount="indefinite" />
         </circle>
       ))}
     </>
@@ -312,7 +320,7 @@ export function MandalaCidadela({
     const sessCount = getSessionCount(d.id);
     const collective = getCollective(d.id);
     const iconSize = NODE_R * 2.2;
-    const hoverScale = isHovered ? 1.15 : 1;
+    const hoverScale = isHovered ? 1.05 : 1;
     const labelPos = getLabelPos(d.numero);
     const nameLines = splitName(d.nome);
 
@@ -629,19 +637,19 @@ export function MandalaCidadela({
         {/* ===== CENTER — Praça da Integração (subdued glow) ===== */}
         <circle cx={CX} cy={CY} r={CENTER_R + 4} fill="url(#m-center-radial)" filter="url(#m-soft-glow)" />
         <circle cx={CX} cy={CY} r={CENTER_R + 1.5} fill="none" stroke="rgba(201,162,74,0.06)" strokeWidth="0.12">
-          <animate attributeName="stroke-opacity" values="0.04;0.08;0.04" dur="7s" repeatCount="indefinite" />
+          <animate attributeName="stroke-opacity" values="0.04;0.07;0.04" dur="9s" repeatCount="indefinite" />
         </circle>
         <circle cx={CX} cy={CY} r={CENTER_R} fill="rgba(201,162,74,0.05)" stroke="rgba(201,162,74,0.3)" strokeWidth="0.35" filter="url(#m-center-glow)">
-          <animate attributeName="r" values={`${CENTER_R};${CENTER_R * 1.03};${CENTER_R}`} dur="7s" repeatCount="indefinite" />
-          <animate attributeName="stroke-opacity" values="0.2;0.4;0.2" dur="7s" repeatCount="indefinite" />
+          <animate attributeName="r" values={`${CENTER_R};${CENTER_R * 1.03};${CENTER_R}`} dur="9s" repeatCount="indefinite" />
+          <animate attributeName="stroke-opacity" values="0.2;0.35;0.2" dur="9s" repeatCount="indefinite" />
         </circle>
         <circle cx={CX} cy={CY} r="3" fill="rgba(201,162,74,0.10)" stroke="none">
-          <animate attributeName="r" values="2.8;3.5;2.8" dur="7s" repeatCount="indefinite" />
-          <animate attributeName="opacity" values="0.25;0.6;0.25" dur="7s" repeatCount="indefinite" />
+          <animate attributeName="r" values="2.8;3.4;2.8" dur="9s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.20;0.50;0.20" dur="9s" repeatCount="indefinite" />
         </circle>
         <circle cx={CX} cy={CY} r={CENTER_R + 1} fill="none" stroke="rgba(107,75,161,0.06)" strokeWidth="0.1">
-          <animate attributeName="r" values={`${CENTER_R + 0.5};${CENTER_R + 2};${CENTER_R + 0.5}`} dur="7s" repeatCount="indefinite" />
-          <animate attributeName="opacity" values="0.03;0.1;0.03" dur="7s" repeatCount="indefinite" />
+          <animate attributeName="r" values={`${CENTER_R + 0.5};${CENTER_R + 1.8};${CENTER_R + 0.5}`} dur="9s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.03;0.08;0.03" dur="9s" repeatCount="indefinite" />
         </circle>
         {/* Center icon */}
         <svg x={CX - 3.5} y={CY - 5} width="7" height="7" viewBox="0 0 28 28" opacity="0.35">
