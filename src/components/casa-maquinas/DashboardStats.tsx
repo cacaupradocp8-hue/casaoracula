@@ -7,14 +7,11 @@ interface StatCardProps {
   accent?: string;
 }
 
-function StatCard({ icon: Icon, label, value, accent = 'hsl(var(--cm-gold-soft))' }: StatCardProps) {
+function StatCard({ icon: Icon, label, value, accent = 'hsl(var(--primary))' }: StatCardProps) {
   return (
-    <div className="p-4 rounded-xl border border-border/30 bg-card/70 backdrop-blur-sm cm-card">
+    <div className="p-4 rounded-xl border border-border/30 bg-card/70 backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-lg">
       <div className="flex items-center gap-3">
-        <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center"
-          style={{ backgroundColor: `${accent}22` }}
-        >
+        <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${accent}22` }}>
           <Icon className="w-4 h-4" style={{ color: accent }} />
         </div>
         <div>
@@ -38,8 +35,8 @@ export function DashboardStats({ clientes, sessoesMes, gestosAtivos, alertas }: 
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
       <StatCard icon={Users} label="Clientes ativos" value={clientes} />
       <StatCard icon={Calendar} label="Sessões este mês" value={sessoesMes} />
-      <StatCard icon={Sparkles} label="Gestos ativos" value={gestosAtivos} accent="hsl(var(--cm-green))" />
-      <StatCard icon={AlertTriangle} label="Alertas clínicos" value={alertas} accent="hsl(var(--cm-red))" />
+      <StatCard icon={Sparkles} label="Gestos ativos" value={gestosAtivos} accent="hsl(var(--accent))" />
+      <StatCard icon={AlertTriangle} label="Alertas clínicos" value={alertas} accent="hsl(var(--destructive))" />
     </div>
   );
 }
