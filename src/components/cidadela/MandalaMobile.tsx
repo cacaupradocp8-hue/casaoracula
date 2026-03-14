@@ -63,7 +63,7 @@ export function MandalaMobile({ districts, districtStates = [], collectiveData =
         <div className="relative shrink-0">
           <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: colors.dot, opacity: state === 'inativo' ? 0.4 : 1 }} />
           {state === 'integrado' && (
-            <div className="absolute inset-0 w-3.5 h-3.5 rounded-full animate-ping" style={{ backgroundColor: 'rgba(107,75,161,0.25)' }} />
+            <div className="absolute inset-0 w-3.5 h-3.5 rounded-full animate-ping" style={{ backgroundColor: 'rgba(74,158,107,0.25)' }} />
           )}
           {state === 'ativo' && (
             <div className="absolute inset-0 w-3.5 h-3.5 rounded-full animate-pulse" style={{ backgroundColor: 'rgba(201,162,74,0.2)' }} />
