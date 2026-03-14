@@ -406,11 +406,17 @@ export function MandalaCidadela({
           </>
         )}
 
-        {/* Center — Praça da Integração */}
-        <circle cx={cx} cy={cy} r="10" fill="url(#mandala-center-glow)" />
-        <circle cx={cx} cy={cy} r="7" fill="rgba(201,162,74,0.05)" stroke="rgba(201,162,74,0.15)" strokeWidth="0.3" />
-        <circle cx={cx} cy={cy} r="4" fill="rgba(201,162,74,0.08)" stroke="rgba(201,162,74,0.2)" strokeWidth="0.2">
-          <animate attributeName="r" values="3.5;4.2;3.5" dur="4s" repeatCount="indefinite" />
+        {/* Center — Praça da Integração — 1.6x bigger */}
+        <circle cx={cx} cy={cy} r="14" fill="url(#mandala-center-glow)" />
+        <circle cx={cx} cy={cy} r="10" fill="rgba(201,162,74,0.04)" stroke="rgba(201,162,74,0.12)" strokeWidth="0.25" />
+        <circle cx={cx} cy={cy} r={centerNodeR} fill="rgba(201,162,74,0.08)" stroke="rgba(201,162,74,0.3)" strokeWidth="0.3" filter="url(#mandala-center-pulse)">
+          <animate attributeName="r" values={`${centerNodeR - 0.3};${centerNodeR * 1.05};${centerNodeR - 0.3}`} dur="6s" repeatCount="indefinite" />
+          <animate attributeName="stroke-opacity" values="0.2;0.5;0.2" dur="6s" repeatCount="indefinite" />
+        </circle>
+        {/* Inner breathing pulse */}
+        <circle cx={cx} cy={cy} r="3" fill="rgba(201,162,74,0.15)" stroke="none">
+          <animate attributeName="r" values="2.5;3.5;2.5" dur="6s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.6;1;0.6" dur="6s" repeatCount="indefinite" />
         </circle>
         {/* Center icon for district 11 */}
         {centerDistrict && (
@@ -420,13 +426,13 @@ export function MandalaCidadela({
             onClick={(e) => { e.stopPropagation(); onDistrictClick?.(centerDistrict); }}
           >
             <title>{centerDistrict.nome}</title>
-            <circle cx={cx} cy={cy} r="7" fill="transparent" />
+            <circle cx={cx} cy={cy} r={centerNodeR} fill="transparent" />
           </g>
         )}
-        <text x={cx} y={cy - 1.2} textAnchor="middle" fill="#C9A24A" fontSize="1.8" fontWeight="600" opacity="0.7">
+        <text x={cx} y={cy - 1.5} textAnchor="middle" fill="#C9A24A" fontSize="2.2" fontWeight="600" opacity="0.85">
           {centerLabel[0]}
         </text>
-        <text x={cx} y={cy + 1.5} textAnchor="middle" fill="#C9A24A" fontSize="1.8" fontWeight="600" opacity="0.7">
+        <text x={cx} y={cy + 1.8} textAnchor="middle" fill="#C9A24A" fontSize="2.2" fontWeight="600" opacity="0.85">
           {centerLabel[1]}
         </text>
 
