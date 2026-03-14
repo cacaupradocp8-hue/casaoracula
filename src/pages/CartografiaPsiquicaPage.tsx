@@ -524,7 +524,7 @@ export default function CartografiaPsiquicaPage() {
 
                 <div className="text-center space-y-2">
                   <p className="text-xs text-muted-foreground/50">
-                    Próxima ferramenta sugerida: Mapa das Vozes Internas
+                    Ao salvar, sua CidaDELA Interior será gerada automaticamente como GPS da jornada.
                   </p>
                   <p className="text-[10px] text-muted-foreground/30">
                     Esta ferramenta é exploratória, não diagnóstica. Leitura simbólica do estado psíquico.
