@@ -95,11 +95,11 @@ const FIXED_TOOLS: FixedTool[] = [
     categoria: 'diagnostico',
   },
   {
-    id: 'big5-oracular',
-    nome: 'Big Five Oracular',
-    descricao: 'Mapa simbólico dos 5 territórios com ritual de ancoragem.',
-    rota: '/ferramenta/big5-oracular',
-    portalMinimo: 'aluna',
+    id: 'cartografia-psiquica-oracula',
+    nome: 'Cartografia Psíquica Orácula',
+    descricao: 'Mapeamento simbólico dos territórios da psique com geração da CidaDELA Interior.',
+    rota: '/ferramenta/cartografia-psiquica-oracula',
+    portalMinimo: 'visitante',
     categoria: 'diagnostico',
   },
   {
