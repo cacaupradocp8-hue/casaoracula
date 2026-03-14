@@ -154,8 +154,8 @@ export function MandalaMobile({ districts, districtStates = [], collectiveData =
           <span className="text-[9px]" style={{ color: 'rgba(201,162,74,0.5)' }}>Ativo</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#b8a4d8' }} />
-          <span className="text-[9px]" style={{ color: 'rgba(184,164,216,0.5)' }}>Integrado</span>
+          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#6bc48f' }} />
+          <span className="text-[9px]" style={{ color: 'rgba(125,217,160,0.5)' }}>Integrado</span>
         </div>
       </div>
 
