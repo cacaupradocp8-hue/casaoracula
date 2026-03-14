@@ -4,7 +4,7 @@ import type { MandalaDistrict, MandalaDistrictState, MandalaMode, MandalaCollect
 const STATE_COLORS = {
   inativo: { bg: 'rgba(245,241,232,0.03)', border: 'rgba(245,241,232,0.08)', text: 'rgba(245,241,232,0.35)', dot: 'rgba(245,241,232,0.2)' },
   ativo: { bg: 'rgba(201,162,74,0.08)', border: 'rgba(201,162,74,0.25)', text: '#C9A24A', dot: '#C9A24A' },
-  integrado: { bg: 'rgba(107,75,161,0.08)', border: 'rgba(107,75,161,0.25)', text: '#b8a4d8', dot: '#b8a4d8' },
+  integrado: { bg: 'rgba(74,158,107,0.08)', border: 'rgba(74,158,107,0.25)', text: '#7dd9a0', dot: '#6bc48f' },
 };
 
 const STATE_LABELS = {
