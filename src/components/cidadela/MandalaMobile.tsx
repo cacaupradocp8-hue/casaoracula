@@ -4,7 +4,7 @@ import type { MandalaDistrict, MandalaDistrictState, MandalaMode, MandalaCollect
 const STATE_COLORS = {
   inativo: { bg: 'rgba(245,241,232,0.03)', border: 'rgba(245,241,232,0.08)', text: 'rgba(245,241,232,0.35)', dot: 'rgba(245,241,232,0.2)' },
   ativo: { bg: 'rgba(201,162,74,0.08)', border: 'rgba(201,162,74,0.25)', text: '#C9A24A', dot: '#C9A24A' },
-  integrado: { bg: 'rgba(107,75,161,0.08)', border: 'rgba(107,75,161,0.25)', text: '#b8a4d8', dot: '#b8a4d8' },
+  integrado: { bg: 'rgba(74,158,107,0.08)', border: 'rgba(74,158,107,0.25)', text: '#7dd9a0', dot: '#6bc48f' },
 };
 
 const STATE_LABELS = {
@@ -63,7 +63,7 @@ export function MandalaMobile({ districts, districtStates = [], collectiveData =
         <div className="relative shrink-0">
           <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: colors.dot, opacity: state === 'inativo' ? 0.4 : 1 }} />
           {state === 'integrado' && (
-            <div className="absolute inset-0 w-3.5 h-3.5 rounded-full animate-ping" style={{ backgroundColor: 'rgba(107,75,161,0.25)' }} />
+            <div className="absolute inset-0 w-3.5 h-3.5 rounded-full animate-ping" style={{ backgroundColor: 'rgba(74,158,107,0.25)' }} />
           )}
           {state === 'ativo' && (
             <div className="absolute inset-0 w-3.5 h-3.5 rounded-full animate-pulse" style={{ backgroundColor: 'rgba(201,162,74,0.2)' }} />
@@ -76,7 +76,7 @@ export function MandalaMobile({ districts, districtStates = [], collectiveData =
               {d.nome}
             </span>
             {state === 'integrado' && (
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full shrink-0" style={{ background: 'rgba(107,75,161,0.2)', color: '#b8a4d8' }}>✓</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full shrink-0" style={{ background: 'rgba(74,158,107,0.2)', color: '#7dd9a0' }}>✓</span>
             )}
           </div>
           <div className="flex items-center gap-2 mt-0.5">
@@ -113,8 +113,8 @@ export function MandalaMobile({ districts, districtStates = [], collectiveData =
             <span className="text-[10px]" style={{ color: 'rgba(201,162,74,0.5)' }}>{stats.active}</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#b8a4d8' }} />
-            <span className="text-[10px]" style={{ color: 'rgba(184,164,216,0.6)' }}>{stats.integrated}</span>
+            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#6bc48f' }} />
+            <span className="text-[10px]" style={{ color: 'rgba(125,217,160,0.6)' }}>{stats.integrated}</span>
           </div>
           <span className="text-[10px]" style={{ color: 'rgba(245,241,232,0.2)' }}>{stats.explored}/{stats.total}</span>
         </div>
@@ -154,8 +154,8 @@ export function MandalaMobile({ districts, districtStates = [], collectiveData =
           <span className="text-[9px]" style={{ color: 'rgba(201,162,74,0.5)' }}>Ativo</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#b8a4d8' }} />
-          <span className="text-[9px]" style={{ color: 'rgba(184,164,216,0.5)' }}>Integrado</span>
+          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#6bc48f' }} />
+          <span className="text-[9px]" style={{ color: 'rgba(125,217,160,0.5)' }}>Integrado</span>
         </div>
       </div>
 
