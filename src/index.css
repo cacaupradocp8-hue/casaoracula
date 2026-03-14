@@ -77,12 +77,18 @@
     --gold-light: 42 55% 72%;
     --gold-dark: 42 55% 45%;
     
+    /* Roxo místico: #6b4ba1 */
+    --mystic: 264 37% 46%;
+    --mystic-light: 264 37% 58%;
+    --mystic-dark: 264 37% 34%;
+    
     /* Fundo principal: #0E1A24 */
     --midnight: 206 44% 10%;
     --midnight-light: 206 43% 14%;
 
-    /* Gradients - simplificados */
+    /* Gradients */
     --gradient-gold: linear-gradient(135deg, hsl(42 49% 58%), hsl(42 55% 45%));
+    --gradient-gold-mystic: linear-gradient(135deg, hsl(42 49% 58%), hsl(264 37% 46%));
     --gradient-midnight: linear-gradient(180deg, hsl(206 43% 14%), hsl(206 44% 8%));
     --gradient-mystical: linear-gradient(135deg, hsl(216 25% 35%), hsl(206 44% 10%));
     --gradient-hero: radial-gradient(ellipse at top, hsl(206 43% 18%), hsl(206 44% 10%));
@@ -91,6 +97,7 @@
     --shadow-gold: 0 4px 30px -5px hsl(42 49% 58% / 0.25);
     --shadow-soft: 0 8px 32px -8px hsl(0 0% 0% / 0.4);
     --shadow-glow: 0 0 60px -10px hsl(42 49% 58% / 0.3);
+    --shadow-mystic: 0 4px 30px -5px hsl(264 37% 46% / 0.25);
 
     /* Typography */
     --font-display: 'Cormorant Garamond', serif;
@@ -164,6 +171,13 @@
 @layer components {
   .text-gold-gradient {
     background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gold-mystic-gradient {
+    background: var(--gradient-gold-mystic);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

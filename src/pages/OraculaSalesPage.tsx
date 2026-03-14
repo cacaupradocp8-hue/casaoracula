@@ -33,8 +33,11 @@ export default function OraculaSalesPage() {
             src={mentoriaBanner}
             alt="Casa Orácula — Certificação ORÁCULA em Leitura e Condução Simbólica Feminina"
             className="w-full h-auto block"
+            loading="eager"
           />
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
+          {/* Breathing orb overlay */}
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-64 rounded-full bg-gradient-to-t from-mystic/10 via-gold/5 to-transparent blur-3xl animate-breathe pointer-events-none" />
         </div>
       </section>
 
@@ -799,19 +802,19 @@ export default function OraculaSalesPage() {
             Você entra para atravessar.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-5 justify-center">
             <Button 
               variant="outline"
               size="lg"
               onClick={() => navigate('/auth')}
-              className="border-white/20 hover:border-primary/30 text-white/70 hover:text-white px-10 py-6 text-lg"
+              className="border-white/15 hover:border-mystic/30 text-white/60 hover:text-white px-10 py-6 text-lg transition-all duration-300 hover:scale-105"
             >
               Entrar
             </Button>
             <Button 
               size="lg"
               onClick={() => navigate('/planos')}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_40px_-8px_hsl(var(--gold)/0.3)] px-10 py-6 text-lg"
+              className="bg-gradient-to-r from-gold to-mystic text-background border border-gold/30 hover:scale-105 transition-all duration-300 shadow-[0_0_40px_-8px_hsl(var(--gold)/0.3)] hover:shadow-[0_0_60px_-8px_hsl(var(--gold)/0.4)] px-10 py-6 text-lg"
             >
               Ver Planos
               <ArrowRight className="w-4 h-4 ml-2" />

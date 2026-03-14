@@ -56,6 +56,11 @@ export default {
           light: "hsl(var(--gold-light))",
           dark: "hsl(var(--gold-dark))",
         },
+        mystic: {
+          DEFAULT: "hsl(var(--mystic))",
+          light: "hsl(var(--mystic-light))",
+          dark: "hsl(var(--mystic-dark))",
+        },
         midnight: {
           DEFAULT: "hsl(var(--midnight))",
           light: "hsl(var(--midnight-light))",
@@ -114,8 +119,12 @@ export default {
           "50%": { boxShadow: "0 0 40px 5px hsl(var(--gold) / 0.4)" },
         },
         "breathe": {
-          "0%, 100%": { transform: "scale(1)", opacity: "0.8" },
-          "50%": { transform: "scale(1.05)", opacity: "1" },
+          "0%, 100%": { transform: "scale(1)", opacity: "0.6" },
+          "50%": { transform: "scale(1.1)", opacity: "1" },
+        },
+        "breathe-subtle": {
+          "0%, 100%": { transform: "scale(1)", opacity: "0.4" },
+          "50%": { transform: "scale(1.08)", opacity: "0.7" },
         },
         "float-gentle": {
           "0%, 100%": { transform: "translateY(0)" },
@@ -137,6 +146,7 @@ export default {
         "card-flip": "card-flip 0.8s ease-out forwards",
         "card-glow": "card-glow 3s ease-in-out infinite",
         "breathe": "breathe 4s ease-in-out infinite",
+        "breathe-subtle": "breathe-subtle 4s ease-in-out infinite",
         "float-gentle": "float-gentle 6s ease-in-out infinite",
         "reveal-text": "reveal-text 1s ease-out forwards",
       },

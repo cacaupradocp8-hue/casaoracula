@@ -13,6 +13,7 @@ import { DashboardQuickActions } from '@/components/casa-maquinas/DashboardQuick
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, Plus, Users } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface ClienteRecente {
   id: string;
@@ -20,6 +21,11 @@ interface ClienteRecente {
   status: string;
   updated_at: string;
 }
+
+const fadeInUp = {
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0 },
+};
 
 export default function CasaDasMaquinas() {
   const { user } = useAuth();
@@ -65,7 +71,7 @@ export default function CasaDasMaquinas() {
     return (
       <CasaMaquinasLayout title="Dashboard">
         <div className="flex items-center justify-center min-h-[50vh]">
-          <Loader2 className="w-6 h-6 animate-spin text-[#C9A24A]" />
+          <Loader2 className="w-6 h-6 animate-spin text-gold" />
         </div>
       </CasaMaquinasLayout>
     );
@@ -80,74 +86,86 @@ export default function CasaDasMaquinas() {
   return (
     <CasaMaquinasLayout title="Dashboard" subtitle="Visão geral do espaço profissional">
       {/* Quick Actions */}
-      <DashboardQuickActions />
+      <motion.div {...fadeInUp} transition={{ duration: 0.5 }}>
+        <DashboardQuickActions />
+      </motion.div>
 
       {/* Stats */}
-      <div className="mt-4">
+      <motion.div {...fadeInUp} transition={{ duration: 0.5, delay: 0.05 }} className="mt-6">
         <DashboardStats
           clientes={stats.clientes}
           sessoesMes={stats.sessoesMes}
           gestosAtivos={stats.gestosAtivos}
           alertas={stats.alertas}
         />
-      </div>
+      </motion.div>
 
       {/* Main grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
         {/* Left column */}
-        <div className="lg:col-span-1 space-y-4">
-          <DashboardAgenda />
-          <DashboardJornadas />
-          <DashboardArchetypes />
+        <div className="lg:col-span-1 space-y-6">
+          <motion.div {...fadeInUp} transition={{ duration: 0.5, delay: 0.1 }}>
+            <DashboardAgenda />
+          </motion.div>
+          <motion.div {...fadeInUp} transition={{ duration: 0.5, delay: 0.15 }}>
+            <DashboardJornadas />
+          </motion.div>
+          <motion.div {...fadeInUp} transition={{ duration: 0.5, delay: 0.2 }}>
+            <DashboardArchetypes />
+          </motion.div>
         </div>
 
         {/* Right column */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="lg:col-span-2 space-y-6">
           {/* Clientes recentes */}
-          <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60 backdrop-blur-sm">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-[#F5F1E8]/80 flex items-center gap-2">
-                  <Users className="w-4 h-4 text-[#C9A24A]" />
-                  Clientes Recentes
-                </CardTitle>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-7 text-xs text-[#C9A24A] hover:text-[#C9A24A] hover:bg-[#C9A24A]/10 gap-1"
-                  onClick={() => navigate('/casa-das-maquinas/clientes')}
-                >
-                  <Plus className="w-3 h-3" />
-                  Novo
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {clientesRecentes.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {clientesRecentes.map(c => (
-                    <DashboardClientCard
-                      key={c.id}
-                      nome={c.nome}
-                      ultimaSessao={new Date(c.updated_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })}
-                      distritoAtual=""
-                      torrePredominante=""
-                      estado={estadoMap[c.status] || 'travessia'}
-                      onOpenCity={() => navigate(`/casa-das-maquinas/clientes/${c.id}`)}
-                      onStartSession={() => navigate('/casa-das-maquinas/sessoes')}
-                    />
-                  ))}
+          <motion.div {...fadeInUp} transition={{ duration: 0.5, delay: 0.1 }}>
+            <Card className="border-gold/8 bg-card/40 backdrop-blur-md hover:border-gold/15 transition-all duration-500">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-sm font-medium text-foreground/70 flex items-center gap-2">
+                    <Users className="w-4 h-4 text-gold" />
+                    Clientes Recentes
+                  </CardTitle>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-7 text-xs text-gold hover:text-gold hover:bg-gold/10 gap-1"
+                    onClick={() => navigate('/casa-das-maquinas/clientes')}
+                  >
+                    <Plus className="w-3 h-3" />
+                    Novo
+                  </Button>
                 </div>
-              ) : (
-                <p className="text-sm text-[#F5F1E8]/30 text-center py-6">
-                  Nenhuma cliente cadastrada ainda
-                </p>
-              )}
-            </CardContent>
-          </Card>
+              </CardHeader>
+              <CardContent>
+                {clientesRecentes.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {clientesRecentes.map(c => (
+                      <DashboardClientCard
+                        key={c.id}
+                        nome={c.nome}
+                        ultimaSessao={new Date(c.updated_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        distritoAtual=""
+                        torrePredominante=""
+                        estado={estadoMap[c.status] || 'travessia'}
+                        onOpenCity={() => navigate(`/casa-das-maquinas/clientes/${c.id}`)}
+                        onStartSession={() => navigate('/casa-das-maquinas/sessoes')}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground/40 text-center py-8">
+                    Nenhuma cliente cadastrada ainda
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
 
           {/* District Chart */}
-          <DashboardDistrictChart />
+          <motion.div {...fadeInUp} transition={{ duration: 0.5, delay: 0.15 }}>
+            <DashboardDistrictChart />
+          </motion.div>
         </div>
       </div>
     </CasaMaquinasLayout>
