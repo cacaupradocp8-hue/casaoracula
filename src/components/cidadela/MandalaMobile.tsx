@@ -76,7 +76,7 @@ export function MandalaMobile({ districts, districtStates = [], collectiveData =
               {d.nome}
             </span>
             {state === 'integrado' && (
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full shrink-0" style={{ background: 'rgba(107,75,161,0.2)', color: '#b8a4d8' }}>✓</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full shrink-0" style={{ background: 'rgba(74,158,107,0.2)', color: '#7dd9a0' }}>✓</span>
             )}
           </div>
           <div className="flex items-center gap-2 mt-0.5">
