@@ -142,10 +142,11 @@ export function MandalaCidadela({
 }: Props) {
   const cx = 50;
   const cy = 50;
-  const innerR = 22;
-  const outerR = 40;
-  const innerNodeR = 4.5;
-  const outerNodeR = 3.8;
+  const innerR = 24;
+  const outerR = 42;
+  const innerNodeR = 5.2;
+  const outerNodeR = 4.5;
+  const centerNodeR = 8;
 
   // Zoom/Pan state
   const svgRef = useRef<SVGSVGElement>(null);
