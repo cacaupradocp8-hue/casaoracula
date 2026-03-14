@@ -13,9 +13,9 @@ interface ClientCardProps {
 }
 
 const estadoCores: Record<string, string> = {
-  crise: 'bg-red-500/20 text-red-400 border-red-500/30',
-  travessia: 'bg-[#C9A24A]/20 text-[#C9A24A] border-[#C9A24A]/30',
-  'integração': 'bg-[#556B57]/20 text-[#556B57] border-[#556B57]/30',
+  crise: 'bg-destructive/15 text-destructive border-destructive/30',
+  travessia: 'bg-primary/15 text-primary border-primary/30',
+  'integração': 'bg-accent/15 text-accent border-accent/30',
 };
 
 export function DashboardClientCard({
@@ -28,11 +28,11 @@ export function DashboardClientCard({
   onStartSession,
 }: ClientCardProps) {
   return (
-    <div className="p-4 rounded-xl border border-[#C9A24A]/10 bg-[#0B1B2B]/60 hover:border-[#C9A24A]/20 transition-all group">
+    <div className="p-4 rounded-xl border border-border/30 bg-card/70 backdrop-blur-sm hover:border-primary/30 transition-all group hover:-translate-y-1 hover:shadow-lg">
       <div className="flex items-start justify-between mb-3">
         <div>
-          <h3 className="text-sm font-semibold text-[#F5F1E8]">{nome}</h3>
-          <p className="text-[10px] text-[#F5F1E8]/40 mt-0.5">Última sessão: {ultimaSessao}</p>
+          <h3 className="text-sm font-display font-semibold text-foreground">{nome}</h3>
+          <p className="text-[10px] text-muted-foreground mt-0.5">Última sessão: {ultimaSessao}</p>
         </div>
         <Badge variant="outline" className={`text-[10px] ${estadoCores[estado]}`}>
           {estado}
@@ -40,13 +40,13 @@ export function DashboardClientCard({
       </div>
 
       <div className="flex items-center gap-2 mb-3">
-        <div className="flex items-center gap-1 text-[10px] text-[#F5F1E8]/50">
-          <MapPin className="w-3 h-3 text-[#C9A24A]/60" />
+        <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+          <MapPin className="w-3 h-3 text-primary/60" />
           {distritoAtual}
         </div>
-        <span className="text-[#F5F1E8]/20">·</span>
-        <div className="flex items-center gap-1 text-[10px] text-[#F5F1E8]/50">
-          <Castle className="w-3 h-3 text-[#C9A24A]/60" />
+        <span className="text-foreground/20">·</span>
+        <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+          <Castle className="w-3 h-3 text-primary/60" />
           {torrePredominante}
         </div>
       </div>
@@ -56,7 +56,7 @@ export function DashboardClientCard({
           size="sm"
           variant="ghost"
           onClick={onOpenCity}
-          className="h-7 text-xs text-[#C9A24A] hover:text-[#C9A24A] hover:bg-[#C9A24A]/10 flex-1"
+          className="h-7 text-xs text-primary hover:text-primary hover:bg-primary/10 flex-1"
         >
           Abrir Cidade
           <ChevronRight className="w-3 h-3 ml-1" />
@@ -65,7 +65,7 @@ export function DashboardClientCard({
           size="sm"
           variant="outline"
           onClick={onStartSession}
-          className="h-7 text-xs border-[#C9A24A]/20 text-[#F5F1E8]/60 hover:text-[#F5F1E8] hover:bg-[#C9A24A]/10"
+          className="h-7 text-xs border-border/40 text-foreground/60 hover:text-foreground hover:bg-primary/10"
         >
           Sessão
         </Button>
