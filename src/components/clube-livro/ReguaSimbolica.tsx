@@ -14,12 +14,12 @@ interface ReguaSimbolicaProps {
  */
 export function ReguaSimbolica({ steps, activeTab, onTabChange }: ReguaSimbolicaProps) {
   return (
-    <div className="w-full mb-6">
+    <div className="w-full">
       <div className="flex items-center justify-between relative">
-        {/* Connecting line */}
-        <div className="absolute top-4 left-6 right-6 h-px bg-primary/10" />
+        {/* Connecting line — gradient */}
+        <div className="absolute top-5 left-8 right-8 h-px bg-gradient-to-r from-primary/5 via-gold/15 to-primary/5" />
 
-        {steps.map((step, i) => {
+        {steps.map((step) => {
           const isActive = activeTab === step.key;
           const isDone = step.concluido;
           const isLocked = !step.desbloqueado;
@@ -32,8 +32,8 @@ export function ReguaSimbolica({ steps, activeTab, onTabChange }: ReguaSimbolica
               }}
               disabled={isLocked}
               className={cn(
-                'relative flex flex-col items-center gap-1.5 z-10 transition-all group',
-                isLocked && 'cursor-not-allowed opacity-40',
+                'relative flex flex-col items-center gap-2 z-10 transition-all duration-300 group',
+                isLocked && 'cursor-not-allowed opacity-35',
                 !isLocked && 'cursor-pointer',
               )}
               title={isLocked ? 'Ainda não é tempo de avançar.' : step.label}
@@ -41,28 +41,28 @@ export function ReguaSimbolica({ steps, activeTab, onTabChange }: ReguaSimbolica
               {/* Moon / Star icon */}
               <div
                 className={cn(
-                  'w-8 h-8 rounded-full flex items-center justify-center text-base transition-all border',
-                  isActive && 'ring-2 ring-primary/30 scale-110',
-                  isDone && !isActive && 'bg-primary/15 border-primary/30',
-                  !isDone && !isActive && !isLocked && 'bg-muted/30 border-border/50',
-                  isLocked && 'bg-muted/10 border-border/20',
+                  'w-10 h-10 rounded-full flex items-center justify-center text-base transition-all duration-300 border',
+                  isActive && 'ring-2 ring-gold/30 scale-110 bg-gradient-to-br from-gold/15 to-mystic/10 border-gold/30 shadow-sm shadow-gold/10',
+                  isDone && !isActive && 'bg-primary/10 border-primary/25',
+                  !isDone && !isActive && !isLocked && 'bg-card border-border/30 hover:border-primary/20',
+                  isLocked && 'bg-muted/10 border-border/15',
                 )}
               >
                 {isLocked ? (
-                  <Lock className="w-3 h-3 text-muted-foreground/50" />
+                  <Lock className="w-3 h-3 text-muted-foreground/40" />
                 ) : (
-                  <span>{step.emoji}</span>
+                  <span className={cn(isActive && 'scale-110 transition-transform')}>{step.emoji}</span>
                 )}
               </div>
 
-              {/* Label (hidden on mobile for space) */}
+              {/* Label */}
               <span
                 className={cn(
-                  'text-[10px] sm:text-xs leading-tight transition-colors',
-                  isActive && 'text-primary font-medium',
+                  'text-[10px] sm:text-xs leading-tight transition-colors font-medium',
+                  isActive && 'text-gold',
                   isDone && !isActive && 'text-primary/70',
                   !isDone && !isActive && !isLocked && 'text-muted-foreground',
-                  isLocked && 'text-muted-foreground/40',
+                  isLocked && 'text-muted-foreground/30',
                 )}
               >
                 {step.label}
