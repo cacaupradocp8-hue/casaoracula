@@ -119,8 +119,12 @@ export default {
           "50%": { boxShadow: "0 0 40px 5px hsl(var(--gold) / 0.4)" },
         },
         "breathe": {
-          "0%, 100%": { transform: "scale(1)", opacity: "0.8" },
-          "50%": { transform: "scale(1.05)", opacity: "1" },
+          "0%, 100%": { transform: "scale(1)", opacity: "0.6" },
+          "50%": { transform: "scale(1.1)", opacity: "1" },
+        },
+        "breathe-subtle": {
+          "0%, 100%": { transform: "scale(1)", opacity: "0.4" },
+          "50%": { transform: "scale(1.08)", opacity: "0.7" },
         },
         "float-gentle": {
           "0%, 100%": { transform: "translateY(0)" },
