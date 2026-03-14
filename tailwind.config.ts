@@ -146,6 +146,7 @@ export default {
         "card-flip": "card-flip 0.8s ease-out forwards",
         "card-glow": "card-glow 3s ease-in-out infinite",
         "breathe": "breathe 4s ease-in-out infinite",
+        "breathe-subtle": "breathe-subtle 4s ease-in-out infinite",
         "float-gentle": "float-gentle 6s ease-in-out infinite",
         "reveal-text": "reveal-text 1s ease-out forwards",
       },
