@@ -126,25 +126,33 @@ function arcPath(cx: number, cy: number, r: number, startAngleDeg: number, endAn
   return `M ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2}`;
 }
 
-// Subtle cosmos particles
+// Floating cosmos particles with gentle drift
 function CosmosLayer() {
-  const stars = useMemo(
-    () => Array.from({ length: 24 }, (_, i) => ({
-      id: i,
-      cx: 5 + Math.random() * 90,
-      cy: 5 + Math.random() * 90,
-      r: 0.08 + Math.random() * 0.14,
-      dur: 12 + Math.random() * 18,
-      delay: Math.random() * 10,
-      isGold: Math.random() > 0.6,
-    })),
+  const particles = useMemo(
+    () => Array.from({ length: 32 }, (_, i) => {
+      const cx = 5 + Math.random() * 90;
+      const cy = 5 + Math.random() * 90;
+      const driftX = (Math.random() - 0.5) * 6;
+      const driftY = (Math.random() - 0.5) * 6;
+      return {
+        id: i,
+        cx, cy, driftX, driftY,
+        r: 0.06 + Math.random() * 0.16,
+        fadeDur: 14 + Math.random() * 20,
+        moveDur: 20 + Math.random() * 30,
+        delay: Math.random() * 12,
+        isGold: Math.random() > 0.55,
+      };
+    }),
     []
   );
   return (
     <>
-      {stars.map((s) => (
-        <circle key={s.id} cx={s.cx} cy={s.cy} r={s.r} fill={s.isGold ? '#C9A24A' : '#F5F1E8'} opacity="0">
-          <animate attributeName="opacity" values="0;0.12;0" dur={`${s.dur}s`} begin={`${s.delay}s`} repeatCount="indefinite" />
+      {particles.map((p) => (
+        <circle key={p.id} cx={p.cx} cy={p.cy} r={p.r} fill={p.isGold ? '#C9A24A' : '#F5F1E8'} opacity="0">
+          <animate attributeName="opacity" values="0;0.10;0.06;0.10;0" dur={`${p.fadeDur}s`} begin={`${p.delay}s`} repeatCount="indefinite" />
+          <animate attributeName="cx" values={`${p.cx};${p.cx + p.driftX};${p.cx}`} dur={`${p.moveDur}s`} begin={`${p.delay}s`} repeatCount="indefinite" />
+          <animate attributeName="cy" values={`${p.cy};${p.cy + p.driftY};${p.cy}`} dur={`${p.moveDur * 1.1}s`} begin={`${p.delay}s`} repeatCount="indefinite" />
         </circle>
       ))}
     </>
