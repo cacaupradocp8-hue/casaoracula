@@ -90,18 +90,160 @@ const SYMBOLIC_CONNECTIONS: { from: number; to: number; label: string }[] = [
 ];
 
 const DISTRICT_ICONS: Record<number, (c: string) => JSX.Element> = {
-  1: (c) => <g><path d="M10 22 L14 6 L18 22" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round"/><line x1="11.5" y1="16" x2="16.5" y2="16" stroke={c} strokeWidth="1.5"/></g>,
-  2: (c) => <g><rect x="9" y="5" width="10" height="18" rx="1.5" fill="none" stroke={c} strokeWidth="2"/><circle cx="16" cy="14" r="1.2" fill={c}/></g>,
-  3: (c) => <g><rect x="10" y="8" width="8" height="14" rx="1" fill="none" stroke={c} strokeWidth="2"/><line x1="14" y1="4" x2="14" y2="8" stroke={c} strokeWidth="2"/><line x1="11" y1="5.5" x2="17" y2="5.5" stroke={c} strokeWidth="1.5"/></g>,
-  4: (c) => <g><circle cx="14" cy="9" r="4" fill="none" stroke={c} strokeWidth="2"/><line x1="14" y1="13" x2="14" y2="22" stroke={c} strokeWidth="2"/><line x1="14" y1="18" x2="17" y2="17" stroke={c} strokeWidth="1.5"/></g>,
-  5: (c) => <g><path d="M14 14 m-1.5,0 a1.5,1.5 0 1,1 3,0 a3,3 0 1,1 -6,0 a5,5 0 1,1 10,0 a7,7 0 1,1 -14,0" fill="none" stroke={c} strokeWidth="1.5"/></g>,
-  6: (c) => <g><circle cx="14" cy="11" r="3" fill="none" stroke={c} strokeWidth="2"/><circle cx="11" cy="8.5" r="2" fill="none" stroke={c} strokeWidth="1.2"/><circle cx="17" cy="8.5" r="2" fill="none" stroke={c} strokeWidth="1.2"/><line x1="14" y1="14" x2="14" y2="22" stroke={c} strokeWidth="2"/></g>,
-  7: (c) => <g><ellipse cx="14" cy="12" rx="5" ry="6.5" fill="none" stroke={c} strokeWidth="2"/><line x1="14" y1="18.5" x2="14" y2="23" stroke={c} strokeWidth="2"/><line x1="10" y1="23" x2="18" y2="23" stroke={c} strokeWidth="1.5"/></g>,
-  8: (c) => <g><rect x="9" y="14" width="10" height="4" rx="1" fill="none" stroke={c} strokeWidth="2"/><line x1="14" y1="5" x2="14" y2="14" stroke={c} strokeWidth="2"/><circle cx="14" cy="5" r="2" fill="none" stroke={c} strokeWidth="1.5"/></g>,
-  9: (c) => <g><circle cx="14" cy="14" r="6.5" fill="none" stroke={c} strokeWidth="1.5" strokeDasharray="2.5 2.5"/><circle cx="14" cy="7.5" r="1.5" fill={c}/><circle cx="14" cy="20.5" r="1.5" fill={c}/><circle cx="7.5" cy="14" r="1.5" fill={c}/><circle cx="20.5" cy="14" r="1.5" fill={c}/></g>,
-  10: (c) => <g><path d="M16 6 A7 7 0 1 0 16 22 A5 5 0 1 1 16 6" fill="none" stroke={c} strokeWidth="2"/></g>,
-  11: (c) => <g><circle cx="14" cy="14" r="6" fill="none" stroke={c} strokeWidth="1.5"/><line x1="14" y1="8" x2="14" y2="20" stroke={c} strokeWidth="1.2"/><line x1="8" y1="14" x2="20" y2="14" stroke={c} strokeWidth="1.2"/><circle cx="14" cy="14" r="2.5" fill="none" stroke={c} strokeWidth="1.2"/></g>,
-  12: (c) => <g><path d="M6 20 Q14 6 22 20" fill="none" stroke={c} strokeWidth="2"/><line x1="14" y1="9" x2="14" y2="5" stroke={c} strokeWidth="1.5"/><line x1="9" y1="12" x2="7" y2="9" stroke={c} strokeWidth="1.5"/><line x1="19" y1="12" x2="21" y2="9" stroke={c} strokeWidth="1.5"/></g>,
+  // 1 — Entrada / Ponto de Chegada — Portal com arco e estrela guia
+  1: (c) => <g>
+    <path d="M8 24 L8 10 A6 6 0 0 1 20 10 L20 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round"/>
+    <line x1="8" y1="24" x2="20" y2="24" stroke={c} strokeWidth="1.2"/>
+    <path d="M10 24 L10 14" stroke={c} strokeWidth="0.8" strokeDasharray="1 1.5" opacity="0.5"/>
+    <path d="M18 24 L18 14" stroke={c} strokeWidth="0.8" strokeDasharray="1 1.5" opacity="0.5"/>
+    <circle cx="14" cy="7" r="1.8" fill="none" stroke={c} strokeWidth="1" opacity="0.7"/>
+    <circle cx="14" cy="7" r="0.6" fill={c} opacity="0.9"/>
+    <line x1="14" y1="4" x2="14" y2="5.2" stroke={c} strokeWidth="0.6" opacity="0.5"/>
+    <line x1="14" y1="8.8" x2="14" y2="10" stroke={c} strokeWidth="0.6" opacity="0.5"/>
+    <line x1="11.2" y1="7" x2="12.2" y2="7" stroke={c} strokeWidth="0.6" opacity="0.5"/>
+    <line x1="15.8" y1="7" x2="16.8" y2="7" stroke={c} strokeWidth="0.6" opacity="0.5"/>
+  </g>,
+
+  // 2 — Torres — Torre com ameias e vigília
+  2: (c) => <g>
+    <rect x="10" y="10" width="8" height="14" rx="0.8" fill="none" stroke={c} strokeWidth="1.5"/>
+    <path d="M10 10 L10 7 L12 7 L12 9 L14 9 L14 7 L16 7 L16 9 L18 9 L18 7 L18 10" fill="none" stroke={c} strokeWidth="1.2"/>
+    <rect x="12.5" y="18" width="3" height="6" rx="1.5" fill="none" stroke={c} strokeWidth="1" opacity="0.7"/>
+    <circle cx="14" cy="13.5" r="1.5" fill="none" stroke={c} strokeWidth="0.8" opacity="0.6"/>
+    <circle cx="14" cy="13.5" r="0.4" fill={c} opacity="0.5"/>
+    <line x1="9" y1="16" x2="19" y2="16" stroke={c} strokeWidth="0.5" opacity="0.3"/>
+  </g>,
+
+  // 3 — Portas — Porta com chave simbólica e umbral
+  3: (c) => <g>
+    <path d="M9 24 L9 9 A5 5 0 0 1 19 9 L19 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round"/>
+    <line x1="9" y1="24" x2="19" y2="24" stroke={c} strokeWidth="1"/>
+    <line x1="14" y1="9" x2="14" y2="24" stroke={c} strokeWidth="0.6" opacity="0.3"/>
+    <circle cx="16" cy="16" r="1" fill="none" stroke={c} strokeWidth="0.8"/>
+    <circle cx="16" cy="16" r="0.3" fill={c}/>
+    <line x1="16" y1="17" x2="16" y2="19.5" stroke={c} strokeWidth="0.7"/>
+    <line x1="15.3" y1="18.5" x2="16.7" y2="18.5" stroke={c} strokeWidth="0.5"/>
+    <path d="M11 6 Q14 3 17 6" fill="none" stroke={c} strokeWidth="0.6" opacity="0.4"/>
+  </g>,
+
+  // 4 — Jardim dos Arquétipos — Árvore com raízes e copa
+  4: (c) => <g>
+    <line x1="14" y1="13" x2="14" y2="22" stroke={c} strokeWidth="1.5"/>
+    <path d="M14 22 Q12 24 10 25" fill="none" stroke={c} strokeWidth="0.8" opacity="0.5"/>
+    <path d="M14 22 Q16 24 18 25" fill="none" stroke={c} strokeWidth="0.8" opacity="0.5"/>
+    <path d="M14 21 Q11 23 9 23" fill="none" stroke={c} strokeWidth="0.6" opacity="0.35"/>
+    <circle cx="14" cy="10" r="5" fill="none" stroke={c} strokeWidth="1.2"/>
+    <circle cx="14" cy="10" r="3" fill="none" stroke={c} strokeWidth="0.6" opacity="0.4"/>
+    <circle cx="11" cy="8" r="2.5" fill="none" stroke={c} strokeWidth="0.8" opacity="0.5"/>
+    <circle cx="17" cy="8" r="2.5" fill="none" stroke={c} strokeWidth="0.8" opacity="0.5"/>
+    <circle cx="14" cy="6" r="2" fill="none" stroke={c} strokeWidth="0.7" opacity="0.45"/>
+    <circle cx="14" cy="10" r="0.8" fill={c} opacity="0.6"/>
+  </g>,
+
+  // 5 — Praça do Abalo — Espiral com onda sísmica
+  5: (c) => <g>
+    <path d="M14 14 m0,-2 a2,2 0 1,1 0,4 a4,4 0 1,1 0,-8 a6,6 0 1,1 0,12" fill="none" stroke={c} strokeWidth="1.2" strokeLinecap="round"/>
+    <path d="M6 20 Q10 17 14 20 Q18 23 22 20" fill="none" stroke={c} strokeWidth="0.7" opacity="0.4"/>
+    <path d="M7 22 Q11 19 14 22 Q17 25 21 22" fill="none" stroke={c} strokeWidth="0.5" opacity="0.25"/>
+    <circle cx="14" cy="14" r="1" fill={c} opacity="0.7"/>
+    <line x1="14" y1="3" x2="14" y2="6" stroke={c} strokeWidth="0.5" opacity="0.3"/>
+    <line x1="14" y1="22" x2="14" y2="25" stroke={c} strokeWidth="0.5" opacity="0.3"/>
+  </g>,
+
+  // 6 — Casa dos Sonhos — Lua crescente com nuvens e estrelas
+  6: (c) => <g>
+    <path d="M17 8 A5 5 0 1 0 17 18 A3.5 3.5 0 1 1 17 8" fill="none" stroke={c} strokeWidth="1.3"/>
+    <circle cx="9" cy="9" r="0.5" fill={c} opacity="0.6"/>
+    <circle cx="7" cy="13" r="0.4" fill={c} opacity="0.4"/>
+    <circle cx="10" cy="16" r="0.35" fill={c} opacity="0.5"/>
+    <circle cx="20" cy="6" r="0.45" fill={c} opacity="0.35"/>
+    <path d="M5 20 Q7 18 9 20 Q11 22 13 20" fill="none" stroke={c} strokeWidth="0.6" opacity="0.3"/>
+    <path d="M15 22 Q17 20 19 22 Q21 24 23 22" fill="none" stroke={c} strokeWidth="0.5" opacity="0.2"/>
+    <line x1="9" y1="8.5" x2="9" y2="9.5" stroke={c} strokeWidth="0.4" opacity="0.3"/>
+    <line x1="8.5" y1="9" x2="9.5" y2="9" stroke={c} strokeWidth="0.4" opacity="0.3"/>
+  </g>,
+
+  // 7 — Espelho dos Vínculos — Espelho duplo com reflexo
+  7: (c) => <g>
+    <ellipse cx="14" cy="12" rx="5.5" ry="7" fill="none" stroke={c} strokeWidth="1.3"/>
+    <ellipse cx="14" cy="12" rx="3.5" ry="5" fill="none" stroke={c} strokeWidth="0.6" opacity="0.35"/>
+    <line x1="14" y1="19" x2="14" y2="24" stroke={c} strokeWidth="1.3"/>
+    <path d="M10 24 Q14 22.5 18 24" fill="none" stroke={c} strokeWidth="1"/>
+    <circle cx="12.5" cy="10.5" r="0.6" fill={c} opacity="0.25"/>
+    <path d="M11 14 Q14 16 17 14" fill="none" stroke={c} strokeWidth="0.5" opacity="0.3"/>
+    <line x1="8.5" y1="12" x2="7" y2="12" stroke={c} strokeWidth="0.4" opacity="0.3"/>
+    <line x1="19.5" y1="12" x2="21" y2="12" stroke={c} strokeWidth="0.4" opacity="0.3"/>
+    <line x1="14" y1="4.5" x2="14" y2="5" stroke={c} strokeWidth="0.4" opacity="0.3"/>
+  </g>,
+
+  // 8 — Forja — Bigorna com martelo e chamas
+  8: (c) => <g>
+    <path d="M9 18 L9 16 L19 16 L19 18" fill="none" stroke={c} strokeWidth="1.3"/>
+    <rect x="11" y="18" width="6" height="2.5" rx="0.5" fill="none" stroke={c} strokeWidth="1"/>
+    <line x1="14" y1="20.5" x2="14" y2="23" stroke={c} strokeWidth="1.2"/>
+    <line x1="11" y1="23" x2="17" y2="23" stroke={c} strokeWidth="1"/>
+    <path d="M18 14 L20 8 L21 8 L19 15" fill="none" stroke={c} strokeWidth="1" strokeLinecap="round"/>
+    <path d="M11 14 Q12 11 14 12 Q16 11 15 14" fill="none" stroke={c} strokeWidth="0.6" opacity="0.5"/>
+    <path d="M12 12 Q13 9 14 10" fill="none" stroke={c} strokeWidth="0.5" opacity="0.35"/>
+    <path d="M14 10 Q15 9 16 12" fill="none" stroke={c} strokeWidth="0.5" opacity="0.35"/>
+    <circle cx="13" cy="8" r="0.3" fill={c} opacity="0.4"/>
+    <circle cx="15" cy="7" r="0.25" fill={c} opacity="0.3"/>
+  </g>,
+
+  // 9 — Conselho Interior — Mesa redonda com cadeiras
+  9: (c) => <g>
+    <circle cx="14" cy="14" r="5" fill="none" stroke={c} strokeWidth="1.2"/>
+    <circle cx="14" cy="14" r="2.5" fill="none" stroke={c} strokeWidth="0.6" opacity="0.4" strokeDasharray="1.5 1"/>
+    {[0,60,120,180,240,300].map((a,i) => {
+      const rad = (a * Math.PI) / 180;
+      const x = 14 + 6.8 * Math.cos(rad);
+      const y = 14 + 6.8 * Math.sin(rad);
+      return <circle key={i} cx={x} cy={y} r="1" fill="none" stroke={c} strokeWidth="0.7" opacity="0.6"/>;
+    })}
+    <circle cx="14" cy="14" r="0.8" fill={c} opacity="0.5"/>
+  </g>,
+
+  // 10 — Labirinto — Labirinto clássico com caminho
+  10: (c) => <g>
+    <path d="M14 4 L14 7" stroke={c} strokeWidth="0.8" opacity="0.4"/>
+    <path d="M14 8 A6 6 0 0 0 8 14" fill="none" stroke={c} strokeWidth="1.2"/>
+    <path d="M8 14 A6 6 0 0 0 14 20" fill="none" stroke={c} strokeWidth="1.2"/>
+    <path d="M14 20 A4 4 0 0 0 18 16" fill="none" stroke={c} strokeWidth="1"/>
+    <path d="M18 16 A4 4 0 0 0 14 12" fill="none" stroke={c} strokeWidth="1"/>
+    <path d="M14 12 A2 2 0 0 0 12 14" fill="none" stroke={c} strokeWidth="0.8"/>
+    <circle cx="14" cy="14" r="0.8" fill={c} opacity="0.7"/>
+    <circle cx="14" cy="24" r="0.5" fill={c} opacity="0.3"/>
+    <path d="M20 14 A8 8 0 0 0 14 6" fill="none" stroke={c} strokeWidth="0.5" opacity="0.25" strokeDasharray="1 1.5"/>
+    <path d="M6 14 A8 8 0 0 0 14 22" fill="none" stroke={c} strokeWidth="0.5" opacity="0.25" strokeDasharray="1 1.5"/>
+  </g>,
+
+  // 11 — Praça da Integração / do Ser — Mandala central com cruz e círculos
+  11: (c) => <g>
+    <circle cx="14" cy="14" r="7" fill="none" stroke={c} strokeWidth="1"/>
+    <circle cx="14" cy="14" r="4.5" fill="none" stroke={c} strokeWidth="0.7" opacity="0.5"/>
+    <circle cx="14" cy="14" r="2" fill="none" stroke={c} strokeWidth="0.8"/>
+    <line x1="14" y1="7" x2="14" y2="21" stroke={c} strokeWidth="0.6" opacity="0.4"/>
+    <line x1="7" y1="14" x2="21" y2="14" stroke={c} strokeWidth="0.6" opacity="0.4"/>
+    <line x1="9" y1="9" x2="19" y2="19" stroke={c} strokeWidth="0.4" opacity="0.25"/>
+    <line x1="19" y1="9" x2="9" y2="19" stroke={c} strokeWidth="0.4" opacity="0.25"/>
+    <circle cx="14" cy="14" r="0.7" fill={c} opacity="0.8"/>
+    {[0,90,180,270].map((a,i) => {
+      const rad = (a * Math.PI) / 180;
+      return <circle key={i} cx={14 + 5.7 * Math.cos(rad)} cy={14 + 5.7 * Math.sin(rad)} r="0.5" fill={c} opacity="0.35"/>;
+    })}
+  </g>,
+
+  // 12 — Portal de Renascimento — Fênix / chama ascendente
+  12: (c) => <g>
+    <path d="M14 22 Q14 16 10 12 Q14 15 14 8 Q14 15 18 12 Q14 16 14 22" fill="none" stroke={c} strokeWidth="1.2" strokeLinejoin="round"/>
+    <path d="M14 8 Q13 5 14 3 Q15 5 14 8" fill="none" stroke={c} strokeWidth="0.8" opacity="0.6"/>
+    <path d="M10 12 Q8 10 9 8" fill="none" stroke={c} strokeWidth="0.6" opacity="0.4"/>
+    <path d="M18 12 Q20 10 19 8" fill="none" stroke={c} strokeWidth="0.6" opacity="0.4"/>
+    <circle cx="14" cy="16" r="1.2" fill="none" stroke={c} strokeWidth="0.6" opacity="0.5"/>
+    <circle cx="14" cy="16" r="0.4" fill={c} opacity="0.6"/>
+    <line x1="14" y1="22" x2="12" y2="25" stroke={c} strokeWidth="0.5" opacity="0.3"/>
+    <line x1="14" y1="22" x2="16" y2="25" stroke={c} strokeWidth="0.5" opacity="0.3"/>
+  </g>,
 };
 
 function sectorPath(cx: number, cy: number, innerR: number, outerR: number, startDeg: number, endDeg: number): string {
