@@ -1,11 +1,10 @@
 import { useMemo } from 'react';
-import { Badge } from '@/components/ui/badge';
 import type { MandalaDistrict, MandalaDistrictState, MandalaMode, MandalaCollectiveData } from './MandalaCidadela';
 
 const STATE_COLORS = {
-  inativo: { bg: 'bg-muted/30', border: 'border-muted/40', text: 'text-muted-foreground/50', dot: 'bg-muted-foreground/30' },
-  ativo: { bg: 'bg-primary/10', border: 'border-primary/40', text: 'text-primary', dot: 'bg-primary animate-pulse' },
-  integrado: { bg: 'bg-[#556B57]/10', border: 'border-[#556B57]/40', text: 'text-[#556B57]', dot: 'bg-[#556B57]' },
+  inativo: { bg: 'rgba(245,241,232,0.03)', border: 'rgba(245,241,232,0.08)', text: 'rgba(245,241,232,0.35)', dot: 'rgba(245,241,232,0.2)' },
+  ativo: { bg: 'rgba(201,162,74,0.08)', border: 'rgba(201,162,74,0.25)', text: '#C9A24A', dot: '#C9A24A' },
+  integrado: { bg: 'rgba(107,75,161,0.08)', border: 'rgba(107,75,161,0.25)', text: '#b8a4d8', dot: '#b8a4d8' },
 };
 
 const STATE_LABELS = {
@@ -23,38 +22,23 @@ interface Props {
   onDistrictClick?: (district: MandalaDistrict) => void;
 }
 
-export function MandalaMobile({
-  districts,
-  districtStates = [],
-  collectiveData = [],
-  mode,
-  selectedId,
-  onDistrictClick,
-}: Props) {
+export function MandalaMobile({ districts, districtStates = [], collectiveData = [], mode, selectedId, onDistrictClick }: Props) {
   const centerDistrict = useMemo(() => districts.find(d => d.numero === 11), [districts]);
   const entryDistrict = useMemo(() => districts.find(d => d.numero === 1), [districts]);
   const innerDistricts = useMemo(() => districts.filter(d => [2, 3, 4, 6].includes(d.numero)), [districts]);
   const outerDistricts = useMemo(() => districts.filter(d => [5, 7, 8, 9, 10, 12].includes(d.numero)), [districts]);
 
-  const getState = (id: string): 'inativo' | 'ativo' | 'integrado' => {
-    return (districtStates.find(s => s.district_id === id)?.state as any) || 'inativo';
-  };
+  const getState = (id: string): 'inativo' | 'ativo' | 'integrado' =>
+    (districtStates.find(s => s.district_id === id)?.state as any) || 'inativo';
+  const getSessionCount = (id: string) =>
+    districtStates.find(s => s.district_id === id)?.sessions_count || 0;
+  const getCollective = (id: string) =>
+    collectiveData.find(c => c.district_id === id);
 
-  const getSessionCount = (id: string) => {
-    return districtStates.find(s => s.district_id === id)?.sessions_count || 0;
-  };
-
-  const getCollective = (id: string) => {
-    return collectiveData.find(c => c.district_id === id);
-  };
-
-  // Summary stats
   const stats = useMemo(() => {
     const active = districtStates.filter(s => s.state === 'ativo').length;
     const integrated = districtStates.filter(s => s.state === 'integrado').length;
-    const total = districts.length;
-    const explored = active + integrated;
-    return { active, integrated, total, explored };
+    return { active, integrated, explored: active + integrated, total: districts.length };
   }, [districtStates, districts]);
 
   const renderDistrict = (d: MandalaDistrict) => {
@@ -68,86 +52,78 @@ export function MandalaMobile({
       <button
         key={d.id}
         onClick={() => onDistrictClick?.(d)}
-        className={`
-          flex items-center gap-3 p-3 rounded-lg border transition-all text-left w-full
-          ${colors.bg} ${colors.border}
-          ${isSelected ? 'ring-2 ring-primary shadow-md scale-[1.01]' : ''}
-          ${onDistrictClick ? 'hover:scale-[1.02] active:scale-[0.98]' : ''}
-        `}
+        className="flex items-center gap-3 p-3.5 rounded-xl transition-all text-left w-full"
+        style={{
+          background: colors.bg,
+          border: `1px solid ${colors.border}`,
+          boxShadow: isSelected ? '0 0 12px rgba(201,162,74,0.15)' : 'none',
+          transform: isSelected ? 'scale(1.01)' : 'none',
+        }}
       >
-        {/* State dot with glow for integrado */}
         <div className="relative shrink-0">
-          <div className={`w-3 h-3 rounded-full ${colors.dot}`} />
+          <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: colors.dot, opacity: state === 'inativo' ? 0.4 : 1 }} />
           {state === 'integrado' && (
-            <div className="absolute inset-0 w-3 h-3 rounded-full bg-[#556B57]/30 animate-ping" />
+            <div className="absolute inset-0 w-3.5 h-3.5 rounded-full animate-ping" style={{ backgroundColor: 'rgba(107,75,161,0.25)' }} />
+          )}
+          {state === 'ativo' && (
+            <div className="absolute inset-0 w-3.5 h-3.5 rounded-full animate-pulse" style={{ backgroundColor: 'rgba(201,162,74,0.2)' }} />
           )}
         </div>
 
-        {/* Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <span className={`text-sm font-medium truncate ${colors.text}`}>
+            <span className="text-sm font-medium truncate" style={{ color: colors.text }}>
               {d.nome}
             </span>
             {state === 'integrado' && (
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#556B57]/20 text-[#556B57] shrink-0">
-                ✓
-              </span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full shrink-0" style={{ background: 'rgba(107,75,161,0.2)', color: '#b8a4d8' }}>✓</span>
             )}
           </div>
           <div className="flex items-center gap-2 mt-0.5">
-            <span className="text-[10px] text-muted-foreground/60">
-              {STATE_LABELS[state]}
-            </span>
+            <span className="text-[10px]" style={{ color: 'rgba(245,241,232,0.3)' }}>{STATE_LABELS[state]}</span>
             {mode === 'clinico' && sessCount > 0 && (
-              <span className="text-[10px] text-primary/60">
+              <span className="text-[10px]" style={{ color: 'rgba(201,162,74,0.5)' }}>
                 {sessCount} {sessCount === 1 ? 'sessão' : 'sessões'}
               </span>
             )}
             {mode === 'coletivo' && collective && collective.client_count > 0 && (
-              <span className="text-[10px] text-primary/60">
+              <span className="text-[10px]" style={{ color: 'rgba(201,162,74,0.5)' }}>
                 {collective.client_count} {collective.client_count === 1 ? 'cliente' : 'clientes'}
               </span>
             )}
           </div>
         </div>
 
-        {/* District number */}
-        <span className="text-[10px] text-muted-foreground/40 shrink-0">
-          #{d.numero}
-        </span>
+        <span className="text-[10px] shrink-0" style={{ color: 'rgba(245,241,232,0.2)' }}>#{d.numero}</span>
       </button>
     );
   };
 
   return (
-    <div className="space-y-4">
-      {/* Summary stats bar */}
-      <div className="flex items-center justify-between px-3 py-2.5 rounded-lg border border-primary/10 bg-primary/5">
-        <span className="text-xs font-medium text-primary/70">
+    <div className="space-y-4 max-w-[420px] mx-auto">
+      {/* Stats bar */}
+      <div className="flex items-center justify-between px-3.5 py-3 rounded-xl"
+        style={{ background: 'rgba(201,162,74,0.04)', border: '1px solid rgba(201,162,74,0.1)' }}>
+        <span className="text-xs font-medium" style={{ color: 'rgba(201,162,74,0.6)' }}>
           {mode === 'clinico' ? 'Praça da Integração' : 'Praça do Ser'}
         </span>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-primary" />
-            <span className="text-[10px] text-primary/60">{stats.active}</span>
+            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#C9A24A' }} />
+            <span className="text-[10px]" style={{ color: 'rgba(201,162,74,0.5)' }}>{stats.active}</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-[#556B57]" />
-            <span className="text-[10px] text-[#556B57]">{stats.integrated}</span>
+            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#b8a4d8' }} />
+            <span className="text-[10px]" style={{ color: 'rgba(184,164,216,0.6)' }}>{stats.integrated}</span>
           </div>
-          <span className="text-[10px] text-muted-foreground/40">
-            {stats.explored}/{stats.total}
-          </span>
+          <span className="text-[10px]" style={{ color: 'rgba(245,241,232,0.2)' }}>{stats.explored}/{stats.total}</span>
         </div>
       </div>
 
-      {/* Center + Entry */}
+      {/* Center */}
       {(centerDistrict || entryDistrict) && (
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 mb-2 px-1">
-            Centro da CidaDELA
-          </p>
+          <p className="text-[10px] uppercase tracking-wider mb-2 px-1" style={{ color: 'rgba(201,162,74,0.35)' }}>Centro da CidaDELA</p>
           <div className="grid grid-cols-1 gap-2">
             {centerDistrict && renderDistrict(centerDistrict)}
             {entryDistrict && renderDistrict(entryDistrict)}
@@ -155,46 +131,36 @@ export function MandalaMobile({
         </div>
       )}
 
-      {/* Inner ring */}
+      {/* Inner */}
       <div>
-        <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 mb-2 px-1">
-          Primeiro Anel — Torres, Portas, Arquétipos, Sonhos
-        </p>
-        <div className="grid grid-cols-1 gap-2">
-          {innerDistricts.map(renderDistrict)}
-        </div>
+        <p className="text-[10px] uppercase tracking-wider mb-2 px-1" style={{ color: 'rgba(201,162,74,0.3)' }}>Primeiro Anel</p>
+        <div className="grid grid-cols-1 gap-2">{innerDistricts.map(renderDistrict)}</div>
       </div>
 
-      {/* Outer ring */}
+      {/* Outer */}
       <div>
-        <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 mb-2 px-1">
-          Segundo Anel — Labirinto, Forja, Espelho, Conselho, Abalo, Renascimento
-        </p>
-        <div className="grid grid-cols-1 gap-2">
-          {outerDistricts.map(renderDistrict)}
-        </div>
+        <p className="text-[10px] uppercase tracking-wider mb-2 px-1" style={{ color: 'rgba(107,75,161,0.35)' }}>Segundo Anel</p>
+        <div className="grid grid-cols-1 gap-2">{outerDistricts.map(renderDistrict)}</div>
       </div>
 
       {/* Legend */}
       <div className="flex items-center justify-center gap-4 pt-1">
         <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
-          <span className="text-[9px] text-muted-foreground/40">Não explorado</span>
+          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'rgba(245,241,232,0.2)' }} />
+          <span className="text-[9px]" style={{ color: 'rgba(245,241,232,0.3)' }}>Não explorado</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-primary" />
-          <span className="text-[9px] text-primary/60">Ativo</span>
+          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#C9A24A' }} />
+          <span className="text-[9px]" style={{ color: 'rgba(201,162,74,0.5)' }}>Ativo</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-[#556B57]" />
-          <span className="text-[9px] text-[#556B57]">Integrado</span>
+          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#b8a4d8' }} />
+          <span className="text-[9px]" style={{ color: 'rgba(184,164,216,0.5)' }}>Integrado</span>
         </div>
       </div>
 
-      <p className="text-[9px] text-muted-foreground/30 text-center italic">
-        {mode === 'clinico'
-          ? 'Ferramenta de leitura simbólica. Não substitui julgamento clínico.'
-          : 'Estados indicam o movimento da jornada.'}
+      <p className="text-[9px] text-center italic" style={{ color: 'rgba(245,241,232,0.2)' }}>
+        {mode === 'clinico' ? 'Ferramenta de leitura simbólica. Não substitui julgamento clínico.' : 'Estados indicam o movimento da jornada.'}
       </p>
     </div>
   );

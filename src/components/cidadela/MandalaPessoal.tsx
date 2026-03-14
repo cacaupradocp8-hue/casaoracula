@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Loader2, Sparkles } from 'lucide-react';
 import { MandalaCidadela, MandalaLegend } from '@/components/cidadela/MandalaCidadela';
 import { MandalaMobile } from '@/components/cidadela/MandalaMobile';
+import { DistrictDetailSheet } from '@/components/cidadela/DistrictDetailSheet';
 import { useIsMobile } from '@/hooks/use-mobile';
 import type { MandalaDistrict, MandalaDistrictState } from '@/components/cidadela/MandalaCidadela';
 
@@ -13,6 +14,7 @@ export function MandalaPessoal() {
   const [districts, setDistricts] = useState<MandalaDistrict[]>([]);
   const [districtStates, setDistrictStates] = useState<MandalaDistrictState[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedDistrict, setSelectedDistrict] = useState<MandalaDistrict | null>(null);
 
   useEffect(() => {
     if (user?.id) loadData();
@@ -70,10 +72,12 @@ export function MandalaPessoal() {
     setLoading(false);
   };
 
+  const handleDistrictClick = (d: MandalaDistrict) => setSelectedDistrict(d);
+
   if (loading) {
     return (
       <div className="flex justify-center py-12">
-        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+        <Loader2 className="w-6 h-6 animate-spin" style={{ color: '#C9A24A' }} />
       </div>
     );
   }
@@ -81,12 +85,15 @@ export function MandalaPessoal() {
   if (districts.length === 0) return null;
 
   const hasJourneyData = districtStates.some(s => s.state !== 'inativo');
+  const selectedState = selectedDistrict ? districtStates.find(s => s.district_id === selectedDistrict.id) : undefined;
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-center gap-2">
-        <Sparkles className="w-4 h-4 text-primary/60" />
-        <h3 className="text-sm font-medium text-foreground/70">Sua CidaDELA Interior</h3>
+        <Sparkles className="w-4 h-4" style={{ color: 'rgba(201,162,74,0.5)' }} />
+        <h3 className="text-sm font-medium" style={{ color: 'rgba(245,241,232,0.6)', fontFamily: "'Playfair Display', serif" }}>
+          Sua CidaDELA Interior
+        </h3>
       </div>
 
       {isMobile ? (
@@ -94,6 +101,7 @@ export function MandalaPessoal() {
           districts={districts}
           districtStates={districtStates}
           mode="explorar"
+          onDistrictClick={handleDistrictClick}
         />
       ) : (
         <>
@@ -101,17 +109,25 @@ export function MandalaPessoal() {
             districts={districts}
             districtStates={districtStates}
             mode="explorar"
-            className="w-full max-w-[420px] mx-auto"
+            onDistrictClick={handleDistrictClick}
+            className="w-full"
           />
           <MandalaLegend mode="explorar" />
         </>
       )}
 
       {!hasJourneyData && (
-        <p className="text-center text-xs text-muted-foreground/60 italic">
+        <p className="text-center text-xs italic" style={{ color: 'rgba(245,241,232,0.3)' }}>
           Sua mandala será preenchida conforme você avança na jornada.
         </p>
       )}
+
+      <DistrictDetailSheet
+        district={selectedDistrict}
+        districtState={selectedState}
+        open={!!selectedDistrict}
+        onClose={() => setSelectedDistrict(null)}
+      />
     </div>
   );
 }
