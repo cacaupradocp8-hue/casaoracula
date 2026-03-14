@@ -142,10 +142,11 @@ export function MandalaCidadela({
 }: Props) {
   const cx = 50;
   const cy = 50;
-  const innerR = 22;
-  const outerR = 40;
-  const innerNodeR = 4.5;
-  const outerNodeR = 3.8;
+  const innerR = 24;
+  const outerR = 42;
+  const innerNodeR = 5.2;
+  const outerNodeR = 4.5;
+  const centerNodeR = 8;
 
   // Zoom/Pan state
   const svgRef = useRef<SVGSVGElement>(null);
@@ -291,7 +292,14 @@ export function MandalaCidadela({
       >
         <defs>
           <filter id="mandala-glow">
-            <feGaussianBlur stdDeviation="0.8" result="blur" />
+            <feGaussianBlur stdDeviation="1.2" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter id="mandala-center-pulse">
+            <feGaussianBlur stdDeviation="2" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
@@ -303,7 +311,13 @@ export function MandalaCidadela({
             <stop offset="100%" stopColor="#C9A24A" stopOpacity="0.2" />
           </linearGradient>
           <radialGradient id="mandala-center-glow">
-            <stop offset="0%" stopColor="#C9A24A" stopOpacity="0.12" />
+            <stop offset="0%" stopColor="#C9A24A" stopOpacity="0.2" />
+            <stop offset="60%" stopColor="#C9A24A" stopOpacity="0.06" />
+            <stop offset="100%" stopColor="#C9A24A" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="mandala-inner-ring-glow">
+            <stop offset="0%" stopColor="#C9A24A" stopOpacity="0" />
+            <stop offset="80%" stopColor="#C9A24A" stopOpacity="0.03" />
             <stop offset="100%" stopColor="#C9A24A" stopOpacity="0" />
           </radialGradient>
           <marker id="conn-arrow" markerWidth="4" markerHeight="3" refX="3" refY="1.5" orient="auto">
@@ -313,22 +327,38 @@ export function MandalaCidadela({
 
         <Particles />
 
+        {/* Radial lines from center to outer ring */}
+        {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle, i) => {
+          const rad = (angle * Math.PI) / 180;
+          return (
+            <line key={`radial-${i}`}
+              x1={cx + 8 * Math.cos(rad)} y1={cy + 8 * Math.sin(rad)}
+              x2={cx + (outerR + 2) * Math.cos(rad)} y2={cy + (outerR + 2) * Math.sin(rad)}
+              stroke="rgba(201,162,74,0.04)" strokeWidth="0.12"
+            />
+          );
+        })}
+
         {/* Compass lines */}
         {compassLines.map((l, i) => (
           <g key={i}>
-            <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke="rgba(201,162,74,0.04)" strokeWidth="0.1" />
-            <line x1={l.x3} y1={l.y3} x2={l.x4} y2={l.y4} stroke="rgba(201,162,74,0.04)" strokeWidth="0.1" />
+            <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke="rgba(201,162,74,0.06)" strokeWidth="0.15" />
+            <line x1={l.x3} y1={l.y3} x2={l.x4} y2={l.y4} stroke="rgba(201,162,74,0.06)" strokeWidth="0.15" />
           </g>
         ))}
 
         {/* Outer decorative ring */}
-        <circle cx={cx} cy={cy} r={outerR + 4} fill="none" stroke="rgba(201,162,74,0.03)" strokeWidth="0.15" />
+        <circle cx={cx} cy={cy} r={outerR + 4} fill="none" stroke="rgba(201,162,74,0.05)" strokeWidth="0.2" />
+        <circle cx={cx} cy={cy} r={outerR + 6} fill="none" stroke="rgba(201,162,74,0.02)" strokeWidth="0.1" />
 
         {/* Outer ring guide */}
-        <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="rgba(201,162,74,0.06)" strokeWidth="0.15" strokeDasharray="1 1.5" />
+        <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="rgba(201,162,74,0.1)" strokeWidth="0.2" strokeDasharray="1.5 1" />
+
+        {/* Inner ring ambient glow */}
+        <circle cx={cx} cy={cy} r={innerR} fill="url(#mandala-inner-ring-glow)" />
 
         {/* Inner ring guide */}
-        <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="rgba(201,162,74,0.08)" strokeWidth="0.15" strokeDasharray="0.8 1.2" />
+        <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="rgba(201,162,74,0.12)" strokeWidth="0.2" strokeDasharray="1 1" />
 
         {/* Symbolic connections between districts */}
         {connectionPaths.map((conn) => {
@@ -376,11 +406,17 @@ export function MandalaCidadela({
           </>
         )}
 
-        {/* Center — Praça da Integração */}
-        <circle cx={cx} cy={cy} r="10" fill="url(#mandala-center-glow)" />
-        <circle cx={cx} cy={cy} r="7" fill="rgba(201,162,74,0.05)" stroke="rgba(201,162,74,0.15)" strokeWidth="0.3" />
-        <circle cx={cx} cy={cy} r="4" fill="rgba(201,162,74,0.08)" stroke="rgba(201,162,74,0.2)" strokeWidth="0.2">
-          <animate attributeName="r" values="3.5;4.2;3.5" dur="4s" repeatCount="indefinite" />
+        {/* Center — Praça da Integração — 1.6x bigger */}
+        <circle cx={cx} cy={cy} r="14" fill="url(#mandala-center-glow)" />
+        <circle cx={cx} cy={cy} r="10" fill="rgba(201,162,74,0.04)" stroke="rgba(201,162,74,0.12)" strokeWidth="0.25" />
+        <circle cx={cx} cy={cy} r={centerNodeR} fill="rgba(201,162,74,0.08)" stroke="rgba(201,162,74,0.3)" strokeWidth="0.3" filter="url(#mandala-center-pulse)">
+          <animate attributeName="r" values={`${centerNodeR - 0.3};${centerNodeR * 1.05};${centerNodeR - 0.3}`} dur="6s" repeatCount="indefinite" />
+          <animate attributeName="stroke-opacity" values="0.2;0.5;0.2" dur="6s" repeatCount="indefinite" />
+        </circle>
+        {/* Inner breathing pulse */}
+        <circle cx={cx} cy={cy} r="3" fill="rgba(201,162,74,0.15)" stroke="none">
+          <animate attributeName="r" values="2.5;3.5;2.5" dur="6s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.6;1;0.6" dur="6s" repeatCount="indefinite" />
         </circle>
         {/* Center icon for district 11 */}
         {centerDistrict && (
@@ -390,13 +426,13 @@ export function MandalaCidadela({
             onClick={(e) => { e.stopPropagation(); onDistrictClick?.(centerDistrict); }}
           >
             <title>{centerDistrict.nome}</title>
-            <circle cx={cx} cy={cy} r="7" fill="transparent" />
+            <circle cx={cx} cy={cy} r={centerNodeR} fill="transparent" />
           </g>
         )}
-        <text x={cx} y={cy - 1.2} textAnchor="middle" fill="#C9A24A" fontSize="1.8" fontWeight="600" opacity="0.7">
+        <text x={cx} y={cy - 1.5} textAnchor="middle" fill="#C9A24A" fontSize="2.2" fontWeight="600" opacity="0.85">
           {centerLabel[0]}
         </text>
-        <text x={cx} y={cy + 1.5} textAnchor="middle" fill="#C9A24A" fontSize="1.8" fontWeight="600" opacity="0.7">
+        <text x={cx} y={cy + 1.8} textAnchor="middle" fill="#C9A24A" fontSize="2.2" fontWeight="600" opacity="0.85">
           {centerLabel[1]}
         </text>
 
@@ -463,7 +499,7 @@ export function MandalaCidadela({
               )}
 
               {/* Label */}
-              <text x={pos.x} y={pos.y + nodeR + 2.5} textAnchor="middle" fill={style.textColor} fontSize="1.6" fontWeight="500" opacity="0.8">
+              <text x={pos.x} y={pos.y + nodeR + 2.8} textAnchor="middle" fill={style.textColor} fontSize="1.8" fontWeight="500" opacity="0.85">
                 {d.nome.length > 14 ? d.nome.slice(0, 13) + '…' : d.nome}
               </text>
 
