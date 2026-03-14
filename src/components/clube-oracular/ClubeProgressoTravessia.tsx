@@ -12,22 +12,22 @@ export function ClubeProgressoTravessia({ progresso, totalTerritorios, explorado
   const percent = Math.round(progresso * 100);
 
   return (
-    <Card className="border-border/15 hover:border-primary/15 transition-colors duration-300">
-      <CardContent className="p-6">
-        <div className="flex items-center gap-2.5 mb-4">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/15 to-mystic/10 flex items-center justify-center">
+    <Card className="border-border/12 bg-card/40 backdrop-blur-sm hover:-translate-y-1.5 hover:shadow-[0_10px_30px_-8px_hsl(var(--primary)/0.08)] transition-all duration-500">
+      <CardContent className="p-7">
+        <div className="flex items-center gap-2.5 mb-5">
+          <div className="w-9 h-9 rounded-full bg-primary/10 border border-primary/12 flex items-center justify-center">
             <Map className="w-4 h-4 text-primary" />
           </div>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-medium">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/70 font-medium">
             Sua Travessia no Ciclo
           </p>
         </div>
         <Progress value={percent} className="h-2 mb-3" />
         <div className="flex items-center justify-between">
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground/60">
             {explorados} de {totalTerritorios} territórios
           </p>
-          <p className="text-xs font-medium text-foreground">{percent}%</p>
+          <p className="text-xs font-medium text-gold">{percent}%</p>
         </div>
       </CardContent>
     </Card>
