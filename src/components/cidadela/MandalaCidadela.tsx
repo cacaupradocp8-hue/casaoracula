@@ -637,19 +637,19 @@ export function MandalaCidadela({
         {/* ===== CENTER — Praça da Integração (subdued glow) ===== */}
         <circle cx={CX} cy={CY} r={CENTER_R + 4} fill="url(#m-center-radial)" filter="url(#m-soft-glow)" />
         <circle cx={CX} cy={CY} r={CENTER_R + 1.5} fill="none" stroke="rgba(201,162,74,0.06)" strokeWidth="0.12">
-          <animate attributeName="stroke-opacity" values="0.04;0.08;0.04" dur="7s" repeatCount="indefinite" />
+          <animate attributeName="stroke-opacity" values="0.04;0.07;0.04" dur="9s" repeatCount="indefinite" />
         </circle>
         <circle cx={CX} cy={CY} r={CENTER_R} fill="rgba(201,162,74,0.05)" stroke="rgba(201,162,74,0.3)" strokeWidth="0.35" filter="url(#m-center-glow)">
-          <animate attributeName="r" values={`${CENTER_R};${CENTER_R * 1.03};${CENTER_R}`} dur="7s" repeatCount="indefinite" />
-          <animate attributeName="stroke-opacity" values="0.2;0.4;0.2" dur="7s" repeatCount="indefinite" />
+          <animate attributeName="r" values={`${CENTER_R};${CENTER_R * 1.03};${CENTER_R}`} dur="9s" repeatCount="indefinite" />
+          <animate attributeName="stroke-opacity" values="0.2;0.35;0.2" dur="9s" repeatCount="indefinite" />
         </circle>
         <circle cx={CX} cy={CY} r="3" fill="rgba(201,162,74,0.10)" stroke="none">
-          <animate attributeName="r" values="2.8;3.5;2.8" dur="7s" repeatCount="indefinite" />
-          <animate attributeName="opacity" values="0.25;0.6;0.25" dur="7s" repeatCount="indefinite" />
+          <animate attributeName="r" values="2.8;3.4;2.8" dur="9s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.20;0.50;0.20" dur="9s" repeatCount="indefinite" />
         </circle>
         <circle cx={CX} cy={CY} r={CENTER_R + 1} fill="none" stroke="rgba(107,75,161,0.06)" strokeWidth="0.1">
-          <animate attributeName="r" values={`${CENTER_R + 0.5};${CENTER_R + 2};${CENTER_R + 0.5}`} dur="7s" repeatCount="indefinite" />
-          <animate attributeName="opacity" values="0.03;0.1;0.03" dur="7s" repeatCount="indefinite" />
+          <animate attributeName="r" values={`${CENTER_R + 0.5};${CENTER_R + 1.8};${CENTER_R + 0.5}`} dur="9s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.03;0.08;0.03" dur="9s" repeatCount="indefinite" />
         </circle>
         {/* Center icon */}
         <svg x={CX - 3.5} y={CY - 5} width="7" height="7" viewBox="0 0 28 28" opacity="0.35">
