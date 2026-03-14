@@ -292,7 +292,14 @@ export function MandalaCidadela({
       >
         <defs>
           <filter id="mandala-glow">
-            <feGaussianBlur stdDeviation="0.8" result="blur" />
+            <feGaussianBlur stdDeviation="1.2" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter id="mandala-center-pulse">
+            <feGaussianBlur stdDeviation="2" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
@@ -304,7 +311,13 @@ export function MandalaCidadela({
             <stop offset="100%" stopColor="#C9A24A" stopOpacity="0.2" />
           </linearGradient>
           <radialGradient id="mandala-center-glow">
-            <stop offset="0%" stopColor="#C9A24A" stopOpacity="0.12" />
+            <stop offset="0%" stopColor="#C9A24A" stopOpacity="0.2" />
+            <stop offset="60%" stopColor="#C9A24A" stopOpacity="0.06" />
+            <stop offset="100%" stopColor="#C9A24A" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="mandala-inner-ring-glow">
+            <stop offset="0%" stopColor="#C9A24A" stopOpacity="0" />
+            <stop offset="80%" stopColor="#C9A24A" stopOpacity="0.03" />
             <stop offset="100%" stopColor="#C9A24A" stopOpacity="0" />
           </radialGradient>
           <marker id="conn-arrow" markerWidth="4" markerHeight="3" refX="3" refY="1.5" orient="auto">
