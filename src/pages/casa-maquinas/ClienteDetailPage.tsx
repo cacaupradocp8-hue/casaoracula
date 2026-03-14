@@ -63,12 +63,12 @@ export default function ClienteDetailPage() {
     );
   }
 
-  const tabClass = "data-[state=active]:bg-primary/15 data-[state=active]:text-primary text-muted-foreground";
+  const tabClass = "data-[state=active]:bg-primary/15 data-[state=active]:text-primary text-muted-foreground text-xs";
 
   return (
     <CasaMaquinasLayout title={cliente.nome} subtitle="Jornada interior">
       <Tabs defaultValue="cidadela" className="w-full">
-        <TabsList className="bg-card/80 border border-border/30 mb-6 flex-wrap h-auto gap-0.5">
+        <TabsList className="bg-card/80 border border-border/30 mb-6 flex-wrap h-auto gap-0.5 p-1">
           <TabsTrigger value="cidadela" className={tabClass}>CidaDELA</TabsTrigger>
           <TabsTrigger value="historico" className={tabClass}>Histórico</TabsTrigger>
           <TabsTrigger value="cartografia" className={tabClass}>Cartografia</TabsTrigger>
