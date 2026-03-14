@@ -110,7 +110,8 @@ export default function FerramentasPage() {
         rota: t.rota!,
         portalMinimo: t.portal_minimo,
         categoria: mapDBCategory(t.tipo_ferramenta),
-      }));
+        isPlaceholder: false,
+      } as ToolItem));
     return [...FIXED_TOOLS, ...CLINICAL_TOOLS, ...dbMapped];
   })();
 
