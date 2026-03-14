@@ -1,8 +1,8 @@
 import { useMemo, useState, useRef, useCallback } from 'react';
 
 // ============================================
-// MANDALA DA CIDADELA INTERIOR — v6
-// Enhanced radial mandala with clear visual hierarchy
+// MANDALA DA CIDADELA INTERIOR — v7
+// Refined radial mandala with cartographic feel
 // ============================================
 
 export interface MandalaDistrict {
@@ -49,29 +49,29 @@ const STATE_STYLES = {
   inativo: {
     fill: 'rgba(245,241,232,0.02)',
     stroke: 'rgba(245,241,232,0.12)',
-    sectorFill: 'rgba(245,241,232,0.015)',
-    sectorStroke: 'rgba(245,241,232,0.05)',
-    iconColor: 'rgba(245,241,232,0.25)',
-    textColor: 'rgba(245,241,232,0.35)',
+    sectorFill: 'rgba(245,241,232,0.012)',
+    sectorStroke: 'rgba(245,241,232,0.04)',
+    iconColor: 'rgba(245,241,232,0.22)',
+    textColor: 'rgba(245,241,232,0.30)',
     glowColor: 'transparent',
   },
   ativo: {
-    fill: 'rgba(201,162,74,0.15)',
-    stroke: 'rgba(201,162,74,0.6)',
-    sectorFill: 'rgba(201,162,74,0.06)',
-    sectorStroke: 'rgba(201,162,74,0.15)',
+    fill: 'rgba(201,162,74,0.14)',
+    stroke: 'rgba(201,162,74,0.55)',
+    sectorFill: 'rgba(201,162,74,0.05)',
+    sectorStroke: 'rgba(201,162,74,0.12)',
     iconColor: '#C9A24A',
     textColor: '#C9A24A',
-    glowColor: 'rgba(201,162,74,0.15)',
+    glowColor: 'rgba(201,162,74,0.12)',
   },
   integrado: {
-    fill: 'rgba(74,158,107,0.15)',
+    fill: 'rgba(74,158,107,0.14)',
     stroke: '#6bc48f',
-    sectorFill: 'rgba(74,158,107,0.06)',
-    sectorStroke: 'rgba(74,158,107,0.15)',
+    sectorFill: 'rgba(74,158,107,0.05)',
+    sectorStroke: 'rgba(74,158,107,0.12)',
     iconColor: '#6bc48f',
     textColor: '#7dd9a0',
-    glowColor: 'rgba(74,158,107,0.18)',
+    glowColor: 'rgba(74,158,107,0.15)',
   },
 };
 
@@ -128,9 +128,9 @@ function arcPath(cx: number, cy: number, r: number, startAngleDeg: number, endAn
 
 function Particles() {
   const particles = useMemo(
-    () => Array.from({ length: 20 }, (_, i) => ({
-      id: i, cx: 8 + Math.random() * 84, cy: 8 + Math.random() * 84,
-      r: 0.12 + Math.random() * 0.22, dur: 8 + Math.random() * 14, delay: Math.random() * 7,
+    () => Array.from({ length: 16 }, (_, i) => ({
+      id: i, cx: 10 + Math.random() * 80, cy: 10 + Math.random() * 80,
+      r: 0.1 + Math.random() * 0.18, dur: 10 + Math.random() * 16, delay: Math.random() * 8,
     })),
     []
   );
@@ -138,18 +138,16 @@ function Particles() {
     <>
       {particles.map((p) => (
         <circle key={p.id} cx={p.cx} cy={p.cy} r={p.r} fill="#C9A24A" opacity="0">
-          <animate attributeName="opacity" values="0;0.18;0" dur={`${p.dur}s`} begin={`${p.delay}s`} repeatCount="indefinite" />
-          <animate attributeName="cy" values={`${p.cy};${p.cy - 3};${p.cy}`} dur={`${p.dur}s`} begin={`${p.delay}s`} repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0;0.15;0" dur={`${p.dur}s`} begin={`${p.delay}s`} repeatCount="indefinite" />
+          <animate attributeName="cy" values={`${p.cy};${p.cy - 2};${p.cy}`} dur={`${p.dur}s`} begin={`${p.delay}s`} repeatCount="indefinite" />
         </circle>
       ))}
     </>
   );
 }
 
-// Split a name into max 2 lines for SVG display
 function splitName(nome: string): string[] {
   if (nome.length <= 14) return [nome];
-  // Try to split at space near middle
   const mid = Math.floor(nome.length / 2);
   let splitIdx = nome.lastIndexOf(' ', mid + 4);
   if (splitIdx < 4) splitIdx = nome.indexOf(' ', mid - 4);
@@ -162,15 +160,15 @@ export function MandalaCidadela({
   pathPoints = [], onDistrictClick, className, showConnections = false,
 }: Props) {
   const CX = 50, CY = 50;
-  const CENTER_R = 12;
-  const INNER_BAND_IN = 15;
-  const INNER_BAND_OUT = 30;
-  const OUTER_BAND_IN = 32;
-  const OUTER_BAND_OUT = 47;
+  const CENTER_R = 10;
+  const INNER_BAND_IN = 16;
+  const INNER_BAND_OUT = 29;
+  const OUTER_BAND_IN = 31;
+  const OUTER_BAND_OUT = 46;
   const INNER_NODE_R = 22.5;
-  const OUTER_NODE_R = 39.5;
-  const NODE_R_INNER = 5.8;
-  const NODE_R_OUTER = 5;
+  const OUTER_NODE_R = 38.5;
+  const NODE_R_INNER = 5.2;
+  const NODE_R_OUTER = 4.6;
 
   const svgRef = useRef<SVGSVGElement>(null);
   const [viewBox, setViewBox] = useState({ x: -4, y: -4, w: 108, h: 108 });
@@ -250,11 +248,10 @@ export function MandalaCidadela({
       if (!fromD || !toD) return null;
       const p1 = getPos(conn.from);
       const p2 = getPos(conn.to);
-      // Curved path with control point offset toward center
       const mx = (p1.x + p2.x) / 2;
       const my = (p1.y + p2.y) / 2;
-      const cpx = mx + (CX - mx) * 0.35;
-      const cpy = my + (CY - my) * 0.35;
+      const cpx = mx + (CX - mx) * 0.4;
+      const cpy = my + (CY - my) * 0.4;
       const curvePath = `M ${p1.x} ${p1.y} Q ${cpx} ${cpy} ${p2.x} ${p2.y}`;
       return { ...conn, p1, p2, midX: mx, midY: my, cpx, cpy, curvePath, idx: i };
     }).filter(Boolean) as any[];
@@ -283,12 +280,12 @@ export function MandalaCidadela({
     });
   }, [districts]);
 
-  // Label position pushed outward from node
+  // Label position - inner labels between rings, outer labels outside
   const getLabelPos = (num: number) => {
     const angleDeg = getAngleDeg(num);
     const rad = (angleDeg * Math.PI) / 180;
     const isInner = INNER_RING_NUMS.includes(num);
-    const r = isInner ? INNER_NODE_R + 7.5 : OUTER_NODE_R + 7;
+    const r = isInner ? INNER_NODE_R + 7 : OUTER_NODE_R + 6.5;
     return { x: CX + r * Math.cos(rad), y: CY + r * Math.sin(rad), angleDeg };
   };
 
@@ -320,36 +317,37 @@ export function MandalaCidadela({
 
         {/* Selection ring */}
         {isSelected && (
-          <circle cx={pos.x} cy={pos.y} r={nodeR + 3} fill="none" stroke="#C9A24A" strokeWidth="0.6" strokeDasharray="1.5 0.8">
+          <circle cx={pos.x} cy={pos.y} r={nodeR + 2.5} fill="none" stroke="#C9A24A" strokeWidth="0.5" strokeDasharray="1.5 0.8">
             <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" />
           </circle>
         )}
 
         {/* Hover glow */}
         {isHovered && (
-          <circle cx={pos.x} cy={pos.y} r={nodeR + 3.5} fill="rgba(201,162,74,0.08)" stroke="rgba(201,162,74,0.2)" strokeWidth="0.25" filter="url(#m-hover-glow)" />
+          <circle cx={pos.x} cy={pos.y} r={nodeR + 2} fill="rgba(201,162,74,0.06)" stroke="rgba(201,162,74,0.18)" strokeWidth="0.2" filter="url(#m-hover-glow)" />
         )}
 
         {/* Active pulse */}
         {isAtivo && (
-          <circle cx={pos.x} cy={pos.y} r={nodeR + 1.5} fill="none" stroke={style.stroke} strokeWidth="0.25" strokeOpacity="0.4" filter="url(#m-glow-gold)">
-            <animate attributeName="r" values={`${nodeR + 1};${nodeR + 2.5};${nodeR + 1}`} dur="4s" repeatCount="indefinite" />
+          <circle cx={pos.x} cy={pos.y} r={nodeR + 1.2} fill="none" stroke={style.stroke} strokeWidth="0.2" strokeOpacity="0.35" filter="url(#m-glow-gold)">
+            <animate attributeName="r" values={`${nodeR + 0.8};${nodeR + 2};${nodeR + 0.8}`} dur="4s" repeatCount="indefinite" />
           </circle>
         )}
 
         {/* Integrated halo */}
         {isIntegrado && (
           <>
-            <circle cx={pos.x} cy={pos.y} r={nodeR + 2} fill="none" stroke="#6bc48f" strokeWidth="0.3" strokeOpacity="0.35" filter="url(#m-glow-green)">
-              <animate attributeName="r" values={`${nodeR + 1.5};${nodeR + 3};${nodeR + 1.5}`} dur="5s" repeatCount="indefinite" />
+            <circle cx={pos.x} cy={pos.y} r={nodeR + 1.5} fill="none" stroke="#6bc48f" strokeWidth="0.25" strokeOpacity="0.3" filter="url(#m-glow-green)">
+              <animate attributeName="r" values={`${nodeR + 1};${nodeR + 2.5};${nodeR + 1}`} dur="5s" repeatCount="indefinite" />
             </circle>
-            <circle cx={pos.x} cy={pos.y} r={nodeR + 1} fill="rgba(74,158,107,0.06)" />
+            <circle cx={pos.x} cy={pos.y} r={nodeR + 0.5} fill="rgba(74,158,107,0.04)" />
           </>
         )}
 
         {/* Node circle */}
         <circle cx={pos.x} cy={pos.y} r={nodeR} fill={style.fill} stroke={style.stroke}
-          strokeWidth={isIntegrado ? '0.8' : isAtivo ? '0.6' : '0.35'} style={{ transition: 'all 0.5s ease' }} />
+          strokeWidth={isIntegrado ? '0.7' : isAtivo ? '0.5' : '0.3'}
+          style={{ transition: 'all 0.6s ease' }} />
 
         {/* Inner glow fill */}
         {state !== 'inativo' && <circle cx={pos.x} cy={pos.y} r={nodeR - 0.3} fill={style.glowColor} />}
@@ -363,24 +361,24 @@ export function MandalaCidadela({
 
         {/* Integration badge */}
         {isIntegrado && (
-          <g transform={`translate(${pos.x + nodeR * 0.65}, ${pos.y - nodeR * 0.65})`}>
-            <circle r="2" fill="#3a8a5c" stroke="#6bc48f" strokeWidth="0.35" />
-            <polyline points="-0.7,0.1 -0.15,0.55 0.8,-0.45" fill="none" stroke="#F5F1E8" strokeWidth="0.5" strokeLinecap="round" />
+          <g transform={`translate(${pos.x + nodeR * 0.6}, ${pos.y - nodeR * 0.6})`}>
+            <circle r="1.8" fill="#3a8a5c" stroke="#6bc48f" strokeWidth="0.3" />
+            <polyline points="-0.6,0.1 -0.1,0.5 0.7,-0.4" fill="none" stroke="#F5F1E8" strokeWidth="0.45" strokeLinecap="round" />
           </g>
         )}
 
         {/* Label — full name with line break */}
-        <text x={labelPos.x} y={labelPos.y - (nameLines.length > 1 ? 1.2 : 0)} textAnchor="middle" dominantBaseline="central"
-          fill={style.textColor} fontSize={isInner ? "2.2" : "1.9"} fontWeight="500" opacity="0.9"
-          style={{ fontFamily: "'Inter', sans-serif" }}>
+        <text x={labelPos.x} y={labelPos.y - (nameLines.length > 1 ? 1 : 0)} textAnchor="middle" dominantBaseline="central"
+          fill={style.textColor} fontSize={isInner ? "2" : "1.8"} fontWeight="500" opacity="0.85"
+          style={{ fontFamily: "'Playfair Display', serif", letterSpacing: '0.02em' }}>
           {nameLines.map((line, i) => (
-            <tspan key={i} x={labelPos.x} dy={i === 0 ? 0 : 2.4}>{line}</tspan>
+            <tspan key={i} x={labelPos.x} dy={i === 0 ? 0 : 2.2}>{line}</tspan>
           ))}
         </text>
 
         {/* Session count */}
         {mode === 'clinico' && sessCount > 0 && (
-          <text x={labelPos.x} y={labelPos.y + (nameLines.length > 1 ? 3.8 : 2.8)} textAnchor="middle" fill="#C9A24A" fontSize="1.4" opacity="0.5">
+          <text x={labelPos.x} y={labelPos.y + (nameLines.length > 1 ? 3.5 : 2.5)} textAnchor="middle" fill="#C9A24A" fontSize="1.3" opacity="0.45">
             {sessCount} {sessCount === 1 ? 'sessão' : 'sessões'}
           </text>
         )}
@@ -392,12 +390,12 @@ export function MandalaCidadela({
               const a = (i / Math.max(collective.client_count, 1)) * Math.PI * 2;
               const dr = nodeR * 0.4;
               return (
-                <circle key={i} cx={pos.x + dr * Math.cos(a)} cy={pos.y + dr * Math.sin(a)} r="0.8" fill="#C9A24A" filter="url(#m-glow-gold)">
+                <circle key={i} cx={pos.x + dr * Math.cos(a)} cy={pos.y + dr * Math.sin(a)} r="0.7" fill="#C9A24A" filter="url(#m-glow-gold)">
                   <animate attributeName="opacity" values="0.3;0.85;0.3" dur="3s" begin={`${i * 0.5}s`} repeatCount="indefinite" />
                 </circle>
               );
             })}
-            <text x={labelPos.x} y={labelPos.y + (nameLines.length > 1 ? 3.8 : 2.8)} textAnchor="middle" fill="#C9A24A" fontSize="1.3" opacity="0.45">
+            <text x={labelPos.x} y={labelPos.y + (nameLines.length > 1 ? 3.5 : 2.5)} textAnchor="middle" fill="#C9A24A" fontSize="1.2" opacity="0.4">
               {collective.client_count} {collective.client_count === 1 ? 'cliente' : 'clientes'}
             </text>
           </>
@@ -407,7 +405,7 @@ export function MandalaCidadela({
   };
 
   return (
-    <div className={`relative ${className || ''}`} style={{ aspectRatio: '1/1', maxWidth: '480px', margin: '0 auto' }}>
+    <div className={`relative ${className || ''}`} style={{ aspectRatio: '1/1', maxWidth: '520px', margin: '0 auto' }}>
       {isZoomed && (
         <button onClick={resetZoom}
           className="absolute top-2 right-2 z-10 px-2.5 py-1 rounded-lg text-[10px] bg-[#C9A24A]/10 border border-[#C9A24A]/20 text-[#C9A24A]/70 hover:text-[#C9A24A] transition-colors backdrop-blur-sm">
@@ -427,30 +425,38 @@ export function MandalaCidadela({
         style={{ touchAction: 'none' }}
       >
         <defs>
-          <filter id="m-glow-gold"><feGaussianBlur stdDeviation="1.5" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-          <filter id="m-glow-green"><feGaussianBlur stdDeviation="2" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-          <filter id="m-center-glow"><feGaussianBlur stdDeviation="3.5" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-          <filter id="m-hover-glow"><feGaussianBlur stdDeviation="2" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-          <filter id="m-soft-glow"><feGaussianBlur stdDeviation="4" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+          <filter id="m-glow-gold"><feGaussianBlur stdDeviation="1.2" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+          <filter id="m-glow-green"><feGaussianBlur stdDeviation="1.8" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+          <filter id="m-center-glow"><feGaussianBlur stdDeviation="3" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+          <filter id="m-hover-glow"><feGaussianBlur stdDeviation="1.5" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+          <filter id="m-soft-glow"><feGaussianBlur stdDeviation="3.5" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
 
           <radialGradient id="m-center-radial">
-            <stop offset="0%" stopColor="#C9A24A" stopOpacity="0.35" />
-            <stop offset="40%" stopColor="#C9A24A" stopOpacity="0.08" />
-            <stop offset="70%" stopColor="#6b4ba1" stopOpacity="0.04" />
+            <stop offset="0%" stopColor="#C9A24A" stopOpacity="0.30" />
+            <stop offset="35%" stopColor="#C9A24A" stopOpacity="0.08" />
+            <stop offset="60%" stopColor="#6b4ba1" stopOpacity="0.03" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
           <radialGradient id="m-bg-gradient" cx="50%" cy="50%">
-            <stop offset="0%" stopColor="#6b4ba1" stopOpacity="0.04" />
-            <stop offset="50%" stopColor="#0a0a0a" stopOpacity="0.02" />
+            <stop offset="0%" stopColor="#6b4ba1" stopOpacity="0.03" />
+            <stop offset="50%" stopColor="#0a0a0a" stopOpacity="0.01" />
+            <stop offset="100%" stopColor="transparent" />
+          </radialGradient>
+          <radialGradient id="m-inner-sector-grad">
+            <stop offset="30%" stopColor="#C9A24A" stopOpacity="0.02" />
+            <stop offset="100%" stopColor="transparent" />
+          </radialGradient>
+          <radialGradient id="m-outer-sector-grad">
+            <stop offset="30%" stopColor="#6b4ba1" stopOpacity="0.015" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
           <linearGradient id="m-path-grad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#C9A24A" stopOpacity="0.15" />
-            <stop offset="50%" stopColor="#C9A24A" stopOpacity="0.7" />
-            <stop offset="100%" stopColor="#4a9e6b" stopOpacity="0.4" />
+            <stop offset="50%" stopColor="#C9A24A" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#4a9e6b" stopOpacity="0.35" />
           </linearGradient>
-          <marker id="m-arrow" markerWidth="4" markerHeight="3" refX="3" refY="1.5" orient="auto">
-            <polygon points="0 0, 4 1.5, 0 3" fill="rgba(201,162,74,0.3)" />
+          <marker id="m-arrow" markerWidth="3.5" markerHeight="2.5" refX="2.5" refY="1.25" orient="auto">
+            <polygon points="0 0, 3.5 1.25, 0 2.5" fill="rgba(201,162,74,0.25)" />
           </marker>
         </defs>
 
@@ -466,8 +472,9 @@ export function MandalaCidadela({
           return (
             <path key={`outer-sec-${sec.num}`}
               d={sectorPath(CX, CY, OUTER_BAND_IN, OUTER_BAND_OUT, sec.startDeg, sec.endDeg)}
-              fill={style.sectorFill} stroke={style.sectorStroke} strokeWidth="0.18"
-              style={{ transition: 'fill 0.6s ease, stroke 0.6s ease' }}
+              fill={state !== 'inativo' ? style.sectorFill : 'url(#m-outer-sector-grad)'}
+              stroke={style.sectorStroke} strokeWidth="0.15"
+              style={{ transition: 'fill 0.8s ease, stroke 0.8s ease' }}
             />
           );
         })}
@@ -480,20 +487,21 @@ export function MandalaCidadela({
           return (
             <path key={`inner-sec-${sec.num}`}
               d={sectorPath(CX, CY, INNER_BAND_IN, INNER_BAND_OUT, sec.startDeg, sec.endDeg)}
-              fill={style.sectorFill} stroke={style.sectorStroke} strokeWidth="0.22"
-              style={{ transition: 'fill 0.6s ease, stroke 0.6s ease' }}
+              fill={state !== 'inativo' ? style.sectorFill : 'url(#m-inner-sector-grad)'}
+              stroke={style.sectorStroke} strokeWidth="0.18"
+              style={{ transition: 'fill 0.8s ease, stroke 0.8s ease' }}
             />
           );
         })}
 
         {/* Ring boundaries */}
-        <circle cx={CX} cy={CY} r={OUTER_BAND_OUT} fill="none" stroke="rgba(201,162,74,0.08)" strokeWidth="0.25" />
-        <circle cx={CX} cy={CY} r={OUTER_BAND_IN} fill="none" stroke="rgba(107,75,161,0.06)" strokeWidth="0.15" />
-        <circle cx={CX} cy={CY} r={INNER_BAND_OUT} fill="none" stroke="rgba(201,162,74,0.12)" strokeWidth="0.3" />
-        <circle cx={CX} cy={CY} r={INNER_BAND_IN} fill="none" stroke="rgba(201,162,74,0.1)" strokeWidth="0.25" />
+        <circle cx={CX} cy={CY} r={OUTER_BAND_OUT} fill="none" stroke="rgba(201,162,74,0.06)" strokeWidth="0.2" />
+        <circle cx={CX} cy={CY} r={OUTER_BAND_IN} fill="none" stroke="rgba(107,75,161,0.05)" strokeWidth="0.12" />
+        <circle cx={CX} cy={CY} r={INNER_BAND_OUT} fill="none" stroke="rgba(201,162,74,0.10)" strokeWidth="0.25" />
+        <circle cx={CX} cy={CY} r={INNER_BAND_IN} fill="none" stroke="rgba(201,162,74,0.08)" strokeWidth="0.2" />
 
         {/* Decorative outer ring */}
-        <circle cx={CX} cy={CY} r={OUTER_BAND_OUT + 2.5} fill="none" stroke="rgba(107,75,161,0.04)" strokeWidth="0.12" />
+        <circle cx={CX} cy={CY} r={OUTER_BAND_OUT + 2} fill="none" stroke="rgba(107,75,161,0.03)" strokeWidth="0.1" />
 
         {/* Radial dividers — inner */}
         {INNER_RING_NUMS.map((_, i) => {
@@ -504,7 +512,7 @@ export function MandalaCidadela({
             <line key={`idiv-${i}`}
               x1={CX + INNER_BAND_IN * Math.cos(rad)} y1={CY + INNER_BAND_IN * Math.sin(rad)}
               x2={CX + INNER_BAND_OUT * Math.cos(rad)} y2={CY + INNER_BAND_OUT * Math.sin(rad)}
-              stroke="rgba(201,162,74,0.08)" strokeWidth="0.15"
+              stroke="rgba(201,162,74,0.06)" strokeWidth="0.12"
             />
           );
         })}
@@ -517,7 +525,7 @@ export function MandalaCidadela({
             <line key={`odiv-${i}`}
               x1={CX + OUTER_BAND_IN * Math.cos(rad)} y1={CY + OUTER_BAND_IN * Math.sin(rad)}
               x2={CX + OUTER_BAND_OUT * Math.cos(rad)} y2={CY + OUTER_BAND_OUT * Math.sin(rad)}
-              stroke="rgba(107,75,161,0.06)" strokeWidth="0.12"
+              stroke="rgba(107,75,161,0.04)" strokeWidth="0.1"
             />
           );
         })}
@@ -528,7 +536,7 @@ export function MandalaCidadela({
           return (
             <path key={`iarc-${i}`}
               d={arcPath(CX, CY, INNER_NODE_R, -90 + i * slice, -90 + (i + 1) * slice)}
-              fill="none" stroke="rgba(201,162,74,0.07)" strokeWidth="0.2" strokeDasharray="1 1.5"
+              fill="none" stroke="rgba(201,162,74,0.05)" strokeWidth="0.15" strokeDasharray="0.8 1.2"
             />
           );
         })}
@@ -537,7 +545,7 @@ export function MandalaCidadela({
           return (
             <path key={`oarc-${i}`}
               d={arcPath(CX, CY, OUTER_NODE_R, -90 + i * slice, -90 + (i + 1) * slice)}
-              fill="none" stroke="rgba(107,75,161,0.05)" strokeWidth="0.15" strokeDasharray="0.8 1.2"
+              fill="none" stroke="rgba(107,75,161,0.04)" strokeWidth="0.12" strokeDasharray="0.6 1"
             />
           );
         })}
@@ -549,10 +557,10 @@ export function MandalaCidadela({
             <g key={`conn-${conn.idx}`}>
               <path d={conn.curvePath}
                 fill="none"
-                stroke={isHov ? 'rgba(201,162,74,0.5)' : 'rgba(201,162,74,0.06)'}
-                strokeWidth={isHov ? '0.5' : '0.15'}
-                strokeDasharray={isHov ? 'none' : '1.5 2'}
-                markerEnd="url(#m-arrow)" style={{ transition: 'all 0.3s ease' }} />
+                stroke={isHov ? 'rgba(201,162,74,0.45)' : 'rgba(201,162,74,0.05)'}
+                strokeWidth={isHov ? '0.4' : '0.12'}
+                strokeDasharray={isHov ? 'none' : '1.2 1.8'}
+                markerEnd="url(#m-arrow)" style={{ transition: 'all 0.4s ease' }} />
               {/* Invisible hitarea */}
               <path d={conn.curvePath} fill="none" stroke="transparent" strokeWidth="3"
                 onPointerEnter={() => setHoveredConnection(conn.idx)}
@@ -560,10 +568,11 @@ export function MandalaCidadela({
                 className="cursor-help" />
               {isHov && (
                 <g>
-                  <rect x={conn.midX - 16} y={conn.midY - 4} width="32" height="7" rx="1.5"
-                    fill="rgba(10,10,10,0.93)" stroke="rgba(201,162,74,0.35)" strokeWidth="0.3" />
-                  <text x={conn.midX} y={conn.midY + 0.8} textAnchor="middle"
-                    fill="#C9A24A" fontSize="2" fontWeight="500" opacity="0.9">{conn.label}</text>
+                  <rect x={conn.midX - 15} y={conn.midY - 3.5} width="30" height="6" rx="1.2"
+                    fill="rgba(10,10,10,0.92)" stroke="rgba(201,162,74,0.3)" strokeWidth="0.25" />
+                  <text x={conn.midX} y={conn.midY + 0.5} textAnchor="middle"
+                    fill="#C9A24A" fontSize="1.8" fontWeight="500" opacity="0.85"
+                    style={{ fontFamily: "'Inter', sans-serif" }}>{conn.label}</text>
                 </g>
               )}
             </g>
@@ -573,37 +582,41 @@ export function MandalaCidadela({
         {/* Journey path */}
         {pathD && (
           <>
-            <path d={pathD} fill="none" stroke="url(#m-path-grad)" strokeWidth="0.7" strokeLinecap="round" filter="url(#m-glow-gold)">
+            <path d={pathD} fill="none" stroke="url(#m-path-grad)" strokeWidth="0.6" strokeLinecap="round" filter="url(#m-glow-gold)">
               <animate attributeName="stroke-dashoffset" from="20" to="0" dur="3s" repeatCount="indefinite" />
             </path>
-            <path d={pathD} fill="none" stroke="#C9A24A" strokeWidth="0.3" strokeOpacity="0.3" strokeDasharray="2 1" strokeLinecap="round">
+            <path d={pathD} fill="none" stroke="#C9A24A" strokeWidth="0.25" strokeOpacity="0.25" strokeDasharray="1.5 0.8" strokeLinecap="round">
               <animate attributeName="stroke-dashoffset" values="0;-3" dur="2s" repeatCount="indefinite" />
             </path>
           </>
         )}
 
-        {/* ===== CENTER — Enhanced ===== */}
+        {/* ===== CENTER — Praça da Integração ===== */}
         {/* Outer aura */}
-        <circle cx={CX} cy={CY} r={CENTER_R + 6} fill="url(#m-center-radial)" filter="url(#m-soft-glow)" />
+        <circle cx={CX} cy={CY} r={CENTER_R + 5} fill="url(#m-center-radial)" filter="url(#m-soft-glow)" />
         {/* Decorative ring */}
-        <circle cx={CX} cy={CY} r={CENTER_R + 2.5} fill="none" stroke="rgba(201,162,74,0.1)" strokeWidth="0.2">
-          <animate attributeName="stroke-opacity" values="0.06;0.15;0.06" dur="6s" repeatCount="indefinite" />
+        <circle cx={CX} cy={CY} r={CENTER_R + 2} fill="none" stroke="rgba(201,162,74,0.08)" strokeWidth="0.15">
+          <animate attributeName="stroke-opacity" values="0.05;0.12;0.05" dur="6s" repeatCount="indefinite" />
         </circle>
         {/* Main breathing circle */}
-        <circle cx={CX} cy={CY} r={CENTER_R} fill="rgba(201,162,74,0.1)" stroke="rgba(201,162,74,0.45)" strokeWidth="0.5" filter="url(#m-center-glow)">
-          <animate attributeName="r" values={`${CENTER_R};${CENTER_R * 1.06};${CENTER_R}`} dur="6s" repeatCount="indefinite" />
-          <animate attributeName="stroke-opacity" values="0.3;0.65;0.3" dur="6s" repeatCount="indefinite" />
+        <circle cx={CX} cy={CY} r={CENTER_R} fill="rgba(201,162,74,0.08)" stroke="rgba(201,162,74,0.4)" strokeWidth="0.4" filter="url(#m-center-glow)">
+          <animate attributeName="r" values={`${CENTER_R};${CENTER_R * 1.05};${CENTER_R}`} dur="6s" repeatCount="indefinite" />
+          <animate attributeName="stroke-opacity" values="0.25;0.55;0.25" dur="6s" repeatCount="indefinite" />
         </circle>
         {/* Inner core */}
-        <circle cx={CX} cy={CY} r="5" fill="rgba(201,162,74,0.2)" stroke="none">
-          <animate attributeName="r" values="4;5.5;4" dur="6s" repeatCount="indefinite" />
-          <animate attributeName="opacity" values="0.4;1;0.4" dur="6s" repeatCount="indefinite" />
+        <circle cx={CX} cy={CY} r="4" fill="rgba(201,162,74,0.15)" stroke="none">
+          <animate attributeName="r" values="3.5;4.5;3.5" dur="6s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.35;0.85;0.35" dur="6s" repeatCount="indefinite" />
         </circle>
-        {/* Purple halo */}
-        <circle cx={CX} cy={CY} r={CENTER_R + 1.8} fill="none" stroke="rgba(107,75,161,0.12)" strokeWidth="0.15">
-          <animate attributeName="r" values={`${CENTER_R + 1.2};${CENTER_R + 3};${CENTER_R + 1.2}`} dur="6s" repeatCount="indefinite" />
-          <animate attributeName="opacity" values="0.06;0.2;0.06" dur="6s" repeatCount="indefinite" />
+        {/* Purple accent halo */}
+        <circle cx={CX} cy={CY} r={CENTER_R + 1.5} fill="none" stroke="rgba(107,75,161,0.1)" strokeWidth="0.12">
+          <animate attributeName="r" values={`${CENTER_R + 1};${CENTER_R + 2.5};${CENTER_R + 1}`} dur="6s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.05;0.15;0.05" dur="6s" repeatCount="indefinite" />
         </circle>
+        {/* Center icon */}
+        <svg x={CX - 4} y={CY - 5.5} width="8" height="8" viewBox="0 0 28 28" opacity="0.5">
+          {DISTRICT_ICONS[11]?.('#C9A24A')}
+        </svg>
         {/* Center interactive area */}
         {centerDistrict && (
           <g data-district={centerDistrict.id} className={onDistrictClick ? 'cursor-pointer' : ''}
@@ -613,10 +626,11 @@ export function MandalaCidadela({
           </g>
         )}
         {/* Center label */}
-        <text x={CX} y={CY - 2.5} textAnchor="middle" fill="#C9A24A" fontSize="3" fontWeight="600" opacity="0.95"
-          style={{ fontFamily: "'Playfair Display', serif" }}>{centerLabel[0]}</text>
-        <text x={CX} y={CY + 2.8} textAnchor="middle" fill="#C9A24A" fontSize="3" fontWeight="600" opacity="0.95"
-          style={{ fontFamily: "'Playfair Display', serif" }}>{centerLabel[1]}</text>
+        <text x={CX} y={CY + 4} textAnchor="middle" fill="#C9A24A" fontSize="2.5" fontWeight="600" opacity="0.9"
+          style={{ fontFamily: "'Playfair Display', serif" }}>
+          <tspan x={CX} dy="0">{centerLabel[0]}</tspan>
+          <tspan x={CX} dy="2.8">{centerLabel[1]}</tspan>
+        </text>
 
         {/* ===== RENDER DISTRICTS ===== */}
         {innerDistricts.map(d => renderDistrictNode(d, true))}
@@ -627,28 +641,28 @@ export function MandalaCidadela({
 }
 
 // ============================================
-// LEGEND — Updated with green for integrated
+// LEGEND
 // ============================================
 export function MandalaLegend({ mode }: { mode: MandalaMode }) {
   return (
-    <div className="space-y-2.5 mt-4 max-w-[480px] mx-auto">
-      <div className="flex items-center justify-center gap-6 flex-wrap">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: STATE_STYLES.inativo.fill, borderColor: STATE_STYLES.inativo.stroke }} />
-          <span className="text-[11px] text-muted-foreground/50">{mode === 'coletivo' ? 'Sem clientes' : 'Não explorado'}</span>
+    <div className="space-y-2 mt-3 max-w-[520px] mx-auto">
+      <div className="flex items-center justify-center gap-5 flex-wrap">
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full border" style={{ backgroundColor: STATE_STYLES.inativo.fill, borderColor: STATE_STYLES.inativo.stroke }} />
+          <span className="text-[10px] text-muted-foreground/50">{mode === 'coletivo' ? 'Sem clientes' : 'Não explorado'}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: STATE_STYLES.ativo.fill, borderColor: STATE_STYLES.ativo.stroke }} />
-          <span className="text-[11px]" style={{ color: '#C9A24A', opacity: 0.8 }}>{mode === 'coletivo' ? 'Com clientes' : 'Ativo'}</span>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full border" style={{ backgroundColor: STATE_STYLES.ativo.fill, borderColor: STATE_STYLES.ativo.stroke }} />
+          <span className="text-[10px]" style={{ color: '#C9A24A', opacity: 0.75 }}>{mode === 'coletivo' ? 'Com clientes' : 'Ativo'}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full border relative" style={{ backgroundColor: STATE_STYLES.integrado.fill, borderColor: STATE_STYLES.integrado.stroke }}>
-            <div className="absolute inset-0 rounded-full" style={{ boxShadow: '0 0 8px rgba(74,158,107,0.45)' }} />
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full border relative" style={{ backgroundColor: STATE_STYLES.integrado.fill, borderColor: STATE_STYLES.integrado.stroke }}>
+            <div className="absolute inset-0 rounded-full" style={{ boxShadow: '0 0 6px rgba(74,158,107,0.4)' }} />
           </div>
-          <span className="text-[11px]" style={{ color: '#7dd9a0' }}>Integrado</span>
+          <span className="text-[10px]" style={{ color: '#7dd9a0' }}>Integrado</span>
         </div>
       </div>
-      <p className="text-[10px] text-muted-foreground/30 text-center italic">
+      <p className="text-[9px] text-muted-foreground/25 text-center italic">
         {mode === 'clinico' ? 'Ferramenta de leitura simbólica. Não substitui julgamento clínico.' : 'Estados indicam o movimento da jornada.'}
       </p>
     </div>
