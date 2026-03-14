@@ -112,11 +112,16 @@ export default function MapaCidadelaPage() {
   const getSessionCount = (id: string) => journeyDistricts.find(j => j.district_id === id)?.sessions_count || 0;
 
   // Path points
-  const INNER_RING_NUMS = [1, 2, 3, 4, 5, 6];
-  const cxM = 50, cyM = 50, innerR = 24, outerR = 40;
+  const CENTER_NUM = 11;
+  const ENTRY_NUM = 1;
+  const INNER_RING_NUMS = [2, 3, 4, 6];
+  const OUTER_RING_NUMS = [5, 7, 8, 9, 10, 12];
+  const cxM = 50, cyM = 50, innerR = 22, outerR = 40;
   const getPos = (num: number) => {
+    if (num === CENTER_NUM) return { x: cxM, y: cyM };
+    if (num === ENTRY_NUM) return { x: cxM, y: cyM - innerR + 2 };
     const isInner = INNER_RING_NUMS.includes(num);
-    const ring = isInner ? [1, 2, 3, 4, 5, 6] : [7, 8, 9, 10, 11, 12];
+    const ring = isInner ? INNER_RING_NUMS : OUTER_RING_NUMS;
     const idx = ring.indexOf(num);
     const count = ring.length;
     const r = isInner ? innerR : outerR;
