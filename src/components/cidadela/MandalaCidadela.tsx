@@ -42,9 +42,15 @@ interface Props {
   showConnections?: boolean;
 }
 
-// Ring assignment: inner (1-6), outer (7-12)
-const INNER_RING_NUMS = [1, 2, 3, 4, 5, 6];
-const OUTER_RING_NUMS = [7, 8, 9, 10, 11, 12];
+// Ring assignment based on actual DB structure:
+// Center: Praça da Integração (11) — rendered as center node
+// Entry: Portão da Chegada (1) — rendered at top of inner ring
+// Inner ring (4): Torres(2), Portas(3), Jardim dos Arquétipos(4), Casa dos Sonhos(6)
+// Outer ring (6): Praça do Abalo(5), Espelho dos Vínculos(7), A Forja(8), Conselho Interior(9), Labirinto(10), Portal de Renascimento(12)
+const CENTER_NUM = 11;
+const ENTRY_NUM = 1;
+const INNER_RING_NUMS = [2, 3, 4, 6];
+const OUTER_RING_NUMS = [5, 7, 8, 9, 10, 12];
 
 const STATE_STYLES = {
   inativo: {
@@ -69,30 +75,31 @@ const STATE_STYLES = {
 
 // Symbolic connections between districts with therapeutic descriptions
 const SYMBOLIC_CONNECTIONS: { from: number; to: number; label: string }[] = [
-  { from: 1, to: 2, label: 'Da defesa ao limiar' },
-  { from: 2, to: 6, label: 'Do limiar ao labirinto' },
-  { from: 6, to: 8, label: 'Do labirinto à forja' },
+  { from: 2, to: 3, label: 'Da defesa ao limiar' },
+  { from: 3, to: 10, label: 'Do limiar ao labirinto' },
+  { from: 10, to: 8, label: 'Do labirinto à forja' },
   { from: 8, to: 11, label: 'Da forja à integração' },
-  { from: 3, to: 4, label: 'Do arquétipo ao sonho' },
-  { from: 4, to: 5, label: 'Do sonho à travessia' },
+  { from: 4, to: 6, label: 'Do arquétipo ao sonho' },
+  { from: 6, to: 5, label: 'Do sonho ao abalo' },
   { from: 7, to: 9, label: 'Do espelho ao conselho' },
-  { from: 9, to: 10, label: 'Do conselho ao abalo' },
-  { from: 10, to: 12, label: 'Do abalo ao renascimento' },
+  { from: 9, to: 5, label: 'Do conselho ao abalo' },
+  { from: 5, to: 12, label: 'Do abalo ao renascimento' },
   { from: 12, to: 11, label: 'Do renascimento à integração' },
+  { from: 1, to: 2, label: 'Da chegada às torres' },
 ];
 
 // SVG mini-icons per district number
 const DISTRICT_ICONS: Record<number, (color: string) => JSX.Element> = {
-  1: (c) => <g><rect x="8" y="5" width="8" height="14" rx="1" fill="none" stroke={c} strokeWidth="1.5"/><circle cx="14" cy="12" r="1" fill={c}/></g>,
-  2: (c) => <g><rect x="9" y="7" width="6" height="12" rx="0.5" fill="none" stroke={c} strokeWidth="1.5"/><line x1="12" y1="4" x2="12" y2="7" stroke={c} strokeWidth="1.5"/><line x1="10" y1="5" x2="14" y2="5" stroke={c} strokeWidth="1.5"/></g>,
-  3: (c) => <g><circle cx="12" cy="8" r="3" fill="none" stroke={c} strokeWidth="1.5"/><line x1="12" y1="11" x2="12" y2="18" stroke={c} strokeWidth="1.5"/><line x1="12" y1="15" x2="14" y2="15" stroke={c} strokeWidth="1.2"/></g>,
-  4: (c) => <g><circle cx="12" cy="10" r="2" fill="none" stroke={c} strokeWidth="1.5"/><circle cx="10" cy="8" r="1.5" fill="none" stroke={c} strokeWidth="1"/><circle cx="14" cy="8" r="1.5" fill="none" stroke={c} strokeWidth="1"/><line x1="12" y1="12" x2="12" y2="18" stroke={c} strokeWidth="1.5"/></g>,
-  5: (c) => <g><polyline points="14,4 10,11 13,11 9,20" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></g>,
-  6: (c) => <g><path d="M14 6 A6 6 0 1 0 14 18 A4 4 0 1 1 14 6" fill="none" stroke={c} strokeWidth="1.5"/></g>,
+  1: (c) => <g><path d="M8 18 L12 6 L16 18" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round"/><line x1="10" y1="14" x2="14" y2="14" stroke={c} strokeWidth="1.2"/></g>,
+  2: (c) => <g><rect x="8" y="5" width="8" height="14" rx="1" fill="none" stroke={c} strokeWidth="1.5"/><circle cx="14" cy="12" r="1" fill={c}/></g>,
+  3: (c) => <g><rect x="9" y="7" width="6" height="12" rx="0.5" fill="none" stroke={c} strokeWidth="1.5"/><line x1="12" y1="4" x2="12" y2="7" stroke={c} strokeWidth="1.5"/><line x1="10" y1="5" x2="14" y2="5" stroke={c} strokeWidth="1.5"/></g>,
+  4: (c) => <g><circle cx="12" cy="8" r="3" fill="none" stroke={c} strokeWidth="1.5"/><line x1="12" y1="11" x2="12" y2="18" stroke={c} strokeWidth="1.5"/><line x1="12" y1="15" x2="14" y2="15" stroke={c} strokeWidth="1.2"/></g>,
+  5: (c) => <g><path d="M12 12 m-1,0 a1,1 0 1,1 2,0 a2,2 0 1,1 -4,0 a3,3 0 1,1 6,0 a4,4 0 1,1 -8,0 a5,5 0 1,1 10,0" fill="none" stroke={c} strokeWidth="1.2"/></g>,
+  6: (c) => <g><circle cx="12" cy="10" r="2" fill="none" stroke={c} strokeWidth="1.5"/><circle cx="10" cy="8" r="1.5" fill="none" stroke={c} strokeWidth="1"/><circle cx="14" cy="8" r="1.5" fill="none" stroke={c} strokeWidth="1"/><line x1="12" y1="12" x2="12" y2="18" stroke={c} strokeWidth="1.5"/></g>,
   7: (c) => <g><ellipse cx="12" cy="10" rx="4" ry="5" fill="none" stroke={c} strokeWidth="1.5"/><line x1="12" y1="15" x2="12" y2="19" stroke={c} strokeWidth="1.5"/><line x1="9" y1="19" x2="15" y2="19" stroke={c} strokeWidth="1.5"/></g>,
   8: (c) => <g><rect x="8" y="12" width="8" height="3" rx="0.5" fill="none" stroke={c} strokeWidth="1.5"/><line x1="12" y1="5" x2="12" y2="12" stroke={c} strokeWidth="1.5"/><circle cx="12" cy="5" r="1.5" fill="none" stroke={c} strokeWidth="1.2"/></g>,
   9: (c) => <g><circle cx="12" cy="12" r="5" fill="none" stroke={c} strokeWidth="1.2" strokeDasharray="2 2"/><circle cx="12" cy="7" r="1" fill={c}/><circle cx="12" cy="17" r="1" fill={c}/><circle cx="7" cy="12" r="1" fill={c}/><circle cx="17" cy="12" r="1" fill={c}/></g>,
-  10: (c) => <g><path d="M12 12 m-1,0 a1,1 0 1,1 2,0 a2,2 0 1,1 -4,0 a3,3 0 1,1 6,0 a4,4 0 1,1 -8,0 a5,5 0 1,1 10,0" fill="none" stroke={c} strokeWidth="1.2"/></g>,
+  10: (c) => <g><path d="M14 6 A6 6 0 1 0 14 18 A4 4 0 1 1 14 6" fill="none" stroke={c} strokeWidth="1.5"/></g>,
   11: (c) => <g><circle cx="12" cy="12" r="5" fill="none" stroke={c} strokeWidth="1.2"/><line x1="12" y1="7" x2="12" y2="17" stroke={c} strokeWidth="1"/><line x1="7" y1="12" x2="17" y2="12" stroke={c} strokeWidth="1"/><circle cx="12" cy="12" r="2" fill="none" stroke={c} strokeWidth="1"/></g>,
   12: (c) => <g><path d="M6 16 Q12 6 18 16" fill="none" stroke={c} strokeWidth="1.5"/><line x1="12" y1="8" x2="12" y2="5" stroke={c} strokeWidth="1.2"/><line x1="8" y1="10" x2="6" y2="8" stroke={c} strokeWidth="1.2"/><line x1="16" y1="10" x2="18" y2="8" stroke={c} strokeWidth="1.2"/></g>,
 };
@@ -135,9 +142,10 @@ export function MandalaCidadela({
 }: Props) {
   const cx = 50;
   const cy = 50;
-  const innerR = 24;
+  const innerR = 22;
   const outerR = 40;
-  const nodeR = 4.2;
+  const innerNodeR = 4.5;
+  const outerNodeR = 3.8;
 
   // Zoom/Pan state
   const svgRef = useRef<SVGSVGElement>(null);
@@ -184,14 +192,21 @@ export function MandalaCidadela({
     setViewBox({ x: 0, y: 0, w: 100, h: 100 });
   }, []);
 
+  // Center label: "Praça da Integração" for clinical, "Praça do Ser" for personal
   const centerLabel = mode === 'clinico' ? ['Praça da', 'Integração'] : ['Praça', 'do Ser'];
 
   const getPos = (num: number) => {
+    // Center district
+    if (num === CENTER_NUM) return { x: cx, y: cy };
+    // Entry at top
+    if (num === ENTRY_NUM) return { x: cx, y: cy - innerR + 2 };
+
     const isInner = INNER_RING_NUMS.includes(num);
     const ring = isInner ? INNER_RING_NUMS : OUTER_RING_NUMS;
     const idx = ring.indexOf(num);
     const count = ring.length;
     const r = isInner ? innerR : outerR;
+    // Start from top (-90°), distribute evenly
     const angle = ((idx / count) * 360 - 90) * (Math.PI / 180);
     return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
   };
@@ -246,13 +261,18 @@ export function MandalaCidadela({
 
   const isZoomed = viewBox.w !== 100 || viewBox.h !== 100 || viewBox.x !== 0 || viewBox.y !== 0;
 
+  // Separate center district, entry district, and ring districts
+  const centerDistrict = districts.find(d => d.numero === CENTER_NUM);
+  const entryDistrict = districts.find(d => d.numero === ENTRY_NUM);
+  const ringDistricts = districts.filter(d => d.numero !== CENTER_NUM);
+
   return (
     <div className={`relative ${className || ''}`} style={{ aspectRatio: '1/1' }}>
       {/* Zoom controls */}
       {isZoomed && (
         <button
           onClick={resetZoom}
-          className="absolute top-2 right-2 z-10 px-2 py-1 rounded text-[9px] bg-[#C9A24A]/10 border border-[#C9A24A]/20 text-[#C9A24A]/70 hover:text-[#C9A24A] transition-colors"
+          className="absolute top-2 right-2 z-10 px-2 py-1 rounded text-[9px] bg-gold/10 border border-gold/20 text-gold/70 hover:text-gold transition-colors"
         >
           Reset zoom
         </button>
@@ -283,7 +303,7 @@ export function MandalaCidadela({
             <stop offset="100%" stopColor="#C9A24A" stopOpacity="0.2" />
           </linearGradient>
           <radialGradient id="mandala-center-glow">
-            <stop offset="0%" stopColor="#C9A24A" stopOpacity="0.1" />
+            <stop offset="0%" stopColor="#C9A24A" stopOpacity="0.12" />
             <stop offset="100%" stopColor="#C9A24A" stopOpacity="0" />
           </radialGradient>
           <marker id="conn-arrow" markerWidth="4" markerHeight="3" refX="3" refY="1.5" orient="auto">
@@ -316,50 +336,26 @@ export function MandalaCidadela({
           return (
             <g key={`conn-${conn.idx}`}>
               <line
-                x1={conn.p1.x}
-                y1={conn.p1.y}
-                x2={conn.p2.x}
-                y2={conn.p2.y}
+                x1={conn.p1.x} y1={conn.p1.y} x2={conn.p2.x} y2={conn.p2.y}
                 stroke={isHovered ? 'rgba(201,162,74,0.5)' : 'rgba(201,162,74,0.08)'}
                 strokeWidth={isHovered ? '0.4' : '0.15'}
                 strokeDasharray={isHovered ? 'none' : '1 1'}
                 markerEnd="url(#conn-arrow)"
                 style={{ transition: 'all 0.3s ease' }}
               />
-              {/* Invisible wider hitbox for hover */}
               <line
-                x1={conn.p1.x}
-                y1={conn.p1.y}
-                x2={conn.p2.x}
-                y2={conn.p2.y}
-                stroke="transparent"
-                strokeWidth="2"
+                x1={conn.p1.x} y1={conn.p1.y} x2={conn.p2.x} y2={conn.p2.y}
+                stroke="transparent" strokeWidth="2"
                 onPointerEnter={() => setHoveredConnection(conn.idx)}
                 onPointerLeave={() => setHoveredConnection(null)}
                 className="cursor-help"
               />
-              {/* Tooltip */}
               {isHovered && (
                 <g>
-                  <rect
-                    x={conn.midX - 14}
-                    y={conn.midY - 3}
-                    width="28"
-                    height="5"
-                    rx="1"
-                    fill="rgba(11,27,43,0.9)"
-                    stroke="rgba(201,162,74,0.3)"
-                    strokeWidth="0.2"
-                  />
-                  <text
-                    x={conn.midX}
-                    y={conn.midY + 0.8}
-                    textAnchor="middle"
-                    fill="#C9A24A"
-                    fontSize="1.8"
-                    fontWeight="500"
-                    opacity="0.9"
-                  >
+                  <rect x={conn.midX - 14} y={conn.midY - 3} width="28" height="5" rx="1"
+                    fill="rgba(11,27,43,0.9)" stroke="rgba(201,162,74,0.3)" strokeWidth="0.2" />
+                  <text x={conn.midX} y={conn.midY + 0.8} textAnchor="middle"
+                    fill="#C9A24A" fontSize="1.8" fontWeight="500" opacity="0.9">
                     {conn.label}
                   </text>
                 </g>
@@ -380,21 +376,32 @@ export function MandalaCidadela({
           </>
         )}
 
-        {/* Center */}
-        <circle cx={cx} cy={cy} r="9" fill="url(#mandala-center-glow)" />
-        <circle cx={cx} cy={cy} r="6.5" fill="rgba(201,162,74,0.05)" stroke="rgba(201,162,74,0.15)" strokeWidth="0.3" />
-        <circle cx={cx} cy={cy} r="3.5" fill="rgba(201,162,74,0.08)" stroke="rgba(201,162,74,0.2)" strokeWidth="0.2">
-          <animate attributeName="r" values="3.2;3.8;3.2" dur="4s" repeatCount="indefinite" />
+        {/* Center — Praça da Integração */}
+        <circle cx={cx} cy={cy} r="10" fill="url(#mandala-center-glow)" />
+        <circle cx={cx} cy={cy} r="7" fill="rgba(201,162,74,0.05)" stroke="rgba(201,162,74,0.15)" strokeWidth="0.3" />
+        <circle cx={cx} cy={cy} r="4" fill="rgba(201,162,74,0.08)" stroke="rgba(201,162,74,0.2)" strokeWidth="0.2">
+          <animate attributeName="r" values="3.5;4.2;3.5" dur="4s" repeatCount="indefinite" />
         </circle>
-        <text x={cx} y={cy - 1} textAnchor="middle" fill="#C9A24A" fontSize="1.8" fontWeight="600" opacity="0.7">
+        {/* Center icon for district 11 */}
+        {centerDistrict && (
+          <g
+            data-district={centerDistrict.id}
+            className={onDistrictClick ? 'cursor-pointer' : ''}
+            onClick={(e) => { e.stopPropagation(); onDistrictClick?.(centerDistrict); }}
+          >
+            <title>{centerDistrict.nome}</title>
+            <circle cx={cx} cy={cy} r="7" fill="transparent" />
+          </g>
+        )}
+        <text x={cx} y={cy - 1.2} textAnchor="middle" fill="#C9A24A" fontSize="1.8" fontWeight="600" opacity="0.7">
           {centerLabel[0]}
         </text>
         <text x={cx} y={cy + 1.5} textAnchor="middle" fill="#C9A24A" fontSize="1.8" fontWeight="600" opacity="0.7">
           {centerLabel[1]}
         </text>
 
-        {/* Districts */}
-        {districts.map((d) => {
+        {/* Ring Districts */}
+        {ringDistricts.map((d) => {
           const pos = getPos(d.numero);
           const state = getState(d.id);
           const style = STATE_STYLES[state];
@@ -402,6 +409,9 @@ export function MandalaCidadela({
           const isSelected = selectedId === d.id;
           const sessCount = getSessionCount(d.id);
           const collective = getCollective(d.id);
+          const isEntry = d.numero === ENTRY_NUM;
+          const isInner = INNER_RING_NUMS.includes(d.numero);
+          const nodeR = isEntry ? 3.5 : isInner ? innerNodeR : outerNodeR;
 
           return (
             <g
@@ -413,7 +423,6 @@ export function MandalaCidadela({
                 onDistrictClick?.(d);
               }}
             >
-              {/* Tooltip on hover */}
               <title>{d.nome}</title>
 
               {/* Selection ring */}
@@ -423,15 +432,18 @@ export function MandalaCidadela({
                 </circle>
               )}
 
-              {/* Glow for active/integrated */}
+              {/* Glow for active/integrated — smooth pulse */}
               {state !== 'inativo' && (
                 <circle cx={pos.x} cy={pos.y} r={nodeR + 1.2} fill="none" stroke={style.stroke} strokeWidth="0.15" strokeOpacity="0.3" filter="url(#mandala-glow)">
                   <animate attributeName="r" values={`${nodeR + 0.8};${nodeR + 1.5};${nodeR + 0.8}`} dur="3s" repeatCount="indefinite" />
                 </circle>
               )}
 
-              {/* Node */}
-              <circle cx={pos.x} cy={pos.y} r={nodeR} fill={style.fill} stroke={style.stroke} strokeWidth={isIntegrado ? '0.6' : '0.4'} />
+              {/* Node circle */}
+              <circle cx={pos.x} cy={pos.y} r={nodeR} fill={style.fill} stroke={style.stroke}
+                strokeWidth={isIntegrado ? '0.6' : '0.4'}
+                style={{ transition: 'fill 0.5s ease, stroke 0.5s ease' }}
+              />
 
               {/* Icon */}
               <svg x={pos.x - nodeR} y={pos.y - nodeR} width={nodeR * 2} height={nodeR * 2} viewBox="0 0 24 24">
@@ -452,7 +464,7 @@ export function MandalaCidadela({
 
               {/* Label */}
               <text x={pos.x} y={pos.y + nodeR + 2.5} textAnchor="middle" fill={style.textColor} fontSize="1.6" fontWeight="500" opacity="0.8">
-                {d.nome.length > 12 ? d.nome.slice(0, 11) + '…' : d.nome}
+                {d.nome.length > 14 ? d.nome.slice(0, 13) + '…' : d.nome}
               </text>
 
               {/* Session count (clinical mode) */}
@@ -498,13 +510,13 @@ export function MandalaLegend({ mode }: { mode: MandalaMode }) {
       <div className="flex items-center justify-center gap-5 flex-wrap">
         <div className="flex items-center gap-1.5">
           <div className="w-2.5 h-2.5 rounded-full border" style={{ backgroundColor: STATE_STYLES.inativo.fill, borderColor: STATE_STYLES.inativo.stroke }} />
-          <span className="text-[10px] text-[#F5F1E8]/40">
+          <span className="text-[10px] text-muted-foreground/50">
             {mode === 'coletivo' ? 'Sem clientes' : 'Não explorado'}
           </span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-2.5 h-2.5 rounded-full border" style={{ backgroundColor: STATE_STYLES.ativo.fill, borderColor: STATE_STYLES.ativo.stroke }} />
-          <span className="text-[10px] text-[#C9A24A]/70">
+          <span className="text-[10px] text-gold/70">
             {mode === 'coletivo' ? 'Com clientes' : 'Ativo'}
           </span>
         </div>
@@ -515,7 +527,7 @@ export function MandalaLegend({ mode }: { mode: MandalaMode }) {
           <span className="text-[10px] text-[#556B57]">Integrado</span>
         </div>
       </div>
-      <p className="text-[9px] text-[#F5F1E8]/25 text-center italic">
+      <p className="text-[9px] text-muted-foreground/30 text-center italic">
         {mode === 'clinico'
           ? 'Ferramenta de leitura simbólica. Não substitui julgamento clínico.'
           : 'Estados indicam o movimento da jornada.'}
