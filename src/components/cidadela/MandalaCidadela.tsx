@@ -499,7 +499,7 @@ export function MandalaCidadela({
               )}
 
               {/* Label */}
-              <text x={pos.x} y={pos.y + nodeR + 2.5} textAnchor="middle" fill={style.textColor} fontSize="1.6" fontWeight="500" opacity="0.8">
+              <text x={pos.x} y={pos.y + nodeR + 2.8} textAnchor="middle" fill={style.textColor} fontSize="1.8" fontWeight="500" opacity="0.85">
                 {d.nome.length > 14 ? d.nome.slice(0, 13) + '…' : d.nome}
               </text>
 

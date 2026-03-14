@@ -210,9 +210,18 @@ export default function JardimPsiqueDetalhe() {
               <p className="text-xs font-medium text-muted-foreground capitalize">
                 {key.replace(/_/g, ' ')}
               </p>
-              <p className="text-sm text-foreground">
-                {typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value)}
-              </p>
+              {typeof value === 'object' && value !== null ? (
+                <div className="space-y-1 pl-3 border-l border-gold/20">
+                  {Object.entries(value as Record<string, unknown>).map(([subKey, subVal]) => (
+                    <div key={subKey}>
+                      <span className="text-xs text-muted-foreground capitalize">{subKey.replace(/_/g, ' ')}: </span>
+                      <span className="text-sm text-foreground">{String(subVal)}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-foreground">{String(value)}</p>
+              )}
             </div>
           ))}
         </CardContent>
