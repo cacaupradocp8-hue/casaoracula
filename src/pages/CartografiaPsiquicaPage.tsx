@@ -132,8 +132,8 @@ export default function CartografiaPsiquicaPage() {
       console.error(error);
       toast.error('Erro ao salvar cartografia');
     } else {
-      toast.success('Cartografia salva com sucesso ✨');
-      navigate('/dashboard');
+      toast.success('Cartografia salva com sucesso ✨ Sua CidaDELA Interior foi gerada.');
+      navigate('/mapa-casa');
     }
     setSaving(false);
   };
@@ -524,7 +524,7 @@ export default function CartografiaPsiquicaPage() {
 
                 <div className="text-center space-y-2">
                   <p className="text-xs text-muted-foreground/50">
-                    Próxima ferramenta sugerida: Mapa das Vozes Internas
+                    Ao salvar, sua CidaDELA Interior será gerada automaticamente como GPS da jornada.
                   </p>
                   <p className="text-[10px] text-muted-foreground/30">
                     Esta ferramenta é exploratória, não diagnóstica. Leitura simbólica do estado psíquico.
@@ -562,7 +562,7 @@ export default function CartografiaPsiquicaPage() {
             <Button variant="ghost" size="sm" onClick={() => setStep(7)}>
               <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
+            <Button variant="ghost" size="sm" onClick={() => navigate('/mapa-casa')}>
               Revisitar depois
             </Button>
           </div>

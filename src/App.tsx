@@ -1138,13 +1138,15 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/ferramenta/big5-oracular"
+        path="/ferramenta/cartografia-psiquica-oracula"
         element={
-          <ProtectedRoute minPortal="mentorada">
-            <Big5Oracular />
+          <ProtectedRoute minPortal="visitante">
+            <CartografiaPsiquicaPage />
           </ProtectedRoute>
         }
       />
+      {/* Legacy redirect */}
+      <Route path="/ferramenta/big5-oracular" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route
         path="/ferramenta/big5-funcional"
         element={
@@ -1177,14 +1179,9 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/ferramenta/cartografia-psiquica"
-        element={
-          <ProtectedRoute minPortal="mentorada">
-            <CartografiaPsiquicaPage />
-          </ProtectedRoute>
-        }
-      />
+      {/* Legacy redirect */}
+      <Route path="/ferramenta/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
+      <Route path="/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route
         path="/ferramentas/oraculo-perguntas"
         element={

@@ -78,7 +78,7 @@ const profissionalMenuGroups = (isAdmin: boolean, isMentorada: boolean) => [
     key: 'ferramentas-clinicas', label: 'Ferramentas Clínicas', icon: Wrench, path: '/session-room',
     subitems: [
       { label: 'Sala de Sessão Clínica', path: '/session-room' },
-      { label: 'Big Five Oracular', path: '/ferramenta/big5-oracular' },
+      { label: 'Cartografia Psíquica Orácula', path: '/ferramenta/cartografia-psiquica-oracula' },
       { label: 'Narroterapia Oracular™', path: '/narroterapia' },
     ],
   },

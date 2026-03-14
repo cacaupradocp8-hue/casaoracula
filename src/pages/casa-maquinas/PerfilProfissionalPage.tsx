@@ -20,7 +20,7 @@ export default function PerfilProfissionalPage() {
   const specialtyLabels: Record<string, string> = {
     big5: 'Big Five',
     big5_simbolico: 'Big5 Simbólico',
-    big5_oracular: 'Big5 Oracular',
+    big5_oracular: 'Cartografia Psíquica Orácula',
     big5_funcional: 'Big5 Funcional',
     sessoes: 'Sessões Clínicas',
     cartografia: 'Cartografia',
