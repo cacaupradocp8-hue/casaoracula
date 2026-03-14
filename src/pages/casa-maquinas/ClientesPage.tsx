@@ -28,9 +28,9 @@ interface Cliente {
 }
 
 const estadoCores: Record<string, string> = {
-  crise: 'bg-red-500/20 text-red-400 border-red-500/30',
-  travessia: 'bg-[#C9A24A]/20 text-[#C9A24A] border-[#C9A24A]/30',
-  integracao: 'bg-[#556B57]/20 text-[#556B57] border-[#556B57]/30',
+  crise: 'bg-destructive/15 text-destructive border-destructive/30',
+  travessia: 'bg-primary/15 text-primary border-primary/30',
+  integracao: 'bg-accent/15 text-accent border-accent/30',
 };
 
 export default function ClientesPage() {
@@ -66,7 +66,6 @@ export default function ClientesPage() {
       return;
     }
 
-    // Load journeys for each client
     const clientIds = (data || []).map(c => c.id);
     const { data: journeys } = await supabase
       .from('journeys')
@@ -112,7 +111,6 @@ export default function ClientesPage() {
       return;
     }
 
-    // Create journey for this client
     if (data) {
       await supabase.from('journeys').insert({ client_id: data.id });
     }
@@ -137,16 +135,16 @@ export default function ClientesPage() {
       {/* Search & Filters */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#F5F1E8]/30" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             placeholder="Buscar cliente..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="pl-9 bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8] placeholder:text-[#F5F1E8]/30"
+            className="pl-9"
           />
         </div>
         <Select value={filterState} onValueChange={setFilterState}>
-          <SelectTrigger className="w-40 bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]">
+          <SelectTrigger className="w-40">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -158,29 +156,29 @@ export default function ClientesPage() {
         </Select>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-[#C9A24A] hover:bg-[#C9A24A]/80 text-[#0B1B2B] gap-2">
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/80 gap-2">
               <Plus className="w-4 h-4" />
               Nova Cliente
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-[#0B1B2B] border-[#C9A24A]/20">
+          <DialogContent>
             <DialogHeader>
-              <DialogTitle className="text-[#F5F1E8]">Nova Cliente</DialogTitle>
+              <DialogTitle>Nova Cliente</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label className="text-[#F5F1E8]/70">Nome</Label>
-                <Input value={newName} onChange={e => setNewName(e.target.value)} className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]" />
+                <Label>Nome</Label>
+                <Input value={newName} onChange={e => setNewName(e.target.value)} />
               </div>
               <div>
-                <Label className="text-[#F5F1E8]/70">Objetivo Terapêutico</Label>
-                <Textarea value={newObjective} onChange={e => setNewObjective(e.target.value)} className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]" />
+                <Label>Objetivo Terapêutico</Label>
+                <Textarea value={newObjective} onChange={e => setNewObjective(e.target.value)} />
               </div>
               <div>
-                <Label className="text-[#F5F1E8]/70">Observações</Label>
-                <Textarea value={newNotes} onChange={e => setNewNotes(e.target.value)} className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]" />
+                <Label>Observações</Label>
+                <Textarea value={newNotes} onChange={e => setNewNotes(e.target.value)} />
               </div>
-              <Button onClick={handleCreate} disabled={saving || !newName.trim()} className="w-full bg-[#C9A24A] hover:bg-[#C9A24A]/80 text-[#0B1B2B]">
+              <Button onClick={handleCreate} disabled={saving || !newName.trim()} className="w-full bg-primary text-primary-foreground hover:bg-primary/80">
                 {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Criar Cliente'}
               </Button>
             </div>
@@ -191,10 +189,10 @@ export default function ClientesPage() {
       {/* Client List */}
       {loading ? (
         <div className="flex justify-center py-20">
-          <Loader2 className="w-6 h-6 animate-spin text-[#C9A24A]" />
+          <Loader2 className="w-6 h-6 animate-spin text-primary" />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-20 text-[#F5F1E8]/40">
+        <div className="text-center py-20 text-muted-foreground">
           <p className="text-lg">Nenhuma cliente encontrada</p>
           <p className="text-sm mt-1">Crie sua primeira cliente para começar</p>
         </div>
@@ -203,14 +201,14 @@ export default function ClientesPage() {
           {filtered.map(c => (
             <Card
               key={c.id}
-              className="border-[#C9A24A]/10 bg-[#0B1B2B]/60 hover:border-[#C9A24A]/20 transition-all cursor-pointer"
+              className="border-border/30 bg-card/70 backdrop-blur-sm hover:border-primary/30 transition-all cursor-pointer hover:-translate-y-1 hover:shadow-lg"
               onClick={() => navigate(`/casa-das-maquinas/clientes/${c.id}`)}
             >
               <CardContent className="p-4">
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <h3 className="text-sm font-semibold text-[#F5F1E8]">{c.nome}</h3>
-                    <p className="text-[10px] text-[#F5F1E8]/40 mt-0.5">
+                    <h3 className="text-sm font-display font-semibold text-foreground">{c.nome}</h3>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">
                       Desde {new Date(c.created_at).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
@@ -221,18 +219,18 @@ export default function ClientesPage() {
                   )}
                 </div>
                 {c.objetivo_terapeutico && (
-                  <p className="text-xs text-[#F5F1E8]/50 mb-3 line-clamp-2">{c.objetivo_terapeutico}</p>
+                  <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{c.objetivo_terapeutico}</p>
                 )}
                 <div className="flex items-center gap-2">
                   {c.journey?.current_district && (
-                    <div className="flex items-center gap-1 text-[10px] text-[#F5F1E8]/50">
-                      <MapPin className="w-3 h-3 text-[#C9A24A]/60" />
+                    <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                      <MapPin className="w-3 h-3 text-primary/60" />
                       {c.journey.current_district.nome}
                     </div>
                   )}
                 </div>
                 <div className="flex items-center gap-2 mt-3">
-                  <Button size="sm" variant="ghost" className="h-7 text-xs text-[#C9A24A] hover:text-[#C9A24A] hover:bg-[#C9A24A]/10 flex-1">
+                  <Button size="sm" variant="ghost" className="h-7 text-xs text-primary hover:text-primary hover:bg-primary/10 flex-1">
                     Abrir Cidade <ChevronRight className="w-3 h-3 ml-1" />
                   </Button>
                 </div>

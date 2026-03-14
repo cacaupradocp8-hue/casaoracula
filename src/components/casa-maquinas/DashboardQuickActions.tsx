@@ -6,10 +6,10 @@ export function DashboardQuickActions() {
   const navigate = useNavigate();
 
   const actions = [
-    { label: 'Nova Sessão', icon: Plus, route: '/casa-das-maquinas/sessoes', accent: '#C9A24A' },
-    { label: 'Clientes', icon: Users, route: '/casa-das-maquinas/clientes', accent: '#556B57' },
-    { label: 'Mapa Simbólico', icon: Map, route: '/casa-das-maquinas/mapa-vivo', accent: '#8B5CF6' },
-    { label: 'Ferramentas', icon: FileText, route: '/casa-das-maquinas/ferramentas', accent: '#3B82F6' },
+    { label: 'Nova Sessão', icon: Plus, route: '/casa-das-maquinas/sessoes', accent: 'hsl(var(--cm-gold-soft))' },
+    { label: 'Clientes', icon: Users, route: '/casa-das-maquinas/clientes', accent: 'hsl(var(--cm-green))' },
+    { label: 'Mapa Simbólico', icon: Map, route: '/casa-das-maquinas/mapa-vivo', accent: 'hsl(var(--cm-slate))' },
+    { label: 'Ferramentas', icon: FileText, route: '/casa-das-maquinas/ferramentas', accent: 'hsl(var(--cm-purple))' },
   ];
 
   return (
@@ -20,7 +20,7 @@ export function DashboardQuickActions() {
           variant="outline"
           size="sm"
           onClick={() => navigate(a.route)}
-          className="h-8 text-xs border-[#C9A24A]/15 text-[#F5F1E8]/70 hover:text-[#F5F1E8] hover:bg-[#C9A24A]/10 gap-1.5"
+          className="h-8 text-xs border-border/40 text-foreground/70 hover:text-foreground hover:bg-primary/10 gap-1.5"
         >
           <a.icon className="w-3.5 h-3.5" style={{ color: a.accent }} />
           {a.label}

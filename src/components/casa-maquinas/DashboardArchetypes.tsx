@@ -62,20 +62,20 @@ export function DashboardArchetypes() {
   const maxCount = archetypes.length > 0 ? archetypes[0].count : 1;
 
   return (
-    <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60 backdrop-blur-sm">
+    <Card className="border-border/30 bg-card/70 backdrop-blur-sm">
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-medium text-[#F5F1E8]/80 flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-[#C9A24A]" />
+        <CardTitle className="text-sm font-medium text-foreground/80 flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-primary" />
           Arquétipos Emergentes
         </CardTitle>
       </CardHeader>
       <CardContent>
         {loading ? (
           <div className="flex justify-center py-6">
-            <Loader2 className="w-4 h-4 animate-spin text-[#C9A24A]" />
+            <Loader2 className="w-4 h-4 animate-spin text-primary" />
           </div>
         ) : archetypes.length === 0 ? (
-          <p className="text-sm text-[#F5F1E8]/30 text-center py-6">
+          <p className="text-sm text-muted-foreground text-center py-6">
             Arquétipos aparecerão com o uso das ferramentas
           </p>
         ) : (
@@ -83,15 +83,15 @@ export function DashboardArchetypes() {
             {archetypes.map((a, i) => (
               <div key={a.name} className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-[#F5F1E8]/70">{a.name}</span>
-                  <span className="text-xs text-[#F5F1E8]/40">{a.count}×</span>
+                  <span className="text-xs text-foreground/70">{a.name}</span>
+                  <span className="text-xs text-muted-foreground">{a.count}×</span>
                 </div>
-                <div className="h-1.5 rounded-full bg-[#F5F1E8]/5 overflow-hidden">
+                <div className="h-1.5 rounded-full bg-secondary/50 overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all"
                     style={{
                       width: `${(a.count / maxCount) * 100}%`,
-                      backgroundColor: i === 0 ? '#C9A24A' : i === 1 ? '#556B57' : '#C9A24A60',
+                      backgroundColor: i === 0 ? '#DAA520' : i === 1 ? '#4A7C59' : '#DAA52060',
                     }}
                   />
                 </div>

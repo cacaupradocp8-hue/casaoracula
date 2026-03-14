@@ -56,45 +56,45 @@ export function DashboardAgenda() {
   };
 
   return (
-    <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60 backdrop-blur-sm">
+    <Card className="border-border/30 bg-card/70 backdrop-blur-sm">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium text-[#F5F1E8]/80 flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-[#C9A24A]" />
+          <CardTitle className="text-sm font-medium text-foreground/80 flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-primary" />
             Agenda de Hoje
           </CardTitle>
-          <span className="text-xs text-[#F5F1E8]/40 capitalize">{hoje}</span>
+          <span className="text-xs text-muted-foreground capitalize">{hoje}</span>
         </div>
       </CardHeader>
       <CardContent className="space-y-2">
         {loading ? (
-          <p className="text-sm text-[#F5F1E8]/30 text-center py-4">Carregando...</p>
+          <p className="text-sm text-muted-foreground text-center py-4">Carregando...</p>
         ) : sessoes.length > 0 ? (
           sessoes.map(s => (
             <div
               key={s.id}
-              className="flex items-center gap-3 p-3 rounded-lg bg-[#F5F1E8]/[0.03] hover:bg-[#F5F1E8]/[0.06] transition-colors cursor-pointer group"
+              className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors cursor-pointer group"
             >
-              <div className="flex items-center gap-1.5 text-[#C9A24A] min-w-[52px]">
+              <div className="flex items-center gap-1.5 text-primary min-w-[52px]">
                 <Clock className="w-3 h-3" />
                 <span className="text-xs font-mono">{s.hora}</span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-[#F5F1E8] font-medium truncate">{s.cliente}</p>
+                <p className="text-sm text-foreground font-medium truncate">{s.cliente}</p>
                 {s.distrito && (
-                  <p className="text-[10px] text-[#F5F1E8]/40">{s.distrito}</p>
+                  <p className="text-[10px] text-muted-foreground">{s.distrito}</p>
                 )}
               </div>
               <Badge
                 variant="outline"
-                className="text-[10px] border-[#556B57]/40 text-[#556B57] shrink-0"
+                className="text-[10px] border-accent/40 text-accent shrink-0"
               >
                 {s.tipo}
               </Badge>
             </div>
           ))
         ) : (
-          <p className="text-sm text-[#F5F1E8]/30 text-center py-4">Nenhuma sessão agendada para hoje</p>
+          <p className="text-sm text-muted-foreground text-center py-4">Nenhuma sessão agendada para hoje</p>
         )}
       </CardContent>
     </Card>

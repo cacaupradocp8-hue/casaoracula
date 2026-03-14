@@ -36,9 +36,9 @@ export function DashboardJornadas() {
       });
 
       setJornadas([
-        { estado: 'Ativo', count: counts.ativo, cor: '#556B57' },
-        { estado: 'Pausado', count: counts.pausado, cor: '#C9A24A' },
-        { estado: 'Encerrado', count: counts.encerrado, cor: '#E85A5A' },
+        { estado: 'Ativo', count: counts.ativo, cor: '#4A7C59' },
+        { estado: 'Pausado', count: counts.pausado, cor: '#DAA520' },
+        { estado: 'Encerrado', count: counts.encerrado, cor: '#C70039' },
       ]);
     }
     setLoading(false);
@@ -47,24 +47,23 @@ export function DashboardJornadas() {
   const total = jornadas.reduce((sum, j) => sum + j.count, 0);
 
   return (
-    <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60 backdrop-blur-sm">
+    <Card className="border-border/30 bg-card/70 backdrop-blur-sm">
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-medium text-[#F5F1E8]/80 flex items-center gap-2">
-          <Compass className="w-4 h-4 text-[#C9A24A]" />
+        <CardTitle className="text-sm font-medium text-foreground/80 flex items-center gap-2">
+          <Compass className="w-4 h-4 text-primary" />
           Status das Clientes
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {loading ? (
           <div className="flex justify-center py-4">
-            <Loader2 className="w-4 h-4 animate-spin text-[#C9A24A]" />
+            <Loader2 className="w-4 h-4 animate-spin text-primary" />
           </div>
         ) : total === 0 ? (
-          <p className="text-sm text-[#F5F1E8]/30 text-center py-4">Nenhuma cliente cadastrada</p>
+          <p className="text-sm text-muted-foreground text-center py-4">Nenhuma cliente cadastrada</p>
         ) : (
           <>
-            {/* Bar */}
-            <div className="flex rounded-full overflow-hidden h-2.5 bg-[#F5F1E8]/5">
+            <div className="flex rounded-full overflow-hidden h-2.5 bg-secondary/50">
               {jornadas.map(j => (
                 j.count > 0 && (
                   <div
@@ -79,14 +78,13 @@ export function DashboardJornadas() {
               ))}
             </div>
 
-            {/* Legend */}
             <div className="flex items-center justify-between">
               {jornadas.map(j => (
                 <div key={j.estado} className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: j.cor }} />
                   <div>
-                    <span className="text-sm font-semibold text-[#F5F1E8]">{j.count}</span>
-                    <span className="text-[10px] text-[#F5F1E8]/40 ml-1">{j.estado}</span>
+                    <span className="text-sm font-semibold text-foreground">{j.count}</span>
+                    <span className="text-[10px] text-muted-foreground ml-1">{j.estado}</span>
                   </div>
                 </div>
               ))}

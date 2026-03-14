@@ -89,7 +89,7 @@ export function CasaMaquinasSidebar() {
 
     return (
       <SidebarGroup key={label}>
-        <SidebarGroupLabel className="text-[#C9A24A]/60 uppercase text-[10px] tracking-widest font-medium">
+        <SidebarGroupLabel className="text-[hsl(var(--cm-gold-soft))] uppercase text-[10px] tracking-widest font-medium opacity-70">
           {label}
         </SidebarGroupLabel>
         <SidebarGroupContent>
@@ -106,8 +106,8 @@ export function CasaMaquinasSidebar() {
                     className={cn(
                       'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all',
                       isActive(item.path)
-                        ? 'bg-[#C9A24A]/15 text-[#C9A24A] font-medium'
-                        : 'text-[#F5F1E8]/60 hover:text-[#F5F1E8] hover:bg-[#F5F1E8]/5'
+                        ? 'bg-[hsl(var(--cm-gold-soft)/0.15)] text-[hsl(var(--cm-gold-soft))] font-medium'
+                        : 'text-[hsl(var(--cm-text)/0.6)] hover:text-[hsl(var(--cm-text))] hover:bg-[hsl(var(--cm-text)/0.05)]'
                     )}
                   >
                     <item.icon className="w-4 h-4 shrink-0" />
@@ -125,17 +125,17 @@ export function CasaMaquinasSidebar() {
   return (
     <Sidebar
       collapsible="icon"
-      className="border-r border-[#C9A24A]/10 bg-[#0B1B2B]"
+      className="border-r border-[hsl(var(--cm-border)/0.3)]"
     >
-      <SidebarHeader className="p-4 border-b border-[#C9A24A]/10">
+      <SidebarHeader className="p-4 border-b border-[hsl(var(--cm-border)/0.3)]">
         <Link to="/casa-das-maquinas" className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-[#C9A24A]/20 flex items-center justify-center shrink-0">
-            <Compass className="w-4 h-4 text-[#C9A24A]" />
+          <div className="w-8 h-8 rounded-lg bg-[hsl(var(--cm-gold-soft)/0.2)] flex items-center justify-center shrink-0">
+            <Compass className="w-4 h-4 text-[hsl(var(--cm-gold-soft))]" />
           </div>
           {!collapsed && (
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-[#F5F1E8] truncate">Casa das Máquinas</p>
-              <p className="text-[10px] text-[#F5F1E8]/40 uppercase tracking-wider">Espaço Profissional</p>
+              <p className="text-sm font-display font-semibold truncate">Casa das Máquinas</p>
+              <p className="text-[10px] opacity-50 uppercase tracking-wider">Cartografia Profissional</p>
             </div>
           )}
         </Link>
@@ -148,12 +148,12 @@ export function CasaMaquinasSidebar() {
         {renderGroup('Sistema', systemNav)}
       </SidebarContent>
 
-      <SidebarFooter className="p-3 border-t border-[#C9A24A]/10">
+      <SidebarFooter className="p-3 border-t border-[hsl(var(--cm-border)/0.3)]">
         <Link to="/jornada">
           <Button
             variant="ghost"
             size="sm"
-            className="w-full justify-start gap-2 text-[#F5F1E8]/40 hover:text-[#F5F1E8] hover:bg-[#F5F1E8]/5 text-xs"
+            className="w-full justify-start gap-2 opacity-50 hover:opacity-100 text-xs"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
             {!collapsed && 'Voltar à Formação'}
