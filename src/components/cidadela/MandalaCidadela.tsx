@@ -225,9 +225,9 @@ const TERRITORY_ART: Record<number, (s: typeof STATE_STYLES.inativo) => JSX.Elem
   // 4 — Jardim das Imagens
   4: (st) => <g>
     <circle cx="0" cy="0" r="36" fill={st.building} stroke={st.wall} strokeWidth="1.2" />
-    <circle cx="0" cy="0" r="30" fill="none" stroke={st.wall} strokeWidth="0.7" strokeDasharray="4 3" />
-    <line x1="0" y1="-36" x2="0" y2="36" stroke={st.wall} strokeWidth="0.8" strokeDasharray="3 3" />
-    <line x1="-36" y1="0" x2="36" y2="0" stroke={st.wall} strokeWidth="0.8" strokeDasharray="3 3" />
+    <circle cx="0" cy="0" r="30" fill="none" stroke={st.wall} strokeWidth="0.7" />
+    <line x1="0" y1="-36" x2="0" y2="36" stroke={st.wall} strokeWidth="0.8" />
+    <line x1="-36" y1="0" x2="36" y2="0" stroke={st.wall} strokeWidth="0.8" />
     <rect x="-2" y="-2" width="4" height="18" rx="1" fill={st.building} stroke={st.icon} strokeWidth="1.5" />
     <ellipse cx="0" cy="-10" rx="14" ry="10" fill={st.accent} stroke={st.icon} strokeWidth="1.5" />
     <ellipse cx="-6" cy="-14" rx="8" ry="7" fill="none" stroke={st.icon} strokeWidth="0.8" opacity="0.6" />
