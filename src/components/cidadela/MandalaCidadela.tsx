@@ -166,18 +166,33 @@ const TERRITORY_ART: Record<number, (s: typeof STATE_STYLES.inativo) => JSX.Elem
     <polygon points="0,-14 1.5,-10 5,-10 2,-7 3,-3 0,-6 -3,-3 -2,-7 -5,-10 -1.5,-10" fill={st.icon} opacity="0.9" />
   </g>,
 
-  // 2 — Torres
+  // 2 — Torres (torre medieval alta com ameias)
   2: (st) => <g>
-    <ellipse cx="0" cy="24" rx="36" ry="8" fill={st.building} stroke={st.wall} strokeWidth="0.8" />
-    <rect x="-28" y="0" width="56" height="24" rx="1" fill={st.building} stroke={st.wall} strokeWidth="1" />
-    <rect x="-24" y="-24" width="14" height="48" rx="1.5" fill={st.building} stroke={st.wall} strokeWidth="1.2" />
-    {[-24,-20,-16,-12].map((x,i) => <rect key={i} x={x} y="-29" width="3" height="5" fill={st.building} stroke={st.icon} strokeWidth="0.8" />)}
-    <path d="M-20 -8 A4 4 0 0 1 -12 -8" fill="none" stroke={st.icon} strokeWidth="1.2" />
-    <rect x="10" y="-24" width="14" height="48" rx="1.5" fill={st.building} stroke={st.wall} strokeWidth="1.2" />
-    {[10,14,18,22].map((x,i) => <rect key={i} x={x} y="-29" width="3" height="5" fill={st.building} stroke={st.icon} strokeWidth="0.8" />)}
-    <path d="M14 -8 A4 4 0 0 1 22 -8" fill="none" stroke={st.icon} strokeWidth="1.2" />
-    <line x1="-18" y1="-29" x2="-18" y2="-38" stroke={st.icon} strokeWidth="1.2" />
-    <path d="M-18 -38 L-10 -35 L-18 -32" fill={st.icon} opacity="0.8" />
+    {/* Base / terreno */}
+    <ellipse cx="0" cy="28" rx="38" ry="8" fill={st.building} stroke={st.wall} strokeWidth="0.8" />
+    {/* Muralha baixa conectando as torres */}
+    <rect x="-12" y="8" width="24" height="20" rx="1" fill={st.building} stroke={st.wall} strokeWidth="0.8" />
+    {[-12,-8,-4,0,4,8].map((x,i) => <rect key={`wm${i}`} x={x} y="4" width="3" height="5" fill={st.building} stroke={st.icon} strokeWidth="0.6" />)}
+    {/* Torre esquerda — alta e estreita */}
+    <rect x="-28" y="-30" width="18" height="58" rx="1.5" fill={st.building} stroke={st.wall} strokeWidth="1.3" />
+    {/* Ameias torre esquerda */}
+    {[-28,-24,-20,-16,-12].map((x,i) => <rect key={`le${i}`} x={x} y="-35" width="3" height="6" fill={st.building} stroke={st.icon} strokeWidth="0.9" />)}
+    {/* Janela arco torre esquerda */}
+    <path d="M-23 -12 A4 5 0 0 1 -15 -12 L-15 -2 L-23 -2 Z" fill={st.accent} stroke={st.icon} strokeWidth="1" />
+    <path d="M-23 6 A4 5 0 0 1 -15 6 L-15 16 L-23 16 Z" fill={st.accent} stroke={st.icon} strokeWidth="0.8" opacity="0.7" />
+    {/* Torre direita — alta e estreita */}
+    <rect x="10" y="-30" width="18" height="58" rx="1.5" fill={st.building} stroke={st.wall} strokeWidth="1.3" />
+    {/* Ameias torre direita */}
+    {[10,14,18,22,26].map((x,i) => <rect key={`re${i}`} x={x} y="-35" width="3" height="6" fill={st.building} stroke={st.icon} strokeWidth="0.9" />)}
+    {/* Janela arco torre direita */}
+    <path d="M15 -12 A4 5 0 0 1 23 -12 L23 -2 L15 -2 Z" fill={st.accent} stroke={st.icon} strokeWidth="1" />
+    <path d="M15 6 A4 5 0 0 1 23 6 L23 16 L15 16 Z" fill={st.accent} stroke={st.icon} strokeWidth="0.8" opacity="0.7" />
+    {/* Mastro e bandeira na torre esquerda */}
+    <line x1="-19" y1="-35" x2="-19" y2="-50" stroke={st.icon} strokeWidth="1.3" />
+    <path d="M-19 -50 L-10 -46 L-19 -42" fill={st.icon} opacity="0.85" />
+    {/* Telhado cônico torre direita */}
+    <polygon points="10,-35 19,-48 28,-35" fill={st.building} stroke={st.icon} strokeWidth="1" />
+    <circle cx="19" cy="-48" r="1.5" fill={st.icon} opacity="0.7" />
   </g>,
 
   // 3 — Portas
