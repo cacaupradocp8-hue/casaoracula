@@ -438,21 +438,38 @@ function AtmosphereParticles() {
 // ============================================
 function MandalaRings() {
   return <g>
-    {/* Inner sacred ring */}
-    <circle cx={CX} cy={CY} r={INNER_R + 20} fill="none" stroke="#C9A24A" strokeWidth="0.8" strokeDasharray="8 5" opacity="0.20" />
-    <circle cx={CX} cy={CY} r={INNER_R - 20} fill="none" stroke="#C9A24A" strokeWidth="0.5" strokeDasharray="4 6" opacity="0.15" />
-    {/* Outer sacred ring */}
-    <circle cx={CX} cy={CY} r={OUTER_R + 18} fill="none" stroke="#C9A24A" strokeWidth="1" strokeDasharray="10 6" opacity="0.18" />
-    <circle cx={CX} cy={CY} r={OUTER_R - 18} fill="none" stroke="#C9A24A" strokeWidth="0.6" strokeDasharray="5 5" opacity="0.12" />
-    {/* 12-fold star geometry connecting inner ring positions */}
+    {/* Anel do centro — forte e visível */}
+    <circle cx={CX} cy={CY} r={90} fill="none" stroke="#C9A24A" strokeWidth="1.8" opacity="0.35" />
+    {/* Anel interno — bem marcado */}
+    <circle cx={CX} cy={CY} r={INNER_R + 25} fill="none" stroke="#C9A24A" strokeWidth="1.5" opacity="0.30" />
+    <circle cx={CX} cy={CY} r={INNER_R - 15} fill="none" stroke="#C9A24A" strokeWidth="1.0" opacity="0.22" />
+    {/* Anel externo — contorno da mandala */}
+    <circle cx={CX} cy={CY} r={OUTER_R + 22} fill="none" stroke="#C9A24A" strokeWidth="2" opacity="0.28" />
+    <circle cx={CX} cy={CY} r={OUTER_R - 15} fill="none" stroke="#C9A24A" strokeWidth="1.2" opacity="0.20" />
+    {/* Anel mais externo — borda decorativa */}
+    <circle cx={CX} cy={CY} r={OUTER_R + 50} fill="none" stroke="#C9A24A" strokeWidth="1" strokeDasharray="12 6" opacity="0.18" />
+    {/* Geometria de 12 pontas conectando anéis */}
     {Array.from({ length: 12 }, (_, i) => {
-      const a1 = ((i / 12) * 360 - 90) * Math.PI / 180;
-      const a2 = (((i + 1) / 12) * 360 - 90) * Math.PI / 180;
-      const r = INNER_R + 20;
+      const a = ((i / 12) * 360 - 90) * Math.PI / 180;
+      const r1 = 90;
+      const r2 = OUTER_R + 22;
       return <line key={i}
-        x1={CX + r * Math.cos(a1)} y1={CY + r * Math.sin(a1)}
-        x2={CX + r * Math.cos(a2)} y2={CY + r * Math.sin(a2)}
-        stroke="#C9A24A" strokeWidth="0.4" opacity="0.12" />;
+        x1={CX + r1 * Math.cos(a)} y1={CY + r1 * Math.sin(a)}
+        x2={CX + r2 * Math.cos(a)} y2={CY + r2 * Math.sin(a)}
+        stroke="#C9A24A" strokeWidth="0.5" opacity="0.14" />;
+    })}
+    {/* Marcadores nos cruzamentos anel/raio */}
+    {Array.from({ length: 6 }, (_, i) => {
+      const a = ((i / 6) * 360 - 90) * Math.PI / 180;
+      const r = INNER_R + 25;
+      return <circle key={`dot-i${i}`} cx={CX + r * Math.cos(a)} cy={CY + r * Math.sin(a)}
+        r="3" fill="#C9A24A" opacity="0.18" />;
+    })}
+    {Array.from({ length: 6 }, (_, i) => {
+      const a = ((i / 6) * 360 - 60) * Math.PI / 180;
+      const r = OUTER_R + 22;
+      return <circle key={`dot-o${i}`} cx={CX + r * Math.cos(a)} cy={CY + r * Math.sin(a)}
+        r="3.5" fill="#C9A24A" opacity="0.16" />;
     })}
   </g>;
 }
