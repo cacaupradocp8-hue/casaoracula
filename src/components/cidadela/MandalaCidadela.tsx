@@ -225,9 +225,9 @@ const TERRITORY_ART: Record<number, (s: typeof STATE_STYLES.inativo) => JSX.Elem
   // 4 — Jardim das Imagens
   4: (st) => <g>
     <circle cx="0" cy="0" r="36" fill={st.building} stroke={st.wall} strokeWidth="1.2" />
-    <circle cx="0" cy="0" r="30" fill="none" stroke={st.wall} strokeWidth="0.7" strokeDasharray="4 3" />
-    <line x1="0" y1="-36" x2="0" y2="36" stroke={st.wall} strokeWidth="0.8" strokeDasharray="3 3" />
-    <line x1="-36" y1="0" x2="36" y2="0" stroke={st.wall} strokeWidth="0.8" strokeDasharray="3 3" />
+    <circle cx="0" cy="0" r="30" fill="none" stroke={st.wall} strokeWidth="0.7" />
+    <line x1="0" y1="-36" x2="0" y2="36" stroke={st.wall} strokeWidth="0.8" />
+    <line x1="-36" y1="0" x2="36" y2="0" stroke={st.wall} strokeWidth="0.8" />
     <rect x="-2" y="-2" width="4" height="18" rx="1" fill={st.building} stroke={st.icon} strokeWidth="1.5" />
     <ellipse cx="0" cy="-10" rx="14" ry="10" fill={st.accent} stroke={st.icon} strokeWidth="1.5" />
     <ellipse cx="-6" cy="-14" rx="8" ry="7" fill="none" stroke={st.icon} strokeWidth="0.8" opacity="0.6" />
@@ -244,7 +244,7 @@ const TERRITORY_ART: Record<number, (s: typeof STATE_STYLES.inativo) => JSX.Elem
   // 5 — Praça do Abalo
   5: (st) => <g>
     <path d="M-34 -18 L34 -20 L36 20 L-32 22 Z" fill={st.building} stroke={st.wall} strokeWidth="1.2" />
-    <path d="M-24 -12 L24 -14 L26 12 L-22 14 Z" fill="none" stroke={st.wall} strokeWidth="0.7" strokeDasharray="3 3" />
+    <path d="M-24 -12 L24 -14 L26 12 L-22 14 Z" fill="none" stroke={st.wall} strokeWidth="0.7" />
     <path d="M-5 -20 L-2 -10 L3 -4 L-2 4 L4 12 L0 22" fill="none" stroke={st.icon} strokeWidth="2.8" strokeLinecap="round" />
     <path d="M-2 -10 L-8 -6" fill="none" stroke={st.icon} strokeWidth="1" opacity="0.7" />
     <path d="M3 -4 L8 -1" fill="none" stroke={st.icon} strokeWidth="1" opacity="0.7" />
@@ -273,7 +273,7 @@ const TERRITORY_ART: Record<number, (s: typeof STATE_STYLES.inativo) => JSX.Elem
   // 7 — Espelho dos Vínculos
   7: (st) => <g>
     <ellipse cx="0" cy="2" rx="34" ry="28" fill={st.building} stroke={st.wall} strokeWidth="1" />
-    <ellipse cx="0" cy="2" rx="26" ry="20" fill="none" stroke={st.wall} strokeWidth="0.6" strokeDasharray="3 4" />
+    <ellipse cx="0" cy="2" rx="26" ry="20" fill="none" stroke={st.wall} strokeWidth="0.6" />
     <ellipse cx="0" cy="-2" rx="9" ry="14" fill={st.accent} stroke={st.icon} strokeWidth="1.8" />
     <ellipse cx="0" cy="-2" rx="6" ry="10" fill="none" stroke={st.icon} strokeWidth="0.8" opacity="0.5" />
     <line x1="0" y1="12" x2="0" y2="20" stroke={st.icon} strokeWidth="1.8" />
@@ -302,7 +302,7 @@ const TERRITORY_ART: Record<number, (s: typeof STATE_STYLES.inativo) => JSX.Elem
   // 9 — Conselho Interior
   9: (st) => <g>
     <circle cx="0" cy="0" r="34" fill={st.building} stroke={st.wall} strokeWidth="1.2" />
-    <circle cx="0" cy="0" r="28" fill="none" stroke={st.wall} strokeWidth="0.6" strokeDasharray="3 3" />
+    <circle cx="0" cy="0" r="28" fill="none" stroke={st.wall} strokeWidth="0.6" />
     <circle cx="0" cy="0" r="12" fill="none" stroke={st.icon} strokeWidth="1.5" />
     <circle cx="0" cy="0" r="3" fill={st.icon} opacity="0.6" />
     {/* Seats around the council */}
@@ -339,7 +339,7 @@ const TERRITORY_ART: Record<number, (s: typeof STATE_STYLES.inativo) => JSX.Elem
   11: (st) => <g>
     {/* Sacred geometry rings */}
     <circle cx="0" cy="0" r="60" fill={st.building} stroke={st.wall} strokeWidth="1.8" />
-    <circle cx="0" cy="0" r="52" fill="none" stroke={st.wall} strokeWidth="1" strokeDasharray="5 4" />
+    <circle cx="0" cy="0" r="52" fill="none" stroke={st.wall} strokeWidth="1" />
     {/* Radial lines */}
     {Array.from({ length: 12 }, (_, i) => {
       const a = (i / 12) * Math.PI * 2;
@@ -386,7 +386,7 @@ const TERRITORY_ART: Record<number, (s: typeof STATE_STYLES.inativo) => JSX.Elem
   // 13 — Jardim da Heroína (NOVO)
   13: (st) => <g>
     <circle cx="0" cy="0" r="36" fill={st.building} stroke={st.wall} strokeWidth="1.2" />
-    <circle cx="0" cy="0" r="30" fill="none" stroke={st.wall} strokeWidth="0.6" strokeDasharray="4 3" />
+    <circle cx="0" cy="0" r="30" fill="none" stroke={st.wall} strokeWidth="0.6" />
     {/* Flower spiral — pétala central */}
     {[0, 72, 144, 216, 288].map((a, i) => {
       const rad = (a * Math.PI) / 180;
@@ -449,15 +449,15 @@ function AtmosphereParticles() {
 function MandalaRings() {
   return <g>
     {/* Anel do centro — forte e visível */}
-    <circle cx={CX} cy={CY} r={90} fill="none" stroke="#C9A24A" strokeWidth="1.8" opacity="0.35" />
+    <circle cx={CX} cy={CY} r={90} fill="none" stroke="#C9A24A" strokeWidth="2.5" opacity="0.45" />
     {/* Anel interno — bem marcado */}
-    <circle cx={CX} cy={CY} r={INNER_R + 25} fill="none" stroke="#C9A24A" strokeWidth="1.5" opacity="0.30" />
-    <circle cx={CX} cy={CY} r={INNER_R - 15} fill="none" stroke="#C9A24A" strokeWidth="1.0" opacity="0.22" />
+    <circle cx={CX} cy={CY} r={INNER_R + 25} fill="none" stroke="#C9A24A" strokeWidth="2.2" opacity="0.40" />
+    <circle cx={CX} cy={CY} r={INNER_R - 15} fill="none" stroke="#C9A24A" strokeWidth="1.5" opacity="0.30" />
     {/* Anel externo — contorno da mandala */}
-    <circle cx={CX} cy={CY} r={OUTER_R + 22} fill="none" stroke="#C9A24A" strokeWidth="2" opacity="0.28" />
-    <circle cx={CX} cy={CY} r={OUTER_R - 15} fill="none" stroke="#C9A24A" strokeWidth="1.2" opacity="0.20" />
+    <circle cx={CX} cy={CY} r={OUTER_R + 22} fill="none" stroke="#C9A24A" strokeWidth="2.8" opacity="0.38" />
+    <circle cx={CX} cy={CY} r={OUTER_R - 15} fill="none" stroke="#C9A24A" strokeWidth="1.8" opacity="0.28" />
     {/* Anel mais externo — borda decorativa */}
-    <circle cx={CX} cy={CY} r={OUTER_R + 50} fill="none" stroke="#C9A24A" strokeWidth="1" strokeDasharray="12 6" opacity="0.18" />
+    <circle cx={CX} cy={CY} r={OUTER_R + 50} fill="none" stroke="#C9A24A" strokeWidth="2" opacity="0.32" />
     {/* Geometria de 12 pontas conectando anéis */}
     {Array.from({ length: 12 }, (_, i) => {
       const a = ((i / 12) * 360 - 90) * Math.PI / 180;
@@ -780,7 +780,7 @@ export function MandalaCidadela({
 
         {/* Decorative outer border */}
         <rect x="15" y="15" width="770" height="770" rx="12" fill="none" stroke="rgba(201,162,74,0.15)" strokeWidth="1.5" />
-        <rect x="25" y="25" width="750" height="750" rx="8" fill="none" stroke="rgba(201,162,74,0.08)" strokeWidth="0.7" strokeDasharray="10 6" />
+        <rect x="25" y="25" width="750" height="750" rx="8" fill="none" stroke="rgba(201,162,74,0.12)" strokeWidth="0.8" />
 
         {/* Mandala rings */}
         <MandalaRings />
