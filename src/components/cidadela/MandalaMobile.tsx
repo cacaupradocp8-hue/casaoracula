@@ -105,7 +105,7 @@ export function MandalaMobile({ districts, districtStates = [], collectiveData =
       <div className="flex items-center justify-between px-3.5 py-3 rounded-xl"
         style={{ background: 'rgba(201,162,74,0.04)', border: '1px solid rgba(201,162,74,0.1)' }}>
         <span className="text-xs font-medium" style={{ color: 'rgba(201,162,74,0.6)' }}>
-          {mode === 'clinico' ? 'Praça da Integração' : 'Praça do Ser'}
+          {mode === 'clinico' ? 'Coração da CidaDELA' : 'Praça do Ser'}
         </span>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1">
