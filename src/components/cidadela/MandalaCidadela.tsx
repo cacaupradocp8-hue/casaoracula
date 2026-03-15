@@ -780,7 +780,7 @@ export function MandalaCidadela({
 
         {/* Decorative outer border */}
         <rect x="15" y="15" width="770" height="770" rx="12" fill="none" stroke="rgba(201,162,74,0.15)" strokeWidth="1.5" />
-        <rect x="25" y="25" width="750" height="750" rx="8" fill="none" stroke="rgba(201,162,74,0.08)" strokeWidth="0.7" strokeDasharray="10 6" />
+        <rect x="25" y="25" width="750" height="750" rx="8" fill="none" stroke="rgba(201,162,74,0.12)" strokeWidth="0.8" />
 
         {/* Mandala rings */}
         <MandalaRings />
