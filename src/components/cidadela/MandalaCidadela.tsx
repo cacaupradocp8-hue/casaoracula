@@ -244,7 +244,7 @@ const TERRITORY_ART: Record<number, (s: typeof STATE_STYLES.inativo) => JSX.Elem
   // 5 — Praça do Abalo
   5: (st) => <g>
     <path d="M-34 -18 L34 -20 L36 20 L-32 22 Z" fill={st.building} stroke={st.wall} strokeWidth="1.2" />
-    <path d="M-24 -12 L24 -14 L26 12 L-22 14 Z" fill="none" stroke={st.wall} strokeWidth="0.7" strokeDasharray="3 3" />
+    <path d="M-24 -12 L24 -14 L26 12 L-22 14 Z" fill="none" stroke={st.wall} strokeWidth="0.7" />
     <path d="M-5 -20 L-2 -10 L3 -4 L-2 4 L4 12 L0 22" fill="none" stroke={st.icon} strokeWidth="2.8" strokeLinecap="round" />
     <path d="M-2 -10 L-8 -6" fill="none" stroke={st.icon} strokeWidth="1" opacity="0.7" />
     <path d="M3 -4 L8 -1" fill="none" stroke={st.icon} strokeWidth="1" opacity="0.7" />
