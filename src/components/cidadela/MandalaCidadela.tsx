@@ -302,7 +302,7 @@ const TERRITORY_ART: Record<number, (s: typeof STATE_STYLES.inativo) => JSX.Elem
   // 9 — Conselho Interior
   9: (st) => <g>
     <circle cx="0" cy="0" r="34" fill={st.building} stroke={st.wall} strokeWidth="1.2" />
-    <circle cx="0" cy="0" r="28" fill="none" stroke={st.wall} strokeWidth="0.6" strokeDasharray="3 3" />
+    <circle cx="0" cy="0" r="28" fill="none" stroke={st.wall} strokeWidth="0.6" />
     <circle cx="0" cy="0" r="12" fill="none" stroke={st.icon} strokeWidth="1.5" />
     <circle cx="0" cy="0" r="3" fill={st.icon} opacity="0.6" />
     {/* Seats around the council */}
