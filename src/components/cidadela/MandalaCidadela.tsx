@@ -48,7 +48,7 @@ const CX = 400, CY = 400;
 // NAME OVERRIDES — renames sem alterar DB
 // ============================================
 const NAME_OVERRIDES: Record<number, string> = {
-  4: 'Jardim das Imagens',
+  4: 'Bosque dos Arquétipos',
 };
 
 // ============================================
