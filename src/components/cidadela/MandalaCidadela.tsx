@@ -166,38 +166,48 @@ const TERRITORY_ART: Record<number, (s: typeof STATE_STYLES.inativo) => JSX.Elem
     <polygon points="0,-14 1.5,-10 5,-10 2,-7 3,-3 0,-6 -3,-3 -2,-7 -5,-10 -1.5,-10" fill={st.icon} opacity="0.9" />
   </g>,
 
-  // 2 — Torre (estilo Rapunzel — torre única alta e cilíndrica com telhado cônico)
+  // 2 — Torre medieval robusta
   2: (st) => <g>
-    {/* Base / terreno */}
-    <ellipse cx="0" cy="28" rx="28" ry="7" fill={st.building} stroke={st.wall} strokeWidth="0.8" />
-    {/* Corpo cilíndrico da torre */}
-    <rect x="-14" y="-42" width="28" height="70" rx="4" fill={st.building} stroke={st.wall} strokeWidth="1.5" />
-    {/* Textura de pedra — linhas horizontais */}
-    {[-36,-28,-20,-12,-4,4,12,20].map((y,i) =>
-      <line key={`stone${i}`} x1="-13" y1={y} x2="13" y2={y} stroke={st.icon} strokeWidth="0.4" opacity="0.25" />
+    {/* Sombra/base */}
+    <ellipse cx="0" cy="30" rx="32" ry="7" fill={st.building} stroke={st.wall} strokeWidth="0.6" />
+
+    {/* Corpo principal — pedra sólida, largo na base, afinando no topo */}
+    <path d="M-16 28 L-18 -20 L-14 -20 L-14 -30 L14 -30 L14 -20 L18 -20 L16 28 Z"
+      fill={st.building} stroke={st.wall} strokeWidth="1.8" strokeLinejoin="round" />
+
+    {/* Ameias no topo — battlements */}
+    {[-14,-9,-4,1,6,11].map((x,i) =>
+      <rect key={`b${i}`} x={x} y="-38" width="4" height="8" rx="0.5"
+        fill={st.building} stroke={st.icon} strokeWidth="1" />
     )}
-    {/* Janela alta em arco (janela da Rapunzel) */}
-    <path d="M-6 -34 A6 8 0 0 1 6 -34 L6 -22 L-6 -22 Z" fill={st.accent} stroke={st.icon} strokeWidth="1.3" />
-    <line x1="0" y1="-34" x2="0" y2="-22" stroke={st.icon} strokeWidth="0.6" opacity="0.5" />
-    <line x1="-6" y1="-28" x2="6" y2="-28" stroke={st.icon} strokeWidth="0.6" opacity="0.5" />
+
+    {/* Pedras horizontais — textura */}
+    {[-22,-14,-6,2,10,18].map((y,i) =>
+      <line key={`s${i}`} x1={-15 + i*0.3} y1={y} x2={15 - i*0.3} y2={y}
+        stroke={st.icon} strokeWidth="0.5" opacity="0.3" />
+    )}
+
+    {/* Janela em arco — grande, no alto */}
+    <rect x="-7" y="-24" width="14" height="16" rx="1" fill={st.accent} stroke={st.icon} strokeWidth="1.2" />
+    <path d="M-7 -24 A7 7 0 0 1 7 -24" fill={st.accent} stroke={st.icon} strokeWidth="1.2" />
+    {/* Cruz da janela */}
+    <line x1="0" y1="-30" x2="0" y2="-8" stroke={st.icon} strokeWidth="0.7" opacity="0.5" />
+    <line x1="-7" y1="-16" x2="7" y2="-16" stroke={st.icon} strokeWidth="0.7" opacity="0.5" />
+
     {/* Janela pequena inferior */}
-    <path d="M-4 -6 A4 5 0 0 1 4 -6 L4 4 L-4 4 Z" fill={st.accent} stroke={st.icon} strokeWidth="0.9" opacity="0.7" />
-    {/* Sacada sob janela alta */}
-    <path d="M-10 -22 Q-12 -20 -10 -18" fill="none" stroke={st.icon} strokeWidth="0.8" opacity="0.6" />
-    <path d="M10 -22 Q12 -20 10 -18" fill="none" stroke={st.icon} strokeWidth="0.8" opacity="0.6" />
-    <line x1="-10" y1="-22" x2="10" y2="-22" stroke={st.icon} strokeWidth="0.8" />
-    {/* Telhado cônico alto */}
-    <polygon points="-16,-42 0,-62 16,-42" fill={st.building} stroke={st.icon} strokeWidth="1.3" />
-    {/* Ponta do telhado */}
-    <circle cx="0" cy="-62" r="2" fill={st.icon} opacity="0.8" />
-    <line x1="0" y1="-62" x2="0" y2="-68" stroke={st.icon} strokeWidth="1" />
-    {/* Bandeirola no topo */}
-    <path d="M0 -68 L8 -65 L0 -62" fill={st.icon} opacity="0.75" />
-    {/* Cabelo da Rapunzel (trança descendo) */}
-    <path d="M0 -22 Q6 -14 4 -4 Q2 6 6 14 Q8 20 4 26" fill="none" stroke={st.icon} strokeWidth="1.2" opacity="0.35" strokeDasharray="3 2" />
-    {/* Hera/vegetação na base */}
-    <path d="M-14 18 Q-18 14 -20 8" fill="none" stroke={st.icon} strokeWidth="0.8" opacity="0.3" />
-    <path d="M14 18 Q18 14 20 8" fill="none" stroke={st.icon} strokeWidth="0.8" opacity="0.3" />
+    <rect x="-4" y="0" width="8" height="10" rx="0.8" fill={st.accent} stroke={st.icon} strokeWidth="0.9" opacity="0.7" />
+    <path d="M-4 0 A4 4 0 0 1 4 0" fill={st.accent} stroke={st.icon} strokeWidth="0.9" opacity="0.7" />
+
+    {/* Porta na base */}
+    <path d="M-5 28 L-5 18 A5 5 0 0 1 5 18 L5 28" fill={st.accent} stroke={st.icon} strokeWidth="1" />
+
+    {/* Mastro com bandeira */}
+    <line x1="0" y1="-38" x2="0" y2="-54" stroke={st.icon} strokeWidth="1.5" />
+    <path d="M0 -54 L10 -50 L0 -46" fill={st.icon} opacity="0.8" />
+
+    {/* Reforços laterais — contrafortes */}
+    <path d="M-16 28 L-22 28 L-18 8" fill={st.building} stroke={st.wall} strokeWidth="0.8" />
+    <path d="M16 28 L22 28 L18 8" fill={st.building} stroke={st.wall} strokeWidth="0.8" />
   </g>,
 
   // 3 — Portas
