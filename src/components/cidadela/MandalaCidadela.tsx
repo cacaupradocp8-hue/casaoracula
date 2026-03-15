@@ -789,7 +789,7 @@ export function MandalaCidadela({
         <rect x="25" y="25" width="750" height="750" rx="8" fill="none" stroke="rgba(201,162,74,0.12)" strokeWidth="0.8" />
 
         {/* Mandala rings */}
-        <MandalaRings />
+        <MandalaRings districts={allDistricts} />
 
         {/* Atmosphere */}
         <AtmosphereParticles />
