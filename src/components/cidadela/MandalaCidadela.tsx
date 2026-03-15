@@ -386,7 +386,7 @@ const TERRITORY_ART: Record<number, (s: typeof STATE_STYLES.inativo) => JSX.Elem
   // 13 — Jardim da Heroína (NOVO)
   13: (st) => <g>
     <circle cx="0" cy="0" r="36" fill={st.building} stroke={st.wall} strokeWidth="1.2" />
-    <circle cx="0" cy="0" r="30" fill="none" stroke={st.wall} strokeWidth="0.6" strokeDasharray="4 3" />
+    <circle cx="0" cy="0" r="30" fill="none" stroke={st.wall} strokeWidth="0.6" />
     {/* Flower spiral — pétala central */}
     {[0, 72, 144, 216, 288].map((a, i) => {
       const rad = (a * Math.PI) / 180;
