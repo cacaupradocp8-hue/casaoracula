@@ -273,7 +273,7 @@ const TERRITORY_ART: Record<number, (s: typeof STATE_STYLES.inativo) => JSX.Elem
   // 7 — Espelho dos Vínculos
   7: (st) => <g>
     <ellipse cx="0" cy="2" rx="34" ry="28" fill={st.building} stroke={st.wall} strokeWidth="1" />
-    <ellipse cx="0" cy="2" rx="26" ry="20" fill="none" stroke={st.wall} strokeWidth="0.6" strokeDasharray="3 4" />
+    <ellipse cx="0" cy="2" rx="26" ry="20" fill="none" stroke={st.wall} strokeWidth="0.6" />
     <ellipse cx="0" cy="-2" rx="9" ry="14" fill={st.accent} stroke={st.icon} strokeWidth="1.8" />
     <ellipse cx="0" cy="-2" rx="6" ry="10" fill="none" stroke={st.icon} strokeWidth="0.8" opacity="0.5" />
     <line x1="0" y1="12" x2="0" y2="20" stroke={st.icon} strokeWidth="1.8" />
