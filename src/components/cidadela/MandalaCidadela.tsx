@@ -794,7 +794,7 @@ export function MandalaCidadela({
             <path d={road.path} fill="none"
               stroke={road.integrated ? 'rgba(107,196,143,0.45)' : road.lit ? 'rgba(212,175,55,0.40)' : 'rgba(180,170,150,0.14)'}
               strokeWidth={road.lit ? 3 : 1.8}
-              strokeDasharray={road.lit ? 'none' : '5 5'}
+              strokeLinecap="round"
               strokeLinecap="round"
               style={{ transition: 'stroke 0.5s, stroke-width 0.5s' }}
             />
