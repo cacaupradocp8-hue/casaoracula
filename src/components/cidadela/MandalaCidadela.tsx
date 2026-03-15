@@ -788,22 +788,7 @@ export function MandalaCidadela({
         {/* Atmosphere */}
         <AtmosphereParticles />
 
-        {/* Roads */}
-        {roads.map(road => (
-          <g key={road.key}>
-            <path d={road.path} fill="none"
-              stroke={road.integrated ? 'rgba(107,196,143,0.45)' : road.lit ? 'rgba(212,175,55,0.40)' : 'rgba(180,170,150,0.14)'}
-              strokeWidth={road.lit ? 3 : 1.8}
-              strokeLinecap="round"
-              style={{ transition: 'stroke 0.5s, stroke-width 0.5s' }}
-            />
-            {road.lit && (
-              <path d={road.path} fill="none"
-                stroke={road.integrated ? 'rgba(107,196,143,0.14)' : 'rgba(212,175,55,0.12)'}
-                strokeWidth="12" strokeLinecap="round" filter="url(#road-glow)" />
-            )}
-          </g>
-        ))}
+        {/* Roads removed */}
 
         {/* Render: outer first (back), then inner, then center (front) */}
         {outerDistricts.map(d => renderDistrict(d))}
