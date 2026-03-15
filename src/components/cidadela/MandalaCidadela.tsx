@@ -339,7 +339,7 @@ const TERRITORY_ART: Record<number, (s: typeof STATE_STYLES.inativo) => JSX.Elem
   11: (st) => <g>
     {/* Sacred geometry rings */}
     <circle cx="0" cy="0" r="60" fill={st.building} stroke={st.wall} strokeWidth="1.8" />
-    <circle cx="0" cy="0" r="52" fill="none" stroke={st.wall} strokeWidth="1" strokeDasharray="5 4" />
+    <circle cx="0" cy="0" r="52" fill="none" stroke={st.wall} strokeWidth="1" />
     {/* Radial lines */}
     {Array.from({ length: 12 }, (_, i) => {
       const a = (i / 12) * Math.PI * 2;
