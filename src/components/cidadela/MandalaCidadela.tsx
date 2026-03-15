@@ -449,15 +449,15 @@ function AtmosphereParticles() {
 function MandalaRings() {
   return <g>
     {/* Anel do centro — forte e visível */}
-    <circle cx={CX} cy={CY} r={90} fill="none" stroke="#C9A24A" strokeWidth="1.8" opacity="0.35" />
+    <circle cx={CX} cy={CY} r={90} fill="none" stroke="#C9A24A" strokeWidth="2.5" opacity="0.45" />
     {/* Anel interno — bem marcado */}
-    <circle cx={CX} cy={CY} r={INNER_R + 25} fill="none" stroke="#C9A24A" strokeWidth="1.5" opacity="0.30" />
-    <circle cx={CX} cy={CY} r={INNER_R - 15} fill="none" stroke="#C9A24A" strokeWidth="1.0" opacity="0.22" />
+    <circle cx={CX} cy={CY} r={INNER_R + 25} fill="none" stroke="#C9A24A" strokeWidth="2.2" opacity="0.40" />
+    <circle cx={CX} cy={CY} r={INNER_R - 15} fill="none" stroke="#C9A24A" strokeWidth="1.5" opacity="0.30" />
     {/* Anel externo — contorno da mandala */}
-    <circle cx={CX} cy={CY} r={OUTER_R + 22} fill="none" stroke="#C9A24A" strokeWidth="2" opacity="0.28" />
-    <circle cx={CX} cy={CY} r={OUTER_R - 15} fill="none" stroke="#C9A24A" strokeWidth="1.2" opacity="0.20" />
+    <circle cx={CX} cy={CY} r={OUTER_R + 22} fill="none" stroke="#C9A24A" strokeWidth="2.8" opacity="0.38" />
+    <circle cx={CX} cy={CY} r={OUTER_R - 15} fill="none" stroke="#C9A24A" strokeWidth="1.8" opacity="0.28" />
     {/* Anel mais externo — borda decorativa */}
-    <circle cx={CX} cy={CY} r={OUTER_R + 50} fill="none" stroke="#C9A24A" strokeWidth="1.5" opacity="0.25" />
+    <circle cx={CX} cy={CY} r={OUTER_R + 50} fill="none" stroke="#C9A24A" strokeWidth="2" opacity="0.32" />
     {/* Geometria de 12 pontas conectando anéis */}
     {Array.from({ length: 12 }, (_, i) => {
       const a = ((i / 12) * 360 - 90) * Math.PI / 180;
