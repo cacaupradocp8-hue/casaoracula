@@ -446,41 +446,47 @@ function AtmosphereParticles() {
 // ============================================
 // MANDALA RINGS — decorative concentric rings
 // ============================================
-function MandalaRings() {
+function MandalaRings({ districts }: { districts: MandalaDistrict[] }) {
+  // Collect district positions to mask them out from rings
+  const maskHoles = districts.map(d => {
+    const pos = DISTRICT_POSITIONS[d.numero];
+    if (!pos) return null;
+    const r = d.numero === 11 ? RING_BASE_R.center + 8 : 
+              pos.ring === 'inner' ? RING_BASE_R.inner + 6 : RING_BASE_R.outer + 4;
+    return { x: pos.x, y: pos.y, r };
+  }).filter(Boolean) as { x: number; y: number; r: number }[];
+
   return <g>
-    {/* Anel do centro — forte e visível */}
-    <circle cx={CX} cy={CY} r={90} fill="none" stroke="#C9A24A" strokeWidth="2.5" opacity="0.45" />
-    {/* Anel interno — bem marcado */}
-    <circle cx={CX} cy={CY} r={INNER_R + 25} fill="none" stroke="#C9A24A" strokeWidth="2.2" opacity="0.40" />
-    <circle cx={CX} cy={CY} r={INNER_R - 15} fill="none" stroke="#C9A24A" strokeWidth="1.5" opacity="0.30" />
-    {/* Anel externo — contorno da mandala */}
-    <circle cx={CX} cy={CY} r={OUTER_R + 22} fill="none" stroke="#C9A24A" strokeWidth="2.8" opacity="0.38" />
-    <circle cx={CX} cy={CY} r={OUTER_R - 15} fill="none" stroke="#C9A24A" strokeWidth="1.8" opacity="0.28" />
-    {/* Anel mais externo — borda decorativa */}
-    <circle cx={CX} cy={CY} r={OUTER_R + 50} fill="none" stroke="#C9A24A" strokeWidth="2" opacity="0.32" />
-    {/* Geometria de 12 pontas conectando anéis */}
-    {Array.from({ length: 12 }, (_, i) => {
-      const a = ((i / 12) * 360 - 90) * Math.PI / 180;
-      const r1 = 90;
-      const r2 = OUTER_R + 22;
-      return <line key={i}
-        x1={CX + r1 * Math.cos(a)} y1={CY + r1 * Math.sin(a)}
-        x2={CX + r2 * Math.cos(a)} y2={CY + r2 * Math.sin(a)}
-        stroke="#C9A24A" strokeWidth="0.5" opacity="0.14" />;
-    })}
-    {/* Marcadores nos cruzamentos anel/raio */}
-    {Array.from({ length: 6 }, (_, i) => {
-      const a = ((i / 6) * 360 - 90) * Math.PI / 180;
-      const r = INNER_R + 25;
-      return <circle key={`dot-i${i}`} cx={CX + r * Math.cos(a)} cy={CY + r * Math.sin(a)}
-        r="3" fill="#C9A24A" opacity="0.18" />;
-    })}
-    {Array.from({ length: 6 }, (_, i) => {
-      const a = ((i / 6) * 360 - 60) * Math.PI / 180;
-      const r = OUTER_R + 22;
-      return <circle key={`dot-o${i}`} cx={CX + r * Math.cos(a)} cy={CY + r * Math.sin(a)}
-        r="3.5" fill="#C9A24A" opacity="0.16" />;
-    })}
+    <defs>
+      <mask id="rings-mask">
+        <rect x="0" y="0" width="800" height="800" fill="white" />
+        {maskHoles.map((h, i) => (
+          <circle key={i} cx={h.x} cy={h.y} r={h.r} fill="black" />
+        ))}
+      </mask>
+    </defs>
+    <g mask="url(#rings-mask)">
+      {/* Anel do centro */}
+      <circle cx={CX} cy={CY} r={90} fill="none" stroke="#C9A24A" strokeWidth="2.5" opacity="0.45" />
+      {/* Anel interno */}
+      <circle cx={CX} cy={CY} r={INNER_R + 25} fill="none" stroke="#C9A24A" strokeWidth="2.2" opacity="0.40" />
+      <circle cx={CX} cy={CY} r={INNER_R - 15} fill="none" stroke="#C9A24A" strokeWidth="1.5" opacity="0.30" />
+      {/* Anel externo */}
+      <circle cx={CX} cy={CY} r={OUTER_R + 22} fill="none" stroke="#C9A24A" strokeWidth="2.8" opacity="0.38" />
+      <circle cx={CX} cy={CY} r={OUTER_R - 15} fill="none" stroke="#C9A24A" strokeWidth="1.8" opacity="0.28" />
+      {/* Anel mais externo */}
+      <circle cx={CX} cy={CY} r={OUTER_R + 50} fill="none" stroke="#C9A24A" strokeWidth="2" opacity="0.32" />
+      {/* Geometria de 12 pontas */}
+      {Array.from({ length: 12 }, (_, i) => {
+        const a = ((i / 12) * 360 - 90) * Math.PI / 180;
+        const r1 = 90;
+        const r2 = OUTER_R + 22;
+        return <line key={i}
+          x1={CX + r1 * Math.cos(a)} y1={CY + r1 * Math.sin(a)}
+          x2={CX + r2 * Math.cos(a)} y2={CY + r2 * Math.sin(a)}
+          stroke="#C9A24A" strokeWidth="0.5" opacity="0.14" />;
+      })}
+    </g>
   </g>;
 }
 
