@@ -457,7 +457,7 @@ function MandalaRings() {
     <circle cx={CX} cy={CY} r={OUTER_R + 22} fill="none" stroke="#C9A24A" strokeWidth="2" opacity="0.28" />
     <circle cx={CX} cy={CY} r={OUTER_R - 15} fill="none" stroke="#C9A24A" strokeWidth="1.2" opacity="0.20" />
     {/* Anel mais externo — borda decorativa */}
-    <circle cx={CX} cy={CY} r={OUTER_R + 50} fill="none" stroke="#C9A24A" strokeWidth="1" strokeDasharray="12 6" opacity="0.18" />
+    <circle cx={CX} cy={CY} r={OUTER_R + 50} fill="none" stroke="#C9A24A" strokeWidth="1.5" opacity="0.25" />
     {/* Geometria de 12 pontas conectando anéis */}
     {Array.from({ length: 12 }, (_, i) => {
       const a = ((i / 12) * 360 - 90) * Math.PI / 180;
