@@ -532,6 +532,7 @@ export function MandalaCidadela({
   districts, districtStates = [], collectiveData = [], mode, selectedId,
   pathPoints = [], onDistrictClick, className, showConnections = false,
 }: Props) {
+  const isMobile = useIsMobile();
   const svgRef = useRef<SVGSVGElement>(null);
   const [viewBox, setViewBox] = useState({ x: 0, y: 0, w: 800, h: 800 });
   const [isPanning, setIsPanning] = useState(false);
