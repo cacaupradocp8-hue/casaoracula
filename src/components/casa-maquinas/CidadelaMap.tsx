@@ -120,29 +120,17 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
 
   const mapContent = (maxW: string) => (
     <>
-      {isMobile ? (
-        <MandalaMobile
-          districts={districts}
-          districtStates={journeyDistricts}
-          mode="clinico"
-          selectedId={selectedDistrict?.id}
-          onDistrictClick={handleClick}
-        />
-      ) : (
-        <>
-          <MandalaCidadela
-            districts={districts}
-            districtStates={journeyDistricts}
-            mode="clinico"
-            selectedId={selectedDistrict?.id}
-            pathPoints={pathPoints}
-            onDistrictClick={handleClick}
-            showConnections={true}
-            className={`w-full ${maxW} mx-auto`}
-          />
-          <MandalaLegend mode="clinico" />
-        </>
-      )}
+      <MandalaCidadela
+        districts={districts}
+        districtStates={journeyDistricts}
+        mode="clinico"
+        selectedId={selectedDistrict?.id}
+        pathPoints={pathPoints}
+        onDistrictClick={handleClick}
+        showConnections={true}
+        className={`w-full ${maxW} mx-auto`}
+      />
+      <MandalaLegend mode="clinico" />
     </>
   );
 

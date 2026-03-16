@@ -244,29 +244,17 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
       </div>
 
       {/* Mandala */}
-      {isMobile ? (
-        <MandalaMobile
-          districts={districts}
-          districtStates={journeyDistricts}
-          mode="clinico"
-          selectedId={selectedDistrict?.id}
-          onDistrictClick={handleClick}
-        />
-      ) : (
-        <>
-          <MandalaCidadela
-            districts={districts}
-            districtStates={journeyDistricts}
-            mode="clinico"
-            selectedId={selectedDistrict?.id}
-            pathPoints={pathPoints}
-            onDistrictClick={handleClick}
-            showConnections={true}
-            className="w-full max-w-[520px] mx-auto"
-          />
-          <MandalaLegend mode="clinico" />
-        </>
-      )}
+      <MandalaCidadela
+        districts={districts}
+        districtStates={journeyDistricts}
+        mode="clinico"
+        selectedId={selectedDistrict?.id}
+        pathPoints={pathPoints}
+        onDistrictClick={handleClick}
+        showConnections={true}
+        className="w-full max-w-[520px] mx-auto"
+      />
+      <MandalaLegend mode="clinico" />
 
       {/* Symbolic Data Cards */}
       {cidadelaMap && (
