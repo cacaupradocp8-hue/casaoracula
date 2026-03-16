@@ -27,6 +27,7 @@ interface Props {
 
 export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
   const { user } = useAuth();
+  const isMobile = useIsMobile();
   const { fetchMap } = useCidadelaMap();
   const [cidadelaMap, setCidadelaMap] = useState<ClientCidadelaMap | null>(null);
   const [districts, setDistricts] = useState<MandalaDistrict[]>([]);
