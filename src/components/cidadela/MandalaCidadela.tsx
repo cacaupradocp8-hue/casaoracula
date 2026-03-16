@@ -1,4 +1,5 @@
 import { useMemo, useState, useRef, useCallback } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // ============================================
 // CIDADELA INTERIOR — MANDALA SAGRADA v5
