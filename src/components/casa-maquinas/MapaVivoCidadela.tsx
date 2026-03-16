@@ -3,6 +3,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCidadelaMap, type ClientCidadelaMap } from '@/hooks/useCidadelaMap';
 import { MandalaCidadela, MandalaLegend } from '@/components/cidadela/MandalaCidadela';
+import { MandalaMobile } from '@/components/cidadela/MandalaMobile';
+import { useIsMobile } from '@/hooks/use-mobile';
 import type { MandalaDistrict, MandalaDistrictState } from '@/components/cidadela/MandalaCidadela';
 import { DistrictPanel } from './DistrictPanel';
 import { JourneyTimeline } from './JourneyTimeline';
