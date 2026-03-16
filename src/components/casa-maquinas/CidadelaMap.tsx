@@ -148,25 +148,25 @@ export function CidadelaMap({ clienteId }: { clienteId: string }) {
 
   return (
     <div className="relative space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="space-y-3">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-[#C9A24A]/60" />
-          <h3 className="text-sm font-medium text-[#F5F1E8]/70">Mapa Evolutivo da CidaDELA Interior</h3>
+          <Sparkles className="w-4 h-4 text-[#C9A24A]/60 shrink-0" />
+          <h3 className="text-sm font-medium text-[#F5F1E8]/70 whitespace-nowrap">Mapa Evolutivo da CidaDELA Interior</h3>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="border-[#C9A24A]/15 text-[#C9A24A]/70 hover:text-[#C9A24A] hover:border-[#C9A24A]/30 text-xs h-8 gap-1.5" onClick={() => setFullscreen(true)}>
+        <div className="flex items-center gap-2 flex-wrap">
+          <Button variant="outline" size="sm" className="border-[#C9A24A]/15 text-[#C9A24A]/70 hover:text-[#C9A24A] hover:border-[#C9A24A]/30 text-xs h-8 gap-1.5 whitespace-nowrap" onClick={() => setFullscreen(true)}>
             <Maximize2 className="w-3 h-3" /> Tela Cheia
           </Button>
-          <Button variant="outline" size="sm" className="border-[#C9A24A]/15 text-[#C9A24A]/70 hover:text-[#C9A24A] hover:border-[#C9A24A]/30 text-xs h-8 gap-1.5" onClick={() => setShowTimeline(true)}>
+          <Button variant="outline" size="sm" className="border-[#C9A24A]/15 text-[#C9A24A]/70 hover:text-[#C9A24A] hover:border-[#C9A24A]/30 text-xs h-8 gap-1.5 whitespace-nowrap" onClick={() => setShowTimeline(true)}>
             <Clock className="w-3 h-3" /> Linha do tempo
           </Button>
           {sessions.length >= 2 && (
-            <Button variant="outline" size="sm" className="border-[#6366F1]/20 text-[#6366F1]/70 hover:text-[#6366F1] hover:border-[#6366F1]/30 text-xs h-8 gap-1.5" onClick={() => setShowReplay(true)}>
+            <Button variant="outline" size="sm" className="border-[#6366F1]/20 text-[#6366F1]/70 hover:text-[#6366F1] hover:border-[#6366F1]/30 text-xs h-8 gap-1.5 whitespace-nowrap" onClick={() => setShowReplay(true)}>
               <PlayCircle className="w-3 h-3" /> Replay
             </Button>
           )}
           {sessions.length >= 1 && (
-            <Button variant="outline" size="sm" className="border-[#556B57]/20 text-[#556B57]/70 hover:text-[#556B57] hover:border-[#556B57]/30 text-xs h-8 gap-1.5" onClick={() => setShowNarrativo(true)}>
+            <Button variant="outline" size="sm" className="border-[#556B57]/20 text-[#556B57]/70 hover:text-[#556B57] hover:border-[#556B57]/30 text-xs h-8 gap-1.5 whitespace-nowrap" onClick={() => setShowNarrativo(true)}>
               <FileText className="w-3 h-3" /> Narrativa
             </Button>
           )}
