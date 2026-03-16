@@ -1,4 +1,5 @@
 import { useMemo, useState, useRef, useCallback } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // ============================================
 // CIDADELA INTERIOR — MANDALA SAGRADA v5
@@ -531,6 +532,7 @@ export function MandalaCidadela({
   districts, districtStates = [], collectiveData = [], mode, selectedId,
   pathPoints = [], onDistrictClick, className, showConnections = false,
 }: Props) {
+  const isMobile = useIsMobile();
   const svgRef = useRef<SVGSVGElement>(null);
   const [viewBox, setViewBox] = useState({ x: 0, y: 0, w: 800, h: 800 });
   const [isPanning, setIsPanning] = useState(false);
@@ -737,13 +739,13 @@ export function MandalaCidadela({
 
       <svg ref={svgRef}
         viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`}
-        className={`w-full h-full ${isPanning ? 'cursor-grabbing' : 'cursor-grab'}`}
-        onWheel={handleWheel}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerLeave={handlePointerUp}
-        style={{ touchAction: 'none' }}
+        className={`w-full h-full ${!isMobile && isPanning ? 'cursor-grabbing' : !isMobile ? 'cursor-grab' : ''}`}
+        onWheel={!isMobile ? handleWheel : undefined}
+        onPointerDown={!isMobile ? handlePointerDown : undefined}
+        onPointerMove={!isMobile ? handlePointerMove : undefined}
+        onPointerUp={!isMobile ? handlePointerUp : undefined}
+        onPointerLeave={!isMobile ? handlePointerUp : undefined}
+        style={!isMobile ? { touchAction: 'none' } : undefined}
       >
         <defs>
           <filter id="territory-glow">
