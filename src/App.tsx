@@ -136,6 +136,7 @@ import ModoSessaoImersivo from "./pages/casa-maquinas/ModoSessaoImersivo";
 import MapaCidadelaPage from "./pages/casa-maquinas/MapaCidadelaPage";
 import RelatorioJornadaPage from "./pages/RelatorioJornadaPage";
 import MapaVivoPage from "./pages/MapaVivoPage";
+import MapaVivoCidadelaPage from "./pages/casa-maquinas/MapaVivoCidadelaPage";
 import JornadaAlmaPage from "./pages/JornadaAlmaPage";
 import CasaTecelasPage from "./pages/casa-maquinas/CasaTecelasPage";
 import AcademiaPage from "./pages/casa-maquinas/AcademiaPage";
