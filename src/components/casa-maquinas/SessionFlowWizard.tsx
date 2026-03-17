@@ -124,7 +124,7 @@ export function SessionFlowWizard({ clienteId, clienteNome, open, onClose }: Ses
       // Get first diagnostic tool as suggestion
       const { data: primary } = await supabase
         .from('sala_ferramentas')
-        .select('id, ferramenta_nome, rota, categoria_metodo, icone, descricao_curta')
+        .select('id, ferramenta_nome, rota, categoria_metodo, icone, ferramenta_descricao')
         .eq('ativa', true)
         .eq('categoria_metodo', 'diagnostico')
         .order('ordem')
@@ -138,7 +138,7 @@ export function SessionFlowWizard({ clienteId, clienteNome, open, onClose }: Ses
           rota: primary.rota,
           categoria_metodo: primary.categoria_metodo,
           icone: primary.icone,
-          descricao_curta: primary.descricao_curta,
+          ferramenta_descricao: primary.ferramenta_descricao,
         });
 
         // Fetch complementary via proximo_passo
