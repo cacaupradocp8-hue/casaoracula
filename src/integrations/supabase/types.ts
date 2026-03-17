@@ -15350,6 +15350,45 @@ export type Database = {
         }
         Relationships: []
       }
+      tool_districts: {
+        Row: {
+          created_at: string | null
+          district_id: string
+          id: string
+          tipo: string
+          tool_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          district_id: string
+          id?: string
+          tipo?: string
+          tool_id: string
+        }
+        Update: {
+          created_at?: string | null
+          district_id?: string
+          id?: string
+          tipo?: string
+          tool_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tool_districts_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "city_districts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tool_districts_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tools: {
         Row: {
           acao_central: string | null
