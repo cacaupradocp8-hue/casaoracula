@@ -101,7 +101,7 @@ export function AdminOraculosTab() {
     try {
       const [oraclesRes, cardsRes, spreadsRes] = await Promise.all([
         supabase.from('oracle_decks').select('*').order('ordem'),
-        supabase.from('oracle_cards').select('*').order('ordem'),
+        (supabase.from('oracle_cards') as any).select('*').order('ordem'),
         supabase.from('oracle_spreads').select('*').order('ordem'),
       ]);
 
@@ -255,11 +255,11 @@ export function AdminOraculosTab() {
 
     try {
       if (editingCard) {
-        const { error } = await supabase.from('oracle_cards').update(cardData).eq('id', editingCard.id);
+        const { error } = await (supabase.from('oracle_cards') as any).update(cardData).eq('id', editingCard.id);
         if (error) throw error;
         toast({ title: 'Carta atualizada!' });
       } else {
-        const { error } = await supabase.from('oracle_cards').insert(cardData);
+        const { error } = await (supabase.from('oracle_cards') as any).insert(cardData);
         if (error) throw error;
         toast({ title: 'Carta criada!' });
       }
@@ -278,7 +278,7 @@ export function AdminOraculosTab() {
     if (!confirm('Tem certeza que deseja excluir esta carta?')) return;
     
     try {
-      const { error } = await supabase.from('oracle_cards').delete().eq('id', id);
+      const { error } = await (supabase.from('oracle_cards') as any).delete().eq('id', id);
       if (error) throw error;
       toast({ title: 'Carta excluída!' });
       fetchData();

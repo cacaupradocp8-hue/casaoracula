@@ -11304,116 +11304,86 @@ export type Database = {
       }
       oracle_cards: {
         Row: {
-          ai_generated_image_url: string | null
-          back_image_url: string | null
-          base_question: string | null
-          care_notes: string | null
-          category_id: string | null
-          color_hex: string | null
-          created_at: string
-          deep_reading: string | null
+          aplicacao_terapeutica: string | null
+          archetype_id: string
+          ativa: boolean | null
+          cor_principal: string | null
+          created_at: string | null
+          descricao_curta: string | null
+          district_id: string | null
+          elemento: string | null
+          familia: string
+          icone: string | null
           id: string
-          image_variants_json: Json | null
-          is_sensitive: boolean | null
-          keyword: string | null
-          keywords_json: Json | null
-          level: Database["public"]["Enums"]["oracle_card_level"] | null
-          main_image_url: string | null
-          oracle_id: string
-          ordem: number | null
-          polarity_light_text: string | null
-          polarity_shadow_text: string | null
-          reflection_questions_json: Json | null
-          ritual_text: string | null
-          short_message: string | null
-          status: Database["public"]["Enums"]["oracle_content_status"] | null
-          subtitle: string | null
-          suggested_intervention_id: string | null
-          suggested_tool_id: string | null
-          symbolic_focus: string | null
-          title: string
-          updated_at: string
+          mensagem_simbolica: string | null
+          nome: string
+          numero: number
+          pergunta_oracular: string | null
+          slug: string
+          subtitulo: string | null
+          tool_id: string | null
+          updated_at: string | null
         }
         Insert: {
-          ai_generated_image_url?: string | null
-          back_image_url?: string | null
-          base_question?: string | null
-          care_notes?: string | null
-          category_id?: string | null
-          color_hex?: string | null
-          created_at?: string
-          deep_reading?: string | null
+          aplicacao_terapeutica?: string | null
+          archetype_id: string
+          ativa?: boolean | null
+          cor_principal?: string | null
+          created_at?: string | null
+          descricao_curta?: string | null
+          district_id?: string | null
+          elemento?: string | null
+          familia: string
+          icone?: string | null
           id?: string
-          image_variants_json?: Json | null
-          is_sensitive?: boolean | null
-          keyword?: string | null
-          keywords_json?: Json | null
-          level?: Database["public"]["Enums"]["oracle_card_level"] | null
-          main_image_url?: string | null
-          oracle_id: string
-          ordem?: number | null
-          polarity_light_text?: string | null
-          polarity_shadow_text?: string | null
-          reflection_questions_json?: Json | null
-          ritual_text?: string | null
-          short_message?: string | null
-          status?: Database["public"]["Enums"]["oracle_content_status"] | null
-          subtitle?: string | null
-          suggested_intervention_id?: string | null
-          suggested_tool_id?: string | null
-          symbolic_focus?: string | null
-          title: string
-          updated_at?: string
+          mensagem_simbolica?: string | null
+          nome: string
+          numero: number
+          pergunta_oracular?: string | null
+          slug: string
+          subtitulo?: string | null
+          tool_id?: string | null
+          updated_at?: string | null
         }
         Update: {
-          ai_generated_image_url?: string | null
-          back_image_url?: string | null
-          base_question?: string | null
-          care_notes?: string | null
-          category_id?: string | null
-          color_hex?: string | null
-          created_at?: string
-          deep_reading?: string | null
+          aplicacao_terapeutica?: string | null
+          archetype_id?: string
+          ativa?: boolean | null
+          cor_principal?: string | null
+          created_at?: string | null
+          descricao_curta?: string | null
+          district_id?: string | null
+          elemento?: string | null
+          familia?: string
+          icone?: string | null
           id?: string
-          image_variants_json?: Json | null
-          is_sensitive?: boolean | null
-          keyword?: string | null
-          keywords_json?: Json | null
-          level?: Database["public"]["Enums"]["oracle_card_level"] | null
-          main_image_url?: string | null
-          oracle_id?: string
-          ordem?: number | null
-          polarity_light_text?: string | null
-          polarity_shadow_text?: string | null
-          reflection_questions_json?: Json | null
-          ritual_text?: string | null
-          short_message?: string | null
-          status?: Database["public"]["Enums"]["oracle_content_status"] | null
-          subtitle?: string | null
-          suggested_intervention_id?: string | null
-          suggested_tool_id?: string | null
-          symbolic_focus?: string | null
-          title?: string
-          updated_at?: string
+          mensagem_simbolica?: string | null
+          nome?: string
+          numero?: number
+          pergunta_oracular?: string | null
+          slug?: string
+          subtitulo?: string | null
+          tool_id?: string | null
+          updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "oracle_cards_category_id_fkey"
-            columns: ["category_id"]
+            foreignKeyName: "oracle_cards_archetype_id_fkey"
+            columns: ["archetype_id"]
             isOneToOne: false
-            referencedRelation: "oracle_categories"
+            referencedRelation: "founding_archetypes"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "oracle_cards_oracle_id_fkey"
-            columns: ["oracle_id"]
+            foreignKeyName: "oracle_cards_district_id_fkey"
+            columns: ["district_id"]
             isOneToOne: false
-            referencedRelation: "oracle_decks"
+            referencedRelation: "city_districts"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "oracle_cards_suggested_tool_id_fkey"
-            columns: ["suggested_tool_id"]
+            foreignKeyName: "oracle_cards_tool_id_fkey"
+            columns: ["tool_id"]
             isOneToOne: false
             referencedRelation: "tools"
             referencedColumns: ["id"]
@@ -11750,13 +11720,6 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "oracle_usage_stats_oracle_card_id_fkey"
-            columns: ["oracle_card_id"]
-            isOneToOne: false
-            referencedRelation: "oracle_cards"
             referencedColumns: ["id"]
           },
         ]
@@ -14425,13 +14388,6 @@ export type Database = {
             columns: ["district_id"]
             isOneToOne: false
             referencedRelation: "districts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "sessions_oracle_card_id_fkey"
-            columns: ["oracle_card_id"]
-            isOneToOne: false
-            referencedRelation: "oracle_cards"
             referencedColumns: ["id"]
           },
           {

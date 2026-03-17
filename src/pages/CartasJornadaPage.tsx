@@ -94,8 +94,7 @@ export default function CartasJornadaPage() {
         }
 
         // Fetch all cards for this oracle
-        const { data: cardsData, error: cardsError } = await supabase
-          .from('oracle_cards')
+        const { data: cardsData, error: cardsError } = await (supabase.from('oracle_cards') as any)
           .select('id, title, subtitle, short_message, deep_reading, ritual_text, ordem, main_image_url')
           .eq('oracle_id', deck.id)
           .eq('status', 'published')
