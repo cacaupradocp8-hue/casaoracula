@@ -101,7 +101,7 @@ export function AdminOraculosTab() {
     try {
       const [oraclesRes, cardsRes, spreadsRes] = await Promise.all([
         supabase.from('oracle_decks').select('*').order('ordem'),
-        supabase.from('oracle_cards').select('*').order('ordem'),
+        (supabase.from('oracle_cards') as any).select('*').order('ordem'),
         supabase.from('oracle_spreads').select('*').order('ordem'),
       ]);
 
