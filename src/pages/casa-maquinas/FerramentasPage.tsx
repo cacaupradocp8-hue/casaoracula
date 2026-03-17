@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import { canAccessFeature, PortalType } from '@/types/portal';
 
 // ═══════════════════════════════════════════════════════════════
-// Same categories & fixed tools as FerramentasHub — clinical context
+// Categories for clinical context
 // ═══════════════════════════════════════════════════════════════
 
 type CategoryKey = 'todas' | 'diagnostico' | 'arquetipos' | 'sombras' | 'narrativas' | 'oraculos' | 'cartografia';
@@ -26,6 +26,10 @@ const CATEGORIES: { key: CategoryKey; label: string; icon: React.ElementType }[]
   { key: 'cartografia', label: 'Cartografia', icon: Map },
 ];
 
+// ═══════════════════════════════════════════════════════════════
+// Clinical-only tools (SaaS context, not in sala_ferramentas)
+// ═══════════════════════════════════════════════════════════════
+
 interface ToolItem {
   id: string;
   nome: string;
@@ -36,22 +40,6 @@ interface ToolItem {
   isPlaceholder?: boolean;
 }
 
-const FIXED_TOOLS: ToolItem[] = [
-  { id: 'cartografia-psiquica-oracula', nome: 'Cartografia Psíquica Orácula', descricao: 'Mapeamento simbólico dos territórios da psique com geração da CidaDELA Interior.', rota: '/ferramenta/cartografia-psiquica-oracula', portalMinimo: 'visitante', categoria: 'diagnostico' },
-  { id: 'cm-cartografia', nome: 'Cartografia Psíquica (Clínica)', descricao: 'Cartografia Big Five simbólico — 30 perguntas, 5 territórios.', rota: '/casa-das-maquinas/ferramentas/cartografia', portalMinimo: 'oracula', categoria: 'diagnostico' },
-  { id: 'cm-torre-viva', nome: 'Torre Viva', descricao: 'Identificação da torre predominante da cliente.', rota: '/casa-das-maquinas/ferramentas/torre-viva', portalMinimo: 'oracula', categoria: 'sombras' },
-  { id: 'cm-labirinto', nome: 'Labirinto das 39 Portas', descricao: 'Protocolo de leitura simbólica — onde a psique está.', rota: '/casa-das-maquinas/ferramentas/labirinto', portalMinimo: 'oracula', categoria: 'diagnostico' },
-  { id: 'cm-atlas', nome: 'Atlas de Arquétipos', descricao: 'Mapeamento dos arquétipos dominantes e latentes.', rota: '/casa-das-maquinas/ferramentas/atlas-arquetipos', portalMinimo: 'oracula', categoria: 'arquetipos' },
-  { id: 'cm-decodificacao', nome: 'Decodificação Onírica', descricao: 'Análise simbólica de sonhos.', rota: '/casa-das-maquinas/ferramentas/decodificacao-onirica', portalMinimo: 'oracula', categoria: 'narrativas' },
-  { id: 'cm-escrita', nome: 'Escrita Simbólica', descricao: 'Ferramenta narrativa simbólica.', rota: '/casa-das-maquinas/ferramentas/escrita-simbolica', portalMinimo: 'oracula', categoria: 'narrativas', isPlaceholder: true },
-  { id: 'cm-espelho', nome: 'Espelho Relacional', descricao: 'Mapeamento de projeções e espelhamentos.', rota: '/casa-das-maquinas/ferramentas/espelho-relacional', portalMinimo: 'oracula', categoria: 'sombras', isPlaceholder: true },
-  { id: 'cm-ritual', nome: 'Ritual Simbólico', descricao: 'Protocolo de integração ritualística.', rota: '/casa-das-maquinas/ferramentas/ritual-simbolico', portalMinimo: 'oracula', categoria: 'sombras', isPlaceholder: true },
-  { id: 'cm-dialogo', nome: 'Diálogo com Partes', descricao: 'Conselho das partes internas.', rota: '/casa-das-maquinas/ferramentas/dialogo-partes', portalMinimo: 'oracula', categoria: 'arquetipos', isPlaceholder: true },
-  { id: 'cm-mapa-transf', nome: 'Mapa de Transformação', descricao: 'Cartografia de evolução terapêutica.', rota: '/casa-das-maquinas/ferramentas/mapa-transformacao', portalMinimo: 'oracula', categoria: 'cartografia', isPlaceholder: true },
-  { id: 'cm-ritual-passagem', nome: 'Ritual de Passagem', descricao: 'Protocolo de fechamento e transição.', rota: '/casa-das-maquinas/ferramentas/ritual-passagem', portalMinimo: 'oracula', categoria: 'sombras', isPlaceholder: true },
-];
-
-// Clinical tools with :clienteId param
 const CLINICAL_TOOLS: ToolItem[] = [
   { id: 'cm-inventario', nome: 'Inventário de Personas', descricao: 'Mapeamento de personas ativas.', rota: '/casa-das-maquinas/ferramentas/inventario-personas', portalMinimo: 'aluna_formacao', categoria: 'arquetipos' },
   { id: 'cm-complexos', nome: 'Mapeamento de Complexos', descricao: 'Cartografia de complexos psíquicos.', rota: '/casa-das-maquinas/ferramentas/mapeamento-complexos', portalMinimo: 'aluna_formacao', categoria: 'sombras' },
@@ -81,13 +69,13 @@ export default function FerramentasPage() {
   const userPortal = (user?.portal || 'visitante') as PortalType;
   const isAdmin = userPortal === 'admin';
 
-  // Also fetch DB ferramentas from sala_ferramentas
+  // Fetch DB ferramentas — 100% database-driven
   const { data: dbFerramentas, isLoading } = useQuery({
     queryKey: ['cm-ferramentas-db'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('sala_ferramentas')
-        .select('id, ferramenta_nome, ferramenta_descricao, rota, tipo_ferramenta, portal_minimo, ordem')
+        .select('id, ferramenta_nome, ferramenta_descricao, rota, tipo_ferramenta, portal_minimo, ordem, e_complementar')
         .eq('ativa', true)
         .order('ordem', { ascending: true });
       if (error) throw error;
@@ -98,11 +86,11 @@ export default function FerramentasPage() {
 
   const hasAccess = (minPortal: string) => isAdmin || canAccessFeature(userPortal, minPortal as PortalType);
 
-  // Merge fixed + clinical + DB, dedup
+  // Merge clinical-only tools + DB tools, dedup
   const allTools = (() => {
-    const fixedIds = new Set([...FIXED_TOOLS, ...CLINICAL_TOOLS].map(t => t.id));
+    const clinicalIds = new Set(CLINICAL_TOOLS.map(t => t.id));
     const dbMapped = (dbFerramentas || [])
-      .filter(t => t.rota && !fixedIds.has(t.id))
+      .filter(t => t.rota && !clinicalIds.has(t.id) && !t.e_complementar)
       .map(t => ({
         id: t.id,
         nome: t.ferramenta_nome,
@@ -112,7 +100,7 @@ export default function FerramentasPage() {
         categoria: mapDBCategory(t.tipo_ferramenta),
         isPlaceholder: false,
       } as ToolItem));
-    return [...FIXED_TOOLS, ...CLINICAL_TOOLS, ...dbMapped];
+    return [...CLINICAL_TOOLS, ...dbMapped];
   })();
 
   const filtered = activeCategory === 'todas' ? allTools : allTools.filter(t => t.categoria === activeCategory);
