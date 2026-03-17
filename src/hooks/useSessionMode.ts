@@ -25,18 +25,13 @@ export function useSessionMode() {
     setNextStep(null);
   }, []);
 
-  /**
-   * Given a tool route or ID, fetch its `proximo_passo` from sala_ferramentas
-   * and resolve the next tool suggestion.
-   */
   const fetchNextStep = useCallback(async (currentToolRoute?: string, currentToolId?: string) => {
     if (!currentToolRoute && !currentToolId) return;
     setLoadingNext(true);
     try {
-      // Find the current tool
       let query = supabase
         .from('sala_ferramentas')
-        .select('proximo_passo, nome, categoria_metodo');
+        .select('proximo_passo, ferramenta_nome, categoria_metodo');
 
       if (currentToolId) {
         query = query.eq('id', currentToolId);
@@ -51,10 +46,9 @@ export function useSessionMode() {
         return;
       }
 
-      // Resolve next step - it could be a route
       const { data: nextTool } = await supabase
         .from('sala_ferramentas')
-        .select('nome, rota, categoria_metodo')
+        .select('ferramenta_nome, rota, categoria_metodo')
         .eq('rota', currentTool.proximo_passo)
         .eq('ativa', true)
         .limit(1)
@@ -62,10 +56,10 @@ export function useSessionMode() {
 
       if (nextTool) {
         setNextStep({
-          ferramenta_nome: nextTool.nome,
+          ferramenta_nome: nextTool.ferramenta_nome,
           ferramenta_rota: nextTool.rota || '',
           categoria: nextTool.categoria_metodo,
-          motivo: `Sugestão baseada no fluxo do método após "${currentTool.nome}"`,
+          motivo: `Sugestão baseada no fluxo do método após "${currentTool.ferramenta_nome}"`,
         });
       } else {
         setNextStep(null);
@@ -78,16 +72,12 @@ export function useSessionMode() {
     }
   }, []);
 
-  /**
-   * Fetch a starting tool suggestion based on a district or initial assessment.
-   */
   const fetchInitialSuggestion = useCallback(async () => {
     setLoadingNext(true);
     try {
-      // Suggest the first tool in the diagnostic flow
       const { data } = await supabase
         .from('sala_ferramentas')
-        .select('nome, rota, categoria_metodo')
+        .select('ferramenta_nome, rota, categoria_metodo')
         .eq('ativa', true)
         .eq('categoria_metodo', 'diagnostico')
         .order('ordem', { ascending: true })
@@ -96,7 +86,7 @@ export function useSessionMode() {
 
       if (data) {
         setNextStep({
-          ferramenta_nome: data.nome,
+          ferramenta_nome: data.ferramenta_nome,
           ferramenta_rota: data.rota || '',
           categoria: data.categoria_metodo,
           motivo: 'Primeira ferramenta sugerida para iniciar o diagnóstico simbólico.',
