@@ -2272,6 +2272,71 @@ export type Database = {
         }
         Relationships: []
       }
+      client_archetype_state: {
+        Row: {
+          arquitipo_evolucao_id: string | null
+          arquitipo_regente_id: string | null
+          arquitipo_sombra_id: string | null
+          client_id: string
+          created_at: string | null
+          fonte: string | null
+          id: string
+          observacoes: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          arquitipo_evolucao_id?: string | null
+          arquitipo_regente_id?: string | null
+          arquitipo_sombra_id?: string | null
+          client_id: string
+          created_at?: string | null
+          fonte?: string | null
+          id?: string
+          observacoes?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          arquitipo_evolucao_id?: string | null
+          arquitipo_regente_id?: string | null
+          arquitipo_sombra_id?: string | null
+          client_id?: string
+          created_at?: string | null
+          fonte?: string | null
+          id?: string
+          observacoes?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_archetype_state_arquitipo_evolucao_id_fkey"
+            columns: ["arquitipo_evolucao_id"]
+            isOneToOne: false
+            referencedRelation: "founding_archetypes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_archetype_state_arquitipo_regente_id_fkey"
+            columns: ["arquitipo_regente_id"]
+            isOneToOne: false
+            referencedRelation: "founding_archetypes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_archetype_state_arquitipo_sombra_id_fkey"
+            columns: ["arquitipo_sombra_id"]
+            isOneToOne: false
+            referencedRelation: "founding_archetypes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_archetype_state_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: true
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_cidadela_map: {
         Row: {
           arquetipos_emergentes: string[] | null
