@@ -3871,6 +3871,507 @@ export type Database = {
           },
         ]
       }
+      co_ai_recommendations: {
+        Row: {
+          campo_psiquico: string | null
+          client_id: string
+          created_at: string
+          distrito: string | null
+          id: string
+          motivo: string | null
+          session_id: string | null
+          tool_complementar_id: string | null
+          tool_sugerida_id: string | null
+        }
+        Insert: {
+          campo_psiquico?: string | null
+          client_id: string
+          created_at?: string
+          distrito?: string | null
+          id?: string
+          motivo?: string | null
+          session_id?: string | null
+          tool_complementar_id?: string | null
+          tool_sugerida_id?: string | null
+        }
+        Update: {
+          campo_psiquico?: string | null
+          client_id?: string
+          created_at?: string
+          distrito?: string | null
+          id?: string
+          motivo?: string | null
+          session_id?: string | null
+          tool_complementar_id?: string | null
+          tool_sugerida_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_ai_recommendations_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_ai_recommendations_tool_complementar_id_fkey"
+            columns: ["tool_complementar_id"]
+            isOneToOne: false
+            referencedRelation: "sala_ferramentas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_ai_recommendations_tool_sugerida_id_fkey"
+            columns: ["tool_sugerida_id"]
+            isOneToOne: false
+            referencedRelation: "sala_ferramentas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_appointments: {
+        Row: {
+          client_id: string
+          created_at: string
+          fim: string
+          id: string
+          inicio: string
+          origem: string
+          status: string
+          terapeuta_user_id: string
+          workspace_id: string | null
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          fim: string
+          id?: string
+          inicio: string
+          origem?: string
+          status?: string
+          terapeuta_user_id: string
+          workspace_id?: string | null
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          fim?: string
+          id?: string
+          inicio?: string
+          origem?: string
+          status?: string
+          terapeuta_user_id?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_appointments_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_appointments_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "co_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_city_history: {
+        Row: {
+          client_id: string
+          created_at: string
+          detalhe: string | null
+          distrito: string | null
+          evento: string
+          id: string
+          session_id: string | null
+          tool_id: string | null
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          detalhe?: string | null
+          distrito?: string | null
+          evento: string
+          id?: string
+          session_id?: string | null
+          tool_id?: string | null
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          detalhe?: string | null
+          distrito?: string | null
+          evento?: string
+          id?: string
+          session_id?: string | null
+          tool_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_city_history_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_city_history_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "sala_ferramentas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_client_profiles: {
+        Row: {
+          arquetipo_evolucao: string | null
+          arquetipo_regente: string | null
+          arquetipo_sombra: string | null
+          client_id: string
+          distrito_ativo: string | null
+          fase_jornada: string | null
+          id: string
+          observacoes: string | null
+          porta_ativa: string | null
+          torre_dominante: string | null
+          updated_at: string
+        }
+        Insert: {
+          arquetipo_evolucao?: string | null
+          arquetipo_regente?: string | null
+          arquetipo_sombra?: string | null
+          client_id: string
+          distrito_ativo?: string | null
+          fase_jornada?: string | null
+          id?: string
+          observacoes?: string | null
+          porta_ativa?: string | null
+          torre_dominante?: string | null
+          updated_at?: string
+        }
+        Update: {
+          arquetipo_evolucao?: string | null
+          arquetipo_regente?: string | null
+          arquetipo_sombra?: string | null
+          client_id?: string
+          distrito_ativo?: string | null
+          fase_jornada?: string | null
+          id?: string
+          observacoes?: string | null
+          porta_ativa?: string | null
+          torre_dominante?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_client_profiles_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: true
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_garden_flowers: {
+        Row: {
+          client_id: string
+          created_at: string
+          descricao: string | null
+          id: string
+          origem_registro_id: string | null
+          tipo_flor: string
+          titulo: string | null
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          origem_registro_id?: string | null
+          tipo_flor: string
+          titulo?: string | null
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          origem_registro_id?: string | null
+          tipo_flor?: string
+          titulo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_garden_flowers_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_garden_flowers_origem_registro_id_fkey"
+            columns: ["origem_registro_id"]
+            isOneToOne: false
+            referencedRelation: "co_journey_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_journey_records: {
+        Row: {
+          client_id: string
+          conteudo: string
+          created_at: string
+          id: string
+          tipo: string
+          tool_id: string | null
+          visivel_para_terapeuta: boolean
+        }
+        Insert: {
+          client_id: string
+          conteudo: string
+          created_at?: string
+          id?: string
+          tipo: string
+          tool_id?: string | null
+          visivel_para_terapeuta?: boolean
+        }
+        Update: {
+          client_id?: string
+          conteudo?: string
+          created_at?: string
+          id?: string
+          tipo?: string
+          tool_id?: string | null
+          visivel_para_terapeuta?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_journey_records_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_journey_records_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "sala_ferramentas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_passport_entries: {
+        Row: {
+          client_id: string
+          conquistado_em: string
+          descricao: string | null
+          id: string
+          selo: string
+        }
+        Insert: {
+          client_id: string
+          conquistado_em?: string
+          descricao?: string | null
+          id?: string
+          selo: string
+        }
+        Update: {
+          client_id?: string
+          conquistado_em?: string
+          descricao?: string | null
+          id?: string
+          selo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_passport_entries_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_session_notes: {
+        Row: {
+          created_at: string
+          id: string
+          insight_principal: string | null
+          observacoes: string | null
+          session_id: string
+          tarefa_simbolica: string | null
+          tema: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          insight_principal?: string | null
+          observacoes?: string | null
+          session_id: string
+          tarefa_simbolica?: string | null
+          tema?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          insight_principal?: string | null
+          observacoes?: string | null
+          session_id?: string
+          tarefa_simbolica?: string | null
+          tema?: string | null
+        }
+        Relationships: []
+      }
+      co_tool_flows: {
+        Row: {
+          created_at: string
+          id: string
+          ordem: number
+          tipo: string
+          tool_destino_id: string
+          tool_origem_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ordem?: number
+          tipo?: string
+          tool_destino_id: string
+          tool_origem_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ordem?: number
+          tipo?: string
+          tool_destino_id?: string
+          tool_origem_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_tool_flows_tool_destino_id_fkey"
+            columns: ["tool_destino_id"]
+            isOneToOne: false
+            referencedRelation: "sala_ferramentas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_tool_flows_tool_origem_id_fkey"
+            columns: ["tool_origem_id"]
+            isOneToOne: false
+            referencedRelation: "sala_ferramentas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_tool_usage: {
+        Row: {
+          created_at: string
+          entrada_registrada: string | null
+          id: string
+          insights: string | null
+          ordem_uso: number
+          saida_registrada: string | null
+          session_id: string
+          tool_id: string
+        }
+        Insert: {
+          created_at?: string
+          entrada_registrada?: string | null
+          id?: string
+          insights?: string | null
+          ordem_uso?: number
+          saida_registrada?: string | null
+          session_id: string
+          tool_id: string
+        }
+        Update: {
+          created_at?: string
+          entrada_registrada?: string | null
+          id?: string
+          insights?: string | null
+          ordem_uso?: number
+          saida_registrada?: string | null
+          session_id?: string
+          tool_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_tool_usage_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "sala_ferramentas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_workspace_users: {
+        Row: {
+          created_at: string
+          id: string
+          papel: string
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          papel?: string
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          papel?: string
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_workspace_users_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "co_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_workspaces: {
+        Row: {
+          created_at: string
+          id: string
+          nome: string
+          owner_user_id: string
+          slug: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          nome: string
+          owner_user_id: string
+          slug?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          nome?: string
+          owner_user_id?: string
+          slug?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       collective_bed_entries: {
         Row: {
           aprovado_por_admin: boolean
