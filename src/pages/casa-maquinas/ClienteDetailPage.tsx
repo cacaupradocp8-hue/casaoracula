@@ -23,7 +23,9 @@ import { RitualIntegracao } from '@/components/casa-maquinas/ritual-integracao/R
 import { CartografiaPsiquicaOracula } from '@/components/casa-maquinas/cartografia-psiquica/CartografiaPsiquicaOracula';
 import { RelatorioJornadaPage } from '@/components/casa-maquinas/relatorio-jornada/RelatorioJornadaPage';
 import { BussolaCartografa } from '@/components/casa-maquinas/bussola-cartografa/BussolaCartografa';
-import { Loader2 } from 'lucide-react';
+import { SessionFlowWizard } from '@/components/casa-maquinas/SessionFlowWizard';
+import { Button } from '@/components/ui/button';
+import { Loader2, Play } from 'lucide-react';
 
 export default function ClienteDetailPage() {
   const { clienteId } = useParams<{ clienteId: string }>();
