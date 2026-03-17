@@ -15307,40 +15307,79 @@ export type Database = {
       }
       tools: {
         Row: {
+          acao_central: string | null
+          ambiente: string
           ativa: boolean | null
+          categoria_metodo: string | null
           created_at: string
           descricao: string | null
           district_id: string | null
+          e_complementar: boolean | null
+          entrada: string | null
+          ferramenta_pai_id: string | null
+          funcao_principal: string | null
           icone: string | null
           id: string
+          nivel: string
           nome: string
           ordem: number | null
+          proximo_passo_id: string | null
+          quando_usar: string | null
           rota: string | null
+          saida: string | null
+          slug: string | null
           tipo: string | null
+          updated_at: string | null
         }
         Insert: {
+          acao_central?: string | null
+          ambiente?: string
           ativa?: boolean | null
+          categoria_metodo?: string | null
           created_at?: string
           descricao?: string | null
           district_id?: string | null
+          e_complementar?: boolean | null
+          entrada?: string | null
+          ferramenta_pai_id?: string | null
+          funcao_principal?: string | null
           icone?: string | null
           id?: string
+          nivel?: string
           nome: string
           ordem?: number | null
+          proximo_passo_id?: string | null
+          quando_usar?: string | null
           rota?: string | null
+          saida?: string | null
+          slug?: string | null
           tipo?: string | null
+          updated_at?: string | null
         }
         Update: {
+          acao_central?: string | null
+          ambiente?: string
           ativa?: boolean | null
+          categoria_metodo?: string | null
           created_at?: string
           descricao?: string | null
           district_id?: string | null
+          e_complementar?: boolean | null
+          entrada?: string | null
+          ferramenta_pai_id?: string | null
+          funcao_principal?: string | null
           icone?: string | null
           id?: string
+          nivel?: string
           nome?: string
           ordem?: number | null
+          proximo_passo_id?: string | null
+          quando_usar?: string | null
           rota?: string | null
+          saida?: string | null
+          slug?: string | null
           tipo?: string | null
+          updated_at?: string | null
         }
         Relationships: [
           {
@@ -15348,6 +15387,20 @@ export type Database = {
             columns: ["district_id"]
             isOneToOne: false
             referencedRelation: "districts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tools_ferramenta_pai_id_fkey"
+            columns: ["ferramenta_pai_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tools_proximo_passo_id_fkey"
+            columns: ["proximo_passo_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
             referencedColumns: ["id"]
           },
         ]
