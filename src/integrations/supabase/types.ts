@@ -11600,6 +11600,44 @@ export type Database = {
           },
         ]
       }
+      oracle_spread_positions: {
+        Row: {
+          created_at: string | null
+          descricao: string | null
+          id: string
+          nome: string
+          pergunta: string | null
+          posicao: number
+          spread_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          descricao?: string | null
+          id?: string
+          nome: string
+          pergunta?: string | null
+          posicao: number
+          spread_id: string
+        }
+        Update: {
+          created_at?: string | null
+          descricao?: string | null
+          id?: string
+          nome?: string
+          pergunta?: string | null
+          posicao?: number
+          spread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oracle_spread_positions_spread_id_fkey"
+            columns: ["spread_id"]
+            isOneToOne: false
+            referencedRelation: "oracle_spreads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       oracle_spreads: {
         Row: {
           closing_text: string | null
