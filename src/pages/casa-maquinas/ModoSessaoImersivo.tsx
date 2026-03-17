@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCidadelaMap } from '@/hooks/useCidadelaMap';
+import { useSessionMode, type SessionMode } from '@/hooks/useSessionMode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -18,6 +19,8 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import { SessionModeSelector } from '@/components/casa-maquinas/SessionModeSelector';
+import { SessionModeIndicator } from '@/components/casa-maquinas/SessionModeIndicator';
 
 // ─── Timer Hook ───
 function useSessionTimer() {
@@ -42,49 +45,43 @@ function useSessionTimer() {
   return { seconds, running, start, pause, stop, formatted };
 }
 
-// ─── Tag Extraction ───
 function extractTags(text: string): string[] {
   const matches = text.match(/#\w+/g);
   return matches ? [...new Set(matches.map(t => t.toLowerCase()))] : [];
 }
 
-// ─── Types ───
 interface ClientData {
-  id: string;
-  nome: string;
-  status: string;
-  objetivo_terapeutico: string | null;
+  id: string; nome: string; status: string; objetivo_terapeutico: string | null;
 }
-
 interface PastSession {
-  id: string;
-  date: string;
-  notes: string | null;
-  insight: string | null;
-  district_name?: string;
+  id: string; date: string; notes: string | null; insight: string | null; district_name?: string;
 }
-
 interface ActiveDistrict {
-  district_id: string;
-  district_name: string;
-  state: string;
-  sessions_count: number;
+  district_id: string; district_name: string; state: string; sessions_count: number;
 }
-
 interface SuggestedTool {
-  id: string;
-  title: string;
-  type: string;
-  content: string;
+  id: string; title: string; type: string; content: string;
 }
 
 export default function ModoSessaoImersivo() {
   const { clienteId } = useParams<{ clienteId: string }>();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const navigate = useNavigate();
   const timer = useSessionTimer();
   const autoSaveRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { updateFromSession } = useCidadelaMap();
+  const sessionMode = useSessionMode();
+
+  // Mode initialization
+  const initialMode = searchParams.get('modo') as SessionMode | null;
+  const [modeSelectorOpen, setModeSelectorOpen] = useState(!initialMode);
+
+  useEffect(() => {
+    if (initialMode && !sessionMode.mode) {
+      sessionMode.selectMode(initialMode);
+    }
+  }, [initialMode]);
 
   // State
   const [loading, setLoading] = useState(true);
@@ -106,20 +103,22 @@ export default function ModoSessaoImersivo() {
   const [sessInsight, setSessInsight] = useState('');
   const [sessFerramenta, setSessFerramenta] = useState('');
 
-  // ─── Load Data ───
   useEffect(() => {
     if (!user || !clienteId) return;
     loadAll();
   }, [user, clienteId]);
 
+  // Orácula mode: auto-fetch initial suggestion
+  useEffect(() => {
+    if (sessionMode.mode === 'oracula' && !sessionMode.nextStep && !loading) {
+      sessionMode.fetchInitialSuggestion();
+    }
+  }, [sessionMode.mode, loading]);
+
   async function loadAll() {
     setLoading(true);
     try {
-      await Promise.all([
-        loadClient(),
-        loadPastSessions(),
-        loadActiveDistricts(),
-      ]);
+      await Promise.all([loadClient(), loadPastSessions(), loadActiveDistricts()]);
     } finally {
       setLoading(false);
     }
@@ -127,26 +126,18 @@ export default function ModoSessaoImersivo() {
 
   async function loadClient() {
     const { data } = await supabase
-      .from('clientes')
-      .select('id, nome, status, objetivo_terapeutico')
-      .eq('id', clienteId!)
-      .single();
+      .from('clientes').select('id, nome, status, objetivo_terapeutico')
+      .eq('id', clienteId!).single();
     if (data) setClient(data);
   }
 
   async function loadPastSessions() {
     const { data } = await supabase
-      .from('sessions')
-      .select('id, date, notes, insight, district_id, districts(name)')
-      .eq('client_id', clienteId!)
-      .order('date', { ascending: false })
-      .limit(10);
+      .from('sessions').select('id, date, notes, insight, district_id, districts(name)')
+      .eq('client_id', clienteId!).order('date', { ascending: false }).limit(10);
     if (data) {
       setPastSessions(data.map((s: any) => ({
-        id: s.id,
-        date: s.date,
-        notes: s.notes,
-        insight: s.insight,
+        id: s.id, date: s.date, notes: s.notes, insight: s.insight,
         district_name: s.districts?.name,
       })));
     }
@@ -154,27 +145,16 @@ export default function ModoSessaoImersivo() {
 
   async function loadActiveDistricts() {
     const { data: journeys } = await supabase
-      .from('journeys')
-      .select('id')
-      .eq('client_id', clienteId!)
-      .limit(1);
-
+      .from('journeys').select('id').eq('client_id', clienteId!).limit(1);
     if (journeys && journeys.length > 0) {
       const { data: jd } = await supabase
-        .from('journey_districts')
-        .select('district_id, state, sessions_count, districts(name)')
-        .eq('journey_id', journeys[0].id)
-        .eq('state', 'ativo');
-
+        .from('journey_districts').select('district_id, state, sessions_count, districts(name)')
+        .eq('journey_id', journeys[0].id).eq('state', 'ativo');
       if (jd) {
         setActiveDistricts(jd.map((d: any) => ({
-          district_id: d.district_id,
-          district_name: d.districts?.name || '—',
-          state: d.state,
-          sessions_count: d.sessions_count || 0,
+          district_id: d.district_id, district_name: d.districts?.name || '—',
+          state: d.state, sessions_count: d.sessions_count || 0,
         })));
-
-        // Load suggested tools based on active districts
         loadSuggestedTools(jd.map((d: any) => d.district_id));
       }
     }
@@ -183,53 +163,33 @@ export default function ModoSessaoImersivo() {
   async function loadSuggestedTools(districtIds: string[]) {
     if (districtIds.length === 0) return;
     setLoadingSuggestions(true);
-
-    // Try AI suggestions first, fallback to district-based
     try {
       const { data } = await supabase
-        .from('interventions')
-        .select('id, title, type, content, district_id')
-        .in('district_id', districtIds)
-        .eq('ativa', true)
-        .limit(5);
-
+        .from('interventions').select('id, title, type, content, district_id')
+        .in('district_id', districtIds).eq('ativa', true).limit(5);
       if (data) {
-        setSuggestedTools(data.map(d => ({
-          id: d.id,
-          title: d.title,
-          type: d.type,
-          content: d.content,
-        })));
+        setSuggestedTools(data.map(d => ({ id: d.id, title: d.title, type: d.type, content: d.content })));
       }
     } finally {
       setLoadingSuggestions(false);
     }
   }
 
-  // ─── Auto-save prontuário ───
   const handleProntuarioChange = useCallback((value: string) => {
     setProntuario(value);
     setTags(extractTags(value));
     setAutoSaved(false);
-
     if (autoSaveRef.current) clearTimeout(autoSaveRef.current);
-    autoSaveRef.current = setTimeout(() => {
-      setAutoSaved(true);
-      // Auto-save is visual only until session is finalized
-    }, 2000);
+    autoSaveRef.current = setTimeout(() => setAutoSaved(true), 2000);
   }, []);
 
-  // ─── Save Session ───
   async function handleSaveSession(finalize = false) {
     if (!client || !user) return;
     setSaving(true);
 
     const { error } = await supabase.from('sessions').insert({
-      client_id: client.id,
-      user_id: user.id,
-      notes: prontuario || null,
-      insight: sessInsight || null,
-      task: null,
+      client_id: client.id, user_id: user.id,
+      notes: prontuario || null, insight: sessInsight || null, task: null,
     } as any);
 
     if (error) {
@@ -238,7 +198,7 @@ export default function ModoSessaoImersivo() {
       return;
     }
 
-    // Update CidaDELA map automatically
+    // Auto-update CidaDELA map (always in Orácula, on finalize in Livre)
     if (finalize && clienteId) {
       await updateFromSession(clienteId, {
         distrito: sessDistrict || undefined,
@@ -259,6 +219,16 @@ export default function ModoSessaoImersivo() {
     }
   }
 
+  const handleModeSelect = (mode: SessionMode) => {
+    sessionMode.selectMode(mode);
+    setModeSelectorOpen(false);
+  };
+
+  const handleFollowNextStep = (rota: string) => {
+    sessionMode.fetchNextStep(rota);
+    navigate(rota);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -274,9 +244,7 @@ export default function ModoSessaoImersivo() {
           <CardContent className="p-6 text-center">
             <AlertCircle className="w-8 h-8 text-destructive mx-auto mb-3" />
             <p className="text-foreground">Cliente não encontrado.</p>
-            <Button variant="outline" className="mt-4" onClick={() => navigate('/casa-das-maquinas/clientes')}>
-              Voltar
-            </Button>
+            <Button variant="outline" className="mt-4" onClick={() => navigate('/casa-das-maquinas/clientes')}>Voltar</Button>
           </CardContent>
         </Card>
       </div>
@@ -287,6 +255,13 @@ export default function ModoSessaoImersivo() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Mode Selector */}
+      <SessionModeSelector
+        open={modeSelectorOpen}
+        onSelect={handleModeSelect}
+        onClose={() => { if (!sessionMode.mode) sessionMode.selectMode('livre'); setModeSelectorOpen(false); }}
+      />
+
       {/* Top Bar */}
       <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border/30">
         <div className="flex items-center justify-between px-4 py-2 max-w-screen-2xl mx-auto">
@@ -298,6 +273,14 @@ export default function ModoSessaoImersivo() {
               <h1 className="text-sm font-semibold text-foreground">Modo Sessão</h1>
               <p className="text-xs text-muted-foreground">{client.nome}</p>
             </div>
+            {/* Mode indicator in top bar */}
+            {sessionMode.mode && (
+              <SessionModeIndicator
+                mode={sessionMode.mode}
+                onToggle={sessionMode.toggleMode}
+                compact
+              />
+            )}
           </div>
 
           {/* Timer */}
@@ -320,23 +303,10 @@ export default function ModoSessaoImersivo() {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleSaveSession(false)}
-              disabled={saving || !prontuario.trim()}
-              className="gap-1.5 text-xs"
-            >
-              <Save className="w-3.5 h-3.5" />
-              Salvar
+            <Button variant="outline" size="sm" onClick={() => handleSaveSession(false)} disabled={saving || !prontuario.trim()} className="gap-1.5 text-xs">
+              <Save className="w-3.5 h-3.5" /> Salvar
             </Button>
-            <Button
-              variant="gold"
-              size="sm"
-              onClick={() => handleSaveSession(true)}
-              disabled={saving}
-              className="gap-1.5 text-xs"
-            >
+            <Button variant="gold" size="sm" onClick={() => handleSaveSession(true)} disabled={saving} className="gap-1.5 text-xs">
               {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Finalizar Sessão'}
             </Button>
           </div>
@@ -345,24 +315,17 @@ export default function ModoSessaoImersivo() {
 
       {/* Main Content */}
       <div className="flex max-w-screen-2xl mx-auto" style={{ height: 'calc(100vh - 49px)' }}>
-        {/* ─── Editor Area ─── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex-1 flex flex-col p-4"
-        >
-          {/* Tags display */}
+        {/* Editor Area */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col p-4">
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mb-3">
               {tags.map(tag => (
                 <Badge key={tag} variant="secondary" className="text-xs font-mono bg-primary/10 text-primary border-primary/20">
-                  <Hash className="w-2.5 h-2.5 mr-0.5" />
-                  {tag.replace('#', '')}
+                  <Hash className="w-2.5 h-2.5 mr-0.5" />{tag.replace('#', '')}
                 </Badge>
               ))}
             </div>
           )}
-
           <div className="flex-1 relative">
             <Textarea
               value={prontuario}
@@ -371,14 +334,12 @@ export default function ModoSessaoImersivo() {
               className="h-full w-full resize-none bg-card/30 border-border/30 text-foreground placeholder:text-muted-foreground/40 text-sm leading-relaxed focus:ring-primary/30"
             />
             {autoSaved && (
-              <span className="absolute bottom-3 right-3 text-[10px] text-muted-foreground/50">
-                ✓ Auto-salvo
-              </span>
+              <span className="absolute bottom-3 right-3 text-[10px] text-muted-foreground/50">✓ Auto-salvo</span>
             )}
           </div>
         </motion.div>
 
-        {/* ─── Contextual Sidebar ─── */}
+        {/* Contextual Sidebar */}
         <motion.aside
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -398,12 +359,39 @@ export default function ModoSessaoImersivo() {
                 </div>
               </div>
               {client.objetivo_terapeutico && (
-                <p className="text-xs text-muted-foreground italic leading-relaxed">
-                  {client.objetivo_terapeutico}
-                </p>
+                <p className="text-xs text-muted-foreground italic leading-relaxed">{client.objetivo_terapeutico}</p>
               )}
 
               <Separator className="bg-border/20" />
+
+              {/* Orácula Mode: Next Step Suggestion */}
+              {sessionMode.mode === 'oracula' && (
+                <>
+                  <SessionModeIndicator
+                    mode={sessionMode.mode}
+                    onToggle={sessionMode.toggleMode}
+                    nextStep={sessionMode.nextStep}
+                    loadingNext={sessionMode.loadingNext}
+                    onFollowNextStep={handleFollowNextStep}
+                  />
+                  <Separator className="bg-border/20" />
+                </>
+              )}
+
+              {/* Livre Mode: Optional suggestion */}
+              {sessionMode.mode === 'livre' && (
+                <>
+                  <SessionModeIndicator
+                    mode={sessionMode.mode}
+                    onToggle={sessionMode.toggleMode}
+                    onRequestSuggestion={sessionMode.fetchInitialSuggestion}
+                    nextStep={sessionMode.nextStep}
+                    loadingNext={sessionMode.loadingNext}
+                    onFollowNextStep={handleFollowNextStep}
+                  />
+                  <Separator className="bg-border/20" />
+                </>
+              )}
 
               {/* Last Session */}
               <div>
@@ -411,15 +399,9 @@ export default function ModoSessaoImersivo() {
                 {lastSession ? (
                   <div className="text-xs space-y-1">
                     <p className="text-foreground/70">{new Date(lastSession.date).toLocaleDateString('pt-BR')}</p>
-                    {lastSession.district_name && (
-                      <Badge variant="outline" className="text-[10px]">{lastSession.district_name}</Badge>
-                    )}
-                    {lastSession.notes && (
-                      <p className="text-muted-foreground line-clamp-3 leading-relaxed">{lastSession.notes}</p>
-                    )}
-                    {lastSession.insight && (
-                      <p className="text-primary/70 text-[11px]">✦ {lastSession.insight}</p>
-                    )}
+                    {lastSession.district_name && <Badge variant="outline" className="text-[10px]">{lastSession.district_name}</Badge>}
+                    {lastSession.notes && <p className="text-muted-foreground line-clamp-3 leading-relaxed">{lastSession.notes}</p>}
+                    {lastSession.insight && <p className="text-primary/70 text-[11px]">✦ {lastSession.insight}</p>}
                   </div>
                 ) : (
                   <p className="text-xs text-muted-foreground">Primeira sessão</p>
@@ -450,9 +432,11 @@ export default function ModoSessaoImersivo() {
               {/* Session Registration Fields */}
               <div>
                 <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1">
-                  <Castle className="w-3 h-3 text-primary" />
-                  Registro da CidaDELA
+                  <Castle className="w-3 h-3 text-primary" /> Registro da CidaDELA
                 </h3>
+                {sessionMode.mode === 'oracula' && (
+                  <p className="text-[9px] text-primary/50 mb-2 italic">O mapa será atualizado automaticamente ao finalizar.</p>
+                )}
                 <div className="space-y-2">
                   <div>
                     <Label className="text-[10px] text-muted-foreground">Distrito visitado</Label>
@@ -475,7 +459,6 @@ export default function ModoSessaoImersivo() {
                     <Textarea value={sessInsight} onChange={e => setSessInsight(e.target.value)} placeholder="Insight desta sessão..." className="min-h-[50px] text-xs bg-background/30 border-border/30" />
                   </div>
                 </div>
-                <p className="text-[8px] text-muted-foreground/40 mt-1 italic">Ao finalizar, o mapa da CidaDELA será atualizado automaticamente.</p>
               </div>
 
               <Separator className="bg-border/20" />
@@ -483,8 +466,7 @@ export default function ModoSessaoImersivo() {
               {/* Suggested Tools */}
               <div>
                 <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-primary" />
-                  Ferramentas Sugeridas
+                  <Sparkles className="w-3 h-3 text-primary" /> Ferramentas Sugeridas
                 </h3>
                 {loadingSuggestions ? (
                   <Loader2 className="w-4 h-4 animate-spin text-primary mx-auto" />
@@ -506,12 +488,10 @@ export default function ModoSessaoImersivo() {
 
               {/* Action Buttons */}
               <div className="space-y-2">
-                {/* CidaDELA Map Modal */}
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="outline" size="sm" className="w-full gap-2 text-xs border-border/30">
-                      <Map className="w-3.5 h-3.5" />
-                      Ver Mapa da CidaDELA
+                      <Map className="w-3.5 h-3.5" /> Ver Mapa da CidaDELA
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-2xl bg-card">
@@ -540,12 +520,10 @@ export default function ModoSessaoImersivo() {
                   </DialogContent>
                 </Dialog>
 
-                {/* Full History Modal */}
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="outline" size="sm" className="w-full gap-2 text-xs border-border/30">
-                      <FileText className="w-3.5 h-3.5" />
-                      Ver Prontuário Completo
+                      <FileText className="w-3.5 h-3.5" /> Ver Prontuário Completo
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-2xl max-h-[80vh] bg-card">
@@ -557,12 +535,8 @@ export default function ModoSessaoImersivo() {
                         {pastSessions.length > 0 ? pastSessions.map(s => (
                           <div key={s.id} className="border-b border-border/10 pb-3">
                             <div className="flex items-center gap-2 mb-1">
-                              <span className="text-xs font-medium text-foreground/70">
-                                {new Date(s.date).toLocaleDateString('pt-BR')}
-                              </span>
-                              {s.district_name && (
-                                <Badge variant="outline" className="text-[10px]">{s.district_name}</Badge>
-                              )}
+                              <span className="text-xs font-medium text-foreground/70">{new Date(s.date).toLocaleDateString('pt-BR')}</span>
+                              {s.district_name && <Badge variant="outline" className="text-[10px]">{s.district_name}</Badge>}
                             </div>
                             {s.insight && <p className="text-xs text-primary/80 mb-1">✦ {s.insight}</p>}
                             {s.notes && <p className="text-xs text-muted-foreground leading-relaxed">{s.notes}</p>}
@@ -575,12 +549,10 @@ export default function ModoSessaoImersivo() {
                   </DialogContent>
                 </Dialog>
 
-                {/* Library Modal */}
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="outline" size="sm" className="w-full gap-2 text-xs border-border/30">
-                      <BookOpen className="w-3.5 h-3.5" />
-                      Acessar Biblioteca
+                      <BookOpen className="w-3.5 h-3.5" /> Acessar Biblioteca
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-2xl max-h-[80vh] bg-card">
@@ -602,10 +574,7 @@ export default function ModoSessaoImersivo() {
                         )) : (
                           <p className="text-sm text-muted-foreground text-center">
                             Acesse a{' '}
-                            <button
-                              className="text-primary underline"
-                              onClick={() => navigate('/casa-das-maquinas/biblioteca')}
-                            >
+                            <button className="text-primary underline" onClick={() => navigate('/casa-das-maquinas/biblioteca')}>
                               Biblioteca completa
                             </button>
                           </p>
