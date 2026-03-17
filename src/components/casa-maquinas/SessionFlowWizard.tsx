@@ -455,8 +455,8 @@ export function SessionFlowWizard({ clienteId, clienteNome, open, onClose }: Ses
                             <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Ferramenta complementar</span>
                           </div>
                           <h4 className="font-display font-medium text-foreground text-sm">{complementaryTool.ferramenta_nome}</h4>
-                          {complementaryTool.descricao_curta && (
-                            <p className="text-xs text-muted-foreground mt-1">{complementaryTool.descricao_curta}</p>
+                          {complementaryTool.ferramenta_descricao && (
+                            <p className="text-xs text-muted-foreground mt-1">{complementaryTool.ferramenta_descricao}</p>
                           )}
                           <Button
                             variant="outline"
