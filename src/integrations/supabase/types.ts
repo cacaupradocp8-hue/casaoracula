@@ -2188,6 +2188,51 @@ export type Database = {
         }
         Relationships: []
       }
+      city_districts: {
+        Row: {
+          ativo: boolean | null
+          cor_principal: string | null
+          created_at: string | null
+          descricao: string | null
+          funcao_simbolica: string | null
+          icone: string | null
+          id: string
+          nome: string
+          ordem: number | null
+          quando_ativo: string | null
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          cor_principal?: string | null
+          created_at?: string | null
+          descricao?: string | null
+          funcao_simbolica?: string | null
+          icone?: string | null
+          id?: string
+          nome: string
+          ordem?: number | null
+          quando_ativo?: string | null
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          cor_principal?: string | null
+          created_at?: string | null
+          descricao?: string | null
+          funcao_simbolica?: string | null
+          icone?: string | null
+          id?: string
+          nome?: string
+          ordem?: number | null
+          quando_ativo?: string | null
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       client_cidadela_map: {
         Row: {
           arquetipos_emergentes: string[] | null
