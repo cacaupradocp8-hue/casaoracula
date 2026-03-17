@@ -371,6 +371,45 @@ export type Database = {
           },
         ]
       }
+      archetype_tools: {
+        Row: {
+          archetype_id: string
+          created_at: string | null
+          id: string
+          tipo: string | null
+          tool_id: string
+        }
+        Insert: {
+          archetype_id: string
+          created_at?: string | null
+          id?: string
+          tipo?: string | null
+          tool_id: string
+        }
+        Update: {
+          archetype_id?: string
+          created_at?: string | null
+          id?: string
+          tipo?: string | null
+          tool_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "archetype_tools_archetype_id_fkey"
+            columns: ["archetype_id"]
+            isOneToOne: false
+            referencedRelation: "founding_archetypes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "archetype_tools_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       atelie_conteudos: {
         Row: {
           conteudo_gerado: Json | null
