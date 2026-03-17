@@ -259,7 +259,7 @@ export function AdminOraculosTab() {
         if (error) throw error;
         toast({ title: 'Carta atualizada!' });
       } else {
-        const { error } = await supabase.from('oracle_cards').insert(cardData);
+        const { error } = await (supabase.from('oracle_cards') as any).insert(cardData);
         if (error) throw error;
         toast({ title: 'Carta criada!' });
       }
