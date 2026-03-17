@@ -7125,6 +7125,80 @@ export type Database = {
         }
         Relationships: []
       }
+      founding_archetypes: {
+        Row: {
+          ativo: boolean | null
+          caminho_evolucao: string | null
+          cor_principal: string | null
+          created_at: string | null
+          descricao: string | null
+          desejo_profundo: string | null
+          distrito_principal_id: string | null
+          elemento: string | null
+          essencia: string | null
+          estrategia_sobrevivencia: string | null
+          ferida_central: string | null
+          icone: string | null
+          id: string
+          nome: string
+          ordem: number | null
+          slug: string
+          sombra: string | null
+          titulo_simbolico: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          caminho_evolucao?: string | null
+          cor_principal?: string | null
+          created_at?: string | null
+          descricao?: string | null
+          desejo_profundo?: string | null
+          distrito_principal_id?: string | null
+          elemento?: string | null
+          essencia?: string | null
+          estrategia_sobrevivencia?: string | null
+          ferida_central?: string | null
+          icone?: string | null
+          id?: string
+          nome: string
+          ordem?: number | null
+          slug: string
+          sombra?: string | null
+          titulo_simbolico?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          caminho_evolucao?: string | null
+          cor_principal?: string | null
+          created_at?: string | null
+          descricao?: string | null
+          desejo_profundo?: string | null
+          distrito_principal_id?: string | null
+          elemento?: string | null
+          essencia?: string | null
+          estrategia_sobrevivencia?: string | null
+          ferida_central?: string | null
+          icone?: string | null
+          id?: string
+          nome?: string
+          ordem?: number | null
+          slug?: string
+          sombra?: string | null
+          titulo_simbolico?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "founding_archetypes_distrito_principal_id_fkey"
+            columns: ["distrito_principal_id"]
+            isOneToOne: false
+            referencedRelation: "city_districts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       gestos_integracao: {
         Row: {
           cliente_id: string
