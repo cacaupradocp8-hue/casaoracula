@@ -4260,14 +4260,14 @@ export type Database = {
             foreignKeyName: "co_tool_flows_tool_destino_id_fkey"
             columns: ["tool_destino_id"]
             isOneToOne: false
-            referencedRelation: "sala_ferramentas"
+            referencedRelation: "tools"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "co_tool_flows_tool_origem_id_fkey"
             columns: ["tool_origem_id"]
             isOneToOne: false
-            referencedRelation: "sala_ferramentas"
+            referencedRelation: "tools"
             referencedColumns: ["id"]
           },
         ]
