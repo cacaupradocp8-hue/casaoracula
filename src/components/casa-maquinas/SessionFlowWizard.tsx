@@ -145,14 +145,14 @@ export function SessionFlowWizard({ clienteId, clienteNome, open, onClose }: Ses
         if (primary.rota) {
           const { data: next } = await supabase
             .from('sala_ferramentas')
-            .select('id, ferramenta_nome, rota, categoria_metodo, icone, descricao_curta, proximo_passo')
+            .select('id, ferramenta_nome, rota, categoria_metodo, icone, ferramenta_descricao, proximo_passo')
             .eq('rota', primary.rota)
             .maybeSingle();
 
           if (next?.proximo_passo) {
             const { data: comp } = await supabase
               .from('sala_ferramentas')
-              .select('id, ferramenta_nome, rota, categoria_metodo, icone, descricao_curta')
+              .select('id, ferramenta_nome, rota, categoria_metodo, icone, ferramenta_descricao')
               .eq('rota', next.proximo_passo)
               .eq('ativa', true)
               .maybeSingle();
@@ -162,7 +162,7 @@ export function SessionFlowWizard({ clienteId, clienteNome, open, onClose }: Ses
               rota: comp.rota,
               categoria_metodo: comp.categoria_metodo,
               icone: comp.icone,
-              descricao_curta: comp.descricao_curta,
+              ferramenta_descricao: comp.ferramenta_descricao,
             });
           }
         }
