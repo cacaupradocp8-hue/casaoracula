@@ -430,8 +430,8 @@ export function SessionFlowWizard({ clienteId, clienteNome, open, onClose }: Ses
                             <span className="text-[10px] uppercase tracking-wider text-primary/60">Próxima ferramenta sugerida</span>
                           </div>
                           <h4 className="font-display font-semibold text-foreground">{suggestedTool.ferramenta_nome}</h4>
-                          {suggestedTool.descricao_curta && (
-                            <p className="text-xs text-muted-foreground mt-1">{suggestedTool.descricao_curta}</p>
+                          {suggestedTool.ferramenta_descricao && (
+                            <p className="text-xs text-muted-foreground mt-1">{suggestedTool.ferramenta_descricao}</p>
                           )}
                           {suggestedTool.categoria_metodo && (
                             <Badge variant="secondary" className="text-[9px] mt-2">{suggestedTool.categoria_metodo}</Badge>
