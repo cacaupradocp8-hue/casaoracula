@@ -105,7 +105,7 @@ export function SessionFlowWizard({ clienteId, clienteNome, open, onClose }: Ses
   const loadAllTools = async () => {
     const { data } = await supabase
       .from('sala_ferramentas')
-      .select('id, ferramenta_nome, rota, categoria_metodo, icone, descricao_curta')
+      .select('id, ferramenta_nome, rota, categoria_metodo, icone, ferramenta_descricao')
       .eq('ativa', true)
       .order('ordem');
     setAllTools((data || []).map(t => ({
@@ -114,7 +114,7 @@ export function SessionFlowWizard({ clienteId, clienteNome, open, onClose }: Ses
       rota: t.rota,
       categoria_metodo: t.categoria_metodo,
       icone: t.icone,
-      descricao_curta: t.descricao_curta,
+      ferramenta_descricao: t.ferramenta_descricao,
     })));
   };
 
