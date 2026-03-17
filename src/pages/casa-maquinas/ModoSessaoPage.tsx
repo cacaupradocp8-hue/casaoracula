@@ -15,6 +15,10 @@ import type { GpsSuggestion } from '@/lib/gps-cidadela';
 import { SessionInterventionSuggestions } from '@/components/casa-maquinas/SessionInterventionSuggestions';
 import { OracleSessionWidget } from '@/components/cidadela-oracle/OracleSessionWidget';
 import { useCidadelaOracle, type CidadelaCard } from '@/hooks/useCidadelaOracle';
+import { useSessionMode, type SessionMode } from '@/hooks/useSessionMode';
+import { SessionModeSelector } from '@/components/casa-maquinas/SessionModeSelector';
+import { SessionModeIndicator } from '@/components/casa-maquinas/SessionModeIndicator';
+import { useCidadelaMap } from '@/hooks/useCidadelaMap';
 
 const CHECKIN_STATES = [
   { value: 'contraida', label: 'Contraída', color: '#EF4444' },
@@ -26,6 +30,19 @@ export default function ModoSessaoPage() {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const sessionMode = useSessionMode();
+  const { updateFromSession } = useCidadelaMap();
+
+  // Initialize mode from URL param or show selector
+  const initialMode = searchParams.get('modo') as SessionMode | null;
+  const [modeSelectorOpen, setModeSelectorOpen] = useState(!initialMode);
+
+  useEffect(() => {
+    if (initialMode && !sessionMode.mode) {
+      sessionMode.selectMode(initialMode);
+    }
+  }, [initialMode]);
+
   const [step, setStep] = useState(1);
   const [clients, setClients] = useState<any[]>([]);
   const [districts, setDistricts] = useState<any[]>([]);
@@ -43,10 +60,19 @@ export default function ModoSessaoPage() {
   const [gpsSuggestion, setGpsSuggestion] = useState<GpsSuggestion | null>(null);
   const [usedInterventionIds, setUsedInterventionIds] = useState<string[]>([]);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const [usedToolRoutes, setUsedToolRoutes] = useState<string[]>([]);
   const { recordUsage } = useCidadelaOracle();
+
   useEffect(() => {
     if (user) loadData();
   }, [user]);
+
+  // In Orácula mode, auto-fetch initial suggestion after check-in
+  useEffect(() => {
+    if (sessionMode.mode === 'oracula' && step === 2 && !sessionMode.nextStep) {
+      sessionMode.fetchInitialSuggestion();
+    }
+  }, [sessionMode.mode, step]);
 
   const loadData = async () => {
     const [cRes, dRes, tRes] = await Promise.all([
@@ -63,6 +89,13 @@ export default function ModoSessaoPage() {
   const filteredTools = selectedDistrict
     ? tools.filter(t => t.district_id === selectedDistrict)
     : tools;
+
+  const handleFollowNextStep = (rota: string) => {
+    setUsedToolRoutes(prev => [...prev, rota]);
+    // Fetch the next step after this one
+    sessionMode.fetchNextStep(rota);
+    navigate(rota);
+  };
 
   const handleSave = async () => {
     if (!selectedClient) {
@@ -92,48 +125,43 @@ export default function ModoSessaoPage() {
       return;
     }
 
+    // Auto-update CidaDELA map in Orácula mode
+    if (sessionMode.mode === 'oracula' && selectedClient) {
+      const toolName = tools.find(t => t.id === selectedTool)?.nome;
+      const districtName = districts.find(d => d.id === selectedDistrict)?.nome;
+      await updateFromSession(selectedClient, {
+        distrito: districtName || undefined,
+        ferramenta: toolName || undefined,
+        insight: insight || undefined,
+      });
+    }
+
     // Update journey district state
     if (selectedDistrict) {
       const { data: journeys } = await supabase
-        .from('journeys')
-        .select('id')
-        .eq('client_id', selectedClient)
-        .limit(1);
-
+        .from('journeys').select('id').eq('client_id', selectedClient).limit(1);
       if (journeys && journeys.length > 0) {
         const journeyId = journeys[0].id;
-        // Upsert journey_district
         const { data: existing } = await supabase
-          .from('journey_districts')
-          .select('id, sessions_count')
-          .eq('journey_id', journeyId)
-          .eq('district_id', selectedDistrict)
-          .limit(1);
-
+          .from('journey_districts').select('id, sessions_count')
+          .eq('journey_id', journeyId).eq('district_id', selectedDistrict).limit(1);
         if (existing && existing.length > 0) {
           await supabase.from('journey_districts').update({
-            state: 'ativo',
-            sessions_count: (existing[0].sessions_count || 0) + 1,
+            state: 'ativo', sessions_count: (existing[0].sessions_count || 0) + 1,
             last_session_at: new Date().toISOString(),
           }).eq('id', existing[0].id);
         } else {
           await supabase.from('journey_districts').insert({
-            journey_id: journeyId,
-            district_id: selectedDistrict,
-            state: 'ativo',
-            sessions_count: 1,
-            last_session_at: new Date().toISOString(),
+            journey_id: journeyId, district_id: selectedDistrict,
+            state: 'ativo', sessions_count: 1, last_session_at: new Date().toISOString(),
           });
         }
-
-        // Update journey current district
         await supabase.from('journeys').update({
-          current_district_id: selectedDistrict,
-          updated_at: new Date().toISOString(),
+          current_district_id: selectedDistrict, updated_at: new Date().toISOString(),
         }).eq('id', journeyId);
       }
     }
-    // Record oracle card usage
+
     if (selectedCardId && selectedClient) {
       await recordUsage(selectedClient, selectedCardId);
     }
@@ -142,10 +170,15 @@ export default function ModoSessaoPage() {
     navigate(`/casa-das-maquinas/clientes/${selectedClient}`);
   };
 
+  const handleModeSelect = (mode: SessionMode) => {
+    sessionMode.selectMode(mode);
+    setModeSelectorOpen(false);
+  };
+
   if (loading) {
     return (
       <CasaMaquinasLayout title="Modo Sessão">
-        <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-[#C9A24A]" /></div>
+        <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
       </CasaMaquinasLayout>
     );
   }
@@ -159,6 +192,28 @@ export default function ModoSessaoPage() {
 
   return (
     <CasaMaquinasLayout title="Modo Sessão" subtitle="Conduza uma sessão passo a passo">
+      {/* Mode Selector Dialog */}
+      <SessionModeSelector
+        open={modeSelectorOpen}
+        onSelect={handleModeSelect}
+        onClose={() => { if (!sessionMode.mode) navigate(-1); setModeSelectorOpen(false); }}
+      />
+
+      {/* Mode Indicator */}
+      {sessionMode.mode && (
+        <div className="mb-6">
+          <SessionModeIndicator
+            mode={sessionMode.mode}
+            onToggle={sessionMode.toggleMode}
+            nextStep={sessionMode.nextStep}
+            loadingNext={sessionMode.loadingNext}
+            onFollowNextStep={handleFollowNextStep}
+            onRequestSuggestion={sessionMode.fetchInitialSuggestion}
+            compact={step < 3}
+          />
+        </div>
+      )}
+
       {/* Stepper */}
       <div className="flex items-center justify-center gap-2 mb-8">
         {steps.map((s, i) => (
@@ -167,16 +222,16 @@ export default function ModoSessaoPage() {
               onClick={() => step > s.num && setStep(s.num)}
               className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                 step === s.num
-                  ? 'bg-[#C9A24A] text-[#0B1B2B]'
+                  ? 'bg-primary text-primary-foreground'
                   : step > s.num
-                  ? 'bg-[#556B57] text-[#F5F1E8]'
-                  : 'bg-[#F5F1E8]/10 text-[#F5F1E8]/30'
+                  ? 'bg-accent text-accent-foreground'
+                  : 'bg-muted text-muted-foreground'
               }`}
             >
               {step > s.num ? <CheckCircle className="w-4 h-4" /> : s.num}
             </button>
-            <span className="text-[10px] text-[#F5F1E8]/40 hidden sm:block">{s.label}</span>
-            {i < steps.length - 1 && <ChevronRight className="w-3 h-3 text-[#F5F1E8]/20" />}
+            <span className="text-[10px] text-muted-foreground hidden sm:block">{s.label}</span>
+            {i < steps.length - 1 && <ChevronRight className="w-3 h-3 text-muted-foreground" />}
           </div>
         ))}
       </div>
@@ -184,24 +239,22 @@ export default function ModoSessaoPage() {
       <div className="max-w-xl mx-auto">
         {/* Step 1: Check-in */}
         {step === 1 && (
-          <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
-            <CardHeader><CardTitle className="text-sm text-[#F5F1E8]/80">Check-in Rápido</CardTitle></CardHeader>
+          <Card className="border-border/30 bg-card/60">
+            <CardHeader><CardTitle className="text-sm text-foreground/80">Check-in Rápido</CardTitle></CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="text-xs text-[#F5F1E8]/60 mb-2 block">Cliente</label>
+                <label className="text-xs text-muted-foreground mb-2 block">Cliente</label>
                 <Select value={selectedClient} onValueChange={setSelectedClient}>
-                  <SelectTrigger className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]">
+                  <SelectTrigger className="bg-background/60 border-border/30">
                     <SelectValue placeholder="Selecione..." />
                   </SelectTrigger>
                   <SelectContent>
-                    {clients.map(c => (
-                      <SelectItem key={c.id} value={c.id}>{c.nome}</SelectItem>
-                    ))}
+                    {clients.map(c => <SelectItem key={c.id} value={c.id}>{c.nome}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <label className="text-xs text-[#F5F1E8]/60 mb-2 block">Estado de presença</label>
+                <label className="text-xs text-muted-foreground mb-2 block">Estado de presença</label>
                 <div className="flex gap-2">
                   {CHECKIN_STATES.map(s => (
                     <Button
@@ -209,8 +262,8 @@ export default function ModoSessaoPage() {
                       variant={checkinState === s.value ? 'default' : 'outline'}
                       size="sm"
                       className={checkinState === s.value
-                        ? 'bg-[#C9A24A]/20 text-[#C9A24A] border-[#C9A24A]/40'
-                        : 'border-[#C9A24A]/10 text-[#F5F1E8]/50'}
+                        ? 'bg-primary/20 text-primary border-primary/40'
+                        : 'border-border/30 text-muted-foreground'}
                       onClick={() => setCheckinState(s.value)}
                     >
                       {s.label}
@@ -219,10 +272,10 @@ export default function ModoSessaoPage() {
                 </div>
               </div>
               <div>
-                <label className="text-xs text-[#F5F1E8]/60 mb-2 block">Observações do check-in</label>
-                <Textarea value={checkinNotes} onChange={e => setCheckinNotes(e.target.value)} className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]" placeholder="Campo livre..." />
+                <label className="text-xs text-muted-foreground mb-2 block">Observações do check-in</label>
+                <Textarea value={checkinNotes} onChange={e => setCheckinNotes(e.target.value)} className="bg-background/60 border-border/30" placeholder="Campo livre..." />
               </div>
-              <Button onClick={() => setStep(2)} disabled={!selectedClient} className="w-full bg-[#C9A24A] hover:bg-[#C9A24A]/80 text-[#0B1B2B]">
+              <Button onClick={() => setStep(2)} disabled={!selectedClient} className="w-full bg-primary hover:bg-primary/80 text-primary-foreground">
                 Avançar <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </CardContent>
@@ -238,7 +291,6 @@ export default function ModoSessaoPage() {
                 checkin={checkinState}
                 onApply={(s) => {
                   setGpsSuggestion(s);
-                  // Try to auto-select matching district/tool from lists
                   const matchDist = districts.find(d => d.nome === s.distrito_sugerido);
                   if (matchDist) setSelectedDistrict(matchDist.id);
                   const matchTool = tools.find(t => t.nome === s.ferramenta_recomendada);
@@ -247,67 +299,86 @@ export default function ModoSessaoPage() {
                 }}
               />
             )}
-            <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
-              <CardHeader><CardTitle className="text-sm text-[#F5F1E8]/80">Distrito & Ferramenta</CardTitle></CardHeader>
+
+            {/* Orácula mode: show next step suggestion prominently */}
+            {sessionMode.mode === 'oracula' && sessionMode.nextStep && (
+              <div className="mb-4">
+                <SessionModeIndicator
+                  mode={sessionMode.mode}
+                  onToggle={sessionMode.toggleMode}
+                  nextStep={sessionMode.nextStep}
+                  loadingNext={sessionMode.loadingNext}
+                  onFollowNextStep={handleFollowNextStep}
+                  compact={false}
+                />
+              </div>
+            )}
+
+            <Card className="border-border/30 bg-card/60">
+              <CardHeader><CardTitle className="text-sm text-foreground/80">Distrito & Ferramenta</CardTitle></CardHeader>
               <CardContent className="space-y-4">
-              {/* Oracle Session Widget */}
-              <OracleSessionWidget
-                clientId={selectedClient}
-                districtId={selectedDistrict}
-                checkinState={checkinState}
-                onUseCard={(card: CidadelaCard) => {
-                  setSelectedCardId(card.id);
-                  if (card.district_id) {
-                    setSelectedDistrict(card.district_id);
-                  }
-                  toast.success(`Carta "${card.name}" selecionada`);
-                }}
-              />
-              {selectedCardId && (
-                <p className="text-[10px] text-[#C9A24A]/60 text-center">✦ Carta vinculada à sessão</p>
-              )}
-              <div>
-                <label className="text-xs text-[#F5F1E8]/60 mb-2 block">Distrito</label>
-                <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>
-                  <SelectTrigger className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]">
-                    <SelectValue placeholder="Escolha o distrito..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {districts.map(d => (
-                      <SelectItem key={d.id} value={d.id}>{d.numero}. {d.nome}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label className="text-xs text-[#F5F1E8]/60 mb-2 block">Ferramenta</label>
-                <Select value={selectedTool} onValueChange={setSelectedTool}>
-                  <SelectTrigger className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]">
-                    <SelectValue placeholder="Escolha a ferramenta..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {filteredTools.map(t => (
-                      <SelectItem key={t.id} value={t.id}>{t.nome}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setStep(1)} className="flex-1 border-[#C9A24A]/10 text-[#F5F1E8]/60">Voltar</Button>
-                <Button onClick={() => setStep(3)} className="flex-1 bg-[#C9A24A] hover:bg-[#C9A24A]/80 text-[#0B1B2B]">Avançar</Button>
-              </div>
+                <OracleSessionWidget
+                  clientId={selectedClient}
+                  districtId={selectedDistrict}
+                  checkinState={checkinState}
+                  onUseCard={(card: CidadelaCard) => {
+                    setSelectedCardId(card.id);
+                    if (card.district_id) setSelectedDistrict(card.district_id);
+                    toast.success(`Carta "${card.name}" selecionada`);
+                  }}
+                />
+                {selectedCardId && (
+                  <p className="text-[10px] text-primary/60 text-center">✦ Carta vinculada à sessão</p>
+                )}
+                <div>
+                  <label className="text-xs text-muted-foreground mb-2 block">Distrito</label>
+                  <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>
+                    <SelectTrigger className="bg-background/60 border-border/30">
+                      <SelectValue placeholder="Escolha o distrito..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {districts.map(d => <SelectItem key={d.id} value={d.id}>{d.numero}. {d.nome}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground mb-2 block">Ferramenta</label>
+                  <Select value={selectedTool} onValueChange={setSelectedTool}>
+                    <SelectTrigger className="bg-background/60 border-border/30">
+                      <SelectValue placeholder="Escolha a ferramenta..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filteredTools.map(t => <SelectItem key={t.id} value={t.id}>{t.nome}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={() => setStep(1)} className="flex-1 border-border/30 text-muted-foreground">Voltar</Button>
+                  <Button onClick={() => setStep(3)} className="flex-1 bg-primary hover:bg-primary/80 text-primary-foreground">Avançar</Button>
+                </div>
               </CardContent>
             </Card>
           </>
         )}
 
-        {/* Step 3: Execution placeholder */}
+        {/* Step 3: Execution */}
         {step === 3 && (
-          <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
-            <CardHeader><CardTitle className="text-sm text-[#F5F1E8]/80">Execução</CardTitle></CardHeader>
+          <Card className="border-border/30 bg-card/60">
+            <CardHeader><CardTitle className="text-sm text-foreground/80">Execução</CardTitle></CardHeader>
             <CardContent className="space-y-4">
+              {/* Orácula mode: show next step */}
+              {sessionMode.mode === 'oracula' && (
+                <SessionModeIndicator
+                  mode={sessionMode.mode}
+                  onToggle={sessionMode.toggleMode}
+                  nextStep={sessionMode.nextStep}
+                  loadingNext={sessionMode.loadingNext}
+                  onFollowNextStep={handleFollowNextStep}
+                />
+              )}
+
               <div className="text-center py-8">
-                <p className="text-sm text-[#F5F1E8]/50">
+                <p className="text-sm text-muted-foreground">
                   {selectedTool ? 'Execute a ferramenta selecionada com a cliente.' : 'Nenhuma ferramenta selecionada — conduza a sessão livremente.'}
                 </p>
                 {selectedTool && (() => {
@@ -315,15 +386,21 @@ export default function ModoSessaoPage() {
                   return tool ? (
                     <Button
                       variant="outline"
-                      className="mt-4 border-[#C9A24A]/20 text-[#C9A24A]"
-                      onClick={() => navigate(tool.rota)}
+                      className="mt-4 border-primary/20 text-primary"
+                      onClick={() => {
+                        setUsedToolRoutes(prev => [...prev, tool.rota || '']);
+                        if (sessionMode.mode === 'oracula' && tool.rota) {
+                          sessionMode.fetchNextStep(tool.rota);
+                        }
+                        navigate(tool.rota);
+                      }}
                     >
                       Abrir {tool.nome}
                     </Button>
                   ) : null;
                 })()}
               </div>
-              {/* Intervention Suggestions */}
+
               <SessionInterventionSuggestions
                 sessionDistrictId={selectedDistrict || undefined}
                 checkinState={checkinState}
@@ -334,11 +411,11 @@ export default function ModoSessaoPage() {
                 }}
               />
               {usedInterventionIds.length > 0 && (
-                <p className="text-[10px] text-[#C9A24A]/40 text-center">{usedInterventionIds.length} intervenção(ões) selecionada(s)</p>
+                <p className="text-[10px] text-primary/40 text-center">{usedInterventionIds.length} intervenção(ões) selecionada(s)</p>
               )}
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setStep(2)} className="flex-1 border-[#C9A24A]/10 text-[#F5F1E8]/60">Voltar</Button>
-                <Button onClick={() => setStep(4)} className="flex-1 bg-[#C9A24A] hover:bg-[#C9A24A]/80 text-[#0B1B2B]">Avançar</Button>
+                <Button variant="outline" onClick={() => setStep(2)} className="flex-1 border-border/30 text-muted-foreground">Voltar</Button>
+                <Button onClick={() => setStep(4)} className="flex-1 bg-primary hover:bg-primary/80 text-primary-foreground">Avançar</Button>
               </div>
             </CardContent>
           </Card>
@@ -346,24 +423,33 @@ export default function ModoSessaoPage() {
 
         {/* Step 4: Final Register */}
         {step === 4 && (
-          <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
-            <CardHeader><CardTitle className="text-sm text-[#F5F1E8]/80">Registro Final</CardTitle></CardHeader>
+          <Card className="border-border/30 bg-card/60">
+            <CardHeader><CardTitle className="text-sm text-foreground/80">Registro Final</CardTitle></CardHeader>
             <CardContent className="space-y-4">
+              {sessionMode.mode === 'oracula' && (
+                <div className="p-3 rounded-lg bg-primary/5 border border-primary/20 text-xs text-muted-foreground">
+                  <p className="font-semibold text-primary text-[10px] uppercase mb-1">Modo Orácula</p>
+                  Ao salvar, o mapa da CidaDELA será atualizado automaticamente com os dados desta sessão.
+                  {usedToolRoutes.length > 0 && (
+                    <p className="mt-1 text-primary/60">{usedToolRoutes.length} ferramenta(s) utilizada(s) no fluxo.</p>
+                  )}
+                </div>
+              )}
               <div>
-                <label className="text-xs text-[#F5F1E8]/60 mb-2 block">Insight principal</label>
-                <Textarea value={insight} onChange={e => setInsight(e.target.value)} className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]" placeholder="O que emergiu nesta sessão?" />
+                <label className="text-xs text-muted-foreground mb-2 block">Insight principal</label>
+                <Textarea value={insight} onChange={e => setInsight(e.target.value)} className="bg-background/60 border-border/30" placeholder="O que emergiu nesta sessão?" />
               </div>
               <div>
-                <label className="text-xs text-[#F5F1E8]/60 mb-2 block">Tarefa simbólica</label>
-                <Textarea value={task} onChange={e => setTask(e.target.value)} className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]" placeholder="O que a cliente leva para casa?" />
+                <label className="text-xs text-muted-foreground mb-2 block">Tarefa simbólica</label>
+                <Textarea value={task} onChange={e => setTask(e.target.value)} className="bg-background/60 border-border/30" placeholder="O que a cliente leva para casa?" />
               </div>
               <div>
-                <label className="text-xs text-[#F5F1E8]/60 mb-2 block">Notas</label>
-                <Textarea value={notes} onChange={e => setNotes(e.target.value)} className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]" placeholder="Anotações privadas..." />
+                <label className="text-xs text-muted-foreground mb-2 block">Notas</label>
+                <Textarea value={notes} onChange={e => setNotes(e.target.value)} className="bg-background/60 border-border/30" placeholder="Anotações privadas..." />
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setStep(3)} className="flex-1 border-[#C9A24A]/10 text-[#F5F1E8]/60">Voltar</Button>
-                <Button onClick={handleSave} disabled={saving} className="flex-1 bg-[#C9A24A] hover:bg-[#C9A24A]/80 text-[#0B1B2B]">
+                <Button variant="outline" onClick={() => setStep(3)} className="flex-1 border-border/30 text-muted-foreground">Voltar</Button>
+                <Button onClick={handleSave} disabled={saving} className="flex-1 bg-primary hover:bg-primary/80 text-primary-foreground">
                   {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salvar Sessão'}
                 </Button>
               </div>

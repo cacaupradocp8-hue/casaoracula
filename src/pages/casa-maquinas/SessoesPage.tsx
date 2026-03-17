@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,50 +9,29 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogDescription,
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription,
 } from '@/components/ui/dialog';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import {
-  Calendar,
-  Plus,
-  Loader2,
-  Home,
-  ChevronRight,
-  Cog,
-  Map,
+  Calendar, Plus, Loader2, Home, ChevronRight, Cog, Map,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { SessionModeSelector } from '@/components/casa-maquinas/SessionModeSelector';
+import type { SessionMode } from '@/hooks/useSessionMode';
 
 type MovimentoPercebido = 'avancou' | 'tensao' | 'ciclo_repetido' | 'observacao';
 
-interface Cliente {
-  id: string;
-  nome: string;
-}
-
+interface Cliente { id: string; nome: string; }
 interface Sessao {
-  id: string;
-  cliente_id: string;
-  data_sessao: string;
-  movimento_percebido: MovimentoPercebido;
-  nota_breve: string | null;
-  created_at: string;
-  cliente_nome?: string;
+  id: string; cliente_id: string; data_sessao: string;
+  movimento_percebido: MovimentoPercebido; nota_breve: string | null;
+  created_at: string; cliente_nome?: string;
 }
 
 const MOVIMENTOS: { value: MovimentoPercebido; label: string; cor: string }[] = [
@@ -65,6 +44,7 @@ const MOVIMENTOS: { value: MovimentoPercebido; label: string; cor: string }[] = 
 export default function SessoesPage() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [sessoes, setSessoes] = useState<Sessao[]>([]);
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [loading, setLoading] = useState(true);
@@ -72,6 +52,7 @@ export default function SessoesPage() {
   const [creating, setCreating] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [modeSelectorOpen, setModeSelectorOpen] = useState(false);
   const PAGE_SIZE = 20;
 
   // Form
@@ -90,11 +71,8 @@ export default function SessoesPage() {
   const loadClientes = async () => {
     if (!user) return;
     const { data } = await supabase
-      .from('clientes')
-      .select('id, nome')
-      .eq('terapeuta_id', user.id)
-      .eq('status', 'ativo')
-      .order('nome');
+      .from('clientes').select('id, nome')
+      .eq('terapeuta_id', user.id).eq('status', 'ativo').order('nome');
     setClientes(data || []);
   };
 
@@ -102,46 +80,31 @@ export default function SessoesPage() {
     if (!user) return;
     setLoading(true);
     const from = pageNum * PAGE_SIZE;
-
     const { data, error } = await supabase
-      .from('sessoes_casa_maquinas')
-      .select('*')
+      .from('sessoes_casa_maquinas').select('*')
       .eq('owner_id', user.id)
       .order('data_sessao', { ascending: false })
       .range(from, from + PAGE_SIZE - 1);
 
-    if (error) {
-      console.error('Erro ao carregar sessões:', error);
-      setLoading(false);
-      return;
-    }
+    if (error) { setLoading(false); return; }
 
-    // Fetch client names
     const clienteIds = [...new Set((data || []).map(s => s.cliente_id))];
     let clienteMap: Record<string, string> = {};
     if (clienteIds.length > 0) {
       const { data: clientesData } = await supabase
-        .from('clientes')
-        .select('id, nome')
-        .in('id', clienteIds);
+        .from('clientes').select('id, nome').in('id', clienteIds);
       clienteMap = Object.fromEntries((clientesData || []).map(c => [c.id, c.nome]));
     }
 
     const mapped: Sessao[] = (data || []).map(s => ({
-      id: s.id,
-      cliente_id: s.cliente_id,
-      data_sessao: s.data_sessao,
+      id: s.id, cliente_id: s.cliente_id, data_sessao: s.data_sessao,
       movimento_percebido: s.movimento_percebido as MovimentoPercebido,
-      nota_breve: s.nota_breve,
-      created_at: s.created_at,
+      nota_breve: s.nota_breve, created_at: s.created_at,
       cliente_nome: clienteMap[s.cliente_id] || 'Cliente',
     }));
 
-    if (pageNum === 0) {
-      setSessoes(mapped);
-    } else {
-      setSessoes(prev => [...prev, ...mapped]);
-    }
+    if (pageNum === 0) setSessoes(mapped);
+    else setSessoes(prev => [...prev, ...mapped]);
     setHasMore((data || []).length === PAGE_SIZE);
     setPage(pageNum);
     setLoading(false);
@@ -153,22 +116,15 @@ export default function SessoesPage() {
       return;
     }
     setCreating(true);
-
     const { error } = await supabase.from('sessoes_casa_maquinas').insert({
-      owner_id: user.id,
-      cliente_id: clienteId,
-      data_sessao: dataSessao,
-      movimento_percebido: movimento,
-      nota_breve: notaBreve.trim() || null,
+      owner_id: user.id, cliente_id: clienteId, data_sessao: dataSessao,
+      movimento_percebido: movimento, nota_breve: notaBreve.trim() || null,
     });
-
     if (error) {
-      console.error('Erro ao criar sessão:', error);
       toast({ title: 'Erro ao criar sessão', variant: 'destructive' });
       setCreating(false);
       return;
     }
-
     toast({ title: 'Sessão registrada!' });
     setDialogOpen(false);
     resetForm();
@@ -177,10 +133,14 @@ export default function SessoesPage() {
   };
 
   const resetForm = () => {
-    setClienteId('');
-    setDataSessao(new Date().toISOString().split('T')[0]);
-    setMovimento('observacao');
-    setNotaBreve('');
+    setClienteId(''); setDataSessao(new Date().toISOString().split('T')[0]);
+    setMovimento('observacao'); setNotaBreve('');
+  };
+
+  const handleModeSelect = (mode: SessionMode) => {
+    setModeSelectorOpen(false);
+    // Navigate to stepper page with mode param
+    navigate(`/casa-das-maquinas/nova-sessao?modo=${mode}`);
   };
 
   const getMovimentoBadge = (mov: MovimentoPercebido) => {
@@ -203,13 +163,11 @@ export default function SessoesPage() {
       <div className="container mx-auto px-4 py-8 pb-20">
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
           <Link to="/dashboard" className="hover:text-foreground transition-colors flex items-center gap-1">
-            <Home className="w-3 h-3" />
-            Casa
+            <Home className="w-3 h-3" /> Casa
           </Link>
           <ChevronRight className="w-3 h-3" />
           <Link to="/casa-das-maquinas" className="hover:text-foreground transition-colors flex items-center gap-1">
-            <Cog className="w-3 h-3" />
-            Casa das Máquinas
+            <Cog className="w-3 h-3" /> Casa das Máquinas
           </Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-foreground">Sessões</span>
@@ -220,10 +178,16 @@ export default function SessoesPage() {
           subtitle="Registre sessões simbólicas com suas clientes"
           icon={<Calendar className="w-5 h-5" />}
           action={
-            <Button variant="gold" onClick={() => setDialogOpen(true)} className="gap-2">
-              <Plus className="w-4 h-4" />
-              Nova Sessão
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="gold" onClick={() => setModeSelectorOpen(true)} className="gap-2">
+                <Plus className="w-4 h-4" />
+                Iniciar Sessão
+              </Button>
+              <Button variant="outline" onClick={() => setDialogOpen(true)} className="gap-2">
+                <Plus className="w-4 h-4" />
+                Registro Rápido
+              </Button>
+            </div>
           }
           className="mb-8"
         />
@@ -233,12 +197,9 @@ export default function SessoesPage() {
             <CardContent>
               <Calendar className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-50" />
               <h3 className="text-lg font-medium mb-2">Nenhuma sessão registrada</h3>
-              <p className="text-muted-foreground text-sm mb-4">
-                Registre sua primeira sessão simbólica.
-              </p>
-              <Button variant="gold" onClick={() => setDialogOpen(true)} className="gap-2">
-                <Plus className="w-4 h-4" />
-                Registrar Sessão
+              <p className="text-muted-foreground text-sm mb-4">Registre sua primeira sessão simbólica.</p>
+              <Button variant="gold" onClick={() => setModeSelectorOpen(true)} className="gap-2">
+                <Plus className="w-4 h-4" /> Iniciar Sessão
               </Button>
             </CardContent>
           </Card>
@@ -267,15 +228,13 @@ export default function SessoesPage() {
                     </div>
                     <Link to={`/casa-das-maquinas/mapa-vivo/${sessao.cliente_id}`}>
                       <Button variant="outline" size="sm" className="gap-1">
-                        <Map className="w-3 h-3" />
-                        Mapa Vivo
+                        <Map className="w-3 h-3" /> Mapa Vivo
                       </Button>
                     </Link>
                   </div>
                 </CardContent>
               </Card>
             ))}
-
             {hasMore && (
               <div className="text-center pt-4">
                 <Button variant="outline" onClick={() => loadSessoes(page + 1)} disabled={loading}>
@@ -287,59 +246,49 @@ export default function SessoesPage() {
           </div>
         )}
 
-        {/* Create Session Dialog */}
+        {/* Mode Selector */}
+        <SessionModeSelector
+          open={modeSelectorOpen}
+          onSelect={handleModeSelect}
+          onClose={() => setModeSelectorOpen(false)}
+        />
+
+        {/* Quick Register Dialog */}
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Plus className="w-5 h-5" />
-                Nova Sessão
-              </DialogTitle>
-              <DialogDescription>Registre uma sessão simbólica com sua cliente.</DialogDescription>
+              <DialogTitle className="flex items-center gap-2"><Plus className="w-5 h-5" /> Registro Rápido</DialogTitle>
+              <DialogDescription>Registre uma sessão simbólica sem condução guiada.</DialogDescription>
             </DialogHeader>
-
             <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label>Cliente *</Label>
                 <Select value={clienteId} onValueChange={setClienteId}>
                   <SelectTrigger><SelectValue placeholder="Selecione a cliente" /></SelectTrigger>
                   <SelectContent>
-                    {clientes.map(c => (
-                      <SelectItem key={c.id} value={c.id}>{c.nome}</SelectItem>
-                    ))}
+                    {clientes.map(c => <SelectItem key={c.id} value={c.id}>{c.nome}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
-
               <div className="space-y-2">
                 <Label>Data da Sessão</Label>
                 <Input type="date" value={dataSessao} onChange={(e) => setDataSessao(e.target.value)} />
               </div>
-
               <div className="space-y-2">
                 <Label>Movimento Percebido</Label>
                 <Select value={movimento} onValueChange={(v) => setMovimento(v as MovimentoPercebido)}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    {MOVIMENTOS.map(m => (
-                      <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
-                    ))}
+                    {MOVIMENTOS.map(m => <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
-
               <div className="space-y-2">
                 <Label>Nota Breve (máx. 300 caracteres)</Label>
-                <Textarea
-                  value={notaBreve}
-                  onChange={(e) => setNotaBreve(e.target.value.slice(0, 300))}
-                  placeholder="Observações breves da sessão..."
-                  maxLength={300}
-                />
+                <Textarea value={notaBreve} onChange={(e) => setNotaBreve(e.target.value.slice(0, 300))} placeholder="Observações breves da sessão..." maxLength={300} />
                 <p className="text-xs text-muted-foreground text-right">{notaBreve.length}/300</p>
               </div>
             </div>
-
             <DialogFooter>
               <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancelar</Button>
               <Button variant="gold" onClick={handleCreate} disabled={creating || !clienteId}>
