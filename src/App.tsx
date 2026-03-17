@@ -136,6 +136,7 @@ import ModoSessaoImersivo from "./pages/casa-maquinas/ModoSessaoImersivo";
 import MapaCidadelaPage from "./pages/casa-maquinas/MapaCidadelaPage";
 import RelatorioJornadaPage from "./pages/RelatorioJornadaPage";
 import MapaVivoPage from "./pages/MapaVivoPage";
+import MapaVivoCidadelaPage from "./pages/casa-maquinas/MapaVivoCidadelaPage";
 import JornadaAlmaPage from "./pages/JornadaAlmaPage";
 import CasaTecelasPage from "./pages/casa-maquinas/CasaTecelasPage";
 import AcademiaPage from "./pages/casa-maquinas/AcademiaPage";
@@ -1607,6 +1608,7 @@ function AppRoutes() {
         <Route path="/app/clientes/:clienteId/cidadela" element={<ProtectedRoute minPortal="oracula"><MapaCidadelaPage /></ProtectedRoute>} />
         <Route path="/saas/clientes/:clienteId/relatorio-jornada" element={<ProtectedRoute minPortal="oracula"><RelatorioJornadaPage /></ProtectedRoute>} />
         <Route path="/saas/clientes/:clienteId/mapa-vivo" element={<ProtectedRoute minPortal="oracula"><MapaVivoPage /></ProtectedRoute>} />
+        <Route path="/saas/clientes/:clienteId/cidadela-viva" element={<ProtectedRoute minPortal="oracula"><MapaVivoCidadelaPage /></ProtectedRoute>} />
         <Route path="/saas/clientes/:clienteId/jornada-alma" element={<ProtectedRoute minPortal="aluna_formacao"><JornadaAlmaPage /></ProtectedRoute>} />
         <Route path="/saas/clientes/:clienteId/rituais-mudra" element={<ProtectedRoute minPortal="aluna_formacao"><RituaisMudraPage /></ProtectedRoute>} />
         <Route path="/saas/clientes/:clienteId/bussola-onirica" element={<ProtectedRoute minPortal="aluna_formacao"><BussolaOniricaPage /></ProtectedRoute>} />
