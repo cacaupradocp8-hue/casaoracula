@@ -32,6 +32,7 @@ export default function ClienteDetailPage() {
   const { user } = useAuth();
   const [cliente, setCliente] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [sessionWizardOpen, setSessionWizardOpen] = useState(false);
 
   useEffect(() => {
     if (user && clienteId) loadCliente();
