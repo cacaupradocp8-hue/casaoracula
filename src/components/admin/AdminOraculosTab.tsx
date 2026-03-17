@@ -255,7 +255,7 @@ export function AdminOraculosTab() {
 
     try {
       if (editingCard) {
-        const { error } = await supabase.from('oracle_cards').update(cardData).eq('id', editingCard.id);
+        const { error } = await (supabase.from('oracle_cards') as any).update(cardData).eq('id', editingCard.id);
         if (error) throw error;
         toast({ title: 'Carta atualizada!' });
       } else {
