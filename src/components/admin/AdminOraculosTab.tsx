@@ -278,7 +278,7 @@ export function AdminOraculosTab() {
     if (!confirm('Tem certeza que deseja excluir esta carta?')) return;
     
     try {
-      const { error } = await supabase.from('oracle_cards').delete().eq('id', id);
+      const { error } = await (supabase.from('oracle_cards') as any).delete().eq('id', id);
       if (error) throw error;
       toast({ title: 'Carta excluída!' });
       fetchData();

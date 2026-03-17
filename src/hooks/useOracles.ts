@@ -91,8 +91,7 @@ export function useOracleBySlug(slug: string) {
 
         // Fetch cards, spreads, categories in parallel
         const [cardsRes, spreadsRes, categoriesRes] = await Promise.all([
-          supabase
-            .from('oracle_cards')
+          (supabase.from('oracle_cards') as any)
             .select('*')
             .eq('oracle_id', oracleData.id)
             .order('ordem'),
