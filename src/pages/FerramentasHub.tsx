@@ -6,7 +6,6 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   Loader2, Home, ChevronRight, ArrowRight, Lock,
@@ -73,111 +72,7 @@ const CATEGORIES: {
 ];
 
 // ═══════════════════════════════════════════════════════════════
-// FERRAMENTAS FIXAS (do FerramentasMetodoHub)
-// ═══════════════════════════════════════════════════════════════
-
-interface FixedTool {
-  id: string;
-  nome: string;
-  descricao: string;
-  rota: string;
-  portalMinimo: PortalType;
-  categoria: CategoryKey;
-}
-
-const FIXED_TOOLS: FixedTool[] = [
-  {
-    id: 'labirinto',
-    nome: 'Labirinto das 39 Portas',
-    descricao: 'Protocolo de leitura simbólica — onde a psique está.',
-    rota: '/labirinto',
-    portalMinimo: 'aluna',
-    categoria: 'diagnostico',
-  },
-  {
-    id: 'cartografia-psiquica-oracula',
-    nome: 'Cartografia Psíquica Orácula',
-    descricao: 'Mapeamento simbólico dos territórios da psique com geração da CidaDELA Interior.',
-    rota: '/ferramenta/cartografia-psiquica-oracula',
-    portalMinimo: 'visitante',
-    categoria: 'diagnostico',
-  },
-  {
-    id: 'torre-viva',
-    nome: 'Torre Viva™',
-    descricao: 'Identifique as 7 Torres de defesa que organizam a psique.',
-    rota: '/ferramentas/torre-viva',
-    portalMinimo: 'oracula',
-    categoria: 'sombras',
-  },
-  {
-    id: 'cartografia-torre',
-    nome: 'Cartografia das Torres',
-    descricao: 'Explore as 5 Famílias de Torres e seus padrões.',
-    rota: '/ferramentas/cartografia-torre',
-    portalMinimo: 'aluna',
-    categoria: 'cartografia',
-  },
-  {
-    id: 'atlas-arquetipos',
-    nome: 'Atlas dos Arquétipos Femininos',
-    descricao: 'Mapeamento dos arquétipos dominantes e latentes.',
-    rota: '/atlas-arquetipos-femininos',
-    portalMinimo: 'aluna',
-    categoria: 'arquetipos',
-  },
-  {
-    id: 'leitura-5-camadas',
-    nome: 'Leitura em 5 Camadas',
-    descricao: 'Ferramenta central do Método — do sintoma ao portal.',
-    rota: '/sala-do-metodo?tab=5-camadas',
-    portalMinimo: 'oracula',
-    categoria: 'narrativas',
-  },
-  {
-    id: 'radar-eixo',
-    nome: 'Radar de Eixo',
-    descricao: 'Mapeamento de 6 competências estruturais da psique.',
-    rota: '/sala-do-metodo?tab=radar',
-    portalMinimo: 'oracula',
-    categoria: 'diagnostico',
-  },
-  {
-    id: 'mapas-reflexivos',
-    nome: 'Mapas Reflexivos Pessoais',
-    descricao: 'Big5, Eneagrama, Constelação e Tarô — modelos de reflexão.',
-    rota: '/mapas-pessoais',
-    portalMinimo: 'visitante',
-    categoria: 'cartografia',
-  },
-  {
-    id: 'oraculos',
-    nome: 'Oráculos da Casa',
-    descricao: 'Tiragem de cartas e leitura simbólica.',
-    rota: '/oraculos',
-    portalMinimo: 'visitante',
-    categoria: 'oraculos',
-  },
-  {
-    id: 'narroterapia',
-    nome: 'Narroterapia Oracular™',
-    descricao: 'Protocolos narrativos e biblioteca de contos clínicos.',
-    rota: '/narroterapia',
-    portalMinimo: 'aluna',
-    categoria: 'narrativas',
-  },
-  {
-    id: 'cartografia-psiquica',
-    nome: 'Cartografia Psíquica',
-    descricao: 'Mapeamento simbólico do mundo interior.',
-    rota: '/ferramenta/cartografia-psiquica-oracula',
-    portalMinimo: 'visitante',
-    categoria: 'cartografia',
-  },
-];
-
-// ═══════════════════════════════════════════════════════════════
-// COMPONENTE
+// COMPONENTE — 100% database-driven (sem FIXED_TOOLS)
 // ═══════════════════════════════════════════════════════════════
 
 interface DBFerramenta {
@@ -188,7 +83,20 @@ interface DBFerramenta {
   tipo_ferramenta: string | null;
   portal_minimo: string;
   ordem: number;
+  e_complementar: boolean | null;
+  categoria_metodo: string | null;
 }
+
+const mapDBToolCategory = (tipo: string | null): CategoryKey => {
+  if (!tipo) return 'diagnostico';
+  if (['diagnostico', 'autoleitura'].includes(tipo)) return 'diagnostico';
+  if (['arquetipos'].includes(tipo)) return 'arquetipos';
+  if (['sombra', 'ritual_simbolico'].includes(tipo)) return 'sombras';
+  if (['ferramenta_narrativa', 'conducao_terapeutica'].includes(tipo)) return 'narrativas';
+  if (['leitura_simbolica', 'oraculo'].includes(tipo)) return 'oraculos';
+  if (['cartografia', 'mapeamento'].includes(tipo)) return 'cartografia';
+  return 'diagnostico';
+};
 
 export default function FerramentasHub() {
   const navigate = useNavigate();
@@ -198,13 +106,13 @@ export default function FerramentasHub() {
   const userPortal = (user?.portal || 'visitante') as PortalType;
   const isAdmin = userPortal === 'admin';
 
-  // DB ferramentas
+  // 100% DB-driven — all tools come from sala_ferramentas
   const { data: dbFerramentas, isLoading } = useQuery({
     queryKey: ['ferramentas-hub-unified'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('sala_ferramentas')
-        .select('id, ferramenta_nome, ferramenta_descricao, rota, tipo_ferramenta, portal_minimo, ordem')
+        .select('id, ferramenta_nome, ferramenta_descricao, rota, tipo_ferramenta, portal_minimo, ordem, e_complementar, categoria_metodo')
         .eq('ativa', true)
         .order('ordem', { ascending: true });
       if (error) throw error;
@@ -218,33 +126,17 @@ export default function FerramentasHub() {
     return canAccessFeature(userPortal, minPortal as PortalType);
   };
 
-  // Map DB tools to categories
-  const mapDBToolCategory = (tipo: string | null): CategoryKey => {
-    if (!tipo) return 'diagnostico';
-    if (['diagnostico', 'autoleitura'].includes(tipo)) return 'diagnostico';
-    if (['arquetipos'].includes(tipo)) return 'arquetipos';
-    if (['sombra', 'ritual_simbolico'].includes(tipo)) return 'sombras';
-    if (['ferramenta_narrativa', 'conducao_terapeutica'].includes(tipo)) return 'narrativas';
-    if (['leitura_simbolica', 'oraculo'].includes(tipo)) return 'oraculos';
-    if (['cartografia', 'mapeamento'].includes(tipo)) return 'cartografia';
-    return 'diagnostico';
-  };
-
-  // Merge fixed + DB tools, dedup by id
-  const allTools = (() => {
-    const fixedIds = new Set(FIXED_TOOLS.map(t => t.id));
-    const dbMapped = (dbFerramentas || [])
-      .filter(t => t.rota && !fixedIds.has(t.id))
-      .map(t => ({
-        id: t.id,
-        nome: t.ferramenta_nome,
-        descricao: t.ferramenta_descricao || '',
-        rota: t.rota!,
-        portalMinimo: t.portal_minimo as PortalType,
-        categoria: mapDBToolCategory(t.tipo_ferramenta),
-      }));
-    return [...FIXED_TOOLS, ...dbMapped];
-  })();
+  // Filter out complementary tools (they appear under their parent)
+  const allTools = (dbFerramentas || [])
+    .filter(t => t.rota && !t.e_complementar)
+    .map(t => ({
+      id: t.id,
+      nome: t.ferramenta_nome,
+      descricao: t.ferramenta_descricao || '',
+      rota: t.rota!,
+      portalMinimo: t.portal_minimo as PortalType,
+      categoria: mapDBToolCategory(t.tipo_ferramenta),
+    }));
 
   const filteredTools = activeCategory === 'todas'
     ? allTools

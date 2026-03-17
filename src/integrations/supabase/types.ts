@@ -12847,12 +12847,15 @@ export type Database = {
           ativa: boolean
           bloco_interativo_requerido: boolean | null
           categoria_badge: string | null
+          categoria_metodo: string | null
           created_at: string
+          e_complementar: boolean | null
           familia_id: string | null
           familia_simbolica: string | null
           ferramenta_chave: string
           ferramenta_descricao: string | null
           ferramenta_nome: string
+          ferramenta_pai_id: string | null
           finalidade_pratica: string | null
           has_blocks: boolean | null
           icone: string | null
@@ -12862,6 +12865,7 @@ export type Database = {
           origem_metodologica: string | null
           portal_id: string | null
           portal_minimo: Database["public"]["Enums"]["portal_type"] | null
+          proximo_passo: string | null
           rota: string
           sala_id: string
           slug: string | null
@@ -12879,12 +12883,15 @@ export type Database = {
           ativa?: boolean
           bloco_interativo_requerido?: boolean | null
           categoria_badge?: string | null
+          categoria_metodo?: string | null
           created_at?: string
+          e_complementar?: boolean | null
           familia_id?: string | null
           familia_simbolica?: string | null
           ferramenta_chave: string
           ferramenta_descricao?: string | null
           ferramenta_nome: string
+          ferramenta_pai_id?: string | null
           finalidade_pratica?: string | null
           has_blocks?: boolean | null
           icone?: string | null
@@ -12894,6 +12901,7 @@ export type Database = {
           origem_metodologica?: string | null
           portal_id?: string | null
           portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
+          proximo_passo?: string | null
           rota: string
           sala_id: string
           slug?: string | null
@@ -12911,12 +12919,15 @@ export type Database = {
           ativa?: boolean
           bloco_interativo_requerido?: boolean | null
           categoria_badge?: string | null
+          categoria_metodo?: string | null
           created_at?: string
+          e_complementar?: boolean | null
           familia_id?: string | null
           familia_simbolica?: string | null
           ferramenta_chave?: string
           ferramenta_descricao?: string | null
           ferramenta_nome?: string
+          ferramenta_pai_id?: string | null
           finalidade_pratica?: string | null
           has_blocks?: boolean | null
           icone?: string | null
@@ -12926,6 +12937,7 @@ export type Database = {
           origem_metodologica?: string | null
           portal_id?: string | null
           portal_minimo?: Database["public"]["Enums"]["portal_type"] | null
+          proximo_passo?: string | null
           rota?: string
           sala_id?: string
           slug?: string | null
@@ -12945,6 +12957,13 @@ export type Database = {
             columns: ["familia_id"]
             isOneToOne: false
             referencedRelation: "travessia_familias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sala_ferramentas_ferramenta_pai_id_fkey"
+            columns: ["ferramenta_pai_id"]
+            isOneToOne: false
+            referencedRelation: "sala_ferramentas"
             referencedColumns: ["id"]
           },
           {
