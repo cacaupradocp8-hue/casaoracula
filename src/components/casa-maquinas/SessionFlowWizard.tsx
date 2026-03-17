@@ -31,7 +31,7 @@ interface ToolSuggestion {
   rota: string | null;
   categoria_metodo: string | null;
   icone: string | null;
-  descricao_curta: string | null;
+  ferramenta_descricao: string | null;
 }
 
 interface SessionInsight {

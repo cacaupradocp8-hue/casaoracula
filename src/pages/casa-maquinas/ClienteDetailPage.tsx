@@ -70,6 +70,23 @@ export default function ClienteDetailPage() {
 
   return (
     <CasaMaquinasLayout title={cliente.nome} subtitle="Jornada interior">
+      <div className="flex justify-end mb-4">
+        <Button
+          variant="gold"
+          onClick={() => setSessionWizardOpen(true)}
+          className="gap-2"
+        >
+          <Play className="w-4 h-4" /> Iniciar Sessão
+        </Button>
+      </div>
+
+      <SessionFlowWizard
+        clienteId={clienteId!}
+        clienteNome={cliente.nome}
+        open={sessionWizardOpen}
+        onClose={() => setSessionWizardOpen(false)}
+      />
+
       <Tabs defaultValue="cidadela" className="w-full">
         <TabsList className="bg-card/80 border border-border/30 mb-6 flex-wrap h-auto gap-0.5 p-1">
           <TabsTrigger value="cidadela" className={tabClass}>CidaDELA</TabsTrigger>
