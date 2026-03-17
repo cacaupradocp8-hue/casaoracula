@@ -300,6 +300,77 @@ export type Database = {
           },
         ]
       }
+      ai_recommendations: {
+        Row: {
+          client_id: string
+          created_at: string | null
+          descricao: string | null
+          distrito_sugerido_id: string | null
+          id: string
+          resolved_at: string | null
+          session_id: string | null
+          status: string | null
+          tipo: string
+          titulo: string | null
+          tool_sugerida_id: string | null
+        }
+        Insert: {
+          client_id: string
+          created_at?: string | null
+          descricao?: string | null
+          distrito_sugerido_id?: string | null
+          id?: string
+          resolved_at?: string | null
+          session_id?: string | null
+          status?: string | null
+          tipo?: string
+          titulo?: string | null
+          tool_sugerida_id?: string | null
+        }
+        Update: {
+          client_id?: string
+          created_at?: string | null
+          descricao?: string | null
+          distrito_sugerido_id?: string | null
+          id?: string
+          resolved_at?: string | null
+          session_id?: string | null
+          status?: string | null
+          tipo?: string
+          titulo?: string | null
+          tool_sugerida_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_recommendations_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_recommendations_distrito_sugerido_id_fkey"
+            columns: ["distrito_sugerido_id"]
+            isOneToOne: false
+            referencedRelation: "city_districts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_recommendations_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_recommendations_tool_sugerida_id_fkey"
+            columns: ["tool_sugerida_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       app_settings: {
         Row: {
           created_at: string
@@ -2392,6 +2463,78 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_city_state: {
+        Row: {
+          arquetipo_ativo: string | null
+          client_id: string
+          created_at: string | null
+          distrito_ativo: string | null
+          distrito_id: string | null
+          id: string
+          ultima_ferramenta_id: string | null
+          ultima_sessao_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          arquetipo_ativo?: string | null
+          client_id: string
+          created_at?: string | null
+          distrito_ativo?: string | null
+          distrito_id?: string | null
+          id?: string
+          ultima_ferramenta_id?: string | null
+          ultima_sessao_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          arquetipo_ativo?: string | null
+          client_id?: string
+          created_at?: string | null
+          distrito_ativo?: string | null
+          distrito_id?: string | null
+          id?: string
+          ultima_ferramenta_id?: string | null
+          ultima_sessao_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_city_state_arquetipo_ativo_fkey"
+            columns: ["arquetipo_ativo"]
+            isOneToOne: false
+            referencedRelation: "founding_archetypes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_city_state_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: true
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_city_state_distrito_id_fkey"
+            columns: ["distrito_id"]
+            isOneToOne: false
+            referencedRelation: "city_districts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_city_state_ultima_ferramenta_id_fkey"
+            columns: ["ultima_ferramenta_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_city_state_ultima_sessao_id_fkey"
+            columns: ["ultima_sessao_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
             referencedColumns: ["id"]
           },
         ]
@@ -16567,6 +16710,10 @@ export type Database = {
           _torre?: string
         }
         Returns: undefined
+      }
+      update_cidadela_on_tool_usage: {
+        Args: { _arquetipo_id?: string; _session_id: string; _tool_id: string }
+        Returns: Json
       }
       upsert_pattern_stat: {
         Args: {
