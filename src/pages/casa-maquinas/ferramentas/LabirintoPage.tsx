@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, ChevronRight, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { updateClientDistrict } from '@/utils/updateClientDistrict';
 
 const CAMADAS = [
   { key: 'fact', label: 'Fato', placeholder: 'O que aconteceu? Descreva o evento concreto.' },
@@ -48,7 +49,11 @@ export default function LabirintoPage() {
     });
 
     if (error) toast.error('Erro ao salvar');
-    else { toast.success('Registro do labirinto salvo'); navigate(`/casa-das-maquinas/clientes/${clientId}`); }
+    else {
+      await updateClientDistrict(clientId, 'labirinto');
+      toast.success('Registro do labirinto salvo');
+      navigate(`/casa-das-maquinas/clientes/${clientId}`);
+    }
     setSaving(false);
   };
 

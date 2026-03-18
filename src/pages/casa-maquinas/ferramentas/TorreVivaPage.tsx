@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { updateClientDistrict } from '@/utils/updateClientDistrict';
 
 const TORRES = ['Controle', 'Performance', 'Silêncio', 'Adaptação', 'Força', 'Espiritualização'];
 
@@ -43,7 +44,11 @@ export default function TorreVivaPage() {
     });
 
     if (error) toast.error('Erro ao salvar');
-    else { toast.success('Torre registrada'); navigate(`/casa-das-maquinas/clientes/${clientId}`); }
+    else {
+      await updateClientDistrict(clientId, 'torre_viva');
+      toast.success('Torre registrada');
+      navigate(`/casa-das-maquinas/clientes/${clientId}`);
+    }
     setSaving(false);
   };
 
