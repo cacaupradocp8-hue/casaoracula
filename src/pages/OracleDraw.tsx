@@ -523,7 +523,7 @@ export default function OracleDraw() {
               
               <Button 
                 variant="ghost"
-                onClick={() => navigate(`/oraculos/${oracle.slug}/historico`)}
+                onClick={() => navigate(`${basePath}/${oracle.slug}/historico`)}
                 className="text-muted-foreground"
               >
                 Ver Histórico
