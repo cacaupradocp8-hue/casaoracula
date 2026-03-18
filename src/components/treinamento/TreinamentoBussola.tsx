@@ -176,8 +176,8 @@ export function TreinamentoBussola() {
                     <p className="text-xs text-muted-foreground mb-1">Ferramenta correta</p>
                     <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
                       {userAnswer.ferramenta.toLowerCase().trim() === currentCase.ferramenta_correta?.toLowerCase().trim()
-                        ? <CheckCircle className="w-3.5 h-3.5 text-green-500" />
-                        : <XCircle className="w-3.5 h-3.5 text-red-400" />}
+                        ? <CheckCircle className="w-3.5 h-3.5 text-primary" />
+                        : <XCircle className="w-3.5 h-3.5 text-destructive" />}
                       {currentCase.ferramenta_correta || '—'}
                     </p>
                   </div>
