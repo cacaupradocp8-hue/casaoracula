@@ -48,7 +48,11 @@ export default function LabirintoPage() {
     });
 
     if (error) toast.error('Erro ao salvar');
-    else { toast.success('Registro do labirinto salvo'); navigate(`/casa-das-maquinas/clientes/${clientId}`); }
+    else {
+      await updateClientDistrict(clientId, 'labirinto');
+      toast.success('Registro do labirinto salvo');
+      navigate(`/casa-das-maquinas/clientes/${clientId}`);
+    }
     setSaving(false);
   };
 
