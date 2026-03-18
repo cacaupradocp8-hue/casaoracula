@@ -70,6 +70,7 @@ Deno.serve(async (req) => {
     const tools = toolsRes.data || [];
     const flows = flowsRes.data || [];
     const toolDistricts = toolDistrictsRes.data || [];
+    const rules = rulesRes.data || [];
 
     // Build lookup maps
     const toolById = new Map(tools.map((t: any) => [t.id, t]));
