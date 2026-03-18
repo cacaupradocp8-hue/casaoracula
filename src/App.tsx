@@ -58,6 +58,7 @@ import Oraculos from "./pages/Oraculos";
 import OracleHome from "./pages/OracleHome";
 import OracleDraw from "./pages/OracleDraw";
 import OracleHistory from "./pages/OracleHistory";
+import OracleCardLibrary from "./pages/OracleCardLibrary";
 import Cursos from "./pages/Cursos";
 import CursoDetalhe from "./pages/CursoDetalhe";
 import CursoAula from "./pages/CursoAula";
