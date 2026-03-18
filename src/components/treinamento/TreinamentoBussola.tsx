@@ -167,8 +167,8 @@ export function TreinamentoBussola() {
                     <p className="text-xs text-muted-foreground mb-1">Distrito correto</p>
                     <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
                       {userAnswer.distrito.toLowerCase().trim() === currentCase.distrito_correto?.toLowerCase().trim()
-                        ? <CheckCircle className="w-3.5 h-3.5 text-green-500" />
-                        : <XCircle className="w-3.5 h-3.5 text-red-400" />}
+                        ? <CheckCircle className="w-3.5 h-3.5 text-primary" />
+                        : <XCircle className="w-3.5 h-3.5 text-destructive" />}
                       {currentCase.distrito_correto || '—'}
                     </p>
                   </div>
