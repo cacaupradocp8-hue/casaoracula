@@ -320,3 +320,28 @@ function calculateConfidence(
 
   return Math.min(score, 95);
 }
+
+interface RuleContext {
+  distrito: string | null;
+  arquetipo: string | null;
+  torre: string | null;
+  porta: string | null;
+  ferramenta_origem_slug: string | null;
+  fase_jornada: string;
+}
+
+function matchRule(rules: any[], ctx: RuleContext): any | null {
+  for (const rule of rules) {
+    let matches = true;
+
+    if (rule.distrito && rule.distrito !== ctx.distrito) matches = false;
+    if (rule.arquetipo && rule.arquetipo !== ctx.arquetipo) matches = false;
+    if (rule.torre && rule.torre !== ctx.torre) matches = false;
+    if (rule.porta && rule.porta !== ctx.porta) matches = false;
+    if (rule.ferramenta_origem_slug && rule.ferramenta_origem_slug !== ctx.ferramenta_origem_slug) matches = false;
+    if (rule.fase_jornada && rule.fase_jornada !== ctx.fase_jornada) matches = false;
+
+    if (matches) return rule;
+  }
+  return null;
+}
