@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Plus, Users, Map, FileText } from 'lucide-react';
+import { Plus, Users, Map, FileText, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function DashboardQuickActions() {
@@ -8,6 +8,7 @@ export function DashboardQuickActions() {
   const actions = [
     { label: 'Nova Sessão', icon: Plus, route: '/casa-das-maquinas/sessoes', accent: 'hsl(var(--primary))' },
     { label: 'Clientes', icon: Users, route: '/casa-das-maquinas/clientes', accent: 'hsl(var(--accent))' },
+    { label: 'Oráculo', icon: Sparkles, route: '/casa-das-maquinas/oraculo', accent: 'hsl(var(--gold, var(--primary)))' },
     { label: 'Mapa Simbólico', icon: Map, route: '/casa-das-maquinas/mapa-vivo', accent: 'hsl(var(--secondary-foreground))' },
     { label: 'Ferramentas', icon: FileText, route: '/casa-das-maquinas/ferramentas', accent: 'hsl(var(--primary))' },
   ];
