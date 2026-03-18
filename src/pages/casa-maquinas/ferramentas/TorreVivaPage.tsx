@@ -43,7 +43,11 @@ export default function TorreVivaPage() {
     });
 
     if (error) toast.error('Erro ao salvar');
-    else { toast.success('Torre registrada'); navigate(`/casa-das-maquinas/clientes/${clientId}`); }
+    else {
+      await updateClientDistrict(clientId, 'torre_viva');
+      toast.success('Torre registrada');
+      navigate(`/casa-das-maquinas/clientes/${clientId}`);
+    }
     setSaving(false);
   };
 
