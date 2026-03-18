@@ -6,8 +6,9 @@ import { SimuladorSessaoAvancado } from '@/components/treinamento/SimuladorSessa
 import { ClientesPiloto } from '@/components/treinamento/ClientesPiloto';
 import { BibliotecaFerramentas } from '@/components/treinamento/BibliotecaFerramentas';
 import { JornadaExemplo } from '@/components/treinamento/JornadaExemplo';
+import { TreinamentoBussola } from '@/components/treinamento/TreinamentoBussola';
 import { useEffectivePortal } from '@/hooks/useEffectivePortal';
-import { Compass, BookOpen, Play, Map, Users, FlaskConical } from 'lucide-react';
+import { Compass, BookOpen, Play, Map, Users, FlaskConical, Navigation } from 'lucide-react';
 
 export default function SalaTreinamentoPage() {
   const { effectivePortal, isAdmin } = useEffectivePortal();
@@ -20,6 +21,7 @@ export default function SalaTreinamentoPage() {
     { value: 'estudos', label: 'Estudos de Caso', icon: BookOpen },
     { value: 'simulador', label: 'Simulador de Sessão', icon: Play },
     { value: 'biblioteca', label: 'Ferramentas', icon: FlaskConical },
+    { value: 'bussola', label: 'Treino da Bússola', icon: Navigation },
     { value: 'jornada', label: 'Jornada Exemplo', icon: Map },
     ...(showPiloto ? [{ value: 'piloto', label: 'Clientes-Piloto', icon: Users }] : []),
   ];
@@ -30,7 +32,7 @@ export default function SalaTreinamentoPage() {
       subtitle="Ambiente seguro para prática e desenvolvimento de habilidades com o Método Orácula"
     >
       <Tabs defaultValue="automapa" className="space-y-6">
-        <TabsList className="grid grid-cols-3 md:grid-cols-6 gap-2 h-auto bg-transparent p-0">
+        <TabsList className="grid grid-cols-3 md:grid-cols-7 gap-2 h-auto bg-transparent p-0">
           {tabs.map(tab => (
             <TabsTrigger
               key={tab.value}
@@ -47,6 +49,7 @@ export default function SalaTreinamentoPage() {
         <TabsContent value="estudos"><EstudosCasoTreinamento /></TabsContent>
         <TabsContent value="simulador"><SimuladorSessaoAvancado /></TabsContent>
         <TabsContent value="biblioteca"><BibliotecaFerramentas /></TabsContent>
+        <TabsContent value="bussola"><TreinamentoBussola /></TabsContent>
         <TabsContent value="jornada"><JornadaExemplo /></TabsContent>
         {showPiloto && <TabsContent value="piloto"><ClientesPiloto /></TabsContent>}
       </Tabs>
