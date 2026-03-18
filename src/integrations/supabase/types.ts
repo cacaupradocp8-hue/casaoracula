@@ -1886,6 +1886,149 @@ export type Database = {
           },
         ]
       }
+      cartographer_engine: {
+        Row: {
+          arquetipo_regente_id: string | null
+          client_id: string
+          created_at: string | null
+          distrito_ativo: string | null
+          fase_jornada: string | null
+          id: string
+          input_snapshot: Json | null
+          modo_sessao: string | null
+          porta_ativa: string | null
+          session_id: string | null
+          therapist_id: string
+          torre_ativa: string | null
+          trigger_type: string
+        }
+        Insert: {
+          arquetipo_regente_id?: string | null
+          client_id: string
+          created_at?: string | null
+          distrito_ativo?: string | null
+          fase_jornada?: string | null
+          id?: string
+          input_snapshot?: Json | null
+          modo_sessao?: string | null
+          porta_ativa?: string | null
+          session_id?: string | null
+          therapist_id: string
+          torre_ativa?: string | null
+          trigger_type?: string
+        }
+        Update: {
+          arquetipo_regente_id?: string | null
+          client_id?: string
+          created_at?: string | null
+          distrito_ativo?: string | null
+          fase_jornada?: string | null
+          id?: string
+          input_snapshot?: Json | null
+          modo_sessao?: string | null
+          porta_ativa?: string | null
+          session_id?: string | null
+          therapist_id?: string
+          torre_ativa?: string | null
+          trigger_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cartographer_engine_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cartographer_engine_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cartographer_recommendations: {
+        Row: {
+          aceita: boolean | null
+          arquetipo_sugerido: string | null
+          confianca: number | null
+          created_at: string | null
+          distrito_sugerido: string | null
+          engine_id: string
+          ferramenta_escolhida_id: string | null
+          id: string
+          observacao_feedback: string | null
+          pergunta_sugerida: string | null
+          respondido_em: string | null
+          ritual_sugerido: string | null
+          tool_complementar_id: string | null
+          tool_principal_id: string | null
+        }
+        Insert: {
+          aceita?: boolean | null
+          arquetipo_sugerido?: string | null
+          confianca?: number | null
+          created_at?: string | null
+          distrito_sugerido?: string | null
+          engine_id: string
+          ferramenta_escolhida_id?: string | null
+          id?: string
+          observacao_feedback?: string | null
+          pergunta_sugerida?: string | null
+          respondido_em?: string | null
+          ritual_sugerido?: string | null
+          tool_complementar_id?: string | null
+          tool_principal_id?: string | null
+        }
+        Update: {
+          aceita?: boolean | null
+          arquetipo_sugerido?: string | null
+          confianca?: number | null
+          created_at?: string | null
+          distrito_sugerido?: string | null
+          engine_id?: string
+          ferramenta_escolhida_id?: string | null
+          id?: string
+          observacao_feedback?: string | null
+          pergunta_sugerida?: string | null
+          respondido_em?: string | null
+          ritual_sugerido?: string | null
+          tool_complementar_id?: string | null
+          tool_principal_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cartographer_recommendations_engine_id_fkey"
+            columns: ["engine_id"]
+            isOneToOne: false
+            referencedRelation: "cartographer_engine"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cartographer_recommendations_ferramenta_escolhida_id_fkey"
+            columns: ["ferramenta_escolhida_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cartographer_recommendations_tool_complementar_id_fkey"
+            columns: ["tool_complementar_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cartographer_recommendations_tool_principal_id_fkey"
+            columns: ["tool_principal_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cartographies: {
         Row: {
           classification_json: Json | null
