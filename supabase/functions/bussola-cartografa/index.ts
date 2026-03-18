@@ -56,12 +56,13 @@ Deno.serve(async (req) => {
     }
 
     // 1. Gather client state
-    const [cityStateRes, archStateRes, toolsRes, flowsRes, toolDistrictsRes] = await Promise.all([
+    const [cityStateRes, archStateRes, toolsRes, flowsRes, toolDistrictsRes, rulesRes] = await Promise.all([
       supabase.from("client_city_state").select("*").eq("client_id", client_id).maybeSingle(),
       supabase.from("client_archetype_state").select("*").eq("client_id", client_id).maybeSingle(),
       supabase.from("tools").select("id, nome, categoria_metodo, proximo_passo_id, nivel, ambiente, slug, funcao_principal, quando_usar").eq("ativa", true).order("ordem"),
       supabase.from("co_tool_flows").select("*").order("ordem"),
       supabase.from("tool_districts").select("tool_id, district_id, tipo, district:city_districts(id, nome)"),
+      supabase.from("cartographer_rules").select("*").eq("ativa", true).order("prioridade", { ascending: false }),
     ]);
 
     const cityState = cityStateRes.data;
@@ -69,6 +70,7 @@ Deno.serve(async (req) => {
     const tools = toolsRes.data || [];
     const flows = flowsRes.data || [];
     const toolDistricts = toolDistrictsRes.data || [];
+    const rules = rulesRes.data || [];
 
     // Build lookup maps
     const toolById = new Map(tools.map((t: any) => [t.id, t]));
@@ -82,33 +84,54 @@ Deno.serve(async (req) => {
     // 2. Determine phase
     const phase = fase_jornada || inferPhase(cityState, tools);
 
-    // 3. Determine base district
+    // Build slug lookup
+    const toolBySlug = new Map(tools.map((t: any) => [t.slug, t]));
+    const lastTool = last_tool_id ? toolById.get(last_tool_id) : null;
+
+    // 3. Try cartographer_rules first (database-driven rules)
+    let toolPrincipal: any = null;
+    let toolComplementar: any = null;
     let distritoSugerido = cityState?.distrito_ativo || null;
-    
-    // Rule 1: if last tool has principal district, use it
-    if (last_tool_id && toolPrincipalDistrict.has(last_tool_id)) {
+    let perguntaFromRule: string | null = null;
+    let ritualFromRule: string | null = null;
+    let confiancaFromRule: number | null = null;
+
+    const matchedRule = matchRule(rules, {
+      distrito: distritoSugerido,
+      arquetipo: archState?.arquitipo_regente_id || null,
+      torre: null,
+      porta: null,
+      ferramenta_origem_slug: lastTool?.slug || null,
+      fase_jornada: phase,
+    });
+
+    if (matchedRule) {
+      toolPrincipal = toolBySlug.get(matchedRule.ferramenta_principal_slug) || null;
+      toolComplementar = matchedRule.ferramenta_complementar_slug
+        ? toolBySlug.get(matchedRule.ferramenta_complementar_slug) || null
+        : null;
+      if (matchedRule.pergunta) perguntaFromRule = matchedRule.pergunta;
+      if (matchedRule.ritual) ritualFromRule = matchedRule.ritual;
+      confiancaFromRule = matchedRule.confianca_base;
+    }
+
+    // Fallback: Rule 1 — last tool's principal district
+    if (!distritoSugerido && last_tool_id && toolPrincipalDistrict.has(last_tool_id)) {
       distritoSugerido = toolPrincipalDistrict.get(last_tool_id)!;
     }
 
-    // 4. Find principal tool suggestion
-    let toolPrincipal: any = null;
-    let toolComplementar: any = null;
-
-    // Rule 3: if last_tool has proximo_passo, use it
-    if (last_tool_id) {
-      const lastTool = toolById.get(last_tool_id);
-      if (lastTool?.proximo_passo_id) {
-        toolPrincipal = toolById.get(lastTool.proximo_passo_id) || null;
-      }
+    // Fallback: proximo_passo from methodology
+    if (!toolPrincipal && lastTool?.proximo_passo_id) {
+      toolPrincipal = toolById.get(lastTool.proximo_passo_id) || null;
     }
 
-    // If no next step from tool, use phase-based logic
+    // Fallback: phase-based selection
     if (!toolPrincipal) {
       toolPrincipal = selectByPhase(phase, tools, cityState);
     }
 
-    // Find complementar from flows
-    if (toolPrincipal) {
+    // Fallback: complementar from flows
+    if (toolPrincipal && !toolComplementar) {
       const complementarFlow = flows.find(
         (f: any) => f.tool_origem_id === toolPrincipal.id && f.tipo === "complementar"
       );
@@ -117,14 +140,14 @@ Deno.serve(async (req) => {
       }
     }
 
-    // 5. Generate clinical question
-    const pergunta = generateQuestion(phase, distritoSugerido, archState);
+    // 5. Generate clinical question (rule override or fallback)
+    const pergunta = perguntaFromRule || generateQuestion(phase, distritoSugerido, archState);
 
-    // 6. Suggest ritual
-    const ritual = suggestRitual(phase, distritoSugerido);
+    // 6. Suggest ritual (rule override or fallback)
+    const ritual = ritualFromRule || suggestRitual(phase, distritoSugerido);
 
-    // 7. Calculate confidence
-    const confianca = calculateConfidence(
+    // 7. Calculate confidence (rule override or fallback)
+    const confianca = confiancaFromRule || calculateConfidence(
       toolPrincipal,
       distritoSugerido,
       last_tool_id,
@@ -296,4 +319,29 @@ function calculateConfidence(
   if (phase !== "inicio") score += 5;
 
   return Math.min(score, 95);
+}
+
+interface RuleContext {
+  distrito: string | null;
+  arquetipo: string | null;
+  torre: string | null;
+  porta: string | null;
+  ferramenta_origem_slug: string | null;
+  fase_jornada: string;
+}
+
+function matchRule(rules: any[], ctx: RuleContext): any | null {
+  for (const rule of rules) {
+    let matches = true;
+
+    if (rule.distrito && rule.distrito !== ctx.distrito) matches = false;
+    if (rule.arquetipo && rule.arquetipo !== ctx.arquetipo) matches = false;
+    if (rule.torre && rule.torre !== ctx.torre) matches = false;
+    if (rule.porta && rule.porta !== ctx.porta) matches = false;
+    if (rule.ferramenta_origem_slug && rule.ferramenta_origem_slug !== ctx.ferramenta_origem_slug) matches = false;
+    if (rule.fase_jornada && rule.fase_jornada !== ctx.fase_jornada) matches = false;
+
+    if (matches) return rule;
+  }
+  return null;
 }
