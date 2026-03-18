@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { Loader2, Moon } from 'lucide-react';
 import { toast } from 'sonner';
+import { updateClientDistrict } from '@/utils/updateClientDistrict';
 
 export default function DecodificacaoOniricaPage() {
   const { user } = useAuth();
