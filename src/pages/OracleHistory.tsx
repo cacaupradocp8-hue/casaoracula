@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Sparkles, ArrowLeft, Calendar } from 'lucide-react';
@@ -7,9 +7,17 @@ import { useOracleBySlug, useOracleDraws } from '@/hooks/useOracles';
 import { AmbientSoundToggle } from '@/components/oracle/AmbientSoundToggle';
 import { cn } from '@/lib/utils';
 
+function useOracleBasePath() {
+  const location = useLocation();
+  return location.pathname.startsWith('/casa-das-maquinas') 
+    ? '/casa-das-maquinas/oraculo' 
+    : '/oraculos';
+}
+
 export default function OracleHistory() {
   const { oracleSlug } = useParams<{ oracleSlug: string }>();
   const navigate = useNavigate();
+  const basePath = useOracleBasePath();
   const { oracle, spreads, cards, isLoading: oracleLoading, hasAccess } = useOracleBySlug(oracleSlug || '');
   const { draws, isLoading: drawsLoading } = useOracleDraws(oracle?.id);
 
@@ -24,7 +32,7 @@ export default function OracleHistory() {
   }
 
   if (!oracle || !hasAccess()) {
-    navigate('/oraculos');
+    navigate(basePath);
     return null;
   }
 
@@ -44,12 +52,11 @@ export default function OracleHistory() {
       className="min-h-screen flex flex-col"
       style={{ backgroundColor }}
     >
-      {/* Minimal Header */}
       <header className="flex items-center justify-between p-4">
         <Button 
           variant="ghost" 
           size="icon"
-          onClick={() => navigate(`/oraculos/${oracle.slug}`)}
+          onClick={() => navigate(`${basePath}/${oracle.slug}`)}
           className="text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -79,7 +86,7 @@ export default function OracleHistory() {
               Nenhuma consulta ainda
             </p>
             <Button 
-              onClick={() => navigate(`/oraculos/${oracle.slug}/tirar`)}
+              onClick={() => navigate(`${basePath}/${oracle.slug}/tirar`)}
               style={{ backgroundColor: primaryColor }}
             >
               Fazer Consulta
@@ -109,7 +116,6 @@ export default function OracleHistory() {
                   </div>
                 </div>
 
-                {/* Cards drawn - Show images */}
                 <div className="flex gap-2 mb-3 overflow-x-auto pb-2">
                   {draw.drawn_cards_json.map((drawnCard, i) => {
                     const card = getCard(drawnCard.cardId);
@@ -138,7 +144,6 @@ export default function OracleHistory() {
                   })}
                 </div>
 
-                {/* Notes */}
                 {draw.user_notes && (
                   <p className="text-xs text-muted-foreground/70 italic border-t border-border/10 pt-3">
                     "{draw.user_notes}"
