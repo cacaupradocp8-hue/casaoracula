@@ -1645,6 +1645,7 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/oraculo/:oracleSlug" element={<ProtectedRoute minPortal="oracula"><OracleHome /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/oraculo/:oracleSlug/tirar" element={<ProtectedRoute minPortal="oracula"><OracleDraw /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/oraculo/:oracleSlug/historico" element={<ProtectedRoute minPortal="oracula"><OracleHistory /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/oraculo/:oracleSlug/biblioteca" element={<ProtectedRoute minPortal="oracula"><OracleCardLibrary /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/dialogo-partes" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/mapa-transformacao" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/ritual-passagem" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
