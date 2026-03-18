@@ -96,7 +96,7 @@ Deno.serve(async (req) => {
     let ritualFromRule: string | null = null;
     let confiancaFromRule: number | null = null;
 
-    const matchedRule = matchRule(rules, {
+    const { best: matchedRule, alternative: alternativeRule } = matchRules(rules, {
       distrito: distritoSugerido,
       arquetipo: archState?.arquitipo_regente_id || null,
       torre: null,
@@ -113,6 +113,23 @@ Deno.serve(async (req) => {
       if (matchedRule.pergunta) perguntaFromRule = matchedRule.pergunta;
       if (matchedRule.ritual) ritualFromRule = matchedRule.ritual;
       confiancaFromRule = matchedRule.confianca_base;
+    }
+
+    // Build alternative suggestion from second-best rule
+    let alternativa: any = null;
+    if (alternativeRule) {
+      const altPrincipal = toolBySlug.get(alternativeRule.ferramenta_principal_slug);
+      const altComplementar = alternativeRule.ferramenta_complementar_slug
+        ? toolBySlug.get(alternativeRule.ferramenta_complementar_slug)
+        : null;
+      alternativa = {
+        rule_nome: alternativeRule.nome,
+        tool_principal: altPrincipal ? { id: altPrincipal.id, nome: altPrincipal.nome, slug: altPrincipal.slug } : null,
+        tool_complementar: altComplementar ? { id: altComplementar.id, nome: altComplementar.nome, slug: altComplementar.slug } : null,
+        pergunta: alternativeRule.pergunta || null,
+        ritual: alternativeRule.ritual || null,
+        confianca: alternativeRule.confianca_base || null,
+      };
     }
 
     // Fallback: Rule 1 — last tool's principal district
