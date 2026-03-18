@@ -56,12 +56,13 @@ Deno.serve(async (req) => {
     }
 
     // 1. Gather client state
-    const [cityStateRes, archStateRes, toolsRes, flowsRes, toolDistrictsRes] = await Promise.all([
+    const [cityStateRes, archStateRes, toolsRes, flowsRes, toolDistrictsRes, rulesRes] = await Promise.all([
       supabase.from("client_city_state").select("*").eq("client_id", client_id).maybeSingle(),
       supabase.from("client_archetype_state").select("*").eq("client_id", client_id).maybeSingle(),
       supabase.from("tools").select("id, nome, categoria_metodo, proximo_passo_id, nivel, ambiente, slug, funcao_principal, quando_usar").eq("ativa", true).order("ordem"),
       supabase.from("co_tool_flows").select("*").order("ordem"),
       supabase.from("tool_districts").select("tool_id, district_id, tipo, district:city_districts(id, nome)"),
+      supabase.from("cartographer_rules").select("*").eq("ativa", true).order("prioridade", { ascending: false }),
     ]);
 
     const cityState = cityStateRes.data;
