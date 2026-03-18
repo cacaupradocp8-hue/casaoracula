@@ -3,14 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { CasaMaquinasLayout } from '@/components/casa-maquinas/CasaMaquinasLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { updateClientDistrict } from '@/utils/updateClientDistrict';
+import { useBussola } from '@/hooks/useBussola';
+import { BussolaPanel } from '@/components/casa-maquinas/BussolaPanel';
 
+const TORRE_TOOL_ID = '85031549-f69f-41fe-b122-12bb77013ac8';
 const TORRES = ['Controle', 'Performance', 'Silêncio', 'Adaptação', 'Força', 'Espiritualização'];
 
 export default function TorreVivaPage() {
@@ -23,6 +26,7 @@ export default function TorreVivaPage() {
   const [notes, setNotes] = useState('');
   const [clinicalPosture, setClinicalPosture] = useState('');
   const [saving, setSaving] = useState(false);
+  const bussola = useBussola();
 
   useEffect(() => {
     if (user) {
@@ -47,7 +51,11 @@ export default function TorreVivaPage() {
     else {
       await updateClientDistrict(clientId, 'torre_viva');
       toast.success('Torre registrada');
-      navigate(`/casa-das-maquinas/clientes/${clientId}`);
+      bussola.invoke({
+        client_id: clientId,
+        trigger_type: 'ferramenta',
+        last_tool_id: TORRE_TOOL_ID,
+      });
     }
     setSaving(false);
   };
@@ -94,6 +102,15 @@ export default function TorreVivaPage() {
           </CardContent>
         </Card>
       </div>
+
+      <BussolaPanel
+        result={bussola.result}
+        open={bussola.showPanel}
+        onOpenChange={bussola.setShowPanel}
+        onAccept={(id, aceita, obs) => bussola.submitFeedback(id, aceita, undefined, obs)}
+        onAlternative={() => bussola.invoke({ client_id: clientId, trigger_type: 'ferramenta', last_tool_id: TORRE_TOOL_ID })}
+        loading={bussola.loading}
+      />
     </CasaMaquinasLayout>
   );
 }

@@ -10,6 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Loader2, ChevronRight, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { updateClientDistrict } from '@/utils/updateClientDistrict';
+import { useBussola } from '@/hooks/useBussola';
+import { BussolaPanel } from '@/components/casa-maquinas/BussolaPanel';
+
+const LABIRINTO_TOOL_ID = '8b974b88-0586-4960-a3bd-7599d6afee99';
 
 const CAMADAS = [
   { key: 'fact', label: 'Fato', placeholder: 'O que aconteceu? Descreva o evento concreto.' },
@@ -27,6 +31,7 @@ export default function LabirintoPage() {
   const [currentLayer, setCurrentLayer] = useState(0);
   const [values, setValues] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
+  const bussola = useBussola();
 
   useEffect(() => {
     if (user) {
@@ -52,7 +57,11 @@ export default function LabirintoPage() {
     else {
       await updateClientDistrict(clientId, 'labirinto');
       toast.success('Registro do labirinto salvo');
-      navigate(`/casa-das-maquinas/clientes/${clientId}`);
+      bussola.invoke({
+        client_id: clientId,
+        trigger_type: 'ferramenta',
+        last_tool_id: LABIRINTO_TOOL_ID,
+      });
     }
     setSaving(false);
   };
@@ -62,13 +71,11 @@ export default function LabirintoPage() {
   return (
     <CasaMaquinasLayout title="Labirinto das 39 Portas" subtitle="Travessia em 5 camadas">
       <div className="max-w-lg mx-auto space-y-4">
-        {/* Client */}
         <Select value={clientId} onValueChange={setClientId}>
           <SelectTrigger className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]"><SelectValue placeholder="Selecione a cliente..." /></SelectTrigger>
           <SelectContent>{clients.map(c => <SelectItem key={c.id} value={c.id}>{c.nome}</SelectItem>)}</SelectContent>
         </Select>
 
-        {/* Layer indicators */}
         <div className="flex items-center justify-center gap-2">
           {CAMADAS.map((c, i) => (
             <div key={c.key} className="flex items-center gap-1">
@@ -87,7 +94,6 @@ export default function LabirintoPage() {
           ))}
         </div>
 
-        {/* Current layer */}
         <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
           <CardHeader>
             <CardTitle className="text-sm text-[#C9A24A]">Camada {currentLayer + 1}: {camada.label}</CardTitle>
@@ -114,6 +120,15 @@ export default function LabirintoPage() {
           </CardContent>
         </Card>
       </div>
+
+      <BussolaPanel
+        result={bussola.result}
+        open={bussola.showPanel}
+        onOpenChange={bussola.setShowPanel}
+        onAccept={(id, aceita, obs) => bussola.submitFeedback(id, aceita, undefined, obs)}
+        onAlternative={() => bussola.invoke({ client_id: clientId, trigger_type: 'ferramenta', last_tool_id: LABIRINTO_TOOL_ID })}
+        loading={bussola.loading}
+      />
     </CasaMaquinasLayout>
   );
 }
