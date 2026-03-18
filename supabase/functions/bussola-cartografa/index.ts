@@ -96,7 +96,7 @@ Deno.serve(async (req) => {
     let ritualFromRule: string | null = null;
     let confiancaFromRule: number | null = null;
 
-    const matchedRule = matchRule(rules, {
+    const { best: matchedRule, alternative: alternativeRule } = matchRules(rules, {
       distrito: distritoSugerido,
       arquetipo: archState?.arquitipo_regente_id || null,
       torre: null,
@@ -113,6 +113,23 @@ Deno.serve(async (req) => {
       if (matchedRule.pergunta) perguntaFromRule = matchedRule.pergunta;
       if (matchedRule.ritual) ritualFromRule = matchedRule.ritual;
       confiancaFromRule = matchedRule.confianca_base;
+    }
+
+    // Build alternative suggestion from second-best rule
+    let alternativa: any = null;
+    if (alternativeRule) {
+      const altPrincipal = toolBySlug.get(alternativeRule.ferramenta_principal_slug);
+      const altComplementar = alternativeRule.ferramenta_complementar_slug
+        ? toolBySlug.get(alternativeRule.ferramenta_complementar_slug)
+        : null;
+      alternativa = {
+        rule_nome: alternativeRule.nome,
+        tool_principal: altPrincipal ? { id: altPrincipal.id, nome: altPrincipal.nome, slug: altPrincipal.slug } : null,
+        tool_complementar: altComplementar ? { id: altComplementar.id, nome: altComplementar.nome, slug: altComplementar.slug } : null,
+        pergunta: alternativeRule.pergunta || null,
+        ritual: alternativeRule.ritual || null,
+        confianca: alternativeRule.confianca_base || null,
+      };
     }
 
     // Fallback: Rule 1 — last tool's principal district
@@ -212,6 +229,7 @@ Deno.serve(async (req) => {
       confianca,
       fase_jornada: phase,
       modo_sessao: modo_sessao || "oracula",
+      alternativa,
     };
 
     return new Response(JSON.stringify(result), {
@@ -330,8 +348,7 @@ interface RuleContext {
   fase_jornada: string;
 }
 
-function matchRule(rules: any[], ctx: RuleContext): any | null {
-  // 1. Collect all matching rules
+function matchRules(rules: any[], ctx: RuleContext): { best: any | null; alternative: any | null } {
   const matched = rules.filter((rule) => {
     if (rule.distrito && rule.distrito !== ctx.distrito) return false;
     if (rule.arquetipo && rule.arquetipo !== ctx.arquetipo) return false;
@@ -342,15 +359,13 @@ function matchRule(rules: any[], ctx: RuleContext): any | null {
     return true;
   });
 
-  if (matched.length === 0) return null;
+  if (matched.length === 0) return { best: null, alternative: null };
 
-  // 2. Sort by priority DESC, then confidence DESC
   matched.sort((a, b) => {
     const prioDiff = (b.prioridade || 0) - (a.prioridade || 0);
     if (prioDiff !== 0) return prioDiff;
     return (b.confianca_base || 0) - (a.confianca_base || 0);
   });
 
-  // 3. Return best match
-  return matched[0];
+  return { best: matched[0], alternative: matched[1] || null };
 }
