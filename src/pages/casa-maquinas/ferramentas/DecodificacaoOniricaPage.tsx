@@ -11,6 +11,10 @@ import { Label } from '@/components/ui/label';
 import { Loader2, Moon } from 'lucide-react';
 import { toast } from 'sonner';
 import { updateClientDistrict } from '@/utils/updateClientDistrict';
+import { useBussola } from '@/hooks/useBussola';
+import { BussolaPanel } from '@/components/casa-maquinas/BussolaPanel';
+
+const SONHOS_TOOL_ID = '48e9c595-1bc3-4d5e-a953-a4edfb39003e';
 
 export default function DecodificacaoOniricaPage() {
   const { user } = useAuth();
@@ -23,6 +27,7 @@ export default function DecodificacaoOniricaPage() {
   const [interruptedMovement, setInterruptedMovement] = useState('');
   const [symbolicMessage, setSymbolicMessage] = useState('');
   const [saving, setSaving] = useState(false);
+  const bussola = useBussola();
 
   useEffect(() => {
     if (user) {
@@ -48,7 +53,11 @@ export default function DecodificacaoOniricaPage() {
     else {
       await updateClientDistrict(clientId, 'sonhos');
       toast.success('Sonho registrado');
-      navigate(`/casa-das-maquinas/clientes/${clientId}`);
+      bussola.invoke({
+        client_id: clientId,
+        trigger_type: 'ferramenta',
+        last_tool_id: SONHOS_TOOL_ID,
+      });
     }
     setSaving(false);
   };
@@ -100,6 +109,15 @@ export default function DecodificacaoOniricaPage() {
           </CardContent>
         </Card>
       </div>
+
+      <BussolaPanel
+        result={bussola.result}
+        open={bussola.showPanel}
+        onOpenChange={bussola.setShowPanel}
+        onAccept={(id, aceita, obs) => bussola.submitFeedback(id, aceita, undefined, obs)}
+        onAlternative={() => bussola.invoke({ client_id: clientId, trigger_type: 'ferramenta', last_tool_id: SONHOS_TOOL_ID })}
+        loading={bussola.loading}
+      />
     </CasaMaquinasLayout>
   );
 }
