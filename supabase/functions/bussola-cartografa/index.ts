@@ -140,14 +140,14 @@ Deno.serve(async (req) => {
       }
     }
 
-    // 5. Generate clinical question
-    const pergunta = generateQuestion(phase, distritoSugerido, archState);
+    // 5. Generate clinical question (rule override or fallback)
+    const pergunta = perguntaFromRule || generateQuestion(phase, distritoSugerido, archState);
 
-    // 6. Suggest ritual
-    const ritual = suggestRitual(phase, distritoSugerido);
+    // 6. Suggest ritual (rule override or fallback)
+    const ritual = ritualFromRule || suggestRitual(phase, distritoSugerido);
 
-    // 7. Calculate confidence
-    const confianca = calculateConfidence(
+    // 7. Calculate confidence (rule override or fallback)
+    const confianca = confiancaFromRule || calculateConfidence(
       toolPrincipal,
       distritoSugerido,
       last_tool_id,
