@@ -2029,6 +2029,63 @@ export type Database = {
           },
         ]
       }
+      cartographer_rules: {
+        Row: {
+          arquetipo: string | null
+          ativa: boolean | null
+          confianca_base: number | null
+          created_at: string | null
+          distrito: string | null
+          fase_jornada: string | null
+          ferramenta_complementar_slug: string | null
+          ferramenta_origem_slug: string | null
+          ferramenta_principal_slug: string
+          id: string
+          nome: string
+          pergunta: string | null
+          porta: string | null
+          prioridade: number | null
+          ritual: string | null
+          torre: string | null
+        }
+        Insert: {
+          arquetipo?: string | null
+          ativa?: boolean | null
+          confianca_base?: number | null
+          created_at?: string | null
+          distrito?: string | null
+          fase_jornada?: string | null
+          ferramenta_complementar_slug?: string | null
+          ferramenta_origem_slug?: string | null
+          ferramenta_principal_slug: string
+          id?: string
+          nome: string
+          pergunta?: string | null
+          porta?: string | null
+          prioridade?: number | null
+          ritual?: string | null
+          torre?: string | null
+        }
+        Update: {
+          arquetipo?: string | null
+          ativa?: boolean | null
+          confianca_base?: number | null
+          created_at?: string | null
+          distrito?: string | null
+          fase_jornada?: string | null
+          ferramenta_complementar_slug?: string | null
+          ferramenta_origem_slug?: string | null
+          ferramenta_principal_slug?: string
+          id?: string
+          nome?: string
+          pergunta?: string | null
+          porta?: string | null
+          prioridade?: number | null
+          ritual?: string | null
+          torre?: string | null
+        }
+        Relationships: []
+      }
       cartographies: {
         Row: {
           classification_json: Json | null
