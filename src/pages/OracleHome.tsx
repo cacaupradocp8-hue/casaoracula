@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { Sparkles, Play, History, Lock, ArrowLeft, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,9 +8,17 @@ import { AmbientSoundToggle } from '@/components/oracle/AmbientSoundToggle';
 import { cn } from '@/lib/utils';
 import { useCopy } from '@/hooks/useCopy';
 
+function useOracleBasePath() {
+  const location = useLocation();
+  return location.pathname.startsWith('/casa-das-maquinas') 
+    ? '/casa-das-maquinas/oraculo' 
+    : '/oraculos';
+}
+
 export default function OracleHome() {
   const { oracleSlug } = useParams<{ oracleSlug: string }>();
   const navigate = useNavigate();
+  const basePath = useOracleBasePath();
   const { oracle, spreads, cards, isLoading, error, hasAccess } = useOracleBySlug(oracleSlug || '');
   const [sensitiveMode, setSensitiveMode] = useState(false);
   const { getCopyByKey } = useCopy();
@@ -28,7 +36,7 @@ export default function OracleHome() {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <p className="text-muted-foreground mb-4">Oráculo não encontrado</p>
-          <Button variant="ghost" onClick={() => navigate('/oraculos')}>
+          <Button variant="ghost" onClick={() => navigate(basePath)}>
             Voltar
           </Button>
         </div>
@@ -71,7 +79,7 @@ export default function OracleHome() {
             
             <Button 
               variant="ghost" 
-              onClick={() => navigate('/oraculos')}
+              onClick={() => navigate(basePath)}
               className="text-muted-foreground"
             >
               Voltar
@@ -101,12 +109,12 @@ export default function OracleHome() {
           </div>
         )}
 
-        {/* Top Bar - Minimal */}
+        {/* Top Bar */}
         <header className="relative z-10 flex items-center justify-between p-4">
           <Button 
             variant="ghost" 
             size="icon"
-            onClick={() => navigate('/oraculos')}
+            onClick={() => navigate(basePath)}
             className="text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -115,10 +123,9 @@ export default function OracleHome() {
           <AmbientSoundToggle />
         </header>
 
-        {/* Content - Centered */}
+        {/* Content */}
         <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 pb-8">
           <div className="text-center max-w-md animate-fade-in">
-            {/* Oracle name */}
             <h1 className="text-4xl md:text-5xl font-display font-medium text-foreground mb-2 tracking-wide">
               {oracle.name}
             </h1>
@@ -139,14 +146,13 @@ export default function OracleHome() {
             <Button 
               size="lg"
               className="w-full max-w-xs text-base py-6 mb-4"
-              onClick={() => navigate(`/oraculos/${oracle.slug}/tirar`)}
+              onClick={() => navigate(`${basePath}/${oracle.slug}/tirar`)}
               style={{ backgroundColor: primaryColor }}
             >
               <Play className="w-4 h-4 mr-2" />
               {getCopyByKey('btn_iniciar_travessia', 'Iniciar a travessia')}
             </Button>
 
-            {/* Card count hint */}
             <p className="text-xs text-muted-foreground/60 mb-8">
               {totalCards} cartas disponíveis
             </p>
@@ -155,13 +161,12 @@ export default function OracleHome() {
 
         {/* Bottom Actions */}
         <div className="relative z-10 px-6 pb-8 max-w-md mx-auto w-full space-y-4">
-          {/* Spreads - Minimal list */}
           {publishedSpreads.length > 1 && (
             <div className="space-y-2">
               {publishedSpreads.map((spread) => (
                 <button
                   key={spread.id}
-                  onClick={() => navigate(`/oraculos/${oracle.slug}/tirar?spread=${spread.id}`)}
+                  onClick={() => navigate(`${basePath}/${oracle.slug}/tirar?spread=${spread.id}`)}
                   className={cn(
                     'w-full p-4 rounded-xl text-left',
                     'bg-card/30 hover:bg-card/50 transition-colors',
@@ -186,13 +191,12 @@ export default function OracleHome() {
             </div>
           )}
 
-          {/* Secondary actions */}
           <div className="flex items-center justify-center gap-4 pt-2">
             {oracle.enable_journal && (
               <Button 
                 variant="ghost"
                 size="sm"
-                onClick={() => navigate(`/oraculos/${oracle.slug}/historico`)}
+                onClick={() => navigate(`${basePath}/${oracle.slug}/historico`)}
                 className="text-muted-foreground hover:text-foreground"
               >
                 <History className="w-4 h-4 mr-2" />
@@ -201,7 +205,6 @@ export default function OracleHome() {
             )}
           </div>
 
-          {/* Sensitive mode toggle */}
           {oracle.is_sensitive_mode_available && (
             <div className="flex items-center justify-center gap-3 pt-4">
               <Shield className="w-4 h-4 text-muted-foreground/50" />
@@ -216,7 +219,6 @@ export default function OracleHome() {
         </div>
       </section>
 
-      {/* Disclaimer */}
       {oracle.disclaimer_text && (
         <footer className="px-6 py-4 text-center">
           <p className="text-[10px] text-muted-foreground/50 max-w-sm mx-auto">

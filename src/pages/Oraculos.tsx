@@ -1,4 +1,4 @@
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Sparkles, Lock, Home, ChevronRight, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -7,8 +7,16 @@ import { OracleDeck } from '@/types/oracle';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
+function useOracleBasePath() {
+  const location = useLocation();
+  return location.pathname.startsWith('/casa-das-maquinas') 
+    ? '/casa-das-maquinas/oraculo' 
+    : '/oraculos';
+}
+
 export default function Oraculos() {
   const navigate = useNavigate();
+  const basePath = useOracleBasePath();
   const { oracles, isLoading, hasAccess } = useOracles();
 
   const publishedOracles = oracles.filter(o => o.status === 'published' || hasAccess(o));
@@ -42,7 +50,6 @@ export default function Oraculos() {
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-16 space-y-6 relative"
         >
-          {/* Ambient glow */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-gold/5 blur-[100px] pointer-events-none" />
 
           <motion.div
@@ -80,11 +87,11 @@ export default function Oraculos() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {publishedOracles.map((oracle, index) => (
-              <OracleCard 
+              <OracleCardItem 
                 key={oracle.id} 
                 oracle={oracle} 
                 hasAccess={hasAccess(oracle)} 
-                onNavigate={() => navigate(`/oraculos/${oracle.slug}`)}
+                onNavigate={() => navigate(`${basePath}/${oracle.slug}`)}
                 index={index}
               />
             ))}
@@ -95,14 +102,14 @@ export default function Oraculos() {
   );
 }
 
-interface OracleCardProps {
+interface OracleCardItemProps {
   oracle: OracleDeck;
   hasAccess: boolean;
   onNavigate: () => void;
   index: number;
 }
 
-function OracleCard({ oracle, hasAccess, onNavigate, index }: OracleCardProps) {
+function OracleCardItem({ oracle, hasAccess, onNavigate, index }: OracleCardItemProps) {
   const navigate = useNavigate();
   const primaryColor = oracle.theme_json?.primaryColor || 'hsl(var(--gold))';
   const backgroundColor = oracle.theme_json?.backgroundColor || 'hsl(var(--midnight))';
@@ -138,17 +145,14 @@ function OracleCard({ oracle, hasAccess, onNavigate, index }: OracleCardProps) {
           </div>
         )}
         
-        {/* Cinematic overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-card/30 via-transparent to-card/30" />
         
-        {/* Corner accent */}
         <div className="absolute top-4 right-4 w-8 h-8">
           <div className="absolute top-0 right-0 w-full h-px bg-gradient-to-l from-gold/30 to-transparent" />
           <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-gold/30 to-transparent" />
         </div>
 
-        {/* Locked Overlay */}
         {!hasAccess && (
           <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center">
             <div className="text-center p-6">
