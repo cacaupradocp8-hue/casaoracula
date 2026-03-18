@@ -189,7 +189,7 @@ export default function OracleDraw() {
         <Button 
           variant="ghost" 
           size="icon"
-          onClick={() => navigate(`/oraculos/${oracle.slug}`)}
+          onClick={() => navigate(`${basePath}/${oracle.slug}`)}
           className="text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="w-5 h-5" />
