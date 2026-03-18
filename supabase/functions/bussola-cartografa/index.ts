@@ -331,17 +331,26 @@ interface RuleContext {
 }
 
 function matchRule(rules: any[], ctx: RuleContext): any | null {
-  for (const rule of rules) {
-    let matches = true;
+  // 1. Collect all matching rules
+  const matched = rules.filter((rule) => {
+    if (rule.distrito && rule.distrito !== ctx.distrito) return false;
+    if (rule.arquetipo && rule.arquetipo !== ctx.arquetipo) return false;
+    if (rule.torre && rule.torre !== ctx.torre) return false;
+    if (rule.porta && rule.porta !== ctx.porta) return false;
+    if (rule.ferramenta_origem_slug && rule.ferramenta_origem_slug !== ctx.ferramenta_origem_slug) return false;
+    if (rule.fase_jornada && rule.fase_jornada !== ctx.fase_jornada) return false;
+    return true;
+  });
 
-    if (rule.distrito && rule.distrito !== ctx.distrito) matches = false;
-    if (rule.arquetipo && rule.arquetipo !== ctx.arquetipo) matches = false;
-    if (rule.torre && rule.torre !== ctx.torre) matches = false;
-    if (rule.porta && rule.porta !== ctx.porta) matches = false;
-    if (rule.ferramenta_origem_slug && rule.ferramenta_origem_slug !== ctx.ferramenta_origem_slug) matches = false;
-    if (rule.fase_jornada && rule.fase_jornada !== ctx.fase_jornada) matches = false;
+  if (matched.length === 0) return null;
 
-    if (matches) return rule;
-  }
-  return null;
+  // 2. Sort by priority DESC, then confidence DESC
+  matched.sort((a, b) => {
+    const prioDiff = (b.prioridade || 0) - (a.prioridade || 0);
+    if (prioDiff !== 0) return prioDiff;
+    return (b.confianca_base || 0) - (a.confianca_base || 0);
+  });
+
+  // 3. Return best match
+  return matched[0];
 }
