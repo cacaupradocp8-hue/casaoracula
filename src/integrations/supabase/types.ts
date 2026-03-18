@@ -11389,15 +11389,18 @@ export type Database = {
           ativa: boolean | null
           cor_principal: string | null
           created_at: string | null
+          deck_id: string | null
           descricao_curta: string | null
           district_id: string | null
           elemento: string | null
           familia: string
           icone: string | null
           id: string
+          main_image_url: string | null
           mensagem_simbolica: string | null
           nome: string
           numero: number
+          ordem: number | null
           pergunta_oracular: string | null
           slug: string
           subtitulo: string | null
@@ -11410,15 +11413,18 @@ export type Database = {
           ativa?: boolean | null
           cor_principal?: string | null
           created_at?: string | null
+          deck_id?: string | null
           descricao_curta?: string | null
           district_id?: string | null
           elemento?: string | null
           familia: string
           icone?: string | null
           id?: string
+          main_image_url?: string | null
           mensagem_simbolica?: string | null
           nome: string
           numero: number
+          ordem?: number | null
           pergunta_oracular?: string | null
           slug: string
           subtitulo?: string | null
@@ -11431,15 +11437,18 @@ export type Database = {
           ativa?: boolean | null
           cor_principal?: string | null
           created_at?: string | null
+          deck_id?: string | null
           descricao_curta?: string | null
           district_id?: string | null
           elemento?: string | null
           familia?: string
           icone?: string | null
           id?: string
+          main_image_url?: string | null
           mensagem_simbolica?: string | null
           nome?: string
           numero?: number
+          ordem?: number | null
           pergunta_oracular?: string | null
           slug?: string
           subtitulo?: string | null
@@ -11452,6 +11461,13 @@ export type Database = {
             columns: ["archetype_id"]
             isOneToOne: false
             referencedRelation: "founding_archetypes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "oracle_cards_deck_id_fkey"
+            columns: ["deck_id"]
+            isOneToOne: false
+            referencedRelation: "oracle_decks"
             referencedColumns: ["id"]
           },
           {

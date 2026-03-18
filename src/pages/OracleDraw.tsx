@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { Sparkles, Loader2, ArrowLeft, RotateCcw, Save, ChevronDown, ChevronUp, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -16,10 +16,18 @@ import { cn } from '@/lib/utils';
 
 type DrawStep = 'select-spread' | 'meditation' | 'drawing' | 'reveal' | 'closing';
 
+function useOracleBasePath() {
+  const location = useLocation();
+  return location.pathname.startsWith('/casa-das-maquinas') 
+    ? '/casa-das-maquinas/oraculo' 
+    : '/oraculos';
+}
+
 export default function OracleDraw() {
   const { oracleSlug } = useParams<{ oracleSlug: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const basePath = useOracleBasePath();
   const { user } = useAuth();
   const { toast } = useToast();
   
@@ -160,7 +168,7 @@ export default function OracleDraw() {
   }
 
   if (!oracle || !hasAccess()) {
-    navigate('/oraculos');
+    navigate(basePath);
     return null;
   }
 
@@ -181,7 +189,7 @@ export default function OracleDraw() {
         <Button 
           variant="ghost" 
           size="icon"
-          onClick={() => navigate(`/oraculos/${oracle.slug}`)}
+          onClick={() => navigate(`${basePath}/${oracle.slug}`)}
           className="text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -515,7 +523,7 @@ export default function OracleDraw() {
               
               <Button 
                 variant="ghost"
-                onClick={() => navigate(`/oraculos/${oracle.slug}/historico`)}
+                onClick={() => navigate(`${basePath}/${oracle.slug}/historico`)}
                 className="text-muted-foreground"
               >
                 Ver Histórico
