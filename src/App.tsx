@@ -1776,6 +1776,14 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/oraculos/:oracleSlug/biblioteca"
+          element={
+            <ProtectedRoute>
+              <OracleCardLibrary />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Legacy redirects for old /curso/ routes */}
         <Route path="/curso/:id" element={<LegacyCursoRedirect />} />
