@@ -21,6 +21,7 @@ const mainNav: NavItem[] = [
   { label: 'Grupos', path: '/casa-das-maquinas/grupos', icon: UsersRound },
 ];
 const toolsNav: NavItem[] = [
+  { label: 'Oráculo', path: '/casa-das-maquinas/oraculo', icon: Sparkles },
   { label: 'Painel Clínico', path: '/casa-das-maquinas/painel-clinico', icon: Compass },
   { label: 'Ferramentas', path: '/casa-das-maquinas/ferramentas', icon: Wrench },
   { label: 'Biblioteca', path: '/casa-das-maquinas/biblioteca', icon: BookOpen },
