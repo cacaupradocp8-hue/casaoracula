@@ -168,7 +168,7 @@ export default function OracleDraw() {
   }
 
   if (!oracle || !hasAccess()) {
-    navigate('/oraculos');
+    navigate(basePath);
     return null;
   }
 
