@@ -229,6 +229,7 @@ Deno.serve(async (req) => {
       confianca,
       fase_jornada: phase,
       modo_sessao: modo_sessao || "oracula",
+      alternativa,
     };
 
     return new Response(JSON.stringify(result), {
