@@ -3,6 +3,42 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { OracleDeck, OracleCard, OracleSpread, OracleCategory, OracleDraw, DrawnCard } from '@/types/oracle';
 
+// Map DB row to OracleCard type
+function mapDbCardToOracleCard(row: any): OracleCard {
+  return {
+    id: row.id,
+    oracle_id: row.deck_id || '',
+    category_id: null,
+    title: row.nome || '',
+    subtitle: row.subtitulo || null,
+    main_image_url: row.main_image_url || null,
+    back_image_url: null,
+    image_variants_json: [],
+    keywords_json: [],
+    polarity_light_text: null,
+    polarity_shadow_text: null,
+    short_message: row.mensagem_simbolica || null,
+    deep_reading: row.descricao_curta || null,
+    reflection_questions_json: row.pergunta_oracular ? [row.pergunta_oracular] : [],
+    ritual_text: null,
+    care_notes: row.aplicacao_terapeutica || null,
+    level: 'beginner',
+    is_sensitive: false,
+    status: row.ativa ? 'published' : 'draft',
+    ordem: row.ordem || row.numero || 0,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+    // Extra fields for display
+    familia: row.familia,
+    cor_principal: row.cor_principal,
+    icone: row.icone,
+    archetype_id: row.archetype_id,
+    district_id: row.district_id,
+    tool_id: row.tool_id,
+    elemento: row.elemento,
+  } as OracleCard & Record<string, any>;
+}
+
 export function useOracles() {
   const { user } = useAuth();
   const [oracles, setOracles] = useState<OracleDeck[]>([]);
@@ -34,18 +70,20 @@ export function useOracles() {
 
   const hasAccess = useCallback((oracle: OracleDeck): boolean => {
     const userPortal = user?.portal || 'visitante';
-    
-    // Admin always has access
     if (userPortal === 'admin') return true;
 
     const portalOrder: Record<string, number> = {
       visitante: 0,
+      mentorada: 1,
+      aluna_formacao: 2,
       pre_iniciada: 1,
-      iniciada: 2,
-      admin: 3,
+      assinante: 3,
+      oracula: 4,
+      iniciada: 4,
+      admin: 5,
     };
 
-    return portalOrder[userPortal] >= portalOrder[oracle.minimum_portal];
+    return (portalOrder[userPortal] || 0) >= (portalOrder[oracle.minimum_portal] || 0);
   }, [user]);
 
   return {
@@ -89,12 +127,13 @@ export function useOracleBySlug(slug: string) {
 
         setOracle(oracleData as unknown as OracleDeck);
 
-        // Fetch cards, spreads, categories in parallel
+        // Fetch cards (using deck_id), spreads, categories in parallel
         const [cardsRes, spreadsRes, categoriesRes] = await Promise.all([
           (supabase.from('oracle_cards') as any)
             .select('*')
-            .eq('oracle_id', oracleData.id)
-            .order('ordem'),
+            .eq('deck_id', oracleData.id)
+            .eq('ativa', true)
+            .order('numero'),
           supabase
             .from('oracle_spreads')
             .select('*')
@@ -107,7 +146,9 @@ export function useOracleBySlug(slug: string) {
             .order('ordem'),
         ]);
 
-        setCards((cardsRes.data || []) as unknown as OracleCard[]);
+        // Map DB cards to expected type
+        const mappedCards = (cardsRes.data || []).map(mapDbCardToOracleCard);
+        setCards(mappedCards);
         setSpreads((spreadsRes.data || []) as unknown as OracleSpread[]);
         setCategories((categoriesRes.data || []) as unknown as OracleCategory[]);
       } catch (err) {
@@ -129,12 +170,16 @@ export function useOracleBySlug(slug: string) {
 
     const portalOrder: Record<string, number> = {
       visitante: 0,
+      mentorada: 1,
+      aluna_formacao: 2,
       pre_iniciada: 1,
-      iniciada: 2,
-      admin: 3,
+      assinante: 3,
+      oracula: 4,
+      iniciada: 4,
+      admin: 5,
     };
 
-    return portalOrder[userPortal] >= portalOrder[oracle.minimum_portal];
+    return (portalOrder[userPortal] || 0) >= (portalOrder[oracle.minimum_portal] || 0);
   }, [oracle, user]);
 
   return {
