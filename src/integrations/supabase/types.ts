@@ -2086,6 +2086,39 @@ export type Database = {
         }
         Relationships: []
       }
+      cartographer_training_cases: {
+        Row: {
+          created_at: string | null
+          descricao: string | null
+          distrito_correto: string | null
+          ferramenta_correta: string | null
+          id: string
+          nivel: string | null
+          pergunta_correta: string | null
+          titulo: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          descricao?: string | null
+          distrito_correto?: string | null
+          ferramenta_correta?: string | null
+          id?: string
+          nivel?: string | null
+          pergunta_correta?: string | null
+          titulo?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          descricao?: string | null
+          distrito_correto?: string | null
+          ferramenta_correta?: string | null
+          id?: string
+          nivel?: string | null
+          pergunta_correta?: string | null
+          titulo?: string | null
+        }
+        Relationships: []
+      }
       cartographies: {
         Row: {
           classification_json: Json | null
