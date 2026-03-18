@@ -330,8 +330,7 @@ interface RuleContext {
   fase_jornada: string;
 }
 
-function matchRule(rules: any[], ctx: RuleContext): any | null {
-  // 1. Collect all matching rules
+function matchRules(rules: any[], ctx: RuleContext): { best: any | null; alternative: any | null } {
   const matched = rules.filter((rule) => {
     if (rule.distrito && rule.distrito !== ctx.distrito) return false;
     if (rule.arquetipo && rule.arquetipo !== ctx.arquetipo) return false;
@@ -342,15 +341,13 @@ function matchRule(rules: any[], ctx: RuleContext): any | null {
     return true;
   });
 
-  if (matched.length === 0) return null;
+  if (matched.length === 0) return { best: null, alternative: null };
 
-  // 2. Sort by priority DESC, then confidence DESC
   matched.sort((a, b) => {
     const prioDiff = (b.prioridade || 0) - (a.prioridade || 0);
     if (prioDiff !== 0) return prioDiff;
     return (b.confianca_base || 0) - (a.confianca_base || 0);
   });
 
-  // 3. Return best match
-  return matched[0];
+  return { best: matched[0], alternative: matched[1] || null };
 }
