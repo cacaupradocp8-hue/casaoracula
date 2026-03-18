@@ -84,33 +84,54 @@ Deno.serve(async (req) => {
     // 2. Determine phase
     const phase = fase_jornada || inferPhase(cityState, tools);
 
-    // 3. Determine base district
+    // Build slug lookup
+    const toolBySlug = new Map(tools.map((t: any) => [t.slug, t]));
+    const lastTool = last_tool_id ? toolById.get(last_tool_id) : null;
+
+    // 3. Try cartographer_rules first (database-driven rules)
+    let toolPrincipal: any = null;
+    let toolComplementar: any = null;
     let distritoSugerido = cityState?.distrito_ativo || null;
-    
-    // Rule 1: if last tool has principal district, use it
-    if (last_tool_id && toolPrincipalDistrict.has(last_tool_id)) {
+    let perguntaFromRule: string | null = null;
+    let ritualFromRule: string | null = null;
+    let confiancaFromRule: number | null = null;
+
+    const matchedRule = matchRule(rules, {
+      distrito: distritoSugerido,
+      arquetipo: archState?.arquitipo_regente_id || null,
+      torre: null,
+      porta: null,
+      ferramenta_origem_slug: lastTool?.slug || null,
+      fase_jornada: phase,
+    });
+
+    if (matchedRule) {
+      toolPrincipal = toolBySlug.get(matchedRule.ferramenta_principal_slug) || null;
+      toolComplementar = matchedRule.ferramenta_complementar_slug
+        ? toolBySlug.get(matchedRule.ferramenta_complementar_slug) || null
+        : null;
+      if (matchedRule.pergunta) perguntaFromRule = matchedRule.pergunta;
+      if (matchedRule.ritual) ritualFromRule = matchedRule.ritual;
+      confiancaFromRule = matchedRule.confianca_base;
+    }
+
+    // Fallback: Rule 1 — last tool's principal district
+    if (!distritoSugerido && last_tool_id && toolPrincipalDistrict.has(last_tool_id)) {
       distritoSugerido = toolPrincipalDistrict.get(last_tool_id)!;
     }
 
-    // 4. Find principal tool suggestion
-    let toolPrincipal: any = null;
-    let toolComplementar: any = null;
-
-    // Rule 3: if last_tool has proximo_passo, use it
-    if (last_tool_id) {
-      const lastTool = toolById.get(last_tool_id);
-      if (lastTool?.proximo_passo_id) {
-        toolPrincipal = toolById.get(lastTool.proximo_passo_id) || null;
-      }
+    // Fallback: proximo_passo from methodology
+    if (!toolPrincipal && lastTool?.proximo_passo_id) {
+      toolPrincipal = toolById.get(lastTool.proximo_passo_id) || null;
     }
 
-    // If no next step from tool, use phase-based logic
+    // Fallback: phase-based selection
     if (!toolPrincipal) {
       toolPrincipal = selectByPhase(phase, tools, cityState);
     }
 
-    // Find complementar from flows
-    if (toolPrincipal) {
+    // Fallback: complementar from flows
+    if (toolPrincipal && !toolComplementar) {
       const complementarFlow = flows.find(
         (f: any) => f.tool_origem_id === toolPrincipal.id && f.tipo === "complementar"
       );
