@@ -5967,6 +5967,86 @@ export type Database = {
           },
         ]
       }
+      custom_oracle_cards: {
+        Row: {
+          aplicacao: string | null
+          created_at: string | null
+          custom_oracle_id: string
+          id: string
+          mensagem: string | null
+          nome: string
+          ordem: number | null
+          pergunta: string | null
+          slug: string
+        }
+        Insert: {
+          aplicacao?: string | null
+          created_at?: string | null
+          custom_oracle_id: string
+          id?: string
+          mensagem?: string | null
+          nome: string
+          ordem?: number | null
+          pergunta?: string | null
+          slug: string
+        }
+        Update: {
+          aplicacao?: string | null
+          created_at?: string | null
+          custom_oracle_id?: string
+          id?: string
+          mensagem?: string | null
+          nome?: string
+          ordem?: number | null
+          pergunta?: string | null
+          slug?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_oracle_cards_custom_oracle_id_fkey"
+            columns: ["custom_oracle_id"]
+            isOneToOne: false
+            referencedRelation: "custom_oracles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      custom_oracles: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          descricao: string | null
+          id: string
+          nome: string
+          ordem: number | null
+          slug: string
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          descricao?: string | null
+          id?: string
+          nome: string
+          ordem?: number | null
+          slug: string
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          descricao?: string | null
+          id?: string
+          nome?: string
+          ordem?: number | null
+          slug?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       cycle_books: {
         Row: {
           book_id: string
