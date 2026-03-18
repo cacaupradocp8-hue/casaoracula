@@ -16,10 +16,18 @@ import { cn } from '@/lib/utils';
 
 type DrawStep = 'select-spread' | 'meditation' | 'drawing' | 'reveal' | 'closing';
 
+function useOracleBasePath() {
+  const location = useLocation();
+  return location.pathname.startsWith('/casa-das-maquinas') 
+    ? '/casa-das-maquinas/oraculo' 
+    : '/oraculos';
+}
+
 export default function OracleDraw() {
   const { oracleSlug } = useParams<{ oracleSlug: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const basePath = useOracleBasePath();
   const { user } = useAuth();
   const { toast } = useToast();
   
