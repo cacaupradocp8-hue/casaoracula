@@ -44,7 +44,11 @@ export default function DecodificacaoOniricaPage() {
     });
 
     if (error) toast.error('Erro ao salvar');
-    else { toast.success('Sonho registrado'); navigate(`/casa-das-maquinas/clientes/${clientId}`); }
+    else {
+      await updateClientDistrict(clientId, 'sonhos');
+      toast.success('Sonho registrado');
+      navigate(`/casa-das-maquinas/clientes/${clientId}`);
+    }
     setSaving(false);
   };
 
