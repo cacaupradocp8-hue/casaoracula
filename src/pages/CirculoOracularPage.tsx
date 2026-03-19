@@ -143,7 +143,6 @@ export default function CirculoOracularPage() {
                   <div>
                     <p className="text-xs text-gold/60 uppercase tracking-widest mb-1">Livro do Ciclo</p>
                     <h2 className="font-display text-lg text-foreground">{cicloAtual.titulo}</h2>
-                    {cicloAtual.autor && <p className="text-sm text-muted-foreground">{cicloAtual.autor}</p>}
                   </div>
                 </CardContent>
               </Card>
