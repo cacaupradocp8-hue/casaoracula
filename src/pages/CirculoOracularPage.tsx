@@ -1,43 +1,26 @@
 import { useState, useEffect } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Sparkles, Sun, Eye, Flame, Heart, Save, Loader2, Check } from 'lucide-react';
+import { Flame, Save, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useClubeLivro } from '@/hooks/useClubeLivro';
 import { toast } from 'sonner';
 
 const FASES = [
-  { key: 'abertura', label: 'Abertura', icon: Sun, desc: 'O campo se prepara. Silêncio antes da leitura.', color: 'text-amber-400' },
-  { key: 'leitura', label: 'Leitura', icon: BookOpen, desc: 'A obra atravessa. Deixe o texto trabalhar.', color: 'text-blue-400' },
-  { key: 'reflexao', label: 'Reflexão', icon: Eye, desc: 'O que ficou? O que se moveu internamente?', color: 'text-purple-400' },
-  { key: 'integracao', label: 'Integração', icon: Heart, desc: 'Encarnar o que foi tocado. Gesto vivo.', color: 'text-gold' },
+  { key: 'abertura', label: 'Silêncio' },
+  { key: 'leitura', label: 'Escuta' },
+  { key: 'reflexao', label: 'Reflexão' },
+  { key: 'integracao', label: 'Gesto' },
 ];
-
-interface Registro {
-  id: string;
-  fase: string;
-  passagem_atravessou: string | null;
-  onde_toca_vida: string | null;
-  imagem_ficou: string | null;
-  insights_encontro: string | null;
-  movimentos_internos: string | null;
-  decisoes_simbolicas: string | null;
-  gesto_pos_circulo: string | null;
-  created_at: string;
-}
 
 export default function CirculoOracularPage() {
   const { user } = useAuth();
   const { cicloAtual } = useClubeLivro();
   const [faseAtiva, setFaseAtiva] = useState('abertura');
-  const [registro, setRegistro] = useState<Registro | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [registro, setRegistro] = useState<any>(null);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     passagem_atravessou: '',
@@ -45,7 +28,6 @@ export default function CirculoOracularPage() {
     imagem_ficou: '',
     insights_encontro: '',
     movimentos_internos: '',
-    decisoes_simbolicas: '',
     gesto_pos_circulo: '',
   });
 
@@ -55,7 +37,6 @@ export default function CirculoOracularPage() {
 
   const fetchRegistro = async () => {
     if (!user || !cicloAtual) return;
-    setLoading(true);
     const { data } = await (supabase.from('circulo_oracular_registros' as any) as any)
       .select('*')
       .eq('user_id', user.id)
@@ -70,11 +51,9 @@ export default function CirculoOracularPage() {
         imagem_ficou: data[0].imagem_ficou || '',
         insights_encontro: data[0].insights_encontro || '',
         movimentos_internos: data[0].movimentos_internos || '',
-        decisoes_simbolicas: data[0].decisoes_simbolicas || '',
         gesto_pos_circulo: data[0].gesto_pos_circulo || '',
       });
     }
-    setLoading(false);
   };
 
   const handleSave = async () => {
@@ -89,10 +68,10 @@ export default function CirculoOracularPage() {
         await (supabase.from('circulo_oracular_registros' as any) as any)
           .insert({ user_id: user.id, ciclo_id: cicloAtual.id, fase: faseAtiva, ...form });
       }
-      toast.success('Registro guardado no campo');
+      toast.success('Guardado');
       fetchRegistro();
     } catch {
-      toast.error('Não foi possível guardar');
+      toast.error('Erro ao guardar');
     } finally {
       setSaving(false);
     }
@@ -102,227 +81,175 @@ export default function CirculoOracularPage() {
     setForm(prev => ({ ...prev, [field]: value }));
   };
 
+  const faseIndex = FASES.findIndex(f => f.key === faseAtiva);
+
   return (
     <AppLayout>
       <div className="min-h-screen">
-        {/* Hero */}
-        <section className="relative py-20 md:py-28 overflow-hidden">
-          <div className="absolute inset-0 bg-background" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-gradient-to-br from-mystic/8 via-gold/5 to-transparent blur-3xl animate-breathe pointer-events-none" />
-
+        {/* Entry — contemplative */}
+        <section className="relative py-24 md:py-32 overflow-hidden">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-gold/5 blur-3xl animate-breathe pointer-events-none" />
+          
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="relative z-10 container mx-auto px-6 text-center max-w-2xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.2 }}
+            className="relative z-10 container mx-auto px-6 text-center max-w-lg"
           >
-            <div className="w-14 h-14 mx-auto rounded-full bg-gold/10 border border-gold/15 flex items-center justify-center mb-6">
-              <Flame className="w-7 h-7 text-gold" />
+            <div className="w-12 h-12 mx-auto rounded-full bg-gold/8 border border-gold/10 flex items-center justify-center mb-8">
+              <Flame className="w-5 h-5 text-gold/50" />
             </div>
-            <p className="text-[11px] uppercase tracking-[0.4em] text-gold/50 font-medium mb-4">
+            <p className="text-[10px] uppercase tracking-[0.5em] text-gold/40 font-medium mb-6">
               Círculo Oracular
             </p>
-            <h1 className="font-display text-3xl md:text-4xl text-foreground mb-4 tracking-wide">
-              O Círculo se Abre
-            </h1>
-            <p className="text-muted-foreground text-sm md:text-base font-display italic">
-              Cada leitura é uma travessia. O que ficou não precisa ser explicado — precisa ser habitado.
+            <p className="text-foreground/60 text-sm font-display italic leading-relaxed">
+              O que ficou não precisa ser explicado — precisa ser habitado.
             </p>
           </motion.div>
         </section>
 
-        <div className="container mx-auto px-6 pb-24 max-w-4xl">
-          {/* Active Book */}
+        <div className="container mx-auto px-6 pb-24 max-w-xl">
+          {/* Active Book — subtle */}
           {cicloAtual && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-              <Card className="glass border-gold/15 mb-10">
-                <CardContent className="p-6 flex items-center gap-5">
-                  {cicloAtual.capa_url && (
-                    <img src={cicloAtual.capa_url} alt={cicloAtual.titulo} className="w-16 h-24 rounded object-cover border border-border/30" />
-                  )}
-                  <div>
-                    <p className="text-xs text-gold/60 uppercase tracking-widest mb-1">Livro do Ciclo</p>
-                    <h2 className="font-display text-lg text-foreground">{cicloAtual.titulo}</h2>
-                  </div>
-                </CardContent>
-              </Card>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="mb-12">
+              <div className="flex items-center gap-4 justify-center">
+                {cicloAtual.capa_url && (
+                  <img src={cicloAtual.capa_url} alt={cicloAtual.titulo} className="w-10 h-14 rounded object-cover opacity-70" />
+                )}
+                <p className="text-xs text-muted-foreground font-display">{cicloAtual.titulo}</p>
+              </div>
             </motion.div>
           )}
 
-          {/* Journey Phases */}
-          <Tabs value={faseAtiva} onValueChange={setFaseAtiva} className="space-y-8">
-            <TabsList className="w-full grid grid-cols-4 h-auto p-1 bg-card/50 border border-border/30">
-              {FASES.map(fase => {
-                const Icon = fase.icon;
-                return (
-                  <TabsTrigger
-                    key={fase.key}
-                    value={fase.key}
-                    className="flex flex-col gap-1.5 py-3 data-[state=active]:bg-gold/10 data-[state=active]:text-gold text-muted-foreground"
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span className="text-xs font-medium">{fase.label}</span>
-                  </TabsTrigger>
-                );
-              })}
-            </TabsList>
+          {/* Phase navigation — minimal dots */}
+          <div className="flex items-center justify-center gap-6 mb-12">
+            {FASES.map((fase, i) => (
+              <button
+                key={fase.key}
+                onClick={() => setFaseAtiva(fase.key)}
+                className="group flex flex-col items-center gap-2"
+              >
+                <div className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                  faseAtiva === fase.key ? 'bg-gold scale-125' : i <= faseIndex ? 'bg-gold/30' : 'bg-border'
+                }`} />
+                <span className={`text-[10px] tracking-wider transition-colors duration-300 ${
+                  faseAtiva === fase.key ? 'text-gold/70' : 'text-muted-foreground/40'
+                }`}>
+                  {fase.label}
+                </span>
+              </button>
+            ))}
+          </div>
 
-            <AnimatePresence mode="wait">
-              <motion.div key={faseAtiva} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-                {/* Phase Description */}
-                {FASES.map(fase => (
-                  <TabsContent key={fase.key} value={fase.key}>
-                    <div className="mb-6">
-                      <p className={`text-sm font-display ${fase.color} mb-1`}>{fase.label}</p>
-                      <p className="text-muted-foreground text-sm italic">{fase.desc}</p>
-                    </div>
+          {/* Content — spacious, quiet */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={faseAtiva}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              {faseAtiva === 'abertura' && (
+                <div className="text-center py-12">
+                  <p className="text-foreground/50 text-sm font-display italic leading-loose max-w-xs mx-auto">
+                    Antes de abrir o livro, abra o campo interno. Perceba o que já está presente — sem forçar, sem nomear.
+                  </p>
+                </div>
+              )}
 
-                    {fase.key === 'abertura' && (
-                      <Card className="glass border-border/20">
-                        <CardContent className="p-6 space-y-6">
-                          <p className="text-foreground/80 font-display text-sm leading-relaxed">
-                            Antes de abrir o livro, abra o campo interno. Perceba o que já está presente em você — sem forçar, sem nomear.
-                          </p>
-                          <div className="glass p-4 rounded-xl border border-gold/10 text-center">
-                            <Sparkles className="w-5 h-5 text-gold/50 mx-auto mb-2" />
-                            <p className="text-xs text-muted-foreground italic">
-                              "A leitura não começa nos olhos — começa no silêncio que os antecede."
-                            </p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    )}
+              {faseAtiva === 'leitura' && (
+                <div className="space-y-8">
+                  <Field
+                    label="Qual passagem te atravessou?"
+                    value={form.passagem_atravessou}
+                    onChange={v => updateField('passagem_atravessou', v)}
+                    placeholder="O trecho que ficou..."
+                  />
+                  <Field
+                    label="Onde isso toca sua vida?"
+                    value={form.onde_toca_vida}
+                    onChange={v => updateField('onde_toca_vida', v)}
+                    placeholder="O que essa passagem ilumina..."
+                  />
+                  <Field
+                    label="Qual imagem ficou?"
+                    value={form.imagem_ficou}
+                    onChange={v => updateField('imagem_ficou', v)}
+                    placeholder="Uma imagem, sensação ou palavra..."
+                    rows={2}
+                  />
+                </div>
+              )}
 
-                    {fase.key === 'leitura' && (
-                      <Card className="glass border-border/20">
-                        <CardContent className="p-6 space-y-5">
-                          <div>
-                            <label className="text-xs text-gold/70 font-display tracking-wide block mb-2">
-                              Qual passagem te atravessou?
-                            </label>
-                            <Textarea
-                              value={form.passagem_atravessou}
-                              onChange={e => updateField('passagem_atravessou', e.target.value)}
-                              placeholder="Escreva a passagem ou trecho que ficou em você..."
-                              rows={4}
-                              className="bg-background/50"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-xs text-gold/70 font-display tracking-wide block mb-2">
-                              Onde isso toca sua vida?
-                            </label>
-                            <Textarea
-                              value={form.onde_toca_vida}
-                              onChange={e => updateField('onde_toca_vida', e.target.value)}
-                              placeholder="Que parte da sua vida essa passagem ilumina?"
-                              rows={4}
-                              className="bg-background/50"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-xs text-gold/70 font-display tracking-wide block mb-2">
-                              Qual imagem ficou em você?
-                            </label>
-                            <Textarea
-                              value={form.imagem_ficou}
-                              onChange={e => updateField('imagem_ficou', e.target.value)}
-                              placeholder="Uma imagem, sensação ou palavra que permanece..."
-                              rows={3}
-                              className="bg-background/50"
-                            />
-                          </div>
-                        </CardContent>
-                      </Card>
-                    )}
+              {faseAtiva === 'reflexao' && (
+                <div className="space-y-8">
+                  <Field
+                    label="O que emergiu no encontro?"
+                    value={form.insights_encontro}
+                    onChange={v => updateField('insights_encontro', v)}
+                    placeholder="O que surgiu..."
+                  />
+                  <Field
+                    label="O que se moveu em você?"
+                    value={form.movimentos_internos}
+                    onChange={v => updateField('movimentos_internos', v)}
+                    placeholder="Movimentos internos..."
+                  />
+                </div>
+              )}
 
-                    {fase.key === 'reflexao' && (
-                      <Card className="glass border-border/20">
-                        <CardContent className="p-6 space-y-5">
-                          <p className="text-foreground/70 text-sm font-display italic mb-2">
-                            Espaço para registrar o que emergiu no encontro ao vivo.
-                          </p>
-                          <div>
-                            <label className="text-xs text-gold/70 font-display tracking-wide block mb-2">
-                              Insights do encontro
-                            </label>
-                            <Textarea
-                              value={form.insights_encontro}
-                              onChange={e => updateField('insights_encontro', e.target.value)}
-                              placeholder="O que surgiu durante o encontro..."
-                              rows={4}
-                              className="bg-background/50"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-xs text-gold/70 font-display tracking-wide block mb-2">
-                              Movimentos internos
-                            </label>
-                            <Textarea
-                              value={form.movimentos_internos}
-                              onChange={e => updateField('movimentos_internos', e.target.value)}
-                              placeholder="O que se moveu em você..."
-                              rows={3}
-                              className="bg-background/50"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-xs text-gold/70 font-display tracking-wide block mb-2">
-                              Decisões simbólicas
-                            </label>
-                            <Textarea
-                              value={form.decisoes_simbolicas}
-                              onChange={e => updateField('decisoes_simbolicas', e.target.value)}
-                              placeholder="Algo que você decide a partir deste campo..."
-                              rows={3}
-                              className="bg-background/50"
-                            />
-                          </div>
-                        </CardContent>
-                      </Card>
-                    )}
+              {faseAtiva === 'integracao' && (
+                <div className="space-y-8">
+                  <div className="text-center py-4">
+                    <p className="text-foreground/40 text-xs font-display italic">
+                      A ponte entre o símbolo e a vida é um gesto.
+                    </p>
+                  </div>
+                  <Field
+                    label="Qual gesto você leva para a vida?"
+                    value={form.gesto_pos_circulo}
+                    onChange={v => updateField('gesto_pos_circulo', v)}
+                    placeholder="Um gesto simples, concreto, encarnado..."
+                    rows={3}
+                  />
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
 
-                    {fase.key === 'integracao' && (
-                      <Card className="glass border-border/20">
-                        <CardContent className="p-6 space-y-5">
-                          <div className="glass p-4 rounded-xl border border-gold/10 text-center mb-4">
-                            <Heart className="w-5 h-5 text-gold/50 mx-auto mb-2" />
-                            <p className="text-sm text-foreground/80 font-display">
-                              O gesto encarnado é a ponte entre o símbolo e a vida.
-                            </p>
-                          </div>
-                          <div>
-                            <label className="text-xs text-gold/70 font-display tracking-wide block mb-2">
-                              Qual gesto você leva para a sua vida após essa leitura?
-                            </label>
-                            <Textarea
-                              value={form.gesto_pos_circulo}
-                              onChange={e => updateField('gesto_pos_circulo', e.target.value)}
-                              placeholder="Um gesto simples, concreto, encarnado..."
-                              rows={4}
-                              className="bg-background/50"
-                            />
-                          </div>
-                        </CardContent>
-                      </Card>
-                    )}
-                  </TabsContent>
-                ))}
-              </motion.div>
-            </AnimatePresence>
-          </Tabs>
-
-          {/* Save Button */}
+          {/* Save — quiet */}
           {faseAtiva !== 'abertura' && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8 text-center">
-              <Button onClick={handleSave} variant="gold" size="lg" disabled={saving} className="gap-2 px-8">
-                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                Guardar no Campo
-              </Button>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-12 text-center">
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="inline-flex items-center gap-2 text-gold/50 hover:text-gold text-xs uppercase tracking-[0.3em] transition-colors duration-300 disabled:opacity-30"
+              >
+                {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
+                Guardar
+              </button>
             </motion.div>
           )}
         </div>
       </div>
     </AppLayout>
+  );
+}
+
+function Field({ label, value, onChange, placeholder, rows = 3 }: {
+  label: string; value: string; onChange: (v: string) => void; placeholder: string; rows?: number;
+}) {
+  return (
+    <div className="space-y-2">
+      <p className="text-[11px] text-gold/50 font-display tracking-wide">{label}</p>
+      <Textarea
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        rows={rows}
+        className="bg-transparent border-border/15 focus:border-gold/20 text-sm text-foreground/80 placeholder:text-muted-foreground/30 resize-none"
+      />
+    </div>
   );
 }
