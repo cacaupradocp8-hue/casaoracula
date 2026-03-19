@@ -170,6 +170,21 @@ serve(async (req) => {
 
     // Build complete system prompt with SANITIZED context
     let systemPrompt = globalPrompt + agentPrompt;
+
+    // Symbolic book listening directive (fallback for clube_livro context)
+    if (context?.contextType === 'clube_livro') {
+      systemPrompt += `\n\n## Protocolo de Escuta sobre Livros
+Quando uma usuária escreve sobre um livro:
+1. Identificar:
+   - Arquétipo presente na narrativa
+   - Emoção dominante
+   - Fase da jornada (início, crise, travessia, integração)
+2. Responder com:
+   - Uma ampliação simbólica (não explicação)
+   - Uma pergunta aberta
+Exemplo: "Essa imagem aponta para um limiar interno. O que em você ainda não atravessou esse portal?"
+Nunca resumir o livro. Nunca dar interpretação fechada.`;
+    }
     
     // Add context prompt if provided (SANITIZED)
     const sanitizedContextPrompt = sanitizeContextPrompt(context?.contextPrompt);
