@@ -27,6 +27,8 @@ import Mentoria from "./pages/Mentoria";
 import CasaTecelaAtrio from "./pages/CasaTecelaAtrio";
 import CasaTecelaInterior from "./pages/CasaTecelaInterior";
 import { CasaAtrio, CasaSustentacao, CasaLeitura, CasaCirculo, CasaJardim } from "./pages/casa";
+import CirculoOracularPage from "./pages/CirculoOracularPage";
+import HeroinaAppPage from "./pages/HeroinaAppPage";
 import OraculaPage from "./pages/OraculaPage";
 import PortalOraculaPage from "./pages/PortalOraculaPage";
 import OraculaSalesPage from "./pages/OraculaSalesPage";
