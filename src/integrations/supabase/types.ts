@@ -15701,6 +15701,74 @@ export type Database = {
         }
         Relationships: []
       }
+      tecela_conselho: {
+        Row: {
+          autor_id: string
+          created_at: string | null
+          id: string
+          pergunta_facilitadora: string
+          situacao: string
+          territorio_cidadela: string | null
+          torre_envolvida: string | null
+          updated_at: string | null
+          visivel: boolean | null
+        }
+        Insert: {
+          autor_id: string
+          created_at?: string | null
+          id?: string
+          pergunta_facilitadora: string
+          situacao: string
+          territorio_cidadela?: string | null
+          torre_envolvida?: string | null
+          updated_at?: string | null
+          visivel?: boolean | null
+        }
+        Update: {
+          autor_id?: string
+          created_at?: string | null
+          id?: string
+          pergunta_facilitadora?: string
+          situacao?: string
+          territorio_cidadela?: string | null
+          torre_envolvida?: string | null
+          updated_at?: string | null
+          visivel?: boolean | null
+        }
+        Relationships: []
+      }
+      tecela_conselho_respostas: {
+        Row: {
+          autor_id: string
+          conselho_id: string
+          conteudo: string
+          created_at: string | null
+          id: string
+        }
+        Insert: {
+          autor_id: string
+          conselho_id: string
+          conteudo: string
+          created_at?: string | null
+          id?: string
+        }
+        Update: {
+          autor_id?: string
+          conselho_id?: string
+          conteudo?: string
+          created_at?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tecela_conselho_respostas_conselho_id_fkey"
+            columns: ["conselho_id"]
+            isOneToOne: false
+            referencedRelation: "tecela_conselho"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tecela_favoritos: {
         Row: {
           created_at: string
@@ -15769,6 +15837,104 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      tecela_mensagens_dia: {
+        Row: {
+          ativa: boolean | null
+          created_at: string | null
+          created_by: string | null
+          data_exibicao: string
+          id: string
+          mensagem: string
+        }
+        Insert: {
+          ativa?: boolean | null
+          created_at?: string | null
+          created_by?: string | null
+          data_exibicao?: string
+          id?: string
+          mensagem: string
+        }
+        Update: {
+          ativa?: boolean | null
+          created_at?: string | null
+          created_by?: string | null
+          data_exibicao?: string
+          id?: string
+          mensagem?: string
+        }
+        Relationships: []
+      }
+      tecela_registros_campo: {
+        Row: {
+          arquetipo_presente: string | null
+          autor_id: string
+          created_at: string | null
+          estado_campo: string
+          id: string
+          porta_ativa: string | null
+          texto: string
+          titulo_simbolico: string
+          torre_ativa: string | null
+          updated_at: string | null
+          visivel: boolean | null
+        }
+        Insert: {
+          arquetipo_presente?: string | null
+          autor_id: string
+          created_at?: string | null
+          estado_campo?: string
+          id?: string
+          porta_ativa?: string | null
+          texto: string
+          titulo_simbolico: string
+          torre_ativa?: string | null
+          updated_at?: string | null
+          visivel?: boolean | null
+        }
+        Update: {
+          arquetipo_presente?: string | null
+          autor_id?: string
+          created_at?: string | null
+          estado_campo?: string
+          id?: string
+          porta_ativa?: string | null
+          texto?: string
+          titulo_simbolico?: string
+          torre_ativa?: string | null
+          updated_at?: string | null
+          visivel?: boolean | null
+        }
+        Relationships: []
+      }
+      tecela_ressonancias: {
+        Row: {
+          created_at: string | null
+          id: string
+          registro_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          registro_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          registro_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tecela_ressonancias_registro_id_fkey"
+            columns: ["registro_id"]
+            isOneToOne: false
+            referencedRelation: "tecela_registros_campo"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tecela_supervisoes: {
         Row: {
