@@ -673,6 +673,22 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/circulo-oracular"
+        element={
+          <ProtectedRoute minPortal="assinante">
+            <CirculoOracularPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/jardim-heroina-app"
+        element={
+          <ProtectedRoute>
+            <HeroinaAppPage />
+          </ProtectedRoute>
+        }
+      />
       
       {/* Casa Orácula - 3 Room Architecture */}
       <Route
