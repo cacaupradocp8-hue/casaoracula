@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Sparkles, ScrollText, MessageCircle, Archive, Compass, BookHeart } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Sparkles, ScrollText, MessageCircle, Archive, Compass, BookHeart, Flame } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { TecidosTab } from '@/components/casa-tecelas/TecidosTab';
 import { ConselhoTecelasTab } from '@/components/casa-tecelas/ConselhoTecelasTab';
@@ -20,6 +22,7 @@ const tabs = [
 
 export default function CasaTecelaInterior() {
   const [activeTab, setActiveTab] = useState('tecidos');
+  const navigate = useNavigate();
 
   return (
     <AppLayout>
@@ -28,13 +31,22 @@ export default function CasaTecelaInterior() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
+          className="flex items-center justify-between mb-8"
         >
           <SectionHeader
             title="A Casa das Tecelãs"
             subtitle="Campo simbólico vivo — tecidos, conselho e caminhos percorridos"
             icon={<Sparkles className="w-5 h-5" />}
-            className="mb-8"
           />
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2 border-gold/30 text-gold hover:bg-gold/10"
+            onClick={() => navigate('/circulo-oracular')}
+          >
+            <Flame className="w-4 h-4" />
+            <span className="hidden sm:inline">Círculo Oracular</span>
+          </Button>
         </motion.div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">

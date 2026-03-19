@@ -2489,6 +2489,54 @@ export type Database = {
           },
         ]
       }
+      circulo_oracular_registros: {
+        Row: {
+          ciclo_id: string
+          created_at: string | null
+          decisoes_simbolicas: string | null
+          fase: string
+          gesto_pos_circulo: string | null
+          id: string
+          imagem_ficou: string | null
+          insights_encontro: string | null
+          movimentos_internos: string | null
+          onde_toca_vida: string | null
+          passagem_atravessou: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          ciclo_id: string
+          created_at?: string | null
+          decisoes_simbolicas?: string | null
+          fase?: string
+          gesto_pos_circulo?: string | null
+          id?: string
+          imagem_ficou?: string | null
+          insights_encontro?: string | null
+          movimentos_internos?: string | null
+          onde_toca_vida?: string | null
+          passagem_atravessou?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          ciclo_id?: string
+          created_at?: string | null
+          decisoes_simbolicas?: string | null
+          fase?: string
+          gesto_pos_circulo?: string | null
+          id?: string
+          imagem_ficou?: string | null
+          insights_encontro?: string | null
+          movimentos_internos?: string | null
+          onde_toca_vida?: string | null
+          passagem_atravessou?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       circulos_sagrados: {
         Row: {
           created_at: string
@@ -8068,6 +8116,81 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      heroina_jornada: {
+        Row: {
+          consentimento_terapeuta: boolean | null
+          created_at: string | null
+          fase_atual: string
+          id: string
+          mensagem_simbolica: string | null
+          porta_ativa: string | null
+          therapist_id: string | null
+          torre_ativa: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          consentimento_terapeuta?: boolean | null
+          created_at?: string | null
+          fase_atual?: string
+          id?: string
+          mensagem_simbolica?: string | null
+          porta_ativa?: string | null
+          therapist_id?: string | null
+          torre_ativa?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          consentimento_terapeuta?: boolean | null
+          created_at?: string | null
+          fase_atual?: string
+          id?: string
+          mensagem_simbolica?: string | null
+          porta_ativa?: string | null
+          therapist_id?: string | null
+          torre_ativa?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      heroina_registros: {
+        Row: {
+          arquetipo_ativo: string | null
+          created_at: string | null
+          emocao_dominante: string | null
+          fase: string | null
+          id: string
+          pergunta: string | null
+          resposta: string | null
+          tipo: string
+          user_id: string
+        }
+        Insert: {
+          arquetipo_ativo?: string | null
+          created_at?: string | null
+          emocao_dominante?: string | null
+          fase?: string | null
+          id?: string
+          pergunta?: string | null
+          resposta?: string | null
+          tipo?: string
+          user_id: string
+        }
+        Update: {
+          arquetipo_ativo?: string | null
+          created_at?: string | null
+          emocao_dominante?: string | null
+          fase?: string | null
+          id?: string
+          pergunta?: string | null
+          resposta?: string | null
+          tipo?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       heroina_ritual_registros: {
         Row: {
