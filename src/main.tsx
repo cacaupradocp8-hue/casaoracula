@@ -48,23 +48,23 @@ if (!rootElement) {
   throw new Error("Elemento #root não encontrado.");
 }
 
-// Patch DOM to prevent "removeChild" crashes from browser extensions or HMR
-const originalRemoveChild = rootElement.removeChild.bind(rootElement);
-rootElement.removeChild = function <T extends Node>(child: T): T {
-  if (child.parentNode !== rootElement) {
+// Patch DOM globally to prevent "removeChild" crashes from browser extensions or HMR
+const origRemoveChild = Node.prototype.removeChild;
+Node.prototype.removeChild = function <T extends Node>(child: T): T {
+  if (child.parentNode !== this) {
     console.warn(`${BOOT_LOG_PREFIX} removeChild interceptado — nó órfão ignorado`);
     return child;
   }
-  return originalRemoveChild(child);
+  return origRemoveChild.call(this, child) as T;
 };
 
-const originalInsertBefore = rootElement.insertBefore.bind(rootElement);
-rootElement.insertBefore = function <T extends Node>(newNode: T, refNode: Node | null): T {
-  if (refNode && refNode.parentNode !== rootElement) {
+const origInsertBefore = Node.prototype.insertBefore;
+Node.prototype.insertBefore = function <T extends Node>(newNode: T, refNode: Node | null): T {
+  if (refNode && refNode.parentNode !== this) {
     console.warn(`${BOOT_LOG_PREFIX} insertBefore interceptado — ref órfão ignorado`);
     return newNode;
   }
-  return originalInsertBefore(newNode, refNode);
+  return origInsertBefore.call(this, newNode, refNode) as T;
 };
 
 const root: Root = createRoot(rootElement);
