@@ -194,6 +194,69 @@ const ClubeOracular = React.lazy(() => import("./pages/ClubeOracular"));
 const MapaCasaOracula = React.lazy(() => import("./pages/MapaCasaOracula"));
 const MinhaJornada = React.lazy(() => import("./pages/MinhaJornada"));
 
+// Casa pages
+const CasaAtrio = React.lazy(() => import("./pages/casa/CasaAtrio"));
+const CasaSustentacao = React.lazy(() => import("./pages/casa/CasaSustentacao"));
+const CasaLeitura = React.lazy(() => import("./pages/casa/CasaLeitura"));
+const CasaCirculo = React.lazy(() => import("./pages/casa/CasaCirculo"));
+const CasaJardim = React.lazy(() => import("./pages/casa/CasaJardim"));
+
+// Radiestesia
+const RadiestesiaPortal = React.lazy(() => import("./pages/radiestesia/RadiestesiaPortal"));
+const Leitura5Camadas = React.lazy(() => import("./pages/radiestesia/Leitura5Camadas"));
+const MesaRadionica = React.lazy(() => import("./pages/radiestesia/MesaRadionica"));
+const CatalogoGraficos = React.lazy(() => import("./pages/radiestesia/CatalogoGraficos"));
+const GraficoDetalhe = React.lazy(() => import("./pages/radiestesia/GraficoDetalhe"));
+const Pantaculos = React.lazy(() => import("./pages/radiestesia/Pantaculos"));
+const CristaisCampos = React.lazy(() => import("./pages/radiestesia/CristaisCampos"));
+const EscalaNarrativa = React.lazy(() => import("./pages/radiestesia/EscalaNarrativa"));
+const DiarioPraticas = React.lazy(() => import("./pages/radiestesia/DiarioPraticas"));
+
+// Método
+const AsPortas = React.lazy(() => import("./pages/metodo/AsPortas"));
+const OsCamposPsiquicos = React.lazy(() => import("./pages/metodo/OsCamposPsiquicos"));
+const AsTorres = React.lazy(() => import("./pages/metodo/AsTorres"));
+const TriadeMetodo = React.lazy(() => import("./pages/metodo/TriadeMetodo"));
+
+// Casa das Máquinas
+const CasaDasMaquinas = React.lazy(() => import("./pages/casa-maquinas/CasaDasMaquinas"));
+const SessoesPage = React.lazy(() => import("./pages/casa-maquinas/SessoesPage"));
+const GestosIntegracaoPage = React.lazy(() => import("./pages/casa-maquinas/GestosIntegracaoPage"));
+const MapaVivoClientePage = React.lazy(() => import("./pages/casa-maquinas/MapaVivoClientePage"));
+const PainelInstitucionalPage = React.lazy(() => import("./pages/casa-maquinas/PainelInstitucionalPage"));
+const ClientesPage = React.lazy(() => import("./pages/casa-maquinas/ClientesPage"));
+const ClienteDetailPage = React.lazy(() => import("./pages/casa-maquinas/ClienteDetailPage"));
+const ModoSessaoPage = React.lazy(() => import("./pages/casa-maquinas/ModoSessaoPage"));
+const FerramentasPage = React.lazy(() => import("./pages/casa-maquinas/FerramentasPage"));
+const GruposPage = React.lazy(() => import("./pages/casa-maquinas/GruposPage"));
+const GrupoDetailPage = React.lazy(() => import("./pages/casa-maquinas/GrupoDetailPage"));
+const BibliotecaIntervPage = React.lazy(() => import("./pages/casa-maquinas/BibliotecaIntervPage"));
+
+// Labirinto da Heroína
+const LabirintoHeroinaPage = React.lazy(() => import("./pages/labirinto-heroina/LabirintoHeroinaPraticoPage"));
+
+// Clube do Livro
+const ClubeLivroApresentacao = React.lazy(() => import("./pages/clube-livro/ClubeLivroApresentacao"));
+const ClubeLivroCiclo = React.lazy(() => import("./pages/clube-livro/ClubeLivroCiclo"));
+const ClubeLivroPorta = React.lazy(() => import("./pages/clube-livro/ClubeLivroPorta"));
+const ClubeLivroFase = React.lazy(() => import("./pages/clube-livro/ClubeLivroFase"));
+const ClubeLivroEscutas = React.lazy(() => import("./pages/clube-livro/ClubeLivroEscutas"));
+const ClubeLivroEncontros = React.lazy(() => import("./pages/clube-livro/ClubeLivroEncontros"));
+const ClubeLivroRitual = React.lazy(() => import("./pages/clube-livro/ClubeLivroRitual"));
+const ClubeLivroAula = React.lazy(() => import("./pages/clube-livro/ClubeLivroAula"));
+const IntegracaoOracular = React.lazy(() => import("./pages/clube-livro/IntegracaoOracular"));
+const MeuCaminhoClube = React.lazy(() => import("./pages/clube-livro/MeuCaminhoClube"));
+const Integracao8020 = React.lazy(() => import("./pages/clube-livro/Integracao8020"));
+const ClubeLivroLivro = React.lazy(() => import("./pages/clube-livro/ClubeLivroLivro"));
+const MapaJornadas = React.lazy(() => import("./pages/clube-livro/MapaJornadas"));
+const MinhaTravessia = React.lazy(() => import("./pages/clube-livro/MinhaTravessia"));
+const CertificadoTravessia = React.lazy(() => import("./pages/clube-livro/CertificadoTravessia"));
+const Lab8020Season = React.lazy(() => import("./pages/clube-livro/Lab8020Season"));
+
+// Jardim do Ofício
+const JardimOficioPage = React.lazy(() => import("./pages/jardim-oficio/JardimOficioPage"));
+const PainelSupervisaoPage = React.lazy(() => import("./pages/jardim-oficio/PainelSupervisaoPage"));
+
 const queryClient = new QueryClient();
 const BOOT_ROUTE_LOG_PREFIX = '[boot-debug][routes]';
 
