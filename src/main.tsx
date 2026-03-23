@@ -48,6 +48,25 @@ if (!rootElement) {
   throw new Error("Elemento #root não encontrado.");
 }
 
+// Patch DOM to prevent "removeChild" crashes from browser extensions or HMR
+const originalRemoveChild = rootElement.removeChild.bind(rootElement);
+rootElement.removeChild = function <T extends Node>(child: T): T {
+  if (child.parentNode !== rootElement) {
+    console.warn(`${BOOT_LOG_PREFIX} removeChild interceptado — nó órfão ignorado`);
+    return child;
+  }
+  return originalRemoveChild(child);
+};
+
+const originalInsertBefore = rootElement.insertBefore.bind(rootElement);
+rootElement.insertBefore = function <T extends Node>(newNode: T, refNode: Node | null): T {
+  if (refNode && refNode.parentNode !== rootElement) {
+    console.warn(`${BOOT_LOG_PREFIX} insertBefore interceptado — ref órfão ignorado`);
+    return newNode;
+  }
+  return originalInsertBefore(newNode, refNode);
+};
+
 const root: Root = createRoot(rootElement);
 let bootWindowOpen = true;
 window.setTimeout(() => {
