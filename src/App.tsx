@@ -2102,7 +2102,9 @@ const App = () => (
           <AdminPreviewProvider>
             <AppDomainProvider>
               <RootErrorBoundary>
-                <AppRoutes />
+                <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-pulse text-gold font-display text-xl">Carregando...</div></div>}>
+                  <AppRoutes />
+                </Suspense>
               </RootErrorBoundary>
             </AppDomainProvider>
           </AdminPreviewProvider>
