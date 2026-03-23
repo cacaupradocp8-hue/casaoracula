@@ -13,238 +13,249 @@ import { PortalType, canAccessFeature } from "@/types/portal";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import { LockedForVisitor } from "@/components/shared/LockedForVisitor";
 
-// Pages
-// Landing page removed - route "/" now goes to Auth
+import { Suspense } from "react";
+
+// Only Auth and NotFound are eagerly loaded (critical path)
 import Auth from "./pages/Auth";
-import ResetPassword from "./pages/ResetPassword";
-import Dashboard from "./pages/Dashboard";
-import DashboardMembro from "./pages/DashboardMembro";
-import Welcome from "./pages/Welcome";
-import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
-import BibliotecaUnificada from "./pages/BibliotecaUnificada";
-import Mentoria from "./pages/Mentoria";
-import CasaTecelaAtrio from "./pages/CasaTecelaAtrio";
-import CasaTecelaInterior from "./pages/CasaTecelaInterior";
-import { CasaAtrio, CasaSustentacao, CasaLeitura, CasaCirculo, CasaJardim } from "./pages/casa";
-import CirculoOracularPage from "./pages/CirculoOracularPage";
-import HeroinaAppPage from "./pages/HeroinaAppPage";
-import OraculaPage from "./pages/OraculaPage";
-import PortalOraculaPage from "./pages/PortalOraculaPage";
-import OraculaSalesPage from "./pages/OraculaSalesPage";
-import Travessias from "./pages/Travessias";
-import Agentes from "./pages/Agentes";
-import LeituraOracular from "./pages/LeituraOracular";
-// Novas ferramentas
-import EspelhoConsciencia from "./pages/salas/EspelhoConsciencia";
-import MapaArquetiposEgo from "./pages/salas/MapaArquetiposEgo";
-import CartografiaTorre from "./pages/salas/CartografiaTorre";
-import PlasticidadePsiquica from "./pages/salas/PlasticidadePsiquica";
-import SalasList from "./pages/SalasList";
-import FerramentasHub from "./pages/FerramentasHub";
-import FerramentasVitrine from "./pages/FerramentasVitrine";
-import SalaDetalhe from "./pages/SalaDetalhe";
-import PortalDetalhe from "./pages/PortalDetalhe";
-import AulaPage from "./pages/AulaPage";
-import LaboratorioLeitura from "./pages/LaboratorioLeitura";
-import Metodo from "./pages/Metodo";
-import FerramentasMetodo from "./pages/FerramentasMetodo";
-import FerramentasMetodoHub from "./pages/FerramentasMetodoHub";
-import Portais from "./pages/Portais";
-import ConfirmarProfissional from "./pages/ConfirmarProfissional";
-import MinhasClientes from "./pages/MinhasClientes";
-import MapaOracula from "./pages/MapaOracula";
-import QuizPage from "./pages/QuizPage";
-import ClientePerfil from "./pages/ClientePerfil";
-import Oraculos from "./pages/Oraculos";
-import OracleHome from "./pages/OracleHome";
-import OracleDraw from "./pages/OracleDraw";
-import OracleHistory from "./pages/OracleHistory";
-import OracleCardLibrary from "./pages/OracleCardLibrary";
-import Cursos from "./pages/Cursos";
-import CursoDetalhe from "./pages/CursoDetalhe";
-import CursoAula from "./pages/CursoAula";
-import CursoModulo from "./pages/CursoModulo";
-import BibliotecaDasTravessias from "./pages/BibliotecaDasTravessias";
-import BibliotecaTravessiaDetalhe from "./pages/BibliotecaTravessiaDetalhe";
-import LabirintoHome from "./pages/labirinto/LabirintoHome";
-import LabirintoPorta from "./pages/labirinto/LabirintoPorta";
-import LabirintoComoUsar from "./pages/labirinto/LabirintoComoUsar";
-import LabirintoTiposCampo from "./pages/labirinto/LabirintoTiposCampo";
-import LabirintoTabela from "./pages/labirinto/LabirintoTabela";
-import InstallApp from "./pages/InstallApp";
-import Planos from "./pages/Planos";
-import PlanosClubeOracular from "./pages/PlanosClubeOracular";
-import PosCompra from "./pages/PosCompra";
-import Assinatura from "./pages/Assinatura";
-import Billing from "./pages/Billing";
-import MinhaConta from "./pages/MinhaConta";
-import Suporte from "./pages/Suporte";
-import CheckoutSucesso from "./pages/CheckoutSucesso";
-import CheckoutCancelado from "./pages/CheckoutCancelado";
-import Audios from "./pages/Audios";
-import EstudioOracular from "./pages/EstudioOracular";
-import Notificacoes from "./pages/Notificacoes";
-// Ferramentas (salas)
-import Big5 from "./pages/salas/Big5";
-import Eneagrama from "./pages/salas/Eneagrama";
-import OraculoPerguntas from "./pages/salas/OraculoPerguntas";
-import Chakras from "./pages/salas/Chakras";
-import Hawkins from "./pages/salas/Hawkins";
-import EscalaMAIA from "./pages/salas/EscalaMAIA";
-import Antroposofia from "./pages/salas/Antroposofia";
-import Neuroplasticidade from "./pages/salas/Neuroplasticidade";
-import Narrativas from "./pages/salas/Narrativas";
-// Portal Radiestesia Oracular
-import { 
-  RadiestesiaPortal, 
-  Leitura5Camadas,
-  MesaRadionica, 
-  CatalogoGraficos,
-  GraficoDetalhe,
-  Pantaculos, 
-  CristaisCampos, 
-  EscalaNarrativa, 
-  DiarioPraticas 
-} from "./pages/radiestesia";
-import Tarot from "./pages/salas/Tarot";
-import Constelacao from "./pages/salas/Constelacao";
-import Syntheia from "./pages/Syntheia";
-import AgenteAnalista from "./pages/salas/AgenteAnalista";
-import AgenteCurador from "./pages/salas/AgenteCurador";
-import AgenteSimbólico from "./pages/salas/AgenteSimbólico";
-import FerramentaDinamica from "./pages/FerramentaDinamica";
-import CriarFerramenta from "./pages/admin/CriarFerramenta";
-import AtelieConteudo from "./pages/admin/AtelieConteudo";
-import AdminModulosFormativos from "./pages/admin/AdminModulosFormativos";
-import AdminBooks from "./pages/admin/AdminBooks";
-import AdminOracleCardsPage from "./pages/admin/AdminOracleCardsPage";
-import Big5Simbolico from "./pages/Big5Simbolico";
-import Big5Oracular from "./pages/Big5Oracular";
-import Big5Funcional from "./pages/Big5Funcional";
-import EneagramaFeminino from "./pages/EneagramaFeminino";
-import JornadaHeroina from "./pages/JornadaHeroina";
-import TorreViva from "./pages/TorreViva";
-import AtlasArquetiposFemininos from "./pages/AtlasArquetiposFemininos";
-import BibliotecaCasos from "./pages/BibliotecaCasos";
-import { AsPortas, OsCamposPsiquicos, AsTorres, TriadeMetodo } from "./pages/metodo";
-// FormacaoOracula, FormacaoVivaPage, FormacaoPage - removidos do import direto
-// Agora usando OraculaPage como gate e PortalOraculaPage para área interna
-import MapaVivoList from "./pages/MapaVivoList";
-import MapaVivoEditor from "./pages/MapaVivoEditor";
+
+// All other pages are lazy-loaded
+const ResetPassword = React.lazy(() => import("./pages/ResetPassword"));
+const Dashboard = React.lazy(() => import("./pages/Dashboard"));
+const DashboardMembro = React.lazy(() => import("./pages/DashboardMembro"));
+const Welcome = React.lazy(() => import("./pages/Welcome"));
+const Admin = React.lazy(() => import("./pages/Admin"));
+const BibliotecaUnificada = React.lazy(() => import("./pages/BibliotecaUnificada"));
+const Mentoria = React.lazy(() => import("./pages/Mentoria"));
+const CasaTecelaAtrio = React.lazy(() => import("./pages/CasaTecelaAtrio"));
+const CasaTecelaInterior = React.lazy(() => import("./pages/CasaTecelaInterior"));
+const CirculoOracularPage = React.lazy(() => import("./pages/CirculoOracularPage"));
+const HeroinaAppPage = React.lazy(() => import("./pages/HeroinaAppPage"));
+const OraculaPage = React.lazy(() => import("./pages/OraculaPage"));
+const PortalOraculaPage = React.lazy(() => import("./pages/PortalOraculaPage"));
+const OraculaSalesPage = React.lazy(() => import("./pages/OraculaSalesPage"));
+const Travessias = React.lazy(() => import("./pages/Travessias"));
+const Agentes = React.lazy(() => import("./pages/Agentes"));
+const LeituraOracular = React.lazy(() => import("./pages/LeituraOracular"));
+const EspelhoConsciencia = React.lazy(() => import("./pages/salas/EspelhoConsciencia"));
+const MapaArquetiposEgo = React.lazy(() => import("./pages/salas/MapaArquetiposEgo"));
+const CartografiaTorre = React.lazy(() => import("./pages/salas/CartografiaTorre"));
+const PlasticidadePsiquica = React.lazy(() => import("./pages/salas/PlasticidadePsiquica"));
+const SalasList = React.lazy(() => import("./pages/SalasList"));
+const FerramentasHub = React.lazy(() => import("./pages/FerramentasHub"));
+const FerramentasVitrine = React.lazy(() => import("./pages/FerramentasVitrine"));
+const SalaDetalhe = React.lazy(() => import("./pages/SalaDetalhe"));
+const PortalDetalhe = React.lazy(() => import("./pages/PortalDetalhe"));
+const AulaPage = React.lazy(() => import("./pages/AulaPage"));
+const LaboratorioLeitura = React.lazy(() => import("./pages/LaboratorioLeitura"));
+const Metodo = React.lazy(() => import("./pages/Metodo"));
+const FerramentasMetodo = React.lazy(() => import("./pages/FerramentasMetodo"));
+const FerramentasMetodoHub = React.lazy(() => import("./pages/FerramentasMetodoHub"));
+const Portais = React.lazy(() => import("./pages/Portais"));
+const ConfirmarProfissional = React.lazy(() => import("./pages/ConfirmarProfissional"));
+const MinhasClientes = React.lazy(() => import("./pages/MinhasClientes"));
+const MapaOracula = React.lazy(() => import("./pages/MapaOracula"));
+const QuizPage = React.lazy(() => import("./pages/QuizPage"));
+const ClientePerfil = React.lazy(() => import("./pages/ClientePerfil"));
+const Oraculos = React.lazy(() => import("./pages/Oraculos"));
+const OracleHome = React.lazy(() => import("./pages/OracleHome"));
+const OracleDraw = React.lazy(() => import("./pages/OracleDraw"));
+const OracleHistory = React.lazy(() => import("./pages/OracleHistory"));
+const OracleCardLibrary = React.lazy(() => import("./pages/OracleCardLibrary"));
+const Cursos = React.lazy(() => import("./pages/Cursos"));
+const CursoDetalhe = React.lazy(() => import("./pages/CursoDetalhe"));
+const CursoAula = React.lazy(() => import("./pages/CursoAula"));
+const CursoModulo = React.lazy(() => import("./pages/CursoModulo"));
+const BibliotecaDasTravessias = React.lazy(() => import("./pages/BibliotecaDasTravessias"));
+const BibliotecaTravessiaDetalhe = React.lazy(() => import("./pages/BibliotecaTravessiaDetalhe"));
+const LabirintoHome = React.lazy(() => import("./pages/labirinto/LabirintoHome"));
+const LabirintoPorta = React.lazy(() => import("./pages/labirinto/LabirintoPorta"));
+const LabirintoComoUsar = React.lazy(() => import("./pages/labirinto/LabirintoComoUsar"));
+const LabirintoTiposCampo = React.lazy(() => import("./pages/labirinto/LabirintoTiposCampo"));
+const LabirintoTabela = React.lazy(() => import("./pages/labirinto/LabirintoTabela"));
+const InstallApp = React.lazy(() => import("./pages/InstallApp"));
+const Planos = React.lazy(() => import("./pages/Planos"));
+const PlanosClubeOracular = React.lazy(() => import("./pages/PlanosClubeOracular"));
+const PosCompra = React.lazy(() => import("./pages/PosCompra"));
+const Assinatura = React.lazy(() => import("./pages/Assinatura"));
+const Billing = React.lazy(() => import("./pages/Billing"));
+const MinhaConta = React.lazy(() => import("./pages/MinhaConta"));
+const Suporte = React.lazy(() => import("./pages/Suporte"));
+const CheckoutSucesso = React.lazy(() => import("./pages/CheckoutSucesso"));
+const CheckoutCancelado = React.lazy(() => import("./pages/CheckoutCancelado"));
+const Audios = React.lazy(() => import("./pages/Audios"));
+const EstudioOracular = React.lazy(() => import("./pages/EstudioOracular"));
+const Notificacoes = React.lazy(() => import("./pages/Notificacoes"));
+const Big5 = React.lazy(() => import("./pages/salas/Big5"));
+const Eneagrama = React.lazy(() => import("./pages/salas/Eneagrama"));
+const OraculoPerguntas = React.lazy(() => import("./pages/salas/OraculoPerguntas"));
+const Chakras = React.lazy(() => import("./pages/salas/Chakras"));
+const Hawkins = React.lazy(() => import("./pages/salas/Hawkins"));
+const EscalaMAIA = React.lazy(() => import("./pages/salas/EscalaMAIA"));
+const Antroposofia = React.lazy(() => import("./pages/salas/Antroposofia"));
+const Neuroplasticidade = React.lazy(() => import("./pages/salas/Neuroplasticidade"));
+const Narrativas = React.lazy(() => import("./pages/salas/Narrativas"));
+const Tarot = React.lazy(() => import("./pages/salas/Tarot"));
+const Constelacao = React.lazy(() => import("./pages/salas/Constelacao"));
+const Syntheia = React.lazy(() => import("./pages/Syntheia"));
+const AgenteAnalista = React.lazy(() => import("./pages/salas/AgenteAnalista"));
+const AgenteCurador = React.lazy(() => import("./pages/salas/AgenteCurador"));
+const AgenteSimbólico = React.lazy(() => import("./pages/salas/AgenteSimbólico"));
+const FerramentaDinamica = React.lazy(() => import("./pages/FerramentaDinamica"));
+const CriarFerramenta = React.lazy(() => import("./pages/admin/CriarFerramenta"));
+const AtelieConteudo = React.lazy(() => import("./pages/admin/AtelieConteudo"));
+const AdminModulosFormativos = React.lazy(() => import("./pages/admin/AdminModulosFormativos"));
+const AdminBooks = React.lazy(() => import("./pages/admin/AdminBooks"));
+const AdminOracleCardsPage = React.lazy(() => import("./pages/admin/AdminOracleCardsPage"));
+const Big5Simbolico = React.lazy(() => import("./pages/Big5Simbolico"));
+const Big5Oracular = React.lazy(() => import("./pages/Big5Oracular"));
+const Big5Funcional = React.lazy(() => import("./pages/Big5Funcional"));
+const EneagramaFeminino = React.lazy(() => import("./pages/EneagramaFeminino"));
+const JornadaHeroina = React.lazy(() => import("./pages/JornadaHeroina"));
+const TorreViva = React.lazy(() => import("./pages/TorreViva"));
+const AtlasArquetiposFemininos = React.lazy(() => import("./pages/AtlasArquetiposFemininos"));
+const BibliotecaCasos = React.lazy(() => import("./pages/BibliotecaCasos"));
+const MapaVivoList = React.lazy(() => import("./pages/MapaVivoList"));
+const MapaVivoEditor = React.lazy(() => import("./pages/MapaVivoEditor"));
+const PainelClinicoPage = React.lazy(() => import("./pages/casa-maquinas/PainelClinicoPage"));
+const ModoSessaoImersivo = React.lazy(() => import("./pages/casa-maquinas/ModoSessaoImersivo"));
+const MapaCidadelaPage = React.lazy(() => import("./pages/casa-maquinas/MapaCidadelaPage"));
+const RelatorioJornadaPage = React.lazy(() => import("./pages/RelatorioJornadaPage"));
+const MapaVivoPage = React.lazy(() => import("./pages/MapaVivoPage"));
+const MapaVivoCidadelaPage = React.lazy(() => import("./pages/casa-maquinas/MapaVivoCidadelaPage"));
+const JornadaAlmaPage = React.lazy(() => import("./pages/JornadaAlmaPage"));
+const CasaTecelasPage = React.lazy(() => import("./pages/casa-maquinas/CasaTecelasPage"));
+const AcademiaPage = React.lazy(() => import("./pages/casa-maquinas/AcademiaPage"));
+const PerfilProfissionalPage = React.lazy(() => import("./pages/casa-maquinas/PerfilProfissionalPage"));
+const SalaTreinamentoPage = React.lazy(() => import("./pages/SalaTreinamentoPage"));
+const ComunidadePage = React.lazy(() => import("./pages/ComunidadePage"));
+const AcademiaFormacaoPage = React.lazy(() => import("./pages/AcademiaFormacaoPage"));
+const CartografiaPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/CartografiaPage"));
+const CartografiaPsiquicaPage = React.lazy(() => import("./pages/CartografiaPsiquicaPage"));
+const RituaisMudraPage = React.lazy(() => import("./pages/RituaisMudraPage"));
+const BussolaOniricaPage = React.lazy(() => import("./pages/BussolaOniricaPage"));
+const CirculoSagradoPage = React.lazy(() => import("./pages/CirculoSagradoPage"));
+const CursoDeusasPage = React.lazy(() => import("./pages/CursoDeusasPage"));
+const CursoChaveOniricaPage = React.lazy(() => import("./pages/CursoChaveOniricaPage"));
+const TorreVivaPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/TorreVivaPage"));
+const LabirintoPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/LabirintoPage"));
+const DecodificacaoOniricaPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/DecodificacaoOniricaPage"));
+const AtlasArquetiposPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/AtlasArquetiposPage"));
+const PlaceholderToolPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/PlaceholderToolPage"));
+const InventarioPersonasPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/InventarioPersonasPage"));
+const MapeamentoComplexosPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/MapeamentoComplexosPage"));
+const MapaSombraPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/MapaSombraPage"));
+const DiagnosticoEgoPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/DiagnosticoEgoPage"));
+const SonhoEstruturadoPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/SonhoEstruturadoPage"));
+const ImaginacaoAtivaPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/ImaginacaoAtivaPage"));
+const EscritaNaoCensuradaPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/EscritaNaoCensuradaPage"));
+const CorpoInconscientePage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/CorpoInconscientePage"));
+const SectionPlaceholder = React.lazy(() => import("./pages/casa-maquinas/SectionPlaceholder"));
+const ConfiguracoesSaasPage = React.lazy(() => import("./pages/casa-maquinas/ConfiguracoesSaasPage"));
+const FormacaoMetodoPage = React.lazy(() => import("./pages/FormacaoMetodoPage"));
+const FormacaoForumPage = React.lazy(() => import("./pages/FormacaoForumPage"));
+const FormacaoAvaliacoesPage = React.lazy(() => import("./pages/FormacaoAvaliacoesPage"));
+const Jornada = React.lazy(() => import("./pages/Jornada"));
+const Onboarding = React.lazy(() => import("./pages/Onboarding"));
+const SessionRoomHome = React.lazy(() => import("./pages/SessionRoomHome"));
+const SessionRoomCase = React.lazy(() => import("./pages/SessionRoomCase"));
+const SessionRoomGroup = React.lazy(() => import("./pages/SessionRoomGroup"));
+const ManuaisProtocolo = React.lazy(() => import("./pages/ManuaisProtocolo"));
+const RoteirosProtocolo = React.lazy(() => import("./pages/RoteirosProtocolo"));
+const Big5TemplateList = React.lazy(() => import("./pages/templates/Big5TemplateList"));
+const Big5TemplateEditor = React.lazy(() => import("./pages/templates/Big5TemplateEditor"));
+const EnneagramTemplateList = React.lazy(() => import("./pages/templates/EnneagramTemplateList"));
+const EnneagramTemplateEditor = React.lazy(() => import("./pages/templates/EnneagramTemplateEditor"));
+const TarotTemplateList = React.lazy(() => import("./pages/templates/TarotTemplateList"));
+const TarotTemplateEditor = React.lazy(() => import("./pages/templates/TarotTemplateEditor"));
+const ConstellationTemplateList = React.lazy(() => import("./pages/templates/ConstellationTemplateList"));
+const ConstellationTemplateEditor = React.lazy(() => import("./pages/templates/ConstellationTemplateEditor"));
+const PersonalMaps = React.lazy(() => import("./pages/PersonalMaps"));
+const PersonalMapEditor = React.lazy(() => import("./pages/PersonalMapEditor"));
+const JardimPsique = React.lazy(() => import("./pages/JardimPsique"));
+const JardimPsiqueDetalhe = React.lazy(() => import("./pages/JardimPsiqueDetalhe"));
+const MinhaBiblioteca = React.lazy(() => import("./pages/MinhaBiblioteca"));
+const Tour = React.lazy(() => import("./pages/Tour"));
+const TravessiaDetalhe = React.lazy(() => import("./pages/TravessiaDetalhe"));
+const NarroterapiaHub = React.lazy(() => import("./pages/NarroterapiaHub"));
+const BibliotecaContos = React.lazy(() => import("./pages/narroterapia/BibliotecaContos"));
+const BibliotecaClinica = React.lazy(() => import("./pages/narroterapia/BibliotecaClinica"));
+const ContoClinicoDetalhe = React.lazy(() => import("./pages/narroterapia/ContoClinicoDetalhe"));
+const AudiosNarracao = React.lazy(() => import("./pages/narroterapia/AudiosNarracao"));
+const RitualAutorizacao = React.lazy(() => import("./pages/narroterapia/RitualAutorizacao"));
+const BibliotecaTravessias = React.lazy(() => import("./pages/BibliotecaTravessias"));
+const BibliotecaTravessiasFamilia = React.lazy(() => import("./pages/BibliotecaTravessiasFamilia"));
+const MapaHeroinaPage = React.lazy(() => import("./pages/mapa-heroina"));
+const CartasJornadaPage = React.lazy(() => import("./pages/CartasJornadaPage"));
+const PortalJunguiano = React.lazy(() => import("./pages/PortalJunguiano"));
+const PortalJunguianoPorta = React.lazy(() => import("./pages/PortalJunguianoPorta"));
+const ExperienciaGratuita = React.lazy(() => import("./pages/ExperienciaGratuita"));
+const ClubeOracular = React.lazy(() => import("./pages/ClubeOracular"));
+const MapaCasaOracula = React.lazy(() => import("./pages/MapaCasaOracula"));
+const MinhaJornada = React.lazy(() => import("./pages/MinhaJornada"));
+
+// Casa pages
+const CasaAtrio = React.lazy(() => import("./pages/casa/CasaAtrio"));
+const CasaSustentacao = React.lazy(() => import("./pages/casa/CasaSustentacao"));
+const CasaLeitura = React.lazy(() => import("./pages/casa/CasaLeitura"));
+const CasaCirculo = React.lazy(() => import("./pages/casa/CasaCirculo"));
+const CasaJardim = React.lazy(() => import("./pages/casa/CasaJardim"));
+
+// Radiestesia
+const RadiestesiaPortal = React.lazy(() => import("./pages/radiestesia/RadiestesiaPortal"));
+const Leitura5Camadas = React.lazy(() => import("./pages/radiestesia/Leitura5Camadas"));
+const MesaRadionica = React.lazy(() => import("./pages/radiestesia/MesaRadionica"));
+const CatalogoGraficos = React.lazy(() => import("./pages/radiestesia/CatalogoGraficos"));
+const GraficoDetalhe = React.lazy(() => import("./pages/radiestesia/GraficoDetalhe"));
+const Pantaculos = React.lazy(() => import("./pages/radiestesia/Pantaculos"));
+const CristaisCampos = React.lazy(() => import("./pages/radiestesia/CristaisCampos"));
+const EscalaNarrativa = React.lazy(() => import("./pages/radiestesia/EscalaNarrativa"));
+const DiarioPraticas = React.lazy(() => import("./pages/radiestesia/DiarioPraticas"));
+
+// Método
+const AsPortas = React.lazy(() => import("./pages/metodo/AsPortas"));
+const OsCamposPsiquicos = React.lazy(() => import("./pages/metodo/OsCamposPsiquicos"));
+const AsTorres = React.lazy(() => import("./pages/metodo/AsTorres"));
+const TriadeMetodo = React.lazy(() => import("./pages/metodo/TriadeMetodo"));
+
 // Casa das Máquinas
-import { CasaDasMaquinas, SessoesPage, GestosIntegracaoPage, MapaVivoClientePage, PainelInstitucionalPage, ClientesPage, ClienteDetailPage, ModoSessaoPage, FerramentasPage, GruposPage, GrupoDetailPage, BibliotecaIntervPage } from "./pages/casa-maquinas";
-import PainelClinicoPage from "./pages/casa-maquinas/PainelClinicoPage";
-import ModoSessaoImersivo from "./pages/casa-maquinas/ModoSessaoImersivo";
-import MapaCidadelaPage from "./pages/casa-maquinas/MapaCidadelaPage";
-import RelatorioJornadaPage from "./pages/RelatorioJornadaPage";
-import MapaVivoPage from "./pages/MapaVivoPage";
-import MapaVivoCidadelaPage from "./pages/casa-maquinas/MapaVivoCidadelaPage";
-import JornadaAlmaPage from "./pages/JornadaAlmaPage";
-import CasaTecelasPage from "./pages/casa-maquinas/CasaTecelasPage";
-import AcademiaPage from "./pages/casa-maquinas/AcademiaPage";
-import PerfilProfissionalPage from "./pages/casa-maquinas/PerfilProfissionalPage";
-import SalaTreinamentoPage from "./pages/SalaTreinamentoPage";
-import ComunidadePage from "./pages/ComunidadePage";
-import AcademiaFormacaoPage from "./pages/AcademiaFormacaoPage";
-import CartografiaPage from "./pages/casa-maquinas/ferramentas/CartografiaPage";
-import CartografiaPsiquicaPage from "./pages/CartografiaPsiquicaPage";
-import RituaisMudraPage from "./pages/RituaisMudraPage";
-import BussolaOniricaPage from "./pages/BussolaOniricaPage";
-import CirculoSagradoPage from "./pages/CirculoSagradoPage";
-import CursoDeusasPage from "./pages/CursoDeusasPage";
-import CursoChaveOniricaPage from "./pages/CursoChaveOniricaPage";
-import TorreVivaPage from "./pages/casa-maquinas/ferramentas/TorreVivaPage";
-import LabirintoPage from "./pages/casa-maquinas/ferramentas/LabirintoPage";
-import DecodificacaoOniricaPage from "./pages/casa-maquinas/ferramentas/DecodificacaoOniricaPage";
-import AtlasArquetiposPage from "./pages/casa-maquinas/ferramentas/AtlasArquetiposPage";
-import PlaceholderToolPage from "./pages/casa-maquinas/ferramentas/PlaceholderToolPage";
-import InventarioPersonasPage from "./pages/casa-maquinas/ferramentas/InventarioPersonasPage";
-import MapeamentoComplexosPage from "./pages/casa-maquinas/ferramentas/MapeamentoComplexosPage";
-import MapaSombraPage from "./pages/casa-maquinas/ferramentas/MapaSombraPage";
-import DiagnosticoEgoPage from "./pages/casa-maquinas/ferramentas/DiagnosticoEgoPage";
-import SonhoEstruturadoPage from "./pages/casa-maquinas/ferramentas/SonhoEstruturadoPage";
-import ImaginacaoAtivaPage from "./pages/casa-maquinas/ferramentas/ImaginacaoAtivaPage";
-import EscritaNaoCensuradaPage from "./pages/casa-maquinas/ferramentas/EscritaNaoCensuradaPage";
-import CorpoInconscientePage from "./pages/casa-maquinas/ferramentas/CorpoInconscientePage";
-import SectionPlaceholder from "./pages/casa-maquinas/SectionPlaceholder";
-import ConfiguracoesSaasPage from "./pages/casa-maquinas/ConfiguracoesSaasPage";
-import FormacaoMetodoPage from "./pages/FormacaoMetodoPage";
-import FormacaoForumPage from "./pages/FormacaoForumPage";
-import FormacaoAvaliacoesPage from "./pages/FormacaoAvaliacoesPage";
+const CasaDasMaquinas = React.lazy(() => import("./pages/casa-maquinas/CasaDasMaquinas"));
+const SessoesPage = React.lazy(() => import("./pages/casa-maquinas/SessoesPage"));
+const GestosIntegracaoPage = React.lazy(() => import("./pages/casa-maquinas/GestosIntegracaoPage"));
+const MapaVivoClientePage = React.lazy(() => import("./pages/casa-maquinas/MapaVivoClientePage"));
+const PainelInstitucionalPage = React.lazy(() => import("./pages/casa-maquinas/PainelInstitucionalPage"));
+const ClientesPage = React.lazy(() => import("./pages/casa-maquinas/ClientesPage"));
+const ClienteDetailPage = React.lazy(() => import("./pages/casa-maquinas/ClienteDetailPage"));
+const ModoSessaoPage = React.lazy(() => import("./pages/casa-maquinas/ModoSessaoPage"));
+const FerramentasPage = React.lazy(() => import("./pages/casa-maquinas/FerramentasPage"));
+const GruposPage = React.lazy(() => import("./pages/casa-maquinas/GruposPage"));
+const GrupoDetailPage = React.lazy(() => import("./pages/casa-maquinas/GrupoDetailPage"));
+const BibliotecaIntervPage = React.lazy(() => import("./pages/casa-maquinas/BibliotecaIntervPage"));
+
+// Labirinto da Heroína
+const LabirintoHeroinaPage = React.lazy(() => import("./pages/labirinto-heroina/LabirintoHeroinaPraticoPage"));
+
+// Clube do Livro
+const ClubeLivroApresentacao = React.lazy(() => import("./pages/clube-livro/ClubeLivroApresentacao"));
+const ClubeLivroCiclo = React.lazy(() => import("./pages/clube-livro/ClubeLivroCiclo"));
+const ClubeLivroPorta = React.lazy(() => import("./pages/clube-livro/ClubeLivroPorta"));
+const ClubeLivroFase = React.lazy(() => import("./pages/clube-livro/ClubeLivroFase"));
+const ClubeLivroEscutas = React.lazy(() => import("./pages/clube-livro/ClubeLivroEscutas"));
+const ClubeLivroEncontros = React.lazy(() => import("./pages/clube-livro/ClubeLivroEncontros"));
+const ClubeLivroRitual = React.lazy(() => import("./pages/clube-livro/ClubeLivroRitual"));
+const ClubeLivroAula = React.lazy(() => import("./pages/clube-livro/ClubeLivroAula"));
+const IntegracaoOracular = React.lazy(() => import("./pages/clube-livro/IntegracaoOracular"));
+const MeuCaminhoClube = React.lazy(() => import("./pages/clube-livro/MeuCaminhoClube"));
+const Integracao8020 = React.lazy(() => import("./pages/clube-livro/Integracao8020"));
+const ClubeLivroLivro = React.lazy(() => import("./pages/clube-livro/ClubeLivroLivro"));
+const MapaJornadas = React.lazy(() => import("./pages/clube-livro/MapaJornadas"));
+const MinhaTravessia = React.lazy(() => import("./pages/clube-livro/MinhaTravessia"));
+const CertificadoTravessia = React.lazy(() => import("./pages/clube-livro/CertificadoTravessia"));
+const Lab8020Season = React.lazy(() => import("./pages/clube-livro/Lab8020Season"));
 
 // Jardim do Ofício
-import { JardimOficioPage, PainelSupervisaoPage } from "./pages/jardim-oficio";
-import Jornada from "./pages/Jornada";
-import Onboarding from "./pages/Onboarding";
-// SalaDaVisitante removida - usar SalaDetalhe com ID do banco
-// SalaDeSessao removido - usar SessionRoomHome
-import SessionRoomHome from "./pages/SessionRoomHome";
-import SessionRoomCase from "./pages/SessionRoomCase";
-import SessionRoomGroup from "./pages/SessionRoomGroup";
-import ManuaisProtocolo from "./pages/ManuaisProtocolo";
-import RoteirosProtocolo from "./pages/RoteirosProtocolo";
-// Symbolic Templates
-import Big5TemplateList from "./pages/templates/Big5TemplateList";
-import Big5TemplateEditor from "./pages/templates/Big5TemplateEditor";
-import EnneagramTemplateList from "./pages/templates/EnneagramTemplateList";
-import EnneagramTemplateEditor from "./pages/templates/EnneagramTemplateEditor";
-import TarotTemplateList from "./pages/templates/TarotTemplateList";
-import TarotTemplateEditor from "./pages/templates/TarotTemplateEditor";
-import ConstellationTemplateList from "./pages/templates/ConstellationTemplateList";
-import ConstellationTemplateEditor from "./pages/templates/ConstellationTemplateEditor";
-// Personal Symbolic Maps
-import PersonalMaps from "./pages/PersonalMaps";
-import PersonalMapEditor from "./pages/PersonalMapEditor";
-// Jardim da Psique - Espaço privado de registros
-import JardimPsique from "./pages/JardimPsique";
-import JardimPsiqueDetalhe from "./pages/JardimPsiqueDetalhe";
-import MinhaBiblioteca from "./pages/MinhaBiblioteca";
-// Tour da Casa
-import Tour from "./pages/Tour";
-// Travessia Detalhe
-import TravessiaDetalhe from "./pages/TravessiaDetalhe";
-// Narroterapia Oracular
-import NarroterapiaHub from "./pages/NarroterapiaHub";
-import BibliotecaContos from "./pages/narroterapia/BibliotecaContos";
-import BibliotecaClinica from "./pages/narroterapia/BibliotecaClinica";
-import ContoClinicoDetalhe from "./pages/narroterapia/ContoClinicoDetalhe";
-import AudiosNarracao from "./pages/narroterapia/AudiosNarracao";
-import RitualAutorizacao from "./pages/narroterapia/RitualAutorizacao";
-// Biblioteca das Travessias (Symbolic Families)
-import BibliotecaTravessias from "./pages/BibliotecaTravessias";
-import BibliotecaTravessiasFamilia from "./pages/BibliotecaTravessiasFamilia";
-// Clube do Livro Oracular
-import { 
-  ClubeLivroApresentacao, 
-  ClubeLivroCiclo, 
-  ClubeLivroPorta,
-  ClubeLivroFase, 
-  ClubeLivroEscutas, 
-  ClubeLivroEncontros,
-  ClubeLivroRitual,
-  ClubeLivroAula,
-  IntegracaoOracular,
-  MeuCaminhoClube,
-  Integracao8020,
-  ClubeLivroLivro,
-  MapaJornadas,
-  MinhaTravessia,
-  CertificadoTravessia,
-  
-  Lab8020Season,
-} from "./pages/clube-livro";
-// Labirinto da Heroína Interna®
-import { LabirintoHeroinaPage } from "./pages/labirinto-heroina";
-import MapaHeroinaPage from "./pages/mapa-heroina";
-import CartasJornadaPage from "./pages/CartasJornadaPage";
-import PortalJunguiano from "./pages/PortalJunguiano";
-import PortalJunguianoPorta from "./pages/PortalJunguianoPorta";
-// Novas páginas de navegação simplificada
-import ExperienciaGratuita from "./pages/ExperienciaGratuita";
-import ClubeOracular from "./pages/ClubeOracular";
-import MapaCasaOracula from "./pages/MapaCasaOracula";
-import MinhaJornada from "./pages/MinhaJornada";
+const JardimOficioPage = React.lazy(() => import("./pages/jardim-oficio/JardimOficioPage"));
+const PainelSupervisaoPage = React.lazy(() => import("./pages/jardim-oficio/PainelSupervisaoPage"));
 
 const queryClient = new QueryClient();
 const BOOT_ROUTE_LOG_PREFIX = '[boot-debug][routes]';
@@ -2091,7 +2102,9 @@ const App = () => (
           <AdminPreviewProvider>
             <AppDomainProvider>
               <RootErrorBoundary>
-                <AppRoutes />
+                <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-pulse text-gold font-display text-xl">Carregando...</div></div>}>
+                  <AppRoutes />
+                </Suspense>
               </RootErrorBoundary>
             </AppDomainProvider>
           </AdminPreviewProvider>

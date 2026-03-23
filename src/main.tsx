@@ -107,7 +107,7 @@ window.setTimeout(async () => {
   sessionStorage.setItem(BOOT_STALL_RETRY_KEY, "1");
   await clearClientCaches();
   window.location.reload();
-}, 6000);
+}, 12000);
 
 async function bootstrapApp() {
   try {
