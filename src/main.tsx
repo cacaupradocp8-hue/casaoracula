@@ -41,12 +41,35 @@ async function clearClientCaches() {
   }
 }
 
+function hardenReactRootAgainstExternalDomMutation(rootNode: HTMLElement) {
+  try {
+    document.documentElement.setAttribute("translate", "no");
+    document.documentElement.classList.add("notranslate");
+    document.body?.setAttribute("translate", "no");
+    document.body?.classList.add("notranslate");
+    rootNode.setAttribute("translate", "no");
+    rootNode.classList.add("notranslate");
+
+    const hasGoogleNoTranslate = document.head.querySelector('meta[name="google"][content="notranslate"]');
+    if (!hasGoogleNoTranslate) {
+      const meta = document.createElement("meta");
+      meta.name = "google";
+      meta.content = "notranslate";
+      document.head.appendChild(meta);
+    }
+  } catch (error) {
+    console.warn(`${BOOT_LOG_PREFIX} falha ao endurecer a raiz contra mutações externas`, error);
+  }
+}
+
 console.info(`${BOOT_LOG_PREFIX} entrada do app`);
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
   throw new Error("Elemento #root não encontrado.");
 }
+
+hardenReactRootAgainstExternalDomMutation(rootElement);
 
 // Patch DOM globally to prevent "removeChild" crashes from browser extensions or HMR
 const origRemoveChild = Node.prototype.removeChild;
@@ -131,11 +154,7 @@ window.setTimeout(async () => {
 async function bootstrapApp() {
   try {
     const { default: App } = await import("./App.tsx");
-    root.render(
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    );
+    root.render(<App />);
   } catch (error) {
     const alreadyRetried = sessionStorage.getItem(BOOT_IMPORT_RETRY_KEY) === "1";
 
