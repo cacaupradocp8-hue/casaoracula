@@ -142,11 +142,11 @@ function installDomMutationGuards() {
   };
 
   const prototypeTargets: Array<[string, Record<string, unknown> | undefined]> = [
-    ["Node", window.Node?.prototype as Record<string, unknown> | undefined],
-    ["Element", window.Element?.prototype as Record<string, unknown> | undefined],
-    ["HTMLElement", window.HTMLElement?.prototype as Record<string, unknown> | undefined],
-    ["Document", window.Document?.prototype as Record<string, unknown> | undefined],
-    ["DocumentFragment", window.DocumentFragment?.prototype as Record<string, unknown> | undefined],
+    ["Node", window.Node?.prototype as unknown as Record<string, unknown> | undefined],
+    ["Element", window.Element?.prototype as unknown as Record<string, unknown> | undefined],
+    ["HTMLElement", window.HTMLElement?.prototype as unknown as Record<string, unknown> | undefined],
+    ["Document", window.Document?.prototype as unknown as Record<string, unknown> | undefined],
+    ["DocumentFragment", window.DocumentFragment?.prototype as unknown as Record<string, unknown> | undefined],
   ];
 
   prototypeTargets.forEach(([label, prototype]) => {
