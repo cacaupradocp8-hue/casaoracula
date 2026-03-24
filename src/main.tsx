@@ -5,6 +5,7 @@ import "./index.css";
 const PRELOAD_RETRY_KEY = "vite-preload-retried";
 const BOOT_IMPORT_RETRY_KEY = "vite-boot-import-retried";
 const BOOT_STALL_RETRY_KEY = "vite-boot-stall-retried";
+const DOM_GUARD_INSTALL_KEY = "__lovable_dom_guard_installed__";
 const BOOT_LOG_PREFIX = "[boot-debug][main]";
 
 function BootFatalFallback({ message }: { message: string }) {
@@ -62,6 +63,99 @@ function hardenReactRootAgainstExternalDomMutation(rootNode: HTMLElement) {
   }
 }
 
+function isRecoverableDomMutationError(reason: unknown) {
+  const message = reason instanceof Error
+    ? reason.message
+    : typeof reason === "string"
+      ? reason
+      : "";
+
+  return /Failed to execute '(removeChild|insertBefore|replaceChild)' on 'Node'/.test(message);
+}
+
+function installDomMutationGuards() {
+  const guardWindow = window as Window & { [DOM_GUARD_INSTALL_KEY]?: boolean };
+  if (guardWindow[DOM_GUARD_INSTALL_KEY]) return;
+  guardWindow[DOM_GUARD_INSTALL_KEY] = true;
+
+  const patchPrototypeMethod = (
+    label: string,
+    prototype: Record<string, unknown> | undefined,
+    methodName: "removeChild" | "insertBefore" | "replaceChild",
+    fallbackReturnIndex: number,
+  ) => {
+    if (!prototype) return;
+
+    const original = prototype[methodName];
+    if (typeof original !== "function") return;
+    if ((original as { __lovableGuarded?: boolean }).__lovableGuarded) return;
+
+    const wrapped = function (this: Node, ...args: unknown[]) {
+      try {
+        if (methodName === "removeChild") {
+          const [child] = args as [Node];
+          if (child && child.parentNode !== this) {
+            console.warn(`${BOOT_LOG_PREFIX} ${label}.${methodName} interceptado — nó órfão ignorado`, {
+              parent: this.nodeName,
+              child: child.nodeName,
+            });
+            return child;
+          }
+        }
+
+        if (methodName === "insertBefore") {
+          const [newNode, referenceNode] = args as [Node, Node | null];
+          if (referenceNode && referenceNode.parentNode !== this) {
+            console.warn(`${BOOT_LOG_PREFIX} ${label}.${methodName} interceptado — referência órfã ignorada`, {
+              parent: this.nodeName,
+              newNode: newNode.nodeName,
+              referenceNode: referenceNode.nodeName,
+            });
+            return newNode;
+          }
+        }
+
+        if (methodName === "replaceChild") {
+          const [, oldChild] = args as [Node, Node];
+          if (oldChild && oldChild.parentNode !== this) {
+            console.warn(`${BOOT_LOG_PREFIX} ${label}.${methodName} interceptado — alvo órfão ignorado`, {
+              parent: this.nodeName,
+              oldChild: oldChild.nodeName,
+            });
+            return oldChild;
+          }
+        }
+
+        return (original as (...fnArgs: unknown[]) => unknown).apply(this, args);
+      } catch (error) {
+        if (isRecoverableDomMutationError(error)) {
+          console.warn(`${BOOT_LOG_PREFIX} ${label}.${methodName} recuperou DOMException`, error);
+          return args[fallbackReturnIndex];
+        }
+
+        throw error;
+      }
+    };
+
+    (wrapped as { __lovableGuarded?: boolean }).__lovableGuarded = true;
+    prototype[methodName] = wrapped;
+  };
+
+  const prototypeTargets: Array<[string, Record<string, unknown> | undefined]> = [
+    ["Node", window.Node?.prototype as unknown as Record<string, unknown> | undefined],
+    ["Element", window.Element?.prototype as unknown as Record<string, unknown> | undefined],
+    ["HTMLElement", window.HTMLElement?.prototype as unknown as Record<string, unknown> | undefined],
+    ["Document", window.Document?.prototype as unknown as Record<string, unknown> | undefined],
+    ["DocumentFragment", window.DocumentFragment?.prototype as unknown as Record<string, unknown> | undefined],
+  ];
+
+  prototypeTargets.forEach(([label, prototype]) => {
+    patchPrototypeMethod(label, prototype, "removeChild", 0);
+    patchPrototypeMethod(label, prototype, "insertBefore", 0);
+    patchPrototypeMethod(label, prototype, "replaceChild", 1);
+  });
+}
+
 console.info(`${BOOT_LOG_PREFIX} entrada do app`);
 
 const rootElement = document.getElementById("root");
@@ -70,25 +164,7 @@ if (!rootElement) {
 }
 
 hardenReactRootAgainstExternalDomMutation(rootElement);
-
-// Patch DOM globally to prevent "removeChild" crashes from browser extensions or HMR
-const origRemoveChild = Node.prototype.removeChild;
-Node.prototype.removeChild = function <T extends Node>(child: T): T {
-  if (child.parentNode !== this) {
-    console.warn(`${BOOT_LOG_PREFIX} removeChild interceptado — nó órfão ignorado`);
-    return child;
-  }
-  return origRemoveChild.call(this, child) as T;
-};
-
-const origInsertBefore = Node.prototype.insertBefore;
-Node.prototype.insertBefore = function <T extends Node>(newNode: T, refNode: Node | null): T {
-  if (refNode && refNode.parentNode !== this) {
-    console.warn(`${BOOT_LOG_PREFIX} insertBefore interceptado — ref órfão ignorado`);
-    return newNode;
-  }
-  return origInsertBefore.call(this, newNode, refNode) as T;
-};
+installDomMutationGuards();
 
 const root: Root = createRoot(rootElement);
 let bootWindowOpen = true;
@@ -124,7 +200,19 @@ window.addEventListener("vite:preloadError", async (event) => {
 });
 
 window.addEventListener("error", (event) => {
-  console.error(`${BOOT_LOG_PREFIX} [global-error]`, event.error ?? event.message);
+  const reason = event.error ?? event.message;
+  console.error(`${BOOT_LOG_PREFIX} [global-error]`, reason);
+
+  if (isRecoverableDomMutationError(reason)) {
+    console.warn(`${BOOT_LOG_PREFIX} erro de mutação externa do DOM detectado`, reason);
+    event.preventDefault();
+
+    if (bootWindowOpen || rootElement.innerHTML.trim().length === 0) {
+      renderFatalBootFallback("A interface foi interrompida por uma modificação externa do navegador. Recarregue para recuperar o app.");
+    }
+    return;
+  }
+
   if (!bootWindowOpen) return;
   if (event.error instanceof Error && event.error.stack?.includes("createElement")) {
     renderFatalBootFallback(event.error);
@@ -133,6 +221,15 @@ window.addEventListener("error", (event) => {
 
 window.addEventListener("unhandledrejection", (event) => {
   console.error(`${BOOT_LOG_PREFIX} [unhandled-rejection]`, event.reason);
+
+  if (isRecoverableDomMutationError(event.reason)) {
+    console.warn(`${BOOT_LOG_PREFIX} promessa rejeitada por mutação externa do DOM`, event.reason);
+    event.preventDefault();
+
+    if (bootWindowOpen || rootElement.innerHTML.trim().length === 0) {
+      renderFatalBootFallback("A interface foi interrompida por uma modificação externa do navegador. Recarregue para recuperar o app.");
+    }
+  }
 });
 
 window.setTimeout(async () => {
