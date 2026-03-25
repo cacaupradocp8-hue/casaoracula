@@ -195,6 +195,7 @@ const ExperienciaGratuita = React.lazy(() => import("./pages/ExperienciaGratuita
 const ClubeOracular = React.lazy(() => import("./pages/ClubeOracular"));
 const MapaCasaOracula = React.lazy(() => import("./pages/MapaCasaOracula"));
 const MinhaJornada = React.lazy(() => import("./pages/MinhaJornada"));
+const SalaDaVisitante = React.lazy(() => import("./pages/SalaDaVisitante"));
 
 // Casa pages
 const CasaAtrio = React.lazy(() => import("./pages/casa/CasaAtrio"));
