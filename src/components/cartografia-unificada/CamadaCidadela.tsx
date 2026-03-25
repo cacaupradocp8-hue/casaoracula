@@ -12,6 +12,7 @@ interface CidadelaData {
   leitura_integrada: string;
   tensao_simbolica: string;
   direcao_travessia: string;
+  nivel_integracao?: string;
 }
 
 interface Props {
@@ -40,6 +41,13 @@ const DISTRITOS_META: Record<string, { nome: string; icon: string }> = {
   portal_renascimento: { nome: 'Portal de Renascimento', icon: '🦋' },
 };
 
+const ESTADO_CORES = {
+  central: { bg: 'bg-primary/20', ring: 'ring-2 ring-primary/50', text: 'text-primary' },
+  ativo: { bg: 'bg-amber-500/15', ring: '', text: 'text-amber-600' },
+  tensao: { bg: 'bg-destructive/10', ring: 'ring-1 ring-destructive/30', text: 'text-destructive' },
+  potencial: { bg: 'bg-muted/30', ring: '', text: 'text-muted-foreground/50' },
+};
+
 const anim = (delay: number) => ({
   initial: { opacity: 0, y: 16 },
   animate: { opacity: 1, y: 0 },
@@ -47,12 +55,25 @@ const anim = (delay: number) => ({
 });
 
 export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloIcon, territorios, pontoPartida }: Props) {
-  const distritosAtivos = territorios
-    .map(key => ({ key, ...DISTRITOS_META[key] }))
-    .filter(d => d.nome);
+  const distritoCentral = pontoPartida || territorios[0] || '';
+  const tensaoSet = new Set(data.distritos_tensao || []);
+
+  const getEstado = (key: string) => {
+    if (key === distritoCentral) return 'central';
+    if (tensaoSet.has(key) || tensaoSet.has(DISTRITOS_META[key]?.nome)) return 'tensao';
+    if (territorios.includes(key)) return 'ativo';
+    return 'potencial';
+  };
+
+  const distritosOrdenados = Object.entries(DISTRITOS_META)
+    .map(([key, meta]) => ({ key, ...meta, estado: getEstado(key) }))
+    .sort((a, b) => {
+      const ordem = { central: 0, ativo: 1, tensao: 2, potencial: 3 };
+      return (ordem[a.estado] ?? 3) - (ordem[b.estado] ?? 3);
+    });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-2xl mx-auto overflow-hidden">
       <motion.div {...anim(0)} className="text-center space-y-3">
         <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center"
           style={{ background: `${corHex}15`, border: `2px solid ${corHex}40` }}>
@@ -63,8 +84,8 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
       </motion.div>
 
       {/* Cor e atmosfera */}
-      <motion.div {...anim(0.1)} className="flex items-center justify-center gap-3 flex-wrap">
-        <div className="w-6 h-6 rounded-full shadow-md" style={{ backgroundColor: corHex }} />
+      <motion.div {...anim(0.1)} className="flex items-center justify-center gap-3 flex-wrap px-4">
+        <div className="w-6 h-6 rounded-full shadow-md shrink-0" style={{ backgroundColor: corHex }} />
         <span className="text-sm font-medium text-foreground">{cor}</span>
         <span className="text-xs text-muted-foreground">·</span>
         {atmosfera.slice(0, 3).map(a => (
@@ -72,71 +93,89 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         ))}
       </motion.div>
 
-      {/* Mandala visual */}
-      <motion.div {...anim(0.2)} className="relative mx-auto" style={{ width: '260px', height: '260px' }}>
-        {/* Centro */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-16 h-16 rounded-full flex flex-col items-center justify-center"
-            style={{ background: `${corHex}12`, border: `2px solid ${corHex}40` }}>
-            <span className="text-2xl">{simboloIcon}</span>
-            <span className="text-[8px] text-foreground/50">{simbolo}</span>
+      {/* Nível de integração (modo cliente) */}
+      {data.nivel_integracao && (
+        <motion.div {...anim(0.15)} className="flex justify-center">
+          <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+            data.nivel_integracao === 'alto' ? 'bg-accent/15 text-accent-foreground' :
+            data.nivel_integracao === 'medio' ? 'bg-amber-500/15 text-amber-600' :
+            'bg-destructive/10 text-destructive'
+          }`}>
+            Integração: {data.nivel_integracao}
           </div>
-        </div>
-        {/* Distritos em órbita */}
-        {distritosAtivos.map((d, i) => {
-          const angle = (i / distritosAtivos.length) * Math.PI * 2 - Math.PI / 2;
-          const x = 50 + Math.cos(angle) * 38;
-          const y = 50 + Math.sin(angle) * 38;
-          const isPonto = d.key === pontoPartida;
-          return (
-            <div key={d.key} className="absolute flex flex-col items-center"
-              style={{ left: `${x}%`, top: `${y}%`, transform: 'translate(-50%, -50%)' }}>
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg ${
-                isPonto ? 'bg-primary/15 ring-2 ring-primary/40' : 'bg-card/60 border border-border/20'
-              }`}>
-                {d.icon}
-              </div>
-              <span className="text-[7px] text-foreground/40 mt-0.5 text-center max-w-[60px] truncate">{d.nome}</span>
+        </motion.div>
+      )}
+
+      {/* Mapa responsivo — grid ao invés de posicionamento absoluto */}
+      <motion.div {...anim(0.2)} className="px-4">
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-w-sm mx-auto">
+          {/* Centro: símbolo */}
+          <div className="col-span-3 sm:col-span-4 flex justify-center mb-2">
+            <div className="w-16 h-16 rounded-full flex flex-col items-center justify-center"
+              style={{ background: `${corHex}12`, border: `2px solid ${corHex}40` }}>
+              <span className="text-2xl">{simboloIcon}</span>
+              <span className="text-[8px] text-foreground/50">{simbolo}</span>
             </div>
-          );
-        })}
+          </div>
+          {/* Distritos */}
+          {distritosOrdenados.map(d => {
+            const estilos = ESTADO_CORES[d.estado];
+            return (
+              <div key={d.key} className="flex flex-col items-center text-center">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg ${estilos.bg} ${estilos.ring}`}>
+                  {d.icon}
+                </div>
+                <span className={`text-[8px] mt-0.5 max-w-[64px] truncate ${estilos.text}`}>
+                  {d.nome}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+        {/* Legenda */}
+        <div className="flex justify-center gap-3 mt-3 text-[8px] text-muted-foreground/50">
+          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-primary/40" /> central</span>
+          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-500/30" /> ativo</span>
+          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-destructive/30" /> tensão</span>
+          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-muted/40" /> potencial</span>
+        </div>
       </motion.div>
 
       {/* Distrito Dominante */}
       <motion.div {...anim(0.3)}>
-        <Card className="border-primary/20 bg-primary/5">
+        <Card className="border-primary/20 bg-primary/5 mx-4">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-primary/80">
-              {DISTRITOS_META[data.distrito_dominante]?.icon} Distrito Central: {data.distrito_dominante}
+              {DISTRITOS_META[data.distrito_dominante]?.icon || '🏛️'} Distrito Central: {data.distrito_dominante}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-foreground/80 leading-relaxed">{data.distrito_dominante_descricao}</p>
+            <p className="text-sm text-foreground/80 leading-relaxed break-words">{data.distrito_dominante_descricao}</p>
           </CardContent>
         </Card>
       </motion.div>
 
       {/* Leitura Integrada */}
       <motion.div {...anim(0.4)}>
-        <Card className="border-border/10 bg-card/40">
+        <Card className="border-border/10 bg-card/40 mx-4">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-muted-foreground/70">Leitura Simbólica Integrada</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-foreground/80 leading-relaxed italic">{data.leitura_integrada}</p>
+            <p className="text-sm text-foreground/80 leading-relaxed italic break-words">{data.leitura_integrada}</p>
           </CardContent>
         </Card>
       </motion.div>
 
       {/* Grid: Tensão + Crescimento */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-4">
         <motion.div {...anim(0.5)}>
           <Card className="border-amber-500/15 bg-amber-500/5 h-full">
             <CardHeader className="pb-2">
               <CardTitle className="text-xs text-amber-500/70">Tensão Simbólica</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-xs text-foreground/70 leading-relaxed">{data.tensao_simbolica}</p>
+              <p className="text-xs text-foreground/70 leading-relaxed break-words">{data.tensao_simbolica}</p>
               {data.distritos_tensao?.length > 0 && (
                 <div className="flex flex-wrap gap-1 mt-2">
                   {data.distritos_tensao.map(d => (
@@ -153,7 +192,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
               <CardTitle className="text-xs text-accent-foreground/70">Território de Crescimento</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-xs text-foreground/70 leading-relaxed">{data.territorio_crescimento_descricao}</p>
+              <p className="text-xs text-foreground/70 leading-relaxed break-words">{data.territorio_crescimento_descricao}</p>
               <p className="text-[10px] text-accent-foreground/50 mt-1">{data.territorio_crescimento}</p>
             </CardContent>
           </Card>
@@ -162,10 +201,10 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
 
       {/* Direção da Travessia */}
       <motion.div {...anim(0.6)}>
-        <Card className="border-primary/10">
+        <Card className="border-primary/10 mx-4">
           <CardContent className="p-5 text-center">
             <p className="text-[10px] tracking-wider uppercase text-muted-foreground/40 mb-2">Direção da travessia</p>
-            <p className="text-sm text-foreground/80 italic leading-relaxed">{data.direcao_travessia}</p>
+            <p className="text-sm text-foreground/80 italic leading-relaxed break-words">{data.direcao_travessia}</p>
           </CardContent>
         </Card>
       </motion.div>
