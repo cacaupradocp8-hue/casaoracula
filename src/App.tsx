@@ -132,6 +132,7 @@ const ComunidadePage = React.lazy(() => import("./pages/ComunidadePage"));
 const AcademiaFormacaoPage = React.lazy(() => import("./pages/AcademiaFormacaoPage"));
 const CartografiaPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/CartografiaPage"));
 const CartografiaPsiquicaPage = React.lazy(() => import("./pages/CartografiaPsiquicaPage"));
+const RevelacaoCidadelaPage = React.lazy(() => import("./pages/RevelacaoCidadelaPage"));
 const RituaisMudraPage = React.lazy(() => import("./pages/RituaisMudraPage"));
 const BussolaOniricaPage = React.lazy(() => import("./pages/BussolaOniricaPage"));
 const CirculoSagradoPage = React.lazy(() => import("./pages/CirculoSagradoPage"));
@@ -1213,6 +1214,14 @@ function AppRoutes() {
       {/* Legacy redirect */}
       <Route path="/ferramenta/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route path="/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
+      <Route
+        path="/revelacao-cidadela"
+        element={
+          <ProtectedRoute minPortal="visitante">
+            <RevelacaoCidadelaPage />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/ferramentas/oraculo-perguntas"
         element={

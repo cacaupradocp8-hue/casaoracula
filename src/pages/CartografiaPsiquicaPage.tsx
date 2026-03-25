@@ -109,6 +109,33 @@ export default function CartografiaPsiquicaPage() {
     return Math.round((rLen / (rLen + cLen)) * 100);
   };
 
+  const gerarCidadela = async () => {
+    if (!user) return;
+
+    // Determine dominant/secondary districts from selected territories
+    const distritoCentral = pontoPartida || territorios[0] || 'portao_chegada';
+    const distritosAtivos = territorios;
+
+    // Build initial district JSON for auto_mapeamento
+    const distritosJson: Record<string, any> = {};
+    DISTRITOS.forEach(d => {
+      const isAtivo = distritosAtivos.includes(d.key);
+      const isCentral = d.key === distritoCentral;
+      distritosJson[d.key] = {
+        nome: d.nome,
+        estado: isCentral ? 'central' : isAtivo ? 'ativo' : 'potencial',
+        icon: d.icon,
+      };
+    });
+
+    // Upsert auto_mapeamento (CidaDELA state)
+    await supabase.from('auto_mapeamento').upsert({
+      user_id: user.id,
+      distritos_json: distritosJson,
+      anotacoes: `Cor: ${cor} | Atmosfera: ${atmosfera.join(', ')} | Símbolo: ${simbolo} | Ponto de partida: ${DISTRITOS.find(d => d.key === distritoCentral)?.nome || distritoCentral}`,
+    } as any, { onConflict: 'user_id' });
+  };
+
   const handleSave = async () => {
     if (!user) return;
     setSaving(true);
@@ -132,8 +159,10 @@ export default function CartografiaPsiquicaPage() {
       console.error(error);
       toast.error('Erro ao salvar cartografia');
     } else {
-      toast.success('Cartografia salva com sucesso ✨ Sua CidaDELA Interior foi gerada.');
-      navigate('/mapa-casa');
+      // Generate CidaDELA automatically
+      await gerarCidadela();
+      toast.success('Sua CidaDELA Interior foi gerada ✨');
+      navigate('/revelacao-cidadela');
     }
     setSaving(false);
   };
