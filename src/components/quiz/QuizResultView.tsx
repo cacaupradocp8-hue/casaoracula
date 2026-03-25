@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
   Sparkles, Heart, DoorOpen, 
-  Compass, ArrowRight
+  Map, ArrowRight
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
