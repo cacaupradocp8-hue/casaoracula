@@ -364,12 +364,18 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
 
   const isOnboardingRoute = location.pathname === '/onboarding';
   const isPosCompraRoute = location.pathname === '/pos-compra';
+  const isVisitorJourneyRoute = location.pathname === '/sala-da-visitante' 
+    || location.pathname.startsWith('/quiz/')
+    || location.pathname === '/comece-aqui'
+    || location.pathname === '/experiencia-gratuita'
+    || location.pathname.startsWith('/travessia/');
   const isAdmin = user?.portal === 'admin';
   const isVisitor = user?.portal === 'visitante';
 
   // Only redirect to onboarding if we successfully loaded status AND it's not completed
   // If there was an error loading onboarding, skip redirect (fail-open)
-  if (!onboardingCompleted && !onboardingError && !isOnboardingRoute && !isAdmin) {
+  // Visitor journey routes (sala, quiz, travessia) bypass onboarding enforcement
+  if (!onboardingCompleted && !onboardingError && !isOnboardingRoute && !isAdmin && !isVisitorJourneyRoute) {
     logRouteStep('definição da rota pós-login: /onboarding', {
       from: location.pathname,
       userId: user?.id ?? null,
