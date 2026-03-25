@@ -539,14 +539,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/experiencia-gratuita"
-        element={
-          <ProtectedRoute>
-            <ExperienciaGratuita />
-          </ProtectedRoute>
-        }
-      />
+      {/* experiencia-gratuita redirect moved below */}
       <Route
         path="/mapa-casa"
         element={
