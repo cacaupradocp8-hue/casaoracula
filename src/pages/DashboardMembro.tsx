@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { useBussolaOracular } from "@/hooks/useBussolaOracular";
 import {
@@ -9,13 +11,23 @@ import {
   SuaVozResumo,
   AlertaOracular,
 } from "@/components/bussola-home";
+import { BoasVindasBanner } from "@/components/bussola-home/BoasVindasBanner";
 import { DashboardPaths } from "@/components/dashboard/DashboardPaths";
 import { DashboardCommunity } from "@/components/dashboard/DashboardCommunity";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Moon } from "lucide-react";
 
 export default function DashboardMembro() {
   const bussola = useBussolaOracular();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isBoasVindas = searchParams.get('boas-vindas') === 'true';
+  const [showBanner, setShowBanner] = useState(isBoasVindas);
+
+  const handleDismissBanner = () => {
+    setShowBanner(false);
+    searchParams.delete('boas-vindas');
+    setSearchParams(searchParams, { replace: true });
+  };
 
   if (bussola.loading) {
     return (
@@ -37,6 +49,17 @@ export default function DashboardMembro() {
   return (
     <AppLayout>
       <div className="container mx-auto px-5 md:px-6 py-8 pb-20 max-w-3xl">
+        {/* Banner de boas-vindas (pós-compra) */}
+        <AnimatePresence>
+          {showBanner && (
+            <BoasVindasBanner
+              nome={bussola.welcomeName}
+              temCartografia={bussola.temCartografia}
+              onDismiss={handleDismissBanner}
+            />
+          )}
+        </AnimatePresence>
+
         {/* 1. Bússola — Momento atual */}
         <BussolaAtual
           leituraMomento={bussola.leituraMomento}
@@ -76,7 +99,7 @@ export default function DashboardMembro() {
         {/* Separador */}
         <div className="h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent mb-8" />
 
-        {/* Caminhos e Comunidade (mantidos) */}
+        {/* Caminhos e Comunidade */}
         <DashboardPaths />
         <DashboardCommunity />
       </div>

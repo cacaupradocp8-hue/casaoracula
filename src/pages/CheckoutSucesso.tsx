@@ -1,50 +1,26 @@
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { CheckCircle2, ArrowRight, Sparkles } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 export default function CheckoutSucesso() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirect to dashboard with welcome mode after a brief moment
+    const timer = setTimeout(() => {
+      navigate('/dashboard-membro?boas-vindas=true', { replace: true });
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [navigate]);
+
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-16 flex items-center justify-center min-h-[70vh]">
-        <Card className="max-w-md w-full text-center">
-          <CardHeader className="pb-4">
-            <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
-              <CheckCircle2 className="w-8 h-8 text-green-500" />
-            </div>
-            <CardTitle className="text-2xl">Assinatura Ativada!</CardTitle>
-            <CardDescription className="text-base mt-2">
-              Bem-vinda à sua nova jornada na Casa ORÁCULA
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex items-center justify-center gap-2 text-gold">
-              <Sparkles className="w-5 h-5" />
-              <span className="font-medium">Seu acesso já está liberado</span>
-              <Sparkles className="w-5 h-5" />
-            </div>
-
-            <p className="text-sm text-muted-foreground">
-              Agora você tem acesso a todos os recursos do seu plano. 
-              Explore as ferramentas, salas e conteúdos disponíveis.
-            </p>
-
-            <div className="space-y-3 pt-4">
-              <Button asChild className="w-full bg-gold text-black hover:bg-gold/90">
-                <Link to="/dashboard">
-                  Ir para o Dashboard
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
-              </Button>
-              <Button variant="outline" asChild className="w-full">
-                <Link to="/assinatura">
-                  Ver Minha Assinatura
-                </Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="min-h-[70vh] flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Loader2 className="w-8 h-8 animate-spin text-gold mx-auto" />
+          <p className="text-muted-foreground text-sm">Preparando sua entrada na Casa...</p>
+        </div>
       </div>
     </AppLayout>
   );

@@ -185,9 +185,9 @@ export default function PosCompra() {
                       variant="gold"
                       size="lg"
                       className="w-full py-6 text-base"
-                      onClick={() => navigate(getDestinationRoute())}
+                      onClick={() => navigate('/dashboard-membro?boas-vindas=true')}
                     >
-                      Entrar na {getSalaName()}
+                      Entrar na Casa Orácula
                     </Button>
                   </div>
                 )}

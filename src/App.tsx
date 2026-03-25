@@ -82,6 +82,7 @@ const Billing = React.lazy(() => import("./pages/Billing"));
 const MinhaConta = React.lazy(() => import("./pages/MinhaConta"));
 const Suporte = React.lazy(() => import("./pages/Suporte"));
 const CheckoutSucesso = React.lazy(() => import("./pages/CheckoutSucesso"));
+const ConviteClube = React.lazy(() => import("./pages/ConviteClube"));
 const CheckoutCancelado = React.lazy(() => import("./pages/CheckoutCancelado"));
 const Audios = React.lazy(() => import("./pages/Audios"));
 const EstudioOracular = React.lazy(() => import("./pages/EstudioOracular"));
@@ -538,14 +539,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/experiencia-gratuita"
-        element={
-          <ProtectedRoute>
-            <ExperienciaGratuita />
-          </ProtectedRoute>
-        }
-      />
+      {/* experiencia-gratuita redirect moved below */}
       <Route
         path="/mapa-casa"
         element={
@@ -566,7 +560,23 @@ function AppRoutes() {
         path="/comece-aqui"
         element={
           <ProtectedRoute>
-            <Navigate to="/onboarding" replace />
+            <Navigate to="/quiz/descubra-seu-eixo" replace />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/convite-clube"
+        element={
+          <ProtectedRoute>
+            <ConviteClube />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/experiencia-gratuita"
+        element={
+          <ProtectedRoute>
+            <Navigate to="/quiz/descubra-seu-eixo" replace />
           </ProtectedRoute>
         }
       />

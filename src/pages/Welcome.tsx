@@ -52,7 +52,7 @@ export default function Welcome() {
   }, [onboardingLoading, onboardingCompleted, user, isAdmin, navigate]);
 
   const handleContinue = () => {
-    navigate('/jornada', { replace: true });
+    navigate('/dashboard-membro', { replace: true });
   };
 
   // Show loading while checking auth and profile
