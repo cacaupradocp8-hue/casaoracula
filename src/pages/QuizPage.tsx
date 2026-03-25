@@ -107,27 +107,54 @@ export default function QuizPage() {
 
   const fetchQuizData = async () => {
     try {
-      // Fetch quiz
-      const { data: quizData, error: quizError } = await supabase
+      const aliasMap: Record<string, string> = {
+        'descubra-sua-voz': 'descubra-seu-eixo',
+      };
+
+      const slugCandidates = Array.from(
+        new Set([quizId, quizId ? aliasMap[quizId] : undefined].filter(Boolean) as string[])
+      );
+
+      let resolvedQuiz: Quiz | null = null;
+
+      const { data: quizById } = await supabase
         .from("quizzes")
         .select("*")
-        .eq("id", quizId)
+        .eq("id", quizId as string)
         .eq("ativo", true)
-        .single();
+        .maybeSingle();
 
-      if (quizError || !quizData) {
+      if (quizById) {
+        resolvedQuiz = quizById;
+      }
+
+      if (!resolvedQuiz && slugCandidates.length > 0) {
+        const { data: quizBySlug } = await supabase
+          .from("quizzes")
+          .select("*")
+          .in("slug", slugCandidates)
+          .eq("ativo", true)
+          .limit(1)
+          .maybeSingle();
+
+        if (quizBySlug) {
+          resolvedQuiz = quizBySlug;
+        }
+      }
+
+      if (!resolvedQuiz) {
         toast.error("Quiz não encontrado");
-        navigate(-1);
         return;
       }
 
-      setQuiz(quizData);
+      const resolvedQuizId = resolvedQuiz.id;
+      setQuiz(resolvedQuiz);
 
       // Fetch perguntas
       const { data: perguntasData } = await supabase
         .from("quiz_perguntas")
         .select("*")
-        .eq("quiz_id", quizId)
+        .eq("quiz_id", resolvedQuizId)
         .eq("ativo", true)
         .order("ordem");
 
@@ -158,7 +185,7 @@ export default function QuizPage() {
       const { data: resultadosData } = await supabase
         .from("quiz_resultados")
         .select("*")
-        .eq("quiz_id", quizId)
+        .eq("quiz_id", resolvedQuizId)
         .order("ordem");
 
       if (resultadosData) {
@@ -170,7 +197,7 @@ export default function QuizPage() {
         const { data: prevResponse } = await supabase
           .from("quiz_respostas_usuario")
           .select("*, resultado:quiz_resultados(*)")
-          .eq("quiz_id", quizId)
+          .eq("quiz_id", resolvedQuizId)
           .eq("user_id", user.id)
           .order("completed_at", { ascending: false })
           .limit(1)
