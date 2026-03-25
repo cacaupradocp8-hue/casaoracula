@@ -31,28 +31,28 @@ export default function Onboarding() {
   useEffect(() => {
     if (onboardingLoading) return;
     
-    // If already completed onboarding, go to Sala da Visitante
+    // If already completed onboarding, go to dashboard
     if (onboardingCompleted) {
-      navigate(`/salas/${SALA_VISITANTE_ID}`, { replace: true });
+      navigate('/dashboard-membro', { replace: true });
       return;
     }
 
-    // If archetype already saved but not completed, complete and redirect
+    // If archetype already saved but not completed, complete and redirect to quiz
     if (entryArchetype) {
       completeOnboarding().then(() => {
-        navigate(`/salas/${SALA_VISITANTE_ID}`, { replace: true });
+        navigate('/quiz/descubra-seu-eixo', { replace: true });
       });
     }
   }, [onboardingLoading, onboardingCompleted, entryArchetype, navigate, completeOnboarding]);
 
-  // After archetype selection, save and go directly to Sala da Visitante
+  // After archetype selection, save and go to Quiz da Voz
   const handleSelectArchetype = useCallback(async (archetype: ArchetypeType) => {
     setIsProcessing(true);
     const success = await saveArchetype(archetype);
 
     if (success) {
       await completeOnboarding();
-      navigate(`/salas/${SALA_VISITANTE_ID}`, { replace: true });
+      navigate('/quiz/descubra-seu-eixo', { replace: true });
     }
     setIsProcessing(false);
   }, [saveArchetype, completeOnboarding, navigate]);
