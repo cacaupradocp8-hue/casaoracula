@@ -53,7 +53,7 @@ export interface DistritoResumo {
   key: string;
   nome: string;
   icon: string;
-  estado: 'ativo' | 'tensao' | 'integrado' | 'nao_explorado';
+  estado: 'ativo' | 'tensao' | 'integrado' | 'nao_explorado' | 'central';
 }
 
 export interface RecomendacaoAcao {
