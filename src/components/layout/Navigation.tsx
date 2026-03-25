@@ -24,7 +24,7 @@ import {
 
 // ── VISITANTE / GRATUITO ─────────────────────────────────────────────────────
 const visitanteMenuGroups = () => [
-  { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'inicio', label: 'Sala da Visitante', icon: Home, path: '/sala-da-visitante', subitems: [] },
   { key: 'mapa', label: 'Mapa da Casa', icon: Map, path: '/mapa-casa', subitems: [] },
   { key: 'clube', label: 'Clube Oracular', icon: BookOpen, path: '/app/clube', subitems: [] },
   { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
