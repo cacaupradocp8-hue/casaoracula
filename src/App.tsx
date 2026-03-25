@@ -195,6 +195,7 @@ const ExperienciaGratuita = React.lazy(() => import("./pages/ExperienciaGratuita
 const ClubeOracular = React.lazy(() => import("./pages/ClubeOracular"));
 const MapaCasaOracula = React.lazy(() => import("./pages/MapaCasaOracula"));
 const MinhaJornada = React.lazy(() => import("./pages/MinhaJornada"));
+const SalaDaVisitante = React.lazy(() => import("./pages/SalaDaVisitante"));
 
 // Casa pages
 const CasaAtrio = React.lazy(() => import("./pages/casa/CasaAtrio"));
@@ -442,12 +443,14 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
     return <Navigate to="/onboarding" replace />;
   }
 
-  logRouteStep('definição da rota pós-login: /dashboard-membro', {
+  // Visitantes vão para a Sala da Visitante; membros para o dashboard
+  const destination = user?.portal === 'visitante' ? '/sala-da-visitante' : '/dashboard-membro';
+  logRouteStep(`definição da rota pós-login: ${destination}`, {
     from: location.pathname,
     userId: user?.id ?? null,
     portal: user?.portal ?? null,
   });
-  return <Navigate to="/dashboard-membro" replace />;
+  return <Navigate to={destination} replace />;
 }
 
 // Legacy redirect components for old /curso/ routes
@@ -512,12 +515,12 @@ function AppRoutes() {
         }
       />
 
-      {/* Sala da Visitante - Redirect to database-driven room */}
+      {/* Sala da Visitante - Standalone entry page */}
       <Route
         path="/sala-da-visitante"
         element={
           <ProtectedRoute>
-            <Navigate to="/salas/be626211-4608-4232-b678-8c3edfac2798" replace />
+            <SalaDaVisitante />
           </ProtectedRoute>
         }
       />
@@ -560,7 +563,7 @@ function AppRoutes() {
         path="/comece-aqui"
         element={
           <ProtectedRoute>
-            <Navigate to="/quiz/descubra-seu-eixo" replace />
+            <Navigate to="/sala-da-visitante" replace />
           </ProtectedRoute>
         }
       />
