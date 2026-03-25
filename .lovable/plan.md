@@ -1,72 +1,36 @@
 
-# Plano de Correção: Navegação para Travessia Zero (Erro 404)
 
-## Diagnóstico
+# Plano: Restaurar Sala da Visitante como Porta Principal
 
-O botão "Continuar Jornada" na página de formação está navegando para `/portais/{id}`, mas essa rota **não existe**. As rotas corretas são:
-- `/portal/{id}` (singular) → para conteúdos da tabela `conteudo_travessias`
-- `/travessia/{slug}` → para conteúdos da tabela `travessias`
+## Situacao Atual
 
-### Arquivos com o erro:
-1. `src/pages/PortalOraculaPage.tsx` → linha 201: `navigate(`/portais/${portal.id}`)`
-2. `src/components/formation-map/NodeDetailPanel.tsx` → linha 79: `navigate(`/portais/${node.reference_id}`)`
+- `/` (raiz) aponta para Auth (login) via PublicRoute
+- `/sala-da-visitante` e ProtectedRoute que redireciona para `/salas/be626211-...` (pagina de sala do banco de dados)
+- `/comece-aqui` redireciona para `/quiz/descubra-seu-eixo`
+- `VisitorSalaContent` existe e funciona bem, mas esta embutido dentro de SalaDetalhe
+- Visitantes autenticados (portal=visitante) caem no dashboard apos onboarding
+- PublicRoute redireciona usuarios autenticados para `/dashboard-membro`
 
----
+## Problemas
 
-## Solução Proposta
+1. Nao existe rota standalone para a Sala da Visitante - ela depende de uma sala no banco de dados
+2. Apos login, visitantes vao direto para dashboard, sem passar pela Sala
+3. O CTA do VisitorSalaContent aponta para `/quiz/descubra-seu-eixo` (slug antigo) em vez de `/quiz/descubra-sua-voz`
+4. Nao ha conexao clara com a Travessia 00
 
-### Correção 1: PortalOraculaPage.tsx (linha 201)
+## Plano de Execucao
 
-**Antes:**
-```tsx
-onClick={() => navigate(`/portais/${portal.id}`)}
-```
+### 1. Criar pagina standalone `/sala-da-visitante`
 
-**Depois:**
-```tsx
-onClick={() => navigate(`/portal/${portal.id}`)}
-```
+Criar `src/pages/SalaDaVisitante.tsx` como pagina propria (nao redirect para sala do banco). Reutiliza `VisitorSalaContent` refatorado com layout AppLayout.
 
-> Correção simples: trocar `/portais/` (plural) por `/portal/` (singular), que corresponde à rota definida em `App.tsx:340`.
+### 2. Refatorar `VisitorSalaContent`
 
----
+- Atualizar CTA principal: "Descobrir minha Voz" → navega para `/quiz/descubra-seu-eixo` (manter slug existente que funciona)
+- Adicionar indicacao visual da Travessia 00 como proximo passo apos o quiz
+- Remover botao "Explorar a Casa" (gera confusao)
+- Simplificar texto de boas-vindas para clareza em 3 segundos
 
-### Correção 2: NodeDetailPanel.tsx (linha 79)
+### 3. Atualizar rotas em `App.tsx`
 
-**Antes:**
-```tsx
-case 'portal':
-  navigate(`/portais/${node.reference_id}`);
-  break;
-```
-
-**Depois:**
-```tsx
-case 'portal':
-  navigate(`/portal/${node.reference_id}`);
-  break;
-```
-
-> Mesma correção: usar a rota correta `/portal/` (singular).
-
----
-
-## Impacto
-
-- A Travessia Zero e todos os portais de formação voltarão a funcionar corretamente
-- Nenhuma alteração de banco de dados necessária
-- Nenhuma criação de novas rotas
-
----
-
-## Detalhes Técnicos
-
-| Arquivo | Linha | Rota Incorreta | Rota Correta |
-|---------|-------|----------------|--------------|
-| PortalOraculaPage.tsx | 201 | `/portais/{id}` | `/portal/{id}` |
-| NodeDetailPanel.tsx | 79 | `/portais/{id}` | `/portal/{id}` |
-
-### Rotas existentes em App.tsx:
-- `/portal/:id` → renderiza `<PortalDetalhe />` (linha 340)
-- `/travessia/:slug` → renderiza `<TravessiaDetalhe />` (linha 366)
-- `/portais` → renderiza `<Portais />` (página de listagem, linha 374)
+- `/sala-da-visitante` → pag
