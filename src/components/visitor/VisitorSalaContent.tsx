@@ -1,18 +1,18 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Compass, Play } from 'lucide-react';
+import { ArrowRight, Sparkles, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
 import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
 
 /**
- * VisitorSalaContent - Sala de Visitas da Casa Orácula
+ * VisitorSalaContent - Porta Principal da Casa Orácula
  * 
- * Experiência contemplativa de chegada com 3 seções:
- * 1. Boas-vindas
+ * Experiência de chegada com clareza em 3 segundos:
+ * 1. O que é isso
  * 2. Vídeo de boas-vindas
- * 3. Convite para o Quiz da Voz
+ * 3. O que faço agora (Quiz da Voz → Travessia)
  */
 export function VisitorSalaContent() {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ export function VisitorSalaContent() {
   return (
     <div className="max-w-2xl mx-auto space-y-16 py-8">
 
-      {/* SEÇÃO 1 — BOAS-VINDAS */}
+      {/* SEÇÃO 1 — BOAS-VINDAS (clareza em 3 segundos) */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -35,17 +35,16 @@ export function VisitorSalaContent() {
         className="text-center space-y-5 px-4"
       >
         <h1 className="font-display text-2xl md:text-3xl text-foreground leading-snug">
-          Bem-vinda à Sala de Visitas<br />
-          <span className="text-gold">da Casa Orácula.</span>
+          Bem-vinda à<br />
+          <span className="text-gold">Casa Orácula.</span>
         </h1>
-        <p className="text-lg text-muted-foreground italic">
-          Antes de entrar na Casa, sente-se um momento.
+        <p className="text-lg text-muted-foreground">
+          Um espaço de autoconhecimento guiado.
         </p>
         <div className="w-12 h-px bg-gold/30 mx-auto" />
         <p className="text-muted-foreground leading-relaxed max-w-lg mx-auto">
-          Este é um espaço de escuta.
-          Aqui você pode conhecer o espírito da Casa, entender o método
-          e sentir se esse caminho faz sentido para a sua jornada.
+          Aqui você descobre como conduz processos humanos
+          e aprende a sustentar transformações com consciência.
         </p>
       </motion.section>
 
@@ -93,7 +92,7 @@ export function VisitorSalaContent() {
         </div>
       </motion.section>
 
-      {/* SEÇÃO 3 — CONVITE PARA O QUIZ */}
+      {/* SEÇÃO 3 — CTA PRINCIPAL: DESCOBRIR MINHA VOZ */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -101,38 +100,34 @@ export function VisitorSalaContent() {
         className="text-center space-y-6 px-4"
       >
         <div className="space-y-4 max-w-md mx-auto">
-          <p className="text-muted-foreground leading-relaxed">
-            Talvez você já conduza processos humanos.<br />
-            Talvez ainda esteja descobrindo como fazer isso.
-          </p>
           <p className="text-foreground/90 leading-relaxed">
-            O teste da Voz ajuda a reconhecer como você naturalmente conduz transformações.
+            Toda jornada começa com uma descoberta:<br />
+            <span className="text-gold font-medium">qual é a sua Voz?</span>
           </p>
           <p className="text-xs text-muted-foreground/50 uppercase tracking-widest">
             Leva menos de 3 minutos
           </p>
         </div>
 
-        <div className="flex flex-col items-center gap-3 pt-2">
+        <div className="flex flex-col items-center gap-4 pt-2">
           <Button
             variant="gold"
             size="lg"
             onClick={() => navigate('/quiz/descubra-seu-eixo')}
-            className="gap-2 px-8"
+            className="gap-2 px-8 text-base"
           >
             Descobrir minha Voz
             <ArrowRight className="w-4 h-4" />
           </Button>
+        </div>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/comece-aqui')}
-            className="gap-2 text-muted-foreground hover:text-gold"
-          >
-            <Compass className="w-4 h-4" />
-            Explorar a Casa
-          </Button>
+        {/* Indicação do caminho */}
+        <div className="pt-4">
+          <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground/40">
+            <Sparkles className="w-3 h-3" />
+            <span>Quiz da Voz → Travessia Inicial → Entrada na Casa</span>
+            <Sparkles className="w-3 h-3" />
+          </div>
         </div>
       </motion.section>
 
