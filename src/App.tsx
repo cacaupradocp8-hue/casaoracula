@@ -567,7 +567,23 @@ function AppRoutes() {
         path="/comece-aqui"
         element={
           <ProtectedRoute>
-            <Navigate to="/onboarding" replace />
+            <Navigate to="/quiz/descubra-seu-eixo" replace />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/convite-clube"
+        element={
+          <ProtectedRoute>
+            <ConviteClube />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/experiencia-gratuita"
+        element={
+          <ProtectedRoute>
+            <Navigate to="/quiz/descubra-seu-eixo" replace />
           </ProtectedRoute>
         }
       />
