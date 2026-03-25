@@ -1215,6 +1215,14 @@ function AppRoutes() {
       <Route path="/ferramenta/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route path="/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route
+        path="/revelacao-cidadela"
+        element={
+          <ProtectedRoute minPortal="visitante">
+            <RevelacaoCidadelaPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/ferramentas/oraculo-perguntas"
         element={
           <ProtectedRoute minPortal="mentorada">
