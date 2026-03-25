@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Check, Circle, Loader2, Sparkles, Mic, Route } from 'lucide-react';
+import { ArrowRight, Check, Circle, Loader2, Sparkles, Mic, Route, Map } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -10,7 +10,7 @@ import { useCopy } from '@/hooks/useCopy';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 
-type StepKey = 'quiz' | 'resultado' | 'travessia';
+type StepKey = 'quiz' | 'resultado' | 'cartografia' | 'travessia';
 type StepStatus = 'pendente' | 'concluido';
 
 const STEPS: { key: StepKey; num: number; title: string; description: string; route: string; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -31,8 +31,16 @@ const STEPS: { key: StepKey; num: number; title: string; description: string; ro
     icon: Sparkles,
   },
   {
-    key: 'travessia',
+    key: 'cartografia',
     num: 3,
+    title: 'Cartografia Psíquica Orácula',
+    description: 'Gere sua CidaDELA Interior — o GPS simbólico da sua jornada.',
+    route: '/ferramenta/cartografia-psiquica-oracula',
+    icon: Map,
+  },
+  {
+    key: 'travessia',
+    num: 4,
     title: 'Travessia 00',
     description: 'Sete dias de escuta guiada para habitar a Casa antes de transformá-la.',
     route: '/travessia/travessia-zero-o-limiar-da-casa',
