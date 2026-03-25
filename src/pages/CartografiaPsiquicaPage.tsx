@@ -254,7 +254,7 @@ export default function CartografiaPsiquicaPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col overflow-x-hidden">
       {/* Progress bar */}
       {phase !== 'intro' && phase !== 'result' && phase !== 'generating' && (
         <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-muted">
@@ -262,7 +262,7 @@ export default function CartografiaPsiquicaPage() {
         </div>
       )}
 
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-6">
+      <div className="flex-1 flex items-center justify-center px-4 py-6 sm:p-6 w-full max-w-full">
         <AnimatePresence mode="wait">
           {/* ═══ INTRO ═══ */}
           {phase === 'intro' && (
