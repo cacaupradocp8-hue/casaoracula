@@ -56,6 +56,7 @@ export default function ExperienciaGratuita() {
   const [status, setStatus] = useState<Record<StepKey, StepStatus>>({
     quiz: 'pendente',
     resultado: 'pendente',
+    cartografia: 'pendente',
     travessia: 'pendente',
   });
   const [loading, setLoading] = useState(true);
@@ -64,17 +65,18 @@ export default function ExperienciaGratuita() {
     const loadProgress = async () => {
       if (!user) { setLoading(false); return; }
       try {
-        const { data: quizData } = await supabase
-          .from('big5_registros')
-          .select('id')
-          .eq('user_id', user.id)
-          .limit(1);
+        const [{ data: quizData }, { data: cartoData }] = await Promise.all([
+          supabase.from('big5_registros').select('id').eq('user_id', user.id).limit(1),
+          supabase.from('cartografia_psiquica').select('id').eq('user_id', user.id).limit(1) as any,
+        ]);
 
         const quizDone = quizData && quizData.length > 0;
+        const cartoDone = cartoData && cartoData.length > 0;
 
         setStatus({
           quiz: quizDone ? 'concluido' : 'pendente',
           resultado: quizDone ? 'concluido' : 'pendente',
+          cartografia: cartoDone ? 'concluido' : 'pendente',
           travessia: 'pendente',
         });
       } catch (e) {
