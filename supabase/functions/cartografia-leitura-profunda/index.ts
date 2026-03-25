@@ -48,9 +48,11 @@ Deno.serve(async (req) => {
       conflitos,
       simbolo,
       ponto_partida,
+      // Client mode: quando chamado da Casa das Máquinas
+      modo = "terapeuta", // "terapeuta" | "cliente"
+      client_context,
     } = body;
 
-    // Build the AI prompt
     const prompt = buildPrompt({
       medias_big5,
       predominante,
@@ -62,6 +64,8 @@ Deno.serve(async (req) => {
       conflitos,
       simbolo,
       ponto_partida,
+      modo,
+      client_context,
     });
 
     const apiKey = Deno.env.get("OPENAI_API_KEY");
@@ -75,6 +79,8 @@ Deno.serve(async (req) => {
       );
     }
 
+    const systemPrompt = modo === "cliente" ? SYSTEM_PROMPT_CLIENT : SYSTEM_PROMPT_THERAPIST;
+
     const aiResponse = await fetch(
       "https://api.openai.com/v1/chat/completions",
       {
@@ -86,10 +92,7 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           model: "gpt-4o",
           messages: [
-            {
-              role: "system",
-              content: SYSTEM_PROMPT,
-            },
+            { role: "system", content: systemPrompt },
             { role: "user", content: prompt },
           ],
           temperature: 0.7,
@@ -136,12 +139,16 @@ Deno.serve(async (req) => {
   }
 });
 
-const SYSTEM_PROMPT = `Você é uma Cartógrafa Psíquica Oracular — especialista em leitura simbólica da psique feminina.
+// ══════════════════════════════════════════════════════════════
+// SYSTEM PROMPTS
+// ══════════════════════════════════════════════════════════════
+
+const SYSTEM_PROMPT_THERAPIST = `Você é uma Cartógrafa Psíquica Oracular — especialista em leitura simbólica da psique feminina.
 
 Você NÃO faz diagnósticos. Você NÃO usa linguagem clínica tradicional.
 Você usa linguagem simbólica, arquetípica e de travessia.
 
-Sua função é gerar uma leitura profunda em 3 camadas a partir dos dados da Cartografia Psíquica Orácula.
+Sua função é gerar uma leitura profunda em 3 camadas para uma TERAPEUTA que está mapeando a si mesma.
 
 REGRAS ABSOLUTAS:
 - Nunca usar termos como "transtorno", "patologia", "diagnóstico"
@@ -149,30 +156,50 @@ REGRAS ABSOLUTAS:
 - Ser profunda sem ser genérica
 - Cada leitura deve ser única e específica para os dados recebidos
 - Usar metáforas de cidade interior, arquétipos, portas e torres
+- A Direção Clínica deve ser ACIONÁVEL — sugerir ações concretas
 
 Responda SEMPRE em JSON válido com a estrutura exata solicitada.`;
 
-function buildPrompt(data: any): string {
-  const territoriosNomes: Record<string, string> = {
-    portao_chegada: "Portão da Chegada",
-    torres: "Torres",
-    portas: "Portas",
-    jardim_arquetipos: "Jardim dos Arquétipos",
-    praca_abalo: "Praça do Abalo",
-    casa_sonhos: "Casa dos Sonhos",
-    espelho_vinculos: "Espelho dos Vínculos",
-    forja: "Forja",
-    conselho_interior: "Conselho Interior",
-    labirinto: "Labirinto",
-    praca_integracao: "Praça da Integração",
-    portal_renascimento: "Portal de Renascimento",
-  };
+const SYSTEM_PROMPT_CLIENT = `Você é uma Cartógrafa Psíquica Oracular — especialista em leitura simbólica da psique feminina.
 
+Sua função é gerar uma leitura clínica profunda de uma CLIENTE em processo terapêutico.
+Esta leitura será usada pela TERAPEUTA como GPS de decisão clínica.
+
+REGRAS ABSOLUTAS:
+- Nunca usar termos como "transtorno", "patologia"
+- Usar linguagem simbólica mas com clareza clínica
+- Ser profunda, específica e ACIONÁVEL
+- Cada leitura deve gerar DIREÇÕES CONCRETAS para a facilitadora
+- Identificar riscos, pontos de atenção e oportunidades terapêuticas
+- Sugerir ferramentas específicas do método (Torres, Portas, Labirinto, Forja, etc.)
+
+Responda SEMPRE em JSON válido com a estrutura exata solicitada.`;
+
+// ══════════════════════════════════════════════════════════════
+// PROMPT BUILDER
+// ══════════════════════════════════════════════════════════════
+
+const TERRITORIOS_NOMES: Record<string, string> = {
+  portao_chegada: "Portão da Chegada",
+  torres: "Torres",
+  portas: "Portas",
+  jardim_arquetipos: "Jardim dos Arquétipos",
+  praca_abalo: "Praça do Abalo",
+  casa_sonhos: "Casa dos Sonhos",
+  espelho_vinculos: "Espelho dos Vínculos",
+  forja: "Forja",
+  conselho_interior: "Conselho Interior",
+  labirinto: "Labirinto",
+  praca_integracao: "Praça da Integração",
+  portal_renascimento: "Portal de Renascimento",
+};
+
+function buildPrompt(data: any): string {
   const terrAtivos = (data.territorios || [])
-    .map((t: string) => territoriosNomes[t] || t)
+    .map((t: string) => TERRITORIOS_NOMES[t] || t)
     .join(", ");
 
-  return `DADOS DA CARTOGRAFIA:
+  const baseData = `DADOS DA CARTOGRAFIA:
 
 Big5 Oracular (médias 1-5):
 ${Object.entries(data.medias_big5 || {})
@@ -188,38 +215,75 @@ Territórios ativos: ${terrAtivos}
 Recursos internos: ${data.recursos || "não informado"}
 Conflitos/tensões: ${data.conflitos || "não informado"}
 Símbolo pessoal: ${data.simbolo || "não selecionado"}
-Ponto de partida: ${territoriosNomes[data.ponto_partida] || data.ponto_partida || "não definido"}
+Ponto de partida: ${TERRITORIOS_NOMES[data.ponto_partida] || data.ponto_partida || "não definido"}`;
 
----
+  const clientContext = data.client_context
+    ? `\n\nCONTEXTO DA CLIENTE:\n${data.client_context}`
+    : "";
 
-Gere uma leitura profunda com EXATAMENTE esta estrutura JSON:
+  const structure = data.modo === "cliente"
+    ? CLIENT_JSON_STRUCTURE
+    : THERAPIST_JSON_STRUCTURE;
 
-{
+  return `${baseData}${clientContext}\n\n---\n\nGere uma leitura profunda com EXATAMENTE esta estrutura JSON:\n\n${structure}`;
+}
+
+const THERAPIST_JSON_STRUCTURE = `{
   "leitura_psiquica": {
     "titulo": "título simbólico da leitura (max 8 palavras)",
     "tracos_dominantes": "parágrafo descrevendo os traços psíquicos dominantes de forma simbólica (3-4 frases)",
     "padroes_emocionais": "parágrafo sobre padrões emocionais recorrentes (3-4 frases)",
     "estrutura_funcionamento": "como essa psique opera — mecanismos de proteção, forma de vínculo, eixo interno (3-4 frases)",
-    "frase_espelho": "uma frase curta e profunda que funcione como espelho — algo que a pessoa leia e pense 'isso sou eu'"
+    "frase_espelho": "uma frase curta e profunda que funcione como espelho"
   },
   "cidadela": {
-    "distrito_dominante": "nome do distrito que mais representa o momento atual",
+    "distrito_dominante": "nome do distrito central",
     "distrito_dominante_descricao": "por que este distrito é central agora (2-3 frases)",
     "distritos_ativos": ["lista dos distritos em atividade"],
     "distritos_tensao": ["distritos onde há tensão ou conflito"],
     "territorio_crescimento": "distrito que representa potencial de crescimento",
     "territorio_crescimento_descricao": "por que este território pede atenção (2-3 frases)",
-    "leitura_integrada": "parágrafo integrando cor, atmosfera, territórios e símbolo em uma narrativa coerente (4-5 frases)",
-    "tensao_simbolica": "qual é a principal tensão simbólica presente na CidaDELA (2-3 frases)",
-    "direcao_travessia": "para onde a psique está se movendo — qual é a direção da travessia (2-3 frases)"
+    "leitura_integrada": "parágrafo integrando cor, atmosfera, territórios e símbolo em narrativa coerente (4-5 frases)",
+    "tensao_simbolica": "principal tensão simbólica na CidaDELA (2-3 frases)",
+    "direcao_travessia": "para onde a psique se move — direção da travessia (2-3 frases)"
   },
   "direcao_clinica": {
-    "estilo_terapeutico": "como esta terapeuta tende a atuar — seu estilo natural de condução (3-4 frases)",
-    "zona_seguranca": "onde ela conduz com mais segurança e naturalidade (2-3 frases)",
-    "zona_projecao": "onde ela pode projetar, distorcer ou se perder na condução (2-3 frases, linguagem delicada)",
-    "ferramentas_naturais": ["3-4 ferramentas do método que são mais naturais para ela"],
+    "estilo_terapeutico": "como esta terapeuta tende a atuar — estilo natural de condução (3-4 frases)",
+    "zona_seguranca": "onde conduz com segurança e naturalidade (2-3 frases)",
+    "zona_projecao": "onde pode projetar ou distorcer na condução (2-3 frases, linguagem delicada)",
+    "ferramentas_naturais": ["3-4 ferramentas do método mais naturais para ela"],
     "ferramentas_desafio": ["2-3 ferramentas que representam desafio ou crescimento"],
-    "orientacao": "conselho simbólico para a prática clínica desta terapeuta (2-3 frases)"
+    "orientacao": "conselho simbólico para a prática clínica (2-3 frases)"
   }
 }`;
-}
+
+const CLIENT_JSON_STRUCTURE = `{
+  "leitura_psiquica": {
+    "titulo": "título simbólico da leitura (max 8 palavras)",
+    "tracos_dominantes": "traços psíquicos dominantes observados (3-4 frases)",
+    "padroes_emocionais": "padrões emocionais recorrentes identificados (3-4 frases)",
+    "estrutura_funcionamento": "como essa psique opera — mecanismos e eixo interno (3-4 frases)",
+    "frase_espelho": "uma frase que funcione como espelho para a cliente",
+    "conflitos_ativos": "conflitos ou tensões em atividade neste momento (2-3 frases)"
+  },
+  "cidadela": {
+    "distrito_dominante": "distrito que mais representa o momento atual da cliente",
+    "distrito_dominante_descricao": "por que este distrito é central agora (2-3 frases)",
+    "distritos_ativos": ["distritos em atividade"],
+    "distritos_tensao": ["distritos em tensão"],
+    "territorio_crescimento": "distrito de potencial de crescimento",
+    "territorio_crescimento_descricao": "por que (2-3 frases)",
+    "nivel_integracao": "baixo | medio | alto — avaliação do nível de integração geral",
+    "leitura_integrada": "narrativa simbólica integrada (4-5 frases)",
+    "tensao_simbolica": "principal tensão simbólica (2-3 frases)",
+    "direcao_travessia": "direção da travessia — para onde a psique se move (2-3 frases)"
+  },
+  "direcao_clinica": {
+    "abordagem": "como abordar esta cliente neste momento — postura recomendada para a facilitadora (3-4 frases)",
+    "risco": "riscos de projeção ou condução inadequada a observar (2-3 frases)",
+    "sugestoes": ["3-5 ações concretas: ferramentas, perguntas ou intervenções sugeridas"],
+    "ferramentas_indicadas": ["2-3 ferramentas específicas do método indicadas para este momento"],
+    "distrito_foco": "distrito que deve ser foco da próxima sessão",
+    "pergunta_clinica": "uma pergunta-chave que a facilitadora deveria explorar com a cliente"
+  }
+}`;

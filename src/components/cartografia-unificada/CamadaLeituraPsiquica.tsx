@@ -8,6 +8,7 @@ interface LeituraPsiquicaData {
   padroes_emocionais: string;
   estrutura_funcionamento: string;
   frase_espelho: string;
+  conflitos_ativos?: string;
 }
 
 interface Props {
@@ -25,21 +26,21 @@ const anim = (delay: number) => ({
 
 export function CamadaLeituraPsiquica({ data, predominante, fragilizado, medias }: Props) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-2xl mx-auto overflow-hidden">
       <motion.div {...anim(0)} className="text-center space-y-3">
         <div className="w-14 h-14 mx-auto rounded-full bg-primary/10 flex items-center justify-center">
           <Sparkles className="w-7 h-7 text-primary" />
         </div>
         <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50">Camada 1</p>
         <h2 className="font-display text-2xl font-bold text-foreground">Leitura Psíquica</h2>
-        <p className="text-lg italic text-primary/80 font-display">"{data.titulo}"</p>
+        <p className="text-lg italic text-primary/80 font-display break-words px-4">"{data.titulo}"</p>
       </motion.div>
 
       {/* Frase Espelho */}
       <motion.div {...anim(0.15)}>
-        <Card className="border-primary/20 bg-primary/5">
+        <Card className="border-primary/20 bg-primary/5 mx-4">
           <CardContent className="p-6 text-center">
-            <p className="text-base italic text-foreground/90 leading-relaxed">
+            <p className="text-base italic text-foreground/90 leading-relaxed break-words">
               "{data.frase_espelho}"
             </p>
           </CardContent>
@@ -48,44 +49,58 @@ export function CamadaLeituraPsiquica({ data, predominante, fragilizado, medias 
 
       {/* Traços Dominantes */}
       <motion.div {...anim(0.25)}>
-        <Card className="border-border/10 bg-card/40">
+        <Card className="border-border/10 bg-card/40 mx-4">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-muted-foreground/70">Traços Dominantes</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-foreground/80 leading-relaxed">{data.tracos_dominantes}</p>
+            <p className="text-sm text-foreground/80 leading-relaxed break-words">{data.tracos_dominantes}</p>
           </CardContent>
         </Card>
       </motion.div>
 
       {/* Padrões Emocionais */}
       <motion.div {...anim(0.35)}>
-        <Card className="border-border/10 bg-card/40">
+        <Card className="border-border/10 bg-card/40 mx-4">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-muted-foreground/70">Padrões Emocionais</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-foreground/80 leading-relaxed">{data.padroes_emocionais}</p>
+            <p className="text-sm text-foreground/80 leading-relaxed break-words">{data.padroes_emocionais}</p>
           </CardContent>
         </Card>
       </motion.div>
 
       {/* Estrutura de Funcionamento */}
       <motion.div {...anim(0.45)}>
-        <Card className="border-border/10 bg-card/40">
+        <Card className="border-border/10 bg-card/40 mx-4">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-muted-foreground/70">Estrutura de Funcionamento</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-foreground/80 leading-relaxed">{data.estrutura_funcionamento}</p>
+            <p className="text-sm text-foreground/80 leading-relaxed break-words">{data.estrutura_funcionamento}</p>
           </CardContent>
         </Card>
       </motion.div>
 
+      {/* Conflitos Ativos (modo cliente) */}
+      {data.conflitos_ativos && (
+        <motion.div {...anim(0.5)}>
+          <Card className="border-amber-500/15 bg-amber-500/5 mx-4">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs text-amber-500/70">⚡ Conflitos Ativos</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-xs text-foreground/70 leading-relaxed break-words">{data.conflitos_ativos}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
       {/* Big5 Bars */}
       {medias && Object.keys(medias).length > 0 && (
         <motion.div {...anim(0.55)}>
-          <Card className="border-border/10 bg-card/40">
+          <Card className="border-border/10 bg-card/40 mx-4">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm text-muted-foreground/70">Mapa de Forças</CardTitle>
             </CardHeader>
@@ -112,7 +127,7 @@ export function CamadaLeituraPsiquica({ data, predominante, fragilizado, medias 
       )}
 
       {/* Predominante & Fragilizado */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-4">
         {predominante && (
           <motion.div {...anim(0.6)}>
             <Card className="border-2 h-full" style={{ borderColor: predominante.cor_primaria + '60' }}>
@@ -122,7 +137,7 @@ export function CamadaLeituraPsiquica({ data, predominante, fragilizado, medias 
                   <span className="text-[10px] tracking-wider uppercase text-primary/60">Predominante</span>
                 </div>
                 <p className="text-sm font-medium text-foreground">{predominante.nome}</p>
-                <p className="text-xs text-foreground/60 leading-relaxed">{predominante.narrativa_elevada}</p>
+                <p className="text-xs text-foreground/60 leading-relaxed break-words">{predominante.narrativa_elevada}</p>
               </CardContent>
             </Card>
           </motion.div>
@@ -136,7 +151,7 @@ export function CamadaLeituraPsiquica({ data, predominante, fragilizado, medias 
                   <span className="text-[10px] tracking-wider uppercase text-amber-500/60">Pede atenção</span>
                 </div>
                 <p className="text-sm font-medium text-foreground">{fragilizado.nome}</p>
-                <p className="text-xs text-foreground/60 leading-relaxed">{fragilizado.narrativa_fragil}</p>
+                <p className="text-xs text-foreground/60 leading-relaxed break-words">{fragilizado.narrativa_fragil}</p>
               </CardContent>
             </Card>
           </motion.div>
