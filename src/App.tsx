@@ -82,6 +82,7 @@ const Billing = React.lazy(() => import("./pages/Billing"));
 const MinhaConta = React.lazy(() => import("./pages/MinhaConta"));
 const Suporte = React.lazy(() => import("./pages/Suporte"));
 const CheckoutSucesso = React.lazy(() => import("./pages/CheckoutSucesso"));
+const ConviteClube = React.lazy(() => import("./pages/ConviteClube"));
 const CheckoutCancelado = React.lazy(() => import("./pages/CheckoutCancelado"));
 const Audios = React.lazy(() => import("./pages/Audios"));
 const EstudioOracular = React.lazy(() => import("./pages/EstudioOracular"));
