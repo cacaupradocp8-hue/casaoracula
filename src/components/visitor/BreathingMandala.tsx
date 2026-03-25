@@ -3,20 +3,18 @@ import { motion } from 'framer-motion';
 /**
  * BreathingMandala — Elemento sensorial de presença
  * 
- * Animação suave e contínua que evoca respiração:
- * scale: 1 → 1.04 → 1
- * opacity: 0.7 → 1 → 0.7
- * duration: 6s loop
+ * Mandala mais visível, com brilho dourado e contraste melhor no mobile.
  */
 export function BreathingMandala() {
   return (
-    <div className="relative w-40 h-40 md:w-48 md:h-48 flex items-center justify-center">
-      {/* Outer glow ring */}
+    <div className="relative w-48 h-48 md:w-56 md:h-56 flex items-center justify-center">
+      <div className="absolute inset-6 rounded-full bg-gold/10 blur-2xl pointer-events-none" />
+
       <motion.div
-        className="absolute inset-0 rounded-full border border-gold/10"
+        className="absolute inset-0 rounded-full border-2 border-gold/25 shadow-[0_0_40px_hsl(var(--gold)/0.18)]"
         animate={{
-          scale: [1, 1.06, 1],
-          opacity: [0.3, 0.6, 0.3],
+          scale: [1, 1.04, 1],
+          opacity: [0.45, 0.9, 0.45],
         }}
         transition={{
           duration: 6,
@@ -25,27 +23,25 @@ export function BreathingMandala() {
         }}
       />
 
-      {/* Middle ring */}
       <motion.div
-        className="absolute inset-4 rounded-full border border-gold/15"
+        className="absolute inset-5 rounded-full border border-gold/35 bg-gold/5"
         animate={{
-          scale: [1, 1.04, 1],
-          opacity: [0.5, 0.8, 0.5],
+          scale: [1, 1.035, 1],
+          opacity: [0.55, 1, 0.55],
         }}
         transition={{
           duration: 6,
           repeat: Infinity,
           ease: 'easeInOut',
-          delay: 0.3,
+          delay: 0.25,
         }}
       />
 
-      {/* Inner mandala SVG */}
       <motion.div
-        className="relative z-10"
+        className="relative z-10 drop-shadow-[0_0_24px_hsl(var(--gold)/0.3)]"
         animate={{
           scale: [1, 1.04, 1],
-          opacity: [0.7, 1, 0.7],
+          opacity: [0.82, 1, 0.82],
         }}
         transition={{
           duration: 6,
@@ -54,64 +50,60 @@ export function BreathingMandala() {
         }}
       >
         <svg
-          width="80"
-          height="80"
-          viewBox="0 0 80 80"
+          width="112"
+          height="112"
+          viewBox="0 0 112 112"
           fill="none"
-          className="text-gold/60"
+          className="text-gold"
+          aria-hidden="true"
         >
-          {/* Center circle */}
-          <circle cx="40" cy="40" r="4" fill="currentColor" opacity="0.8" />
-          
-          {/* Petal ring 1 */}
+          <circle cx="56" cy="56" r="8" fill="currentColor" opacity="0.95" />
+          <circle cx="56" cy="56" r="20" stroke="currentColor" strokeOpacity="0.35" strokeWidth="1.5" />
+          <circle cx="56" cy="56" r="34" stroke="currentColor" strokeOpacity="0.25" strokeWidth="1.5" />
+
           {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => (
             <ellipse
-              key={angle}
-              cx="40"
-              cy="26"
-              rx="3"
-              ry="8"
+              key={`inner-${angle}`}
+              cx="56"
+              cy="35"
+              rx="5"
+              ry="15"
               fill="currentColor"
-              opacity="0.4"
-              transform={`rotate(${angle} 40 40)`}
+              opacity="0.6"
+              transform={`rotate(${angle} 56 56)`}
             />
           ))}
 
-          {/* Petal ring 2 */}
           {[22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5].map((angle) => (
             <ellipse
-              key={angle}
-              cx="40"
-              cy="18"
-              rx="2.5"
-              ry="10"
+              key={`outer-${angle}`}
+              cx="56"
+              cy="22"
+              rx="4"
+              ry="16"
               fill="currentColor"
-              opacity="0.25"
-              transform={`rotate(${angle} 40 40)`}
+              opacity="0.38"
+              transform={`rotate(${angle} 56 56)`}
             />
           ))}
 
-          {/* Outer ring dots */}
           {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle) => {
             const rad = (angle * Math.PI) / 180;
-            const x = 40 + Math.cos(rad) * 35;
-            const y = 40 + Math.sin(rad) * 35;
+            const x = 56 + Math.cos(rad) * 48;
+            const y = 56 + Math.sin(rad) * 48;
             return (
               <circle
-                key={angle}
+                key={`dot-${angle}`}
                 cx={x}
                 cy={y}
-                r="1.5"
+                r="2.6"
                 fill="currentColor"
-                opacity="0.2"
+                opacity="0.5"
               />
             );
           })}
         </svg>
       </motion.div>
-
-      {/* Soft radial glow behind */}
-      <div className="absolute inset-0 rounded-full bg-gold/[0.04] blur-xl pointer-events-none" />
     </div>
   );
 }
