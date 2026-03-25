@@ -512,12 +512,12 @@ function AppRoutes() {
         }
       />
 
-      {/* Sala da Visitante - Redirect to database-driven room */}
+      {/* Sala da Visitante - Standalone entry page */}
       <Route
         path="/sala-da-visitante"
         element={
           <ProtectedRoute>
-            <Navigate to="/salas/be626211-4608-4232-b678-8c3edfac2798" replace />
+            <SalaDaVisitante />
           </ProtectedRoute>
         }
       />
