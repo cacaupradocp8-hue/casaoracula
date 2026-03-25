@@ -560,7 +560,7 @@ function AppRoutes() {
         path="/comece-aqui"
         element={
           <ProtectedRoute>
-            <Navigate to="/quiz/descubra-seu-eixo" replace />
+            <Navigate to="/sala-da-visitante" replace />
           </ProtectedRoute>
         }
       />
