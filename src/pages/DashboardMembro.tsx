@@ -1,20 +1,23 @@
 import { AppLayout } from "@/components/layout/AppLayout";
-import { useHomeInteligente } from "@/hooks/useHomeInteligente";
-import { HomeSuaVoz } from "@/components/home-inteligente/HomeSuaVoz";
-import { HomeSeuMapa } from "@/components/home-inteligente/HomeSeuMapa";
-import { HomeMomento } from "@/components/home-inteligente/HomeMomento";
-import { HomeProximoPasso } from "@/components/home-inteligente/HomeProximoPasso";
-import { HomeLeitura } from "@/components/home-inteligente/HomeLeitura";
-import { HomePraticas } from "@/components/home-inteligente/HomePraticas";
+import { useBussolaOracular } from "@/hooks/useBussolaOracular";
+import {
+  BussolaAtual,
+  ProximaAcao,
+  MiniMapaCidadela,
+  JornadaRecomendada,
+  PraticasRelevantes,
+  SuaVozResumo,
+  AlertaOracular,
+} from "@/components/bussola-home";
 import { DashboardPaths } from "@/components/dashboard/DashboardPaths";
 import { DashboardCommunity } from "@/components/dashboard/DashboardCommunity";
 import { motion } from "framer-motion";
 import { Moon } from "lucide-react";
 
 export default function DashboardMembro() {
-  const { voz, mapa, momento, proximoPasso, leitura, loading } = useHomeInteligente();
+  const bussola = useBussolaOracular();
 
-  if (loading) {
+  if (bussola.loading) {
     return (
       <AppLayout>
         <div className="min-h-[70vh] flex items-center justify-center">
@@ -34,31 +37,47 @@ export default function DashboardMembro() {
   return (
     <AppLayout>
       <div className="container mx-auto px-5 md:px-6 py-8 pb-20 max-w-3xl">
-        {/* Bloco 1 — Sua Voz */}
-        <HomeSuaVoz voz={voz} />
+        {/* 1. Bússola — Momento atual */}
+        <BussolaAtual
+          leituraMomento={bussola.leituraMomento}
+          distritoDominante={bussola.distritoDominante}
+          distritoTensao={bussola.distritoTensao}
+          nivelIntegracao={bussola.nivelIntegracao}
+          temCartografia={bussola.temCartografia}
+        />
 
-        {/* Bloco 2 — Seu Mapa (CidaDELA) */}
-        <HomeSeuMapa mapa={mapa} />
+        {/* 2. Próxima Ação — CTA principal */}
+        <ProximaAcao
+          principal={bussola.acaoPrincipal}
+          secundarias={bussola.acoesSecundarias}
+        />
 
-        {/* Bloco 3 — Seu Momento Atual */}
-        <HomeMomento momento={momento} mapa={mapa} />
+        {/* 3. Mini Mapa CidaDELA */}
+        <MiniMapaCidadela
+          temCartografia={bussola.temCartografia}
+          distritoDominante={bussola.distritoDominante}
+          distritosAtivos={bussola.distritosAtivos}
+          distritoTensao={bussola.distritoTensao}
+          corHex={bussola.corHex}
+        />
 
-        {/* Bloco 4 — Próximo Passo */}
-        <HomeProximoPasso proximoPasso={proximoPasso} />
+        {/* 4. Jornada de Leitura */}
+        <JornadaRecomendada leitura={bussola.leitura} />
 
-        {/* Bloco 5 — Jornada de Leitura */}
-        <HomeLeitura leitura={leitura} />
+        {/* 5. Práticas filtradas */}
+        <PraticasRelevantes praticas={bussola.praticasSugeridas} />
 
-        {/* Bloco 6 — Práticas rápidas */}
-        <HomePraticas />
+        {/* 6. Sua Voz (resumida) */}
+        <SuaVozResumo voz={bussola.voz} welcomeName={bussola.welcomeName} />
 
-        {/* Separador sutil */}
+        {/* 7. Alertas clínicos */}
+        <AlertaOracular alertas={bussola.alertas} />
+
+        {/* Separador */}
         <div className="h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent mb-8" />
 
-        {/* Caminhos da Casa (mantido) */}
+        {/* Caminhos e Comunidade (mantidos) */}
         <DashboardPaths />
-
-        {/* Comunidade (mantido) */}
         <DashboardCommunity />
       </div>
     </AppLayout>
