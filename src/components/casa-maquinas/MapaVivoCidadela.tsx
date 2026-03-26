@@ -53,17 +53,20 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
   useEffect(() => { loadData(); }, [clienteId]);
 
   const loadData = async () => {
-    const [distRes, toolsRes, sessRes, mapData] = await Promise.all([
+    const [distRes, toolsRes, sessRes, mapData, cartoData] = await Promise.all([
       supabase.from('districts').select('*').order('numero'),
       supabase.from('tools').select('*').eq('ativa', true).order('ordem'),
       supabase.from('sessions').select('id, district_id, created_at, checkin_state, tool_id, oracle_card_id, insight, task').eq('client_id', clienteId).order('created_at', { ascending: true }),
       fetchMap(clienteId),
+      loadClientCartografia(clienteId),
     ]);
 
-    setDistricts(distRes.data || []);
+    const dists = distRes.data || [];
+    setDistricts(dists);
     setTools(toolsRes.data || []);
     setSessions(sessRes.data || []);
     setCidadelaMap(mapData);
+    setClientCartografia(cartoData);
 
     const cardIds = (sessRes.data || []).map((s: any) => s.oracle_card_id).filter(Boolean);
     if (cardIds.length > 0) {
@@ -75,16 +78,22 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
     const { data: journeys } = await supabase
       .from('journeys').select('id').eq('client_id', clienteId).limit(1);
 
+    let jdData: MandalaDistrictState[] = [];
     if (journeys?.length) {
       const { data: jd } = await supabase
         .from('journey_districts').select('*').eq('journey_id', journeys[0].id);
-      setJourneyDistricts((jd || []).map((j: any) => ({
+      jdData = (jd || []).map((j: any) => ({
         district_id: j.district_id,
         state: j.state,
         sessions_count: j.sessions_count,
         last_session_at: j.last_session_at,
-      })));
+      }));
+      setJourneyDistricts(jdData);
     }
+
+    // Compute 4-state GPS from cartografia + journey data
+    const computed = computeDistrictStates(dists, jdData, cartoData);
+    setGpsStates(computed);
 
     const { data: stateChanges } = await supabase
       .from('district_state_changes')
