@@ -1,6 +1,8 @@
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin } from 'lucide-react';
+import CidadelaMapSVG, { type DistrictDisplayState } from '@/components/cidadela/CidadelaMapSVG';
 
 interface CidadelaData {
   distrito_dominante: string;
@@ -41,13 +43,6 @@ const DISTRITOS_META: Record<string, { nome: string; icon: string }> = {
   portal_renascimento: { nome: 'Portal de Renascimento', icon: '🦋' },
 };
 
-const ESTADO_CORES = {
-  central: { bg: 'bg-primary/20', ring: 'ring-2 ring-primary/50', text: 'text-primary' },
-  ativo: { bg: 'bg-amber-500/15', ring: '', text: 'text-amber-600' },
-  tensao: { bg: 'bg-destructive/10', ring: 'ring-1 ring-destructive/30', text: 'text-destructive' },
-  potencial: { bg: 'bg-muted/30', ring: '', text: 'text-muted-foreground/50' },
-};
-
 const anim = (delay: number) => ({
   initial: { opacity: 0, y: 16 },
   animate: { opacity: 1, y: 0 },
@@ -55,22 +50,24 @@ const anim = (delay: number) => ({
 });
 
 export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloIcon, territorios, pontoPartida }: Props) {
-  const distritoCentral = pontoPartida || territorios[0] || '';
-  const tensaoSet = new Set(data.distritos_tensao || []);
-
-  const getEstado = (key: string) => {
-    if (key === distritoCentral) return 'central';
-    if (tensaoSet.has(key) || tensaoSet.has(DISTRITOS_META[key]?.nome)) return 'tensao';
-    if (territorios.includes(key)) return 'ativo';
-    return 'potencial';
-  };
-
-  const distritosOrdenados = Object.entries(DISTRITOS_META)
-    .map(([key, meta]) => ({ key, ...meta, estado: getEstado(key) }))
-    .sort((a, b) => {
-      const ordem = { central: 0, ativo: 1, tensao: 2, potencial: 3 };
-      return (ordem[a.estado] ?? 3) - (ordem[b.estado] ?? 3);
+  // Build district states for the SVG map
+  const svgDistrictStates = useMemo(() => {
+    const states: Record<string, DistrictDisplayState> = {};
+    const tensaoSet = new Set((data.distritos_tensao || []).map(d => d.toLowerCase()));
+    const ativoSet = new Set((data.distritos_ativos || []).map(d => d.toLowerCase()));
+    Object.values(DISTRITOS_META).forEach(d => {
+      const key = d.nome.toLowerCase();
+      if (tensaoSet.has(key)) states[key] = 'em_tensao';
+      else if (ativoSet.has(key)) states[key] = 'ativo';
     });
+    if (data.distrito_dominante) {
+      const domKey = data.distrito_dominante.toLowerCase();
+      if (!states[domKey] || states[domKey] === 'nao_explorado') {
+        states[domKey] = 'ativo';
+      }
+    }
+    return states;
+  }, [data]);
 
   return (
     <div className="space-y-6 w-full max-w-2xl mx-auto overflow-hidden">
@@ -93,7 +90,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         ))}
       </motion.div>
 
-      {/* Nível de integração (modo cliente) */}
+      {/* Nível de integração */}
       {data.nivel_integracao && (
         <motion.div {...anim(0.15)} className="flex justify-center">
           <div className={`px-3 py-1 rounded-full text-xs font-medium ${
@@ -106,39 +103,13 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         </motion.div>
       )}
 
-      {/* Mapa responsivo — grid ao invés de posicionamento absoluto */}
-      <motion.div {...anim(0.2)} className="px-4">
-        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-w-sm mx-auto">
-          {/* Centro: símbolo */}
-          <div className="col-span-3 sm:col-span-4 flex justify-center mb-2">
-            <div className="w-16 h-16 rounded-full flex flex-col items-center justify-center"
-              style={{ background: `${corHex}12`, border: `2px solid ${corHex}40` }}>
-              <span className="text-2xl">{simboloIcon}</span>
-              <span className="text-[8px] text-foreground/50">{simbolo}</span>
-            </div>
-          </div>
-          {/* Distritos */}
-          {distritosOrdenados.map(d => {
-            const estilos = ESTADO_CORES[d.estado];
-            return (
-              <div key={d.key} className="flex flex-col items-center text-center">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg ${estilos.bg} ${estilos.ring}`}>
-                  {d.icon}
-                </div>
-                <span className={`text-[8px] mt-0.5 max-w-[64px] truncate ${estilos.text}`}>
-                  {d.nome}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-        {/* Legenda */}
-        <div className="flex justify-center gap-3 mt-3 text-[8px] text-muted-foreground/50">
-          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-primary/40" /> central</span>
-          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-500/30" /> ativo</span>
-          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-destructive/30" /> tensão</span>
-          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-muted/40" /> potencial</span>
-        </div>
+      {/* SVG Map — mesmo visual da Casa das Máquinas */}
+      <motion.div {...anim(0.2)}>
+        <CidadelaMapSVG
+          districtStates={svgDistrictStates}
+          activeDistrict={data.distrito_dominante}
+          maxWidth={520}
+        />
       </motion.div>
 
       {/* Distrito Dominante */}
