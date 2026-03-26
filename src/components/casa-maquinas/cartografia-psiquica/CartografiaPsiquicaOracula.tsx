@@ -26,6 +26,7 @@ interface Props {
 
 export function CartografiaPsiquicaOracula({ clienteId }: Props) {
   const { user } = useAuth();
+  const { saveClientCartografia } = useCartografiaGPS();
   const [records, setRecords] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<'list' | 'wizard' | 'result'>('list');
