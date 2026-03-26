@@ -188,13 +188,23 @@ export default function MapaVivoCidadelaV2({
     setPanelOpen(true);
   };
 
+  const displayTitle = customTitle || (selfMode ? 'Minha CidaDELA Interior' : `CidaDELA Interior — ${cliente?.nome || ''}`);
+  const displaySubtitle = selfMode ? 'Mapa simbólico da sua identidade clínica' : 'Prontuário simbólico vivo';
+
+  const Wrapper = ({ children }: { children: React.ReactNode }) => {
+    if (standalone) {
+      return <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">{children}</div>;
+    }
+    return <CasaMaquinasLayout title={displayTitle} subtitle={displaySubtitle}>{children}</CasaMaquinasLayout>;
+  };
+
   if (loadingDistricts) {
     return (
-      <CasaMaquinasLayout title="Mapa da CidaDELA">
+      <Wrapper>
         <div className="flex items-center justify-center min-h-[50vh]">
           <Loader2 className="w-6 h-6 animate-spin text-[#C9A24A]" />
         </div>
-      </CasaMaquinasLayout>
+      </Wrapper>
     );
   }
 
@@ -204,7 +214,7 @@ export default function MapaVivoCidadelaV2({
     visitedCount <= 6 ? 'Aprofundamento' : 'Integração';
 
   return (
-    <CasaMaquinasLayout title={`CidaDELA Interior — ${cliente?.nome || ''}`} subtitle="Prontuário simbólico vivo">
+    <Wrapper>
       {/* Ethical notice */}
       <div className="flex items-start gap-2 px-3 py-2 rounded-md bg-[#C9A24A]/5 border border-[#C9A24A]/10 mb-4">
         <Eye className="w-4 h-4 text-[#C9A24A]/50 mt-0.5 shrink-0" />
