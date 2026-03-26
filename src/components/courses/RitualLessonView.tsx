@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ChevronLeft, ChevronRight, Check, Sparkles, BookOpen, Flower2 } from 'lucide-react';
 import { CourseLesson } from '@/types/course';
-import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
+import { AudioOracular } from '@/components/audio/AudioOracular';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export interface RitualSlide {
