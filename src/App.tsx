@@ -179,7 +179,7 @@ const PersonalMapEditor = React.lazy(() => import("./pages/PersonalMapEditor"));
 const JardimPsique = React.lazy(() => import("./pages/JardimPsique"));
 const JardimPsiqueDetalhe = React.lazy(() => import("./pages/JardimPsiqueDetalhe"));
 const MinhaBiblioteca = React.lazy(() => import("./pages/MinhaBiblioteca"));
-const Tour = React.lazy(() => import("./pages/Tour"));
+
 const TravessiaDetalhe = React.lazy(() => import("./pages/TravessiaDetalhe"));
 const NarroterapiaHub = React.lazy(() => import("./pages/NarroterapiaHub"));
 const BibliotecaContos = React.lazy(() => import("./pages/narroterapia/BibliotecaContos"));
@@ -262,7 +262,16 @@ const Lab8020Season = React.lazy(() => import("./pages/clube-livro/Lab8020Season
 const JardimOficioPage = React.lazy(() => import("./pages/jardim-oficio/JardimOficioPage"));
 const PainelSupervisaoPage = React.lazy(() => import("./pages/jardim-oficio/PainelSupervisaoPage"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 min — avoid refetching on every mount
+      gcTime: 1000 * 60 * 10,   // 10 min garbage collection
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 const BOOT_ROUTE_LOG_PREFIX = '[boot-debug][routes]';
 
 const logRouteStep = (
@@ -513,7 +522,7 @@ function AppRoutes() {
       <Route path="/formacao-oracula" element={<Navigate to="/oracula" replace />} />
       <Route path="/formacao-viva" element={<Navigate to="/oracula" replace />} />
       <Route path="/formacao" element={<Navigate to="/cursos" replace />} />
-      <Route path="/tour" element={<Tour />} />
+      <Route path="/tour" element={<Navigate to="/mapa-casa" replace />} />
 
       {/* Onboarding Route - First-time experience (before completing) */}
       <Route
