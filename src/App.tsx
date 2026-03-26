@@ -332,7 +332,19 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
   const { isLoading, isAuthenticated, user, isAuthReady, authError } = useAuth();
   const preview = useAdminPreviewOptional();
   const location = useLocation();
-  const { onboardingCompleted, isLoading: onboardingLoading, error: onboardingError } = useOnboarding();
+  const isOnboardingRoute = location.pathname === '/onboarding';
+  const isPosCompraRoute = location.pathname === '/pos-compra';
+  const isVisitorJourneyRoute = location.pathname === '/sala-da-visitante'
+    || location.pathname.startsWith('/quiz/')
+    || location.pathname === '/comece-aqui'
+    || location.pathname === '/experiencia-gratuita'
+    || location.pathname.startsWith('/travessia/');
+  const isAdmin = user?.portal === 'admin';
+  const isVisitor = user?.portal === 'visitante';
+  const shouldSkipOnboarding = isAdmin || isVisitorJourneyRoute;
+  const { onboardingCompleted, isLoading: onboardingLoading, error: onboardingError } = useOnboarding({
+    enabled: !shouldSkipOnboarding,
+  });
 
   if (!isAuthReady || isLoading) {
     logRouteStep('boot auth pendente', { path: location.pathname, isAuthReady, isLoading });
@@ -349,7 +361,7 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
     return <Navigate to="/auth" replace />;
   }
 
-  if (onboardingLoading) {
+  if (!shouldSkipOnboarding && onboardingLoading) {
     logRouteStep('onboarding pendente', { path: location.pathname, userId: user?.id ?? null });
     return <AuthLoading />;
   }
@@ -358,16 +370,6 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
   if (onboardingError && location.pathname !== '/onboarding') {
     logRouteStep('falha no onboarding, fail-open para dashboard', { path: location.pathname, onboardingError }, 'warn');
   }
-
-  const isOnboardingRoute = location.pathname === '/onboarding';
-  const isPosCompraRoute = location.pathname === '/pos-compra';
-  const isVisitorJourneyRoute = location.pathname === '/sala-da-visitante' 
-    || location.pathname.startsWith('/quiz/')
-    || location.pathname === '/comece-aqui'
-    || location.pathname === '/experiencia-gratuita'
-    || location.pathname.startsWith('/travessia/');
-  const isAdmin = user?.portal === 'admin';
-  const isVisitor = user?.portal === 'visitante';
 
   // Only redirect to onboarding if we successfully loaded status AND it's not completed
   // If there was an error loading onboarding, skip redirect (fail-open)
@@ -408,7 +410,12 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading, user, isAuthReady, authError } = useAuth();
   const location = useLocation();
-  const { onboardingCompleted, isLoading: onboardingLoading, error: onboardingError } = useOnboarding();
+  const isAdmin = user?.portal === 'admin';
+  const isVisitor = user?.portal === 'visitante';
+  const shouldSkipOnboarding = !isAuthenticated || isAdmin || isVisitor;
+  const { onboardingCompleted, isLoading: onboardingLoading, error: onboardingError } = useOnboarding({
+    enabled: !shouldSkipOnboarding,
+  });
 
   if (!isAuthReady || isLoading) {
     logRouteStep('PublicRoute aguardando auth boot', { path: location.pathname, isAuthReady, isLoading });
@@ -425,7 +432,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
 
-  if (onboardingLoading) {
+  if (!shouldSkipOnboarding && onboardingLoading) {
     logRouteStep('PublicRoute aguardando onboarding', { path: location.pathname, userId: user?.id ?? null });
     return <AuthLoading />;
   }
@@ -435,9 +442,8 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
     logRouteStep('PublicRoute erro no onboarding, fail-open para dashboard', { path: location.pathname, onboardingError }, 'warn');
   }
 
-  const isAdmin = user?.portal === 'admin';
   // Only redirect to onboarding if we successfully loaded status AND it's not completed
-  if (!onboardingCompleted && !onboardingError && !isAdmin) {
+  if (!onboardingCompleted && !onboardingError && !isAdmin && !isVisitor) {
     logRouteStep('definição da rota pós-login: /onboarding', {
       from: location.pathname,
       userId: user?.id ?? null,

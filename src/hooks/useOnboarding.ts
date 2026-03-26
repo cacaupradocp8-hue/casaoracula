@@ -13,6 +13,10 @@ export interface OnboardingData {
   error: string | null;
 }
 
+interface UseOnboardingOptions {
+  enabled?: boolean;
+}
+
 const ARCHETYPE_SYMBOLS: Record<ArchetypeType, { symbol: string; phrase: string }> = {
   therapist: {
     symbol: 'ouroboros',
@@ -30,13 +34,13 @@ const ARCHETYPE_SYMBOLS: Record<ArchetypeType, { symbol: string; phrase: string 
 
 const ONBOARDING_STATUS_TIMEOUT_MS = 6000;
 
-export function useOnboarding() {
+export function useOnboarding({ enabled = true }: UseOnboardingOptions = {}) {
   const { user, isAuthReady, isAuthenticated } = useAuth();
   const [data, setData] = useState<OnboardingData>({
     entryArchetype: null,
     entrySymbol: null,
     onboardingCompleted: false,
-    isLoading: true,
+    isLoading: enabled,
     error: null,
   });
 
@@ -44,6 +48,11 @@ export function useOnboarding() {
   const currentUserIdRef = useRef<string | null>(null);
 
   const fetchOnboardingStatus = useCallback(async () => {
+    if (!enabled) {
+      setData(prev => ({ ...prev, isLoading: false, error: null }));
+      return;
+    }
+
     if (!isAuthReady) {
       setData(prev => ({ ...prev, isLoading: true, error: null }));
       return;
@@ -100,15 +109,22 @@ export function useOnboarding() {
         error: 'Erro ao carregar o onboarding. Recarregue para tentar novamente.',
       }));
     }
-  }, [isAuthReady, isAuthenticated, user?.id]);
+  }, [enabled, isAuthReady, isAuthenticated, user?.id]);
 
   useEffect(() => {
+    if (!enabled) {
+      hasFetchedRef.current = false;
+      currentUserIdRef.current = null;
+      setData(prev => ({ ...prev, isLoading: false, error: null }));
+      return;
+    }
+
     if (user?.id !== currentUserIdRef.current) {
       hasFetchedRef.current = false;
     }
 
     void fetchOnboardingStatus();
-  }, [user?.id, isAuthReady, isAuthenticated, fetchOnboardingStatus]);
+  }, [enabled, user?.id, isAuthReady, isAuthenticated, fetchOnboardingStatus]);
 
   const saveArchetype = useCallback(async (archetype: ArchetypeType): Promise<boolean> => {
     if (!user?.id) return false;
