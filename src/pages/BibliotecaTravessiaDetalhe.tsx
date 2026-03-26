@@ -9,7 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { canAccessFeature, normalizePortalType } from '@/types/portal';
 import { Database } from '@/integrations/supabase/types';
-import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
+import { AudioOracular } from '@/components/audio/AudioOracular';
 
 type PortalType = Database['public']['Enums']['portal_type'];
 import { 
@@ -130,10 +130,10 @@ export default function BibliotecaTravessiaDetalhe() {
 
       case 'audio':
         return (
-          <UnifiedAudioPlayer
+          <AudioOracular
             audioUrl={mediaItem.url}
-            title={mediaItem.titulo || 'Áudio'}
-            size="md"
+            titulo={mediaItem.titulo || 'Áudio'}
+            compact
           />
         );
 

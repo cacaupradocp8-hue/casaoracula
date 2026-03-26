@@ -5,7 +5,7 @@ import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, Headphones, BookOpen } from 'lucide-react';
-import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
+import { AudioOracular } from '@/components/audio/AudioOracular';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function EstudioOracular() {
@@ -64,10 +64,9 @@ export default function EstudioOracular() {
                   )}
 
                   {selected.audio_full_url && (
-                    <UnifiedAudioPlayer
+                    <AudioOracular
                       audioUrl={selected.audio_full_url}
-                      title="Leitura Completa"
-                      size="lg"
+                      titulo="Leitura Completa"
                     />
                   )}
 

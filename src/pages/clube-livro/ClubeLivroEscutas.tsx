@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useClubeCicloDetalhe } from '@/hooks/useClubeLivro';
 import { useAudioProgress } from '@/hooks/useAudioProgress';
-import { PlayerOracular } from '@/components/audio/PlayerOracular';
+import { AudioOracular } from '@/components/audio/AudioOracular';
 import { 
   BookOpen, ChevronRight, Home, Headphones, 
   Play, FileText, ArrowLeft, Clock, CheckCircle2
@@ -145,7 +145,7 @@ export default function ClubeLivroEscutas() {
                   </CardHeader>
                   <CardContent>
                     {escuta.tipo === 'audio' && escuta.audio_url ? (
-                      <PlayerOracular
+                      <AudioOracular
                         audioUrl={escuta.audio_url}
                         titulo={escuta.titulo}
                         hideInsight={false}

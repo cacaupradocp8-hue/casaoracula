@@ -1,4 +1,4 @@
-import { PlayerOracular } from "@/components/audio/PlayerOracular";
+import { AudioOracular } from "@/components/audio/AudioOracular";
 import { cn } from "@/lib/utils";
 
 interface PortaAudioPlayerProps {
@@ -9,7 +9,7 @@ interface PortaAudioPlayerProps {
 
 export function PortaAudioPlayer({ audioUrl, audioTitulo, className }: PortaAudioPlayerProps) {
   return (
-    <PlayerOracular
+    <AudioOracular
       audioUrl={audioUrl}
       titulo={audioTitulo || undefined}
       className={cn(className)}

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import { Lock } from 'lucide-react';
 import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
-import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
+import { AudioOracular } from '@/components/audio/AudioOracular';
 
 interface AulaMediaBlockProps {
   videoUrl: string | null;
@@ -47,10 +47,10 @@ export function AulaMediaBlock({ videoUrl, audioUrl, videoId, titulo, aulaId, po
 
       {/* Audio — only renders if no video is playing */}
       {hasAudio && (
-        <UnifiedAudioPlayer
+        <AudioOracular
           audioUrl={audioUrl!}
-          title="Áudio da Aula"
-          size="lg"
+          titulo="Áudio da Aula"
+          compact
         />
       )}
     </div>
