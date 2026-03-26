@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useClubeCicloDetalhe } from '@/hooks/useClubeLivro';
 import { useAudioProgress } from '@/hooks/useAudioProgress';
-import { PlayerOracular } from '@/components/audio/PlayerOracular';
+import { AudioOracular } from '@/components/audio/AudioOracular';
 import { 
   BookOpen, ChevronRight, Home, Headphones, 
   Play, FileText, ArrowLeft, Clock, CheckCircle2
