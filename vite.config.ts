@@ -20,7 +20,9 @@ export default defineConfig(({ mode }) => ({
         enabled: false,
       },
       registerType: "autoUpdate",
-      selfDestroying: false,
+      // Evita tela branca entre deploys quando um HTML antigo referencia chunks já expirados.
+      // Mantemos o manifesto, mas o SW passa a se autodestruir e limpar caches legados.
+      selfDestroying: true,
       includeAssets: [],
       manifest: {
         name: "Casa ORÁCULA",
@@ -52,15 +54,13 @@ export default defineConfig(({ mode }) => ({
         ],
       },
       workbox: {
-        // Minimal precaching - only the shell, not all assets
-        globPatterns: ["**/*.html"],
+        // Sem precache do HTML para não servir index antigo apontando para assets hashados removidos.
+        globPatterns: [],
+        cleanupOutdatedCaches: true,
         maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
         // Skip waiting immediately so new SW activates fast
         skipWaiting: true,
         clientsClaim: true,
-        // CRITICAL: SPA fallback — all navigation requests must return index.html
-        navigateFallback: "/index.html",
-        navigateFallbackDenylist: [/^\/api\//, /^\/supabase\//],
         // No runtime caching - let browser handle it naturally
         runtimeCaching: [],
       },
