@@ -262,7 +262,16 @@ const Lab8020Season = React.lazy(() => import("./pages/clube-livro/Lab8020Season
 const JardimOficioPage = React.lazy(() => import("./pages/jardim-oficio/JardimOficioPage"));
 const PainelSupervisaoPage = React.lazy(() => import("./pages/jardim-oficio/PainelSupervisaoPage"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 min — avoid refetching on every mount
+      gcTime: 1000 * 60 * 10,   // 10 min garbage collection
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 const BOOT_ROUTE_LOG_PREFIX = '[boot-debug][routes]';
 
 const logRouteStep = (
