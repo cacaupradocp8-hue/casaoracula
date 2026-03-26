@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Loader2, MapPin, Sparkles } from 'lucide-react';
+import CidadelaMapSVG, { type DistrictDisplayState } from '@/components/cidadela/CidadelaMapSVG';
 
 const DISTRITOS_META: Record<string, { nome: string; icon: string; desc: string }> = {
   portao_chegada: { nome: 'Portão da Chegada', icon: '🚪', desc: 'Chegadas, inícios' },
