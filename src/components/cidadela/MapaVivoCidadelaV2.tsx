@@ -61,25 +61,57 @@ interface DistrictVisualState {
   eventCount: number;
 }
 
-export default function MapaVivoCidadelaV2() {
-  const { clienteId } = useParams<{ clienteId: string }>();
+interface MapaVivoCidadelaV2Props {
+  /** When true, shows the therapist's own CidaDELA using their user ID */
+  selfMode?: boolean;
+  /** Override the ID to load data for (useful in selfMode) */
+  overrideId?: string;
+  /** Custom title */
+  title?: string;
+  /** Hide CasaMaquinasLayout wrapper */
+  standalone?: boolean;
+}
+
+export default function MapaVivoCidadelaV2({
+  selfMode = false,
+  overrideId,
+  title: customTitle,
+  standalone = false,
+}: MapaVivoCidadelaV2Props = {}) {
+  const { clienteId: paramClienteId } = useParams<{ clienteId: string }>();
   const navigate = useNavigate();
+
+  const targetId = overrideId || paramClienteId;
 
   const { data: districts = [], isLoading: loadingDistricts } = useCityDistricts();
   const { data: archetypes = [] } = useFoundingArchetypes();
-  const { data: cityState } = useClientCityState(clienteId);
-  const { data: archState } = useClientArchetypeState(clienteId);
-  const { data: history = [] } = useCityHistory(clienteId);
+  const { data: cityState } = useClientCityState(selfMode ? undefined : targetId);
+  const { data: archState } = useClientArchetypeState(selfMode ? undefined : targetId);
+  const { data: history = [] } = useCityHistory(selfMode ? undefined : targetId);
   const { data: toolDistricts = [] } = useToolDistricts();
 
-  const { data: cliente } = useQuery({
-    queryKey: ['cliente-nome', clienteId],
+  // Load self data from auto_mapeamento + cartografia_psiquica when in selfMode
+  const { data: selfMapData } = useQuery({
+    queryKey: ['self-cidadela-map', overrideId],
     queryFn: async () => {
-      if (!clienteId) return null;
-      const { data } = await supabase.from('clientes').select('id, nome').eq('id', clienteId).single();
+      if (!overrideId) return null;
+      const [{ data: mapa }, { data: carto }] = await Promise.all([
+        supabase.from('auto_mapeamento').select('*').eq('user_id', overrideId).maybeSingle(),
+        supabase.from('cartografia_psiquica').select('*').eq('user_id', overrideId).order('created_at', { ascending: false }).limit(1),
+      ]);
+      return { mapa, carto: (carto as any[])?.[0] || null };
+    },
+    enabled: selfMode && !!overrideId,
+  });
+
+  const { data: cliente } = useQuery({
+    queryKey: ['cliente-nome', targetId],
+    queryFn: async () => {
+      if (!targetId) return null;
+      const { data } = await supabase.from('clientes').select('id, nome').eq('id', targetId).single();
       return data;
     },
-    enabled: !!clienteId,
+    enabled: !selfMode && !!targetId,
   });
 
   const [selectedDistrict, setSelectedDistrict] = useState<CityDistrict | null>(null);
