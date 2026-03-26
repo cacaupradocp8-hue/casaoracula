@@ -163,6 +163,8 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
         toast.error('Leitura IA não disponível');
       } else {
         setAiResult(aiData);
+        // Save to clientes.cartografia_sessao for client GPS
+        await saveClientCartografia(clienteId, aiData);
         setMode('result');
         setActiveLayer(0);
       }
