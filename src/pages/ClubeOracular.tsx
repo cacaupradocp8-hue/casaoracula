@@ -63,7 +63,7 @@ export default function ClubeOracular() {
             {/* Breathing symbol */}
             <div
               className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gold/8 border border-gold/12 mb-6"
-              style={{ animation: 'clube-breathe 4s ease-in-out infinite' }}
+              style={{ animation: 'clube-breathe-icon 4s ease-in-out infinite' }}
             >
               <BookOpen className="w-7 h-7 text-gold/70" />
             </div>
