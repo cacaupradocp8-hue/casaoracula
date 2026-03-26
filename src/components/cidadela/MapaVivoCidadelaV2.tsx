@@ -223,7 +223,7 @@ export default function MapaVivoCidadelaV2({
       <div className="flex items-center justify-between mb-3">
         <Button variant="outline" size="sm"
           className="border-[#C9A24A]/15 text-[#C9A24A]/70 text-xs h-8 gap-1.5"
-          onClick={() => navigate(`/casa-das-maquinas/clientes/${clienteId}`)}>
+          onClick={() => navigate(selfMode ? '/dashboard-membro' : `/casa-das-maquinas/clientes/${targetId}`)}>
           <ArrowLeft className="w-3 h-3" /> Voltar
         </Button>
         <Button variant="outline" size="sm"
