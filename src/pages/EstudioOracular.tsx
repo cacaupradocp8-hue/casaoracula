@@ -64,10 +64,9 @@ export default function EstudioOracular() {
                   )}
 
                   {selected.audio_full_url && (
-                    <UnifiedAudioPlayer
+                    <AudioOracular
                       audioUrl={selected.audio_full_url}
-                      title="Leitura Completa"
-                      size="lg"
+                      titulo="Leitura Completa"
                     />
                   )}
 

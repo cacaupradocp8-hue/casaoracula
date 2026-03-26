@@ -145,7 +145,7 @@ export default function ClubeLivroEscutas() {
                   </CardHeader>
                   <CardContent>
                     {escuta.tipo === 'audio' && escuta.audio_url ? (
-                      <PlayerOracular
+                      <AudioOracular
                         audioUrl={escuta.audio_url}
                         titulo={escuta.titulo}
                         hideInsight={false}
