@@ -8,6 +8,7 @@ import { ClubeConteudoSemanal } from '@/components/clube-oracular/ClubeConteudoS
 import { ClubeProximoEncontro } from '@/components/clube-oracular/ClubeProximoEncontro';
 import { ClubeProgressoTravessia } from '@/components/clube-oracular/ClubeProgressoTravessia';
 import { ClubeBlocoProgressao } from '@/components/clube-oracular/ClubeBlocoProgressao';
+import { ClubeJardinsIntegracao } from '@/components/clube-oracular/ClubeJardinsIntegracao';
 import { BookOpen, Loader2, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -39,59 +40,70 @@ export default function ClubeOracular() {
   return (
     <AppLayout>
       <div className="min-h-screen">
-        {/* Hero Section */}
-        <section className="relative py-28 md:py-36 overflow-hidden">
+        {/* ─── HERO ─────────────────────────────────────── */}
+        <section className="relative py-24 md:py-32 overflow-hidden">
           <div className="absolute inset-0 bg-background" />
 
-          {/* Breathing orb — ONLY here */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-gradient-to-br from-mystic/8 via-gold/5 to-transparent blur-3xl animate-breathe pointer-events-none" />
+          {/* Breathing orb */}
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full pointer-events-none"
+            style={{
+              background: 'radial-gradient(circle, hsl(var(--mystic) / 0.08), hsl(var(--gold) / 0.04), transparent)',
+              filter: 'blur(40px)',
+              animation: 'clube-breathe 4s ease-in-out infinite',
+            }}
+          />
 
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            className="relative z-10 container mx-auto px-6 text-center max-w-3xl"
+            transition={{ duration: 1, ease: 'easeOut' }}
+            className="relative z-10 container mx-auto px-6 text-center max-w-2xl"
           >
-            <div className="inline-flex items-center gap-3 mb-8">
-              <div className="w-14 h-14 rounded-full bg-gold/10 border border-gold/15 flex items-center justify-center">
-                <BookOpen className="w-7 h-7 text-gold" />
-              </div>
+            {/* Breathing symbol */}
+            <div
+              className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gold/8 border border-gold/12 mb-6"
+              style={{ animation: 'clube-breathe 4s ease-in-out infinite' }}
+            >
+              <BookOpen className="w-7 h-7 text-gold/70" />
             </div>
 
-            <p className="text-[11px] uppercase tracking-[0.4em] text-gold/50 font-medium mb-5">
+            <p className="text-[11px] uppercase tracking-[0.4em] text-gold/40 font-medium mb-4">
               Clube de Leitura Oracular
             </p>
 
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 tracking-wide leading-tight">
+            <h1 className="font-display text-3xl md:text-4xl lg:text-5xl text-foreground mb-5 tracking-wide leading-tight">
               Território de Leitura Viva
             </h1>
 
-            <p className="text-muted-foreground text-base md:text-lg max-w-xl mx-auto font-display italic leading-relaxed">
-              Reflexão, prática e atravessamento simbólico — cada livro é uma travessia, cada encontro é um portal.
+            <p className="text-muted-foreground/60 text-sm md:text-base max-w-md mx-auto font-display italic leading-relaxed">
+              Cada livro é uma travessia. Cada encontro, um portal.
             </p>
 
-            <div className="flex items-center justify-center gap-3 mt-8">
-              <div className="w-12 h-px bg-gradient-to-r from-transparent to-gold/25" />
-              <Sparkles className="w-3 h-3 text-gold/30" />
-              <div className="w-12 h-px bg-gradient-to-l from-transparent to-gold/25" />
+            <div className="flex items-center justify-center gap-3 mt-7">
+              <div className="w-10 h-px bg-gradient-to-r from-transparent to-gold/20" />
+              <Sparkles className="w-3 h-3 text-gold/25" />
+              <div className="w-10 h-px bg-gradient-to-l from-transparent to-gold/20" />
             </div>
           </motion.div>
         </section>
 
-        {/* Content Grid */}
-        <div className="container mx-auto px-6 pb-32 max-w-6xl">
+        {/* ─── CONTENT ──────────────────────────────────── */}
+        <div className="container mx-auto px-6 pb-28 max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-14">
 
-            {/* Main column */}
+            {/* ── Main column ─────────────────────────── */}
             <div className="lg:col-span-2 space-y-14">
-              <motion.div {...fadeInUp} transition={{ duration: 0.8 }}>
+              {/* 1. Banner do Ciclo Atual */}
+              <motion.div {...fadeInUp} transition={{ duration: 0.7 }}>
                 <ClubeBannerCicloAtual
                   ciclo={cicloAtual}
                   onAcessar={() => cicloAtual && navigate(`/clube-livro/${cicloAtual.id}`)}
                 />
               </motion.div>
 
-              <motion.div {...fadeInUp} transition={{ duration: 0.8, delay: 0.1 }}>
+              {/* 2. Ritual da Semana (podcast, carta, pergunta, prática) */}
+              <motion.div {...fadeInUp} transition={{ duration: 0.7, delay: 0.08 }}>
                 <ClubeConteudoSemanal
                   conteudo={conteudoSemanal}
                   onSalvarReflexao={(texto) =>
@@ -100,15 +112,22 @@ export default function ClubeOracular() {
                   salvando={salvarReflexao.isPending}
                 />
               </motion.div>
+
+              {/* 3. Integração com os Jardins */}
+              <motion.div {...fadeInUp} transition={{ duration: 0.7, delay: 0.12 }}>
+                <ClubeJardinsIntegracao />
+              </motion.div>
             </div>
 
-            {/* Sidebar */}
-            <div className="space-y-10">
-              <motion.div {...fadeInUp} transition={{ duration: 0.8, delay: 0.15 }}>
+            {/* ── Sidebar ─────────────────────────────── */}
+            <div className="space-y-8">
+              {/* 5. Próximo Encontro */}
+              <motion.div {...fadeInUp} transition={{ duration: 0.7, delay: 0.1 }}>
                 <ClubeProximoEncontro encontro={proximoEncontro} />
               </motion.div>
 
-              <motion.div {...fadeInUp} transition={{ duration: 0.8, delay: 0.2 }}>
+              {/* 6. Progresso da Travessia */}
+              <motion.div {...fadeInUp} transition={{ duration: 0.7, delay: 0.15 }}>
                 <ClubeProgressoTravessia
                   progresso={engajamento?.progresso ?? 0}
                   totalTerritorios={4}
@@ -116,7 +135,8 @@ export default function ClubeOracular() {
                 />
               </motion.div>
 
-              <motion.div {...fadeInUp} transition={{ duration: 0.8, delay: 0.25 }}>
+              {/* Bloco de Progressão */}
+              <motion.div {...fadeInUp} transition={{ duration: 0.7, delay: 0.2 }}>
                 <ClubeBlocoProgressao
                   portal={user?.portal}
                   engajamento={engajamento?.nivel ?? 'baixo'}
@@ -125,6 +145,21 @@ export default function ClubeOracular() {
             </div>
           </div>
         </div>
+
+        {/* Breathing animation keyframes */}
+        <style>{`
+          @keyframes clube-breathe {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+            50% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+          }
+          .inline-flex[style*="clube-breathe"] {
+            animation: clube-breathe-icon 4s ease-in-out infinite;
+          }
+          @keyframes clube-breathe-icon {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.05); opacity: 1; }
+          }
+        `}</style>
       </div>
     </AppLayout>
   );
