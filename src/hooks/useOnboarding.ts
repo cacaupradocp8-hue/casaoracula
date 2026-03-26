@@ -69,11 +69,13 @@ export function useOnboarding() {
       setData(prev => ({ ...prev, isLoading: true, error: null }));
 
       const { data: profile, error } = await withTimeout(
-        supabase
-          .from('profiles')
-          .select('entry_archetype, entry_symbol, onboarding_completed')
-          .eq('id', user.id)
-          .single(),
+        Promise.resolve(
+          supabase
+            .from('profiles')
+            .select('entry_archetype, entry_symbol, onboarding_completed')
+            .eq('id', user.id)
+            .single()
+        ),
         ONBOARDING_STATUS_TIMEOUT_MS,
         'Tempo limite ao carregar o onboarding.'
       );

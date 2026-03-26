@@ -1,5 +1,5 @@
 export async function withTimeout<T>(
-  promise: Promise<T>,
+  promise: PromiseLike<T>,
   timeoutMs: number,
   message: string,
 ): Promise<T> {
@@ -7,7 +7,7 @@ export async function withTimeout<T>(
 
   try {
     return await Promise.race<T>([
-      promise,
+      Promise.resolve(promise),
       new Promise<T>((_, reject) => {
         timeoutId = setTimeout(() => {
           reject(new Error(message));
