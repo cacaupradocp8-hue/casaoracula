@@ -126,23 +126,42 @@ export default function MapaVivoCidadelaV2({
   // Build visual states for each district
   const districtStates = useMemo(() => {
     const states: Record<string, DistrictVisualState> = {};
-    const visitedDistricts = new Set(history.map(h => h.distrito).filter(Boolean));
 
-    districts.forEach(d => {
-      const isActive = cityState?.distrito_id === d.id;
-      const hasArch = archetypes.some(a => a.distrito_principal_id === d.id && 
-        (a.id === archState?.arquitipo_regente_id || a.id === archState?.arquitipo_sombra_id));
-      const eventCount = history.filter(h => h.distrito === d.nome).length;
+    if (selfMode && selfMapData?.mapa) {
+      // Self mode: derive states from auto_mapeamento distritos_json
+      const distritos = (selfMapData.mapa.distritos_json || {}) as Record<string, { nome: string; estado: string; icon: string }>;
+      const distMap: Record<string, string> = {};
+      Object.values(distritos).forEach(d => { distMap[d.nome.toLowerCase()] = d.estado; });
 
-      states[d.id] = {
-        visited: visitedDistricts.has(d.nome) || isActive,
-        active: isActive,
-        hasArchetype: hasArch,
-        eventCount,
-      };
-    });
+      districts.forEach(d => {
+        const estado = distMap[d.nome.toLowerCase()];
+        states[d.id] = {
+          visited: !!estado && estado !== 'potencial',
+          active: estado === 'central' || estado === 'ativo',
+          hasArchetype: false,
+          eventCount: 0,
+        };
+      });
+    } else {
+      // Client mode: derive from city_state + history
+      const visitedDistricts = new Set(history.map(h => h.distrito).filter(Boolean));
+
+      districts.forEach(d => {
+        const isActive = cityState?.distrito_id === d.id;
+        const hasArch = archetypes.some(a => a.distrito_principal_id === d.id && 
+          (a.id === archState?.arquitipo_regente_id || a.id === archState?.arquitipo_sombra_id));
+        const eventCount = history.filter(h => h.distrito === d.nome).length;
+
+        states[d.id] = {
+          visited: visitedDistricts.has(d.nome) || isActive,
+          active: isActive,
+          hasArchetype: hasArch,
+          eventCount,
+        };
+      });
+    }
     return states;
-  }, [districts, cityState, archState, archetypes, history]);
+  }, [districts, cityState, archState, archetypes, history, selfMode, selfMapData]);
 
   // Tools for selected district
   const selectedTools = useMemo(() => {
