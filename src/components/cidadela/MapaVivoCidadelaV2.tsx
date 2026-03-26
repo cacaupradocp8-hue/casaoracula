@@ -551,7 +551,7 @@ export default function MapaVivoCidadelaV2({
           )}
         </SheetContent>
       </Sheet>
-    </CasaMaquinasLayout>
+    </Wrapper>
   );
 }
 
