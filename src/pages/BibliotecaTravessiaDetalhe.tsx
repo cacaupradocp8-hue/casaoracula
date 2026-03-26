@@ -130,10 +130,10 @@ export default function BibliotecaTravessiaDetalhe() {
 
       case 'audio':
         return (
-          <UnifiedAudioPlayer
+          <AudioOracular
             audioUrl={mediaItem.url}
-            title={mediaItem.titulo || 'Áudio'}
-            size="md"
+            titulo={mediaItem.titulo || 'Áudio'}
+            compact
           />
         );
 

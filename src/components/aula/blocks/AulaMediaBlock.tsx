@@ -47,10 +47,10 @@ export function AulaMediaBlock({ videoUrl, audioUrl, videoId, titulo, aulaId, po
 
       {/* Audio — only renders if no video is playing */}
       {hasAudio && (
-        <UnifiedAudioPlayer
+        <AudioOracular
           audioUrl={audioUrl!}
-          title="Áudio da Aula"
-          size="lg"
+          titulo="Áudio da Aula"
+          compact
         />
       )}
     </div>

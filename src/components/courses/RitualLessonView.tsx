@@ -225,10 +225,10 @@ export function RitualLessonView({
       {lesson.audio_url && (
         <div className="sticky bottom-0 w-full bg-card/95 backdrop-blur-md border-t border-border p-3">
           <div className="max-w-[600px] mx-auto">
-            <UnifiedAudioPlayer
+            <AudioOracular
               audioUrl={lesson.audio_url}
-              title={lesson.titulo}
-              size="sm"
+              titulo={lesson.titulo}
+              compact
             />
           </div>
         </div>
