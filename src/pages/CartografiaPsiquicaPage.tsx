@@ -219,10 +219,11 @@ export default function CartografiaPsiquicaPage() {
 
       if (aiError) {
         console.error('AI Error:', aiError);
-        // Fallback without AI
         setAiResult(null);
       } else {
         setAiResult(aiData);
+        // Save to profiles.cartografia_base for therapist identity
+        await saveTherapistCartografia(aiData);
       }
 
       setPhase('result');
