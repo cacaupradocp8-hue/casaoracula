@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { UnifiedAudioPlayer } from '@/components/audio/UnifiedAudioPlayer';
+import { AudioOracular } from '@/components/audio/AudioOracular';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
