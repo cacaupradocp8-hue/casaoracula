@@ -112,7 +112,7 @@ export default function CidadelaMapSVG({
           const pos = POSITIONS[d.ordem || (idx + 1)];
           if (!pos) return null;
           const state = getState(d.nome);
-          const isActive = state === 'ativo' || (activeDistrict && d.nome.toLowerCase() === activeDistrict?.toLowerCase());
+          const isActive = state === 'ativo' || Boolean(activeDistrict && d.nome.toLowerCase() === activeDistrict?.toLowerCase());
           const distColor = d.cor_principal || '#C9A24A';
           const Icon = DISTRICT_ICONS[d.icone || ''] || MapPin;
           const nameKey = d.nome.toLowerCase();
@@ -123,13 +123,11 @@ export default function CidadelaMapSVG({
           const fillColor = isActive ? `${distColor}22`
             : state === 'em_tensao' ? 'rgba(180,75,75,0.12)'
             : state === 'integrado' ? 'rgba(85,107,87,0.15)'
-            : state === 'ativo' ? `${distColor}13`
             : 'rgba(245,241,232,0.02)';
 
           const strokeColor = isActive ? distColor
             : state === 'em_tensao' ? 'rgba(180,75,75,0.6)'
             : state === 'integrado' ? 'rgba(85,107,87,0.7)'
-            : state === 'ativo' ? `${distColor}B3`
             : 'rgba(245,241,232,0.1)';
 
           const textOpacity = isActive ? 1 : state !== 'nao_explorado' ? 0.7 : 0.3;
