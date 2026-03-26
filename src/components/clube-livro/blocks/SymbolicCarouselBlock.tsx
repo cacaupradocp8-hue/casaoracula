@@ -197,7 +197,7 @@ export function SymbolicCarouselBlock({
         {/* Audio player */}
         {audioUrl && (
           <div className="mt-4 pt-4 border-t border-border/10">
-            <UnifiedAudioPlayer audioUrl={audioUrl} title={title} size="sm" />
+            <AudioOracular audioUrl={audioUrl} titulo={title} compact />
           </div>
         )}
       </div>
