@@ -125,33 +125,13 @@ export default function RevelacaoCidadelaPage() {
           ))}
         </motion.div>
 
-        {/* Mapa visual */}
-        <motion.div {...anim(0.3)} className="relative mx-auto" style={{ width: '280px', height: '280px' }}>
-          {/* Centro */}
-          {central && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-20 h-20 rounded-full flex flex-col items-center justify-center"
-                style={{ background: `${corHex}15`, border: `2px solid ${corHex}50` }}>
-                <span className="text-3xl">{central[1].icon}</span>
-                <span className="text-[9px] font-medium text-foreground/70 mt-0.5">{central[1].nome}</span>
-              </div>
-            </div>
-          )}
-          {/* Distritos ativos em órbita */}
-          {ativos.map(([key, d], i) => {
-            const angle = (i / ativos.length) * Math.PI * 2 - Math.PI / 2;
-            const x = 50 + Math.cos(angle) * 38;
-            const y = 50 + Math.sin(angle) * 38;
-            return (
-              <div key={key} className="absolute flex flex-col items-center"
-                style={{ left: `${x}%`, top: `${y}%`, transform: 'translate(-50%, -50%)' }}>
-                <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-xl">
-                  {d.icon}
-                </div>
-                <span className="text-[8px] text-foreground/50 mt-0.5 text-center max-w-[60px] truncate">{d.nome}</span>
-              </div>
-            );
-          })}
+        {/* Mapa visual — Mandala CidaDELA */}
+        <motion.div {...anim(0.3)}>
+          <CidadelaMapSVG
+            districtStates={svgStates}
+            activeDistrict={central?.[1]?.nome || null}
+            maxWidth={520}
+          />
         </motion.div>
 
         {/* Leitura simbólica */}
