@@ -61,25 +61,57 @@ interface DistrictVisualState {
   eventCount: number;
 }
 
-export default function MapaVivoCidadelaV2() {
-  const { clienteId } = useParams<{ clienteId: string }>();
+interface MapaVivoCidadelaV2Props {
+  /** When true, shows the therapist's own CidaDELA using their user ID */
+  selfMode?: boolean;
+  /** Override the ID to load data for (useful in selfMode) */
+  overrideId?: string;
+  /** Custom title */
+  title?: string;
+  /** Hide CasaMaquinasLayout wrapper */
+  standalone?: boolean;
+}
+
+export default function MapaVivoCidadelaV2({
+  selfMode = false,
+  overrideId,
+  title: customTitle,
+  standalone = false,
+}: MapaVivoCidadelaV2Props = {}) {
+  const { clienteId: paramClienteId } = useParams<{ clienteId: string }>();
   const navigate = useNavigate();
+
+  const targetId = overrideId || paramClienteId;
 
   const { data: districts = [], isLoading: loadingDistricts } = useCityDistricts();
   const { data: archetypes = [] } = useFoundingArchetypes();
-  const { data: cityState } = useClientCityState(clienteId);
-  const { data: archState } = useClientArchetypeState(clienteId);
-  const { data: history = [] } = useCityHistory(clienteId);
+  const { data: cityState } = useClientCityState(selfMode ? undefined : targetId);
+  const { data: archState } = useClientArchetypeState(selfMode ? undefined : targetId);
+  const { data: history = [] } = useCityHistory(selfMode ? undefined : targetId);
   const { data: toolDistricts = [] } = useToolDistricts();
 
-  const { data: cliente } = useQuery({
-    queryKey: ['cliente-nome', clienteId],
+  // Load self data from auto_mapeamento + cartografia_psiquica when in selfMode
+  const { data: selfMapData } = useQuery({
+    queryKey: ['self-cidadela-map', overrideId],
     queryFn: async () => {
-      if (!clienteId) return null;
-      const { data } = await supabase.from('clientes').select('id, nome').eq('id', clienteId).single();
+      if (!overrideId) return null;
+      const [{ data: mapa }, { data: carto }] = await Promise.all([
+        supabase.from('auto_mapeamento').select('*').eq('user_id', overrideId).maybeSingle(),
+        supabase.from('cartografia_psiquica').select('*').eq('user_id', overrideId).order('created_at', { ascending: false }).limit(1),
+      ]);
+      return { mapa, carto: (carto as any[])?.[0] || null };
+    },
+    enabled: selfMode && !!overrideId,
+  });
+
+  const { data: cliente } = useQuery({
+    queryKey: ['cliente-nome', targetId],
+    queryFn: async () => {
+      if (!targetId) return null;
+      const { data } = await supabase.from('clientes').select('id, nome').eq('id', targetId).single();
       return data;
     },
-    enabled: !!clienteId,
+    enabled: !selfMode && !!targetId,
   });
 
   const [selectedDistrict, setSelectedDistrict] = useState<CityDistrict | null>(null);
@@ -94,23 +126,42 @@ export default function MapaVivoCidadelaV2() {
   // Build visual states for each district
   const districtStates = useMemo(() => {
     const states: Record<string, DistrictVisualState> = {};
-    const visitedDistricts = new Set(history.map(h => h.distrito).filter(Boolean));
 
-    districts.forEach(d => {
-      const isActive = cityState?.distrito_id === d.id;
-      const hasArch = archetypes.some(a => a.distrito_principal_id === d.id && 
-        (a.id === archState?.arquitipo_regente_id || a.id === archState?.arquitipo_sombra_id));
-      const eventCount = history.filter(h => h.distrito === d.nome).length;
+    if (selfMode && selfMapData?.mapa) {
+      // Self mode: derive states from auto_mapeamento distritos_json
+      const distritos = (selfMapData.mapa.distritos_json || {}) as Record<string, { nome: string; estado: string; icon: string }>;
+      const distMap: Record<string, string> = {};
+      Object.values(distritos).forEach(d => { distMap[d.nome.toLowerCase()] = d.estado; });
 
-      states[d.id] = {
-        visited: visitedDistricts.has(d.nome) || isActive,
-        active: isActive,
-        hasArchetype: hasArch,
-        eventCount,
-      };
-    });
+      districts.forEach(d => {
+        const estado = distMap[d.nome.toLowerCase()];
+        states[d.id] = {
+          visited: !!estado && estado !== 'potencial',
+          active: estado === 'central' || estado === 'ativo',
+          hasArchetype: false,
+          eventCount: 0,
+        };
+      });
+    } else {
+      // Client mode: derive from city_state + history
+      const visitedDistricts = new Set(history.map(h => h.distrito).filter(Boolean));
+
+      districts.forEach(d => {
+        const isActive = cityState?.distrito_id === d.id;
+        const hasArch = archetypes.some(a => a.distrito_principal_id === d.id && 
+          (a.id === archState?.arquitipo_regente_id || a.id === archState?.arquitipo_sombra_id));
+        const eventCount = history.filter(h => h.distrito === d.nome).length;
+
+        states[d.id] = {
+          visited: visitedDistricts.has(d.nome) || isActive,
+          active: isActive,
+          hasArchetype: hasArch,
+          eventCount,
+        };
+      });
+    }
     return states;
-  }, [districts, cityState, archState, archetypes, history]);
+  }, [districts, cityState, archState, archetypes, history, selfMode, selfMapData]);
 
   // Tools for selected district
   const selectedTools = useMemo(() => {
@@ -137,13 +188,23 @@ export default function MapaVivoCidadelaV2() {
     setPanelOpen(true);
   };
 
+  const displayTitle = customTitle || (selfMode ? 'Minha CidaDELA Interior' : `CidaDELA Interior — ${cliente?.nome || ''}`);
+  const displaySubtitle = selfMode ? 'Mapa simbólico da sua identidade clínica' : 'Prontuário simbólico vivo';
+
+  const Wrapper = ({ children }: { children: React.ReactNode }) => {
+    if (standalone) {
+      return <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">{children}</div>;
+    }
+    return <CasaMaquinasLayout title={displayTitle} subtitle={displaySubtitle}>{children}</CasaMaquinasLayout>;
+  };
+
   if (loadingDistricts) {
     return (
-      <CasaMaquinasLayout title="Mapa da CidaDELA">
+      <Wrapper>
         <div className="flex items-center justify-center min-h-[50vh]">
           <Loader2 className="w-6 h-6 animate-spin text-[#C9A24A]" />
         </div>
-      </CasaMaquinasLayout>
+      </Wrapper>
     );
   }
 
@@ -153,7 +214,7 @@ export default function MapaVivoCidadelaV2() {
     visitedCount <= 6 ? 'Aprofundamento' : 'Integração';
 
   return (
-    <CasaMaquinasLayout title={`CidaDELA Interior — ${cliente?.nome || ''}`} subtitle="Prontuário simbólico vivo">
+    <Wrapper>
       {/* Ethical notice */}
       <div className="flex items-start gap-2 px-3 py-2 rounded-md bg-[#C9A24A]/5 border border-[#C9A24A]/10 mb-4">
         <Eye className="w-4 h-4 text-[#C9A24A]/50 mt-0.5 shrink-0" />
@@ -191,7 +252,7 @@ export default function MapaVivoCidadelaV2() {
       <div className="flex items-center justify-between mb-3">
         <Button variant="outline" size="sm"
           className="border-[#C9A24A]/15 text-[#C9A24A]/70 text-xs h-8 gap-1.5"
-          onClick={() => navigate(`/casa-das-maquinas/clientes/${clienteId}`)}>
+          onClick={() => navigate(selfMode ? '/dashboard-membro' : `/casa-das-maquinas/clientes/${targetId}`)}>
           <ArrowLeft className="w-3 h-3" /> Voltar
         </Button>
         <Button variant="outline" size="sm"
@@ -490,7 +551,7 @@ export default function MapaVivoCidadelaV2() {
           )}
         </SheetContent>
       </Sheet>
-    </CasaMaquinasLayout>
+    </Wrapper>
   );
 }
 
