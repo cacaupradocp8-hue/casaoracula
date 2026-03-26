@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { withTimeout } from '@/lib/withTimeout';
 
 export type ArchetypeType = 'therapist' | 'mentor' | 'seeker';
 
@@ -26,6 +27,8 @@ const ARCHETYPE_SYMBOLS: Record<ArchetypeType, { symbol: string; phrase: string 
     phrase: 'A alma vê no escuro antes de falar.',
   },
 };
+
+const ONBOARDING_STATUS_TIMEOUT_MS = 6000;
 
 export function useOnboarding() {
   const { user, isAuthReady, isAuthenticated } = useAuth();
@@ -65,11 +68,17 @@ export function useOnboarding() {
     try {
       setData(prev => ({ ...prev, isLoading: true, error: null }));
 
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('entry_archetype, entry_symbol, onboarding_completed')
-        .eq('id', user.id)
-        .single();
+      const { data: profile, error } = await withTimeout(
+        Promise.resolve(
+          supabase
+            .from('profiles')
+            .select('entry_archetype, entry_symbol, onboarding_completed')
+            .eq('id', user.id)
+            .single()
+        ),
+        ONBOARDING_STATUS_TIMEOUT_MS,
+        'Tempo limite ao carregar o onboarding.'
+      );
 
       if (error) throw error;
 
