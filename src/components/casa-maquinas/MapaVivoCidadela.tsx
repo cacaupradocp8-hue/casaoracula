@@ -209,6 +209,54 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
         </p>
       </div>
 
+      {/* GPS Direction Panel */}
+      {clientCartografia && (
+        <Card className="border-primary/15 bg-primary/5">
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <Compass className="w-4 h-4 text-primary/70" />
+              <span className="text-xs font-semibold text-primary/80 uppercase tracking-wider">GPS Clínico</span>
+            </div>
+            {clientCartografia.direcao_clinica?.distrito_foco && (
+              <div className="flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 text-primary/60 shrink-0" />
+                <span className="text-xs text-foreground/70">
+                  Foco: <strong className="text-foreground/90">{clientCartografia.direcao_clinica.distrito_foco}</strong>
+                </span>
+              </div>
+            )}
+            {clientCartografia.direcao_clinica?.abordagem && (
+              <p className="text-[11px] text-foreground/60 leading-relaxed">{clientCartografia.direcao_clinica.abordagem}</p>
+            )}
+            {clientCartografia.direcao_clinica?.risco && (
+              <div className="flex items-start gap-2 p-2 rounded bg-amber-500/5 border border-amber-500/10">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-500/60 mt-0.5 shrink-0" />
+                <p className="text-[10px] text-amber-600/70">{clientCartografia.direcao_clinica.risco}</p>
+              </div>
+            )}
+            {clientCartografia.direcao_clinica?.pergunta_clinica && (
+              <p className="text-[11px] italic text-primary/60 text-center">
+                "{clientCartografia.direcao_clinica.pergunta_clinica}"
+              </p>
+            )}
+            {/* GPS district state summary */}
+            {gpsStates.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {gpsStates.filter(s => s.state !== 'nao_explorado').map(s => (
+                  <Badge key={s.district_id} variant="outline" className={`text-[8px] ${
+                    s.state === 'integrado' ? 'border-emerald-500/30 text-emerald-500/80' :
+                    s.state === 'em_tensao' ? 'border-red-400/30 text-red-400/80' :
+                    'border-[#C9A24A]/30 text-[#C9A24A]/80'
+                  }`}>
+                    {s.state === 'integrado' ? '✓' : s.state === 'em_tensao' ? '⚡' : '●'} {s.district_name}
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       {/* Header */}
       <div className="space-y-3">
         <div className="flex items-center gap-2">
