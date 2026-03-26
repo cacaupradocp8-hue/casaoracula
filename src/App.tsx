@@ -179,7 +179,7 @@ const PersonalMapEditor = React.lazy(() => import("./pages/PersonalMapEditor"));
 const JardimPsique = React.lazy(() => import("./pages/JardimPsique"));
 const JardimPsiqueDetalhe = React.lazy(() => import("./pages/JardimPsiqueDetalhe"));
 const MinhaBiblioteca = React.lazy(() => import("./pages/MinhaBiblioteca"));
-const Tour = React.lazy(() => import("./pages/Tour"));
+
 const TravessiaDetalhe = React.lazy(() => import("./pages/TravessiaDetalhe"));
 const NarroterapiaHub = React.lazy(() => import("./pages/NarroterapiaHub"));
 const BibliotecaContos = React.lazy(() => import("./pages/narroterapia/BibliotecaContos"));
