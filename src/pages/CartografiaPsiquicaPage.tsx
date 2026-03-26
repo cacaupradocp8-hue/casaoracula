@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBig5Oracular } from '@/hooks/useBig5Oracular';
+import { useCartografiaGPS } from '@/hooks/useCartografiaGPS';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -72,6 +73,7 @@ export default function CartografiaPsiquicaPage() {
     fatores, perguntas, loading: loadingBig5,
     calcularMedias, saveResult, getIntensidade,
   } = useBig5Oracular();
+  const { saveTherapistCartografia } = useCartografiaGPS();
 
   const [phase, setPhase] = useState<Phase>('intro');
   const [saving, setSaving] = useState(false);
@@ -217,10 +219,11 @@ export default function CartografiaPsiquicaPage() {
 
       if (aiError) {
         console.error('AI Error:', aiError);
-        // Fallback without AI
         setAiResult(null);
       } else {
         setAiResult(aiData);
+        // Save to profiles.cartografia_base for therapist identity
+        await saveTherapistCartografia(aiData);
       }
 
       setPhase('result');

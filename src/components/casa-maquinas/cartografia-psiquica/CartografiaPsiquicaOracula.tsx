@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCartografiaGPS } from '@/hooks/useCartografiaGPS';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,7 @@ interface Props {
 
 export function CartografiaPsiquicaOracula({ clienteId }: Props) {
   const { user } = useAuth();
+  const { saveClientCartografia } = useCartografiaGPS();
   const [records, setRecords] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<'list' | 'wizard' | 'result'>('list');
@@ -161,6 +163,8 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
         toast.error('Leitura IA não disponível');
       } else {
         setAiResult(aiData);
+        // Save to clientes.cartografia_sessao for client GPS
+        await saveClientCartografia(clienteId, aiData);
         setMode('result');
         setActiveLayer(0);
       }

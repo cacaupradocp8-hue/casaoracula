@@ -2977,6 +2977,7 @@ export type Database = {
         Row: {
           archetypal_profile_history: Json | null
           archetypal_profile_json: Json | null
+          cartografia_sessao: Json | null
           codigo_interno: string | null
           created_at: string
           data_inicio: string | null
@@ -2991,6 +2992,7 @@ export type Database = {
         Insert: {
           archetypal_profile_history?: Json | null
           archetypal_profile_json?: Json | null
+          cartografia_sessao?: Json | null
           codigo_interno?: string | null
           created_at?: string
           data_inicio?: string | null
@@ -3005,6 +3007,7 @@ export type Database = {
         Update: {
           archetypal_profile_history?: Json | null
           archetypal_profile_json?: Json | null
+          cartografia_sessao?: Json | null
           codigo_interno?: string | null
           created_at?: string
           data_inicio?: string | null
@@ -6590,6 +6593,7 @@ export type Database = {
           district_id: string
           from_state: string
           id: string
+          motivo: string | null
           reason: string
           to_state: string
         }
@@ -6600,6 +6604,7 @@ export type Database = {
           district_id: string
           from_state: string
           id?: string
+          motivo?: string | null
           reason: string
           to_state: string
         }
@@ -6610,6 +6615,7 @@ export type Database = {
           district_id?: string
           from_state?: string
           id?: string
+          motivo?: string | null
           reason?: string
           to_state?: string
         }
@@ -13125,6 +13131,7 @@ export type Database = {
           access_expires_at: string | null
           access_status: string
           avatar_url: string | null
+          cartografia_base: Json | null
           created_at: string
           email: string | null
           entry_archetype: string | null
@@ -13145,6 +13152,7 @@ export type Database = {
           access_expires_at?: string | null
           access_status?: string
           avatar_url?: string | null
+          cartografia_base?: Json | null
           created_at?: string
           email?: string | null
           entry_archetype?: string | null
@@ -13165,6 +13173,7 @@ export type Database = {
           access_expires_at?: string | null
           access_status?: string
           avatar_url?: string | null
+          cartografia_base?: Json | null
           created_at?: string
           email?: string | null
           entry_archetype?: string | null

@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCidadelaMap, type ClientCidadelaMap } from '@/hooks/useCidadelaMap';
+import { useCartografiaGPS, type CartografiaGPSResult, type GPSDistrictState } from '@/hooks/useCartografiaGPS';
 import { MandalaCidadela, MandalaLegend } from '@/components/cidadela/MandalaCidadela';
 import { MandalaMobile } from '@/components/cidadela/MandalaMobile';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -17,7 +18,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
   Loader2, Clock, Sparkles, Maximize2, Minimize2,
-  Castle, Key, Brain, Compass, Wrench, Eye, PlayCircle, FileText
+  Castle, Key, Brain, Compass, Wrench, Eye, PlayCircle, FileText,
+  MapPin, AlertTriangle, CheckCircle2
 } from 'lucide-react';
 
 interface Props {
@@ -29,9 +31,12 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
   const { user } = useAuth();
   const isMobile = useIsMobile();
   const { fetchMap } = useCidadelaMap();
+  const { loadClientCartografia, computeDistrictStates } = useCartografiaGPS();
   const [cidadelaMap, setCidadelaMap] = useState<ClientCidadelaMap | null>(null);
+  const [clientCartografia, setClientCartografia] = useState<CartografiaGPSResult | null>(null);
   const [districts, setDistricts] = useState<MandalaDistrict[]>([]);
   const [journeyDistricts, setJourneyDistricts] = useState<MandalaDistrictState[]>([]);
+  const [gpsStates, setGpsStates] = useState<GPSDistrictState[]>([]);
   const [tools, setTools] = useState<any[]>([]);
   const [sessions, setSessions] = useState<any[]>([]);
   const [oracleCards, setOracleCards] = useState<any[]>([]);
@@ -48,17 +53,20 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
   useEffect(() => { loadData(); }, [clienteId]);
 
   const loadData = async () => {
-    const [distRes, toolsRes, sessRes, mapData] = await Promise.all([
+    const [distRes, toolsRes, sessRes, mapData, cartoData] = await Promise.all([
       supabase.from('districts').select('*').order('numero'),
       supabase.from('tools').select('*').eq('ativa', true).order('ordem'),
       supabase.from('sessions').select('id, district_id, created_at, checkin_state, tool_id, oracle_card_id, insight, task').eq('client_id', clienteId).order('created_at', { ascending: true }),
       fetchMap(clienteId),
+      loadClientCartografia(clienteId),
     ]);
 
-    setDistricts(distRes.data || []);
+    const dists = distRes.data || [];
+    setDistricts(dists);
     setTools(toolsRes.data || []);
     setSessions(sessRes.data || []);
     setCidadelaMap(mapData);
+    setClientCartografia(cartoData);
 
     const cardIds = (sessRes.data || []).map((s: any) => s.oracle_card_id).filter(Boolean);
     if (cardIds.length > 0) {
@@ -70,16 +78,22 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
     const { data: journeys } = await supabase
       .from('journeys').select('id').eq('client_id', clienteId).limit(1);
 
+    let jdData: MandalaDistrictState[] = [];
     if (journeys?.length) {
       const { data: jd } = await supabase
         .from('journey_districts').select('*').eq('journey_id', journeys[0].id);
-      setJourneyDistricts((jd || []).map((j: any) => ({
+      jdData = (jd || []).map((j: any) => ({
         district_id: j.district_id,
         state: j.state,
         sessions_count: j.sessions_count,
         last_session_at: j.last_session_at,
-      })));
+      }));
+      setJourneyDistricts(jdData);
     }
+
+    // Compute 4-state GPS from cartografia + journey data
+    const computed = computeDistrictStates(dists, jdData, cartoData);
+    setGpsStates(computed);
 
     const { data: stateChanges } = await supabase
       .from('district_state_changes')
@@ -194,6 +208,54 @@ export function MapaVivoCidadela({ clienteId, compact = false }: Props) {
           Ferramenta de leitura simbólica. Não substitui julgamento clínico.
         </p>
       </div>
+
+      {/* GPS Direction Panel */}
+      {clientCartografia && (
+        <Card className="border-primary/15 bg-primary/5">
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <Compass className="w-4 h-4 text-primary/70" />
+              <span className="text-xs font-semibold text-primary/80 uppercase tracking-wider">GPS Clínico</span>
+            </div>
+            {clientCartografia.direcao_clinica?.distrito_foco && (
+              <div className="flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 text-primary/60 shrink-0" />
+                <span className="text-xs text-foreground/70">
+                  Foco: <strong className="text-foreground/90">{clientCartografia.direcao_clinica.distrito_foco}</strong>
+                </span>
+              </div>
+            )}
+            {clientCartografia.direcao_clinica?.abordagem && (
+              <p className="text-[11px] text-foreground/60 leading-relaxed">{clientCartografia.direcao_clinica.abordagem}</p>
+            )}
+            {clientCartografia.direcao_clinica?.risco && (
+              <div className="flex items-start gap-2 p-2 rounded bg-amber-500/5 border border-amber-500/10">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-500/60 mt-0.5 shrink-0" />
+                <p className="text-[10px] text-amber-600/70">{clientCartografia.direcao_clinica.risco}</p>
+              </div>
+            )}
+            {clientCartografia.direcao_clinica?.pergunta_clinica && (
+              <p className="text-[11px] italic text-primary/60 text-center">
+                "{clientCartografia.direcao_clinica.pergunta_clinica}"
+              </p>
+            )}
+            {/* GPS district state summary */}
+            {gpsStates.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {gpsStates.filter(s => s.state !== 'nao_explorado').map(s => (
+                  <Badge key={s.district_id} variant="outline" className={`text-[8px] ${
+                    s.state === 'integrado' ? 'border-emerald-500/30 text-emerald-500/80' :
+                    s.state === 'em_tensao' ? 'border-red-400/30 text-red-400/80' :
+                    'border-[#C9A24A]/30 text-[#C9A24A]/80'
+                  }`}>
+                    {s.state === 'integrado' ? '✓' : s.state === 'em_tensao' ? '⚡' : '●'} {s.district_name}
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Header */}
       <div className="space-y-3">
