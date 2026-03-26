@@ -12,6 +12,7 @@ import { AppDomainProvider } from "@/contexts/AppDomainContext";
 import { PortalType, canAccessFeature } from "@/types/portal";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import { LockedForVisitor } from "@/components/shared/LockedForVisitor";
+import { BootLoadingScreen } from "@/components/shared/BootLoadingScreen";
 
 import { Suspense } from "react";
 
@@ -274,11 +275,7 @@ const logRouteStep = (
 
 // Loading component for auth states
 function AuthLoading() {
-  return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="animate-pulse text-gold font-display text-xl">Carregando...</div>
-    </div>
-  );
+  return <BootLoadingScreen />;
 }
 
 function AppRouteError({ title, message }: { title: string; message: string }) {
@@ -2130,7 +2127,7 @@ const App = () => (
           <AdminPreviewProvider>
             <AppDomainProvider>
               <RootErrorBoundary>
-                <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-pulse text-gold font-display text-xl">Carregando...</div></div>}>
+                <Suspense fallback={<BootLoadingScreen message="Carregando a próxima etapa da travessia." />}>
                   <AppRoutes />
                 </Suspense>
               </RootErrorBoundary>

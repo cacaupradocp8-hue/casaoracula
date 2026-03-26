@@ -3,6 +3,7 @@ import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { PortalType, canAccessFeature, getCaseLimit } from '@/types/portal';
 import { parseDateSafe } from '@/lib/date-safe';
+import { withTimeout } from '@/lib/withTimeout';
 
 interface User {
   id: string;
@@ -31,6 +32,9 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const AUTH_PROFILE_TIMEOUT_MS = 8000;
+const AUTH_SESSION_TIMEOUT_MS = 8000;
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -52,25 +56,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           { data: profile, error: profileError },
           { data: role },
           { data: matricula },
-        ] = await Promise.all([
-          supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', userId)
-            .single(),
-          supabase
-            .from('user_roles')
-            .select('portal')
-            .eq('user_id', userId)
-            .single(),
-          supabase
-            .from('matriculas')
-            .select('id')
-            .eq('user_id', userId)
-            .eq('curso_id', 'formacao_oracula')
-            .eq('ativa', true)
-            .maybeSingle(),
-        ]);
+        ] = await withTimeout(
+          Promise.all([
+            supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', userId)
+              .single(),
+            supabase
+              .from('user_roles')
+              .select('portal')
+              .eq('user_id', userId)
+              .single(),
+            supabase
+              .from('matriculas')
+              .select('id')
+              .eq('user_id', userId)
+              .eq('curso_id', 'formacao_oracula')
+              .eq('ativa', true)
+              .maybeSingle(),
+          ]),
+          AUTH_PROFILE_TIMEOUT_MS,
+          'Tempo limite ao carregar seu perfil.'
+        );
 
         if (profileError || !profile) {
           const errorCode = typeof profileError === 'object' && profileError !== null && 'code' in profileError
@@ -119,7 +127,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
+      const { data: { user: authUser } } = await withTimeout(
+        supabase.auth.getUser(),
+        AUTH_PROFILE_TIMEOUT_MS,
+        'Tempo limite ao restaurar os dados básicos da sessão.'
+      );
 
       if (authUser?.id === userId) {
         const fallbackName = typeof authUser.user_metadata?.nome === 'string' && authUser.user_metadata.nome.trim().length > 0
@@ -228,8 +240,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       syncSession(nextSession, false);
     });
 
-    void supabase.auth
-      .getSession()
+    void withTimeout(
+      supabase.auth.getSession(),
+      AUTH_SESSION_TIMEOUT_MS,
+      'Tempo limite ao restaurar sua sessão.'
+    )
       .then(({ data: { session: initialSession } }) => {
         console.info(`${AUTH_BOOT_LOG_PREFIX} leitura do usuário autenticado`, {
           hasSession: !!initialSession,
