@@ -676,6 +676,40 @@ export default function TravessiaDetalhe() {
 
             {/* Área de Comentários para Travessia 00 */}
             {isTravessiaZero && <TravessiaComentarios travessiaId="travessia-zero" />}
+
+            {/* CTA simbólico — Travessia 00 → Clube */}
+            {isTravessiaZero && (
+              <section className="relative mt-16 py-16 flex flex-col items-center text-center overflow-hidden rounded-2xl border border-gold/10 bg-card/40">
+                {/* Orb glow */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="w-64 h-64 rounded-full bg-gradient-to-br from-gold/8 via-mystic/5 to-transparent blur-3xl opacity-60" />
+                </div>
+
+                <div className="relative z-10 flex flex-col items-center gap-6 max-w-sm px-6">
+                  {/* Minimal breathing dot */}
+                  <div className="w-10 h-10 rounded-full border border-gold/20 flex items-center justify-center animate-breathe-oracular">
+                    <div className="w-2.5 h-2.5 rounded-full bg-gold/30" />
+                  </div>
+
+                  <div className="space-y-3">
+                    <p className="text-muted-foreground/70 text-sm font-body leading-relaxed italic">
+                      Se isso tocou algo em você...
+                    </p>
+                    <p className="text-foreground/90 text-base font-display leading-relaxed tracking-wide">
+                      existe um espaço onde essa jornada continua.
+                    </p>
+                  </div>
+
+                  <Button
+                    onClick={() => navigate('/convite-clube')}
+                    className="mt-2 px-8 py-3 rounded-full font-display text-sm tracking-wider bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 hover:border-gold/30 transition-all"
+                    variant="ghost"
+                  >
+                    Conhecer o Clube Oracular
+                  </Button>
+                </div>
+              </section>
+            )}
           </div>
         )}
 
