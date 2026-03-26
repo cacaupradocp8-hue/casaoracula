@@ -513,7 +513,7 @@ function AppRoutes() {
       <Route path="/formacao-oracula" element={<Navigate to="/oracula" replace />} />
       <Route path="/formacao-viva" element={<Navigate to="/oracula" replace />} />
       <Route path="/formacao" element={<Navigate to="/cursos" replace />} />
-      <Route path="/tour" element={<Tour />} />
+      <Route path="/tour" element={<Navigate to="/mapa-casa" replace />} />
 
       {/* Onboarding Route - First-time experience (before completing) */}
       <Route

@@ -90,6 +90,19 @@ export default function RevelacaoCidadelaPage() {
   const ativos = Object.entries(distritos).filter(([, v]) => v.estado === 'ativo');
   const corHex = cartografia.metadata_json?.cor_hex || '#C9A24A';
 
+  // Build district states for CidadelaMapSVG
+  const svgStates = useMemo(() => {
+    const states: Record<string, DistrictDisplayState> = {};
+    Object.entries(distritos).forEach(([, d]) => {
+      const key = d.nome.toLowerCase();
+      if (d.estado === 'central') states[key] = 'ativo';
+      else if (d.estado === 'ativo') states[key] = 'ativo';
+      else if (d.estado === 'tensao') states[key] = 'em_tensao';
+      else if (d.estado === 'integrado') states[key] = 'integrado';
+    });
+    return states;
+  }, [distritos]);
+
   // Generate symbolic reading
   const centralNome = central?.[1]?.nome || 'sua cidade interior';
   const ativosNomes = ativos.map(([, v]) => v.nome);
