@@ -73,6 +73,7 @@ export default function CartografiaPsiquicaPage() {
     fatores, perguntas, loading: loadingBig5,
     calcularMedias, saveResult, getIntensidade,
   } = useBig5Oracular();
+  const { saveTherapistCartografia } = useCartografiaGPS();
 
   const [phase, setPhase] = useState<Phase>('intro');
   const [saving, setSaving] = useState(false);
