@@ -2088,6 +2088,14 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/templo-de-escuta"
+          element={
+            <ProtectedRoute>
+              <TemploEscuta />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Biblioteca das Travessias - Redirect to unified biblioteca */}
         <Route
