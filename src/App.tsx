@@ -86,6 +86,7 @@ const CheckoutSucesso = React.lazy(() => import("./pages/CheckoutSucesso"));
 const ConviteClube = React.lazy(() => import("./pages/ConviteClube"));
 const CheckoutCancelado = React.lazy(() => import("./pages/CheckoutCancelado"));
 const Audios = React.lazy(() => import("./pages/Audios"));
+const TemploEscuta = React.lazy(() => import("./pages/TemploEscuta"));
 const EstudioOracular = React.lazy(() => import("./pages/EstudioOracular"));
 const Notificacoes = React.lazy(() => import("./pages/Notificacoes"));
 const Big5 = React.lazy(() => import("./pages/salas/Big5"));
