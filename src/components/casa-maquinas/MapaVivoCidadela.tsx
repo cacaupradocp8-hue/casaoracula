@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCidadelaMap, type ClientCidadelaMap } from '@/hooks/useCidadelaMap';
+import { useCartografiaGPS, type CartografiaGPSResult, type GPSDistrictState } from '@/hooks/useCartografiaGPS';
 import { MandalaCidadela, MandalaLegend } from '@/components/cidadela/MandalaCidadela';
 import { MandalaMobile } from '@/components/cidadela/MandalaMobile';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -17,7 +18,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
   Loader2, Clock, Sparkles, Maximize2, Minimize2,
-  Castle, Key, Brain, Compass, Wrench, Eye, PlayCircle, FileText
+  Castle, Key, Brain, Compass, Wrench, Eye, PlayCircle, FileText,
+  MapPin, AlertTriangle, CheckCircle2
 } from 'lucide-react';
 
 interface Props {
