@@ -65,8 +65,10 @@ export default function CidadelaMapSVG({
   maxWidth = 620,
   archetypeDistricts: _archetypeDistricts = {},
   eventCounts: _eventCounts = {},
+  forceCircular = false,
 }: Props) {
   const isMobile = useIsMobile();
+  const useCircular = forceCircular || !isMobile;
   const [selectedDistrict, setSelectedDistrict] = useState<MandalaDistrict | null>(null);
 
   const { data: districts = [], isLoading } = useQuery({
