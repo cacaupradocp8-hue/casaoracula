@@ -121,7 +121,7 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
           <Button
             variant="gold"
             size="lg"
-            onClick={() => navigate('/ferramenta/cartografia-psiquica-oracula')}
+            onClick={() => navigate('/ferramentas/cartografia-psiquica-oracula')}
             className="gap-2 px-8 py-6 text-base"
           >
             Revelar minha CidaDELA
