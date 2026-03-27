@@ -1,16 +1,10 @@
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Compass, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import CidadelaMapSVG, { type DistrictDisplayState } from '@/components/cidadela/CidadelaMapSVG';
 import type { DistritoResumo } from '@/hooks/useBussolaOracular';
-
-const ESTADO_STYLES: Record<string, string> = {
-  central: 'bg-primary/15 border-primary/25 text-primary',
-  ativo: 'bg-primary/8 border-primary/15 text-primary/70',
-  tensao: 'bg-destructive/8 border-destructive/15 text-destructive/70',
-  integrado: 'bg-emerald-500/8 border-emerald-500/15 text-emerald-600/70',
-  nao_explorado: 'bg-muted/30 border-border/10 text-muted-foreground/40',
-};
 
 interface Props {
   temCartografia: boolean;
@@ -18,10 +12,24 @@ interface Props {
   distritosAtivos: DistritoResumo[];
   distritoTensao: DistritoResumo | null;
   corHex: string;
+  distritosRaw: Record<string, any>;
 }
 
-export function MiniMapaCidadela({ temCartografia, distritoDominante, distritosAtivos, distritoTensao, corHex }: Props) {
+export function MiniMapaCidadela({ temCartografia, distritoDominante, distritosAtivos, distritoTensao, corHex, distritosRaw }: Props) {
   const navigate = useNavigate();
+
+  // Build states for CidadelaMapSVG from raw distrito data
+  const svgStates = useMemo(() => {
+    const states: Record<string, DistrictDisplayState> = {};
+    Object.entries(distritosRaw).forEach(([, d]: [string, any]) => {
+      const key = (d.nome || '').toLowerCase();
+      if (!key) return;
+      if (d.estado === 'central' || d.estado === 'ativo') states[key] = 'ativo';
+      else if (d.estado === 'tensao') states[key] = 'em_tensao';
+      else if (d.estado === 'integrado') states[key] = 'integrado';
+    });
+    return states;
+  }, [distritosRaw]);
 
   if (!temCartografia) {
     return (
@@ -29,7 +37,7 @@ export function MiniMapaCidadela({ temCartografia, distritoDominante, distritosA
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="mb-6"
+        className="mb-8"
       >
         <div className="rounded-2xl border border-dashed border-primary/20 bg-primary/[0.02] p-6 text-center">
           <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center">
@@ -39,7 +47,7 @@ export function MiniMapaCidadela({ temCartografia, distritoDominante, distritosA
             Sua CidaDELA aguarda revelação
           </p>
           <p className="text-xs text-muted-foreground/50 mb-4 max-w-xs mx-auto">
-            Um mapa simbólico da sua psique será gerado pela Cartografia Psíquica Orácula.
+            Um mapa simbólico da sua psique será gerado pela Cartografia Psíquica.
           </p>
           <Button
             variant="gold"
@@ -53,22 +61,12 @@ export function MiniMapaCidadela({ temCartografia, distritoDominante, distritosA
     );
   }
 
-  // Todos os distritos exibíveis (dominante, ativos, tensão)
-  const allDistritos = new Map<string, DistritoResumo>();
-  if (distritoDominante) allDistritos.set(distritoDominante.key, { ...distritoDominante, estado: 'central' as const });
-  distritosAtivos.forEach(d => {
-    if (!allDistritos.has(d.key)) allDistritos.set(d.key, d);
-  });
-  if (distritoTensao && !allDistritos.has(distritoTensao.key)) {
-    allDistritos.set(distritoTensao.key, distritoTensao);
-  }
-
   return (
     <motion.section
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="mb-6"
+      className="mb-8"
     >
       <div className="flex items-center justify-between mb-3">
         <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40">
@@ -82,27 +80,16 @@ export function MiniMapaCidadela({ temCartografia, distritoDominante, distritosA
         </button>
       </div>
 
+      {/* Mandala SVG real — igual à Casa das Máquinas */}
       <div
-        className="rounded-2xl border border-border/10 p-4 cursor-pointer hover:border-primary/20 transition-all"
-        style={{ background: `linear-gradient(135deg, ${corHex}08, transparent 60%)` }}
+        className="rounded-2xl border border-border/10 overflow-hidden cursor-pointer hover:border-primary/20 transition-all"
         onClick={() => navigate('/revelacao-cidadela')}
       >
-        <div className="grid grid-cols-3 gap-2">
-          {Array.from(allDistritos.values()).slice(0, 6).map((d) => {
-            const style = ESTADO_STYLES[d.estado] || ESTADO_STYLES.nao_explorado;
-            return (
-              <div
-                key={d.key}
-                className={`flex flex-col items-center gap-1 py-2.5 px-2 rounded-xl border ${style} transition-all`}
-              >
-                <span className="text-lg">{d.icon}</span>
-                <span className="text-[9px] text-center leading-tight truncate w-full">
-                  {d.nome}
-                </span>
-              </div>
-            );
-          })}
-        </div>
+        <CidadelaMapSVG
+          districtStates={svgStates}
+          activeDistrict={distritoDominante?.nome || null}
+          maxWidth={480}
+        />
       </div>
     </motion.section>
   );
