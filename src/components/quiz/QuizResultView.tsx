@@ -132,13 +132,13 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
             <Map className="w-5 h-5 text-primary/50" />
           </div>
           <h3 className="font-display text-xl md:text-2xl text-foreground/90">
-            Existe um mapa inteiro por trás dessa voz
+            Sua mente se organiza como uma cidade
           </h3>
           <p className="text-foreground/60 text-sm leading-relaxed max-w-lg mx-auto">
-            Toda mente se organiza em distritos internos — territórios que guardam forças, feridas, padrões repetitivos e recursos que você ainda não acessou. A psicologia profunda chama isso de <span className="text-foreground/80 font-medium">arquitetura psíquica</span>.
+            A psicologia profunda demonstra que toda psique possui uma <span className="text-foreground/80 font-medium">arquitetura interna</span> — territórios que guardam seus recursos, seus padrões de repetição e os pontos onde você trava. Entender essa organização é o primeiro passo para mudar de verdade.
           </p>
           <p className="text-foreground/50 text-sm leading-relaxed max-w-md mx-auto">
-            A CidaDELA Interior é o sistema que revela essa arquitetura. Ela transforma o que o quiz apenas nomeou em um mapa vivo — com distritos, tensões, direções e ações concretas.
+            A CidaDELA Interior é o sistema que mapeia essa arquitetura. Ela transforma o que o quiz nomeou em um mapa funcional — com distritos, conflitos internos e direções claras de ação.
           </p>
         </div>
       </motion.section>
