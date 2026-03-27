@@ -15,6 +15,8 @@ interface Props {
   maxWidth?: number;
   archetypeDistricts?: Record<string, boolean>;
   eventCounts?: Record<string, number>;
+  /** Force the circular SVG mandala even on mobile */
+  forceCircular?: boolean;
 }
 
 const DISTRICT_NUMBER_BY_NAME: Record<string, number> = {
@@ -63,8 +65,10 @@ export default function CidadelaMapSVG({
   maxWidth = 620,
   archetypeDistricts: _archetypeDistricts = {},
   eventCounts: _eventCounts = {},
+  forceCircular = false,
 }: Props) {
   const isMobile = useIsMobile();
+  const useCircular = forceCircular || !isMobile;
   const [selectedDistrict, setSelectedDistrict] = useState<MandalaDistrict | null>(null);
 
   const { data: districts = [], isLoading } = useQuery({
@@ -122,15 +126,7 @@ export default function CidadelaMapSVG({
         <div className="flex min-h-[320px] items-center justify-center rounded-2xl border border-border/10 bg-card/20 text-xs text-muted-foreground/50">
           Preparando mandala...
         </div>
-      ) : isMobile ? (
-        <MandalaMobile
-          districts={districts}
-          districtStates={mappedStates}
-          mode="explorar"
-          selectedId={selectedDistrict?.id ?? null}
-          onDistrictClick={handleDistrictClick}
-        />
-      ) : (
+      ) : useCircular ? (
         <MandalaCidadela
           districts={districts}
           districtStates={mappedStates}
@@ -139,6 +135,14 @@ export default function CidadelaMapSVG({
           onDistrictClick={handleDistrictClick}
           className="w-full"
           showConnections
+        />
+      ) : (
+        <MandalaMobile
+          districts={districts}
+          districtStates={mappedStates}
+          mode="explorar"
+          selectedId={selectedDistrict?.id ?? null}
+          onDistrictClick={handleDistrictClick}
         />
       )}
 
