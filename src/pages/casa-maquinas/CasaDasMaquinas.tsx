@@ -43,6 +43,7 @@ export default function CasaDasMaquinas() {
   const navigate = useNavigate();
   const [stats, setStats] = useState({ clientes: 0, sessoesMes: 0, gestosAtivos: 0, alertas: 0 });
   const [clientesRecentes, setClientesRecentes] = useState<ClienteRecente[]>([]);
+  const [alertas, setAlertas] = useState<AlertaClinico[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
