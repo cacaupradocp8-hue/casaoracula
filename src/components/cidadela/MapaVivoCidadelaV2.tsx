@@ -126,7 +126,7 @@ export default function MapaVivoCidadelaV2({
     }
 
     districts.forEach((district) => {
-      const visual = districtStates[district.id];
+      const visual = districtVisualStates[district.id];
       if (!visual) return;
 
       if (visual.active) {
@@ -141,7 +141,7 @@ export default function MapaVivoCidadelaV2({
     }
 
     return states;
-  }, [cityState?.distrito_ativo, districts, districtStates, selfMapData, selfMode]);
+  }, [cityState?.distrito_ativo, districtVisualStates, districts, selfMapData, selfMode]);
 
   const archetypeDistricts = useMemo(() => {
     const highlighted = new Set<string>();
@@ -173,7 +173,7 @@ export default function MapaVivoCidadelaV2({
   }, [history]);
 
   // Build visual states for each district
-  const districtStates = useMemo(() => {
+  const districtVisualStates = useMemo(() => {
     const states: Record<string, DistrictVisualState> = {};
 
     if (selfMode && selfMapData?.mapa) {
@@ -264,7 +264,7 @@ export default function MapaVivoCidadelaV2({
   }
 
   // Determine journey phase
-  const visitedCount = Object.values(districtStates).filter(s => s.visited).length;
+  const visitedCount = Object.values(districtVisualStates).filter(s => s.visited).length;
   const phase = visitedCount === 0 ? 'Início' : visitedCount <= 3 ? 'Exploração' :
     visitedCount <= 6 ? 'Aprofundamento' : 'Integração';
 
