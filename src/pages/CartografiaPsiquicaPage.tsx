@@ -659,7 +659,7 @@ export default function CartografiaPsiquicaPage() {
 
               {/* Bottom actions */}
               <div className="flex flex-col items-center gap-4 pt-4">
-                <Button variant="gold" size="lg" className="gap-2 px-8" onClick={() => navigate('/revelacao-cidadela')}>
+                <Button variant="gold" size="lg" className="gap-2 px-8" onClick={() => navigate('/cidadela/revelacao')}>
                   <Eye className="w-4 h-4" /> Ver minha CidaDELA completa
                 </Button>
                 <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard-membro')}>

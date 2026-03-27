@@ -41,7 +41,7 @@ export function MiniMapaCidadela(props: Props) {
           <Button
             variant="gold"
             className="gap-2"
-            onClick={() => navigate('/ferramenta/cartografia-psiquica-oracula')}
+            onClick={() => navigate('/ferramentas/cartografia-psiquica-oracula')}
           >
             Revelar meu mapa <ArrowRight className="w-4 h-4" />
           </Button>
@@ -62,7 +62,7 @@ export function MiniMapaCidadela(props: Props) {
           Sua CidaDELA
         </p>
         <button
-          onClick={() => navigate('/revelacao-cidadela')}
+          onClick={() => navigate('/cidadela/revelacao')}
           className="text-[10px] text-primary/50 hover:text-primary/80 transition-colors flex items-center gap-1"
         >
           Ver mapa completo <ArrowRight className="w-3 h-3" />

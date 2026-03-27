@@ -36,7 +36,7 @@ export function useJourneyGuard(): JourneyState {
 
     const check = async () => {
       try {
-        const [quizRes, cartoRes] = await Promise.all([
+        const [quizRes, cartoRes, cidadelaRes] = await Promise.all([
           supabase
             .from('quiz_respostas_usuario')
             .select('id')
@@ -47,17 +47,28 @@ export function useJourneyGuard(): JourneyState {
             .select('id')
             .eq('user_id', user.id)
             .limit(1),
+          supabase
+            .from('auto_mapeamento')
+            .select('id, distritos_json')
+            .eq('user_id', user.id)
+            .maybeSingle(),
         ]);
 
         const hasQuiz = (quizRes.data?.length ?? 0) > 0;
         const hasCartografia = (cartoRes.data?.length ?? 0) > 0;
+        const hasCidadela = Boolean(
+          cidadelaRes.data?.id
+          && cidadelaRes.data.distritos_json
+          && Object.keys((cidadelaRes.data.distritos_json as Record<string, unknown>) || {}).length > 0,
+        );
 
         if (!hasQuiz) {
           setState({ currentStep: 'quiz', redirectTo: '/quiz/descubra-seu-eixo', loading: false });
         } else if (!hasCartografia) {
-          setState({ currentStep: 'cartografia', redirectTo: '/ferramenta/cartografia-psiquica-oracula', loading: false });
+          setState({ currentStep: 'cartografia', redirectTo: '/ferramentas/cartografia-psiquica-oracula', loading: false });
+        } else if (!hasCidadela) {
+          setState({ currentStep: 'cidadela', redirectTo: '/cidadela/revelacao', loading: false });
         } else {
-          // Has both quiz and cartografia — cidadela is generated from cartografia
           setState({ currentStep: 'complete', redirectTo: null, loading: false });
         }
       } catch (err) {
