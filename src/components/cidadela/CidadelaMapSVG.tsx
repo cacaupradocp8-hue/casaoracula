@@ -15,6 +15,8 @@ interface Props {
   maxWidth?: number;
   archetypeDistricts?: Record<string, boolean>;
   eventCounts?: Record<string, number>;
+  /** Force the circular SVG mandala even on mobile */
+  forceCircular?: boolean;
 }
 
 const DISTRICT_NUMBER_BY_NAME: Record<string, number> = {
