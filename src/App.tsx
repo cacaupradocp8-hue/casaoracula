@@ -346,6 +346,10 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
   const isPosCompraRoute = location.pathname === '/pos-compra';
   const isVisitorJourneyRoute = location.pathname === '/sala-da-visitante'
     || location.pathname.startsWith('/quiz/')
+    || location.pathname === '/ferramenta/cartografia-psiquica-oracula'
+    || location.pathname === '/ferramentas/cartografia-psiquica-oracula'
+    || location.pathname === '/revelacao-cidadela'
+    || location.pathname === '/cidadela/revelacao'
     || location.pathname === '/comece-aqui'
     || location.pathname === '/experiencia-gratuita'
     || location.pathname.startsWith('/travessia/');
@@ -1580,6 +1584,14 @@ function AppRoutes() {
 
       <Route
         path="/quiz/:quizId"
+        element={
+          <ProtectedRoute>
+            <QuizPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/quiz/:quizId/resultado"
         element={
           <ProtectedRoute>
             <QuizPage />
