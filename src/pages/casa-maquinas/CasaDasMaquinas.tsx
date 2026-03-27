@@ -198,8 +198,38 @@ export default function CasaDasMaquinas() {
             </Card>
           </motion.div>
 
+          {/* Alertas Clínicos */}
+          {alertas.length > 0 && (
+            <motion.div {...fadeInUp} transition={{ duration: 0.5, delay: 0.15 }}>
+              <Card className="border-destructive/15 bg-card/40 backdrop-blur-md">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm font-medium text-foreground/70 flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 text-destructive" />
+                    Alertas Clínicos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {alertas.map(a => (
+                      <div key={a.id} className="flex items-start gap-3 p-3 rounded-lg bg-destructive/5 border border-destructive/10">
+                        <AlertTriangle className="w-3.5 h-3.5 text-destructive mt-0.5 shrink-0" />
+                        <div className="min-w-0">
+                          <p className="text-xs text-foreground/80 line-clamp-2">{a.motivo}</p>
+                          <p className="text-[10px] text-muted-foreground mt-1">
+                            {a.distrito && `${a.distrito} · `}
+                            {new Date(a.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+
           {/* District Chart */}
-          <motion.div {...fadeInUp} transition={{ duration: 0.5, delay: 0.15 }}>
+          <motion.div {...fadeInUp} transition={{ duration: 0.5, delay: 0.2 }}>
             <DashboardDistrictChart />
           </motion.div>
         </div>
