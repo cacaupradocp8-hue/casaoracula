@@ -1,9 +1,9 @@
-import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Compass, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import CidadelaMapSVG, { type DistrictDisplayState } from '@/components/cidadela/CidadelaMapSVG';
+import { useAuth } from '@/contexts/AuthContext';
+import MapaVivoCidadelaV2 from '@/components/cidadela/MapaVivoCidadelaV2';
 import type { DistritoResumo } from '@/hooks/useBussolaOracular';
 
 interface Props {
@@ -15,72 +15,10 @@ interface Props {
   distritosRaw: Record<string, any>;
 }
 
-const DISTRICT_NUMBER_BY_KEY: Record<string, number> = {
-  portao_chegada: 1,
-  torres: 2,
-  portas: 3,
-  jardim_arquetipos: 4,
-  praca_abalo: 5,
-  casa_sonhos: 6,
-  espelho_vinculos: 7,
-  forja: 8,
-  conselho_interior: 9,
-  labirinto: 10,
-  praca_integracao: 11,
-  portal_renascimento: 12,
-};
-
-const DISTRICT_NUMBER_BY_NAME: Record<string, number> = {
-  'portão da chegada': 1,
-  'portao da chegada': 1,
-  torres: 2,
-  portas: 3,
-  'jardim dos arquétipos': 4,
-  'jardim dos arquetipos': 4,
-  'bosque dos arquétipos': 4,
-  'bosque dos arquetipos': 4,
-  'praça do abalo': 5,
-  'praca do abalo': 5,
-  'casa dos sonhos': 6,
-  'espelho dos vínculos': 7,
-  'espelho dos vinculos': 7,
-  'espelho dos vínculos ': 7,
-  forja: 8,
-  'a forja': 8,
-  'conselho interior': 9,
-  labirinto: 10,
-  'praça da integração': 11,
-  'praca da integracao': 11,
-  'coração da cidadela': 11,
-  'coracao da cidadela': 11,
-  'portal de renascimento': 12,
-};
-
-function resolveDistrictNumber(key: string, distrito: any) {
-  return DISTRICT_NUMBER_BY_KEY[key] ?? DISTRICT_NUMBER_BY_NAME[(distrito?.nome || '').toLowerCase()] ?? null;
-}
-
 export function MiniMapaCidadela(props: Props) {
-  const { temCartografia, distritosRaw, distritoDominante } = props;
+  const { temCartografia } = props;
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const districtDisplayStates = useMemo<Record<string, DistrictDisplayState>>(() => {
-    return Object.entries(distritosRaw).reduce<Record<string, DistrictDisplayState>>((acc, [key, distrito]) => {
-      const districtNumber = resolveDistrictNumber(key, distrito);
-      if (!districtNumber) return acc;
-
-      const normalizedName = (distrito?.nome || key).toLowerCase();
-
-      acc[normalizedName] = distrito?.estado === 'integrado'
-        ? 'integrado'
-        : distrito?.estado === 'tensao'
-          ? 'em_tensao'
-          : distrito?.estado === 'ativo' || distrito?.estado === 'central'
-            ? 'ativo'
-            : 'nao_explorado';
-
-      return acc;
-    }, {});
-  }, [distritosRaw]);
 
   if (!temCartografia) {
     return (
@@ -131,12 +69,11 @@ export function MiniMapaCidadela(props: Props) {
         </button>
       </div>
 
-      <div className="w-full min-h-[320px] overflow-hidden rounded-2xl border border-border/20 bg-muted/10 p-2 md:p-4 transition-all hover:border-primary/20">
-        <CidadelaMapSVG
-          districtStates={districtDisplayStates}
-          activeDistrict={distritoDominante?.nome || null}
-          maxWidth={620}
-          forceCircular
+      <div className="w-full min-h-[520px] overflow-hidden rounded-2xl border border-border/20 bg-muted/10 transition-all hover:border-primary/20">
+        <MapaVivoCidadelaV2
+          selfMode
+          overrideId={user?.id}
+          standalone
         />
       </div>
     </motion.section>
