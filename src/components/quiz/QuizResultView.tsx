@@ -44,13 +44,13 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
       <motion.section {...fade(0)}>
         <div className="text-center mb-8">
           <p className="text-xs uppercase tracking-[0.25em] text-gold/60 mb-3">
-            Reconhecimento interno
+            Seu padrão foi identificado
           </p>
           <h2 className="font-display text-3xl md:text-4xl text-gold leading-tight">
-            Essa é a sua voz
+            Você conduz de um lugar específico
           </h2>
           <p className="text-sm text-muted-foreground/60 mt-2 max-w-md mx-auto">
-            A forma como você escuta, conduz e organiza a experiência dos outros revela um padrão interno específico.
+            Toda pessoa que escuta, orienta ou facilita o outro opera a partir de um eixo interno dominante. O seu acabou de ser revelado.
           </p>
         </div>
 
@@ -82,7 +82,7 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
               <>
                 <div className="w-16 h-px bg-gold/20 mx-auto" />
                 <div className="text-center">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40 mb-2">Voz de apoio</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40 mb-2">Eixo complementar</p>
                   <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-3">
                     <Heart className="w-4 h-4 text-primary" />
                     <span className="font-display text-base text-foreground font-semibold">
@@ -109,17 +109,17 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
               <Layers className="w-5 h-5 text-gold/50" />
             </div>
             <p className="text-xs uppercase tracking-[0.2em] text-gold/50">
-              Isso é apenas a superfície
+              O que esse resultado não mostra
             </p>
             <div className="bg-gold/5 border border-gold/10 rounded-xl p-5">
               <p className="text-foreground/90 leading-relaxed italic font-display">
-                O que você acabou de ver é a camada mais visível da sua estrutura interna. Mas a mente não funciona por camadas isoladas — ela se organiza em territórios, tensões e forças que atuam ao mesmo tempo.
+                Esse resultado identifica seu eixo principal — mas sua estrutura psíquica não se resume a um eixo. Ela é formada por territórios internos que interagem entre si: forças, tensões, padrões repetitivos e recursos que ainda não foram acessados.
               </p>
             </div>
             <p className="text-muted-foreground text-sm max-w-lg mx-auto">
               {secondaryResult
-                ? `${primaryResult.titulo_simbolico} e ${secondaryResult.titulo_simbolico} são apenas dois eixos de uma arquitetura muito mais complexa. O quiz revela o padrão — mas não mostra como tudo se conecta.`
-                : `Sua voz revela um padrão, mas não mostra como ele se conecta com suas tensões, seus recursos internos e seus pontos cegos.`}
+                ? `${primaryResult.titulo_simbolico} e ${secondaryResult.titulo_simbolico} são dois pontos de um mapa interno muito maior. Você viu a direção — mas ainda não viu o território completo.`
+                : `Você identificou um padrão — mas ainda não sabe como ele se conecta com seus bloqueios, seus recursos e os pontos que você ainda não enxerga.`}
             </p>
           </CardContent>
         </Card>
@@ -132,13 +132,13 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
             <Map className="w-5 h-5 text-primary/50" />
           </div>
           <h3 className="font-display text-xl md:text-2xl text-foreground/90">
-            Existe um mapa inteiro por trás dessa voz
+            Sua mente se organiza como uma cidade
           </h3>
           <p className="text-foreground/60 text-sm leading-relaxed max-w-lg mx-auto">
-            Toda mente se organiza em distritos internos — territórios que guardam forças, feridas, padrões repetitivos e recursos que você ainda não acessou. A psicologia profunda chama isso de <span className="text-foreground/80 font-medium">arquitetura psíquica</span>.
+            A psicologia profunda demonstra que toda psique possui uma <span className="text-foreground/80 font-medium">arquitetura interna</span> — territórios que guardam seus recursos, seus padrões de repetição e os pontos onde você trava. Entender essa organização é o primeiro passo para mudar de verdade.
           </p>
           <p className="text-foreground/50 text-sm leading-relaxed max-w-md mx-auto">
-            A CidaDELA Interior é o sistema que revela essa arquitetura. Ela transforma o que o quiz apenas nomeou em um mapa vivo — com distritos, tensões, direções e ações concretas.
+            A CidaDELA Interior é o sistema que mapeia essa arquitetura. Ela transforma o que o quiz nomeou em um mapa funcional — com distritos, conflitos internos e direções claras de ação.
           </p>
         </div>
       </motion.section>
@@ -151,15 +151,14 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
               <Eye className="w-6 h-6 text-gold/70" />
             </div>
             <h3 className="font-display text-xl md:text-2xl text-foreground">
-              Sem o mapa, você vê apenas um fragmento
+              Sem o mapa, você repete o padrão
             </h3>
             <p className="text-foreground/60 text-sm leading-relaxed max-w-md mx-auto">
-              Você sabe qual é a sua voz — mas ainda não sabe onde ela mora, o que a ameaça e o que ela precisa para evoluir. A CidaDELA revela tudo isso.
+              Você sabe qual é seu eixo — mas ainda não sabe onde ele opera, o que o ameaça e o que ele precisa para evoluir. A CidaDELA revela esse mapa completo.
             </p>
 
             <div className="pt-2 space-y-3">
               {hasAlunaAccess ? (
-                /* Alunas/Oráculas: acesso direto à cartografia */
                 <Button
                   variant="gold"
                   size="lg"
@@ -170,7 +169,6 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
                   <ArrowRight className="w-5 h-5" />
                 </Button>
               ) : (
-                /* Visitantes/Pré-iniciadas: CTA para o Clube */
                 <Button
                   variant="gold"
                   size="lg"
@@ -185,13 +183,13 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
 
               {!hasAlunaAccess && (
                 <p className="text-muted-foreground/50 text-xs max-w-sm mx-auto">
-                  A CidaDELA é revelada dentro do Clube Oracular — o espaço de aprofundamento contínuo da Casa.
+                  A CidaDELA é revelada dentro do Clube — o espaço de aprofundamento contínuo da Casa Orácula.
                 </p>
               )}
 
               {hasAlunaAccess && (
                 <p className="text-muted-foreground/40 text-xs max-w-sm mx-auto">
-                  A Cartografia Psíquica Orácula é o próximo passo — ela gera o mapa completo da sua psique.
+                  A Cartografia Psíquica gera o mapa completo da sua estrutura interna.
                 </p>
               )}
             </div>
@@ -204,13 +202,13 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
         <motion.section {...fade(0.35)}>
           <div className="text-center space-y-5">
             <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground/40">
-              O que acontece quando você entra
+              O que você acessa ao entrar
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-xl mx-auto">
               {[
-                { icon: '🗺️', title: 'Cartografia Psíquica', desc: 'Mapeamento completo da sua estrutura interna' },
-                { icon: '🏛️', title: 'CidaDELA Interior', desc: 'Seu mapa vivo com distritos, tensões e direções' },
-                { icon: '🔮', title: 'Evolução contínua', desc: 'Ferramentas, travessias e acompanhamento simbólico' },
+                { icon: '🗺️', title: 'Cartografia Psíquica', desc: 'Mapeamento completo da sua organização interna' },
+                { icon: '🏛️', title: 'CidaDELA Interior', desc: 'Seu mapa funcional com distritos, tensões e direções' },
+                { icon: '🧭', title: 'Evolução guiada', desc: 'Ferramentas, travessias e acompanhamento contínuo' },
               ].map((item) => (
                 <Card key={item.title} className="border-border/15 bg-card/50">
                   <CardContent className="p-4 text-center space-y-2">
