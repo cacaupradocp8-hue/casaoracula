@@ -1,9 +1,9 @@
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Compass, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/contexts/AuthContext';
-import MapaVivoCidadelaV2 from '@/components/cidadela/MapaVivoCidadelaV2';
+import CidadelaMapSVG, { type DistrictDisplayState } from '@/components/cidadela/CidadelaMapSVG';
 import type { DistritoResumo } from '@/hooks/useBussolaOracular';
 
 interface Props {
@@ -16,9 +16,27 @@ interface Props {
 }
 
 export function MiniMapaCidadela(props: Props) {
-  const { temCartografia } = props;
-  const { user } = useAuth();
+  const { temCartografia, distritosRaw, distritoDominante } = props;
   const navigate = useNavigate();
+
+  // Build district display states from raw data
+  const districtStates = useMemo<Record<string, DistrictDisplayState>>(() => {
+    const states: Record<string, DistrictDisplayState> = {};
+    Object.values(distritosRaw).forEach((d: any) => {
+      const name = d?.nome?.toLowerCase();
+      if (!name) return;
+      if (d.estado === 'central' || d.estado === 'ativo') {
+        states[name] = 'ativo';
+      } else if (d.estado === 'tensao') {
+        states[name] = 'em_tensao';
+      } else if (d.estado === 'integrado') {
+        states[name] = 'integrado';
+      }
+    });
+    return states;
+  }, [distritosRaw]);
+
+  const activeDistrictName = distritoDominante?.nome || null;
 
   if (!temCartografia) {
     return (
@@ -69,11 +87,12 @@ export function MiniMapaCidadela(props: Props) {
         </button>
       </div>
 
-      <div className="w-full min-h-[520px] overflow-hidden rounded-2xl border border-border/20 bg-muted/10 transition-all hover:border-primary/20">
-        <MapaVivoCidadelaV2
-          selfMode
-          overrideId={user?.id}
-          standalone
+      <div className="w-full overflow-hidden rounded-2xl border border-border/20 bg-muted/10 p-3 transition-all hover:border-primary/20">
+        <CidadelaMapSVG
+          districtStates={districtStates}
+          activeDistrict={activeDistrictName}
+          forceCircular
+          maxWidth={520}
         />
       </div>
     </motion.section>
