@@ -12,7 +12,7 @@ import { DashboardArchetypes } from '@/components/casa-maquinas/DashboardArchety
 import { DashboardQuickActions } from '@/components/casa-maquinas/DashboardQuickActions';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, Plus, Users } from 'lucide-react';
+import { Loader2, Plus, Users, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface ClienteRecente {
