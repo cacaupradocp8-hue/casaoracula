@@ -58,23 +58,45 @@ export default function CasaDasMaquinas() {
     const now = new Date();
     const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
 
-    const [clientesRes, sessoesRes, gestosRes, recentesRes] = await Promise.all([
+    const [clientesRes, sessoesRes, gestosRes, recentesRes, alertasRes] = await Promise.all([
       supabase.from('clientes').select('id', { count: 'exact', head: true }).eq('terapeuta_id', user.id),
       supabase.from('sessoes_casa_maquinas').select('id', { count: 'exact', head: true }).eq('owner_id', user.id).gte('data_sessao', firstOfMonth.split('T')[0]),
       supabase.from('gestos_integracao').select('id', { count: 'exact', head: true }).eq('owner_id', user.id).eq('status', 'ativo'),
-      supabase.from('clientes').select('id, nome, status, updated_at').eq('terapeuta_id', user.id).order('updated_at', { ascending: false }).limit(4),
+      supabase.from('clientes').select('id, nome, status, updated_at').eq('terapeuta_id', user.id).order('updated_at', { ascending: false }).limit(6),
+      supabase.from('co_ai_recommendations').select('id, client_id, motivo, distrito, created_at').order('created_at', { ascending: false }).limit(5),
     ]);
+
+    // Load city state for recent clients
+    const recentClients = (recentesRes.data || []) as ClienteRecente[];
+    if (recentClients.length > 0) {
+      const clientIds = recentClients.map(c => c.id);
+      const { data: cityStates } = await supabase
+        .from('client_city_state')
+        .select('client_id, distrito_ativo, arquetipo_ativo')
+        .in('client_id', clientIds);
+
+      if (cityStates) {
+        const stateMap = new Map(cityStates.map(s => [s.client_id, s]));
+        recentClients.forEach(c => {
+          const state = stateMap.get(c.id);
+          if (state) {
+            c.distrito_ativo = state.distrito_ativo || undefined;
+          }
+        });
+      }
+    }
+
+    const alertasData = (alertasRes.data || []) as AlertaClinico[];
 
     setStats({
       clientes: clientesRes.count ?? 0,
       sessoesMes: sessoesRes.count ?? 0,
       gestosAtivos: gestosRes.count ?? 0,
-      alertas: 0,
+      alertas: alertasData.length,
     });
 
-    if (recentesRes.data) {
-      setClientesRecentes(recentesRes.data as ClienteRecente[]);
-    }
+    setClientesRecentes(recentClients);
+    setAlertas(alertasData);
 
     setLoading(false);
   };
