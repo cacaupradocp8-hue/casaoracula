@@ -118,7 +118,7 @@ export default function CasaDasMaquinas() {
   };
 
   return (
-    <CasaMaquinasLayout title="Dashboard" subtitle="Visão geral do espaço profissional">
+    <CasaMaquinasLayout title="Painel Clínico Orácula" subtitle="Visão geral do espaço profissional">
       {/* Quick Actions */}
       <motion.div {...fadeInUp} transition={{ duration: 0.5 }}>
         <DashboardQuickActions />
