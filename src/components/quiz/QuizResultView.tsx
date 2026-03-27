@@ -44,13 +44,13 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
       <motion.section {...fade(0)}>
         <div className="text-center mb-8">
           <p className="text-xs uppercase tracking-[0.25em] text-gold/60 mb-3">
-            Reconhecimento interno
+            Seu padrão foi identificado
           </p>
           <h2 className="font-display text-3xl md:text-4xl text-gold leading-tight">
-            Essa é a sua voz
+            Você conduz de um lugar específico
           </h2>
           <p className="text-sm text-muted-foreground/60 mt-2 max-w-md mx-auto">
-            A forma como você escuta, conduz e organiza a experiência dos outros revela um padrão interno específico.
+            Toda pessoa que escuta, orienta ou facilita o outro opera a partir de um eixo interno dominante. O seu acabou de ser revelado.
           </p>
         </div>
 
@@ -82,7 +82,7 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
               <>
                 <div className="w-16 h-px bg-gold/20 mx-auto" />
                 <div className="text-center">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40 mb-2">Voz de apoio</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40 mb-2">Eixo complementar</p>
                   <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-3">
                     <Heart className="w-4 h-4 text-primary" />
                     <span className="font-display text-base text-foreground font-semibold">
