@@ -180,11 +180,12 @@ export default function CasaDasMaquinas() {
                         key={c.id}
                         nome={c.nome}
                         ultimaSessao={new Date(c.updated_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })}
-                        distritoAtual=""
-                        torrePredominante=""
+                        distritoAtual={c.distrito_ativo || ''}
+                        torrePredominante={c.arquetipo_nome || ''}
                         estado={estadoMap[c.status] || 'travessia'}
                         onOpenCity={() => navigate(`/casa-das-maquinas/clientes/${c.id}`)}
                         onStartSession={() => navigate('/casa-das-maquinas/sessoes')}
+                        onViewHistory={() => navigate(`/casa-das-maquinas/clientes/${c.id}`)}
                       />
                     ))}
                   </div>
