@@ -1246,6 +1246,8 @@ function AppRoutes() {
       {/* Legacy redirect */}
       <Route path="/ferramenta/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route path="/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
+      <Route path="/ferramentas/cartografia-psiquica-oracula" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
+      <Route path="/cidadela/revelacao" element={<Navigate to="/revelacao-cidadela" replace />} />
       <Route
         path="/revelacao-cidadela"
         element={
