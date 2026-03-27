@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { useBussolaOracular } from "@/hooks/useBussolaOracular";
-import {
+import { useJourneyGuard } from "@/hooks/useJourneyGuard";
   BussolaAtual,
   ProximaAcao,
   MiniMapaCidadela,
