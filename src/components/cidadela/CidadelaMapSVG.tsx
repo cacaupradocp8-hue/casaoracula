@@ -126,15 +126,7 @@ export default function CidadelaMapSVG({
         <div className="flex min-h-[320px] items-center justify-center rounded-2xl border border-border/10 bg-card/20 text-xs text-muted-foreground/50">
           Preparando mandala...
         </div>
-      ) : isMobile ? (
-        <MandalaMobile
-          districts={districts}
-          districtStates={mappedStates}
-          mode="explorar"
-          selectedId={selectedDistrict?.id ?? null}
-          onDistrictClick={handleDistrictClick}
-        />
-      ) : (
+      ) : useCircular ? (
         <MandalaCidadela
           districts={districts}
           districtStates={mappedStates}
@@ -143,6 +135,14 @@ export default function CidadelaMapSVG({
           onDistrictClick={handleDistrictClick}
           className="w-full"
           showConnections
+        />
+      ) : (
+        <MandalaMobile
+          districts={districts}
+          districtStates={mappedStates}
+          mode="explorar"
+          selectedId={selectedDistrict?.id ?? null}
+          onDistrictClick={handleDistrictClick}
         />
       )}
 

@@ -136,6 +136,7 @@ export function MiniMapaCidadela(props: Props) {
           districtStates={districtDisplayStates}
           activeDistrict={distritoDominante?.nome || null}
           maxWidth={620}
+          forceCircular
         />
       </div>
     </motion.section>
