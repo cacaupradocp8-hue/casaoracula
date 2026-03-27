@@ -151,15 +151,14 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
               <Eye className="w-6 h-6 text-gold/70" />
             </div>
             <h3 className="font-display text-xl md:text-2xl text-foreground">
-              Sem o mapa, você vê apenas um fragmento
+              Sem o mapa, você repete o padrão
             </h3>
             <p className="text-foreground/60 text-sm leading-relaxed max-w-md mx-auto">
-              Você sabe qual é a sua voz — mas ainda não sabe onde ela mora, o que a ameaça e o que ela precisa para evoluir. A CidaDELA revela tudo isso.
+              Você sabe qual é seu eixo — mas ainda não sabe onde ele opera, o que o ameaça e o que ele precisa para evoluir. A CidaDELA revela esse mapa completo.
             </p>
 
             <div className="pt-2 space-y-3">
               {hasAlunaAccess ? (
-                /* Alunas/Oráculas: acesso direto à cartografia */
                 <Button
                   variant="gold"
                   size="lg"
@@ -170,7 +169,6 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
                   <ArrowRight className="w-5 h-5" />
                 </Button>
               ) : (
-                /* Visitantes/Pré-iniciadas: CTA para o Clube */
                 <Button
                   variant="gold"
                   size="lg"
@@ -185,13 +183,13 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
 
               {!hasAlunaAccess && (
                 <p className="text-muted-foreground/50 text-xs max-w-sm mx-auto">
-                  A CidaDELA é revelada dentro do Clube Oracular — o espaço de aprofundamento contínuo da Casa.
+                  A CidaDELA é revelada dentro do Clube — o espaço de aprofundamento contínuo da Casa Orácula.
                 </p>
               )}
 
               {hasAlunaAccess && (
                 <p className="text-muted-foreground/40 text-xs max-w-sm mx-auto">
-                  A Cartografia Psíquica Orácula é o próximo passo — ela gera o mapa completo da sua psique.
+                  A Cartografia Psíquica gera o mapa completo da sua estrutura interna.
                 </p>
               )}
             </div>
