@@ -103,46 +103,6 @@ export default function MapaVivoCidadelaV2({
   const sombra = archetypes.find(a => a.id === archState?.arquitipo_sombra_id);
   const evolucao = archetypes.find(a => a.id === archState?.arquitipo_evolucao_id);
 
-  const districtDisplayStates = useMemo(() => {
-    const states: Record<string, DistrictDisplayState> = {};
-
-    if (selfMode && selfMapData?.mapa) {
-      const distritos = (selfMapData.mapa.distritos_json || {}) as Record<string, { nome?: string; estado?: string }>;
-
-      Object.values(distritos).forEach((district) => {
-        const name = district.nome?.toLowerCase();
-        if (!name) return;
-
-        if (district.estado === 'central' || district.estado === 'ativo') {
-          states[name] = 'ativo';
-        } else if (district.estado === 'tensao') {
-          states[name] = 'em_tensao';
-        } else if (district.estado === 'integrado') {
-          states[name] = 'integrado';
-        }
-      });
-
-      return states;
-    }
-
-    districts.forEach((district) => {
-      const visual = districtVisualStates[district.id];
-      if (!visual) return;
-
-      if (visual.active) {
-        states[district.nome.toLowerCase()] = 'ativo';
-      } else if (visual.visited) {
-        states[district.nome.toLowerCase()] = 'integrado';
-      }
-    });
-
-    if (cityState?.distrito_ativo) {
-      states[cityState.distrito_ativo.toLowerCase()] = 'ativo';
-    }
-
-    return states;
-  }, [cityState?.distrito_ativo, districtVisualStates, districts, selfMapData, selfMode]);
-
   const archetypeDistricts = useMemo(() => {
     const highlighted = new Set<string>();
 
@@ -211,6 +171,46 @@ export default function MapaVivoCidadelaV2({
     }
     return states;
   }, [districts, cityState, archState, archetypes, history, selfMode, selfMapData]);
+
+  const districtDisplayStates = useMemo(() => {
+    const states: Record<string, DistrictDisplayState> = {};
+
+    if (selfMode && selfMapData?.mapa) {
+      const distritos = (selfMapData.mapa.distritos_json || {}) as Record<string, { nome?: string; estado?: string }>;
+
+      Object.values(distritos).forEach((district) => {
+        const name = district.nome?.toLowerCase();
+        if (!name) return;
+
+        if (district.estado === 'central' || district.estado === 'ativo') {
+          states[name] = 'ativo';
+        } else if (district.estado === 'tensao') {
+          states[name] = 'em_tensao';
+        } else if (district.estado === 'integrado') {
+          states[name] = 'integrado';
+        }
+      });
+
+      return states;
+    }
+
+    districts.forEach((district) => {
+      const visual = districtVisualStates[district.id];
+      if (!visual) return;
+
+      if (visual.active) {
+        states[district.nome.toLowerCase()] = 'ativo';
+      } else if (visual.visited) {
+        states[district.nome.toLowerCase()] = 'integrado';
+      }
+    });
+
+    if (cityState?.distrito_ativo) {
+      states[cityState.distrito_ativo.toLowerCase()] = 'ativo';
+    }
+
+    return states;
+  }, [cityState?.distrito_ativo, districtVisualStates, districts, selfMapData, selfMode]);
 
   // Tools for selected district
   const selectedTools = useMemo(() => {
