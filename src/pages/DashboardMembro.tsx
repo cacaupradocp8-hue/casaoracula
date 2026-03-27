@@ -17,10 +17,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Moon } from "lucide-react";
 
 export default function DashboardMembro() {
+  const navigate = useNavigate();
   const bussola = useBussolaOracular();
+  const journey = useJourneyGuard();
   const [searchParams, setSearchParams] = useSearchParams();
   const isBoasVindas = searchParams.get('boas-vindas') === 'true';
   const [showBanner, setShowBanner] = useState(isBoasVindas);
+
+  // Journey guard: redirect to correct step if flow not completed
+  useEffect(() => {
+    if (!journey.loading && journey.redirectTo) {
+      navigate(journey.redirectTo, { replace: true });
+    }
+  }, [journey.loading, journey.redirectTo, navigate]);
 
   const handleDismissBanner = () => {
     setShowBanner(false);
