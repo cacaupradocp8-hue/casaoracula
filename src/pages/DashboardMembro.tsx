@@ -12,8 +12,6 @@ import {
   AlertaOracular,
 } from "@/components/bussola-home";
 import { BoasVindasBanner } from "@/components/bussola-home/BoasVindasBanner";
-import { DashboardPaths } from "@/components/dashboard/DashboardPaths";
-import { DashboardCommunity } from "@/components/dashboard/DashboardCommunity";
 import { motion, AnimatePresence } from "framer-motion";
 import { Moon } from "lucide-react";
 
@@ -48,7 +46,7 @@ export default function DashboardMembro() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-5 md:px-6 py-8 pb-20 max-w-3xl">
+      <div className="container mx-auto px-5 md:px-6 py-8 pb-24 max-w-2xl">
         {/* Banner de boas-vindas (pós-compra) */}
         <AnimatePresence>
           {showBanner && (
@@ -67,6 +65,7 @@ export default function DashboardMembro() {
           distritoTensao={bussola.distritoTensao}
           nivelIntegracao={bussola.nivelIntegracao}
           temCartografia={bussola.temCartografia}
+          welcomeName={bussola.welcomeName}
         />
 
         {/* 2. Próxima Ação — CTA principal */}
@@ -75,13 +74,14 @@ export default function DashboardMembro() {
           secundarias={bussola.acoesSecundarias}
         />
 
-        {/* 3. Mini Mapa CidaDELA */}
+        {/* 3. Mini Mapa CidaDELA — Mandala real */}
         <MiniMapaCidadela
           temCartografia={bussola.temCartografia}
           distritoDominante={bussola.distritoDominante}
           distritosAtivos={bussola.distritosAtivos}
           distritoTensao={bussola.distritoTensao}
           corHex={bussola.corHex}
+          distritosRaw={bussola.distritosRaw}
         />
 
         {/* 4. Jornada de Leitura */}
@@ -93,15 +93,8 @@ export default function DashboardMembro() {
         {/* 6. Sua Voz (resumida) */}
         <SuaVozResumo voz={bussola.voz} welcomeName={bussola.welcomeName} />
 
-        {/* 7. Alertas clínicos */}
+        {/* 7. Alertas clínicos (só quando necessário) */}
         <AlertaOracular alertas={bussola.alertas} />
-
-        {/* Separador */}
-        <div className="h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent mb-8" />
-
-        {/* Caminhos e Comunidade */}
-        <DashboardPaths />
-        <DashboardCommunity />
       </div>
     </AppLayout>
   );

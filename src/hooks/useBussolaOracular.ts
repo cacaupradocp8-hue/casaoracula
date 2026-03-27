@@ -25,19 +25,19 @@ const VOZ_META: Record<string, { nome: string; apoio: string; mensagem: string; 
   },
 };
 
-const DISTRITOS_META: Record<string, { nome: string; icon: string; mensagem: string }> = {
-  portao_chegada: { nome: 'Portão da Chegada', icon: '🚪', mensagem: 'Um novo ciclo se anuncia. Permita-se chegar.' },
-  torres: { nome: 'Torres', icon: '🏛️', mensagem: 'Suas estruturas estão sendo revisitadas.' },
-  portas: { nome: 'Portas', icon: '🔑', mensagem: 'Emoções buscam passagem. Algo quer ser sentido.' },
-  jardim_arquetipos: { nome: 'Jardim dos Arquétipos', icon: '🌿', mensagem: 'Forças antigas pedem reconhecimento.' },
-  praca_abalo: { nome: 'Praça do Abalo', icon: '⚡', mensagem: 'Algo foi movido. A instabilidade é parte da travessia.' },
-  casa_sonhos: { nome: 'Casa dos Sonhos', icon: '🌙', mensagem: 'O inconsciente envia mensagens.' },
-  espelho_vinculos: { nome: 'Espelho dos Vínculos', icon: '🪞', mensagem: 'Os outros refletem o que ainda não vemos.' },
-  forja: { nome: 'Forja', icon: '🔥', mensagem: 'Transformação pede estrutura e presença.' },
-  conselho_interior: { nome: 'Conselho Interior', icon: '👁️', mensagem: 'Suas vozes internas querem ser ouvidas.' },
-  labirinto: { nome: 'Labirinto', icon: '🌀', mensagem: 'Você está no centro do que precisa ser desvendado.' },
-  praca_integracao: { nome: 'Praça da Integração', icon: '☀️', mensagem: 'O que foi fragmento agora busca reunião.' },
-  portal_renascimento: { nome: 'Portal de Renascimento', icon: '🦋', mensagem: 'Algo morre para que algo novo possa nascer.' },
+const DISTRITOS_META: Record<string, { nome: string; icon: string; tensaoMsg: string; ativoMsg: string }> = {
+  portao_chegada: { nome: 'Portão da Chegada', icon: '🚪', tensaoMsg: 'Dificuldade de iniciar ou recomeçar. Possível resistência ao novo.', ativoMsg: 'Momento de abertura e início.' },
+  torres: { nome: 'Torres', icon: '🏛️', tensaoMsg: 'Estruturas rígidas. Tendência a controle excessivo ou medo de perder a forma.', ativoMsg: 'Fortalecendo suas bases e limites.' },
+  portas: { nome: 'Portas', icon: '🔑', tensaoMsg: 'Emoções represadas buscando passagem. Risco de evitação ou explosão.', ativoMsg: 'Abrindo-se para o que precisa ser sentido.' },
+  jardim_arquetipos: { nome: 'Jardim dos Arquétipos', icon: '🌿', tensaoMsg: 'Confusão de identidades internas. Risco de se fixar num papel.', ativoMsg: 'Reconhecendo forças arquetípicas em movimento.' },
+  praca_abalo: { nome: 'Praça do Abalo', icon: '⚡', tensaoMsg: 'Instabilidade emocional intensa. Priorize regulação antes de avançar.', ativoMsg: 'Algo foi movido. Use a instabilidade como motor.' },
+  casa_sonhos: { nome: 'Casa dos Sonhos', icon: '🌙', tensaoMsg: 'O inconsciente está ativo. Atenção a sonhos recorrentes e ansiedade noturna.', ativoMsg: 'O inconsciente envia mensagens claras.' },
+  espelho_vinculos: { nome: 'Espelho dos Vínculos', icon: '🪞', tensaoMsg: 'Projeções nos relacionamentos. Risco de confundir o outro com partes internas.', ativoMsg: 'Olhando para o que os vínculos revelam.' },
+  forja: { nome: 'Forja', icon: '🔥', tensaoMsg: 'Processo de transformação intenso. Cuidado com queimar etapas.', ativoMsg: 'Transformação em curso. Presença é essencial.' },
+  conselho_interior: { nome: 'Conselho Interior', icon: '👁️', tensaoMsg: 'Vozes internas em conflito. Necessário dar espaço para cada parte.', ativoMsg: 'Suas vozes internas buscam integração.' },
+  labirinto: { nome: 'Labirinto', icon: '🌀', tensaoMsg: 'Sensação de circularidade. Atenção a padrões repetitivos.', ativoMsg: 'No centro do que precisa ser desvendado.' },
+  praca_integracao: { nome: 'Praça da Integração', icon: '☀️', tensaoMsg: 'Dificuldade de unir fragmentos. Integração prematura pode reforçar defesas.', ativoMsg: 'Fragmentos buscam reunião. Momento fértil.' },
+  portal_renascimento: { nome: 'Portal de Renascimento', icon: '🦋', tensaoMsg: 'Luto por algo que precisa terminar. Não apresse a passagem.', ativoMsg: 'Transição em andamento. Algo novo se anuncia.' },
 };
 
 // ── Types ──
@@ -59,7 +59,7 @@ export interface DistritoResumo {
 export interface RecomendacaoAcao {
   texto: string;
   rota: string;
-  tipo: 'pratica' | 'ferramenta' | 'travessia' | 'leitura';
+  tipo: 'pratica' | 'ferramenta' | 'travessia' | 'leitura' | 'escuta';
 }
 
 export interface LeituraRecomendada {
@@ -76,34 +76,23 @@ export interface AlertaClinico {
 }
 
 export interface BussolaData {
-  // estado geral
   loading: boolean;
   temCartografia: boolean;
-
-  // voz
   voz: VozResumo | null;
   welcomeName: string;
-
-  // cidadela
   distritoDominante: DistritoResumo | null;
   distritosAtivos: DistritoResumo[];
   distritoTensao: DistritoResumo | null;
   nivelIntegracao: 'inicio' | 'travessia' | 'integracao';
   corHex: string;
-
-  // momento / leitura
   leituraMomento: string | null;
   leitura: LeituraRecomendada;
-
-  // ações
   acaoPrincipal: RecomendacaoAcao;
   acoesSecundarias: RecomendacaoAcao[];
-
-  // práticas filtradas
   praticasSugeridas: { icon: string; label: string; path: string }[];
-
-  // alertas
   alertas: AlertaClinico[];
+  // Dados brutos para CidadelaMapSVG
+  distritosRaw: Record<string, any>;
 }
 
 // ── Helpers ──
@@ -129,6 +118,43 @@ function calcNivelIntegracao(distritos: Record<string, any>): 'inicio' | 'traves
   return 'inicio';
 }
 
+function gerarLeituraClinica(
+  dominante: DistritoResumo | null,
+  tensao: DistritoResumo | null,
+  nivel: 'inicio' | 'travessia' | 'integracao',
+  carto: any,
+): string | null {
+  if (!dominante) {
+    if (carto?.resumo_narrativo) return carto.resumo_narrativo;
+    return null;
+  }
+
+  const metaDom = DISTRITOS_META[dominante.key];
+  const parts: string[] = [];
+
+  // Parte 1: Onde está
+  parts.push(`Você está no território d${dominante.nome.match(/^[AEIOUaeiou]/) ? 'a' : 'o'} ${dominante.nome}.`);
+
+  // Parte 2: O que significa (direto)
+  if (tensao) {
+    const metaTensao = DISTRITOS_META[tensao.key];
+    parts.push(metaTensao?.tensaoMsg || `Tensão ativa n${tensao.nome.match(/^[AEIOUaeiou]/) ? 'a' : 'o'} ${tensao.nome}.`);
+  } else if (metaDom) {
+    parts.push(metaDom.ativoMsg);
+  }
+
+  // Parte 3: Direção
+  if (nivel === 'inicio') {
+    parts.push('O movimento mais seguro agora é explorar sem pressa.');
+  } else if (nivel === 'integracao') {
+    parts.push('Momento de consolidar o que foi atravessado.');
+  } else if (tensao) {
+    parts.push('Priorize regulação antes de avançar para novas travessias.');
+  }
+
+  return parts.join(' ');
+}
+
 function gerarAlertasClinicosFromEstado(
   tensao: DistritoResumo | null,
   distritos: Record<string, any>,
@@ -138,19 +164,25 @@ function gerarAlertasClinicosFromEstado(
   if (tensao) {
     const meta = DISTRITOS_META[tensao.key];
     if (meta) {
-      alertas.push({
-        mensagem: meta.mensagem,
-        tipo: 'atencao',
-      });
+      alertas.push({ mensagem: meta.tensaoMsg, tipo: 'atencao' });
     }
   }
 
-  // Detectar loops (muitos distritos em tensão)
   const tensoes = Object.entries(distritos).filter(([, v]: any) => (v as any).estado === 'tensao');
   if (tensoes.length >= 3) {
     alertas.push({
-      mensagem: 'Vários territórios em tensão simultânea. Considere uma prática de regulação antes de avançar.',
+      mensagem: 'Vários territórios em tensão simultânea. Reduza estímulos e priorize uma prática de regulação.',
       tipo: 'atencao',
+    });
+  }
+
+  // Detectar estagnação (todos não explorados)
+  const total = Object.keys(distritos).length;
+  const explorados = Object.values(distritos).filter((v: any) => v.estado !== 'nao_explorado' && v.estado !== 'potencial').length;
+  if (total > 0 && explorados === 0) {
+    alertas.push({
+      mensagem: 'Nenhum território explorado ainda. A cartografia é o primeiro passo.',
+      tipo: 'observacao',
     });
   }
 
@@ -163,6 +195,7 @@ function gerarPraticasFiltradas(
 ): { icon: string; label: string; path: string }[] {
   if (temTensao) {
     return [
+      { icon: '🎧', label: 'Escuta contemplativa', path: '/templo-de-escuta' },
       { icon: '🌙', label: 'Registrar sonho', path: '/jardim-da-psique' },
       { icon: '✨', label: 'Tirar uma carta', path: '/oraculos' },
     ];
@@ -171,20 +204,19 @@ function gerarPraticasFiltradas(
     return [
       { icon: '✨', label: 'Tirar uma carta', path: '/oraculos' },
       { icon: '🌿', label: 'Jardim da Psique', path: '/jardim-da-psique' },
-      { icon: '▶️', label: 'Iniciar sessão', path: '/casa-das-maquinas/sessoes' },
     ];
   }
   if (nivelIntegracao === 'integracao') {
     return [
       { icon: '🌿', label: 'Jardim da Psique', path: '/jardim-da-psique' },
-      { icon: '▶️', label: 'Iniciar sessão', path: '/casa-das-maquinas/sessoes' },
+      { icon: '🎧', label: 'Escuta contemplativa', path: '/templo-de-escuta' },
     ];
   }
   // travessia
   return [
     { icon: '✨', label: 'Tirar uma carta', path: '/oraculos' },
     { icon: '🌙', label: 'Registrar sonho', path: '/jardim-da-psique' },
-    { icon: '▶️', label: 'Iniciar sessão', path: '/casa-das-maquinas/sessoes' },
+    { icon: '🎧', label: 'Escuta contemplativa', path: '/templo-de-escuta' },
   ];
 }
 
@@ -251,7 +283,7 @@ export function useBussolaOracular(): BussolaData {
   }, [user?.id]);
 
   return useMemo(() => {
-    const { archetype, symbol, distritos, carto, ciclo, book, jardimCount } = raw;
+    const { archetype, distritos, carto, ciclo, book, jardimCount } = raw;
     const temCartografia = !!carto;
     const welcomeName = user?.name?.split(' ')[0] || 'Habitante';
 
@@ -275,17 +307,10 @@ export function useBussolaOracular(): BussolaData {
     const nivelIntegracao = calcNivelIntegracao(distritos);
     const corHex = carto?.metadata_json?.cor_hex || '#C9A24A';
 
-    // LEITURA DO MOMENTO
-    let leituraMomento: string | null = null;
-    if (temCartografia && distritoDominante) {
-      const tensaoTexto = distritoTensao
-        ? ` Existe tensão no território d${distritoTensao.nome.startsWith('A') || distritoTensao.nome.startsWith('E') ? 'a' : 'o'} ${distritoTensao.nome}.`
-        : '';
-      const meta = DISTRITOS_META[distritoDominante.key];
-      leituraMomento = `Você está no território d${distritoDominante.nome.startsWith('A') || distritoDominante.nome.startsWith('E') ? 'a' : 'o'} ${distritoDominante.nome}. ${meta?.mensagem || ''}${tensaoTexto}`;
-    } else if (temCartografia) {
-      leituraMomento = carto?.resumo_narrativo || null;
-    }
+    // LEITURA DO MOMENTO — Clínica e direta
+    const leituraMomento = temCartografia
+      ? gerarLeituraClinica(distritoDominante, distritoTensao, nivelIntegracao, carto)
+      : null;
 
     // AÇÃO PRINCIPAL + SECUNDÁRIAS
     let acaoPrincipal: RecomendacaoAcao;
@@ -294,6 +319,10 @@ export function useBussolaOracular(): BussolaData {
     if (!temCartografia) {
       acaoPrincipal = { texto: 'Revelar minha CidaDELA', rota: '/ferramenta/cartografia-psiquica-oracula', tipo: 'ferramenta' };
       acoesSecundarias.push({ texto: 'Tirar uma carta', rota: '/oraculos', tipo: 'pratica' });
+    } else if (distritoTensao) {
+      // Se tem tensão, priorizar regulação
+      acaoPrincipal = { texto: 'Prática de regulação', rota: '/templo-de-escuta', tipo: 'escuta' };
+      acoesSecundarias.push({ texto: 'Registrar no Jardim', rota: '/jardim-da-psique', tipo: 'pratica' });
     } else if (carto?.sugestao_proximo_passo) {
       acaoPrincipal = { texto: carto.sugestao_proximo_passo, rota: '/ferramentas', tipo: 'ferramenta' };
       if (jardimCount === 0) {
@@ -314,7 +343,7 @@ export function useBussolaOracular(): BussolaData {
     let motivo: string | null = null;
     if (book) {
       if (distritoDominante) {
-        motivo = `Essa leitura ativa o território d${distritoDominante.nome.startsWith('A') || distritoDominante.nome.startsWith('E') ? 'a' : 'o'} ${distritoDominante.nome}.`;
+        motivo = `Para o seu momento atual, essa leitura ativa o território d${distritoDominante.nome.match(/^[AEIOUaeiou]/) ? 'a' : 'o'} ${distritoDominante.nome}.`;
       } else if (voz) {
         motivo = `Sugestão para a Voz ${voz.nome}.`;
       } else {
@@ -351,6 +380,7 @@ export function useBussolaOracular(): BussolaData {
       acoesSecundarias,
       praticasSugeridas,
       alertas,
+      distritosRaw: distritos,
     };
   }, [raw, loading, user]);
 }
