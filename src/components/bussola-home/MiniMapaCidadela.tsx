@@ -1,14 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Compass, ArrowRight } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { MandalaCidadela, type MandalaDistrict, type MandalaDistrictState } from '@/components/cidadela/MandalaCidadela';
-import { MandalaMobile } from '@/components/cidadela/MandalaMobile';
-import { DistrictDetailSheet } from '@/components/cidadela/DistrictDetailSheet';
-import { useIsMobile } from '@/hooks/use-mobile';
+import CidadelaMapSVG, { type DistrictDisplayState } from '@/components/cidadela/CidadelaMapSVG';
 import type { DistritoResumo } from '@/hooks/useBussolaOracular';
 
 interface Props {
@@ -66,55 +61,26 @@ function resolveDistrictNumber(key: string, distrito: any) {
 }
 
 export function MiniMapaCidadela(props: Props) {
-  const { temCartografia, distritosRaw } = props;
+  const { temCartografia, distritosRaw, distritoDominante } = props;
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
-  const [selectedDistrict, setSelectedDistrict] = useState<MandalaDistrict | null>(null);
-
-  const { data: districts = [], isLoading: loadingDistricts } = useQuery({
-    queryKey: ['dashboard-mandala-cidadela'],
-    queryFn: async () => {
-      const { data, error } = await (supabase as any)
-        .from('districts')
-        .select('id, numero, nome, descricao, icone, cor')
-        .order('numero');
-
-      if (error) throw error;
-      return (data || []) as MandalaDistrict[];
-    },
-    enabled: temCartografia,
-    staleTime: 1000 * 60 * 10,
-  });
-
-  const districtStates = useMemo<MandalaDistrictState[]>(() => {
-    if (!districts.length) return [];
-
-    const statesByNumber = new Map<number, MandalaDistrictState['state']>();
-
-    Object.entries(distritosRaw).forEach(([key, distrito]) => {
+  const districtDisplayStates = useMemo<Record<string, DistrictDisplayState>>(() => {
+    return Object.entries(distritosRaw).reduce<Record<string, DistrictDisplayState>>((acc, [key, distrito]) => {
       const districtNumber = resolveDistrictNumber(key, distrito);
-      if (!districtNumber) return;
+      if (!districtNumber) return acc;
 
-      const state = distrito?.estado === 'integrado'
+      const normalizedName = (distrito?.nome || key).toLowerCase();
+
+      acc[normalizedName] = distrito?.estado === 'integrado'
         ? 'integrado'
-        : distrito?.estado === 'ativo' || distrito?.estado === 'central' || distrito?.estado === 'tensao'
-          ? 'ativo'
-          : 'inativo';
+        : distrito?.estado === 'tensao'
+          ? 'em_tensao'
+          : distrito?.estado === 'ativo' || distrito?.estado === 'central'
+            ? 'ativo'
+            : 'nao_explorado';
 
-      statesByNumber.set(districtNumber, state);
-    });
-
-    return districts.map((district) => ({
-      district_id: district.id,
-      state: statesByNumber.get(district.numero) ?? 'inativo',
-      sessions_count: 0,
-      last_session_at: null,
-    }));
-  }, [districts, distritosRaw]);
-
-  const selectedState = selectedDistrict
-    ? districtStates.find((state) => state.district_id === selectedDistrict.id)
-    : undefined;
+      return acc;
+    }, {});
+  }, [distritosRaw]);
 
   if (!temCartografia) {
     return (
@@ -165,38 +131,13 @@ export function MiniMapaCidadela(props: Props) {
         </button>
       </div>
 
-      <div className="rounded-2xl border border-border/10 bg-card/20 overflow-hidden p-2 md:p-4 transition-all hover:border-primary/20">
-        {loadingDistricts ? (
-          <div className="flex min-h-[320px] items-center justify-center text-xs text-muted-foreground/50">
-            Preparando mandala...
-          </div>
-        ) : isMobile ? (
-          <MandalaMobile
-            districts={districts}
-            districtStates={districtStates}
-            mode="explorar"
-            selectedId={selectedDistrict?.id ?? null}
-            onDistrictClick={setSelectedDistrict}
-          />
-        ) : (
-          <MandalaCidadela
-            districts={districts}
-            districtStates={districtStates}
-            mode="explorar"
-            selectedId={selectedDistrict?.id ?? null}
-            onDistrictClick={setSelectedDistrict}
-            className="w-full"
-            showConnections
-          />
-        )}
+      <div className="w-full min-h-[320px] overflow-hidden rounded-2xl border border-border/20 bg-muted/10 p-2 md:p-4 transition-all hover:border-primary/20">
+        <CidadelaMapSVG
+          districtStates={districtDisplayStates}
+          activeDistrict={distritoDominante?.nome || null}
+          maxWidth={620}
+        />
       </div>
-
-      <DistrictDetailSheet
-        district={selectedDistrict}
-        districtState={selectedState}
-        open={!!selectedDistrict}
-        onClose={() => setSelectedDistrict(null)}
-      />
     </motion.section>
   );
 }
