@@ -109,17 +109,17 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
               <Layers className="w-5 h-5 text-gold/50" />
             </div>
             <p className="text-xs uppercase tracking-[0.2em] text-gold/50">
-              Isso é apenas a superfície
+              O que esse resultado não mostra
             </p>
             <div className="bg-gold/5 border border-gold/10 rounded-xl p-5">
               <p className="text-foreground/90 leading-relaxed italic font-display">
-                O que você acabou de ver é a camada mais visível da sua estrutura interna. Mas a mente não funciona por camadas isoladas — ela se organiza em territórios, tensões e forças que atuam ao mesmo tempo.
+                Esse resultado identifica seu eixo principal — mas sua estrutura psíquica não se resume a um eixo. Ela é formada por territórios internos que interagem entre si: forças, tensões, padrões repetitivos e recursos que ainda não foram acessados.
               </p>
             </div>
             <p className="text-muted-foreground text-sm max-w-lg mx-auto">
               {secondaryResult
-                ? `${primaryResult.titulo_simbolico} e ${secondaryResult.titulo_simbolico} são apenas dois eixos de uma arquitetura muito mais complexa. O quiz revela o padrão — mas não mostra como tudo se conecta.`
-                : `Sua voz revela um padrão, mas não mostra como ele se conecta com suas tensões, seus recursos internos e seus pontos cegos.`}
+                ? `${primaryResult.titulo_simbolico} e ${secondaryResult.titulo_simbolico} são dois pontos de um mapa interno muito maior. Você viu a direção — mas ainda não viu o território completo.`
+                : `Você identificou um padrão — mas ainda não sabe como ele se conecta com seus bloqueios, seus recursos e os pontos que você ainda não enxerga.`}
             </p>
           </CardContent>
         </Card>
