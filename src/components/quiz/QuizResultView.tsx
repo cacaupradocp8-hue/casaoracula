@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Heart, ArrowRight } from 'lucide-react';
+import { Sparkles, Heart, ArrowRight, Lock, Layers, Map, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { canAccessFeature } from '@/types/portal';
 
 interface Resultado {
   id: string;
@@ -31,19 +33,25 @@ const fade = (delay = 0) => ({
 
 export function QuizResultView({ primaryResult, secondaryResult }: QuizResultViewProps) {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const hasClubAccess = user ? canAccessFeature(user.portal, 'assinante') : false;
+  const hasAlunaAccess = user ? canAccessFeature(user.portal, 'aluna') : false;
 
   return (
-    <div className="space-y-14">
+    <div className="space-y-12">
 
-      {/* ── BLOCO 1: SUA VOZ ── */}
+      {/* ══ BLOCO 1: IDENTIDADE — CONFIRMAÇÃO ══ */}
       <motion.section {...fade(0)}>
         <div className="text-center mb-8">
           <p className="text-xs uppercase tracking-[0.25em] text-gold/60 mb-3">
-            Sua voz foi escutada
+            Reconhecimento interno
           </p>
           <h2 className="font-display text-3xl md:text-4xl text-gold leading-tight">
-            Sua Voz Primária
+            Essa é a sua voz
           </h2>
+          <p className="text-sm text-muted-foreground/60 mt-2 max-w-md mx-auto">
+            A forma como você escuta, conduz e organiza a experiência dos outros revela um padrão interno específico.
+          </p>
         </div>
 
         {primaryResult.imagem_url && (
@@ -58,7 +66,6 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
 
         <Card className="border-gold/20 bg-card/80 backdrop-blur">
           <CardContent className="pt-8 pb-8 space-y-6">
-            {/* Voz Primária */}
             <div className="text-center">
               <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gold/10 border border-gold/20 mb-4">
                 <Sparkles className="w-4 h-4 text-gold" />
@@ -71,11 +78,11 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
               </p>
             </div>
 
-            {/* Voz de Apoio */}
             {secondaryResult && (
               <>
                 <div className="w-16 h-px bg-gold/20 mx-auto" />
                 <div className="text-center">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40 mb-2">Voz de apoio</p>
                   <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-3">
                     <Heart className="w-4 h-4 text-primary" />
                     <span className="font-display text-base text-foreground font-semibold">
@@ -94,44 +101,137 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
         </Card>
       </motion.section>
 
-      {/* ── BLOCO 2: SOMBRA & FORÇA ── */}
+      {/* ══ BLOCO 2: LIMITAÇÃO — ABRIR LOOP ══ */}
       <motion.section {...fade(0.1)}>
-        <Card className="border-gold/15 bg-gradient-to-br from-card to-gold/[0.03] backdrop-blur">
-          <CardContent className="py-8 px-6 text-center space-y-4">
-            <p className="text-xs uppercase tracking-[0.2em] text-gold/50 mb-2">
-              O que sua voz revela
+        <Card className="border-border/20 bg-gradient-to-br from-card to-gold/[0.02] backdrop-blur">
+          <CardContent className="py-8 px-6 text-center space-y-5">
+            <div className="w-10 h-10 mx-auto rounded-full bg-gold/5 border border-gold/15 flex items-center justify-center">
+              <Layers className="w-5 h-5 text-gold/50" />
+            </div>
+            <p className="text-xs uppercase tracking-[0.2em] text-gold/50">
+              Isso é apenas a superfície
             </p>
-            <div className="bg-gold/5 border border-gold/10 rounded-xl p-5 text-center">
+            <div className="bg-gold/5 border border-gold/10 rounded-xl p-5">
               <p className="text-foreground/90 leading-relaxed italic font-display">
-                {secondaryResult
-                  ? `Quando ${primaryResult.titulo_simbolico} e ${secondaryResult.titulo_simbolico} atuam juntas, sua escuta ganha profundidade e amplitude. A voz primária conduz enquanto a voz de apoio sustenta.`
-                  : `Sua voz carrega uma potência que se desdobra em múltiplas camadas. À medida que você habita esse território, outras vozes internas se revelam.`}
+                O que você acabou de ver é a camada mais visível da sua estrutura interna. Mas a mente não funciona por camadas isoladas — ela se organiza em territórios, tensões e forças que atuam ao mesmo tempo.
               </p>
             </div>
-            <p className="text-muted-foreground text-sm max-w-md mx-auto pt-2">
-              Mas essa é apenas a superfície. A travessia revela o que a voz ainda não consegue dizer.
+            <p className="text-muted-foreground text-sm max-w-lg mx-auto">
+              {secondaryResult
+                ? `${primaryResult.titulo_simbolico} e ${secondaryResult.titulo_simbolico} são apenas dois eixos de uma arquitetura muito mais complexa. O quiz revela o padrão — mas não mostra como tudo se conecta.`
+                : `Sua voz revela um padrão, mas não mostra como ele se conecta com suas tensões, seus recursos internos e seus pontos cegos.`}
             </p>
           </CardContent>
         </Card>
       </motion.section>
 
-      {/* ── CTA: PRÓXIMO PASSO — CARTOGRAFIA ── */}
-      <motion.section {...fade(0.2)}>
-        <div className="text-center space-y-4">
-          <Button
-            variant="gold"
-            size="lg"
-            onClick={() => navigate('/ferramentas/cartografia-psiquica-oracula')}
-            className="gap-2 px-8 py-6 text-base"
-          >
-            Revelar minha CidaDELA
-            <ArrowRight className="w-4 h-4" />
-          </Button>
-          <p className="text-muted-foreground text-sm max-w-sm mx-auto">
-            A próxima etapa é a Cartografia Psíquica Orácula — o mapa simbólico da sua psique.
+      {/* ══ BLOCO 3: PROFUNDIDADE — ARQUITETURA DA MENTE ══ */}
+      <motion.section {...fade(0.15)}>
+        <div className="text-center space-y-6">
+          <div className="w-10 h-10 mx-auto rounded-full bg-primary/5 border border-primary/15 flex items-center justify-center">
+            <Map className="w-5 h-5 text-primary/50" />
+          </div>
+          <h3 className="font-display text-xl md:text-2xl text-foreground/90">
+            Existe um mapa inteiro por trás dessa voz
+          </h3>
+          <p className="text-foreground/60 text-sm leading-relaxed max-w-lg mx-auto">
+            Toda mente se organiza em distritos internos — territórios que guardam forças, feridas, padrões repetitivos e recursos que você ainda não acessou. A psicologia profunda chama isso de <span className="text-foreground/80 font-medium">arquitetura psíquica</span>.
+          </p>
+          <p className="text-foreground/50 text-sm leading-relaxed max-w-md mx-auto">
+            A CidaDELA Interior é o sistema que revela essa arquitetura. Ela transforma o que o quiz apenas nomeou em um mapa vivo — com distritos, tensões, direções e ações concretas.
           </p>
         </div>
       </motion.section>
+
+      {/* ══ BLOCO 4: TENSÃO + CTA ══ */}
+      <motion.section {...fade(0.25)}>
+        <Card className="border-gold/20 bg-gradient-to-b from-gold/[0.04] to-transparent backdrop-blur overflow-hidden">
+          <CardContent className="py-10 px-6 text-center space-y-6">
+            <div className="w-12 h-12 mx-auto rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center">
+              <Eye className="w-6 h-6 text-gold/70" />
+            </div>
+            <h3 className="font-display text-xl md:text-2xl text-foreground">
+              Sem o mapa, você vê apenas um fragmento
+            </h3>
+            <p className="text-foreground/60 text-sm leading-relaxed max-w-md mx-auto">
+              Você sabe qual é a sua voz — mas ainda não sabe onde ela mora, o que a ameaça e o que ela precisa para evoluir. A CidaDELA revela tudo isso.
+            </p>
+
+            <div className="pt-2 space-y-3">
+              {hasAlunaAccess ? (
+                /* Alunas/Oráculas: acesso direto à cartografia */
+                <Button
+                  variant="gold"
+                  size="lg"
+                  onClick={() => navigate('/ferramentas/cartografia-psiquica-oracula')}
+                  className="gap-2 px-8 py-6 text-base shadow-gold"
+                >
+                  Revelar minha CidaDELA
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              ) : (
+                /* Visitantes/Pré-iniciadas: CTA para o Clube */
+                <Button
+                  variant="gold"
+                  size="lg"
+                  onClick={() => navigate('/planos')}
+                  className="gap-2 px-8 py-6 text-base shadow-gold"
+                >
+                  <Lock className="w-4 h-4" />
+                  Desbloquear minha CidaDELA
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              )}
+
+              {!hasAlunaAccess && (
+                <p className="text-muted-foreground/50 text-xs max-w-sm mx-auto">
+                  A CidaDELA é revelada dentro do Clube Oracular — o espaço de aprofundamento contínuo da Casa.
+                </p>
+              )}
+
+              {hasAlunaAccess && (
+                <p className="text-muted-foreground/40 text-xs max-w-sm mx-auto">
+                  A Cartografia Psíquica Orácula é o próximo passo — ela gera o mapa completo da sua psique.
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.section>
+
+      {/* ══ BLOCO 5: CONTEXTO DO CLUBE (só para quem não tem acesso) ══ */}
+      {!hasAlunaAccess && (
+        <motion.section {...fade(0.35)}>
+          <div className="text-center space-y-5">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground/40">
+              O que acontece quando você entra
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-xl mx-auto">
+              {[
+                { icon: '🗺️', title: 'Cartografia Psíquica', desc: 'Mapeamento completo da sua estrutura interna' },
+                { icon: '🏛️', title: 'CidaDELA Interior', desc: 'Seu mapa vivo com distritos, tensões e direções' },
+                { icon: '🔮', title: 'Evolução contínua', desc: 'Ferramentas, travessias e acompanhamento simbólico' },
+              ].map((item) => (
+                <Card key={item.title} className="border-border/15 bg-card/50">
+                  <CardContent className="p-4 text-center space-y-2">
+                    <span className="text-2xl block">{item.icon}</span>
+                    <p className="text-xs font-medium text-foreground/80">{item.title}</p>
+                    <p className="text-[10px] text-muted-foreground/50 leading-relaxed">{item.desc}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/planos')}
+              className="gap-1.5 text-gold border-gold/20 hover:bg-gold/5"
+            >
+              Ver planos do Clube <ArrowRight className="w-3.5 h-3.5" />
+            </Button>
+          </div>
+        </motion.section>
+      )}
     </div>
   );
 }
