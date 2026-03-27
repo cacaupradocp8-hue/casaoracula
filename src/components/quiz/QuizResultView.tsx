@@ -202,13 +202,13 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
         <motion.section {...fade(0.35)}>
           <div className="text-center space-y-5">
             <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground/40">
-              O que acontece quando você entra
+              O que você acessa ao entrar
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-xl mx-auto">
               {[
-                { icon: '🗺️', title: 'Cartografia Psíquica', desc: 'Mapeamento completo da sua estrutura interna' },
-                { icon: '🏛️', title: 'CidaDELA Interior', desc: 'Seu mapa vivo com distritos, tensões e direções' },
-                { icon: '🔮', title: 'Evolução contínua', desc: 'Ferramentas, travessias e acompanhamento simbólico' },
+                { icon: '🗺️', title: 'Cartografia Psíquica', desc: 'Mapeamento completo da sua organização interna' },
+                { icon: '🏛️', title: 'CidaDELA Interior', desc: 'Seu mapa funcional com distritos, tensões e direções' },
+                { icon: '🧭', title: 'Evolução guiada', desc: 'Ferramentas, travessias e acompanhamento contínuo' },
               ].map((item) => (
                 <Card key={item.title} className="border-border/15 bg-card/50">
                   <CardContent className="p-4 text-center space-y-2">
