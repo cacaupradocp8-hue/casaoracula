@@ -5,6 +5,7 @@ import {
   useClientArchetypeState, useCityHistory, useToolDistricts,
   type CityDistrict, type FoundingArchetype
 } from '@/hooks/useMapaVivoCidadela';
+import CidadelaMapSVG, { type DistrictDisplayState } from '@/components/cidadela/CidadelaMapSVG';
 import { CasaMaquinasLayout } from '@/components/casa-maquinas/CasaMaquinasLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -32,27 +33,6 @@ const ARCHETYPE_ICONS: Record<string, React.ElementType> = {
   heart: Heart, water: Droplets, sword: Sword, leaf: TreePine,
   key: Search, crown: Crown, scroll: Scroll, tree: TreePine,
 };
-
-// ── SVG Layout positions for 9 districts + center ──
-const CX = 300, CY = 300;
-const POSITIONS: Record<number, { x: number; y: number; r: number }> = {
-  9: { x: CX, y: CY, r: 42 },           // Praça (center)
-  1: { x: CX, y: CY - 200, r: 34 },     // Portão (top)
-  2: { x: CX - 170, y: CY - 100, r: 34 }, // Labirinto
-  3: { x: CX + 170, y: CY - 100, r: 34 }, // Torres
-  4: { x: CX - 200, y: CY + 40, r: 34 },  // Jardim
-  5: { x: CX + 200, y: CY + 40, r: 34 },  // Casa dos Sonhos
-  6: { x: CX - 140, y: CY + 160, r: 34 }, // Espelho
-  7: { x: CX + 140, y: CY + 160, r: 34 }, // Forja
-  8: { x: CX, y: CY + 210, r: 34 },      // Conselho
-};
-
-// ── Connection paths between districts ──
-const CONNECTIONS = [
-  [1, 2], [1, 3], [2, 4], [3, 5], [4, 6], [5, 7],
-  [6, 8], [7, 8], [2, 9], [3, 9], [4, 9], [5, 9],
-  [6, 9], [7, 9], [8, 9], [1, 9],
-];
 
 interface DistrictVisualState {
   visited: boolean;
@@ -123,8 +103,37 @@ export default function MapaVivoCidadelaV2({
   const sombra = archetypes.find(a => a.id === archState?.arquitipo_sombra_id);
   const evolucao = archetypes.find(a => a.id === archState?.arquitipo_evolucao_id);
 
+  const archetypeDistricts = useMemo(() => {
+    const highlighted = new Set<string>();
+
+    archetypes.forEach((archetype) => {
+      const isCurrent = archetype.id === archState?.arquitipo_regente_id
+        || archetype.id === archState?.arquitipo_sombra_id
+        || archetype.id === archState?.arquitipo_evolucao_id;
+
+      if (!isCurrent || !archetype.distrito_principal_id) return;
+
+      const district = districts.find((item) => item.id === archetype.distrito_principal_id);
+      if (district?.nome) highlighted.add(district.nome.toLowerCase());
+    });
+
+    return Array.from(highlighted).reduce<Record<string, boolean>>((acc, districtName) => {
+      acc[districtName] = true;
+      return acc;
+    }, {});
+  }, [archState?.arquitipo_evolucao_id, archState?.arquitipo_regente_id, archState?.arquitipo_sombra_id, archetypes, districts]);
+
+  const eventCounts = useMemo(() => {
+    return history.reduce<Record<string, number>>((acc, event) => {
+      const districtName = event.distrito?.toLowerCase();
+      if (!districtName) return acc;
+      acc[districtName] = (acc[districtName] || 0) + 1;
+      return acc;
+    }, {});
+  }, [history]);
+
   // Build visual states for each district
-  const districtStates = useMemo(() => {
+  const districtVisualStates = useMemo(() => {
     const states: Record<string, DistrictVisualState> = {};
 
     if (selfMode && selfMapData?.mapa) {
@@ -163,6 +172,46 @@ export default function MapaVivoCidadelaV2({
     return states;
   }, [districts, cityState, archState, archetypes, history, selfMode, selfMapData]);
 
+  const districtDisplayStates = useMemo(() => {
+    const states: Record<string, DistrictDisplayState> = {};
+
+    if (selfMode && selfMapData?.mapa) {
+      const distritos = (selfMapData.mapa.distritos_json || {}) as Record<string, { nome?: string; estado?: string }>;
+
+      Object.values(distritos).forEach((district) => {
+        const name = district.nome?.toLowerCase();
+        if (!name) return;
+
+        if (district.estado === 'central' || district.estado === 'ativo') {
+          states[name] = 'ativo';
+        } else if (district.estado === 'tensao') {
+          states[name] = 'em_tensao';
+        } else if (district.estado === 'integrado') {
+          states[name] = 'integrado';
+        }
+      });
+
+      return states;
+    }
+
+    districts.forEach((district) => {
+      const visual = districtVisualStates[district.id];
+      if (!visual) return;
+
+      if (visual.active) {
+        states[district.nome.toLowerCase()] = 'ativo';
+      } else if (visual.visited) {
+        states[district.nome.toLowerCase()] = 'integrado';
+      }
+    });
+
+    if (cityState?.distrito_ativo) {
+      states[cityState.distrito_ativo.toLowerCase()] = 'ativo';
+    }
+
+    return states;
+  }, [cityState?.distrito_ativo, districtVisualStates, districts, selfMapData, selfMode]);
+
   // Tools for selected district
   const selectedTools = useMemo(() => {
     if (!selectedDistrict) return [];
@@ -188,6 +237,12 @@ export default function MapaVivoCidadelaV2({
     setPanelOpen(true);
   };
 
+  const handleDistrictClickByName = (districtName: string) => {
+    const district = districts.find((item) => item.nome.toLowerCase() === districtName.toLowerCase());
+    if (!district) return;
+    handleDistrictClick(district);
+  };
+
   const displayTitle = customTitle || (selfMode ? 'Minha CidaDELA Interior' : `CidaDELA Interior — ${cliente?.nome || ''}`);
   const displaySubtitle = selfMode ? 'Mapa simbólico da sua identidade clínica' : 'Prontuário simbólico vivo';
 
@@ -209,7 +264,7 @@ export default function MapaVivoCidadelaV2({
   }
 
   // Determine journey phase
-  const visitedCount = Object.values(districtStates).filter(s => s.visited).length;
+  const visitedCount = Object.values(districtVisualStates).filter(s => s.visited).length;
   const phase = visitedCount === 0 ? 'Início' : visitedCount <= 3 ? 'Exploração' :
     visitedCount <= 6 ? 'Aprofundamento' : 'Integração';
 
@@ -262,134 +317,16 @@ export default function MapaVivoCidadelaV2({
         </Button>
       </div>
 
-      {/* SVG Map */}
-      <div className="relative mx-auto" style={{ maxWidth: 620 }}>
-        <svg viewBox="0 0 600 520" className="w-full" style={{ filter: 'drop-shadow(0 0 40px rgba(201,162,74,0.08))' }}>
-          <defs>
-            <radialGradient id="bg-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#1a1a2e" />
-              <stop offset="100%" stopColor="#0a0a14" />
-            </radialGradient>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-            </filter>
-            <filter id="softGlow">
-              <feGaussianBlur stdDeviation="6" result="blur" />
-              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-            </filter>
-          </defs>
-
-          <rect width="600" height="520" fill="url(#bg-glow)" rx="16" />
-
-          {/* Connection lines */}
-          {CONNECTIONS.map(([a, b], i) => {
-            const pa = POSITIONS[a];
-            const pb = POSITIONS[b];
-            if (!pa || !pb) return null;
-            const da = districts[a - 1];
-            const db = districts[b - 1];
-            const aState = da ? districtStates[da.id] : null;
-            const bState = db ? districtStates[db.id] : null;
-            const bothVisited = aState?.visited && bState?.visited;
-            return (
-              <line key={i}
-                x1={pa.x} y1={pa.y} x2={pb.x} y2={pb.y}
-                stroke={bothVisited ? 'rgba(201,162,74,0.25)' : 'rgba(245,241,232,0.06)'}
-                strokeWidth={bothVisited ? 1.5 : 0.8}
-                strokeDasharray={bothVisited ? '' : '4 4'}
-              />
-            );
-          })}
-
-          {/* Districts */}
-          {districts.map((d, idx) => {
-            const pos = POSITIONS[d.ordem || (idx + 1)];
-            if (!pos) return null;
-            const state = districtStates[d.id];
-            const isActive = state?.active;
-            const isVisited = state?.visited;
-            const hasArch = state?.hasArchetype;
-            const Icon = DISTRICT_ICONS[d.icone || ''] || MapPin;
-
-            const fillColor = isActive ? `${d.cor_principal || '#C9A24A'}22`
-              : isVisited ? `${d.cor_principal || '#888'}11`
-              : 'rgba(245,241,232,0.02)';
-            const strokeColor = isActive ? (d.cor_principal || '#C9A24A')
-              : isVisited ? `${d.cor_principal || '#888'}88`
-              : 'rgba(245,241,232,0.1)';
-            const textOpacity = isActive ? 1 : isVisited ? 0.7 : 0.3;
-
-            return (
-              <g key={d.id}
-                className="cursor-pointer transition-all duration-300"
-                onClick={() => handleDistrictClick(d)}
-                style={{ filter: isActive ? 'url(#softGlow)' : '' }}
-              >
-                {/* Outer ring for active */}
-                {isActive && (
-                  <circle cx={pos.x} cy={pos.y} r={pos.r + 6}
-                    fill="none" stroke={d.cor_principal || '#C9A24A'}
-                    strokeWidth="1" opacity="0.4"
-                    strokeDasharray="3 3">
-                    <animateTransform attributeName="transform" type="rotate"
-                      from={`0 ${pos.x} ${pos.y}`} to={`360 ${pos.x} ${pos.y}`}
-                      dur="20s" repeatCount="indefinite" />
-                  </circle>
-                )}
-
-                {/* Main circle */}
-                <circle cx={pos.x} cy={pos.y} r={pos.r}
-                  fill={fillColor} stroke={strokeColor}
-                  strokeWidth={isActive ? 2 : 1}
-                />
-
-                {/* Archetype marker */}
-                {hasArch && (
-                  <circle cx={pos.x + pos.r - 6} cy={pos.y - pos.r + 6} r="5"
-                    fill="#D4B96E" stroke="#0a0a14" strokeWidth="1.5" />
-                )}
-
-                {/* District name */}
-                <text x={pos.x} y={pos.y + pos.r + 16}
-                  textAnchor="middle"
-                  fill={`rgba(245,241,232,${textOpacity})`}
-                  fontSize="10" fontFamily="Inter, sans-serif"
-                  fontWeight={isActive ? '600' : '400'}>
-                  {d.nome}
-                </text>
-
-                {/* Event count badge */}
-                {(state?.eventCount || 0) > 0 && (
-                  <>
-                    <circle cx={pos.x - pos.r + 8} cy={pos.y - pos.r + 8} r="8"
-                      fill="rgba(201,162,74,0.2)" stroke="rgba(201,162,74,0.4)" strokeWidth="0.5" />
-                    <text x={pos.x - pos.r + 8} y={pos.y - pos.r + 11}
-                      textAnchor="middle" fill="#C9A24A" fontSize="8" fontWeight="600">
-                      {state?.eventCount}
-                    </text>
-                  </>
-                )}
-
-                {/* Icon placeholder via foreignObject */}
-                <foreignObject x={pos.x - 10} y={pos.y - 10} width="20" height="20">
-                  <div className="flex items-center justify-center w-full h-full">
-                    <Icon className="w-4 h-4" style={{ color: strokeColor }} />
-                  </div>
-                </foreignObject>
-              </g>
-            );
-          })}
-
-          {/* Center breathing animation */}
-          {districts.find(d => d.ordem === 9) && (
-            <circle cx={CX} cy={CY} r={48}
-              fill="none" stroke="rgba(212,185,110,0.15)" strokeWidth="1">
-              <animate attributeName="r" values="48;54;48" dur="9s" repeatCount="indefinite" />
-              <animate attributeName="opacity" values="0.15;0.3;0.15" dur="9s" repeatCount="indefinite" />
-            </circle>
-          )}
-        </svg>
+      {/* Mandala unificada da Casa das Máquinas */}
+      <div className="rounded-2xl border border-[#C9A24A]/10 bg-[#0a0a14]/80 p-3 md:p-5">
+        <CidadelaMapSVG
+          districtStates={districtDisplayStates}
+          activeDistrict={cityState?.distrito_ativo || null}
+          archetypeDistricts={archetypeDistricts}
+          eventCounts={eventCounts}
+          onDistrictClick={handleDistrictClickByName}
+          maxWidth={620}
+        />
       </div>
 
       {/* Timeline */}
