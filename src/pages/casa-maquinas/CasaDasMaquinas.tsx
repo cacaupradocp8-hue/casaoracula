@@ -156,8 +156,9 @@ export default function CasaDasMaquinas() {
             <Card className="border-gold/8 bg-card/40 backdrop-blur-md hover:border-gold/15 transition-all duration-500">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-sm font-medium text-foreground/70 flex items-center gap-2">
-                    <Users className="w-4 h-4 text-gold" />
+                   <CardTitle className="text-sm font-medium text-foreground/70 flex items-center gap-2">
+                     <Users className="w-4 h-4 text-primary" />
+                     Clientes Ativas
                     Clientes Recentes
                   </CardTitle>
                   <Button
