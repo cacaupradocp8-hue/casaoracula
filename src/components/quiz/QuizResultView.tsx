@@ -115,20 +115,20 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
         </Card>
       </motion.section>
 
-      {/* ── CTA: INICIAR TRAVESSIA ── */}
+      {/* ── CTA: PRÓXIMO PASSO — CARTOGRAFIA ── */}
       <motion.section {...fade(0.2)}>
         <div className="text-center space-y-4">
           <Button
             variant="gold"
             size="lg"
-            onClick={() => navigate('/travessia/travessia-zero-o-limiar-da-casa')}
+            onClick={() => navigate('/ferramenta/cartografia-psiquica-oracula')}
             className="gap-2 px-8 py-6 text-base"
           >
-            Iniciar minha travessia
+            Revelar minha CidaDELA
             <ArrowRight className="w-4 h-4" />
           </Button>
           <p className="text-muted-foreground text-sm max-w-sm mx-auto">
-            A travessia é gratuita. A Casa Orácula te espera do outro lado.
+            A próxima etapa é a Cartografia Psíquica Orácula — o mapa simbólico da sua psique.
           </p>
         </div>
       </motion.section>
