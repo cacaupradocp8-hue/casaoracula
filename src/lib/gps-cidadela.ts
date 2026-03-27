@@ -4,149 +4,152 @@ export interface GpsSuggestion {
   rule: string;
   distrito_sugerido: string;
   ferramenta_recomendada: string;
+  ferramenta_complementar?: string;
   pergunta_clinica: string;
+  ritual?: string;
+  confianca: number;
   postura: {
     sustentar: string;
     evitar: string;
   };
+  carta_simbolica?: {
+    id: string;
+    nome: string;
+    mensagem: string;
+  } | null;
 }
 
-interface CartographyScores {
-  porta_possivel: number;
-  torre_interna: number;
-  campo_outro: number;
-  voz_mundo: number;
-  porta_abalo: number;
+interface CartographerRule {
+  id: string;
+  nome: string;
+  prioridade: number;
+  distrito: string | null;
+  arquetipo: string | null;
+  torre: string | null;
+  porta: string | null;
+  fase_jornada: string | null;
+  ferramenta_principal_slug: string | null;
+  ferramenta_complementar_slug: string | null;
+  pergunta: string | null;
+  ritual: string | null;
+  confianca_base: number | null;
 }
 
-const HIGH_THRESHOLD = 65;
-const LOW_THRESHOLD = 40;
+/**
+ * Match cartographer_rules against the client's current state.
+ * Rules are pre-sorted by prioridade DESC from the database.
+ */
+function matchRules(
+  rules: CartographerRule[],
+  context: {
+    distrito?: string | null;
+    torre?: string | null;
+    arquetipo?: string | null;
+    fase?: string | null;
+  },
+): { best: CartographerRule | null; alternative: CartographerRule | null } {
+  const scored: Array<{ rule: CartographerRule; score: number }> = [];
 
-function isHigh(v: number | undefined) { return (v ?? 0) >= HIGH_THRESHOLD; }
-function isLow(v: number | undefined) { return (v ?? 0) <= LOW_THRESHOLD; }
+  for (const r of rules) {
+    let score = r.prioridade;
+    let matches = 0;
 
-function applyRules(
-  scores: CartographyScores | null,
-  hasRecentDream: boolean,
-  currentDistrictName: string | null,
-): GpsSuggestion {
-  // R4 — sonho recente (prioridade)
-  if (hasRecentDream) {
-    return {
-      rule: 'R4-Sonho',
-      distrito_sugerido: 'Casa dos Sonhos',
-      ferramenta_recomendada: 'Decodificação Onírica',
-      pergunta_clinica: 'Que imagem do sonho ainda habita você?',
-      postura: { sustentar: 'escuta imagética, acolhimento', evitar: 'interpretação apressada' },
-    };
-  }
-
-  if (scores) {
-    // R1 — Porta do Abalo alta
-    if (isHigh(scores.porta_abalo)) {
-      return {
-        rule: 'R1',
-        distrito_sugerido: 'Praça do Abalo',
-        ferramenta_recomendada: 'Escrita simbólica',
-        pergunta_clinica: 'O que dentro de você pede acolhimento agora?',
-        postura: { sustentar: 'presença e escuta lenta', evitar: 'confronto' },
-      };
+    // Boost score for matching context fields
+    if (r.distrito && context.distrito && r.distrito.toLowerCase() === context.distrito.toLowerCase()) {
+      matches++;
+      score += 30;
+    } else if (r.distrito && context.distrito && r.distrito.toLowerCase() !== context.distrito.toLowerCase()) {
+      continue; // district mismatch = skip
     }
 
-    // R2 — Torre Interna alta + Porta do Possível baixa
-    if (isHigh(scores.torre_interna) && isLow(scores.porta_possivel)) {
-      return {
-        rule: 'R2',
-        distrito_sugerido: 'Torres',
-        ferramenta_recomendada: 'Torre Viva',
-        pergunta_clinica: 'O que você acredita que precisa controlar?',
-        postura: { sustentar: 'curiosidade', evitar: 'interpretação rápida' },
-      };
+    if (r.torre && context.torre && r.torre.toLowerCase() === context.torre.toLowerCase()) {
+      matches++;
+      score += 20;
+    } else if (r.torre && context.torre && r.torre.toLowerCase() !== context.torre.toLowerCase()) {
+      continue;
     }
 
-    // R3 — Campo do Outro alto + Voz no Mundo baixa
-    if (isHigh(scores.campo_outro) && isLow(scores.voz_mundo)) {
-      return {
-        rule: 'R3',
-        distrito_sugerido: 'Espelho dos Vínculos',
-        ferramenta_recomendada: 'Atlas de Arquétipos',
-        pergunta_clinica: 'O que essa relação revela sobre você?',
-        postura: { sustentar: 'reflexão', evitar: 'aconselhamento direto' },
-      };
+    if (r.arquetipo && context.arquetipo && r.arquetipo.toLowerCase() === context.arquetipo.toLowerCase()) {
+      matches++;
+      score += 15;
+    }
+
+    if (r.fase_jornada && context.fase && r.fase_jornada.toLowerCase() === context.fase.toLowerCase()) {
+      matches++;
+      score += 10;
+    }
+
+    // Generic rules (no specific filters) always match but with base score
+    if (!r.distrito && !r.torre && !r.arquetipo && !r.fase_jornada) {
+      matches = 1; // generic fallback
+    }
+
+    if (matches > 0 || (!r.distrito && !r.torre && !r.arquetipo)) {
+      scored.push({ rule: r, score });
     }
   }
 
-  // Fallback
+  scored.sort((a, b) => b.score - a.score);
+
   return {
-    rule: 'fallback',
-    distrito_sugerido: currentDistrictName || 'Portão da Chegada',
-    ferramenta_recomendada: 'Cartografia Psíquica',
-    pergunta_clinica: 'O que precisa de atenção agora?',
-    postura: { sustentar: 'presença aberta', evitar: 'direcionamento excessivo' },
+    best: scored[0]?.rule || null,
+    alternative: scored[1]?.rule || null,
   };
+}
+
+async function fetchRandomCard(): Promise<{ id: string; nome: string; mensagem: string } | null> {
+  try {
+    const { data } = await supabase
+      .from('oracle_cards')
+      .select('id, nome, mensagem_simbolica')
+      .eq('ativa', true)
+      .limit(50);
+
+    if (!data || data.length === 0) return null;
+    const card = data[Math.floor(Math.random() * data.length)];
+    return {
+      id: card.id,
+      nome: card.nome,
+      mensagem: card.mensagem_simbolica || '',
+    };
+  } catch {
+    return null;
+  }
 }
 
 export async function getGpsSuggestion(
   clientId: string,
   _checkin: string,
 ): Promise<{ suggestion: GpsSuggestion; meta: { currentDistrict: string | null; lastTool: string | null } }> {
-  // 1. Latest cartography scores
-  const { data: carto } = await supabase
-    .from('cartographies')
-    .select('scores_json, classification_json')
+  // 1. Load active rules from cartographer_rules
+  const { data: rulesData } = await supabase
+    .from('cartographer_rules')
+    .select('*')
+    .eq('ativa', true)
+    .order('prioridade', { ascending: false });
+
+  const rules = (rulesData || []) as CartographerRule[];
+
+  // 2. Get client's current city state
+  const { data: cityState } = await supabase
+    .from('client_city_state')
+    .select('distrito_ativo, arquetipo_ativo')
     .eq('client_id', clientId)
-    .order('date', { ascending: false })
-    .limit(1);
+    .maybeSingle();
 
-  const scores: CartographyScores | null = carto?.[0]?.classification_json
-    ? (() => {
-        const c = carto[0].classification_json as Record<string, string>;
-        const s = (carto[0].scores_json || {}) as Record<string, number>;
-        // Map classification labels to numeric thresholds for rule matching
-        const toNum = (key: string) => {
-          if (c[key] === 'alto') return s[key] ?? 80;
-          if (c[key] === 'baixo') return s[key] ?? 20;
-          return s[key] ?? 50;
-        };
-        return {
-          porta_possivel: toNum('porta_possivel'),
-          torre_interna: toNum('torre_interna'),
-          campo_outro: toNum('campo_outro'),
-          voz_mundo: toNum('voz_mundo'),
-          porta_abalo: toNum('porta_abalo'),
-        };
-      })()
-    : null;
+  // 3. Get client's cartografia for torre info
+  const { data: clienteData } = await supabase
+    .from('clientes')
+    .select('cartografia_sessao')
+    .eq('id', clientId)
+    .single();
 
-  // 2. Recent dream (last 7 days)
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-  const { count: dreamCount } = await supabase
-    .from('dreams')
-    .select('id', { count: 'exact', head: true })
-    .eq('client_id', clientId)
-    .gte('date', sevenDaysAgo.toISOString().split('T')[0]);
+  const cartografia = (clienteData as any)?.cartografia_sessao as any;
+  const torreFromCartografia = cartografia?.cidadela?.territorio_crescimento || null;
 
-  const hasRecentDream = (dreamCount ?? 0) > 0;
+  // 4. Current district and last tool
+  const currentDistrict = cityState?.distrito_ativo || null;
 
-  // 3. Current district from journey
-  const { data: journeys } = await supabase
-    .from('journeys')
-    .select('current_district_id')
-    .eq('client_id', clientId)
-    .limit(1);
-
-  let currentDistrictName: string | null = null;
-  if (journeys?.[0]?.current_district_id) {
-    const { data: dist } = await supabase
-      .from('districts')
-      .select('nome')
-      .eq('id', journeys[0].current_district_id)
-      .single();
-    currentDistrictName = dist?.nome ?? null;
-  }
-
-  // 4. Last tool used
   const { data: lastSession } = await supabase
     .from('sessions')
     .select('tool_id')
@@ -164,13 +167,63 @@ export async function getGpsSuggestion(
     lastToolName = tool?.nome ?? null;
   }
 
-  const suggestion = applyRules(scores, hasRecentDream, currentDistrictName);
+  // 5. Match rules
+  const { best, alternative } = matchRules(rules, {
+    distrito: currentDistrict,
+    torre: torreFromCartografia,
+    arquetipo: null,
+    fase: null,
+  });
 
+  // 6. Resolve tool names from slugs
+  const resolveToolName = async (slug: string | null): Promise<string> => {
+    if (!slug) return 'Cartografia Psíquica';
+    const { data } = await supabase.from('tools').select('nome').eq('slug', slug).single();
+    return data?.nome || slug;
+  };
+
+  // 7. Get optional symbolic card
+  const carta = await fetchRandomCard();
+
+  if (best) {
+    const [ferrPrincipal, ferrComplementar] = await Promise.all([
+      resolveToolName(best.ferramenta_principal_slug),
+      resolveToolName(best.ferramenta_complementar_slug),
+    ]);
+
+    return {
+      suggestion: {
+        rule: best.nome,
+        distrito_sugerido: best.distrito || currentDistrict || 'Portão da Chegada',
+        ferramenta_recomendada: ferrPrincipal,
+        ferramenta_complementar: best.ferramenta_complementar_slug ? ferrComplementar : undefined,
+        pergunta_clinica: best.pergunta || 'O que precisa de atenção agora?',
+        ritual: best.ritual || undefined,
+        confianca: best.confianca_base || 70,
+        postura: {
+          sustentar: 'presença e escuta atenta',
+          evitar: 'interpretação apressada',
+        },
+        carta_simbolica: carta,
+      },
+      meta: { currentDistrict, lastTool: lastToolName },
+    };
+  }
+
+  // Fallback
   return {
-    suggestion,
-    meta: {
-      currentDistrict: currentDistrictName,
-      lastTool: lastToolName,
+    suggestion: {
+      rule: 'exploração-aberta',
+      distrito_sugerido: currentDistrict || 'Portão da Chegada',
+      ferramenta_recomendada: 'Cartografia Psíquica Orácula',
+      pergunta_clinica: 'O que precisa de atenção agora?',
+      confianca: 50,
+      postura: {
+        sustentar: 'presença aberta',
+        evitar: 'direcionamento excessivo',
+      },
+      carta_simbolica: carta,
     },
+    meta: { currentDistrict, lastTool: lastToolName },
   };
 }
