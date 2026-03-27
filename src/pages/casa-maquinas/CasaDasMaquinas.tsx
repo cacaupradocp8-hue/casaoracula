@@ -20,6 +20,17 @@ interface ClienteRecente {
   nome: string;
   status: string;
   updated_at: string;
+  distrito_ativo?: string;
+  arquetipo_nome?: string;
+}
+
+interface AlertaClinico {
+  id: string;
+  client_id: string;
+  cliente_nome?: string;
+  motivo: string;
+  distrito: string;
+  created_at: string;
 }
 
 const fadeInUp = {
