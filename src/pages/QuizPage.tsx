@@ -327,6 +327,13 @@ export default function QuizPage() {
           toast.error("Erro ao salvar resultado");
         } else {
           toast.success("Resultado salvo no seu perfil");
+          
+          // Save vozes to profile
+          const vozPrimaria = mapQuizResultToVozId(result.titulo_simbolico);
+          const vozApoio = secondary ? mapQuizResultToVozId(secondary.titulo_simbolico) : null;
+          if (vozPrimaria) {
+            await saveVozes(vozPrimaria, vozApoio);
+          }
         }
       } catch (error) {
         console.error(error);
