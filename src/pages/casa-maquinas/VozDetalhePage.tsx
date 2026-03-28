@@ -2,8 +2,10 @@ import { useParams, Link } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { CasaMaquinasSidebar } from '@/components/casa-maquinas/CasaMaquinasSidebar';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ChevronDown, Sparkles } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { ArrowLeft, ChevronDown, Sparkles, Star, Heart } from 'lucide-react';
 import { VOZES } from '@/data/vozes';
+import { useUserVoz } from '@/hooks/useUserVoz';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -24,6 +26,7 @@ function CollapseBlock({ title, children, defaultOpen = false }: { title: string
 export default function VozDetalhePage() {
   const { vozId } = useParams();
   const voz = VOZES.find(v => v.id === vozId);
+  const { voz_primaria, voz_apoio, setVozAtiva } = useUserVoz();
 
   if (!voz) {
     return (
@@ -36,8 +39,16 @@ export default function VozDetalhePage() {
     );
   }
 
-  const handleUsarVoz = () => {
-    toast.success(`Voz "${voz.nome}" ativada para a sessão atual`);
+  const isPrimaria = voz.id === voz_primaria;
+  const isApoio = voz.id === voz_apoio;
+
+  const handleUsarVoz = async () => {
+    const success = await setVozAtiva(voz.id);
+    if (success) {
+      toast.success(`Voz "${voz.nome}" ativada para a sessão atual`);
+    } else {
+      toast.error('Erro ao ativar voz');
+    }
   };
 
   return (
@@ -52,6 +63,16 @@ export default function VozDetalhePage() {
               </Link>
               <div className="w-8 h-8 rounded-full shrink-0" style={{ backgroundColor: `hsl(${voz.cor})` }} />
               <h1 className="text-2xl font-display font-bold text-foreground">{voz.nome}</h1>
+              {isPrimaria && (
+                <Badge className="bg-gold/15 text-gold border-gold/30 gap-1">
+                  <Star className="w-3 h-3" /> Sua voz primária
+                </Badge>
+              )}
+              {isApoio && (
+                <Badge variant="outline" className="border-primary/30 text-primary gap-1">
+                  <Heart className="w-3 h-3" /> Voz de apoio
+                </Badge>
+              )}
             </div>
             <p className="text-muted-foreground italic text-lg">"{voz.frase}"</p>
 
