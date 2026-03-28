@@ -60,10 +60,10 @@ export function GpsSuggestionCard({ clientId, checkin, vozAtiva, onApply }: Prop
         </div>
 
         {/* Meta resumo */}
-        <div className="flex gap-4 text-[10px] text-muted-foreground/60">
+        <div className="flex flex-wrap gap-3 text-[10px] text-muted-foreground/60">
           {meta.currentDistrict && (
             <span className="flex items-center gap-1">
-              <MapPin className="w-3 h-3" /> Atual: {meta.currentDistrict}
+              <MapPin className="w-3 h-3" /> Distrito: {meta.currentDistrict}
             </span>
           )}
           {meta.lastTool && (
@@ -71,7 +71,19 @@ export function GpsSuggestionCard({ clientId, checkin, vozAtiva, onApply }: Prop
               <Wrench className="w-3 h-3" /> Última: {meta.lastTool}
             </span>
           )}
+          {meta.vozInfluencia && (
+            <span className="flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-primary/60" /> Voz: {meta.vozInfluencia}
+            </span>
+          )}
         </div>
+
+        {/* Baseado em */}
+        {meta.vozInfluencia && (
+          <div className="text-[9px] text-primary/40 italic">
+            Sugere com base em: Distrito + Torre + Voz ({meta.vozInfluencia})
+          </div>
+        )}
 
         {/* Suggestion grid */}
         <div className="grid grid-cols-2 gap-3">
