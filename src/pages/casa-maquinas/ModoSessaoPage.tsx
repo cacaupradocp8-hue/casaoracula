@@ -19,6 +19,8 @@ import { useSessionMode, type SessionMode } from '@/hooks/useSessionMode';
 import { SessionModeSelector } from '@/components/casa-maquinas/SessionModeSelector';
 import { SessionModeIndicator } from '@/components/casa-maquinas/SessionModeIndicator';
 import { useCidadelaMap } from '@/hooks/useCidadelaMap';
+import { useUserVoz } from '@/hooks/useUserVoz';
+import { VozAtivaIndicator, VozClinicalSuggestions, sortToolsByVoz } from '@/components/casa-maquinas/VozAtivaIndicator';
 
 const CHECKIN_STATES = [
   { value: 'contraida', label: 'Contraída', color: '#EF4444' },
@@ -32,6 +34,7 @@ export default function ModoSessaoPage() {
   const navigate = useNavigate();
   const sessionMode = useSessionMode();
   const { updateFromSession } = useCidadelaMap();
+  const { voz_ativa, setVozAtiva } = useUserVoz();
 
   // Initialize mode from URL param or show selector
   const initialMode = searchParams.get('modo') as SessionMode | null;
@@ -86,9 +89,10 @@ export default function ModoSessaoPage() {
     setLoading(false);
   };
 
-  const filteredTools = selectedDistrict
-    ? tools.filter(t => t.district_id === selectedDistrict)
-    : tools;
+  const filteredTools = sortToolsByVoz(
+    selectedDistrict ? tools.filter(t => t.district_id === selectedDistrict) : tools,
+    voz_ativa
+  );
 
   const handleFollowNextStep = (rota: string) => {
     setUsedToolRoutes(prev => [...prev, rota]);
@@ -117,6 +121,7 @@ export default function ModoSessaoPage() {
       insight: insight || null,
       task: task || null,
       notes: notes || null,
+      voz_utilizada: voz_ativa || null,
     } as any);
 
     if (error) {
@@ -201,7 +206,7 @@ export default function ModoSessaoPage() {
 
       {/* Mode Indicator */}
       {sessionMode.mode && (
-        <div className="mb-6">
+        <div className="mb-4">
           <SessionModeIndicator
             mode={sessionMode.mode}
             onToggle={sessionMode.toggleMode}
@@ -210,6 +215,16 @@ export default function ModoSessaoPage() {
             onFollowNextStep={handleFollowNextStep}
             onRequestSuggestion={sessionMode.fetchInitialSuggestion}
             compact={step < 3}
+          />
+        </div>
+      )}
+
+      {/* Voz Ativa Indicator */}
+      {voz_ativa && (
+        <div className="mb-6">
+          <VozAtivaIndicator
+            vozId={voz_ativa}
+            onClear={() => setVozAtiva('')}
           />
         </div>
       )}
@@ -352,6 +367,8 @@ export default function ModoSessaoPage() {
                     </SelectContent>
                   </Select>
                 </div>
+                {/* Voz clinical suggestions in step 2 */}
+                <VozClinicalSuggestions vozId={voz_ativa} />
                 <div className="flex gap-2">
                   <Button variant="outline" onClick={() => setStep(1)} className="flex-1 border-border/30 text-muted-foreground">Voltar</Button>
                   <Button onClick={() => setStep(3)} className="flex-1 bg-primary hover:bg-primary/80 text-primary-foreground">Avançar</Button>
@@ -401,6 +418,9 @@ export default function ModoSessaoPage() {
                 })()}
               </div>
 
+              {/* Voz clinical suggestions in execution step */}
+              <VozClinicalSuggestions vozId={voz_ativa} />
+
               <SessionInterventionSuggestions
                 sessionDistrictId={selectedDistrict || undefined}
                 checkinState={checkinState}
@@ -434,6 +454,10 @@ export default function ModoSessaoPage() {
                     <p className="mt-1 text-primary/60">{usedToolRoutes.length} ferramenta(s) utilizada(s) no fluxo.</p>
                   )}
                 </div>
+              )}
+              {/* Voz used in this session */}
+              {voz_ativa && (
+                <VozAtivaIndicator vozId={voz_ativa} compact />
               )}
               <div>
                 <label className="text-xs text-muted-foreground mb-2 block">Insight principal</label>

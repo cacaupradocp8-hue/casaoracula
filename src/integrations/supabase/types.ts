@@ -14837,6 +14837,7 @@ export type Database = {
           updated_at: string
           used_intervention_ids: string[] | null
           user_id: string
+          voz_utilizada: string | null
         }
         Insert: {
           checkin_notes?: string | null
@@ -14856,6 +14857,7 @@ export type Database = {
           updated_at?: string
           used_intervention_ids?: string[] | null
           user_id?: string
+          voz_utilizada?: string | null
         }
         Update: {
           checkin_notes?: string | null
@@ -14875,6 +14877,7 @@ export type Database = {
           updated_at?: string
           used_intervention_ids?: string[] | null
           user_id?: string
+          voz_utilizada?: string | null
         }
         Relationships: [
           {

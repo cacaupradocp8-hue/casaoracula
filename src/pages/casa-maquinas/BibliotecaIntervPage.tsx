@@ -15,10 +15,11 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import {
   Loader2, Search, Heart, BookOpen, Sparkles, Shield, Pen, ArrowRight,
-  Target, HelpCircle, Package, MapPin, ChevronRight, Play, X, Filter
+  Target, HelpCircle, Package, MapPin, ChevronRight, Play, X, Filter, AudioLines
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
+import { VOZES } from '@/data/vozes';
 
 const TYPE_LABELS: Record<string, { label: string; icon: typeof BookOpen; color: string }> = {
   pergunta_clinica: { label: 'Pergunta Clínica', icon: HelpCircle, color: '#C9A24A' },
@@ -66,6 +67,7 @@ export default function BibliotecaIntervPage() {
   const [filterLevel, setFilterLevel] = useState('all');
   const [filterDistrict, setFilterDistrict] = useState('all');
   const [filterArchetype, setFilterArchetype] = useState('all');
+  const [filterVoz, setFilterVoz] = useState('all');
   const [tab, setTab] = useState('todas');
   const [selected, setSelected] = useState<Intervention | null>(null);
 
@@ -119,6 +121,17 @@ export default function BibliotecaIntervPage() {
     if (filterArchetype !== 'all') {
       const arqs = [...(i.arquetipos_relacionados || []), ...(i.archetype_key ? [i.archetype_key] : [])];
       if (!arqs.includes(filterArchetype)) return false;
+    }
+    // Voz filter: match interventions whose title/content matches voz ferramentas or districts
+    if (filterVoz !== 'all') {
+      const voz = VOZES.find(v => v.id === filterVoz);
+      if (voz) {
+        const vozKeywords = [...voz.ferramentas, ...voz.distritos].map(k => k.toLowerCase());
+        const searchable = [i.title, i.content, i.descricao_breve, ...(i.tags || [])].filter(Boolean).join(' ').toLowerCase();
+        const distName = i.district_id ? (distMap[i.district_id] || '').toLowerCase() : '';
+        const hasMatch = vozKeywords.some(k => searchable.includes(k) || distName.includes(k));
+        if (!hasMatch) return false;
+      }
     }
     if (search) {
       const q = search.toLowerCase();
@@ -220,12 +233,28 @@ export default function BibliotecaIntervPage() {
                 </SelectContent>
               </Select>
             )}
-            {(filterType !== 'all' || filterLevel !== 'all' || filterDistrict !== 'all' || filterArchetype !== 'all' || search) && (
+            <Select value={filterVoz} onValueChange={setFilterVoz}>
+              <SelectTrigger className="w-[155px] bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8] h-8 text-xs">
+                <SelectValue placeholder="Voz" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas as vozes</SelectItem>
+                {VOZES.map(v => (
+                  <SelectItem key={v.id} value={v.id}>
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: `hsl(${v.cor})` }} />
+                      {v.nome}
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {(filterType !== 'all' || filterLevel !== 'all' || filterDistrict !== 'all' || filterArchetype !== 'all' || filterVoz !== 'all' || search) && (
               <Button
                 variant="ghost"
                 size="sm"
                 className="text-[10px] text-[#C9A24A]/50 hover:text-[#C9A24A] h-7"
-                onClick={() => { setFilterType('all'); setFilterLevel('all'); setFilterDistrict('all'); setFilterArchetype('all'); setSearch(''); }}
+                onClick={() => { setFilterType('all'); setFilterLevel('all'); setFilterDistrict('all'); setFilterArchetype('all'); setFilterVoz('all'); setSearch(''); }}
               >
                 <X className="w-3 h-3 mr-1" /> Limpar
               </Button>
