@@ -206,7 +206,7 @@ export default function ModoSessaoPage() {
 
       {/* Mode Indicator */}
       {sessionMode.mode && (
-        <div className="mb-6">
+        <div className="mb-4">
           <SessionModeIndicator
             mode={sessionMode.mode}
             onToggle={sessionMode.toggleMode}
@@ -215,6 +215,16 @@ export default function ModoSessaoPage() {
             onFollowNextStep={handleFollowNextStep}
             onRequestSuggestion={sessionMode.fetchInitialSuggestion}
             compact={step < 3}
+          />
+        </div>
+      )}
+
+      {/* Voz Ativa Indicator */}
+      {voz_ativa && (
+        <div className="mb-6">
+          <VozAtivaIndicator
+            vozId={voz_ativa}
+            onClear={() => setVozAtiva('')}
           />
         </div>
       )}
