@@ -227,19 +227,32 @@ export async function getGpsSuggestion(
   }
 
   // Fallback
-  return {
-    suggestion: {
-      rule: 'exploração-aberta',
-      distrito_sugerido: currentDistrict || 'Portão da Chegada',
-      ferramenta_recomendada: 'Cartografia Psíquica Orácula',
-      pergunta_clinica: 'O que precisa de atenção agora?',
-      confianca: 50,
-      postura: {
-        sustentar: 'presença aberta',
-        evitar: 'direcionamento excessivo',
-      },
-      carta_simbolica: carta,
+  let fallbackSuggestion = {
+    rule: 'exploração-aberta',
+    distrito_sugerido: currentDistrict || 'Portão da Chegada',
+    ferramenta_recomendada: 'Cartografia Psíquica Orácula',
+    pergunta_clinica: 'O que precisa de atenção agora?',
+    confianca: 50,
+    postura: {
+      sustentar: 'presença aberta',
+      evitar: 'direcionamento excessivo',
     },
-    meta: { currentDistrict, lastTool: lastToolName },
+    carta_simbolica: carta,
+  };
+
+  let vozInfluenciaFallback: string | null = null;
+  if (vozAtiva) {
+    const adj = adjustSuggestionForVoz(fallbackSuggestion, vozAtiva);
+    if (adj.voz_influencia) {
+      fallbackSuggestion.postura = adj.postura;
+      fallbackSuggestion.pergunta_clinica = adj.pergunta_clinica;
+      fallbackSuggestion.confianca = Math.min(100, fallbackSuggestion.confianca + adj.confianca_boost);
+      vozInfluenciaFallback = adj.voz_influencia;
+    }
+  }
+
+  return {
+    suggestion: fallbackSuggestion,
+    meta: { currentDistrict, lastTool: lastToolName, vozInfluencia: vozInfluenciaFallback },
   };
 }
