@@ -15,10 +15,11 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import {
   Loader2, Search, Heart, BookOpen, Sparkles, Shield, Pen, ArrowRight,
-  Target, HelpCircle, Package, MapPin, ChevronRight, Play, X, Filter
+  Target, HelpCircle, Package, MapPin, ChevronRight, Play, X, Filter, AudioLines
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
+import { VOZES } from '@/data/vozes';
 
 const TYPE_LABELS: Record<string, { label: string; icon: typeof BookOpen; color: string }> = {
   pergunta_clinica: { label: 'Pergunta Clínica', icon: HelpCircle, color: '#C9A24A' },
