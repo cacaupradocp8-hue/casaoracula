@@ -67,6 +67,7 @@ export default function QuizPage() {
   const { quizId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { saveVozes } = useUserVoz();
 
   const [loading, setLoading] = useState(true);
   const [quiz, setQuiz] = useState<Quiz | null>(null);
