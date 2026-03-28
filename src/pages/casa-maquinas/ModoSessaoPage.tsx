@@ -89,9 +89,10 @@ export default function ModoSessaoPage() {
     setLoading(false);
   };
 
-  const filteredTools = selectedDistrict
-    ? tools.filter(t => t.district_id === selectedDistrict)
-    : tools;
+  const filteredTools = sortToolsByVoz(
+    selectedDistrict ? tools.filter(t => t.district_id === selectedDistrict) : tools,
+    voz_ativa
+  );
 
   const handleFollowNextStep = (rota: string) => {
     setUsedToolRoutes(prev => [...prev, rota]);
