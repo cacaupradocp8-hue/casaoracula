@@ -155,6 +155,11 @@ const ImaginacaoAtivaPage = React.lazy(() => import("./pages/casa-maquinas/ferra
 const EscritaNaoCensuradaPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/EscritaNaoCensuradaPage"));
 const CorpoInconscientePage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/CorpoInconscientePage"));
 const SectionPlaceholder = React.lazy(() => import("./pages/casa-maquinas/SectionPlaceholder"));
+const VozesHomePage = React.lazy(() => import("./pages/casa-maquinas/VozesHomePage"));
+const VozesListaPage = React.lazy(() => import("./pages/casa-maquinas/VozesListaPage"));
+const VozDetalhePage = React.lazy(() => import("./pages/casa-maquinas/VozDetalhePage"));
+const VozesMapaPage = React.lazy(() => import("./pages/casa-maquinas/VozesMapaPage"));
+const VozesTabelaPage = React.lazy(() => import("./pages/casa-maquinas/VozesTabelaPage"));
 const ConfiguracoesSaasPage = React.lazy(() => import("./pages/casa-maquinas/ConfiguracoesSaasPage"));
 const FormacaoMetodoPage = React.lazy(() => import("./pages/FormacaoMetodoPage"));
 const FormacaoForumPage = React.lazy(() => import("./pages/FormacaoForumPage"));
