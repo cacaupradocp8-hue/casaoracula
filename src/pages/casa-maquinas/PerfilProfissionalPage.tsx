@@ -1,9 +1,14 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useAcademyProgress } from '@/hooks/useAcademyProgress';
+import { useUserVoz } from '@/hooks/useUserVoz';
+import { VOZES } from '@/data/vozes';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
+import { AudioLines, Star, Heart, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function PerfilProfissionalPage() {
   const { user } = useAuth();
