@@ -9,6 +9,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Loader2, ArrowLeft, ArrowRight, Sparkles, RefreshCw, ExternalLink, Bug } from "lucide-react";
 import { toast } from "sonner";
 import { ModularPageRenderer } from "@/components/modular/ModularPageRenderer";
+import { mapQuizResultToVozId } from "@/utils/vozMapping";
+import { useUserVoz } from "@/hooks/useUserVoz";
+import { AudioLines } from "lucide-react";
 import { ContentPageLayout } from "@/components/shared/ContentPageLayout";
 import { QuizResultView } from "@/components/quiz/QuizResultView";
 import { useContentBlocks } from "@/hooks/useContentBlocks";
@@ -64,6 +67,7 @@ export default function QuizPage() {
   const { quizId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { saveVozes } = useUserVoz();
 
   const [loading, setLoading] = useState(true);
   const [quiz, setQuiz] = useState<Quiz | null>(null);
@@ -323,6 +327,13 @@ export default function QuizPage() {
           toast.error("Erro ao salvar resultado");
         } else {
           toast.success("Resultado salvo no seu perfil");
+          
+          // Save vozes to profile
+          const vozPrimaria = mapQuizResultToVozId(result.titulo_simbolico);
+          const vozApoio = secondary ? mapQuizResultToVozId(secondary.titulo_simbolico) : null;
+          if (vozPrimaria) {
+            await saveVozes(vozPrimaria, vozApoio);
+          }
         }
       } catch (error) {
         console.error(error);
@@ -585,6 +596,24 @@ export default function QuizPage() {
             showLoading={false}
           />
 
+          {/* Ver minha Voz button */}
+          {(() => {
+            const vozId = mapQuizResultToVozId(prevResult.titulo_simbolico);
+            return vozId ? (
+              <div className="flex justify-center pt-4">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => navigate(`/casa-das-maquinas/7-vozes/${vozId}`)}
+                  className="gap-2 border-primary/30 text-primary hover:bg-primary/10"
+                >
+                  <AudioLines className="w-5 h-5" />
+                  Ver minha Voz no sistema
+                </Button>
+              </div>
+            ) : null;
+          })()}
+
           {/* Action buttons */}
           <div className="flex gap-4 justify-center pt-4">
             <Button variant="outline" onClick={() => navigate(-1)}>
@@ -661,6 +690,24 @@ export default function QuizPage() {
              Explorar com Syntheia
            </Button>
          </div>
+
+         {/* Ver minha Voz button */}
+          {(() => {
+            const vozId = mapQuizResultToVozId(finalResult.titulo_simbolico);
+            return vozId ? (
+              <div className="flex justify-center pt-2">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => navigate(`/casa-das-maquinas/7-vozes/${vozId}`)}
+                  className="gap-2 border-primary/30 text-primary hover:bg-primary/10"
+                >
+                  <AudioLines className="w-5 h-5" />
+                  Ver minha Voz no sistema
+                </Button>
+              </div>
+            ) : null;
+          })()}
 
          {/* Action buttons */}
           <div className="flex gap-4 justify-center pt-4">
