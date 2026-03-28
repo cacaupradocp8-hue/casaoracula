@@ -1,4 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
+import { adjustSuggestionForVoz } from '@/lib/voz-gps-integration';
 
 export interface GpsSuggestion {
   rule: string;
