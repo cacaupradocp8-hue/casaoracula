@@ -51,8 +51,8 @@ export function useUserVoz() {
       if (error) throw error;
 
       // Save to history
-      await supabase.from('voz_historico' as any).insert({
-        user creation: formData.id,
+      await (supabase.from('voz_historico' as any) as any).insert({
+        user_id: user.id,
         voz_primaria: primaria,
         voz_apoio: apoio,
       });
