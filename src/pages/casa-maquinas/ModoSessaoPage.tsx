@@ -367,6 +367,8 @@ export default function ModoSessaoPage() {
                     </SelectContent>
                   </Select>
                 </div>
+                {/* Voz clinical suggestions in step 2 */}
+                <VozClinicalSuggestions vozId={voz_ativa} />
                 <div className="flex gap-2">
                   <Button variant="outline" onClick={() => setStep(1)} className="flex-1 border-border/30 text-muted-foreground">Voltar</Button>
                   <Button onClick={() => setStep(3)} className="flex-1 bg-primary hover:bg-primary/80 text-primary-foreground">Avançar</Button>
