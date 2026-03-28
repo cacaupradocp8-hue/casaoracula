@@ -233,12 +233,28 @@ export default function BibliotecaIntervPage() {
                 </SelectContent>
               </Select>
             )}
-            {(filterType !== 'all' || filterLevel !== 'all' || filterDistrict !== 'all' || filterArchetype !== 'all' || search) && (
+            <Select value={filterVoz} onValueChange={setFilterVoz}>
+              <SelectTrigger className="w-[155px] bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8] h-8 text-xs">
+                <SelectValue placeholder="Voz" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas as vozes</SelectItem>
+                {VOZES.map(v => (
+                  <SelectItem key={v.id} value={v.id}>
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: `hsl(${v.cor})` }} />
+                      {v.nome}
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {(filterType !== 'all' || filterLevel !== 'all' || filterDistrict !== 'all' || filterArchetype !== 'all' || filterVoz !== 'all' || search) && (
               <Button
                 variant="ghost"
                 size="sm"
                 className="text-[10px] text-[#C9A24A]/50 hover:text-[#C9A24A] h-7"
-                onClick={() => { setFilterType('all'); setFilterLevel('all'); setFilterDistrict('all'); setFilterArchetype('all'); setSearch(''); }}
+                onClick={() => { setFilterType('all'); setFilterLevel('all'); setFilterDistrict('all'); setFilterArchetype('all'); setFilterVoz('all'); setSearch(''); }}
               >
                 <X className="w-3 h-3 mr-1" /> Limpar
               </Button>
