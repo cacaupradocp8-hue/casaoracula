@@ -1730,6 +1730,11 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/ferramentas/escrita-simbolica" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/espelho-relacional" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/ritual-simbolico" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/7-vozes" element={<ProtectedRoute minPortal="oracula"><VozesHomePage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/7-vozes/lista" element={<ProtectedRoute minPortal="oracula"><VozesListaPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/7-vozes/mapa" element={<ProtectedRoute minPortal="oracula"><VozesMapaPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/7-vozes/tabela" element={<ProtectedRoute minPortal="oracula"><VozesTabelaPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/7-vozes/:vozId" element={<ProtectedRoute minPortal="oracula"><VozDetalhePage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/oraculo" element={<ProtectedRoute minPortal="oracula"><Oraculos /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/oraculo/:oracleSlug" element={<ProtectedRoute minPortal="oracula"><OracleHome /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/oraculo/:oracleSlug/tirar" element={<ProtectedRoute minPortal="oracula"><OracleDraw /></ProtectedRoute>} />

@@ -23,6 +23,7 @@ const mainNav: NavItem[] = [
 const toolsNav: NavItem[] = [
   { label: 'Oráculo', path: '/casa-das-maquinas/oraculo', icon: Sparkles },
   { label: 'Painel Clínico', path: '/casa-das-maquinas/painel-clinico', icon: Compass },
+  { label: '7 Vozes', path: '/casa-das-maquinas/7-vozes', icon: AudioLines },
   { label: 'Ferramentas', path: '/casa-das-maquinas/ferramentas', icon: Wrench },
   { label: 'Biblioteca', path: '/casa-das-maquinas/biblioteca', icon: BookOpen },
   { label: 'Mapa Vivo', path: '/casa-das-maquinas/mapa-vivo', icon: Map },
