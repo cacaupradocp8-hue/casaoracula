@@ -121,6 +121,7 @@ export default function ModoSessaoPage() {
       insight: insight || null,
       task: task || null,
       notes: notes || null,
+      voz_utilizada: voz_ativa || null,
     } as any);
 
     if (error) {
