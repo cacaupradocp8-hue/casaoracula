@@ -155,6 +155,11 @@ const ImaginacaoAtivaPage = React.lazy(() => import("./pages/casa-maquinas/ferra
 const EscritaNaoCensuradaPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/EscritaNaoCensuradaPage"));
 const CorpoInconscientePage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/CorpoInconscientePage"));
 const SectionPlaceholder = React.lazy(() => import("./pages/casa-maquinas/SectionPlaceholder"));
+const VozesHomePage = React.lazy(() => import("./pages/casa-maquinas/VozesHomePage"));
+const VozesListaPage = React.lazy(() => import("./pages/casa-maquinas/VozesListaPage"));
+const VozDetalhePage = React.lazy(() => import("./pages/casa-maquinas/VozDetalhePage"));
+const VozesMapaPage = React.lazy(() => import("./pages/casa-maquinas/VozesMapaPage"));
+const VozesTabelaPage = React.lazy(() => import("./pages/casa-maquinas/VozesTabelaPage"));
 const ConfiguracoesSaasPage = React.lazy(() => import("./pages/casa-maquinas/ConfiguracoesSaasPage"));
 const FormacaoMetodoPage = React.lazy(() => import("./pages/FormacaoMetodoPage"));
 const FormacaoForumPage = React.lazy(() => import("./pages/FormacaoForumPage"));
@@ -1725,6 +1730,11 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/ferramentas/escrita-simbolica" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/espelho-relacional" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas/ritual-simbolico" element={<ProtectedRoute minPortal="oracula"><PlaceholderToolPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/7-vozes" element={<ProtectedRoute minPortal="oracula"><VozesHomePage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/7-vozes/lista" element={<ProtectedRoute minPortal="oracula"><VozesListaPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/7-vozes/mapa" element={<ProtectedRoute minPortal="oracula"><VozesMapaPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/7-vozes/tabela" element={<ProtectedRoute minPortal="oracula"><VozesTabelaPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/7-vozes/:vozId" element={<ProtectedRoute minPortal="oracula"><VozDetalhePage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/oraculo" element={<ProtectedRoute minPortal="oracula"><Oraculos /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/oraculo/:oracleSlug" element={<ProtectedRoute minPortal="oracula"><OracleHome /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/oraculo/:oracleSlug/tirar" element={<ProtectedRoute minPortal="oracula"><OracleDraw /></ProtectedRoute>} />
