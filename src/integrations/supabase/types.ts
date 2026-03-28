@@ -13147,6 +13147,9 @@ export type Database = {
           supervisao_validada: boolean | null
           termo_etico_aceito: boolean | null
           updated_at: string
+          voz_apoio: string | null
+          voz_ativa: string | null
+          voz_primaria: string | null
         }
         Insert: {
           access_expires_at?: string | null
@@ -13168,6 +13171,9 @@ export type Database = {
           supervisao_validada?: boolean | null
           termo_etico_aceito?: boolean | null
           updated_at?: string
+          voz_apoio?: string | null
+          voz_ativa?: string | null
+          voz_primaria?: string | null
         }
         Update: {
           access_expires_at?: string | null
@@ -13189,6 +13195,9 @@ export type Database = {
           supervisao_validada?: boolean | null
           termo_etico_aceito?: boolean | null
           updated_at?: string
+          voz_apoio?: string | null
+          voz_ativa?: string | null
+          voz_primaria?: string | null
         }
         Relationships: []
       }
@@ -17142,6 +17151,33 @@ export type Database = {
           updated_at?: string
           video_url?: string | null
           visibilidade_role?: string[]
+        }
+        Relationships: []
+      }
+      voz_historico: {
+        Row: {
+          created_at: string
+          id: string
+          quiz_response_id: string | null
+          user_id: string
+          voz_apoio: string | null
+          voz_primaria: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          quiz_response_id?: string | null
+          user_id: string
+          voz_apoio?: string | null
+          voz_primaria?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          quiz_response_id?: string | null
+          user_id?: string
+          voz_apoio?: string | null
+          voz_primaria?: string | null
         }
         Relationships: []
       }
