@@ -304,6 +304,7 @@ export default function ModoSessaoPage() {
               <GpsSuggestionCard
                 clientId={selectedClient}
                 checkin={checkinState}
+                vozAtiva={voz_ativa}
                 onApply={(s) => {
                   setGpsSuggestion(s);
                   const matchDist = districts.find(d => d.nome === s.distrito_sugerido);
