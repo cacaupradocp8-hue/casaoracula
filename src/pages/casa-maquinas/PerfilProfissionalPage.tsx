@@ -13,6 +13,10 @@ import { Link } from 'react-router-dom';
 export default function PerfilProfissionalPage() {
   const { user } = useAuth();
   const { progress, stats, isLoading, currentLevel } = useAcademyProgress();
+  const { voz_primaria, voz_apoio, loading: vozLoading } = useUserVoz();
+
+  const vozPrimData = voz_primaria ? VOZES.find(v => v.id === voz_primaria) : null;
+  const vozApoioData = voz_apoio ? VOZES.find(v => v.id === voz_apoio) : null;
 
   if (isLoading) {
     return (
