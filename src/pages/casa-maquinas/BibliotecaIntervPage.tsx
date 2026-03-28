@@ -122,6 +122,17 @@ export default function BibliotecaIntervPage() {
       const arqs = [...(i.arquetipos_relacionados || []), ...(i.archetype_key ? [i.archetype_key] : [])];
       if (!arqs.includes(filterArchetype)) return false;
     }
+    // Voz filter: match interventions whose title/content matches voz ferramentas or districts
+    if (filterVoz !== 'all') {
+      const voz = VOZES.find(v => v.id === filterVoz);
+      if (voz) {
+        const vozKeywords = [...voz.ferramentas, ...voz.distritos].map(k => k.toLowerCase());
+        const searchable = [i.title, i.content, i.descricao_breve, ...(i.tags || [])].filter(Boolean).join(' ').toLowerCase();
+        const distName = i.district_id ? (distMap[i.district_id] || '').toLowerCase() : '';
+        const hasMatch = vozKeywords.some(k => searchable.includes(k) || distName.includes(k));
+        if (!hasMatch) return false;
+      }
+    }
     if (search) {
       const q = search.toLowerCase();
       const searchable = [i.title, i.content, i.descricao_breve, i.objetivo, ...(i.tags || [])].filter(Boolean).join(' ').toLowerCase();
