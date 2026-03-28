@@ -7,23 +7,24 @@ import { getGpsSuggestion, type GpsSuggestion } from '@/lib/gps-cidadela';
 interface Props {
   clientId: string;
   checkin: string;
+  vozAtiva?: string | null;
   onApply?: (suggestion: GpsSuggestion) => void;
 }
 
-export function GpsSuggestionCard({ clientId, checkin, onApply }: Props) {
+export function GpsSuggestionCard({ clientId, checkin, vozAtiva, onApply }: Props) {
   const [suggestion, setSuggestion] = useState<GpsSuggestion | null>(null);
-  const [meta, setMeta] = useState<{ currentDistrict: string | null; lastTool: string | null }>({ currentDistrict: null, lastTool: null });
+  const [meta, setMeta] = useState<{ currentDistrict: string | null; lastTool: string | null; vozInfluencia: string | null }>({ currentDistrict: null, lastTool: null, vozInfluencia: null });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!clientId) return;
     setLoading(true);
-    getGpsSuggestion(clientId, checkin).then(res => {
+    getGpsSuggestion(clientId, checkin, vozAtiva).then(res => {
       setSuggestion(res.suggestion);
       setMeta(res.meta);
       setLoading(false);
     });
-  }, [clientId, checkin]);
+  }, [clientId, checkin, vozAtiva]);
 
   if (loading) {
     return (
