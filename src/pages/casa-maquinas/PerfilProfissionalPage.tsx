@@ -85,6 +85,65 @@ export default function PerfilProfissionalPage() {
           </Card>
         </motion.div>
 
+        {/* Minha Voz */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
+          <Card className="border-primary/20">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <AudioLines className="w-5 h-5 text-primary" />
+                Minha Voz
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {!vozLoading && (vozPrimData || vozApoioData) ? (
+                <div className="space-y-4">
+                  {vozPrimData && (
+                    <Link to={`/casa-das-maquinas/7-vozes/${vozPrimData.id}`}>
+                      <div className="flex items-center gap-4 p-4 rounded-xl bg-gold/5 border border-gold/20 hover:border-gold/40 transition-all cursor-pointer group">
+                        <div className="w-10 h-10 rounded-full shrink-0" style={{ backgroundColor: `hsl(${vozPrimData.cor})` }} />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <Star className="w-3.5 h-3.5 text-gold" />
+                            <span className="text-xs text-gold font-medium uppercase tracking-wider">Voz Primária</span>
+                          </div>
+                          <p className="font-display font-semibold text-foreground">{vozPrimData.nome}</p>
+                          <p className="text-xs text-muted-foreground italic truncate">"{vozPrimData.frase}"</p>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                      </div>
+                    </Link>
+                  )}
+                  {vozApoioData && (
+                    <Link to={`/casa-das-maquinas/7-vozes/${vozApoioData.id}`}>
+                      <div className="flex items-center gap-4 p-4 rounded-xl bg-primary/5 border border-primary/15 hover:border-primary/30 transition-all cursor-pointer group mt-3">
+                        <div className="w-10 h-10 rounded-full shrink-0" style={{ backgroundColor: `hsl(${vozApoioData.cor})` }} />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <Heart className="w-3.5 h-3.5 text-primary" />
+                            <span className="text-xs text-primary font-medium uppercase tracking-wider">Voz de Apoio</span>
+                          </div>
+                          <p className="font-display font-semibold text-foreground">{vozApoioData.nome}</p>
+                          <p className="text-xs text-muted-foreground italic truncate">"{vozApoioData.frase}"</p>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                      </div>
+                    </Link>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-6 space-y-3">
+                  <p className="text-sm text-muted-foreground">Sua voz ainda não foi revelada.</p>
+                  <Link to="/quiz/descubra-seu-eixo">
+                    <Button variant="gold" size="sm" className="gap-2">
+                      Descobrir minha Voz <ArrowRight className="w-3.5 h-3.5" />
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+
         {/* Badges */}
         {progress?.badges && progress.badges.length > 0 && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
