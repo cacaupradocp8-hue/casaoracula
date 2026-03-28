@@ -1,4 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
+import { adjustSuggestionForVoz } from '@/lib/voz-gps-integration';
 
 export interface GpsSuggestion {
   rule: string;
@@ -120,7 +121,8 @@ async function fetchRandomCard(): Promise<{ id: string; nome: string; mensagem: 
 export async function getGpsSuggestion(
   clientId: string,
   _checkin: string,
-): Promise<{ suggestion: GpsSuggestion; meta: { currentDistrict: string | null; lastTool: string | null } }> {
+  vozAtiva?: string | null,
+): Promise<{ suggestion: GpsSuggestion; meta: { currentDistrict: string | null; lastTool: string | null; vozInfluencia: string | null } }> {
   // 1. Load active rules from cartographer_rules
   const { data: rulesData } = await supabase
     .from('cartographer_rules')
@@ -191,39 +193,66 @@ export async function getGpsSuggestion(
       resolveToolName(best.ferramenta_complementar_slug),
     ]);
 
-    return {
-      suggestion: {
-        rule: best.nome,
-        distrito_sugerido: best.distrito || currentDistrict || 'Portão da Chegada',
-        ferramenta_recomendada: ferrPrincipal,
-        ferramenta_complementar: best.ferramenta_complementar_slug ? ferrComplementar : undefined,
-        pergunta_clinica: best.pergunta || 'O que precisa de atenção agora?',
-        ritual: best.ritual || undefined,
-        confianca: best.confianca_base || 70,
-        postura: {
-          sustentar: 'presença e escuta atenta',
-          evitar: 'interpretação apressada',
-        },
-        carta_simbolica: carta,
+    let baseSuggestion = {
+      rule: best.nome,
+      distrito_sugerido: best.distrito || currentDistrict || 'Portão da Chegada',
+      ferramenta_recomendada: ferrPrincipal,
+      ferramenta_complementar: best.ferramenta_complementar_slug ? ferrComplementar : undefined,
+      pergunta_clinica: best.pergunta || 'O que precisa de atenção agora?',
+      ritual: best.ritual || undefined,
+      confianca: best.confianca_base || 70,
+      postura: {
+        sustentar: 'presença e escuta atenta',
+        evitar: 'interpretação apressada',
       },
-      meta: { currentDistrict, lastTool: lastToolName },
+      carta_simbolica: carta,
+    };
+
+    // Apply voice adjustments if voz_ativa is set
+    let vozInfluencia: string | null = null;
+    if (vozAtiva) {
+      const adj = adjustSuggestionForVoz(baseSuggestion, vozAtiva);
+      if (adj.voz_influencia) {
+        baseSuggestion.postura = adj.postura;
+        baseSuggestion.pergunta_clinica = adj.pergunta_clinica;
+        baseSuggestion.confianca = Math.min(100, baseSuggestion.confianca + adj.confianca_boost);
+        vozInfluencia = adj.voz_influencia;
+      }
+    }
+
+    return {
+      suggestion: baseSuggestion,
+      meta: { currentDistrict, lastTool: lastToolName, vozInfluencia },
     };
   }
 
   // Fallback
-  return {
-    suggestion: {
-      rule: 'exploração-aberta',
-      distrito_sugerido: currentDistrict || 'Portão da Chegada',
-      ferramenta_recomendada: 'Cartografia Psíquica Orácula',
-      pergunta_clinica: 'O que precisa de atenção agora?',
-      confianca: 50,
-      postura: {
-        sustentar: 'presença aberta',
-        evitar: 'direcionamento excessivo',
-      },
-      carta_simbolica: carta,
+  let fallbackSuggestion = {
+    rule: 'exploração-aberta',
+    distrito_sugerido: currentDistrict || 'Portão da Chegada',
+    ferramenta_recomendada: 'Cartografia Psíquica Orácula',
+    pergunta_clinica: 'O que precisa de atenção agora?',
+    confianca: 50,
+    postura: {
+      sustentar: 'presença aberta',
+      evitar: 'direcionamento excessivo',
     },
-    meta: { currentDistrict, lastTool: lastToolName },
+    carta_simbolica: carta,
+  };
+
+  let vozInfluenciaFallback: string | null = null;
+  if (vozAtiva) {
+    const adj = adjustSuggestionForVoz(fallbackSuggestion, vozAtiva);
+    if (adj.voz_influencia) {
+      fallbackSuggestion.postura = adj.postura;
+      fallbackSuggestion.pergunta_clinica = adj.pergunta_clinica;
+      fallbackSuggestion.confianca = Math.min(100, fallbackSuggestion.confianca + adj.confianca_boost);
+      vozInfluenciaFallback = adj.voz_influencia;
+    }
+  }
+
+  return {
+    suggestion: fallbackSuggestion,
+    meta: { currentDistrict, lastTool: lastToolName, vozInfluencia: vozInfluenciaFallback },
   };
 }

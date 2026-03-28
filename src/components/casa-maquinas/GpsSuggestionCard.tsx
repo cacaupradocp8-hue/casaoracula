@@ -7,23 +7,24 @@ import { getGpsSuggestion, type GpsSuggestion } from '@/lib/gps-cidadela';
 interface Props {
   clientId: string;
   checkin: string;
+  vozAtiva?: string | null;
   onApply?: (suggestion: GpsSuggestion) => void;
 }
 
-export function GpsSuggestionCard({ clientId, checkin, onApply }: Props) {
+export function GpsSuggestionCard({ clientId, checkin, vozAtiva, onApply }: Props) {
   const [suggestion, setSuggestion] = useState<GpsSuggestion | null>(null);
-  const [meta, setMeta] = useState<{ currentDistrict: string | null; lastTool: string | null }>({ currentDistrict: null, lastTool: null });
+  const [meta, setMeta] = useState<{ currentDistrict: string | null; lastTool: string | null; vozInfluencia: string | null }>({ currentDistrict: null, lastTool: null, vozInfluencia: null });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!clientId) return;
     setLoading(true);
-    getGpsSuggestion(clientId, checkin).then(res => {
+    getGpsSuggestion(clientId, checkin, vozAtiva).then(res => {
       setSuggestion(res.suggestion);
       setMeta(res.meta);
       setLoading(false);
     });
-  }, [clientId, checkin]);
+  }, [clientId, checkin, vozAtiva]);
 
   if (loading) {
     return (
@@ -59,10 +60,10 @@ export function GpsSuggestionCard({ clientId, checkin, onApply }: Props) {
         </div>
 
         {/* Meta resumo */}
-        <div className="flex gap-4 text-[10px] text-muted-foreground/60">
+        <div className="flex flex-wrap gap-3 text-[10px] text-muted-foreground/60">
           {meta.currentDistrict && (
             <span className="flex items-center gap-1">
-              <MapPin className="w-3 h-3" /> Atual: {meta.currentDistrict}
+              <MapPin className="w-3 h-3" /> Distrito: {meta.currentDistrict}
             </span>
           )}
           {meta.lastTool && (
@@ -70,7 +71,19 @@ export function GpsSuggestionCard({ clientId, checkin, onApply }: Props) {
               <Wrench className="w-3 h-3" /> Última: {meta.lastTool}
             </span>
           )}
+          {meta.vozInfluencia && (
+            <span className="flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-primary/60" /> Voz: {meta.vozInfluencia}
+            </span>
+          )}
         </div>
+
+        {/* Baseado em */}
+        {meta.vozInfluencia && (
+          <div className="text-[9px] text-primary/40 italic">
+            Sugere com base em: Distrito + Torre + Voz ({meta.vozInfluencia})
+          </div>
+        )}
 
         {/* Suggestion grid */}
         <div className="grid grid-cols-2 gap-3">
