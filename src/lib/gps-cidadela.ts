@@ -120,7 +120,8 @@ async function fetchRandomCard(): Promise<{ id: string; nome: string; mensagem: 
 export async function getGpsSuggestion(
   clientId: string,
   _checkin: string,
-): Promise<{ suggestion: GpsSuggestion; meta: { currentDistrict: string | null; lastTool: string | null } }> {
+  vozAtiva?: string | null,
+): Promise<{ suggestion: GpsSuggestion; meta: { currentDistrict: string | null; lastTool: string | null; vozInfluencia: string | null } }> {
   // 1. Load active rules from cartographer_rules
   const { data: rulesData } = await supabase
     .from('cartographer_rules')
