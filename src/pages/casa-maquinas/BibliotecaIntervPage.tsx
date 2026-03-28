@@ -67,6 +67,7 @@ export default function BibliotecaIntervPage() {
   const [filterLevel, setFilterLevel] = useState('all');
   const [filterDistrict, setFilterDistrict] = useState('all');
   const [filterArchetype, setFilterArchetype] = useState('all');
+  const [filterVoz, setFilterVoz] = useState('all');
   const [tab, setTab] = useState('todas');
   const [selected, setSelected] = useState<Intervention | null>(null);
 
