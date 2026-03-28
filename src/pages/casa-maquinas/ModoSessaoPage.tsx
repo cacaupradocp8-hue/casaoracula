@@ -455,6 +455,10 @@ export default function ModoSessaoPage() {
                   )}
                 </div>
               )}
+              {/* Voz used in this session */}
+              {voz_ativa && (
+                <VozAtivaIndicator vozId={voz_ativa} compact />
+              )}
               <div>
                 <label className="text-xs text-muted-foreground mb-2 block">Insight principal</label>
                 <Textarea value={insight} onChange={e => setInsight(e.target.value)} className="bg-background/60 border-border/30" placeholder="O que emergiu nesta sessão?" />
