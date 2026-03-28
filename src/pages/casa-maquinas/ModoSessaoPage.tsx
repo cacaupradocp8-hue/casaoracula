@@ -34,6 +34,7 @@ export default function ModoSessaoPage() {
   const navigate = useNavigate();
   const sessionMode = useSessionMode();
   const { updateFromSession } = useCidadelaMap();
+  const { voz_ativa, setVozAtiva } = useUserVoz();
 
   // Initialize mode from URL param or show selector
   const initialMode = searchParams.get('modo') as SessionMode | null;
