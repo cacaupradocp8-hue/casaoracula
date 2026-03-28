@@ -418,6 +418,9 @@ export default function ModoSessaoPage() {
                 })()}
               </div>
 
+              {/* Voz clinical suggestions in execution step */}
+              <VozClinicalSuggestions vozId={voz_ativa} />
+
               <SessionInterventionSuggestions
                 sessionDistrictId={selectedDistrict || undefined}
                 checkinState={checkinState}
