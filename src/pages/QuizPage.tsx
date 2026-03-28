@@ -691,6 +691,24 @@ export default function QuizPage() {
            </Button>
          </div>
 
+         {/* Ver minha Voz button */}
+          {(() => {
+            const vozId = mapQuizResultToVozId(finalResult.titulo_simbolico);
+            return vozId ? (
+              <div className="flex justify-center pt-2">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => navigate(`/casa-das-maquinas/7-vozes/${vozId}`)}
+                  className="gap-2 border-primary/30 text-primary hover:bg-primary/10"
+                >
+                  <AudioLines className="w-5 h-5" />
+                  Ver minha Voz no sistema
+                </Button>
+              </div>
+            ) : null;
+          })()}
+
          {/* Action buttons */}
           <div className="flex gap-4 justify-center pt-4">
             <Button variant="outline" onClick={() => navigate(-1)}>
