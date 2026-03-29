@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/sidebar';
 import {
   LayoutDashboard, Users, UsersRound, Wrench, BookOpen, Flame, GraduationCap,
-  FlaskConical, Settings, Eye, Crown, Calendar, Map, Sparkles, Compass, ChevronLeft, AudioLines,
+  FlaskConical, Settings, Eye, Crown, Calendar, Map, Sparkles, Compass, ChevronLeft, AudioLines, Layers,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
