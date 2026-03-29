@@ -35,7 +35,7 @@ const STEPS: { key: StepKey; num: number; title: string; description: string; ro
     num: 3,
     title: 'Cartografia Psíquica Orácula',
     description: 'Ao entrar na Casa, revele o mapa da sua CidaDELA Interior — seu GPS simbólico.',
-    route: '/planos-clube',
+    route: '/planos',
     icon: Map,
   },
   {
