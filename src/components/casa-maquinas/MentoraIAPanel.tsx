@@ -159,6 +159,17 @@ export function MentoraIAPanel({
       }
 
       setHistorico(prev => [...prev, { fala: falaAtual, resposta: fullResponse }]);
+
+      // Track feedback for adaptive learning
+      if (user) {
+        supabase.from('co_mentora_feedback').insert({
+          user_id: user.id,
+          cliente_id: clienteId,
+          sugestao_exibida: fullResponse.slice(0, 500),
+          sugestao_utilizada: true,
+          feedback_tipo: 'consultada',
+        }).then(() => {});
+      }
     } catch (err) {
       console.error('Mentora error:', err);
       toast.error('Erro de conexão com a Mentora');
