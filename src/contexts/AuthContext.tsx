@@ -210,11 +210,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       setSession(nextSession);
 
+      // Desbloqueia o gate de boot assim que a sessão inicial é conhecida.
+      // O carregamento de perfil continua controlado por isLoading, evitando a
+      // corrida onde isLoading cai para false antes de isAuthReady subir.
+      if (isInitialSync) {
+        setIsAuthReady(true);
+      }
+
       if (!nextSession?.user) {
         setUser(null);
         setAuthError(null);
         setIsLoading(false);
-        if (isInitialSync) setIsAuthReady(true);
         return;
       }
 
@@ -224,7 +230,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         void fetchUserProfile(nextSession.user.id).finally(() => {
           if (!isMounted) return;
           setIsLoading(false);
-          if (isInitialSync) setIsAuthReady(true);
         });
       }, 0);
     };
