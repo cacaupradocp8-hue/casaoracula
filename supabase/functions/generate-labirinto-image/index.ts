@@ -61,12 +61,12 @@ serve(async (req) => {
   }
 
   try {
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY not configured");
+    if (!OPENAI_API_KEY) {
+      throw new Error("OPENAI_API_KEY not configured");
     }
 
     const { porta_id, symbolic_focus, preview_only } = await req.json() as GenerateRequest;
@@ -129,22 +129,19 @@ Square format, 1:1 aspect ratio. Ultra high resolution. No text, no words, no le
     console.log(`Generating image for Porta ${porta.numero}: ${porta.nome}`);
     console.log("Prompt:", fullPrompt.substring(0, 300) + "...");
 
-    // Call Lovable AI Gateway
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    // Call OpenAI DALL-E 3 API
+    const response = await fetch("https://api.openai.com/v1/images/generations", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash-image-preview",
-        messages: [
-          {
-            role: "user",
-            content: fullPrompt,
-          },
-        ],
-        modalities: ["image", "text"],
+        model: "dall-e-3",
+        prompt: fullPrompt,
+        n: 1,
+        size: "1024x1024",
+        response_format: "b64_json",
       }),
     });
 
@@ -169,7 +166,7 @@ Square format, 1:1 aspect ratio. Ultra high resolution. No text, no words, no le
     }
 
     const aiData = await response.json();
-    const imageData = aiData.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    const imageData = aiData.data?.[0]?.b64_json;
 
     if (!imageData) {
       console.error("No image in response:", JSON.stringify(aiData));
@@ -180,7 +177,7 @@ Square format, 1:1 aspect ratio. Ultra high resolution. No text, no words, no le
       return new Response(
         JSON.stringify({ 
           success: true, 
-          image_base64: imageData,
+          image_base64: `data:image/png;base64,${imageData}`,
           porta_id,
           porta_nome: porta.nome,
         }),
@@ -189,8 +186,7 @@ Square format, 1:1 aspect ratio. Ultra high resolution. No text, no words, no le
     }
 
     // Upload to Supabase Storage
-    const base64Data = imageData.replace(/^data:image\/\w+;base64,/, "");
-    const binaryData = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+    const binaryData = Uint8Array.from(atob(imageData), c => c.charCodeAt(0));
     
     const fileName = `labirinto/porta_${porta.numero}_${Date.now()}.png`;
 

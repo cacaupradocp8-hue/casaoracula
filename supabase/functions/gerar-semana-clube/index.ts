@@ -60,8 +60,8 @@ serve(async (req) => {
     }
 
     // --- Step 1: Generate content via Lovable AI ---
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY not configured");
 
     const userPrompt = `Livro: "${livro}"
 Trecho/Capítulo: "${capitulo_trecho}"
@@ -91,14 +91,14 @@ Crie UMA pergunta contemplativa profunda que ajude a leitora a refletir sobre su
 Crie uma prática terapêutica simples (escrita reflexiva, visualização simbólica ou auto-observação) inspirada no símbolo central do trecho. Inclua: nome da prática, duração sugerida e instruções passo a passo.
 </PRATICA>`;
 
-    const aiResponse = await fetch("https://ai.lovable.dev/api/chat/completions", {
+    const aiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
+        "Authorization": `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "gpt-4o",
         messages: [
           { role: "system", content: ALQUIMISTA_SYSTEM_PROMPT },
           { role: "user", content: userPrompt },

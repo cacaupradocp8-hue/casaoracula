@@ -10,8 +10,8 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not configured");
 
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -80,28 +80,24 @@ Ultra high resolution, professional quality.`;
 
     console.log("Generating infographic image with pro model...");
 
-    // Build the message content - optionally include reference image
-    const messageContent: any[] = [{ type: "text", text: imagePrompt }];
-    
+    // Build prompt text (no reference image support with DALL-E 3 generations endpoint)
+    let finalPrompt = imagePrompt;
     if (reference_image_url) {
-      messageContent.push({
-        type: "image_url",
-        image_url: { url: reference_image_url }
-      });
+      finalPrompt += `\n\nStyle reference: inspired by the aesthetic of the reference artwork.`;
     }
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/images/generations", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-pro-image-preview",
-        messages: [
-          { role: "user", content: messageContent },
-        ],
-        modalities: ["image", "text"],
+        model: "dall-e-3",
+        prompt: finalPrompt,
+        n: 1,
+        size: "1792x1024",
+        response_format: "b64_json",
       }),
     });
 
@@ -124,7 +120,7 @@ Ultra high resolution, professional quality.`;
     }
 
     const data = await response.json();
-    const imageBase64 = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    const imageBase64 = data.data?.[0]?.b64_json;
 
     if (!imageBase64) {
       throw new Error("Nenhuma imagem foi gerada");
@@ -133,8 +129,7 @@ Ultra high resolution, professional quality.`;
     // Upload to storage
     const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, "");
-    const binaryData = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+    const binaryData = Uint8Array.from(atob(imageBase64), c => c.charCodeAt(0));
     
     const fileName = `infograficos/${project_id || crypto.randomUUID()}_${Date.now()}.png`;
 

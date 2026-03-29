@@ -81,8 +81,8 @@ serve(async (req) => {
 
     // If AI enhancement is enabled, personalize each section
     if (useAI) {
-      const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-      if (LOVABLE_API_KEY) {
+      const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+      if (OPENAI_API_KEY) {
         try {
           const systemPrompt = `Você é uma assistente para terapeutas que trabalham com o método simbólico do Labirinto da Heroína Interna®.
 
@@ -99,10 +99,10 @@ CONTEXTO DAS CAMADAS SELECIONADAS:
 ${contexto}`;
 
           const melhorias = await Promise.all([
-            personalizarSecao("abertura", templateBase.abertura, systemPrompt, LOVABLE_API_KEY),
-            personalizarSecao("exploracao", templateBase.exploracao, systemPrompt, LOVABLE_API_KEY),
-            personalizarSecao("intervencao", templateBase.intervencao, systemPrompt, LOVABLE_API_KEY),
-            personalizarSecao("fechamento", templateBase.fechamento, systemPrompt, LOVABLE_API_KEY),
+            personalizarSecao("abertura", templateBase.abertura, systemPrompt, OPENAI_API_KEY),
+            personalizarSecao("exploracao", templateBase.exploracao, systemPrompt, OPENAI_API_KEY),
+            personalizarSecao("intervencao", templateBase.intervencao, systemPrompt, OPENAI_API_KEY),
+            personalizarSecao("fechamento", templateBase.fechamento, systemPrompt, OPENAI_API_KEY),
           ]);
 
           roteiro = {
@@ -309,14 +309,14 @@ INSTRUÇÕES:
 - Retorne APENAS o texto refinado, sem explicações`;
 
   try {
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "gpt-4o",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
