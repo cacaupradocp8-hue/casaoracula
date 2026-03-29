@@ -72,22 +72,19 @@ Square format, 1:1 aspect ratio. Ultra high resolution.`;
 
     console.log("Generating oracle image with prompt:", fullPrompt);
 
-    // Call Lovable AI Gateway for image generation
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    // Call OpenAI DALL-E 3 API for image generation
+    const response = await fetch("https://api.openai.com/v1/images/generations", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash-image-preview",
-        messages: [
-          {
-            role: "user",
-            content: fullPrompt,
-          },
-        ],
-        modalities: ["image", "text"],
+        model: "dall-e-3",
+        prompt: fullPrompt,
+        n: 1,
+        size: "1024x1024",
+        response_format: "b64_json",
       }),
     });
 
