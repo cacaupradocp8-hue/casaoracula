@@ -124,7 +124,7 @@ Square format, 1:1 aspect ratio. Ultra high resolution.`;
       return new Response(
         JSON.stringify({ 
           success: true, 
-          image_base64: imageData,
+          image_base64: `data:image/png;base64,${imageData}`,
           symbolic_focus,
         }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
