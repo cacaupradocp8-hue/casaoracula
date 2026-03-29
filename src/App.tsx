@@ -500,6 +500,7 @@ function AppRoutes() {
   // Init session tracking once + track deep routes
   React.useEffect(() => {
     console.info('[boot-debug][routes] AppRoutes montado');
+    window.dispatchEvent(new Event('lovable:app-mounted'));
     initRitualSessionTracking();
   }, []);
 
@@ -2168,26 +2169,26 @@ function AppRoutes() {
 }
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      {import.meta.env.PROD && <ServiceWorkerUpdateToast />}
-      <BrowserRouter>
-        <AuthProvider>
-          <AdminPreviewProvider>
-            <AppDomainProvider>
-              <RootErrorBoundary>
+  <RootErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        {import.meta.env.PROD && <ServiceWorkerUpdateToast />}
+        <BrowserRouter>
+          <AuthProvider>
+            <AdminPreviewProvider>
+              <AppDomainProvider>
                 <Suspense fallback={<BootLoadingScreen message="Carregando a próxima etapa da travessia." />}>
                   <AppRoutes />
                 </Suspense>
-              </RootErrorBoundary>
-            </AppDomainProvider>
-          </AdminPreviewProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+              </AppDomainProvider>
+            </AdminPreviewProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </RootErrorBoundary>
 );
 
 export default App;

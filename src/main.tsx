@@ -7,6 +7,7 @@ const BOOT_IMPORT_RETRY_KEY = "vite-boot-import-retried";
 const BOOT_STALL_RETRY_KEY = "vite-boot-stall-retried";
 const DOM_GUARD_INSTALL_KEY = "__lovable_dom_guard_installed__";
 const BOOT_LOG_PREFIX = "[boot-debug][main]";
+const APP_MOUNT_EVENT = "lovable:app-mounted";
 
 function BootFatalFallback({ message }: { message: string }) {
   return (
@@ -168,9 +169,18 @@ installDomMutationGuards();
 
 const root: Root = createRoot(rootElement);
 let bootWindowOpen = true;
+let appMounted = false;
 window.setTimeout(() => {
   bootWindowOpen = false;
 }, 10000);
+
+window.addEventListener(APP_MOUNT_EVENT, () => {
+  appMounted = true;
+  sessionStorage.removeItem(PRELOAD_RETRY_KEY);
+  sessionStorage.removeItem(BOOT_IMPORT_RETRY_KEY);
+  sessionStorage.removeItem(BOOT_STALL_RETRY_KEY);
+  console.info(`${BOOT_LOG_PREFIX} app montado com sucesso`);
+});
 
 const renderFatalBootFallback = (reason: unknown) => {
   const message = reason instanceof Error
@@ -233,8 +243,7 @@ window.addEventListener("unhandledrejection", (event) => {
 });
 
 window.setTimeout(async () => {
-  const rootStillEmpty = rootElement.innerHTML.trim().length === 0;
-  if (!rootStillEmpty) return;
+  if (appMounted) return;
 
   const alreadyRetried = sessionStorage.getItem(BOOT_STALL_RETRY_KEY) === "1";
   if (alreadyRetried) {
