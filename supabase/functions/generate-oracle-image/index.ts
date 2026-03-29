@@ -140,8 +140,7 @@ Square format, 1:1 aspect ratio. Ultra high resolution.`;
     }
 
     // Convert base64 to blob
-    const base64Data = imageData.replace(/^data:image\/\w+;base64,/, "");
-    const binaryData = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+    const binaryData = Uint8Array.from(atob(imageData), c => c.charCodeAt(0));
     
     const fileName = `cards/${card_id}_${Date.now()}.png`;
 

@@ -129,8 +129,7 @@ Ultra high resolution, professional quality.`;
     // Upload to storage
     const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, "");
-    const binaryData = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+    const binaryData = Uint8Array.from(atob(imageBase64), c => c.charCodeAt(0));
     
     const fileName = `infograficos/${project_id || crypto.randomUUID()}_${Date.now()}.png`;
 

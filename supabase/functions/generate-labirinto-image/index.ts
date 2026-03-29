@@ -186,8 +186,7 @@ Square format, 1:1 aspect ratio. Ultra high resolution. No text, no words, no le
     }
 
     // Upload to Supabase Storage
-    const base64Data = imageData.replace(/^data:image\/\w+;base64,/, "");
-    const binaryData = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+    const binaryData = Uint8Array.from(atob(imageData), c => c.charCodeAt(0));
     
     const fileName = `labirinto/porta_${porta.numero}_${Date.now()}.png`;
 
