@@ -18,12 +18,15 @@ import { Suspense } from "react";
 
 // Only Auth and NotFound are eagerly loaded (critical path)
 import Auth from "./pages/Auth";
+import Dashboard from "./pages/Dashboard";
+import DashboardMembro from "./pages/DashboardMembro";
 import NotFound from "./pages/NotFound";
+import Onboarding from "./pages/Onboarding";
+import SalaDaVisitante from "./pages/SalaDaVisitante";
 
+// Entry routes after auth are eagerly loaded to avoid suspense stalls / white screen on boot
 // All other pages are lazy-loaded
 const ResetPassword = React.lazy(() => import("./pages/ResetPassword"));
-const Dashboard = React.lazy(() => import("./pages/Dashboard"));
-const DashboardMembro = React.lazy(() => import("./pages/DashboardMembro"));
 const Welcome = React.lazy(() => import("./pages/Welcome"));
 const Admin = React.lazy(() => import("./pages/Admin"));
 const BibliotecaUnificada = React.lazy(() => import("./pages/BibliotecaUnificada"));
@@ -165,7 +168,6 @@ const FormacaoMetodoPage = React.lazy(() => import("./pages/FormacaoMetodoPage")
 const FormacaoForumPage = React.lazy(() => import("./pages/FormacaoForumPage"));
 const FormacaoAvaliacoesPage = React.lazy(() => import("./pages/FormacaoAvaliacoesPage"));
 const Jornada = React.lazy(() => import("./pages/Jornada"));
-const Onboarding = React.lazy(() => import("./pages/Onboarding"));
 const SessionRoomHome = React.lazy(() => import("./pages/SessionRoomHome"));
 const SessionRoomCase = React.lazy(() => import("./pages/SessionRoomCase"));
 const SessionRoomGroup = React.lazy(() => import("./pages/SessionRoomGroup"));
@@ -202,7 +204,6 @@ const ExperienciaGratuita = React.lazy(() => import("./pages/ExperienciaGratuita
 const ClubeOracular = React.lazy(() => import("./pages/ClubeOracular"));
 const MapaCasaOracula = React.lazy(() => import("./pages/MapaCasaOracula"));
 const MinhaJornada = React.lazy(() => import("./pages/MinhaJornada"));
-const SalaDaVisitante = React.lazy(() => import("./pages/SalaDaVisitante"));
 
 // Casa pages
 const CasaAtrio = React.lazy(() => import("./pages/casa/CasaAtrio"));
