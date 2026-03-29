@@ -234,7 +234,7 @@ export default function ExperienciaGratuita() {
             <Button
               variant="gold"
               size="lg"
-              onClick={() => navigate('/planos-clube')}
+              onClick={() => navigate('/planos')}
               className="gap-2 px-8"
             >
               Habitar a Casa Orácula

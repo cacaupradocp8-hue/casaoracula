@@ -2062,7 +2062,7 @@ function AppRoutes() {
 
         {/* Planos e Assinatura */}
         <Route path="/planos" element={<Planos />} />
-        <Route path="/planos-clube" element={<PlanosClubeOracular />} />
+        <Route path="/planos-clube" element={<Navigate to="/planos" replace />} />
         <Route 
           path="/pos-compra" 
           element={

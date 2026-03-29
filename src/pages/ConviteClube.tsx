@@ -212,7 +212,7 @@ export default function ConviteClube() {
             <Button
               variant="ghost"
               size="lg"
-              onClick={() => navigate('/planos-clube')}
+              onClick={() => navigate('/planos')}
               className="px-10 py-5 rounded-full font-display text-sm tracking-wider bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 hover:border-gold/30 transition-all group"
             >
               Entrar no Clube

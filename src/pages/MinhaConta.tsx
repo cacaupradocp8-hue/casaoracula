@@ -164,7 +164,7 @@ export default function MinhaConta() {
                  </p>
                  <div className="grid gap-2 pt-2">
                    <Button className="w-full" asChild>
-                     <Link to="/planos-clube">
+                     <Link to="/planos">
                        <ArrowUpRight className="w-4 h-4 mr-2" />
                        Ver Planos
                      </Link>
