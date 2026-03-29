@@ -421,6 +421,7 @@ export default function TravessiaDetalhe() {
   const hasPortalAccess = isAdmin || canAccessFeature(user.portal, travessia.portal_minimo);
   const hasProfessionalAccess = isAdmin || !travessia.requer_profissional || isProfessional;
   const hasFullAccess = hasPortalAccess && hasProfessionalAccess;
+  const hasAlunaAccess = isAdmin || canAccessFeature(user.portal, 'aluna');
 
   // Navigate between travessias
   const currentIndex = allTravessias.findIndex(t => t.slug === slug);
