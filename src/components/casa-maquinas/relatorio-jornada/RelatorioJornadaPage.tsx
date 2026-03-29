@@ -10,11 +10,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import {
   Loader2, Sparkles, MapPin, TrendingUp, Clock, Eye,
   FileText, Printer, RefreshCw, Compass, Shield, Flame,
-  Calendar, AlertTriangle, CheckCircle2, ArrowRight,
+  Calendar, AlertTriangle, CheckCircle2, ArrowRight, Download,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
 import { RelatorioNarrativo } from '../RelatorioNarrativo';
+import { generateRelatorioPDF } from '@/lib/relatorio-pdf-export';
 
 interface Props {
   clienteId: string;
