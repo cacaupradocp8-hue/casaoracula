@@ -328,45 +328,52 @@ export default function MapaVivoCidadelaV2({
         </div>
       </div>
 
-      {/* Mandala unificada da Casa das Máquinas */}
-      <div className="rounded-2xl border border-[#C9A24A]/10 bg-[#0a0a14]/80 p-3 md:p-5">
-        <CidadelaMapSVG
-          districtStates={districtDisplayStates}
-          activeDistrict={cityState?.distrito_ativo || null}
-          archetypeDistricts={archetypeDistricts}
-          eventCounts={eventCounts}
-          onDistrictClick={handleDistrictClickByName}
-          maxWidth={620}
-        />
-      </div>
+      {/* Replay Mode or Normal Map */}
+      {showReplay && targetId ? (
+        <ReplayJornada clienteId={targetId} onClose={() => setShowReplay(false)} />
+      ) : (
+        <>
+          {/* Mandala unificada da Casa das Máquinas */}
+          <div className="rounded-2xl border border-[#C9A24A]/10 bg-[#0a0a14]/80 p-3 md:p-5">
+            <CidadelaMapSVG
+              districtStates={districtDisplayStates}
+              activeDistrict={cityState?.distrito_ativo || null}
+              archetypeDistricts={archetypeDistricts}
+              eventCounts={eventCounts}
+              onDistrictClick={handleDistrictClickByName}
+              maxWidth={620}
+            />
+          </div>
 
-      {/* Timeline */}
-      {showTimeline && history.length > 0 && (
-        <Card className="mt-6 border-[#C9A24A]/10 bg-[#0a0a14]/80">
-          <CardContent className="p-4">
-            <h3 className="text-xs font-semibold text-[#C9A24A]/60 uppercase tracking-wider mb-3 flex items-center gap-2">
-              <Clock className="w-3.5 h-3.5" /> Trilha de Travessias
-            </h3>
-            <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
-              {history.slice(0, 20).map(event => (
-                <div key={event.id} className="flex items-start gap-3 text-[11px]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#C9A24A]/40 mt-1.5 shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <span className="text-[#F5F1E8]/60 font-medium">{event.distrito}</span>
-                    <span className="text-[#F5F1E8]/30 mx-1.5">·</span>
-                    <span className="text-[#F5F1E8]/40">{event.evento}</span>
-                    {event.detalhe && (
-                      <p className="text-[#F5F1E8]/25 text-[10px] mt-0.5">{event.detalhe}</p>
-                    )}
-                  </div>
-                  <span className="text-[#F5F1E8]/20 text-[9px] whitespace-nowrap">
-                    {new Date(event.created_at).toLocaleDateString('pt-BR')}
-                  </span>
+          {/* Timeline */}
+          {showTimeline && history.length > 0 && (
+            <Card className="mt-6 border-[#C9A24A]/10 bg-[#0a0a14]/80">
+              <CardContent className="p-4">
+                <h3 className="text-xs font-semibold text-[#C9A24A]/60 uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <Clock className="w-3.5 h-3.5" /> Trilha de Travessias
+                </h3>
+                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
+                  {history.slice(0, 20).map(event => (
+                    <div key={event.id} className="flex items-start gap-3 text-[11px]">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#C9A24A]/40 mt-1.5 shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <span className="text-[#F5F1E8]/60 font-medium">{event.distrito}</span>
+                        <span className="text-[#F5F1E8]/30 mx-1.5">·</span>
+                        <span className="text-[#F5F1E8]/40">{event.evento}</span>
+                        {event.detalhe && (
+                          <p className="text-[#F5F1E8]/25 text-[10px] mt-0.5">{event.detalhe}</p>
+                        )}
+                      </div>
+                      <span className="text-[#F5F1E8]/20 text-[9px] whitespace-nowrap">
+                        {new Date(event.created_at).toLocaleDateString('pt-BR')}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          )}
+        </>
       )}
 
       {/* District Detail Panel */}
