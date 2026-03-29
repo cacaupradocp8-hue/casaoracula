@@ -166,7 +166,7 @@ Square format, 1:1 aspect ratio. Ultra high resolution. No text, no words, no le
     }
 
     const aiData = await response.json();
-    const imageData = aiData.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    const imageData = aiData.data?.[0]?.b64_json;
 
     if (!imageData) {
       console.error("No image in response:", JSON.stringify(aiData));
