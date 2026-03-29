@@ -177,7 +177,7 @@ Square format, 1:1 aspect ratio. Ultra high resolution. No text, no words, no le
       return new Response(
         JSON.stringify({ 
           success: true, 
-          image_base64: imageData,
+          image_base64: `data:image/png;base64,${imageData}`,
           porta_id,
           porta_nome: porta.nome,
         }),
