@@ -16,6 +16,7 @@ import {
   Loader2, Plus, X, CheckCircle, Map, Flower2, Save, LogOut,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { MentoraIAPanel } from './MentoraIAPanel';
 import { toast } from 'sonner';
 
 interface SessionFlowWizardProps {
