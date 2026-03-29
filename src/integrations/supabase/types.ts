@@ -4331,6 +4331,68 @@ export type Database = {
           },
         ]
       }
+      clube_livro_semana: {
+        Row: {
+          capitulo_trecho: string
+          carta_semana: string | null
+          ciclo_id: string | null
+          created_at: string
+          gerado_por: string | null
+          id: string
+          livro: string
+          pergunta_contemplativa: string | null
+          podcast_audio_url: string | null
+          podcast_roteiro: string | null
+          pratica_terapeutica: string | null
+          publicado_em: string | null
+          semana_numero: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          capitulo_trecho: string
+          carta_semana?: string | null
+          ciclo_id?: string | null
+          created_at?: string
+          gerado_por?: string | null
+          id?: string
+          livro: string
+          pergunta_contemplativa?: string | null
+          podcast_audio_url?: string | null
+          podcast_roteiro?: string | null
+          pratica_terapeutica?: string | null
+          publicado_em?: string | null
+          semana_numero?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          capitulo_trecho?: string
+          carta_semana?: string | null
+          ciclo_id?: string | null
+          created_at?: string
+          gerado_por?: string | null
+          id?: string
+          livro?: string
+          pergunta_contemplativa?: string | null
+          podcast_audio_url?: string | null
+          podcast_roteiro?: string | null
+          pratica_terapeutica?: string | null
+          publicado_em?: string | null
+          semana_numero?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_livro_semana_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_portais: {
         Row: {
           aplicacao_pessoal: string | null

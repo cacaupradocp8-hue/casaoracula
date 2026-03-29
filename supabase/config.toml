@@ -68,3 +68,6 @@ verify_jwt = false
 
 [functions.bussola-onirica]
 verify_jwt = false
+
+[functions.gerar-semana-clube]
+verify_jwt = false

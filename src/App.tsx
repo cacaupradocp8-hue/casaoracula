@@ -264,6 +264,7 @@ const MapaJornadas = React.lazy(() => import("./pages/clube-livro/MapaJornadas")
 const MinhaTravessia = React.lazy(() => import("./pages/clube-livro/MinhaTravessia"));
 const CertificadoTravessia = React.lazy(() => import("./pages/clube-livro/CertificadoTravessia"));
 const Lab8020Season = React.lazy(() => import("./pages/clube-livro/Lab8020Season"));
+const ClubeLivroSemana = React.lazy(() => import("./pages/clube-livro/ClubeLivroSemana"));
 
 // Jardim do Ofício
 const JardimOficioPage = React.lazy(() => import("./pages/jardim-oficio/JardimOficioPage"));
@@ -928,7 +929,15 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      {/* Clube do Livro Oracular (legado) */}
+      {/* Clube do Livro Oracular */}
+      <Route
+        path="/clube-livro/semana"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroSemana />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/clube-livro"
         element={
