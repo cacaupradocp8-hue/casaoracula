@@ -567,6 +567,22 @@ export function SessionFlowWizard({ clienteId, clienteNome, open, onClose }: Ses
                   />
                 </div>
 
+                {/* Mentora IA */}
+                <div className="pt-2 border-t border-border/20">
+                  <MentoraIAPanel
+                    clienteId={clienteId}
+                    clienteNome={clienteNome}
+                    dadosCidadela={{
+                      ferramentas: usedTools.map(t => t.ferramenta_nome),
+                    }}
+                    historicoSessao={
+                      insights.length > 0
+                        ? `Insights registrados: ${insights.map(i => i.text).join('; ')}`
+                        : undefined
+                    }
+                  />
+                </div>
+
                 <Button
                   onClick={handleFinishSession}
                   className="w-full bg-primary hover:bg-primary/80 text-primary-foreground gap-2"
