@@ -80,28 +80,24 @@ Ultra high resolution, professional quality.`;
 
     console.log("Generating infographic image with pro model...");
 
-    // Build the message content - optionally include reference image
-    const messageContent: any[] = [{ type: "text", text: imagePrompt }];
-    
+    // Build prompt text (no reference image support with DALL-E 3 generations endpoint)
+    let finalPrompt = imagePrompt;
     if (reference_image_url) {
-      messageContent.push({
-        type: "image_url",
-        image_url: { url: reference_image_url }
-      });
+      finalPrompt += `\n\nStyle reference: inspired by the aesthetic of the reference artwork.`;
     }
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/images/generations", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-pro-image-preview",
-        messages: [
-          { role: "user", content: messageContent },
-        ],
-        modalities: ["image", "text"],
+        model: "dall-e-3",
+        prompt: finalPrompt,
+        n: 1,
+        size: "1792x1024",
+        response_format: "b64_json",
       }),
     });
 
