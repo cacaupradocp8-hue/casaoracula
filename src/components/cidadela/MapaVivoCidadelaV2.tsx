@@ -18,8 +18,9 @@ import { useQuery } from '@tanstack/react-query';
 import {
   ArrowLeft, Loader2, Eye, Crown, Moon, Sparkles, Clock,
   Shield, Flame, Compass, Flower2, TreePine, Heart, Sword,
-  Scroll, Droplets, Search, Gem, MapPin, Wrench, ChevronRight
+  Scroll, Droplets, Search, Gem, MapPin, Wrench, ChevronRight, History
 } from 'lucide-react';
+import ReplayJornada from './ReplayJornada';
 
 // ── Icon map for districts ──────────────────────
 const DISTRICT_ICONS: Record<string, React.ElementType> = {
