@@ -56,7 +56,7 @@ serve(async (req) => {
   }
 
   try {
-    const { fala_cliente, dados_cidadela, historico_sessao, voz_terapeuta } = await req.json();
+    const { fala_cliente, dados_cidadela, historico_sessao, voz_terapeuta, perfil_terapeuta } = await req.json();
 
     if (!fala_cliente || typeof fala_cliente !== "string" || fala_cliente.trim().length === 0) {
       return new Response(JSON.stringify({ error: "Campo 'fala_cliente' é obrigatório" }), {
@@ -70,6 +70,26 @@ serve(async (req) => {
 
     // Build context message
     let contextParts: string[] = [];
+
+    // Adaptive profile context
+    if (perfil_terapeuta) {
+      contextParts.push(`PERFIL ADAPTATIVO DA TERAPEUTA:
+- Estilo de condução: ${perfil_terapeuta.estilo_conducao || "exploratório"}
+- Linguagem preferida: ${perfil_terapeuta.linguagem || "simbólica"}
+- Nível de profundidade: ${perfil_terapeuta.nivel_profundidade || "médio"}
+- Padrão de decisão: ${perfil_terapeuta.padrao_decisao || "intuitivo"}
+- Ferramentas preferidas: ${(perfil_terapeuta.ferramentas_preferidas || []).join(", ") || "sem preferência definida"}
+- Pontos fortes: ${(perfil_terapeuta.pontos_fortes || []).join(", ") || "em construção"}
+- Pontos cegos: ${(perfil_terapeuta.pontos_cegos || []).join(", ") || "em construção"}
+
+ADAPTE sua orientação ao perfil desta terapeuta:
+- Se estilo "contemplativo": use mais pausas e perguntas abertas
+- Se estilo "diretivo": seja mais objetiva nas sugestões
+- Se linguagem "direta": reduza metáforas
+- Se linguagem "poética": amplie imagens simbólicas
+- Se nível "profundo/imersivo": explore camadas mais densas
+- Se nível "superficial/médio": mantenha orientações práticas`);
+    }
 
     if (dados_cidadela) {
       contextParts.push(`ESTADO DA CIDADELA DA CLIENTE:

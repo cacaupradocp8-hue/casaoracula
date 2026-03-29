@@ -238,6 +238,7 @@ const PainelInstitucionalPage = React.lazy(() => import("./pages/casa-maquinas/P
 const ClientesPage = React.lazy(() => import("./pages/casa-maquinas/ClientesPage"));
 const ClienteDetailPage = React.lazy(() => import("./pages/casa-maquinas/ClienteDetailPage"));
 const ModoSessaoPage = React.lazy(() => import("./pages/casa-maquinas/ModoSessaoPage"));
+const PerfilConducaoPage = React.lazy(() => import("./pages/casa-maquinas/PerfilConducaoPage"));
 const FerramentasPage = React.lazy(() => import("./pages/casa-maquinas/FerramentasPage"));
 const GruposPage = React.lazy(() => import("./pages/casa-maquinas/GruposPage"));
 const GrupoDetailPage = React.lazy(() => import("./pages/casa-maquinas/GrupoDetailPage"));
@@ -1726,6 +1727,7 @@ function AppRoutes() {
         <Route path="/academia/curso-deusas" element={<ProtectedRoute minPortal="aluna_formacao"><CursoDeusasPage /></ProtectedRoute>} />
         <Route path="/academia/curso-chave-onirica" element={<ProtectedRoute minPortal="aluna_formacao"><CursoChaveOniricaPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/nova-sessao" element={<ProtectedRoute minPortal="oracula"><ModoSessaoPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/perfil-conducao" element={<ProtectedRoute minPortal="oracula"><PerfilConducaoPage /></ProtectedRoute>} />
         <Route path="/saas/sessao/:clienteId" element={<ProtectedRoute minPortal="oracula"><ModoSessaoImersivo /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/ferramentas" element={<ProtectedRoute minPortal="oracula"><FerramentasPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/grupos" element={<ProtectedRoute minPortal="oracula"><GruposPage /></ProtectedRoute>} />
