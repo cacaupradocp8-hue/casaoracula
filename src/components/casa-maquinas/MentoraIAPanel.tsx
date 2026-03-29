@@ -91,6 +91,7 @@ export function MentoraIAPanel({
           dados_cidadela: dadosCidadela,
           historico_sessao: contextoSessao,
           voz_terapeuta: vozTerapeuta,
+          perfil_terapeuta: perfilTerapeuta || undefined,
         }),
       });
 
