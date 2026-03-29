@@ -3,6 +3,7 @@ import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCidadelaMap } from '@/hooks/useCidadelaMap';
+import CidadelaMapSVG from '@/components/cidadela/CidadelaMapSVG';
 import { useSessionMode, type SessionMode } from '@/hooks/useSessionMode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
