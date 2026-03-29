@@ -124,6 +124,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'narroterapia': AdminNarroterapiaTab,
   'narroterapia-autorizacao': AdminNarroterapiaAutorizacaoTab,
   'clube-livro': AdminClubeLivroTab,
+  'gerador-semanal': AdminGeradorSemanal,
   'planos-clube': AdminPlanosClubTab,
   'estudio-oracular': AdminEstudioOracular,
   'portal-junguiano': AdminPortalJunguianoTab,
