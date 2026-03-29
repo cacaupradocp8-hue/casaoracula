@@ -35,7 +35,7 @@ const STEPS: { key: StepKey; num: number; title: string; description: string; ro
     num: 3,
     title: 'Cartografia Psíquica Orácula',
     description: 'Ao entrar na Casa, revele o mapa da sua CidaDELA Interior — seu GPS simbólico.',
-    route: '/planos-clube',
+    route: '/planos',
     icon: Map,
   },
   {
@@ -234,7 +234,7 @@ export default function ExperienciaGratuita() {
             <Button
               variant="gold"
               size="lg"
-              onClick={() => navigate('/planos-clube')}
+              onClick={() => navigate('/planos')}
               className="gap-2 px-8"
             >
               Habitar a Casa Orácula
