@@ -312,11 +312,20 @@ export default function MapaVivoCidadelaV2({
           onClick={() => navigate(selfMode ? '/dashboard-membro' : `/casa-das-maquinas/clientes/${targetId}`)}>
           <ArrowLeft className="w-3 h-3" /> Voltar
         </Button>
-        <Button variant="outline" size="sm"
-          className="border-[#C9A24A]/15 text-[#C9A24A]/70 text-xs h-8 gap-1.5"
-          onClick={() => setShowTimeline(!showTimeline)}>
-          <Clock className="w-3 h-3" /> {showTimeline ? 'Ocultar' : 'Linha do tempo'}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm"
+            className="border-[#C9A24A]/15 text-[#C9A24A]/70 text-xs h-8 gap-1.5"
+            onClick={() => setShowTimeline(!showTimeline)}>
+            <Clock className="w-3 h-3" /> {showTimeline ? 'Ocultar' : 'Linha do tempo'}
+          </Button>
+          {!selfMode && targetId && (
+            <Button variant="outline" size="sm"
+              className="border-[#C9A24A]/15 text-[#C9A24A]/70 text-xs h-8 gap-1.5"
+              onClick={() => setShowReplay(!showReplay)}>
+              <History className="w-3 h-3" /> {showReplay ? 'Mapa Atual' : 'Replay da Jornada'}
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Mandala unificada da Casa das Máquinas */}
