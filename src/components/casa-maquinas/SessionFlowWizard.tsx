@@ -16,6 +16,7 @@ import {
   Loader2, Plus, X, CheckCircle, Map, Flower2, Save, LogOut,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { MentoraIAPanel } from './MentoraIAPanel';
 import { toast } from 'sonner';
 
 interface SessionFlowWizardProps {
@@ -563,6 +564,22 @@ export function SessionFlowWizard({ clienteId, clienteNome, open, onClose }: Ses
                     onChange={e => setSessionNotes(e.target.value)}
                     placeholder="Observações livres..."
                     className="bg-background/60 border-border/30 min-h-[60px]"
+                  />
+                </div>
+
+                {/* Mentora IA */}
+                <div className="pt-2 border-t border-border/20">
+                  <MentoraIAPanel
+                    clienteId={clienteId}
+                    clienteNome={clienteNome}
+                    dadosCidadela={{
+                      ferramentas: usedTools.map(t => t.ferramenta_nome),
+                    }}
+                    historicoSessao={
+                      insights.length > 0
+                        ? `Insights registrados: ${insights.map(i => i.text).join('; ')}`
+                        : undefined
+                    }
                   />
                 </div>
 

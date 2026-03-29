@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import { GpsSuggestionCard } from '@/components/casa-maquinas/GpsSuggestionCard';
 import type { GpsSuggestion } from '@/lib/gps-cidadela';
 import { SessionInterventionSuggestions } from '@/components/casa-maquinas/SessionInterventionSuggestions';
+import { MentoraIAPanel } from '@/components/casa-maquinas/MentoraIAPanel';
 import { OracleSessionWidget } from '@/components/cidadela-oracle/OracleSessionWidget';
 import { useCidadelaOracle, type CidadelaCard } from '@/hooks/useCidadelaOracle';
 import { useSessionMode, type SessionMode } from '@/hooks/useSessionMode';
@@ -433,6 +434,19 @@ export default function ModoSessaoPage() {
               />
               {usedInterventionIds.length > 0 && (
                 <p className="text-[10px] text-primary/40 text-center">{usedInterventionIds.length} intervenção(ões) selecionada(s)</p>
+              )}
+              {/* Mentora IA */}
+              {selectedClient && (
+                <div className="pt-2 border-t border-border/20">
+                  <MentoraIAPanel
+                    clienteId={selectedClient}
+                    clienteNome={clients.find(c => c.id === selectedClient)?.nome || 'Cliente'}
+                    dadosCidadela={{
+                      distrito_ativo: districts.find(d => d.id === selectedDistrict)?.nome,
+                    }}
+                    vozTerapeuta={voz_ativa || undefined}
+                  />
+                </div>
               )}
               <div className="flex gap-2">
                 <Button variant="outline" onClick={() => setStep(2)} className="flex-1 border-border/30 text-muted-foreground">Voltar</Button>
