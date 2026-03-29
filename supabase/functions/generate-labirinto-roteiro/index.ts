@@ -81,8 +81,8 @@ serve(async (req) => {
 
     // If AI enhancement is enabled, personalize each section
     if (useAI) {
-      const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-      if (LOVABLE_API_KEY) {
+      const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+      if (OPENAI_API_KEY) {
         try {
           const systemPrompt = `Você é uma assistente para terapeutas que trabalham com o método simbólico do Labirinto da Heroína Interna®.
 
