@@ -10,11 +10,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import {
   Loader2, Sparkles, MapPin, TrendingUp, Clock, Eye,
   FileText, Printer, RefreshCw, Compass, Shield, Flame,
-  Calendar, AlertTriangle, CheckCircle2, ArrowRight,
+  Calendar, AlertTriangle, CheckCircle2, ArrowRight, Download,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
 import { RelatorioNarrativo } from '../RelatorioNarrativo';
+import { generateRelatorioPDF } from '@/lib/relatorio-pdf-export';
 
 interface Props {
   clienteId: string;
@@ -185,6 +186,37 @@ export function RelatorioJornadaPage({ clienteId }: Props) {
     window.print();
   };
 
+  const handleExportPDF = () => {
+    const sections: { title: string; content: string }[] = [];
+    if (panorama?.narrative) {
+      const n = panorama.narrative;
+      if (n.ponto_partida) sections.push({ title: 'Panorama — Ponto de Partida', content: n.ponto_partida });
+      if (n.movimentos_principais) sections.push({ title: 'Movimentos Principais', content: n.movimentos_principais });
+      if (n.repeticoes) sections.push({ title: 'Repetições e Padrões', content: n.repeticoes });
+      if (n.momentos_virada) sections.push({ title: 'Momentos de Virada', content: n.momentos_virada });
+      if (n.integracao) sections.push({ title: 'Sinais de Integração', content: n.integracao });
+      if (n.proximo_horizonte) sections.push({ title: 'Próximo Horizonte Simbólico', content: n.proximo_horizonte });
+      if (n.sintese) sections.push({ title: 'Síntese', content: n.sintese });
+    }
+    if (sections.length === 0) {
+      sections.push({ title: 'Panorama', content: 'Gere a síntese narrativa antes de exportar o PDF completo.' });
+    }
+
+    generateRelatorioPDF({
+      clienteNome,
+      periodoInicio: firstSession || null,
+      periodoFim: lastSession || null,
+      totalSessoes: sessions.length,
+      distritosAtivos: ativos.length,
+      distritosIntegrados: integrados.length,
+      sections,
+      traversals: traversals.map(t => ({ date: t.date, label: t.label, detail: t.detail })),
+      districts: districts.map(d => ({ nome: d.nome, state: d.state, sessions_count: d.sessions_count })),
+      patterns: patterns.map(p => ({ pattern_name: p.pattern_name, occurrence_count: p.occurrence_count })),
+    });
+    toast.success('PDF exportado com sucesso');
+  };
+
   const ativos = districts.filter(d => d.state === 'ativo');
   const integrados = districts.filter(d => d.state === 'integrado');
   const firstSession = sessions[0]?.created_at;
@@ -218,6 +250,9 @@ export function RelatorioJornadaPage({ clienteId }: Props) {
             </p>
           </div>
           <div className="flex gap-2 print:hidden">
+            <Button variant="outline" size="sm" onClick={handleExportPDF} className="gap-1.5 text-xs">
+              <Download className="w-3.5 h-3.5" /> Exportar PDF
+            </Button>
             <Button variant="outline" size="sm" onClick={handlePrint} className="gap-1.5 text-xs">
               <Printer className="w-3.5 h-3.5" /> Imprimir
             </Button>
