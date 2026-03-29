@@ -3,6 +3,7 @@ import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCidadelaMap } from '@/hooks/useCidadelaMap';
+import CidadelaMapSVG from '@/components/cidadela/CidadelaMapSVG';
 import { useSessionMode, type SessionMode } from '@/hooks/useSessionMode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -494,27 +495,25 @@ export default function ModoSessaoImersivo() {
                       <Map className="w-3.5 h-3.5" /> Ver Mapa da CidaDELA
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-2xl bg-card">
+                   <DialogContent className="max-w-2xl bg-card">
                     <DialogHeader>
                       <DialogTitle className="text-foreground">Mapa da CidaDELA — {client.nome}</DialogTitle>
                     </DialogHeader>
-                    <div className="py-6">
-                      {activeDistricts.length > 0 ? (
-                        <div className="grid grid-cols-2 gap-3">
+                    <div className="py-4">
+                      <CidadelaMapSVG
+                        activeDistrict={sessDistrict || null}
+                        maxWidth={500}
+                        forceCircular
+                      />
+                      {activeDistricts.length > 0 && (
+                        <div className="grid grid-cols-2 gap-2 mt-4">
                           {activeDistricts.map(d => (
-                            <Card key={d.district_id} className="bg-background/50 border-primary/20">
-                              <CardContent className="p-3">
-                                <p className="text-sm font-medium text-foreground">{d.district_name}</p>
-                                <div className="flex items-center gap-2 mt-1">
-                                  <Badge variant="secondary" className="text-[10px]">{d.state}</Badge>
-                                  <span className="text-[10px] text-muted-foreground">{d.sessions_count} sessões</span>
-                                </div>
-                              </CardContent>
-                            </Card>
+                            <div key={d.district_id} className="flex items-center justify-between text-xs p-2 rounded-md bg-background/50 border border-border/20">
+                              <span className="text-foreground/80">{d.district_name}</span>
+                              <Badge variant="secondary" className="text-[10px]">{d.sessions_count}x</Badge>
+                            </div>
                           ))}
                         </div>
-                      ) : (
-                        <p className="text-sm text-muted-foreground text-center">Nenhum distrito ativo ainda.</p>
                       )}
                     </div>
                   </DialogContent>

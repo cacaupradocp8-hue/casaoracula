@@ -24,6 +24,7 @@ import { CartografiaPsiquicaOracula } from '@/components/casa-maquinas/cartograf
 import { RelatorioJornadaPage } from '@/components/casa-maquinas/relatorio-jornada/RelatorioJornadaPage';
 import { BussolaCartografa } from '@/components/casa-maquinas/bussola-cartografa/BussolaCartografa';
 import { SessionFlowWizard } from '@/components/casa-maquinas/SessionFlowWizard';
+import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
 import { Button } from '@/components/ui/button';
 import { Loader2, Play } from 'lucide-react';
 
@@ -79,6 +80,9 @@ export default function ClienteDetailPage() {
           <Play className="w-4 h-4" /> Iniciar Sessão
         </Button>
       </div>
+
+      {/* Mini Mandala — visão rápida da CidaDELA */}
+      <MiniMandalaCidadela clienteId={clienteId!} />
 
       <SessionFlowWizard
         clienteId={clienteId!}
