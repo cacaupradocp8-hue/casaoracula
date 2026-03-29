@@ -1,4 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -21,6 +23,16 @@ interface MentoraIAPanelProps {
   vozTerapeuta?: string;
 }
 
+interface TherapistProfileData {
+  estilo_conducao: string;
+  linguagem: string;
+  nivel_profundidade: string;
+  padrao_decisao: string;
+  ferramentas_preferidas: string[];
+  pontos_fortes: string[];
+  pontos_cegos: string[];
+}
+
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mentora-ia`;
 
 export function MentoraIAPanel({
@@ -30,12 +42,28 @@ export function MentoraIAPanel({
   historicoSessao,
   vozTerapeuta,
 }: MentoraIAPanelProps) {
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [falaCliente, setFalaCliente] = useState('');
   const [resposta, setResposta] = useState('');
   const [loading, setLoading] = useState(false);
   const [historico, setHistorico] = useState<Array<{ fala: string; resposta: string }>>([]);
+  const [perfilTerapeuta, setPerfilTerapeuta] = useState<TherapistProfileData | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Load therapist profile on open
+  useEffect(() => {
+    if (open && user) {
+      supabase
+        .from('co_therapist_profile')
+        .select('estilo_conducao, linguagem, nivel_profundidade, padrao_decisao, ferramentas_preferidas, pontos_fortes, pontos_cegos')
+        .eq('user_id', user.id)
+        .maybeSingle()
+        .then(({ data }) => {
+          if (data) setPerfilTerapeuta(data as any);
+        });
+    }
+  }, [open, user]);
 
   const consultarMentora = async () => {
     if (!falaCliente.trim() || loading) return;
