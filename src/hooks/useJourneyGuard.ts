@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
-export type JourneyStep = 'quiz' | 'cartografia' | 'cidadela' | 'complete';
+export type JourneyStep = 'quiz' | 'travessia' | 'cartografia' | 'cidadela' | 'complete';
 
 interface JourneyState {
   currentStep: JourneyStep;
