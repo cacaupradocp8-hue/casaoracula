@@ -10,8 +10,8 @@ serve(async (req) => {
 
   try {
     const { descricao_sonho, simbolos_chave } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY not configured");
 
     const systemPrompt = `Você é a Bússola Onírica da Casa Orácula — uma inteligência simbólica especializada em leitura onírica com base na tradição cabalística e na psicologia arquetípica junguiana.
 
