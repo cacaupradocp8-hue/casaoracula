@@ -120,7 +120,7 @@ Ultra high resolution, professional quality.`;
     }
 
     const data = await response.json();
-    const imageBase64 = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    const imageBase64 = data.data?.[0]?.b64_json;
 
     if (!imageBase64) {
       throw new Error("Nenhuma imagem foi gerada");
