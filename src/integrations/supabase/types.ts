@@ -4806,6 +4806,84 @@ export type Database = {
           },
         ]
       }
+      co_mentora_feedback: {
+        Row: {
+          cliente_id: string | null
+          created_at: string
+          feedback_tipo: string | null
+          ferramenta_escolhida: string | null
+          ferramenta_sugerida: string | null
+          id: string
+          observacao: string | null
+          session_id: string | null
+          sugestao_exibida: string
+          sugestao_utilizada: boolean | null
+          tempo_uso_segundos: number | null
+          user_id: string
+        }
+        Insert: {
+          cliente_id?: string | null
+          created_at?: string
+          feedback_tipo?: string | null
+          ferramenta_escolhida?: string | null
+          ferramenta_sugerida?: string | null
+          id?: string
+          observacao?: string | null
+          session_id?: string | null
+          sugestao_exibida: string
+          sugestao_utilizada?: boolean | null
+          tempo_uso_segundos?: number | null
+          user_id: string
+        }
+        Update: {
+          cliente_id?: string | null
+          created_at?: string
+          feedback_tipo?: string | null
+          ferramenta_escolhida?: string | null
+          ferramenta_sugerida?: string | null
+          id?: string
+          observacao?: string | null
+          session_id?: string | null
+          sugestao_exibida?: string
+          sugestao_utilizada?: boolean | null
+          tempo_uso_segundos?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      co_mentora_insights: {
+        Row: {
+          baseado_em: Json | null
+          created_at: string
+          descricao: string
+          id: string
+          lido: boolean | null
+          tipo: string
+          titulo: string
+          user_id: string
+        }
+        Insert: {
+          baseado_em?: Json | null
+          created_at?: string
+          descricao: string
+          id?: string
+          lido?: boolean | null
+          tipo?: string
+          titulo: string
+          user_id: string
+        }
+        Update: {
+          baseado_em?: Json | null
+          created_at?: string
+          descricao?: string
+          id?: string
+          lido?: boolean | null
+          tipo?: string
+          titulo?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       co_passport_entries: {
         Row: {
           client_id: string
@@ -4865,6 +4943,66 @@ export type Database = {
           session_id?: string
           tarefa_simbolica?: string | null
           tema?: string | null
+        }
+        Relationships: []
+      }
+      co_therapist_profile: {
+        Row: {
+          created_at: string
+          distritos_frequentes: string[] | null
+          estilo_conducao: string | null
+          ferramentas_evitadas: string[] | null
+          ferramentas_preferidas: string[] | null
+          id: string
+          linguagem: string | null
+          nivel_profundidade: string | null
+          padrao_decisao: string | null
+          pontos_cegos: string[] | null
+          pontos_fortes: string[] | null
+          tendencias_json: Json | null
+          total_consultas_mentora: number | null
+          total_sessoes: number | null
+          ultima_analise: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          distritos_frequentes?: string[] | null
+          estilo_conducao?: string | null
+          ferramentas_evitadas?: string[] | null
+          ferramentas_preferidas?: string[] | null
+          id?: string
+          linguagem?: string | null
+          nivel_profundidade?: string | null
+          padrao_decisao?: string | null
+          pontos_cegos?: string[] | null
+          pontos_fortes?: string[] | null
+          tendencias_json?: Json | null
+          total_consultas_mentora?: number | null
+          total_sessoes?: number | null
+          ultima_analise?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          distritos_frequentes?: string[] | null
+          estilo_conducao?: string | null
+          ferramentas_evitadas?: string[] | null
+          ferramentas_preferidas?: string[] | null
+          id?: string
+          linguagem?: string | null
+          nivel_profundidade?: string | null
+          padrao_decisao?: string | null
+          pontos_cegos?: string[] | null
+          pontos_fortes?: string[] | null
+          tendencias_json?: Json | null
+          total_consultas_mentora?: number | null
+          total_sessoes?: number | null
+          ultima_analise?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
