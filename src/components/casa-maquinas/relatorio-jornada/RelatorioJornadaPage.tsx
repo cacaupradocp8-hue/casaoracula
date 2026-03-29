@@ -186,6 +186,37 @@ export function RelatorioJornadaPage({ clienteId }: Props) {
     window.print();
   };
 
+  const handleExportPDF = () => {
+    const sections: { title: string; content: string }[] = [];
+    if (panorama?.narrative) {
+      const n = panorama.narrative;
+      if (n.ponto_partida) sections.push({ title: 'Panorama — Ponto de Partida', content: n.ponto_partida });
+      if (n.movimentos_principais) sections.push({ title: 'Movimentos Principais', content: n.movimentos_principais });
+      if (n.repeticoes) sections.push({ title: 'Repetições e Padrões', content: n.repeticoes });
+      if (n.momentos_virada) sections.push({ title: 'Momentos de Virada', content: n.momentos_virada });
+      if (n.integracao) sections.push({ title: 'Sinais de Integração', content: n.integracao });
+      if (n.proximo_horizonte) sections.push({ title: 'Próximo Horizonte Simbólico', content: n.proximo_horizonte });
+      if (n.sintese) sections.push({ title: 'Síntese', content: n.sintese });
+    }
+    if (sections.length === 0) {
+      sections.push({ title: 'Panorama', content: 'Gere a síntese narrativa antes de exportar o PDF completo.' });
+    }
+
+    generateRelatorioPDF({
+      clienteNome,
+      periodoInicio: firstSession || null,
+      periodoFim: lastSession || null,
+      totalSessoes: sessions.length,
+      distritosAtivos: ativos.length,
+      distritosIntegrados: integrados.length,
+      sections,
+      traversals: traversals.map(t => ({ date: t.date, label: t.label, detail: t.detail })),
+      districts: districts.map(d => ({ nome: d.nome, state: d.state, sessions_count: d.sessions_count })),
+      patterns: patterns.map(p => ({ pattern_name: p.pattern_name, occurrence_count: p.occurrence_count })),
+    });
+    toast.success('PDF exportado com sucesso');
+  };
+
   const ativos = districts.filter(d => d.state === 'ativo');
   const integrados = districts.filter(d => d.state === 'integrado');
   const firstSession = sessions[0]?.created_at;
