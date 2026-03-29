@@ -57,6 +57,7 @@ const AdminAtlasFemininoTab = lazy(() => import('@/components/admin/AdminAtlasFe
 const AdminNarroterapiaTab = lazy(() => import('@/components/admin/AdminNarroterapiaTab').then(m => ({ default: m.AdminNarroterapiaTab })));
 const AdminNarroterapiaAutorizacaoTab = lazy(() => import('@/components/admin/AdminNarroterapiaAutorizacaoTab'));
 const AdminClubeLivroTab = lazy(() => import('@/components/admin/AdminClubeLivroTab'));
+const AdminGeradorSemanal = lazy(() => import('@/components/admin/AdminGeradorSemanal'));
 const AdminPlanosClubTab = lazy(() => import('@/components/admin/AdminPlanosClubTab').then(m => ({ default: m.AdminPlanosClubTab })));
 const AdminEstudioOracular = lazy(() => import('@/components/admin/AdminEstudioOracular'));
 const AdminVitrineCards = lazy(() => import('@/pages/admin/AdminVitrineCards'));
