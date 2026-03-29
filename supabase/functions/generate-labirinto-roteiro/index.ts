@@ -99,10 +99,10 @@ CONTEXTO DAS CAMADAS SELECIONADAS:
 ${contexto}`;
 
           const melhorias = await Promise.all([
-            personalizarSecao("abertura", templateBase.abertura, systemPrompt, LOVABLE_API_KEY),
-            personalizarSecao("exploracao", templateBase.exploracao, systemPrompt, LOVABLE_API_KEY),
-            personalizarSecao("intervencao", templateBase.intervencao, systemPrompt, LOVABLE_API_KEY),
-            personalizarSecao("fechamento", templateBase.fechamento, systemPrompt, LOVABLE_API_KEY),
+            personalizarSecao("abertura", templateBase.abertura, systemPrompt, OPENAI_API_KEY),
+            personalizarSecao("exploracao", templateBase.exploracao, systemPrompt, OPENAI_API_KEY),
+            personalizarSecao("intervencao", templateBase.intervencao, systemPrompt, OPENAI_API_KEY),
+            personalizarSecao("fechamento", templateBase.fechamento, systemPrompt, OPENAI_API_KEY),
           ]);
 
           roteiro = {
