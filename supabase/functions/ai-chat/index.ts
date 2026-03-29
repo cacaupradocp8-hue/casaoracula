@@ -142,7 +142,7 @@ serve(async (req) => {
     // Resolve agent
     let agent = null;
     let agentPrompt = '';
-    let modelo = 'google/gemini-2.5-flash';
+    let modelo = 'gpt-4o';
     let temperatura = 0.7;
     let maxTokens = 1024;
 
