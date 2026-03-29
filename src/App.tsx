@@ -929,7 +929,15 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      {/* Clube do Livro Oracular (legado) */}
+      {/* Clube do Livro Oracular */}
+      <Route
+        path="/clube-livro/semana"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <ClubeLivroSemana />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/clube-livro"
         element={
