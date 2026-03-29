@@ -19,6 +19,7 @@ const mainNav: NavItem[] = [
   { label: 'Clientes', path: '/casa-das-maquinas/clientes', icon: Users },
   { label: 'Nova Sessão', path: '/casa-das-maquinas/nova-sessao', icon: Calendar },
   { label: 'Perfil de Condução', path: '/casa-das-maquinas/perfil-conducao', icon: Brain },
+  { label: 'Campo das Clientes', path: '/casa-das-maquinas/campo-clientes', icon: Eye },
   { label: 'Grupos', path: '/casa-das-maquinas/grupos', icon: UsersRound },
 ];
 const toolsNav: NavItem[] = [
