@@ -252,15 +252,31 @@ export function useBussolaOracular(): BussolaData {
           supabase.from('profiles').select('entry_archetype, entry_symbol').eq('id', user.id).single(),
           supabase.from('auto_mapeamento').select('distritos_json').eq('user_id', user.id).maybeSingle() as any,
           supabase.from('cartografia_psiquica').select('cor_predominante, simbolo_pessoal, metadata_json, resumo_narrativo, conflitos_tensoes, sugestao_proximo_passo').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1) as any,
-          supabase.from('cycles').select('id, book_id').eq('status', 'active').limit(1) as any,
+          supabase.from('cycles').select('id').eq('status', 'active').order('created_at', { ascending: false }).limit(1).maybeSingle() as any,
           supabase.from('jardim_psique_registros').select('id').eq('user_id', user.id).limit(1) as any,
         ]);
 
         let book = null;
-        const ciclo = cicloRes?.data?.[0] || null;
-        if (ciclo?.book_id) {
-          const { data } = await supabase.from('books').select('title, author, cover_url').eq('id', ciclo.book_id).single();
-          book = data;
+        const ciclo = cicloRes?.data || null;
+
+        if (ciclo?.id) {
+          const { data: cycleBook } = await supabase
+            .from('cycle_books')
+            .select('book_id')
+            .eq('cycle_id', ciclo.id)
+            .eq('is_core', true)
+            .order('layer_order', { ascending: true })
+            .limit(1)
+            .maybeSingle() as any;
+
+          if (cycleBook?.book_id) {
+            const { data } = await supabase
+              .from('books')
+              .select('title, author, cover_url')
+              .eq('id', cycleBook.book_id)
+              .single();
+            book = data;
+          }
         }
 
         setRaw({
