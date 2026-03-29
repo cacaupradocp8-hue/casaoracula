@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
-export type JourneyStep = 'quiz' | 'cartografia' | 'cidadela' | 'complete';
+export type JourneyStep = 'quiz' | 'travessia' | 'cartografia' | 'cidadela' | 'complete';
 
 interface JourneyState {
   currentStep: JourneyStep;
@@ -36,12 +36,16 @@ export function useJourneyGuard(): JourneyState {
 
     const check = async () => {
       try {
-        const [quizRes, cartoRes, cidadelaRes] = await Promise.all([
+        const [quizRes, travessiaUnlocksRes, cartoRes, cidadelaRes] = await Promise.all([
           supabase
             .from('quiz_respostas_usuario')
             .select('id')
             .eq('user_id', user.id)
             .limit(1),
+          supabase
+            .from('travessia_day_unlocks')
+            .select('aula_id')
+            .eq('user_id', user.id),
           supabase
             .from('cartografia_psiquica')
             .select('id')
@@ -55,6 +59,7 @@ export function useJourneyGuard(): JourneyState {
         ]);
 
         const hasQuiz = (quizRes.data?.length ?? 0) > 0;
+        const hasTravessia = (travessiaUnlocksRes.data?.length ?? 0) >= 3;
         const hasCartografia = (cartoRes.data?.length ?? 0) > 0;
         const hasCidadela = Boolean(
           cidadelaRes.data?.id
@@ -64,6 +69,8 @@ export function useJourneyGuard(): JourneyState {
 
         if (!hasQuiz) {
           setState({ currentStep: 'quiz', redirectTo: '/quiz/descubra-seu-eixo', loading: false });
+        } else if (!hasTravessia) {
+          setState({ currentStep: 'travessia', redirectTo: '/travessia/travessia-zero-o-limiar-da-casa', loading: false });
         } else if (!hasCartografia) {
           setState({ currentStep: 'cartografia', redirectTo: '/ferramentas/cartografia-psiquica-oracula', loading: false });
         } else if (!hasCidadela) {

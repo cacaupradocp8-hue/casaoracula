@@ -158,28 +158,15 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
             </p>
 
             <div className="pt-2 space-y-3">
-              {hasAlunaAccess ? (
-                <Button
-                  variant="gold"
-                  size="lg"
-                  onClick={() => navigate('/ferramentas/cartografia-psiquica-oracula')}
-                  className="gap-2 px-8 py-6 text-base shadow-gold"
-                >
-                  Revelar minha CidaDELA
-                  <ArrowRight className="w-5 h-5" />
-                </Button>
-              ) : (
-                <Button
-                  variant="gold"
-                  size="lg"
-                  onClick={() => navigate('/planos')}
-                  className="gap-2 px-8 py-6 text-base shadow-gold"
-                >
-                  <Lock className="w-4 h-4" />
-                  Desbloquear minha CidaDELA
-                  <ArrowRight className="w-5 h-5" />
-                </Button>
-              )}
+              <Button
+                variant="gold"
+                size="lg"
+                onClick={() => navigate('/travessia/travessia-zero-o-limiar-da-casa')}
+                className="gap-2 px-8 py-6 text-base shadow-gold"
+              >
+                Iniciar minha Travessia
+                <ArrowRight className="w-5 h-5" />
+              </Button>
 
               {!hasAlunaAccess && (
                 <p className="text-muted-foreground/50 text-xs max-w-sm mx-auto">
