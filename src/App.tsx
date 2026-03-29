@@ -608,6 +608,14 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/convite-clube-oracular"
+        element={
+          <ProtectedRoute>
+            <ConviteClube />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/experiencia-gratuita"
         element={
           <ProtectedRoute>
