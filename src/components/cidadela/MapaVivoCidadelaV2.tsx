@@ -98,6 +98,7 @@ export default function MapaVivoCidadelaV2({
   const [selectedDistrict, setSelectedDistrict] = useState<CityDistrict | null>(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [showTimeline, setShowTimeline] = useState(false);
+  const [showReplay, setShowReplay] = useState(false);
 
   // Resolve archetype names
   const regente = archetypes.find(a => a.id === archState?.arquitipo_regente_id);
