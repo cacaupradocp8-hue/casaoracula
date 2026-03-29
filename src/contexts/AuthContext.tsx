@@ -62,12 +62,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               .from('profiles')
               .select('*')
               .eq('id', userId)
-              .single(),
+              .maybeSingle(),
             supabase
               .from('user_roles')
               .select('portal')
               .eq('user_id', userId)
-              .single(),
+              .maybeSingle(),
             supabase
               .from('matriculas')
               .select('id')

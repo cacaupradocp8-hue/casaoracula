@@ -83,7 +83,7 @@ export function useOnboarding({ enabled = true }: UseOnboardingOptions = {}) {
             .from('profiles')
             .select('entry_archetype, entry_symbol, onboarding_completed')
             .eq('id', user.id)
-            .single()
+            .maybeSingle()
         ),
         ONBOARDING_STATUS_TIMEOUT_MS,
         'Tempo limite ao carregar o onboarding.'
