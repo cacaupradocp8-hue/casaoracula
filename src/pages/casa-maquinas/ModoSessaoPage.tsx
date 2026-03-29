@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import { GpsSuggestionCard } from '@/components/casa-maquinas/GpsSuggestionCard';
 import type { GpsSuggestion } from '@/lib/gps-cidadela';
 import { SessionInterventionSuggestions } from '@/components/casa-maquinas/SessionInterventionSuggestions';
+import { MentoraIAPanel } from '@/components/casa-maquinas/MentoraIAPanel';
 import { OracleSessionWidget } from '@/components/cidadela-oracle/OracleSessionWidget';
 import { useCidadelaOracle, type CidadelaCard } from '@/hooks/useCidadelaOracle';
 import { useSessionMode, type SessionMode } from '@/hooks/useSessionMode';
