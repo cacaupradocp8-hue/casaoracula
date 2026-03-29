@@ -250,6 +250,9 @@ export function RelatorioJornadaPage({ clienteId }: Props) {
             </p>
           </div>
           <div className="flex gap-2 print:hidden">
+            <Button variant="outline" size="sm" onClick={handleExportPDF} className="gap-1.5 text-xs">
+              <Download className="w-3.5 h-3.5" /> Exportar PDF
+            </Button>
             <Button variant="outline" size="sm" onClick={handlePrint} className="gap-1.5 text-xs">
               <Printer className="w-3.5 h-3.5" /> Imprimir
             </Button>
