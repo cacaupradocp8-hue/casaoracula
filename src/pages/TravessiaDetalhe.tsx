@@ -677,7 +677,7 @@ export default function TravessiaDetalhe() {
             {/* Área de Comentários para Travessia 00 */}
             {isTravessiaZero && <TravessiaComentarios travessiaId="travessia-zero" />}
 
-            {/* CTA simbólico — Travessia 00 → Clube */}
+            {/* CTA simbólico — Travessia 00 → Clube ou CidaDELA */}
             {isTravessiaZero && (
               <section className="relative mt-16 py-16 flex flex-col items-center text-center overflow-hidden rounded-2xl border border-gold/10 bg-card/40">
                 {/* Orb glow */}
@@ -700,13 +700,23 @@ export default function TravessiaDetalhe() {
                     </p>
                   </div>
 
-                  <Button
-                    onClick={() => navigate('/convite-clube')}
-                    className="mt-2 px-8 py-3 rounded-full font-display text-sm tracking-wider bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 hover:border-gold/30 transition-all"
-                    variant="ghost"
-                  >
-                    Conhecer o Clube Oracular
-                  </Button>
+                  {hasAlunaAccess ? (
+                    <Button
+                      onClick={() => navigate('/ferramentas/cartografia-psiquica-oracula')}
+                      className="mt-2 px-8 py-3 rounded-full font-display text-sm tracking-wider bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 hover:border-gold/30 transition-all"
+                      variant="ghost"
+                    >
+                      Revelar minha CidaDELA
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => navigate('/planos')}
+                      className="mt-2 px-8 py-3 rounded-full font-display text-sm tracking-wider bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 hover:border-gold/30 transition-all"
+                      variant="ghost"
+                    >
+                      Desbloquear minha CidaDELA
+                    </Button>
+                  )}
                 </div>
               </section>
             )}
