@@ -63,33 +63,6 @@ export default function PlanosClubeOracular() {
       cta: 'Entrar no Clube',
       url: CHECKOUT_ANUAL_URL !== '#' ? CHECKOUT_ANUAL_URL : 'https://pay.rockty.com/pjo9ceihykihwx1gixhspq?off=2tgmh6vsiki7fg0buxdfxq',
     },
-      destaque: false,
-      benefits: [
-        'Acesso completo ao Clube de Leitura',
-        'Portal Atual + Portais anteriores',
-        'Laboratório 80/20',
-        'Jardim da Psique & Jardim do Ofício',
-        'Cancele quando quiser',
-      ],
-      cta: 'Assinar Mensal',
-      url: CHECKOUT_MENSAL_URL,
-    },
-    {
-      name: 'Anual',
-      price: 'R$ 599,97',
-      period: '/ano',
-      destaque: true,
-      badge: '2 meses grátis',
-      benefits: [
-        'Tudo do plano mensal',
-        'Economia de 2 meses',
-        'Acesso garantido por 12 meses',
-        'Laboratório 80/20',
-        'Jardim da Psique & Jardim do Ofício',
-      ],
-      cta: 'Assinar Anual',
-      url: CHECKOUT_ANUAL_URL,
-    },
   ];
 
   return (
