@@ -349,6 +349,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "ai_recommendations_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "ai_recommendations_distrito_sugerido_id_fkey"
             columns: ["distrito_sugerido_id"]
             isOneToOne: false
@@ -438,6 +445,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "archetypal_profile_snapshots_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -694,6 +708,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "atlas_arquetipos_registros_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -1813,6 +1834,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cartografia_complexos_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cartografia_psiquica: {
@@ -1884,6 +1912,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cartografia_psiquica_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cartographer_engine: {
@@ -1938,6 +1973,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cartographer_engine_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
           {
@@ -2153,6 +2195,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cartographies_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
           {
@@ -2487,6 +2536,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cidadela_oracle_usage_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       circulo_oracular_registros: {
@@ -2687,6 +2743,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "client_archetype_state_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: true
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       client_cidadela_map: {
@@ -2746,6 +2809,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "client_cidadela_map_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       client_city_state: {
@@ -2795,6 +2865,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: true
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_city_state_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: true
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
           {
@@ -2880,6 +2957,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "client_labyrinths_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       client_pattern_stats: {
@@ -2916,6 +3000,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_pattern_stats_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -2969,6 +3060,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_seasons_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -4567,6 +4665,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "co_ai_recommendations_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "co_ai_recommendations_tool_complementar_id_fkey"
             columns: ["tool_complementar_id"]
             isOneToOne: false
@@ -4625,6 +4730,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "co_appointments_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "co_appointments_workspace_id_fkey"
             columns: ["workspace_id"]
             isOneToOne: false
@@ -4670,6 +4782,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_city_history_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
           {
@@ -4765,6 +4884,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "co_client_profiles_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: true
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       co_escutas: {
@@ -4848,6 +4974,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "co_garden_flowers_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "co_garden_flowers_origem_registro_id_fkey"
             columns: ["origem_registro_id"]
             isOneToOne: false
@@ -4865,6 +4998,7 @@ export type Database = {
           entry_type: string
           id: string
           jardim_id: string
+          shared_with_therapist: boolean
           therapist_user_id: string
           updated_at: string
           visibility_to_client: boolean
@@ -4877,6 +5011,7 @@ export type Database = {
           entry_type?: string
           id?: string
           jardim_id: string
+          shared_with_therapist?: boolean
           therapist_user_id: string
           updated_at?: string
           visibility_to_client?: boolean
@@ -4889,6 +5024,7 @@ export type Database = {
           entry_type?: string
           id?: string
           jardim_id?: string
+          shared_with_therapist?: boolean
           therapist_user_id?: string
           updated_at?: string
           visibility_to_client?: boolean
@@ -4970,6 +5106,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_journey_records_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
           {
@@ -5087,6 +5230,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_passport_entries_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -5231,6 +5381,7 @@ export type Database = {
           created_at: string
           created_by: string
           id: string
+          jardim_ref_id: string | null
           session_date: string | null
           shared_with_client: boolean
           status: string
@@ -5243,6 +5394,7 @@ export type Database = {
           created_at?: string
           created_by: string
           id?: string
+          jardim_ref_id?: string | null
           session_date?: string | null
           shared_with_client?: boolean
           status?: string
@@ -5255,6 +5407,7 @@ export type Database = {
           created_at?: string
           created_by?: string
           id?: string
+          jardim_ref_id?: string | null
           session_date?: string | null
           shared_with_client?: boolean
           status?: string
@@ -5262,7 +5415,15 @@ export type Database = {
           therapist_user_id?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "co_sessoes_jardim_ref_id_fkey"
+            columns: ["jardim_ref_id"]
+            isOneToOne: false
+            referencedRelation: "co_jardins"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       co_therapist_profile: {
         Row: {
@@ -5987,6 +6148,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "conselho_partes_internas_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       content_blocks: {
@@ -6289,6 +6457,13 @@ export type Database = {
             columns: ["cliente_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "corpo_inconsciente_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -6982,6 +7157,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "decodificacao_onirica_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "decodificacao_onirica_session_case_id_fkey"
             columns: ["session_case_id"]
             isOneToOne: false
@@ -7074,6 +7256,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "diagnostico_ego_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       diario_bordo_aulas: {
@@ -7143,6 +7332,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "district_state_changes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
           {
@@ -7230,6 +7426,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dreams_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
           {
@@ -7723,6 +7926,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "escrita_nao_censurada_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       estudio_projetos: {
@@ -8031,6 +8241,13 @@ export type Database = {
             columns: ["cliente_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ferramenta_registros_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
           {
@@ -8374,6 +8591,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "gestos_integracao_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "gestos_integracao_sessao_id_fkey"
             columns: ["sessao_id"]
             isOneToOne: false
@@ -8448,6 +8672,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "group_members_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "group_members_group_id_fkey"
             columns: ["group_id"]
             isOneToOne: false
@@ -8484,6 +8715,13 @@ export type Database = {
             columns: ["cliente_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_participants_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
           {
@@ -8853,6 +9091,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "imaginacao_ativa_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       intervention_favorites: {
@@ -9006,6 +9251,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "inventario_personas_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       jardim_do_oficio: {
@@ -9069,6 +9321,13 @@ export type Database = {
             columns: ["cliente_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jardim_do_oficio_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
           {
@@ -9259,6 +9518,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jardim_heroina_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -9687,6 +9953,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "jornada_heroina_registros_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "jornada_heroina_registros_session_case_id_fkey"
             columns: ["session_case_id"]
             isOneToOne: false
@@ -9791,6 +10064,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jornada_individuacao_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -9949,6 +10229,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "journey_events_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "journey_events_session_id_fkey"
             columns: ["session_id"]
             isOneToOne: false
@@ -10034,6 +10321,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "journey_reflections_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       journeys: {
@@ -10067,6 +10361,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journeys_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
           {
@@ -10245,6 +10546,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "labirinto_39_portas_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       labirinto_anotacoes: {
@@ -10284,6 +10592,13 @@ export type Database = {
             columns: ["cliente_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "labirinto_anotacoes_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
           {
@@ -10449,6 +10764,13 @@ export type Database = {
             columns: ["cliente_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "labirinto_leituras_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
           {
@@ -10944,6 +11266,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "labyrinth_records_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "labyrinth_records_session_id_fkey"
             columns: ["session_id"]
             isOneToOne: false
@@ -11219,6 +11548,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "mapa_sombra_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       mapa_vivo_heroina: {
@@ -11404,6 +11740,13 @@ export type Database = {
             columns: ["cliente_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mapeamento_complexos_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -12736,6 +13079,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "oracle_usage_stats_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       oracular_readings: {
@@ -13642,6 +13992,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "praticas_mudra_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       profiles: {
@@ -13876,6 +14233,13 @@ export type Database = {
             columns: ["cliente_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "protocolo_oracula_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
           {
@@ -14382,6 +14746,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "reflexoes_jornada_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       relacionamentos_espelho: {
@@ -14436,6 +14807,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "relacionamentos_espelho_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -14533,6 +14911,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rituais_integracao_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -15059,6 +15444,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "session_archetypes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "session_archetypes_session_id_fkey"
             columns: ["session_id"]
             isOneToOne: false
@@ -15101,6 +15493,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_cases_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
           {
@@ -15413,6 +15812,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "sessions_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "sessions_district_id_fkey"
             columns: ["district_id"]
             isOneToOne: false
@@ -15465,6 +15871,13 @@ export type Database = {
             columns: ["cliente_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sessoes_casa_maquinas_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -15668,6 +16081,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "sonho_estruturado_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       sonhos_cabalisticos: {
@@ -15716,6 +16136,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sonhos_cabalisticos_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -16069,6 +16496,13 @@ export type Database = {
             columns: ["cliente_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "symbolic_template_sessions_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -17167,6 +17601,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "towers_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "towers_session_id_fkey"
             columns: ["session_id"]
             isOneToOne: false
@@ -17764,6 +18205,42 @@ export type Database = {
       }
     }
     Views: {
+      clientes_admin_safe: {
+        Row: {
+          client_user_id: string | null
+          codigo_interno: string | null
+          created_at: string | null
+          data_inicio: string | null
+          id: string | null
+          nome: string | null
+          status: Database["public"]["Enums"]["cliente_status"] | null
+          terapeuta_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          client_user_id?: string | null
+          codigo_interno?: string | null
+          created_at?: string | null
+          data_inicio?: string | null
+          id?: string | null
+          nome?: string | null
+          status?: Database["public"]["Enums"]["cliente_status"] | null
+          terapeuta_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          client_user_id?: string | null
+          codigo_interno?: string | null
+          created_at?: string | null
+          data_inicio?: string | null
+          id?: string | null
+          nome?: string | null
+          status?: Database["public"]["Enums"]["cliente_status"] | null
+          terapeuta_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       v_formation_progress: {
         Row: {
           active_travessias: Json | null
@@ -17813,6 +18290,10 @@ export type Database = {
         Returns: boolean
       }
       close_expired_jardins: { Args: never; Returns: number }
+      co_is_linked_therapist: {
+        Args: { _client_user_id: string }
+        Returns: boolean
+      }
       get_agent_with_context: {
         Args: {
           _agent_id: string
