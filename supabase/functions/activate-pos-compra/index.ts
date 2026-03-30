@@ -5,6 +5,13 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+/**
+ * activate-pos-compra — READ-ONLY status check
+ * 
+ * This function does NOT activate subscriptions or grant access.
+ * It only checks the current subscription status for the authenticated user.
+ * All activation happens exclusively via the rockty-webhook.
+ */
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -20,84 +27,65 @@ Deno.serve(async (req) => {
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
 
-    // Verify user with anon client
-    const anonClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
+    // Verify user identity
+    const anonClient = createClient(supabaseUrl, anonKey, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user }, error: userError } = await anonClient.auth.getUser();
-    if (userError || !user) {
+
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } = await anonClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
       return new Response(JSON.stringify({ error: "Invalid user" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Use service role for privileged operations
+    const userId = claimsData.claims.sub;
+
+    // Use service role ONLY to read subscription status (not to write anything)
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
 
-    // Check if user already has active subscription
-    const { data: existingSub } = await adminClient
+    // Check subscription status
+    const { data: subscription } = await adminClient
       .from("subscriptions")
-      .select("id, status")
-      .eq("user_id", user.id)
-      .eq("status", "active")
+      .select("id, status, plan_id, current_period_start, current_period_end")
+      .eq("user_id", userId)
+      .eq("provider", "rockty")
       .maybeSingle();
 
-    if (existingSub) {
-      // Already active, just ensure portal is correct
-      await adminClient.from("user_roles").update({ portal: "assinante" }).eq("user_id", user.id);
-      return new Response(JSON.stringify({ status: "already_active", portal: "assinante" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    // Check portal from user_roles
+    const { data: userRole } = await adminClient
+      .from("user_roles")
+      .select("portal")
+      .eq("user_id", userId)
+      .maybeSingle();
 
-    // Activate: upsert subscription as pending_webhook (webhook will confirm later)
-    const { error: subError } = await adminClient
-      .from("subscriptions")
-      .upsert(
-        {
-          user_id: user.id,
-          provider: "rockty",
-          status: "active",
-          plan_id: "clube_oracular",
-          current_period_start: new Date().toISOString(),
-          current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-        },
-        { onConflict: "user_id,provider" }
-      );
-
-    if (subError) {
-      console.error("Subscription upsert error:", subError);
-      // Try insert instead
-      await adminClient.from("subscriptions").insert({
-        user_id: user.id,
-        provider: "rockty",
-        status: "active",
-        plan_id: "clube_oracular",
-        current_period_start: new Date().toISOString(),
-        current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-      });
-    }
-
-    // Update portal to assinante
-    await adminClient.from("user_roles").update({ portal: "assinante" }).eq("user_id", user.id);
-
-    // Update profile portal too
-    await adminClient
-      .from("profiles")
-      .update({ portal: "assinante", subscription_status: "active", access_expires_at: null })
-      .eq("id", user.id);
-
-    console.log(`Pos-compra activation for user ${user.id} (${user.email})`);
+    const portal = userRole?.portal || "visitante";
+    const subscriptionStatus = subscription?.status || "none";
+    const isActive = subscriptionStatus === "active";
 
     return new Response(
-      JSON.stringify({ status: "activated", portal: "assinante" }),
+      JSON.stringify({
+        status: subscriptionStatus,
+        portal,
+        is_active: isActive,
+        plan_id: subscription?.plan_id || null,
+        current_period_end: subscription?.current_period_end || null,
+        // Explicitly: this function does NOT activate anything
+        message: isActive
+          ? "Assinatura ativa. Acesso liberado."
+          : subscriptionStatus === "pending"
+          ? "Pagamento em processamento. Aguarde a confirmação."
+          : "Nenhuma assinatura encontrada. Verifique seu pagamento.",
+      }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {
-    console.error("activate-pos-compra error:", err);
+    console.error("activate-pos-compra status check error:", err);
     return new Response(JSON.stringify({ error: "Internal error" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
