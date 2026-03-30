@@ -34,25 +34,25 @@ export default function PlanosClubeOracular() {
   const planos = [
     {
       name: 'Mensal',
-      price: 'R$ 59,97',
+      price: 'R$ 37,90',
       period: '/mês',
       destaque: false,
       benefits: [
-        'Acesso completo ao Clube de Leitura',
-        'Portal Atual + Portais anteriores',
+        'CidaDELA Interior completa',
+        'Clube de Leitura Oracular',
         'Laboratório 80/20',
         'Jardim da Psique & Jardim do Ofício',
         'Cancele quando quiser',
       ],
-      cta: 'Assinar Mensal',
-      url: CHECKOUT_MENSAL_URL,
+      cta: 'Entrar no Clube',
+      url: CHECKOUT_MENSAL_URL !== '#' ? CHECKOUT_MENSAL_URL : 'https://pay.rockty.com/pjo9ceihykihwx1gixhspq?off=karv9y4bewbdjcwbmvtwq',
     },
     {
       name: 'Anual',
-      price: 'R$ 599,97',
+      price: 'R$ 379,00',
       period: '/ano',
       destaque: true,
-      badge: '2 meses grátis',
+      badge: 'Mais escolhido',
       benefits: [
         'Tudo do plano mensal',
         'Economia de 2 meses',
@@ -60,8 +60,8 @@ export default function PlanosClubeOracular() {
         'Laboratório 80/20',
         'Jardim da Psique & Jardim do Ofício',
       ],
-      cta: 'Assinar Anual',
-      url: CHECKOUT_ANUAL_URL,
+      cta: 'Entrar no Clube',
+      url: CHECKOUT_ANUAL_URL !== '#' ? CHECKOUT_ANUAL_URL : 'https://pay.rockty.com/pjo9ceihykihwx1gixhspq?off=2tgmh6vsiki7fg0buxdfxq',
     },
   ];
 

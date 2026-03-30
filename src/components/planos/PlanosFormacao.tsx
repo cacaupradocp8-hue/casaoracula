@@ -52,7 +52,7 @@ export function PlanosFormacao() {
           <Button
             variant="outline"
             size="lg"
-            onClick={() => navigate('/metodo')}
+            onClick={() => navigate('/formacao-metodo')}
             className="border-gold/15 text-foreground hover:bg-gold/5 hover:border-gold/25 px-8"
           >
             Conhecer a formação completa
