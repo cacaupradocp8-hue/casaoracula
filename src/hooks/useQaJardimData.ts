@@ -33,7 +33,7 @@ export function useQaClients(therapistId?: string) {
   return useQuery({
     queryKey: ['qa-clients', therapistId],
     queryFn: async () => {
-      let q = supabase.from('clientes').select('id, nome, email, client_user_id, terapeuta_id, status');
+      let q = supabase.from('clientes').select('id, nome, client_user_id, terapeuta_id, status');
       if (therapistId) q = q.eq('terapeuta_id', therapistId);
       const { data, error } = await q.order('nome');
       if (error) throw error;

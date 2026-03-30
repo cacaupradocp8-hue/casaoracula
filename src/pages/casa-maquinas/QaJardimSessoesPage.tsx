@@ -21,7 +21,8 @@ import {
 } from '@/hooks/useQaJardimData';
 
 export default function QaJardimSessoesPage() {
-  const { isAdmin } = useAuth();
+  const { user } = useAuth();
+  const isAdmin = user?.portal === 'admin';
   const [filters, setFilters] = useState<QaFilters>({});
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [selectedType, setSelectedType] = useState<'entry' | 'sessao' | null>(null);
