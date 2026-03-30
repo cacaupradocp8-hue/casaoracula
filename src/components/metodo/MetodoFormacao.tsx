@@ -56,7 +56,7 @@ export function MetodoFormacao() {
 
       <div className="text-center">
         <Button
-          onClick={() => navigate('/formacao')}
+          onClick={() => navigate('/formacao-metodo')}
           className="bg-gold/90 hover:bg-gold text-background"
         >
           Conhecer a Formação
