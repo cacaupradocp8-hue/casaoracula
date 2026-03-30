@@ -39,6 +39,7 @@ const communityNav: NavItem[] = [
 const systemNav: NavItem[] = [
   { label: 'Supervisão', path: '/casa-das-maquinas/supervisao', icon: Eye, minPortal: 'assinante' },
   { label: 'Painel Admin', path: '/casa-das-maquinas/painel', icon: Crown, minPortal: 'admin' },
+  { label: 'QA Jardim+Sessões', path: '/casa-das-maquinas/qa-jardim-sessoes', icon: FlaskConical, minPortal: 'admin' },
   { label: 'Configurações', path: '/casa-das-maquinas/config', icon: Settings },
 ];
 
