@@ -17587,6 +17587,22 @@ export type Database = {
         Args: { _user_id: string }
         Returns: boolean
       }
+      process_webhook_subscription: {
+        Args: {
+          _current_period_end: string
+          _current_period_start: string
+          _customer_name?: string
+          _external_subscription_id: string
+          _next_billing_date: string
+          _plan_id: string
+          _portal: string
+          _provider: string
+          _status: string
+          _subscription_status_profile: string
+          _user_id: string
+        }
+        Returns: Json
+      }
       update_cidadela_from_session: {
         Args: {
           _arquetipo?: string
