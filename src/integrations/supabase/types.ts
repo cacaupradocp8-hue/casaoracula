@@ -2975,14 +2975,19 @@ export type Database = {
       }
       clientes: {
         Row: {
+          accepted_at: string | null
           archetypal_profile_history: Json | null
           archetypal_profile_json: Json | null
           cartografia_sessao: Json | null
+          client_user_id: string | null
           codigo_interno: string | null
           created_at: string
           data_inicio: string | null
           id: string
+          invitation_sent_at: string | null
+          invited_by: string | null
           nome: string
+          notes_internal: string | null
           objetivo_terapeutico: string | null
           observacao_segura: string | null
           status: Database["public"]["Enums"]["cliente_status"]
@@ -2990,14 +2995,19 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          accepted_at?: string | null
           archetypal_profile_history?: Json | null
           archetypal_profile_json?: Json | null
           cartografia_sessao?: Json | null
+          client_user_id?: string | null
           codigo_interno?: string | null
           created_at?: string
           data_inicio?: string | null
           id?: string
+          invitation_sent_at?: string | null
+          invited_by?: string | null
           nome: string
+          notes_internal?: string | null
           objetivo_terapeutico?: string | null
           observacao_segura?: string | null
           status?: Database["public"]["Enums"]["cliente_status"]
@@ -3005,14 +3015,19 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          accepted_at?: string | null
           archetypal_profile_history?: Json | null
           archetypal_profile_json?: Json | null
           cartografia_sessao?: Json | null
+          client_user_id?: string | null
           codigo_interno?: string | null
           created_at?: string
           data_inicio?: string | null
           id?: string
+          invitation_sent_at?: string | null
+          invited_by?: string | null
           nome?: string
+          notes_internal?: string | null
           objetivo_terapeutico?: string | null
           observacao_segura?: string | null
           status?: Database["public"]["Enums"]["cliente_status"]
@@ -4666,6 +4681,42 @@ export type Database = {
           },
         ]
       }
+      co_client_invites: {
+        Row: {
+          accepted_at: string | null
+          client_email: string
+          created_at: string
+          expires_at: string
+          id: string
+          status: string
+          therapist_user_id: string
+          token: string
+          updated_at: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          client_email: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          status?: string
+          therapist_user_id: string
+          token?: string
+          updated_at?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          client_email?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          status?: string
+          therapist_user_id?: string
+          token?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       co_client_profiles: {
         Row: {
           arquetipo_evolucao: string | null
@@ -4716,6 +4767,50 @@ export type Database = {
           },
         ]
       }
+      co_escutas: {
+        Row: {
+          client_user_id: string
+          conteudo: string | null
+          created_at: string
+          created_by: string
+          id: string
+          sessao_id: string | null
+          therapist_user_id: string
+          tipo: string
+          updated_at: string
+        }
+        Insert: {
+          client_user_id: string
+          conteudo?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          sessao_id?: string | null
+          therapist_user_id: string
+          tipo?: string
+          updated_at?: string
+        }
+        Update: {
+          client_user_id?: string
+          conteudo?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          sessao_id?: string | null
+          therapist_user_id?: string
+          tipo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_escutas_sessao_id_fkey"
+            columns: ["sessao_id"]
+            isOneToOne: false
+            referencedRelation: "co_sessoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       co_garden_flowers: {
         Row: {
           client_id: string
@@ -4760,6 +4855,86 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      co_jardim_entries: {
+        Row: {
+          client_user_id: string
+          content: string | null
+          created_at: string
+          created_by: string
+          entry_type: string
+          id: string
+          jardim_id: string
+          therapist_user_id: string
+          updated_at: string
+          visibility_to_client: boolean
+        }
+        Insert: {
+          client_user_id: string
+          content?: string | null
+          created_at?: string
+          created_by: string
+          entry_type?: string
+          id?: string
+          jardim_id: string
+          therapist_user_id: string
+          updated_at?: string
+          visibility_to_client?: boolean
+        }
+        Update: {
+          client_user_id?: string
+          content?: string | null
+          created_at?: string
+          created_by?: string
+          entry_type?: string
+          id?: string
+          jardim_id?: string
+          therapist_user_id?: string
+          updated_at?: string
+          visibility_to_client?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_jardim_entries_jardim_id_fkey"
+            columns: ["jardim_id"]
+            isOneToOne: false
+            referencedRelation: "co_jardins"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_jardins: {
+        Row: {
+          client_user_id: string
+          created_at: string
+          created_by: string
+          id: string
+          status: string
+          therapist_user_id: string
+          updated_at: string
+          visibility_scope: string
+        }
+        Insert: {
+          client_user_id: string
+          created_at?: string
+          created_by: string
+          id?: string
+          status?: string
+          therapist_user_id: string
+          updated_at?: string
+          visibility_scope?: string
+        }
+        Update: {
+          client_user_id?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          status?: string
+          therapist_user_id?: string
+          updated_at?: string
+          visibility_scope?: string
+        }
+        Relationships: []
       }
       co_journey_records: {
         Row: {
@@ -4916,6 +5091,110 @@ export type Database = {
           },
         ]
       }
+      co_praticas: {
+        Row: {
+          client_user_id: string
+          created_at: string
+          created_by: string
+          descricao: string | null
+          id: string
+          sessao_id: string | null
+          status: string
+          therapist_user_id: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          client_user_id: string
+          created_at?: string
+          created_by: string
+          descricao?: string | null
+          id?: string
+          sessao_id?: string | null
+          status?: string
+          therapist_user_id: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          client_user_id?: string
+          created_at?: string
+          created_by?: string
+          descricao?: string | null
+          id?: string
+          sessao_id?: string | null
+          status?: string
+          therapist_user_id?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_praticas_sessao_id_fkey"
+            columns: ["sessao_id"]
+            isOneToOne: false
+            referencedRelation: "co_sessoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_registros_simbolicos: {
+        Row: {
+          client_user_id: string
+          conteudo: string | null
+          created_at: string
+          created_by: string
+          id: string
+          jardim_id: string | null
+          sessao_id: string | null
+          shared_with_client: boolean
+          therapist_user_id: string
+          tipo: string
+          updated_at: string
+        }
+        Insert: {
+          client_user_id: string
+          conteudo?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          jardim_id?: string | null
+          sessao_id?: string | null
+          shared_with_client?: boolean
+          therapist_user_id: string
+          tipo?: string
+          updated_at?: string
+        }
+        Update: {
+          client_user_id?: string
+          conteudo?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          jardim_id?: string | null
+          sessao_id?: string | null
+          shared_with_client?: boolean
+          therapist_user_id?: string
+          tipo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_registros_simbolicos_jardim_id_fkey"
+            columns: ["jardim_id"]
+            isOneToOne: false
+            referencedRelation: "co_jardins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_registros_simbolicos_sessao_id_fkey"
+            columns: ["sessao_id"]
+            isOneToOne: false
+            referencedRelation: "co_sessoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       co_session_notes: {
         Row: {
           created_at: string
@@ -4943,6 +5222,45 @@ export type Database = {
           session_id?: string
           tarefa_simbolica?: string | null
           tema?: string | null
+        }
+        Relationships: []
+      }
+      co_sessoes: {
+        Row: {
+          client_user_id: string
+          created_at: string
+          created_by: string
+          id: string
+          session_date: string | null
+          shared_with_client: boolean
+          status: string
+          summary_internal: string | null
+          therapist_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          client_user_id: string
+          created_at?: string
+          created_by: string
+          id?: string
+          session_date?: string | null
+          shared_with_client?: boolean
+          status?: string
+          summary_internal?: string | null
+          therapist_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          client_user_id?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          session_date?: string | null
+          shared_with_client?: boolean
+          status?: string
+          summary_internal?: string | null
+          therapist_user_id?: string
+          updated_at?: string
         }
         Relationships: []
       }
