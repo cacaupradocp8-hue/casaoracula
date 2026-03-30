@@ -245,6 +245,7 @@ const GruposPage = React.lazy(() => import("./pages/casa-maquinas/GruposPage"));
 const GrupoDetailPage = React.lazy(() => import("./pages/casa-maquinas/GrupoDetailPage"));
 const BibliotecaIntervPage = React.lazy(() => import("./pages/casa-maquinas/BibliotecaIntervPage"));
 const VariacoesFerramentasPage = React.lazy(() => import("./pages/casa-maquinas/VariacoesFerramentasPage"));
+const QaJardimSessoesPage = React.lazy(() => import("./pages/casa-maquinas/QaJardimSessoesPage"));
 
 // Labirinto da Heroína
 const LabirintoHeroinaPage = React.lazy(() => import("./pages/labirinto-heroina/LabirintoHeroinaPraticoPage"));
