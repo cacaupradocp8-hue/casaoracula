@@ -18,6 +18,51 @@ interface RocktyWebhookPayload {
   transaction_id?: string;
 }
 
+/**
+ * SOURCE OF TRUTH ARCHITECTURE:
+ * 
+ * 1. subscriptions table = authoritative source of subscription state
+ * 2. profiles.portal / profiles.subscription_status = derived (synced via process_webhook_subscription)
+ * 3. user_roles.portal = derived (synced via process_webhook_subscription)
+ * 
+ * Update order (atomic via DB function):
+ *   subscriptions → profiles → user_roles
+ * 
+ * All three are updated in a single transaction by process_webhook_subscription().
+ * If any step fails, the entire transaction rolls back — no partial state.
+ */
+
+/**
+ * Generate a deterministic event ID from the webhook payload.
+ * Uses SHA-256 hash of normalized key fields to ensure:
+ * - Same payload always produces the same ID
+ * - No reliance on Date.now() or other non-deterministic values
+ */
+async function computeEventId(payload: RocktyWebhookPayload): Promise<string> {
+  // If the provider gives us a stable ID, prefer it
+  if (payload.transaction_id) return `txn_${payload.transaction_id}`;
+  if (payload.subscription_id && payload.event_type) {
+    return `sub_${payload.subscription_id}_${payload.event_type}`;
+  }
+
+  // Fallback: deterministic hash of normalized payload fields
+  const normalized = JSON.stringify({
+    event_type: payload.event_type,
+    customer_email: payload.customer_email,
+    subscription_id: payload.subscription_id || '',
+    plan_id: payload.plan_id || '',
+    current_period_start: payload.current_period_start || '',
+    current_period_end: payload.current_period_end || '',
+  });
+
+  const encoder = new TextEncoder();
+  const hashBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(normalized));
+  const hashHex = Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0')).join('');
+
+  return `hash_${hashHex.slice(0, 32)}`;
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -35,10 +80,9 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
   try {
-    // Read raw body for signature verification
     const rawBody = await req.text();
 
-    // Require webhook signature
+    // --- HMAC SIGNATURE VERIFICATION ---
     const webhookSecret = Deno.env.get('ROCKTY_WEBHOOK_SECRET');
     if (!webhookSecret) {
       console.error('ROCKTY_WEBHOOK_SECRET not configured');
@@ -57,7 +101,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Compute HMAC-SHA256 signature
     const encoder = new TextEncoder();
     const key = await crypto.subtle.importKey(
       'raw', encoder.encode(webhookSecret),
@@ -77,7 +120,7 @@ Deno.serve(async (req) => {
 
     console.log('Webhook signature verified');
 
-    // Parse and validate payload
+    // --- PARSE & VALIDATE PAYLOAD ---
     const rawPayload = JSON.parse(rawBody);
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const customer_email = typeof rawPayload.customer_email === 'string'
@@ -94,7 +137,6 @@ Deno.serve(async (req) => {
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
-    // Sanitize optional fields
     const customer_name = typeof rawPayload.customer_name === 'string' ? rawPayload.customer_name.slice(0, 200).trim() : undefined;
     const subscription_id = typeof rawPayload.subscription_id === 'string' ? rawPayload.subscription_id.slice(0, 100) : undefined;
     const status = typeof rawPayload.status === 'string' ? rawPayload.status.slice(0, 50) : undefined;
@@ -104,10 +146,15 @@ Deno.serve(async (req) => {
     const next_billing_date = typeof rawPayload.next_billing_date === 'string' ? rawPayload.next_billing_date.slice(0, 50) : undefined;
     const transaction_id = typeof rawPayload.transaction_id === 'string' ? rawPayload.transaction_id.slice(0, 100) : undefined;
 
-    // Build a unique event_id for idempotency
-    const event_id = transaction_id || subscription_id || `${event_type}_${customer_email}_${Date.now()}`;
+    const payload: RocktyWebhookPayload = {
+      event_type, customer_email, customer_name, subscription_id,
+      status, plan_id, current_period_start, current_period_end,
+      next_billing_date, transaction_id,
+    };
 
-    // --- IDEMPOTENCY CHECK ---
+    // --- DETERMINISTIC IDEMPOTENCY ---
+    const event_id = await computeEventId(payload);
+
     const { data: existingEvent } = await supabase
       .from('webhook_events')
       .select('id')
@@ -116,36 +163,21 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     if (existingEvent) {
-      console.log(`Duplicate webhook event ${event_id}, skipping`);
+      console.log(`Duplicate event ${event_id}, skipping`);
       return new Response(
         JSON.stringify({ success: true, message: 'Event already processed', deduplicated: true }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Record event for idempotency (insert before processing)
-    await supabase.from('webhook_events').insert({
-      provider: 'rockty',
-      event_id,
-      event_type,
-      customer_email,
-      payload: rawPayload,
-    });
+    console.log('Processing webhook:', event_type, 'for', customer_email, 'event_id:', event_id);
 
-    const payload: RocktyWebhookPayload = {
-      event_type, customer_email, customer_name, subscription_id,
-      status, plan_id, current_period_start, current_period_end,
-      next_billing_date, transaction_id,
-    };
-
-    console.log('Rockty webhook:', event_type, 'for', customer_email);
-
-    // Log webhook
+    // Log raw webhook (before processing)
     await supabase.from('webhook_logs').insert({
       provider: 'rockty', event_type, payload, processed: false,
     });
 
-    // 1. Find user by email
+    // --- FIND USER ---
     let userId: string | null = null;
 
     const { data: existingProfile } = await supabase
@@ -157,22 +189,27 @@ Deno.serve(async (req) => {
     } else {
       const { data: authUsers } = await supabase.auth.admin.listUsers();
       const authUser = authUsers?.users?.find(u => u.email?.toLowerCase() === customer_email);
-      if (authUser) {
-        userId = authUser.id;
-      }
+      if (authUser) userId = authUser.id;
     }
 
     if (!userId) {
-      // User not found — store pending enrollment
+      // User doesn't exist yet — store pending enrollment
       console.log('User not found, storing in matriculas_pendentes');
+      const curso = plan_id || 'clube_oracular';
+
       await supabase.from('matriculas_pendentes').upsert({
         email: customer_email,
-        curso_id: plan_id || 'clube_oracular',
+        curso_id: curso,
         portal_destino: 'assinante',
         produto_rockty: plan_id,
         transaction_id: subscription_id,
         processado: false,
-      }, { onConflict: 'email' });
+      }, { onConflict: 'email,curso_id' });
+
+      // Record event even for pending users (prevents reprocessing)
+      await supabase.from('webhook_events').insert({
+        provider: 'rockty', event_id, event_type, customer_email, payload: rawPayload,
+      });
 
       return new Response(
         JSON.stringify({ success: true, message: 'Stored in pending matriculas' }),
@@ -180,10 +217,10 @@ Deno.serve(async (req) => {
       );
     }
 
-    // 2. Determine new statuses
+    // --- DETERMINE NEW STATE ---
     let newPortal: string;
     let newSubscriptionStatus: string;
-    let newProfileSubscriptionStatus: string;
+    let newProfileSubStatus: string;
 
     switch (event_type) {
       case 'subscription_created':
@@ -191,84 +228,74 @@ Deno.serve(async (req) => {
       case 'payment_confirmed':
         newPortal = 'assinante';
         newSubscriptionStatus = 'active';
-        newProfileSubscriptionStatus = 'active';
+        newProfileSubStatus = 'active';
         break;
 
       case 'payment_failed':
-        newPortal = 'assinante'; // Keep access during grace
+        newPortal = 'assinante'; // grace period
         newSubscriptionStatus = 'past_due';
-        newProfileSubscriptionStatus = 'active';
+        newProfileSubStatus = 'active';
         break;
 
       case 'subscription_canceled':
         if (current_period_end && new Date(current_period_end) > new Date()) {
           newPortal = 'assinante';
           newSubscriptionStatus = 'canceled';
-          newProfileSubscriptionStatus = 'active';
+          newProfileSubStatus = 'active';
         } else {
           newPortal = 'visitante';
           newSubscriptionStatus = 'canceled';
-          newProfileSubscriptionStatus = 'expired';
+          newProfileSubStatus = 'expired';
         }
         break;
 
       case 'subscription_expired':
         newPortal = 'visitante';
         newSubscriptionStatus = 'expired';
-        newProfileSubscriptionStatus = 'expired';
+        newProfileSubStatus = 'expired';
         break;
 
       default:
         console.log('Unknown event type:', event_type);
         newPortal = 'visitante';
         newSubscriptionStatus = status || 'pending';
-        newProfileSubscriptionStatus = 'none';
+        newProfileSubStatus = 'none';
     }
 
-    // 3. Upsert subscription (unique on user_id + provider)
-    const subscriptionData = {
-      user_id: userId,
-      provider: 'rockty',
-      plan_id: plan_id || 'clube_oracular',
-      status: newSubscriptionStatus,
-      current_period_start: current_period_start ? new Date(current_period_start).toISOString() : new Date().toISOString(),
-      current_period_end: current_period_end ? new Date(current_period_end).toISOString() : null,
-      next_billing_date: next_billing_date ? new Date(next_billing_date).toISOString() : null,
-      external_subscription_id: subscription_id || null,
-      last_event_at: new Date().toISOString(),
-    };
+    // --- ATOMIC ACTIVATION via DB function ---
+    // This updates subscriptions → profiles → user_roles in a single transaction.
+    // If any step fails, the entire transaction rolls back.
+    const { data: result, error: rpcError } = await supabase.rpc('process_webhook_subscription', {
+      _user_id: userId,
+      _provider: 'rockty',
+      _plan_id: plan_id || 'clube_oracular',
+      _status: newSubscriptionStatus,
+      _portal: newPortal,
+      _subscription_status_profile: newProfileSubStatus,
+      _current_period_start: current_period_start ? new Date(current_period_start).toISOString() : new Date().toISOString(),
+      _current_period_end: current_period_end ? new Date(current_period_end).toISOString() : null,
+      _next_billing_date: next_billing_date ? new Date(next_billing_date).toISOString() : null,
+      _external_subscription_id: subscription_id || null,
+      _customer_name: customer_name || null,
+    });
 
-    const { data: existingSub } = await supabase
-      .from('subscriptions').select('id')
-      .eq('user_id', userId).eq('provider', 'rockty').maybeSingle();
-
-    if (existingSub) {
-      await supabase.from('subscriptions').update(subscriptionData).eq('id', existingSub.id);
-      console.log('Updated subscription for user:', userId);
-    } else {
-      await supabase.from('subscriptions').insert(subscriptionData);
-      console.log('Created subscription for user:', userId);
+    if (rpcError) {
+      console.error('Atomic subscription processing failed:', rpcError);
+      // Do NOT record in webhook_events — allow retry
+      return new Response(
+        JSON.stringify({ error: 'Processing failed', detail: rpcError.message }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    // 4. Update profile
-    const profileUpdate: Record<string, any> = {
-      subscription_status: newProfileSubscriptionStatus,
-      portal: newPortal,
-      updated_at: new Date().toISOString(),
-    };
-    if (newSubscriptionStatus === 'active') {
-      profileUpdate.access_expires_at = null; // No expiration for active subs
-    }
-    if (customer_name) {
-      profileUpdate.nome = customer_name;
-    }
-    await supabase.from('profiles').update(profileUpdate).eq('id', userId);
+    // --- RECORD EVENT AFTER SUCCESS ---
+    // Only mark as processed AFTER the atomic operation succeeds.
+    // This ensures: if activation fails, the event can be retried.
+    await supabase.from('webhook_events').insert({
+      provider: 'rockty', event_id, event_type, customer_email, payload: rawPayload,
+    });
 
-    // 5. Update user_roles portal
-    await supabase.from('user_roles').update({ portal: newPortal }).eq('user_id', userId);
-    console.log('Updated portal to:', newPortal);
-
-    // 6. Mark webhook log as processed
+    // Mark webhook log as processed
     await supabase.from('webhook_logs')
       .update({ processed: true })
       .eq('event_type', event_type)
@@ -276,15 +303,10 @@ Deno.serve(async (req) => {
       .order('created_at', { ascending: false })
       .limit(1);
 
-    console.log('Webhook processed successfully for user:', userId);
+    console.log('Webhook processed successfully:', result);
 
     return new Response(
-      JSON.stringify({
-        success: true,
-        user_id: userId,
-        portal: newPortal,
-        subscription_status: newSubscriptionStatus,
-      }),
+      JSON.stringify({ success: true, ...result }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
@@ -298,7 +320,7 @@ Deno.serve(async (req) => {
         payload: { error: errorMessage }, processed: false, error: errorMessage,
       });
     } catch (logError) {
-      console.error('Error logging webhook error:', logError);
+      console.error('Error logging:', logError);
     }
 
     return new Response(
