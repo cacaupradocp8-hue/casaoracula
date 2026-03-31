@@ -521,6 +521,14 @@ export default function ModoSessaoPage() {
           </Card>
         )}
       </div>
+
+      {/* Orientação Dialog */}
+      <EnviarOrientacaoDialog
+        open={orientacaoDialogOpen}
+        onOpenChange={setOrientacaoDialogOpen}
+        onSubmit={async (data) => orientacoes.criar(data)}
+        saving={orientacoes.saving}
+      />
     </CasaMaquinasLayout>
   );
 }
