@@ -157,6 +157,46 @@ export default function JardimHeroinaClientePage() {
         </section>
 
         <div className="container mx-auto px-4 max-w-lg space-y-6">
+          {/* Orientações da terapeuta */}
+          {orientacoes.filter(o => o.status !== 'completed').length > 0 && (
+            <div className="space-y-3">
+              <div className="text-center">
+                <p className="text-[10px] uppercase tracking-[0.3em] text-emerald-500/50 font-medium">
+                  Uma orientação foi deixada para você
+                </p>
+              </div>
+              {orientacoes.filter(o => o.status !== 'completed').map(o => (
+                <OrientacaoCard
+                  key={o.id}
+                  orientacao={o}
+                  onComplete={completar}
+                  onRespond={responder}
+                  onView={marcarVista}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Orientações concluídas */}
+          {orientacoes.filter(o => o.status === 'completed').length > 0 && (
+            <details className="group">
+              <summary className="text-[10px] text-muted-foreground/40 cursor-pointer text-center hover:text-muted-foreground/60 transition-colors">
+                {orientacoes.filter(o => o.status === 'completed').length} orientação(ões) concluída(s)
+              </summary>
+              <div className="space-y-3 mt-3">
+                {orientacoes.filter(o => o.status === 'completed').map(o => (
+                  <OrientacaoCard
+                    key={o.id}
+                    orientacao={o}
+                    onComplete={completar}
+                    onRespond={responder}
+                    onView={marcarVista}
+                  />
+                ))}
+              </div>
+            </details>
+          )}
+
           {/* New Entry Form */}
           <Card className="border-emerald-500/20 bg-card/70 backdrop-blur-sm">
             <CardHeader className="pb-3">
