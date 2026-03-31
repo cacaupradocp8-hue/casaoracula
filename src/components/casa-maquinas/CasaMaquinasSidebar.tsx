@@ -34,7 +34,6 @@ const toolsNav: NavItem[] = [
 const communityNav: NavItem[] = [
   { label: 'Casa das Tecelãs', path: '/casa-das-maquinas/tecelãs', icon: Flame },
   { label: 'Academia Orácula', path: '/casa-das-maquinas/academia', icon: GraduationCap },
-  { label: 'Sala de Treinamento', path: '/casa-das-maquinas/treinamento', icon: FlaskConical },
 ];
 const systemNav: NavItem[] = [
   { label: 'Supervisão', path: '/casa-das-maquinas/supervisao', icon: Eye, minPortal: 'assinante' },
