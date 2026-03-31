@@ -36,6 +36,7 @@ const CasaTecelaInterior = React.lazy(() => import("./pages/CasaTecelaInterior")
 const CirculoOracularPage = React.lazy(() => import("./pages/CirculoOracularPage"));
 const HeroinaAppPage = React.lazy(() => import("./pages/HeroinaAppPage"));
 const JardimHeroinaClientePage = React.lazy(() => import("./pages/JardimHeroinaClientePage"));
+const AceitarConvitePage = React.lazy(() => import("./pages/AceitarConvitePage"));
 const OraculaPage = React.lazy(() => import("./pages/OraculaPage"));
 const PortalOraculaPage = React.lazy(() => import("./pages/PortalOraculaPage"));
 const OraculaSalesPage = React.lazy(() => import("./pages/OraculaSalesPage"));
