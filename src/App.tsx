@@ -136,6 +136,7 @@ const CasaTecelasPage = React.lazy(() => import("./pages/casa-maquinas/CasaTecel
 const AcademiaPage = React.lazy(() => import("./pages/casa-maquinas/AcademiaPage"));
 const PerfilProfissionalPage = React.lazy(() => import("./pages/casa-maquinas/PerfilProfissionalPage"));
 const SalaTreinamentoPage = React.lazy(() => import("./pages/SalaTreinamentoPage"));
+const SalaDeTreinamentoPage = React.lazy(() => import("./pages/SalaDeTreinamentoPage"));
 const ComunidadePage = React.lazy(() => import("./pages/ComunidadePage"));
 const AcademiaFormacaoPage = React.lazy(() => import("./pages/AcademiaFormacaoPage"));
 const CartografiaPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/CartografiaPage"));
@@ -1763,7 +1764,8 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/configuracoes" element={<ProtectedRoute minPortal="aluna_formacao"><ConfiguracoesSaasPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SalaTreinamentoPage /></ProtectedRoute>} />
         <Route path="/treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SalaTreinamentoPage /></ProtectedRoute>} />
-        <Route path="/sala-treinamento" element={<Navigate to="/treinamento" replace />} />
+        <Route path="/sala-de-treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SalaDeTreinamentoPage /></ProtectedRoute>} />
+        <Route path="/sala-treinamento" element={<Navigate to="/sala-de-treinamento" replace />} />
         <Route path="/comunidade" element={<ProtectedRoute><ComunidadePage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/comunidade" element={<Navigate to="/comunidade" replace />} />
         <Route path="/academia" element={<ProtectedRoute minPortal="aluna_formacao"><AcademiaFormacaoPage /></ProtectedRoute>} />

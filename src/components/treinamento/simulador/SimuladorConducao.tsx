@@ -1,35 +1,28 @@
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Loader2, Play, FlaskConical } from 'lucide-react';
+import { Loader2, FlaskConical } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { TrainingCase, RespostaAluna, SimuladorStep, STEP_ORDER, STEP_LABELS } from './types';
+import { RespostaAluna, SimuladorStep, STEP_ORDER, STEP_LABELS } from './types';
 import { useTrainingCases } from './useTrainingCases';
+import { useTrainingProgress } from './useTrainingProgress';
+import { ProgressCard } from './ProgressCard';
+import { CaseList } from './CaseList';
 import { BlocoCaso } from './BlocoCaso';
 import { BlocoLeitura } from './BlocoLeitura';
 import { BlocoPosicionamento } from './BlocoPosicionamento';
 import { BlocoDirecao } from './BlocoDirecao';
 import { BlocoFerramenta } from './BlocoFerramenta';
 import { BlocoFeedback } from './BlocoFeedback';
-
-const NIVEL_STYLES: Record<string, string> = {
-  guiado: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
-  semi_guiado: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
-  livre: 'bg-purple-500/15 text-purple-400 border-purple-500/30',
-};
-
-const NIVEL_LABEL: Record<string, string> = {
-  guiado: 'Guiado',
-  semi_guiado: 'Semi-guiado',
-  livre: 'Livre',
-};
+import { useQueryClient } from '@tanstack/react-query';
 
 export function SimuladorConducao() {
   const { user } = useAuth();
-  const { cases, loading } = useTrainingCases();
+  const { data: cases = [], isLoading } = useTrainingCases();
+  const { progress, completedCount, getCaseStatus } = useTrainingProgress();
+  const queryClient = useQueryClient();
   const [casoIndex, setCasoIndex] = useState(0);
   const [active, setActive] = useState(false);
   const [step, setStep] = useState<SimuladorStep>('caso');
@@ -44,7 +37,7 @@ export function SimuladorConducao() {
 
   const caso = cases[casoIndex];
   const stepIdx = STEP_ORDER.indexOf(step);
-  const progress = active ? ((stepIdx + 1) / STEP_ORDER.length) * 100 : 0;
+  const progressPct = active ? ((stepIdx + 1) / STEP_ORDER.length) * 100 : 0;
 
   const resetResposta = () => {
     setResposta({
@@ -87,16 +80,19 @@ export function SimuladorConducao() {
       status: 'concluido',
     });
 
-    // Update progress
     await supabase.from('co_training_progress').upsert({
       user_id: user.id,
       nivel_atual: caso.nivel,
       casos_concluidos: casoIndex + 1,
       ultimo_case_id: caso.id,
     }, { onConflict: 'user_id' });
+
+    // Refresh progress data
+    queryClient.invalidateQueries({ queryKey: ['training-progress'] });
+    queryClient.invalidateQueries({ queryKey: ['training-attempts'] });
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex justify-center py-12">
         <Loader2 className="w-6 h-6 animate-spin text-primary" />
@@ -108,15 +104,11 @@ export function SimuladorConducao() {
   if (!active) {
     return (
       <div className="space-y-6">
-        <div className="space-y-1">
-          <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
-            <FlaskConical className="w-5 h-5 text-primary" />
-            Simulador de Condução
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Pratique leitura clínica simbólica com casos fictícios. Não há certo ou errado — há coerência de leitura.
-          </p>
-        </div>
+        <ProgressCard
+          totalCases={cases.length}
+          completedCount={completedCount}
+          nivelAtual={progress?.nivel_atual || null}
+        />
 
         {cases.length === 0 ? (
           <Card className="border-dashed border-primary/20">
@@ -127,28 +119,11 @@ export function SimuladorConducao() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid gap-3">
-            {cases.map((c, i) => (
-              <Card
-                key={c.id}
-                className="border-border/30 hover:border-primary/30 transition-all cursor-pointer group"
-                onClick={() => iniciar(i)}
-              >
-                <CardContent className="p-4 flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
-                    <Play className="w-4 h-4 text-primary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{c.title}</p>
-                    <p className="text-xs text-muted-foreground truncate">{c.tema || ''}</p>
-                  </div>
-                  <Badge className={`text-[10px] shrink-0 ${NIVEL_STYLES[c.nivel] || ''}`}>
-                    {NIVEL_LABEL[c.nivel] || c.nivel}
-                  </Badge>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <CaseList
+            cases={cases}
+            getCaseStatus={getCaseStatus}
+            onSelectCase={iniciar}
+          />
         )}
       </div>
     );
@@ -170,7 +145,7 @@ export function SimuladorConducao() {
       </div>
 
       <div className="space-y-1">
-        <Progress value={progress} className="h-1" />
+        <Progress value={progressPct} className="h-1" />
         <div className="flex justify-between">
           {STEP_ORDER.map((s, i) => (
             <span
