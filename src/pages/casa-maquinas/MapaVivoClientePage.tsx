@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -27,6 +27,7 @@ import {
   Save,
   Calendar,
   Brain,
+  User,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -52,6 +53,7 @@ const MOVIMENTOS_LABEL: Record<string, string> = {
 
 export default function MapaVivoClientePage() {
   const { clienteId } = useParams<{ clienteId: string }>();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
   const [clienteNome, setClienteNome] = useState('');
@@ -172,10 +174,20 @@ export default function MapaVivoClientePage() {
           subtitle="Acompanhe a jornada simbólica da sua cliente"
           icon={<Map className="w-5 h-5" />}
           action={
-            <Button variant="gold" onClick={handleSave} disabled={saving} className="gap-2">
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Salvar
-            </Button>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                variant="outline"
+                onClick={() => clienteId && navigate(`/casa-das-maquinas/clientes/${clienteId}`)}
+                className="gap-2"
+              >
+                <User className="w-4 h-4" />
+                Abrir Perfil
+              </Button>
+              <Button variant="gold" onClick={handleSave} disabled={saving} className="gap-2">
+                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                Salvar
+              </Button>
+            </div>
           }
           className="mb-8"
         />

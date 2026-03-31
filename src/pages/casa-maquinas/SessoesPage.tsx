@@ -18,7 +18,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import {
-  Calendar, Plus, Loader2, Home, ChevronRight, Cog, Map,
+  Calendar, Plus, Loader2, Home, ChevronRight, Cog, Map, User,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -226,11 +226,18 @@ export default function SessoesPage() {
                         )}
                       </div>
                     </div>
-                    <Link to={`/casa-das-maquinas/mapa-vivo/${sessao.cliente_id}`}>
-                      <Button variant="outline" size="sm" className="gap-1">
-                        <Map className="w-3 h-3" /> Mapa Vivo
-                      </Button>
-                    </Link>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Link to={`/casa-das-maquinas/clientes/${sessao.cliente_id}`}>
+                        <Button variant="outline" size="sm" className="gap-1">
+                          <User className="w-3 h-3" /> Perfil
+                        </Button>
+                      </Link>
+                      <Link to={`/casa-das-maquinas/mapa-vivo/${sessao.cliente_id}`}>
+                        <Button variant="outline" size="sm" className="gap-1">
+                          <Map className="w-3 h-3" /> Mapa Vivo
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
