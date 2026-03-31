@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { RespostaAluna, SimuladorStep, STEP_ORDER, STEP_LABELS } from './types';
 import { calcularFeedback } from './feedbackEngine';
+import { calculateTrainingScore, gerarFeedbackJson } from './scoringEngine';
 import { useTrainingCases } from './useTrainingCases';
 import { useTrainingProgress } from './useTrainingProgress';
 import { ProgressCard } from './ProgressCard';
