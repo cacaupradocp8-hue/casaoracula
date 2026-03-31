@@ -11,6 +11,7 @@ import { Loader2, Save, Leaf, Compass, Feather, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ClienteProfileHeader } from './ClienteProfileHeader';
+import { PerfilSimbolicoCliente } from './PerfilSimbolicoCliente';
 import { LeituraClienteAgora } from './LeituraClienteAgora';
 import { MapaConducaoDistritos } from './MapaConducaoDistritos';
 import { ConducaoSessaoPanel } from './ConducaoSessaoPanel';
