@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { useCidadelaMap } from '@/hooks/useCidadelaMap';
+import { useClientProfile } from '@/hooks/useClientProfile';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -11,6 +12,7 @@ import { Loader2, Save, Leaf, Compass, Feather, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ClienteProfileHeader } from './ClienteProfileHeader';
+import { PerfilSimbolicoCliente } from './PerfilSimbolicoCliente';
 import { LeituraClienteAgora } from './LeituraClienteAgora';
 import { MapaConducaoDistritos } from './MapaConducaoDistritos';
 import { ConducaoSessaoPanel } from './ConducaoSessaoPanel';
@@ -35,6 +37,7 @@ export function PainelConducaoSessao({ clienteId, clienteNome, open, onClose }: 
   const { user } = useAuth();
   const navigate = useNavigate();
   const { updateFromSession } = useCidadelaMap();
+  const { updateDinamicoFromSession } = useClientProfile(clienteId);
   const orientacoes = useOrientacoesTerapeuta(clienteId);
 
   const [phase, setPhase] = useState<Phase>('mode');
@@ -113,6 +116,13 @@ export function PainelConducaoSessao({ clienteId, clienteNome, open, onClose }: 
         distrito: distritoEmergente || undefined,
         ferramenta: usedTools.map(t => t.nome).join(', ') || undefined,
         insight: hipoteseSimbolica || insights.map(i => i.text).join(' | ') || undefined,
+      });
+
+      // Sync dynamic profile layer
+      await updateDinamicoFromSession({
+        distrito_atual: distritoEmergente || undefined,
+        sensacao_central: sensacaoCentral || undefined,
+        movimento_atual: posturaSugerida || undefined,
       });
 
       toast.success('Sessão salva com sucesso');
@@ -211,6 +221,16 @@ export function PainelConducaoSessao({ clienteId, clienteNome, open, onClose }: 
             >
               {/* BLOCO 1 — Perfil da cliente */}
               <ClienteProfileHeader clienteId={clienteId} clienteNome={clienteNome} />
+
+              {/* Perfil Simbólico em 3 Camadas */}
+              <PerfilSimbolicoCliente
+                clienteId={clienteId}
+                compact
+                onDinamicoChange={(d) => {
+                  if (d.distrito_atual) setDistritoEmergente(d.distrito_atual);
+                  if (d.sensacao_central) setSensacaoCentral(d.sensacao_central);
+                }}
+              />
 
               {/* BLOCO 5 — Leitura da cliente agora (editável) */}
               <LeituraClienteAgora

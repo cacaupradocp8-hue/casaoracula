@@ -24,6 +24,7 @@ import { CartografiaPsiquicaOracula } from '@/components/casa-maquinas/cartograf
 import { RelatorioJornadaPage } from '@/components/casa-maquinas/relatorio-jornada/RelatorioJornadaPage';
 import { BussolaCartografa } from '@/components/casa-maquinas/bussola-cartografa/BussolaCartografa';
 import { PainelConducaoSessao } from '@/components/casa-maquinas/painel-conducao/PainelConducaoSessao';
+import { PerfilSimbolicoCliente } from '@/components/casa-maquinas/painel-conducao/PerfilSimbolicoCliente';
 import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
 import { ClienteJardimHeroinaTab } from '@/components/casa-maquinas/ClienteJardimHeroinaTab';
 import { ClienteAtividadeJardim } from '@/components/casa-maquinas/ClienteAtividadeJardim';
@@ -101,6 +102,7 @@ export default function ClienteDetailPage() {
       <Tabs defaultValue="cidadela" className="w-full">
         <TabsList className="bg-card/80 border border-border/30 mb-6 flex-wrap h-auto gap-0.5 p-1">
           <TabsTrigger value="cidadela" className={tabClass}>CidaDELA</TabsTrigger>
+          <TabsTrigger value="perfil-simbolico" className={tabClass}>Perfil Simbólico</TabsTrigger>
           <TabsTrigger value="historico" className={tabClass}>Histórico</TabsTrigger>
           <TabsTrigger value="cartografia" className={tabClass}>Cartografia</TabsTrigger>
           <TabsTrigger value="sonhos" className={tabClass}>Sonhos</TabsTrigger>
@@ -122,6 +124,7 @@ export default function ClienteDetailPage() {
         </TabsList>
 
         <TabsContent value="cidadela"><MapaVivoCidadela clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="perfil-simbolico"><PerfilSimbolicoCliente clienteId={clienteId!} /></TabsContent>
         <TabsContent value="historico"><ClienteHistorico clienteId={clienteId!} /></TabsContent>
         <TabsContent value="cartografia"><ClienteCartografias clienteId={clienteId!} /></TabsContent>
         <TabsContent value="sonhos"><ClienteSonhos clienteId={clienteId!} /></TabsContent>
