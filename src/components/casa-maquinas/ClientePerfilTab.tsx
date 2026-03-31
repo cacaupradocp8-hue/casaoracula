@@ -11,6 +11,22 @@ import { toast } from 'sonner';
 import { gatherReportData, type JourneyReportData } from '@/lib/journey-report';
 import { JourneyReportPreview } from './JourneyReportPreview';
 
+const getAgeFromBirthDate = (value: string) => {
+  if (!value) return null;
+  const birthDate = new Date(value);
+  if (Number.isNaN(birthDate.getTime())) return null;
+
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age -= 1;
+  }
+
+  return age;
+};
+
 interface Props {
   cliente: any;
   onUpdate: () => void;
@@ -30,6 +46,7 @@ export function ClientePerfil({ cliente, onUpdate }: Props) {
   const [saving, setSaving] = useState(false);
   const [reportData, setReportData] = useState<JourneyReportData | null>(null);
   const [generatingReport, setGeneratingReport] = useState(false);
+  const idade = getAgeFromBirthDate(dataNascimento);
 
   const handleSave = async () => {
     setSaving(true);
@@ -91,6 +108,9 @@ export function ClientePerfil({ cliente, onUpdate }: Props) {
             <div>
               <Label>Data de nascimento</Label>
               <Input type="date" value={dataNascimento} onChange={e => setDataNascimento(e.target.value)} />
+              {idade !== null && (
+                <p className="mt-1 text-xs text-muted-foreground">Idade calculada: {idade} anos</p>
+              )}
             </div>
             <div>
               <Label>Estado civil</Label>

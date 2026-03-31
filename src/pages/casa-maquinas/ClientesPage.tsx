@@ -35,6 +35,22 @@ const estadoCores: Record<string, string> = {
   integracao: 'bg-accent/15 text-accent border-accent/30',
 };
 
+const getAgeFromBirthDate = (value: string) => {
+  if (!value) return null;
+  const birthDate = new Date(value);
+  if (Number.isNaN(birthDate.getTime())) return null;
+
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age -= 1;
+  }
+
+  return age;
+};
+
 export default function ClientesPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -51,6 +67,7 @@ export default function ClientesPage() {
   const [newChildrenCount, setNewChildrenCount] = useState('');
   const [newRelevantInfo, setNewRelevantInfo] = useState('');
   const [saving, setSaving] = useState(false);
+  const estimatedAge = getAgeFromBirthDate(newBirthDate);
 
   useEffect(() => {
     if (user) loadClientes();
@@ -196,6 +213,9 @@ export default function ClientesPage() {
                 <div>
                   <Label>Data de nascimento</Label>
                   <Input type="date" value={newBirthDate} onChange={e => setNewBirthDate(e.target.value)} />
+                  {estimatedAge !== null && (
+                    <p className="mt-1 text-xs text-muted-foreground">Idade calculada: {estimatedAge} anos</p>
+                  )}
                 </div>
                 <div>
                   <Label>Estado civil</Label>
