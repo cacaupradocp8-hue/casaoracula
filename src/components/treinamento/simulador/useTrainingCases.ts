@@ -27,6 +27,9 @@ async function fetchTrainingCases(): Promise<TrainingCase[]> {
   return casesData.map(c => ({
     ...c,
     nivel: c.nivel as TrainingCase['nivel'],
+    distritos_alternativos: (c as any).distritos_alternativos || [],
+    ferramentas_apoio: (c as any).ferramentas_apoio || [],
+    erro_comum: (c as any).erro_comum || null,
     signals: signals.filter(s => s.case_id === c.id),
     readings: readings.filter(r => r.case_id === c.id),
     feedbacks: feedbacks.filter(f => f.case_id === c.id),
