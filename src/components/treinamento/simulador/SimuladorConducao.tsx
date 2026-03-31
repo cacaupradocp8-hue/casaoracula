@@ -6,6 +6,7 @@ import { Loader2, FlaskConical } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { RespostaAluna, SimuladorStep, STEP_ORDER, STEP_LABELS } from './types';
+import { calcularFeedback } from './feedbackEngine';
 import { useTrainingCases } from './useTrainingCases';
 import { useTrainingProgress } from './useTrainingProgress';
 import { ProgressCard } from './ProgressCard';
@@ -66,6 +67,9 @@ export function SimuladorConducao() {
 
   const salvarResposta = async () => {
     if (!user || !caso) return;
+    const result = calcularFeedback(caso, resposta);
+    const feedbackFinal = `[${result.nivel}] Score: ${result.score}% — ${result.resumo}`;
+
     await supabase.from('co_training_attempts').insert({
       user_id: user.id,
       case_id: caso.id,
@@ -77,6 +81,7 @@ export function SimuladorConducao() {
       resposta_hipotese: resposta.hipotese_texto,
       resposta_vetor: resposta.vetor_texto,
       resposta_ferramenta: resposta.ferramenta_escolhida,
+      feedback_final: feedbackFinal,
       status: 'concluido',
     });
 
