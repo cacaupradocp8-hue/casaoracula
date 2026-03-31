@@ -153,6 +153,7 @@ export default function ClientesPage() {
     setNewMaritalStatus('');
     setNewChildrenCount('');
     setNewRelevantInfo('');
+    setNewEmail('');
     setSaving(false);
     loadClientes();
   };
