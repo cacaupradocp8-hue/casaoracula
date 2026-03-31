@@ -136,6 +136,7 @@ const CasaTecelasPage = React.lazy(() => import("./pages/casa-maquinas/CasaTecel
 const AcademiaPage = React.lazy(() => import("./pages/casa-maquinas/AcademiaPage"));
 const PerfilProfissionalPage = React.lazy(() => import("./pages/casa-maquinas/PerfilProfissionalPage"));
 const SalaTreinamentoPage = React.lazy(() => import("./pages/SalaTreinamentoPage"));
+const SalaDeTreinamentoPage = React.lazy(() => import("./pages/SalaDeTreinamentoPage"));
 const ComunidadePage = React.lazy(() => import("./pages/ComunidadePage"));
 const AcademiaFormacaoPage = React.lazy(() => import("./pages/AcademiaFormacaoPage"));
 const CartografiaPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/CartografiaPage"));
