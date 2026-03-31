@@ -4854,6 +4854,54 @@ export type Database = {
         }
         Relationships: []
       }
+      co_client_profile: {
+        Row: {
+          client_id: string
+          created_at: string
+          dinamico: Json
+          estrutural: Json
+          evolutivo: Json
+          id: string
+          therapist_id: string
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          dinamico?: Json
+          estrutural?: Json
+          evolutivo?: Json
+          id?: string
+          therapist_id: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          dinamico?: Json
+          estrutural?: Json
+          evolutivo?: Json
+          id?: string
+          therapist_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_client_profile_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_client_profile_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       co_client_profiles: {
         Row: {
           arquetipo_evolucao: string | null
