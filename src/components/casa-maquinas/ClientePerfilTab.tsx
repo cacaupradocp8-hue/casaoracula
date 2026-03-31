@@ -92,6 +92,7 @@ export function ClientePerfil({ cliente, onUpdate }: Props) {
 
   return (
     <div className="space-y-4 max-w-lg">
+      <ClienteConviteSection cliente={cliente} onUpdate={onUpdate} />
       <Card className="border-border/30 bg-card/70">
         <CardHeader>
           <CardTitle className="text-sm text-foreground/80">Dados da Cliente</CardTitle>
