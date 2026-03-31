@@ -22,6 +22,8 @@ import { SessionModeIndicator } from '@/components/casa-maquinas/SessionModeIndi
 import { useCidadelaMap } from '@/hooks/useCidadelaMap';
 import { useUserVoz } from '@/hooks/useUserVoz';
 import { VozAtivaIndicator, VozClinicalSuggestions, sortToolsByVoz } from '@/components/casa-maquinas/VozAtivaIndicator';
+import { EnviarOrientacaoDialog } from '@/components/casa-maquinas/EnviarOrientacaoDialog';
+import { useOrientacoesTerapeuta } from '@/hooks/useOrientacoes';
 
 const CHECKIN_STATES = [
   { value: 'contraida', label: 'Contraída', color: '#EF4444' },
