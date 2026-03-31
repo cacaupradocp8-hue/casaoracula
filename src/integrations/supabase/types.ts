@@ -3081,11 +3081,15 @@ export type Database = {
           codigo_interno: string | null
           created_at: string
           data_inicio: string | null
+          data_nascimento: string | null
+          estado_civil: string | null
           id: string
+          informacoes_relevantes: string | null
           invitation_sent_at: string | null
           invited_by: string | null
           nome: string
           notes_internal: string | null
+          numero_filhos: number | null
           objetivo_terapeutico: string | null
           observacao_segura: string | null
           status: Database["public"]["Enums"]["cliente_status"]
@@ -3101,11 +3105,15 @@ export type Database = {
           codigo_interno?: string | null
           created_at?: string
           data_inicio?: string | null
+          data_nascimento?: string | null
+          estado_civil?: string | null
           id?: string
+          informacoes_relevantes?: string | null
           invitation_sent_at?: string | null
           invited_by?: string | null
           nome: string
           notes_internal?: string | null
+          numero_filhos?: number | null
           objetivo_terapeutico?: string | null
           observacao_segura?: string | null
           status?: Database["public"]["Enums"]["cliente_status"]
@@ -3121,11 +3129,15 @@ export type Database = {
           codigo_interno?: string | null
           created_at?: string
           data_inicio?: string | null
+          data_nascimento?: string | null
+          estado_civil?: string | null
           id?: string
+          informacoes_relevantes?: string | null
           invitation_sent_at?: string | null
           invited_by?: string | null
           nome?: string
           notes_internal?: string | null
+          numero_filhos?: number | null
           objetivo_terapeutico?: string | null
           observacao_segura?: string | null
           status?: Database["public"]["Enums"]["cliente_status"]
