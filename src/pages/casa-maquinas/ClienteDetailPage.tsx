@@ -23,7 +23,7 @@ import { RitualIntegracao } from '@/components/casa-maquinas/ritual-integracao/R
 import { CartografiaPsiquicaOracula } from '@/components/casa-maquinas/cartografia-psiquica/CartografiaPsiquicaOracula';
 import { RelatorioJornadaPage } from '@/components/casa-maquinas/relatorio-jornada/RelatorioJornadaPage';
 import { BussolaCartografa } from '@/components/casa-maquinas/bussola-cartografa/BussolaCartografa';
-import { SessionFlowWizard } from '@/components/casa-maquinas/SessionFlowWizard';
+import { PainelConducaoSessao } from '@/components/casa-maquinas/painel-conducao/PainelConducaoSessao';
 import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
 import { ClienteJardimHeroinaTab } from '@/components/casa-maquinas/ClienteJardimHeroinaTab';
 import { ClienteAtividadeJardim } from '@/components/casa-maquinas/ClienteAtividadeJardim';
@@ -91,7 +91,7 @@ export default function ClienteDetailPage() {
         <ClienteAtividadeJardim clienteId={clienteId!} />
       </div>
 
-      <SessionFlowWizard
+      <PainelConducaoSessao
         clienteId={clienteId!}
         clienteNome={cliente.nome}
         open={sessionWizardOpen}
