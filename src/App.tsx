@@ -767,6 +767,14 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/aceitar-convite"
+        element={
+          <Suspense fallback={<BootLoadingScreen />}>
+            <AceitarConvitePage />
+          </Suspense>
+        }
+      />
       
       {/* Casa Orácula - 3 Room Architecture */}
       <Route
