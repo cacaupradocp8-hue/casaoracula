@@ -204,6 +204,12 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast }: P
         </Card>
       )}
 
+      {/* Score detalhado */}
+      <ScoreDisplay score={score} />
+
+      {/* Perfil simbólico emergente */}
+      <PerfilSimbolicoCard perfil={perfil} />
+
       <div className="flex gap-2">
         <Button onClick={onReset} variant="outline" className="flex-1 border-border/30">
           <RotateCcw className="w-4 h-4 mr-1" /> Rever leitura
