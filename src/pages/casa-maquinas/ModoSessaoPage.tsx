@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, ChevronRight, Loader2 } from 'lucide-react';
+import { CheckCircle, ChevronRight, Loader2, Leaf } from 'lucide-react';
 import { toast } from 'sonner';
 import { GpsSuggestionCard } from '@/components/casa-maquinas/GpsSuggestionCard';
 import type { GpsSuggestion } from '@/lib/gps-cidadela';
@@ -22,6 +22,8 @@ import { SessionModeIndicator } from '@/components/casa-maquinas/SessionModeIndi
 import { useCidadelaMap } from '@/hooks/useCidadelaMap';
 import { useUserVoz } from '@/hooks/useUserVoz';
 import { VozAtivaIndicator, VozClinicalSuggestions, sortToolsByVoz } from '@/components/casa-maquinas/VozAtivaIndicator';
+import { EnviarOrientacaoDialog } from '@/components/casa-maquinas/EnviarOrientacaoDialog';
+import { useOrientacoesTerapeuta } from '@/hooks/useOrientacoes';
 
 const CHECKIN_STATES = [
   { value: 'contraida', label: 'Contraída', color: '#EF4444' },
@@ -65,7 +67,9 @@ export default function ModoSessaoPage() {
   const [usedInterventionIds, setUsedInterventionIds] = useState<string[]>([]);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [usedToolRoutes, setUsedToolRoutes] = useState<string[]>([]);
+  const [orientacaoDialogOpen, setOrientacaoDialogOpen] = useState(false);
   const { recordUsage } = useCidadelaOracle();
+  const orientacoes = useOrientacoesTerapeuta(selectedClient);
 
   useEffect(() => {
     if (user) loadData();
@@ -486,6 +490,27 @@ export default function ModoSessaoPage() {
                 <label className="text-xs text-muted-foreground mb-2 block">Notas</label>
                 <Textarea value={notes} onChange={e => setNotes(e.target.value)} className="bg-background/60 border-border/30" placeholder="Anotações privadas..." />
               </div>
+              
+              {/* Jardim da Heroína - Send orientation */}
+              {selectedClient && (
+                <div className="p-3 rounded-lg bg-emerald-950/15 border border-emerald-500/15 space-y-2">
+                  <p className="text-[10px] uppercase tracking-wider text-emerald-500/50 font-medium">
+                    🌿 Jardim da Heroína
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Envie uma orientação para a cliente continuar no Jardim entre sessões.
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full text-xs border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 gap-1.5"
+                    onClick={() => setOrientacaoDialogOpen(true)}
+                  >
+                    <Leaf className="w-3 h-3" />
+                    Enviar Orientação ao Jardim
+                  </Button>
+                </div>
+              )}
               <div className="flex gap-2">
                 <Button variant="outline" onClick={() => setStep(3)} className="flex-1 border-border/30 text-muted-foreground">Voltar</Button>
                 <Button onClick={handleSave} disabled={saving} className="flex-1 bg-primary hover:bg-primary/80 text-primary-foreground">
@@ -496,6 +521,14 @@ export default function ModoSessaoPage() {
           </Card>
         )}
       </div>
+
+      {/* Orientação Dialog */}
+      <EnviarOrientacaoDialog
+        open={orientacaoDialogOpen}
+        onOpenChange={setOrientacaoDialogOpen}
+        onSubmit={async (data) => orientacoes.criar(data)}
+        saving={orientacoes.saving}
+      />
     </CasaMaquinasLayout>
   );
 }

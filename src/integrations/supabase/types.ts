@@ -5271,6 +5271,76 @@ export type Database = {
         }
         Relationships: []
       }
+      co_orientacoes: {
+        Row: {
+          cliente_id: string
+          completada_em: string | null
+          conteudo_id: string | null
+          created_at: string
+          id: string
+          mensagem: string
+          resposta_cliente: string | null
+          session_id: string | null
+          status: string
+          terapeuta_id: string
+          tipo: string
+          titulo: string | null
+          updated_at: string
+        }
+        Insert: {
+          cliente_id: string
+          completada_em?: string | null
+          conteudo_id?: string | null
+          created_at?: string
+          id?: string
+          mensagem: string
+          resposta_cliente?: string | null
+          session_id?: string | null
+          status?: string
+          terapeuta_id: string
+          tipo?: string
+          titulo?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cliente_id?: string
+          completada_em?: string | null
+          conteudo_id?: string | null
+          created_at?: string
+          id?: string
+          mensagem?: string
+          resposta_cliente?: string | null
+          session_id?: string | null
+          status?: string
+          terapeuta_id?: string
+          tipo?: string
+          titulo?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_orientacoes_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_orientacoes_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_orientacoes_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       co_passport_entries: {
         Row: {
           client_id: string

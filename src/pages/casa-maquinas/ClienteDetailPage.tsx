@@ -26,6 +26,7 @@ import { BussolaCartografa } from '@/components/casa-maquinas/bussola-cartografa
 import { SessionFlowWizard } from '@/components/casa-maquinas/SessionFlowWizard';
 import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
 import { ClienteJardimHeroinaTab } from '@/components/casa-maquinas/ClienteJardimHeroinaTab';
+import { ClienteAtividadeJardim } from '@/components/casa-maquinas/ClienteAtividadeJardim';
 import { Button } from '@/components/ui/button';
 import { Loader2, Play } from 'lucide-react';
 
@@ -84,6 +85,11 @@ export default function ClienteDetailPage() {
 
       {/* Mini Mandala — visão rápida da CidaDELA */}
       <MiniMandalaCidadela clienteId={clienteId!} />
+
+      {/* Atividade da cliente no Jardim */}
+      <div className="mb-4">
+        <ClienteAtividadeJardim clienteId={clienteId!} />
+      </div>
 
       <SessionFlowWizard
         clienteId={clienteId!}
