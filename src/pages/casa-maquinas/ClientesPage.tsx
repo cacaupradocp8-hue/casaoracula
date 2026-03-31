@@ -129,6 +129,7 @@ export default function ClientesPage() {
         estado_civil: newMaritalStatus || null,
         numero_filhos: newChildrenCount === '' ? null : Number(newChildrenCount),
         informacoes_relevantes: newRelevantInfo || null,
+        email: newEmail.trim().toLowerCase() || null,
       })
       .select()
       .single();
