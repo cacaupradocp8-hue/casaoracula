@@ -213,6 +213,16 @@ export function PainelConducaoSessao({ clienteId, clienteNome, open, onClose }: 
               {/* BLOCO 1 — Perfil da cliente */}
               <ClienteProfileHeader clienteId={clienteId} clienteNome={clienteNome} />
 
+              {/* Perfil Simbólico em 3 Camadas */}
+              <PerfilSimbolicoCliente
+                clienteId={clienteId}
+                compact
+                onDinamicoChange={(d) => {
+                  if (d.distrito_atual) setDistritoEmergente(d.distrito_atual);
+                  if (d.sensacao_central) setSensacaoCentral(d.sensacao_central);
+                }}
+              />
+
               {/* BLOCO 5 — Leitura da cliente agora (editável) */}
               <LeituraClienteAgora
                 distritoEstrutural={cityState?.distrito_ativo || null}
