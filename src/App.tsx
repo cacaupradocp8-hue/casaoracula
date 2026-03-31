@@ -758,6 +758,14 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/meu-jardim"
+        element={
+          <ProtectedRoute>
+            <JardimHeroinaClientePage />
+          </ProtectedRoute>
+        }
+      />
       
       {/* Casa Orácula - 3 Room Architecture */}
       <Route
