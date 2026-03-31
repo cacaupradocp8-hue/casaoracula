@@ -3094,6 +3094,7 @@ export type Database = {
           objetivo_terapeutico: string | null
           observacao_segura: string | null
           status: Database["public"]["Enums"]["cliente_status"]
+          telefone: string | null
           terapeuta_id: string
           updated_at: string
         }
@@ -3119,6 +3120,7 @@ export type Database = {
           objetivo_terapeutico?: string | null
           observacao_segura?: string | null
           status?: Database["public"]["Enums"]["cliente_status"]
+          telefone?: string | null
           terapeuta_id: string
           updated_at?: string
         }
@@ -3144,6 +3146,7 @@ export type Database = {
           objetivo_terapeutico?: string | null
           observacao_segura?: string | null
           status?: Database["public"]["Enums"]["cliente_status"]
+          telefone?: string | null
           terapeuta_id?: string
           updated_at?: string
         }
