@@ -102,6 +102,7 @@ export default function ClienteDetailPage() {
       <Tabs defaultValue="cidadela" className="w-full">
         <TabsList className="bg-card/80 border border-border/30 mb-6 flex-wrap h-auto gap-0.5 p-1">
           <TabsTrigger value="cidadela" className={tabClass}>CidaDELA</TabsTrigger>
+          <TabsTrigger value="perfil-simbolico" className={tabClass}>Perfil Simbólico</TabsTrigger>
           <TabsTrigger value="historico" className={tabClass}>Histórico</TabsTrigger>
           <TabsTrigger value="cartografia" className={tabClass}>Cartografia</TabsTrigger>
           <TabsTrigger value="sonhos" className={tabClass}>Sonhos</TabsTrigger>
