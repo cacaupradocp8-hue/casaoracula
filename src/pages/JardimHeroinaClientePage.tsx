@@ -95,6 +95,7 @@ function EntryCard({ entry, userId, onToggleShare }: {
 export default function JardimHeroinaClientePage() {
   const { user } = useAuth();
   const { jardim, entries, loading, saving, criarEntry, toggleSharedWithTherapist } = useClienteJardim();
+  const { orientacoes, loading: loadingOrientacoes, marcarVista, completar, responder } = useOrientacoesCliente();
   const [content, setContent] = useState('');
   const [entryType, setEntryType] = useState('reflexao');
   const [shareWithTherapist, setShareWithTherapist] = useState(false);
