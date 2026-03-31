@@ -34,7 +34,23 @@ import { ptBR } from 'date-fns/locale';
 import { FASES_JORNADA } from '@/types/mapa-vivo';
 import { MapaVivoPanel } from '@/components/casa-maquinas/MapaVivoPanel';
 import { MapaVivoCidadela } from '@/components/casa-maquinas/MapaVivoCidadela';
-...
+
+type MovimentoPercebido = 'avancou' | 'tensao' | 'ciclo_repetido' | 'observacao';
+
+interface Sessao {
+  id: string;
+  data_sessao: string;
+  movimento_percebido: MovimentoPercebido;
+  nota_breve: string | null;
+}
+
+const MOVIMENTOS_LABEL: Record<string, string> = {
+  avancou: 'Avançou',
+  tensao: 'Tensão',
+  ciclo_repetido: 'Ciclo Repetido',
+  observacao: 'Observação',
+};
+
 export default function MapaVivoClientePage() {
   const { clienteId } = useParams<{ clienteId: string }>();
   const navigate = useNavigate();
@@ -44,7 +60,115 @@ export default function MapaVivoClientePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [sessoes, setSessoes] = useState<Sessao[]>([]);
-...
+
+  // Mapa Vivo fields
+  const [mapaId, setMapaId] = useState<string | null>(null);
+  const [faseAtual, setFaseAtual] = useState('');
+  const [indicadorFase, setIndicadorFase] = useState('');
+  const [arquetipoAtivo, setArquetipoAtivo] = useState('');
+  const [arquetipoSombra, setArquetipoSombra] = useState('');
+  const [arquetipoEmergente, setArquetipoEmergente] = useState('');
+  const [narrativaRecorrente, setNarrativaRecorrente] = useState('');
+  const [imagemSimbolica, setImagemSimbolica] = useState('');
+  const [papelNarrativa, setPapelNarrativa] = useState('');
+
+  useEffect(() => {
+    if (user && clienteId) {
+      loadData();
+    }
+  }, [user, clienteId]);
+
+  const loadData = async () => {
+    if (!user || !clienteId) return;
+    setLoading(true);
+
+    const [clienteRes, mapaRes, sessoesRes] = await Promise.all([
+      supabase.from('clientes').select('nome').eq('id', clienteId).eq('terapeuta_id', user.id).single(),
+      supabase.from('mapa_vivo_heroina').select('*').eq('client_id', clienteId).eq('therapist_id', user.id).order('created_at', { ascending: false }).limit(1).maybeSingle(),
+      supabase.from('sessoes_casa_maquinas').select('id, data_sessao, movimento_percebido, nota_breve').eq('owner_id', user.id).eq('cliente_id', clienteId).order('data_sessao', { ascending: false }).limit(20),
+    ]);
+
+    if (clienteRes.data) setClienteNome(clienteRes.data.nome);
+
+    if (mapaRes.data) {
+      const m = mapaRes.data;
+      setMapaId(m.id);
+      setFaseAtual(m.fase_jornada || '');
+      setIndicadorFase(m.fase_descricao || '');
+      setArquetipoAtivo(m.arquetipo_predominante || '');
+      setArquetipoSombra(m.arquetipo_tensao || '');
+      setArquetipoEmergente(m.arquetipo_emergente || '');
+      setNarrativaRecorrente(m.simbolo_recorrente || '');
+      setImagemSimbolica(m.metafora_central || '');
+      setPapelNarrativa(m.mito_pessoal || '');
+    }
+
+    setSessoes((sessoesRes.data || []) as Sessao[]);
+    setLoading(false);
+  };
+
+  const handleSave = async () => {
+    if (!user || !clienteId) return;
+    setSaving(true);
+
+    const payload = {
+      therapist_id: user.id,
+      client_id: clienteId,
+      session_case_id: clienteId, // using clienteId as reference
+      fase_jornada: faseAtual || null,
+      fase_descricao: indicadorFase || null,
+      arquetipo_predominante: arquetipoAtivo || null,
+      arquetipo_tensao: arquetipoSombra || null,
+      arquetipo_emergente: arquetipoEmergente || null,
+      simbolo_recorrente: narrativaRecorrente || null,
+      metafora_central: imagemSimbolica || null,
+      mito_pessoal: papelNarrativa || null,
+    };
+
+    let result;
+    if (mapaId) {
+      result = await supabase.from('mapa_vivo_heroina').update(payload).eq('id', mapaId).select().single();
+    } else {
+      result = await supabase.from('mapa_vivo_heroina').insert(payload).select().single();
+    }
+
+    if (result.error) {
+      console.error('Erro ao salvar mapa:', result.error);
+      toast({ title: 'Erro ao salvar mapa', variant: 'destructive' });
+    } else {
+      setMapaId(result.data.id);
+      toast({ title: 'Mapa Vivo salvo!' });
+    }
+    setSaving(false);
+  };
+
+  if (loading) {
+    return (
+      <AppLayout>
+        <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-[50vh]">
+          <Loader2 className="w-8 h-8 animate-spin text-gold" />
+        </div>
+      </AppLayout>
+    );
+  }
+
+  return (
+    <AppLayout>
+      <div className="container mx-auto px-4 py-8 pb-20">
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/dashboard" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Home className="w-3 h-3" />
+            Casa
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <Link to="/casa-das-maquinas" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <Cog className="w-3 h-3" />
+            Casa das Máquinas
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-foreground">Mapa Vivo — {clienteNome}</span>
+        </nav>
+
         <SectionHeader
           title={`Mapa Vivo — ${clienteNome}`}
           subtitle="Acompanhe a jornada simbólica da sua cliente"
