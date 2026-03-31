@@ -37,6 +37,7 @@ export function PainelConducaoSessao({ clienteId, clienteNome, open, onClose }: 
   const { user } = useAuth();
   const navigate = useNavigate();
   const { updateFromSession } = useCidadelaMap();
+  const { updateDinamicoFromSession } = useClientProfile(clienteId);
   const orientacoes = useOrientacoesTerapeuta(clienteId);
 
   const [phase, setPhase] = useState<Phase>('mode');
