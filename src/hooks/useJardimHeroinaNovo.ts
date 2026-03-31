@@ -103,6 +103,23 @@ export function useJardimHeroinaNovo({ caseId, clientId }: UseJardimHeroinaNovoP
 
       if (error) throw error;
 
+      // Also create co_jardins for client-facing view
+      const { data: clienteData } = await supabase
+        .from('clientes')
+        .select('client_user_id')
+        .eq('id', clientId)
+        .single();
+
+      if (clienteData?.client_user_id) {
+        await supabase.from('co_jardins').upsert({
+          client_user_id: clienteData.client_user_id,
+          therapist_user_id: user.id,
+          created_by: user.id,
+          status: 'active',
+          visibility_scope: 'client_owned',
+        }, { onConflict: 'client_user_id,therapist_user_id' }).select();
+      }
+
       const created = data as JardimHeroinaNovo;
       setJardim(created);
       toast.success('Jardim da Heroína ativado ✨');
