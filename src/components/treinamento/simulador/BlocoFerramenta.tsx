@@ -1,10 +1,10 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Wrench } from 'lucide-react';
-import { FERRAMENTAS_METODO, CasoSimulado } from './types';
+import { FERRAMENTAS_METODO, TrainingCase } from './types';
 
 interface Props {
-  caso: CasoSimulado;
+  caso: TrainingCase;
   ferramenta: string;
   onChange: (v: string) => void;
   onNext: () => void;

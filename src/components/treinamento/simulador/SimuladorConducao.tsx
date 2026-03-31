@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Loader2, Play, FlaskConical } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
-import { CasoSimulado, RespostaAluna, SimuladorStep, STEP_ORDER, STEP_LABELS } from './types';
+import { TrainingCase, RespostaAluna, SimuladorStep, STEP_ORDER, STEP_LABELS } from './types';
+import { useTrainingCases } from './useTrainingCases';
 import { BlocoCaso } from './BlocoCaso';
 import { BlocoLeitura } from './BlocoLeitura';
 import { BlocoPosicionamento } from './BlocoPosicionamento';
@@ -17,20 +17,19 @@ import { BlocoFeedback } from './BlocoFeedback';
 
 const NIVEL_STYLES: Record<string, string> = {
   guiado: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
-  'semi-guiado': 'bg-amber-500/15 text-amber-400 border-amber-500/30',
+  semi_guiado: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
   livre: 'bg-purple-500/15 text-purple-400 border-purple-500/30',
 };
 
-const NIVEL_DESC: Record<string, string> = {
-  guiado: 'Perguntas e dicas orientam cada passo',
-  'semi-guiado': 'Algumas orientações, mais autonomia',
-  livre: 'Sem orientação — confie na sua leitura',
+const NIVEL_LABEL: Record<string, string> = {
+  guiado: 'Guiado',
+  semi_guiado: 'Semi-guiado',
+  livre: 'Livre',
 };
 
 export function SimuladorConducao() {
   const { user } = useAuth();
-  const [casos, setCasos] = useState<CasoSimulado[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { cases, loading } = useTrainingCases();
   const [casoIndex, setCasoIndex] = useState(0);
   const [active, setActive] = useState(false);
   const [step, setStep] = useState<SimuladorStep>('caso');
@@ -43,23 +42,7 @@ export function SimuladorConducao() {
     ferramenta_escolhida: '',
   });
 
-  useEffect(() => {
-    supabase
-      .from('treinamento_casos_simulados')
-      .select('*')
-      .eq('ativo', true)
-      .order('ordem')
-      .then(({ data, error }) => {
-        if (error) {
-          console.error(error);
-          toast.error('Erro ao carregar casos');
-        }
-        setCasos((data as CasoSimulado[]) || []);
-        setLoading(false);
-      });
-  }, []);
-
-  const caso = casos[casoIndex];
+  const caso = cases[casoIndex];
   const stepIdx = STEP_ORDER.indexOf(step);
   const progress = active ? ((stepIdx + 1) / STEP_ORDER.length) * 100 : 0;
 
@@ -90,24 +73,27 @@ export function SimuladorConducao() {
 
   const salvarResposta = async () => {
     if (!user || !caso) return;
-    await supabase.from('treinamento_respostas').upsert({
+    await supabase.from('co_training_attempts').insert({
       user_id: user.id,
-      caso_id: caso.id,
-      leitura_texto: resposta.leitura_texto,
-      distrito_escolhido: resposta.distrito_escolhido,
-      estado_escolhido: resposta.estado_escolhido,
-      hipotese_texto: resposta.hipotese_texto,
-      vetor_texto: resposta.vetor_texto,
-      ferramenta_escolhida: resposta.ferramenta_escolhida,
-      nivel_usado: caso.nivel,
-      concluido: true,
-      updated_at: new Date().toISOString(),
-    }, { onConflict: 'user_id,caso_id' });
-  };
+      case_id: caso.id,
+      resposta_o_que_acontece: resposta.leitura_texto,
+      resposta_parece_o_que: '',
+      resposta_distrito: resposta.distrito_escolhido,
+      resposta_estado: resposta.estado_escolhido,
+      resposta_movimento: '',
+      resposta_hipotese: resposta.hipotese_texto,
+      resposta_vetor: resposta.vetor_texto,
+      resposta_ferramenta: resposta.ferramenta_escolhida,
+      status: 'concluido',
+    });
 
-  const handleFeedbackEnter = () => {
-    nextStep();
-    salvarResposta();
+    // Update progress
+    await supabase.from('co_training_progress').upsert({
+      user_id: user.id,
+      nivel_atual: caso.nivel,
+      casos_concluidos: casoIndex + 1,
+      ultimo_case_id: caso.id,
+    }, { onConflict: 'user_id' });
   };
 
   if (loading) {
@@ -132,7 +118,7 @@ export function SimuladorConducao() {
           </p>
         </div>
 
-        {casos.length === 0 ? (
+        {cases.length === 0 ? (
           <Card className="border-dashed border-primary/20">
             <CardContent className="py-12 text-center">
               <FlaskConical className="w-10 h-10 mx-auto text-primary/30 mb-3" />
@@ -142,7 +128,7 @@ export function SimuladorConducao() {
           </Card>
         ) : (
           <div className="grid gap-3">
-            {casos.map((c, i) => (
+            {cases.map((c, i) => (
               <Card
                 key={c.id}
                 className="border-border/30 hover:border-primary/30 transition-all cursor-pointer group"
@@ -153,11 +139,11 @@ export function SimuladorConducao() {
                     <Play className="w-4 h-4 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{c.titulo}</p>
-                    <p className="text-xs text-muted-foreground truncate">{c.contexto_breve}</p>
+                    <p className="text-sm font-medium text-foreground truncate">{c.title}</p>
+                    <p className="text-xs text-muted-foreground truncate">{c.tema || ''}</p>
                   </div>
-                  <Badge className={`text-[10px] shrink-0 capitalize ${NIVEL_STYLES[c.nivel] || ''}`}>
-                    {c.nivel}
+                  <Badge className={`text-[10px] shrink-0 ${NIVEL_STYLES[c.nivel] || ''}`}>
+                    {NIVEL_LABEL[c.nivel] || c.nivel}
                   </Badge>
                 </CardContent>
               </Card>
@@ -171,10 +157,9 @@ export function SimuladorConducao() {
   // --- ACTIVE SIMULATION ---
   return (
     <div className="space-y-4">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="space-y-0.5">
-          <p className="text-sm font-medium text-foreground">{caso?.titulo}</p>
+          <p className="text-sm font-medium text-foreground">{caso?.title}</p>
           <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
             {STEP_LABELS[step]} — Passo {stepIdx + 1} de {STEP_ORDER.length}
           </p>
@@ -184,7 +169,6 @@ export function SimuladorConducao() {
         </Button>
       </div>
 
-      {/* Progress */}
       <div className="space-y-1">
         <Progress value={progress} className="h-1" />
         <div className="flex justify-between">
@@ -201,10 +185,7 @@ export function SimuladorConducao() {
         </div>
       </div>
 
-      {/* Blocks */}
-      {caso && step === 'caso' && (
-        <BlocoCaso caso={caso} onNext={nextStep} />
-      )}
+      {caso && step === 'caso' && <BlocoCaso caso={caso} onNext={nextStep} />}
       {caso && step === 'leitura' && (
         <BlocoLeitura
           caso={caso}
@@ -246,8 +227,8 @@ export function SimuladorConducao() {
           caso={caso}
           resposta={resposta}
           onReset={resetResposta}
-          onNextCaso={() => iniciar(Math.min(casoIndex + 1, casos.length - 1))}
-          isLast={casoIndex >= casos.length - 1}
+          onNextCaso={() => iniciar(Math.min(casoIndex + 1, cases.length - 1))}
+          isLast={casoIndex >= cases.length - 1}
         />
       )}
     </div>

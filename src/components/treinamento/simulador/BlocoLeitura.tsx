@@ -2,10 +2,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowRight, HelpCircle } from 'lucide-react';
-import { CasoSimulado } from './types';
+import { TrainingCase } from './types';
 
 interface Props {
-  caso: CasoSimulado;
+  caso: TrainingCase;
   value: string;
   onChange: (v: string) => void;
   onNext: () => void;
@@ -19,15 +19,17 @@ export function BlocoLeitura({ caso, value, onChange, onNext }: Props) {
       </p>
 
       {/* Perguntas guiadas */}
-      {caso.nivel !== 'livre' && (
+      {caso.nivel === 'guiado' && (
         <Card className="border-primary/15 bg-primary/5">
           <CardContent className="p-4 space-y-2">
-            {caso.perguntas_leitura.map((p, i) => (
-              <div key={i} className="flex items-start gap-2">
-                <HelpCircle className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-                <p className="text-sm text-foreground/80">{p}</p>
-              </div>
-            ))}
+            <div className="flex items-start gap-2">
+              <HelpCircle className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+              <p className="text-sm text-foreground/80">O que está acontecendo com esta cliente?</p>
+            </div>
+            <div className="flex items-start gap-2">
+              <HelpCircle className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+              <p className="text-sm text-foreground/80">Isso parece o quê no campo simbólico?</p>
+            </div>
           </CardContent>
         </Card>
       )}
