@@ -25,6 +25,7 @@ import { RelatorioJornadaPage } from '@/components/casa-maquinas/relatorio-jorna
 import { BussolaCartografa } from '@/components/casa-maquinas/bussola-cartografa/BussolaCartografa';
 import { SessionFlowWizard } from '@/components/casa-maquinas/SessionFlowWizard';
 import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
+import { ClienteJardimHeroinaTab } from '@/components/casa-maquinas/ClienteJardimHeroinaTab';
 import { Button } from '@/components/ui/button';
 import { Loader2, Play } from 'lucide-react';
 
@@ -101,6 +102,7 @@ export default function ClienteDetailPage() {
           <TabsTrigger value="estacoes" className={tabClass}>Estações</TabsTrigger>
           <TabsTrigger value="ariadne" className={tabClass}>Fio de Ariadne</TabsTrigger>
           <TabsTrigger value="sinais" className={tabClass}>Sinais</TabsTrigger>
+          <TabsTrigger value="jardim-heroina" className={tabClass}>Jardim</TabsTrigger>
           <TabsTrigger value="39portas" className={tabClass}>39 Portas</TabsTrigger>
           <TabsTrigger value="atlas" className={tabClass}>Atlas</TabsTrigger>
           <TabsTrigger value="espelho" className={tabClass}>Espelho</TabsTrigger>
@@ -121,6 +123,7 @@ export default function ClienteDetailPage() {
         <TabsContent value="estacoes"><OraculoEstacoes clienteId={clienteId!} /></TabsContent>
         <TabsContent value="ariadne"><FioDeAriadne clienteId={clienteId!} /></TabsContent>
         <TabsContent value="sinais"><SinaisDaJornada clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="jardim-heroina"><ClienteJardimHeroinaTab clientId={clienteId!} clientName={cliente.nome} /></TabsContent>
         <TabsContent value="39portas"><Labirinto39Portas clienteId={clienteId!} /></TabsContent>
         <TabsContent value="atlas"><AtlasArquetipos clienteId={clienteId!} /></TabsContent>
         <TabsContent value="espelho"><RelacionamentosEspelho clienteId={clienteId!} /></TabsContent>

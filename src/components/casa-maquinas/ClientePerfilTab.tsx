@@ -21,6 +21,12 @@ export function ClientePerfil({ cliente, onUpdate }: Props) {
   const [nome, setNome] = useState(cliente.nome || '');
   const [objetivo, setObjetivo] = useState(cliente.objetivo_terapeutico || '');
   const [obs, setObs] = useState(cliente.observacao_segura || '');
+  const [dataNascimento, setDataNascimento] = useState(cliente.data_nascimento || '');
+  const [estadoCivil, setEstadoCivil] = useState(cliente.estado_civil || '');
+  const [numeroFilhos, setNumeroFilhos] = useState(
+    cliente.numero_filhos === null || cliente.numero_filhos === undefined ? '' : String(cliente.numero_filhos)
+  );
+  const [informacoesRelevantes, setInformacoesRelevantes] = useState(cliente.informacoes_relevantes || '');
   const [saving, setSaving] = useState(false);
   const [reportData, setReportData] = useState<JourneyReportData | null>(null);
   const [generatingReport, setGeneratingReport] = useState(false);
@@ -29,7 +35,15 @@ export function ClientePerfil({ cliente, onUpdate }: Props) {
     setSaving(true);
     const { error } = await supabase
       .from('clientes')
-      .update({ nome, objetivo_terapeutico: objetivo, observacao_segura: obs })
+      .update({
+        nome,
+        objetivo_terapeutico: objetivo,
+        observacao_segura: obs,
+        data_nascimento: dataNascimento || null,
+        estado_civil: estadoCivil || null,
+        numero_filhos: numeroFilhos === '' ? null : Number(numeroFilhos),
+        informacoes_relevantes: informacoesRelevantes || null,
+      })
       .eq('id', cliente.id);
 
     if (error) {
@@ -60,34 +74,63 @@ export function ClientePerfil({ cliente, onUpdate }: Props) {
 
   return (
     <div className="space-y-4 max-w-lg">
-      <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
+      <Card className="border-border/30 bg-card/70">
         <CardHeader>
-          <CardTitle className="text-sm text-[#F5F1E8]/80">Dados da Cliente</CardTitle>
+          <CardTitle className="text-sm text-foreground/80">Dados da Cliente</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label className="text-[#F5F1E8]/70">Nome</Label>
-            <Input value={nome} onChange={e => setNome(e.target.value)} className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]" />
+            <Label>Nome</Label>
+            <Input value={nome} onChange={e => setNome(e.target.value)} />
           </div>
           <div>
-            <Label className="text-[#F5F1E8]/70">Objetivo Terapêutico</Label>
-            <Textarea value={objetivo} onChange={e => setObjetivo(e.target.value)} className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]" />
+            <Label>Objetivo Terapêutico</Label>
+            <Textarea value={objetivo} onChange={e => setObjetivo(e.target.value)} />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <Label>Data de nascimento</Label>
+              <Input type="date" value={dataNascimento} onChange={e => setDataNascimento(e.target.value)} />
+            </div>
+            <div>
+              <Label>Estado civil</Label>
+              <Input value={estadoCivil} onChange={e => setEstadoCivil(e.target.value)} placeholder="Ex: casada" />
+            </div>
           </div>
           <div>
-            <Label className="text-[#F5F1E8]/70">Observações</Label>
-            <Textarea value={obs} onChange={e => setObs(e.target.value)} className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]" />
+            <Label>Filhos</Label>
+            <Input
+              type="number"
+              min="0"
+              inputMode="numeric"
+              value={numeroFilhos}
+              onChange={e => setNumeroFilhos(e.target.value)}
+              placeholder="Quantidade de filhos"
+            />
           </div>
-          <Button onClick={handleSave} disabled={saving} className="bg-[#C9A24A] hover:bg-[#C9A24A]/80 text-[#0B1B2B] gap-2">
+          <div>
+            <Label>Informações relevantes</Label>
+            <Textarea
+              value={informacoesRelevantes}
+              onChange={e => setInformacoesRelevantes(e.target.value)}
+              placeholder="Contexto familiar, profissão, marcos importantes, saúde, observações clínicas iniciais..."
+            />
+          </div>
+          <div>
+            <Label>Observações</Label>
+            <Textarea value={obs} onChange={e => setObs(e.target.value)} />
+          </div>
+          <Button onClick={handleSave} disabled={saving} className="gap-2">
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
             Salvar
           </Button>
         </CardContent>
       </Card>
 
-      <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
+      <Card className="border-border/30 bg-card/70">
         <CardContent className="p-4">
           <Button onClick={handleGenerateReport} disabled={generatingReport} variant="outline"
-            className="w-full border-[#C9A24A]/20 text-[#C9A24A] hover:bg-[#C9A24A]/10 gap-2">
+            className="w-full gap-2">
             {generatingReport ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
             Gerar Relatório de Jornada
           </Button>

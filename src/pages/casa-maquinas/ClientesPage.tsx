@@ -27,6 +27,8 @@ interface Cliente {
   };
 }
 
+const ESTADOS_CIVIS = ['solteira', 'casada', 'união estável', 'divorciada', 'viúva', 'outro'];
+
 const estadoCores: Record<string, string> = {
   crise: 'bg-destructive/15 text-destructive border-destructive/30',
   travessia: 'bg-primary/15 text-primary border-primary/30',
@@ -44,6 +46,10 @@ export default function ClientesPage() {
   const [newName, setNewName] = useState('');
   const [newObjective, setNewObjective] = useState('');
   const [newNotes, setNewNotes] = useState('');
+  const [newBirthDate, setNewBirthDate] = useState('');
+  const [newMaritalStatus, setNewMaritalStatus] = useState('');
+  const [newChildrenCount, setNewChildrenCount] = useState('');
+  const [newRelevantInfo, setNewRelevantInfo] = useState('');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -101,6 +107,10 @@ export default function ClientesPage() {
         terapeuta_id: user.id,
         objetivo_terapeutico: newObjective || null,
         observacao_segura: newNotes || null,
+        data_nascimento: newBirthDate || null,
+        estado_civil: newMaritalStatus || null,
+        numero_filhos: newChildrenCount === '' ? null : Number(newChildrenCount),
+        informacoes_relevantes: newRelevantInfo || null,
       })
       .select()
       .single();
@@ -120,6 +130,10 @@ export default function ClientesPage() {
     setNewName('');
     setNewObjective('');
     setNewNotes('');
+    setNewBirthDate('');
+    setNewMaritalStatus('');
+    setNewChildrenCount('');
+    setNewRelevantInfo('');
     setSaving(false);
     loadClientes();
   };
@@ -161,7 +175,7 @@ export default function ClientesPage() {
               Nova Cliente
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-h-[85vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Nova Cliente</DialogTitle>
             </DialogHeader>
@@ -177,6 +191,44 @@ export default function ClientesPage() {
               <div>
                 <Label>Observações</Label>
                 <Textarea value={newNotes} onChange={e => setNewNotes(e.target.value)} />
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <Label>Data de nascimento</Label>
+                  <Input type="date" value={newBirthDate} onChange={e => setNewBirthDate(e.target.value)} />
+                </div>
+                <div>
+                  <Label>Estado civil</Label>
+                  <Select value={newMaritalStatus} onValueChange={setNewMaritalStatus}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {ESTADOS_CIVIS.map((estado) => (
+                        <SelectItem key={estado} value={estado}>{estado}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div>
+                <Label>Filhos</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  inputMode="numeric"
+                  value={newChildrenCount}
+                  onChange={e => setNewChildrenCount(e.target.value)}
+                  placeholder="Quantidade de filhos"
+                />
+              </div>
+              <div>
+                <Label>Informações relevantes</Label>
+                <Textarea
+                  value={newRelevantInfo}
+                  onChange={e => setNewRelevantInfo(e.target.value)}
+                  placeholder="Estado civil, filhos, contexto familiar, saúde, marcos importantes..."
+                />
               </div>
               <Button onClick={handleCreate} disabled={saving || !newName.trim()} className="w-full bg-primary text-primary-foreground hover:bg-primary/80">
                 {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Criar Cliente'}
