@@ -117,6 +117,13 @@ export function PainelConducaoSessao({ clienteId, clienteNome, open, onClose }: 
         insight: hipoteseSimbolica || insights.map(i => i.text).join(' | ') || undefined,
       });
 
+      // Sync dynamic profile layer
+      await updateDinamicoFromSession({
+        distrito_atual: distritoEmergente || undefined,
+        sensacao_central: sensacaoCentral || undefined,
+        movimento_atual: posturaSugerida || undefined,
+      });
+
       toast.success('Sessão salva com sucesso');
       onClose();
     } catch (err) {
