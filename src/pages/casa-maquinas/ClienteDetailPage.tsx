@@ -24,6 +24,7 @@ import { CartografiaPsiquicaOracula } from '@/components/casa-maquinas/cartograf
 import { RelatorioJornadaPage } from '@/components/casa-maquinas/relatorio-jornada/RelatorioJornadaPage';
 import { BussolaCartografa } from '@/components/casa-maquinas/bussola-cartografa/BussolaCartografa';
 import { PainelConducaoSessao } from '@/components/casa-maquinas/painel-conducao/PainelConducaoSessao';
+import { PerfilSimbolicoCliente } from '@/components/casa-maquinas/painel-conducao/PerfilSimbolicoCliente';
 import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
 import { ClienteJardimHeroinaTab } from '@/components/casa-maquinas/ClienteJardimHeroinaTab';
 import { ClienteAtividadeJardim } from '@/components/casa-maquinas/ClienteAtividadeJardim';
