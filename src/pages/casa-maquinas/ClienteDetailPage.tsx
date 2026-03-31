@@ -91,7 +91,7 @@ export default function ClienteDetailPage() {
         <ClienteAtividadeJardim clienteId={clienteId!} />
       </div>
 
-      <SessionFlowWizard
+      <PainelConducaoSessao
         clienteId={clienteId!}
         clienteNome={cliente.nome}
         open={sessionWizardOpen}
