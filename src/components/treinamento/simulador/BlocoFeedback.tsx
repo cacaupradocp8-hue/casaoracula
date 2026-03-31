@@ -60,6 +60,16 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast }: P
     [caso, resposta]
   );
 
+  const score = useMemo(
+    () => calculateTrainingScore(caso, resposta),
+    [caso, resposta]
+  );
+
+  const perfil = useMemo(
+    () => gerarPerfilSimbolico(caso, resposta),
+    [caso, resposta]
+  );
+
   const config = NIVEL_CONFIG[result.nivel];
   const NivelIcon = config.icon;
 
