@@ -86,6 +86,11 @@ export default function ClienteDetailPage() {
       {/* Mini Mandala — visão rápida da CidaDELA */}
       <MiniMandalaCidadela clienteId={clienteId!} />
 
+      {/* Atividade da cliente no Jardim */}
+      <div className="mb-4">
+        <ClienteAtividadeJardim clienteId={clienteId!} />
+      </div>
+
       <SessionFlowWizard
         clienteId={clienteId!}
         clienteNome={cliente.nome}
