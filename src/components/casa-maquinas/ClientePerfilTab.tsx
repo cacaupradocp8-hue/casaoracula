@@ -10,6 +10,7 @@ import { Loader2, Save, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 import { gatherReportData, type JourneyReportData } from '@/lib/journey-report';
 import { JourneyReportPreview } from './JourneyReportPreview';
+import { ClienteConviteSection } from './ClienteConviteSection';
 
 const getAgeFromBirthDate = (value: string) => {
   if (!value) return null;
