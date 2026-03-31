@@ -230,7 +230,7 @@ export function SimuladorConducao() {
           vetor={resposta.vetor_texto}
           onHipoteseChange={v => setResposta(r => ({ ...r, hipotese_texto: v }))}
           onVetorChange={v => setResposta(r => ({ ...r, vetor_texto: v }))}
-          onNext={handleFeedbackEnter}
+          onNext={nextStep}
         />
       )}
       {caso && step === 'ferramenta' && (
@@ -238,7 +238,7 @@ export function SimuladorConducao() {
           caso={caso}
           ferramenta={resposta.ferramenta_escolhida}
           onChange={v => setResposta(r => ({ ...r, ferramenta_escolhida: v }))}
-          onNext={handleFeedbackEnter}
+          onNext={() => { nextStep(); salvarResposta(); }}
         />
       )}
       {caso && step === 'feedback' && (
