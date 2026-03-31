@@ -1763,6 +1763,7 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/configuracoes" element={<ProtectedRoute minPortal="aluna_formacao"><ConfiguracoesSaasPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SalaTreinamentoPage /></ProtectedRoute>} />
         <Route path="/treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SalaTreinamentoPage /></ProtectedRoute>} />
+        <Route path="/sala-treinamento" element={<Navigate to="/treinamento" replace />} />
         <Route path="/comunidade" element={<ProtectedRoute><ComunidadePage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/comunidade" element={<Navigate to="/comunidade" replace />} />
         <Route path="/academia" element={<ProtectedRoute minPortal="aluna_formacao"><AcademiaFormacaoPage /></ProtectedRoute>} />
