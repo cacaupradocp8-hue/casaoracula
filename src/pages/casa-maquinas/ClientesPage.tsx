@@ -66,6 +66,7 @@ export default function ClientesPage() {
   const [newMaritalStatus, setNewMaritalStatus] = useState('');
   const [newChildrenCount, setNewChildrenCount] = useState('');
   const [newRelevantInfo, setNewRelevantInfo] = useState('');
+  const [newEmail, setNewEmail] = useState('');
   const [saving, setSaving] = useState(false);
   const estimatedAge = getAgeFromBirthDate(newBirthDate);
 
