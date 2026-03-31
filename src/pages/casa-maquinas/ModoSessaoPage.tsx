@@ -67,7 +67,9 @@ export default function ModoSessaoPage() {
   const [usedInterventionIds, setUsedInterventionIds] = useState<string[]>([]);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [usedToolRoutes, setUsedToolRoutes] = useState<string[]>([]);
+  const [orientacaoDialogOpen, setOrientacaoDialogOpen] = useState(false);
   const { recordUsage } = useCidadelaOracle();
+  const orientacoes = useOrientacoesTerapeuta(selectedClient);
 
   useEffect(() => {
     if (user) loadData();
