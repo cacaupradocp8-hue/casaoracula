@@ -3082,6 +3082,7 @@ export type Database = {
           created_at: string
           data_inicio: string | null
           data_nascimento: string | null
+          email: string | null
           estado_civil: string | null
           id: string
           informacoes_relevantes: string | null
@@ -3106,6 +3107,7 @@ export type Database = {
           created_at?: string
           data_inicio?: string | null
           data_nascimento?: string | null
+          email?: string | null
           estado_civil?: string | null
           id?: string
           informacoes_relevantes?: string | null
@@ -3130,6 +3132,7 @@ export type Database = {
           created_at?: string
           data_inicio?: string | null
           data_nascimento?: string | null
+          email?: string | null
           estado_civil?: string | null
           id?: string
           informacoes_relevantes?: string | null
@@ -4900,6 +4903,57 @@ export type Database = {
             foreignKeyName: "co_client_profiles_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: true
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_convites: {
+        Row: {
+          accepted_at: string | null
+          cliente_id: string
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          status: string
+          terapeuta_id: string
+          token: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          cliente_id: string
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          status?: string
+          terapeuta_id: string
+          token?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          cliente_id?: string
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          status?: string
+          terapeuta_id?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_convites_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_convites_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
             referencedRelation: "clientes_admin_safe"
             referencedColumns: ["id"]
           },
@@ -18268,6 +18322,7 @@ export type Database = {
       }
     }
     Functions: {
+      accept_client_invitation: { Args: { _token: string }; Returns: Json }
       activate_fundadora_plan: {
         Args: { user_id_param: string }
         Returns: undefined

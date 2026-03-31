@@ -66,6 +66,7 @@ export default function ClientesPage() {
   const [newMaritalStatus, setNewMaritalStatus] = useState('');
   const [newChildrenCount, setNewChildrenCount] = useState('');
   const [newRelevantInfo, setNewRelevantInfo] = useState('');
+  const [newEmail, setNewEmail] = useState('');
   const [saving, setSaving] = useState(false);
   const estimatedAge = getAgeFromBirthDate(newBirthDate);
 
@@ -128,6 +129,7 @@ export default function ClientesPage() {
         estado_civil: newMaritalStatus || null,
         numero_filhos: newChildrenCount === '' ? null : Number(newChildrenCount),
         informacoes_relevantes: newRelevantInfo || null,
+        email: newEmail.trim().toLowerCase() || null,
       })
       .select()
       .single();
@@ -151,6 +153,7 @@ export default function ClientesPage() {
     setNewMaritalStatus('');
     setNewChildrenCount('');
     setNewRelevantInfo('');
+    setNewEmail('');
     setSaving(false);
     loadClientes();
   };
@@ -200,6 +203,10 @@ export default function ClientesPage() {
               <div>
                 <Label>Nome</Label>
                 <Input value={newName} onChange={e => setNewName(e.target.value)} />
+              </div>
+              <div>
+                <Label>Email (para convite ao Jardim)</Label>
+                <Input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} placeholder="cliente@email.com" />
               </div>
               <div>
                 <Label>Objetivo Terapêutico</Label>

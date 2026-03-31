@@ -10,6 +10,7 @@ import { Loader2, Save, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 import { gatherReportData, type JourneyReportData } from '@/lib/journey-report';
 import { JourneyReportPreview } from './JourneyReportPreview';
+import { ClienteConviteSection } from './ClienteConviteSection';
 
 const getAgeFromBirthDate = (value: string) => {
   if (!value) return null;
@@ -91,6 +92,7 @@ export function ClientePerfil({ cliente, onUpdate }: Props) {
 
   return (
     <div className="space-y-4 max-w-lg">
+      <ClienteConviteSection cliente={cliente} onUpdate={onUpdate} />
       <Card className="border-border/30 bg-card/70">
         <CardHeader>
           <CardTitle className="text-sm text-foreground/80">Dados da Cliente</CardTitle>
