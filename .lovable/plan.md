@@ -1,61 +1,35 @@
 
 
-# Plano: Migrar todas as Edge Functions para OpenAI GPT API
+## Plan: Create Training Database Tables
 
-## Resumo
+Apply the migration to create 6 new `co_training_*` tables for the Sala de Treinamento simulator.
 
-Migrar as 16 edge functions que usam o Lovable AI Gateway para a API OpenAI diretamente, usando a `OPENAI_API_KEY` já configurada. As 2 funções que já usam OpenAI (`syntheia-chat`, `cartografia-leitura-profunda`) permanecem inalteradas.
+### Database Migration
 
-## Funções a migrar (16)
+Create these tables with the `co_` prefix convention:
 
-| # | Função | Modelo atual |
-|---|--------|-------------|
-| 1 | ai-chat | gemini |
-| 2 | bussola-cartografa | gemini |
-| 3 | bussola-onirica | gemini |
-| 4 | estudio-gerar-estrutura | gemini |
-| 5 | estudio-gerar-infografico | gemini |
-| 6 | ethical-review-content | gemini |
-| 7 | generate-clinical-narrative | gemini |
-| 8 | generate-journey-narrative | gemini |
-| 9 | generate-labirinto-image | gemini (imagem) |
-| 10 | generate-labirinto-roteiro | gemini |
-| 11 | generate-oracle-image | gemini (imagem) |
-| 12 | generate-portal-content | gemini |
-| 13 | gerar-semana-clube | gemini |
-| 14 | labirinto-leitura | gemini |
-| 15 | mapa-vivo-insights | gemini |
-| 16 | revise-portal-content | gemini |
-| 17 | studio-generate-episode | gemini |
-| 18 | syntheia-generate | gemini |
+1. **co_training_cases** - Simulated clinical cases with reference answers
+2. **co_training_case_signals** - Observable signals per case (relational, replaces array)
+3. **co_training_case_possible_readings** - Expected/acceptable/common-error readings
+4. **co_training_case_feedbacks** - Conditional feedback by type (coerente/ajuste/erro)
+5. **co_training_attempts** - Student response records
+6. **co_training_progress** - Aggregated progress per student
 
-## Alteração padrão em cada função
+All tables use UUID PKs, proper foreign keys with CASCADE, and relevant indexes on `case_id` and `user_id`. No RLS in this step.
 
-Em cada arquivo `index.ts`:
+### Post-Migration: Update Simulator Components
 
-1. **Trocar a chave**: `LOVABLE_API_KEY` → `OPENAI_API_KEY`
-2. **Trocar a URL**: `https://ai.gateway.lovable.dev/v1/chat/completions` → `https://api.openai.com/v1/chat/completions`
-3. **Trocar o modelo**: `google/gemini-*` → `gpt-4o` (texto) ou `gpt-image-1` (imagem)
-4. **Mensagens de erro**: atualizar referências
+After tables are created, update the existing simulator components to use the new relational structure:
 
-## Modelo OpenAI por tipo de tarefa
+1. **Update `types.ts`** - New interfaces matching `co_training_cases`, signals, readings, feedbacks
+2. **Update `SimuladorConducao.tsx`** - Query `co_training_cases` + join signals; save to `co_training_attempts` and `co_training_progress`
+3. **Update `BlocoFeedback.tsx`** - Use `co_training_case_feedbacks` and `co_training_case_possible_readings` for richer conditional feedback
+4. **Update remaining bloco components** as needed for the new data shape
 
-| Tipo | Modelo |
-|------|--------|
-| Texto (chat, análise, geração) | `gpt-4o` |
-| Geração de imagem | `gpt-image-1` via `/v1/images/generations` |
-
-## Caso especial: Geração de imagens
-
-As funções `generate-oracle-image` e `generate-labirinto-image` usam geração de imagem. Serão migradas para usar a API de imagens da OpenAI (`/v1/images/generations`) com o modelo DALL-E 3.
-
-## Redeploy
-
-Após editar cada função, redeploy automático.
-
-## Detalhes Técnicos
-
-- A `OPENAI_API_KEY` já está configurada como secret — nenhuma ação do usuário necessária
-- O formato de request/response da OpenAI é compatível (mesmo schema de `messages`, `choices`, etc.)
-- Funções que usam streaming (`ai-chat`) continuarão com streaming via OpenAI
+### Files Affected
+- `src/components/treinamento/simulador/types.ts`
+- `src/components/treinamento/simulador/SimuladorConducao.tsx`
+- `src/components/treinamento/simulador/BlocoFeedback.tsx`
+- `src/components/treinamento/simulador/BlocoCaso.tsx`
+- `src/components/treinamento/simulador/BlocoLeitura.tsx`
 
