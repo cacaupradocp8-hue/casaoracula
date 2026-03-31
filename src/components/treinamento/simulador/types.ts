@@ -1,3 +1,65 @@
+// Interfaces matching co_training_* tables
+
+export interface TrainingCase {
+  id: string;
+  title: string;
+  nivel: 'guiado' | 'semi_guiado' | 'livre';
+  tema: string | null;
+  caso_texto: string;
+  distrito_esperado: string | null;
+  estado_esperado: string | null;
+  movimento_esperado: string | null;
+  hipotese_esperada: string | null;
+  vetor_esperado: string | null;
+  ferramenta_principal: string | null;
+  ativo: boolean;
+  ordem: number;
+  // Joined data
+  signals?: TrainingCaseSignal[];
+  readings?: TrainingCaseReading[];
+  feedbacks?: TrainingCaseFeedback[];
+}
+
+export interface TrainingCaseSignal {
+  id: string;
+  case_id: string;
+  sinal: string;
+  ordem: number;
+}
+
+export interface TrainingCaseReading {
+  id: string;
+  case_id: string;
+  leitura: string;
+  tipo: 'esperada' | 'aceitavel' | 'erro_comum';
+  observacao: string | null;
+}
+
+export interface TrainingCaseFeedback {
+  id: string;
+  case_id: string;
+  tipo: 'coerente' | 'ajuste' | 'erro';
+  gatilho: string | null;
+  feedback_texto: string;
+}
+
+export interface TrainingAttempt {
+  id?: string;
+  user_id: string;
+  case_id: string;
+  resposta_o_que_acontece: string;
+  resposta_parece_o_que: string;
+  resposta_distrito: string;
+  resposta_estado: string;
+  resposta_movimento: string;
+  resposta_hipotese: string;
+  resposta_vetor: string;
+  resposta_ferramenta: string;
+  feedback_final: string | null;
+  status: 'rascunho' | 'concluido';
+}
+
+// Legacy type kept for backwards compat (old table)
 export interface CasoSimulado {
   id: string;
   titulo: string;

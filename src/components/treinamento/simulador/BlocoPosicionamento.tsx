@@ -1,11 +1,10 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { ArrowRight, MapPin, Activity } from 'lucide-react';
-import { DISTRITOS_CIDADELA, ESTADOS_CLIENTE, CasoSimulado } from './types';
+import { DISTRITOS_CIDADELA, ESTADOS_CLIENTE, TrainingCase } from './types';
 
 interface Props {
-  caso: CasoSimulado;
+  caso: TrainingCase;
   distrito: string;
   estado: string;
   onDistritoChange: (v: string) => void;
@@ -22,7 +21,6 @@ export function BlocoPosicionamento({ caso, distrito, estado, onDistritoChange, 
         Posicione a cliente no mapa da CidaDELA.
       </p>
 
-      {/* Distrito */}
       <Card className="border-border/30">
         <CardContent className="p-4 space-y-2">
           <div className="flex items-center gap-2 mb-1">
@@ -50,7 +48,6 @@ export function BlocoPosicionamento({ caso, distrito, estado, onDistritoChange, 
         </CardContent>
       </Card>
 
-      {/* Estado */}
       <Card className="border-border/30">
         <CardContent className="p-4 space-y-2">
           <div className="flex items-center gap-2 mb-1">

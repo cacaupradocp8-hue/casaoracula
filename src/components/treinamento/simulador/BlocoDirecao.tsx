@@ -2,10 +2,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowRight, Compass, TrendingUp } from 'lucide-react';
-import { CasoSimulado } from './types';
+import { TrainingCase } from './types';
 
 interface Props {
-  caso: CasoSimulado;
+  caso: TrainingCase;
   hipotese: string;
   vetor: string;
   onHipoteseChange: (v: string) => void;
