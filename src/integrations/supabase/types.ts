@@ -18102,6 +18102,125 @@ export type Database = {
         }
         Relationships: []
       }
+      treinamento_casos_simulados: {
+        Row: {
+          ativo: boolean | null
+          contexto_breve: string
+          created_at: string | null
+          distrito_referencia: string | null
+          estado_referencia: string | null
+          fala_inicial: string
+          feedback_json: Json | null
+          ferramenta_referencia: string | null
+          hipotese_referencia: string | null
+          id: string
+          nivel: string
+          ordem: number | null
+          perguntas_leitura: string[] | null
+          sinais: string[] | null
+          titulo: string
+          updated_at: string | null
+          vetor_referencia: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          contexto_breve: string
+          created_at?: string | null
+          distrito_referencia?: string | null
+          estado_referencia?: string | null
+          fala_inicial: string
+          feedback_json?: Json | null
+          ferramenta_referencia?: string | null
+          hipotese_referencia?: string | null
+          id?: string
+          nivel?: string
+          ordem?: number | null
+          perguntas_leitura?: string[] | null
+          sinais?: string[] | null
+          titulo: string
+          updated_at?: string | null
+          vetor_referencia?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          contexto_breve?: string
+          created_at?: string | null
+          distrito_referencia?: string | null
+          estado_referencia?: string | null
+          fala_inicial?: string
+          feedback_json?: Json | null
+          ferramenta_referencia?: string | null
+          hipotese_referencia?: string | null
+          id?: string
+          nivel?: string
+          ordem?: number | null
+          perguntas_leitura?: string[] | null
+          sinais?: string[] | null
+          titulo?: string
+          updated_at?: string | null
+          vetor_referencia?: string | null
+        }
+        Relationships: []
+      }
+      treinamento_respostas: {
+        Row: {
+          caso_id: string
+          concluido: boolean | null
+          created_at: string | null
+          distrito_escolhido: string | null
+          estado_escolhido: string | null
+          feedback_recebido: Json | null
+          ferramenta_escolhida: string | null
+          hipotese_texto: string | null
+          id: string
+          leitura_texto: string | null
+          nivel_usado: string | null
+          updated_at: string | null
+          user_id: string
+          vetor_texto: string | null
+        }
+        Insert: {
+          caso_id: string
+          concluido?: boolean | null
+          created_at?: string | null
+          distrito_escolhido?: string | null
+          estado_escolhido?: string | null
+          feedback_recebido?: Json | null
+          ferramenta_escolhida?: string | null
+          hipotese_texto?: string | null
+          id?: string
+          leitura_texto?: string | null
+          nivel_usado?: string | null
+          updated_at?: string | null
+          user_id: string
+          vetor_texto?: string | null
+        }
+        Update: {
+          caso_id?: string
+          concluido?: boolean | null
+          created_at?: string | null
+          distrito_escolhido?: string | null
+          estado_escolhido?: string | null
+          feedback_recebido?: Json | null
+          ferramenta_escolhida?: string | null
+          hipotese_texto?: string | null
+          id?: string
+          leitura_texto?: string | null
+          nivel_usado?: string | null
+          updated_at?: string | null
+          user_id?: string
+          vetor_texto?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "treinamento_respostas_caso_id_fkey"
+            columns: ["caso_id"]
+            isOneToOne: false
+            referencedRelation: "treinamento_casos_simulados"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_aula_progress: {
         Row: {
           aula_id: string
