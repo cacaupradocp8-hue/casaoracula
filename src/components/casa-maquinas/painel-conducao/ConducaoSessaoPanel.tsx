@@ -17,8 +17,8 @@ interface Props {
   onRemoveInsight: (index: number) => void;
   sessionNotes: string;
   onSessionNotesChange: (v: string) => void;
-  hipoteseSimbólica: string;
-  onHipoteseSimbolicaChange: (v: string) => void;
+  hipoteseSimbolica: string;
+  onHipoteseSimbolica: (v: string) => void;
   proximoPasso: string;
   onProximoPassoChange: (v: string) => void;
 }
