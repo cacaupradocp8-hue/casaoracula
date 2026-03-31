@@ -490,6 +490,27 @@ export default function ModoSessaoPage() {
                 <label className="text-xs text-muted-foreground mb-2 block">Notas</label>
                 <Textarea value={notes} onChange={e => setNotes(e.target.value)} className="bg-background/60 border-border/30" placeholder="Anotações privadas..." />
               </div>
+              
+              {/* Jardim da Heroína - Send orientation */}
+              {selectedClient && (
+                <div className="p-3 rounded-lg bg-emerald-950/15 border border-emerald-500/15 space-y-2">
+                  <p className="text-[10px] uppercase tracking-wider text-emerald-500/50 font-medium">
+                    🌿 Jardim da Heroína
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Envie uma orientação para a cliente continuar no Jardim entre sessões.
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full text-xs border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 gap-1.5"
+                    onClick={() => setOrientacaoDialogOpen(true)}
+                  >
+                    <Leaf className="w-3 h-3" />
+                    Enviar Orientação ao Jardim
+                  </Button>
+                </div>
+              )}
               <div className="flex gap-2">
                 <Button variant="outline" onClick={() => setStep(3)} className="flex-1 border-border/30 text-muted-foreground">Voltar</Button>
                 <Button onClick={handleSave} disabled={saving} className="flex-1 bg-primary hover:bg-primary/80 text-primary-foreground">
