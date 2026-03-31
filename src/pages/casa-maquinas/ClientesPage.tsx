@@ -131,6 +131,7 @@ export default function ClientesPage() {
         numero_filhos: newChildrenCount === '' ? null : Number(newChildrenCount),
         informacoes_relevantes: newRelevantInfo || null,
         email: newEmail.trim().toLowerCase() || null,
+        telefone: newPhone.trim() || null,
       })
       .select()
       .single();
