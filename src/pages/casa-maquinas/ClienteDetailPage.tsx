@@ -124,6 +124,7 @@ export default function ClienteDetailPage() {
         </TabsList>
 
         <TabsContent value="cidadela"><MapaVivoCidadela clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="perfil-simbolico"><PerfilSimbolicoCliente clienteId={clienteId!} /></TabsContent>
         <TabsContent value="historico"><ClienteHistorico clienteId={clienteId!} /></TabsContent>
         <TabsContent value="cartografia"><ClienteCartografias clienteId={clienteId!} /></TabsContent>
         <TabsContent value="sonhos"><ClienteSonhos clienteId={clienteId!} /></TabsContent>
