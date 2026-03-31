@@ -144,9 +144,33 @@ export default function ClientesPage() {
 
     if (data) {
       await supabase.from('journeys').insert({ client_id: data.id });
-    }
 
-    toast.success('Cliente criada com sucesso');
+      // Send invitation if email is provided
+      if (newEmail.trim()) {
+        try {
+          const { error: inviteError } = await supabase.functions.invoke('send-client-invitation', {
+            body: {
+              cliente_id: data.id,
+              email: newEmail.trim().toLowerCase(),
+              nome_cliente: newName.trim(),
+            },
+          });
+          if (inviteError) {
+            console.error('Invite error:', inviteError);
+            toast.warning('Cliente criada, mas erro ao enviar convite por email');
+          } else {
+            toast.success('Cliente criada e convite enviado por email 🌿');
+          }
+        } catch (err) {
+          console.error('Invite send error:', err);
+          toast.success('Cliente criada (convite não enviado)');
+        }
+      } else {
+        toast.success('Cliente criada com sucesso');
+      }
+    } else {
+      toast.success('Cliente criada com sucesso');
+    }
     setDialogOpen(false);
     setNewName('');
     setNewObjective('');
