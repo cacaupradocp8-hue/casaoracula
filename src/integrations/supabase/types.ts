@@ -5755,6 +5755,250 @@ export type Database = {
           },
         ]
       }
+      co_training_attempts: {
+        Row: {
+          case_id: string
+          created_at: string | null
+          feedback_final: string | null
+          id: string
+          resposta_distrito: string | null
+          resposta_estado: string | null
+          resposta_ferramenta: string | null
+          resposta_hipotese: string | null
+          resposta_movimento: string | null
+          resposta_o_que_acontece: string | null
+          resposta_parece_o_que: string | null
+          resposta_vetor: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          case_id: string
+          created_at?: string | null
+          feedback_final?: string | null
+          id?: string
+          resposta_distrito?: string | null
+          resposta_estado?: string | null
+          resposta_ferramenta?: string | null
+          resposta_hipotese?: string | null
+          resposta_movimento?: string | null
+          resposta_o_que_acontece?: string | null
+          resposta_parece_o_que?: string | null
+          resposta_vetor?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          case_id?: string
+          created_at?: string | null
+          feedback_final?: string | null
+          id?: string
+          resposta_distrito?: string | null
+          resposta_estado?: string | null
+          resposta_ferramenta?: string | null
+          resposta_hipotese?: string | null
+          resposta_movimento?: string | null
+          resposta_o_que_acontece?: string | null
+          resposta_parece_o_que?: string | null
+          resposta_vetor?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_training_attempts_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "co_training_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_training_case_feedbacks: {
+        Row: {
+          case_id: string
+          feedback_texto: string
+          gatilho: string | null
+          id: string
+          tipo: string
+        }
+        Insert: {
+          case_id: string
+          feedback_texto: string
+          gatilho?: string | null
+          id?: string
+          tipo: string
+        }
+        Update: {
+          case_id?: string
+          feedback_texto?: string
+          gatilho?: string | null
+          id?: string
+          tipo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_training_case_feedbacks_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "co_training_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_training_case_possible_readings: {
+        Row: {
+          case_id: string
+          id: string
+          leitura: string
+          observacao: string | null
+          tipo: string
+        }
+        Insert: {
+          case_id: string
+          id?: string
+          leitura: string
+          observacao?: string | null
+          tipo: string
+        }
+        Update: {
+          case_id?: string
+          id?: string
+          leitura?: string
+          observacao?: string | null
+          tipo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_training_case_possible_readings_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "co_training_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_training_case_signals: {
+        Row: {
+          case_id: string
+          id: string
+          ordem: number | null
+          sinal: string
+        }
+        Insert: {
+          case_id: string
+          id?: string
+          ordem?: number | null
+          sinal: string
+        }
+        Update: {
+          case_id?: string
+          id?: string
+          ordem?: number | null
+          sinal?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_training_case_signals_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "co_training_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_training_cases: {
+        Row: {
+          ativo: boolean | null
+          caso_texto: string
+          created_at: string | null
+          distrito_esperado: string | null
+          estado_esperado: string | null
+          ferramenta_principal: string | null
+          hipotese_esperada: string | null
+          id: string
+          movimento_esperado: string | null
+          nivel: string
+          ordem: number | null
+          tema: string | null
+          title: string
+          updated_at: string | null
+          vetor_esperado: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          caso_texto: string
+          created_at?: string | null
+          distrito_esperado?: string | null
+          estado_esperado?: string | null
+          ferramenta_principal?: string | null
+          hipotese_esperada?: string | null
+          id?: string
+          movimento_esperado?: string | null
+          nivel?: string
+          ordem?: number | null
+          tema?: string | null
+          title: string
+          updated_at?: string | null
+          vetor_esperado?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          caso_texto?: string
+          created_at?: string | null
+          distrito_esperado?: string | null
+          estado_esperado?: string | null
+          ferramenta_principal?: string | null
+          hipotese_esperada?: string | null
+          id?: string
+          movimento_esperado?: string | null
+          nivel?: string
+          ordem?: number | null
+          tema?: string | null
+          title?: string
+          updated_at?: string | null
+          vetor_esperado?: string | null
+        }
+        Relationships: []
+      }
+      co_training_progress: {
+        Row: {
+          casos_concluidos: number | null
+          id: string
+          nivel_atual: string | null
+          ultimo_case_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          casos_concluidos?: number | null
+          id?: string
+          nivel_atual?: string | null
+          ultimo_case_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          casos_concluidos?: number | null
+          id?: string
+          nivel_atual?: string | null
+          ultimo_case_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_training_progress_ultimo_case_id_fkey"
+            columns: ["ultimo_case_id"]
+            isOneToOne: false
+            referencedRelation: "co_training_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       co_workspace_users: {
         Row: {
           created_at: string
