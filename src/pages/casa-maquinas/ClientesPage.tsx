@@ -156,6 +156,7 @@ export default function ClientesPage() {
     setNewChildrenCount('');
     setNewRelevantInfo('');
     setNewEmail('');
+    setNewPhone('');
     setSaving(false);
     loadClientes();
   };
