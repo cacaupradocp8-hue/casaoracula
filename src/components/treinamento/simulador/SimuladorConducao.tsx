@@ -29,7 +29,7 @@ const NIVEL_LABEL: Record<string, string> = {
 
 export function SimuladorConducao() {
   const { user } = useAuth();
-  const { cases, loading } = useTrainingCases();
+  const { data: cases = [], isLoading: loading } = useTrainingCases();
   const [casoIndex, setCasoIndex] = useState(0);
   const [active, setActive] = useState(false);
   const [step, setStep] = useState<SimuladorStep>('caso');
