@@ -35,6 +35,7 @@ const CasaTecelaAtrio = React.lazy(() => import("./pages/CasaTecelaAtrio"));
 const CasaTecelaInterior = React.lazy(() => import("./pages/CasaTecelaInterior"));
 const CirculoOracularPage = React.lazy(() => import("./pages/CirculoOracularPage"));
 const HeroinaAppPage = React.lazy(() => import("./pages/HeroinaAppPage"));
+const JardimHeroinaClientePage = React.lazy(() => import("./pages/JardimHeroinaClientePage"));
 const OraculaPage = React.lazy(() => import("./pages/OraculaPage"));
 const PortalOraculaPage = React.lazy(() => import("./pages/PortalOraculaPage"));
 const OraculaSalesPage = React.lazy(() => import("./pages/OraculaSalesPage"));
@@ -754,6 +755,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <HeroinaAppPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/meu-jardim"
+        element={
+          <ProtectedRoute>
+            <JardimHeroinaClientePage />
           </ProtectedRoute>
         }
       />
