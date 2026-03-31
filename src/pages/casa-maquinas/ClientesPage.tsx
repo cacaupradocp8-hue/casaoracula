@@ -207,9 +207,15 @@ export default function ClientesPage() {
                 <Label>Nome</Label>
                 <Input value={newName} onChange={e => setNewName(e.target.value)} />
               </div>
-              <div>
-                <Label>Email (para convite ao Jardim)</Label>
-                <Input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} placeholder="cliente@email.com" />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <Label>Email</Label>
+                  <Input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} placeholder="cliente@email.com" />
+                </div>
+                <div>
+                  <Label>Telefone</Label>
+                  <Input type="tel" value={newPhone} onChange={e => setNewPhone(e.target.value)} placeholder="(11) 99999-9999" />
+                </div>
               </div>
               <div>
                 <Label>Objetivo Terapêutico</Label>
