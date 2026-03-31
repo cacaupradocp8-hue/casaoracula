@@ -26,6 +26,7 @@ import { BussolaCartografa } from '@/components/casa-maquinas/bussola-cartografa
 import { SessionFlowWizard } from '@/components/casa-maquinas/SessionFlowWizard';
 import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
 import { ClienteJardimHeroinaTab } from '@/components/casa-maquinas/ClienteJardimHeroinaTab';
+import { ClienteAtividadeJardim } from '@/components/casa-maquinas/ClienteAtividadeJardim';
 import { Button } from '@/components/ui/button';
 import { Loader2, Play } from 'lucide-react';
 
