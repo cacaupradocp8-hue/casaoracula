@@ -37,6 +37,7 @@ const assinanteMenuGroups = () => [
   { key: 'jornada', label: 'Minha Jornada', icon: Compass, path: '/minha-jornada', subitems: [] },
   { key: 'mapa', label: 'Mapa da Casa', icon: Map, path: '/mapa-casa', subitems: [] },
   { key: 'clube', label: 'Clube de Leitura', icon: BookOpen, path: '/app/clube', subitems: [] },
+  { key: 'jardim', label: 'Meu Jardim', icon: Flower2, path: '/meu-jardim', subitems: [] },
   { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
   { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/comunidade', subitems: [] },
   { key: 'conta', label: 'Perfil', icon: User, path: '/minha-conta', subitems: [] },
