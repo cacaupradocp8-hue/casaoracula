@@ -4,6 +4,9 @@ import { Badge } from '@/components/ui/badge';
 import { RotateCcw, ArrowRight, CheckCircle2, AlertTriangle, Info, MapPin, Activity, Compass, Wrench, BarChart3 } from 'lucide-react';
 import { TrainingCase, RespostaAluna } from './types';
 import { calcularFeedback, FeedbackResult } from './feedbackEngine';
+import { calculateTrainingScore, gerarPerfilSimbolico } from './scoringEngine';
+import { ScoreDisplay } from './ScoreDisplay';
+import { PerfilSimbolicoCard } from './PerfilSimbolicoCard';
 import { useMemo } from 'react';
 
 interface Props {
