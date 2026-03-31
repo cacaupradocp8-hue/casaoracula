@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { RespostaAluna, SimuladorStep, STEP_ORDER, STEP_LABELS } from './types';
 import { calcularFeedback } from './feedbackEngine';
+import { calculateTrainingScore, gerarFeedbackJson } from './scoringEngine';
 import { useTrainingCases } from './useTrainingCases';
 import { useTrainingProgress } from './useTrainingProgress';
 import { ProgressCard } from './ProgressCard';
@@ -68,7 +69,9 @@ export function SimuladorConducao() {
   const salvarResposta = async () => {
     if (!user || !caso) return;
     const result = calcularFeedback(caso, resposta);
-    const feedbackFinal = `[${result.nivel}] Score: ${result.score}% — ${result.resumo}`;
+    const score = calculateTrainingScore(caso, resposta);
+    const feedbackJson = gerarFeedbackJson(caso, resposta, score);
+    const feedbackFinal = `[${result.nivel}] Score: ${score.total}/9 — ${result.resumo}`;
 
     await supabase.from('co_training_attempts').insert({
       user_id: user.id,
@@ -82,6 +85,11 @@ export function SimuladorConducao() {
       resposta_vetor: resposta.vetor_texto,
       resposta_ferramenta: resposta.ferramenta_escolhida,
       feedback_final: feedbackFinal,
+      score_total: score.total,
+      score_distrito: score.distrito,
+      score_hipotese: score.hipotese,
+      score_ferramenta: score.ferramenta,
+      feedback_json: feedbackJson as any,
       status: 'concluido',
     });
 
@@ -90,11 +98,14 @@ export function SimuladorConducao() {
       nivel_atual: caso.nivel,
       casos_concluidos: casoIndex + 1,
       ultimo_case_id: caso.id,
+      coerencia_media: score.total / 9 * 100,
+      total_casos: casoIndex + 1,
+      taxa_acerto: score.total >= 7 ? 100 : score.total >= 4 ? 50 : 0,
     }, { onConflict: 'user_id' });
 
-    // Refresh progress data
     queryClient.invalidateQueries({ queryKey: ['training-progress'] });
     queryClient.invalidateQueries({ queryKey: ['training-attempts'] });
+    queryClient.invalidateQueries({ queryKey: ['training-dashboard'] });
   };
 
   if (isLoading) {

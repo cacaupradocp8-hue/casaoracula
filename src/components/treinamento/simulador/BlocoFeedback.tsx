@@ -4,6 +4,9 @@ import { Badge } from '@/components/ui/badge';
 import { RotateCcw, ArrowRight, CheckCircle2, AlertTriangle, Info, MapPin, Activity, Compass, Wrench, BarChart3 } from 'lucide-react';
 import { TrainingCase, RespostaAluna } from './types';
 import { calcularFeedback, FeedbackResult } from './feedbackEngine';
+import { calculateTrainingScore, gerarPerfilSimbolico } from './scoringEngine';
+import { ScoreDisplay } from './ScoreDisplay';
+import { PerfilSimbolicoCard } from './PerfilSimbolicoCard';
 import { useMemo } from 'react';
 
 interface Props {
@@ -54,6 +57,16 @@ function CoerenciaIndicator({ match, label }: { match: boolean; label: string })
 export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast }: Props) {
   const result: FeedbackResult = useMemo(
     () => calcularFeedback(caso, resposta),
+    [caso, resposta]
+  );
+
+  const score = useMemo(
+    () => calculateTrainingScore(caso, resposta),
+    [caso, resposta]
+  );
+
+  const perfil = useMemo(
+    () => gerarPerfilSimbolico(caso, resposta),
     [caso, resposta]
   );
 
@@ -190,6 +203,12 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast }: P
           </CardContent>
         </Card>
       )}
+
+      {/* Score detalhado */}
+      <ScoreDisplay score={score} />
+
+      {/* Perfil simbólico emergente */}
+      <PerfilSimbolicoCard perfil={perfil} />
 
       <div className="flex gap-2">
         <Button onClick={onReset} variant="outline" className="flex-1 border-border/30">

@@ -5760,6 +5760,7 @@ export type Database = {
           case_id: string
           created_at: string | null
           feedback_final: string | null
+          feedback_json: Json | null
           id: string
           resposta_distrito: string | null
           resposta_estado: string | null
@@ -5769,6 +5770,10 @@ export type Database = {
           resposta_o_que_acontece: string | null
           resposta_parece_o_que: string | null
           resposta_vetor: string | null
+          score_distrito: number | null
+          score_ferramenta: number | null
+          score_hipotese: number | null
+          score_total: number | null
           status: string | null
           updated_at: string | null
           user_id: string
@@ -5777,6 +5782,7 @@ export type Database = {
           case_id: string
           created_at?: string | null
           feedback_final?: string | null
+          feedback_json?: Json | null
           id?: string
           resposta_distrito?: string | null
           resposta_estado?: string | null
@@ -5786,6 +5792,10 @@ export type Database = {
           resposta_o_que_acontece?: string | null
           resposta_parece_o_que?: string | null
           resposta_vetor?: string | null
+          score_distrito?: number | null
+          score_ferramenta?: number | null
+          score_hipotese?: number | null
+          score_total?: number | null
           status?: string | null
           updated_at?: string | null
           user_id: string
@@ -5794,6 +5804,7 @@ export type Database = {
           case_id?: string
           created_at?: string | null
           feedback_final?: string | null
+          feedback_json?: Json | null
           id?: string
           resposta_distrito?: string | null
           resposta_estado?: string | null
@@ -5803,6 +5814,10 @@ export type Database = {
           resposta_o_que_acontece?: string | null
           resposta_parece_o_que?: string | null
           resposta_vetor?: string | null
+          score_distrito?: number | null
+          score_ferramenta?: number | null
+          score_hipotese?: number | null
+          score_total?: number | null
           status?: string | null
           updated_at?: string | null
           user_id?: string
@@ -5916,8 +5931,11 @@ export type Database = {
           caso_texto: string
           created_at: string | null
           distrito_esperado: string | null
+          distritos_alternativos: string[] | null
+          erro_comum: string | null
           estado_esperado: string | null
           ferramenta_principal: string | null
+          ferramentas_apoio: string[] | null
           hipotese_esperada: string | null
           id: string
           movimento_esperado: string | null
@@ -5933,8 +5951,11 @@ export type Database = {
           caso_texto: string
           created_at?: string | null
           distrito_esperado?: string | null
+          distritos_alternativos?: string[] | null
+          erro_comum?: string | null
           estado_esperado?: string | null
           ferramenta_principal?: string | null
+          ferramentas_apoio?: string[] | null
           hipotese_esperada?: string | null
           id?: string
           movimento_esperado?: string | null
@@ -5950,8 +5971,11 @@ export type Database = {
           caso_texto?: string
           created_at?: string | null
           distrito_esperado?: string | null
+          distritos_alternativos?: string[] | null
+          erro_comum?: string | null
           estado_esperado?: string | null
           ferramenta_principal?: string | null
+          ferramentas_apoio?: string[] | null
           hipotese_esperada?: string | null
           id?: string
           movimento_esperado?: string | null
@@ -5967,24 +5991,33 @@ export type Database = {
       co_training_progress: {
         Row: {
           casos_concluidos: number | null
+          coerencia_media: number | null
           id: string
           nivel_atual: string | null
+          taxa_acerto: number | null
+          total_casos: number | null
           ultimo_case_id: string | null
           updated_at: string | null
           user_id: string
         }
         Insert: {
           casos_concluidos?: number | null
+          coerencia_media?: number | null
           id?: string
           nivel_atual?: string | null
+          taxa_acerto?: number | null
+          total_casos?: number | null
           ultimo_case_id?: string | null
           updated_at?: string | null
           user_id: string
         }
         Update: {
           casos_concluidos?: number | null
+          coerencia_media?: number | null
           id?: string
           nivel_atual?: string | null
+          taxa_acerto?: number | null
+          total_casos?: number | null
           ultimo_case_id?: string | null
           updated_at?: string | null
           user_id?: string
