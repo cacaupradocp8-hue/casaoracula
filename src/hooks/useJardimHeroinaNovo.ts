@@ -111,13 +111,24 @@ export function useJardimHeroinaNovo({ caseId, clientId }: UseJardimHeroinaNovoP
         .single();
 
       if (clienteData?.client_user_id) {
-        await supabase.from('co_jardins').upsert({
-          client_user_id: clienteData.client_user_id,
-          therapist_user_id: user.id,
-          created_by: user.id,
-          status: 'active',
-          visibility_scope: 'client_owned',
-        }, { onConflict: 'client_user_id,therapist_user_id' }).select();
+        // Check if co_jardins already exists for this pair
+        const { data: existingCoJardim } = await supabase
+          .from('co_jardins')
+          .select('id')
+          .eq('client_user_id', clienteData.client_user_id)
+          .eq('therapist_user_id', user.id)
+          .eq('status', 'active')
+          .maybeSingle();
+
+        if (!existingCoJardim) {
+          await supabase.from('co_jardins').insert({
+            client_user_id: clienteData.client_user_id,
+            therapist_user_id: user.id,
+            created_by: user.id,
+            status: 'active',
+            visibility_scope: 'client_owned',
+          });
+        }
       }
 
       const created = data as JardimHeroinaNovo;
