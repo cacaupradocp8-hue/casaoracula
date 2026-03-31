@@ -12,6 +12,8 @@ import {
   Sparkles, Heart, BookOpen 
 } from 'lucide-react';
 import { useClienteJardim, type JardimEntry } from '@/hooks/useClienteJardim';
+import { useOrientacoesCliente } from '@/hooks/useOrientacoes';
+import { OrientacaoCard } from '@/components/jardim/OrientacaoCard';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
