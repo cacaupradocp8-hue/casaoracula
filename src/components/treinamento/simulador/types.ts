@@ -7,11 +7,14 @@ export interface TrainingCase {
   tema: string | null;
   caso_texto: string;
   distrito_esperado: string | null;
+  distritos_alternativos: string[];
   estado_esperado: string | null;
   movimento_esperado: string | null;
   hipotese_esperada: string | null;
   vetor_esperado: string | null;
   ferramenta_principal: string | null;
+  ferramentas_apoio: string[];
+  erro_comum: string | null;
   ativo: boolean;
   ordem: number;
   // Joined data
