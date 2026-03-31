@@ -30,8 +30,8 @@ export function ConducaoSessaoPanel({
   onRemoveInsight,
   sessionNotes,
   onSessionNotesChange,
-  hipoteseSimbólica,
-  onHipoteseSimbolica Change,
+  hipoteseSimbolica,
+  onHipoteseSimbolica,
   proximoPasso,
   onProximoPassoChange,
 }: Props) {
@@ -95,8 +95,8 @@ export function ConducaoSessaoPanel({
             <p className="text-xs font-medium text-foreground">Hipótese simbólica da sessão</p>
           </div>
           <Textarea
-            value={hipoteseSimbólica}
-            onChange={e => onHipoteseSimbolica Change(e.target.value)}
+            value={hipoteseSimbolica}
+            onChange={e => onHipoteseSimbolica(e.target.value)}
             className="text-xs bg-background/60 border-border/30 min-h-[70px]"
             placeholder="Qual a hipótese simbólica que emergiu nesta sessão? Este campo consolida o raciocínio clínico..."
           />
