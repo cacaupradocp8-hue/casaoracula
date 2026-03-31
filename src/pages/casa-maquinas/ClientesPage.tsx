@@ -205,6 +205,10 @@ export default function ClientesPage() {
                 <Input value={newName} onChange={e => setNewName(e.target.value)} />
               </div>
               <div>
+                <Label>Email (para convite ao Jardim)</Label>
+                <Input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} placeholder="cliente@email.com" />
+              </div>
+              <div>
                 <Label>Objetivo Terapêutico</Label>
                 <Textarea value={newObjective} onChange={e => setNewObjective(e.target.value)} />
               </div>
