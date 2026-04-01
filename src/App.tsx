@@ -1114,6 +1114,32 @@ function AppRoutes() {
         }
       />
 
+      {/* CO Travessias - Clube de Leitura */}
+      <Route
+        path="/clube-livro/travessias"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <COTravessiasList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/travessia/:travessiaId"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <COTravessiaDetail />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/travessia/:travessiaId/encontro/:encontroId"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <COTravessiaEncontro />
+          </ProtectedRoute>
+        }
+      />
+
       <Route
         path="/biblioteca"
         element={
