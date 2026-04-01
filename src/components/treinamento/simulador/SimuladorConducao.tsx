@@ -53,6 +53,7 @@ export function SimuladorConducao() {
       ferramenta_escolhida: '',
     });
     setStep('caso');
+    resetAvaliacao();
   };
 
   const iniciar = (idx: number) => {
