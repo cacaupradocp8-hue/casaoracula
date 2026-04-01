@@ -226,6 +226,8 @@ export function SimuladorConducao() {
           onReset={resetResposta}
           onNextCaso={() => iniciar(Math.min(casoIndex + 1, cases.length - 1))}
           isLast={casoIndex >= cases.length - 1}
+          avaliacaoIA={avaliacao}
+          isLoadingIA={isLoadingIA}
         />
       )}
     </div>
