@@ -1,13 +1,14 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { RotateCcw, ArrowRight, CheckCircle2, AlertTriangle, Info, MapPin, Activity, Compass, Wrench, BarChart3 } from 'lucide-react';
+import { RotateCcw, ArrowRight, CheckCircle2, AlertTriangle, Info, MapPin, Activity, Compass, Wrench, BarChart3, Sparkles, Loader2 } from 'lucide-react';
 import { TrainingCase, RespostaAluna } from './types';
 import { calcularFeedback, FeedbackResult } from './feedbackEngine';
 import { calculateTrainingScore, gerarPerfilSimbolico } from './scoringEngine';
 import { ScoreDisplay } from './ScoreDisplay';
 import { PerfilSimbolicoCard } from './PerfilSimbolicoCard';
 import { useMemo } from 'react';
+import { AvaliacaoIA } from './useAvaliacaoIA';
 
 interface Props {
   caso: TrainingCase;
@@ -15,6 +16,8 @@ interface Props {
   onReset: () => void;
   onNextCaso: () => void;
   isLast: boolean;
+  avaliacaoIA?: AvaliacaoIA | null;
+  isLoadingIA?: boolean;
 }
 
 const NIVEL_CONFIG = {
@@ -54,7 +57,13 @@ function CoerenciaIndicator({ match, label }: { match: boolean; label: string })
   );
 }
 
-export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast }: Props) {
+function getNivelFromScore(total: number): 'coerente' | 'ajuste' | 'erro' {
+  if (total >= 7) return 'coerente';
+  if (total >= 4) return 'ajuste';
+  return 'erro';
+}
+
+export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast, avaliacaoIA, isLoadingIA }: Props) {
   const result: FeedbackResult = useMemo(
     () => calcularFeedback(caso, resposta),
     [caso, resposta]
@@ -70,7 +79,17 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast }: P
     [caso, resposta]
   );
 
-  const config = NIVEL_CONFIG[result.nivel];
+  // Use AI scores if available, fallback to local
+  const finalScore = avaliacaoIA
+    ? { distrito: avaliacaoIA.score_distrito, hipotese: avaliacaoIA.score_hipotese, ferramenta: avaliacaoIA.score_ferramenta, total: avaliacaoIA.score_total }
+    : score;
+
+  const finalPerfil = avaliacaoIA?.perfil_simbolico_emergente
+    ? avaliacaoIA.perfil_simbolico_emergente
+    : perfil;
+
+  const nivel = avaliacaoIA ? getNivelFromScore(avaliacaoIA.score_total) : result.nivel;
+  const config = NIVEL_CONFIG[nivel];
   const NivelIcon = config.icon;
 
   return (
@@ -79,6 +98,19 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast }: P
         Este retorno não indica certo ou errado. Indica coerência de leitura clínica.
       </p>
 
+      {/* Loading IA */}
+      {isLoadingIA && (
+        <Card className="border-primary/30 bg-primary/5">
+          <CardContent className="p-4 flex items-center gap-3">
+            <Loader2 className="w-5 h-5 text-primary animate-spin" />
+            <div>
+              <p className="text-sm font-medium text-primary">Avaliação IA em andamento...</p>
+              <p className="text-xs text-muted-foreground">Analisando coerência simbólica da sua leitura</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Resultado geral */}
       <Card className={`border ${config.bg}`}>
         <CardContent className="p-4 space-y-3">
@@ -86,17 +118,68 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast }: P
             <div className="flex items-center gap-2">
               <NivelIcon className={`w-5 h-5 ${config.color}`} />
               <div>
-                <p className={`text-sm font-medium ${config.color}`}>{config.label}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{result.resumo}</p>
+                <p className={`text-sm font-medium ${config.color}`}>
+                  {avaliacaoIA ? avaliacaoIA.nivel_coerencia : config.label}
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {avaliacaoIA ? 'Avaliação IA' : result.resumo}
+                </p>
               </div>
             </div>
             <Badge className={config.badge}>
               <BarChart3 className="w-3 h-3 mr-1" />
-              {result.score}%
+              {finalScore.total}/9
             </Badge>
           </div>
         </CardContent>
       </Card>
+
+      {/* Feedback IA detalhado */}
+      {avaliacaoIA?.feedback && (
+        <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <p className="text-xs font-medium text-primary/80 uppercase tracking-wider">Feedback da Avaliação IA</p>
+            </div>
+
+            {avaliacaoIA.feedback.leitura_do_padrao && (
+              <div className="space-y-1">
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Leitura do Padrão</p>
+                <p className="text-sm text-foreground/80 leading-relaxed">{avaliacaoIA.feedback.leitura_do_padrao}</p>
+              </div>
+            )}
+
+            {avaliacaoIA.feedback.analise_do_distrito && (
+              <div className="space-y-1">
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Análise do Distrito</p>
+                <p className="text-sm text-foreground/80 leading-relaxed">{avaliacaoIA.feedback.analise_do_distrito}</p>
+              </div>
+            )}
+
+            {avaliacaoIA.feedback.analise_da_ferramenta && (
+              <div className="space-y-1">
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Análise da Ferramenta</p>
+                <p className="text-sm text-foreground/80 leading-relaxed">{avaliacaoIA.feedback.analise_da_ferramenta}</p>
+              </div>
+            )}
+
+            {avaliacaoIA.feedback.erro_comum && (
+              <div className="space-y-1">
+                <p className="text-[10px] text-amber-400 uppercase tracking-wider">Erro Comum</p>
+                <p className="text-sm text-foreground/70 leading-relaxed">{avaliacaoIA.feedback.erro_comum}</p>
+              </div>
+            )}
+
+            {avaliacaoIA.feedback.direcao_sugerida && (
+              <div className="space-y-1 pt-1 border-t border-border/20">
+                <p className="text-[10px] text-primary uppercase tracking-wider">Direção Sugerida</p>
+                <p className="text-sm text-foreground/80 leading-relaxed">{avaliacaoIA.feedback.direcao_sugerida}</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Comparação estrutural */}
       <Card className="border-border/30">
@@ -156,8 +239,8 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast }: P
         </Card>
       )}
 
-      {/* Feedbacks pedagógicos ativos */}
-      {result.feedbacksAtivos.length > 0 && (
+      {/* Feedbacks pedagógicos ativos (local - show only when no AI) */}
+      {!avaliacaoIA && result.feedbacksAtivos.length > 0 && (
         <Card className="border-border/30">
           <CardContent className="p-4 space-y-3">
             {result.feedbacksAtivos.map(f => {
@@ -175,8 +258,8 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast }: P
         </Card>
       )}
 
-      {/* Leituras de referência */}
-      {result.leiturasRelevantes.length > 0 && (
+      {/* Leituras de referência (show only when no AI) */}
+      {!avaliacaoIA && result.leiturasRelevantes.length > 0 && (
         <Card className="border-border/30">
           <CardContent className="p-4 space-y-2">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">Leituras de referência</p>
@@ -205,10 +288,10 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast }: P
       )}
 
       {/* Score detalhado */}
-      <ScoreDisplay score={score} />
+      <ScoreDisplay score={finalScore} />
 
       {/* Perfil simbólico emergente */}
-      <PerfilSimbolicoCard perfil={perfil} />
+      <PerfilSimbolicoCard perfil={finalPerfil} />
 
       <div className="flex gap-2">
         <Button onClick={onReset} variant="outline" className="flex-1 border-border/30">
