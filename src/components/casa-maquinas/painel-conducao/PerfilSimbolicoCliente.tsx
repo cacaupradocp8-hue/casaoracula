@@ -126,6 +126,9 @@ export function PerfilSimbolicoCliente({ clienteId, compact = false, onDinamicoC
               </TabsList>
 
               <TabsContent value="estrutural" className="mt-3">
+                <p className="text-[9px] text-muted-foreground/50 italic mb-2 flex items-center gap-1">
+                  <Shield className="w-3 h-3" /> Dados históricos — arquitetura psíquica acumulada
+                </p>
                 <ProfileLayerView
                   fields={ESTRUTURAL_FIELDS}
                   values={estrutural as Record<string, string>}
