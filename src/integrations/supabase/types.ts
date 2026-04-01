@@ -6106,6 +6106,146 @@ export type Database = {
           },
         ]
       }
+      co_travessia_encontros: {
+        Row: {
+          abertura_texto: string | null
+          conducao_terapeuta: string | null
+          created_at: string
+          ferramenta_sugerida: string | null
+          id: string
+          integracao_texto: string | null
+          numero_encontro: number
+          objetivo_encontro: string | null
+          pratica_texto: string | null
+          reflexoes: string[] | null
+          titulo: string
+          travessia_id: string
+          updated_at: string
+        }
+        Insert: {
+          abertura_texto?: string | null
+          conducao_terapeuta?: string | null
+          created_at?: string
+          ferramenta_sugerida?: string | null
+          id?: string
+          integracao_texto?: string | null
+          numero_encontro: number
+          objetivo_encontro?: string | null
+          pratica_texto?: string | null
+          reflexoes?: string[] | null
+          titulo: string
+          travessia_id: string
+          updated_at?: string
+        }
+        Update: {
+          abertura_texto?: string | null
+          conducao_terapeuta?: string | null
+          created_at?: string
+          ferramenta_sugerida?: string | null
+          id?: string
+          integracao_texto?: string | null
+          numero_encontro?: number
+          objetivo_encontro?: string | null
+          pratica_texto?: string | null
+          reflexoes?: string[] | null
+          titulo?: string
+          travessia_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_travessia_encontros_travessia_id_fkey"
+            columns: ["travessia_id"]
+            isOneToOne: false
+            referencedRelation: "co_travessias"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_travessia_respostas: {
+        Row: {
+          created_at: string
+          encontro_id: string
+          id: string
+          resposta_integracao: string | null
+          resposta_texto: string | null
+          travessia_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          encontro_id: string
+          id?: string
+          resposta_integracao?: string | null
+          resposta_texto?: string | null
+          travessia_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          encontro_id?: string
+          id?: string
+          resposta_integracao?: string | null
+          resposta_texto?: string | null
+          travessia_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_travessia_respostas_encontro_id_fkey"
+            columns: ["encontro_id"]
+            isOneToOne: false
+            referencedRelation: "co_travessia_encontros"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_travessia_respostas_travessia_id_fkey"
+            columns: ["travessia_id"]
+            isOneToOne: false
+            referencedRelation: "co_travessias"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_travessias: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          descricao: string | null
+          id: string
+          livro_base: string | null
+          nivel: Database["public"]["Enums"]["co_travessia_nivel"]
+          ordem: number
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          livro_base?: string | null
+          nivel?: Database["public"]["Enums"]["co_travessia_nivel"]
+          ordem?: number
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          livro_base?: string | null
+          nivel?: Database["public"]["Enums"]["co_travessia_nivel"]
+          ordem?: number
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       co_workspace_users: {
         Row: {
           created_at: string
@@ -19115,6 +19255,7 @@ export type Database = {
       casa_room: "sustentacao" | "leitura" | "circulo"
       cliente_status: "ativo" | "pausado" | "encerrado"
       clube_jornada_tipo: "heroina" | "sombra" | "expressao_mundo"
+      co_travessia_nivel: "iniciante" | "intermediario" | "avancado"
       content_block_type:
         | "rich_text"
         | "image"
@@ -19354,6 +19495,7 @@ export const Constants = {
       casa_room: ["sustentacao", "leitura", "circulo"],
       cliente_status: ["ativo", "pausado", "encerrado"],
       clube_jornada_tipo: ["heroina", "sombra", "expressao_mundo"],
+      co_travessia_nivel: ["iniciante", "intermediario", "avancado"],
       content_block_type: [
         "rich_text",
         "image",
