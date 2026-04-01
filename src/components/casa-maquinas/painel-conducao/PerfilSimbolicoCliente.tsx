@@ -114,11 +114,11 @@ export function PerfilSimbolicoCliente({ clienteId, compact = false, onDinamicoC
 
             <Tabs defaultValue="dinamico" className="w-full">
               <TabsList className="bg-muted/30 border border-border/20 h-8 p-0.5 w-full">
-                <TabsTrigger value="estrutural" className="text-[10px] flex-1 gap-1 data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
-                  <Shield className="w-3 h-3" /> Estrutural
+                <TabsTrigger value="estrutural" className="text-[10px] flex-1 gap-1 data-[state=active]:bg-muted/50 data-[state=active]:text-muted-foreground">
+                  <Shield className="w-3 h-3" /> Histórico
                 </TabsTrigger>
-                <TabsTrigger value="dinamico" className="text-[10px] flex-1 gap-1 data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
-                  <Zap className="w-3 h-3" /> Dinâmico
+                <TabsTrigger value="dinamico" className="text-[10px] flex-1 gap-1 data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:ring-1 data-[state=active]:ring-primary/30">
+                  <Zap className="w-3 h-3" /> Sessão atual
                 </TabsTrigger>
                 <TabsTrigger value="evolutivo" className="text-[10px] flex-1 gap-1 data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
                   <TrendingUp className="w-3 h-3" /> Evolutivo
@@ -126,6 +126,9 @@ export function PerfilSimbolicoCliente({ clienteId, compact = false, onDinamicoC
               </TabsList>
 
               <TabsContent value="estrutural" className="mt-3">
+                <p className="text-[9px] text-muted-foreground/50 italic mb-2 flex items-center gap-1">
+                  <Shield className="w-3 h-3" /> Dados históricos — arquitetura psíquica acumulada
+                </p>
                 <ProfileLayerView
                   fields={ESTRUTURAL_FIELDS}
                   values={estrutural as Record<string, string>}
@@ -140,6 +143,11 @@ export function PerfilSimbolicoCliente({ clienteId, compact = false, onDinamicoC
               </TabsContent>
 
               <TabsContent value="dinamico" className="mt-3">
+                <div className="mb-2 p-2 rounded-md bg-primary/5 border border-primary/15">
+                  <p className="text-[9px] text-primary/70 italic flex items-center gap-1">
+                    <Zap className="w-3 h-3" /> Leitura da sessão atual — campo emergente em tempo real
+                  </p>
+                </div>
                 <ProfileLayerView
                   fields={DINAMICO_FIELDS}
                   values={dinamico as Record<string, string>}
