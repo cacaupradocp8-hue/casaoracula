@@ -198,7 +198,8 @@ export default function ModoSessaoPage() {
     { num: 1, label: 'Check-in' },
     { num: 2, label: 'Distrito & Ferramenta' },
     { num: 3, label: 'Execução' },
-    { num: 4, label: 'Registro Final' },
+    { num: 4, label: 'Registro' },
+    { num: 5, label: 'Jardim' },
   ];
 
   return (
