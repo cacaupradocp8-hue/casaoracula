@@ -19,12 +19,14 @@ import { BlocoDirecao } from './BlocoDirecao';
 import { BlocoFerramenta } from './BlocoFerramenta';
 import { BlocoFeedback } from './BlocoFeedback';
 import { useQueryClient } from '@tanstack/react-query';
+import { useAvaliacaoIA } from './useAvaliacaoIA';
 
 export function SimuladorConducao() {
   const { user } = useAuth();
   const { data: cases = [], isLoading } = useTrainingCases();
   const { progress, completedCount, getCaseStatus } = useTrainingProgress();
   const queryClient = useQueryClient();
+  const { avaliacao, isLoading: isLoadingIA, avaliar, reset: resetAvaliacao } = useAvaliacaoIA();
   const [casoIndex, setCasoIndex] = useState(0);
   const [active, setActive] = useState(false);
   const [step, setStep] = useState<SimuladorStep>('caso');
@@ -51,6 +53,7 @@ export function SimuladorConducao() {
       ferramenta_escolhida: '',
     });
     setStep('caso');
+    resetAvaliacao();
   };
 
   const iniciar = (idx: number) => {
@@ -72,6 +75,9 @@ export function SimuladorConducao() {
     const score = calculateTrainingScore(caso, resposta);
     const feedbackJson = gerarFeedbackJson(caso, resposta, score);
     const feedbackFinal = `[${result.nivel}] Score: ${score.total}/9 — ${result.resumo}`;
+
+    // Fire AI evaluation in parallel (non-blocking)
+    avaliar(caso, resposta);
 
     await supabase.from('co_training_attempts').insert({
       user_id: user.id,
@@ -220,6 +226,8 @@ export function SimuladorConducao() {
           onReset={resetResposta}
           onNextCaso={() => iniciar(Math.min(casoIndex + 1, cases.length - 1))}
           isLast={casoIndex >= cases.length - 1}
+          avaliacaoIA={avaliacao}
+          isLoadingIA={isLoadingIA}
         />
       )}
     </div>
