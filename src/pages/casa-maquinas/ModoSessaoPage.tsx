@@ -22,7 +22,7 @@ import { SessionModeIndicator } from '@/components/casa-maquinas/SessionModeIndi
 import { useCidadelaMap } from '@/hooks/useCidadelaMap';
 import { useUserVoz } from '@/hooks/useUserVoz';
 import { VozAtivaIndicator, VozClinicalSuggestions, sortToolsByVoz } from '@/components/casa-maquinas/VozAtivaIndicator';
-import { EnviarOrientacaoDialog } from '@/components/casa-maquinas/EnviarOrientacaoDialog';
+import { EncaminharJardimStep } from '@/components/casa-maquinas/EncaminharJardimStep';
 import { useOrientacoesTerapeuta } from '@/hooks/useOrientacoes';
 
 const CHECKIN_STATES = [
