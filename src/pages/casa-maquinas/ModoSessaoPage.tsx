@@ -506,7 +506,13 @@ export default function ModoSessaoPage() {
         {/* Step 5: Encaminhar para o Jardim */}
         {step === 5 && selectedClient && (
           <EncaminharJardimStep
+            clienteId={selectedClient}
             clienteNome={clients.find(c => c.id === selectedClient)?.nome || 'a cliente'}
+            distritoId={selectedDistrict || undefined}
+            ferramentaId={selectedTool || undefined}
+            checkinState={checkinState || undefined}
+            insight={insight || undefined}
+            notas={notes || undefined}
             saving={orientacoes.saving}
             orientacaoEnviada={orientacaoEnviada}
             onEnviar={async (data) => {
