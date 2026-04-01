@@ -114,11 +114,11 @@ export function PerfilSimbolicoCliente({ clienteId, compact = false, onDinamicoC
 
             <Tabs defaultValue="dinamico" className="w-full">
               <TabsList className="bg-muted/30 border border-border/20 h-8 p-0.5 w-full">
-                <TabsTrigger value="estrutural" className="text-[10px] flex-1 gap-1 data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
-                  <Shield className="w-3 h-3" /> Estrutural
+                <TabsTrigger value="estrutural" className="text-[10px] flex-1 gap-1 data-[state=active]:bg-muted/50 data-[state=active]:text-muted-foreground">
+                  <Shield className="w-3 h-3" /> Histórico
                 </TabsTrigger>
-                <TabsTrigger value="dinamico" className="text-[10px] flex-1 gap-1 data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
-                  <Zap className="w-3 h-3" /> Dinâmico
+                <TabsTrigger value="dinamico" className="text-[10px] flex-1 gap-1 data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:ring-1 data-[state=active]:ring-primary/30">
+                  <Zap className="w-3 h-3" /> Sessão atual
                 </TabsTrigger>
                 <TabsTrigger value="evolutivo" className="text-[10px] flex-1 gap-1 data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
                   <TrendingUp className="w-3 h-3" /> Evolutivo
