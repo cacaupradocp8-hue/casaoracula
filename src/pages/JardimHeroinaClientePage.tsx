@@ -9,8 +9,10 @@ import { useAuth } from '@/contexts/AuthContext';
 // Blocos da Home
 import { BoasVindasBloco } from '@/components/jardim-cliente/BoasVindasBloco';
 import { TerapeutaDeixouBloco } from '@/components/jardim-cliente/TerapeutaDeixouBloco';
-import { JardimHojeBloco } from '@/components/jardim-cliente/JardimHojeBloco';
-import { TravessiaResumoBloco } from '@/components/jardim-cliente/TravessiaResumoBloco';
+import { MomentoJardimBloco } from '@/components/jardim-cliente/MomentoJardimBloco';
+import { PraticaRecomendadaBloco } from '@/components/jardim-cliente/PraticaRecomendadaBloco';
+import { EscutaSugeridaBloco } from '@/components/jardim-cliente/EscutaSugeridaBloco';
+import { RegistroHojeBloco } from '@/components/jardim-cliente/RegistroHojeBloco';
 
 // Seções internas
 import { MeuJardimSecao } from '@/components/jardim-cliente/MeuJardimSecao';
@@ -56,12 +58,14 @@ export default function JardimHeroinaClientePage() {
   } = useOrientacoesCliente();
 
   const orientacoesPendentes = orientacoes.filter((o) => o.status !== 'completed');
+  const escutaSugerida = orientacoes.find((o) => o.tipo === 'escuta' && o.status !== 'completed') || null;
+  const praticaRecomendada = praticasPendentes.length > 0 ? praticasPendentes[0] : null;
 
   if (loading || loadingOrientacoes) {
     return (
       <AppLayout>
         <div className="min-h-[60vh] flex items-center justify-center">
-          <Loader2 className="w-5 h-5 text-emerald-500/50 animate-spin" />
+          <Loader2 className="w-5 h-5 text-primary/50 animate-spin" />
         </div>
       </AppLayout>
     );
@@ -71,12 +75,12 @@ export default function JardimHeroinaClientePage() {
     return (
       <AppLayout>
         <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6">
-          <div className="w-20 h-20 rounded-full bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-center mb-6">
-            <Leaf className="w-8 h-8 text-emerald-500/30" />
+          <div className="w-20 h-20 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center mb-6">
+            <Leaf className="w-8 h-8 text-primary/30" />
           </div>
           <h2 className="text-lg font-display text-foreground/80 mb-2">Jardim ainda não preparado</h2>
           <p className="text-sm text-muted-foreground max-w-sm">
-            Seu Jardim da Heroína será ativado pela sua terapeuta. 
+            Seu Jardim da Heroína será ativado pela sua terapeuta.
             Este é um espaço de integração entre sessões.
           </p>
         </div>
@@ -87,14 +91,7 @@ export default function JardimHeroinaClientePage() {
   return (
     <AppLayout>
       <div className="min-h-screen pb-24">
-        {/* Header sutil */}
-        <div className="text-center pt-6 pb-2">
-          <p className="text-[10px] uppercase tracking-[0.5em] text-emerald-500/40 font-medium">
-            Jardim da Heroína
-          </p>
-        </div>
-
-        {/* Tab navigation - mobile friendly */}
+        {/* Tab navigation */}
         <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm border-b border-border/10">
           <div className="container mx-auto max-w-lg px-2">
             <div className="flex overflow-x-auto scrollbar-hide gap-0.5 py-2">
@@ -105,14 +102,14 @@ export default function JardimHeroinaClientePage() {
                   className={cn(
                     "flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs whitespace-nowrap transition-all shrink-0",
                     tab === key
-                      ? "bg-emerald-500/15 text-emerald-400 font-medium"
+                      ? "bg-primary/15 text-primary font-medium"
                       : "text-muted-foreground/50 hover:text-muted-foreground/70"
                   )}
                 >
                   <Icon className="w-3.5 h-3.5" />
                   {label}
                   {key === 'terapeuta' && orientacoesPendentes.length > 0 && (
-                    <span className="w-4 h-4 rounded-full bg-emerald-500 text-[9px] text-white flex items-center justify-center">
+                    <span className="w-4 h-4 rounded-full bg-primary text-[9px] text-primary-foreground flex items-center justify-center">
                       {orientacoesPendentes.length}
                     </span>
                   )}
@@ -123,9 +120,9 @@ export default function JardimHeroinaClientePage() {
         </div>
 
         {/* Content */}
-        <div className="container mx-auto px-4 max-w-lg py-6">
+        <div className="container mx-auto px-4 max-w-lg py-4">
           {tab === 'inicio' && (
-            <div className="space-y-8">
+            <div className="space-y-6">
               <BoasVindasBloco />
 
               <TerapeutaDeixouBloco
@@ -138,13 +135,13 @@ export default function JardimHeroinaClientePage() {
                 onMarcarVistaOrientacao={marcarVista}
               />
 
-              <JardimHojeBloco saving={saving} onCriar={criarEntry} />
+              <MomentoJardimBloco />
 
-              <TravessiaResumoBloco
-                items={travessia}
-                contadores={contadores}
-                onVerTudo={() => setTab('travessia')}
-              />
+              <PraticaRecomendadaBloco pratica={praticaRecomendada} />
+
+              <EscutaSugeridaBloco escuta={escutaSugerida} />
+
+              <RegistroHojeBloco saving={saving} onCriar={criarEntry} />
             </div>
           )}
 
