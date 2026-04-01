@@ -18,7 +18,7 @@ const FRASES = [
 
 export function BoasVindasBloco() {
   const { user } = useAuth();
-  const nome = user?.user_metadata?.nome || user?.email?.split('@')[0] || '';
+  const nome = (user as any)?.user_metadata?.nome || user?.email?.split('@')[0] || '';
   const frase = FRASES[new Date().getDate() % FRASES.length];
 
   return (
