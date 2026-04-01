@@ -5319,6 +5319,80 @@ export type Database = {
         }
         Relationships: []
       }
+      co_orientacao_sugestoes_ia: {
+        Row: {
+          aceito_json: Json | null
+          cliente_id: string
+          created_at: string
+          editado: boolean
+          id: string
+          ignorado: boolean
+          justificativa_clinica: string | null
+          orientacao_id: string | null
+          session_id: string | null
+          sugestao_json: Json
+          terapeuta_id: string
+          updated_at: string
+        }
+        Insert: {
+          aceito_json?: Json | null
+          cliente_id: string
+          created_at?: string
+          editado?: boolean
+          id?: string
+          ignorado?: boolean
+          justificativa_clinica?: string | null
+          orientacao_id?: string | null
+          session_id?: string | null
+          sugestao_json?: Json
+          terapeuta_id: string
+          updated_at?: string
+        }
+        Update: {
+          aceito_json?: Json | null
+          cliente_id?: string
+          created_at?: string
+          editado?: boolean
+          id?: string
+          ignorado?: boolean
+          justificativa_clinica?: string | null
+          orientacao_id?: string | null
+          session_id?: string | null
+          sugestao_json?: Json
+          terapeuta_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_orientacao_sugestoes_ia_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_orientacao_sugestoes_ia_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_orientacao_sugestoes_ia_orientacao_id_fkey"
+            columns: ["orientacao_id"]
+            isOneToOne: false
+            referencedRelation: "co_orientacoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_orientacao_sugestoes_ia_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       co_orientacoes: {
         Row: {
           cliente_id: string

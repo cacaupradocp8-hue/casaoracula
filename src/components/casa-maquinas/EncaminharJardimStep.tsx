@@ -4,13 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import {
   Leaf, Send, Loader2, BookOpen, Headphones, Sparkles,
-  MapPin, Target, CheckCircle, ChevronRight, SkipForward,
+  MapPin, Target, CheckCircle, SkipForward,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { SugestaoIAJardim } from './SugestaoIAJardim';
 
 const TIPOS = [
   { key: 'pratica', label: 'Prática', icon: BookOpen, desc: 'Exercício ou prática sugerida' },
@@ -21,7 +21,13 @@ const TIPOS = [
 ] as const;
 
 interface Props {
+  clienteId: string;
   clienteNome: string;
+  distritoId?: string;
+  ferramentaId?: string;
+  checkinState?: string;
+  insight?: string;
+  notas?: string;
   saving: boolean;
   orientacaoEnviada: boolean;
   onEnviar: (data: { tipo: string; titulo?: string; mensagem: string }) => Promise<boolean>;
@@ -32,7 +38,13 @@ interface Props {
 }
 
 export function EncaminharJardimStep({
+  clienteId,
   clienteNome,
+  distritoId,
+  ferramentaId,
+  checkinState,
+  insight,
+  notas,
   saving,
   orientacaoEnviada,
   onEnviar,
@@ -53,6 +65,12 @@ export function EncaminharJardimStep({
       setTitulo('');
       setMensagem('');
     }
+  };
+
+  const handleApplySugestao = (data: { tipo: string; titulo?: string; mensagem: string }) => {
+    setTipo(data.tipo);
+    setTitulo(data.titulo || '');
+    setMensagem(data.mensagem);
   };
 
   return (
@@ -89,6 +107,19 @@ export function EncaminharJardimStep({
             </p>
           </CardContent>
         </Card>
+      )}
+
+      {/* Sugestão IA - aparece antes do formulário */}
+      {!orientacaoEnviada && (
+        <SugestaoIAJardim
+          clienteId={clienteId}
+          distritoId={distritoId}
+          ferramentaId={ferramentaId}
+          checkinState={checkinState}
+          insight={insight}
+          notas={notas}
+          onApplySugestao={handleApplySugestao}
+        />
       )}
 
       {/* Formulário inline */}
