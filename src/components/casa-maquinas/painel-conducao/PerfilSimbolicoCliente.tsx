@@ -143,6 +143,11 @@ export function PerfilSimbolicoCliente({ clienteId, compact = false, onDinamicoC
               </TabsContent>
 
               <TabsContent value="dinamico" className="mt-3">
+                <div className="mb-2 p-2 rounded-md bg-primary/5 border border-primary/15">
+                  <p className="text-[9px] text-primary/70 italic flex items-center gap-1">
+                    <Zap className="w-3 h-3" /> Leitura da sessão atual — campo emergente em tempo real
+                  </p>
+                </div>
                 <ProfileLayerView
                   fields={DINAMICO_FIELDS}
                   values={dinamico as Record<string, string>}
