@@ -158,6 +158,9 @@ const MapaSombraPage = React.lazy(() => import("./pages/casa-maquinas/ferramenta
 const DiagnosticoEgoPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/DiagnosticoEgoPage"));
 const SonhoEstruturadoPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/SonhoEstruturadoPage"));
 const ImaginacaoAtivaPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/ImaginacaoAtivaPage"));
+const COTravessiasList = React.lazy(() => import("./pages/clube-livro/COTravessiasList"));
+const COTravessiaDetail = React.lazy(() => import("./pages/clube-livro/COTravessiaDetail"));
+const COTravessiaEncontro = React.lazy(() => import("./pages/clube-livro/COTravessiaEncontro"));
 const EscritaNaoCensuradaPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/EscritaNaoCensuradaPage"));
 const CorpoInconscientePage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/CorpoInconscientePage"));
 const SectionPlaceholder = React.lazy(() => import("./pages/casa-maquinas/SectionPlaceholder"));
