@@ -103,25 +103,28 @@ export function OrientacaoCard({ orientacao, onComplete, onRespond, onView }: Pr
         )}
 
         {orientacao.status !== 'completed' && (
-          <div className="flex gap-2 pt-1">
-            <Button
-              size="sm"
-              variant="outline"
-              className="flex-1 text-xs h-8 border-border/20 gap-1.5"
-              onClick={() => setShowRespondForm(!showRespondForm)}
-            >
-              <MessageCircle className="w-3 h-3" />
-              {showRespondForm ? 'Fechar' : 'Registrar reflexão'}
-            </Button>
-            <Button
-              size="sm"
-              className="flex-1 text-xs h-8 bg-emerald-600 hover:bg-emerald-700 gap-1.5"
-              onClick={handleComplete}
-              disabled={saving}
-            >
-              {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
-              Concluída
-            </Button>
+          <div className="space-y-2 pt-1">
+            <div className="flex gap-1.5">
+              <Button
+                size="sm"
+                variant="outline"
+                className="flex-1 text-[10px] h-7 border-border/20 gap-1"
+                onClick={() => setShowRespondForm(!showRespondForm)}
+              >
+                <MessageCircle className="w-3 h-3" />
+                {showRespondForm ? 'Fechar' : 'Quero registrar'}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="text-[10px] h-7 border-primary/20 text-primary/70 gap-1"
+                onClick={handleComplete}
+                disabled={saving}
+              >
+                {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
+                Já fiz
+              </Button>
+            </div>
           </div>
         )}
 
