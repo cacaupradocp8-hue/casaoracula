@@ -68,6 +68,7 @@ export default function ModoSessaoPage() {
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [usedToolRoutes, setUsedToolRoutes] = useState<string[]>([]);
   const [orientacaoDialogOpen, setOrientacaoDialogOpen] = useState(false);
+  const [orientacaoEnviada, setOrientacaoEnviada] = useState(false);
   const { recordUsage } = useCidadelaOracle();
   const orientacoes = useOrientacoesTerapeuta(selectedClient);
 
