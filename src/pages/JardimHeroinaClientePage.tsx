@@ -1,115 +1,63 @@
 import { useState } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { 
-  Leaf, Loader2, Send, Lock, Eye, EyeOff, 
-  Sparkles, Heart, BookOpen 
-} from 'lucide-react';
-import { useClienteJardim, type JardimEntry } from '@/hooks/useClienteJardim';
-import { useOrientacoesCliente } from '@/hooks/useOrientacoes';
-import { OrientacaoCard } from '@/components/jardim/OrientacaoCard';
-import { useAuth } from '@/contexts/AuthContext';
-import { motion, AnimatePresence } from 'framer-motion';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { Loader2, Leaf, Home, Inbox, Sparkles, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useClienteJardimCompleto } from '@/hooks/useClienteJardimCompleto';
+import { useOrientacoesCliente } from '@/hooks/useOrientacoes';
+import { useAuth } from '@/contexts/AuthContext';
 
-const ENTRY_TYPES = [
-  { key: 'reflexao', label: 'Reflexão', icon: Sparkles, desc: 'Um pensamento, uma percepção' },
-  { key: 'sentimento', label: 'Sentimento', icon: Heart, desc: 'O que sinto agora' },
-  { key: 'observacao', label: 'Observação', icon: Eye, desc: 'Algo que notei em mim' },
-] as const;
+// Blocos da Home
+import { BoasVindasBloco } from '@/components/jardim-cliente/BoasVindasBloco';
+import { TerapeutaDeixouBloco } from '@/components/jardim-cliente/TerapeutaDeixouBloco';
+import { JardimHojeBloco } from '@/components/jardim-cliente/JardimHojeBloco';
+import { TravessiaResumoBloco } from '@/components/jardim-cliente/TravessiaResumoBloco';
 
-function EntryCard({ entry, userId, onToggleShare }: { 
-  entry: JardimEntry; 
-  userId: string;
-  onToggleShare: (id: string, current: boolean) => void;
-}) {
-  const isOwn = entry.created_by === userId;
-  const isTherapist = !isOwn;
+// Seções internas
+import { MeuJardimSecao } from '@/components/jardim-cliente/MeuJardimSecao';
+import { DaTerapeutaSecao } from '@/components/jardim-cliente/DaTerapeutaSecao';
+import { PraticasSecao } from '@/components/jardim-cliente/PraticasSecao';
+import { TravessiaSecao } from '@/components/jardim-cliente/TravessiaSecao';
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={cn(
-        "rounded-xl p-4 border transition-all",
-        isTherapist 
-          ? "bg-emerald-950/20 border-emerald-500/20" 
-          : "bg-card/60 border-border/30"
-      )}
-    >
-      <div className="flex items-start justify-between gap-3 mb-2">
-        <div className="flex items-center gap-2">
-          {isTherapist ? (
-            <Badge variant="outline" className="text-[10px] border-emerald-500/30 text-emerald-400">
-              <Leaf className="w-3 h-3 mr-1" />
-              Da terapeuta
-            </Badge>
-          ) : (
-            <Badge variant="outline" className="text-[10px] border-primary/30 text-primary">
-              <BookOpen className="w-3 h-3 mr-1" />
-              {entry.entry_type === 'reflexao' ? 'Reflexão' : 
-               entry.entry_type === 'sentimento' ? 'Sentimento' : 'Observação'}
-            </Badge>
-          )}
-        </div>
-        <span className="text-[10px] text-muted-foreground">
-          {format(new Date(entry.created_at), "dd MMM · HH:mm", { locale: ptBR })}
-        </span>
-      </div>
+type Tab = 'inicio' | 'jardim' | 'terapeuta' | 'praticas' | 'travessia';
 
-      <p className="text-sm text-foreground/80 leading-relaxed whitespace-pre-wrap">
-        {entry.content}
-      </p>
-
-      {isOwn && (
-        <div className="flex items-center gap-2 mt-3 pt-2 border-t border-border/20">
-          <button
-            onClick={() => onToggleShare(entry.id, entry.shared_with_therapist)}
-            className={cn(
-              "flex items-center gap-1.5 text-[10px] transition-colors",
-              entry.shared_with_therapist 
-                ? "text-emerald-400 hover:text-emerald-300" 
-                : "text-muted-foreground/50 hover:text-muted-foreground"
-            )}
-          >
-            {entry.shared_with_therapist ? (
-              <><Eye className="w-3 h-3" /> Visível para terapeuta</>
-            ) : (
-              <><EyeOff className="w-3 h-3" /> Só eu vejo</>
-            )}
-          </button>
-        </div>
-      )}
-    </motion.div>
-  );
-}
+const TABS: { key: Tab; label: string; icon: any }[] = [
+  { key: 'inicio', label: 'Início', icon: Home },
+  { key: 'jardim', label: 'Meu Jardim', icon: Leaf },
+  { key: 'terapeuta', label: 'Da Terapeuta', icon: Inbox },
+  { key: 'praticas', label: 'Práticas', icon: Sparkles },
+  { key: 'travessia', label: 'Travessia', icon: MapPin },
+];
 
 export default function JardimHeroinaClientePage() {
   const { user } = useAuth();
-  const { jardim, entries, loading, saving, criarEntry, toggleSharedWithTherapist } = useClienteJardim();
-  const { orientacoes, loading: loadingOrientacoes, marcarVista, completar, responder } = useOrientacoesCliente();
-  const [content, setContent] = useState('');
-  const [entryType, setEntryType] = useState('reflexao');
-  const [shareWithTherapist, setShareWithTherapist] = useState(false);
+  const [tab, setTab] = useState<Tab>('inicio');
 
-  const handleSubmit = async () => {
-    if (!content.trim()) return;
-    const success = await criarEntry(content.trim(), entryType, shareWithTherapist);
-    if (success) {
-      setContent('');
-      setShareWithTherapist(false);
-    }
-  };
+  const {
+    jardim,
+    minhasEntries,
+    entriesTerapeuta,
+    praticas,
+    praticasPendentes,
+    sessoesCompartilhadas,
+    travessia,
+    contadores,
+    loading,
+    saving,
+    criarEntry,
+    toggleSharedWithTherapist,
+  } = useClienteJardimCompleto();
 
-  if (loading) {
+  const {
+    orientacoes,
+    loading: loadingOrientacoes,
+    marcarVista,
+    completar,
+    responder,
+  } = useOrientacoesCliente();
+
+  const orientacoesPendentes = orientacoes.filter((o) => o.status !== 'completed');
+
+  if (loading || loadingOrientacoes) {
     return (
       <AppLayout>
         <div className="min-h-[60vh] flex items-center justify-center">
@@ -128,7 +76,7 @@ export default function JardimHeroinaClientePage() {
           </div>
           <h2 className="text-lg font-display text-foreground/80 mb-2">Jardim ainda não preparado</h2>
           <p className="text-sm text-muted-foreground max-w-sm">
-            Seu Jardim da Heroína será ativado pela sua terapeuta durante a sessão. 
+            Seu Jardim da Heroína será ativado pela sua terapeuta. 
             Este é um espaço de integração entre sessões.
           </p>
         </div>
@@ -139,169 +87,92 @@ export default function JardimHeroinaClientePage() {
   return (
     <AppLayout>
       <div className="min-h-screen pb-24">
-        {/* Header */}
-        <section className="relative py-12 md:py-16 overflow-hidden">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
-          
-          <div className="relative z-10 container mx-auto px-6 text-center max-w-md">
-            <div className="w-10 h-10 mx-auto rounded-full bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center mb-4">
-              <Leaf className="w-5 h-5 text-emerald-500/60" />
-            </div>
-            <p className="text-[10px] uppercase tracking-[0.5em] text-emerald-500/40 font-medium mb-3">
-              Jardim da Heroína
-            </p>
-            <p className="text-foreground/50 text-xs font-display italic">
-              Um espaço seguro para observar o que emergiu
-            </p>
-          </div>
-        </section>
+        {/* Header sutil */}
+        <div className="text-center pt-6 pb-2">
+          <p className="text-[10px] uppercase tracking-[0.5em] text-emerald-500/40 font-medium">
+            Jardim da Heroína
+          </p>
+        </div>
 
-        <div className="container mx-auto px-4 max-w-lg space-y-6">
-          {/* Orientações da terapeuta */}
-          {orientacoes.filter(o => o.status !== 'completed').length > 0 && (
-            <div className="space-y-3">
-              <div className="text-center">
-                <p className="text-[10px] uppercase tracking-[0.3em] text-emerald-500/50 font-medium">
-                  Uma orientação foi deixada para você
-                </p>
-              </div>
-              {orientacoes.filter(o => o.status !== 'completed').map(o => (
-                <OrientacaoCard
-                  key={o.id}
-                  orientacao={o}
-                  onComplete={completar}
-                  onRespond={responder}
-                  onView={marcarVista}
-                />
+        {/* Tab navigation - mobile friendly */}
+        <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm border-b border-border/10">
+          <div className="container mx-auto max-w-lg px-2">
+            <div className="flex overflow-x-auto scrollbar-hide gap-0.5 py-2">
+              {TABS.map(({ key, label, icon: Icon }) => (
+                <button
+                  key={key}
+                  onClick={() => setTab(key)}
+                  className={cn(
+                    "flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs whitespace-nowrap transition-all shrink-0",
+                    tab === key
+                      ? "bg-emerald-500/15 text-emerald-400 font-medium"
+                      : "text-muted-foreground/50 hover:text-muted-foreground/70"
+                  )}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {label}
+                  {key === 'terapeuta' && orientacoesPendentes.length > 0 && (
+                    <span className="w-4 h-4 rounded-full bg-emerald-500 text-[9px] text-white flex items-center justify-center">
+                      {orientacoesPendentes.length}
+                    </span>
+                  )}
+                </button>
               ))}
             </div>
-          )}
+          </div>
+        </div>
 
-          {/* Orientações concluídas */}
-          {orientacoes.filter(o => o.status === 'completed').length > 0 && (
-            <details className="group">
-              <summary className="text-[10px] text-muted-foreground/40 cursor-pointer text-center hover:text-muted-foreground/60 transition-colors">
-                {orientacoes.filter(o => o.status === 'completed').length} orientação(ões) concluída(s)
-              </summary>
-              <div className="space-y-3 mt-3">
-                {orientacoes.filter(o => o.status === 'completed').map(o => (
-                  <OrientacaoCard
-                    key={o.id}
-                    orientacao={o}
-                    onComplete={completar}
-                    onRespond={responder}
-                    onView={marcarVista}
-                  />
-                ))}
-              </div>
-            </details>
-          )}
+        {/* Content */}
+        <div className="container mx-auto px-4 max-w-lg py-6">
+          {tab === 'inicio' && (
+            <div className="space-y-8">
+              <BoasVindasBloco />
 
-          {/* New Entry Form */}
-          <Card className="border-emerald-500/20 bg-card/70 backdrop-blur-sm">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm flex items-center gap-2 text-foreground/80">
-                <Sparkles className="w-4 h-4 text-emerald-500/60" />
-                Novo registro
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Entry type selection */}
-              <div className="flex gap-2">
-                {ENTRY_TYPES.map(({ key, label, icon: Icon }) => (
-                  <button
-                    key={key}
-                    onClick={() => setEntryType(key)}
-                    className={cn(
-                      "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs transition-all border",
-                      entryType === key 
-                        ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400" 
-                        : "bg-card/50 border-border/20 text-muted-foreground hover:border-border/40"
-                    )}
-                  >
-                    <Icon className="w-3.5 h-3.5" />
-                    {label}
-                  </button>
-                ))}
-              </div>
-
-              <Textarea
-                placeholder={
-                  entryType === 'reflexao' ? 'O que surgiu em mim desde a última sessão...' :
-                  entryType === 'sentimento' ? 'O que estou sentindo agora...' :
-                  'Algo que notei em mim esta semana...'
-                }
-                value={content}
-                onChange={e => setContent(e.target.value.slice(0, 500))}
-                className="min-h-[100px] resize-none bg-background/50"
-                maxLength={500}
+              <TerapeutaDeixouBloco
+                orientacoesPendentes={orientacoesPendentes}
+                entriesTerapeuta={entriesTerapeuta}
+                praticasPendentes={praticasPendentes}
+                onVerTudo={() => setTab('terapeuta')}
+                onCompletarOrientacao={completar}
+                onResponderOrientacao={responder}
+                onMarcarVistaOrientacao={marcarVista}
               />
-              <div className="flex items-center justify-between">
-                <p className="text-[10px] text-muted-foreground">{content.length}/500</p>
-              </div>
 
-              {/* Share toggle */}
-              <div className="flex items-center justify-between rounded-lg bg-muted/30 p-3">
-                <div className="flex items-center gap-2">
-                  {shareWithTherapist ? (
-                    <Eye className="w-4 h-4 text-emerald-400" />
-                  ) : (
-                    <Lock className="w-4 h-4 text-muted-foreground" />
-                  )}
-                  <Label className="text-xs text-foreground/70 cursor-pointer">
-                    {shareWithTherapist ? 'Terapeuta poderá ver' : 'Só eu verei este registro'}
-                  </Label>
-                </div>
-                <Switch
-                  checked={shareWithTherapist}
-                  onCheckedChange={setShareWithTherapist}
-                />
-              </div>
+              <JardimHojeBloco saving={saving} onCriar={criarEntry} />
 
-              <Button
-                onClick={handleSubmit}
-                disabled={saving || !content.trim()}
-                className="w-full bg-emerald-600 hover:bg-emerald-700 gap-2"
-              >
-                {saving ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Send className="w-4 h-4" />
-                )}
-                Guardar no Jardim
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Entries List */}
-          {entries.length > 0 && (
-            <>
-              <Separator className="border-border/20" />
-              <div className="space-y-3">
-                <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/50 text-center">
-                  Registros do Jardim
-                </p>
-                <AnimatePresence>
-                  {entries.map(entry => (
-                    <EntryCard
-                      key={entry.id}
-                      entry={entry}
-                      userId={user?.id || ''}
-                      onToggleShare={toggleSharedWithTherapist}
-                    />
-                  ))}
-                </AnimatePresence>
-              </div>
-            </>
-          )}
-
-          {entries.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-sm text-muted-foreground/40 font-display italic">
-                O Jardim aguarda suas primeiras sementes.
-              </p>
+              <TravessiaResumoBloco
+                items={travessia}
+                contadores={contadores}
+                onVerTudo={() => setTab('travessia')}
+              />
             </div>
           )}
+
+          {tab === 'jardim' && (
+            <MeuJardimSecao
+              entries={minhasEntries}
+              userId={user?.id || ''}
+              saving={saving}
+              onCriar={criarEntry}
+              onToggleShare={toggleSharedWithTherapist}
+            />
+          )}
+
+          {tab === 'terapeuta' && (
+            <DaTerapeutaSecao
+              orientacoes={orientacoes}
+              entriesTerapeuta={entriesTerapeuta}
+              praticas={praticas}
+              sessoesCompartilhadas={sessoesCompartilhadas}
+              onCompletarOrientacao={completar}
+              onResponderOrientacao={responder}
+              onMarcarVistaOrientacao={marcarVista}
+            />
+          )}
+
+          {tab === 'praticas' && <PraticasSecao praticas={praticas} />}
+
+          {tab === 'travessia' && <TravessiaSecao items={travessia} />}
         </div>
       </div>
     </AppLayout>
