@@ -19,12 +19,14 @@ import { BlocoDirecao } from './BlocoDirecao';
 import { BlocoFerramenta } from './BlocoFerramenta';
 import { BlocoFeedback } from './BlocoFeedback';
 import { useQueryClient } from '@tanstack/react-query';
+import { useAvaliacaoIA } from './useAvaliacaoIA';
 
 export function SimuladorConducao() {
   const { user } = useAuth();
   const { data: cases = [], isLoading } = useTrainingCases();
   const { progress, completedCount, getCaseStatus } = useTrainingProgress();
   const queryClient = useQueryClient();
+  const { avaliacao, isLoading: isLoadingIA, avaliar, reset: resetAvaliacao } = useAvaliacaoIA();
   const [casoIndex, setCasoIndex] = useState(0);
   const [active, setActive] = useState(false);
   const [step, setStep] = useState<SimuladorStep>('caso');
