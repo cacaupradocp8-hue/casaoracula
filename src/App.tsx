@@ -1,4 +1,4 @@
-import React from "react"; // rebuild-trigger-v6
+import React from "react"; // rebuild-trigger-v8
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
