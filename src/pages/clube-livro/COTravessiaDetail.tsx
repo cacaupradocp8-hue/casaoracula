@@ -11,8 +11,8 @@ import { useAuth } from '@/contexts/AuthContext';
 export default function COTravessiaDetail() {
   const { travessiaId } = useParams<{ travessiaId: string }>();
   const navigate = useNavigate();
-  const { profile } = useAuth();
-  const isTerapeuta = profile?.portal === 'oracula' || profile?.portal === 'admin';
+  const { user } = useAuth();
+  const isTerapeuta = user?.portal === 'oracula' || user?.portal === 'admin';
 
   const { data: travessia, isLoading: loadingT } = useCOTravessia(travessiaId);
   const { data: encontros = [], isLoading: loadingE } = useCOEncontros(travessiaId);
