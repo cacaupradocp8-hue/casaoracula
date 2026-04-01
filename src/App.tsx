@@ -158,6 +158,9 @@ const MapaSombraPage = React.lazy(() => import("./pages/casa-maquinas/ferramenta
 const DiagnosticoEgoPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/DiagnosticoEgoPage"));
 const SonhoEstruturadoPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/SonhoEstruturadoPage"));
 const ImaginacaoAtivaPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/ImaginacaoAtivaPage"));
+const COTravessiasList = React.lazy(() => import("./pages/clube-livro/COTravessiasList"));
+const COTravessiaDetail = React.lazy(() => import("./pages/clube-livro/COTravessiaDetail"));
+const COTravessiaEncontro = React.lazy(() => import("./pages/clube-livro/COTravessiaEncontro"));
 const EscritaNaoCensuradaPage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/EscritaNaoCensuradaPage"));
 const CorpoInconscientePage = React.lazy(() => import("./pages/casa-maquinas/ferramentas/CorpoInconscientePage"));
 const SectionPlaceholder = React.lazy(() => import("./pages/casa-maquinas/SectionPlaceholder"));
@@ -1107,6 +1110,32 @@ function AppRoutes() {
         element={
           <ProtectedRoute minPortal="aluna">
             <CertificadoTravessia />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* CO Travessias - Clube de Leitura */}
+      <Route
+        path="/clube-livro/travessias"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <COTravessiasList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/travessia/:travessiaId"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <COTravessiaDetail />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clube-livro/travessia/:travessiaId/encontro/:encontroId"
+        element={
+          <ProtectedRoute minPortal="aluna">
+            <COTravessiaEncontro />
           </ProtectedRoute>
         }
       />
