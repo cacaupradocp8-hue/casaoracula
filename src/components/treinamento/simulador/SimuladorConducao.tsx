@@ -76,6 +76,9 @@ export function SimuladorConducao() {
     const feedbackJson = gerarFeedbackJson(caso, resposta, score);
     const feedbackFinal = `[${result.nivel}] Score: ${score.total}/9 — ${result.resumo}`;
 
+    // Fire AI evaluation in parallel (non-blocking)
+    avaliar(caso, resposta);
+
     await supabase.from('co_training_attempts').insert({
       user_id: user.id,
       case_id: caso.id,
