@@ -375,8 +375,8 @@ export function SimuladorInterativo() {
         </p>
       </div>
 
-      {/* Filter */}
-      <div className="flex gap-2">
+      {/* Filter + Generate */}
+      <div className="flex items-center gap-2 flex-wrap">
         {['individual', 'grupo', 'misto'].map(t => (
           <Button
             key={t}
@@ -388,6 +388,11 @@ export function SimuladorInterativo() {
             {tipoLabels[t]}
           </Button>
         ))}
+        {isAdmin && (
+          <div className="ml-auto">
+            <GerarCasoIA />
+          </div>
+        )}
       </div>
 
       {isLoading ? (
