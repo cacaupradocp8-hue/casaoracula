@@ -5,6 +5,7 @@ import {
   Play, BookOpen, Shield, Flame, Compass, Eye, EyeOff,
   ArrowRight, AlertCircle, Sparkles, Wrench
 } from 'lucide-react';
+import { GerarCasoIA } from './GerarCasoIA';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -52,7 +53,8 @@ export function SimuladorInterativo() {
   const [showSummary, setShowSummary] = useState(false);
 
   const { user } = useAuth();
-  const isTerapeuta = user?.portal === 'oracula' || user?.portal === 'admin';
+  const isAdmin = user?.portal === 'admin';
+  const isTerapeuta = user?.portal === 'oracula' || isAdmin;
 
   const { data: cases = [], isLoading } = useSimCases();
   const { data: allProgress = [] } = useSimProgress();
@@ -373,8 +375,8 @@ export function SimuladorInterativo() {
         </p>
       </div>
 
-      {/* Filter */}
-      <div className="flex gap-2">
+      {/* Filter + Generate */}
+      <div className="flex items-center gap-2 flex-wrap">
         {['individual', 'grupo', 'misto'].map(t => (
           <Button
             key={t}
@@ -386,6 +388,11 @@ export function SimuladorInterativo() {
             {tipoLabels[t]}
           </Button>
         ))}
+        {isAdmin && (
+          <div className="ml-auto">
+            <GerarCasoIA />
+          </div>
+        )}
       </div>
 
       {isLoading ? (
