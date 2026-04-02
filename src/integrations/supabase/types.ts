@@ -5686,6 +5686,186 @@ export type Database = {
           },
         ]
       }
+      co_sim_cases: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          descricao: string | null
+          ferramenta_sugerida: string | null
+          id: string
+          leitura_mentora: string | null
+          nivel: number
+          ordem: number
+          tipo: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          ferramenta_sugerida?: string | null
+          id?: string
+          leitura_mentora?: string | null
+          nivel?: number
+          ordem?: number
+          tipo?: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          ferramenta_sugerida?: string | null
+          id?: string
+          leitura_mentora?: string | null
+          nivel?: number
+          ordem?: number
+          tipo?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      co_sim_options: {
+        Row: {
+          created_at: string
+          explicacao_simbolica: string | null
+          feedback_texto: string | null
+          id: string
+          ordem: number
+          proximo_step_id: string | null
+          step_id: string
+          texto_opcao: string
+          tipo_resultado: string
+        }
+        Insert: {
+          created_at?: string
+          explicacao_simbolica?: string | null
+          feedback_texto?: string | null
+          id?: string
+          ordem?: number
+          proximo_step_id?: string | null
+          step_id: string
+          texto_opcao: string
+          tipo_resultado?: string
+        }
+        Update: {
+          created_at?: string
+          explicacao_simbolica?: string | null
+          feedback_texto?: string | null
+          id?: string
+          ordem?: number
+          proximo_step_id?: string | null
+          step_id?: string
+          texto_opcao?: string
+          tipo_resultado?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_sim_options_proximo_step_id_fkey"
+            columns: ["proximo_step_id"]
+            isOneToOne: false
+            referencedRelation: "co_sim_steps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_sim_options_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "co_sim_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_sim_progress: {
+        Row: {
+          case_id: string
+          created_at: string
+          escolha_id: string
+          id: string
+          step_id: string
+          user_id: string
+        }
+        Insert: {
+          case_id: string
+          created_at?: string
+          escolha_id: string
+          id?: string
+          step_id: string
+          user_id: string
+        }
+        Update: {
+          case_id?: string
+          created_at?: string
+          escolha_id?: string
+          id?: string
+          step_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_sim_progress_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "co_sim_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_sim_progress_escolha_id_fkey"
+            columns: ["escolha_id"]
+            isOneToOne: false
+            referencedRelation: "co_sim_options"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_sim_progress_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "co_sim_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_sim_steps: {
+        Row: {
+          case_id: string
+          created_at: string
+          id: string
+          objetivo_oculto: string | null
+          ordem: number
+          pergunta: string
+          situacao_texto: string
+        }
+        Insert: {
+          case_id: string
+          created_at?: string
+          id?: string
+          objetivo_oculto?: string | null
+          ordem?: number
+          pergunta?: string
+          situacao_texto: string
+        }
+        Update: {
+          case_id?: string
+          created_at?: string
+          id?: string
+          objetivo_oculto?: string | null
+          ordem?: number
+          pergunta?: string
+          situacao_texto?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_sim_steps_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "co_sim_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       co_therapist_profile: {
         Row: {
           created_at: string
