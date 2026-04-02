@@ -53,7 +53,8 @@ export function SimuladorInterativo() {
   const [showSummary, setShowSummary] = useState(false);
 
   const { user } = useAuth();
-  const isTerapeuta = user?.portal === 'oracula' || user?.portal === 'admin';
+  const isAdmin = user?.portal === 'admin';
+  const isTerapeuta = user?.portal === 'oracula' || isAdmin;
 
   const { data: cases = [], isLoading } = useSimCases();
   const { data: allProgress = [] } = useSimProgress();
