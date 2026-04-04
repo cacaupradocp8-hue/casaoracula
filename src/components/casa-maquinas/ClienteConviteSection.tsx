@@ -6,8 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Send, CheckCircle, Copy, Leaf, MessageCircle, Mail, Link2 } from 'lucide-react';
+import { Loader2, CheckCircle, Copy, Leaf, MessageCircle, Mail, Link2 } from 'lucide-react';
 import { toast } from 'sonner';
+
+const SITE_URL = 'https://casaoracula.lovable.app';
 
 interface Props {
   cliente: any;
@@ -69,7 +71,7 @@ export function ClienteConviteSection({ cliente, onUpdate }: Props) {
 
       if (error) throw error;
 
-      const link = `${window.location.origin}/aceitar-convite?token=${convite.token}`;
+      const link = `${SITE_URL}/aceitar-convite?token=${convite.token}`;
       setInviteLink(link);
       toast.success('Link de convite gerado!');
       onUpdate();
@@ -91,10 +93,10 @@ export function ClienteConviteSection({ cliente, onUpdate }: Props) {
   const sendViaWhatsApp = () => {
     if (!inviteLink) return;
     const nomeCliente = cliente.nome || 'querida';
-    const message = encodeURIComponent(
-      `🌿 Olá, ${nomeCliente}!\n\nPreparei um espaço especial para você — o Jardim da Heroína.\n\nÉ um lugar seguro de integração e continuidade do seu processo terapêutico.\n\nAcesse aqui: ${inviteLink}\n\nVocê precisará criar uma conta para entrar. 💚`
-    );
-    window.open(`https://wa.me/?text=${message}`, '_blank');
+    const text = `🌿 Olá, ${nomeCliente}!\n\nPreparei um espaço especial para você — o Jardim da Heroína.\n\nÉ um lugar seguro de integração e continuidade do seu processo terapêutico.\n\nAcesse aqui: ${inviteLink}\n\nVocê precisará criar uma conta para entrar. 💚`;
+    const encoded = encodeURIComponent(text);
+    const url = `https://api.whatsapp.com/send?text=${encoded}`;
+    window.open(url, '_blank');
     toast.success('WhatsApp aberto!');
   };
 
