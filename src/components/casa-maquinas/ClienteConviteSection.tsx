@@ -6,8 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Send, CheckCircle, Copy, Leaf, MessageCircle, Mail, Link2 } from 'lucide-react';
+import { Loader2, CheckCircle, Copy, Leaf, MessageCircle, Mail, Link2 } from 'lucide-react';
 import { toast } from 'sonner';
+
+const SITE_URL = 'https://casaoracula.lovable.app';
 
 interface Props {
   cliente: any;
