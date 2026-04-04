@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Send, CheckCircle, Copy, Leaf } from 'lucide-react';
+import { Loader2, Send, CheckCircle, Copy, Leaf, MessageCircle, Mail, Link2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Props {
@@ -18,6 +18,7 @@ export function ClienteConviteSection({ cliente, onUpdate }: Props) {
   const { user } = useAuth();
   const [email, setEmail] = useState(cliente.email || '');
   const [saving, setSaving] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(false);
   const [inviteLink, setInviteLink] = useState<string | null>(null);
 
   const isLinked = !!cliente.client_user_id;
@@ -40,28 +41,28 @@ export function ClienteConviteSection({ cliente, onUpdate }: Props) {
     setSaving(false);
   };
 
-  const handleSendInvite = async () => {
-    if (!user || !email.trim()) return;
+  const handleGenerateLink = async () => {
+    if (!user) return;
     setSaving(true);
 
     try {
-      // Save email if not saved yet
-      await supabase
-        .from('clientes')
-        .update({ 
-          email: email.trim().toLowerCase(),
-          invited_by: user.id,
-          invitation_sent_at: new Date().toISOString(),
-        })
-        .eq('id', cliente.id);
+      if (email.trim()) {
+        await supabase
+          .from('clientes')
+          .update({ 
+            email: email.trim().toLowerCase(),
+            invited_by: user.id,
+            invitation_sent_at: new Date().toISOString(),
+          })
+          .eq('id', cliente.id);
+      }
 
-      // Create invitation token
       const { data: convite, error } = await supabase
         .from('co_convites')
         .insert({
           cliente_id: cliente.id,
           terapeuta_id: user.id,
-          email: email.trim().toLowerCase(),
+          email: email.trim().toLowerCase() || null,
         })
         .select('token')
         .single();
@@ -70,7 +71,7 @@ export function ClienteConviteSection({ cliente, onUpdate }: Props) {
 
       const link = `${window.location.origin}/aceitar-convite?token=${convite.token}`;
       setInviteLink(link);
-      toast.success('Convite gerado! Copie o link e envie para sua cliente.');
+      toast.success('Link de convite gerado!');
       onUpdate();
     } catch (err) {
       console.error(err);
@@ -84,6 +85,41 @@ export function ClienteConviteSection({ cliente, onUpdate }: Props) {
     if (inviteLink) {
       navigator.clipboard.writeText(inviteLink);
       toast.success('Link copiado!');
+    }
+  };
+
+  const sendViaWhatsApp = () => {
+    if (!inviteLink) return;
+    const nomeCliente = cliente.nome || 'querida';
+    const message = encodeURIComponent(
+      `🌿 Olá, ${nomeCliente}!\n\nPreparei um espaço especial para você — o Jardim da Heroína.\n\nÉ um lugar seguro de integração e continuidade do seu processo terapêutico.\n\nAcesse aqui: ${inviteLink}\n\nVocê precisará criar uma conta para entrar. 💚`
+    );
+    window.open(`https://wa.me/?text=${message}`, '_blank');
+    toast.success('WhatsApp aberto!');
+  };
+
+  const sendViaEmail = async () => {
+    if (!inviteLink || !email.trim()) return;
+    setSendingEmail(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('send-client-invitation', {
+        body: {
+          cliente_id: cliente.id,
+          email: email.trim().toLowerCase(),
+          nome_cliente: cliente.nome || undefined,
+        },
+      });
+
+      if (error) throw error;
+
+      toast.success('Email de convite enviado!');
+      onUpdate();
+    } catch (err) {
+      console.error(err);
+      toast.error('Erro ao enviar email. Verifique se o serviço de email está configurado.');
+    } finally {
+      setSendingEmail(false);
     }
   };
 
@@ -115,8 +151,8 @@ export function ClienteConviteSection({ cliente, onUpdate }: Props) {
       </CardHeader>
       <CardContent className="space-y-3">
         <p className="text-xs text-muted-foreground">
-          Informe o email da cliente para gerar um link de convite. 
-          Ao aceitar, ela terá acesso ao seu próprio Jardim da Heroína.
+          Informe o email da cliente e gere um link personalizado. 
+          Envie por WhatsApp, email ou copie o link.
         </p>
 
         <div className="space-y-2">
@@ -129,7 +165,7 @@ export function ClienteConviteSection({ cliente, onUpdate }: Props) {
               placeholder="cliente@email.com"
               className="flex-1"
             />
-            {!hasEmail && (
+            {!hasEmail && email.trim() && (
               <Button size="sm" variant="outline" onClick={handleSaveEmail} disabled={saving || !email.trim()}>
                 Salvar
               </Button>
@@ -137,36 +173,71 @@ export function ClienteConviteSection({ cliente, onUpdate }: Props) {
           </div>
         </div>
 
-        {email.trim() && (
+        {!inviteLink && (
           <Button
-            onClick={handleSendInvite}
+            onClick={handleGenerateLink}
             disabled={saving}
             className="w-full gap-2 bg-emerald-600 hover:bg-emerald-700"
           >
             {saving ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              <Send className="w-4 h-4" />
+              <Link2 className="w-4 h-4" />
             )}
             Gerar Link de Convite
           </Button>
         )}
 
         {inviteLink && (
-          <div className="rounded-lg bg-muted/30 p-3 space-y-2">
+          <div className="rounded-lg bg-muted/30 p-3 space-y-3">
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="text-[10px] border-emerald-500/30 text-emerald-400">
-                Link gerado
+                Link personalizado gerado
               </Badge>
             </div>
-            <p className="text-[10px] text-muted-foreground break-all font-mono">{inviteLink}</p>
-            <Button size="sm" variant="outline" onClick={copyLink} className="gap-1 w-full">
-              <Copy className="w-3 h-3" />
-              Copiar link
-            </Button>
+            <p className="text-[10px] text-muted-foreground break-all font-mono bg-background/50 p-2 rounded">
+              {inviteLink}
+            </p>
+
+            <div className="grid grid-cols-3 gap-2">
+              <Button size="sm" variant="outline" onClick={copyLink} className="gap-1 text-xs">
+                <Copy className="w-3 h-3" />
+                Copiar
+              </Button>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={sendViaWhatsApp} 
+                className="gap-1 text-xs text-green-400 border-green-500/30 hover:bg-green-500/10"
+              >
+                <MessageCircle className="w-3 h-3" />
+                WhatsApp
+              </Button>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={sendViaEmail} 
+                disabled={sendingEmail || !email.trim()}
+                className="gap-1 text-xs"
+                title={!email.trim() ? 'Informe o email para enviar' : ''}
+              >
+                {sendingEmail ? (
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                ) : (
+                  <Mail className="w-3 h-3" />
+                )}
+                Email
+              </Button>
+            </div>
+
+            {!email.trim() && (
+              <p className="text-[10px] text-amber-400/80 italic">
+                Informe o email acima para habilitar o envio por email.
+              </p>
+            )}
+
             <p className="text-[10px] text-muted-foreground italic">
-              Envie este link para sua cliente por WhatsApp, email ou como preferir. 
-              Ela precisará criar uma conta para acessar o Jardim.
+              Ao acessar o link, a cliente criará sua conta e terá acesso ao Jardim da Heroína.
             </p>
           </div>
         )}
