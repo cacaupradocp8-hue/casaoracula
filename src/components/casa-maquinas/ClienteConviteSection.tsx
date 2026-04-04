@@ -71,7 +71,7 @@ export function ClienteConviteSection({ cliente, onUpdate }: Props) {
 
       if (error) throw error;
 
-      const link = `${window.location.origin}/aceitar-convite?token=${convite.token}`;
+      const link = `${SITE_URL}/aceitar-convite?token=${convite.token}`;
       setInviteLink(link);
       toast.success('Link de convite gerado!');
       onUpdate();
