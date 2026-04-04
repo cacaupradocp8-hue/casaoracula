@@ -93,10 +93,10 @@ export function ClienteConviteSection({ cliente, onUpdate }: Props) {
   const sendViaWhatsApp = () => {
     if (!inviteLink) return;
     const nomeCliente = cliente.nome || 'querida';
-    const message = encodeURIComponent(
-      `🌿 Olá, ${nomeCliente}!\n\nPreparei um espaço especial para você — o Jardim da Heroína.\n\nÉ um lugar seguro de integração e continuidade do seu processo terapêutico.\n\nAcesse aqui: ${inviteLink}\n\nVocê precisará criar uma conta para entrar. 💚`
-    );
-    window.open(`https://wa.me/?text=${message}`, '_blank');
+    const text = `🌿 Olá, ${nomeCliente}!\n\nPreparei um espaço especial para você — o Jardim da Heroína.\n\nÉ um lugar seguro de integração e continuidade do seu processo terapêutico.\n\nAcesse aqui: ${inviteLink}\n\nVocê precisará criar uma conta para entrar. 💚`;
+    const encoded = encodeURIComponent(text);
+    const url = `https://api.whatsapp.com/send?text=${encoded}`;
+    window.open(url, '_blank');
     toast.success('WhatsApp aberto!');
   };
 
