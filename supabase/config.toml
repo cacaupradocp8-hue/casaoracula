@@ -1,76 +1,55 @@
 project_id = "pvjiznbfwtjqmpeiqqzk"
 
-[functions.rockty-webhook]
-verify_jwt = false
-
-[functions.syntheia-generate]
-verify_jwt = false
-
-[functions.generate-oracle-image]
-verify_jwt = false
-
-[functions.generate-labirinto-image]
-verify_jwt = false
-
-[functions.labirinto-leitura]
-verify_jwt = false
-
-[functions.ai-chat]
-verify_jwt = false
-
-[functions.check-access-expiration]
-verify_jwt = false
-
-[functions.send-retention-emails]
-verify_jwt = false
-
-[functions.generate-retention-notifications]
-verify_jwt = false
-
-[functions.cloudflare-video-token]
-verify_jwt = false
-
-[functions.generate-labirinto-roteiro]
-verify_jwt = false
-
-[functions.generate-clinical-narrative]
-verify_jwt = false
-
-[functions.syntheia-chat]
-verify_jwt = false
-
-[functions.generate-portal-content]
-verify_jwt = false
-
-[functions.revise-portal-content]
-verify_jwt = false
-
-[functions.ethical-review-content]
-verify_jwt = false
-
-[functions.studio-generate-episode]
-verify_jwt = false
-
-[functions.studio-tts]
-verify_jwt = false
-
-[functions.studio-rss]
-verify_jwt = false
-
-[functions.studio-merge-audio]
-verify_jwt = false
-
-[functions.estudio-gerar-estrutura]
-verify_jwt = false
-
-[functions.estudio-gerar-infografico]
-verify_jwt = false
-
-[functions.bussola-onirica]
-verify_jwt = false
-
-[functions.gerar-semana-clube]
-verify_jwt = false
-
-[functions.process-email-queue]
-verify_jwt = true
+[functions]
+  [functions.ai-chat]
+    verify_jwt = false
+  [functions.auth-email-hook]
+    verify_jwt = false
+  [functions.bussola-onirica]
+    verify_jwt = false
+  [functions.check-access-expiration]
+    verify_jwt = false
+  [functions.cloudflare-video-token]
+    verify_jwt = false
+  [functions.estudio-gerar-estrutura]
+    verify_jwt = false
+  [functions.estudio-gerar-infografico]
+    verify_jwt = false
+  [functions.ethical-review-content]
+    verify_jwt = false
+  [functions.generate-clinical-narrative]
+    verify_jwt = false
+  [functions.generate-labirinto-image]
+    verify_jwt = false
+  [functions.generate-labirinto-roteiro]
+    verify_jwt = false
+  [functions.generate-oracle-image]
+    verify_jwt = false
+  [functions.generate-portal-content]
+    verify_jwt = false
+  [functions.generate-retention-notifications]
+    verify_jwt = false
+  [functions.gerar-semana-clube]
+    verify_jwt = false
+  [functions.labirinto-leitura]
+    verify_jwt = false
+  [functions.process-email-queue]
+    verify_jwt = true
+  [functions.revise-portal-content]
+    verify_jwt = false
+  [functions.rockty-webhook]
+    verify_jwt = false
+  [functions.send-retention-emails]
+    verify_jwt = false
+  [functions.studio-generate-episode]
+    verify_jwt = false
+  [functions.studio-merge-audio]
+    verify_jwt = false
+  [functions.studio-rss]
+    verify_jwt = false
+  [functions.studio-tts]
+    verify_jwt = false
+  [functions.syntheia-chat]
+    verify_jwt = false
+  [functions.syntheia-generate]
+    verify_jwt = false
