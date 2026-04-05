@@ -79,9 +79,7 @@ export default function JardimPsiqueDetalhe() {
   const [saving, setSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
-  // Detect if coming from /casa/jardim
-  const isFromCasa = location.pathname.startsWith('/casa/jardim');
-  const backPath = isFromCasa ? '/casa/jardim' : '/jardim-da-psique';
+  const backPath = '/jardim-da-psique';
 
   useEffect(() => {
     const fetchData = async () => {

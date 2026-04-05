@@ -763,11 +763,7 @@ function AppRoutes() {
       />
       <Route
         path="/jardim-heroina-app"
-        element={
-          <ProtectedRoute>
-            <HeroinaAppPage />
-          </ProtectedRoute>
-        }
+        element={<Navigate to="/meu-jardim" replace />}
       />
       <Route
         path="/meu-jardim"
@@ -821,19 +817,11 @@ function AppRoutes() {
       />
       <Route
         path="/casa/jardim"
-        element={
-          <ProtectedRoute>
-            <CasaJardim />
-          </ProtectedRoute>
-        }
+        element={<Navigate to="/jardim-da-psique" replace />}
       />
       <Route
         path="/casa/jardim/:id"
-        element={
-          <ProtectedRoute>
-            <JardimPsiqueDetalhe />
-          </ProtectedRoute>
-        }
+        element={<RedirectWithParams to="/jardim-da-psique/:id" />}
       />
       {/* Formação Orácula - Public sales page */}
       <Route
