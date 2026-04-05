@@ -14,6 +14,8 @@ export interface PublicacaoCanteiro {
   exibicao_anonima: boolean;
   created_at: string;
   source_entry_id: string | null;
+  entry_type: string | null;
+  published_title: string | null;
 }
 
 export function useMinhasPublicacoesCanteiro() {
