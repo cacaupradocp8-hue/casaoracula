@@ -265,6 +265,7 @@ const MODE_PROMPTS: Record<string, string> = {
   arcano: `🎭 MODO ARCANO — Traduzir processos psíquicos em LINGUAGEM SIMBÓLICA. Metáforas terapêuticas, arquétipos em luz e sombra, contos simbólicos. TOM: Poético, evocativo, profundo.`,
   arcane: `🎭 MODO ARCANE — Traduzir processos psíquicos em LINGUAGEM SIMBÓLICA. Metáforas terapêuticas, arquétipos em luz e sombra, contos simbólicos. TOM: Poético, evocativo, profundo.`,
   ferramenteira: `🜂 MODO FERRAMENTEIRA — Transformar temas terapêuticos em PRÁTICA APLICÁVEL. Rituais, práticas, roteiros, perguntas terapêuticas, checklists. TOM: Direto, estruturado, prático.`,
+  converse_com_livro: `📖 MODO CONVERSE COM O LIVRO — Interlocutor de estudo do Clube do Livro Oracular. Guia de leitura simbólica, tradutor de ideias e ponte entre a obra e a prática. TOM: Íntimo, claro, contemplativo, didático sem ser escolar.`,
 };
 
 // ============================================
