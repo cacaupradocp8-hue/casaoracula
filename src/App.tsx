@@ -1813,11 +1813,11 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/7-vozes/mapa" element={<ProtectedRoute minPortal="oracula"><VozesMapaPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/7-vozes/tabela" element={<ProtectedRoute minPortal="oracula"><VozesTabelaPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/7-vozes/:vozId" element={<ProtectedRoute minPortal="oracula"><VozDetalhePage /></ProtectedRoute>} />
-        <Route path="/casa-das-maquinas/oraculo" element={<ProtectedRoute minPortal="oracula"><Oraculos /></ProtectedRoute>} />
-        <Route path="/casa-das-maquinas/oraculo/:oracleSlug" element={<ProtectedRoute minPortal="oracula"><OracleHome /></ProtectedRoute>} />
-        <Route path="/casa-das-maquinas/oraculo/:oracleSlug/tirar" element={<ProtectedRoute minPortal="oracula"><OracleDraw /></ProtectedRoute>} />
-        <Route path="/casa-das-maquinas/oraculo/:oracleSlug/historico" element={<ProtectedRoute minPortal="oracula"><OracleHistory /></ProtectedRoute>} />
-        <Route path="/casa-das-maquinas/oraculo/:oracleSlug/biblioteca" element={<ProtectedRoute minPortal="oracula"><OracleCardLibrary /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/oraculo" element={<Navigate to="/oraculos" replace />} />
+        <Route path="/casa-das-maquinas/oraculo/:oracleSlug" element={<OracleRedirect />} />
+        <Route path="/casa-das-maquinas/oraculo/:oracleSlug/tirar" element={<OracleRedirect suffix="/tirar" />} />
+        <Route path="/casa-das-maquinas/oraculo/:oracleSlug/historico" element={<OracleRedirect suffix="/historico" />} />
+        <Route path="/casa-das-maquinas/oraculo/:oracleSlug/biblioteca" element={<OracleRedirect suffix="/biblioteca" />} />
         <Route path="/casa-das-maquinas/ferramentas/dialogo-partes" element={<Navigate to="/casa-das-maquinas/ferramentas" replace />} />
         <Route path="/casa-das-maquinas/ferramentas/mapa-transformacao" element={<Navigate to="/casa-das-maquinas/ferramentas" replace />} />
         <Route path="/casa-das-maquinas/ferramentas/ritual-passagem" element={<Navigate to="/casa-das-maquinas/ferramentas" replace />} />
