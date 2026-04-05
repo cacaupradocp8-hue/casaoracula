@@ -6,7 +6,7 @@
  import { useState, useCallback } from 'react';
  import { supabase } from '@/integrations/supabase/client';
  import { useAuth } from '@/contexts/AuthContext';
- import { sendMessageToSyntheia, SyntheiaChatMode, ChatMessage } from '@/services/syntheiaChat';
+ import { sendMessageToSyntheia, SyntheiaChatMode, ChatMessage, RoutingContext } from '@/services/syntheiaChat';
  
  interface ConversationContext {
    quizResultId?: string;
@@ -22,6 +22,7 @@
    voiceId?: string;
    context?: ConversationContext;
    autoCreateConversation?: boolean;
+   routingContext?: RoutingContext;
  }
  
  interface Message {
@@ -82,7 +83,6 @@
      setIsLoading(true);
      setError(null);
  
-     // Add user message immediately
      const userMessage: Message = {
        id: `user-${Date.now()}`,
        role: 'user',
@@ -92,25 +92,23 @@
      setMessages(prev => [...prev, userMessage]);
  
      try {
-       // Ensure we have a conversation
        let convId = conversationId;
        if (!convId && user) {
          convId = await createConversation();
        }
  
-       // Build message history for API
        const apiMessages: ChatMessage[] = messages.map(m => ({
          role: m.role,
          content: m.content,
        }));
        apiMessages.push({ role: 'user', content: content.trim() });
  
-       // Call Syntheia API
        const response = await sendMessageToSyntheia(
          mode,
          apiMessages,
-           options.context,
-           options.context?.voicePrompt
+         options.context,
+         options.context?.voicePrompt,
+         options.routingContext
        );
  
        const assistantMessage: Message = {
@@ -144,23 +142,19 @@
        console.error('[useSyntheiaChat] Error sending message:', err);
        const errorMsg = err instanceof Error ? err.message : 'Erro ao enviar mensagem';
        setError(errorMsg);
-       
-       // Remove the user message on error
        setMessages(prev => prev.filter(m => m.id !== userMessage.id));
        return null;
      } finally {
        setIsLoading(false);
      }
-   }, [conversationId, messages, mode, options.context, user, createConversation]);
+   }, [conversationId, messages, mode, options.context, options.routingContext, user, createConversation]);
  
-   // Clear conversation
    const clearConversation = useCallback(() => {
      setConversationId(null);
      setMessages([]);
      setError(null);
    }, []);
  
-   // Add a welcome message
    const addWelcomeMessage = useCallback((content: string) => {
      const welcomeMsg: Message = {
        id: 'welcome',

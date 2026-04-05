@@ -43,6 +43,7 @@ export function TherabotWidget() {
       voicePrompt: config.voicePrompt,
       categoria: context.area,
     },
+    routingContext: config.routingContext,
   });
 
   // Transition message on area change (session memory)
