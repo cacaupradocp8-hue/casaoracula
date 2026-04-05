@@ -17211,6 +17211,111 @@ export type Database = {
           },
         ]
       }
+      student_learning_events: {
+        Row: {
+          action_type: string
+          context_area: string
+          created_at: string
+          id: string
+          metadata_short: Json | null
+          object_id: string | null
+          object_type: string | null
+          user_id: string
+        }
+        Insert: {
+          action_type: string
+          context_area: string
+          created_at?: string
+          id?: string
+          metadata_short?: Json | null
+          object_id?: string | null
+          object_type?: string | null
+          user_id: string
+        }
+        Update: {
+          action_type?: string
+          context_area?: string
+          created_at?: string
+          id?: string
+          metadata_short?: Json | null
+          object_id?: string | null
+          object_type?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      student_learning_progress: {
+        Row: {
+          consistency_pattern: string | null
+          current_book_id: string | null
+          current_bottleneck: string | null
+          current_cycle_id: string | null
+          current_station: string | null
+          current_track: string | null
+          engagement_level: string | null
+          last_access_at: string | null
+          learning_pattern: string | null
+          lessons_completed: number | null
+          pedagogical_signal: string | null
+          practices_completed: number | null
+          practices_started: number | null
+          progress_percent: number | null
+          questions_to_ai_count: number | null
+          ready_for_next_step: boolean | null
+          reflections_count: number | null
+          suggested_next_step: string | null
+          training_cases_completed: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          consistency_pattern?: string | null
+          current_book_id?: string | null
+          current_bottleneck?: string | null
+          current_cycle_id?: string | null
+          current_station?: string | null
+          current_track?: string | null
+          engagement_level?: string | null
+          last_access_at?: string | null
+          learning_pattern?: string | null
+          lessons_completed?: number | null
+          pedagogical_signal?: string | null
+          practices_completed?: number | null
+          practices_started?: number | null
+          progress_percent?: number | null
+          questions_to_ai_count?: number | null
+          ready_for_next_step?: boolean | null
+          reflections_count?: number | null
+          suggested_next_step?: string | null
+          training_cases_completed?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          consistency_pattern?: string | null
+          current_book_id?: string | null
+          current_bottleneck?: string | null
+          current_cycle_id?: string | null
+          current_station?: string | null
+          current_track?: string | null
+          engagement_level?: string | null
+          last_access_at?: string | null
+          learning_pattern?: string | null
+          lessons_completed?: number | null
+          pedagogical_signal?: string | null
+          practices_completed?: number | null
+          practices_started?: number | null
+          progress_percent?: number | null
+          questions_to_ai_count?: number | null
+          ready_for_next_step?: boolean | null
+          reflections_count?: number | null
+          suggested_next_step?: string | null
+          training_cases_completed?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       studio_episodes: {
         Row: {
           audio_final_url: string | null
@@ -19423,6 +19528,35 @@ export type Database = {
         }
         Relationships: []
       }
+      v_student_tracking: {
+        Row: {
+          consistency_pattern: string | null
+          current_book_id: string | null
+          current_bottleneck: string | null
+          current_cycle_id: string | null
+          current_station: string | null
+          current_track: string | null
+          email: string | null
+          engagement_level: string | null
+          last_access_at: string | null
+          learning_pattern: string | null
+          lessons_completed: number | null
+          nome: string | null
+          pedagogical_signal: string | null
+          portal: Database["public"]["Enums"]["portal_type"] | null
+          practices_completed: number | null
+          practices_started: number | null
+          progress_percent: number | null
+          questions_to_ai_count: number | null
+          ready_for_next_step: boolean | null
+          reflections_count: number | null
+          suggested_next_step: string | null
+          training_cases_completed: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       accept_client_invitation: { Args: { _token: string }; Returns: Json }
@@ -19596,6 +19730,10 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
+      }
+      refresh_student_progress: {
+        Args: { _user_id: string }
+        Returns: undefined
       }
       update_cidadela_from_session: {
         Args: {
