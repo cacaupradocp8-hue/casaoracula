@@ -2,8 +2,9 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 // ============================================
-// SYNTHEIA CHAT — Núcleo Orquestrador
-// Edge Function com roteamento de skills
+// SYNTHEIA CHAT — Núcleo Orquestrador v2
+// Camada de Execução com Decisão, Roteamento,
+// Pipelines e Governança Segura
 // ============================================
 
 const corsHeaders = {
@@ -12,7 +13,101 @@ const corsHeaders = {
 };
 
 // ============================================
-// SYNTHEIA CORE PROMPT
+// 1. TYPES
+// ============================================
+
+interface ChatMessage {
+  role: "user" | "assistant" | "system";
+  content: string;
+}
+
+type TipoUsuaria = "visitante" | "cliente" | "aluna" | "terapeuta";
+
+type AreaPrincipal =
+  | "jardim-da-heroina" | "jardim-da-psique" | "casa-das-maquinas"
+  | "sessao" | "treinamento" | "biblioteca" | "clube-do-livro"
+  | "oraculos" | "onboarding" | "geral";
+
+type SubArea =
+  | "praticas" | "acompanhamento" | "leitura" | "mapa-vivo"
+  | "jardim-oficio" | "evolucao-clinica" | "contos" | string;
+
+type ModoEspecial = "sessao" | "estudo" | "livro" | "cliente" | "terapeuta" | null;
+
+type Intencao =
+  | "navegacao" | "explicacao_aprendizado" | "reflexao_simbolica"
+  | "apoio_clinico" | "leitura_jornada" | "conversa_material_fonte"
+  | "geracao_conteudo" | "sintese" | "sugestao_proximo_passo";
+
+type Complexidade = "baixa" | "media" | "alta";
+type Risco = "baixo" | "moderado" | "sensivel";
+type ModoExecucao = "direct_response" | "single_skill" | "pipeline";
+type SkillKey =
+  | "guardiao_jornada" | "arquiteto_cidade" | "arquiteto_fluxos"
+  | "engenheiro_dados" | "alquimista_conteudo" | "curadora_podcast"
+  | "designer_cartografia" | "estrategista_gamificacao" | "modo_livro";
+
+type PipelineKey = "leitura_jornada" | "conducao_clinica" | "mapa_simbolico" | "clube_livro" | "producao_conteudo";
+
+interface ClassifiedContext {
+  tipoUsuaria: TipoUsuaria;
+  area: AreaPrincipal;
+  subArea: SubArea;
+  modoEspecial: ModoEspecial;
+}
+
+interface ClassifiedIntent {
+  intencao: Intencao;
+  complexidade: Complexidade;
+  risco: Risco;
+}
+
+interface ExecutionPlan {
+  mode: ModoExecucao;
+  skills: SkillKey[];
+  pipeline: PipelineKey | null;
+}
+
+interface MinimalPayload {
+  tipoUsuaria: TipoUsuaria;
+  area: AreaPrincipal;
+  subArea: SubArea;
+  modoEspecial: ModoEspecial;
+  contextSnippet: Record<string, unknown>;
+}
+
+interface TraceLog {
+  timestamp: string;
+  userId: string;
+  tipoUsuaria: TipoUsuaria;
+  area: AreaPrincipal;
+  intencao: Intencao;
+  modoExecucao: ModoExecucao;
+  skills: string[];
+  pipeline: string | null;
+  status: "success" | "error";
+  latencyMs: number;
+}
+
+interface FrontendRoutingContext {
+  tipoUsuario?: string;
+  area?: string;
+  subArea?: string;
+  module?: string;
+  pageName?: string;
+  intencao?: string;
+}
+
+interface SyntheiaChatRequest {
+  mode: string;
+  messages: ChatMessage[];
+  extra_context?: Record<string, unknown>;
+  voice_prompt?: string;
+  routing_context?: FrontendRoutingContext;
+}
+
+// ============================================
+// 2. SYNTHEIA CORE PROMPT
 // ============================================
 
 const SYNTHEIA_CORE = `🔷 IDENTIDADE DO SISTEMA
@@ -43,39 +138,15 @@ Sua função é:
 🔷 OBJETIVO CENTRAL
 
 Ajudar a usuária a sair de confusão → para clareza → para ação consciente.
-
 Você nunca entrega apenas reflexão.
 Você sempre conduz para organização interna ou movimento.
 
 🔷 CONTEXTO DO SISTEMA
 
 A Casa Orácula é um ecossistema terapêutico baseado em:
-• leitura simbólica
-• narrativa
-• estrutura psíquica feminina
-• prática clínica aplicada
+• leitura simbólica • narrativa • estrutura psíquica feminina • prática clínica aplicada
 
-Elementos do sistema:
-• Distritos da CidaDELA
-• Torres (estruturas de proteção)
-• Portas (limiares de transformação)
-• Arquétipos (forças psíquicas)
-• Travessias (processos guiados)
-
-🔷 TIPOS DE USUÁRIA
-
-1. Visitante — não conhece o método. Clareza simples. Foco: orientação + curiosidade.
-2. Cliente — em processo terapêutico. Foco: acolhimento + pequenos movimentos.
-3. Aluna — em formação. Foco: compreensão + aplicação.
-4. Terapeuta — usa o sistema profissionalmente. Foco: decisão clínica + estruturação.
-
-🔷 ANÁLISE DE CONTEXTO (OBRIGATÓRIO)
-
-Antes de responder, identifique:
-• onde a usuária está (rota/módulo)
-• qual o objetivo daquele espaço
-• nível de profundidade necessário
-• se é momento de explorar ou direcionar
+Elementos: Distritos da CidaDELA, Torres, Portas, Arquétipos, Travessias.
 
 🔷 FORMATO DE RESPOSTA
 
@@ -98,318 +169,471 @@ Antes de responder, identifique:
 • Perdida no app → orientar navegação
 • Terapeuta → estruturar raciocínio clínico
 
-🔷 NÍVEIS DE PROFUNDIDADE
-
-• baixa → visitante | média → cliente | alta → aluna | estratégica → terapeuta
-
-Nunca entregue profundidade maior do que a usuária consegue sustentar.
-
 🔷 PROIBIÇÕES
 
-• Não diagnosticar
-• Não afirmar verdades absolutas
-• Não induzir dependência
-• Não criar interpretações sem base
-• Não substituir a terapeuta
-• Não incentivar decisões de risco
-
-Se houver sinais de violência, autoagressão ou crise grave, oriente a buscar ajuda profissional.
-
-🔷 MEMÓRIA DE CONTEXTO
-
-Considerar: histórico recente, etapa da jornada, padrões repetidos.
-Se não houver contexto suficiente → pedir mais informação de forma simples.
-
-🔷 OBJETIVO FINAL
-
-A usuária deve sair com pelo menos um: ✔ clareza ✔ organização ✔ decisão ✔ ação`;
+• Não diagnosticar • Não afirmar verdades absolutas • Não induzir dependência
+• Não criar interpretações sem base • Não substituir a terapeuta
+Se houver sinais de violência, autoagressão ou crise grave, oriente a buscar ajuda profissional.`;
 
 // ============================================
-// MODE PROMPTS (linguagem / formato)
+// 3. MODE PROMPTS
 // ============================================
 
 const MODE_PROMPTS: Record<string, string> = {
-  arcano: `━━━━━━━━━━━━━━━━━━
-🎭 MODO ARCANO
-━━━━━━━━━━━━━━━━━━
-FUNÇÃO: Traduzir processos psíquicos em LINGUAGEM SIMBÓLICA.
-• Cria metáforas terapêuticas, arquétipos em luz e sombra, contos simbólicos, exercícios de imaginação.
-• NÃO estrutura produtos, roteiros clínicos longos ou técnica direta.
-TOM: Poético, evocativo, profundo.`,
-
-  arcane: `━━━━━━━━━━━━━━━━━━
-🎭 MODO ARCANE
-━━━━━━━━━━━━━━━━━━
-FUNÇÃO: Traduzir processos psíquicos em LINGUAGEM SIMBÓLICA.
-• Cria metáforas terapêuticas, arquétipos em luz e sombra, contos simbólicos, exercícios de imaginação.
-• NÃO estrutura produtos, roteiros clínicos longos ou técnica direta.
-TOM: Poético, evocativo, profundo.`,
-
-  ferramenteira: `━━━━━━━━━━━━━━━━━━
-🜂 MODO FERRAMENTEIRA
-━━━━━━━━━━━━━━━━━━
-FUNÇÃO: Transformar temas terapêuticos em PRÁTICA APLICÁVEL.
-• Cria rituais, práticas, roteiros de condução, perguntas terapêuticas, checklists.
-• NÃO cria produtos para vender, metáforas longas ou teoria excessiva.
-TOM: Direto, estruturado, prático.`,
+  arcano: `🎭 MODO ARCANO — Traduzir processos psíquicos em LINGUAGEM SIMBÓLICA. Metáforas terapêuticas, arquétipos em luz e sombra, contos simbólicos. TOM: Poético, evocativo, profundo.`,
+  arcane: `🎭 MODO ARCANE — Traduzir processos psíquicos em LINGUAGEM SIMBÓLICA. Metáforas terapêuticas, arquétipos em luz e sombra, contos simbólicos. TOM: Poético, evocativo, profundo.`,
+  ferramenteira: `🜂 MODO FERRAMENTEIRA — Transformar temas terapêuticos em PRÁTICA APLICÁVEL. Rituais, práticas, roteiros, perguntas terapêuticas, checklists. TOM: Direto, estruturado, prático.`,
 };
 
 // ============================================
-// SKILL DEFINITIONS
+// 4. SKILL DEFINITIONS
 // ============================================
 
 interface SkillDef {
   nome: string;
-  descricao: string;
   prompt: string;
   gatilhos: string[];
 }
 
-const SKILLS: Record<string, SkillDef> = {
+const SKILLS: Record<SkillKey, SkillDef> = {
   guardiao_jornada: {
     nome: "Guardião da Jornada Terapêutica",
-    descricao: "Leitura longitudinal, síntese da jornada, devolutiva, fechamento de ciclo",
-    prompt: `━━━━━━━━━━━━━━━━━━
-🛡️ SKILL: GUARDIÃO DA JORNADA TERAPÊUTICA
-━━━━━━━━━━━━━━━━━━
-Você está operando como Guardião da Jornada.
-Sua função é realizar leituras longitudinais: sintetizar a jornada da cliente, criar devolutivas e apoiar fechamentos de ciclo.
-• Observe padrões ao longo do tempo
-• Identifique movimentos psíquicos recorrentes
-• Crie sínteses que honrem o caminho percorrido
-• Sugira rituais de fechamento quando apropriado
-NÃO faça diagnósticos. NÃO substitua a terapeuta. Ofereça leitura, não conclusão.`,
-    gatilhos: ["sintese", "devolutiva", "fechamento", "jornada", "historico", "ciclo", "evolução"],
+    prompt: `🛡️ SKILL: GUARDIÃO DA JORNADA TERAPÊUTICA
+Leituras longitudinais: sintetizar jornada, devolutivas, fechamento de ciclo.
+• Observe padrões ao longo do tempo • Identifique movimentos psíquicos recorrentes
+• Crie sínteses que honrem o caminho • Sugira rituais de fechamento
+NÃO faça diagnósticos. Ofereça leitura, não conclusão.`,
+    gatilhos: ["sintese", "devolutiva", "fechamento", "jornada", "historico", "ciclo", "evolução", "resumo da jornada"],
   },
-
   arquiteto_cidade: {
     nome: "Arquiteto da Cidade Interior",
-    descricao: "Mapa simbólico, distritos, torres, portas, labirintos, geografia psíquica",
-    prompt: `━━━━━━━━━━━━━━━━━━
-🏛️ SKILL: ARQUITETO DA CIDADE INTERIOR
-━━━━━━━━━━━━━━━━━━
-Você está operando como Arquiteto da Cidade Interior.
-Sua função é trabalhar com a CidaDELA: distritos, torres, portas e labirintos como geografia psíquica.
-• Leia o mapa simbólico da cliente
-• Identifique distritos ativos, em tensão ou não explorados
-• Sugira travessias entre territórios
-• Relacione torres com mecanismos de proteção
-NÃO rotule. NÃO simplifique a cartografia. Ofereça leitura territorial.`,
+    prompt: `🏛️ SKILL: ARQUITETO DA CIDADE INTERIOR
+CidaDELA: distritos, torres, portas e labirintos como geografia psíquica.
+• Leia o mapa simbólico • Identifique distritos ativos/em tensão/não explorados
+• Sugira travessias entre territórios • Relacione torres com mecanismos de proteção
+NÃO rotule. Ofereça leitura territorial.`,
     gatilhos: ["cidadela", "distrito", "torre", "porta", "labirinto", "mapa", "territorio", "cartografia"],
   },
-
   arquiteto_fluxos: {
     nome: "Arquiteto de Fluxos Clínicos",
-    descricao: "Condução de sessão, próximo passo, fluxo clínico, onboarding e fechamento",
-    prompt: `━━━━━━━━━━━━━━━━━━
-🔄 SKILL: ARQUITETO DE FLUXOS CLÍNICOS
-━━━━━━━━━━━━━━━━━━
-Você está operando como Arquiteto de Fluxos Clínicos.
-Sua função é apoiar a condução terapêutica: estruturar sessões, sugerir próximos passos, organizar fluxos clínicos.
-• Sugira conduções baseadas no contexto
-• Organize roteiros de sessão (50 min, individual ou grupo)
-• Indique próximo passo metodológico
-• Apoie onboarding e fechamento de processos
+    prompt: `🔄 SKILL: ARQUITETO DE FLUXOS CLÍNICOS
+Condução terapêutica: estruturar sessões, próximos passos, fluxos clínicos.
+• Sugira conduções contextuais • Organize roteiros de sessão
+• Indique próximo passo • Apoie onboarding e fechamento
 NÃO decida pela terapeuta. Ofereça estrutura e opções.`,
-    gatilhos: ["sessao", "condução", "proximo passo", "roteiro", "onboarding", "encerramento", "fluxo clinico"],
+    gatilhos: ["sessao", "condução", "proximo passo", "roteiro", "onboarding", "encerramento", "fluxo clinico", "como conduzir"],
   },
-
   engenheiro_dados: {
     nome: "Engenheiro de Dados Simbólicos",
-    descricao: "Correlação de dados, mapa vivo, leitura estruturada, bússola simbólica",
-    prompt: `━━━━━━━━━━━━━━━━━━
-📊 SKILL: ENGENHEIRO DE DADOS SIMBÓLICOS
-━━━━━━━━━━━━━━━━━━
-Você está operando como Engenheiro de Dados Simbólicos.
-Sua função é correlacionar registros, sessões, ferramentas e padrões em leitura estruturada.
-• Cruze dados de diferentes ferramentas
-• Identifique padrões e recorrências
-• Construa leituras integradas baseadas em dados
-• Gere insights para a bússola simbólica
-NÃO invente dados. NÃO extrapole sem base. Trabalhe com o que existe.`,
+    prompt: `📊 SKILL: ENGENHEIRO DE DADOS SIMBÓLICOS
+Correlacionar registros, sessões, ferramentas e padrões em leitura estruturada.
+• Cruze dados de diferentes ferramentas • Identifique padrões e recorrências
+• Construa leituras integradas • Gere insights para a bússola
+NÃO invente dados. Trabalhe com o que existe.`,
     gatilhos: ["dados", "correlação", "padrão", "bussola", "mapa vivo", "insight", "registros", "estatistica"],
   },
-
   alquimista_conteudo: {
     nome: "Alquimista de Conteúdo Oracular",
-    descricao: "Transformar texto/reflexão em prática, carta, pergunta, microaula, insight",
-    prompt: `━━━━━━━━━━━━━━━━━━
-⚗️ SKILL: ALQUIMISTA DE CONTEÚDO ORACULAR
-━━━━━━━━━━━━━━━━━━
-Você está operando como Alquimista de Conteúdo Oracular.
-Sua função é transformar conteúdos simbólicos em experiências de aprendizagem.
+    prompt: `⚗️ SKILL: ALQUIMISTA DE CONTEÚDO ORACULAR
+Transformar conteúdos simbólicos em experiências de aprendizagem.
 Processo: 1) Extração do Símbolo 2) Tradução Psicológica 3) Aplicação Existencial 4) Transformação Pedagógica
-Formatos de saída: prática terapêutica, carta da semana, pergunta oracular, microaula, insight para comunidade.
-• Linguagem clara, simbólica e contemplativa
-• Nunca resumir o livro, nunca criar arquétipos-rótulo
+Formatos: prática terapêutica, carta, pergunta oracular, microaula, insight.
 NÃO use tom acadêmico. NÃO faça leitura literal.`,
-    gatilhos: ["conteudo", "pratica", "carta", "pergunta oracular", "microaula", "transformar", "reflexão"],
+    gatilhos: ["conteudo", "pratica", "carta", "pergunta oracular", "microaula", "transformar", "reflexão", "criar conteudo"],
   },
-
   curadora_podcast: {
     nome: "Curadora de Podcast Oracular",
-    descricao: "Transformar conteúdo em episódio/áudio contemplativo",
-    prompt: `━━━━━━━━━━━━━━━━━━
-🎙️ SKILL: CURADORA DE PODCAST ORACULAR
-━━━━━━━━━━━━━━━━━━
-Você está operando como Curadora de Podcast Oracular.
-Sua função é transformar conteúdo em roteiro de episódio/áudio contemplativo.
+    prompt: `🎙️ SKILL: CURADORA DE PODCAST ORACULAR
+Transformar conteúdo em roteiro de episódio/áudio contemplativo.
 Estrutura: abertura simbólica → contexto → reflexão → aplicação → pergunta contemplativa.
-• Linguagem falada e natural
-• Tom profundo sem ser acadêmico
-• Sem frases de efeito
+Linguagem falada e natural. Tom profundo sem ser acadêmico.
 NÃO resuma livros. NÃO conclua a experiência.`,
     gatilhos: ["podcast", "audio", "episodio", "roteiro audio", "gravação"],
   },
-
   designer_cartografia: {
     nome: "Designer de Cartografia Simbólica",
-    descricao: "Decisões de interface visual cartográfica/simbólica",
-    prompt: `━━━━━━━━━━━━━━━━━━
-🗺️ SKILL: DESIGNER DE CARTOGRAFIA SIMBÓLICA
-━━━━━━━━━━━━━━━━━━
-Você está operando como Designer de Cartografia Simbólica.
-Sua função é orientar decisões de UX/UI para mapas, mandalas e representações cartográficas.
-• Sugira representações visuais para estados psíquicos
-• Oriente paletas de cores simbólicas
-• Proponha interações significativas
+    prompt: `🗺️ SKILL: DESIGNER DE CARTOGRAFIA SIMBÓLICA
+UX/UI para mapas, mandalas e representações cartográficas.
+• Sugira representações visuais para estados psíquicos • Oriente paletas simbólicas
 NÃO crie código. Ofereça direção conceitual e visual.`,
     gatilhos: ["visual", "mapa visual", "mandala", "design cartografia", "interface mapa"],
   },
-
   estrategista_gamificacao: {
     nome: "Estrategista de Gamificação Terapêutica",
-    descricao: "Progressão, missões, emblemas, níveis, motivação simbólica",
-    prompt: `━━━━━━━━━━━━━━━━━━
-🎯 SKILL: ESTRATEGISTA DE GAMIFICAÇÃO TERAPÊUTICA
-━━━━━━━━━━━━━━━━━━
-Você está operando como Estrategista de Gamificação Terapêutica.
-Sua função é criar sistemas de progressão simbólica: missões, emblemas, marcos, desafios.
-• Gamificação a serviço do processo, não da performance
-• Progressão que honra o tempo psíquico
-• Motivação intrínseca, não competitiva
+    prompt: `🎯 SKILL: ESTRATEGISTA DE GAMIFICAÇÃO TERAPÊUTICA
+Progressão simbólica: missões, emblemas, marcos, desafios.
+Gamificação a serviço do processo, não da performance.
+Progressão que honra o tempo psíquico. Motivação intrínseca.
 NÃO trivialize o processo. NÃO crie métricas de eficiência emocional.`,
     gatilhos: ["gamificação", "progressão", "missão", "emblema", "nivel", "desafio", "marco"],
   },
-
   modo_livro: {
     nome: "Converse com o Livro",
-    descricao: "Conversa ancorada em livro/ciclo/trecho do Clube do Livro",
-    prompt: `━━━━━━━━━━━━━━━━━━
-📖 SKILL: CONVERSE COM O LIVRO
-━━━━━━━━━━━━━━━━━━
-Você está operando no modo especializado de conversa com livro do Clube Oracular.
-Sua função é ser espelho simbólico entre a obra e a vida da usuária.
-• Não resuma o livro
-• Não repita o autor
-• Não use linguagem motivacional
-• Arquétipo é campo, não rótulo
-• Conecte a obra com a jornada interior
-• Permita dúvidas, reflexões e aprofundamento
-• Sugira práticas e perguntas contemplativas quando fizer sentido
+    prompt: `📖 SKILL: CONVERSE COM O LIVRO
+Modo especializado de conversa com livro do Clube Oracular.
+Espelho simbólico entre a obra e a vida da usuária.
+• Não resuma o livro • Não repita o autor • Arquétipo é campo, não rótulo
+• Conecte a obra com a jornada interior • Sugira práticas e perguntas contemplativas
 TOM: Contemplativo, profundo, respeitoso com a obra.`,
     gatilhos: ["livro", "leitura", "clube", "trecho", "capitulo", "autor", "obra"],
   },
 };
 
 // ============================================
-// SKILL ROUTING ENGINE
+// 5. PIPELINE DEFINITIONS
 // ============================================
 
-interface RoutingContext {
-  tipoUsuario?: string;
-  area?: string;
-  subArea?: string;
-  module?: string;
-  pageName?: string;
-  intencao?: string;
+const PIPELINES: Record<PipelineKey, { nome: string; skills: SkillKey[]; descricao: string }> = {
+  leitura_jornada: {
+    nome: "Leitura da Jornada",
+    skills: ["engenheiro_dados", "guardiao_jornada"],
+    descricao: "Correlacionar dados → síntese longitudinal → composição SINTHEYA",
+  },
+  conducao_clinica: {
+    nome: "Condução Clínica",
+    skills: ["arquiteto_fluxos", "guardiao_jornada"],
+    descricao: "Fluxo clínico → contexto da jornada → composição SINTHEYA",
+  },
+  mapa_simbolico: {
+    nome: "Mapa Simbólico",
+    skills: ["engenheiro_dados", "arquiteto_cidade"],
+    descricao: "Dados simbólicos → cartografia da CidaDELA → composição SINTHEYA",
+  },
+  clube_livro: {
+    nome: "Clube do Livro",
+    skills: ["modo_livro", "alquimista_conteudo"],
+    descricao: "Conversa com livro → transformação em prática/reflexão → composição SINTHEYA",
+  },
+  producao_conteudo: {
+    nome: "Produção de Conteúdo",
+    skills: ["alquimista_conteudo", "curadora_podcast"],
+    descricao: "Conteúdo oracular → roteiro de podcast → composição SINTHEYA",
+  },
+};
+
+// ============================================
+// 6. classifyUserContext()
+// ============================================
+
+function classifyUserContext(
+  frontendCtx: FrontendRoutingContext,
+  extraCtx: Record<string, unknown> | undefined
+): ClassifiedContext {
+  const tipo = frontendCtx.tipoUsuario || extraCtx?.tipoUsuario as string || "";
+  const areaRaw = frontendCtx.area || extraCtx?.area as string || "";
+  const subRaw = frontendCtx.subArea || extraCtx?.subArea as string || "";
+  const moduleRaw = frontendCtx.module || extraCtx?.module as string || "";
+
+  // Map tipo
+  let tipoUsuaria: TipoUsuaria = "visitante";
+  if (/terapeuta|facilitadora|mentora/i.test(tipo)) tipoUsuaria = "terapeuta";
+  else if (/aluna|estudante|formação/i.test(tipo)) tipoUsuaria = "aluna";
+  else if (/cliente|paciente/i.test(tipo)) tipoUsuaria = "cliente";
+
+  // Map area
+  const areaMap: Record<string, AreaPrincipal> = {
+    "jardim": "jardim-da-heroina", "heroina": "jardim-da-heroina", "meu-jardim": "jardim-da-heroina",
+    "psique": "jardim-da-psique", "jardim-psique": "jardim-da-psique",
+    "maquinas": "casa-das-maquinas", "casa-das-maquinas": "casa-das-maquinas", "clinico": "casa-das-maquinas",
+    "sessao": "sessao", "session": "sessao",
+    "treinamento": "treinamento", "training": "treinamento", "sala-treinamento": "treinamento",
+    "biblioteca": "biblioteca",
+    "clube": "clube-do-livro", "clube-do-livro": "clube-do-livro", "livro": "clube-do-livro",
+    "oraculo": "oraculos", "oraculos": "oraculos",
+    "onboarding": "onboarding",
+  };
+
+  let area: AreaPrincipal = "geral";
+  const combined = `${areaRaw} ${moduleRaw}`.toLowerCase();
+  for (const [key, val] of Object.entries(areaMap)) {
+    if (combined.includes(key)) { area = val; break; }
+  }
+
+  // SubArea
+  const subArea: SubArea = subRaw || "geral";
+
+  // Modo especial
+  let modoEspecial: ModoEspecial = null;
+  if (area === "sessao") modoEspecial = "sessao";
+  else if (area === "clube-do-livro") modoEspecial = "livro";
+  else if (area === "treinamento") modoEspecial = "estudo";
+  else if (tipoUsuaria === "terapeuta" && area === "casa-das-maquinas") modoEspecial = "terapeuta";
+  else if (tipoUsuaria === "cliente") modoEspecial = "cliente";
+
+  return { tipoUsuaria, area, subArea, modoEspecial };
 }
 
-type SkillKey = keyof typeof SKILLS;
+// ============================================
+// 7. classifyIntent()
+// ============================================
 
-function detectSkills(
-  lastMessage: string,
-  context: RoutingContext
+const INTENT_PATTERNS: { intencao: Intencao; patterns: RegExp[] }[] = [
+  { intencao: "navegacao", patterns: [/onde (fica|clico|encontro|acho)/i, /como (acesso|chego|navego|abro)/i, /qual (menu|botão|aba)/i, /me (leva|direciona)/i] },
+  { intencao: "sintese", patterns: [/sintetiz/i, /síntese/i, /resuma/i, /resumo/i, /panorama/i, /visão geral/i] },
+  { intencao: "leitura_jornada", patterns: [/jornada/i, /evolução/i, /historico/i, /devolutiva/i, /fechamento de ciclo/i, /caminho percorrido/i] },
+  { intencao: "apoio_clinico", patterns: [/sessão/i, /conduz/i, /próximo passo/i, /como atend/i, /supervisão/i, /caso clínico/i, /intervenção/i] },
+  { intencao: "conversa_material_fonte", patterns: [/livro/i, /o autor/i, /capítulo/i, /trecho/i, /a obra/i, /o que.*quis dizer/i] },
+  { intencao: "geracao_conteudo", patterns: [/crie|cria|gere|gera|produza|monte/i, /carta/i, /podcast/i, /microaula/i, /roteiro/i, /prática/i] },
+  { intencao: "reflexao_simbolica", patterns: [/o que significa/i, /simbolismo/i, /arquétipo/i, /sombra/i, /espelho/i, /torre/i, /distrito/i, /portal/i] },
+  { intencao: "explicacao_aprendizado", patterns: [/o que é/i, /explique|explica/i, /como funciona/i, /diferença entre/i, /conceito/i, /método/i] },
+  { intencao: "sugestao_proximo_passo", patterns: [/o que faço agora/i, /por onde começo/i, /me sugir/i, /recomend/i, /qual ferramenta/i] },
+];
+
+function classifyIntent(message: string, ctx: ClassifiedContext): ClassifiedIntent {
+  const msg = message.toLowerCase();
+
+  // Detect intencao
+  let intencao: Intencao = "reflexao_simbolica"; // default
+  for (const { intencao: i, patterns } of INTENT_PATTERNS) {
+    if (patterns.some(p => p.test(msg))) { intencao = i; break; }
+  }
+
+  // Context overrides
+  if (ctx.modoEspecial === "livro" && intencao === "reflexao_simbolica") intencao = "conversa_material_fonte";
+  if (ctx.modoEspecial === "sessao" && intencao === "reflexao_simbolica") intencao = "apoio_clinico";
+
+  // Complexidade
+  let complexidade: Complexidade = "baixa";
+  if (msg.length > 300) complexidade = "alta";
+  else if (msg.length > 100) complexidade = "media";
+  if (["leitura_jornada", "apoio_clinico", "geracao_conteudo"].includes(intencao)) {
+    complexidade = complexidade === "baixa" ? "media" : "alta";
+  }
+
+  // Risco
+  let risco: Risco = "baixo";
+  if (["apoio_clinico", "leitura_jornada"].includes(intencao)) risco = "moderado";
+  if (ctx.tipoUsuaria === "terapeuta" && intencao === "apoio_clinico") risco = "sensivel";
+  if (/suicid|autolesão|violência|abuso|crise/i.test(msg)) risco = "sensivel";
+
+  return { intencao, complexidade, risco };
+}
+
+// ============================================
+// 8. resolveExecutionMode() + resolveSkills()
+// ============================================
+
+function resolveSkillsFromIntent(
+  intent: ClassifiedIntent,
+  ctx: ClassifiedContext,
+  message: string
 ): SkillKey[] {
-  const msg = lastMessage.toLowerCase();
-  const detected: SkillKey[] = [];
+  const skills: Set<SkillKey> = new Set();
+  const msg = message.toLowerCase();
 
-  // 1. Context-based routing (área/módulo)
-  if (context.area === 'clube' || context.module === 'clube') {
-    detected.push('modo_livro');
-  }
+  // 1. Context-forced skills
+  if (ctx.modoEspecial === "livro" || ctx.area === "clube-do-livro") skills.add("modo_livro");
+  if (ctx.modoEspecial === "sessao") skills.add("arquiteto_fluxos");
+  if (ctx.area === "casa-das-maquinas" && ctx.subArea === "mapa-vivo") skills.add("engenheiro_dados");
 
-  // 2. Intent-based routing
-  if (context.intencao === 'conducao_clinica' || context.intencao === 'apoio_clinico') {
-    detected.push('arquiteto_fluxos');
-  }
-  if (context.intencao === 'leitura_jornada') {
-    detected.push('guardiao_jornada');
-  }
-  if (context.intencao === 'geracao_conteudo') {
-    detected.push('alquimista_conteudo');
-  }
+  // 2. Intent-based mapping
+  const intentSkillMap: Record<Intencao, SkillKey[]> = {
+    navegacao: [],
+    explicacao_aprendizado: [],
+    reflexao_simbolica: [],
+    apoio_clinico: ["arquiteto_fluxos"],
+    leitura_jornada: ["engenheiro_dados", "guardiao_jornada"],
+    conversa_material_fonte: ["modo_livro"],
+    geracao_conteudo: ["alquimista_conteudo"],
+    sintese: ["guardiao_jornada"],
+    sugestao_proximo_passo: ["arquiteto_fluxos"],
+  };
 
-  // 3. Message keyword matching
+  for (const s of intentSkillMap[intent.intencao] || []) skills.add(s);
+
+  // 3. Keyword-based detection (only if not already covered)
   for (const [key, skill] of Object.entries(SKILLS)) {
-    if (detected.includes(key as SkillKey)) continue;
+    if (skills.has(key as SkillKey)) continue;
     for (const gatilho of skill.gatilhos) {
-      if (msg.includes(gatilho)) {
-        detected.push(key as SkillKey);
-        break;
+      if (msg.includes(gatilho)) { skills.add(key as SkillKey); break; }
+    }
+  }
+
+  // 4. Pipeline detection for combo patterns
+  if (skills.has("modo_livro") && (msg.includes("podcast") || msg.includes("audio"))) {
+    skills.add("alquimista_conteudo");
+    skills.add("curadora_podcast");
+  }
+  if (skills.has("alquimista_conteudo") && (msg.includes("podcast") || msg.includes("audio"))) {
+    skills.add("curadora_podcast");
+  }
+
+  return Array.from(skills);
+}
+
+function resolvePipeline(skills: SkillKey[], intent: ClassifiedIntent): PipelineKey | null {
+  if (skills.length < 2) return null;
+
+  // Check if detected skills match a known pipeline
+  for (const [key, pipeline] of Object.entries(PIPELINES)) {
+    const pipeSkills = new Set(pipeline.skills);
+    const matchCount = skills.filter(s => pipeSkills.has(s)).length;
+    if (matchCount >= pipeSkills.size) return key as PipelineKey;
+  }
+
+  // Intent-based pipeline fallback
+  if (intent.intencao === "leitura_jornada") return "leitura_jornada";
+  if (intent.intencao === "apoio_clinico" && skills.includes("guardiao_jornada")) return "conducao_clinica";
+
+  return null;
+}
+
+function resolveExecutionMode(skills: SkillKey[]): ModoExecucao {
+  if (skills.length === 0) return "direct_response";
+  if (skills.length === 1) return "single_skill";
+  return "pipeline";
+}
+
+// ============================================
+// 9. buildMinimalPayload()
+// ============================================
+
+function buildMinimalPayload(
+  ctx: ClassifiedContext,
+  intent: ClassifiedIntent,
+  extraCtx: Record<string, unknown> | undefined,
+  skills: SkillKey[]
+): MinimalPayload {
+  const safeFields = new Set([
+    "pageName", "module", "bookTitle", "bookAuthor", "cycleTheme",
+    "stationName", "currentTool", "clientCodinome",
+  ]);
+
+  const contextSnippet: Record<string, unknown> = {};
+
+  if (extraCtx) {
+    for (const [key, val] of Object.entries(extraCtx)) {
+      if (safeFields.has(key) && val !== undefined && val !== null) {
+        contextSnippet[key] = val;
       }
     }
   }
 
-  return detected;
-}
-
-function resolveResponseMode(skills: SkillKey[]): 'direto' | 'skill_unica' | 'pipeline' {
-  if (skills.length === 0) return 'direto';
-  if (skills.length === 1) return 'skill_unica';
-  return 'pipeline';
-}
-
-function buildSkillPrompt(skills: SkillKey[]): string {
-  if (skills.length === 0) return '';
-
-  const parts = skills.map(key => SKILLS[key].prompt);
-
-  if (skills.length === 1) {
-    return `\n\n${parts[0]}`;
+  // For visitante, strip everything sensitive
+  if (ctx.tipoUsuaria === "visitante") {
+    delete contextSnippet.clientCodinome;
   }
 
-  return `\n\n━━━━━━━━━━━━━━━━━━
-🔗 PIPELINE DE SKILLS ATIVADAS
-━━━━━━━━━━━━━━━━━━
-Você está combinando múltiplas capacidades. Integre as seguintes skills em uma resposta coesa.
-A resposta final deve ser UNIFICADA — não separe por skill, componha como SINTHEYA.
+  // For non-terapeuta, never include clinical context
+  if (ctx.tipoUsuaria !== "terapeuta") {
+    delete contextSnippet.clientCodinome;
+  }
 
-${parts.join('\n\n')}
-
-IMPORTANTE: Sua resposta deve integrar todas as perspectivas acima em uma composição unificada.
-NÃO separe a resposta por skill. Componha como SINTHEYA.`;
+  return {
+    tipoUsuaria: ctx.tipoUsuaria,
+    area: ctx.area,
+    subArea: ctx.subArea,
+    modoEspecial: ctx.modoEspecial,
+    contextSnippet,
+  };
 }
 
 // ============================================
-// TYPES
+// 10. DEPTH CALIBRATION
 // ============================================
 
-interface ChatMessage {
-  role: "user" | "assistant" | "system";
-  content: string;
-}
-
-interface SyntheiaChatRequest {
-  mode: "arcano" | "arcane" | "ferramenteira";
-  messages: ChatMessage[];
-  extra_context?: Record<string, unknown>;
-  voice_prompt?: string;
-  routing_context?: RoutingContext;
+function getDepthInstruction(tipo: TipoUsuaria): string {
+  switch (tipo) {
+    case "visitante": return "PROFUNDIDADE BAIXA: linguagem acessível, sem jargão, foco em acolhimento e orientação simples.";
+    case "cliente": return "PROFUNDIDADE MÉDIA: acolhimento + pequenos movimentos. Não aprofundar demais. Linguagem cuidadosa.";
+    case "aluna": return "PROFUNDIDADE ALTA: compreensão + aplicação. Pode usar conceitos do método. Foco pedagógico.";
+    case "terapeuta": return "PROFUNDIDADE ESTRATÉGICA: decisão clínica + estruturação. Linguagem profissional. Raciocínio clínico.";
+  }
 }
 
 // ============================================
-// MAIN HANDLER
+// 11. composeSyntheiaResponse() — Build prompt
+// ============================================
+
+function composeSystemPrompt(
+  mode: string,
+  ctx: ClassifiedContext,
+  intent: ClassifiedIntent,
+  plan: ExecutionPlan,
+  payload: MinimalPayload,
+  voicePrompt?: string
+): string {
+  const parts: string[] = [SYNTHEIA_CORE];
+
+  // Mode prompt
+  const modePrompt = MODE_PROMPTS[mode];
+  if (modePrompt) parts.push(modePrompt);
+
+  // Depth
+  parts.push(`\n📏 CALIBRAÇÃO DE PROFUNDIDADE\n${getDepthInstruction(ctx.tipoUsuaria)}`);
+
+  // Context block
+  parts.push(`\n📍 CONTEXTO ATUAL
+• Tipo de Usuária: ${ctx.tipoUsuaria}
+• Área: ${ctx.area}
+• Sub-área: ${ctx.subArea}
+• Modo especial: ${ctx.modoEspecial || 'nenhum'}
+• Intenção detectada: ${intent.intencao}
+• Complexidade: ${intent.complexidade}
+• Risco: ${intent.risco}`);
+
+  // Risk warning
+  if (intent.risco === "sensivel") {
+    parts.push(`\n⚠️ ALERTA DE RISCO SENSÍVEL
+Esta interação envolve conteúdo sensível. Reforce limites éticos.
+NÃO diagnostique. NÃO substitua a terapeuta. NÃO faça interpretações invasivas.
+Se detectar sinais de crise, oriente a buscar ajuda profissional.`);
+  }
+
+  // Skill prompts
+  if (plan.skills.length === 1) {
+    parts.push(`\n${SKILLS[plan.skills[0]].prompt}`);
+  } else if (plan.skills.length > 1) {
+    const pipelineInfo = plan.pipeline ? PIPELINES[plan.pipeline] : null;
+    parts.push(`\n🔗 PIPELINE${pipelineInfo ? `: ${pipelineInfo.nome}` : ''} — ${pipelineInfo?.descricao || 'Composição de múltiplas skills'}
+Integre as seguintes capacidades em uma resposta coesa e UNIFICADA.
+NÃO separe por skill. Componha como SINTHEYA.\n`);
+    for (const sk of plan.skills) {
+      parts.push(SKILLS[sk].prompt);
+    }
+  }
+
+  // Voice
+  if (voicePrompt) {
+    parts.push(`\nVOZ ATIVA\n${voicePrompt}`);
+  }
+
+  // Extra context snippet
+  if (Object.keys(payload.contextSnippet).length > 0) {
+    parts.push(`\nCONTEXTO ADICIONAL\n${JSON.stringify(payload.contextSnippet, null, 2)}`);
+  }
+
+  // Composition directive
+  parts.push(`\n🔷 DIRETIVA DE COMPOSIÇÃO FINAL
+Sua resposta DEVE seguir o formato: Núcleo → Leitura → Direção (→ Limite Ético se necessário).
+Mantenha coerência com o tipo de usuária (${ctx.tipoUsuaria}) e a profundidade calibrada.
+A resposta é sempre DA SINTHEYA — nunca de uma skill isolada.`);
+
+  return parts.join("\n\n");
+}
+
+// ============================================
+// 12. logMinimalTrace()
+// ============================================
+
+function logMinimalTrace(trace: TraceLog): void {
+  // Console log for edge function logs — no sensitive data
+  console.log(JSON.stringify({
+    t: trace.timestamp,
+    uid: trace.userId.slice(0, 8),
+    tipo: trace.tipoUsuaria,
+    area: trace.area,
+    intent: trace.intencao,
+    mode: trace.modoExecucao,
+    skills: trace.skills,
+    pipeline: trace.pipeline,
+    status: trace.status,
+    ms: trace.latencyMs,
+  }));
+}
+
+// ============================================
+// 13. MAIN HANDLER
 // ============================================
 
 serve(async (req) => {
@@ -417,8 +641,11 @@ serve(async (req) => {
     return new Response("ok", { headers: corsHeaders });
   }
 
+  const startTime = Date.now();
+  let tracePartial: Partial<TraceLog> = { timestamp: new Date().toISOString() };
+
   try {
-    // Authenticate user
+    // === STEP 1: Security — Authenticate ===
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(
@@ -441,7 +668,9 @@ serve(async (req) => {
       );
     }
 
-    // Validate API key
+    tracePartial.userId = user.id;
+
+    // === STEP 2: Validate API Key ===
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) {
       return new Response(
@@ -450,10 +679,10 @@ serve(async (req) => {
       );
     }
 
-    // Parse request
-    const { mode, messages, extra_context, voice_prompt, routing_context }: SyntheiaChatRequest = await req.json();
+    // === STEP 3: Parse & Validate Request ===
+    const body: SyntheiaChatRequest = await req.json();
+    const { mode, messages, extra_context, voice_prompt, routing_context } = body;
 
-    // Validate mode
     if (!mode || !MODE_PROMPTS[mode]) {
       return new Response(
         JSON.stringify({ error: `Modo inválido: ${mode}. Use: arcano, arcane ou ferramenteira` }),
@@ -461,7 +690,6 @@ serve(async (req) => {
       );
     }
 
-    // Validate messages
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return new Response(
         JSON.stringify({ error: "Messages array is required and cannot be empty" }),
@@ -469,72 +697,44 @@ serve(async (req) => {
       );
     }
 
-    // ========================================
-    // SKILL ROUTING
-    // ========================================
+    // === STEP 4: classifyUserContext() ===
+    const frontendCtx: FrontendRoutingContext = routing_context || {};
+    const classifiedCtx = classifyUserContext(frontendCtx, extra_context);
+    tracePartial.tipoUsuaria = classifiedCtx.tipoUsuaria;
+    tracePartial.area = classifiedCtx.area;
 
-    const lastUserMessage = [...messages].reverse().find(m => m.role === 'user')?.content || '';
-    const routingCtx: RoutingContext = routing_context || {
-      tipoUsuario: extra_context?.tipoUsuario as string,
-      area: extra_context?.area as string,
-      subArea: extra_context?.subArea as string,
-      module: extra_context?.module as string,
+    // === STEP 5: classifyIntent() ===
+    const lastUserMessage = [...messages].reverse().find(m => m.role === "user")?.content || "";
+    const classifiedIntent = classifyIntent(lastUserMessage, classifiedCtx);
+    tracePartial.intencao = classifiedIntent.intencao;
+
+    // === STEP 6: resolveSkills() + resolveExecutionMode() ===
+    const detectedSkills = resolveSkillsFromIntent(classifiedIntent, classifiedCtx, lastUserMessage);
+    const pipeline = resolvePipeline(detectedSkills, classifiedIntent);
+    const executionMode = resolveExecutionMode(detectedSkills);
+
+    const executionPlan: ExecutionPlan = {
+      mode: executionMode,
+      skills: detectedSkills,
+      pipeline,
     };
 
-    const detectedSkills = detectSkills(lastUserMessage, routingCtx);
-    const responseMode = resolveResponseMode(detectedSkills);
-    const skillPrompt = buildSkillPrompt(detectedSkills);
+    tracePartial.modoExecucao = executionMode;
+    tracePartial.skills = detectedSkills.map(k => SKILLS[k].nome);
+    tracePartial.pipeline = pipeline;
 
-    const skillNames = detectedSkills.map(k => SKILLS[k].nome);
+    // === STEP 7: buildMinimalPayload() ===
+    const payload = buildMinimalPayload(classifiedCtx, classifiedIntent, extra_context, detectedSkills);
 
-    console.log(`[syntheia-chat] User: ${user.id} | Mode: ${mode} | ResponseMode: ${responseMode} | Skills: ${skillNames.join(', ') || 'nenhuma'}`);
+    // === STEP 8: composeSyntheiaResponse() — Build system prompt ===
+    const systemPrompt = composeSystemPrompt(mode, classifiedCtx, classifiedIntent, executionPlan, payload, voice_prompt);
 
-    // ========================================
-    // BUILD SYSTEM PROMPT
-    // ========================================
-
-    let systemPrompt = SYNTHEIA_CORE + "\n\n" + MODE_PROMPTS[mode];
-
-    // Add routing context
-    if (routingCtx.tipoUsuario || routingCtx.area) {
-      systemPrompt += `\n\n━━━━━━━━━━━━━━━━━━
-📍 CONTEXTO ATUAL
-━━━━━━━━━━━━━━━━━━
-• Tipo de Usuária: ${routingCtx.tipoUsuario || 'não identificado'}
-• Área: ${routingCtx.area || 'geral'}${routingCtx.subArea ? `\n• Sub-área: ${routingCtx.subArea}` : ''}${routingCtx.pageName ? `\n• Página: ${routingCtx.pageName}` : ''}${routingCtx.module ? `\n• Módulo: ${routingCtx.module}` : ''}${routingCtx.intencao ? `\n• Intenção detectada: ${routingCtx.intencao}` : ''}`;
-    }
-
-    // Add skill prompt
-    if (skillPrompt) {
-      systemPrompt += skillPrompt;
-    }
-
-    // Add voice prompt
-    if (voice_prompt) {
-      systemPrompt += `\n\n━━━━━━━━━━━━━━━━━━
-VOZ ATIVA
-━━━━━━━━━━━━━━━━━━
-${voice_prompt}`;
-    }
-
-    // Add extra context (excluding routing fields already used)
-    if (extra_context && Object.keys(extra_context).length > 0) {
-      const { tipoUsuario: _t, area: _a, subArea: _s, module: _m, pageName: _p, intencao: _i, ...rest } = extra_context as Record<string, unknown>;
-      if (Object.keys(rest).length > 0) {
-        systemPrompt += `\n\n━━━━━━━━━━━━━━━━━━
-CONTEXTO ADICIONAL
-━━━━━━━━━━━━━━━━━━
-${JSON.stringify(rest, null, 2)}`;
-      }
-    }
-
-    // Build messages for OpenAI
+    // === STEP 9: Execute — Call OpenAI ===
     const openaiMessages: ChatMessage[] = [
       { role: "system", content: systemPrompt },
       ...messages,
     ];
 
-    // Call OpenAI
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -553,6 +753,9 @@ ${JSON.stringify(rest, null, 2)}`;
       const errorText = await response.text();
       console.error(`[syntheia-chat] OpenAI error ${response.status}:`, errorText);
 
+      tracePartial.status = "error";
+      logMinimalTrace(tracePartial as TraceLog);
+
       if (response.status === 429) {
         return new Response(
           JSON.stringify({ error: "Limite de requisições excedido. Aguarde e tente novamente." }),
@@ -570,22 +773,36 @@ ${JSON.stringify(rest, null, 2)}`;
     const content = data.choices?.[0]?.message?.content;
 
     if (!content) {
+      tracePartial.status = "error";
+      logMinimalTrace(tracePartial as TraceLog);
       return new Response(
         JSON.stringify({ error: "Resposta vazia da OpenAI" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    console.log(`[syntheia-chat] Success | ${content.length} chars | Skills: ${skillNames.join(', ') || 'direto'}`);
+    // === STEP 10: logMinimalTrace() ===
+    tracePartial.status = "success";
+    tracePartial.latencyMs = Date.now() - startTime;
+    logMinimalTrace(tracePartial as TraceLog);
 
+    // === Return ===
     return new Response(
       JSON.stringify({
         mode,
         message: { role: "assistant", content },
         usage: data.usage,
         routing: {
-          responseMode,
-          skillsActivated: skillNames,
+          executionMode,
+          pipeline: pipeline ? PIPELINES[pipeline].nome : null,
+          skillsActivated: detectedSkills.map(k => SKILLS[k].nome),
+          context: {
+            tipoUsuaria: classifiedCtx.tipoUsuaria,
+            area: classifiedCtx.area,
+            intencao: classifiedIntent.intencao,
+            complexidade: classifiedIntent.complexidade,
+            risco: classifiedIntent.risco,
+          },
         },
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -593,6 +810,9 @@ ${JSON.stringify(rest, null, 2)}`;
 
   } catch (error) {
     console.error("[syntheia-chat] Error:", error);
+    tracePartial.status = "error";
+    tracePartial.latencyMs = Date.now() - startTime;
+    try { logMinimalTrace(tracePartial as TraceLog); } catch (_) { /* noop */ }
     return new Response(
       JSON.stringify({ error: error instanceof Error ? error.message : "Erro desconhecido" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
