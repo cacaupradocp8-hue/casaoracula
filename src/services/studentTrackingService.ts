@@ -24,7 +24,10 @@ export type ActionType =
   | 'received_feedback'
   // Jardim da Psique
   | 'created_entry'
-  | 'returned';
+  | 'returned'
+  // Canteiro (compartilhamento)
+  | 'shared_to_canteiro'
+  | 'revoked_canteiro';
 
 export type ObjectType =
   | 'livro'

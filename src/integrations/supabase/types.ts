@@ -6577,6 +6577,7 @@ export type Database = {
           publicado_em: string | null
           rejeitado: boolean
           season_id: string
+          source_entry_id: string | null
           texto: string
           updated_at: string | null
           user_id: string
@@ -6591,6 +6592,7 @@ export type Database = {
           publicado_em?: string | null
           rejeitado?: boolean
           season_id: string
+          source_entry_id?: string | null
           texto: string
           updated_at?: string | null
           user_id: string
@@ -6605,6 +6607,7 @@ export type Database = {
           publicado_em?: string | null
           rejeitado?: boolean
           season_id?: string
+          source_entry_id?: string | null
           texto?: string
           updated_at?: string | null
           user_id?: string
