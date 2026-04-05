@@ -14,6 +14,8 @@ export interface PublicacaoCanteiro {
   exibicao_anonima: boolean;
   created_at: string;
   source_entry_id: string | null;
+  entry_type: string | null;
+  published_title: string | null;
 }
 
 export function useMinhasPublicacoesCanteiro() {
@@ -25,7 +27,7 @@ export function useMinhasPublicacoesCanteiro() {
       if (!user?.id) return [];
       const { data, error } = await supabase
         .from('collective_bed_entries')
-        .select('id, texto, origem, aprovado_por_admin, publicado_em, rejeitado, exibicao_anonima, created_at, source_entry_id')
+        .select('id, texto, origem, aprovado_por_admin, publicado_em, rejeitado, exibicao_anonima, created_at, source_entry_id, entry_type, published_title')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
       if (error) throw error;

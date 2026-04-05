@@ -7,9 +7,16 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useMinhasPublicacoesCanteiro, useRevogarPublicacao } from '@/hooks/useMinhasPublicacoesCanteiro';
-import { Sprout, Trash2, Loader2, Clock, CheckCircle2, XCircle } from 'lucide-react';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { Sprout, Trash2, Loader2, Clock, CheckCircle2, XCircle, BookOpen, HelpCircle, Flame, Headphones, Quote } from 'lucide-react';
+import { formatDateSafe } from '@/lib/date-safe';
+
+const ENTRY_TYPE_LABELS: Record<string, { label: string; icon: React.ElementType }> = {
+  reflexao:        { label: 'Reflexão',           icon: BookOpen },
+  pergunta:        { label: 'Pergunta',           icon: HelpCircle },
+  semente_pratica: { label: 'Semente de Prática', icon: Flame },
+  eco_de_leitura:  { label: 'Eco de Leitura',     icon: Headphones },
+  fragmento:       { label: 'Fragmento',          icon: Quote },
+};
 
 export function MinhasPublicacoesCanteiro() {
   const { data: publicacoes, isLoading } = useMinhasPublicacoesCanteiro();
@@ -28,8 +35,8 @@ export function MinhasPublicacoesCanteiro() {
     return (
       <Card className="border-dashed border-border/20 bg-card/30">
         <CardContent className="py-8 text-center">
-          <Sprout className="w-8 h-8 text-muted-foreground/20 mx-auto mb-3" />
-          <p className="text-sm text-muted-foreground/60">
+          <Sprout className="w-8 h-8 text-muted-foreground/15 mx-auto mb-3" />
+          <p className="text-sm text-muted-foreground/50">
             Você ainda não compartilhou nenhum registro no Canteiro.
           </p>
         </CardContent>
@@ -38,40 +45,79 @@ export function MinhasPublicacoesCanteiro() {
   }
 
   const getStatus = (pub: typeof publicacoes[0]) => {
-    if (pub.rejeitado) return { label: 'Recusada', icon: XCircle, color: 'text-red-400' };
+    if (pub.rejeitado) return { label: 'Recusada', icon: XCircle, color: 'text-destructive/70' };
     if (pub.aprovado_por_admin && pub.publicado_em) return { label: 'Publicada', icon: CheckCircle2, color: 'text-emerald-400' };
     return { label: 'Em curadoria', icon: Clock, color: 'text-amber-400' };
   };
 
+  const publicadasCount = publicacoes.filter(p => p.aprovado_por_admin && p.publicado_em).length;
+  const curadoriaCount = publicacoes.filter(p => !p.aprovado_por_admin && !p.rejeitado).length;
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-2">
-        <Sprout className="w-4 h-4 text-emerald-400/60" />
-        <h3 className="text-sm font-medium text-foreground/70">Minhas Publicações no Canteiro</h3>
-        <Badge variant="outline" className="text-[10px]">{publicacoes.length}</Badge>
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <Sprout className="w-4 h-4 text-primary/50" />
+          <h3 className="text-sm font-medium text-foreground/70">Minhas Publicações no Canteiro</h3>
+        </div>
+        <div className="flex gap-1.5">
+          {publicadasCount > 0 && (
+            <Badge variant="outline" className="text-[9px] border-emerald-400/20 text-emerald-400/70">
+              {publicadasCount} publicada{publicadasCount !== 1 ? 's' : ''}
+            </Badge>
+          )}
+          {curadoriaCount > 0 && (
+            <Badge variant="outline" className="text-[9px] border-amber-400/20 text-amber-400/70">
+              {curadoriaCount} em curadoria
+            </Badge>
+          )}
+        </div>
       </div>
 
       {publicacoes.map((pub) => {
         const status = getStatus(pub);
         const StatusIcon = status.icon;
+        const entryType = (pub as any).entry_type as string | undefined;
+        const typeInfo = entryType ? ENTRY_TYPE_LABELS[entryType] : null;
+        const TypeIcon = typeInfo?.icon;
+        const publishedTitle = (pub as any).published_title as string | undefined;
+
         return (
-          <Card key={pub.id} className="bg-card/50 border-border/20">
+          <Card key={pub.id} className="bg-card/40 border-border/15 hover:border-border/25 transition-all">
             <CardContent className="p-4 space-y-2">
-              <p className="text-sm text-foreground/70 line-clamp-2 whitespace-pre-line">
+              {/* Type + Title row */}
+              <div className="flex items-center gap-2">
+                {TypeIcon && (
+                  <div className="flex items-center gap-1.5">
+                    <TypeIcon className="w-3 h-3 text-primary/50" />
+                    <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+                      {typeInfo?.label}
+                    </span>
+                  </div>
+                )}
+                {publishedTitle && (
+                  <span className="text-xs text-foreground/50 italic ml-1">· {publishedTitle}</span>
+                )}
+              </div>
+
+              {/* Text preview */}
+              <p className="text-sm text-foreground/65 line-clamp-2 whitespace-pre-line">
                 {pub.texto}
               </p>
-              <div className="flex items-center justify-between">
+
+              {/* Footer: status + date + actions */}
+              <div className="flex items-center justify-between pt-1">
                 <div className="flex items-center gap-2">
                   <StatusIcon className={`w-3 h-3 ${status.color}`} />
                   <span className={`text-[10px] ${status.color}`}>{status.label}</span>
-                  <span className="text-[10px] text-muted-foreground/40">
-                    {format(new Date(pub.created_at), "dd MMM yyyy", { locale: ptBR })}
+                  <span className="text-[10px] text-muted-foreground/30">
+                    {formatDateSafe(pub.created_at, "dd MMM yyyy")}
                   </span>
                 </div>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-7 px-2 text-[10px] text-destructive/60 hover:text-destructive"
+                  className="h-7 px-2 text-[10px] text-destructive/50 hover:text-destructive"
                   onClick={() => setRevogarId(pub.id)}
                 >
                   <Trash2 className="w-3 h-3 mr-1" />
