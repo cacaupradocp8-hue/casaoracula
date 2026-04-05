@@ -1921,6 +1921,16 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        
+        {/* Canteiro - Espaço comunitário de partilhas */}
+        <Route
+          path="/canteiro"
+          element={
+            <ProtectedRoute>
+              <Canteiro />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/minha-biblioteca"
           element={
