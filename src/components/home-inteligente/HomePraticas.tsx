@@ -6,7 +6,7 @@ const praticas = [
   { icon: Sparkles, label: 'Tirar uma carta', path: '/oraculos' },
   { icon: Moon, label: 'Registrar sonho', path: '/jardim-da-psique' },
   { icon: Flower2, label: 'Jardim da Psique', path: '/jardim-da-psique' },
-  { icon: Play, label: 'Iniciar sessão', path: '/casa-das-maquinas/sessoes' },
+  { icon: Play, label: 'Sala de Treinamento', path: '/sala-de-treinamento' },
 ];
 
 export function HomePraticas() {

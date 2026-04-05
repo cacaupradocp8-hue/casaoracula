@@ -15,21 +15,20 @@ import { Button } from '@/components/ui/button';
 interface NavItem { label: string; path: string; icon: React.ElementType; minPortal?: string; }
 
 const mainNav: NavItem[] = [
-  { label: 'Dashboard', path: '/casa-das-maquinas', icon: LayoutDashboard },
+  { label: 'Casa das Máquinas', path: '/casa-das-maquinas', icon: LayoutDashboard },
   { label: 'Clientes', path: '/casa-das-maquinas/clientes', icon: Users },
-  { label: 'Nova Sessão', path: '/casa-das-maquinas/nova-sessao', icon: Calendar },
-  { label: 'Perfil de Condução', path: '/casa-das-maquinas/perfil-conducao', icon: Brain },
-  { label: 'Campo das Clientes', path: '/casa-das-maquinas/campo-clientes', icon: Eye },
+  { label: 'Sessões', path: '/casa-das-maquinas/nova-sessao', icon: Calendar },
   { label: 'Grupos', path: '/casa-das-maquinas/grupos', icon: UsersRound },
 ];
 const toolsNav: NavItem[] = [
-  { label: 'Oráculo', path: '/oraculos', icon: Sparkles },
-  { label: 'Painel Clínico', path: '/casa-das-maquinas/painel-clinico', icon: Compass },
-  { label: '7 Vozes', path: '/casa-das-maquinas/7-vozes', icon: AudioLines },
-  { label: 'Ferramentas', path: '/casa-das-maquinas/ferramentas', icon: Wrench },
+  { label: 'Jardim do Ofício', path: '/casa-das-maquinas/jardim-oficio', icon: Sparkles },
+  { label: 'Evolução Clínica', path: '/casa-das-maquinas/treinamento', icon: Brain },
   { label: 'Biblioteca de Intervenções', path: '/casa-das-maquinas/biblioteca', icon: BookOpen },
-  { label: 'Variações', path: '/casa-das-maquinas/variacoes-ferramentas', icon: Layers },
+  { label: 'Ferramentas', path: '/casa-das-maquinas/ferramentas', icon: Wrench },
+  { label: '7 Vozes', path: '/casa-das-maquinas/7-vozes', icon: AudioLines },
+  { label: 'Painel Clínico', path: '/casa-das-maquinas/painel-clinico', icon: Compass },
   { label: 'Mapa Vivo', path: '/casa-das-maquinas/mapa-vivo', icon: Map },
+  { label: 'Variações', path: '/casa-das-maquinas/variacoes-ferramentas', icon: Layers },
 ];
 const communityNav: NavItem[] = [
   { label: 'Casa das Tecelãs', path: '/casa-das-maquinas/tecelãs', icon: Flame },

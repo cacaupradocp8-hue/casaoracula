@@ -23,16 +23,15 @@ import { TravessiaSecao } from '@/components/jardim-cliente/TravessiaSecao';
 type Tab = 'inicio' | 'jardim' | 'terapeuta' | 'praticas' | 'travessia';
 
 const TABS: { key: Tab; label: string; icon: any }[] = [
-  { key: 'inicio', label: 'Início', icon: Home },
   { key: 'jardim', label: 'Meu Jardim', icon: Leaf },
-  { key: 'terapeuta', label: 'Da Terapeuta', icon: Inbox },
-  { key: 'praticas', label: 'Práticas', icon: Sparkles },
-  { key: 'travessia', label: 'Travessia', icon: MapPin },
+  { key: 'travessia', label: 'Minha Travessia', icon: MapPin },
+  { key: 'praticas', label: 'Práticas Guiadas', icon: Sparkles },
+  { key: 'terapeuta', label: 'Acompanhamento da Terapeuta', icon: Inbox },
 ];
 
 export default function JardimHeroinaClientePage() {
   const { user } = useAuth();
-  const [tab, setTab] = useState<Tab>('inicio');
+  const [tab, setTab] = useState<Tab>('jardim');
 
   const {
     jardim,
@@ -121,38 +120,19 @@ export default function JardimHeroinaClientePage() {
 
         {/* Content */}
         <div className="container mx-auto px-4 max-w-lg py-4">
-          {tab === 'inicio' && (
+          {tab === 'jardim' && (
             <div className="space-y-6">
               <BoasVindasBloco />
-
-              <TerapeutaDeixouBloco
-                orientacoesPendentes={orientacoesPendentes}
-                entriesTerapeuta={entriesTerapeuta}
-                praticasPendentes={praticasPendentes}
-                onVerTudo={() => setTab('terapeuta')}
-                onCompletarOrientacao={completar}
-                onResponderOrientacao={responder}
-                onMarcarVistaOrientacao={marcarVista}
-              />
-
               <MomentoJardimBloco />
-
-              <PraticaRecomendadaBloco pratica={praticaRecomendada} />
-
-              <EscutaSugeridaBloco escuta={escutaSugerida} />
-
               <RegistroHojeBloco saving={saving} onCriar={criarEntry} />
+              <MeuJardimSecao
+                entries={minhasEntries}
+                userId={user?.id || ''}
+                saving={saving}
+                onCriar={criarEntry}
+                onToggleShare={toggleSharedWithTherapist}
+              />
             </div>
-          )}
-
-          {tab === 'jardim' && (
-            <MeuJardimSecao
-              entries={minhasEntries}
-              userId={user?.id || ''}
-              saving={saving}
-              onCriar={criarEntry}
-              onToggleShare={toggleSharedWithTherapist}
-            />
           )}
 
           {tab === 'terapeuta' && (
