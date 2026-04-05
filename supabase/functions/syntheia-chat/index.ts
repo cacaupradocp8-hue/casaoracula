@@ -182,7 +182,7 @@ const SKILL_CONTRACTS: Record<SkillKey, SkillContract> = {
   modo_livro: {
     domain: "formativa",
     requiresBond: false,
-    allowedFields: ["bookTitle", "bookAuthor", "cycleTheme", "stationName", "chapterTitle", "excerptText", "optionalStudyNotes", "pageName"],
+    allowedFields: ["bookTitle", "bookAuthor", "cycleTheme", "stationName", "chapterTitle", "excerptText", "optionalStudyNotes", "knowledgeContext", "pageName"],
     forbiddenFields: ["clientId", "sessionNotes", "clientCodinome", "therapistId", "rawClinicalData"],
     minPortal: ["mentorada", "aluna_formacao", "assinante", "oracula", "admin"],
   },
