@@ -25,7 +25,8 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useJardimPsique, JardimRegistro, TipoRegistroJardim } from '@/hooks/useJardimPsique';
 import { NovaEntradaJardimModal } from '@/components/shared/NovaEntradaJardimModal';
-import { cn } from '@/lib/utils';
+import { CompartilharCanteiroBtn } from '@/components/jardim-psique/CompartilharCanteiroBtn';
+import { MinhasPublicacoesCanteiro } from '@/components/jardim-psique/MinhasPublicacoesCanteiro';
 import { motion } from 'framer-motion';
 
 const FERRAMENTA_LABELS: Record<string, string> = {
@@ -149,7 +150,8 @@ export default function JardimPsique() {
                 {registro.tipo_registro === 'ferramenta' ? 'Sem reflexão adicionada ainda' : 'Sem conteúdo'}
               </p>
             )}
-            <div className="flex items-center justify-end mt-3">
+            <div className="flex items-center justify-between mt-3">
+              <CompartilharCanteiroBtn registro={registro} />
               <span className="text-xs text-gold/0 group-hover:text-gold/60 transition-all duration-500 flex items-center gap-1">
                 <Eye className="w-3 h-3" />
                 Ver registro
@@ -279,6 +281,11 @@ export default function JardimPsique() {
             {registrosFiltrados.map((r, i) => renderRegistroCard(r, i))}
           </div>
         )}
+
+        {/* ─── Minhas Publicações no Canteiro ─── */}
+        <div className="mt-10">
+          <MinhasPublicacoesCanteiro />
+        </div>
 
         {/* ─── Privacy notice ─── */}
         <motion.div
