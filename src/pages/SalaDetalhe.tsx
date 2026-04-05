@@ -113,7 +113,7 @@ export default function SalaDetalhe() {
         .maybeSingle();
 
       if (salaRes.error || !salaRes.data) {
-        navigate("/dashboard");
+        navigate("/dashboard-membro");
         return;
       }
       

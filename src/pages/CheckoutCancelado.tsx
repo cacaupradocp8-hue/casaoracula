@@ -32,7 +32,7 @@ export default function CheckoutCancelado() {
                 </Link>
               </Button>
               <Button variant="ghost" asChild className="w-full">
-                <Link to="/dashboard">
+                <Link to="/dashboard-membro">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Voltar ao Dashboard
                 </Link>
