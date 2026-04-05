@@ -3,7 +3,7 @@
 // Modo de estudo ancorado na obra do Clube
 // ============================================
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -12,6 +12,8 @@ import { useSyntheiaChat } from '@/hooks/useSyntheiaChat';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TherabotMessage } from '@/components/therabot/TherabotMessage';
+import { useQuery } from '@tanstack/react-query';
+import { retrieveBookKnowledge, serializeKnowledgeContext } from '@/services/clubeKnowledgeRetrieval';
 import {
   Send, Loader2, BookOpen, Sparkles, X,
   MessageCircle, ChevronDown, ChevronUp, Quote,
@@ -22,9 +24,11 @@ import {
 // ============================================
 
 export interface BookContext {
+  bookId?: string;
   bookTitle: string;
   bookAuthor?: string;
   cycleTheme?: string;
+  cycleId?: string;
   stationName?: string;
   chapterTitle?: string;
   excerptText?: string;
@@ -76,6 +80,26 @@ export function ConverseComLivroChat({ bookContext, className, embedded = false 
   const [input, setInput] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Fetch knowledge context from DB
+  const { data: knowledgeCtx } = useQuery({
+    queryKey: ['book-knowledge', bookContext.bookTitle, bookContext.bookId, bookContext.chapterTitle],
+    queryFn: () => retrieveBookKnowledge({
+      bookId: bookContext.bookId,
+      bookTitle: bookContext.bookTitle,
+      bookAuthor: bookContext.bookAuthor,
+      cicloId: bookContext.cycleId,
+      stationName: bookContext.stationName,
+      chapterTitle: bookContext.chapterTitle,
+    }),
+    staleTime: 5 * 60 * 1000, // Cache for 5 min
+  });
+
+  const serializedKnowledge = useMemo(() => {
+    if (!knowledgeCtx) return undefined;
+    const s = serializeKnowledgeContext(knowledgeCtx);
+    return s.length > 0 ? s : undefined;
+  }, [knowledgeCtx]);
+
   const extraContext: Record<string, unknown> = {
     bookTitle: bookContext.bookTitle,
     bookAuthor: bookContext.bookAuthor,
@@ -84,6 +108,7 @@ export function ConverseComLivroChat({ bookContext, className, embedded = false 
     chapterTitle: bookContext.chapterTitle,
     excerptText: bookContext.excerptText,
     optionalStudyNotes: bookContext.optionalStudyNotes,
+    knowledgeContext: serializedKnowledge,
   };
 
   const welcomeMsg = bookContext.excerptText

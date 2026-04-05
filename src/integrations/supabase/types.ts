@@ -1742,13 +1742,18 @@ export type Database = {
         Row: {
           author: string | null
           category: string
+          central_theme: string | null
           cover_url: string | null
           created_at: string | null
           description_short: string | null
           how_to_read: string | null
           id: string
           is_multipolar: boolean | null
+          key_archetypes: string[] | null
+          key_symbols: string[] | null
           manifesto_short: string | null
+          summary_symbolic: string | null
+          tension_axis: string | null
           title: string
           updated_at: string | null
           why_here: string | null
@@ -1756,13 +1761,18 @@ export type Database = {
         Insert: {
           author?: string | null
           category: string
+          central_theme?: string | null
           cover_url?: string | null
           created_at?: string | null
           description_short?: string | null
           how_to_read?: string | null
           id?: string
           is_multipolar?: boolean | null
+          key_archetypes?: string[] | null
+          key_symbols?: string[] | null
           manifesto_short?: string | null
+          summary_symbolic?: string | null
+          tension_axis?: string | null
           title: string
           updated_at?: string | null
           why_here?: string | null
@@ -1770,13 +1780,18 @@ export type Database = {
         Update: {
           author?: string | null
           category?: string
+          central_theme?: string | null
           cover_url?: string | null
           created_at?: string | null
           description_short?: string | null
           how_to_read?: string | null
           id?: string
           is_multipolar?: boolean | null
+          key_archetypes?: string[] | null
+          key_symbols?: string[] | null
           manifesto_short?: string | null
+          summary_symbolic?: string | null
+          tension_axis?: string | null
           title?: string
           updated_at?: string | null
           why_here?: string | null
@@ -3193,6 +3208,72 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      club_knowledge_entries: {
+        Row: {
+          archetypes: string[] | null
+          book_id: string
+          chapter_order: number | null
+          chapter_title: string | null
+          ciclo_id: string | null
+          content: string
+          created_at: string
+          excerpt_text: string | null
+          excerpt_title: string | null
+          id: string
+          source_type: Database["public"]["Enums"]["club_knowledge_source_type"]
+          symbols: string[] | null
+          tags: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          archetypes?: string[] | null
+          book_id: string
+          chapter_order?: number | null
+          chapter_title?: string | null
+          ciclo_id?: string | null
+          content: string
+          created_at?: string
+          excerpt_text?: string | null
+          excerpt_title?: string | null
+          id?: string
+          source_type?: Database["public"]["Enums"]["club_knowledge_source_type"]
+          symbols?: string[] | null
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          archetypes?: string[] | null
+          book_id?: string
+          chapter_order?: number | null
+          chapter_title?: string | null
+          ciclo_id?: string | null
+          content?: string
+          created_at?: string
+          excerpt_text?: string | null
+          excerpt_title?: string | null
+          id?: string
+          source_type?: Database["public"]["Enums"]["club_knowledge_source_type"]
+          symbols?: string[] | null
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_knowledge_entries_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "club_knowledge_entries_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       clube_audio_albums: {
         Row: {
@@ -19570,6 +19651,14 @@ export type Database = {
       casa_media_type: "audio" | "text" | "video" | "link" | "pdf"
       casa_room: "sustentacao" | "leitura" | "circulo"
       cliente_status: "ativo" | "pausado" | "encerrado"
+      club_knowledge_source_type:
+        | "summary"
+        | "study_note"
+        | "guide_question"
+        | "symbolic_note"
+        | "practice_seed"
+        | "podcast_seed"
+        | "microclass_seed"
       clube_jornada_tipo: "heroina" | "sombra" | "expressao_mundo"
       co_travessia_nivel: "iniciante" | "intermediario" | "avancado"
       content_block_type:
@@ -19810,6 +19899,15 @@ export const Constants = {
       casa_media_type: ["audio", "text", "video", "link", "pdf"],
       casa_room: ["sustentacao", "leitura", "circulo"],
       cliente_status: ["ativo", "pausado", "encerrado"],
+      club_knowledge_source_type: [
+        "summary",
+        "study_note",
+        "guide_question",
+        "symbolic_note",
+        "practice_seed",
+        "podcast_seed",
+        "microclass_seed",
+      ],
       clube_jornada_tipo: ["heroina", "sombra", "expressao_mundo"],
       co_travessia_nivel: ["iniciante", "intermediario", "avancado"],
       content_block_type: [
