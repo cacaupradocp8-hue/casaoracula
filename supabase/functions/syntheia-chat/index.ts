@@ -2,9 +2,9 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 // ============================================
-// SYNTHEIA CHAT — Núcleo Orquestrador v2
-// Camada de Execução com Decisão, Roteamento,
-// Pipelines e Governança Segura
+// SYNTHEIA CHAT — Núcleo Orquestrador v3
+// Com validação real de vínculo, payload mínimo
+// por skill e proteção contra BOLA
 // ============================================
 
 const corsHeaders = {
@@ -85,7 +85,8 @@ interface TraceLog {
   modoExecucao: ModoExecucao;
   skills: string[];
   pipeline: string | null;
-  status: "success" | "error";
+  risco: Risco;
+  status: "success" | "error" | "blocked";
   latencyMs: number;
 }
 
@@ -96,6 +97,7 @@ interface FrontendRoutingContext {
   module?: string;
   pageName?: string;
   intencao?: string;
+  clientId?: string; // client UUID if therapist context
 }
 
 interface SyntheiaChatRequest {
@@ -107,7 +109,87 @@ interface SyntheiaChatRequest {
 }
 
 // ============================================
-// 2. SYNTHEIA CORE PROMPT
+// 2. SKILL CONTRACTS — Security per skill
+// ============================================
+
+type SkillDomain = "publica" | "formativa" | "clinica";
+
+interface SkillContract {
+  domain: SkillDomain;
+  requiresBond: boolean; // requires validated therapist-client link
+  allowedFields: string[]; // whitelist of extra_context fields
+  forbiddenFields: string[]; // explicitly blocked fields
+  minPortal: string[]; // portal values that can use this skill
+}
+
+const SKILL_CONTRACTS: Record<SkillKey, SkillContract> = {
+  guardiao_jornada: {
+    domain: "clinica",
+    requiresBond: true,
+    allowedFields: ["clientCodinome", "currentTool"],
+    forbiddenFields: ["clientId", "sessionNotes", "rawClinicalData"],
+    minPortal: ["oracula", "admin"],
+  },
+  arquiteto_cidade: {
+    domain: "formativa",
+    requiresBond: false,
+    allowedFields: ["pageName", "module", "currentTool"],
+    forbiddenFields: ["clientId", "sessionNotes"],
+    minPortal: ["mentorada", "aluna_formacao", "assinante", "oracula", "admin"],
+  },
+  arquiteto_fluxos: {
+    domain: "clinica",
+    requiresBond: true,
+    allowedFields: ["clientCodinome", "currentTool", "pageName"],
+    forbiddenFields: ["clientId", "sessionNotes", "rawClinicalData"],
+    minPortal: ["oracula", "admin"],
+  },
+  engenheiro_dados: {
+    domain: "clinica",
+    requiresBond: true,
+    allowedFields: ["clientCodinome", "currentTool"],
+    forbiddenFields: ["clientId", "sessionNotes", "rawClinicalData"],
+    minPortal: ["oracula", "admin"],
+  },
+  alquimista_conteudo: {
+    domain: "formativa",
+    requiresBond: false,
+    allowedFields: ["pageName", "module", "bookTitle", "bookAuthor", "cycleTheme", "stationName"],
+    forbiddenFields: ["clientId", "sessionNotes"],
+    minPortal: ["mentorada", "aluna_formacao", "assinante", "oracula", "admin"],
+  },
+  curadora_podcast: {
+    domain: "formativa",
+    requiresBond: false,
+    allowedFields: ["bookTitle", "bookAuthor", "cycleTheme"],
+    forbiddenFields: ["clientId", "sessionNotes"],
+    minPortal: ["mentorada", "aluna_formacao", "assinante", "oracula", "admin"],
+  },
+  designer_cartografia: {
+    domain: "publica",
+    requiresBond: false,
+    allowedFields: ["pageName", "module"],
+    forbiddenFields: ["clientId", "sessionNotes", "clientCodinome"],
+    minPortal: ["visitante", "mentorada", "aluna_formacao", "assinante", "oracula", "admin"],
+  },
+  estrategista_gamificacao: {
+    domain: "publica",
+    requiresBond: false,
+    allowedFields: ["pageName", "module"],
+    forbiddenFields: ["clientId", "sessionNotes", "clientCodinome"],
+    minPortal: ["visitante", "mentorada", "aluna_formacao", "assinante", "oracula", "admin"],
+  },
+  modo_livro: {
+    domain: "formativa",
+    requiresBond: false,
+    allowedFields: ["bookTitle", "bookAuthor", "cycleTheme", "stationName", "pageName"],
+    forbiddenFields: ["clientId", "sessionNotes", "clientCodinome"],
+    minPortal: ["mentorada", "aluna_formacao", "assinante", "oracula", "admin"],
+  },
+};
+
+// ============================================
+// 3. SYNTHEIA CORE PROMPT
 // ============================================
 
 const SYNTHEIA_CORE = `🔷 IDENTIDADE DO SISTEMA
@@ -176,7 +258,7 @@ Elementos: Distritos da CidaDELA, Torres, Portas, Arquétipos, Travessias.
 Se houver sinais de violência, autoagressão ou crise grave, oriente a buscar ajuda profissional.`;
 
 // ============================================
-// 3. MODE PROMPTS
+// 4. MODE PROMPTS
 // ============================================
 
 const MODE_PROMPTS: Record<string, string> = {
@@ -186,7 +268,7 @@ const MODE_PROMPTS: Record<string, string> = {
 };
 
 // ============================================
-// 4. SKILL DEFINITIONS
+// 5. SKILL DEFINITIONS
 // ============================================
 
 interface SkillDef {
@@ -280,7 +362,7 @@ TOM: Contemplativo, profundo, respeitoso com a obra.`,
 };
 
 // ============================================
-// 5. PIPELINE DEFINITIONS
+// 6. PIPELINE DEFINITIONS
 // ============================================
 
 const PIPELINES: Record<PipelineKey, { nome: string; skills: SkillKey[]; descricao: string }> = {
@@ -312,25 +394,114 @@ const PIPELINES: Record<PipelineKey, { nome: string; skills: SkillKey[]; descric
 };
 
 // ============================================
-// 6. classifyUserContext()
+// 7. SERVER-SIDE ROLE RESOLUTION
+// ============================================
+
+async function resolveServerSideRole(
+  supabase: ReturnType<typeof createClient>,
+  userId: string
+): Promise<{ portal: string; tipoUsuaria: TipoUsuaria }> {
+  const { data, error } = await supabase
+    .from("user_roles")
+    .select("portal")
+    .eq("user_id", userId)
+    .single();
+
+  if (error || !data) {
+    return { portal: "visitante", tipoUsuaria: "visitante" };
+  }
+
+  const portal = data.portal as string;
+
+  // Map portal to tipoUsuaria
+  let tipoUsuaria: TipoUsuaria = "visitante";
+  if (portal === "admin" || portal === "oracula") {
+    tipoUsuaria = "terapeuta";
+  } else if (portal === "aluna_formacao" || portal === "assinante") {
+    tipoUsuaria = "aluna";
+  } else if (portal === "mentorada") {
+    tipoUsuaria = "aluna";
+  } else if (portal === "visitante") {
+    tipoUsuaria = "visitante";
+  }
+  // Legacy fallback
+  if (portal === "iniciada") tipoUsuaria = "terapeuta";
+  if (portal === "pre_iniciada") tipoUsuaria = "aluna";
+
+  return { portal, tipoUsuaria };
+}
+
+// ============================================
+// 8. CLINICAL ACCESS VALIDATION
+// ============================================
+
+interface ClinicalAccessResult {
+  authorized: boolean;
+  clientCodinome?: string;
+  reason?: string;
+}
+
+async function validateClinicalAccess(
+  supabase: ReturnType<typeof createClient>,
+  userId: string,
+  portal: string,
+  clientId?: string
+): Promise<ClinicalAccessResult> {
+  // Admin always authorized
+  if (portal === "admin") {
+    if (clientId) {
+      // Even admin, fetch only codinome
+      const { data } = await supabase
+        .from("clientes")
+        .select("nome")
+        .eq("id", clientId)
+        .single();
+      return { authorized: true, clientCodinome: data?.nome || "Cliente" };
+    }
+    return { authorized: true };
+  }
+
+  // No clientId = no clinical context needed
+  if (!clientId) {
+    return { authorized: true };
+  }
+
+  // Validate real bond: therapist must be linked to client with status 'ativo'
+  const { data: bond, error } = await supabase
+    .from("clientes")
+    .select("nome, status")
+    .eq("id", clientId)
+    .eq("terapeuta_id", userId)
+    .in("status", ["ativo", "pausado"])
+    .single();
+
+  if (error || !bond) {
+    return {
+      authorized: false,
+      reason: "Vínculo terapêutico não encontrado ou inativo",
+    };
+  }
+
+  return {
+    authorized: true,
+    clientCodinome: bond.nome || "Cliente",
+  };
+}
+
+// ============================================
+// 9. classifyUserContext() — server-verified
 // ============================================
 
 function classifyUserContext(
+  serverTipoUsuaria: TipoUsuaria,
   frontendCtx: FrontendRoutingContext,
   extraCtx: Record<string, unknown> | undefined
 ): ClassifiedContext {
-  const tipo = frontendCtx.tipoUsuario || extraCtx?.tipoUsuario as string || "";
-  const areaRaw = frontendCtx.area || extraCtx?.area as string || "";
-  const subRaw = frontendCtx.subArea || extraCtx?.subArea as string || "";
-  const moduleRaw = frontendCtx.module || extraCtx?.module as string || "";
+  const areaRaw = frontendCtx.area || (extraCtx?.area as string) || "";
+  const subRaw = frontendCtx.subArea || (extraCtx?.subArea as string) || "";
+  const moduleRaw = frontendCtx.module || (extraCtx?.module as string) || "";
 
-  // Map tipo
-  let tipoUsuaria: TipoUsuaria = "visitante";
-  if (/terapeuta|facilitadora|mentora/i.test(tipo)) tipoUsuaria = "terapeuta";
-  else if (/aluna|estudante|formação/i.test(tipo)) tipoUsuaria = "aluna";
-  else if (/cliente|paciente/i.test(tipo)) tipoUsuaria = "cliente";
-
-  // Map area
+  // Map area from frontend hints (area itself is not a security boundary)
   const areaMap: Record<string, AreaPrincipal> = {
     "jardim": "jardim-da-heroina", "heroina": "jardim-da-heroina", "meu-jardim": "jardim-da-heroina",
     "psique": "jardim-da-psique", "jardim-psique": "jardim-da-psique",
@@ -349,22 +520,21 @@ function classifyUserContext(
     if (combined.includes(key)) { area = val; break; }
   }
 
-  // SubArea
   const subArea: SubArea = subRaw || "geral";
 
-  // Modo especial
+  // Modo especial — derived from server-verified tipo + area
   let modoEspecial: ModoEspecial = null;
   if (area === "sessao") modoEspecial = "sessao";
   else if (area === "clube-do-livro") modoEspecial = "livro";
   else if (area === "treinamento") modoEspecial = "estudo";
-  else if (tipoUsuaria === "terapeuta" && area === "casa-das-maquinas") modoEspecial = "terapeuta";
-  else if (tipoUsuaria === "cliente") modoEspecial = "cliente";
+  else if (serverTipoUsuaria === "terapeuta" && area === "casa-das-maquinas") modoEspecial = "terapeuta";
+  else if (serverTipoUsuaria === "cliente") modoEspecial = "cliente";
 
-  return { tipoUsuaria, area, subArea, modoEspecial };
+  return { tipoUsuaria: serverTipoUsuaria, area, subArea, modoEspecial };
 }
 
 // ============================================
-// 7. classifyIntent()
+// 10. classifyIntent()
 // ============================================
 
 const INTENT_PATTERNS: { intencao: Intencao; patterns: RegExp[] }[] = [
@@ -382,17 +552,14 @@ const INTENT_PATTERNS: { intencao: Intencao; patterns: RegExp[] }[] = [
 function classifyIntent(message: string, ctx: ClassifiedContext): ClassifiedIntent {
   const msg = message.toLowerCase();
 
-  // Detect intencao
-  let intencao: Intencao = "reflexao_simbolica"; // default
+  let intencao: Intencao = "reflexao_simbolica";
   for (const { intencao: i, patterns } of INTENT_PATTERNS) {
     if (patterns.some(p => p.test(msg))) { intencao = i; break; }
   }
 
-  // Context overrides
   if (ctx.modoEspecial === "livro" && intencao === "reflexao_simbolica") intencao = "conversa_material_fonte";
   if (ctx.modoEspecial === "sessao" && intencao === "reflexao_simbolica") intencao = "apoio_clinico";
 
-  // Complexidade
   let complexidade: Complexidade = "baixa";
   if (msg.length > 300) complexidade = "alta";
   else if (msg.length > 100) complexidade = "media";
@@ -400,7 +567,6 @@ function classifyIntent(message: string, ctx: ClassifiedContext): ClassifiedInte
     complexidade = complexidade === "baixa" ? "media" : "alta";
   }
 
-  // Risco
   let risco: Risco = "baixo";
   if (["apoio_clinico", "leitura_jornada"].includes(intencao)) risco = "moderado";
   if (ctx.tipoUsuaria === "terapeuta" && intencao === "apoio_clinico") risco = "sensivel";
@@ -410,7 +576,7 @@ function classifyIntent(message: string, ctx: ClassifiedContext): ClassifiedInte
 }
 
 // ============================================
-// 8. resolveExecutionMode() + resolveSkills()
+// 11. resolveSkills() + resolveExecutionMode()
 // ============================================
 
 function resolveSkillsFromIntent(
@@ -421,12 +587,10 @@ function resolveSkillsFromIntent(
   const skills: Set<SkillKey> = new Set();
   const msg = message.toLowerCase();
 
-  // 1. Context-forced skills
   if (ctx.modoEspecial === "livro" || ctx.area === "clube-do-livro") skills.add("modo_livro");
   if (ctx.modoEspecial === "sessao") skills.add("arquiteto_fluxos");
   if (ctx.area === "casa-das-maquinas" && ctx.subArea === "mapa-vivo") skills.add("engenheiro_dados");
 
-  // 2. Intent-based mapping
   const intentSkillMap: Record<Intencao, SkillKey[]> = {
     navegacao: [],
     explicacao_aprendizado: [],
@@ -441,7 +605,6 @@ function resolveSkillsFromIntent(
 
   for (const s of intentSkillMap[intent.intencao] || []) skills.add(s);
 
-  // 3. Keyword-based detection (only if not already covered)
   for (const [key, skill] of Object.entries(SKILLS)) {
     if (skills.has(key as SkillKey)) continue;
     for (const gatilho of skill.gatilhos) {
@@ -449,7 +612,6 @@ function resolveSkillsFromIntent(
     }
   }
 
-  // 4. Pipeline detection for combo patterns
   if (skills.has("modo_livro") && (msg.includes("podcast") || msg.includes("audio"))) {
     skills.add("alquimista_conteudo");
     skills.add("curadora_podcast");
@@ -463,18 +625,13 @@ function resolveSkillsFromIntent(
 
 function resolvePipeline(skills: SkillKey[], intent: ClassifiedIntent): PipelineKey | null {
   if (skills.length < 2) return null;
-
-  // Check if detected skills match a known pipeline
   for (const [key, pipeline] of Object.entries(PIPELINES)) {
     const pipeSkills = new Set(pipeline.skills);
     const matchCount = skills.filter(s => pipeSkills.has(s)).length;
     if (matchCount >= pipeSkills.size) return key as PipelineKey;
   }
-
-  // Intent-based pipeline fallback
   if (intent.intencao === "leitura_jornada") return "leitura_jornada";
   if (intent.intencao === "apoio_clinico" && skills.includes("guardiao_jornada")) return "conducao_clinica";
-
   return null;
 }
 
@@ -485,39 +642,104 @@ function resolveExecutionMode(skills: SkillKey[]): ModoExecucao {
 }
 
 // ============================================
-// 9. buildMinimalPayload()
+// 12. ENFORCE SKILL CONTRACTS
+// ============================================
+
+interface ContractEnforcementResult {
+  authorized: boolean;
+  filteredSkills: SkillKey[];
+  blockedSkills: SkillKey[];
+  reason?: string;
+}
+
+function enforceSkillContracts(
+  skills: SkillKey[],
+  portal: string,
+  hasBond: boolean
+): ContractEnforcementResult {
+  const filtered: SkillKey[] = [];
+  const blocked: SkillKey[] = [];
+
+  for (const skill of skills) {
+    const contract = SKILL_CONTRACTS[skill];
+
+    // Check portal access
+    if (!contract.minPortal.includes(portal) && portal !== "admin") {
+      blocked.push(skill);
+      continue;
+    }
+
+    // Check bond requirement
+    if (contract.requiresBond && !hasBond && portal !== "admin") {
+      blocked.push(skill);
+      continue;
+    }
+
+    filtered.push(skill);
+  }
+
+  return {
+    authorized: blocked.length === 0,
+    filteredSkills: filtered,
+    blockedSkills: blocked,
+    reason: blocked.length > 0
+      ? `Skills bloqueadas por falta de autorização: ${blocked.join(", ")}`
+      : undefined,
+  };
+}
+
+// ============================================
+// 13. buildMinimalPayload() — per-skill filtering
 // ============================================
 
 function buildMinimalPayload(
   ctx: ClassifiedContext,
-  intent: ClassifiedIntent,
+  _intent: ClassifiedIntent,
   extraCtx: Record<string, unknown> | undefined,
-  skills: SkillKey[]
+  skills: SkillKey[],
+  clinicalAccess: ClinicalAccessResult
 ): MinimalPayload {
-  const safeFields = new Set([
-    "pageName", "module", "bookTitle", "bookAuthor", "cycleTheme",
-    "stationName", "currentTool", "clientCodinome",
-  ]);
+  // Compute the union of allowed fields across active skills
+  const allowedFields = new Set<string>();
+  const forbiddenFields = new Set<string>();
 
+  if (skills.length === 0) {
+    // Direct response: minimal safe fields only
+    allowedFields.add("pageName");
+    allowedFields.add("module");
+  } else {
+    for (const skill of skills) {
+      const contract = SKILL_CONTRACTS[skill];
+      for (const f of contract.allowedFields) allowedFields.add(f);
+      for (const f of contract.forbiddenFields) forbiddenFields.add(f);
+    }
+  }
+
+  // Forbidden always wins
+  for (const f of forbiddenFields) allowedFields.delete(f);
+
+  // Build snippet from allowed fields only
   const contextSnippet: Record<string, unknown> = {};
-
   if (extraCtx) {
     for (const [key, val] of Object.entries(extraCtx)) {
-      if (safeFields.has(key) && val !== undefined && val !== null) {
-        contextSnippet[key] = val;
+      if (allowedFields.has(key) && val !== undefined && val !== null) {
+        // String values only — prevent object injection
+        if (typeof val === "string" && val.length <= 500) {
+          contextSnippet[key] = val;
+        }
       }
     }
   }
 
-  // For visitante, strip everything sensitive
-  if (ctx.tipoUsuaria === "visitante") {
-    delete contextSnippet.clientCodinome;
+  // Inject validated codinome if clinical access was authorized
+  if (clinicalAccess.authorized && clinicalAccess.clientCodinome && allowedFields.has("clientCodinome")) {
+    contextSnippet.clientCodinome = clinicalAccess.clientCodinome;
   }
 
-  // For non-terapeuta, never include clinical context
-  if (ctx.tipoUsuaria !== "terapeuta") {
-    delete contextSnippet.clientCodinome;
-  }
+  // NEVER include raw IDs in payload sent to AI
+  delete contextSnippet.clientId;
+  delete contextSnippet.userId;
+  delete contextSnippet.sessionId;
 
   return {
     tipoUsuaria: ctx.tipoUsuaria,
@@ -529,7 +751,7 @@ function buildMinimalPayload(
 }
 
 // ============================================
-// 10. DEPTH CALIBRATION
+// 14. DEPTH CALIBRATION
 // ============================================
 
 function getDepthInstruction(tipo: TipoUsuaria): string {
@@ -542,7 +764,7 @@ function getDepthInstruction(tipo: TipoUsuaria): string {
 }
 
 // ============================================
-// 11. composeSyntheiaResponse() — Build prompt
+// 15. composeSystemPrompt()
 // ============================================
 
 function composeSystemPrompt(
@@ -555,14 +777,11 @@ function composeSystemPrompt(
 ): string {
   const parts: string[] = [SYNTHEIA_CORE];
 
-  // Mode prompt
   const modePrompt = MODE_PROMPTS[mode];
   if (modePrompt) parts.push(modePrompt);
 
-  // Depth
   parts.push(`\n📏 CALIBRAÇÃO DE PROFUNDIDADE\n${getDepthInstruction(ctx.tipoUsuaria)}`);
 
-  // Context block
   parts.push(`\n📍 CONTEXTO ATUAL
 • Tipo de Usuária: ${ctx.tipoUsuaria}
 • Área: ${ctx.area}
@@ -572,7 +791,6 @@ function composeSystemPrompt(
 • Complexidade: ${intent.complexidade}
 • Risco: ${intent.risco}`);
 
-  // Risk warning
   if (intent.risco === "sensivel") {
     parts.push(`\n⚠️ ALERTA DE RISCO SENSÍVEL
 Esta interação envolve conteúdo sensível. Reforce limites éticos.
@@ -580,7 +798,6 @@ NÃO diagnostique. NÃO substitua a terapeuta. NÃO faça interpretações invas
 Se detectar sinais de crise, oriente a buscar ajuda profissional.`);
   }
 
-  // Skill prompts
   if (plan.skills.length === 1) {
     parts.push(`\n${SKILLS[plan.skills[0]].prompt}`);
   } else if (plan.skills.length > 1) {
@@ -593,17 +810,12 @@ NÃO separe por skill. Componha como SINTHEYA.\n`);
     }
   }
 
-  // Voice
-  if (voicePrompt) {
-    parts.push(`\nVOZ ATIVA\n${voicePrompt}`);
-  }
+  if (voicePrompt) parts.push(`\nVOZ ATIVA\n${voicePrompt}`);
 
-  // Extra context snippet
   if (Object.keys(payload.contextSnippet).length > 0) {
     parts.push(`\nCONTEXTO ADICIONAL\n${JSON.stringify(payload.contextSnippet, null, 2)}`);
   }
 
-  // Composition directive
   parts.push(`\n🔷 DIRETIVA DE COMPOSIÇÃO FINAL
 Sua resposta DEVE seguir o formato: Núcleo → Leitura → Direção (→ Limite Ético se necessário).
 Mantenha coerência com o tipo de usuária (${ctx.tipoUsuaria}) e a profundidade calibrada.
@@ -613,11 +825,10 @@ A resposta é sempre DA SINTHEYA — nunca de uma skill isolada.`);
 }
 
 // ============================================
-// 12. logMinimalTrace()
+// 16. logMinimalTrace()
 // ============================================
 
 function logMinimalTrace(trace: TraceLog): void {
-  // Console log for edge function logs — no sensitive data
   console.log(JSON.stringify({
     t: trace.timestamp,
     uid: trace.userId.slice(0, 8),
@@ -627,13 +838,34 @@ function logMinimalTrace(trace: TraceLog): void {
     mode: trace.modoExecucao,
     skills: trace.skills,
     pipeline: trace.pipeline,
+    risco: trace.risco,
     status: trace.status,
     ms: trace.latencyMs,
   }));
 }
 
 // ============================================
-// 13. MAIN HANDLER
+// 17. SAFE FALLBACK RESPONSE
+// ============================================
+
+function buildSafeFallbackResponse(reason: string): string {
+  return JSON.stringify({
+    mode: "arcano",
+    message: {
+      role: "assistant",
+      content: "Posso ajudá-la com orientação geral, explicações sobre o método e navegação na Casa Orácula. Para acesso a conteúdo clínico ou dados específicos de clientes, é necessário ter o vínculo terapêutico ativo. Como posso ajudá-la?",
+    },
+    routing: {
+      executionMode: "direct_response",
+      pipeline: null,
+      skillsActivated: [],
+      context: { blocked: true, reason },
+    },
+  });
+}
+
+// ============================================
+// 18. MAIN HANDLER
 // ============================================
 
 serve(async (req) => {
@@ -642,10 +874,10 @@ serve(async (req) => {
   }
 
   const startTime = Date.now();
-  let tracePartial: Partial<TraceLog> = { timestamp: new Date().toISOString() };
+  const tracePartial: Partial<TraceLog> = { timestamp: new Date().toISOString() };
 
   try {
-    // === STEP 1: Security — Authenticate ===
+    // === STEP 1: Authenticate ===
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(
@@ -656,21 +888,32 @@ serve(async (req) => {
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+    // User client for auth validation
+    const userClient = createClient(supabaseUrl, supabaseAnonKey, {
       global: { headers: { Authorization: authHeader } },
     });
 
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
-    if (authError || !user) {
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } = await userClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
       return new Response(
         JSON.stringify({ error: "Invalid or expired token" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    tracePartial.userId = user.id;
+    const userId = claimsData.claims.sub as string;
+    tracePartial.userId = userId;
 
-    // === STEP 2: Validate API Key ===
+    // Service client for privileged reads (user_roles, clientes bond check)
+    const serviceClient = createClient(supabaseUrl, supabaseServiceKey);
+
+    // === STEP 2: Server-side role resolution ===
+    const { portal, tipoUsuaria: serverTipo } = await resolveServerSideRole(serviceClient, userId);
+
+    // === STEP 3: Validate API Key ===
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) {
       return new Response(
@@ -679,7 +922,7 @@ serve(async (req) => {
       );
     }
 
-    // === STEP 3: Parse & Validate Request ===
+    // === STEP 4: Parse & Validate Request ===
     const body: SyntheiaChatRequest = await req.json();
     const { mode, messages, extra_context, voice_prompt, routing_context } = body;
 
@@ -697,39 +940,83 @@ serve(async (req) => {
       );
     }
 
-    // === STEP 4: classifyUserContext() ===
+    // Limit messages array to prevent abuse
+    if (messages.length > 50) {
+      return new Response(
+        JSON.stringify({ error: "Too many messages in conversation" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // === STEP 5: classifyUserContext() — uses server-verified tipo ===
     const frontendCtx: FrontendRoutingContext = routing_context || {};
-    const classifiedCtx = classifyUserContext(frontendCtx, extra_context);
+    const classifiedCtx = classifyUserContext(serverTipo, frontendCtx, extra_context);
     tracePartial.tipoUsuaria = classifiedCtx.tipoUsuaria;
     tracePartial.area = classifiedCtx.area;
 
-    // === STEP 5: classifyIntent() ===
+    // === STEP 6: classifyIntent() ===
     const lastUserMessage = [...messages].reverse().find(m => m.role === "user")?.content || "";
     const classifiedIntent = classifyIntent(lastUserMessage, classifiedCtx);
     tracePartial.intencao = classifiedIntent.intencao;
+    tracePartial.risco = classifiedIntent.risco;
 
-    // === STEP 6: resolveSkills() + resolveExecutionMode() ===
+    // === STEP 7: resolveSkills() ===
     const detectedSkills = resolveSkillsFromIntent(classifiedIntent, classifiedCtx, lastUserMessage);
-    const pipeline = resolvePipeline(detectedSkills, classifiedIntent);
-    const executionMode = resolveExecutionMode(detectedSkills);
+
+    // === STEP 8: Validate clinical access if any skill requires bond ===
+    const requestedClientId = (routing_context?.clientId || extra_context?.clientId) as string | undefined;
+    const anyClinicalSkill = detectedSkills.some(s => SKILL_CONTRACTS[s].requiresBond);
+
+    let clinicalAccess: ClinicalAccessResult = { authorized: true };
+
+    if (anyClinicalSkill && requestedClientId) {
+      clinicalAccess = await validateClinicalAccess(serviceClient, userId, portal, requestedClientId);
+
+      if (!clinicalAccess.authorized) {
+        // BLOCKED — no clinical context, safe fallback
+        tracePartial.status = "blocked";
+        tracePartial.modoExecucao = "direct_response";
+        tracePartial.skills = [];
+        tracePartial.pipeline = null;
+        tracePartial.latencyMs = Date.now() - startTime;
+        logMinimalTrace(tracePartial as TraceLog);
+
+        return new Response(
+          buildSafeFallbackResponse(clinicalAccess.reason || "bond_missing"),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    } else if (anyClinicalSkill && !requestedClientId) {
+      // Clinical skill requested but no clientId — downgrade to non-clinical
+      clinicalAccess = { authorized: false, reason: "no_client_specified" };
+    }
+
+    // === STEP 9: Enforce skill contracts ===
+    const hasBond = clinicalAccess.authorized && !!requestedClientId;
+    const contractResult = enforceSkillContracts(detectedSkills, portal, hasBond);
+    const activeSkills = contractResult.filteredSkills;
+
+    // === STEP 10: Resolve execution plan with filtered skills ===
+    const pipeline = resolvePipeline(activeSkills, classifiedIntent);
+    const executionMode = resolveExecutionMode(activeSkills);
 
     const executionPlan: ExecutionPlan = {
       mode: executionMode,
-      skills: detectedSkills,
+      skills: activeSkills,
       pipeline,
     };
 
     tracePartial.modoExecucao = executionMode;
-    tracePartial.skills = detectedSkills.map(k => SKILLS[k].nome);
+    tracePartial.skills = activeSkills.map(k => SKILLS[k].nome);
     tracePartial.pipeline = pipeline;
 
-    // === STEP 7: buildMinimalPayload() ===
-    const payload = buildMinimalPayload(classifiedCtx, classifiedIntent, extra_context, detectedSkills);
+    // === STEP 11: buildMinimalPayload() — contract-filtered ===
+    const payload = buildMinimalPayload(classifiedCtx, classifiedIntent, extra_context, activeSkills, clinicalAccess);
 
-    // === STEP 8: composeSyntheiaResponse() — Build system prompt ===
+    // === STEP 12: composeSystemPrompt() ===
     const systemPrompt = composeSystemPrompt(mode, classifiedCtx, classifiedIntent, executionPlan, payload, voice_prompt);
 
-    // === STEP 9: Execute — Call OpenAI ===
+    // === STEP 13: Call OpenAI ===
     const openaiMessages: ChatMessage[] = [
       { role: "system", content: systemPrompt },
       ...messages,
@@ -752,8 +1039,8 @@ serve(async (req) => {
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`[syntheia-chat] OpenAI error ${response.status}:`, errorText);
-
       tracePartial.status = "error";
+      tracePartial.latencyMs = Date.now() - startTime;
       logMinimalTrace(tracePartial as TraceLog);
 
       if (response.status === 429) {
@@ -774,6 +1061,7 @@ serve(async (req) => {
 
     if (!content) {
       tracePartial.status = "error";
+      tracePartial.latencyMs = Date.now() - startTime;
       logMinimalTrace(tracePartial as TraceLog);
       return new Response(
         JSON.stringify({ error: "Resposta vazia da OpenAI" }),
@@ -781,12 +1069,11 @@ serve(async (req) => {
       );
     }
 
-    // === STEP 10: logMinimalTrace() ===
+    // === STEP 14: Log & Return ===
     tracePartial.status = "success";
     tracePartial.latencyMs = Date.now() - startTime;
     logMinimalTrace(tracePartial as TraceLog);
 
-    // === Return ===
     return new Response(
       JSON.stringify({
         mode,
@@ -795,7 +1082,10 @@ serve(async (req) => {
         routing: {
           executionMode,
           pipeline: pipeline ? PIPELINES[pipeline].nome : null,
-          skillsActivated: detectedSkills.map(k => SKILLS[k].nome),
+          skillsActivated: activeSkills.map(k => SKILLS[k].nome),
+          blockedSkills: contractResult.blockedSkills.length > 0
+            ? contractResult.blockedSkills.map(k => SKILLS[k].nome)
+            : undefined,
           context: {
             tipoUsuaria: classifiedCtx.tipoUsuaria,
             area: classifiedCtx.area,
