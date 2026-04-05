@@ -355,7 +355,7 @@ export default function MapaVivoPage() {
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" className="gap-1.5 text-xs"
-              onClick={() => navigate(`/saas/clientes/${clienteId}/mapa-cidadela`)}>
+              onClick={() => navigate(`/casa-das-maquinas/clientes/${clienteId}/mapa-cidadela`)}>
               <MapPin className="w-3.5 h-3.5" /> Mapa Clássico
             </Button>
             <Button variant="outline" size="sm" className="gap-1.5 text-xs"

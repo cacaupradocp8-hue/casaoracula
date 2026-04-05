@@ -10,6 +10,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ServiceWorkerUpdateToast } from "@/components/pwa/ServiceWorkerUpdateToast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useParams, useLocation } from "react-router-dom";
+import RedirectWithParams from "@/components/routing/RedirectWithParams";
 import { initRitualSessionTracking, trackRouteForRitual } from "@/hooks/useRitualState";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { AdminPreviewProvider, useAdminPreviewOptional } from "@/contexts/AdminPreviewContext";
@@ -1770,21 +1771,32 @@ function AppRoutes() {
         />
         <Route path="/casa-das-maquinas/clientes" element={<ProtectedRoute minPortal="oracula"><ClientesPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/clientes/:clienteId" element={<ProtectedRoute minPortal="oracula"><ClienteDetailPage /></ProtectedRoute>} />
-        <Route path="/saas/clientes/:clienteId/mapa-cidadela" element={<ProtectedRoute minPortal="oracula"><MapaCidadelaPage /></ProtectedRoute>} />
-        <Route path="/app/clientes/:clienteId/cidadela" element={<ProtectedRoute minPortal="oracula"><MapaCidadelaPage /></ProtectedRoute>} />
-        <Route path="/saas/clientes/:clienteId/relatorio-jornada" element={<ProtectedRoute minPortal="oracula"><RelatorioJornadaPage /></ProtectedRoute>} />
-        <Route path="/saas/clientes/:clienteId/mapa-vivo" element={<ProtectedRoute minPortal="oracula"><MapaVivoPage /></ProtectedRoute>} />
-        <Route path="/saas/clientes/:clienteId/cidadela-viva" element={<ProtectedRoute minPortal="oracula"><MapaVivoCidadelaPage /></ProtectedRoute>} />
-        <Route path="/saas/clientes/:clienteId/jornada-alma" element={<ProtectedRoute minPortal="aluna_formacao"><JornadaAlmaPage /></ProtectedRoute>} />
-        <Route path="/saas/clientes/:clienteId/rituais-mudra" element={<ProtectedRoute minPortal="aluna_formacao"><RituaisMudraPage /></ProtectedRoute>} />
-        <Route path="/saas/clientes/:clienteId/bussola-onirica" element={<ProtectedRoute minPortal="aluna_formacao"><BussolaOniricaPage /></ProtectedRoute>} />
-        <Route path="/saas/clientes/:clienteId/circulo-sagrado" element={<ProtectedRoute minPortal="aluna_formacao"><CirculoSagradoPage /></ProtectedRoute>} />
+        {/* === Rotas oficiais /casa-das-maquinas/clientes/:id/* === */}
+        <Route path="/casa-das-maquinas/clientes/:clienteId/mapa-cidadela" element={<ProtectedRoute minPortal="oracula"><MapaCidadelaPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/clientes/:clienteId/relatorio-jornada" element={<ProtectedRoute minPortal="oracula"><RelatorioJornadaPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/clientes/:clienteId/mapa-vivo" element={<ProtectedRoute minPortal="oracula"><MapaVivoPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/clientes/:clienteId/cidadela-viva" element={<ProtectedRoute minPortal="oracula"><MapaVivoCidadelaPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/clientes/:clienteId/jornada-alma" element={<ProtectedRoute minPortal="aluna_formacao"><JornadaAlmaPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/clientes/:clienteId/rituais-mudra" element={<ProtectedRoute minPortal="aluna_formacao"><RituaisMudraPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/clientes/:clienteId/bussola-onirica" element={<ProtectedRoute minPortal="aluna_formacao"><BussolaOniricaPage /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/clientes/:clienteId/circulo-sagrado" element={<ProtectedRoute minPortal="aluna_formacao"><CirculoSagradoPage /></ProtectedRoute>} />
+        {/* === Redirects legados /saas/* e /app/* → /casa-das-maquinas/* === */}
+        <Route path="/saas/clientes/:clienteId/mapa-cidadela" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/mapa-cidadela" />} />
+        <Route path="/saas/clientes/:clienteId/relatorio-jornada" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/relatorio-jornada" />} />
+        <Route path="/saas/clientes/:clienteId/mapa-vivo" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/mapa-vivo" />} />
+        <Route path="/saas/clientes/:clienteId/cidadela-viva" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/cidadela-viva" />} />
+        <Route path="/saas/clientes/:clienteId/jornada-alma" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/jornada-alma" />} />
+        <Route path="/saas/clientes/:clienteId/rituais-mudra" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/rituais-mudra" />} />
+        <Route path="/saas/clientes/:clienteId/bussola-onirica" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/bussola-onirica" />} />
+        <Route path="/saas/clientes/:clienteId/circulo-sagrado" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/circulo-sagrado" />} />
+        <Route path="/app/clientes/:clienteId/cidadela" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/mapa-cidadela" />} />
         <Route path="/academia/curso-deusas" element={<ProtectedRoute minPortal="aluna_formacao"><CursoDeusasPage /></ProtectedRoute>} />
         <Route path="/academia/curso-chave-onirica" element={<ProtectedRoute minPortal="aluna_formacao"><CursoChaveOniricaPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/nova-sessao" element={<ProtectedRoute minPortal="oracula"><ModoSessaoPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/perfil-conducao" element={<ProtectedRoute minPortal="oracula"><PerfilConducaoPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/campo-clientes" element={<ProtectedRoute minPortal="oracula"><CampoDasClientesPage /></ProtectedRoute>} />
-        <Route path="/saas/sessao/:clienteId" element={<ProtectedRoute minPortal="oracula"><ModoSessaoImersivo /></ProtectedRoute>} />
+        <Route path="/casa-das-maquinas/sessao/:clienteId" element={<ProtectedRoute minPortal="oracula"><ModoSessaoImersivo /></ProtectedRoute>} />
+        <Route path="/saas/sessao/:clienteId" element={<RedirectWithParams to="/casa-das-maquinas/sessao/:clienteId" />} />
         <Route path="/casa-das-maquinas/ferramentas" element={<ProtectedRoute minPortal="oracula"><FerramentasPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/grupos" element={<ProtectedRoute minPortal="oracula"><GruposPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/grupos/:groupId" element={<ProtectedRoute minPortal="oracula"><GrupoDetailPage /></ProtectedRoute>} />
