@@ -40,7 +40,7 @@ export default function Canteiro() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState<EntryType | 'todos'>('todos');
-  const { data: entries, isLoading } = useCanteiroEntries(activeFilter);
+  const { data: entries, isLoading } = useCanteiroPublicEntries(activeFilter);
 
   const entryIds = useMemo(() => entries?.map(e => e.id) || [], [entries]);
   const { data: reactionsMap } = useCanteiroReactions(entryIds);
