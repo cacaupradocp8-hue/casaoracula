@@ -5,7 +5,7 @@
 
 import { supabase } from "@/integrations/supabase/client";
 
-export type SyntheiaChatMode = "arcano" | "arcane" | "ferramenteira";
+export type SyntheiaChatMode = "arcano" | "arcane" | "ferramenteira" | "converse_com_livro";
 
 export interface ChatMessage {
   role: "user" | "assistant";
@@ -102,6 +102,7 @@ export const SYNTHEIA_MODE_LABELS: Record<SyntheiaChatMode, string> = {
   arcano: "Arcano — Linguagem Simbólica",
   arcane: "Arcane — Linguagem Simbólica",
   ferramenteira: "Ferramenteira — Prática Aplicável",
+  converse_com_livro: "Converse com o Livro",
 };
 
 /**
@@ -111,4 +112,5 @@ export const SYNTHEIA_MODE_DESCRIPTIONS: Record<SyntheiaChatMode, string> = {
   arcano: "Metáforas, arquétipos, contos simbólicos e exercícios de imaginação",
   arcane: "Metáforas, arquétipos, contos simbólicos e exercícios de imaginação",
   ferramenteira: "Rituais, práticas, roteiros de condução e perguntas terapêuticas",
+  converse_com_livro: "Conversa guiada sobre a obra do Clube do Livro Oracular",
 };

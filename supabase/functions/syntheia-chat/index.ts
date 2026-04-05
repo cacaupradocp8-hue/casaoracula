@@ -182,8 +182,8 @@ const SKILL_CONTRACTS: Record<SkillKey, SkillContract> = {
   modo_livro: {
     domain: "formativa",
     requiresBond: false,
-    allowedFields: ["bookTitle", "bookAuthor", "cycleTheme", "stationName", "pageName"],
-    forbiddenFields: ["clientId", "sessionNotes", "clientCodinome"],
+    allowedFields: ["bookTitle", "bookAuthor", "cycleTheme", "stationName", "chapterTitle", "excerptText", "optionalStudyNotes", "pageName"],
+    forbiddenFields: ["clientId", "sessionNotes", "clientCodinome", "therapistId", "rawClinicalData"],
     minPortal: ["mentorada", "aluna_formacao", "assinante", "oracula", "admin"],
   },
 };
@@ -265,6 +265,7 @@ const MODE_PROMPTS: Record<string, string> = {
   arcano: `🎭 MODO ARCANO — Traduzir processos psíquicos em LINGUAGEM SIMBÓLICA. Metáforas terapêuticas, arquétipos em luz e sombra, contos simbólicos. TOM: Poético, evocativo, profundo.`,
   arcane: `🎭 MODO ARCANE — Traduzir processos psíquicos em LINGUAGEM SIMBÓLICA. Metáforas terapêuticas, arquétipos em luz e sombra, contos simbólicos. TOM: Poético, evocativo, profundo.`,
   ferramenteira: `🜂 MODO FERRAMENTEIRA — Transformar temas terapêuticos em PRÁTICA APLICÁVEL. Rituais, práticas, roteiros, perguntas terapêuticas, checklists. TOM: Direto, estruturado, prático.`,
+  converse_com_livro: `📖 MODO CONVERSE COM O LIVRO — Interlocutor de estudo do Clube do Livro Oracular. Guia de leitura simbólica, tradutor de ideias e ponte entre a obra e a prática. TOM: Íntimo, claro, contemplativo, didático sem ser escolar.`,
 };
 
 // ============================================
@@ -351,13 +352,34 @@ NÃO trivialize o processo. NÃO crie métricas de eficiência emocional.`,
   },
   modo_livro: {
     nome: "Converse com o Livro",
-    prompt: `📖 SKILL: CONVERSE COM O LIVRO
-Modo especializado de conversa com livro do Clube Oracular.
-Espelho simbólico entre a obra e a vida da usuária.
-• Não resuma o livro • Não repita o autor • Arquétipo é campo, não rótulo
-• Conecte a obra com a jornada interior • Sugira práticas e perguntas contemplativas
-TOM: Contemplativo, profundo, respeitoso com a obra.`,
-    gatilhos: ["livro", "leitura", "clube", "trecho", "capitulo", "autor", "obra"],
+    prompt: `📖 SKILL: CONVERSE COM O LIVRO — Modo Especializado do Clube Oracular
+
+Você é uma interlocutora de estudo: guia de leitura simbólica, tradutora de ideias difíceis e ponte entre a obra e a prática simbólica.
+
+FUNÇÕES:
+1. Explicar trechos — esclarecer linguagem difícil, traduzir ideias, organizar sentido
+2. Responder dúvidas — personagens, símbolos, conflitos, arquétipos, temas, movimentos narrativos
+3. Conectar com a jornada simbólica — travessias, torres, portas, arquétipos, distritos (sem forçar)
+4. Ajudar a estudar — resumir ideias, destacar pontos de atenção, sugerir perguntas de leitura, apontar fios condutores
+5. Sugerir desdobramentos — pergunta contemplativa, prática simbólica, carta, micro aplicação
+
+ESTRUTURA DE RESPOSTA (quando aplicável):
+🔹 Núcleo — explicação direta da dúvida
+🔹 Leitura — aprofundamento simbólico ou narrativo
+🔹 Aplicação — conexão com jornada ou prática reflexiva
+🔹 Próximo fio — pergunta, pista ou direção para continuar a leitura
+
+REGRAS DE HONESTIDADE:
+• Se excerptText NÃO foi fornecido, diga que está respondendo a partir do contexto geral
+• Convide a aluna a colar o trecho quando quiser mais precisão
+• NUNCA invente citações ou detalhes específicos sem base no payload
+• NUNCA finja ter lido uma parte específica da obra
+
+TOM: íntimo, claro, simbólico, didático sem ser escolar, profundo sem ser acadêmico, acolhedor sem infantilizar.
+EVITAR: respostas genéricas de chatbot, excesso de teoria, resumo escolar, interpretação mística vazia, linguagem clínica diagnóstica.
+
+NÃO É: chat geral, suporte clínico, substituto da terapeuta, motor de diagnóstico.`,
+    gatilhos: ["livro", "leitura", "clube", "trecho", "capitulo", "autor", "obra", "passagem", "personagem"],
   },
 };
 
@@ -724,7 +746,9 @@ function buildMinimalPayload(
     for (const [key, val] of Object.entries(extraCtx)) {
       if (allowedFields.has(key) && val !== undefined && val !== null) {
         // String values only — prevent object injection
-        if (typeof val === "string" && val.length <= 500) {
+        // Allow longer values for book content fields
+        const maxLen = (key === "excerptText" || key === "optionalStudyNotes") ? 3000 : 500;
+        if (typeof val === "string" && val.length <= maxLen) {
           contextSnippet[key] = val;
         }
       }
