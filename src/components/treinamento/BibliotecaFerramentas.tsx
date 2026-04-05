@@ -4,6 +4,15 @@ import {
   Compass, Shield, BookOpen, Brain, Flame, Eye, Heart, Layers, MessageSquare, Map as MapIcon, Sparkles, DoorOpen
 } from 'lucide-react';
 
+const HIDDEN_TOOLS = new Set([
+  'Escrita Simbólica',
+  'Espelho Relacional',
+  'Ritual Simbólico',
+  'Diálogo de Partes',
+  'Mapa de Transformação',
+  'Ritual de Passagem',
+]);
+
 const FERRAMENTAS = [
   { nome: 'Cartografia Psíquica', categoria: 'Leitura de Campo', icon: Compass, desc: 'Mapeamento inicial da psique. Identifica Torres, Portas e campo dominante.', distrito: 'Portão da Chegada' },
   { nome: 'Torre Viva', categoria: 'Leitura de Campo', icon: Shield, desc: 'Explora as Torres de proteção psíquica e seus mecanismos de defesa.', distrito: 'Torres' },
@@ -33,7 +42,7 @@ export function BibliotecaFerramentas() {
         Referência completa das ferramentas do Método Orácula organizadas por categoria e distrito.
       </p>
       <div className="grid gap-3 md:grid-cols-2">
-        {FERRAMENTAS.map(f => (
+        {FERRAMENTAS.filter(f => !HIDDEN_TOOLS.has(f.nome)).map(f => (
           <Card key={f.nome} className="bg-[#0F2438] border-[#C9A24A]/10 hover:border-[#C9A24A]/30 transition-colors">
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between gap-2">
