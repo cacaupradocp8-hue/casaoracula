@@ -23,11 +23,10 @@ import { TravessiaSecao } from '@/components/jardim-cliente/TravessiaSecao';
 type Tab = 'inicio' | 'jardim' | 'terapeuta' | 'praticas' | 'travessia';
 
 const TABS: { key: Tab; label: string; icon: any }[] = [
-  { key: 'inicio', label: 'Início', icon: Home },
   { key: 'jardim', label: 'Meu Jardim', icon: Leaf },
-  { key: 'terapeuta', label: 'Da Terapeuta', icon: Inbox },
-  { key: 'praticas', label: 'Práticas', icon: Sparkles },
-  { key: 'travessia', label: 'Travessia', icon: MapPin },
+  { key: 'travessia', label: 'Minha Travessia', icon: MapPin },
+  { key: 'praticas', label: 'Práticas Guiadas', icon: Sparkles },
+  { key: 'terapeuta', label: 'Acompanhamento da Terapeuta', icon: Inbox },
 ];
 
 export default function JardimHeroinaClientePage() {

@@ -25,31 +25,30 @@ import {
 // ── VISITANTE / GRATUITO ─────────────────────────────────────────────────────
 const visitanteMenuGroups = () => [
   { key: 'inicio', label: 'Sala da Visitante', icon: Home, path: '/sala-da-visitante', subitems: [] },
-  { key: 'mapa', label: 'Mapa da Casa', icon: Map, path: '/mapa-casa', subitems: [] },
+  { key: 'explorar', label: 'Explorar a Casa', icon: Map, path: '/mapa-casa', subitems: [] },
+  { key: 'oraculo', label: 'Vivenciar um Oráculo', icon: Sparkles, path: '/oraculos', subitems: [] },
+  { key: 'travessia', label: 'Sua Primeira Travessia', icon: Compass, path: '/travessias', subitems: [] },
   { key: 'clube', label: 'Clube Oracular', icon: BookOpen, path: '/app/clube', subitems: [] },
-  { key: 'conta', label: 'Minha Conta', icon: User, path: '/minha-conta', subitems: [] },
-  { key: 'suporte', label: 'Suporte', icon: Headphones, path: '/suporte', subitems: [] },
+  { key: 'formacao', label: 'Caminhos de Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
 ];
 
 // ── ASSINANTE DO CLUBE ──────────────────────────────────────────────────────
 const assinanteMenuGroups = () => [
-  { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
-  { key: 'jornada', label: 'Minha Jornada', icon: Compass, path: '/minha-jornada', subitems: [] },
-  { key: 'mapa', label: 'Mapa da Casa', icon: Map, path: '/mapa-casa', subitems: [] },
-  { key: 'clube', label: 'Clube de Leitura', icon: BookOpen, path: '/app/clube', subitems: [] },
-  { key: 'jardim', label: 'Meu Jardim', icon: Flower2, path: '/meu-jardim', subitems: [] },
+  { key: 'inicio', label: 'Minha Jornada', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'biblioteca', label: 'Biblioteca', icon: BookOpen, path: '/biblioteca', subitems: [] },
+  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/app/clube', subitems: [] },
+  { key: 'jardim', label: 'Jardim da Psique', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
   { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
   { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/comunidade', subitems: [] },
-  { key: 'conta', label: 'Perfil', icon: User, path: '/minha-conta', subitems: [] },
 ];
 
 // ── ALUNA DE FORMAÇÃO ───────────────────────────────────────────────────────
 const alunaMenuGroups = () => [
-  { key: 'inicio', label: 'Início', icon: Home, path: '/dashboard-membro', subitems: [] },
-  { key: 'jornada', label: 'Minha Jornada', icon: Compass, path: '/minha-jornada', subitems: [] },
-  { key: 'mapa', label: 'Mapa da Casa', icon: Map, path: '/mapa-casa', subitems: [] },
-  { key: 'clube', label: 'Clube de Leitura', icon: BookOpen, path: '/app/clube', subitems: [] },
-  { key: 'jardim', label: 'Meu Jardim', icon: Flower2, path: '/meu-jardim', subitems: [] },
+  { key: 'inicio', label: 'Minha Jornada', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'biblioteca', label: 'Biblioteca', icon: BookOpen, path: '/biblioteca', subitems: [] },
+  { key: 'treinamento', label: 'Sala de Treinamento', icon: Compass, path: '/sala-de-treinamento', subitems: [] },
+  { key: 'jardim', label: 'Jardim da Psique', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/app/clube', subitems: [] },
   {
     key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos',
     subitems: [
@@ -58,38 +57,28 @@ const alunaMenuGroups = () => [
       { label: 'Travessias', path: '/travessias' },
     ],
   },
-  { key: 'treinamento', label: 'Sala de Treinamento', icon: Compass, path: '/sala-de-treinamento', subitems: [] },
   { key: 'casa-maquinas', label: 'Casa das Máquinas', icon: Cog, path: '/casa-das-maquinas', subitems: [] },
-  { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/comunidade', subitems: [] },
-  { key: 'conta', label: 'Perfil', icon: User, path: '/minha-conta', subitems: [] },
 ];
 
 // ── MUNDO 2: Casa das Máquinas (Espaço Profissional) ────────────────────────
 const profissionalMenuGroups = (isAdmin: boolean, isMentorada: boolean) => [
-  { key: 'visao-geral', label: 'Visão Geral', icon: Cog, path: '/casa-das-maquinas', subitems: [] },
-  { key: 'clientes', label: 'Clientes', icon: Users, path: '/minhas-clientes', subitems: [] },
+  { key: 'visao-geral', label: 'Casa das Máquinas', icon: Cog, path: '/casa-das-maquinas', subitems: [] },
+  { key: 'clientes', label: 'Clientes', icon: Users, path: '/casa-das-maquinas/clientes', subitems: [] },
   {
-    key: 'sessoes', label: 'Sessões', icon: Calendar, path: '/casa-das-maquinas/sessoes',
+    key: 'sessoes', label: 'Sessões', icon: Calendar, path: '/casa-das-maquinas/nova-sessao',
     subitems: [
-      { label: 'Sala de Sessão', path: '/casa-das-maquinas/sessoes' },
+      { label: 'Nova Sessão', path: '/casa-das-maquinas/nova-sessao' },
       { label: 'Mapa Vivo', path: '/casa-das-maquinas/mapa-vivo' },
       { label: 'Gestos de Integração', path: '/casa-das-maquinas/gestos' },
     ],
   },
-  {
-    key: 'ferramentas-clinicas', label: 'Ferramentas Clínicas', icon: Wrench, path: '/session-room',
-    subitems: [
-      { label: 'Sala de Sessão Clínica', path: '/session-room' },
-      { label: 'Cartografia Psíquica Orácula', path: '/ferramenta/cartografia-psiquica-oracula' },
-      { label: 'Narroterapia Oracular™', path: '/narroterapia' },
-    ],
-  },
+  { key: 'jardim-oficio', label: 'Jardim do Ofício', icon: Flower2, path: '/casa-das-maquinas/jardim-oficio', subitems: [] },
+  { key: 'evolucao', label: 'Evolução Clínica', icon: GraduationCap, path: '/casa-das-maquinas/treinamento', subitems: [] },
+  { key: 'biblioteca', label: 'Biblioteca de Intervenções', icon: BookOpen, path: '/casa-das-maquinas/biblioteca', subitems: [] },
+  { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/casa-das-maquinas/ferramentas', subitems: [] },
+  { key: '7vozes', label: '7 Vozes', icon: Headphones, path: '/casa-das-maquinas/7-vozes', subitems: [] },
   ...(isMentorada ? [{
-    key: 'supervisao', label: 'Supervisão', icon: Eye, path: '/casa-das-maquinas/supervisao',
-    subitems: [
-      { label: 'Painel de Supervisão', path: '/casa-das-maquinas/supervisao' },
-      { label: 'Jardim do Ofício', path: '/casa-das-maquinas/jardim-oficio' },
-    ],
+    key: 'supervisao', label: 'Supervisão', icon: Eye, path: '/casa-das-maquinas/supervisao', subitems: [],
   }] : []),
   ...(isAdmin ? [{
     key: 'painel-institucional', label: 'Painel Admin', icon: Crown, path: '/casa-das-maquinas/painel', subitems: [],

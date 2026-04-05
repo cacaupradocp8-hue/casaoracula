@@ -6,11 +6,11 @@ export function DashboardQuickActions() {
   const navigate = useNavigate();
 
   const actions = [
-    { label: 'Nova Sessão', icon: Plus, route: '/casa-das-maquinas/sessoes', accent: 'hsl(var(--primary))' },
+    { label: 'Nova Sessão', icon: Plus, route: '/casa-das-maquinas/nova-sessao', accent: 'hsl(var(--primary))' },
     { label: 'Clientes', icon: Users, route: '/casa-das-maquinas/clientes', accent: 'hsl(var(--accent))' },
-    { label: 'Oráculo', icon: Sparkles, route: '/oraculos', accent: 'hsl(var(--gold, var(--primary)))' },
-    { label: 'Mapa Simbólico', icon: Map, route: '/casa-das-maquinas/mapa-vivo', accent: 'hsl(var(--secondary-foreground))' },
-    { label: 'Ferramentas', icon: FileText, route: '/casa-das-maquinas/ferramentas', accent: 'hsl(var(--primary))' },
+    { label: 'Biblioteca de Intervenções', icon: FileText, route: '/casa-das-maquinas/biblioteca', accent: 'hsl(var(--gold, var(--primary)))' },
+    { label: 'Ferramentas', icon: Sparkles, route: '/casa-das-maquinas/ferramentas', accent: 'hsl(var(--secondary-foreground))' },
+    { label: 'Mapa Vivo', icon: Map, route: '/casa-das-maquinas/mapa-vivo', accent: 'hsl(var(--primary))' },
   ];
 
   return (
