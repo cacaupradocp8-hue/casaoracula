@@ -1798,6 +1798,38 @@ export type Database = {
         }
         Relationships: []
       }
+      canteiro_reactions: {
+        Row: {
+          created_at: string
+          entry_id: string
+          id: string
+          reaction_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entry_id: string
+          id?: string
+          reaction_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entry_id?: string
+          id?: string
+          reaction_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canteiro_reactions_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "collective_bed_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cartografia_complexos: {
         Row: {
           client_id: string
@@ -6571,11 +6603,14 @@ export type Database = {
           aprovado_por_admin: boolean
           bed_id: string
           created_at: string | null
+          entry_type: string
           exibicao_anonima: boolean
           id: string
           origem: string
           publicado_em: string | null
+          published_title: string | null
           rejeitado: boolean
+          removed_at: string | null
           season_id: string
           source_entry_id: string | null
           texto: string
@@ -6586,11 +6621,14 @@ export type Database = {
           aprovado_por_admin?: boolean
           bed_id: string
           created_at?: string | null
+          entry_type?: string
           exibicao_anonima?: boolean
           id?: string
           origem?: string
           publicado_em?: string | null
+          published_title?: string | null
           rejeitado?: boolean
+          removed_at?: string | null
           season_id: string
           source_entry_id?: string | null
           texto: string
@@ -6601,11 +6639,14 @@ export type Database = {
           aprovado_por_admin?: boolean
           bed_id?: string
           created_at?: string | null
+          entry_type?: string
           exibicao_anonima?: boolean
           id?: string
           origem?: string
           publicado_em?: string | null
+          published_title?: string | null
           rejeitado?: boolean
+          removed_at?: string | null
           season_id?: string
           source_entry_id?: string | null
           texto?: string
