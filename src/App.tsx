@@ -122,6 +122,7 @@ const AdminModulosFormativos = React.lazy(() => import("./pages/admin/AdminModul
 const AdminBooks = React.lazy(() => import("./pages/admin/AdminBooks"));
 const AdminAlunaAcompanhamento = React.lazy(() => import("./pages/admin/AdminAlunaAcompanhamento"));
 const AdminOracleCardsPage = React.lazy(() => import("./pages/admin/AdminOracleCardsPage"));
+const Canteiro = React.lazy(() => import("./pages/Canteiro"));
 const Big5Simbolico = React.lazy(() => import("./pages/Big5Simbolico"));
 const Big5Oracular = React.lazy(() => import("./pages/Big5Oracular"));
 const Big5Funcional = React.lazy(() => import("./pages/Big5Funcional"));
@@ -1917,6 +1918,16 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <JardimPsiqueDetalhe />
+            </ProtectedRoute>
+          }
+        />
+        
+        {/* Canteiro - Espaço comunitário de partilhas */}
+        <Route
+          path="/canteiro"
+          element={
+            <ProtectedRoute>
+              <Canteiro />
             </ProtectedRoute>
           }
         />
