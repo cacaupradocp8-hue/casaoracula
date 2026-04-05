@@ -266,6 +266,13 @@ export default function AdminAlunaAcompanhamento() {
         </Card>
       </div>
 
+      {/* Canteiro Stats */}
+      <Card>
+        <CardContent className="p-6">
+          <CanteiroStatsPanel />
+        </CardContent>
+      </Card>
+
       {/* Filters */}
       <Card>
         <CardContent className="p-4">
