@@ -120,6 +120,7 @@ const CriarFerramenta = React.lazy(() => import("./pages/admin/CriarFerramenta")
 const AtelieConteudo = React.lazy(() => import("./pages/admin/AtelieConteudo"));
 const AdminModulosFormativos = React.lazy(() => import("./pages/admin/AdminModulosFormativos"));
 const AdminBooks = React.lazy(() => import("./pages/admin/AdminBooks"));
+const AdminAlunaAcompanhamento = React.lazy(() => import("./pages/admin/AdminAlunaAcompanhamento"));
 const AdminOracleCardsPage = React.lazy(() => import("./pages/admin/AdminOracleCardsPage"));
 const Big5Simbolico = React.lazy(() => import("./pages/Big5Simbolico"));
 const Big5Oracular = React.lazy(() => import("./pages/Big5Oracular"));
