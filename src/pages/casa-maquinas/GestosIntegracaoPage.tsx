@@ -192,7 +192,7 @@ export default function GestosIntegracaoPage() {
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20">
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <Link to="/dashboard" className="hover:text-foreground transition-colors flex items-center gap-1">
+          <Link to="/dashboard-membro" className="hover:text-foreground transition-colors flex items-center gap-1">
             <Home className="w-3 h-3" />
             Casa
           </Link>
