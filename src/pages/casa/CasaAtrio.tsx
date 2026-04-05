@@ -13,7 +13,7 @@ const rooms = [
     subtitle: 'Diário arquetípico privado',
     description: 'Sonhos, oráculos, frases que tocaram. Campo de memória simbólica que pode ser revisitado.',
     icon: Leaf,
-    path: '/casa/jardim',
+    path: '/jardim-da-psique',
     accent: 'from-emerald-500/20 to-emerald-600/5',
     iconColor: 'text-emerald-400',
     borderHover: 'hover:border-emerald-500/40',
