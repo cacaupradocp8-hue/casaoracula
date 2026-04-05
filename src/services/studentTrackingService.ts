@@ -21,14 +21,14 @@ export async function trackLearningEvent(params: TrackEventParams) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    await supabase.from('student_learning_events').insert({
+    await supabase.from('student_learning_events').insert([{
       user_id: user.id,
       context_area: params.contextArea,
       action_type: params.actionType,
       object_type: params.objectType || null,
       object_id: params.objectId || null,
-      metadata_short: params.metadata || {},
-    });
+      metadata_short: (params.metadata || {}) as any,
+    }]);
   } catch (err) {
     // Silently fail — tracking should never break UX
     console.warn('[StudentTracking] Failed to track event:', err);
