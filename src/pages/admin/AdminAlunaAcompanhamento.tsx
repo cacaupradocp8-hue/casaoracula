@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { CanteiroStatsPanel } from '@/components/admin/CanteiroStatsPanel';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -264,6 +265,13 @@ export default function AdminAlunaAcompanhamento() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Canteiro Stats */}
+      <Card>
+        <CardContent className="p-6">
+          <CanteiroStatsPanel />
+        </CardContent>
+      </Card>
 
       {/* Filters */}
       <Card>

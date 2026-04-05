@@ -19531,6 +19531,19 @@ export type Database = {
         }
         Relationships: []
       }
+      v_canteiro_per_student_stats: {
+        Row: {
+          em_curadoria: number | null
+          email: string | null
+          nome: string | null
+          publicadas: number | null
+          recusadas: number | null
+          total_publicacoes: number | null
+          ultimo_compartilhamento: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
       v_formation_progress: {
         Row: {
           active_travessias: Json | null
