@@ -58,7 +58,7 @@ const alunaMenuGroups = () => [
       { label: 'Travessias', path: '/travessias' },
     ],
   },
-  { key: 'treinamento', label: 'Sala de Treinamento', icon: Compass, path: '/sala-treinamento', subitems: [] },
+  { key: 'treinamento', label: 'Sala de Treinamento', icon: Compass, path: '/sala-de-treinamento', subitems: [] },
   { key: 'casa-maquinas', label: 'Casa das Máquinas', icon: Cog, path: '/casa-das-maquinas', subitems: [] },
   { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/comunidade', subitems: [] },
   { key: 'conta', label: 'Perfil', icon: User, path: '/minha-conta', subitems: [] },

@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 const espacos = [
   { label: 'Clube de Leitura', icon: BookOpen, path: '/clube-livro', desc: 'Leitura simbólica e reflexão' },
   { label: 'Formação', icon: GraduationCap, path: '/oracula', desc: 'Estudo do Método Orácula' },
-  { label: 'Sala de Treinamento', icon: Compass, path: '/sala-treinamento', desc: 'Prática e simulação' },
+  { label: 'Sala de Treinamento', icon: Compass, path: '/sala-de-treinamento', desc: 'Prática e simulação' },
   { label: 'Casa das Máquinas', icon: Wrench, path: '/casa-maquinas', desc: 'SaaS profissional' },
   { label: 'Comunidade', icon: Users, path: '/comunidade', desc: 'Trocas e aprofundamento' },
   { label: 'Mapa da Casa', icon: Map, path: '/mapa-casa', desc: 'Navegue pelo ecossistema' },

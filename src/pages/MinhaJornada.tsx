@@ -51,7 +51,7 @@ const STAGES: Stage[] = [
     title: 'Sala de Treinamento',
     description: 'Ambiente de prática com estudos de caso e simulações.',
     icon: Wrench,
-    route: '/sala-treinamento',
+    route: '/sala-de-treinamento',
   },
   {
     key: 'casa-maquinas',
