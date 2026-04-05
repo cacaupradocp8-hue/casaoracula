@@ -1875,6 +1875,14 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/admin/alunas-acompanhamento"
+          element={
+            <ProtectedRoute minPortal="admin">
+              <AdminAlunaAcompanhamento />
+            </ProtectedRoute>
+          }
+        />
         
 
         {/* Jardim do Ofício */}
