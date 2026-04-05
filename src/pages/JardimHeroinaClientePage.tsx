@@ -120,38 +120,19 @@ export default function JardimHeroinaClientePage() {
 
         {/* Content */}
         <div className="container mx-auto px-4 max-w-lg py-4">
-          {tab === 'inicio' && (
+          {tab === 'jardim' && (
             <div className="space-y-6">
               <BoasVindasBloco />
-
-              <TerapeutaDeixouBloco
-                orientacoesPendentes={orientacoesPendentes}
-                entriesTerapeuta={entriesTerapeuta}
-                praticasPendentes={praticasPendentes}
-                onVerTudo={() => setTab('terapeuta')}
-                onCompletarOrientacao={completar}
-                onResponderOrientacao={responder}
-                onMarcarVistaOrientacao={marcarVista}
-              />
-
               <MomentoJardimBloco />
-
-              <PraticaRecomendadaBloco pratica={praticaRecomendada} />
-
-              <EscutaSugeridaBloco escuta={escutaSugerida} />
-
               <RegistroHojeBloco saving={saving} onCriar={criarEntry} />
+              <MeuJardimSecao
+                entries={minhasEntries}
+                userId={user?.id || ''}
+                saving={saving}
+                onCriar={criarEntry}
+                onToggleShare={toggleSharedWithTherapist}
+              />
             </div>
-          )}
-
-          {tab === 'jardim' && (
-            <MeuJardimSecao
-              entries={minhasEntries}
-              userId={user?.id || ''}
-              saving={saving}
-              onCriar={criarEntry}
-              onToggleShare={toggleSharedWithTherapist}
-            />
           )}
 
           {tab === 'terapeuta' && (
