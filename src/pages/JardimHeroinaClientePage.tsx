@@ -31,7 +31,7 @@ const TABS: { key: Tab; label: string; icon: any }[] = [
 
 export default function JardimHeroinaClientePage() {
   const { user } = useAuth();
-  const [tab, setTab] = useState<Tab>('inicio');
+  const [tab, setTab] = useState<Tab>('jardim');
 
   const {
     jardim,
