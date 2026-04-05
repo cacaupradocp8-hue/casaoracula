@@ -12,6 +12,9 @@ export interface CollectiveBed {
   encerrado_em: string | null;
 }
 
+export type EntryType = 'reflexao' | 'pergunta' | 'semente_pratica' | 'eco_de_leitura' | 'fragmento';
+export type ReactionType = 'ecoou' | 'guardar_refletir' | 'levar_travessia';
+
 export interface CollectiveBedEntry {
   id: string;
   bed_id: string;
@@ -20,13 +23,18 @@ export interface CollectiveBedEntry {
   ciclo_id: string | null;
   origem: 'psique' | 'oficio';
   texto: string;
+  entry_type: EntryType;
+  published_title: string | null;
   aprovado_por_admin: boolean;
   publicado_em: string | null;
   exibicao_anonima: boolean;
   rejeitado: boolean;
   created_at: string;
   profiles?: { nome: string | null } | null;
+  author_nome?: string | null;
 }
+
+export interface CanteiroEntry extends CollectiveBedEntry {}
 
 /** Active canteiro */
 export function useActiveCanteiro() {
