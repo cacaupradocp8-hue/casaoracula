@@ -186,3 +186,112 @@ export function useSubmitPartilha() {
     onError: () => toast.error('Erro ao enviar partilha.'),
   });
 }
+
+/** Published entries for Canteiro page (no bed_id required) */
+export function useCanteiroPublicEntries(filterType?: EntryType | 'todos') {
+  return useQuery({
+    queryKey: ['canteiro-public-entries', filterType],
+    queryFn: async () => {
+      let query = supabase
+        .from('collective_bed_entries')
+        .select('id, user_id, texto, entry_type, published_title, origem, exibicao_anonima, publicado_em, created_at')
+        .eq('aprovado_por_admin', true)
+        .not('publicado_em', 'is', null)
+        .eq('rejeitado', false)
+        .is('removed_at', null)
+        .order('publicado_em', { ascending: false })
+        .limit(50);
+
+      if (filterType && filterType !== 'todos') {
+        query = query.eq('entry_type', filterType);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+
+      const entries = (data || []) as any[];
+      const userIds = [...new Set(entries.filter(e => !e.exibicao_anonima).map(e => e.user_id))];
+
+      let profileMap: Record<string, string> = {};
+      if (userIds.length > 0) {
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('id, nome')
+          .in('id', userIds);
+        profiles?.forEach(p => { profileMap[p.id] = p.nome || 'Anônima'; });
+      }
+
+      return entries.map(e => ({
+        ...e,
+        author_nome: e.exibicao_anonima ? null : (profileMap[e.user_id] || 'Anônima'),
+      })) as CanteiroEntry[];
+    },
+  });
+}
+
+/** Reactions for multiple entries */
+export function useCanteiroReactions(entryIds: string[]) {
+  const { user } = useAuth();
+
+  return useQuery({
+    queryKey: ['canteiro-reactions', entryIds],
+    queryFn: async () => {
+      if (!entryIds.length) return {};
+
+      const { data, error } = await supabase
+        .from('canteiro_reactions')
+        .select('entry_id, reaction_type, user_id')
+        .in('entry_id', entryIds);
+
+      if (error) throw error;
+
+      const map: Record<string, Record<ReactionType, { count: number; userReacted: boolean }>> = {};
+      (data || []).forEach((r: any) => {
+        if (!map[r.entry_id]) map[r.entry_id] = {} as any;
+        if (!map[r.entry_id][r.reaction_type as ReactionType]) {
+          map[r.entry_id][r.reaction_type as ReactionType] = { count: 0, userReacted: false };
+        }
+        map[r.entry_id][r.reaction_type as ReactionType].count++;
+        if (r.user_id === user?.id) {
+          map[r.entry_id][r.reaction_type as ReactionType].userReacted = true;
+        }
+      });
+      return map;
+    },
+    enabled: entryIds.length > 0,
+  });
+}
+
+/** Toggle a reaction */
+export function useToggleReaction() {
+  const qc = useQueryClient();
+  const { user } = useAuth();
+
+  return useMutation({
+    mutationFn: async ({ entryId, reactionType }: { entryId: string; reactionType: ReactionType }) => {
+      if (!user) throw new Error('Not authenticated');
+
+      const { data: existing } = await supabase
+        .from('canteiro_reactions')
+        .select('id')
+        .eq('entry_id', entryId)
+        .eq('user_id', user.id)
+        .eq('reaction_type', reactionType)
+        .maybeSingle();
+
+      if (existing) {
+        await supabase.from('canteiro_reactions').delete().eq('id', existing.id);
+      } else {
+        const insertData: Record<string, any> = {
+          entry_id: entryId,
+          user_id: user.id,
+          reaction_type: reactionType,
+        };
+        await supabase.from('canteiro_reactions').insert(insertData as any);
+      }
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['canteiro-reactions'] });
+    },
+  });
+}
