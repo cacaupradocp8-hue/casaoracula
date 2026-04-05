@@ -19518,6 +19518,19 @@ export type Database = {
         }
         Relationships: []
       }
+      v_canteiro_admin_stats: {
+        Row: {
+          publicacoes_aprovadas: number | null
+          publicacoes_rejeitadas: number | null
+          publicacoes_ultimos_30_dias: number | null
+          registros_jardim_ultimos_30_dias: number | null
+          total_publicacoes_canteiro: number | null
+          total_registros_jardim: number | null
+          usuarias_ativas_jardim: number | null
+          usuarias_que_publicaram: number | null
+        }
+        Relationships: []
+      }
       v_formation_progress: {
         Row: {
           active_travessias: Json | null
