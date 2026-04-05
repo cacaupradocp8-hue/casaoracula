@@ -124,7 +124,7 @@ Deno.serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Casa Orácula <notificacoes@casaoracula.com.br>',
+        from: 'Casa Orácula <notificacoes@institutotransfore.com.br>',
         to: [profile.email],
         subject: title,
         html,
