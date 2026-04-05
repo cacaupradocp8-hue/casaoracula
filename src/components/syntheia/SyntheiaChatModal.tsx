@@ -10,8 +10,8 @@
  import { ScrollArea } from '@/components/ui/scroll-area';
  import { Send, Bot, User, Loader2, Sparkles, X } from 'lucide-react';
  import { cn } from '@/lib/utils';
- import { useSyntheiaChat } from '@/hooks/useSyntheiaChat';
- import { SyntheiaChatMode } from '@/services/syntheiaChat';
+import { useSyntheiaChat } from '@/hooks/useSyntheiaChat';
+import { SyntheiaChatMode, RoutingContext } from '@/services/syntheiaChat';
  
  interface SyntheiaChatModalProps {
    open: boolean;

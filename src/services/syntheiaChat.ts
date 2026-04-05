@@ -12,6 +12,20 @@ export interface ChatMessage {
   content: string;
 }
 
+export interface RoutingContext {
+  tipoUsuario?: string;
+  area?: string;
+  subArea?: string;
+  module?: string;
+  pageName?: string;
+  intencao?: string;
+}
+
+export interface RoutingInfo {
+  responseMode: 'direto' | 'skill_unica' | 'pipeline';
+  skillsActivated: string[];
+}
+
 export interface SyntheiaChatResponse {
   mode: SyntheiaChatMode;
   message: {
@@ -23,6 +37,7 @@ export interface SyntheiaChatResponse {
     completion_tokens: number;
     total_tokens: number;
   };
+  routing?: RoutingInfo;
 }
 
 export interface SyntheiaChatError {
@@ -31,17 +46,13 @@ export interface SyntheiaChatError {
 
 /**
  * Send a message to Syntheia using OpenAI via Edge Function
- * 
- * @param mode - The Syntheia mode: "arcano", "arcane", or "ferramenteira"
- * @param messages - Array of conversation messages
- * @param extraContext - Optional additional context object
- * @returns The assistant's response
  */
 export async function sendMessageToSyntheia(
   mode: SyntheiaChatMode,
   messages: ChatMessage[],
-   extraContext?: Record<string, unknown>,
-   voicePrompt?: string
+  extraContext?: Record<string, unknown>,
+  voicePrompt?: string,
+  routingContext?: RoutingContext
 ): Promise<SyntheiaChatResponse> {
   const { data, error } = await supabase.functions.invoke<SyntheiaChatResponse | SyntheiaChatError>(
     "syntheia-chat",
@@ -50,7 +61,8 @@ export async function sendMessageToSyntheia(
         mode,
         messages,
         extra_context: extraContext,
-         voice_prompt: voicePrompt,
+        voice_prompt: voicePrompt,
+        routing_context: routingContext,
       },
     }
   );
@@ -64,7 +76,6 @@ export async function sendMessageToSyntheia(
     throw new Error("Resposta vazia do servidor");
   }
 
-  // Check if response is an error
   if ("error" in data) {
     throw new Error(data.error);
   }

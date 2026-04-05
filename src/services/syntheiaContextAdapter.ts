@@ -1,9 +1,10 @@
 // ============================================
 // SYNTHEIA CONTEXT ADAPTER
 // Maps route + user type to contextual SINTHEYA config
+// Includes routing context for skill detection
 // ============================================
 
-import { SyntheiaChatMode } from '@/services/syntheiaChat';
+import { SyntheiaChatMode, RoutingContext } from '@/services/syntheiaChat';
 import { PortalType } from '@/types/portal';
 
 export type TherabotUserType = 'visitante' | 'cliente' | 'aluna' | 'terapeuta';
@@ -36,6 +37,7 @@ export interface TherabotConfig {
   navigationSuggestions: NavigationSuggestion[];
   title: string;
   areaLabel: string;
+  routingContext: RoutingContext;
 }
 
 function resolveUserType(portal: PortalType | undefined): TherabotUserType {
@@ -104,6 +106,22 @@ function resolveArea(pathname: string): AreaResolution {
   return { area: 'geral', pageName: 'Casa Orácula', module: 'geral' };
 }
 
+/**
+ * Detect likely user intent based on area and user type
+ */
+function detectIntencao(ctx: TherabotContext): string | undefined {
+  if (ctx.area === 'clube') return 'conversa_material_fonte';
+  if (ctx.area === 'casa-das-maquinas' && ctx.subArea === 'sessoes') return 'apoio_clinico';
+  if (ctx.area === 'casa-das-maquinas' && ctx.subArea === 'clientes') return 'leitura_jornada';
+  if (ctx.area === 'casa-das-maquinas') return 'conducao_clinica';
+  if (ctx.area === 'treinamento' || ctx.area === 'formacao') return 'explicacao_aprendizado';
+  if (ctx.area === 'meu-jardim') return 'reflexao_simbolica';
+  if (ctx.area === 'oraculos') return 'reflexao_simbolica';
+  if (ctx.area === 'biblioteca') return 'explicacao_aprendizado';
+  if (ctx.tipoUsuario === 'visitante') return 'navegacao';
+  return undefined;
+}
+
 export function buildTherabotContext(pathname: string, portal?: PortalType): TherabotContext {
   const tipoUsuario = resolveUserType(portal);
   const { area, subArea, pageName, module } = resolveArea(pathname);
@@ -113,6 +131,20 @@ export function buildTherabotContext(pathname: string, portal?: PortalType): The
   }
 
   return { tipoUsuario, area, subArea, pageName, module };
+}
+
+/**
+ * Build routing context for the edge function skill router
+ */
+export function buildRoutingContext(ctx: TherabotContext): RoutingContext {
+  return {
+    tipoUsuario: ctx.tipoUsuario,
+    area: ctx.area,
+    subArea: ctx.subArea,
+    module: ctx.module,
+    pageName: ctx.pageName,
+    intencao: detectIntencao(ctx),
+  };
 }
 
 // ============================================
@@ -145,6 +177,7 @@ function getVisitorConfig(ctx: TherabotContext): TherabotConfig {
       { label: 'Vivenciar um oráculo', prompt: 'Quero vivenciar um oráculo. O que está disponível para mim?', icon: 'sparkles' },
     ],
     navigationSuggestions: VISITOR_NAV,
+    routingContext: buildRoutingContext(ctx),
   };
 }
 
@@ -178,6 +211,7 @@ function getClientConfig(ctx: TherabotContext): TherabotConfig {
       { label: 'Organizar meu registro', prompt: 'Quero organizar o que vivenciei recentemente. Me ajuda a dar forma simbólica a isso?', icon: 'list' },
     ],
     navigationSuggestions: CLIENT_NAV,
+    routingContext: buildRoutingContext(ctx),
   };
 }
 
@@ -214,6 +248,7 @@ function getStudentConfig(ctx: TherabotContext): TherabotConfig {
       { label: 'Revisar o que aprendi aqui', prompt: 'Quero revisar o que aprendi nesta área. Me ajuda a organizar e consolidar?', icon: 'list' },
     ],
     navigationSuggestions: STUDENT_NAV,
+    routingContext: buildRoutingContext(ctx),
   };
 }
 
@@ -252,6 +287,7 @@ function getTherapistConfig(ctx: TherabotContext): TherabotConfig {
       { label: 'Transformar anotação em síntese', prompt: 'Tenho anotações de sessão. Me ajuda a transformar em uma síntese clínica organizada?', icon: 'list' },
     ],
     navigationSuggestions: THERAPIST_NAV,
+    routingContext: buildRoutingContext(ctx),
   };
 }
 
