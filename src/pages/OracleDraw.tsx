@@ -19,10 +19,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 type DrawStep = 'select-spread' | 'meditation' | 'drawing' | 'reveal' | 'closing';
 
 function useOracleBasePath() {
-  const location = useLocation();
-  return location.pathname.startsWith('/casa-das-maquinas') 
-    ? '/casa-das-maquinas/oraculo' 
-    : '/oraculos';
+  return '/oraculos';
 }
 
 export default function OracleDraw() {

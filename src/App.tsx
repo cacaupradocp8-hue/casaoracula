@@ -1,4 +1,9 @@
 import React from "react"; // rebuild-trigger-v8
+
+function OracleRedirect({ suffix = '' }: { suffix?: string }) {
+  const { oracleSlug } = useParams();
+  return <Navigate to={`/oraculos/${oracleSlug}${suffix}`} replace />;
+}
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";

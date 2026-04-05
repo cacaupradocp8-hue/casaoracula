@@ -12,10 +12,7 @@ import { ptBR } from 'date-fns/locale';
 import { useCopy } from '@/hooks/useCopy';
 
 function useOracleBasePath() {
-  const location = useLocation();
-  return location.pathname.startsWith('/casa-das-maquinas') 
-    ? '/casa-das-maquinas/oraculo' 
-    : '/oraculos';
+  return '/oraculos';
 }
 
 export default function OracleHome() {
