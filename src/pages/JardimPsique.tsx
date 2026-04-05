@@ -27,6 +27,7 @@ import { useJardimPsique, JardimRegistro, TipoRegistroJardim } from '@/hooks/use
 import { NovaEntradaJardimModal } from '@/components/shared/NovaEntradaJardimModal';
 import { CompartilharCanteiroBtn } from '@/components/jardim-psique/CompartilharCanteiroBtn';
 import { MinhasPublicacoesCanteiro } from '@/components/jardim-psique/MinhasPublicacoesCanteiro';
+import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
 const FERRAMENTA_LABELS: Record<string, string> = {
