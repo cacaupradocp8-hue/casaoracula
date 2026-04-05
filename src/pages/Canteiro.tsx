@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useCanteiroEntries, useCanteiroReactions, useToggleReaction, type EntryType, type ReactionType, type CanteiroEntry } from '@/hooks/useCanteiro';
+import { useCanteiroPublicEntries, useCanteiroReactions, useToggleReaction, type EntryType, type ReactionType, type CanteiroEntry } from '@/hooks/useCanteiro';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
