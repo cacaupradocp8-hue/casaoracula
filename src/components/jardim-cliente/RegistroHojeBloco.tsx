@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { PenLine, Eye, Lock, Loader2, Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
+import { useStudentTracking } from '@/hooks/useStudentTracking';
 
 interface Props {
   saving: boolean;
@@ -16,11 +17,13 @@ interface Props {
 export function RegistroHojeBloco({ saving, onCriar }: Props) {
   const [content, setContent] = useState('');
   const [shared, setShared] = useState(false);
+  const { track } = useStudentTracking();
 
   const handleSubmit = async () => {
     if (!content.trim()) return;
     const ok = await onCriar(content.trim(), 'reflexao', shared);
     if (ok) {
+      track('jardim-da-psique', 'saved_reflection', 'registro_jardim');
       toast.success('🌿 Registro guardado no seu Jardim');
       setContent('');
       setShared(false);

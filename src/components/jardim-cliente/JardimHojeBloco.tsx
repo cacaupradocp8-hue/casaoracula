@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Sparkles, Heart, Moon, PenLine, Eye, Lock, Send, Loader2, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { useStudentTracking } from '@/hooks/useStudentTracking';
 
 const TIPOS = [
   { key: 'reflexao', label: 'Reflexão', icon: Sparkles, placeholder: 'O que surgiu em mim...' },
@@ -25,6 +26,7 @@ export function JardimHojeBloco({ saving, onCriar }: Props) {
   const [tipo, setTipo] = useState('reflexao');
   const [content, setContent] = useState('');
   const [shared, setShared] = useState(false);
+  const { track } = useStudentTracking();
 
   const tipoAtual = TIPOS.find((t) => t.key === tipo) || TIPOS[0];
 
@@ -32,6 +34,7 @@ export function JardimHojeBloco({ saving, onCriar }: Props) {
     if (!content.trim()) return;
     const ok = await onCriar(content.trim(), tipo, shared);
     if (ok) {
+      track('jardim-da-psique', 'created_entry', 'registro_jardim', undefined, { tipo });
       toast.success('🌿 Registro guardado');
       setContent('');
       setShared(false);

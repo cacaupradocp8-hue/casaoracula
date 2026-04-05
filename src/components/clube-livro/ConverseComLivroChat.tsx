@@ -18,6 +18,7 @@ import {
   Send, Loader2, BookOpen, Sparkles, X,
   MessageCircle, ChevronDown, ChevronUp, Quote,
 } from 'lucide-react';
+import { useStudentTracking } from '@/hooks/useStudentTracking';
 
 // ============================================
 // TYPES
@@ -76,8 +77,10 @@ const QUICK_ACTIONS_NO_EXCERPT: QuickAction[] = [
 
 export function ConverseComLivroChat({ bookContext, className, embedded = false }: Props) {
   const { user } = useAuth();
+  const { track } = useStudentTracking();
   const [isOpen, setIsOpen] = useState(embedded);
   const [input, setInput] = useState('');
+  const [trackedOpen, setTrackedOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Fetch knowledge context from DB
@@ -133,12 +136,19 @@ export function ConverseComLivroChat({ bookContext, className, embedded = false 
     },
   });
 
-  // Welcome
+  // Welcome + track open
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       addWelcomeMessage(welcomeMsg);
+      if (!trackedOpen) {
+        setTrackedOpen(true);
+        track('clube', 'opened', 'converse_com_livro', bookContext.bookId, {
+          book_id: bookContext.bookId,
+          cycle_id: bookContext.cycleId,
+        });
+      }
     }
-  }, [isOpen, messages.length, addWelcomeMessage, welcomeMsg]);
+  }, [isOpen, messages.length, addWelcomeMessage, welcomeMsg, trackedOpen, track, bookContext]);
 
   // Auto-scroll
   useEffect(() => {
@@ -152,8 +162,14 @@ export function ConverseComLivroChat({ bookContext, className, embedded = false 
     if (!input.trim() || isLoading) return;
     const msg = input.trim();
     setInput('');
+    track('clube', 'asked_question', 'converse_com_livro', bookContext.bookId, {
+      book_id: bookContext.bookId,
+      cycle_id: bookContext.cycleId,
+      has_excerpt: !!bookContext.excerptText,
+      interaction_kind: 'pergunta_livre',
+    });
     await sendMessage(msg);
-  }, [input, isLoading, sendMessage]);
+  }, [input, isLoading, sendMessage, track, bookContext]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -163,6 +179,20 @@ export function ConverseComLivroChat({ bookContext, className, embedded = false 
   };
 
   const handleQuickAction = async (prompt: string) => {
+    // Classify quick action for tracking
+    const kind = prompt.toLowerCase().includes('prática') ? 'pratica'
+      : prompt.toLowerCase().includes('contemplativa') ? 'pergunta_contemplativa'
+      : prompt.toLowerCase().includes('resumir') || prompt.toLowerCase().includes('ideia central') ? 'resumir'
+      : prompt.toLowerCase().includes('trecho') ? 'explicar_trecho'
+      : prompt.toLowerCase().includes('jornada') ? 'conexao_jornada'
+      : prompt.toLowerCase().includes('observar') ? 'observacao'
+      : 'pergunta_livre';
+    track('clube', 'asked_question', 'converse_com_livro', bookContext.bookId, {
+      book_id: bookContext.bookId,
+      cycle_id: bookContext.cycleId,
+      has_excerpt: !!bookContext.excerptText,
+      interaction_kind: kind,
+    });
     await sendMessage(prompt);
   };
 
