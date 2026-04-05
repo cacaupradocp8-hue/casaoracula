@@ -3,7 +3,7 @@
 // Modo de estudo ancorado na obra do Clube
 // ============================================
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -12,6 +12,8 @@ import { useSyntheiaChat } from '@/hooks/useSyntheiaChat';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TherabotMessage } from '@/components/therabot/TherabotMessage';
+import { useQuery } from '@tanstack/react-query';
+import { retrieveBookKnowledge, serializeKnowledgeContext } from '@/services/clubeKnowledgeRetrieval';
 import {
   Send, Loader2, BookOpen, Sparkles, X,
   MessageCircle, ChevronDown, ChevronUp, Quote,
@@ -22,9 +24,11 @@ import {
 // ============================================
 
 export interface BookContext {
+  bookId?: string;
   bookTitle: string;
   bookAuthor?: string;
   cycleTheme?: string;
+  cycleId?: string;
   stationName?: string;
   chapterTitle?: string;
   excerptText?: string;
