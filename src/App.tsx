@@ -1797,7 +1797,7 @@ function AppRoutes() {
         <Route path="/casa-das-maquinas/perfil-profissional" element={<ProtectedRoute minPortal="oracula"><PerfilProfissionalPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/configuracoes" element={<ProtectedRoute minPortal="aluna_formacao"><ConfiguracoesSaasPage /></ProtectedRoute>} />
         <Route path="/casa-das-maquinas/treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SalaTreinamentoPage /></ProtectedRoute>} />
-        <Route path="/treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SalaTreinamentoPage /></ProtectedRoute>} />
+        <Route path="/treinamento" element={<Navigate to="/sala-de-treinamento" replace />} />
         <Route path="/sala-de-treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SalaDeTreinamentoPage /></ProtectedRoute>} />
         <Route path="/sala-treinamento" element={<Navigate to="/sala-de-treinamento" replace />} />
         <Route path="/comunidade" element={<ProtectedRoute><ComunidadePage /></ProtectedRoute>} />

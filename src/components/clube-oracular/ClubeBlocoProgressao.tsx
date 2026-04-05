@@ -25,7 +25,7 @@ const CENARIOS = [
     titulo: 'Sua prática busca um novo território',
     texto: 'Seu percurso já mostra sinais de prontidão para o próximo portal. A Sala de Treinamento é o espaço onde a teoria se encontra com a prática, preparando você para guiar outras jornadas.',
     botao: 'Acessar Sala de Treinamento',
-    rota: '/sala-treinamento',
+    rota: '/sala-de-treinamento',
   },
   {
     key: 'casa-maquinas',

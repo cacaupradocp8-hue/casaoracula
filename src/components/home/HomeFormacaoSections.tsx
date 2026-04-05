@@ -114,7 +114,7 @@ export function HomeFormacaoSections({ userId }: Props) {
 
             <Card
               className="border-border/30 bg-card/50 cursor-pointer group hover:border-primary/30 transition-all"
-              onClick={() => navigate('/sala-treinamento')}
+              onClick={() => navigate('/sala-de-treinamento')}
             >
               <CardContent className="p-5 flex flex-col items-center text-center gap-2">
                 <Compass className="h-6 w-6 text-primary/70 group-hover:text-primary transition-colors" />
