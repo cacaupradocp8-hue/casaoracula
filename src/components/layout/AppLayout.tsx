@@ -35,6 +35,10 @@ export function AppLayout({ children }: AppLayoutProps) {
       <BootSafeBoundary label="EthicalNotice" compact>
         <EthicalNotice />
       </BootSafeBoundary>
+
+      <BootSafeBoundary label="Therabot" compact>
+        <TherabotWidget />
+      </BootSafeBoundary>
     </div>
   );
 }
