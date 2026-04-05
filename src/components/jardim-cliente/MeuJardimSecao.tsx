@@ -12,14 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Eye, EyeOff, BookOpen, Heart, Moon, PenLine, Sparkles, Lock, Send } from 'lucide-react';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
-import { trackLearningEvent } from '@/services/studentTrackingService';
+import { Eye, EyeOff, BookOpen, Heart, Moon, PenLine, Sparkles, Lock } from 'lucide-react';
 import type { JardimEntry } from '@/hooks/useClienteJardimCompleto';
 import { JardimHojeBloco } from './JardimHojeBloco';
 
