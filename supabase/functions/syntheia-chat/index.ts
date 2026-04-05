@@ -745,9 +745,10 @@ function buildMinimalPayload(
   if (extraCtx) {
     for (const [key, val] of Object.entries(extraCtx)) {
       if (allowedFields.has(key) && val !== undefined && val !== null) {
-        // String values only — prevent object injection
         // Allow longer values for book content fields
-        const maxLen = (key === "excerptText" || key === "optionalStudyNotes") ? 3000 : 500;
+        const maxLen = (key === "excerptText" || key === "optionalStudyNotes") ? 3000
+          : key === "knowledgeContext" ? 5000
+          : 500;
         if (typeof val === "string" && val.length <= maxLen) {
           contextSnippet[key] = val;
         }
