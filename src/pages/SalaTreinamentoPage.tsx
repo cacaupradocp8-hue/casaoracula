@@ -6,9 +6,20 @@ import { BibliotecaFerramentas } from '@/components/treinamento/BibliotecaFerram
 import { TrainingDashboard } from '@/components/treinamento/simulador/TrainingDashboard';
 import { useEffectivePortal } from '@/hooks/useEffectivePortal';
 import { FlaskConical, Compass, BookOpen, BarChart3 } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import { useStudentTracking } from '@/hooks/useStudentTracking';
 
 export default function SalaTreinamentoPage() {
   const { effectivePortal, isAdmin } = useEffectivePortal();
+  const { track } = useStudentTracking();
+  const trackedRef = useRef(false);
+
+  useEffect(() => {
+    if (!trackedRef.current) {
+      trackedRef.current = true;
+      track('treinamento', 'opened', 'sala_treinamento');
+    }
+  }, [track]);
 
   const tabs = [
     { value: 'simulador', label: 'Simulador', icon: FlaskConical },

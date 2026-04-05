@@ -20,6 +20,7 @@ import { BlocoFerramenta } from './BlocoFerramenta';
 import { BlocoFeedback } from './BlocoFeedback';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAvaliacaoIA } from './useAvaliacaoIA';
+import { useStudentTracking } from '@/hooks/useStudentTracking';
 
 export function SimuladorConducao() {
   const { user } = useAuth();
@@ -27,6 +28,7 @@ export function SimuladorConducao() {
   const { progress, completedCount, getCaseStatus } = useTrainingProgress();
   const queryClient = useQueryClient();
   const { avaliacao, isLoading: isLoadingIA, avaliar, reset: resetAvaliacao } = useAvaliacaoIA();
+  const { track } = useStudentTracking();
   const [casoIndex, setCasoIndex] = useState(0);
   const [active, setActive] = useState(false);
   const [step, setStep] = useState<SimuladorStep>('caso');
@@ -60,6 +62,13 @@ export function SimuladorConducao() {
     setCasoIndex(idx);
     setActive(true);
     resetResposta();
+    const c = cases[idx];
+    if (c) {
+      track('treinamento', 'opened_case', 'caso_treinamento', c.id, {
+        case_id: c.id,
+        nivel: c.nivel,
+      });
+    }
   };
 
   const nextStep = () => {
@@ -98,6 +107,10 @@ export function SimuladorConducao() {
       feedback_json: feedbackJson as any,
       status: 'concluido',
     });
+
+    // Track submission + completion
+    track('treinamento', 'submitted_response', 'caso_treinamento', caso.id, { case_id: caso.id, nivel: caso.nivel });
+    track('treinamento', 'completed', 'caso_treinamento', caso.id, { case_id: caso.id, nivel: caso.nivel });
 
     await supabase.from('co_training_progress').upsert({
       user_id: user.id,

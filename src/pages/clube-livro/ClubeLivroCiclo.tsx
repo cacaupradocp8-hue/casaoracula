@@ -21,6 +21,7 @@ import {
   Target, PenLine, Sparkles, Loader2, ArrowRight, CheckCircle2, Lock,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useStudentTracking } from '@/hooks/useStudentTracking';
 import {
   CicloHeaderBlock,
   PorQueEsteLivroBlock,
@@ -63,7 +64,21 @@ export default function ClubeLivroCiclo() {
   const { data: integracao8020Record } = useIntegracao8020Record(id);
   const { user } = useAuth();
   const { steps, isTabUnlocked } = useCirculoProgressao(id);
+  const { track } = useStudentTracking();
   const [activeTab, setActiveTab] = useState('portal');
+
+  // Track book/cycle opening once
+  const [tracked, setTracked] = useState(false);
+  if (!tracked && ciclo && !isLoading) {
+    setTracked(true);
+    track('clube', 'opened', 'livro', id, {
+      cycle_id: id,
+      station_name: ciclo.titulo,
+    });
+    track('clube', 'entered_cycle', 'ciclo', id, {
+      cycle_id: id,
+    });
+  }
 
   const integracaoConcluida = integracaoRecord?.status === 'concluida';
   const integracao8020Concluida = integracao8020Record?.status === 'concluida';

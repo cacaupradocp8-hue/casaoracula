@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { useClienteJardimCompleto } from '@/hooks/useClienteJardimCompleto';
 import { useOrientacoesCliente } from '@/hooks/useOrientacoes';
 import { useAuth } from '@/contexts/AuthContext';
+import { useStudentTracking } from '@/hooks/useStudentTracking';
 
 // Blocos da Home
 import { BoasVindasBloco } from '@/components/jardim-cliente/BoasVindasBloco';
@@ -31,7 +32,9 @@ const TABS: { key: Tab; label: string; icon: any }[] = [
 
 export default function JardimHeroinaClientePage() {
   const { user } = useAuth();
+  const { track } = useStudentTracking();
   const [tab, setTab] = useState<Tab>('jardim');
+  const [trackedOpen, setTrackedOpen] = useState(false);
 
   const {
     jardim,
@@ -68,6 +71,12 @@ export default function JardimHeroinaClientePage() {
         </div>
       </AppLayout>
     );
+  }
+
+  // Track opening the garden once loaded
+  if (jardim && !trackedOpen) {
+    setTrackedOpen(true);
+    track('jardim-da-psique', 'opened', 'jardim_psique');
   }
 
   if (!jardim) {
