@@ -27,7 +27,7 @@ const toolsNav: NavItem[] = [
   { label: 'Painel Clínico', path: '/casa-das-maquinas/painel-clinico', icon: Compass },
   { label: '7 Vozes', path: '/casa-das-maquinas/7-vozes', icon: AudioLines },
   { label: 'Ferramentas', path: '/casa-das-maquinas/ferramentas', icon: Wrench },
-  { label: 'Biblioteca', path: '/casa-das-maquinas/biblioteca', icon: BookOpen },
+  { label: 'Biblioteca de Intervenções', path: '/casa-das-maquinas/biblioteca', icon: BookOpen },
   { label: 'Variações', path: '/casa-das-maquinas/variacoes-ferramentas', icon: Layers },
   { label: 'Mapa Vivo', path: '/casa-das-maquinas/mapa-vivo', icon: Map },
 ];
