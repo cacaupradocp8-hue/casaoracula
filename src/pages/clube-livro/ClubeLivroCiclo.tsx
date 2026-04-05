@@ -71,13 +71,11 @@ export default function ClubeLivroCiclo() {
   const [tracked, setTracked] = useState(false);
   if (!tracked && ciclo && !isLoading) {
     setTracked(true);
-    track('clube', 'opened', 'livro', ciclo.livro_id || id, {
-      book_id: ciclo.livro_id,
+    track('clube', 'opened', 'livro', id, {
       cycle_id: id,
       station_name: ciclo.titulo,
     });
     track('clube', 'entered_cycle', 'ciclo', id, {
-      book_id: ciclo.livro_id,
       cycle_id: id,
     });
   }
