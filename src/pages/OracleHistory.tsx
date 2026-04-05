@@ -12,10 +12,7 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 function useOracleBasePath() {
-  const location = useLocation();
-  return location.pathname.startsWith('/casa-das-maquinas') 
-    ? '/casa-das-maquinas/oraculo' 
-    : '/oraculos';
+  return '/oraculos';
 }
 
 export default function OracleHistory() {
