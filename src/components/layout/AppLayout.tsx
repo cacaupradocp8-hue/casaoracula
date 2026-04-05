@@ -3,6 +3,7 @@ import { Navigation } from './Navigation';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
 import { AccessExpirationBanner } from '@/components/shared/AccessExpirationBanner';
 import { BootSafeBoundary } from '@/components/shared/BootSafeBoundary';
+import { TherabotWidget } from '@/components/therabot/TherabotWidget';
 
 interface AppLayoutProps {
   children: ReactNode;
