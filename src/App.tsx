@@ -27,8 +27,7 @@ import { renderAdminRoutes } from "@/routes/adminRoutes";
 
 // Only Auth and NotFound are eagerly loaded (critical path)
 import Auth from "./pages/Auth";
-import Dashboard from "./pages/Dashboard";
-import DashboardMembro from "./pages/DashboardMembro";
+// Dashboard and DashboardMembro kept as files but not directly routed — DashboardReorganizado is the active dashboard
 import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import SalaDaVisitante from "./pages/SalaDaVisitante";
