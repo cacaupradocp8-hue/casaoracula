@@ -72,7 +72,7 @@ function ParallaxImage({ src, alt, className = '' }: { src: string; alt: string;
 
   return (
     <div ref={ref} className={`relative overflow-hidden ${className}`}>
-      <motion.img src={src} alt={alt} style={{ y }} className="w-full h-full object-cover scale-115" />
+      <motion.img src={src} alt={alt} style={{ y }} className="w-full h-full object-cover scale-[1.15]" />
       <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/50 via-transparent to-[#0B0B0F]" />
     </div>
   );
