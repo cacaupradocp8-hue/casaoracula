@@ -15,7 +15,7 @@ export function useMapaVivo() {
 
     const { data, error } = await supabase
       .from('mapa_vivo_heroina')
-      .select('id, session_case_id, therapist_id, client_id, fase_atual, movimento_atual, semente_gesto, gesto_jardim_registro_id, observacoes, created_at, updated_at')
+      .select('*')
       .eq('session_case_id', caseId)
       .eq('therapist_id', user.id)
       .order('created_at', { ascending: false })
