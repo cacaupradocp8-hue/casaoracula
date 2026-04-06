@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { ParticleField } from '@/components/sales/ParticleField';
 
@@ -12,65 +12,110 @@ import mentoriaImg from '@/assets/formacao/mentoria01-new.png';
 import casaTecalasImg from '@/assets/formacao/casa-tecelas-new.png';
 import narroterapiaImg from '@/assets/formacao/narroterapia-new.png';
 
-/* ── Cinematic phrase — each phrase animates on scroll ── */
-function CinePhrase({
+/* ─────────────────────────────────────────────
+   PRIMITIVES
+───────────────────────────────────────────── */
+
+/** Cinematic phrase — scroll-triggered, blur-to-sharp */
+function Phrase({
   children,
   delay = 0,
   className = '',
-  accent = false,
 }: {
   children: React.ReactNode;
   delay?: number;
   className?: string;
-  accent?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-15% 0px -15% 0px' });
+  const inView = useInView(ref, { once: true, margin: '-18% 0px -18% 0px' });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 35, filter: 'blur(6px)' }}
-      animate={isInView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-      transition={{ duration: 1.1, delay, ease: [0.22, 1, 0.36, 1] }}
-      className={`${accent ? 'text-[#C6A96B]' : 'text-[#F3EFE7]/90'} ${className}`}
+      initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
+      animate={inView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
+      transition={{ duration: 1.4, delay, ease: [0.22, 1, 0.36, 1] }}
+      className={className}
     >
       {children}
     </motion.div>
   );
 }
 
-/* ── Full-bleed image with parallax ── */
+/** Impact statement — near full-screen, single message */
+function ImpactScreen({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <section className="min-h-[70vh] md:min-h-[80vh] flex items-center justify-center px-6">
+      <Phrase className={`text-center max-w-lg mx-auto ${className}`}>
+        {children}
+      </Phrase>
+    </section>
+  );
+}
+
+/** Visual breathing space between emotional blocks */
+function Breath({ height = 'h-[100px] md:h-[140px]' }: { height?: string }) {
+  return <div className={height} />;
+}
+
+/** Parallax image divider */
 function ParallaxImage({ src, alt, className = '' }: { src: string; alt: string; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  const y = useTransform(scrollYProgress, [0, 1], ['-8%', '8%']);
+  const y = useTransform(scrollYProgress, [0, 1], ['-10%', '10%']);
 
   return (
     <div ref={ref} className={`relative overflow-hidden ${className}`}>
-      <motion.img
-        src={src}
-        alt={alt}
-        style={{ y }}
-        className="w-full h-full object-cover scale-110"
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/40 via-transparent to-[#0B0B0F]" />
+      <motion.img src={src} alt={alt} style={{ y }} className="w-full h-full object-cover scale-115" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/50 via-transparent to-[#0B0B0F]" />
     </div>
   );
 }
 
-/* ── Divider ── */
-function Divider() {
+/** CTA button with temperature levels */
+function CTA({
+  label,
+  onClick,
+  temperature = 'warm',
+}: {
+  label: string;
+  onClick: () => void;
+  temperature?: 'cool' | 'warm' | 'hot';
+}) {
+  const styles = {
+    cool: 'border border-[#C6A96B]/40 bg-transparent text-[#F3EFE7]/80 hover:bg-[#C6A96B]/10 hover:border-[#C6A96B]/60',
+    warm: 'bg-[#C6A96B] text-[#0B0B0F] hover:bg-[#d4b87a]',
+    hot: 'bg-[#C6A96B] text-[#0B0B0F] hover:bg-[#d4b87a] shadow-[0_0_100px_-15px_rgba(198,169,107,0.35)]',
+  };
+
   return (
     <motion.div
-      initial={{ width: 0, opacity: 0 }}
-      whileInView={{ width: 48, opacity: 1 }}
+      initial={{ opacity: 0, y: 15 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8 }}
-      className="h-px bg-[#C6A96B]/30 mx-auto"
-    />
+      className="flex justify-center"
+    >
+      <button
+        onClick={onClick}
+        className={`w-full max-w-xs py-5 text-[11px] uppercase tracking-[0.3em] font-semibold transition-all duration-500 flex items-center justify-center gap-2 ${styles[temperature]}`}
+      >
+        {label}
+        <ArrowRight className="w-4 h-4" />
+      </button>
+    </motion.div>
   );
 }
+
+/* ─────────────────────────────────────────────
+   PAGE
+───────────────────────────────────────────── */
 
 export default function OraculaSalesPage() {
   const navigate = useNavigate();
@@ -81,11 +126,18 @@ export default function OraculaSalesPage() {
 
   const ctaClick = () => navigate('/planos');
 
+  // Hide floating CTA when near offer section
+  const [showFloating, setShowFloating] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setShowFloating(true), 3500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#0B0B0F] text-[#F3EFE7] overflow-x-hidden selection:bg-[#C6A96B]/30">
       <ParticleField density={80} color="216,255,62" />
 
-      {/* ── Header mobile ── */}
+      {/* ── Header ── */}
       <motion.header
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -94,32 +146,34 @@ export default function OraculaSalesPage() {
       >
         <button
           onClick={() => navigate('/login')}
-          className="text-[#F3EFE7]/50 text-[11px] tracking-[0.2em] uppercase hover:text-[#F3EFE7]/80 transition-colors"
+          className="text-[#F3EFE7]/40 text-[11px] tracking-[0.2em] uppercase hover:text-[#F3EFE7]/70 transition-colors"
         >
           Entrar
         </button>
       </motion.header>
 
-      {/* ═══════════════════════════════════════════
-          1. HERO — 85vh mobile-first
-      ═══════════════════════════════════════════ */}
+      {/* ═══════════════════════════════════════════════════════
+          ESTADO 1 — RECONHECIMENTO
+      ═══════════════════════════════════════════════════════ */}
+
+      {/* HERO */}
       <motion.section
         ref={heroRef}
         style={{ opacity: heroOp }}
-        className="relative min-h-[85vh] flex flex-col items-center justify-center"
+        className="relative min-h-[90vh] flex flex-col items-center justify-center"
       >
         <motion.div className="absolute inset-0 z-0" style={{ scale: heroScale }}>
           <img src={heroImg} alt="" className="w-full h-full object-cover object-center" />
-          <div className="absolute inset-0 bg-[#0B0B0F]/65" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-transparent to-[#0B0B0F]/30" />
+          <div className="absolute inset-0 bg-[#0B0B0F]/60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-transparent to-[#0B0B0F]/20" />
         </motion.div>
 
         <div className="relative z-10 text-center px-6 max-w-lg mx-auto">
           <motion.h1
-            initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
+            initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 1.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="font-display text-[clamp(1.7rem,7vw,3.5rem)] font-light leading-[1.2] tracking-tight mb-6"
+            transition={{ duration: 1.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="font-display text-[clamp(1.6rem,7vw,3.2rem)] font-light leading-[1.25] tracking-tight mb-8"
           >
             Você não precisa
             <br />
@@ -136,178 +190,206 @@ export default function OraculaSalesPage() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1.2 }}
-            className="text-[#F3EFE7]/60 text-base leading-relaxed mb-10 font-light"
+            transition={{ duration: 1, delay: 1.4 }}
+            className="text-[#F3EFE7]/55 text-base leading-relaxed mb-12 font-light"
           >
             Aprenda a ler o campo antes de intervir.
           </motion.p>
 
-          <motion.button
+          <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.6 }}
-            onClick={ctaClick}
-            className="w-full max-w-xs mx-auto bg-[#C6A96B] text-[#0B0B0F] py-5 text-[11px] uppercase tracking-[0.3em] font-semibold hover:bg-[#d4b87a] transition-all duration-500 flex items-center justify-center gap-2"
+            transition={{ duration: 0.8, delay: 1.8 }}
           >
-            Entrar na Formação
-            <ArrowRight className="w-4 h-4" />
-          </motion.button>
+            <CTA label="Entrar na Formação" onClick={ctaClick} temperature="cool" />
+          </motion.div>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 2 }}
-            className="text-[#F3EFE7]/35 text-[11px] mt-5 tracking-wide"
+            transition={{ duration: 0.8, delay: 2.2 }}
+            className="text-[#F3EFE7]/25 text-[11px] mt-6 tracking-wide"
           >
             Ciclo de 1 ano · Turmas fechadas
           </motion.p>
         </div>
 
-        {/* Scroll hint */}
         <motion.div
-          className="absolute bottom-6 left-1/2 -translate-x-1/2"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2.5, repeat: Infinity }}
         >
-          <div className="w-px h-10 bg-gradient-to-b from-[#F3EFE7]/20 to-transparent" />
+          <div className="w-px h-12 bg-gradient-to-b from-[#F3EFE7]/15 to-transparent" />
         </motion.div>
       </motion.section>
 
-      {/* ═══════════════════════════════════════════
-          2. IDENTIFICAÇÃO — uma frase por "tela"
-      ═══════════════════════════════════════════ */}
-      <section className="py-24 px-6 max-w-lg mx-auto space-y-[30vh]">
+      {/* Identificação — frases progressivas */}
+      <section className="px-6 max-w-lg mx-auto">
+        <Breath />
         {[
           'Você já estudou.',
           'Já atendeu.',
           'Já ajudou.',
-          'E mesmo assim…',
-          'Algo não sustenta.',
         ].map((frase, i) => (
-          <CinePhrase
-            key={i}
-            className="font-display text-2xl md:text-4xl font-light leading-[1.3] whitespace-pre-line text-center"
-            accent={i === 4}
-          >
-            {frase}
-          </CinePhrase>
+          <div key={i}>
+            <Phrase
+              delay={i * 0.05}
+              className="font-display text-[clamp(1.3rem,5vw,2.2rem)] font-light leading-[1.3] text-center text-[#F3EFE7]/80 py-[12vh] md:py-[15vh]"
+            >
+              {frase}
+            </Phrase>
+          </div>
         ))}
       </section>
 
-      {/* ── Image break ── */}
-      <ParallaxImage src={img02} alt="Formação" className="h-[50vh] md:h-[60vh]" />
+      {/* ── IMPACTO: "Algo não sustenta" ── */}
+      <ImpactScreen className="font-display text-[clamp(1.5rem,6vw,2.8rem)] font-light leading-[1.2]">
+        <span className="text-[#F3EFE7]/60">E mesmo assim…</span>
+        <br /><br />
+        <span className="text-[#C6A96B]">Algo não sustenta.</span>
+      </ImpactScreen>
 
-      {/* ═══════════════════════════════════════════
-          3. PERGUNTA — QUEBRA
-      ═══════════════════════════════════════════ */}
-      <section className="py-28 px-6">
-        <div className="max-w-lg mx-auto text-center space-y-10">
-          <CinePhrase className="font-display text-3xl md:text-5xl font-light leading-[1.15]">
-            O que você ainda
-            <br />
-            não está vendo?
-          </CinePhrase>
+      <Breath />
 
-          <Divider />
+      {/* ═══════════════════════════════════════════════════════
+          ESTADO 2 — DESCONFORTO
+      ═══════════════════════════════════════════════════════ */}
 
-          <CinePhrase delay={0.15} className="text-lg font-light leading-relaxed">
-            A verdade desconfortável:
-            <br />
-            <span className="text-[#F3EFE7]/50">não é falta de ferramenta.</span>
-            <br />
-            <span className="text-[#C6A96B]">É falta de leitura.</span>
-          </CinePhrase>
-        </div>
-      </section>
+      <ParallaxImage src={img02} alt="" className="h-[45vh] md:h-[55vh]" />
 
-      {/* ═══════════════════════════════════════════
-          4. O ERRO INVISÍVEL
-      ═══════════════════════════════════════════ */}
-      <section className="py-20 px-6 max-w-lg mx-auto space-y-[22vh]">
+      <Breath />
+
+      {/* Pergunta central — tela cheia */}
+      <ImpactScreen className="font-display text-[clamp(1.6rem,6.5vw,3rem)] font-light leading-[1.15]">
+        O que você ainda
+        <br />
+        não está vendo?
+      </ImpactScreen>
+
+      <ImpactScreen className="text-lg md:text-xl font-light leading-relaxed">
+        <span className="text-[#F3EFE7]/50">A verdade desconfortável:</span>
+        <br /><br />
+        <span className="text-[#F3EFE7]/40">não é falta de ferramenta.</span>
+        <br /><br />
+        <span className="text-[#C6A96B]">É falta de leitura.</span>
+      </ImpactScreen>
+
+      {/* Erro invisível — sequência progressiva */}
+      <section className="px-6 max-w-lg mx-auto">
         {[
-          { text: 'O mercado ensinou você a conduzir.' },
-          { text: 'Mas não ensinou a ler.' },
-          { text: 'E quando você não lê…' },
-          { text: 'Você interfere no tempo errado.' },
-          { text: 'E toda intervenção fora de tempo…\nvira invasão simbólica.', accent: true },
+          { text: 'O mercado ensinou você a conduzir.', dim: true },
+          { text: 'Mas não ensinou a ler.', dim: true },
+          { text: 'E quando você não lê…', dim: true },
+          { text: 'Você interfere no tempo errado.', dim: false },
         ].map((item, i) => (
-          <CinePhrase
+          <Phrase
             key={i}
-            accent={item.accent}
-            className="font-display text-xl md:text-3xl font-light leading-[1.4] whitespace-pre-line"
+            className={`font-display text-xl md:text-2xl font-light leading-[1.4] py-[13vh] md:py-[16vh] ${
+              item.dim ? 'text-[#F3EFE7]/50' : 'text-[#F3EFE7]/85'
+            }`}
           >
             {item.text}
-          </CinePhrase>
+          </Phrase>
         ))}
       </section>
 
-      {/* ── Image break ── */}
-      <ParallaxImage src={img03} alt="Método" className="h-[50vh] md:h-[60vh]" />
+      {/* ── IMPACTO: "invasão simbólica" ── */}
+      <ImpactScreen className="font-display text-[clamp(1.4rem,5.5vw,2.5rem)] font-light leading-[1.3]">
+        <span className="text-[#F3EFE7]/60">E toda intervenção fora de tempo…</span>
+        <br /><br />
+        <span className="text-[#C6A96B]">vira invasão simbólica.</span>
+      </ImpactScreen>
 
-      {/* ═══════════════════════════════════════════
-          5. A VIRADA
-      ═══════════════════════════════════════════ */}
-      <section className="py-28 px-6">
-        <div className="max-w-lg mx-auto text-center space-y-12">
-          <CinePhrase className="font-display text-2xl md:text-4xl font-light">
-            A Casa Orácula nasce desse ponto.
-          </CinePhrase>
-          <CinePhrase delay={0.1} className="font-display text-xl md:text-2xl font-light text-[#F3EFE7]/45">
-            Não como método de intervenção.
-          </CinePhrase>
-          <CinePhrase delay={0.15} accent className="font-display text-xl md:text-2xl font-light">
-            Mas como método de leitura.
-          </CinePhrase>
-        </div>
+      {/* ── ÂNCORA DE DECISÃO 1 ── */}
+      <Breath height="h-[60px] md:h-[80px]" />
+      <CTA label="Começar a ler com precisão" onClick={ctaClick} temperature="warm" />
+      <Breath />
+
+      {/* ═══════════════════════════════════════════════════════
+          ESTADO 3 — REVELAÇÃO
+      ═══════════════════════════════════════════════════════ */}
+
+      <ParallaxImage src={img03} alt="" className="h-[50vh] md:h-[60vh]" />
+
+      <ImpactScreen className="font-display text-[clamp(1.5rem,6vw,2.8rem)] font-light leading-[1.2]">
+        A Casa Orácula nasce desse ponto.
+      </ImpactScreen>
+
+      <section className="px-6 max-w-lg mx-auto text-center space-y-[12vh]">
+        <Phrase className="font-display text-xl md:text-2xl font-light text-[#F3EFE7]/40">
+          Não como método de intervenção.
+        </Phrase>
+        <Phrase className="font-display text-xl md:text-2xl font-light text-[#C6A96B]">
+          Mas como método de leitura.
+        </Phrase>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          VSL — Vídeo
-      ═══════════════════════════════════════════ */}
-      <section className="py-16 px-6 bg-[#0E0E13]">
+      <Breath />
+
+      {/* VSL */}
+      <section className="py-16 px-6 bg-[#0A0A0E]">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1 }}
           className="max-w-2xl mx-auto"
         >
-          <p className="text-[#C6A96B]/50 text-[10px] uppercase tracking-[0.5em] text-center mb-8">
+          <p className="text-[#C6A96B]/40 text-[10px] uppercase tracking-[0.5em] text-center mb-8">
             Assista antes de decidir
           </p>
-          <div className="relative aspect-video rounded-lg overflow-hidden border border-[#C6A96B]/15 shadow-[0_0_80px_-20px_rgba(198,169,107,0.15)]">
+          <div className="relative aspect-video rounded-lg overflow-hidden border border-[#C6A96B]/12 shadow-[0_0_60px_-20px_rgba(198,169,107,0.12)]">
             <div className="absolute inset-0 bg-[#0B0B0F] flex items-center justify-center">
               <div className="text-center space-y-3">
-                <div className="w-16 h-16 rounded-full border-2 border-[#C6A96B]/40 flex items-center justify-center mx-auto cursor-pointer hover:border-[#C6A96B] hover:bg-[#C6A96B]/10 transition-all duration-500">
+                <div className="w-16 h-16 rounded-full border-2 border-[#C6A96B]/30 flex items-center justify-center mx-auto cursor-pointer hover:border-[#C6A96B] hover:bg-[#C6A96B]/10 transition-all duration-500">
                   <svg className="w-7 h-7 text-[#C6A96B] ml-1" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z" />
                   </svg>
                 </div>
-                <p className="text-[#F3EFE7]/30 text-xs">Clique para assistir</p>
+                <p className="text-[#F3EFE7]/25 text-xs">Clique para assistir</p>
               </div>
             </div>
           </div>
-          <p className="text-[#F3EFE7]/25 text-xs mt-5 text-center font-light">
-            6 minutos que podem mudar a forma como você conduz.
-          </p>
         </motion.div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          6. MÉTODO — Stack vertical
-      ═══════════════════════════════════════════ */}
-      <section className="py-24 px-6">
-        <div className="max-w-lg mx-auto">
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-[#C6A96B]/40 text-[10px] uppercase tracking-[0.5em] text-center mb-14"
-          >
-            Método da CidaDELA
-          </motion.p>
+      <Breath />
 
-          <div className="space-y-6">
+      {/* Narrôterapia — sequência emocional */}
+      <ParallaxImage src={narroterapiaImg} alt="Narrôterapia" className="h-[40vh]" />
+
+      <section className="px-6 max-w-lg mx-auto">
+        {[
+          { text: 'A Narrôterapia não corrige comportamento.', accent: false },
+          { text: 'Ela revela narrativa.', accent: true },
+          { text: 'Toda repetição tem uma história.', accent: false },
+          { text: 'E toda história não vista…\nse repete.', accent: false },
+          { text: 'Quando a narrativa é reconhecida…\na psique se reorganiza.', accent: true },
+        ].map((item, i) => (
+          <Phrase
+            key={i}
+            className={`font-display text-xl md:text-2xl font-light leading-[1.4] whitespace-pre-line text-center py-[14vh] md:py-[17vh] ${
+              item.accent ? 'text-[#C6A96B]' : 'text-[#F3EFE7]/60'
+            }`}
+          >
+            {item.text}
+          </Phrase>
+        ))}
+      </section>
+
+      <Breath />
+
+      {/* ═══════════════════════════════════════════════════════
+          ESTADO 4 — MÉTODO
+      ═══════════════════════════════════════════════════════ */}
+
+      <section className="py-20 px-6">
+        <div className="max-w-lg mx-auto">
+          <Phrase className="text-[#C6A96B]/35 text-[10px] uppercase tracking-[0.5em] text-center mb-16">
+            Método da CidaDELA
+          </Phrase>
+
+          <div className="space-y-8">
             {[
               { title: 'Portas', desc: 'Em que limiar a psique está.' },
               { title: 'Campos', desc: 'O clima simbólico que pede leitura.' },
@@ -318,61 +400,34 @@ export default function OraculaSalesPage() {
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: i * 0.15 }}
-                className="border border-[#F3EFE7]/[0.08] p-8 relative overflow-hidden"
+                transition={{ duration: 0.9, delay: i * 0.15 }}
+                className="border border-[#F3EFE7]/[0.06] p-8 relative overflow-hidden"
               >
-                <div className="absolute top-0 left-0 w-1 h-full bg-[#C6A96B]/30" />
-                <h3 className="font-display text-2xl text-[#F3EFE7] font-light mb-2 tracking-wide">
+                <div className="absolute top-0 left-0 w-[3px] h-full bg-[#C6A96B]/25" />
+                <h3 className="font-display text-2xl text-[#F3EFE7]/90 font-light mb-2 tracking-wide pl-2">
                   {item.title}
                 </h3>
-                <p className="text-[#F3EFE7]/50 text-sm leading-relaxed">{item.desc}</p>
+                <p className="text-[#F3EFE7]/40 text-sm leading-relaxed pl-2">{item.desc}</p>
               </motion.div>
             ))}
           </div>
-
-          <CinePhrase delay={0.2} className="font-display text-lg font-light text-center mt-14 leading-relaxed">
-            Quando isso é visto,
-            <br />
-            a condução deixa de ser tentativa.
-            <br />
-            <span className="text-[#C6A96B]">E passa a ser precisão.</span>
-          </CinePhrase>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          7. NARRÔTERAPIA — com imagem
-      ═══════════════════════════════════════════ */}
-      <section className="relative overflow-hidden">
-        <ParallaxImage src={narroterapiaImg} alt="Narrôterapia" className="h-[45vh]" />
+      <ImpactScreen className="font-display text-lg md:text-xl font-light leading-relaxed">
+        <span className="text-[#F3EFE7]/50">Quando isso é visto,</span>
+        <br />
+        <span className="text-[#F3EFE7]/50">a condução deixa de ser tentativa.</span>
+        <br /><br />
+        <span className="text-[#C6A96B]">E passa a ser precisão.</span>
+      </ImpactScreen>
 
-        <div className="py-20 px-6 max-w-lg mx-auto space-y-[20vh]">
-          <CinePhrase className="font-display text-xl md:text-3xl font-light text-center">
-            A Narrôterapia não corrige comportamento.
-          </CinePhrase>
-          <CinePhrase accent className="font-display text-xl md:text-3xl font-light text-center">
-            Ela revela narrativa.
-          </CinePhrase>
-          <CinePhrase className="font-display text-xl md:text-3xl font-light text-center">
-            Toda repetição tem uma história.
-          </CinePhrase>
-          <CinePhrase className="font-display text-xl md:text-3xl font-light text-center whitespace-pre-line">
-            {'E toda história não vista…\nse repete.'}
-          </CinePhrase>
-          <CinePhrase accent className="font-display text-xl md:text-3xl font-light text-center whitespace-pre-line">
-            {'Quando a narrativa é reconhecida…\na psique se reorganiza.'}
-          </CinePhrase>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════
-          8. PROVA ESTRUTURAL
-      ═══════════════════════════════════════════ */}
-      <section className="py-20 px-6">
+      {/* Prova estrutural */}
+      <section className="py-16 px-6">
         <div className="max-w-lg mx-auto">
-          <CinePhrase className="font-display text-2xl font-light mb-10 text-center">
+          <Phrase className="font-display text-xl font-light mb-10 text-center text-[#F3EFE7]/70">
             Você aprende a:
-          </CinePhrase>
+          </Phrase>
           <div className="space-y-5">
             {[
               'Ler antes de intervir',
@@ -381,36 +436,33 @@ export default function OraculaSalesPage() {
             ].map((item, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, x: -15 }}
+                initial={{ opacity: 0, x: -12 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="flex items-center gap-4 py-4 border-b border-[#F3EFE7]/[0.06]"
+                className="flex items-center gap-4 py-4 border-b border-[#F3EFE7]/[0.05]"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C6A96B]/60 shrink-0" />
-                <p className="text-[#F3EFE7]/80 text-base font-light">{item}</p>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C6A96B]/50 shrink-0" />
+                <p className="text-[#F3EFE7]/70 text-base font-light">{item}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Image: Mentoria ── */}
-      <ParallaxImage src={mentoriaImg} alt="Mentoria" className="h-[50vh]" />
+      {/* ── ÂNCORA DE DECISÃO 2 ── */}
+      <Breath height="h-[60px] md:h-[80px]" />
+      <CTA label="Começar a ler com precisão" onClick={ctaClick} temperature="warm" />
+      <Breath />
 
-      {/* ═══════════════════════════════════════════
-          ENTREGAS — com imagens
-      ═══════════════════════════════════════════ */}
+      {/* Entregas com imagens */}
+      <ParallaxImage src={mentoriaImg} alt="Mentoria" className="h-[45vh]" />
+
       <section className="py-20 px-6">
         <div className="max-w-lg mx-auto space-y-8">
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-[#C6A96B]/40 text-[10px] uppercase tracking-[0.5em] text-center mb-10"
-          >
+          <Phrase className="text-[#C6A96B]/35 text-[10px] uppercase tracking-[0.5em] text-center mb-8">
             O que a formação entrega
-          </motion.p>
+          </Phrase>
 
           {[
             { title: 'Leitura simbólica', desc: 'Portas, Campos e Torres antes de intervir.', img: img04 },
@@ -423,36 +475,34 @@ export default function OraculaSalesPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: i * 0.1 }}
-              className="border border-[#F3EFE7]/[0.06] overflow-hidden"
+              className="border border-[#F3EFE7]/[0.05] overflow-hidden"
             >
-              <div className="relative h-44 overflow-hidden">
+              <div className="relative h-40 overflow-hidden">
                 <img src={item.img} alt={item.title} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/20 to-transparent" />
               </div>
               <div className="p-6">
-                <h3 className="font-display text-lg text-[#F3EFE7]/90 mb-2">{item.title}</h3>
-                <p className="text-[#F3EFE7]/45 text-sm leading-relaxed">{item.desc}</p>
+                <h3 className="font-display text-lg text-[#F3EFE7]/85 mb-1.5">{item.title}</h3>
+                <p className="text-[#F3EFE7]/40 text-sm leading-relaxed">{item.desc}</p>
               </div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          9. APP DIFERENCIAL
-      ═══════════════════════════════════════════ */}
-      <section className="py-20 px-6 bg-[#111117]">
+      {/* App */}
+      <section className="py-16 px-6 bg-[#0A0A0E]">
         <div className="max-w-lg mx-auto text-center space-y-6">
-          <CinePhrase className="font-display text-2xl font-light">
+          <Phrase className="font-display text-xl font-light text-[#F3EFE7]/80">
             O app da Casa Orácula não é bônus.
-          </CinePhrase>
-          <CinePhrase accent className="font-display text-2xl font-light">
+          </Phrase>
+          <Phrase className="font-display text-xl font-light text-[#C6A96B]">
             É extensão da sua mente clínica.
-          </CinePhrase>
-          <div className="space-y-3 pt-6">
+          </Phrase>
+          <div className="space-y-3 pt-4">
             {['Mapa vivo da prática', 'Registro de Portas', 'Acompanhamento de narrativas'].map((item) => (
-              <p key={item} className="text-[#F3EFE7]/50 text-sm flex items-center gap-3 justify-center">
-                <span className="w-1 h-1 rounded-full bg-[#C6A96B]/50" />
+              <p key={item} className="text-[#F3EFE7]/40 text-sm flex items-center gap-3 justify-center">
+                <span className="w-1 h-1 rounded-full bg-[#C6A96B]/40" />
                 {item}
               </p>
             ))}
@@ -460,65 +510,62 @@ export default function OraculaSalesPage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          10. POSICIONAMENTO FINAL
-      ═══════════════════════════════════════════ */}
-      <section className="py-24 px-6 max-w-lg mx-auto space-y-[22vh] text-center">
-        <CinePhrase className="font-display text-2xl md:text-4xl font-light">
+      <Breath />
+
+      {/* ═══════════════════════════════════════════════════════
+          ESTADO 5 — DECISÃO
+      ═══════════════════════════════════════════════════════ */}
+
+      {/* Posicionamento */}
+      <section className="px-6 max-w-lg mx-auto">
+        <Phrase className="font-display text-[clamp(1.4rem,5.5vw,2.5rem)] font-light text-center py-[15vh] text-[#F3EFE7]/80">
           Isso não é um curso.
-        </CinePhrase>
-        <CinePhrase accent className="font-display text-2xl md:text-4xl font-light">
+        </Phrase>
+        <Phrase className="font-display text-[clamp(1.4rem,5.5vw,2.5rem)] font-light text-center py-[15vh] text-[#C6A96B]">
           É uma formação de identidade.
-        </CinePhrase>
-        <CinePhrase className="font-display text-xl font-light text-[#F3EFE7]/50">
+        </Phrase>
+        <Phrase className="font-display text-xl font-light text-center py-[15vh] text-[#F3EFE7]/45">
           Um ano para atravessar.
           <br />
           Integrar.
           <br />
           Se posicionar.
-        </CinePhrase>
+        </Phrase>
       </section>
 
-      {/* ── Image break ── */}
-      <ParallaxImage src={img04} alt="Formação Orácula" className="h-[45vh]" />
+      <ParallaxImage src={img04} alt="" className="h-[40vh]" />
 
-      {/* ═══════════════════════════════════════════
-          11. OFERTA
-      ═══════════════════════════════════════════ */}
-      <section className="py-28 px-6 border-t border-[#F3EFE7]/[0.04]">
+      <Breath />
+
+      {/* ── OFERTA ── */}
+      <section className="py-28 px-6">
         <motion.div
           initial={{ opacity: 0, y: 30, filter: 'blur(4px)' }}
           whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           viewport={{ once: true }}
-          transition={{ duration: 1.2 }}
+          transition={{ duration: 1.4 }}
           className="max-w-sm mx-auto text-center"
         >
-          <p className="text-[#C6A96B]/40 text-[10px] uppercase tracking-[0.5em] mb-10">
+          <p className="text-[#C6A96B]/30 text-[10px] uppercase tracking-[0.5em] mb-10">
             Investimento
           </p>
 
-          <h2 className="font-display text-2xl font-light text-[#F3EFE7]/90 mb-3">
+          <h2 className="font-display text-2xl font-light text-[#F3EFE7]/85 mb-3">
             Formação Oracular
           </h2>
-          <p className="text-[#F3EFE7]/40 text-sm mb-8">Ciclo completo de 1 ano</p>
+          <p className="text-[#F3EFE7]/35 text-sm mb-8">Ciclo completo de 1 ano</p>
 
           <p className="font-display text-5xl font-light text-[#F3EFE7] mb-2">
             R$ <span className="text-[#C6A96B]">3.597</span>
           </p>
-          <p className="text-[#F3EFE7]/50 text-sm mb-1">
-            ou até <span className="text-[#C6A96B]/90 font-medium">12x de R$ 349,58</span>
+          <p className="text-[#F3EFE7]/45 text-sm mb-1">
+            ou até <span className="text-[#C6A96B]/80 font-medium">12x de R$ 349,58</span>
           </p>
-          <p className="text-[#F3EFE7]/30 text-xs mb-12">Turmas fechadas</p>
+          <p className="text-[#F3EFE7]/25 text-xs mb-14">Turmas fechadas</p>
 
-          <button
-            onClick={ctaClick}
-            className="w-full bg-[#C6A96B] text-[#0B0B0F] py-5 text-[11px] uppercase tracking-[0.3em] font-semibold hover:bg-[#d4b87a] transition-all duration-500 flex items-center justify-center gap-2"
-          >
-            Entrar na Formação
-            <ArrowRight className="w-4 h-4" />
-          </button>
+          <CTA label="Entrar na Formação Orácula" onClick={ctaClick} temperature="hot" />
 
-          <p className="text-[#F3EFE7]/25 text-xs mt-8 leading-relaxed italic">
+          <p className="text-[#F3EFE7]/20 text-xs mt-10 leading-relaxed italic">
             A decisão não é sobre valor.
             <br />
             É sobre responsabilidade.
@@ -526,74 +573,60 @@ export default function OraculaSalesPage() {
         </motion.div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          12. FECHAMENTO
-      ═══════════════════════════════════════════ */}
+      {/* Fechamento emocional */}
       <section className="relative py-28 px-6">
         <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F] via-[#0E0E13] to-[#0B0B0F]" />
         <motion.div
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-[#C6A96B]/[0.03] blur-[140px] pointer-events-none"
-          animate={{ scale: [1, 1.15, 1], opacity: [0.15, 0.35, 0.15] }}
-          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-[#C6A96B]/[0.025] blur-[120px] pointer-events-none"
+          animate={{ scale: [1, 1.12, 1], opacity: [0.12, 0.3, 0.12] }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
         />
 
-        <div className="relative z-10 max-w-lg mx-auto space-y-10 text-center">
-          <CinePhrase className="font-display text-xl font-light text-[#F3EFE7]/55 italic">
+        <div className="relative z-10 max-w-lg mx-auto text-center">
+          <Phrase className="font-display text-xl font-light text-[#F3EFE7]/45 italic mb-[10vh]">
             Depois que você aprende a ler…
             <br />
             não consegue mais fingir que não vê.
-          </CinePhrase>
-          <CinePhrase className="font-display text-lg font-light text-[#F3EFE7]/40">
+          </Phrase>
+          <Phrase className="font-display text-lg font-light text-[#F3EFE7]/35 mb-[10vh]">
             Se você sente que já não quer apenas conduzir mulheres…
-          </CinePhrase>
-          <CinePhrase accent className="font-display text-xl font-light">
+          </Phrase>
+          <Phrase className="font-display text-xl font-light text-[#C6A96B] mb-[10vh]">
             Talvez esteja buscando uma casa.
-          </CinePhrase>
-          <CinePhrase className="font-display text-2xl font-light">
+          </Phrase>
+          <Phrase className="font-display text-2xl font-light text-[#F3EFE7]/85 mb-12">
             E a Casa… já existe.
-          </CinePhrase>
+          </Phrase>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2, delay: 0.3 }}
-            className="pt-6"
-          >
-            <button
-              onClick={ctaClick}
-              className="w-full max-w-xs mx-auto bg-[#C6A96B] text-[#0B0B0F] py-6 text-[11px] uppercase tracking-[0.3em] font-semibold hover:bg-[#d4b87a] transition-all duration-700 shadow-[0_0_100px_-20px_rgba(198,169,107,0.3)] flex items-center justify-center gap-2"
-            >
-              Entrar na Formação Orácula
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </motion.div>
+          <CTA label="Entrar na Formação Orácula" onClick={ctaClick} temperature="hot" />
         </div>
       </section>
 
-      {/* ═══ FOOTER ═══ */}
+      {/* Footer */}
       <footer className="py-12 px-6 border-t border-[#F3EFE7]/[0.03]">
-        <p className="text-[#F3EFE7]/15 text-[11px] leading-relaxed max-w-sm">
+        <p className="text-[#F3EFE7]/12 text-[11px] leading-relaxed max-w-sm">
           Casa Orácula © {new Date().getFullYear()} · A Casa Orácula não substitui terapia,
           acompanhamento psicológico ou tratamento clínico quando necessário.
         </p>
       </footer>
 
-      {/* ═══ CTA FLUTUANTE MOBILE ═══ */}
-      <motion.div
-        initial={{ y: 100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, delay: 3 }}
-        className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/95 to-transparent md:hidden"
-      >
-        <button
-          onClick={ctaClick}
-          className="w-full bg-[#C6A96B] text-[#0B0B0F] py-4 text-[11px] uppercase tracking-[0.25em] font-semibold flex items-center justify-center gap-2 shadow-[0_-4px_30px_rgba(198,169,107,0.2)]"
+      {/* CTA flutuante mobile — discreto */}
+      {showFloating && (
+        <motion.div
+          initial={{ y: 80, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="fixed bottom-0 left-0 right-0 z-50 p-3 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/90 to-transparent md:hidden pb-safe"
         >
-          Entrar na Formação
-          <ArrowRight className="w-4 h-4" />
-        </button>
-      </motion.div>
+          <button
+            onClick={ctaClick}
+            className="w-full bg-[#C6A96B]/90 text-[#0B0B0F] py-3.5 text-[10px] uppercase tracking-[0.25em] font-semibold flex items-center justify-center gap-2"
+          >
+            Entrar na Formação
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </motion.div>
+      )}
     </div>
   );
 }
