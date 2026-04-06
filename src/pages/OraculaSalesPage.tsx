@@ -16,7 +16,6 @@ import narroterapiaImg from '@/assets/formacao/narroterapia-new.png';
    PRIMITIVES
 ───────────────────────────────────────────── */
 
-/** Cinematic phrase — scroll-triggered, blur-to-sharp */
 function Phrase({
   children,
   delay = 0,
@@ -42,7 +41,6 @@ function Phrase({
   );
 }
 
-/** Impact statement — near full-screen, single message */
 function ImpactScreen({
   children,
   className = '',
@@ -52,33 +50,39 @@ function ImpactScreen({
 }) {
   return (
     <section className="min-h-[70vh] md:min-h-[80vh] flex items-center justify-center px-6">
-      <Phrase className={`text-center max-w-lg mx-auto ${className}`}>
-        {children}
-      </Phrase>
+      <Phrase className={`text-center max-w-lg mx-auto ${className}`}>{children}</Phrase>
     </section>
   );
 }
 
-/** Visual breathing space between emotional blocks */
 function Breath({ height = 'h-[100px] md:h-[140px]' }: { height?: string }) {
   return <div className={height} />;
 }
 
-/** Parallax image divider */
-function ParallaxImage({ src, alt, className = '' }: { src: string; alt: string; className?: string }) {
+function ParallaxImage({
+  src,
+  alt,
+  className = '',
+  imgClassName = 'object-center scale-[1.08] md:scale-[1.12]',
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  imgClassName?: string;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], ['-10%', '10%']);
 
   return (
     <div ref={ref} className={`relative overflow-hidden ${className}`}>
-      <motion.img src={src} alt={alt} style={{ y }} className="w-full h-full object-cover scale-[1.15]" />
+      <motion.img src={src} alt={alt} style={{ y }} className={`w-full h-full object-cover ${imgClassName}`} />
       <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/50 via-transparent to-[#0B0B0F]" />
+      <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#0B0B0F]/35 to-transparent" />
     </div>
   );
 }
 
-/** CTA button with temperature levels */
 function CTA({
   label,
   onClick,
@@ -113,10 +117,6 @@ function CTA({
   );
 }
 
-/* ─────────────────────────────────────────────
-   PAGE
-───────────────────────────────────────────── */
-
 export default function OraculaSalesPage() {
   const navigate = useNavigate();
   const heroRef = useRef<HTMLDivElement>(null);
@@ -126,7 +126,6 @@ export default function OraculaSalesPage() {
 
   const ctaClick = () => navigate('/planos');
 
-  // Hide floating CTA when near offer section
   const [showFloating, setShowFloating] = useState(false);
   useEffect(() => {
     const timer = setTimeout(() => setShowFloating(true), 3500);
@@ -137,7 +136,6 @@ export default function OraculaSalesPage() {
     <div className="min-h-screen bg-[#0B0B0F] text-[#F3EFE7] overflow-x-hidden selection:bg-[#C6A96B]/30">
       <ParticleField density={80} color="216,255,62" />
 
-      {/* ── Header ── */}
       <motion.header
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -152,18 +150,13 @@ export default function OraculaSalesPage() {
         </button>
       </motion.header>
 
-      {/* ═══════════════════════════════════════════════════════
-          ESTADO 1 — RECONHECIMENTO
-      ═══════════════════════════════════════════════════════ */}
-
-      {/* HERO */}
       <motion.section
         ref={heroRef}
         style={{ opacity: heroOp }}
         className="relative min-h-[90vh] flex flex-col items-center justify-center"
       >
         <motion.div className="absolute inset-0 z-0" style={{ scale: heroScale }}>
-          <img src={heroImg} alt="" className="w-full h-full object-cover object-center" />
+          <img src={heroImg} alt="" className="w-full h-full object-cover object-[center_18%] md:object-center" />
           <div className="absolute inset-0 bg-[#0B0B0F]/60" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-transparent to-[#0B0B0F]/20" />
         </motion.div>
@@ -223,14 +216,9 @@ export default function OraculaSalesPage() {
         </motion.div>
       </motion.section>
 
-      {/* Identificação — frases progressivas */}
       <section className="px-6 max-w-lg mx-auto">
         <Breath />
-        {[
-          'Você já estudou.',
-          'Já atendeu.',
-          'Já ajudou.',
-        ].map((frase, i) => (
+        {['Você já estudou.', 'Já atendeu.', 'Já ajudou.'].map((frase, i) => (
           <div key={i}>
             <Phrase
               delay={i * 0.05}
@@ -242,24 +230,24 @@ export default function OraculaSalesPage() {
         ))}
       </section>
 
-      {/* ── IMPACTO: "Algo não sustenta" ── */}
       <ImpactScreen className="font-display text-[clamp(1.5rem,6vw,2.8rem)] font-light leading-[1.2]">
         <span className="text-[#F3EFE7]/60">E mesmo assim…</span>
-        <br /><br />
+        <br />
+        <br />
         <span className="text-[#C6A96B]">Algo não sustenta.</span>
       </ImpactScreen>
 
       <Breath />
 
-      {/* ═══════════════════════════════════════════════════════
-          ESTADO 2 — DESCONFORTO
-      ═══════════════════════════════════════════════════════ */}
-
-      <ParallaxImage src={img02} alt="" className="h-[45vh] md:h-[55vh]" />
+      <ParallaxImage
+        src={img02}
+        alt="Formação Orácula"
+        className="h-[48vh] md:h-[55vh]"
+        imgClassName="object-center scale-[1.08] md:scale-[1.12]"
+      />
 
       <Breath />
 
-      {/* Pergunta central — tela cheia */}
       <ImpactScreen className="font-display text-[clamp(1.6rem,6.5vw,3rem)] font-light leading-[1.15]">
         O que você ainda
         <br />
@@ -268,13 +256,14 @@ export default function OraculaSalesPage() {
 
       <ImpactScreen className="text-lg md:text-xl font-light leading-relaxed">
         <span className="text-[#F3EFE7]/50">A verdade desconfortável:</span>
-        <br /><br />
+        <br />
+        <br />
         <span className="text-[#F3EFE7]/40">não é falta de ferramenta.</span>
-        <br /><br />
+        <br />
+        <br />
         <span className="text-[#C6A96B]">É falta de leitura.</span>
       </ImpactScreen>
 
-      {/* Erro invisível — sequência progressiva */}
       <section className="px-6 max-w-lg mx-auto">
         {[
           { text: 'O mercado ensinou você a conduzir.', dim: true },
@@ -293,23 +282,23 @@ export default function OraculaSalesPage() {
         ))}
       </section>
 
-      {/* ── IMPACTO: "invasão simbólica" ── */}
       <ImpactScreen className="font-display text-[clamp(1.4rem,5.5vw,2.5rem)] font-light leading-[1.3]">
         <span className="text-[#F3EFE7]/60">E toda intervenção fora de tempo…</span>
-        <br /><br />
+        <br />
+        <br />
         <span className="text-[#C6A96B]">vira invasão simbólica.</span>
       </ImpactScreen>
 
-      {/* ── ÂNCORA DE DECISÃO 1 ── */}
       <Breath height="h-[60px] md:h-[80px]" />
       <CTA label="Começar a ler com precisão" onClick={ctaClick} temperature="warm" />
       <Breath />
 
-      {/* ═══════════════════════════════════════════════════════
-          ESTADO 3 — REVELAÇÃO
-      ═══════════════════════════════════════════════════════ */}
-
-      <ParallaxImage src={img03} alt="" className="h-[50vh] md:h-[60vh]" />
+      <ParallaxImage
+        src={img03}
+        alt="Leitura simbólica"
+        className="h-[58vh] md:h-[60vh]"
+        imgClassName="object-[center_16%] md:object-center scale-[1.02] md:scale-[1.06]"
+      />
 
       <ImpactScreen className="font-display text-[clamp(1.5rem,6vw,2.8rem)] font-light leading-[1.2]">
         A Casa Orácula nasce desse ponto.
@@ -326,7 +315,6 @@ export default function OraculaSalesPage() {
 
       <Breath />
 
-      {/* VSL */}
       <section className="py-16 px-6 bg-[#0A0A0E]">
         <motion.div
           initial={{ opacity: 0, y: 25 }}
@@ -355,8 +343,12 @@ export default function OraculaSalesPage() {
 
       <Breath />
 
-      {/* Narrôterapia — sequência emocional */}
-      <ParallaxImage src={narroterapiaImg} alt="Narrôterapia" className="h-[40vh]" />
+      <ParallaxImage
+        src={narroterapiaImg}
+        alt="Narrôterapia"
+        className="h-[42vh] md:h-[44vh]"
+        imgClassName="object-center scale-[1.08] md:scale-[1.12]"
+      />
 
       <section className="px-6 max-w-lg mx-auto">
         {[
@@ -378,10 +370,6 @@ export default function OraculaSalesPage() {
       </section>
 
       <Breath />
-
-      {/* ═══════════════════════════════════════════════════════
-          ESTADO 4 — MÉTODO
-      ═══════════════════════════════════════════════════════ */}
 
       <section className="py-20 px-6">
         <div className="max-w-lg mx-auto">
@@ -418,22 +406,18 @@ export default function OraculaSalesPage() {
         <span className="text-[#F3EFE7]/50">Quando isso é visto,</span>
         <br />
         <span className="text-[#F3EFE7]/50">a condução deixa de ser tentativa.</span>
-        <br /><br />
+        <br />
+        <br />
         <span className="text-[#C6A96B]">E passa a ser precisão.</span>
       </ImpactScreen>
 
-      {/* Prova estrutural */}
       <section className="py-16 px-6">
         <div className="max-w-lg mx-auto">
           <Phrase className="font-display text-xl font-light mb-10 text-center text-[#F3EFE7]/70">
             Você aprende a:
           </Phrase>
           <div className="space-y-5">
-            {[
-              'Ler antes de intervir',
-              'Identificar estrutura psíquica',
-              'Sustentar processos reais',
-            ].map((item, i) => (
+            {['Ler antes de intervir', 'Identificar estrutura psíquica', 'Sustentar processos reais'].map((item, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, x: -12 }}
@@ -450,13 +434,16 @@ export default function OraculaSalesPage() {
         </div>
       </section>
 
-      {/* ── ÂNCORA DE DECISÃO 2 ── */}
       <Breath height="h-[60px] md:h-[80px]" />
       <CTA label="Começar a ler com precisão" onClick={ctaClick} temperature="warm" />
       <Breath />
 
-      {/* Entregas com imagens */}
-      <ParallaxImage src={mentoriaImg} alt="Mentoria" className="h-[45vh]" />
+      <ParallaxImage
+        src={mentoriaImg}
+        alt="Mentoria"
+        className="h-[46vh] md:h-[48vh]"
+        imgClassName="object-center scale-[1.06] md:scale-[1.1]"
+      />
 
       <section className="py-20 px-6">
         <div className="max-w-lg mx-auto space-y-8">
@@ -465,9 +452,27 @@ export default function OraculaSalesPage() {
           </Phrase>
 
           {[
-            { title: 'Leitura simbólica', desc: 'Portas, Campos e Torres antes de intervir.', img: img04 },
-            { title: 'Certificação em Narrôterapia', desc: 'Narrativa como eixo clínico simbólico.', img: narroterapiaImg },
-            { title: 'Casa das Tecelãs', desc: 'Comunidade e mentorias ao vivo a cada 15 dias.', img: casaTecalasImg },
+            {
+              title: 'Leitura simbólica',
+              desc: 'Portas, Campos e Torres antes de intervir.',
+              img: img04,
+              mediaClass: 'aspect-[4/5]',
+              imageClass: 'object-[center_16%]',
+            },
+            {
+              title: 'Certificação em Narrôterapia',
+              desc: 'Narrativa como eixo clínico simbólico.',
+              img: narroterapiaImg,
+              mediaClass: 'aspect-[16/10]',
+              imageClass: 'object-center',
+            },
+            {
+              title: 'Casa das Tecelãs',
+              desc: 'Comunidade e mentorias ao vivo a cada 15 dias.',
+              img: casaTecalasImg,
+              mediaClass: 'aspect-[16/10]',
+              imageClass: 'object-center',
+            },
           ].map((item, i) => (
             <motion.div
               key={item.title}
@@ -477,8 +482,8 @@ export default function OraculaSalesPage() {
               transition={{ duration: 0.7, delay: i * 0.1 }}
               className="border border-[#F3EFE7]/[0.05] overflow-hidden"
             >
-              <div className="relative h-40 overflow-hidden">
-                <img src={item.img} alt={item.title} className="w-full h-full object-cover" />
+              <div className={`relative overflow-hidden ${item.mediaClass}`}>
+                <img src={item.img} alt={item.title} className={`w-full h-full object-cover ${item.imageClass}`} />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/20 to-transparent" />
               </div>
               <div className="p-6">
@@ -490,7 +495,6 @@ export default function OraculaSalesPage() {
         </div>
       </section>
 
-      {/* App */}
       <section className="py-16 px-6 bg-[#0A0A0E]">
         <div className="max-w-lg mx-auto text-center space-y-6">
           <Phrase className="font-display text-xl font-light text-[#F3EFE7]/80">
@@ -512,11 +516,6 @@ export default function OraculaSalesPage() {
 
       <Breath />
 
-      {/* ═══════════════════════════════════════════════════════
-          ESTADO 5 — DECISÃO
-      ═══════════════════════════════════════════════════════ */}
-
-      {/* Posicionamento */}
       <section className="px-6 max-w-lg mx-auto">
         <Phrase className="font-display text-[clamp(1.4rem,5.5vw,2.5rem)] font-light text-center py-[15vh] text-[#F3EFE7]/80">
           Isso não é um curso.
@@ -533,11 +532,15 @@ export default function OraculaSalesPage() {
         </Phrase>
       </section>
 
-      <ParallaxImage src={img04} alt="" className="h-[40vh]" />
+      <ParallaxImage
+        src={img04}
+        alt="Formação Oracular"
+        className="h-[58vh] md:h-[52vh]"
+        imgClassName="object-[center_14%] md:object-center scale-[1.01] md:scale-[1.05]"
+      />
 
       <Breath />
 
-      {/* ── OFERTA ── */}
       <section className="py-28 px-6">
         <motion.div
           initial={{ opacity: 0, y: 30, filter: 'blur(4px)' }}
@@ -550,9 +553,7 @@ export default function OraculaSalesPage() {
             Investimento
           </p>
 
-          <h2 className="font-display text-2xl font-light text-[#F3EFE7]/85 mb-3">
-            Formação Oracular
-          </h2>
+          <h2 className="font-display text-2xl font-light text-[#F3EFE7]/85 mb-3">Formação Oracular</h2>
           <p className="text-[#F3EFE7]/35 text-sm mb-8">Ciclo completo de 1 ano</p>
 
           <p className="font-display text-5xl font-light text-[#F3EFE7] mb-2">
@@ -573,7 +574,6 @@ export default function OraculaSalesPage() {
         </motion.div>
       </section>
 
-      {/* Fechamento emocional */}
       <section className="relative py-28 px-6">
         <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F] via-[#0E0E13] to-[#0B0B0F]" />
         <motion.div
@@ -602,7 +602,6 @@ export default function OraculaSalesPage() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="py-12 px-6 border-t border-[#F3EFE7]/[0.03]">
         <p className="text-[#F3EFE7]/12 text-[11px] leading-relaxed max-w-sm">
           Casa Orácula © {new Date().getFullYear()} · A Casa Orácula não substitui terapia,
@@ -610,7 +609,6 @@ export default function OraculaSalesPage() {
         </p>
       </footer>
 
-      {/* CTA flutuante mobile — discreto */}
       {showFloating && (
         <motion.div
           initial={{ y: 80, opacity: 0 }}
