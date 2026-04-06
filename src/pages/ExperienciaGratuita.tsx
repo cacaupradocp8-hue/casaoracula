@@ -105,7 +105,7 @@ export default function ExperienciaGratuita() {
             Experiência Gratuita
           </h1>
           <p className="text-muted-foreground max-w-md mx-auto leading-relaxed">
-            Três passos para escutar sua voz, entender seu momento e começar a habitar a Casa Orácula.
+            Quatro passos para escutar sua voz, entender seu momento e escolher seu caminho na Casa Orácula.
           </p>
         </motion.div>
 
@@ -224,22 +224,35 @@ export default function ExperienciaGratuita() {
           <div className="rounded-2xl border border-primary/10 bg-card/30 backdrop-blur-sm p-8 text-center space-y-4">
             <p className="text-xs uppercase tracking-[0.2em] text-primary/50">Após a travessia</p>
             <h2 className="font-display text-xl text-foreground">
-              {getCopyByKey('convite_clube_titulo', 'Continue sua jornada no Clube de Leitura Oracular')}
+              {getCopyByKey('convite_clube_titulo', 'Continue sua jornada no Clube do Livro')}
             </h2>
             <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
               {getCopyByKey('convite_clube_descricao',
-                'Estudo simbólico, prática terapêutica e comunidade de mulheres que escutam o invisível.'
+                'Sistema de leitura como intervenção psíquica guiada — inclui a Cartografia da Cidadela e travessias semanais.'
               )}
             </p>
-            <Button
-              variant="gold"
-              size="lg"
-              onClick={() => navigate('/planos')}
-              className="gap-2 px-8"
-            >
-              Habitar a Casa Orácula
-              <ArrowRight className="w-4 h-4" />
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button
+                variant="gold"
+                size="lg"
+                onClick={() => navigate('/planos')}
+                className="gap-2 px-8"
+              >
+                <BookOpen className="w-4 h-4" />
+                Clube do Livro
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => navigate('/oracula')}
+                className="gap-2 px-8"
+              >
+                <GraduationCap className="w-4 h-4" />
+                Formação Orácula
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </motion.div>
       </div>
