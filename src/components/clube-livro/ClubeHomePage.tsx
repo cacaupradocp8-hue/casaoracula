@@ -108,23 +108,9 @@ export function ClubeHomePage() {
                   {estacaoAtual.livro_titulo}{estacaoAtual.livro_autor ? ` — ${estacaoAtual.livro_autor}` : ''}
                 </p>
 
-                {/* Quick access items */}
-                <div className="grid grid-cols-3 gap-3 mb-6">
-                  {[
-                    { label: 'Áudios', icon: Headphones },
-                    { label: 'Leitura', icon: BookOpen },
-                    { label: 'Jardim', icon: Flower2 },
-                  ].map(item => (
-                    <div
-                      key={item.label}
-                      className="p-3 rounded-xl bg-background/50 border border-border/20 text-center cursor-pointer hover:border-primary/20 transition-all"
-                      onClick={() => navigate(`/clube-livro/porta/${estacaoAtual.id}`)}
-                    >
-                      <item.icon className="w-5 h-5 text-primary/60 mx-auto mb-1.5" />
-                      <p className="text-xs text-foreground/70">{item.label}</p>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-xs uppercase tracking-[0.2em] text-primary/50 font-medium mb-4">
+                  Seu próximo passo agora é:
+                </p>
 
                 <Button
                   variant="gold"
