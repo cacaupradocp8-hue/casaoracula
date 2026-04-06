@@ -27,14 +27,7 @@ export function SalesHeader() {
           : 'bg-transparent py-6'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-        <button
-          onClick={() => navigate('/')}
-          className="text-[#F3EFE7]/80 font-display text-lg tracking-wide hover:text-[#C6A96B] transition-colors"
-        >
-          Casa Orácula
-        </button>
-
+      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-end">
         <nav className="hidden md:flex items-center gap-8">
           {[
             { label: 'Método', id: 'metodo' },
@@ -56,13 +49,6 @@ export function SalesHeader() {
             Entrar
           </button>
         </nav>
-
-        <button
-          onClick={() => scrollTo('oferta')}
-          className="text-[#C6A96B] text-[11px] uppercase tracking-[0.25em] font-medium border border-[#C6A96B]/30 px-5 py-2 hover:bg-[#C6A96B]/10 transition-all duration-300"
-        >
-          Entrar na Formação
-        </button>
       </div>
     </motion.header>
   );
