@@ -29,20 +29,8 @@ export default function OraculaSalesPage() {
   return (
     <div className="min-h-screen bg-black text-foreground overflow-x-hidden selection:bg-primary/20">
       
-      {/* ═══ HERO — BANNER IMAGEM ═══ */}
-      <section className="relative w-full">
-        <div className="relative w-full overflow-hidden">
-          <img
-            src={mentoriaBanner}
-            alt="Casa Orácula — Certificação ORÁCULA em Leitura e Condução Simbólica Feminina"
-            className="w-full h-auto block"
-            loading="eager"
-          />
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
-          {/* Breathing orb overlay */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-64 rounded-full bg-gradient-to-t from-mystic/10 via-gold/5 to-transparent blur-3xl animate-breathe pointer-events-none" />
-        </div>
-      </section>
+      {/* ═══ HERO — FULL SCREEN COM PULSAÇÃO ═══ */}
+      <PulsingHero bannerSrc={mentoriaBanner} />
 
       {/* ═══ SEÇÃO DE VÍDEO ═══ */}
       <section className="relative py-20 md:py-24 px-6 overflow-hidden">
