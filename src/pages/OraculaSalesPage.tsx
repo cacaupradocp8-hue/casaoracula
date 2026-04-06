@@ -12,7 +12,7 @@ const fade = {
 
 const slowFade = {
   ...fade,
-  transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
+  transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] as const },
 };
 
 export default function OraculaSalesPage() {
