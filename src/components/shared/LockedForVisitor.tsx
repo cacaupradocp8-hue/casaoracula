@@ -1,54 +1,91 @@
 import { motion } from 'framer-motion';
-import { Lock } from 'lucide-react';
+import { Lock, BookOpen, GraduationCap, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { AppLayout } from '@/components/layout/AppLayout';
 
 interface LockedForVisitorProps {
   featureName?: string;
 }
 
 /**
- * LockedForVisitor - Blocking component for visitors trying to access restricted content
- * 
- * Shows a simple, calm message that the content belongs to another stage.
- * NO buttons, NO CTAs, NO alternative routes.
+ * LockedForVisitor - Explanatory gating page for users without access.
+ * Shows what this space is, who it's for, and CTAs to upgrade.
  */
 export function LockedForVisitor({ featureName }: LockedForVisitorProps) {
+  const navigate = useNavigate();
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen bg-background flex flex-col items-center justify-center p-6"
-    >
-      {/* Ambient background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gold/5 via-background to-background" />
+    <AppLayout>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-[80vh] flex flex-col items-center justify-center p-6"
+      >
+        {/* Content */}
+        <div className="text-center max-w-lg mx-auto space-y-8">
+          {/* Lock Icon */}
+          <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">
+            <Lock className="w-7 h-7 text-primary/60" />
+          </div>
 
-      {/* Content */}
-      <div className="relative z-10 text-center max-w-md mx-auto space-y-6">
-        {/* Lock Icon */}
-        <div className="w-16 h-16 rounded-full bg-muted/30 border border-border/30 flex items-center justify-center mx-auto">
-          <Lock className="w-8 h-8 text-muted-foreground/50" />
-        </div>
+          {/* Message */}
+          <div className="space-y-3">
+            {featureName && (
+              <p className="text-xs uppercase tracking-[0.2em] text-primary/50">
+                {featureName}
+              </p>
+            )}
 
-        {/* Message */}
-        <div className="space-y-3">
-          {featureName && (
-            <p className="text-muted-foreground text-sm">
-              {featureName}
+            <h1 className="font-display text-2xl text-foreground">
+              Este espaço pertence a outra etapa da jornada
+            </h1>
+
+            <p className="text-muted-foreground leading-relaxed">
+              Para acessar este conteúdo, você precisa fazer parte do ecossistema da Casa Orácula
+              — seja pelo Clube do Livro ou pela Formação.
             </p>
-          )}
-          
-          <h1 className="font-display text-xl text-foreground">
-            Entrada por círculo
-          </h1>
-          
-          <p className="text-muted-foreground leading-relaxed">
-            Este espaço exige travessia prévia.
-          </p>
+          </div>
 
-          <p className="text-sm text-muted-foreground/60 pt-4">
-            Este conteúdo pertence a outra etapa da travessia.
+          {/* CTAs */}
+          <div className="grid gap-3 max-w-sm mx-auto">
+            <Button
+              variant="gold"
+              size="lg"
+              className="gap-2 w-full"
+              onClick={() => navigate('/planos')}
+            >
+              <BookOpen className="w-4 h-4" />
+              Assinar o Clube do Livro
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+
+            <Button
+              variant="outline"
+              size="lg"
+              className="gap-2 w-full"
+              onClick={() => navigate('/oracula')}
+            >
+              <GraduationCap className="w-4 h-4" />
+              Conhecer a Formação Orácula
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </div>
+
+          {/* Explore */}
+          <p className="text-sm text-muted-foreground/60">
+            Ou{' '}
+            <button
+              type="button"
+              onClick={() => navigate('/vitrine')}
+              className="text-primary/70 hover:text-primary underline underline-offset-2 transition-colors"
+            >
+              explore a Vitrine
+            </button>{' '}
+            para conhecer tudo que a Casa oferece.
           </p>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </AppLayout>
   );
 }
