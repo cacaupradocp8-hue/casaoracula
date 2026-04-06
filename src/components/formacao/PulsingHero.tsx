@@ -68,7 +68,7 @@ export function PulsingHero({ bannerSrc }: { bannerSrc: string }) {
             initial={{ opacity: 0, letterSpacing: '0.3em' }}
             animate={{ opacity: 1, letterSpacing: '0.6em' }}
             transition={{ duration: 1.5, delay: 0.3 }}
-            className="text-primary/50 text-[10px] md:text-xs uppercase mb-10 font-medium"
+            className="text-primary/80 text-[10px] md:text-xs uppercase mb-10 font-medium"
           >
             Casa Orácula apresenta
           </motion.p>
@@ -95,7 +95,7 @@ export function PulsingHero({ bannerSrc }: { bannerSrc: string }) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1 }}
-            className="text-white/40 text-lg md:text-xl leading-relaxed max-w-xl mx-auto font-display italic mb-14"
+            className="text-white/75 text-lg md:text-xl leading-relaxed max-w-xl mx-auto font-display italic mb-14"
           >
             A única formação que ensina a ler a psique feminina através de um mapa simbólico vivo — e a conduzir processos com método, ética e profundidade.
           </motion.p>
