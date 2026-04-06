@@ -2,14 +2,16 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
-// Generic hook for tecela tables
-export function useTecelaData<T>(table: string, filters?: Record<string, any>) {
+type TecelaTable = 'tecela_tramas' | 'tecela_supervisoes' | 'tecela_intervencoes' | 'tecela_casos_espelho';
+
+// Typed hook for specific tecela tables only
+export function useTecelaData<T>(table: TecelaTable, filters?: Record<string, any>) {
   const [data, setData] = useState<T[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetch = useCallback(async () => {
     setIsLoading(true);
-    let query = (supabase.from(table as any) as any).select('*').order('created_at', { ascending: false });
+    let query = (supabase.from(table) as any).select('*').order('created_at', { ascending: false });
     if (filters) {
       Object.entries(filters).forEach(([k, v]) => {
         query = query.eq(k, v);

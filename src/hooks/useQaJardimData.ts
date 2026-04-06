@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 
 export interface QaFilters {
   therapistId?: string;
@@ -13,7 +14,13 @@ export interface QaFilters {
   onlySharedWithClient?: boolean;
 }
 
+function useIsAdmin() {
+  const { user } = useAuth();
+  return user?.portal === 'admin';
+}
+
 export function useQaTherapists() {
+  const isAdmin = useIsAdmin();
   return useQuery({
     queryKey: ['qa-therapists'],
     queryFn: async () => {
@@ -26,10 +33,12 @@ export function useQaTherapists() {
       if (error) throw error;
       return data || [];
     },
+    enabled: isAdmin,
   });
 }
 
 export function useQaClients(therapistId?: string) {
+  const isAdmin = useIsAdmin();
   return useQuery({
     queryKey: ['qa-clients', therapistId],
     queryFn: async () => {
@@ -39,16 +48,17 @@ export function useQaClients(therapistId?: string) {
       if (error) throw error;
       return data || [];
     },
+    enabled: isAdmin,
   });
 }
 
 export function useQaJardins(filters: QaFilters) {
+  const isAdmin = useIsAdmin();
   return useQuery({
     queryKey: ['qa-jardins', filters],
     queryFn: async () => {
-      let q = supabase.from('co_jardins').select('*');
+      let q = supabase.from('co_jardins').select('id, client_user_id, therapist_user_id, created_by, status, visibility_scope, created_at, updated_at');
       if (filters.clientId) {
-        // Find client_user_id from clientes table
         const { data: cliente } = await supabase.from('clientes').select('client_user_id').eq('id', filters.clientId).single();
         if (cliente?.client_user_id) q = q.eq('client_user_id', cliente.client_user_id);
       }
@@ -58,15 +68,16 @@ export function useQaJardins(filters: QaFilters) {
       if (error) throw error;
       return data || [];
     },
-    enabled: true,
+    enabled: isAdmin,
   });
 }
 
 export function useQaEntries(filters: QaFilters) {
+  const isAdmin = useIsAdmin();
   return useQuery({
     queryKey: ['qa-entries', filters],
     queryFn: async () => {
-      let q = supabase.from('co_jardim_entries').select('*');
+      let q = supabase.from('co_jardim_entries').select('id, jardim_id, client_user_id, therapist_user_id, created_by, entry_type, shared_with_therapist, visibility_to_client, created_at, updated_at');
       if (filters.jardimId) q = q.eq('jardim_id', filters.jardimId);
       if (filters.therapistId) q = q.eq('therapist_user_id', filters.therapistId);
       if (filters.entryType) q = q.eq('entry_type', filters.entryType);
@@ -82,15 +93,16 @@ export function useQaEntries(filters: QaFilters) {
       if (error) throw error;
       return data || [];
     },
-    enabled: true,
+    enabled: isAdmin,
   });
 }
 
 export function useQaSessoes(filters: QaFilters) {
+  const isAdmin = useIsAdmin();
   return useQuery({
     queryKey: ['qa-sessoes', filters],
     queryFn: async () => {
-      let q = supabase.from('co_sessoes').select('*');
+      let q = supabase.from('co_sessoes').select('id, client_user_id, therapist_user_id, created_by, shared_with_client, jardim_ref_id, created_at, updated_at');
       if (filters.therapistId) q = q.eq('therapist_user_id', filters.therapistId);
       if (filters.onlySharedWithClient) q = q.eq('shared_with_client', true);
       if (filters.dateFrom) q = q.gte('created_at', filters.dateFrom);
@@ -103,7 +115,7 @@ export function useQaSessoes(filters: QaFilters) {
       if (error) throw error;
       return data || [];
     },
-    enabled: true,
+    enabled: isAdmin,
   });
 }
 
@@ -125,14 +137,12 @@ export function computeConsistencyAlerts(
   );
   const jardimIds = new Set(jardins.map(j => j.id));
 
-  // Entries sem jardim correspondente
   entries.forEach(e => {
     if (!jardimIds.has(e.jardim_id)) {
       alerts.push({ type: 'error', message: `Entry ${e.id.slice(0,8)} sem jardim correspondente (jardim_id: ${e.jardim_id?.slice(0,8)})`, relatedId: e.id });
     }
   });
 
-  // Jardins sem entries
   const jardinsWithEntries = new Set(entries.map(e => e.jardim_id));
   jardins.forEach(j => {
     if (!jardinsWithEntries.has(j.id)) {
@@ -140,27 +150,22 @@ export function computeConsistencyAlerts(
     }
   });
 
-  // Entries criadas pela cliente com shared_with_therapist = false (informativo)
   entries.filter(e => e.created_by === e.client_user_id && !e.shared_with_therapist).forEach(e => {
     alerts.push({ type: 'warning', message: `Entry ${e.id.slice(0,8)} da cliente NÃO compartilhada com terapeuta`, relatedId: e.id });
   });
 
-  // Entries criadas pela terapeuta com visibility_to_client = false (informativo)
   entries.filter(e => e.created_by === e.therapist_user_id && !e.visibility_to_client).forEach(e => {
     alerts.push({ type: 'warning', message: `Entry ${e.id.slice(0,8)} da terapeuta NÃO visível para cliente`, relatedId: e.id });
   });
 
-  // Sessões com jardim_ref_id inválido
   sessoes.filter(s => s.jardim_ref_id && !jardimIds.has(s.jardim_ref_id)).forEach(s => {
     alerts.push({ type: 'error', message: `Sessão ${s.id.slice(0,8)} com jardim_ref_id inválido`, relatedId: s.id });
   });
 
-  // Sessões compartilhadas sem conteúdo mínimo
   sessoes.filter(s => s.shared_with_client && (!s.summary_internal || s.summary_internal.trim().length < 10)).forEach(s => {
     alerts.push({ type: 'warning', message: `Sessão ${s.id.slice(0,8)} compartilhada com cliente mas sem conteúdo mínimo`, relatedId: s.id });
   });
 
-  // Registros sem vínculo ativo
   [...entries, ...sessoes].forEach(r => {
     const key = `${r.therapist_user_id}:${r.client_user_id}`;
     if (!activeClientLinks.has(key)) {
