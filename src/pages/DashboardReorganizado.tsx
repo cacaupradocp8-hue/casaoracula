@@ -19,10 +19,11 @@ interface QuickSection {
 }
 
 const SECTIONS: QuickSection[] = [
-  { title: 'Formações', icon: GraduationCap, route: '/cursos', desc: 'Cursos e formação profissional' },
+  { title: 'Formação', icon: GraduationCap, route: '/oracula', desc: 'Formação profissional em psicologia simbólica' },
   { title: 'Clube do Livro', icon: BookOpen, route: '/app/clube', desc: 'Travessias semanais com livros' },
   { title: 'Ferramentas', icon: Wrench, route: '/ferramentas', desc: 'Instrumentos de sessão e autoleitura' },
   { title: 'Jardins', icon: Flower2, route: '/jardim-da-psique', desc: 'Seus registros e reflexões' },
+  { title: 'Vitrine', icon: ShoppingBag, route: '/vitrine', desc: 'Todo o ecossistema da Casa' },
 ];
 
 export default function DashboardReorganizado() {
