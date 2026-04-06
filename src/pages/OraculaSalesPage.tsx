@@ -6,9 +6,13 @@ import { ParticleField } from '@/components/sales/ParticleField';
 import { SalesHeader } from '@/components/sales/SalesHeader';
 
 import heroImg from '@/assets/formacao/imagem01.png';
-import mentoriaImg from '@/assets/formacao/mentoria01.png';
 import casaMaquinasImg from '@/assets/formacao/casa-maquinas.png';
-import img03 from '@/assets/formacao/imagem03.png';
+import narroterapiaImg from '@/assets/formacao/narroterapia.png';
+import certificacaoImg from '@/assets/formacao/certificacao.png';
+import casaTecalasImg from '@/assets/formacao/casa-tecelas.png';
+import circuloLeituraImg from '@/assets/formacao/circulo-leitura.png';
+import isadoraLivroImg from '@/assets/formacao/isadora-livro.png';
+import isadoraPbImg from '@/assets/formacao/isadora-pb.png';
 
 /* ── Shared animation preset ── */
 const fade = {
@@ -132,6 +136,31 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══════════════════════════════════════════
+          SEÇÃO — ISADORA (foto P&B + texto)
+      ═══════════════════════════════════════════ */}
+      <section className="py-20 md:py-32 px-6 md:px-16 bg-[#0E0E13]">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+          <motion.div {...fade} className="relative">
+            <div className="relative overflow-hidden rounded-sm">
+              <img src={isadoraPbImg} alt="Isadora" className="w-full max-w-sm mx-auto md:max-w-none grayscale" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0E0E13] via-transparent to-transparent opacity-70" />
+            </div>
+          </motion.div>
+          <motion.div {...fadeSlow} className="space-y-6">
+            <Phrase className="font-display text-2xl md:text-4xl font-light text-[#F3EFE7]/90 leading-[1.25]">
+              A Casa Orácula não forma terapeutas.
+            </Phrase>
+            <Phrase delay={0.1} className="font-display text-2xl md:text-4xl font-light text-[#C6A96B]/80 leading-[1.25]">
+              Forma leitoras de campo.
+            </Phrase>
+            <Phrase delay={0.2} className="text-[#F3EFE7]/30 text-sm md:text-base leading-relaxed font-light max-w-md">
+              Um método estruturado para quem quer parar de conduzir no escuro e começar a ler antes de intervir.
+            </Phrase>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
           SEÇÃO 3 — PERGUNTA CENTRAL
       ═══════════════════════════════════════════ */}
       <section className="py-32 md:py-48 px-6 bg-[#111117] relative">
@@ -181,26 +210,34 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          SEÇÃO 5 — NASCIMENTO DA CASA ORÁCULA
+          SEÇÃO — ISADORA COM LIVRO (virada)
       ═══════════════════════════════════════════ */}
-      <section className="py-32 md:py-48 px-6 md:px-16">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          <Phrase className="font-display text-2xl md:text-4xl lg:text-5xl font-light text-[#F3EFE7]/90">
-            A Casa Orácula nasce desse ponto.
-          </Phrase>
-          <Phrase delay={0.1} className="font-display text-xl md:text-2xl font-light text-[#F3EFE7]/40">
-            Não como método de intervenção.
-          </Phrase>
-          <Phrase delay={0.2} className="font-display text-xl md:text-2xl font-light text-[#C6A96B]/70">
-            Mas como método de leitura.
-          </Phrase>
-          <motion.div {...fade} className="pt-10 max-w-lg mx-auto">
-            <p className="text-[#F3EFE7]/30 text-sm md:text-base leading-relaxed font-light">
-              Um sistema estruturado para identificar:<br />
-              em que limiar a psique está,<br />
-              qual campo está ativo,<br />
-              e qual estrutura sustentou aquela mulher até aqui.
-            </p>
+      <section className="relative py-20 md:py-32 px-6 md:px-16">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+          <motion.div {...fadeSlow} className="order-2 md:order-1 space-y-6">
+            <Phrase className="font-display text-2xl md:text-4xl lg:text-5xl font-light text-[#F3EFE7]/90">
+              A Casa Orácula nasce desse ponto.
+            </Phrase>
+            <Phrase delay={0.1} className="font-display text-xl md:text-2xl font-light text-[#F3EFE7]/40">
+              Não como método de intervenção.
+            </Phrase>
+            <Phrase delay={0.2} className="font-display text-xl md:text-2xl font-light text-[#C6A96B]/70">
+              Mas como método de leitura.
+            </Phrase>
+            <motion.div {...fade} className="pt-4">
+              <p className="text-[#F3EFE7]/30 text-sm md:text-base leading-relaxed font-light">
+                Um sistema estruturado para identificar:<br />
+                em que limiar a psique está,<br />
+                qual campo está ativo,<br />
+                e qual estrutura sustentou aquela mulher até aqui.
+              </p>
+            </motion.div>
+          </motion.div>
+          <motion.div {...fade} className="order-1 md:order-2 relative">
+            <div className="relative overflow-hidden rounded-sm">
+              <img src={isadoraLivroImg} alt="Isadora segurando livro" className="w-full max-w-sm mx-auto md:max-w-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-transparent to-transparent opacity-50" />
+            </div>
           </motion.div>
         </div>
       </section>
@@ -247,10 +284,20 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          SEÇÃO 7 — NARRÔTERAPIA
+          SEÇÃO 7 — NARRÔTERAPIA (com imagem)
       ═══════════════════════════════════════════ */}
-      <section className="py-28 md:py-44 px-6 md:px-16 bg-[#0E0E13]">
-        <div className="max-w-3xl mx-auto space-y-16 md:space-y-24">
+      <section className="py-28 md:py-44 px-6 md:px-16 bg-[#0E0E13] relative overflow-hidden">
+        {/* Background image */}
+        <div className="absolute inset-0">
+          <img src={narroterapiaImg} alt="" className="w-full h-full object-cover opacity-15" />
+          <div className="absolute inset-0 bg-[#0E0E13]/85" />
+        </div>
+
+        <div className="relative z-10 max-w-3xl mx-auto space-y-16 md:space-y-24">
+          <motion.p {...fade} className="text-[#C6A96B]/40 text-[10px] uppercase tracking-[0.6em] text-center">
+            Narrôterapia Oracular
+          </motion.p>
+
           {[
             { text: 'A Narrôterapia não corrige comportamento.', accent: false },
             { text: 'Ela revela narrativa.', accent: true },
@@ -272,7 +319,7 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          SEÇÃO 8 — O QUE A FORMAÇÃO ENTREGA
+          SEÇÃO 8 — O QUE A FORMAÇÃO ENTREGA (com imagens)
       ═══════════════════════════════════════════ */}
       <section id="formacao" className="py-28 md:py-40 px-6 md:px-16">
         <div className="max-w-6xl mx-auto">
@@ -282,10 +329,10 @@ export default function OraculaSalesPage() {
 
           <div className="grid md:grid-cols-2 gap-6">
             {[
-              { title: 'Leitura simbólica', desc: 'Você aprende a ler Portas, Campos e Torres antes de intervir.' },
-              { title: 'Certificação em Narrôterapia', desc: 'Recebe certificação para trabalhar narrativa como eixo clínico simbólico.' },
-              { title: 'Mentorias quinzenais', desc: 'Tem prática supervisionada e mentorias ao vivo a cada 15 dias.' },
-              { title: 'App clínico integrado', desc: 'Opera dentro de um mapa vivo da sua prática, sem depender de intuição solta.' },
+              { title: 'Leitura simbólica', desc: 'Você aprende a ler Portas, Campos e Torres antes de intervir.', img: circuloLeituraImg },
+              { title: 'Certificação em Narrôterapia', desc: 'Recebe certificação para trabalhar narrativa como eixo clínico simbólico.', img: certificacaoImg },
+              { title: 'Casa das Tecelãs', desc: 'Comunidade de prática supervisionada e mentorias ao vivo a cada 15 dias.', img: casaTecalasImg },
+              { title: 'App clínico integrado', desc: 'Opera dentro de um mapa vivo da sua prática, sem depender de intuição solta.', img: casaMaquinasImg },
             ].map((item, i) => (
               <motion.div
                 key={item.title}
@@ -293,12 +340,22 @@ export default function OraculaSalesPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: i * 0.1 }}
-                className="border border-[#F3EFE7]/[0.06] p-8 md:p-10 hover:border-[#C6A96B]/20 transition-colors duration-500 group"
+                className="border border-[#F3EFE7]/[0.06] overflow-hidden hover:border-[#C6A96B]/20 transition-colors duration-500 group"
               >
-                <h3 className="font-display text-lg md:text-xl text-[#F3EFE7]/90 mb-3 group-hover:text-[#C6A96B]/80 transition-colors">
-                  {item.title}
-                </h3>
-                <p className="text-[#F3EFE7]/30 text-sm leading-relaxed">{item.desc}</p>
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={item.img}
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/40 to-transparent" />
+                </div>
+                <div className="p-8 md:p-10">
+                  <h3 className="font-display text-lg md:text-xl text-[#F3EFE7]/90 mb-3 group-hover:text-[#C6A96B]/80 transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-[#F3EFE7]/30 text-sm leading-relaxed">{item.desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -338,10 +395,7 @@ export default function OraculaSalesPage() {
             </p>
           </motion.div>
 
-          <motion.div
-            {...fade}
-            className="relative"
-          >
+          <motion.div {...fade} className="relative">
             <div className="relative rounded-xl overflow-hidden border border-[#F3EFE7]/[0.06]">
               <img src={casaMaquinasImg} alt="App Casa Orácula" className="w-full" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#111117] via-transparent to-transparent opacity-60" />
