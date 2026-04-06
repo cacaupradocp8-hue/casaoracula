@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import type { CollectiveBedEntry, EntryType, CanteiroEntry } from './types';
+import type { CollectiveBedEntry, EntryType, CanteiroEntry, CollectiveBed } from './types';
 
 export type { CollectiveBedEntry, CanteiroEntry };
 
@@ -22,7 +22,7 @@ export function useCanteiroEntries(bedId: string | undefined, origem?: 'psique' 
       const { data, error } = await q;
       if (error) throw error;
 
-      const entries = (data || []) as CollectiveBedEntry[];
+      const entries = data || [];
       const userIds = [...new Set(entries.filter(e => !e.exibicao_anonima).map(e => e.user_id))];
       let profileMap: Record<string, string> = {};
       if (userIds.length > 0) {
@@ -36,7 +36,7 @@ export function useCanteiroEntries(bedId: string | undefined, origem?: 'psique' 
       return entries.map(e => ({
         ...e,
         profiles: e.exibicao_anonima ? null : { nome: profileMap[e.user_id] || null },
-      })) as CollectiveBedEntry[];
+      })) as unknown as CollectiveBedEntry[];
     },
     enabled: !!bedId,
   });
@@ -64,7 +64,7 @@ export function useCanteiroPublicEntries(filterType?: EntryType | 'todos') {
       const { data, error } = await query;
       if (error) throw error;
 
-      const entries = (data || []) as CollectiveBedEntry[];
+      const entries = data || [];
       const userIds = [...new Set(entries.filter(e => !e.exibicao_anonima).map(e => e.user_id))];
 
       let profileMap: Record<string, string> = {};
@@ -79,7 +79,7 @@ export function useCanteiroPublicEntries(filterType?: EntryType | 'todos') {
       return entries.map(e => ({
         ...e,
         author_nome: e.exibicao_anonima ? null : (profileMap[e.user_id] || 'Anônima'),
-      })) as CanteiroEntry[];
+      })) as unknown as CanteiroEntry[];
     },
   });
 }
@@ -96,8 +96,8 @@ export function useArchivedCanteiros() {
         .order('encerrado_em', { ascending: false });
       if (error) throw error;
 
-      const beds = (data || []) as Array<CollectiveBedEntry & { ciclo_id?: string }>;
-      const cicloIds = [...new Set(beds.filter((b: any) => b.ciclo_id).map((b: any) => b.ciclo_id))];
+      const beds = (data || []) as Array<Record<string, any>>;
+      const cicloIds = [...new Set(beds.filter(b => b.ciclo_id).map(b => b.ciclo_id))];
       let cicloMap: Record<string, string> = {};
       if (cicloIds.length > 0) {
         const { data: ciclos } = await supabase
@@ -107,7 +107,7 @@ export function useArchivedCanteiros() {
         cicloMap = Object.fromEntries((ciclos || []).map(c => [c.id, c.titulo]));
       }
 
-      return beds.map((b: any) => ({
+      return beds.map(b => ({
         id: b.id,
         season_id: b.season_id,
         ciclo_id: b.ciclo_id || null,
@@ -115,7 +115,7 @@ export function useArchivedCanteiros() {
         aberto_em: b.aberto_em,
         encerrado_em: b.encerrado_em,
         ciclo_nome: b.ciclo_id ? (cicloMap[b.ciclo_id] || null) : null,
-      }));
+      })) as (CollectiveBed & { ciclo_nome: string | null })[];
     },
   });
 }

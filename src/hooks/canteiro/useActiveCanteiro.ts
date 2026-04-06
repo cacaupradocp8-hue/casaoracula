@@ -16,23 +16,24 @@ export function useActiveCanteiro() {
       if (error) throw error;
       if (!data) return null;
 
+      const bed = data as Record<string, any>;
       let cicloNome: string | null = null;
-      if (data.ciclo_id) {
+      if (bed.ciclo_id) {
         const { data: ciclo } = await supabase
           .from('clube_livro_ciclos')
           .select('titulo')
-          .eq('id', data.ciclo_id)
+          .eq('id', bed.ciclo_id)
           .maybeSingle();
         cicloNome = ciclo?.titulo || null;
       }
 
       return {
-        id: data.id,
-        season_id: data.season_id,
-        ciclo_id: data.ciclo_id || null,
-        status: data.status,
-        aberto_em: data.aberto_em,
-        encerrado_em: data.encerrado_em,
+        id: bed.id,
+        season_id: bed.season_id,
+        ciclo_id: bed.ciclo_id || null,
+        status: bed.status,
+        aberto_em: bed.aberto_em,
+        encerrado_em: bed.encerrado_em,
         ciclo_nome: cicloNome,
       } as CollectiveBed & { ciclo_nome: string | null };
     },
