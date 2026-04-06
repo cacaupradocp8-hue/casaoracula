@@ -22,9 +22,11 @@ export function useHeroinaCenarioRegistros() {
   return useQuery({
     queryKey: ["heroina-cenario-registros", user?.id],
     queryFn: async () => {
+      if (!user?.id) return [];
       const { data, error } = await supabase
         .from("heroina_cenario_registros")
         .select("*")
+        .eq("user_id", user.id)
         .order("registrado_em", { ascending: false });
       
       if (error) throw error;
