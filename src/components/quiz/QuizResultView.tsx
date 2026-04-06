@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Heart, ArrowRight, Layers, Map, Eye, BookOpen, GraduationCap, Route } from 'lucide-react';
+import { Sparkles, Heart, ArrowRight, Layers, BookOpen, GraduationCap, Route, Map } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature } from '@/types/portal';
@@ -125,17 +125,86 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
         </Card>
       </motion.section>
 
-      {/* ══ BLOCO 3: SEU PRÓXIMO PASSO — 3 TRILHAS ══ */}
+      {/* ══ BLOCO 3: PONTO DE PARTIDA — CONDUÇÃO DE DECISÃO ══ */}
       <motion.section {...fade(0.2)}>
-        <div className="text-center mb-6">
-          <p className="text-xs uppercase tracking-[0.2em] text-primary/50 mb-2">Seu próximo passo</p>
+        <div className="text-center mb-2">
+          <p className="text-sm text-muted-foreground">
+            Com base nas suas respostas, este é o seu ponto de partida na Casa.
+          </p>
+        </div>
+        <div className="text-center mb-8">
           <h3 className="font-display text-xl md:text-2xl text-foreground">
-            Escolha como continuar sua jornada
+            Seu próximo passo recomendado:
           </h3>
         </div>
 
         <div className="space-y-4">
-          {/* TRILHA 1: Travessia 00 — Gratuita */}
+
+          {/* ── TRILHA 1: Clube do Livro — DESTAQUE PRINCIPAL ── */}
+          {!hasClubAccess ? (
+            <Card className="border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent hover:border-gold/50 transition-all shadow-lg ring-1 ring-gold/10">
+              <CardContent className="py-8 px-6">
+                <div className="flex flex-col sm:flex-row items-start gap-5">
+                  <div className="w-14 h-14 rounded-full bg-gold/15 border-2 border-gold/30 flex items-center justify-center shrink-0">
+                    <BookOpen className="w-6 h-6 text-gold" />
+                  </div>
+                  <div className="flex-1 min-w-0 space-y-4">
+                    <div>
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-gold/70 block mb-1.5">Caminho recomendado</span>
+                      <h4 className="font-display text-xl font-semibold text-foreground">Clube do Livro Oracular</h4>
+                      <p className="text-sm text-foreground/80 leading-relaxed mt-2">
+                        Você não precisa começar sozinha.{'\n'}
+                        Aqui você entra em uma jornada guiada, onde cada leitura é usada como intervenção psíquica.
+                      </p>
+                    </div>
+                    <Button
+                      variant="gold"
+                      size="lg"
+                      onClick={() => navigate('/planos')}
+                      className="gap-2 w-full sm:w-auto"
+                    >
+                      Entrar no Clube
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                    <p className="text-xs text-gold/50 italic">
+                      É por aqui que a maioria começa.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            /* Se já tem acesso ao Clube — mostrar Cartografia */
+            <Card className="border-gold/20 bg-gold/[0.03] hover:border-gold/30 transition-all shadow-md">
+              <CardContent className="py-8 px-6">
+                <div className="flex flex-col sm:flex-row items-start gap-5">
+                  <div className="w-14 h-14 rounded-full bg-gold/15 border-2 border-gold/30 flex items-center justify-center shrink-0">
+                    <Map className="w-6 h-6 text-gold" />
+                  </div>
+                  <div className="flex-1 min-w-0 space-y-4">
+                    <div>
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-gold/70 block mb-1.5">Seu próximo passo no Clube</span>
+                      <h4 className="font-display text-xl font-semibold text-foreground">Cartografia da Cidadela</h4>
+                      <p className="text-sm text-foreground/80 leading-relaxed mt-2">
+                        Revele o mapa completo da sua estrutura interna — seu GPS simbólico.
+                      </p>
+                    </div>
+                    <Button
+                      variant="gold"
+                      size="lg"
+                      onClick={() => navigate('/ferramentas/cartografia-psiquica-oracula')}
+                      className="gap-2 w-full sm:w-auto"
+                    >
+                      Criar minha Cartografia
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* ── TRILHA 2: Travessia 00 — Secundária ── */}
           <Card className="border-primary/20 bg-primary/[0.03] hover:border-primary/30 transition-all">
             <CardContent className="py-6 px-6">
               <div className="flex items-start gap-4">
@@ -147,7 +216,7 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
                     <span className="text-[10px] uppercase tracking-[0.2em] text-primary/50 block mb-1">Gratuito</span>
                     <h4 className="font-display text-lg font-semibold text-foreground">Travessia 00</h4>
                     <p className="text-sm text-muted-foreground leading-relaxed mt-1">
-                      Sete dias de escuta guiada para experimentar o método antes de se comprometer.
+                      Se preferir começar no seu tempo, essa travessia te guia pelos primeiros passos dentro da Casa.
                     </p>
                   </div>
                   <Button
@@ -156,46 +225,18 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
                     onClick={() => navigate('/travessia/travessia-zero-o-limiar-da-casa')}
                     className="gap-2 border-primary/20 text-primary hover:bg-primary/5"
                   >
-                    Começar a Travessia
+                    Começar pela Travessia
                     <ArrowRight className="w-4 h-4" />
                   </Button>
+                  <p className="text-xs text-muted-foreground/50 italic">
+                    Sem acompanhamento estruturado.
+                  </p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* TRILHA 2: Clube do Livro — Recomendado */}
-          {!hasClubAccess && (
-            <Card className="border-gold/30 bg-gradient-to-br from-gold/[0.05] to-transparent hover:border-gold/40 transition-all shadow-md">
-              <CardContent className="py-6 px-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-11 h-11 rounded-full bg-gold/10 border border-gold/25 flex items-center justify-center shrink-0 mt-0.5">
-                    <BookOpen className="w-5 h-5 text-gold/80" />
-                  </div>
-                  <div className="flex-1 min-w-0 space-y-3">
-                    <div>
-                      <span className="text-[10px] uppercase tracking-[0.2em] text-gold/60 block mb-1">Caminho recomendado</span>
-                      <h4 className="font-display text-lg font-semibold text-foreground">Clube do Livro</h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed mt-1">
-                        Sistema de leitura como intervenção psíquica guiada. Inclui a Cartografia da Cidadela e travessias semanais com livros.
-                      </p>
-                    </div>
-                    <Button
-                      variant="gold"
-                      size="sm"
-                      onClick={() => navigate('/planos')}
-                      className="gap-2"
-                    >
-                      Entrar no Clube do Livro
-                      <ArrowRight className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* TRILHA 3: Formação Orácula */}
+          {/* ── TRILHA 3: Formação Orácula — Avançada ── */}
           {!hasAlunaAccess && (
             <Card className="border-border/20 bg-card/50 hover:border-border/30 transition-all">
               <CardContent className="py-6 px-6">
@@ -205,10 +246,10 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
                   </div>
                   <div className="flex-1 min-w-0 space-y-3">
                     <div>
-                      <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 block mb-1">Caminho alternativo</span>
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 block mb-1">Caminho avançado</span>
                       <h4 className="font-display text-lg font-semibold text-foreground">Formação Orácula</h4>
                       <p className="text-sm text-muted-foreground leading-relaxed mt-1">
-                        Entre direto na formação profissional em psicologia simbólica, mesmo sem passar pelo Clube.
+                        Se você já sabe que quer conduzir outras mulheres com método, pode entrar direto na formação.
                       </p>
                     </div>
                     <Button
@@ -217,39 +258,12 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
                       onClick={() => navigate('/oracula')}
                       className="gap-2"
                     >
-                      Conhecer a Formação
+                      Entrar na Formação
                       <ArrowRight className="w-4 h-4" />
                     </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Se já tem acesso ao Clube — mostrar Cartografia */}
-          {hasClubAccess && (
-            <Card className="border-gold/20 bg-gold/[0.03] hover:border-gold/30 transition-all">
-              <CardContent className="py-6 px-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-11 h-11 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <Map className="w-5 h-5 text-gold/70" />
-                  </div>
-                  <div className="flex-1 min-w-0 space-y-3">
-                    <div>
-                      <h4 className="font-display text-lg font-semibold text-foreground">Cartografia da Cidadela</h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed mt-1">
-                        Revele o mapa completo da sua estrutura interna — seu GPS simbólico.
-                      </p>
-                    </div>
-                    <Button
-                      variant="gold"
-                      size="sm"
-                      onClick={() => navigate('/ferramentas/cartografia-psiquica-oracula')}
-                      className="gap-2"
-                    >
-                      Criar minha Cartografia
-                      <ArrowRight className="w-4 h-4" />
-                    </Button>
+                    <p className="text-xs text-muted-foreground/50 italic">
+                      Indicado para quem quer atuar como terapeuta.
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -283,6 +297,18 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
           </div>
         </motion.section>
       )}
+
+      {/* ══ BLOCO FINAL: ENCORAJAMENTO ══ */}
+      <motion.section {...fade(0.45)}>
+        <div className="text-center py-6">
+          <div className="w-12 h-px bg-gold/20 mx-auto mb-6" />
+          <p className="font-display text-lg text-foreground/80 leading-relaxed max-w-md mx-auto">
+            Você não precisa decidir tudo agora.
+            <br />
+            <span className="text-gold">Só precisa dar o próximo passo.</span>
+          </p>
+        </div>
+      </motion.section>
     </div>
   );
 }
