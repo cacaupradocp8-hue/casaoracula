@@ -288,9 +288,10 @@ export default function OraculaSalesPage() {
           
           {/* Card principal */}
           <div className="border border-primary/20 rounded-2xl p-10 md:p-14 bg-white/[0.02] backdrop-blur-sm shadow-[0_0_80px_-20px_hsl(var(--gold)/0.1)]">
-            <h3 className="font-display text-2xl md:text-3xl text-primary text-center mb-8">
-              FORMAÇÃO ORÁCULA
+            <h3 className="font-display text-2xl md:text-3xl text-primary text-center mb-4">
+              O que acontece dentro
             </h3>
+            <p className="text-white/40 text-sm text-center mb-8 uppercase tracking-widest">Estrutura da formação</p>
             
             <p className="text-white/50 text-center mb-10 max-w-lg mx-auto text-lg">
               Formação iniciática e profissional para mulheres que conduzem processos humanos com símbolos e narrativa
