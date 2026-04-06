@@ -17,9 +17,11 @@ export function useHeroinaArquetipoRegistros() {
   return useQuery({
     queryKey: ["heroina-arquetipo-registros", user?.id],
     queryFn: async () => {
+      if (!user?.id) return [];
       const { data, error } = await supabase
         .from("heroina_arquetipo_registros")
         .select("*")
+        .eq("user_id", user.id)
         .order("registrado_em", { ascending: false });
 
       if (error) throw error;
