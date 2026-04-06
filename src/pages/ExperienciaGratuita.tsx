@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Check, Circle, Loader2, Sparkles, Mic, Route, Map } from 'lucide-react';
+import { ArrowRight, Check, Circle, Loader2, Sparkles, Mic, Route, Map, BookOpen, GraduationCap } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
