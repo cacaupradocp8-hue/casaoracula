@@ -609,91 +609,11 @@ export default function OraculaSalesPage() {
         </motion.div>
       </section>
 
-      {/* ═══ FERRAMENTAS DA CASA — com imagem de fundo ═══ */}
-      <section className="relative py-28 md:py-36 px-6 overflow-hidden">
-        <img src={ferramentasSection} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover opacity-[0.06]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-black/90 to-black" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[350px] rounded-full bg-primary/[0.04] blur-[120px] pointer-events-none" />
+      {/* ═══ CIDADELA COMPARISON — COM vs SEM FORMAÇÃO ═══ */}
+      <CidadelaComparison />
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="relative z-10 max-w-4xl mx-auto"
-        >
-          {/* ── CLUBE ORACULAR ── */}
-          <div className="text-center mb-16">
-            <BookOpen className="w-10 h-10 text-primary/40 mx-auto mb-6" />
-            <h2 className="font-display text-3xl md:text-5xl text-primary mb-4">
-              Clube Oracular
-            </h2>
-            <p className="text-white/40 text-xs uppercase tracking-widest mb-6">Sistema de leitura como intervenção psíquica guiada</p>
-            <p className="text-white/50 text-lg max-w-2xl mx-auto leading-relaxed">
-              Cada livro é selecionado como dispositivo simbólico. Cada ciclo de leitura ativa uma Porta Psíquica específica. A leitura não é consumo intelectual — é travessia.
-            </p>
-          </div>
-          
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 mb-10">
-            {[
-              { name: "Leitura Simbólica Guiada", desc: "Livros selecionados por Porta e Jornada, não por tema" },
-              { name: "Aulas-Álbum Oraculares", desc: "Obras sonoras formativas que ativam portas simbólicas" },
-              { name: "Círculo de Integração", desc: "Espaço coletivo de reflexão entre facilitadoras" },
-              { name: "Cartografia por Ciclo", desc: "Cada leitura alimenta o Mapa Vivo da CidaDELA" },
-              { name: "Perguntas-Mãe", desc: "Questões que abrem campo sem forçar resposta" },
-              { name: "Diário da Travessia", desc: "Registro simbólico pessoal de cada ciclo vivido" },
-            ].map((tool) => (
-              <div
-                key={tool.name}
-                className="border border-white/10 rounded-xl p-8 text-center hover:border-primary/25 transition-all duration-500 bg-white/[0.02] backdrop-blur-sm hover:shadow-[0_0_40px_-15px_hsl(var(--gold)/0.08)]"
-              >
-                <p className="text-white/70 text-sm font-display mb-2">{tool.name}</p>
-                <p className="text-white/35 text-xs leading-relaxed">{tool.desc}</p>
-              </div>
-            ))}
-          </div>
-          
-          <div className="border border-primary/15 rounded-2xl p-8 bg-white/[0.02] backdrop-blur-sm max-w-xl mx-auto">
-            <p className="text-primary/60 text-center italic font-display text-lg">
-              No Clube, você não lê sobre psicologia.<br />
-              Você atravessa a psique — uma obra de cada vez.
-            </p>
-          </div>
-
-          {/* ── FERRAMENTAS INTEGRADAS ── */}
-          <div className="mt-24 text-center mb-16">
-            <Star className="w-10 h-10 text-primary/40 mx-auto mb-6" />
-            <h2 className="font-display text-3xl md:text-5xl text-primary mb-4">
-              As Ferramentas da Casa
-            </h2>
-            <p className="text-white/50 text-lg">
-              Cada ferramenta foi desenhada para sustentar o método — não para impressionar.
-            </p>
-          </div>
-          
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5">
-            {[
-              "Mapa Vivo da CidaDELA",
-              "Labirinto das 39 Portas",
-              "Atlas de Arquétipos Femininos",
-              "Oráculo Simbólico",
-              "Jardim da Psique",
-              "Protocolos de Condução Ética",
-            ].map((tool) => (
-              <div
-                key={tool}
-                className="border border-white/10 rounded-xl p-8 text-center hover:border-primary/25 transition-all duration-500 bg-white/[0.02] backdrop-blur-sm hover:shadow-[0_0_40px_-15px_hsl(var(--gold)/0.08)]"
-              >
-                <p className="text-white/60 text-sm">{tool}</p>
-              </div>
-            ))}
-          </div>
-          
-          <p className="text-primary/60 text-center italic mt-14 font-display text-xl">
-            Tudo integrado. Nada improvisado.
-          </p>
-        </motion.div>
-      </section>
+      {/* ═══ ECOSSISTEMA COMPLETO — Casa das Máquinas + Clube + Ferramentas ═══ */}
+      <EcosystemShowcase />
 
       {/* ═══ DIVISOR ═══ */}
       <div className="w-full flex justify-center py-4">
