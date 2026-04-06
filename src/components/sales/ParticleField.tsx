@@ -18,7 +18,7 @@ interface Props {
   className?: string;
 }
 
-export function ParticleField({ density = 60, color = '216,255,62', className = '' }: Props) {
+export function ParticleField({ density = 80, color = '216,255,62', className = '' }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const mouseRef = useRef({ x: -1000, y: -1000 });
@@ -33,13 +33,13 @@ export function ParticleField({ density = 60, color = '216,255,62', className = 
       particles.push({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: Math.random() * 0.2 + 0.1,
-        size: Math.random() * 2 + 1.5,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: Math.random() * 0.25 + 0.1,
+        size: Math.random() * 2.5 + 1.5,
         opacity: 0,
-        baseOpacity: Math.random() * 0.4 + 0.15,
+        baseOpacity: Math.random() * 0.5 + 0.2,
         pulse: Math.random() * Math.PI * 2,
-        pulseSpeed: Math.random() * 0.008 + 0.003,
+        pulseSpeed: Math.random() * 0.01 + 0.004,
       });
     }
     particlesRef.current = particles;
@@ -84,14 +84,13 @@ export function ParticleField({ density = 60, color = '216,255,62', className = 
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         p.pulse += p.pulseSpeed;
-        p.opacity = p.baseOpacity + Math.sin(p.pulse) * 0.15;
+        p.opacity = p.baseOpacity + Math.sin(p.pulse) * 0.2;
 
-        // Mouse repulsion
         const dx = p.x - mx;
         const dy = p.y - my;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 120) {
-          const force = (120 - dist) / 120 * 0.5;
+        if (dist < 130) {
+          const force = (130 - dist) / 130 * 0.6;
           p.vx += (dx / dist) * force;
           p.vy += (dy / dist) * force;
         }
@@ -111,18 +110,17 @@ export function ParticleField({ density = 60, color = '216,255,62', className = 
         ctx.fillStyle = `rgba(${color},${p.opacity})`;
         ctx.fill();
 
-        // Lines between close particles
         for (let j = i + 1; j < particles.length; j++) {
           const q = particles[j];
           const lx = p.x - q.x;
           const ly = p.y - q.y;
           const ld = Math.sqrt(lx * lx + ly * ly);
-          if (ld < 100) {
+          if (ld < 110) {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(q.x, q.y);
-            ctx.strokeStyle = `rgba(${color},${(1 - ld / 100) * 0.08})`;
-            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = `rgba(${color},${(1 - ld / 110) * 0.12})`;
+            ctx.lineWidth = 0.6;
             ctx.stroke();
           }
         }
