@@ -158,6 +158,9 @@ const PortalJunguiano = React.lazy(() => import("./pages/PortalJunguiano"));
 const PortalJunguianoPorta = React.lazy(() => import("./pages/PortalJunguianoPorta"));
 const MapaCasaOracula = React.lazy(() => import("./pages/MapaCasaOracula"));
 const MinhaJornada = React.lazy(() => import("./pages/MinhaJornada"));
+const ExplorarACasa = React.lazy(() => import("./pages/ExplorarACasa"));
+const Vitrine = React.lazy(() => import("./pages/Vitrine"));
+const DashboardReorganizado = React.lazy(() => import("./pages/DashboardReorganizado"));
 const PosCompra = React.lazy(() => import("./pages/PosCompra"));
 const CasaAtrio = React.lazy(() => import("./pages/casa/CasaAtrio"));
 const CasaSustentacao = React.lazy(() => import("./pages/casa/CasaSustentacao"));
@@ -279,6 +282,8 @@ function AppRoutes() {
       <Route path="/formacao-viva" element={<Navigate to="/oracula" replace />} />
       <Route path="/formacao" element={<Navigate to="/cursos" replace />} />
       <Route path="/tour" element={<Navigate to="/mapa-casa" replace />} />
+      <Route path="/explorar-a-casa" element={<ExplorarACasa />} />
+      <Route path="/vitrine" element={<Vitrine />} />
 
       {/* Onboarding & Visitor */}
       <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
@@ -294,7 +299,8 @@ function AppRoutes() {
       <Route path="/convite-clube-oracular" element={<ProtectedRoute><ConviteClube /></ProtectedRoute>} />
       <Route path="/experiencia-gratuita" element={<ProtectedRoute><Navigate to="/quiz/descubra-seu-eixo" replace /></ProtectedRoute>} />
       <Route path="/dashboard" element={<ProtectedRoute><Navigate to="/dashboard-membro" replace /></ProtectedRoute>} />
-      <Route path="/dashboard-membro" element={<ProtectedRoute><DashboardMembro /></ProtectedRoute>} />
+      <Route path="/dashboard-membro" element={<ProtectedRoute><DashboardReorganizado /></ProtectedRoute>} />
+      <Route path="/clube" element={<Navigate to="/app/clube" replace />} />
       <Route path="/salas/:id" element={<ProtectedRoute><SalaDetalhe /></ProtectedRoute>} />
       <Route path="/portal/:id" element={<ProtectedRoute><PortalDetalhe /></ProtectedRoute>} />
       <Route path="/aulas/:id" element={<ProtectedRoute><AulaPage /></ProtectedRoute>} />
