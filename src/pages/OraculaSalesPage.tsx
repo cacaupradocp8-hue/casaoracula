@@ -2,6 +2,9 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles, Shield, BookOpen, Users, Star, CheckCircle2, Ear, Compass, Scale, AlertTriangle, Eye, Heart, Layers, Flame, Moon, Sunrise, Crown } from "lucide-react";
+import { PulsingHero } from "@/components/formacao/PulsingHero";
+import { CidadelaComparison } from "@/components/formacao/CidadelaComparison";
+import { EcosystemShowcase } from "@/components/formacao/EcosystemShowcase";
 
 // Imagens
 import mentoriaBanner from "@/assets/formacao/mentoria-banner-horizontal.png";
