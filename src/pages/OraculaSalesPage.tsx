@@ -98,16 +98,16 @@ export default function OraculaSalesPage() {
           <div className="w-32 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent mx-auto mb-10" />
           
           <p className="text-white/50 text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto font-display italic">
-            Uma formação para quem deseja conduzir transformação com método simbólico.
+            A única formação que ensina a ler a psique feminina através de um mapa simbólico vivo — e a conduzir processos humanos com método, ética e profundidade.
           </p>
 
           {/* Positioning block */}
           <div className="mt-14 border border-primary/15 rounded-2xl p-8 md:p-10 bg-white/[0.02] backdrop-blur-sm max-w-lg mx-auto">
             <p className="text-white/60 text-lg md:text-xl leading-relaxed font-display">
-              Essa formação não é sobre aprender ferramentas.
+              Aqui você não aprende técnicas soltas.
             </p>
             <p className="text-gold-gradient text-lg md:text-xl leading-relaxed font-display mt-2">
-              É sobre aprender a conduzir processos.
+              Você aprende a sustentar o campo onde a transformação acontece.
             </p>
           </div>
         </motion.div>
@@ -128,16 +128,16 @@ export default function OraculaSalesPage() {
               transition={{ duration: 0.8 }}
             >
               <h2 className="font-display text-3xl md:text-4xl text-white mb-10 leading-snug">
-                Você não precisa de mais técnicas.<br />
-                <span className="text-gold-gradient">Precisa de critério.</span>
+                O problema não é a falta de sensibilidade.<br />
+                <span className="text-gold-gradient">É a falta de mapa.</span>
               </h2>
               
               <p className="text-white/50 mb-8 text-lg leading-relaxed">
-                Muitas mulheres conduzem outras mulheres com sensibilidade, intuição, símbolos e histórias.
+                Muitas mulheres conduzem processos profundos com intuição, símbolos e narrativas — mas sem estrutura, sem critério de leitura e sem saber quando parar.
               </p>
               
               <p className="text-primary/80 italic text-xl font-display">
-                A Formação ORÁCULA nasce para organizar o campo.
+                A Formação ORÁCULA existe para dar estrutura ao que a intuição sozinha não sustenta.
               </p>
             </motion.div>
 
@@ -241,22 +241,23 @@ export default function OraculaSalesPage() {
           transition={{ duration: 0.8 }}
           className="relative z-10 max-w-5xl mx-auto"
         >
+          {/* ── O MÉTODO DA CIDADELA ── */}
           <div className="text-center mb-16">
             <Sparkles className="w-10 h-10 text-primary/40 mx-auto mb-6" />
             <h2 className="font-display text-3xl md:text-5xl text-primary mb-6">
-              O que é a Formação ORÁCULA
+              O Método da CidaDELA
             </h2>
-            <p className="text-white/50 text-lg max-w-xl mx-auto">
-              A Formação ORÁCULA não é um curso rápido.
+            <p className="text-white/50 text-lg max-w-2xl mx-auto leading-relaxed">
+              O grande diferencial da Casa Orácula é o método. Não um conjunto de técnicas — mas uma cartografia completa da psique feminina que opera em três planos distintos.
             </p>
           </div>
           
-          {/* 3 Cards de competências */}
+          {/* 3 Planos do Método */}
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             {[
-              { label: "Um percurso de autorização progressiva", icon: Compass, desc: "Cada etapa habilita a próxima. Não há atalhos." },
-              { label: "Um método simbólico estruturado", icon: Layers, desc: "Portas, Torres, Travessias — tudo mapeado." },
-              { label: "Uma formação ética para quem guia", icon: Shield, desc: "Limite, presença e responsabilidade clínica." },
+              { label: "Portas Psíquicas", icon: Compass, desc: "Onde a psique está agora. Não descrevem quem você é — mas em que campo de travessia você se encontra. São limiares ativos, não rótulos." },
+              { label: "Campos Psíquicos", icon: Layers, desc: "O clima simbólico que atravessa a Porta. Informam a postura da facilitadora: o que sustentar, o que não acelerar, o que não tocar." },
+              { label: "Torres de Sobrevivência", icon: Shield, desc: "Estruturas que mantiveram a psique de pé quando não havia chão. Não são defeitos. São reconhecidas — e eventualmente renegociadas." },
             ].map((item, i) => (
               <motion.div
                 key={item.label}
@@ -275,10 +276,20 @@ export default function OraculaSalesPage() {
             ))}
           </div>
 
-          <p className="text-primary/70 text-center mb-8 text-sm uppercase tracking-widest">Aqui, você aprende:</p>
+          {/* Diferencial conceitual */}
+          <div className="border border-primary/15 rounded-2xl p-8 md:p-10 bg-white/[0.02] backdrop-blur-sm max-w-2xl mx-auto mb-16">
+            <p className="text-white/60 text-center text-lg leading-relaxed font-display">
+              No Método Oracular, a pergunta nunca é <span className="text-white/80 italic">"Quem você é?"</span>
+            </p>
+            <p className="text-gold-gradient text-center text-lg leading-relaxed font-display mt-3">
+              A pergunta é: "Em que campo você está agora?"
+            </p>
+          </div>
+
+          <p className="text-primary/70 text-center mb-8 text-sm uppercase tracking-widest">Com esse mapa, a facilitadora aprende:</p>
           
           <div className="flex flex-wrap justify-center gap-6 text-white/60 mb-16">
-            {["quando conduzir", "quando silenciar", "quando sustentar", "quando encerrar"].map((item, i) => (
+            {["quando falar", "quando silenciar", "quando sustentar", "quando retirar a própria mão"].map((item, i) => (
               <span key={item} className="flex items-center gap-3">
                 {i > 0 && <span className="w-1.5 h-1.5 rounded-full bg-primary/30" />}
                 {item}
@@ -286,25 +297,25 @@ export default function OraculaSalesPage() {
             ))}
           </div>
           
-          {/* Card principal */}
+          {/* Card principal — O que acontece dentro */}
           <div className="border border-primary/20 rounded-2xl p-10 md:p-14 bg-white/[0.02] backdrop-blur-sm shadow-[0_0_80px_-20px_hsl(var(--gold)/0.1)]">
             <h3 className="font-display text-2xl md:text-3xl text-primary text-center mb-4">
-              O que acontece dentro
+              O que acontece dentro da Formação
             </h3>
-            <p className="text-white/40 text-sm text-center mb-8 uppercase tracking-widest">Estrutura da formação</p>
+            <p className="text-white/40 text-sm text-center mb-8 uppercase tracking-widest">Estrutura viva do método</p>
             
             <p className="text-white/50 text-center mb-10 max-w-lg mx-auto text-lg">
-              Formação iniciática e profissional para mulheres que conduzem processos humanos com símbolos e narrativa
+              Uma jornada iniciática e profissional onde cada etapa exige travessia pessoal antes da aplicação clínica.
             </p>
             
             <div className="grid md:grid-cols-2 gap-x-10 gap-y-5 mb-10">
               {[
-                "Metodologia própria ORÁCULA, estruturada em Portas, Torres e Travessias",
-                "Leitura oracular e arquetípica com critérios éticos claros",
-                "Travessias vividas antes do método — ninguém aplica o que não sustentou",
-                "Mentoria contínua para direção de campo, ritmo e limite",
-                "Ferramentas exclusivas integradas ao App",
-                "Formação para atendimentos individuais e grupos",
+                "Cartografia da CidaDELA — o mapa vivo da psique feminina com Portas, Campos e Torres",
+                "Leitura Oracular em 5 Camadas — critérios éticos para ler sem projetar",
+                "Narroterapia Oracular — condução terapêutica por narrativa pessoal e contos",
+                "Travessias vividas — ninguém aplica o que não sustentou em si mesma",
+                "Mentoria contínua — direção de campo, ritmo e limite ético",
+                "Clube Oracular — sistema de leitura como intervenção psíquica guiada",
               ].map((item) => (
                 <div key={item} className="flex items-start gap-3">
                   <span className="text-primary/50 mt-1 shrink-0">✦</span>
@@ -315,8 +326,8 @@ export default function OraculaSalesPage() {
             
             <div className="pt-8 border-t border-primary/10 text-center">
               <p className="text-primary/60 italic font-display text-xl">
-                Não é um método para aplicar.<br />
-                É um lugar para sustentar.
+                Não é um método para aplicar sobre alguém.<br />
+                É um campo para sustentar com alguém.
               </p>
             </div>
           </div>
@@ -531,34 +542,79 @@ export default function OraculaSalesPage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="relative z-10 max-w-3xl mx-auto text-center"
+          className="relative z-10 max-w-4xl mx-auto"
         >
-          <h2 className="font-display text-3xl md:text-5xl text-primary mb-10">
-            Portal da Narroterapia Oracular
-          </h2>
-          
-          <p className="text-white/60 leading-relaxed text-xl mb-14 font-display">
-            A Narroterapia Oracular não é contar histórias.<br />
-            <span className="text-gold-gradient">É ler a psique através delas.</span>
-          </p>
-          
-          <div className="grid sm:grid-cols-2 gap-5 max-w-xl mx-auto mb-14">
-            {[
-              "escuta narrativa profunda",
-              "uso terapêutico de contos e mitos",
-              "condução simbólica sem sugestão",
-              "criação de ritos narrativos seguros",
-            ].map((item) => (
-              <div key={item} className="border border-white/10 rounded-xl p-6 text-white/50 text-sm bg-white/[0.02] backdrop-blur-sm hover:border-primary/20 transition-colors duration-300">
-                {item}
-              </div>
-            ))}
+          <div className="text-center mb-16">
+            <h2 className="font-display text-3xl md:text-5xl text-primary mb-10">
+              Narroterapia Oracular
+            </h2>
+            
+            <p className="text-white/60 leading-relaxed text-xl mb-6 font-display">
+              Na Casa Orácula, a narrativa não é metáfora decorativa.<br />
+              <span className="text-gold-gradient">É ferramenta clínica de condução simbólica.</span>
+            </p>
+            <p className="text-white/40 leading-relaxed max-w-2xl mx-auto">
+              A Narroterapia Oracular opera por dois caminhos distintos e complementares — cada um com função, limite e aplicação própria.
+            </p>
           </div>
           
-          <p className="text-primary/60 italic font-display text-xl">
-            Aqui a história deixa de ser metáfora<br />
-            e se torna instrumento clínico simbólico.
-          </p>
+          {/* Dois vieses da Narroterapia */}
+          <div className="grid md:grid-cols-2 gap-8 mb-16">
+            <motion.div
+              initial={{ opacity: 0, x: -15 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="border border-primary/15 rounded-2xl p-8 md:p-10 bg-white/[0.02] backdrop-blur-sm hover:shadow-[0_0_60px_-15px_hsl(var(--gold)/0.1)] transition-shadow duration-700"
+            >
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
+                <Ear className="w-5 h-5 text-primary/60" strokeWidth={1.5} />
+              </div>
+              <h3 className="font-display text-xl text-white mb-4">Narrativa Pessoal</h3>
+              <p className="text-white/50 text-sm leading-relaxed mb-6">
+                A escuta da história que a mulher conta sobre si mesma — suas rupturas, repetições, personagens internos e o mito que ela vive sem saber.
+              </p>
+              <ul className="space-y-3 text-white/40 text-sm">
+                <li className="flex items-start gap-2"><span className="text-primary/40 mt-0.5">✦</span> Identificação de padrões narrativos inconscientes</li>
+                <li className="flex items-start gap-2"><span className="text-primary/40 mt-0.5">✦</span> Leitura dos ciclos de repetição</li>
+                <li className="flex items-start gap-2"><span className="text-primary/40 mt-0.5">✦</span> Reconhecimento do mito pessoal ativo</li>
+              </ul>
+              <div className="mt-6 pt-5 border-t border-primary/10">
+                <p className="text-primary/50 italic text-sm font-display">A facilitadora não interpreta. Ela devolve o espelho.</p>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 15 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="border border-primary/15 rounded-2xl p-8 md:p-10 bg-white/[0.02] backdrop-blur-sm hover:shadow-[0_0_60px_-15px_hsl(var(--gold)/0.1)] transition-shadow duration-700"
+            >
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
+                <BookOpen className="w-5 h-5 text-primary/60" strokeWidth={1.5} />
+              </div>
+              <h3 className="font-display text-xl text-white mb-4">Contos & Narrativas Simbólicas</h3>
+              <p className="text-white/50 text-sm leading-relaxed mb-6">
+                O uso de contos, mitos e narrativas como dispositivos simbólicos precisos — não para ilustrar, mas para abrir portas psíquicas específicas.
+              </p>
+              <ul className="space-y-3 text-white/40 text-sm">
+                <li className="flex items-start gap-2"><span className="text-primary/40 mt-0.5">✦</span> Seleção terapêutica de contos por Porta ativada</li>
+                <li className="flex items-start gap-2"><span className="text-primary/40 mt-0.5">✦</span> Condução de campo sem sugestão direta</li>
+                <li className="flex items-start gap-2"><span className="text-primary/40 mt-0.5">✦</span> Criação de ritos narrativos seguros</li>
+              </ul>
+              <div className="mt-6 pt-5 border-t border-primary/10">
+                <p className="text-primary/50 italic text-sm font-display">O conto não cura. Ele abre um campo — e o campo exige estrutura.</p>
+              </div>
+            </motion.div>
+          </div>
+          
+          <div className="text-center">
+            <p className="text-primary/60 italic font-display text-xl">
+              A narrativa organiza identidade. A facilitadora organiza a narrativa.<br />
+              <span className="text-white/40 text-base not-italic">Sem isso, toda escuta vira projeção.</span>
+            </p>
+          </div>
         </motion.div>
       </section>
 
@@ -575,24 +631,63 @@ export default function OraculaSalesPage() {
           transition={{ duration: 0.8 }}
           className="relative z-10 max-w-4xl mx-auto"
         >
+          {/* ── CLUBE ORACULAR ── */}
           <div className="text-center mb-16">
+            <BookOpen className="w-10 h-10 text-primary/40 mx-auto mb-6" />
+            <h2 className="font-display text-3xl md:text-5xl text-primary mb-4">
+              Clube Oracular
+            </h2>
+            <p className="text-white/40 text-xs uppercase tracking-widest mb-6">Sistema de leitura como intervenção psíquica guiada</p>
+            <p className="text-white/50 text-lg max-w-2xl mx-auto leading-relaxed">
+              Cada livro é selecionado como dispositivo simbólico. Cada ciclo de leitura ativa uma Porta Psíquica específica. A leitura não é consumo intelectual — é travessia.
+            </p>
+          </div>
+          
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 mb-10">
+            {[
+              { name: "Leitura Simbólica Guiada", desc: "Livros selecionados por Porta e Jornada, não por tema" },
+              { name: "Aulas-Álbum Oraculares", desc: "Obras sonoras formativas que ativam portas simbólicas" },
+              { name: "Círculo de Integração", desc: "Espaço coletivo de reflexão entre facilitadoras" },
+              { name: "Cartografia por Ciclo", desc: "Cada leitura alimenta o Mapa Vivo da CidaDELA" },
+              { name: "Perguntas-Mãe", desc: "Questões que abrem campo sem forçar resposta" },
+              { name: "Diário da Travessia", desc: "Registro simbólico pessoal de cada ciclo vivido" },
+            ].map((tool) => (
+              <div
+                key={tool.name}
+                className="border border-white/10 rounded-xl p-8 text-center hover:border-primary/25 transition-all duration-500 bg-white/[0.02] backdrop-blur-sm hover:shadow-[0_0_40px_-15px_hsl(var(--gold)/0.08)]"
+              >
+                <p className="text-white/70 text-sm font-display mb-2">{tool.name}</p>
+                <p className="text-white/35 text-xs leading-relaxed">{tool.desc}</p>
+              </div>
+            ))}
+          </div>
+          
+          <div className="border border-primary/15 rounded-2xl p-8 bg-white/[0.02] backdrop-blur-sm max-w-xl mx-auto">
+            <p className="text-primary/60 text-center italic font-display text-lg">
+              No Clube, você não lê sobre psicologia.<br />
+              Você atravessa a psique — uma obra de cada vez.
+            </p>
+          </div>
+
+          {/* ── FERRAMENTAS INTEGRADAS ── */}
+          <div className="mt-24 text-center mb-16">
             <Star className="w-10 h-10 text-primary/40 mx-auto mb-6" />
             <h2 className="font-display text-3xl md:text-5xl text-primary mb-4">
               As Ferramentas da Casa
             </h2>
             <p className="text-white/50 text-lg">
-              Ao entrar na Formação ORÁCULA, você acessa um App exclusivo com:
+              Cada ferramenta foi desenhada para sustentar o método — não para impressionar.
             </p>
           </div>
           
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5">
             {[
-              "Mapa Vivo da Heroína",
+              "Mapa Vivo da CidaDELA",
+              "Labirinto das 39 Portas",
+              "Atlas de Arquétipos Femininos",
+              "Oráculo Simbólico",
               "Jardim da Psique",
-              "Oráculo das Portas",
-              "Biblioteca Narrativa",
-              "Checklists de condução",
-              "Prompts da Sibila por Portal",
+              "Protocolos de Condução Ética",
             ].map((tool) => (
               <div
                 key={tool}
@@ -604,7 +699,7 @@ export default function OraculaSalesPage() {
           </div>
           
           <p className="text-primary/60 text-center italic mt-14 font-display text-xl">
-            Tudo criado para não depender de improviso.
+            Tudo integrado. Nada improvisado.
           </p>
         </motion.div>
       </section>
@@ -804,18 +899,18 @@ export default function OraculaSalesPage() {
 
           <p className="text-white/60 leading-relaxed text-xl mb-8 font-display">
             A Casa Orácula não promete resultados rápidos.<br />
-            Ela oferece lugar.
+            Ela oferece o que nenhuma outra formação oferece:
           </p>
           
           <p className="text-white/50 mb-10 text-xl font-display">
-            Lugar interno.<br />
-            Lugar simbólico.<br />
-            Lugar profissional.
+            Um mapa da psique feminina.<br />
+            Um método de condução narrativa.<br />
+            Um sistema de leitura simbólica vivo.
           </p>
           
           <p className="text-gold-gradient italic text-2xl md:text-3xl font-display mb-16">
-            Você não entra para aprender.<br />
-            Você entra para atravessar.
+            Você não entra para aprender sobre o feminino.<br />
+            Você entra para aprender a sustentá-lo.
           </p>
           
           <Button 
