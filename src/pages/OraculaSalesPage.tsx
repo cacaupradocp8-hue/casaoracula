@@ -824,14 +824,21 @@ export default function OraculaSalesPage() {
             Você entra para aprender a sustentá-lo.
           </p>
           
-          <Button 
-            size="lg"
-            onClick={() => navigate('/planos')}
-            className="bg-gradient-to-r from-gold to-mystic text-background border border-gold/30 hover:scale-105 transition-all duration-300 shadow-[0_0_40px_-8px_hsl(var(--gold)/0.3)] hover:shadow-[0_0_60px_-8px_hsl(var(--gold)/0.4)] px-12 py-7 text-lg"
-          >
-            Entrar na Formação
-            <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
+          <div className="relative inline-block">
+            <motion.div
+              className="absolute inset-0 rounded-xl bg-primary/15 blur-2xl -z-10"
+              animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.7, 0.3] }}
+              transition={{ duration: 3, repeat: Infinity }}
+            />
+            <Button 
+              size="lg"
+              onClick={() => navigate('/planos')}
+              className="relative bg-gradient-to-r from-gold to-mystic text-background border border-gold/30 hover:scale-105 transition-all duration-500 shadow-[0_0_60px_-10px_hsl(var(--gold)/0.4)] hover:shadow-[0_0_80px_-10px_hsl(var(--gold)/0.5)] px-14 py-8 text-lg font-display tracking-wider"
+            >
+              Entrar na Formação
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </div>
         </motion.div>
       </section>
 
