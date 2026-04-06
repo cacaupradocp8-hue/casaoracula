@@ -43,7 +43,7 @@ export function LockedForVisitor({ featureName }: LockedForVisitorProps) {
 
             <p className="text-muted-foreground leading-relaxed">
               Para acessar este conteúdo, você precisa fazer parte do ecossistema da Casa Orácula
-              — seja pelo Clube do Livro ou pela Formação.
+              — seja pelo Clube do Livro ou pela Formação Orácula.
             </p>
           </div>
 
@@ -56,7 +56,7 @@ export function LockedForVisitor({ featureName }: LockedForVisitorProps) {
               onClick={() => navigate('/planos')}
             >
               <BookOpen className="w-4 h-4" />
-              Assinar o Clube do Livro
+              Clube do Livro
               <ArrowRight className="w-4 h-4" />
             </Button>
 
@@ -67,7 +67,7 @@ export function LockedForVisitor({ featureName }: LockedForVisitorProps) {
               onClick={() => navigate('/oracula')}
             >
               <GraduationCap className="w-4 h-4" />
-              Conhecer a Formação Orácula
+              Formação Orácula
               <ArrowRight className="w-4 h-4" />
             </Button>
           </div>

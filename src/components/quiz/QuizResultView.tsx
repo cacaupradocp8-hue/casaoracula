@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Heart, ArrowRight, Lock, Layers, Map, Eye } from 'lucide-react';
+import { Sparkles, Heart, ArrowRight, Layers, Map, Eye, BookOpen, GraduationCap, Route } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature } from '@/types/portal';
@@ -125,67 +125,141 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
         </Card>
       </motion.section>
 
-      {/* ══ BLOCO 3: PROFUNDIDADE — ARQUITETURA DA MENTE ══ */}
-      <motion.section {...fade(0.15)}>
-        <div className="text-center space-y-6">
-          <div className="w-10 h-10 mx-auto rounded-full bg-primary/5 border border-primary/15 flex items-center justify-center">
-            <Map className="w-5 h-5 text-primary/50" />
-          </div>
-          <h3 className="font-display text-xl md:text-2xl text-foreground/90">
-            Sua mente se organiza como uma cidade
+      {/* ══ BLOCO 3: SEU PRÓXIMO PASSO — 3 TRILHAS ══ */}
+      <motion.section {...fade(0.2)}>
+        <div className="text-center mb-6">
+          <p className="text-xs uppercase tracking-[0.2em] text-primary/50 mb-2">Seu próximo passo</p>
+          <h3 className="font-display text-xl md:text-2xl text-foreground">
+            Escolha como continuar sua jornada
           </h3>
-          <p className="text-foreground/60 text-sm leading-relaxed max-w-lg mx-auto">
-            A psicologia profunda demonstra que toda psique possui uma <span className="text-foreground/80 font-medium">arquitetura interna</span> — territórios que guardam seus recursos, seus padrões de repetição e os pontos onde você trava. Entender essa organização é o primeiro passo para mudar de verdade.
-          </p>
-          <p className="text-foreground/50 text-sm leading-relaxed max-w-md mx-auto">
-            A CidaDELA Interior é o sistema que mapeia essa arquitetura. Ela transforma o que o quiz nomeou em um mapa funcional — com distritos, conflitos internos e direções claras de ação.
-          </p>
+        </div>
+
+        <div className="space-y-4">
+          {/* TRILHA 1: Travessia 00 — Gratuita */}
+          <Card className="border-primary/20 bg-primary/[0.03] hover:border-primary/30 transition-all">
+            <CardContent className="py-6 px-6">
+              <div className="flex items-start gap-4">
+                <div className="w-11 h-11 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <Route className="w-5 h-5 text-primary/70" />
+                </div>
+                <div className="flex-1 min-w-0 space-y-3">
+                  <div>
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-primary/50 block mb-1">Gratuito</span>
+                    <h4 className="font-display text-lg font-semibold text-foreground">Travessia 00</h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed mt-1">
+                      Sete dias de escuta guiada para experimentar o método antes de se comprometer.
+                    </p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate('/travessia/travessia-zero-o-limiar-da-casa')}
+                    className="gap-2 border-primary/20 text-primary hover:bg-primary/5"
+                  >
+                    Começar a Travessia
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* TRILHA 2: Clube do Livro — Recomendado */}
+          {!hasClubAccess && (
+            <Card className="border-gold/30 bg-gradient-to-br from-gold/[0.05] to-transparent hover:border-gold/40 transition-all shadow-md">
+              <CardContent className="py-6 px-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-11 h-11 rounded-full bg-gold/10 border border-gold/25 flex items-center justify-center shrink-0 mt-0.5">
+                    <BookOpen className="w-5 h-5 text-gold/80" />
+                  </div>
+                  <div className="flex-1 min-w-0 space-y-3">
+                    <div>
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-gold/60 block mb-1">Caminho recomendado</span>
+                      <h4 className="font-display text-lg font-semibold text-foreground">Clube do Livro</h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed mt-1">
+                        Sistema de leitura como intervenção psíquica guiada. Inclui a Cartografia da Cidadela e travessias semanais com livros.
+                      </p>
+                    </div>
+                    <Button
+                      variant="gold"
+                      size="sm"
+                      onClick={() => navigate('/planos')}
+                      className="gap-2"
+                    >
+                      Entrar no Clube do Livro
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* TRILHA 3: Formação Orácula */}
+          {!hasAlunaAccess && (
+            <Card className="border-border/20 bg-card/50 hover:border-border/30 transition-all">
+              <CardContent className="py-6 px-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-11 h-11 rounded-full bg-secondary/50 border border-border/20 flex items-center justify-center shrink-0 mt-0.5">
+                    <GraduationCap className="w-5 h-5 text-foreground/50" />
+                  </div>
+                  <div className="flex-1 min-w-0 space-y-3">
+                    <div>
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 block mb-1">Caminho alternativo</span>
+                      <h4 className="font-display text-lg font-semibold text-foreground">Formação Orácula</h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed mt-1">
+                        Entre direto na formação profissional em psicologia simbólica, mesmo sem passar pelo Clube.
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate('/oracula')}
+                      className="gap-2"
+                    >
+                      Conhecer a Formação
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Se já tem acesso ao Clube — mostrar Cartografia */}
+          {hasClubAccess && (
+            <Card className="border-gold/20 bg-gold/[0.03] hover:border-gold/30 transition-all">
+              <CardContent className="py-6 px-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-11 h-11 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0 mt-0.5">
+                    <Map className="w-5 h-5 text-gold/70" />
+                  </div>
+                  <div className="flex-1 min-w-0 space-y-3">
+                    <div>
+                      <h4 className="font-display text-lg font-semibold text-foreground">Cartografia da Cidadela</h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed mt-1">
+                        Revele o mapa completo da sua estrutura interna — seu GPS simbólico.
+                      </p>
+                    </div>
+                    <Button
+                      variant="gold"
+                      size="sm"
+                      onClick={() => navigate('/ferramentas/cartografia-psiquica-oracula')}
+                      className="gap-2"
+                    >
+                      Criar minha Cartografia
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </motion.section>
 
-      {/* ══ BLOCO 4: TENSÃO + CTA ══ */}
-      <motion.section {...fade(0.25)}>
-        <Card className="border-gold/20 bg-gradient-to-b from-gold/[0.04] to-transparent backdrop-blur overflow-hidden">
-          <CardContent className="py-10 px-6 text-center space-y-6">
-            <div className="w-12 h-12 mx-auto rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center">
-              <Eye className="w-6 h-6 text-gold/70" />
-            </div>
-            <h3 className="font-display text-xl md:text-2xl text-foreground">
-              Sem o mapa, você repete o padrão
-            </h3>
-            <p className="text-foreground/60 text-sm leading-relaxed max-w-md mx-auto">
-              Você sabe qual é seu eixo — mas ainda não sabe onde ele opera, o que o ameaça e o que ele precisa para evoluir. A CidaDELA revela esse mapa completo.
-            </p>
-
-            <div className="pt-2 space-y-3">
-              <Button
-                variant="gold"
-                size="lg"
-                onClick={() => navigate('/travessia/travessia-zero-o-limiar-da-casa')}
-                className="gap-2 px-8 py-6 text-base shadow-gold"
-              >
-                Iniciar minha Travessia
-                <ArrowRight className="w-5 h-5" />
-              </Button>
-
-              {!hasAlunaAccess && (
-                <p className="text-muted-foreground/50 text-xs max-w-sm mx-auto">
-                  A CidaDELA é revelada dentro do Clube — o espaço de aprofundamento contínuo da Casa Orácula.
-                </p>
-              )}
-
-              {hasAlunaAccess && (
-                <p className="text-muted-foreground/40 text-xs max-w-sm mx-auto">
-                  A Cartografia Psíquica gera o mapa completo da sua estrutura interna.
-                </p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </motion.section>
-
-      {/* ══ BLOCO 5: CONTEXTO DO CLUBE (só para quem não tem acesso) ══ */}
-      {!hasAlunaAccess && (
+      {/* ══ BLOCO 4: CONTEXTO (só para quem não tem nenhum acesso) ══ */}
+      {!hasClubAccess && !hasAlunaAccess && (
         <motion.section {...fade(0.35)}>
           <div className="text-center space-y-5">
             <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground/40">
@@ -193,7 +267,7 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-xl mx-auto">
               {[
-                { icon: '🗺️', title: 'Cartografia Psíquica', desc: 'Mapeamento completo da sua organização interna' },
+                { icon: '🗺️', title: 'Cartografia da Cidadela', desc: 'Mapeamento completo da sua organização interna' },
                 { icon: '🏛️', title: 'CidaDELA Interior', desc: 'Seu mapa funcional com distritos, tensões e direções' },
                 { icon: '🧭', title: 'Evolução guiada', desc: 'Ferramentas, travessias e acompanhamento contínuo' },
               ].map((item) => (
@@ -206,14 +280,6 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
                 </Card>
               ))}
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate('/planos')}
-              className="gap-1.5 text-gold border-gold/20 hover:bg-gold/5"
-            >
-              Ver planos do Clube <ArrowRight className="w-3.5 h-3.5" />
-            </Button>
           </div>
         </motion.section>
       )}
