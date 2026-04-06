@@ -124,7 +124,7 @@ export default function OraculaSalesPage() {
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
   const heroOp = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
-  const ctaClick = () => navigate('/planos');
+  const ctaClick = () => window.open('https://pay.rockty.com/inn1jdxprkw4gafeubsdww?off=qqqmfhyjku7ou9kc70gg', '_blank');
 
   const [showFloating, setShowFloating] = useState(false);
   useEffect(() => {
