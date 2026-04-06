@@ -90,16 +90,11 @@ export function useRouteGuard(minPortal: PortalType = 'visitante'): RouteGuardRe
 
   const hasAccess = canAccessFeature(effectivePortal, minPortal);
 
-  if (isVisitor && !isAdmin && !hasAccess && !isPosCompraRoute) {
-    logRouteStep('visitante bloqueada por permissão', { path: location.pathname, minPortal }, 'warn');
-    return { status: 'locked-visitor' };
-  }
-
-  if (!hasAccess) {
-    logRouteStep('fallback autenticado: redirecionando para /dashboard', {
-      from: location.pathname, effectivePortal, minPortal,
+  if (!hasAccess && !isPosCompraRoute) {
+    logRouteStep('bloqueada por permissão — exibindo gating', {
+      path: location.pathname, effectivePortal, minPortal,
     }, 'warn');
-    return { status: 'redirect', to: '/dashboard-membro' };
+    return { status: 'locked-visitor' };
   }
 
   return { status: 'allowed' };
