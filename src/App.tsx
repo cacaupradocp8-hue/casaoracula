@@ -282,6 +282,8 @@ function AppRoutes() {
       <Route path="/formacao-viva" element={<Navigate to="/oracula" replace />} />
       <Route path="/formacao" element={<Navigate to="/cursos" replace />} />
       <Route path="/tour" element={<Navigate to="/mapa-casa" replace />} />
+      <Route path="/explorar-a-casa" element={<ExplorarACasa />} />
+      <Route path="/vitrine" element={<Vitrine />} />
 
       {/* Onboarding & Visitor */}
       <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
