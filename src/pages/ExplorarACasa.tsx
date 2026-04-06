@@ -52,7 +52,7 @@ export default function ExplorarACasa() {
                 variant="gold"
                 size="lg"
                 className="gap-2 text-base px-8"
-                onClick={() => navigate(user ? '/ferramenta/cartografia-psiquica-oracula' : '/auth')}
+                onClick={() => navigate('/sala-da-visitante')}
               >
                 Descobrir meu caminho
                 <ArrowRight className="w-5 h-5" />
@@ -119,7 +119,7 @@ export default function ExplorarACasa() {
                 variant="gold"
                 size="lg"
                 className="gap-2 text-base px-8"
-                onClick={() => navigate(user ? '/ferramenta/cartografia-psiquica-oracula' : '/auth')}
+                onClick={() => navigate('/sala-da-visitante')}
               >
                 Descobrir meu caminho
                 <ArrowRight className="w-5 h-5" />
