@@ -58,7 +58,7 @@ export default function OraculaSalesPage() {
 
   return (
     <div className="min-h-screen bg-[#0B0B0F] text-[#F3EFE7] overflow-x-hidden selection:bg-[#C6A96B]/30">
-      <ParticleField density={55} color="216,255,62" />
+      <ParticleField density={80} color="216,255,62" />
       <SalesHeader />
 
       {/* ═══════════════════════════════════════════
@@ -81,17 +81,17 @@ export default function OraculaSalesPage() {
           transition={{ duration: 1.8, delay: 0.4 }}
           className="relative z-10 text-center px-6 max-w-4xl"
         >
-          <p className="text-[#C6A96B]/50 text-[10px] uppercase tracking-[0.7em] mb-12">
+          <p className="text-[#C6A96B]/70 text-[11px] uppercase tracking-[0.7em] mb-12">
             Casa Orácula · Formação
           </p>
 
-          <h1 className="font-display text-[clamp(1.8rem,5.5vw,4.2rem)] font-light leading-[1.2] tracking-tight mb-8">
+          <h1 className="font-display text-[clamp(2rem,6vw,4.8rem)] font-light leading-[1.15] tracking-tight mb-8 text-white">
             Você não precisa de mais técnica.
             <br />
             <span className="text-[#C6A96B]">Precisa parar de conduzir no escuro.</span>
           </h1>
 
-          <p className="text-[#F3EFE7]/35 text-base md:text-lg max-w-xl mx-auto leading-relaxed mb-14 font-light">
+          <p className="text-[#F3EFE7]/60 text-base md:text-lg max-w-xl mx-auto leading-relaxed mb-14 font-light">
             A Formação Orácula ensina terapeutas a ler o campo com precisão, antes de intervir.
           </p>
 
@@ -103,7 +103,7 @@ export default function OraculaSalesPage() {
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
 
-          <p className="text-[#F3EFE7]/20 text-[11px] mt-8 tracking-wide">
+          <p className="text-[#F3EFE7]/40 text-[11px] mt-8 tracking-wide">
             Turmas fechadas · Ciclo completo de 1 ano
           </p>
         </motion.div>
@@ -118,6 +118,44 @@ export default function OraculaSalesPage() {
       </motion.section>
 
       {/* ═══════════════════════════════════════════
+          SEÇÃO — VSL (Vídeo de Vendas)
+      ═══════════════════════════════════════════ */}
+      <section className="py-20 md:py-32 px-6 md:px-16 bg-[#0E0E13]">
+        <motion.div {...fadeSlow} className="max-w-4xl mx-auto text-center">
+          <p className="text-[#C6A96B]/60 text-[10px] uppercase tracking-[0.6em] mb-10">
+            Assista antes de decidir
+          </p>
+
+          <div className="relative aspect-video rounded-lg overflow-hidden border border-[#C6A96B]/15 shadow-[0_0_80px_-20px_rgba(198,169,107,0.2)]">
+            {/* Placeholder — substituir src pelo embed do vídeo real */}
+            <div className="absolute inset-0 bg-[#0B0B0F] flex items-center justify-center">
+              <div className="text-center space-y-4">
+                <div className="w-20 h-20 rounded-full border-2 border-[#C6A96B]/40 flex items-center justify-center mx-auto cursor-pointer hover:border-[#C6A96B] hover:bg-[#C6A96B]/10 transition-all duration-500 group">
+                  <svg className="w-8 h-8 text-[#C6A96B] ml-1 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+                <p className="text-[#F3EFE7]/30 text-xs tracking-wide">Clique para assistir</p>
+              </div>
+            </div>
+            {/* Para usar um vídeo real, descomente e substitua a URL:
+            <iframe
+              src="https://www.youtube.com/embed/SEU_VIDEO_ID"
+              className="absolute inset-0 w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title="VSL Formação Orácula"
+            />
+            */}
+          </div>
+
+          <p className="text-[#F3EFE7]/30 text-xs mt-6 font-light">
+            6 minutos que podem mudar a forma como você conduz.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
           SEÇÃO 2 — DESCONFORTO
       ═══════════════════════════════════════════ */}
       <section className="py-28 md:py-44 px-6 md:px-16 max-w-3xl mx-auto space-y-20 md:space-y-28">
@@ -129,7 +167,7 @@ export default function OraculaSalesPage() {
           'As mulheres entendem…\nmas não atravessam.',
           'Elas acessam consciência…\nmas voltam.',
         ].map((frase, i) => (
-          <Phrase key={i} delay={0.05 * i} className="font-display text-xl md:text-3xl lg:text-4xl font-light text-[#F3EFE7]/70 leading-[1.4] whitespace-pre-line">
+          <Phrase key={i} delay={0.05 * i} className="font-display text-xl md:text-3xl lg:text-4xl font-light text-[#F3EFE7]/85 leading-[1.4] whitespace-pre-line">
             {frase}
           </Phrase>
         ))}
@@ -200,7 +238,7 @@ export default function OraculaSalesPage() {
             <Phrase
               key={i}
               className={`font-display text-xl md:text-3xl font-light leading-[1.4] whitespace-pre-line ${
-                accent ? 'text-[#C6A96B]/80' : 'text-[#F3EFE7]/60'
+                accent ? 'text-[#C6A96B]' : 'text-[#F3EFE7]/80'
               }`}
             >
               {text}
@@ -443,11 +481,12 @@ export default function OraculaSalesPage() {
           </h2>
           <p className="text-[#F3EFE7]/30 text-sm mb-10">Ciclo completo de 1 ano</p>
 
-          <p className="font-display text-5xl md:text-7xl font-light text-[#F3EFE7] mb-3">
-            R$ <span className="text-[#C6A96B]">5.597</span>
+          <p className="font-display text-5xl md:text-7xl font-light text-[#F3EFE7] mb-2">
+            R$ <span className="text-[#C6A96B]">3.597</span>
           </p>
-          <p className="text-[#F3EFE7]/20 text-sm mb-4">Turmas fechadas</p>
-          <p className="text-[#F3EFE7]/25 text-xs max-w-xs mx-auto leading-relaxed mb-14">
+          <p className="text-[#F3EFE7]/50 text-sm mb-2">ou até <span className="text-[#C6A96B]/90 font-medium">12x de R$ 349,58</span></p>
+          <p className="text-[#F3EFE7]/30 text-sm mb-4">Turmas fechadas</p>
+          <p className="text-[#F3EFE7]/30 text-xs max-w-xs mx-auto leading-relaxed mb-14">
             Quando iniciamos, não existe próxima data anunciada.
           </p>
 
