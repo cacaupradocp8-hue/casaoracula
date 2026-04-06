@@ -306,7 +306,7 @@ export default function OraculaSalesPage() {
                 <h3 className="font-display text-2xl md:text-3xl text-[#F3EFE7] font-light mb-4 tracking-wide">
                   {item.title}
                 </h3>
-                <p className="text-[#F3EFE7]/35 text-sm leading-relaxed">{item.desc}</p>
+                <p className="text-[#F3EFE7]/55 text-sm leading-relaxed">{item.desc}</p>
               </motion.div>
             ))}
           </div>
