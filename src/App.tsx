@@ -159,7 +159,7 @@ const PortalJunguianoPorta = React.lazy(() => import("./pages/PortalJunguianoPor
 const MapaCasaOracula = React.lazy(() => import("./pages/MapaCasaOracula"));
 const MinhaJornada = React.lazy(() => import("./pages/MinhaJornada"));
 const ExplorarACasa = React.lazy(() => import("./pages/ExplorarACasa"));
-const Vitrine = React.lazy(() => import("./pages/Vitrine"));
+const Vitrine = React.lazy(() => import("./pages/FerramentasVitrine"));
 const DashboardReorganizado = React.lazy(() => import("./pages/DashboardReorganizado"));
 const PosCompra = React.lazy(() => import("./pages/PosCompra"));
 const CasaAtrio = React.lazy(() => import("./pages/casa/CasaAtrio"));
