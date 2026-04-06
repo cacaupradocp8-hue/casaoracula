@@ -9,12 +9,15 @@ export function useMapaVivo() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
-  // Fetch mapa for a case
+  // Fetch mapa for a case — scoped by therapist
   const fetchMapa = useCallback(async (caseId: string): Promise<MapaVivoHeroina | null> => {
+    if (!user) return null;
+
     const { data, error } = await supabase
       .from('mapa_vivo_heroina')
       .select('*')
       .eq('session_case_id', caseId)
+      .eq('therapist_id', user.id)
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle();
@@ -25,7 +28,7 @@ export function useMapaVivo() {
     }
 
     return data as MapaVivoHeroina | null;
-  }, []);
+  }, [user]);
 
   // Create or update mapa
   const saveMapa = useCallback(async (

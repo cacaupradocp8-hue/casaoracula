@@ -105,7 +105,7 @@ export function useAcademyProgress() {
     const clients = await supabase.from('clientes').select('id', { count: 'exact', head: true }).eq('terapeuta_id', user.id);
     const dreams = await sessionsQuery.select('id', { count: 'exact', head: true }).eq('therapist_id', user.id).not('dream_record', 'is', null);
     const labyrinth = await sessionsQuery.select('id', { count: 'exact', head: true }).eq('therapist_id', user.id).not('labyrinth_record', 'is', null);
-    const cartography = await supabase.from('cartographies').select('id, client_id').limit(100);
+    const cartography = await supabase.from('cartographies' as any).select('id').eq('therapist_id', user.id).limit(100);
 
     // Determine tools used by checking various record tables
     const toolsUsed: string[] = [];
