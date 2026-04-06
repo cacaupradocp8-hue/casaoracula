@@ -24,40 +24,30 @@ import {
 
 // ── VISITANTE / GRATUITO ─────────────────────────────────────────────────────
 const visitanteMenuGroups = () => [
-  { key: 'inicio', label: 'Sala da Visitante', icon: Home, path: '/sala-da-visitante', subitems: [] },
-  { key: 'explorar', label: 'Explorar a Casa', icon: Map, path: '/mapa-casa', subitems: [] },
-  { key: 'oraculo', label: 'Vivenciar um Oráculo', icon: Sparkles, path: '/oraculos', subitems: [] },
-  { key: 'travessia', label: 'Sua Primeira Travessia', icon: Compass, path: '/travessias', subitems: [] },
-  { key: 'clube', label: 'Clube Oracular', icon: BookOpen, path: '/app/clube', subitems: [] },
-  { key: 'formacao', label: 'Caminhos de Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
+  { key: 'explorar', label: 'Explorar a Casa', icon: Compass, path: '/explorar-a-casa', subitems: [] },
+  { key: 'formacao', label: 'Formação Orácula', icon: GraduationCap, path: '/oracula', subitems: [] },
+  { key: 'clube', label: 'Clube do Livro', icon: BookOpen, path: '/app/clube', subitems: [] },
+  { key: 'vitrine', label: 'Vitrine', icon: Sparkles, path: '/vitrine', subitems: [] },
 ];
 
 // ── ASSINANTE DO CLUBE ──────────────────────────────────────────────────────
 const assinanteMenuGroups = () => [
-  { key: 'inicio', label: 'Minha Jornada', icon: Home, path: '/dashboard-membro', subitems: [] },
-  { key: 'biblioteca', label: 'Biblioteca', icon: BookOpen, path: '/biblioteca', subitems: [] },
-  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/app/clube', subitems: [] },
-  { key: 'jardim', label: 'Jardim da Psique', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+  { key: 'inicio', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
   { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
-  { key: 'comunidade', label: 'Comunidade', icon: Users, path: '/comunidade', subitems: [] },
+  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/app/clube', subitems: [] },
+  { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas', subitems: [] },
+  { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+  { key: 'vitrine', label: 'Vitrine', icon: Sparkles, path: '/vitrine', subitems: [] },
 ];
 
 // ── ALUNA DE FORMAÇÃO ───────────────────────────────────────────────────────
 const alunaMenuGroups = () => [
-  { key: 'inicio', label: 'Minha Jornada', icon: Home, path: '/dashboard-membro', subitems: [] },
-  { key: 'biblioteca', label: 'Biblioteca', icon: BookOpen, path: '/biblioteca', subitems: [] },
-  { key: 'treinamento', label: 'Sala de Treinamento', icon: Compass, path: '/sala-de-treinamento', subitems: [] },
-  { key: 'jardim', label: 'Jardim da Psique', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+  { key: 'inicio', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
   { key: 'clube', label: 'Clube', icon: BookOpen, path: '/app/clube', subitems: [] },
-  {
-    key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos',
-    subitems: [
-      { label: 'Cursos', path: '/cursos' },
-      { label: 'Formação Orácula', path: '/oracula' },
-      { label: 'Travessias', path: '/travessias' },
-    ],
-  },
-  { key: 'casa-maquinas', label: 'Casa das Máquinas', icon: Cog, path: '/casa-das-maquinas', subitems: [] },
+  { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas', subitems: [] },
+  { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+  { key: 'vitrine', label: 'Vitrine', icon: Sparkles, path: '/vitrine', subitems: [] },
 ];
 
 // ── MUNDO 2: Casa das Máquinas (Espaço Profissional) ────────────────────────
