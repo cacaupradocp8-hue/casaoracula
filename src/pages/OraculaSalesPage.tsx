@@ -92,16 +92,24 @@ export default function OraculaSalesPage() {
           </p>
           
           <h1 className="font-display text-4xl md:text-5xl lg:text-7xl text-white tracking-wide leading-[1.15] mb-10">
-            Formação Iniciática em{" "}
-            <span className="text-gold-gradient">Terapia Arquetípica</span>{" "}
-            e Narroterapia Oracular
+            <span className="text-gold-gradient">Formação Orácula</span>
           </h1>
           
           <div className="w-32 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent mx-auto mb-10" />
           
           <p className="text-white/50 text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto font-display italic">
-            Certificação em Condução Simbólica, Método e Ética do Feminino
+            Uma formação para quem deseja conduzir transformação com método simbólico.
           </p>
+
+          {/* Positioning block */}
+          <div className="mt-14 border border-primary/15 rounded-2xl p-8 md:p-10 bg-white/[0.02] backdrop-blur-sm max-w-lg mx-auto">
+            <p className="text-white/60 text-lg md:text-xl leading-relaxed font-display">
+              Essa formação não é sobre aprender ferramentas.
+            </p>
+            <p className="text-gold-gradient text-lg md:text-xl leading-relaxed font-display mt-2">
+              É sobre aprender a conduzir processos.
+            </p>
+          </div>
         </motion.div>
       </section>
 
@@ -280,9 +288,10 @@ export default function OraculaSalesPage() {
           
           {/* Card principal */}
           <div className="border border-primary/20 rounded-2xl p-10 md:p-14 bg-white/[0.02] backdrop-blur-sm shadow-[0_0_80px_-20px_hsl(var(--gold)/0.1)]">
-            <h3 className="font-display text-2xl md:text-3xl text-primary text-center mb-8">
-              FORMAÇÃO ORÁCULA
+            <h3 className="font-display text-2xl md:text-3xl text-primary text-center mb-4">
+              O que acontece dentro
             </h3>
+            <p className="text-white/40 text-sm text-center mb-8 uppercase tracking-widest">Estrutura da formação</p>
             
             <p className="text-white/50 text-center mb-10 max-w-lg mx-auto text-lg">
               Formação iniciática e profissional para mulheres que conduzem processos humanos com símbolos e narrativa
@@ -688,7 +697,7 @@ export default function OraculaSalesPage() {
               <h2 className="font-display text-2xl md:text-3xl text-primary mb-8">Para quem é</h2>
               
               <ul className="space-y-5 text-white/60 mb-8">
-                {["terapeutas", "psicólogas", "mentoras do feminino", "facilitadoras de grupos"].map((item) => (
+                {["Terapeutas", "Psicólogas", "Mentoras do feminino", "Mulheres em transição para atuação profissional"].map((item) => (
                   <li key={item} className="flex items-center gap-3">
                     <span className="w-2 h-2 rounded-full bg-primary/40" />
                     {item}
@@ -696,9 +705,8 @@ export default function OraculaSalesPage() {
                 ))}
               </ul>
               
-              <p className="text-white/40 italic text-sm">
-                que já estudaram muito<br />
-                mas sentem que falta eixo, estrutura e autoridade interna.
+              <p className="text-primary/60 italic text-sm font-display">
+                Indicado para quem deseja atuar conduzindo outras mulheres.
               </p>
             </div>
 
@@ -786,6 +794,14 @@ export default function OraculaSalesPage() {
           transition={{ duration: 0.8 }}
           className="relative z-10 max-w-2xl mx-auto text-center"
         >
+          {/* Decision block */}
+          <div className="border border-primary/15 rounded-2xl p-8 md:p-10 bg-white/[0.02] backdrop-blur-sm mb-14">
+            <p className="text-white/60 text-lg font-display leading-relaxed">
+              Você pode entrar direto na formação,<br />
+              mesmo sem passar pelo Clube.
+            </p>
+          </div>
+
           <p className="text-white/60 leading-relaxed text-xl mb-8 font-display">
             A Casa Orácula não promete resultados rápidos.<br />
             Ela oferece lugar.
@@ -802,24 +818,14 @@ export default function OraculaSalesPage() {
             Você entra para atravessar.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-5 justify-center">
-            <Button 
-              variant="outline"
-              size="lg"
-              onClick={() => navigate('/auth')}
-              className="border-white/15 hover:border-mystic/30 text-white/60 hover:text-white px-10 py-6 text-lg transition-all duration-300 hover:scale-105"
-            >
-              Entrar
-            </Button>
-            <Button 
-              size="lg"
-              onClick={() => navigate('/planos')}
-              className="bg-gradient-to-r from-gold to-mystic text-background border border-gold/30 hover:scale-105 transition-all duration-300 shadow-[0_0_40px_-8px_hsl(var(--gold)/0.3)] hover:shadow-[0_0_60px_-8px_hsl(var(--gold)/0.4)] px-10 py-6 text-lg"
-            >
-              Ver Planos
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </div>
+          <Button 
+            size="lg"
+            onClick={() => navigate('/planos')}
+            className="bg-gradient-to-r from-gold to-mystic text-background border border-gold/30 hover:scale-105 transition-all duration-300 shadow-[0_0_40px_-8px_hsl(var(--gold)/0.3)] hover:shadow-[0_0_60px_-8px_hsl(var(--gold)/0.4)] px-12 py-7 text-lg"
+          >
+            Entrar na Formação
+            <ArrowRight className="w-5 h-5 ml-2" />
+          </Button>
         </motion.div>
       </section>
 
