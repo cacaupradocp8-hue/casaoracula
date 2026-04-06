@@ -560,7 +560,7 @@ export default function OraculaSalesPage() {
             R$ <span className="text-[#C6A96B]">3.597</span>
           </p>
           <p className="text-[#F3EFE7]/45 text-sm mb-1">
-            ou até <span className="text-[#C6A96B]/80 font-medium">12x de R$ 349,58</span>
+            ou até <span className="text-[#C6A96B]/80 font-medium">12x de R$ 372,01</span>
           </p>
           <p className="text-[#F3EFE7]/25 text-xs mb-14">Turmas fechadas</p>
 
