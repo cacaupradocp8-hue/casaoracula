@@ -53,11 +53,11 @@ export function EcosystemShowcase() {
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <p className="text-primary/40 text-xs uppercase tracking-[0.5em] mb-6">O ecossistema completo</p>
+          <p className="text-primary/70 text-xs uppercase tracking-[0.5em] mb-6">O ecossistema completo</p>
           <h2 className="font-display text-3xl md:text-5xl lg:text-6xl text-white mb-6">
             O que você <span className="text-gold-gradient">recebe</span>
           </h2>
-          <p className="text-white/40 text-lg max-w-2xl mx-auto">
+          <p className="text-white/70 text-lg max-w-2xl mx-auto">
             Não é só um curso. É um sistema profissional completo para conduzir transformação com o Método Orácula.
           </p>
         </motion.div>
@@ -93,10 +93,10 @@ export function EcosystemShowcase() {
                       </motion.div>
                       <div>
                         <h3 className="font-display text-xl md:text-2xl text-white">{item.title}</h3>
-                        <p className="text-primary/50 text-xs uppercase tracking-widest">{item.subtitle}</p>
+                        <p className="text-primary/80 text-xs uppercase tracking-widest">{item.subtitle}</p>
                       </div>
                     </div>
-                    <p className="text-white/40 text-sm leading-relaxed">{item.desc}</p>
+                    <p className="text-white/70 text-sm leading-relaxed">{item.desc}</p>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -110,7 +110,7 @@ export function EcosystemShowcase() {
                         className="flex items-center gap-3 rounded-xl border border-white/[0.04] bg-white/[0.02] px-4 py-3 hover:border-primary/15 transition-colors duration-300"
                       >
                         <span className="w-1.5 h-1.5 rounded-full bg-primary/40 shrink-0" />
-                        <span className="text-white/50 text-xs">{feature}</span>
+                        <span className="text-white/75 text-xs">{feature}</span>
                       </motion.div>
                     ))}
                   </div>
@@ -135,7 +135,7 @@ export function EcosystemShowcase() {
           />
           <p className="relative z-10 text-gold-gradient font-display text-xl md:text-2xl italic">
             Tudo integrado. Nada improvisado.<br />
-            <span className="text-white/35 text-base not-italic mt-2 block">Cada ferramenta conversa com o método. Cada sessão alimenta o mapa.</span>
+            <span className="text-white/65 text-base not-italic mt-2 block">Cada ferramenta conversa com o método. Cada sessão alimenta o mapa.</span>
           </p>
         </motion.div>
       </div>

@@ -10,6 +10,9 @@ interface Particle {
   baseOpacity: number;
   pulse: number;
   pulseSpeed: number;
+  tailLength: number;
+  speed: number;
+  angle: number;
 }
 
 interface Props {
@@ -30,16 +33,21 @@ export function ParticleField({ density = 80, color = '216,255,62', className = 
   const initParticles = useCallback((w: number, h: number) => {
     const particles: Particle[] = [];
     for (let i = 0; i < count; i++) {
+      const speed = Math.random() * 2.5 + 1.5;
+      const angle = Math.random() * 0.4 + 1.2; // ~70-90 degrees downward with slight diagonal
       particles.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: Math.random() * 0.25 + 0.1,
-        size: Math.random() * 2.5 + 1.5,
+        x: Math.random() * w * 1.5,
+        y: Math.random() * h - h * 0.3,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        size: Math.random() * 1.8 + 0.8,
         opacity: 0,
-        baseOpacity: Math.random() * 0.5 + 0.2,
+        baseOpacity: Math.random() * 0.6 + 0.3,
         pulse: Math.random() * Math.PI * 2,
-        pulseSpeed: Math.random() * 0.01 + 0.004,
+        pulseSpeed: Math.random() * 0.02 + 0.005,
+        tailLength: Math.random() * 30 + 15,
+        speed,
+        angle,
       });
     }
     particlesRef.current = particles;
@@ -84,46 +92,44 @@ export function ParticleField({ density = 80, color = '216,255,62', className = 
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         p.pulse += p.pulseSpeed;
-        p.opacity = p.baseOpacity + Math.sin(p.pulse) * 0.2;
+        p.opacity = p.baseOpacity + Math.sin(p.pulse) * 0.15;
 
-        const dx = p.x - mx;
-        const dy = p.y - my;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 130) {
-          const force = (130 - dist) / 130 * 0.6;
-          p.vx += (dx / dist) * force;
-          p.vy += (dy / dist) * force;
-        }
-
-        p.vx *= 0.99;
-        p.vy *= 0.99;
+        // Move along meteor angle
         p.x += p.vx;
         p.y += p.vy;
 
-        if (p.x < 0) p.x = w();
-        if (p.x > w()) p.x = 0;
-        if (p.y < 0) p.y = h();
-        if (p.y > h()) p.y = 0;
+        // Reset when off screen
+        if (p.y > h() + 20 || p.x > w() + 50 || p.x < -50) {
+          p.x = Math.random() * w() * 1.5 - w() * 0.25;
+          p.y = -Math.random() * h() * 0.3;
+          p.speed = Math.random() * 2.5 + 1.5;
+          p.angle = Math.random() * 0.4 + 1.2;
+          p.vx = Math.cos(p.angle) * p.speed;
+          p.vy = Math.sin(p.angle) * p.speed;
+        }
+
+        // Draw meteor streak (line with gradient)
+        const tailX = p.x - Math.cos(p.angle) * p.tailLength;
+        const tailY = p.y - Math.sin(p.angle) * p.tailLength;
+        
+        const grad = ctx.createLinearGradient(tailX, tailY, p.x, p.y);
+        grad.addColorStop(0, `rgba(${color},0)`);
+        grad.addColorStop(0.7, `rgba(${color},${p.opacity * 0.4})`);
+        grad.addColorStop(1, `rgba(${color},${p.opacity})`);
 
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${color},${p.opacity})`;
-        ctx.fill();
+        ctx.moveTo(tailX, tailY);
+        ctx.lineTo(p.x, p.y);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = p.size * 0.8;
+        ctx.lineCap = 'round';
+        ctx.stroke();
 
-        for (let j = i + 1; j < particles.length; j++) {
-          const q = particles[j];
-          const lx = p.x - q.x;
-          const ly = p.y - q.y;
-          const ld = Math.sqrt(lx * lx + ly * ly);
-          if (ld < 110) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(q.x, q.y);
-            ctx.strokeStyle = `rgba(${color},${(1 - ld / 110) * 0.12})`;
-            ctx.lineWidth = 0.6;
-            ctx.stroke();
-          }
-        }
+        // Bright head dot
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 0.6, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${color},${p.opacity * 1.2})`;
+        ctx.fill();
       }
 
       rafRef.current = requestAnimationFrame(draw);

@@ -151,11 +151,11 @@ export function CidadelaComparison() {
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <p className="text-primary/40 text-xs uppercase tracking-[0.5em] mb-6">O Mapa que muda tudo</p>
+          <p className="text-primary/70 text-xs uppercase tracking-[0.5em] mb-6">O Mapa que muda tudo</p>
           <h2 className="font-display text-3xl md:text-5xl lg:text-6xl text-white mb-6">
             A CidaDELA <span className="text-gold-gradient">Interior</span>
           </h2>
-          <p className="text-white/40 text-lg max-w-2xl mx-auto">
+          <p className="text-white/70 text-lg max-w-2xl mx-auto">
             A psique feminina tem uma arquitetura. Com a Formação, você aprende a cartografá-la.
           </p>
         </motion.div>
