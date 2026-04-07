@@ -1,201 +1,153 @@
 import { memo } from 'react';
-import mandalaImg from '@/assets/ritual-mandala-breathe.png';
+import { motion } from 'framer-motion';
 
+/* ─────────────────────────────────────────────────────────
+   Sacred Geometry SVG Mandala — minimal, geometric, clean
+   Dourado suave (#E0B36A) sobre fundo escuro
+───────────────────────────────────────────────────────── */
+
+function SacredMandala({ size = 320 }: { size?: number }) {
+  const c = size / 2;
+  const rings = [
+    { r: size * 0.42, petals: 12, petalR: size * 0.06 },
+    { r: size * 0.32, petals: 8, petalR: size * 0.04 },
+    { r: size * 0.22, petals: 6, petalR: size * 0.03 },
+  ];
+
+  return (
+    <svg
+      viewBox={`0 0 ${size} ${size}`}
+      width={size}
+      height={size}
+      className="select-none"
+      style={{ filter: 'drop-shadow(0 0 30px rgba(224,179,106,0.15))' }}
+    >
+      {/* Outer circle */}
+      <circle cx={c} cy={c} r={size * 0.46} fill="none" stroke="#E0B36A" strokeWidth="0.5" opacity="0.2" />
+      <circle cx={c} cy={c} r={size * 0.44} fill="none" stroke="#E0B36A" strokeWidth="0.3" opacity="0.15" />
+
+      {/* Petal rings */}
+      {rings.map((ring, ri) => (
+        <g key={ri} opacity={0.3 - ri * 0.05}>
+          <circle cx={c} cy={c} r={ring.r} fill="none" stroke="#E0B36A" strokeWidth="0.4" />
+          {Array.from({ length: ring.petals }).map((_, i) => {
+            const angle = (i / ring.petals) * Math.PI * 2 - Math.PI / 2;
+            const px = c + Math.cos(angle) * ring.r;
+            const py = c + Math.sin(angle) * ring.r;
+            return (
+              <circle
+                key={i}
+                cx={px}
+                cy={py}
+                r={ring.petalR}
+                fill="none"
+                stroke="#E0B36A"
+                strokeWidth="0.4"
+                opacity={0.35}
+              />
+            );
+          })}
+        </g>
+      ))}
+
+      {/* Radial lines */}
+      {Array.from({ length: 12 }).map((_, i) => {
+        const angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
+        const x1 = c + Math.cos(angle) * size * 0.12;
+        const y1 = c + Math.sin(angle) * size * 0.12;
+        const x2 = c + Math.cos(angle) * size * 0.44;
+        const y2 = c + Math.sin(angle) * size * 0.44;
+        return (
+          <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#E0B36A" strokeWidth="0.3" opacity="0.12" />
+        );
+      })}
+
+      {/* Inner triangles — seed of life hint */}
+      {[0, 1, 2].map((i) => {
+        const angle1 = (i / 3) * Math.PI * 2 - Math.PI / 2;
+        const angle2 = ((i + 1) / 3) * Math.PI * 2 - Math.PI / 2;
+        const r = size * 0.15;
+        return (
+          <line
+            key={`tri-${i}`}
+            x1={c + Math.cos(angle1) * r}
+            y1={c + Math.sin(angle1) * r}
+            x2={c + Math.cos(angle2) * r}
+            y2={c + Math.sin(angle2) * r}
+            stroke="#E0B36A"
+            strokeWidth="0.5"
+            opacity="0.25"
+          />
+        );
+      })}
+
+      {/* Center dot */}
+      <circle cx={c} cy={c} r="2" fill="#E0B36A" opacity="0.4" />
+      <circle cx={c} cy={c} r="5" fill="none" stroke="#E0B36A" strokeWidth="0.5" opacity="0.2" />
+    </svg>
+  );
+}
 
 function MilkyWayBackgroundRaw() {
   return (
-    <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 0, backgroundColor: '#0F2A33' }}>
-      {/* RAYS — visible rotating conic beams */}
+    <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 0, backgroundColor: '#0A0E14' }}>
+      {/* Ambient glow — warm center */}
       <div
-        className="absolute animate-ritual-rays"
+        className="absolute inset-0"
         style={{
-          inset: '-30%',
-          zIndex: 1,
-          pointerEvents: 'none',
           background: `
-            conic-gradient(from 0deg at 50% 50%,
-              rgba(140,185,230,0.00) 0deg,
-              rgba(140,185,230,0.18) 8deg,
-              rgba(140,185,230,0.00) 16deg,
-              rgba(160,200,240,0.00) 45deg,
-              rgba(160,200,240,0.14) 53deg,
-              rgba(160,200,240,0.00) 61deg,
-              rgba(140,185,230,0.00) 90deg,
-              rgba(140,185,230,0.16) 98deg,
-              rgba(140,185,230,0.00) 106deg,
-              rgba(160,200,240,0.00) 135deg,
-              rgba(160,200,240,0.12) 143deg,
-              rgba(160,200,240,0.00) 151deg,
-              rgba(140,185,230,0.00) 180deg,
-              rgba(140,185,230,0.18) 188deg,
-              rgba(140,185,230,0.00) 196deg,
-              rgba(160,200,240,0.00) 225deg,
-              rgba(160,200,240,0.14) 233deg,
-              rgba(160,200,240,0.00) 241deg,
-              rgba(140,185,230,0.00) 270deg,
-              rgba(140,185,230,0.16) 278deg,
-              rgba(140,185,230,0.00) 286deg,
-              rgba(160,200,240,0.00) 315deg,
-              rgba(160,200,240,0.12) 323deg,
-              rgba(160,200,240,0.00) 331deg,
-              rgba(140,185,230,0.00) 360deg
-            )
+            radial-gradient(circle at 50% 38%, rgba(224,179,106,0.06) 0%, transparent 50%),
+            radial-gradient(circle at 50% 42%, rgba(224,179,106,0.03) 0%, transparent 60%)
           `,
-          willChange: 'transform',
-          maskImage: 'radial-gradient(circle, transparent 15%, black 35%, black 70%, transparent 95%)',
-          WebkitMaskImage: 'radial-gradient(circle, transparent 15%, black 35%, black 70%, transparent 95%)',
         }}
-        aria-hidden="true"
-      />
-      {/* Secondary rays — amber warm, counter-rotating */}
-      <div
-        className="absolute"
-        style={{
-          inset: '-25%',
-          zIndex: 1,
-          pointerEvents: 'none',
-          background: `
-            conic-gradient(from 22deg at 50% 50%,
-              rgba(200,150,80,0.00) 0deg,
-              rgba(200,150,80,0.10) 12deg,
-              rgba(200,150,80,0.00) 24deg,
-              rgba(200,150,80,0.00) 90deg,
-              rgba(200,150,80,0.08) 102deg,
-              rgba(200,150,80,0.00) 114deg,
-              rgba(200,150,80,0.00) 180deg,
-              rgba(200,150,80,0.10) 192deg,
-              rgba(200,150,80,0.00) 204deg,
-              rgba(200,150,80,0.00) 270deg,
-              rgba(200,150,80,0.08) 282deg,
-              rgba(200,150,80,0.00) 294deg,
-              rgba(200,150,80,0.00) 360deg
-            )
-          `,
-          animation: 'ritual-rays-rotate 90s linear infinite reverse, ritual-rays-pulse 8s ease-in-out infinite',
-          willChange: 'transform',
-          maskImage: 'radial-gradient(circle, transparent 20%, black 40%, black 65%, transparent 90%)',
-          WebkitMaskImage: 'radial-gradient(circle, transparent 20%, black 40%, black 65%, transparent 90%)',
-        }}
-        aria-hidden="true"
       />
 
-      {/* SILVER-BLUE ambient glow — soft radial behind everything */}
-      <div
-        className="absolute animate-ritual-breathe"
-        style={{
-          inset: '-10%',
-          zIndex: 1,
-          pointerEvents: 'none',
-          background: `
-            radial-gradient(circle at 50% 30%, rgba(140,180,220,0.15), rgba(140,180,220,0) 55%),
-            radial-gradient(circle at 45% 35%, rgba(180,200,230,0.08), rgba(180,200,230,0) 40%),
-            radial-gradient(circle at 55% 25%, rgba(160,190,225,0.06), rgba(160,190,225,0) 35%)
-          `,
-          willChange: 'transform',
-        }}
-        aria-hidden="true"
-      />
-
-      {/* MANDALA + HALO container — top 40% only */}
+      {/* Mandala container — centered in top portion */}
       <div
         className="absolute left-0 right-0 top-0 flex items-center justify-center"
-        style={{ zIndex: 3, pointerEvents: 'none', height: '40vh' }}
+        style={{ zIndex: 3, pointerEvents: 'none', height: '55vh' }}
       >
-        {/* OUTER HALO — large diffuse glow ring */}
-        <div
-          className="absolute animate-ritual-halo"
+        {/* Outer glow ring */}
+        <motion.div
+          className="absolute rounded-full"
           style={{
-            width: 'min(100vw, 660px)',
-            height: 'min(100vw, 660px)',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(160,195,230,0) 45%, rgba(160,195,230,0.08) 65%, rgba(160,195,230,0) 85%)',
-            boxShadow: '0 0 80px 30px rgba(150,185,220,0.06), 0 0 160px 60px rgba(140,175,215,0.03)',
-            transformOrigin: 'center center',
-            willChange: 'transform, opacity',
-            opacity: 0.7,
+            width: 'min(85vw, 500px)',
+            height: 'min(85vw, 500px)',
+            background: 'radial-gradient(circle, transparent 40%, rgba(224,179,106,0.04) 60%, transparent 80%)',
           }}
+          animate={{
+            scale: [1, 1.06, 1],
+            opacity: [0.4, 0.7, 0.4],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
         />
-        {/* MIDDLE glow ring */}
-        <div
-          className="absolute animate-ritual-halo"
-          style={{
-            width: 'min(92vw, 600px)',
-            height: 'min(92vw, 600px)',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(160,195,230,0) 50%, rgba(160,195,230,0.12) 70%, rgba(160,195,230,0) 90%)',
-            boxShadow: '0 0 60px 20px rgba(150,185,220,0.08), 0 0 120px 40px rgba(140,175,215,0.04)',
-            transformOrigin: 'center center',
-            willChange: 'transform, opacity',
+
+        {/* Mandala — ultra slow rotation + breathe */}
+        <motion.div
+          animate={{
+            rotate: [0, 360],
+            scale: [1, 1.03, 1],
           }}
-        />
-        {/* BLUE-SILVER HALO — rich layered glow */}
-        <div
-          className="absolute animate-ritual-halo"
-          style={{
-            width: 'min(90vw, 590px)',
-            height: 'min(90vw, 590px)',
-            borderRadius: '50%',
-            background: `
-              radial-gradient(circle, 
-                rgba(120,160,210,0) 42%,
-                rgba(140,175,220,0.10) 52%,
-                rgba(170,195,230,0.14) 60%,
-                rgba(190,210,240,0.10) 68%,
-                rgba(200,215,235,0.06) 76%,
-                rgba(180,200,230,0) 88%
-              )
-            `,
-            boxShadow: '0 0 40px 15px rgba(150,185,225,0.07), 0 0 80px 30px rgba(130,170,215,0.04)',
-            transformOrigin: 'center center',
-            willChange: 'transform, opacity',
+          transition={{
+            rotate: { duration: 120, repeat: Infinity, ease: 'linear' },
+            scale: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
           }}
-        />
-        {/* INNER HALO — subtle silver close to mandala */}
-        <div
-          className="absolute animate-ritual-breathe"
+          style={{ width: 'min(70vw, 320px)', height: 'min(70vw, 320px)' }}
+          className="flex items-center justify-center"
+        >
+          <SacredMandala size={320} />
+        </motion.div>
+
+        {/* Center glow pulse */}
+        <motion.div
+          className="absolute rounded-full"
           style={{
-            width: 'min(86vw, 570px)',
-            height: 'min(86vw, 570px)',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(180,200,230,0.04) 40%, rgba(160,185,220,0.08) 58%, rgba(140,170,210,0.04) 75%, transparent 88%)',
-            boxShadow: '0 0 25px 8px rgba(160,190,225,0.05)',
-            transformOrigin: 'center center',
-            willChange: 'transform, opacity',
+            width: 60,
+            height: 60,
+            background: 'radial-gradient(circle, rgba(224,179,106,0.2), transparent 70%)',
           }}
-        />
-        {/* WATER RIPPLE — concentric waves */}
-        {[0, 1, 2, 3, 4].map((i) => (
-          <div
-            key={`ripple-${i}`}
-            className="absolute rounded-full"
-            style={{
-              width: 'min(70vw, 460px)',
-              height: 'min(70vw, 460px)',
-              border: '1.5px solid rgba(160,200,235,0.12)',
-              boxShadow: `
-                0 0 8px 2px rgba(140,185,225,0.06),
-                inset 0 0 6px 1px rgba(170,205,240,0.04)
-              `,
-              animation: `ritual-ripple 8s cubic-bezier(0.2,0.6,0.4,1) ${i * 1.6}s infinite`,
-              opacity: 0,
-              transformOrigin: 'center center',
-              willChange: 'transform, opacity',
-            }}
-          />
-        ))}
-        {/* MANDALA — on top, breathing animation */}
-        <img
-          src={mandalaImg}
-          alt=""
-          className="absolute animate-ritual-breathe"
-          style={{
-            width: 'min(70vw, 420px)',
-            height: 'auto',
-            objectFit: 'contain',
-            transformOrigin: 'center center',
-            willChange: 'transform',
-            borderRadius: '50%',
-          }}
+          animate={{ scale: [1, 1.4, 1], opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
         />
       </div>
     </div>
