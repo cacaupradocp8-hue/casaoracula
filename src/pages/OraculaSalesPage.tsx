@@ -26,14 +26,14 @@ function Phrase({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-18% 0px -18% 0px' });
+  const inView = useInView(ref, { once: true, margin: '-15% 0px -15% 0px' });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
+      initial={{ opacity: 0, y: 36, filter: 'blur(6px)' }}
       animate={inView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-      transition={{ duration: 1.4, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 1.6, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
       {children}
@@ -49,14 +49,20 @@ function ImpactScreen({
   className?: string;
 }) {
   return (
-    <section className="min-h-[70vh] md:min-h-[80vh] flex items-center justify-center px-6">
+    <section className="min-h-[80vh] md:min-h-[85vh] flex items-center justify-center px-6">
       <Phrase className={`text-center max-w-lg mx-auto ${className}`}>{children}</Phrase>
     </section>
   );
 }
 
-function Breath({ height = 'h-[100px] md:h-[140px]' }: { height?: string }) {
-  return <div className={height} />;
+function Breath({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' | 'xl' }) {
+  const heights = {
+    sm: 'h-[60px] md:h-[80px]',
+    md: 'h-[100px] md:h-[140px]',
+    lg: 'h-[140px] md:h-[200px]',
+    xl: 'h-[180px] md:h-[260px]',
+  };
+  return <div className={heights[size]} aria-hidden />;
 }
 
 function ParallaxImage({
@@ -93,9 +99,9 @@ function CTA({
   temperature?: 'cool' | 'warm' | 'hot';
 }) {
   const styles = {
-    cool: 'border border-[#C6A96B]/40 bg-transparent text-[#F3EFE7]/80 hover:bg-[#C6A96B]/10 hover:border-[#C6A96B]/60',
+    cool: 'border border-[#C6A96B]/30 bg-transparent text-[#F3EFE7]/70 hover:bg-[#C6A96B]/10 hover:border-[#C6A96B]/50',
     warm: 'bg-[#C6A96B] text-[#0B0B0F] hover:bg-[#d4b87a]',
-    hot: 'bg-[#C6A96B] text-[#0B0B0F] hover:bg-[#d4b87a] shadow-[0_0_100px_-15px_rgba(198,169,107,0.35)]',
+    hot: 'bg-[#C6A96B] text-[#0B0B0F] hover:bg-[#d4b87a] shadow-[0_0_120px_-20px_rgba(198,169,107,0.4)]',
   };
 
   return (
@@ -104,7 +110,7 @@ function CTA({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8 }}
-      className="flex justify-center"
+      className="flex justify-center px-6"
     >
       <button
         onClick={onClick}
@@ -117,6 +123,25 @@ function CTA({
   );
 }
 
+/** Thin state label — almost invisible, just rhythm */
+function StateMarker({ label }: { label: string }) {
+  return (
+    <motion.p
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 1.2 }}
+      className="text-[#C6A96B]/15 text-[9px] uppercase tracking-[0.6em] text-center py-4"
+    >
+      {label}
+    </motion.p>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   PAGE
+───────────────────────────────────────────── */
+
 export default function OraculaSalesPage() {
   const navigate = useNavigate();
   const heroRef = useRef<HTMLDivElement>(null);
@@ -126,16 +151,21 @@ export default function OraculaSalesPage() {
 
   const ctaClick = () => window.open('https://pay.rockty.com/inn1jdxprkw4gafeubsdww?off=qqqmfhyjku7ou9kc70gg', '_blank');
 
+  /* Floating CTA — appears after hero is scrolled past */
   const [showFloating, setShowFloating] = useState(false);
   useEffect(() => {
-    const timer = setTimeout(() => setShowFloating(true), 3500);
-    return () => clearTimeout(timer);
+    const onScroll = () => {
+      setShowFloating(window.scrollY > window.innerHeight * 0.9);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
     <div className="min-h-screen bg-[#0B0B0F] text-[#F3EFE7] overflow-x-hidden selection:bg-[#C6A96B]/30">
-      <ParticleField density={80} color="216,255,62" />
+      <ParticleField density={50} color="216,255,62" />
 
+      {/* ── Header ── */}
       <motion.header
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -150,10 +180,14 @@ export default function OraculaSalesPage() {
         </button>
       </motion.header>
 
+      {/* ══════════════════════════════════════════
+         ESTADO 1 — RECONHECIMENTO
+      ══════════════════════════════════════════ */}
+
       <motion.section
         ref={heroRef}
         style={{ opacity: heroOp }}
-        className="relative min-h-[90vh] flex flex-col items-center justify-center"
+        className="relative min-h-[92vh] flex flex-col items-center justify-center"
       >
         <motion.div className="absolute inset-0 z-0" style={{ scale: heroScale }}>
           <img src={heroImg} alt="" className="w-full h-full object-cover object-[center_18%] md:object-center" />
@@ -184,7 +218,7 @@ export default function OraculaSalesPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 1.4 }}
-            className="text-[#F3EFE7]/55 text-base leading-relaxed mb-12 font-light"
+            className="text-[#F3EFE7]/50 text-base leading-relaxed mb-12 font-light"
           >
             Aprenda a ler o campo antes de intervir.
           </motion.p>
@@ -201,7 +235,7 @@ export default function OraculaSalesPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 2.2 }}
-            className="text-[#F3EFE7]/25 text-[11px] mt-6 tracking-wide"
+            className="text-[#F3EFE7]/20 text-[11px] mt-6 tracking-wide"
           >
             Ciclo de 1 ano · Turmas fechadas
           </motion.p>
@@ -216,37 +250,43 @@ export default function OraculaSalesPage() {
         </motion.div>
       </motion.section>
 
+      {/* Reconhecimento — frases que validam */}
       <section className="px-6 max-w-lg mx-auto">
-        <Breath />
+        <Breath size="lg" />
         {['Você já estudou.', 'Já atendeu.', 'Já ajudou.'].map((frase, i) => (
-          <div key={i}>
-            <Phrase
-              delay={i * 0.05}
-              className="font-display text-[clamp(1.3rem,5vw,2.2rem)] font-light leading-[1.3] text-center text-[#F3EFE7]/80 py-[12vh] md:py-[15vh]"
-            >
-              {frase}
-            </Phrase>
-          </div>
+          <Phrase
+            key={i}
+            delay={i * 0.04}
+            className="font-display text-[clamp(1.3rem,5vw,2.2rem)] font-light leading-[1.3] text-center text-[#F3EFE7]/75 py-[14vh] md:py-[16vh]"
+          >
+            {frase}
+          </Phrase>
         ))}
       </section>
 
+      {/* ══════════════════════════════════════════
+         ESTADO 2 — DESCONFORTO
+      ══════════════════════════════════════════ */}
+
+      <StateMarker label="II" />
+
       <ImpactScreen className="font-display text-[clamp(1.5rem,6vw,2.8rem)] font-light leading-[1.2]">
-        <span className="text-[#F3EFE7]/60">E mesmo assim…</span>
+        <span className="text-[#F3EFE7]/55">E mesmo assim…</span>
         <br />
         <br />
         <span className="text-[#C6A96B]">Algo não sustenta.</span>
       </ImpactScreen>
 
-      <Breath />
+      <Breath size="lg" />
 
       <ParallaxImage
         src={img02}
         alt="Formação Orácula"
-        className="h-[48vh] md:h-[55vh]"
+        className="h-[50vh] md:h-[58vh]"
         imgClassName="object-center scale-[1.08] md:scale-[1.12]"
       />
 
-      <Breath />
+      <Breath size="lg" />
 
       <ImpactScreen className="font-display text-[clamp(1.6rem,6.5vw,3rem)] font-light leading-[1.15]">
         O que você ainda
@@ -255,10 +295,10 @@ export default function OraculaSalesPage() {
       </ImpactScreen>
 
       <ImpactScreen className="text-lg md:text-xl font-light leading-relaxed">
-        <span className="text-[#F3EFE7]/50">A verdade desconfortável:</span>
+        <span className="text-[#F3EFE7]/45">A verdade desconfortável:</span>
         <br />
         <br />
-        <span className="text-[#F3EFE7]/40">não é falta de ferramenta.</span>
+        <span className="text-[#F3EFE7]/35">não é falta de ferramenta.</span>
         <br />
         <br />
         <span className="text-[#C6A96B]">É falta de leitura.</span>
@@ -273,8 +313,8 @@ export default function OraculaSalesPage() {
         ].map((item, i) => (
           <Phrase
             key={i}
-            className={`font-display text-xl md:text-2xl font-light leading-[1.4] py-[13vh] md:py-[16vh] ${
-              item.dim ? 'text-[#F3EFE7]/50' : 'text-[#F3EFE7]/85'
+            className={`font-display text-xl md:text-2xl font-light leading-[1.4] text-center py-[14vh] md:py-[17vh] ${
+              item.dim ? 'text-[#F3EFE7]/45' : 'text-[#F3EFE7]/85'
             }`}
           >
             {item.text}
@@ -283,29 +323,38 @@ export default function OraculaSalesPage() {
       </section>
 
       <ImpactScreen className="font-display text-[clamp(1.4rem,5.5vw,2.5rem)] font-light leading-[1.3]">
-        <span className="text-[#F3EFE7]/60">E toda intervenção fora de tempo…</span>
+        <span className="text-[#F3EFE7]/55">E toda intervenção fora de tempo…</span>
         <br />
         <br />
         <span className="text-[#C6A96B]">vira invasão simbólica.</span>
       </ImpactScreen>
 
-      <Breath height="h-[60px] md:h-[80px]" />
-      <CTA label="Começar a ler com precisão" onClick={ctaClick} temperature="warm" />
-      <Breath />
+      {/* ── ÂNCORA DE DECISÃO 1 ── */}
+      <Breath size="sm" />
+      <CTA label="Entrar na Formação" onClick={ctaClick} temperature="cool" />
+      <Breath size="xl" />
+
+      {/* ══════════════════════════════════════════
+         ESTADO 3 — REVELAÇÃO
+      ══════════════════════════════════════════ */}
+
+      <StateMarker label="III" />
 
       <ParallaxImage
         src={img03}
         alt="Leitura simbólica"
-        className="h-[58vh] md:h-[60vh]"
+        className="h-[60vh] md:h-[62vh]"
         imgClassName="object-[center_16%] md:object-center scale-[1.02] md:scale-[1.06]"
       />
+
+      <Breath size="lg" />
 
       <ImpactScreen className="font-display text-[clamp(1.5rem,6vw,2.8rem)] font-light leading-[1.2]">
         A Casa Orácula nasce desse ponto.
       </ImpactScreen>
 
-      <section className="px-6 max-w-lg mx-auto text-center space-y-[12vh]">
-        <Phrase className="font-display text-xl md:text-2xl font-light text-[#F3EFE7]/40">
+      <section className="px-6 max-w-lg mx-auto text-center space-y-[14vh]">
+        <Phrase className="font-display text-xl md:text-2xl font-light text-[#F3EFE7]/35">
           Não como método de intervenção.
         </Phrase>
         <Phrase className="font-display text-xl md:text-2xl font-light text-[#C6A96B]">
@@ -313,42 +362,16 @@ export default function OraculaSalesPage() {
         </Phrase>
       </section>
 
-      <Breath />
-
-      <section className="py-16 px-6 bg-[#0A0A0E]">
-        <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-          className="max-w-2xl mx-auto"
-        >
-          <p className="text-[#C6A96B]/40 text-[10px] uppercase tracking-[0.5em] text-center mb-8">
-            Assista antes de decidir
-          </p>
-          <div className="relative aspect-video rounded-lg overflow-hidden border border-[#C6A96B]/12 shadow-[0_0_60px_-20px_rgba(198,169,107,0.12)]">
-            <div className="absolute inset-0 bg-[#0B0B0F] flex items-center justify-center">
-              <div className="text-center space-y-3">
-                <div className="w-16 h-16 rounded-full border-2 border-[#C6A96B]/30 flex items-center justify-center mx-auto cursor-pointer hover:border-[#C6A96B] hover:bg-[#C6A96B]/10 transition-all duration-500">
-                  <svg className="w-7 h-7 text-[#C6A96B] ml-1" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </div>
-                <p className="text-[#F3EFE7]/25 text-xs">Clique para assistir</p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </section>
-
-      <Breath />
+      <Breath size="xl" />
 
       <ParallaxImage
         src={narroterapiaImg}
         alt="Narrôterapia"
-        className="h-[42vh] md:h-[44vh]"
+        className="h-[44vh] md:h-[48vh]"
         imgClassName="object-center scale-[1.08] md:scale-[1.12]"
       />
+
+      <Breath size="md" />
 
       <section className="px-6 max-w-lg mx-auto">
         {[
@@ -360,8 +383,8 @@ export default function OraculaSalesPage() {
         ].map((item, i) => (
           <Phrase
             key={i}
-            className={`font-display text-xl md:text-2xl font-light leading-[1.4] whitespace-pre-line text-center py-[14vh] md:py-[17vh] ${
-              item.accent ? 'text-[#C6A96B]' : 'text-[#F3EFE7]/60'
+            className={`font-display text-xl md:text-2xl font-light leading-[1.4] whitespace-pre-line text-center py-[15vh] md:py-[18vh] ${
+              item.accent ? 'text-[#C6A96B]' : 'text-[#F3EFE7]/55'
             }`}
           >
             {item.text}
@@ -369,15 +392,50 @@ export default function OraculaSalesPage() {
         ))}
       </section>
 
-      <Breath />
+      {/* ══════════════════════════════════════════
+         ESTADO 4 — MÉTODO
+      ══════════════════════════════════════════ */}
 
+      <StateMarker label="IV" />
+      <Breath size="lg" />
+
+      {/* Video */}
+      <section className="py-16 px-6 bg-[#0A0A0E]">
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+          className="max-w-2xl mx-auto"
+        >
+          <p className="text-[#C6A96B]/30 text-[10px] uppercase tracking-[0.5em] text-center mb-8">
+            Assista antes de decidir
+          </p>
+          <div className="relative aspect-video rounded-lg overflow-hidden border border-[#C6A96B]/10 shadow-[0_0_60px_-20px_rgba(198,169,107,0.1)]">
+            <div className="absolute inset-0 bg-[#0B0B0F] flex items-center justify-center">
+              <div className="text-center space-y-3">
+                <div className="w-16 h-16 rounded-full border-2 border-[#C6A96B]/30 flex items-center justify-center mx-auto cursor-pointer hover:border-[#C6A96B] hover:bg-[#C6A96B]/10 transition-all duration-500">
+                  <svg className="w-7 h-7 text-[#C6A96B] ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+                <p className="text-[#F3EFE7]/20 text-xs">Clique para assistir</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      <Breath size="xl" />
+
+      {/* Método da CidaDELA */}
       <section className="py-20 px-6">
         <div className="max-w-lg mx-auto">
-          <Phrase className="text-[#C6A96B]/35 text-[10px] uppercase tracking-[0.5em] text-center mb-16">
+          <Phrase className="text-[#C6A96B]/30 text-[10px] uppercase tracking-[0.5em] text-center mb-16">
             Método da CidaDELA
           </Phrase>
 
-          <div className="space-y-8">
+          <div className="space-y-10">
             {[
               { title: 'Portas', desc: 'Em que limiar a psique está.' },
               { title: 'Campos', desc: 'O clima simbólico que pede leitura.' },
@@ -389,13 +447,13 @@ export default function OraculaSalesPage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.9, delay: i * 0.15 }}
-                className="border border-[#F3EFE7]/[0.06] p-8 relative overflow-hidden"
+                className="border border-[#F3EFE7]/[0.05] p-8 md:p-10 relative overflow-hidden"
               >
-                <div className="absolute top-0 left-0 w-[3px] h-full bg-[#C6A96B]/25" />
-                <h3 className="font-display text-2xl text-[#F3EFE7]/90 font-light mb-2 tracking-wide pl-2">
+                <div className="absolute top-0 left-0 w-[3px] h-full bg-[#C6A96B]/20" />
+                <h3 className="font-display text-2xl text-[#F3EFE7]/85 font-light mb-2 tracking-wide pl-3">
                   {item.title}
                 </h3>
-                <p className="text-[#F3EFE7]/40 text-sm leading-relaxed pl-2">{item.desc}</p>
+                <p className="text-[#F3EFE7]/35 text-sm leading-relaxed pl-3">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -403,51 +461,54 @@ export default function OraculaSalesPage() {
       </section>
 
       <ImpactScreen className="font-display text-lg md:text-xl font-light leading-relaxed">
-        <span className="text-[#F3EFE7]/50">Quando isso é visto,</span>
+        <span className="text-[#F3EFE7]/45">Quando isso é visto,</span>
         <br />
-        <span className="text-[#F3EFE7]/50">a condução deixa de ser tentativa.</span>
+        <span className="text-[#F3EFE7]/45">a condução deixa de ser tentativa.</span>
         <br />
         <br />
         <span className="text-[#C6A96B]">E passa a ser precisão.</span>
       </ImpactScreen>
 
+      {/* O que aprende */}
       <section className="py-16 px-6">
         <div className="max-w-lg mx-auto">
-          <Phrase className="font-display text-xl font-light mb-10 text-center text-[#F3EFE7]/70">
+          <Phrase className="font-display text-xl font-light mb-12 text-center text-[#F3EFE7]/65">
             Você aprende a:
           </Phrase>
-          <div className="space-y-5">
+          <div className="space-y-6">
             {['Ler antes de intervir', 'Identificar estrutura psíquica', 'Sustentar processos reais'].map((item, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, x: -12 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="flex items-center gap-4 py-4 border-b border-[#F3EFE7]/[0.05]"
+                transition={{ duration: 0.6, delay: i * 0.12 }}
+                className="flex items-center gap-4 py-5 border-b border-[#F3EFE7]/[0.04]"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C6A96B]/50 shrink-0" />
-                <p className="text-[#F3EFE7]/70 text-base font-light">{item}</p>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C6A96B]/40 shrink-0" />
+                <p className="text-[#F3EFE7]/65 text-base font-light">{item}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      <Breath height="h-[60px] md:h-[80px]" />
+      {/* ── ÂNCORA DE DECISÃO 2 ── */}
+      <Breath size="md" />
       <CTA label="Começar a ler com precisão" onClick={ctaClick} temperature="warm" />
-      <Breath />
+      <Breath size="xl" />
 
+      {/* O que a formação entrega */}
       <ParallaxImage
         src={mentoriaImg}
         alt="Mentoria"
-        className="h-[46vh] md:h-[48vh]"
+        className="h-[48vh] md:h-[52vh]"
         imgClassName="object-center scale-[1.06] md:scale-[1.1]"
       />
 
-      <section className="py-20 px-6">
-        <div className="max-w-lg mx-auto space-y-8">
-          <Phrase className="text-[#C6A96B]/35 text-[10px] uppercase tracking-[0.5em] text-center mb-8">
+      <section className="py-24 px-6">
+        <div className="max-w-lg mx-auto space-y-10">
+          <Phrase className="text-[#C6A96B]/30 text-[10px] uppercase tracking-[0.5em] text-center mb-10">
             O que a formação entrega
           </Phrase>
 
@@ -476,37 +537,38 @@ export default function OraculaSalesPage() {
           ].map((item, i) => (
             <motion.div
               key={item.title}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: i * 0.1 }}
-              className="border border-[#F3EFE7]/[0.05] overflow-hidden"
+              transition={{ duration: 0.8, delay: i * 0.1 }}
+              className="border border-[#F3EFE7]/[0.04] overflow-hidden"
             >
               <div className={`relative overflow-hidden ${item.mediaClass}`}>
                 <img src={item.img} alt={item.title} className={`w-full h-full object-cover ${item.imageClass}`} />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/20 to-transparent" />
               </div>
-              <div className="p-6">
-                <h3 className="font-display text-lg text-[#F3EFE7]/85 mb-1.5">{item.title}</h3>
-                <p className="text-[#F3EFE7]/40 text-sm leading-relaxed">{item.desc}</p>
+              <div className="p-6 md:p-8">
+                <h3 className="font-display text-lg text-[#F3EFE7]/80 mb-1.5">{item.title}</h3>
+                <p className="text-[#F3EFE7]/35 text-sm leading-relaxed">{item.desc}</p>
               </div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      <section className="py-16 px-6 bg-[#0A0A0E]">
+      {/* App section */}
+      <section className="py-20 px-6 bg-[#0A0A0E]">
         <div className="max-w-lg mx-auto text-center space-y-6">
-          <Phrase className="font-display text-xl font-light text-[#F3EFE7]/80">
+          <Phrase className="font-display text-xl font-light text-[#F3EFE7]/75">
             O app da Casa Orácula não é bônus.
           </Phrase>
           <Phrase className="font-display text-xl font-light text-[#C6A96B]">
             É extensão da sua mente clínica.
           </Phrase>
-          <div className="space-y-3 pt-4">
+          <div className="space-y-3 pt-6">
             {['Mapa vivo da prática', 'Registro de Portas', 'Acompanhamento de narrativas'].map((item) => (
-              <p key={item} className="text-[#F3EFE7]/40 text-sm flex items-center gap-3 justify-center">
-                <span className="w-1 h-1 rounded-full bg-[#C6A96B]/40" />
+              <p key={item} className="text-[#F3EFE7]/35 text-sm flex items-center gap-3 justify-center">
+                <span className="w-1 h-1 rounded-full bg-[#C6A96B]/35" />
                 {item}
               </p>
             ))}
@@ -514,16 +576,21 @@ export default function OraculaSalesPage() {
         </div>
       </section>
 
-      <Breath />
+      {/* ══════════════════════════════════════════
+         ESTADO 5 — DECISÃO
+      ══════════════════════════════════════════ */}
+
+      <Breath size="xl" />
+      <StateMarker label="V" />
 
       <section className="px-6 max-w-lg mx-auto">
-        <Phrase className="font-display text-[clamp(1.4rem,5.5vw,2.5rem)] font-light text-center py-[15vh] text-[#F3EFE7]/80">
+        <Phrase className="font-display text-[clamp(1.4rem,5.5vw,2.5rem)] font-light text-center py-[16vh] text-[#F3EFE7]/75">
           Isso não é um curso.
         </Phrase>
-        <Phrase className="font-display text-[clamp(1.4rem,5.5vw,2.5rem)] font-light text-center py-[15vh] text-[#C6A96B]">
+        <Phrase className="font-display text-[clamp(1.4rem,5.5vw,2.5rem)] font-light text-center py-[16vh] text-[#C6A96B]">
           É uma formação de identidade.
         </Phrase>
-        <Phrase className="font-display text-xl font-light text-center py-[15vh] text-[#F3EFE7]/45">
+        <Phrase className="font-display text-xl font-light text-center py-[16vh] text-[#F3EFE7]/40">
           Um ano para atravessar.
           <br />
           Integrar.
@@ -535,13 +602,14 @@ export default function OraculaSalesPage() {
       <ParallaxImage
         src={img04}
         alt="Formação Oracular"
-        className="h-[58vh] md:h-[52vh]"
+        className="h-[60vh] md:h-[55vh]"
         imgClassName="object-[center_14%] md:object-center scale-[1.01] md:scale-[1.05]"
       />
 
-      <Breath />
+      <Breath size="xl" />
 
-      <section className="py-28 px-6">
+      {/* ── ÂNCORA DE DECISÃO 3 — Oferta final ── */}
+      <section className="py-32 px-6">
         <motion.div
           initial={{ opacity: 0, y: 30, filter: 'blur(4px)' }}
           whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
@@ -549,24 +617,24 @@ export default function OraculaSalesPage() {
           transition={{ duration: 1.4 }}
           className="max-w-sm mx-auto text-center"
         >
-          <p className="text-[#C6A96B]/30 text-[10px] uppercase tracking-[0.5em] mb-10">
+          <p className="text-[#C6A96B]/25 text-[10px] uppercase tracking-[0.5em] mb-12">
             Investimento
           </p>
 
-          <h2 className="font-display text-2xl font-light text-[#F3EFE7]/85 mb-3">Formação Oracular</h2>
-          <p className="text-[#F3EFE7]/35 text-sm mb-8">Ciclo completo de 1 ano</p>
+          <h2 className="font-display text-2xl font-light text-[#F3EFE7]/80 mb-3">Formação Oracular</h2>
+          <p className="text-[#F3EFE7]/30 text-sm mb-10">Ciclo completo de 1 ano</p>
 
           <p className="font-display text-5xl font-light text-[#F3EFE7] mb-2">
             R$ <span className="text-[#C6A96B]">3.597</span>
           </p>
-          <p className="text-[#F3EFE7]/45 text-sm mb-1">
+          <p className="text-[#F3EFE7]/40 text-sm mb-1">
             ou até <span className="text-[#C6A96B]/80 font-medium">12x de R$ 372,01</span>
           </p>
-          <p className="text-[#F3EFE7]/25 text-xs mb-14">Turmas fechadas</p>
+          <p className="text-[#F3EFE7]/20 text-xs mb-16">Turmas fechadas</p>
 
           <CTA label="Entrar na Formação Orácula" onClick={ctaClick} temperature="hot" />
 
-          <p className="text-[#F3EFE7]/20 text-xs mt-10 leading-relaxed italic">
+          <p className="text-[#F3EFE7]/15 text-xs mt-12 leading-relaxed italic">
             A decisão não é sobre valor.
             <br />
             É sobre responsabilidade.
@@ -574,27 +642,28 @@ export default function OraculaSalesPage() {
         </motion.div>
       </section>
 
-      <section className="relative py-28 px-6">
+      {/* Fechamento emocional */}
+      <section className="relative py-32 px-6">
         <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F] via-[#0E0E13] to-[#0B0B0F]" />
         <motion.div
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-[#C6A96B]/[0.025] blur-[120px] pointer-events-none"
-          animate={{ scale: [1, 1.12, 1], opacity: [0.12, 0.3, 0.12] }}
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-[#C6A96B]/[0.02] blur-[120px] pointer-events-none"
+          animate={{ scale: [1, 1.12, 1], opacity: [0.1, 0.25, 0.1] }}
           transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
         />
 
         <div className="relative z-10 max-w-lg mx-auto text-center">
-          <Phrase className="font-display text-xl font-light text-[#F3EFE7]/45 italic mb-[10vh]">
+          <Phrase className="font-display text-xl font-light text-[#F3EFE7]/40 italic mb-[12vh]">
             Depois que você aprende a ler…
             <br />
             não consegue mais fingir que não vê.
           </Phrase>
-          <Phrase className="font-display text-lg font-light text-[#F3EFE7]/35 mb-[10vh]">
+          <Phrase className="font-display text-lg font-light text-[#F3EFE7]/30 mb-[12vh]">
             Se você sente que já não quer apenas conduzir mulheres…
           </Phrase>
-          <Phrase className="font-display text-xl font-light text-[#C6A96B] mb-[10vh]">
+          <Phrase className="font-display text-xl font-light text-[#C6A96B] mb-[12vh]">
             Talvez esteja buscando uma casa.
           </Phrase>
-          <Phrase className="font-display text-2xl font-light text-[#F3EFE7]/85 mb-12">
+          <Phrase className="font-display text-2xl font-light text-[#F3EFE7]/80 mb-14">
             E a Casa… já existe.
           </Phrase>
 
@@ -602,29 +671,29 @@ export default function OraculaSalesPage() {
         </div>
       </section>
 
+      {/* Footer */}
       <footer className="py-12 px-6 border-t border-[#F3EFE7]/[0.03]">
-        <p className="text-[#F3EFE7]/12 text-[11px] leading-relaxed max-w-sm">
+        <p className="text-[#F3EFE7]/10 text-[11px] leading-relaxed max-w-sm">
           Casa Orácula © {new Date().getFullYear()} · A Casa Orácula não substitui terapia,
           acompanhamento psicológico ou tratamento clínico quando necessário.
         </p>
       </footer>
 
-      {showFloating && (
-        <motion.div
-          initial={{ y: 80, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="fixed bottom-0 left-0 right-0 z-50 p-3 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/90 to-transparent md:hidden pb-safe"
+      {/* Floating CTA — mobile only, scroll-aware */}
+      <motion.div
+        initial={false}
+        animate={{ y: showFloating ? 0 : 80, opacity: showFloating ? 1 : 0 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+        className="fixed bottom-0 left-0 right-0 z-50 p-3 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/95 to-transparent md:hidden pb-safe pointer-events-none"
+      >
+        <button
+          onClick={ctaClick}
+          className="w-full bg-[#C6A96B]/85 text-[#0B0B0F] py-3.5 text-[10px] uppercase tracking-[0.25em] font-semibold flex items-center justify-center gap-2 pointer-events-auto"
         >
-          <button
-            onClick={ctaClick}
-            className="w-full bg-[#C6A96B]/90 text-[#0B0B0F] py-3.5 text-[10px] uppercase tracking-[0.25em] font-semibold flex items-center justify-center gap-2"
-          >
-            Entrar na Formação
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </motion.div>
-      )}
+          Entrar na Formação
+          <ArrowRight className="w-3.5 h-3.5" />
+        </button>
+      </motion.div>
     </div>
   );
 }
