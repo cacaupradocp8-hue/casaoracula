@@ -132,6 +132,7 @@ interface AdminSidebarProps {
 }
 
 export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(() => {
     // Auto-expand the group containing the active tab
