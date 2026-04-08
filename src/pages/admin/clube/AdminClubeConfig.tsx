@@ -4,7 +4,7 @@ import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Settings, Target, GraduationCap, Sparkles } from 'lucide-react';
-import { LabConfigManager } from '@/components/admin/clube-livro/LabConfigManager';
+
 
 export default function AdminClubeConfig() {
   return (
