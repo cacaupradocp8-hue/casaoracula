@@ -97,7 +97,7 @@ Crie UMA pergunta contemplativa profunda que ajude a leitora a refletir sobre su
 Crie uma prática terapêutica simples (escrita reflexiva, visualização simbólica ou auto-observação) inspirada no símbolo central do trecho. Inclua: nome da prática, duração sugerida e instruções passo a passo.
 </PRATICA>`;
 
-    const aiResponse = await fetch("https://ai.lovable.dev/chat/completions", {
+    const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
