@@ -50,7 +50,16 @@ function VozCard({ voz, isActive, isPrimaria, isApoio, isSelected, onSelect }: {
           style={{
             backgroundColor: isSelected ? hsl : `${hsl}`,
             opacity: isSelected ? 1 : 0.7,
-            ringColor: hsl,
+            // ring color set via inline style on parent
+          }}
+          style-ring-color={hsl}
+        >
+          {/* Override ring color */}
+        </div>
+        <div
+          className={cn(
+            "w-10 h-10 rounded-full shrink-0 flex items-center justify-center transition-all mt-0.5 absolute inset-0",
+          )}
           }}
         >
           <span className="text-white text-xs font-bold">
