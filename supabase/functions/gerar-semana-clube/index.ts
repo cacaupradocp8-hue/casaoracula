@@ -20,6 +20,12 @@ Estilo: claro, simbólico, acessível, contemplativo.
 Evitar: linguagem acadêmica, explicações longas, conceitos técnicos sem tradução.
 O conteúdo deve parecer uma conversa íntima, uma reflexão profunda, uma travessia simbólica.`;
 
+function extractSection(fullText: string, tag: string): string {
+  const regex = new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, "i");
+  const match = fullText.match(regex);
+  return match ? match[1].trim() : "";
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -59,9 +65,9 @@ serve(async (req) => {
       });
     }
 
-    // --- Step 1: Generate content via Lovable AI ---
-    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
-    if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY not configured");
+    // --- Step 1: Generate content via Lovable AI Gateway ---
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
     const userPrompt = `Livro: "${livro}"
 Trecho/Capítulo: "${capitulo_trecho}"
@@ -91,14 +97,14 @@ Crie UMA pergunta contemplativa profunda que ajude a leitora a refletir sobre su
 Crie uma prática terapêutica simples (escrita reflexiva, visualização simbólica ou auto-observação) inspirada no símbolo central do trecho. Inclua: nome da prática, duração sugerida e instruções passo a passo.
 </PRATICA>`;
 
-    const aiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+    const aiResponse = await fetch("https://ai.lovable.dev/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${OPENAI_API_KEY}`,
+        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o",
+        model: "openai/gpt-5-mini",
         messages: [
           { role: "system", content: ALQUIMISTA_SYSTEM_PROMPT },
           { role: "user", content: userPrompt },
@@ -116,17 +122,10 @@ Crie uma prática terapêutica simples (escrita reflexiva, visualização simbó
     const aiData = await aiResponse.json();
     const fullText = aiData.choices?.[0]?.message?.content || "";
 
-    // Parse sections
-    const extractSection = (tag: string): string => {
-      const regex = new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, "i");
-      const match = fullText.match(regex);
-      return match ? match[1].trim() : "";
-    };
-
-    const podcast_roteiro = extractSection("PODCAST");
-    const carta_semana = extractSection("CARTA");
-    const pergunta_contemplativa = extractSection("PERGUNTA");
-    const pratica_terapeutica = extractSection("PRATICA");
+    const podcast_roteiro = extractSection(fullText, "PODCAST");
+    const carta_semana = extractSection(fullText, "CARTA");
+    const pergunta_contemplativa = extractSection(fullText, "PERGUNTA");
+    const pratica_terapeutica = extractSection(fullText, "PRATICA");
 
     // --- Step 2: Generate TTS for podcast ---
     let podcast_audio_url: string | null = null;
@@ -134,7 +133,7 @@ Crie uma prática terapêutica simples (escrita reflexiva, visualização simbó
 
     if (ELEVENLABS_API_KEY && podcast_roteiro) {
       try {
-        const voiceId = "FGY2WhTYpPnrIDTdsKH5"; // Laura - contemplative voice
+        const voiceId = "FGY2WhTYpPnrIDTdsKH5";
         const ttsResponse = await fetch(
           `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
           {
