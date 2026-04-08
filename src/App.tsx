@@ -159,7 +159,7 @@ const MapaCasaOracula = React.lazy(() => import("./pages/MapaCasaOracula"));
 const MinhaJornada = React.lazy(() => import("./pages/MinhaJornada"));
 const ExplorarACasa = React.lazy(() => import("./pages/ExplorarACasa"));
 const Vitrine = React.lazy(() => import("./pages/FerramentasVitrine"));
-const DashboardReorganizado = React.lazy(() => import("./pages/DashboardReorganizado"));
+const DashboardMembro = React.lazy(() => import("./pages/DashboardMembro"));
 const PosCompra = React.lazy(() => import("./pages/PosCompra"));
 const CasaAtrio = React.lazy(() => import("./pages/casa/CasaAtrio"));
 const CasaSustentacao = React.lazy(() => import("./pages/casa/CasaSustentacao"));
@@ -298,7 +298,7 @@ function AppRoutes() {
       <Route path="/convite-clube-oracular" element={<ProtectedRoute><ConviteClube /></ProtectedRoute>} />
       <Route path="/experiencia-gratuita" element={<ProtectedRoute><Navigate to="/quiz/descubra-seu-eixo" replace /></ProtectedRoute>} />
       <Route path="/dashboard" element={<ProtectedRoute><Navigate to="/dashboard-membro" replace /></ProtectedRoute>} />
-      <Route path="/dashboard-membro" element={<ProtectedRoute><DashboardReorganizado /></ProtectedRoute>} />
+      <Route path="/dashboard-membro" element={<ProtectedRoute><DashboardMembro /></ProtectedRoute>} />
       <Route path="/clube" element={<Navigate to="/app/clube" replace />} />
       <Route path="/salas/:id" element={<ProtectedRoute><SalaDetalhe /></ProtectedRoute>} />
       <Route path="/portal/:id" element={<ProtectedRoute><PortalDetalhe /></ProtectedRoute>} />
