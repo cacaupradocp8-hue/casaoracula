@@ -1,10 +1,16 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { stampRitualLastAccess } from '@/hooks/useRitualState';
 
+export interface RitualSaidaAudioPlayback {
+  audio: HTMLAudioElement;
+  playbackStarted: Promise<boolean>;
+}
+
 interface RitualSaidaDialogProps {
   open: boolean;
   onClose: () => void;
   onConfirmExit: () => void;
+  audioPlayback?: RitualSaidaAudioPlayback | null;
 }
 
 const closingPhrases = [
@@ -17,53 +23,120 @@ const closingPhrases = [
 const FADE_IN = 400;
 const HOLD = 1000;
 const FADE_OUT = 400;
-const TOTAL = FADE_IN + HOLD + FADE_OUT;
 
-export function RitualSaidaDialog({ open, onClose, onConfirmExit }: RitualSaidaDialogProps) {
+export function RitualSaidaDialog({ open, onClose, onConfirmExit, audioPlayback = null }: RitualSaidaDialogProps) {
   const [phase, setPhase] = useState<'hidden' | 'playing' | 'fading'>('hidden');
   const [phrase] = useState(() => closingPhrases[Math.floor(Math.random() * closingPhrases.length)]);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const exitCalledRef = useRef(false);
+  const fadeStartedRef = useRef(false);
+  const minVisualCompleteRef = useRef(false);
+  const audioFinishedRef = useRef(true);
+  const cycleActiveRef = useRef(false);
+  const detachAudioListenersRef = useRef<(() => void) | null>(null);
+
+  const queueTimeout = useCallback((callback: () => void, delay: number) => {
+    const timeout = setTimeout(callback, delay);
+    timersRef.current.push(timeout);
+  }, []);
 
   const cleanup = useCallback(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
+    cycleActiveRef.current = false;
+    timersRef.current.forEach((timeout) => clearTimeout(timeout));
+    timersRef.current = [];
+    detachAudioListenersRef.current?.();
+    detachAudioListenersRef.current = null;
   }, []);
 
   const doFinalExit = useCallback(() => {
     if (exitCalledRef.current) return;
     exitCalledRef.current = true;
     cleanup();
+    if (audioPlayback?.audio && !audioPlayback.audio.ended) {
+      audioPlayback.audio.pause();
+      audioPlayback.audio.currentTime = 0;
+    }
     setPhase('hidden');
     stampRitualLastAccess();
     onConfirmExit();
-  }, [cleanup, onConfirmExit]);
+  }, [audioPlayback, cleanup, onConfirmExit]);
+
+  const startFadeOut = useCallback(() => {
+    if (!cycleActiveRef.current || fadeStartedRef.current || exitCalledRef.current) return;
+    fadeStartedRef.current = true;
+    setPhase('fading');
+    queueTimeout(() => {
+      doFinalExit();
+    }, FADE_OUT);
+  }, [doFinalExit, queueTimeout]);
 
   useEffect(() => {
+    const maybeStartFadeOut = () => {
+      if (!cycleActiveRef.current) return;
+      if (minVisualCompleteRef.current && audioFinishedRef.current) {
+        startFadeOut();
+      }
+    };
+
     if (!open) {
+      cleanup();
       setPhase('hidden');
       exitCalledRef.current = false;
+      fadeStartedRef.current = false;
+      minVisualCompleteRef.current = false;
+      audioFinishedRef.current = true;
       return;
     }
 
     exitCalledRef.current = false;
+    fadeStartedRef.current = false;
+    minVisualCompleteRef.current = false;
+    audioFinishedRef.current = !audioPlayback;
+    cycleActiveRef.current = true;
     setPhase('playing');
 
-    timerRef.current = setTimeout(() => {
-      setPhase('fading');
-      timerRef.current = setTimeout(() => {
-        doFinalExit();
-      }, FADE_OUT);
+    queueTimeout(() => {
+      minVisualCompleteRef.current = true;
+      maybeStartFadeOut();
     }, FADE_IN + HOLD);
 
+    if (audioPlayback?.audio) {
+      const handleAudioSettled = () => {
+        audioFinishedRef.current = true;
+        maybeStartFadeOut();
+      };
+
+      audioPlayback.audio.addEventListener('ended', handleAudioSettled);
+      audioPlayback.audio.addEventListener('error', handleAudioSettled);
+      detachAudioListenersRef.current = () => {
+        audioPlayback.audio.removeEventListener('ended', handleAudioSettled);
+        audioPlayback.audio.removeEventListener('error', handleAudioSettled);
+      };
+
+      audioPlayback.playbackStarted
+        .then((didStart) => {
+          if (!cycleActiveRef.current || didStart) return;
+          audioFinishedRef.current = true;
+          maybeStartFadeOut();
+        })
+        .catch(() => {
+          if (!cycleActiveRef.current) return;
+          audioFinishedRef.current = true;
+          maybeStartFadeOut();
+        });
+
+      if (audioPlayback.audio.ended) {
+        audioFinishedRef.current = true;
+      }
+    }
+
     return cleanup;
-  }, [open, cleanup, doFinalExit]);
+  }, [open, audioPlayback, cleanup, queueTimeout, startFadeOut]);
 
   const handleSkip = useCallback(() => {
+    onClose();
     doFinalExit();
-  }, [doFinalExit]);
+  }, [doFinalExit, onClose]);
 
   if (phase === 'hidden') return null;
 
