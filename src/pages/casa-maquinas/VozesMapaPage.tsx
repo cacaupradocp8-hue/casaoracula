@@ -45,21 +45,11 @@ function VozCard({ voz, isActive, isPrimaria, isApoio, isSelected, onSelect }: {
         <div
           className={cn(
             "w-10 h-10 rounded-full shrink-0 flex items-center justify-center transition-all mt-0.5",
-            isSelected ? "ring-2 ring-offset-2 ring-offset-background" : ""
+            isSelected ? "ring-2 ring-offset-2 ring-offset-background ring-primary/40" : ""
           )}
           style={{
-            backgroundColor: isSelected ? hsl : `${hsl}`,
+            backgroundColor: hsl,
             opacity: isSelected ? 1 : 0.7,
-            // ring color set via inline style on parent
-          }}
-          style-ring-color={hsl}
-        >
-          {/* Override ring color */}
-        </div>
-        <div
-          className={cn(
-            "w-10 h-10 rounded-full shrink-0 flex items-center justify-center transition-all mt-0.5 absolute inset-0",
-          )}
           }}
         >
           <span className="text-white text-xs font-bold">
