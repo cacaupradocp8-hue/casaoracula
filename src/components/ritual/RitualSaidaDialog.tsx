@@ -34,12 +34,12 @@ function playRitualTone(duration = 2.8): { stop: () => void } {
 
     const gain1 = ctx.createGain();
     gain1.gain.setValueAtTime(0, now);
-    gain1.gain.linearRampToValueAtTime(0.045, now + 0.8);
+    gain1.gain.linearRampToValueAtTime(0.12, now + 0.8);
     gain1.gain.linearRampToValueAtTime(0, end);
 
     const gain2 = ctx.createGain();
     gain2.gain.setValueAtTime(0, now);
-    gain2.gain.linearRampToValueAtTime(0.018, now + 1.0);
+    gain2.gain.linearRampToValueAtTime(0.06, now + 1.0);
     gain2.gain.linearRampToValueAtTime(0, end);
 
     osc1.connect(gain1).connect(ctx.destination);
