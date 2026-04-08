@@ -73,8 +73,6 @@ export default function AdminClubeConfig() {
             </CardContent>
           </Card>
 
-          {/* Lab 80/20 Config */}
-          <LabConfigManager />
         </div>
       </div>
     </AppLayout>
