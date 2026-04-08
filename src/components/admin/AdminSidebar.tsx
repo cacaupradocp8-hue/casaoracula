@@ -213,7 +213,7 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
                       return (
                         <button
                           key={item.key}
-                          onClick={() => onTabChange(item.key)}
+                          onClick={() => item.route ? navigate(item.route) : onTabChange(item.key)}
                           className={cn(
                             'w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-xs transition-colors',
                             isActive
