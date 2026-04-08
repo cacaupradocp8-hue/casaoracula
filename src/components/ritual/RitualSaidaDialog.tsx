@@ -34,12 +34,12 @@ function playRitualTone(duration = 2.8): { stop: () => void } {
 
     const gain1 = ctx.createGain();
     gain1.gain.setValueAtTime(0, now);
-    gain1.gain.linearRampToValueAtTime(0.045, now + 0.8);
+    gain1.gain.linearRampToValueAtTime(0.12, now + 0.8);
     gain1.gain.linearRampToValueAtTime(0, end);
 
     const gain2 = ctx.createGain();
     gain2.gain.setValueAtTime(0, now);
-    gain2.gain.linearRampToValueAtTime(0.018, now + 1.0);
+    gain2.gain.linearRampToValueAtTime(0.06, now + 1.0);
     gain2.gain.linearRampToValueAtTime(0, end);
 
     osc1.connect(gain1).connect(ctx.destination);
@@ -70,9 +70,9 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit }: RitualSaidaD
   const exitCalledRef = useRef(false);
   const [customAudioUrl, setCustomAudioUrl] = useState<string | null>(null);
 
-  const FADE_IN = 600;
-  const HOLD = 1400;
-  const FADE_OUT = 600;
+  const FADE_IN = 1200;
+  const HOLD = 3000;
+  const FADE_OUT = 1200;
   const TONE_DURATION = (FADE_IN + HOLD + FADE_OUT) / 1000;
 
   // Load custom audio URL once
