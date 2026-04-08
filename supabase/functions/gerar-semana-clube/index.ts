@@ -110,7 +110,7 @@ Crie uma prática terapêutica simples (escrita reflexiva, visualização simbó
           { role: "user", content: userPrompt },
         ],
         temperature: 0.8,
-        max_tokens: 4000,
+        max_completion_tokens: 4000,
       }),
     });
 
