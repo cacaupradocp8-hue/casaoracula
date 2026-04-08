@@ -70,9 +70,9 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit }: RitualSaidaD
   const exitCalledRef = useRef(false);
   const [customAudioUrl, setCustomAudioUrl] = useState<string | null>(null);
 
-  const FADE_IN = 600;
-  const HOLD = 1400;
-  const FADE_OUT = 600;
+  const FADE_IN = 1200;
+  const HOLD = 3000;
+  const FADE_OUT = 1200;
   const TONE_DURATION = (FADE_IN + HOLD + FADE_OUT) / 1000;
 
   // Load custom audio URL once
