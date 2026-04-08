@@ -1,169 +1,42 @@
 
-# Plano de Reestruturação — Jardim da Heroína (Versão Cliente)
+# Reorganização Admin — Clube de Leitura Oracular
 
-## DIAGNÓSTICO ATUAL
+## Problema
+O admin do Clube está fragmentado em múltiplos lugares (AdminBooks, AdminClubeLivroTab, AdminEstacoesTab, AdminGeradorSemanal), sem fluxo claro de criação e com funcionalidades faltando.
 
-### Infraestrutura de dados ✅ Completa
-| Tabela | Função | Status |
-|---|---|---|
-| `co_jardins` | Vínculo jardim ↔ cliente ↔ terapeuta | ✅ |
-| `co_jardim_entries` | Registros bidirecionais (cliente/terapeuta) com `visibility_to_client` e `shared_with_therapist` | ✅ |
-| `co_orientacoes` | Orientações da terapeuta com tipo, status, resposta | ✅ |
-| `co_praticas` | Práticas propostas com status | ✅ |
-| `co_sessoes` | Sessões com `shared_with_client` | ✅ |
-| `clientes` | Vínculo com `client_user_id`, convite, email | ✅ |
+## Solução: Hub + Sub-páginas
 
-### Hooks existentes ✅ Parcialmente reutilizáveis
-| Hook | Função | Reuso |
-|---|---|---|
-| `useClienteJardim` | Lê `co_jardins` + `co_jardim_entries` da cliente | ✅ Manter e expandir |
-| `useOrientacoesCliente` | Lê `co_orientacoes` da cliente | ✅ Manter |
+### 1. Página Hub `/admin/clube-livro`
+Uma página central com cards visuais que mostram o status de cada área e levam às sub-páginas:
 
-### Página atual ⚠️ Monolítica
-`JardimHeroinaClientePage.tsx` — tudo numa lista vertical: orientações + form + entries. Sem hierarquia, sem seções, sem travessia.
+| Card | Descrição | Rota |
+|------|-----------|------|
+| 📚 Livros & Acervo | CRUD de livros, metadados simbólicos, tours | `/admin/clube-livro/acervo` |
+| 🔄 Ciclos & Fases | Gerenciar ciclos, semanas, fases, importar calendário | `/admin/clube-livro/ciclos` |
+| 🌿 Estações | Gerenciar estações oraculares (temporadas) | `/admin/clube-livro/estacoes` |
+| 🎧 Escutas & Aulas-Álbum | Aulas-álbum, escutas guiadas, blocos de aula | `/admin/clube-livro/escutas` |
+| 📅 Encontros | Encontros ao vivo, replays, links | `/admin/clube-livro/encontros` |
+| ⚡ Gerador Semanal | Gerar conteúdo da semana (podcast, carta, prática) | `/admin/clube-livro/gerador` |
+| 🚪 Portais & Travessias | Portais vinculados a ciclos | `/admin/clube-livro/portais` |
+| ⚙️ Configurações | Regras de progressão, níveis de acesso, Lab 80/20 | `/admin/clube-livro/config` |
 
----
+### 2. Fluxo de criação guiado
+Cada card no Hub terá um indicador de status (ex: "3 livros", "1 ciclo ativo", "Sem encontros") para que o admin saiba o que precisa ser feito.
 
-## NOVA ARQUITETURA
+### 3. O que muda tecnicamente
+- Criar `src/pages/admin/clube/AdminClubeHub.tsx` — página hub
+- Criar sub-páginas reutilizando componentes existentes (AdminClubeLivroTab, AdminEstacoesTab, etc.)
+- Adicionar rotas em `adminRoutes.tsx`
+- **NÃO** apagar páginas ou componentes existentes
+- **NÃO** alterar lógica de negócio, hooks ou tabelas
 
-### Estrutura de arquivos
+### 4. Ordem de execução
+1. Criar página Hub com cards
+2. Criar sub-páginas empacotando componentes existentes
+3. Registrar rotas
+4. Verificar navegação
 
-```
-src/pages/jardim-heroina-cliente/
-├── JardimClienteLayout.tsx         ← Layout com abas internas
-├── JardimClienteHome.tsx           ← Home com 4 blocos
-├── JardimClienteMeuJardim.tsx      ← Seção "Meu Jardim" (registros)
-├── JardimClienteOrientacoes.tsx    ← Seção "O que minha terapeuta deixou"
-├── JardimClientePraticas.tsx       ← Seção "Minhas práticas"
-├── JardimClienteTravessia.tsx      ← Seção "Minha travessia"
-└── index.ts
-
-src/components/jardim-cliente/
-├── BoasVindasBloco.tsx             ← Bloco 1: saudação contextual
-├── TerapeutaDeixouBloco.tsx        ← Bloco 2: orientações + entries visíveis
-├── JardimHojeBloco.tsx             ← Bloco 3: ações rápidas
-├── TravessiaResumoBloco.tsx        ← Bloco 4: timeline resumida
-├── EntryCardCliente.tsx            ← Card de entry (versão cliente)
-├── NovoRegistroCliente.tsx         ← Form de novo registro expandido
-├── PraticaCardCliente.tsx          ← Card de prática
-└── TravessiaTimeline.tsx           ← Timeline visual
-
-src/hooks/
-├── useClienteJardim.ts             ← Expandir: sessões compartilhadas + práticas
-└── useOrientacoes.ts               ← Manter como está
-```
-
-### Roteamento
-
-```
-/meu-jardim                 → JardimClienteLayout (tabs internas)
-  Tab "Início"              → JardimClienteHome (4 blocos)
-  Tab "Meu Jardim"          → JardimClienteMeuJardim
-  Tab "Da Terapeuta"        → JardimClienteOrientacoes
-  Tab "Práticas"            → JardimClientePraticas
-  Tab "Travessia"           → JardimClienteTravessia
-```
-
-Rota única `/meu-jardim` com navegação por tabs — sem sub-rotas para manter simplicidade.
-
----
-
-## DETALHAMENTO DOS BLOCOS
-
-### BLOCO 1 — Boas-vindas
-- Saudação por horário ("Bom dia, [nome]")
-- Nome vem de `profiles.display_name` ou `clientes.nome`
-- Frase curta rotativa de acolhimento
-- Sem dados técnicos
-
-### BLOCO 2 — O que sua terapeuta deixou (DESTAQUE)
-- Card com borda e fundo especial (emerald)
-- Mostra orientações pendentes (`co_orientacoes` onde `status != 'completed'`)
-- Mostra entries da terapeuta com `visibility_to_client = true`
-- Mostra práticas em aberto (`co_praticas`)
-- Conta total: "3 coisas novas da sua terapeuta"
-- Link "Ver tudo" → aba "Da Terapeuta"
-
-### BLOCO 3 — Seu Jardim hoje
-- Botões-ação:
-  - 📝 Reflexão
-  - 💭 Sensação
-  - 🌙 Sonho
-  - ✍️ Anotação
-- Cada botão abre modal/sheet de registro rápido
-- Toggle de compartilhamento com terapeuta
-
-### BLOCO 4 — Sua travessia
-- Últimas 5 entradas (mix de entries + orientações concluídas)
-- Contador: "X registros · Y práticas concluídas"
-- Link "Ver tudo" → aba "Travessia"
-
----
-
-## SEÇÕES INTERNAS (TABS)
-
-### Tab "Meu Jardim"
-- Lista de entries da cliente (ordenada por data desc)
-- Form de novo registro com tipos expandidos: reflexão, sensação, sonho, resposta, anotação
-- Toggle de compartilhamento por entry
-- Limite de 500 chars (já existe)
-
-### Tab "Da Terapeuta"
-- Orientações (reutiliza `OrientacaoCard`)
-- Entries da terapeuta visíveis (`visibility_to_client = true`)
-- Sessões compartilhadas (`shared_with_client = true`) — resumo suave
-
-### Tab "Práticas"
-- Lista de `co_praticas` da cliente
-- Status: proposta → em andamento → concluída
-- Botão para registrar reflexão sobre prática
-- Resposta da cliente
-
-### Tab "Travessia"
-- Timeline visual cronológica reversa
-- Ícones por tipo de evento (entry, orientação, prática, sessão)
-- Sem linguagem técnica — "Você registrou uma reflexão", "Sua terapeuta deixou uma prática"
-
----
-
-## HOOK EXPANDIDO
-
-`useClienteJardim` será expandido para trazer também:
-- `co_praticas` onde `client_user_id = user.id`
-- `co_sessoes` onde `client_user_id = user.id` AND `shared_with_client = true`
-- Contadores para a home
-
----
-
-## IMPACTO
-
-| Arquivo | Ação |
-|---|---|
-| `JardimHeroinaClientePage.tsx` | **Substituir** por redirecionamento para novo layout |
-| `useClienteJardim.ts` | **Expandir** com práticas e sessões |
-| `useOrientacoes.ts` | **Manter** |
-| `OrientacaoCard.tsx` | **Manter** |
-| `App.tsx` | **Manter** rota `/meu-jardim` apontando para novo componente |
-| `JardimFirstExperience.tsx` | **Integrar** no estado vazio da home |
-
----
-
-## SEGURANÇA (RLS)
-
-- Todas as queries filtram por `client_user_id = auth.uid()`
-- Entries da terapeuta: apenas `visibility_to_client = true`
-- Sessões: apenas `shared_with_client = true`
-- Orientações: via `clientes.client_user_id`
-- Nenhum bypass, nenhuma contorno
-
----
-
-## O QUE NÃO MUDA
-
-- Banco de dados (estrutura suficiente)
-- Hooks da terapeuta
-- Casa das Máquinas
-- Fluxo de convite
-- RLS existente
-
-Aprovar para implementar?
+### 5. Fora de escopo (agora)
+- Novos CRUDs (escutas, encontros já existem dentro do AdminClubeLivroTab)
+- Alterações de banco de dados
+- Mudanças na experiência da aluna
