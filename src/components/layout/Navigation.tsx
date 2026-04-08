@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppDomain } from '@/contexts/AppDomainContext';
-import { RitualSaidaDialog } from '@/components/ritual/RitualSaidaDialog';
+import { RitualSaidaDialog, type RitualSaidaAudioPlayback } from '@/components/ritual/RitualSaidaDialog';
 import { Button } from '@/components/ui/button';
 import { Logo } from './Logo';
 import { canAccessFeature } from '@/types/portal';
 import { LockedContentModal } from '@/components/shared/LockedContentModal';
 import { NotificationBell } from '@/components/shared/NotificationBell';
 import { forceFullRefresh } from '@/components/pwa/ServiceWorkerUpdateToast';
+import { useAppSettings } from '@/hooks/useAppSettings';
+import { getPublicAudioUrl } from '@/lib/audioUtils';
 import {
   Home, Settings, LogOut, Menu, X, User, LogIn, RefreshCw,
   BookOpen, Compass, Wrench, Flower2, GraduationCap, ChevronDown,
@@ -78,12 +80,15 @@ const profissionalMenuGroups = (isAdmin: boolean, isMentorada: boolean) => [
 export function Navigation() {
   const { user, logout } = useAuth();
   const { domain, toggleDomain } = useAppDomain();
+  const { getSetting } = useAppSettings();
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [lockedModalOpen, setLockedModalOpen] = useState(false);
   const [ritualSaidaOpen, setRitualSaidaOpen] = useState(false);
   const [mobileExpandedGroup, setMobileExpandedGroup] = useState<string | null>(null);
+  const [ritualAudioPlayback, setRitualAudioPlayback] = useState<RitualSaidaAudioPlayback | null>(null);
+  const ritualAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const isAdmin = user?.portal === 'admin';
   const hasOracula = user ? canAccessFeature(user.portal, 'oracula') : false;
@@ -103,8 +108,43 @@ export function Navigation() {
   };
   const menuGroups = getMenuForProfile();
 
-  const handleLogout = () => setRitualSaidaOpen(true);
-  const handleConfirmExit = () => { setRitualSaidaOpen(false); logout(); navigate('/'); };
+  const ritualAudioUrl = useMemo(() => {
+    return getPublicAudioUrl(getSetting('ritual_saida_audio_url', ''));
+  }, [getSetting]);
+
+  const handleLogout = () => {
+    let nextPlayback: RitualSaidaAudioPlayback | null = null;
+
+    if (ritualAudioUrl) {
+      try {
+        ritualAudioRef.current?.pause();
+
+        const audio = new Audio(ritualAudioUrl);
+        audio.preload = 'auto';
+        audio.volume = 0.22;
+
+        const playbackStarted = audio.play()
+          .then(() => true)
+          .catch(() => false);
+
+        ritualAudioRef.current = audio;
+        nextPlayback = { audio, playbackStarted };
+      } catch {
+        ritualAudioRef.current = null;
+      }
+    }
+
+    setRitualAudioPlayback(nextPlayback);
+    setRitualSaidaOpen(true);
+  };
+
+  const handleConfirmExit = () => {
+    setRitualSaidaOpen(false);
+    setRitualAudioPlayback(null);
+    ritualAudioRef.current = null;
+    logout();
+    navigate('/');
+  };
 
   const handleToggleDomain = () => {
     const next = activeDomain === 'aluna' ? 'profissional' : 'aluna';
@@ -358,7 +398,7 @@ export function Navigation() {
         )}
       </nav>
 
-      <RitualSaidaDialog open={ritualSaidaOpen} onClose={() => setRitualSaidaOpen(false)} onConfirmExit={handleConfirmExit} />
+      <RitualSaidaDialog open={ritualSaidaOpen} onClose={() => setRitualSaidaOpen(false)} onConfirmExit={handleConfirmExit} audioPlayback={ritualAudioPlayback} />
       <LockedContentModal open={lockedModalOpen} onOpenChange={setLockedModalOpen} />
     </>
   );
