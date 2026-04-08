@@ -109,7 +109,7 @@ Crie uma prática terapêutica simples (escrita reflexiva, visualização simbó
           { role: "system", content: ALQUIMISTA_SYSTEM_PROMPT },
           { role: "user", content: userPrompt },
         ],
-        temperature: 0.8,
+        temperature: 1,
         max_completion_tokens: 4000,
       }),
     });
