@@ -15,6 +15,7 @@ export interface AdminNavItem {
   key: string;
   label: string;
   icon: React.ElementType;
+  route?: string; // external route (navigates away from admin tabs)
 }
 
 export interface AdminNavGroup {
@@ -32,8 +33,7 @@ export const adminNavGroups: AdminNavGroup[] = [
     emoji: '🎓',
     icon: GraduationCap,
     items: [
-      { key: 'clube-livro', label: 'Círculos de Leitura', icon: BookOpen },
-      { key: 'gerador-semanal', label: 'Gerador Semanal', icon: Sparkles },
+      { key: 'clube-livro', label: 'Círculos de Leitura', icon: BookOpen, route: '/admin/clube-livro' },
       { key: 'planos-clube', label: 'Planos Clube', icon: CreditCard },
       { key: 'conteudos', label: 'Conteúdo', icon: GraduationCap },
       { key: 'cursos', label: 'Cursos', icon: Video },
