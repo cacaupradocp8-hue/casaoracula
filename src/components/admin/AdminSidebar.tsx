@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { ChevronDown, ChevronRight, PanelLeftClose, PanelLeft } from 'lucide-react';
 import {
@@ -15,6 +16,7 @@ export interface AdminNavItem {
   key: string;
   label: string;
   icon: React.ElementType;
+  route?: string; // external route (navigates away from admin tabs)
 }
 
 export interface AdminNavGroup {
@@ -32,8 +34,7 @@ export const adminNavGroups: AdminNavGroup[] = [
     emoji: '🎓',
     icon: GraduationCap,
     items: [
-      { key: 'clube-livro', label: 'Círculos de Leitura', icon: BookOpen },
-      { key: 'gerador-semanal', label: 'Gerador Semanal', icon: Sparkles },
+      { key: 'clube-livro', label: 'Círculos de Leitura', icon: BookOpen, route: '/admin/clube-livro' },
       { key: 'planos-clube', label: 'Planos Clube', icon: CreditCard },
       { key: 'conteudos', label: 'Conteúdo', icon: GraduationCap },
       { key: 'cursos', label: 'Cursos', icon: Video },
@@ -131,6 +132,7 @@ interface AdminSidebarProps {
 }
 
 export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(() => {
     // Auto-expand the group containing the active tab
@@ -211,7 +213,7 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
                       return (
                         <button
                           key={item.key}
-                          onClick={() => onTabChange(item.key)}
+                          onClick={() => item.route ? navigate(item.route) : onTabChange(item.key)}
                           className={cn(
                             'w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-xs transition-colors',
                             isActive
