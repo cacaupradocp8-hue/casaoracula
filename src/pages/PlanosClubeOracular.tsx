@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { useMemo } from 'react';
+import heroPlanos from '@/assets/planos/hero-planos.png';
 
 const fadeUp = {
   initial: { opacity: 0, y: 16 },
@@ -17,6 +19,41 @@ const fadeUp = {
   viewport: { once: true },
   transition: { duration: 0.6 },
 };
+
+function HeroParticles() {
+  const particles = useMemo(() =>
+    Array.from({ length: 18 }, (_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      size: Math.random() * 3 + 1,
+      delay: Math.random() * 6,
+      duration: Math.random() * 4 + 4,
+      opacity: Math.random() * 0.4 + 0.1,
+    })), []);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
+      {particles.map(p => (
+        <motion.div
+          key={p.id}
+          className="absolute rounded-full bg-gold"
+          style={{ left: p.left, top: p.top, width: p.size, height: p.size }}
+          animate={{
+            y: [0, -30, 0],
+            opacity: [p.opacity, p.opacity * 2.5, p.opacity],
+          }}
+          transition={{
+            duration: p.duration,
+            delay: p.delay,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function PlanosClubeOracular() {
   const navigate = useNavigate();
@@ -68,21 +105,38 @@ export default function PlanosClubeOracular() {
   return (
     <AppLayout>
       <div className="min-h-screen bg-background">
-        {/* Header */}
-        <section className="pt-16 pb-8 px-6 text-center">
-          <motion.div {...fadeUp} className="max-w-lg mx-auto space-y-4">
-            <div className="flex items-center justify-center gap-3">
-              <div className="w-8 h-px bg-gradient-to-r from-transparent to-gold/30" />
-              <Sparkles className="w-4 h-4 text-gold/40" />
-              <div className="w-8 h-px bg-gradient-to-l from-transparent to-gold/30" />
-            </div>
-            <h1 className="font-display text-2xl sm:text-3xl font-semibold text-foreground tracking-wide">
-              Clube de Leitura Oracular
-            </h1>
-            <p className="text-muted-foreground/70 text-sm max-w-sm mx-auto">
-              Escolha o plano que faz sentido para sua jornada.
-            </p>
-          </motion.div>
+        {/* Hero with image & effects */}
+        <section className="relative w-full h-[50vh] min-h-[340px] max-h-[480px] overflow-hidden -mt-16 md:-mt-20">
+          <img
+            src={heroPlanos}
+            alt="Clube de Leitura Simbólica"
+            className="absolute inset-0 w-full h-full object-cover object-top"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-transparent" />
+          
+          <HeroParticles />
+
+          <div className="relative z-20 flex flex-col items-center justify-end h-full pb-10 px-6 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="space-y-3"
+            >
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-10 h-px bg-gradient-to-r from-transparent to-gold/40" />
+                <Sparkles className="w-4 h-4 text-gold/50" />
+                <div className="w-10 h-px bg-gradient-to-l from-transparent to-gold/40" />
+              </div>
+              <h1 className="font-display text-3xl sm:text-4xl font-semibold text-foreground tracking-wide drop-shadow-lg">
+                Clube de Leitura Oracular
+              </h1>
+              <p className="text-muted-foreground/80 text-sm max-w-sm mx-auto">
+                Escolha o plano que faz sentido para sua jornada.
+              </p>
+            </motion.div>
+          </div>
         </section>
 
         {/* Assinante — status card */}
