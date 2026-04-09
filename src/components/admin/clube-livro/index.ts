@@ -1,1 +1,10 @@
 export { FaseEditorExpandido } from './FaseEditorExpandido';
+export { CicloSelectorFilter } from './CicloSelectorFilter';
+export { EscutasManagerFull } from './EscutasManagerFull';
+export { EncontrosManagerFull } from './EncontrosManagerFull';
+export { PortasManager } from './PortasManager';
+export { LabConfigManager } from './LabConfigManager';
+export { ClubePlaybookGenerator } from './ClubePlaybookGenerator';
+export { AulaBlocosEditor } from './AulaBlocosEditor';
+export type { AulaBloco } from './AulaBlocosEditor';
+export type * from './types';
