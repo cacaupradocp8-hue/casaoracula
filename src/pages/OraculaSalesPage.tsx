@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { ArrowRight, Play } from 'lucide-react';
 
-import heroImg from '@/assets/formacao/hero-curso.png';
+import heroImg from '@/assets/formacao/hero-oracula.png';
 import img02 from '@/assets/formacao/imagem02-new.png';
 import img03 from '@/assets/formacao/imagem03-new.png';
 import img04 from '@/assets/formacao/imagem04-new.png';
