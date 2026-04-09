@@ -125,9 +125,34 @@ function CTA({
   );
 }
 
-/** Premium video container with custom play button */
+/** Premium video container with HLS player */
 function PremiumVideoContainer({ onCtaClick }: { onCtaClick: () => void }) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const startVideo = useCallback(async () => {
+    setIsPlaying(true);
+    // Wait for video element to mount
+    await new Promise((r) => setTimeout(r, 50));
+    const video = videoRef.current;
+    if (!video) return;
+
+    const src = 'https://customer-xhfrree4xvb8h3z9.cloudflarestream.com/131b6682e30bf25ac6090847e3c511d8/manifest/video.m3u8';
+
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      // Safari native HLS
+      video.src = src;
+      video.play();
+    } else {
+      const Hls = (await import('hls.js')).default;
+      if (Hls.isSupported()) {
+        const hls = new Hls();
+        hls.loadSource(src);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+      }
+    }
+  }, []);
 
   return (
     <motion.div
@@ -143,7 +168,6 @@ function PremiumVideoContainer({ onCtaClick }: { onCtaClick: () => void }) {
         <div className="relative aspect-video">
           {!isPlaying ? (
             <div className="absolute inset-0 flex items-center justify-center bg-[#0B0B0F]">
-              {/* Placeholder image / thumbnail */}
               <img
                 src={heroImg}
                 alt="Assistir VSL"
@@ -151,14 +175,13 @@ function PremiumVideoContainer({ onCtaClick }: { onCtaClick: () => void }) {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/60 to-[#0B0B0F]/40" />
 
-              {/* Play button */}
               <button
-                onClick={() => setIsPlaying(true)}
+                onClick={startVideo}
                 className="relative z-10 group flex flex-col items-center gap-4"
                 aria-label="Reproduzir vídeo"
               >
                 <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-2 border-[#C6A96B]/40 flex items-center justify-center bg-[#C6A96B]/5 backdrop-blur-sm group-hover:border-[#C6A96B] group-hover:bg-[#C6A96B]/15 group-hover:scale-105 transition-all duration-500">
-                  <Play className="w-8 h-8 md:w-10 md:h-10 text-[#C6A96B] ml-1 group-hover:text-[#C6A96B]" fill="currentColor" />
+                  <Play className="w-8 h-8 md:w-10 md:h-10 text-[#C6A96B] ml-1" fill="currentColor" />
                 </div>
                 <span className="text-[#F3EFE7]/30 text-xs tracking-wider uppercase">
                   Assistir apresentação
@@ -166,9 +189,13 @@ function PremiumVideoContainer({ onCtaClick }: { onCtaClick: () => void }) {
               </button>
             </div>
           ) : (
-            <div className="w-full h-full bg-[#0B0B0F] flex items-center justify-center">
-              <p className="text-[#F3EFE7]/30 text-sm">Vídeo em breve</p>
-            </div>
+            <video
+              ref={videoRef}
+              className="w-full h-full object-cover bg-black"
+              controls
+              playsInline
+              controlsList="nodownload"
+            />
           )}
         </div>
       </div>
