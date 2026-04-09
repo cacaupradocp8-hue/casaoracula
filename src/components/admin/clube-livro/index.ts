@@ -6,5 +6,6 @@ export { PortasManager } from './PortasManager';
 export { LabConfigManager } from './LabConfigManager';
 export { ClubePlaybookGenerator } from './ClubePlaybookGenerator';
 export { AulaBlocosEditor } from './AulaBlocosEditor';
+export { GrupoTerapeuticoEditor } from './GrupoTerapeuticoEditor';
 export type { AulaBloco } from './AulaBlocosEditor';
 export type * from './types';
