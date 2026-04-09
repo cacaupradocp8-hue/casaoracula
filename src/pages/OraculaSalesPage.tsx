@@ -8,6 +8,7 @@ import img02 from '@/assets/formacao/imagem02-new.png';
 import img03 from '@/assets/formacao/imagem03-new.png';
 import img04 from '@/assets/formacao/imagem04-new.png';
 import mentoriaImg from '@/assets/formacao/mentoria01-new.png';
+import { ParticleField } from '@/components/sales/ParticleField';
 
 /* ─── PRIMITIVES ─── */
 
@@ -165,19 +166,16 @@ export default function OraculaSalesPage() {
     <div className="min-h-screen bg-[#0B0B0F] text-[#F3EFE7] overflow-x-hidden selection:bg-[#C6A96B]/30">
 
       {/* ── HEADER ── */}
+      {/* Particle meteor effect */}
+      <ParticleField density={70} color="216,255,62" />
+
       <motion.header
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.5 }}
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 py-4 mix-blend-difference"
+        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center px-5 py-4 mix-blend-difference"
       >
         <span className="text-[#F3EFE7]/30 text-[10px] tracking-[0.3em] uppercase">Casa Orácula</span>
-        <button
-          onClick={() => navigate('/login')}
-          className="text-[#F3EFE7]/40 text-[11px] tracking-[0.2em] uppercase hover:text-[#F3EFE7]/70 transition-colors"
-        >
-          Entrar
-        </button>
       </motion.header>
 
       {/* ═══════════════════════════════
