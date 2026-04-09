@@ -88,21 +88,24 @@ const CARDS: HubCard[] = [
 ];
 
 export default function AdminClubeHub() {
-  // Fetch basic stats
   const { data: stats } = useQuery({
     queryKey: ['admin-clube-hub-stats'],
     queryFn: async () => {
-      const [ciclos, books, estacoes, semanas] = await Promise.all([
+      const [ciclos, books, estacoes, semanas, escutas, encontros] = await Promise.all([
         supabase.from('clube_livro_ciclos').select('id', { count: 'exact', head: true }),
         supabase.from('books').select('id', { count: 'exact', head: true }),
         supabase.from('oracular_seasons').select('id', { count: 'exact', head: true }),
         supabase.from('clube_livro_semana').select('id', { count: 'exact', head: true }),
+        (supabase as any).from('clube_livro_escutas').select('id', { count: 'exact', head: true }),
+        (supabase as any).from('clube_livro_encontros').select('id', { count: 'exact', head: true }),
       ]);
       return {
         ciclos: ciclos.count || 0,
         books: books.count || 0,
         estacoes: estacoes.count || 0,
         semanas: semanas.count || 0,
+        escutas: escutas.count || 0,
+        encontros: encontros.count || 0,
       };
     },
   });
@@ -114,6 +117,8 @@ export default function AdminClubeHub() {
       case 'acervo': return `${stats.books} livro(s)`;
       case 'estacoes': return `${stats.estacoes} estação(ões)`;
       case 'gerador': return `${stats.semanas} semana(s)`;
+      case 'escutas': return `${stats.escutas} escuta(s)`;
+      case 'encontros': return `${stats.encontros} encontro(s)`;
       default: return null;
     }
   };
@@ -129,7 +134,7 @@ export default function AdminClubeHub() {
           </Link>
           <SectionHeader
             title="Clube de Leitura Oracular"
-            subtitle="Hub central de gestão — Ciclos, Livros, Escutas, Encontros e mais"
+            subtitle="Sistema de Leitura como Intervenção Psíquica Guiada"
             icon={<BookOpen className="w-5 h-5" />}
           />
         </div>
@@ -171,9 +176,9 @@ export default function AdminClubeHub() {
               Fluxo de criação recomendado
             </h4>
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-              <span className="bg-muted px-2 py-1 rounded font-medium">1. Livros</span>
+              <span className="bg-muted px-2 py-1 rounded font-medium">1. Ciclos</span>
               <ArrowRight className="w-3 h-3" />
-              <span className="bg-muted px-2 py-1 rounded font-medium">2. Ciclos</span>
+              <span className="bg-muted px-2 py-1 rounded font-medium">2. Livros</span>
               <ArrowRight className="w-3 h-3" />
               <span className="bg-muted px-2 py-1 rounded font-medium">3. Estações</span>
               <ArrowRight className="w-3 h-3" />
@@ -181,7 +186,7 @@ export default function AdminClubeHub() {
               <ArrowRight className="w-3 h-3" />
               <span className="bg-muted px-2 py-1 rounded font-medium">5. Encontros</span>
               <ArrowRight className="w-3 h-3" />
-              <span className="bg-muted px-2 py-1 rounded font-medium">6. Gerador Semanal</span>
+              <span className="bg-muted px-2 py-1 rounded font-medium">6. Gerador</span>
             </div>
           </CardContent>
         </Card>
