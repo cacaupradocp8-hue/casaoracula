@@ -56,9 +56,10 @@ export function PlanosHero() {
         className="absolute inset-0 h-full w-full object-cover object-[50%_20%] sm:object-[68%_top] md:object-right"
       />
 
-      {/* Mobile: stronger bottom gradient for text legibility */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/20 sm:bg-gradient-to-r sm:from-background sm:via-background/78 sm:to-transparent z-[1]" />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 sm:via-background/24 to-transparent z-[1]" />
+      {/* Mobile: much stronger overlays to hide image text and ensure legibility */}
+      <div className="absolute inset-0 bg-background/60 sm:bg-transparent z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-background/40 sm:bg-gradient-to-r sm:from-background sm:via-background/78 sm:to-transparent z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 sm:via-background/24 to-transparent z-[1]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_35%,hsl(var(--gold)/0.16),transparent_30%)] z-[1]" />
       <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-background/30 to-transparent z-[1]" />
 
