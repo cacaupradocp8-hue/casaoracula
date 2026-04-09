@@ -1,0 +1,1 @@
+ALTER TABLE public.season_labs ADD COLUMN IF NOT EXISTS grupo_terapeutico JSONB DEFAULT NULL;

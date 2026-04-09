@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Search, Brain, Sparkles } from 'lucide-react';
+import { GrupoTerapeuticoEditor } from './GrupoTerapeuticoEditor';
 
 interface LabConfigManagerProps {
   cicloId: string;
@@ -201,6 +202,17 @@ export function LabConfigManager({ cicloId }: LabConfigManagerProps) {
           'Salvar Configuração do Lab 80/20'
         )}
       </Button>
+
+      <Separator className="my-6" />
+
+      {/* Bloco Grupo Terapêutico */}
+      <GrupoTerapeuticoEditor
+        labId={labConfig?.id}
+        grupoData={labConfig?.grupo_terapeutico as any || null}
+        livroTitulo={labConfig?.nucleo_vivo || undefined}
+        essenciaLab={labConfig?.essencia_transformadora || undefined}
+        onSaved={() => queryClient.invalidateQueries({ queryKey: ['admin-lab-config', cicloId] })}
+      />
     </div>
   );
 }

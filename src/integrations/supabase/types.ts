@@ -16377,6 +16377,7 @@ export type Database = {
           ciclo_id: string | null
           created_at: string
           essencia_transformadora: string | null
+          grupo_terapeutico: Json | null
           id: string
           imagem_organizadora: string | null
           nucleo_vivo: string | null
@@ -16406,6 +16407,7 @@ export type Database = {
           ciclo_id?: string | null
           created_at?: string
           essencia_transformadora?: string | null
+          grupo_terapeutico?: Json | null
           id?: string
           imagem_organizadora?: string | null
           nucleo_vivo?: string | null
@@ -16435,6 +16437,7 @@ export type Database = {
           ciclo_id?: string | null
           created_at?: string
           essencia_transformadora?: string | null
+          grupo_terapeutico?: Json | null
           id?: string
           imagem_organizadora?: string | null
           nucleo_vivo?: string | null
