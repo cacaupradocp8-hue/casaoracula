@@ -53,13 +53,13 @@ export function PlanosHero() {
       <img
         src={heroPlanos}
         alt="Clube de Leitura Simbólica"
-        className="absolute inset-0 h-full w-full object-cover object-[50%_20%] sm:object-[68%_top] md:object-right"
+        className="absolute inset-0 h-full w-full object-cover object-[70%_15%] sm:object-[68%_top] md:object-right"
       />
 
-      {/* Mobile: very strong overlay to fully mask image text */}
-      <div className="absolute inset-0 bg-background/90 sm:bg-background/10 z-[1]" />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/95 to-background/60 sm:bg-gradient-to-r sm:from-background sm:via-background/78 sm:to-transparent z-[1]" />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 sm:via-background/24 to-transparent z-[1]" />
+      {/* Mobile: lighter overlay so the image is visible, with strong bottom gradient for text */}
+      <div className="absolute inset-0 bg-background/40 sm:bg-background/10 z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background from-15% via-background/80 via-50% to-transparent sm:bg-gradient-to-r sm:from-background sm:via-background/78 sm:to-transparent z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 sm:via-background/24 to-transparent z-[1]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_35%,hsl(var(--gold)/0.16),transparent_30%)] z-[1]" />
       <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-background/30 to-transparent z-[1]" />
 
@@ -78,17 +78,17 @@ export function PlanosHero() {
               animate={{ opacity: 1 }}
               transition={{ duration: 1.2, delay: 0.3 }}
             >
-              <div className="w-8 sm:w-12 h-px bg-gradient-to-r from-transparent to-gold/30" />
-              <Sparkles className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-gold/40" />
-              <div className="w-8 sm:w-12 h-px bg-gradient-to-l from-transparent to-gold/30" />
+              <div className="w-8 sm:w-12 h-px bg-gradient-to-r from-transparent to-gold/50" />
+              <Sparkles className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-gold/60" />
+              <div className="w-8 sm:w-12 h-px bg-gradient-to-l from-transparent to-gold/50" />
             </motion.div>
 
-            <h1 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground tracking-wide mb-3 sm:mb-6 leading-[1.1] sm:leading-[0.95] max-w-[90%] sm:max-w-xl">
+            <h1 className="font-display text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground tracking-wide mb-3 sm:mb-6 leading-[1.15] sm:leading-[0.95] max-w-[95%] sm:max-w-xl drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
               Você já acessou uma parte da sua estrutura.
             </h1>
 
             <motion.p
-              className="text-sm sm:text-lg md:text-xl text-gold/70 font-display italic leading-relaxed max-w-[85%] sm:max-w-lg"
+              className="text-base sm:text-lg md:text-xl text-gold font-display italic leading-relaxed max-w-[90%] sm:max-w-lg drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)]"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
