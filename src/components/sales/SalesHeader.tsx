@@ -27,7 +27,14 @@ export function SalesHeader() {
           : 'bg-transparent py-6'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-end">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 text-[#F3EFE7]/60 text-[13px] tracking-wide hover:text-[#F3EFE7] transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          Página Inicial
+        </button>
         <nav className="hidden md:flex items-center gap-8">
           {[
             { label: 'Método', id: 'metodo' },
@@ -42,12 +49,6 @@ export function SalesHeader() {
               {item.label}
             </button>
           ))}
-          <button
-            onClick={() => navigate('/login')}
-            className="text-[#F3EFE7]/40 text-[13px] tracking-wide hover:text-[#F3EFE7]/80 transition-colors"
-          >
-            Entrar
-          </button>
         </nav>
       </div>
     </motion.header>
