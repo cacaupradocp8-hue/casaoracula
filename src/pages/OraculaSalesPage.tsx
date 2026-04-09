@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { ArrowRight, Play } from 'lucide-react';
 
-import heroImg from '@/assets/formacao/hero-fluxor.jpg';
+import heroImg from '@/assets/formacao/hero-curso.png';
 import img02 from '@/assets/formacao/imagem02-new.png';
 import img03 from '@/assets/formacao/imagem03-new.png';
 import img04 from '@/assets/formacao/imagem04-new.png';
@@ -272,8 +272,8 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* Imagem de respiro */}
-      <div className="relative overflow-hidden mx-4 md:mx-auto max-w-3xl rounded-xl h-[40vh] md:h-[50vh]">
-        <img src={img02} alt="Formação" loading="lazy" className="w-full h-full object-cover" />
+      <div className="relative overflow-hidden mx-4 md:mx-auto max-w-3xl rounded-xl">
+        <img src={img02} alt="Formação" loading="lazy" className="w-full h-auto object-contain" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/30 via-transparent to-[#0B0B0F]/90" />
       </div>
 
@@ -327,8 +327,8 @@ export default function OraculaSalesPage() {
          5. MÉTODO — CidaDELA
       ═══════════════════════════════ */}
 
-      <div className="relative overflow-hidden mx-4 md:mx-auto max-w-3xl rounded-xl h-[40vh] md:h-[50vh]">
-        <img src={img03} alt="Método" loading="lazy" className="w-full h-full object-cover" />
+      <div className="relative overflow-hidden mx-4 md:mx-auto max-w-3xl rounded-xl">
+        <img src={img03} alt="Método" loading="lazy" className="w-full h-auto object-contain" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/40 via-transparent to-[#0B0B0F]/90" />
       </div>
 
@@ -428,8 +428,8 @@ export default function OraculaSalesPage() {
 
       <section className="py-16 px-6">
         <div className="max-w-lg mx-auto">
-          <div className="relative overflow-hidden rounded-xl h-[35vh] md:h-[40vh] mb-10">
-            <img src={mentoriaImg} alt="App" loading="lazy" className="w-full h-full object-cover" />
+          <div className="relative overflow-hidden rounded-xl mb-10">
+            <img src={mentoriaImg} alt="App" loading="lazy" className="w-full h-auto object-contain" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/30 to-transparent" />
           </div>
 
@@ -476,8 +476,8 @@ export default function OraculaSalesPage() {
         </Phrase>
       </section>
 
-      <div className="relative overflow-hidden mx-4 md:mx-auto max-w-3xl rounded-xl h-[45vh] md:h-[50vh]">
-        <img src={img04} alt="Formação" loading="lazy" className="w-full h-full object-cover object-[center_14%] md:object-center" />
+      <div className="relative overflow-hidden mx-4 md:mx-auto max-w-3xl rounded-xl">
+        <img src={img04} alt="Formação" loading="lazy" className="w-full h-auto object-contain" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/30 via-transparent to-[#0B0B0F]/90" />
       </div>
 
