@@ -4,6 +4,7 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { ArrowRight, Play } from 'lucide-react';
 
 import heroImg from '@/assets/formacao/hero-oracula.png';
+import mentoriaBanner from '@/assets/formacao/mentoria-banner.png';
 import img02 from '@/assets/formacao/imagem02-new.png';
 import img03 from '@/assets/formacao/imagem03-new.png';
 import img04 from '@/assets/formacao/imagem04-new.png';
@@ -104,32 +105,43 @@ function VideoPlayer({ onCtaClick }: { onCtaClick: () => void }) {
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4">
-      <div className="relative rounded-2xl overflow-hidden border border-[#C6A96B]/10 bg-black/60 shadow-[0_8px_60px_-12px_rgba(198,169,107,0.08)]">
-        <div className="relative aspect-video">
-          {!playing ? (
-            <div className="absolute inset-0 flex items-center justify-center bg-[#0B0B0F]">
-              <img src={heroImg} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/60 to-[#0B0B0F]/40" />
-              <button
-                onClick={play}
-                className="relative z-10 group flex flex-col items-center gap-4"
-                aria-label="Reproduzir vídeo"
-              >
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-2 border-[#C6A96B]/30 flex items-center justify-center bg-[#C6A96B]/5 backdrop-blur-sm group-hover:border-[#C6A96B]/70 group-hover:scale-105 transition-all duration-500">
-                  <Play className="w-8 h-8 md:w-10 md:h-10 text-[#C6A96B] ml-1" fill="currentColor" />
-                </div>
-                <span className="text-[#F3EFE7]/25 text-xs tracking-wider uppercase">Assistir</span>
-              </button>
-            </div>
-          ) : (
-            <video
-              ref={videoRef}
-              className="w-full h-full object-cover bg-black"
-              controls
-              playsInline
-              controlsList="nodownload"
-            />
-          )}
+      {/* Moldura decorativa externa */}
+      <div className="relative p-[3px] rounded-2xl bg-gradient-to-br from-[#C6A96B]/40 via-[#C6A96B]/10 to-[#C6A96B]/30 shadow-[0_0_80px_-20px_rgba(198,169,107,0.15)]">
+        <div className="relative rounded-2xl overflow-hidden bg-black/80">
+          {/* Moldura interna sutil */}
+          <div className="absolute inset-0 rounded-2xl border border-[#C6A96B]/8 pointer-events-none z-20" />
+          
+          <div className="relative aspect-video">
+            {!playing ? (
+              <div className="absolute inset-0 flex items-center justify-center bg-[#0B0B0F]">
+                <img src={mentoriaBanner} alt="" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F]/90 via-[#0B0B0F]/40 to-[#0B0B0F]/20" />
+                {/* Cantos decorativos */}
+                <div className="absolute top-3 left-3 w-6 h-6 border-t border-l border-[#C6A96B]/25 rounded-tl-sm z-10" />
+                <div className="absolute top-3 right-3 w-6 h-6 border-t border-r border-[#C6A96B]/25 rounded-tr-sm z-10" />
+                <div className="absolute bottom-3 left-3 w-6 h-6 border-b border-l border-[#C6A96B]/25 rounded-bl-sm z-10" />
+                <div className="absolute bottom-3 right-3 w-6 h-6 border-b border-r border-[#C6A96B]/25 rounded-br-sm z-10" />
+                <button
+                  onClick={play}
+                  className="relative z-10 group flex flex-col items-center gap-4"
+                  aria-label="Reproduzir vídeo"
+                >
+                  <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-2 border-[#C6A96B]/30 flex items-center justify-center bg-[#C6A96B]/5 backdrop-blur-sm group-hover:border-[#C6A96B]/70 group-hover:scale-105 transition-all duration-500">
+                    <Play className="w-8 h-8 md:w-10 md:h-10 text-[#C6A96B] ml-1" fill="currentColor" />
+                  </div>
+                  <span className="text-[#F3EFE7]/25 text-xs tracking-wider uppercase">Assistir</span>
+                </button>
+              </div>
+            ) : (
+              <video
+                ref={videoRef}
+                className="w-full h-full object-cover bg-black"
+                controls
+                playsInline
+                controlsList="nodownload"
+              />
+            )}
+          </div>
         </div>
       </div>
       <div className="mt-6">
