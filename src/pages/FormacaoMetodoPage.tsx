@@ -131,7 +131,7 @@ export default function FormacaoMetodoPage() {
               <h2 className="font-display text-xl md:text-2xl font-bold text-foreground leading-tight">
                 Uma jornada de profundidade, ética e competência simbólica
               </h2>
-              <p className="text-foreground/60 leading-relaxed max-w-2xl">
+              <p className="text-foreground/80 leading-relaxed max-w-2xl">
                 A Formação no Método Orácula é um processo progressivo de certificação que integra
                 ferramentas de leitura de campo, narrativas simbólicas, condução de sessões e
                 sustentação profissional. Cada módulo foi desenhado para construir maturidade clínica real.
@@ -141,7 +141,7 @@ export default function FormacaoMetodoPage() {
                 <div className="flex flex-wrap gap-4 pt-2">
                   <div className="flex items-center gap-2 text-sm text-foreground/50">
                     <BarChart3 className="w-4 h-4" />
-                    <span>Progresso geral: {overallProgress}%</span>
+                    <span className="text-foreground/70">Progresso geral: {overallProgress}%</span>
                   </div>
                   <Progress value={overallProgress} className="h-2 max-w-xs" />
                 </div>
@@ -180,7 +180,7 @@ export default function FormacaoMetodoPage() {
                   <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center text-xs font-bold text-gold">
                     {i + 1}
                   </span>
-                  <p className="text-sm text-foreground/70 leading-relaxed">{obj}</p>
+                  <p className="text-sm text-foreground/85 leading-relaxed">{obj}</p>
                 </div>
               ))}
             </div>
@@ -219,13 +219,13 @@ export default function FormacaoMetodoPage() {
                           )}
                           <div className="flex-1 min-w-0 space-y-1.5">
                             <div className="flex items-center gap-2">
-                              <span className="text-xs text-foreground/40">Módulo {i + 1}</span>
+                              <span className="text-xs text-foreground/60">Módulo {i + 1}</span>
                               {course.tags.map(t => (
                                 <Badge key={t} variant="outline" className="text-xs border-border/30">{t}</Badge>
                               ))}
                             </div>
                             <h3 className="font-display font-semibold text-foreground/90 truncate">{course.titulo}</h3>
-                            <div className="flex items-center gap-3 text-xs text-foreground/40">
+                            <div className="flex items-center gap-3 text-xs text-foreground/60">
                               {course.duracao_estimada && (
                                 <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{course.duracao_estimada}</span>
                               )}
@@ -234,11 +234,11 @@ export default function FormacaoMetodoPage() {
                             {user && pct > 0 && (
                               <div className="flex items-center gap-2">
                                 <Progress value={pct} className="h-1.5 flex-1" />
-                                <span className="text-xs text-foreground/40">{pct}%</span>
+                                <span className="text-xs text-foreground/60">{pct}%</span>
                               </div>
                             )}
                           </div>
-                          <ChevronRight className="w-5 h-5 text-foreground/20 flex-shrink-0 self-center" />
+                          <ChevronRight className="w-5 h-5 text-foreground/40 flex-shrink-0 self-center" />
                         </CardContent>
                       </Card>
                     </Link>
@@ -267,10 +267,10 @@ export default function FormacaoMetodoPage() {
                     </span>
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
-                        <h4 className="font-medium text-sm text-foreground/80">{p.phase}</h4>
-                        <span className="text-xs text-foreground/40">{p.weeks}</span>
+                        <h4 className="font-medium text-sm text-foreground">{p.phase}</h4>
+                        <span className="text-xs text-foreground/60">{p.weeks}</span>
                       </div>
-                      <p className="text-xs text-foreground/50 mt-0.5">{p.desc}</p>
+                      <p className="text-xs text-foreground/70 mt-0.5">{p.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -291,9 +291,9 @@ export default function FormacaoMetodoPage() {
                     <div className="w-12 h-12 rounded-full bg-gold/10 mx-auto flex items-center justify-center">
                       <Users className="w-6 h-6 text-gold/40" />
                     </div>
-                    <h4 className="font-medium text-sm text-foreground/80">{member.name}</h4>
-                    <p className="text-xs text-gold/60">{member.role}</p>
-                    <p className="text-xs text-foreground/50">{member.description}</p>
+                    <h4 className="font-medium text-sm text-foreground">{member.name}</h4>
+                    <p className="text-xs text-gold">{member.role}</p>
+                    <p className="text-xs text-foreground/70">{member.description}</p>
                   </CardContent>
                 </Card>
               ))}
