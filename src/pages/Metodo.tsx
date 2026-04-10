@@ -56,8 +56,11 @@ export default function Metodo() {
             <h2 className="text-3xl md:text-4xl font-display text-gold mb-8 text-center tracking-wide">
               O que é a Casa
             </h2>
-            <p className="text-muted-foreground text-lg md:text-xl leading-[1.9] text-center max-w-3xl mx-auto mb-12">
+            <p className="text-muted-foreground text-lg md:text-xl leading-[1.9] text-center max-w-3xl mx-auto mb-6">
               {getCopyByKey('casa_oque_e', 'A Casa Orácula é um espaço de formação profunda, onde mulheres atravessam camadas de si mesmas através da linguagem simbólica.')}
+            </p>
+            <p className="text-foreground text-lg md:text-xl leading-[1.9] text-center max-w-3xl mx-auto font-display font-medium mb-12">
+              A Casa Orácula forma mulheres capazes de atravessar, integrar e transmitir conhecimento simbólico com ética, aplicabilidade e maturidade psíquica.
             </p>
             <h2 className="text-3xl md:text-4xl font-display text-gold mb-8 text-center tracking-wide">
               Para quem é
