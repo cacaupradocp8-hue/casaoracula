@@ -18,7 +18,7 @@ export function MetodoHero() {
         transition={{ duration: 1.2, ease: 'easeOut' }}
         className="relative z-10 text-center px-6 max-w-3xl mx-auto"
       >
-        <p className="text-gold/50 uppercase tracking-[0.4em] text-xs mb-8 font-medium">
+        <p className="text-gold uppercase tracking-[0.4em] text-xs mb-8 font-medium">
           Método Orácula
         </p>
         <h1 className="text-5xl md:text-7xl font-display font-semibold text-foreground mb-6 tracking-wide leading-[1.1]">

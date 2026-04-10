@@ -46,7 +46,7 @@ export function MetodoDepoimentos() {
             </p>
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
-                <span className="text-gold/70 text-xs font-display">{dep.nome[0]}</span>
+                <span className="text-gold text-xs font-display">{dep.nome[0]}</span>
               </div>
               <div>
                 <p className="text-foreground text-sm">{dep.nome}</p>

@@ -22,7 +22,7 @@ export function PlanosFormacao() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <p className="text-gold/40 text-xs uppercase tracking-[0.25em] mb-4 font-medium">
+          <p className="text-gold/80 text-xs uppercase tracking-[0.25em] mb-4 font-medium">
             Próximo nível
           </p>
           <h2 className="font-display text-2xl md:text-3xl text-foreground tracking-wide mb-4">
@@ -43,7 +43,7 @@ export function PlanosFormacao() {
                 transition={{ duration: 0.5, delay: 0.1 + i * 0.08 }}
                 className="flex items-center gap-3 text-sm text-muted-foreground"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-gold/30 shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-gold/60 shrink-0" />
                 {b}
               </motion.li>
             ))}
