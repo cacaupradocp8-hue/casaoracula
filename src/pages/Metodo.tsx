@@ -24,7 +24,7 @@ const fadeInUp = {
 const RitualDivider = () => (
   <div className="flex items-center justify-center gap-4 my-12 md:my-16">
     <div className="h-px w-20 bg-gradient-to-r from-transparent to-gold/20" />
-    <span className="text-gold/30 text-xs tracking-[0.3em]">✦</span>
+    <span className="text-gold/50 text-xs tracking-[0.3em]">✦</span>
     <div className="h-px w-20 bg-gradient-to-l from-transparent to-gold/20" />
   </div>
 );
@@ -53,13 +53,13 @@ export default function Metodo() {
 
           {/* 2. O que é + Para quem é */}
           <motion.section {...fadeInUp} transition={{ duration: 0.8 }} className="py-12 md:py-16">
-            <h2 className="text-3xl md:text-4xl font-display text-gold/90 mb-8 text-center tracking-wide">
+            <h2 className="text-3xl md:text-4xl font-display text-gold mb-8 text-center tracking-wide">
               O que é a Casa
             </h2>
             <p className="text-muted-foreground text-lg md:text-xl leading-[1.9] text-center max-w-3xl mx-auto mb-12">
               {getCopyByKey('casa_oque_e', 'A Casa Orácula é um espaço de formação profunda, onde mulheres atravessam camadas de si mesmas através da linguagem simbólica.')}
             </p>
-            <h2 className="text-3xl md:text-4xl font-display text-gold/90 mb-8 text-center tracking-wide">
+            <h2 className="text-3xl md:text-4xl font-display text-gold mb-8 text-center tracking-wide">
               Para quem é
             </h2>
             <p className="text-muted-foreground text-lg md:text-xl leading-[1.9] text-center max-w-3xl mx-auto">
@@ -71,7 +71,7 @@ export default function Metodo() {
 
           {/* 3. Fundamento */}
           <motion.section {...fadeInUp} transition={{ duration: 0.8 }} className="py-12 md:py-16">
-            <h2 className="text-3xl md:text-4xl font-display text-gold/90 mb-10 text-center tracking-wide">
+            <h2 className="text-3xl md:text-4xl font-display text-gold mb-10 text-center tracking-wide">
               Fundamento do Método
             </h2>
             <Card className="bg-card/30 backdrop-blur-sm border-gold/10">

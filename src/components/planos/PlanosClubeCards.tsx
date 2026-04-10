@@ -28,7 +28,7 @@ export function PlanosClubeCards({ ofertas, onSelect }: Props) {
         <h2 className="font-display text-2xl md:text-3xl text-foreground tracking-wide mb-3">
           Entre no Clube Oracular
         </h2>
-        <p className="text-sm text-muted-foreground/60 max-w-lg mx-auto">
+        <p className="text-sm text-muted-foreground max-w-lg mx-auto">
           Acesso contínuo à CidaDELA Interior, leituras guiadas e conteúdos que expandem sua percepção — mês a mês.
         </p>
       </motion.div>
@@ -72,13 +72,13 @@ export function PlanosClubeCards({ ofertas, onSelect }: Props) {
                 {/* Header */}
                 <div className="text-center mb-8">
                   {oferta.simbolo && (
-                    <span className="text-3xl text-gold/40 block mb-4">{oferta.simbolo}</span>
+                    <span className="text-3xl text-gold/70 block mb-4">{oferta.simbolo}</span>
                   )}
                   <h3 className="font-display text-xl font-semibold text-foreground mb-2 tracking-wide">
                     {oferta.nome}
                   </h3>
                   {oferta.subtitulo && (
-                    <p className="text-sm text-muted-foreground/60 leading-relaxed">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       {oferta.subtitulo}
                     </p>
                   )}
@@ -95,8 +95,8 @@ export function PlanosClubeCards({ ofertas, onSelect }: Props) {
                 <div className="flex-1 mb-8">
                   <ul className="space-y-3.5">
                     {oferta.inclusoes.map((item, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-foreground/60">
-                        <Check className="w-4 h-4 text-gold/50 mt-0.5 flex-shrink-0" />
+                      <li key={i} className="flex items-start gap-3 text-sm text-foreground/80">
+                        <Check className="w-4 h-4 text-gold mt-0.5 flex-shrink-0" />
                         <span>{item}</span>
                       </li>
                     ))}

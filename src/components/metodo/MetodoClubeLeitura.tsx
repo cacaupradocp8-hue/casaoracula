@@ -20,7 +20,7 @@ export function MetodoClubeLeitura() {
 
   return (
     <motion.section {...fadeInUp} transition={{ duration: 0.8 }} className="py-16 md:py-24">
-      <p className="text-gold/50 text-xs uppercase tracking-[0.3em] text-center mb-4">Formação contínua</p>
+      <p className="text-gold/80 text-xs uppercase tracking-[0.3em] text-center mb-4">Formação contínua</p>
       <h2 className="text-3xl md:text-4xl font-display text-foreground mb-4 text-center tracking-wide">
         Clube do Livro Formativo
       </h2>

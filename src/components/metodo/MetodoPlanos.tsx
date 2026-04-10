@@ -64,7 +64,7 @@ export function MetodoPlanos() {
             <ul className="space-y-2">
               {plano.itens.map((item) => (
                 <li key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Check className="w-3.5 h-3.5 text-gold/60 shrink-0" />
+                  <Check className="w-3.5 h-3.5 text-gold shrink-0" />
                   {item}
                 </li>
               ))}
