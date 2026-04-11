@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 
 const NAV_ITEMS = [
   { key: 'inicio', icon: Home, label: 'Início', path: '/dashboard-membro' },
-  { key: 'clube', icon: BookOpen, label: 'Clube', path: '/app/clube' },
+  { key: 'clube', icon: BookOpen, label: 'Clube', path: '/clube' },
   { key: 'ferramentas', icon: Wrench, label: 'Ferramentas', path: '/ferramentas' },
   { key: 'jardim', icon: Flower2, label: 'Jardim', path: '/jardim-da-psique' },
   { key: 'formacao', icon: GraduationCap, label: 'Formação', path: '/cursos' },
