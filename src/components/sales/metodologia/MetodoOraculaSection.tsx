@@ -43,7 +43,7 @@ export function MetodoOraculaSection() {
                 <h3 className="text-foreground font-display text-lg font-medium mb-3 tracking-wide">
                   {pilar.titulo}
                 </h3>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-foreground/80 text-sm leading-relaxed">
                   {pilar.texto}
                 </p>
               </div>
