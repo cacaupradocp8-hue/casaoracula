@@ -4,7 +4,6 @@ import { BottomNavPreview } from './BottomNavPreview';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
 import { AccessExpirationBanner } from '@/components/shared/AccessExpirationBanner';
 import { BootSafeBoundary } from '@/components/shared/BootSafeBoundary';
-import { TherabotWidget } from '@/components/therabot/TherabotWidget';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -37,9 +36,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         <EthicalNotice />
       </BootSafeBoundary>
 
-      <BootSafeBoundary label="Therabot" compact>
-        <TherabotWidget />
-      </BootSafeBoundary>
+      {/* TherabotWidget desativado temporariamente */}
 
       <BootSafeBoundary label="BottomNav" compact>
         <BottomNavPreview />
