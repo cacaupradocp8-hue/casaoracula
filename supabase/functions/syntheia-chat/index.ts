@@ -938,11 +938,11 @@ serve(async (req) => {
     // === STEP 2: Server-side role resolution ===
     const { portal, tipoUsuaria: serverTipo } = await resolveServerSideRole(serviceClient, userId);
 
-    // === STEP 3: Validate API Key ===
-    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
-    if (!OPENAI_API_KEY) {
+    // === STEP 3: Validate API Key (Lovable AI Gateway) ===
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) {
       return new Response(
-        JSON.stringify({ error: "OPENAI_API_KEY não configurada" }),
+        JSON.stringify({ error: "LOVABLE_API_KEY não configurada" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -1041,21 +1041,21 @@ serve(async (req) => {
     // === STEP 12: composeSystemPrompt() ===
     const systemPrompt = composeSystemPrompt(mode, classifiedCtx, classifiedIntent, executionPlan, payload, voice_prompt);
 
-    // === STEP 13: Call OpenAI ===
-    const openaiMessages: ChatMessage[] = [
+    // === STEP 13: Call Lovable AI Gateway ===
+    const aiMessages: ChatMessage[] = [
       { role: "system", content: systemPrompt },
       ...messages,
     ];
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${OPENAI_API_KEY}`,
+        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o",
-        messages: openaiMessages,
+        model: "google/gemini-2.5-flash",
+        messages: aiMessages,
         temperature: 0.7,
         max_tokens: 2048,
       }),
@@ -1063,7 +1063,7 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`[syntheia-chat] OpenAI error ${response.status}:`, errorText);
+      console.error(`[syntheia-chat] AI Gateway error ${response.status}:`, errorText);
       tracePartial.status = "error";
       tracePartial.latencyMs = Date.now() - startTime;
       logMinimalTrace(tracePartial as TraceLog);
@@ -1076,7 +1076,7 @@ serve(async (req) => {
       }
 
       return new Response(
-        JSON.stringify({ error: `Erro OpenAI: ${response.status}` }),
+        JSON.stringify({ error: `Erro AI: ${response.status}` }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -1089,7 +1089,7 @@ serve(async (req) => {
       tracePartial.latencyMs = Date.now() - startTime;
       logMinimalTrace(tracePartial as TraceLog);
       return new Response(
-        JSON.stringify({ error: "Resposta vazia da OpenAI" }),
+        JSON.stringify({ error: "Resposta vazia da AI" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
