@@ -21,7 +21,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         <Navigation />
       </BootSafeBoundary>
 
-      <main className="relative pt-16 md:pt-20">
+      <main className="relative pt-16 md:pt-20 pb-24 md:pb-0">
         <div className="container mx-auto px-4 pt-4">
           <BootSafeBoundary label="AccessExpirationBanner" compact>
             <AccessExpirationBanner />
