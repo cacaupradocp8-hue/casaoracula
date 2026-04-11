@@ -72,18 +72,10 @@ export function VisitorSalaContent() {
           0%, 100% { transform: scale(1); opacity: 0.7; }
           50% { transform: scale(1.08); opacity: 1; }
         }
-        @keyframes sala-rays-spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        @keyframes sala-ray-pulse {
-          0%, 100% { opacity: 0.1; }
-          50% { opacity: 0.3; }
-        }
       `}</style>
       <div className="min-h-[85vh] flex flex-col items-center justify-center relative overflow-hidden py-10 px-4">
 
-        {/* Background atmosphere */}
+        {/* Background atmosphere — partículas + gradientes */}
         <div className="absolute inset-0 pointer-events-none">
           <ElectricWaves />
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[600px] md:h-[600px] rounded-full bg-primary/[0.05] blur-[100px]" />
@@ -91,45 +83,15 @@ export function VisitorSalaContent() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[100px] rounded-full bg-accent/[0.04] blur-[60px]" />
         </div>
 
-        {/* SECTION 1 — Mandala + Raios + Texto */}
+        {/* SECTION 1 — Mandala + Texto */}
         <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.8, ease: 'easeOut' }}
           className="relative z-10 flex flex-col items-center text-center space-y-10 max-w-lg"
         >
-          {/* Mandala + light rays */}
+          {/* Mandala with breathing */}
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {/* Rays behind mandala */}
-            <div
-              style={{
-                position: 'absolute',
-                width: '150vmax',
-                height: '150vmax',
-                animation: 'sala-rays-spin 120s linear infinite',
-                pointerEvents: 'none',
-                zIndex: 0,
-              }}
-            >
-              {Array.from({ length: 12 }, (_, i) => (
-                <div
-                  key={i}
-                  style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    width: 2,
-                    height: '50%',
-                    transformOrigin: '50% 0%',
-                    transform: `rotate(${(360 / 12) * i}deg)`,
-                    background: 'linear-gradient(to bottom, rgba(201,164,92,0.25), rgba(201,164,92,0.06) 30%, transparent 70%)',
-                    animation: `sala-ray-pulse ${3 + (i % 3) * 1.2}s ease-in-out ${(i * 0.4) % 2}s infinite`,
-                    filter: 'blur(1.5px)',
-                  }}
-                />
-              ))}
-            </div>
-            {/* Radial glow */}
             <div
               style={{
                 position: 'absolute',
@@ -138,10 +100,8 @@ export function VisitorSalaContent() {
                 background: 'radial-gradient(circle, rgba(201,164,92,0.1) 0%, transparent 65%)',
                 animation: 'sala-breathe 6s ease-in-out infinite',
                 pointerEvents: 'none',
-                zIndex: 0,
               }}
             />
-            {/* Mandala on top with breathing */}
             <div style={{ position: 'relative', zIndex: 2, animation: 'sala-breathe 6s ease-in-out infinite' }}>
               <BreathingMandala />
             </div>

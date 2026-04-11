@@ -15,10 +15,12 @@ interface RitualSaidaDialogProps {
 }
 
 const closingPhrases = [
-  'o campo continua…',
-  'observe o que se move em você',
-  'não force. apenas observe.',
-  'leve o silêncio com você.',
+  'o que foi tocado, continua a vibrar.',
+  'você não sai da Casa — a Casa segue em você.',
+  'feche os olhos. o campo já está selado.',
+  'o silêncio que resta… é a resposta.',
+  'não leve conclusões. leve a pergunta.',
+  'a travessia não termina aqui.',
 ];
 
 const FADE_IN = 400;
