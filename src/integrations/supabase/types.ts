@@ -3243,74 +3243,32 @@ export type Database = {
       }
       club_books: {
         Row: {
-          autor: string | null
-          capa_url: string | null
-          created_at: string
-          descricao: string | null
+          author: string | null
+          cover_url: string | null
+          cycle_id: string | null
+          description: string | null
           id: string
-          titulo: string
-          updated_at: string
+          title: string | null
         }
         Insert: {
-          autor?: string | null
-          capa_url?: string | null
-          created_at?: string
-          descricao?: string | null
+          author?: string | null
+          cover_url?: string | null
+          cycle_id?: string | null
+          description?: string | null
           id?: string
-          titulo: string
-          updated_at?: string
+          title?: string | null
         }
         Update: {
-          autor?: string | null
-          capa_url?: string | null
-          created_at?: string
-          descricao?: string | null
+          author?: string | null
+          cover_url?: string | null
+          cycle_id?: string | null
+          description?: string | null
           id?: string
-          titulo?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      club_cartography: {
-        Row: {
-          arquetipos: string[] | null
-          created_at: string
-          cycle_id: string
-          id: string
-          labirinto_recorrente: string | null
-          notas: string | null
-          porta_ativa: string | null
-          torre_dominante: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          arquetipos?: string[] | null
-          created_at?: string
-          cycle_id: string
-          id?: string
-          labirinto_recorrente?: string | null
-          notas?: string | null
-          porta_ativa?: string | null
-          torre_dominante?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          arquetipos?: string[] | null
-          created_at?: string
-          cycle_id?: string
-          id?: string
-          labirinto_recorrente?: string | null
-          notas?: string | null
-          porta_ativa?: string | null
-          torre_dominante?: string | null
-          updated_at?: string
-          user_id?: string
+          title?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "club_cartography_cycle_id_fkey"
+            foreignKeyName: "club_books_cycle_id_fkey"
             columns: ["cycle_id"]
             isOneToOne: false
             referencedRelation: "club_cycles"
@@ -3318,52 +3276,71 @@ export type Database = {
           },
         ]
       }
-      club_cycles: {
+      club_cartography: {
         Row: {
-          ativo: boolean
-          book_id: string | null
-          created_at: string
-          data_encontro: string | null
-          data_fim: string | null
-          data_inicio: string | null
+          arquetipos: string[] | null
+          created_at: string | null
+          cycle_id: string | null
           id: string
-          nome: string
-          portal: string | null
-          updated_at: string
+          labirinto: string | null
+          notas: string | null
+          porta: string | null
+          torre: string | null
+          user_id: string
         }
         Insert: {
-          ativo?: boolean
-          book_id?: string | null
-          created_at?: string
-          data_encontro?: string | null
-          data_fim?: string | null
-          data_inicio?: string | null
+          arquetipos?: string[] | null
+          created_at?: string | null
+          cycle_id?: string | null
           id?: string
-          nome: string
-          portal?: string | null
-          updated_at?: string
+          labirinto?: string | null
+          notas?: string | null
+          porta?: string | null
+          torre?: string | null
+          user_id: string
         }
         Update: {
-          ativo?: boolean
-          book_id?: string | null
-          created_at?: string
-          data_encontro?: string | null
-          data_fim?: string | null
-          data_inicio?: string | null
+          arquetipos?: string[] | null
+          created_at?: string | null
+          cycle_id?: string | null
           id?: string
-          nome?: string
-          portal?: string | null
-          updated_at?: string
+          labirinto?: string | null
+          notas?: string | null
+          porta?: string | null
+          torre?: string | null
+          user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "club_cycles_book_id_fkey"
-            columns: ["book_id"]
-            isOneToOne: false
-            referencedRelation: "club_books"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
+      }
+      club_cycles: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          end_date: string | null
+          id: string
+          portal: string | null
+          start_date: string | null
+          title: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          portal?: string | null
+          start_date?: string | null
+          title?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          portal?: string | null
+          start_date?: string | null
+          title?: string | null
+        }
+        Relationships: []
       }
       club_knowledge_entries: {
         Row: {
@@ -3433,49 +3410,25 @@ export type Database = {
       }
       club_meetings: {
         Row: {
-          created_at: string
+          completed: boolean | null
           cycle_id: string | null
-          data: string | null
+          date: string | null
           id: string
-          livro: string | null
-          portal: string | null
-          realizado: boolean
-          roteiro_abertura: string | null
-          roteiro_compartilhamento: string | null
-          roteiro_dialogo: string | null
-          roteiro_fechamento: string | null
-          roteiro_integracao: string | null
-          updated_at: string
+          roteiro: Json | null
         }
         Insert: {
-          created_at?: string
+          completed?: boolean | null
           cycle_id?: string | null
-          data?: string | null
+          date?: string | null
           id?: string
-          livro?: string | null
-          portal?: string | null
-          realizado?: boolean
-          roteiro_abertura?: string | null
-          roteiro_compartilhamento?: string | null
-          roteiro_dialogo?: string | null
-          roteiro_fechamento?: string | null
-          roteiro_integracao?: string | null
-          updated_at?: string
+          roteiro?: Json | null
         }
         Update: {
-          created_at?: string
+          completed?: boolean | null
           cycle_id?: string | null
-          data?: string | null
+          date?: string | null
           id?: string
-          livro?: string | null
-          portal?: string | null
-          realizado?: boolean
-          roteiro_abertura?: string | null
-          roteiro_compartilhamento?: string | null
-          roteiro_dialogo?: string | null
-          roteiro_fechamento?: string | null
-          roteiro_integracao?: string | null
-          updated_at?: string
+          roteiro?: Json | null
         }
         Relationships: [
           {
@@ -3489,112 +3442,84 @@ export type Database = {
       }
       club_reflections: {
         Row: {
-          created_at: string
-          cycle_id: string
+          arquetipo: string | null
+          campo_clientes: string | null
+          created_at: string | null
+          cycle_id: string | null
           id: string
-          onde_vejo_clientes: string | null
-          proposta_intervencao: string | null
-          qual_arquetipo: string | null
-          qual_postura: string | null
-          updated_at: string
+          intervencao: string | null
+          postura: string | null
           user_id: string
         }
         Insert: {
-          created_at?: string
-          cycle_id: string
+          arquetipo?: string | null
+          campo_clientes?: string | null
+          created_at?: string | null
+          cycle_id?: string | null
           id?: string
-          onde_vejo_clientes?: string | null
-          proposta_intervencao?: string | null
-          qual_arquetipo?: string | null
-          qual_postura?: string | null
-          updated_at?: string
+          intervencao?: string | null
+          postura?: string | null
           user_id: string
         }
         Update: {
-          created_at?: string
-          cycle_id?: string
+          arquetipo?: string | null
+          campo_clientes?: string | null
+          created_at?: string | null
+          cycle_id?: string | null
           id?: string
-          onde_vejo_clientes?: string | null
-          proposta_intervencao?: string | null
-          qual_arquetipo?: string | null
-          qual_postura?: string | null
-          updated_at?: string
+          intervencao?: string | null
+          postura?: string | null
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "club_reflections_cycle_id_fkey"
-            columns: ["cycle_id"]
-            isOneToOne: false
-            referencedRelation: "club_cycles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       club_tools: {
         Row: {
           conteudo: string | null
-          created_at: string
-          cycle_id: string
+          created_at: string | null
+          cycle_id: string | null
           id: string
-          tipo: string
-          updated_at: string
+          tipo: string | null
           user_id: string
         }
         Insert: {
           conteudo?: string | null
-          created_at?: string
-          cycle_id: string
+          created_at?: string | null
+          cycle_id?: string | null
           id?: string
-          tipo?: string
-          updated_at?: string
+          tipo?: string | null
           user_id: string
         }
         Update: {
           conteudo?: string | null
-          created_at?: string
-          cycle_id?: string
+          created_at?: string | null
+          cycle_id?: string | null
           id?: string
-          tipo?: string
-          updated_at?: string
+          tipo?: string | null
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "club_tools_cycle_id_fkey"
-            columns: ["cycle_id"]
-            isOneToOne: false
-            referencedRelation: "club_cycles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       club_user_cycles: {
         Row: {
-          compromisso_concluido: boolean
-          compromisso_semana: string | null
-          created_at: string
-          cycle_id: string
+          created_at: string | null
+          cycle_id: string | null
           id: string
-          updated_at: string
+          status: string | null
           user_id: string
         }
         Insert: {
-          compromisso_concluido?: boolean
-          compromisso_semana?: string | null
-          created_at?: string
-          cycle_id: string
+          created_at?: string | null
+          cycle_id?: string | null
           id?: string
-          updated_at?: string
+          status?: string | null
           user_id: string
         }
         Update: {
-          compromisso_concluido?: boolean
-          compromisso_semana?: string | null
-          created_at?: string
-          cycle_id?: string
+          created_at?: string | null
+          cycle_id?: string | null
           id?: string
-          updated_at?: string
+          status?: string | null
           user_id?: string
         }
         Relationships: [

@@ -10,13 +10,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
 
-const ROTEIRO_FIELDS = [
-  { key: 'roteiro_abertura', label: 'Abertura' },
-  { key: 'roteiro_compartilhamento', label: 'Compartilhamento' },
-  { key: 'roteiro_dialogo', label: 'Diálogo' },
-  { key: 'roteiro_integracao', label: 'Integração' },
-  { key: 'roteiro_fechamento', label: 'Fechamento' },
-] as const;
+const ROTEIRO_KEYS = ['abertura', 'compartilhamento', 'dialogo', 'integracao', 'fechamento'];
+const ROTEIRO_LABELS: Record<string, string> = {
+  abertura: 'Abertura',
+  compartilhamento: 'Compartilhamento',
+  dialogo: 'Diálogo',
+  integracao: 'Integração',
+  fechamento: 'Fechamento',
+};
 
 export default function ClubeEncontro() {
   const navigate = useNavigate();
@@ -26,30 +27,28 @@ export default function ClubeEncontro() {
     queryKey: ['club-next-meeting'],
     queryFn: async () => {
       const { data } = await supabase
-        .from('club_meetings')
+        .from('club_meetings' as any)
         .select('*, club_cycles(*, club_books(*))')
-        .eq('realizado', false)
-        .order('data', { ascending: true })
+        .eq('completed', false)
+        .order('date', { ascending: true })
         .limit(1)
         .maybeSingle();
-      return data;
+      return data as any;
     },
   });
 
   const [roteiro, setRoteiro] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    if (meeting) {
-      const r: Record<string, string> = {};
-      ROTEIRO_FIELDS.forEach(f => { r[f.key] = (meeting as any)[f.key] || ''; });
-      setRoteiro(r);
+    if (meeting?.roteiro && typeof meeting.roteiro === 'object') {
+      setRoteiro(meeting.roteiro as Record<string, string>);
     }
   }, [meeting]);
 
   const saveMeeting = useMutation({
     mutationFn: async () => {
       if (!meeting) return;
-      await supabase.from('club_meetings').update(roteiro).eq('id', meeting.id);
+      await supabase.from('club_meetings' as any).update({ roteiro }).eq('id', meeting.id);
     },
     onSuccess: () => { toast.success('Encontro salvo'); qc.invalidateQueries({ queryKey: ['club-next-meeting'] }); },
   });
@@ -57,25 +56,23 @@ export default function ClubeEncontro() {
   const markDone = useMutation({
     mutationFn: async () => {
       if (!meeting) return;
-      await supabase.from('club_meetings').update({ ...roteiro, realizado: true }).eq('id', meeting.id);
+      await supabase.from('club_meetings' as any).update({ roteiro, completed: true }).eq('id', meeting.id);
     },
     onSuccess: () => { toast.success('Encontro marcado como realizado'); qc.invalidateQueries({ queryKey: ['club-next-meeting'] }); },
   });
 
-  const cycle = meeting?.club_cycles as any;
-  const book = cycle?.club_books as any;
+  const cycle = meeting?.club_cycles;
+  const bookArr = cycle?.club_books;
+  const book = Array.isArray(bookArr) ? bookArr[0] : bookArr;
 
   return (
     <AppLayout>
       <div className="min-h-screen px-4 py-8 max-w-2xl mx-auto space-y-8">
-        {/* Header */}
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => navigate('/clube')}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <div>
-            <h1 className="font-display text-2xl text-primary">Encontro</h1>
-          </div>
+          <h1 className="font-display text-2xl text-primary">Encontro</h1>
         </div>
 
         {!meeting ? (
@@ -86,25 +83,23 @@ export default function ClubeEncontro() {
           </Card>
         ) : (
           <>
-            {/* Meta */}
             <div className="grid grid-cols-3 gap-3">
-              <MetaCard label="Data" value={meeting.data ? new Date(meeting.data).toLocaleDateString('pt-BR') : '—'} />
-              <MetaCard label="Portal" value={meeting.portal || cycle?.portal || '—'} />
-              <MetaCard label="Livro" value={meeting.livro || book?.titulo || '—'} />
+              <MetaCard label="Data" value={meeting.date ? new Date(meeting.date).toLocaleDateString('pt-BR') : '—'} />
+              <MetaCard label="Portal" value={cycle?.portal || '—'} />
+              <MetaCard label="Livro" value={book?.title || '—'} />
             </div>
 
-            {/* Roteiro */}
             <Card className="border-border/50 bg-card/60">
               <CardHeader className="pb-3">
                 <CardTitle className="font-display text-lg text-primary">Roteiro</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {ROTEIRO_FIELDS.map(f => (
-                  <div key={f.key} className="space-y-1.5">
-                    <Label className="text-xs text-muted-foreground uppercase tracking-wider">{f.label}</Label>
+                {ROTEIRO_KEYS.map(k => (
+                  <div key={k} className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground uppercase tracking-wider">{ROTEIRO_LABELS[k]}</Label>
                     <Textarea
-                      value={roteiro[f.key] || ''}
-                      onChange={e => setRoteiro(prev => ({ ...prev, [f.key]: e.target.value }))}
+                      value={roteiro[k] || ''}
+                      onChange={e => setRoteiro(prev => ({ ...prev, [k]: e.target.value }))}
                       rows={3}
                       className="bg-input/50"
                     />
@@ -113,23 +108,12 @@ export default function ClubeEncontro() {
               </CardContent>
             </Card>
 
-            {/* Actions */}
             <div className="flex gap-3">
-              <Button
-                onClick={() => saveMeeting.mutate()}
-                disabled={saveMeeting.isPending}
-                className="flex-1 bg-primary text-primary-foreground"
-              >
+              <Button onClick={() => saveMeeting.mutate()} disabled={saveMeeting.isPending} className="flex-1 bg-primary text-primary-foreground">
                 Salvar
               </Button>
-              <Button
-                onClick={() => markDone.mutate()}
-                disabled={markDone.isPending}
-                variant="outline"
-                className="flex-1 border-primary/30 text-primary"
-              >
-                <Check className="w-4 h-4 mr-2" />
-                Marcar como realizado
+              <Button onClick={() => markDone.mutate()} disabled={markDone.isPending} variant="outline" className="flex-1 border-primary/30 text-primary">
+                <Check className="w-4 h-4 mr-2" /> Marcar como realizado
               </Button>
             </div>
           </>
