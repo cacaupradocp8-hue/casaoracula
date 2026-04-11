@@ -23,6 +23,11 @@ const COTravessiaDetail = React.lazy(() => import('@/pages/clube-livro/COTravess
 const COTravessiaEncontro = React.lazy(() => import('@/pages/clube-livro/COTravessiaEncontro'));
 const ClubeOracular = React.lazy(() => import('@/pages/ClubeOracular'));
 
+// Novo módulo Clube do Livro Oracular
+const ClubeHome = React.lazy(() => import('@/pages/clube/ClubeHome'));
+const ClubeCiclo = React.lazy(() => import('@/pages/clube/ClubeCiclo'));
+const ClubeEncontro = React.lazy(() => import('@/pages/clube/ClubeEncontro'));
+
 type PR = React.ComponentType<{ children: React.ReactNode; minPortal?: string }>;
 
 export function renderClubeRoutes(ProtectedRoute: PR) {
