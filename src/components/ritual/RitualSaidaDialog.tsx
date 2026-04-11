@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { stampRitualLastAccess } from '@/hooks/useRitualState';
+import { BreathingMandala } from '@/components/visitor/BreathingMandala';
 
 export interface RitualSaidaAudioPlayback {
   audio: HTMLAudioElement;
@@ -145,7 +146,6 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit, audioPlayback 
   return (
     <div
       role="dialog"
-      onClick={handleSkip}
       style={{
         position: 'fixed',
         inset: 0,
@@ -161,18 +161,16 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit, audioPlayback 
         transition: `opacity ${FADE_OUT}ms ease`,
       }}
     >
-      {/* Simple golden ring */}
+      {/* Mandala flor — mesma da Sala da Visitante */}
       <div
         style={{
-          width: 64,
-          height: 64,
-          borderRadius: '50%',
-          border: '1.5px solid rgba(201,164,92,0.4)',
           opacity: visible ? 1 : 0,
-          transform: visible ? 'scale(1)' : 'scale(0.9)',
+          transform: visible ? 'scale(1)' : 'scale(0.85)',
           transition: `opacity ${FADE_IN}ms ease, transform ${FADE_IN}ms ease`,
         }}
-      />
+      >
+        <BreathingMandala />
+      </div>
 
       {/* Phrase */}
       <p
@@ -190,6 +188,29 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit, audioPlayback 
       >
         {phrase}
       </p>
+
+      {/* Botão Pular */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          handleSkip();
+        }}
+        style={{
+          marginTop: 16,
+          padding: '8px 24px',
+          background: 'transparent',
+          border: '1px solid rgba(201,164,92,0.3)',
+          borderRadius: 8,
+          color: 'rgba(201,164,92,0.5)',
+          fontSize: 13,
+          letterSpacing: '0.05em',
+          cursor: 'pointer',
+          opacity: visible ? 1 : 0,
+          transition: `opacity ${FADE_IN}ms ease 200ms`,
+        }}
+      >
+        Pular e sair
+      </button>
     </div>
   );
 }
