@@ -183,66 +183,68 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit, audioPlayback 
           overflow: 'hidden',
         }}
       >
-        {/* Light rays container */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            width: '200vmax',
-            height: '200vmax',
-            transform: 'translate(-50%, -50%)',
-            animation: 'ritual-rays-spin 120s linear infinite',
-            pointerEvents: 'none',
-            opacity: visible ? 1 : 0,
-            transition: `opacity ${FADE_IN}ms ease`,
-          }}
-        >
-          {rays.map((i) => (
-            <div
-              key={i}
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                width: 2,
-                height: '50%',
-                transformOrigin: '50% 0%',
-                transform: `rotate(${(360 / RAY_COUNT) * i}deg)`,
-                background: `linear-gradient(to bottom, rgba(201,164,92,0.25), transparent 70%)`,
-                animation: `ritual-ray-pulse ${3 + (i % 3) * 1.2}s ease-in-out ${(i * 0.4) % 2}s infinite`,
-                filter: 'blur(1.5px)',
-              }}
-            />
-          ))}
-        </div>
+        {/* Mandala + rays wrapper — rays behind, mandala on top */}
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {/* Light rays — positioned behind mandala, emanating from center */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              width: '200vmax',
+              height: '200vmax',
+              transform: 'translate(-50%, -50%)',
+              animation: 'ritual-rays-spin 120s linear infinite',
+              pointerEvents: 'none',
+              zIndex: 0,
+              opacity: visible ? 1 : 0,
+              transition: `opacity ${FADE_IN}ms ease`,
+            }}
+          >
+            {rays.map((i) => (
+              <div
+                key={i}
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  width: 2,
+                  height: '50%',
+                  transformOrigin: '50% 0%',
+                  transform: `rotate(${(360 / RAY_COUNT) * i}deg)`,
+                  background: `linear-gradient(to bottom, rgba(201,164,92,0.3), rgba(201,164,92,0.08) 30%, transparent 70%)`,
+                  animation: `ritual-ray-pulse ${3 + (i % 3) * 1.2}s ease-in-out ${(i * 0.4) % 2}s infinite`,
+                  filter: 'blur(1.5px)',
+                }}
+              />
+            ))}
+          </div>
 
-        {/* Radial glow behind mandala */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            width: 320,
-            height: 320,
-            transform: 'translate(-50%, -50%)',
-            background: 'radial-gradient(circle, rgba(201,164,92,0.1) 0%, transparent 70%)',
-            animation: 'ritual-breathe 6s ease-in-out infinite',
-            pointerEvents: 'none',
-          }}
-        />
+          {/* Radial glow behind mandala */}
+          <div
+            style={{
+              position: 'absolute',
+              width: 320,
+              height: 320,
+              background: 'radial-gradient(circle, rgba(201,164,92,0.12) 0%, transparent 65%)',
+              animation: 'ritual-breathe 6s ease-in-out infinite',
+              pointerEvents: 'none',
+              zIndex: 0,
+            }}
+          />
 
-        {/* Mandala flor — com respiração */}
-        <div
-          style={{
-            position: 'relative',
-            zIndex: 1,
-            animation: visible ? 'ritual-breathe 6s ease-in-out infinite' : 'none',
-            opacity: visible ? 1 : 0,
-            transition: `opacity ${FADE_IN}ms ease`,
-          }}
-        >
-          <BreathingMandala />
+          {/* Mandala flor — on top with breathing */}
+          <div
+            style={{
+              position: 'relative',
+              zIndex: 2,
+              animation: visible ? 'ritual-breathe 6s ease-in-out infinite' : 'none',
+              opacity: visible ? 1 : 0,
+              transition: `opacity ${FADE_IN}ms ease`,
+            }}
+          >
+            <BreathingMandala />
+          </div>
         </div>
 
         {/* Phrase */}
