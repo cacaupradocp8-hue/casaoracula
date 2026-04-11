@@ -1,6 +1,5 @@
-import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import cosmicIcon from '@/assets/therabot-cosmic-icon.png';
+import goddessIcon from '@/assets/therabot-goddess-icon.png';
 
 interface Props {
   onClick: () => void;
@@ -16,13 +15,13 @@ export function TherabotFAB({ onClick }: Props) {
     >
       <button
         onClick={onClick}
-        className="h-16 w-16 rounded-full bg-[#0a0a1a] border-2 border-cyan-400/50 shadow-[0_0_20px_rgba(0,200,255,0.4)] hover:shadow-[0_0_30px_rgba(0,200,255,0.6)] transition-all duration-300 overflow-hidden p-1 hover:scale-105 active:scale-95"
-        aria-label="Abrir Therabot"
+        className="h-16 w-16 rounded-full bg-[#110a20] border-2 border-[#c9a84c]/60 shadow-[0_0_18px_rgba(201,168,76,0.4)] hover:shadow-[0_0_28px_rgba(201,168,76,0.6)] transition-all duration-300 overflow-hidden p-0.5 hover:scale-110 active:scale-95"
+        aria-label="Abrir Sintheya"
       >
         <img
-          src={cosmicIcon}
-          alt="Assistente Cósmica"
-          className="w-full h-full object-contain"
+          src={goddessIcon}
+          alt="Sintheya — Assistente Oracular"
+          className="w-full h-full object-cover rounded-full"
           loading="lazy"
           width={512}
           height={512}
