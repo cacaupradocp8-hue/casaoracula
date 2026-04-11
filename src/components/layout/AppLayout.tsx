@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { Navigation } from './Navigation';
+import { BottomNavPreview } from './BottomNavPreview';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
 import { AccessExpirationBanner } from '@/components/shared/AccessExpirationBanner';
 import { BootSafeBoundary } from '@/components/shared/BootSafeBoundary';
@@ -38,6 +39,10 @@ export function AppLayout({ children }: AppLayoutProps) {
 
       <BootSafeBoundary label="Therabot" compact>
         <TherabotWidget />
+      </BootSafeBoundary>
+
+      <BootSafeBoundary label="BottomNav" compact>
+        <BottomNavPreview />
       </BootSafeBoundary>
     </div>
   );
