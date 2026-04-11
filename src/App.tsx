@@ -126,6 +126,7 @@ const AcademiaFormacaoPage = React.lazy(() => import("./pages/AcademiaFormacaoPa
 const FormacaoMetodoPage = React.lazy(() => import("./pages/FormacaoMetodoPage"));
 const FormacaoForumPage = React.lazy(() => import("./pages/FormacaoForumPage"));
 const FormacaoAvaliacoesPage = React.lazy(() => import("./pages/FormacaoAvaliacoesPage"));
+const BottomNavTestPage = React.lazy(() => import("./pages/BottomNavTestPage"));
 const SessionRoomHome = React.lazy(() => import("./pages/SessionRoomHome"));
 const SessionRoomCase = React.lazy(() => import("./pages/SessionRoomCase"));
 const SessionRoomGroup = React.lazy(() => import("./pages/SessionRoomGroup"));
