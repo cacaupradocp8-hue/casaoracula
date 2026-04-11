@@ -5,9 +5,17 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useEffectivePortal } from '@/hooks/useEffectivePortal';
+import { ClubeOferta } from '@/components/clube/ClubeOferta';
 
 export default function ClubeHome() {
   const navigate = useNavigate();
+  const { canAccess } = useEffectivePortal();
+
+  // Visitors and users below "aluna" see the offer page
+  if (!canAccess('aluna')) {
+    return <ClubeOferta />;
+  }
 
   const { data: activeCycle } = useQuery({
     queryKey: ['club-active-cycle'],
