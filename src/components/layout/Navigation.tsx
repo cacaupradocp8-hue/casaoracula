@@ -163,8 +163,7 @@ export function Navigation() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 md:h-20">
             <Link to={user ? (activeDomain === 'profissional' ? '/casa-das-maquinas' : '/dashboard-membro') : '/'} className="h-full flex items-center py-2">
-              <Logo size="xl" variant="combined" className="md:hidden" />
-              <Logo size="xl" variant="horizontal" className="hidden md:flex" />
+              <span className="font-display text-xl md:text-2xl text-primary tracking-wide">Casa <span className="uppercase">Orácula</span></span>
             </Link>
 
             {/* Desktop menu */}
