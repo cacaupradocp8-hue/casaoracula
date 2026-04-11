@@ -22,7 +22,7 @@ export function BottomNavPreview() {
   const currentIndex = activeIndex >= 0 ? activeIndex : 0;
 
   return (
-    <nav className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-[420px] md:hidden">
+    <nav className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-[420px]">
       <div className="relative h-[70px] bg-card/95 backdrop-blur-xl rounded-2xl border border-border/40 shadow-[0_10px_30px_rgba(0,0,0,0.3)]">
         {/* Indicador animado */}
         <motion.div
