@@ -7,6 +7,7 @@ import { useAppSettings } from '@/hooks/useAppSettings';
 import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
 import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
 import { BreathingMandala } from '@/components/visitor/BreathingMandala';
+import { ElectricWaves } from '@/components/visitor/ElectricWaves';
 
 /**
  * VisitorSalaContent — Portal Vivo de Entrada na Casa Orácula
@@ -68,8 +69,10 @@ export function VisitorSalaContent() {
 
       <div className="min-h-[85vh] flex flex-col items-center justify-center relative overflow-hidden py-10 px-4">
 
-        {/* Background atmosphere — gradiente + brilhos */}
+        {/* Background atmosphere — gradiente + brilhos + ondas elétricas */}
         <div className="absolute inset-0 pointer-events-none">
+          {/* Ondas elétricas */}
+          <ElectricWaves />
           {/* Gradiente radial central */}
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[600px] md:h-[600px] rounded-full bg-primary/[0.05] blur-[100px]" />
           {/* Brilho inferior suave */}
