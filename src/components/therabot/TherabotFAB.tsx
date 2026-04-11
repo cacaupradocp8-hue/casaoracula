@@ -14,22 +14,20 @@ export function TherabotFAB({ onClick }: Props) {
       exit={{ scale: 0, opacity: 0 }}
       className="fixed bottom-24 md:bottom-6 right-4 md:right-6 z-50"
     >
-      <Button
+      <button
         onClick={onClick}
-        variant="gold"
-        size="icon"
-        className="h-14 w-14 rounded-full shadow-glow ring-2 ring-gold/10 hover:ring-gold/25 transition-all overflow-hidden p-0"
+        className="h-16 w-16 rounded-full bg-[#0a0a1a] border-2 border-cyan-400/50 shadow-[0_0_20px_rgba(0,200,255,0.4)] hover:shadow-[0_0_30px_rgba(0,200,255,0.6)] transition-all duration-300 overflow-hidden p-1 hover:scale-105 active:scale-95"
         aria-label="Abrir Therabot"
       >
         <img
           src={cosmicIcon}
           alt="Assistente Cósmica"
-          className="w-full h-full object-cover scale-125"
+          className="w-full h-full object-contain"
           loading="lazy"
           width={512}
           height={512}
         />
-      </Button>
+      </button>
     </motion.div>
   );
 }
