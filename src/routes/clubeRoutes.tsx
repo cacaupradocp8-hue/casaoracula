@@ -27,6 +27,7 @@ const ClubeOracular = React.lazy(() => import('@/pages/ClubeOracular'));
 const ClubeHome = React.lazy(() => import('@/pages/clube/ClubeHome'));
 const ClubeCiclo = React.lazy(() => import('@/pages/clube/ClubeCiclo'));
 const ClubeEncontro = React.lazy(() => import('@/pages/clube/ClubeEncontro'));
+const ClubeAcervo = React.lazy(() => import('@/pages/clube/ClubeAcervo'));
 
 type PR = React.ComponentType<{ children: React.ReactNode; minPortal?: string }>;
 
@@ -58,5 +59,6 @@ export function renderClubeRoutes(ProtectedRoute: PR) {
     <Route key="clube-home" path="/clube" element={<ProtectedRoute minPortal="visitante"><ClubeHome /></ProtectedRoute>} />,
     <Route key="clube-ciclo" path="/clube/ciclo" element={<ProtectedRoute minPortal="mentorada"><ClubeCiclo /></ProtectedRoute>} />,
     <Route key="clube-encontro" path="/clube/encontro" element={<ProtectedRoute minPortal="mentorada"><ClubeEncontro /></ProtectedRoute>} />,
+    <Route key="clube-acervo" path="/clube/acervo" element={<ProtectedRoute minPortal="mentorada"><ClubeAcervo /></ProtectedRoute>} />,
   ];
 }
