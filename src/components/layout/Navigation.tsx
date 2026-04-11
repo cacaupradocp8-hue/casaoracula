@@ -28,7 +28,7 @@ import {
 const visitanteMenuGroups = () => [
   { key: 'explorar', label: 'Explorar a Casa', icon: Compass, path: '/explorar-a-casa', subitems: [] },
   { key: 'formacao', label: 'Formação Orácula', icon: GraduationCap, path: '/oracula', subitems: [] },
-  { key: 'clube', label: 'Clube do Livro', icon: BookOpen, path: '/app/clube', subitems: [] },
+  { key: 'clube', label: 'Clube do Livro', icon: BookOpen, path: '/clube', subitems: [] },
   { key: 'vitrine', label: 'Vitrine', icon: Sparkles, path: '/vitrine', subitems: [] },
 ];
 
@@ -36,7 +36,7 @@ const visitanteMenuGroups = () => [
 const assinanteMenuGroups = () => [
   { key: 'inicio', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
   { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
-  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/app/clube', subitems: [] },
+  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/clube', subitems: [] },
   { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas', subitems: [] },
   { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
   { key: 'vitrine', label: 'Vitrine', icon: Sparkles, path: '/vitrine', subitems: [] },
@@ -46,7 +46,7 @@ const assinanteMenuGroups = () => [
 const alunaMenuGroups = () => [
   { key: 'inicio', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
   { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
-  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/app/clube', subitems: [] },
+  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/clube', subitems: [] },
   { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas', subitems: [] },
   { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
   { key: 'vitrine', label: 'Vitrine', icon: Sparkles, path: '/vitrine', subitems: [] },
