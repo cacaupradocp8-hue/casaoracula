@@ -25,6 +25,22 @@ const FADE_IN = 400;
 const HOLD = 1000;
 const FADE_OUT = 400;
 
+// CSS for breathing + light rays
+const ritualStyles = `
+@keyframes ritual-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+@keyframes ritual-rays-spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+@keyframes ritual-ray-pulse {
+  0%, 100% { opacity: 0.12; }
+  50% { opacity: 0.35; }
+}
+`;
+
 export function RitualSaidaDialog({ open, onClose, onConfirmExit, audioPlayback = null }: RitualSaidaDialogProps) {
   const [phase, setPhase] = useState<'hidden' | 'playing' | 'fading'>('hidden');
   const [phrase] = useState(() => closingPhrases[Math.floor(Math.random() * closingPhrases.length)]);
@@ -143,74 +159,136 @@ export function RitualSaidaDialog({ open, onClose, onConfirmExit, audioPlayback 
 
   const visible = phase === 'playing';
 
+  const RAY_COUNT = 12;
+  const rays = Array.from({ length: RAY_COUNT }, (_, i) => i);
+
   return (
-    <div
-      role="dialog"
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 99999,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 24,
-        background: '#0A0E14',
-        cursor: 'default',
-        opacity: visible ? 1 : 0,
-        transition: `opacity ${FADE_OUT}ms ease`,
-      }}
-    >
-      {/* Mandala flor — mesma da Sala da Visitante */}
+    <>
+      <style>{ritualStyles}</style>
       <div
+        role="dialog"
         style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 99999,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 24,
+          background: '#0A0E14',
+          cursor: 'default',
           opacity: visible ? 1 : 0,
-          transform: visible ? 'scale(1)' : 'scale(0.85)',
-          transition: `opacity ${FADE_IN}ms ease, transform ${FADE_IN}ms ease`,
+          transition: `opacity ${FADE_OUT}ms ease`,
+          overflow: 'hidden',
         }}
       >
-        <BreathingMandala />
+        {/* Light rays container */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            width: '200vmax',
+            height: '200vmax',
+            transform: 'translate(-50%, -50%)',
+            animation: 'ritual-rays-spin 120s linear infinite',
+            pointerEvents: 'none',
+            opacity: visible ? 1 : 0,
+            transition: `opacity ${FADE_IN}ms ease`,
+          }}
+        >
+          {rays.map((i) => (
+            <div
+              key={i}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                width: 2,
+                height: '50%',
+                transformOrigin: '50% 0%',
+                transform: `rotate(${(360 / RAY_COUNT) * i}deg)`,
+                background: `linear-gradient(to bottom, rgba(201,164,92,0.25), transparent 70%)`,
+                animation: `ritual-ray-pulse ${3 + (i % 3) * 1.2}s ease-in-out ${(i * 0.4) % 2}s infinite`,
+                filter: 'blur(1.5px)',
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Radial glow behind mandala */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            width: 320,
+            height: 320,
+            transform: 'translate(-50%, -50%)',
+            background: 'radial-gradient(circle, rgba(201,164,92,0.1) 0%, transparent 70%)',
+            animation: 'ritual-breathe 6s ease-in-out infinite',
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* Mandala flor — com respiração */}
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 1,
+            animation: visible ? 'ritual-breathe 6s ease-in-out infinite' : 'none',
+            opacity: visible ? 1 : 0,
+            transition: `opacity ${FADE_IN}ms ease`,
+          }}
+        >
+          <BreathingMandala />
+        </div>
+
+        {/* Phrase */}
+        <p
+          style={{
+            position: 'relative',
+            zIndex: 1,
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: 16,
+            color: 'rgba(201,164,92,0.5)',
+            fontStyle: 'italic',
+            letterSpacing: '0.03em',
+            textAlign: 'center',
+            padding: '0 40px',
+            opacity: visible ? 1 : 0,
+            transition: `opacity ${FADE_IN}ms ease 100ms`,
+          }}
+        >
+          {phrase}
+        </p>
+
+        {/* Botão Pular */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleSkip();
+          }}
+          style={{
+            position: 'relative',
+            zIndex: 1,
+            marginTop: 16,
+            padding: '8px 24px',
+            background: 'transparent',
+            border: '1px solid rgba(201,164,92,0.3)',
+            borderRadius: 8,
+            color: 'rgba(201,164,92,0.5)',
+            fontSize: 13,
+            letterSpacing: '0.05em',
+            cursor: 'pointer',
+            opacity: visible ? 1 : 0,
+            transition: `opacity ${FADE_IN}ms ease 200ms`,
+          }}
+        >
+          Pular e sair
+        </button>
       </div>
-
-      {/* Phrase */}
-      <p
-        style={{
-          fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 16,
-          color: 'rgba(201,164,92,0.5)',
-          fontStyle: 'italic',
-          letterSpacing: '0.03em',
-          textAlign: 'center',
-          padding: '0 40px',
-          opacity: visible ? 1 : 0,
-          transition: `opacity ${FADE_IN}ms ease 100ms`,
-        }}
-      >
-        {phrase}
-      </p>
-
-      {/* Botão Pular */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          handleSkip();
-        }}
-        style={{
-          marginTop: 16,
-          padding: '8px 24px',
-          background: 'transparent',
-          border: '1px solid rgba(201,164,92,0.3)',
-          borderRadius: 8,
-          color: 'rgba(201,164,92,0.5)',
-          fontSize: 13,
-          letterSpacing: '0.05em',
-          cursor: 'pointer',
-          opacity: visible ? 1 : 0,
-          transition: `opacity ${FADE_IN}ms ease 200ms`,
-        }}
-      >
-        Pular e sair
-      </button>
-    </div>
+    </>
   );
 }
