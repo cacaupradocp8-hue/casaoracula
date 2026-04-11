@@ -175,7 +175,7 @@ export default function OraculaSalesPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--background))] text-[hsl(var(--foreground))] overflow-x-hidden selection:bg-[hsl(var(--primary))/0.3]">
+    <div className="min-h-screen bg-[#0B0B0F] text-[#F3EFE7] overflow-x-hidden selection:bg-[#C6A96B]/30">
 
       <ParticleField density={28} color="216,255,62" />
 
