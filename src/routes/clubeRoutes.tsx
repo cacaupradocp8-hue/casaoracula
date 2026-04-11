@@ -54,5 +54,10 @@ export function renderClubeRoutes(ProtectedRoute: PR) {
     <Route key="cl-trav" path="/clube-livro/travessias" element={<ProtectedRoute minPortal="aluna"><COTravessiasList /></ProtectedRoute>} />,
     <Route key="cl-td" path="/clube-livro/travessia/:travessiaId" element={<ProtectedRoute minPortal="aluna"><COTravessiaDetail /></ProtectedRoute>} />,
     <Route key="cl-te" path="/clube-livro/travessia/:travessiaId/encontro/:encontroId" element={<ProtectedRoute minPortal="aluna"><COTravessiaEncontro /></ProtectedRoute>} />,
+
+    {/* Novo módulo Clube do Livro Oracular */}
+    <Route key="clube-home" path="/clube" element={<ProtectedRoute minPortal="mentorada"><ClubeHome /></ProtectedRoute>} />,
+    <Route key="clube-ciclo" path="/clube/ciclo" element={<ProtectedRoute minPortal="mentorada"><ClubeCiclo /></ProtectedRoute>} />,
+    <Route key="clube-encontro" path="/clube/encontro" element={<ProtectedRoute minPortal="mentorada"><ClubeEncontro /></ProtectedRoute>} />,
   ];
 }
