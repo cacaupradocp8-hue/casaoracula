@@ -24,7 +24,7 @@ export function MetodoOraculaSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-gold/60 text-sm tracking-widest uppercase mb-12 text-center"
+          className="text-gold text-sm font-semibold tracking-widest uppercase mb-12 text-center"
         >
           O Método ORÁCULA
         </motion.p>
@@ -58,10 +58,10 @@ export function MetodoOraculaSection() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-center space-y-1"
         >
-          <p className="text-muted-foreground text-sm">
+          <p className="text-foreground/80 text-sm">
             Nada é interpretado fora de contexto.
           </p>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-foreground/80 text-sm">
             Nada é conduzido sem contorno.
           </p>
         </motion.div>

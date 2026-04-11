@@ -48,7 +48,7 @@ export function MetodoFAQ() {
             <AccordionTrigger className="text-foreground text-sm font-medium hover:no-underline py-4">
               {item.q}
             </AccordionTrigger>
-            <AccordionContent className="text-muted-foreground text-sm leading-relaxed pb-4">
+            <AccordionContent className="text-foreground/80 text-sm leading-relaxed pb-4">
               {item.a}
             </AccordionContent>
           </AccordionItem>

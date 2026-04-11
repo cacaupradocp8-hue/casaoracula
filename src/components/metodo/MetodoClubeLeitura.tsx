@@ -20,11 +20,11 @@ export function MetodoClubeLeitura() {
 
   return (
     <motion.section {...fadeInUp} transition={{ duration: 0.8 }} className="py-16 md:py-24">
-      <p className="text-gold/80 text-xs uppercase tracking-[0.3em] text-center mb-4">Formação contínua</p>
+      <p className="text-gold text-xs font-semibold uppercase tracking-[0.3em] text-center mb-4">Formação contínua</p>
       <h2 className="text-3xl md:text-4xl font-display text-foreground mb-4 text-center tracking-wide">
         Clube do Livro Formativo
       </h2>
-      <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-12">
+      <p className="text-foreground/80 text-center max-w-2xl mx-auto mb-12">
         Cada ciclo é uma travessia. Cada livro, uma porta. Não se trata de ler mais — mas de ler com profundidade simbólica.
       </p>
 
@@ -40,7 +40,7 @@ export function MetodoClubeLeitura() {
           >
             <item.icon className="w-5 h-5 text-gold/70 mb-4" />
             <h3 className="font-display text-foreground mb-2">{item.titulo}</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">{item.texto}</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">{item.texto}</p>
           </motion.div>
         ))}
       </div>

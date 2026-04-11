@@ -24,7 +24,7 @@ const fadeInUp = {
 const RitualDivider = () => (
   <div className="flex items-center justify-center gap-4 my-12 md:my-16">
     <div className="h-px w-20 bg-gradient-to-r from-transparent to-gold/20" />
-    <span className="text-gold/50 text-xs tracking-[0.3em]">✦</span>
+    <span className="text-gold text-xs tracking-[0.3em]">✦</span>
     <div className="h-px w-20 bg-gradient-to-l from-transparent to-gold/20" />
   </div>
 );
@@ -56,7 +56,7 @@ export default function Metodo() {
             <h2 className="text-3xl md:text-4xl font-display text-gold mb-8 text-center tracking-wide">
               O que é a Casa
             </h2>
-            <p className="text-muted-foreground text-lg md:text-xl leading-[1.9] text-center max-w-3xl mx-auto mb-6">
+            <p className="text-foreground/85 text-lg md:text-xl leading-[1.9] text-center max-w-3xl mx-auto mb-6">
               {getCopyByKey('casa_oque_e', 'A Casa Orácula é um espaço de formação profunda, onde mulheres atravessam camadas de si mesmas através da linguagem simbólica.')}
             </p>
             <p className="text-foreground text-lg md:text-xl leading-[1.9] text-center max-w-3xl mx-auto font-display font-medium mb-12">
@@ -65,7 +65,7 @@ export default function Metodo() {
             <h2 className="text-3xl md:text-4xl font-display text-gold mb-8 text-center tracking-wide">
               Para quem é
             </h2>
-            <p className="text-muted-foreground text-lg md:text-xl leading-[1.9] text-center max-w-3xl mx-auto">
+            <p className="text-foreground/85 text-lg md:text-xl leading-[1.9] text-center max-w-3xl mx-auto">
               {getCopyByKey('casa_para_quem', 'Para mulheres que sentem o chamado de mergulhar em si mesmas com profundidade.')}
             </p>
           </motion.section>
@@ -79,7 +79,7 @@ export default function Metodo() {
             </h2>
             <Card className="bg-card/30 backdrop-blur-sm border-gold/10">
               <CardContent className="p-8 md:p-12">
-                <p className="text-muted-foreground text-lg md:text-xl leading-[1.9] text-center font-display italic">
+                <p className="text-foreground/85 text-lg md:text-xl leading-[1.9] text-center font-display italic">
                   {getCopyByKey('casa_fundamento', 'Aqui o símbolo não é conceito. É porta. Cada arquétipo, cada carta, cada imagem que emerge no processo é tratado como linguagem viva da psique.')}
                 </p>
               </CardContent>
