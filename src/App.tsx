@@ -498,6 +498,10 @@ function AppRoutes() {
       <Route path="/formacao-metodo/avaliacoes" element={<ProtectedRoute minPortal="mentorada"><FormacaoAvaliacoesPage /></ProtectedRoute>} />
 
       {/* Biblioteca Travessias */}
+
+      {/* Test: Bottom Nav Preview */}
+      <Route path="/test-bottom-nav" element={<BottomNavTestPage />} />
+
       <Route path="/biblioteca-das-travessias" element={<ProtectedRoute><Navigate to="/biblioteca?aba=travessias" replace /></ProtectedRoute>} />
       <Route path="/biblioteca-das-travessias/:slug" element={<ProtectedRoute><BibliotecaTravessiaDetalhe /></ProtectedRoute>} />
 
