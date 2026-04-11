@@ -11,7 +11,7 @@ export function TherabotFAB({ onClick }: Props) {
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       exit={{ scale: 0, opacity: 0 }}
-      className="fixed bottom-24 md:bottom-6 right-4 md:right-6 z-50"
+      className="fixed bottom-[105px] md:bottom-6 right-4 md:right-6 z-50"
     >
       <button
         onClick={onClick}
