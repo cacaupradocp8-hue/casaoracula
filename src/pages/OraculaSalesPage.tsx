@@ -55,7 +55,7 @@ function GoldButton({
   const base =
     'w-full max-w-sm py-4 md:py-5 rounded-lg text-[11px] uppercase tracking-[0.25em] font-semibold transition-all duration-500 flex items-center justify-center gap-2 active:scale-[0.97]';
   const styles = {
-    outline: 'border border-[#C6A96B]/30 bg-transparent text-[#F3EFE7]/70 hover:bg-[#C6A96B]/10 hover:border-[#C6A96B]/50',
+    outline: 'border border-[#C6A96B]/55 bg-transparent text-[#F3EFE7]/95 hover:bg-[#C6A96B]/12 hover:border-[#C6A96B]/70',
     solid: 'bg-[#C6A96B] text-[#0B0B0F] hover:bg-[#d4b87a]',
     glow: 'bg-[#C6A96B] text-[#0B0B0F] hover:bg-[#d4b87a] shadow-[0_0_80px_-15px_rgba(198,169,107,0.35)]',
   };
@@ -129,7 +129,7 @@ function VideoPlayer({ onCtaClick }: { onCtaClick: () => void }) {
                   <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-2 border-[#C6A96B]/30 flex items-center justify-center bg-[#C6A96B]/5 backdrop-blur-sm group-hover:border-[#C6A96B]/70 group-hover:scale-105 transition-all duration-500">
                     <Play className="w-8 h-8 md:w-10 md:h-10 text-[#C6A96B] ml-1" fill="currentColor" />
                   </div>
-                  <span className="text-[#F3EFE7]/25 text-xs tracking-wider uppercase">Assistir</span>
+                  <span className="text-[#F3EFE7]/80 text-xs tracking-wider uppercase">Assistir</span>
                 </button>
               </div>
             ) : (
@@ -175,20 +175,9 @@ export default function OraculaSalesPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0B0B0F] text-[#F3EFE7] overflow-x-hidden selection:bg-[#C6A96B]/30">
+    <div className="min-h-screen bg-[hsl(var(--background))] text-[hsl(var(--foreground))] overflow-x-hidden selection:bg-[hsl(var(--primary))/0.3]">
 
-      {/* ── HEADER ── */}
-      {/* Particle meteor effect */}
-      <ParticleField density={70} color="216,255,62" />
-
-      <motion.header
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 0.5 }}
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center px-5 py-4 mix-blend-difference"
-      >
-        <span className="text-[#F3EFE7]/30 text-[10px] tracking-[0.3em] uppercase">Casa Orácula</span>
-      </motion.header>
+      <ParticleField density={28} color="216,255,62" />
 
       {/* ═══════════════════════════════
          1. HERO FULLSCREEN
@@ -221,7 +210,7 @@ export default function OraculaSalesPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 1.2 }}
-            className="text-[#F3EFE7]/40 text-base md:text-lg text-center max-w-md"
+            className="text-[hsl(var(--foreground))/0.9] text-base md:text-lg text-center max-w-md"
           >
             A formação que ensina a ler o campo antes de intervir.
           </motion.p>
@@ -243,7 +232,7 @@ export default function OraculaSalesPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2 }}
-            className="text-[#F3EFE7]/15 text-[11px] tracking-wide"
+            className="text-[hsl(var(--foreground))/0.78] text-[11px] tracking-wide"
           >
             Ciclo de 1 ano · Turmas fechadas
           </motion.p>
@@ -268,14 +257,14 @@ export default function OraculaSalesPage() {
           <Phrase
             key={i}
             delay={i * 0.04}
-            className="font-display text-[clamp(1.2rem,5vw,2rem)] font-light leading-[1.3] text-center text-[#F3EFE7]/60 py-[12vh]"
+            className="font-display text-[clamp(1.2rem,5vw,2rem)] font-light leading-[1.3] text-center text-[hsl(var(--foreground))/0.88] py-[12vh]"
           >
             {f}
           </Phrase>
         ))}
 
         <Phrase className="font-display text-[clamp(1.4rem,6vw,2.6rem)] font-light leading-[1.2] text-center py-[14vh]">
-          <span className="text-[#F3EFE7]/40">E mesmo assim…</span>
+          <span className="text-[hsl(var(--foreground))/0.82]">E mesmo assim…</span>
           <br />
           <span className="text-[#C6A96B]">Algo não sustenta.</span>
         </Phrase>
@@ -294,7 +283,7 @@ export default function OraculaSalesPage() {
       ═══════════════════════════════ */}
 
       <section className="max-w-3xl mx-auto">
-        <Phrase className="font-display text-[clamp(1.2rem,5vw,2rem)] font-light text-center text-[#F3EFE7]/50 px-6 mb-10">
+        <Phrase className="font-display text-[clamp(1.2rem,5vw,2rem)] font-light text-center text-[hsl(var(--foreground))/0.88] px-6 mb-10">
           Assista e entenda o que muda quando você <span className="text-[#C6A96B]">aprende a ler</span>.
         </Phrase>
         <VideoPlayer onCtaClick={ctaClick} />
@@ -316,7 +305,7 @@ export default function OraculaSalesPage() {
           <Phrase
             key={i}
             className={`font-display text-lg md:text-xl font-light text-center py-[10vh] ${
-              item.dim ? 'text-[#F3EFE7]/35' : 'text-[#F3EFE7]/80'
+              item.dim ? 'text-[hsl(var(--foreground))/0.82]' : 'text-[hsl(var(--foreground))/0.96]'
             }`}
           >
             {item.t}
@@ -324,7 +313,7 @@ export default function OraculaSalesPage() {
         ))}
 
         <Phrase className="font-display text-[clamp(1.3rem,5vw,2.2rem)] font-light text-center py-[12vh]">
-          <span className="text-[#F3EFE7]/40">Toda intervenção fora de tempo…</span>
+          <span className="text-[hsl(var(--foreground))/0.84]">Toda intervenção fora de tempo…</span>
           <br />
           <span className="text-[#C6A96B]">vira invasão simbólica.</span>
         </Phrase>
@@ -344,7 +333,7 @@ export default function OraculaSalesPage() {
 
       <section className="py-16 px-6">
         <div className="max-w-lg mx-auto">
-          <Phrase className="text-[#C6A96B]/25 text-[10px] uppercase tracking-[0.5em] text-center mb-12">
+          <Phrase className="text-[hsl(var(--primary))] text-sm md:text-base uppercase tracking-[0.35em] text-center mb-8 font-semibold">
             Método da CidaDELA
           </Phrase>
 
@@ -360,11 +349,11 @@ export default function OraculaSalesPage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: i * 0.1 }}
-                className="border border-[#F3EFE7]/[0.06] rounded-lg p-6 relative overflow-hidden"
+                className="border border-[hsl(var(--border))/0.6] bg-[hsl(var(--card))/0.22] rounded-lg p-6 relative overflow-hidden"
               >
-                <div className="absolute top-0 left-0 w-[3px] h-full bg-[#C6A96B]/20 rounded-full" />
-                <h3 className="font-display text-xl text-[#F3EFE7]/75 font-light mb-1 pl-3">{item.title}</h3>
-                <p className="text-[#F3EFE7]/30 text-sm pl-3">{item.desc}</p>
+                <div className="absolute top-0 left-0 w-[3px] h-full bg-[hsl(var(--primary))/0.8] rounded-full" />
+                <h3 className="font-display text-xl text-[hsl(var(--foreground))] font-medium mb-1 pl-3">{item.title}</h3>
+                <p className="text-[hsl(var(--foreground))/0.86] text-sm md:text-base pl-3 leading-relaxed">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -373,9 +362,9 @@ export default function OraculaSalesPage() {
 
       <section className="px-6 max-w-lg mx-auto text-center">
         <Phrase className="text-base md:text-lg font-light py-[8vh]">
-          <span className="text-[#F3EFE7]/35">Quando isso é visto,</span>
+          <span className="text-[hsl(var(--foreground))/0.86]">Quando isso é visto,</span>
           <br />
-          <span className="text-[#F3EFE7]/35">a condução deixa de ser tentativa.</span>
+          <span className="text-[hsl(var(--foreground))/0.86]">a condução deixa de ser tentativa.</span>
           <br /><br />
           <span className="text-[#C6A96B]">E passa a ser precisão.</span>
         </Phrase>
@@ -390,7 +379,7 @@ export default function OraculaSalesPage() {
 
       <section className="py-20 px-6 bg-[#08080C]">
         <div className="max-w-lg mx-auto">
-          <Phrase className="text-[#C6A96B]/25 text-[10px] uppercase tracking-[0.5em] text-center mb-14">
+            <Phrase className="text-[hsl(var(--primary))] text-sm uppercase tracking-[0.35em] text-center mb-10 font-semibold">
             Não é automação. É leitura viva.
           </Phrase>
 
@@ -400,12 +389,12 @@ export default function OraculaSalesPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-              className="border border-[#F3EFE7]/[0.05] rounded-xl p-6 space-y-4"
+              className="border border-[hsl(var(--border))/0.5] rounded-xl p-6 space-y-4 bg-[hsl(var(--card))/0.12]"
             >
-              <p className="text-[#F3EFE7]/20 text-[10px] uppercase tracking-[0.4em]">O mercado oferece</p>
+              <p className="text-[hsl(var(--foreground))/0.8] text-xs uppercase tracking-[0.32em] font-semibold">O mercado oferece</p>
               {['Templates prontos', 'Técnicas desconectadas', 'Resultados rápidos'].map((t) => (
-                <p key={t} className="text-[#F3EFE7]/25 text-sm flex items-center gap-3">
-                  <span className="w-1 h-1 rounded-full bg-[#F3EFE7]/15" />
+                <p key={t} className="text-[hsl(var(--foreground))/0.86] text-sm md:text-base flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--foreground))/0.75]" />
                   {t}
                 </p>
               ))}
@@ -416,12 +405,12 @@ export default function OraculaSalesPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="border border-[#C6A96B]/15 rounded-xl p-6 space-y-4 bg-[#C6A96B]/[0.02]"
+              className="border border-[hsl(var(--primary))/0.35] rounded-xl p-6 space-y-4 bg-[hsl(var(--primary))/0.08]"
             >
-              <p className="text-[#C6A96B]/40 text-[10px] uppercase tracking-[0.4em]">A Casa Orácula entrega</p>
+              <p className="text-[hsl(var(--primary))] text-xs uppercase tracking-[0.32em] font-semibold">A Casa Orácula entrega</p>
               {['Leitura simbólica viva', 'Método com ética e profundidade', 'Formação de identidade clínica'].map((t) => (
-                <p key={t} className="text-[#F3EFE7]/55 text-sm flex items-center gap-3">
-                  <span className="w-1 h-1 rounded-full bg-[#C6A96B]/50" />
+                <p key={t} className="text-[hsl(var(--foreground))/0.92] text-sm md:text-base flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--primary))]" />
                   {t}
                 </p>
               ))}
@@ -443,7 +432,7 @@ export default function OraculaSalesPage() {
             <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/30 to-transparent" />
           </div>
 
-          <Phrase className="font-display text-lg font-light text-[#F3EFE7]/60 text-center mb-2">
+          <Phrase className="font-display text-lg font-light text-[hsl(var(--foreground))/0.92] text-center mb-2">
             O app da Casa Orácula não é bônus.
           </Phrase>
           <Phrase className="font-display text-lg font-light text-[#C6A96B] text-center mb-8">
@@ -453,8 +442,8 @@ export default function OraculaSalesPage() {
           <div className="space-y-3">
             {['Mapa vivo da prática', 'Registro de Portas e Campos', 'Acompanhamento de narrativas', 'Supervisão integrada'].map(
               (item) => (
-                <p key={item} className="text-[#F3EFE7]/40 text-sm flex items-center gap-3 justify-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#C6A96B]/30" />
+                <p key={item} className="text-[hsl(var(--foreground))/0.88] text-sm md:text-base flex items-center gap-3 justify-center">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--primary))/0.75]" />
                   {item}
                 </p>
               ),
@@ -471,13 +460,13 @@ export default function OraculaSalesPage() {
       ═══════════════════════════════ */}
 
       <section className="px-6 max-w-lg mx-auto text-center">
-        <Phrase className="font-display text-[clamp(1.3rem,5vw,2.2rem)] font-light py-[10vh] text-[#F3EFE7]/60">
+        <Phrase className="font-display text-[clamp(1.3rem,5vw,2.2rem)] font-light py-[10vh] text-[hsl(var(--foreground))/0.9]">
           Isso não é um curso.
         </Phrase>
         <Phrase className="font-display text-[clamp(1.3rem,5vw,2.2rem)] font-light py-[10vh] text-[#C6A96B]">
           É uma formação de identidade.
         </Phrase>
-        <Phrase className="font-display text-lg font-light py-[10vh] text-[#F3EFE7]/35 leading-relaxed">
+        <Phrase className="font-display text-lg font-light py-[10vh] text-[hsl(var(--foreground))/0.86] leading-relaxed">
           Um ano para atravessar.
           <br />
           Integrar.
@@ -505,21 +494,21 @@ export default function OraculaSalesPage() {
           transition={{ duration: 1.2 }}
           className="max-w-sm mx-auto text-center"
         >
-          <p className="text-[#C6A96B]/25 text-[10px] uppercase tracking-[0.5em] mb-10">Investimento</p>
-          <h2 className="font-display text-2xl font-light text-[#F3EFE7]/80 mb-2">Formação Oracular</h2>
-          <p className="text-[#F3EFE7]/25 text-sm mb-8">Ciclo completo de 1 ano</p>
+          <p className="text-[hsl(var(--primary))] text-sm uppercase tracking-[0.35em] mb-8 font-semibold">Investimento</p>
+          <h2 className="font-display text-2xl font-light text-[hsl(var(--foreground))/0.96] mb-2">Formação Oracular</h2>
+          <p className="text-[hsl(var(--foreground))/0.82] text-sm mb-8">Ciclo completo de 1 ano</p>
 
           <p className="font-display text-4xl md:text-5xl font-light text-[#F3EFE7] mb-2">
             R$ <span className="text-[#C6A96B]">3.597</span>
           </p>
-          <p className="text-[#F3EFE7]/35 text-sm mb-1">
+          <p className="text-[hsl(var(--foreground))/0.86] text-sm mb-1">
             ou até <span className="text-[#C6A96B]/80 font-medium">12x de R$ 372,01</span>
           </p>
-          <p className="text-[#F3EFE7]/15 text-xs mb-12">Turmas fechadas</p>
+          <p className="text-[hsl(var(--foreground))/0.76] text-xs mb-12">Turmas fechadas</p>
 
           <GoldButton label="Entrar na Formação Orácula" onClick={ctaClick} variant="glow" />
 
-          <p className="text-[#F3EFE7]/12 text-xs mt-10 italic">
+          <p className="text-[hsl(var(--foreground))/0.76] text-xs mt-10 italic">
             A decisão não é sobre valor.
             <br />
             É sobre responsabilidade.
@@ -540,18 +529,18 @@ export default function OraculaSalesPage() {
         />
 
         <div className="relative z-10 max-w-lg mx-auto text-center">
-          <Phrase className="font-display text-lg font-light text-[#F3EFE7]/35 italic mb-[8vh]">
+          <Phrase className="font-display text-lg font-light text-[hsl(var(--foreground))/0.88] italic mb-[8vh]">
             Depois que você aprende a ler…
             <br />
             não consegue mais fingir que não vê.
           </Phrase>
-          <Phrase className="font-display text-base font-light text-[#F3EFE7]/25 mb-[8vh]">
+          <Phrase className="font-display text-base font-light text-[hsl(var(--foreground))/0.82] mb-[8vh]">
             Se você sente que já não quer apenas conduzir mulheres…
           </Phrase>
           <Phrase className="font-display text-lg font-light text-[#C6A96B] mb-[8vh]">
             Talvez esteja buscando uma casa.
           </Phrase>
-          <Phrase className="font-display text-xl font-light text-[#F3EFE7]/70 mb-12">
+          <Phrase className="font-display text-xl font-light text-[hsl(var(--foreground))/0.96] mb-12">
             E a Casa… já existe.
           </Phrase>
 
@@ -560,11 +549,16 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-10 px-6 border-t border-[#F3EFE7]/[0.04]">
-        <p className="text-[#F3EFE7]/10 text-[11px] leading-relaxed max-w-sm mx-auto text-center">
-          Casa Orácula © {new Date().getFullYear()} · A Casa Orácula não substitui terapia,
-          acompanhamento psicológico ou tratamento clínico quando necessário.
-        </p>
+      <footer className="py-10 px-6 border-t border-[hsl(var(--border))/0.4]">
+        <div className="max-w-xl mx-auto text-center space-y-4">
+          <p className="font-display text-base md:text-lg leading-relaxed text-[hsl(var(--foreground))/0.94]">
+            A Casa Orácula forma mulheres capazes de atravessar, integrar e transmitir conhecimento simbólico com ética, aplicabilidade e maturidade psíquica.
+          </p>
+          <p className="text-[hsl(var(--foreground))/0.72] text-[11px] leading-relaxed">
+            Casa Orácula © {new Date().getFullYear()} · A Casa Orácula não substitui terapia,
+            acompanhamento psicológico ou tratamento clínico quando necessário.
+          </p>
+        </div>
       </footer>
 
       {/* ── Floating CTA mobile ── */}
