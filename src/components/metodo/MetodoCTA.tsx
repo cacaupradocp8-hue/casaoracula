@@ -16,10 +16,10 @@ export function MetodoCTA() {
 
   return (
     <motion.section {...fadeInUp} transition={{ duration: 0.8 }} className="text-center py-20 md:py-28">
-      <p className="text-muted-foreground text-lg mb-3 font-display italic">
+      <p className="text-foreground text-lg mb-3 font-display italic">
         {getCopyByKey('casa_cta_texto', 'Pronta para atravessar o limiar?')}
       </p>
-      <p className="text-foreground/80 text-sm mb-10 max-w-md mx-auto">
+      <p className="text-foreground/85 text-sm mb-10 max-w-md mx-auto">
         A Casa Orácula não promete resultados rápidos. Ela oferece lugar — interno, simbólico e profissional.
       </p>
 

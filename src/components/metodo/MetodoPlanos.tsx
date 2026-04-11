@@ -38,7 +38,7 @@ export function MetodoPlanos() {
       <h2 className="text-3xl md:text-4xl font-display text-foreground mb-4 text-center tracking-wide">
         Caminhos de Entrada
       </h2>
-      <p className="text-muted-foreground text-center max-w-xl mx-auto mb-12">
+      <p className="text-foreground/80 text-center max-w-xl mx-auto mb-12">
         Cada caminho respeita o seu momento. Nenhum é maior que o outro — são diferentes profundidades.
       </p>
 
@@ -60,10 +60,10 @@ export function MetodoPlanos() {
               <p className="text-gold text-xs uppercase tracking-widest mb-3 font-medium">Mais escolhido</p>
             )}
             <h3 className="font-display text-xl text-foreground mb-2">{plano.nome}</h3>
-            <p className="text-sm text-muted-foreground mb-5">{plano.desc}</p>
+            <p className="text-sm text-foreground/80 mb-5">{plano.desc}</p>
             <ul className="space-y-2">
               {plano.itens.map((item) => (
-                <li key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
+                <li key={item} className="flex items-center gap-2 text-sm text-foreground/80">
                   <Check className="w-3.5 h-3.5 text-gold shrink-0" />
                   {item}
                 </li>

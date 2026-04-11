@@ -18,13 +18,13 @@ export function MetodoHero() {
         transition={{ duration: 1.2, ease: 'easeOut' }}
         className="relative z-10 text-center px-6 max-w-3xl mx-auto"
       >
-        <p className="text-gold uppercase tracking-[0.4em] text-xs mb-8 font-medium">
+        <p className="text-gold uppercase tracking-[0.4em] text-sm mb-8 font-semibold">
           Método Orácula
         </p>
-        <h1 className="text-5xl md:text-7xl font-display font-semibold text-foreground mb-6 tracking-wide leading-[1.1]">
+        <h1 className="text-5xl md:text-7xl font-display font-semibold text-foreground mb-6 tracking-wide leading-[1.1] drop-shadow-lg">
           {getCopyByKey('casa_titulo', 'Casa Orácula')}
         </h1>
-        <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto font-display italic leading-relaxed">
+        <p className="text-xl md:text-2xl text-foreground/90 max-w-2xl mx-auto font-display italic leading-relaxed">
           {getCopyByKey('casa_subtitulo', 'Um espaço de formação simbólica para a psique feminina')}
         </p>
       </motion.div>

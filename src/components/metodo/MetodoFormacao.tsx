@@ -22,11 +22,11 @@ export function MetodoFormacao() {
 
   return (
     <motion.section {...fadeInUp} transition={{ duration: 0.8 }} className="py-16 md:py-24">
-      <p className="text-gold/80 text-xs uppercase tracking-[0.3em] text-center mb-4">Jornada formativa</p>
+      <p className="text-gold text-xs font-semibold uppercase tracking-[0.3em] text-center mb-4">Jornada formativa</p>
       <h2 className="text-3xl md:text-4xl font-display text-foreground mb-4 text-center tracking-wide">
         Formação Profissional
       </h2>
-      <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-14">
+      <p className="text-foreground/80 text-center max-w-2xl mx-auto mb-14">
         Não se avança por tempo. Avança-se por maturidade. Cada nível exige prática, evidência e revisão.
       </p>
 
@@ -48,7 +48,7 @@ export function MetodoFormacao() {
                 <nivel.icon className="w-4 h-4 text-gold/70" strokeWidth={1.5} />
               </div>
               <h3 className="font-display text-sm text-foreground mb-1">{nivel.nome}</h3>
-              <p className="text-muted-foreground text-xs">{nivel.desc}</p>
+              <p className="text-foreground/75 text-xs">{nivel.desc}</p>
             </motion.div>
           ))}
         </div>

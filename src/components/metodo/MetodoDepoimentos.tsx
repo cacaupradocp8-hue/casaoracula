@@ -41,7 +41,7 @@ export function MetodoDepoimentos() {
             transition={{ duration: 0.5, delay: i * 0.1 }}
             className="border border-border/50 rounded-lg p-6 bg-card/20"
           >
-            <p className="text-muted-foreground text-sm leading-relaxed italic mb-5">
+            <p className="text-foreground/80 text-sm leading-relaxed italic mb-5">
               "{dep.texto}"
             </p>
             <div className="flex items-center gap-2">
@@ -50,7 +50,7 @@ export function MetodoDepoimentos() {
               </div>
               <div>
                 <p className="text-foreground text-sm">{dep.nome}</p>
-                <p className="text-muted-foreground text-xs">{dep.nivel}</p>
+                <p className="text-foreground/70 text-xs">{dep.nivel}</p>
               </div>
             </div>
           </motion.div>

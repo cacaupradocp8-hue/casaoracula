@@ -52,7 +52,7 @@ export function MetodoPilares() {
                   <pilar.Icon className="w-6 h-6 text-gold" />
                 </div>
                 <h3 className="text-xl font-display text-gold mb-4 tracking-wide">{pilar.titulo}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{pilar.texto}</p>
+                <p className="text-sm text-foreground/80 leading-relaxed">{pilar.texto}</p>
               </CardContent>
             </Card>
           </motion.div>
