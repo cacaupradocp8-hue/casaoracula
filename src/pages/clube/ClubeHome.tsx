@@ -1,6 +1,6 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Calendar, Compass, Sparkles } from 'lucide-react';
+import { BookOpen, Calendar, Compass, Sparkles, Library } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
@@ -83,9 +83,13 @@ export default function ClubeHome() {
           <StatusCard icon={<Calendar className="w-4 h-4 text-primary" />} label="Próximo encontro" value={nextMeeting?.date ? new Date(nextMeeting.date).toLocaleDateString('pt-BR') : '—'} />
         </div>
 
-        <div className="text-center">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Button size="lg" onClick={() => navigate('/clube/ciclo')} className="bg-primary text-primary-foreground hover:bg-primary/90 px-10">
             Entrar no ciclo
+          </Button>
+          <Button size="lg" variant="outline" onClick={() => navigate('/clube/acervo')} className="gap-2 px-8">
+            <Library className="w-4 h-4" />
+            Acervo de Livros
           </Button>
         </div>
       </div>
