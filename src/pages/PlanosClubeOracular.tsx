@@ -353,7 +353,13 @@ export default function PlanosClubeOracular() {
           </section>
         ) : (
           /* Planos grid */
-          <section className="pb-20 px-6">
+          <section id="planos-clube" className="pb-20 px-6">
+            <motion.div {...fadeUp} className="text-center mb-10">
+              <h2 className="font-display text-2xl md:text-3xl text-foreground tracking-wide mb-3">
+                Investimento
+              </h2>
+              <div className="w-10 h-px bg-gold/20 mx-auto" />
+            </motion.div>
             <div className="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
               {planos.map((plan, index) => (
                 <motion.div
