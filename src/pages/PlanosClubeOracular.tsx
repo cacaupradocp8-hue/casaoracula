@@ -430,6 +430,47 @@ export default function PlanosClubeOracular() {
           </section>
         )}
 
+        {/* SEÇÃO 10 — Transição */}
+        <section className="py-14 md:py-20 border-t border-border/10">
+          <div className="container mx-auto px-6 max-w-2xl text-center">
+            <motion.div {...fadeUp}>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                O Clube é a base da Casa Orácula.
+              </p>
+              <p className="text-foreground/70">
+                Depois, você pode avançar para a Formação<br />
+                quando estiver pronta para conduzir.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* SEÇÃO 11 — CTA Final */}
+        <section className="py-16 md:py-24 border-t border-border/10">
+          <div className="container mx-auto px-6 max-w-2xl text-center">
+            <motion.div {...fadeUp}>
+              <p className="text-muted-foreground leading-relaxed text-base md:text-lg mb-3">
+                Se você quer parar de apenas escutar<br />
+                e começar a ver o que está acontecendo,
+              </p>
+              <p className="font-display text-xl text-gold italic mb-8">
+                o Clube está aberto.
+              </p>
+              <Button
+                variant="gold"
+                size="lg"
+                className="px-10"
+                onClick={() => {
+                  const el = document.getElementById('planos-clube');
+                  el?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Entrar no Clube de Leitura Oracular
+              </Button>
+            </motion.div>
+          </div>
+        </section>
+
         {/* Nota ética */}
         <footer className="py-12 text-center">
           <div className="flex items-center justify-center gap-4 mb-4">
