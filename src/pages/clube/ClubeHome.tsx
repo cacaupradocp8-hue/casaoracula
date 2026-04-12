@@ -82,14 +82,22 @@ export default function ClubeHome() {
           <StatusCard icon={<Calendar className="w-4 h-4 text-primary" />} label="Próximo encontro" value={nextMeeting?.date ? new Date(nextMeeting.date).toLocaleDateString('pt-BR') : '—'} />
         </div>
 
-        {/* CTA */}
-        <div className="flex justify-center">
+        {/* CTAs */}
+        <div className="flex flex-col items-center gap-3">
           <Button
             size="lg"
             onClick={() => navigate('/clube/ciclo')}
             className="bg-primary text-primary-foreground hover:bg-primary/90 px-12"
           >
             Entrar no ciclo
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => navigate('/clube/escuta')}
+            className="border-gold/20 text-gold hover:bg-gold/10 gap-2"
+          >
+            <Headphones className="w-4 h-4" />
+            Escuta Contemplativa
           </Button>
         </div>
       </div>
