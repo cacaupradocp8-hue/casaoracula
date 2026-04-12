@@ -14775,6 +14775,57 @@ export type Database = {
         }
         Relationships: []
       }
+      oraculo_portais: {
+        Row: {
+          cover_image_url: string | null
+          created_at: string
+          descricao_curta: string | null
+          icon_name: string | null
+          id: string
+          inspirado_em: string | null
+          nome: string
+          objetivo_formativo: string | null
+          ordem: number
+          slug: string
+          status: string
+          subtitulo: string | null
+          tempo_estimado: string | null
+          updated_at: string
+        }
+        Insert: {
+          cover_image_url?: string | null
+          created_at?: string
+          descricao_curta?: string | null
+          icon_name?: string | null
+          id?: string
+          inspirado_em?: string | null
+          nome: string
+          objetivo_formativo?: string | null
+          ordem: number
+          slug: string
+          status?: string
+          subtitulo?: string | null
+          tempo_estimado?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cover_image_url?: string | null
+          created_at?: string
+          descricao_curta?: string | null
+          icon_name?: string | null
+          id?: string
+          inspirado_em?: string | null
+          nome?: string
+          objetivo_formativo?: string | null
+          ordem?: number
+          slug?: string
+          status?: string
+          subtitulo?: string | null
+          tempo_estimado?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pattern_flags: {
         Row: {
           created_at: string
