@@ -300,7 +300,7 @@ function AppRoutes() {
       <Route path="/experiencia-gratuita" element={<ProtectedRoute><Navigate to="/quiz/descubra-seu-eixo" replace /></ProtectedRoute>} />
       <Route path="/dashboard" element={<ProtectedRoute><Navigate to="/dashboard-membro" replace /></ProtectedRoute>} />
       <Route path="/dashboard-membro" element={<ProtectedRoute><DashboardMembro /></ProtectedRoute>} />
-      <Route path="/clube" element={<Navigate to="/app/clube" replace />} />
+      {/* /clube is handled by clubeRoutes */}
       <Route path="/salas/:id" element={<ProtectedRoute><SalaDetalhe /></ProtectedRoute>} />
       <Route path="/portal/:id" element={<ProtectedRoute><PortalDetalhe /></ProtectedRoute>} />
       <Route path="/aulas/:id" element={<ProtectedRoute><AulaPage /></ProtectedRoute>} />
