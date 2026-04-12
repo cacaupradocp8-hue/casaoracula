@@ -7,6 +7,7 @@ const ClubeCiclo = React.lazy(() => import('@/pages/clube/ClubeCiclo'));
 const ClubeEncontro = React.lazy(() => import('@/pages/clube/ClubeEncontro'));
 const ClubeChatLivro = React.lazy(() => import('@/pages/clube/ClubeChatLivro'));
 const ClubeAcervo = React.lazy(() => import('@/pages/clube/ClubeAcervo'));
+const ClubeForja = React.lazy(() => import('@/pages/clube/ClubeForja'));
 
 // ─── Rotas legadas (mantidas para compatibilidade) ───
 const ClubeLivroCiclo = React.lazy(() => import('@/pages/clube-livro/ClubeLivroCiclo'));
@@ -39,6 +40,7 @@ export function renderClubeRoutes(ProtectedRoute: PR) {
     <Route key="clube-chat" path="/clube/chat-livro" element={<ProtectedRoute minPortal="mentorada"><ClubeChatLivro /></ProtectedRoute>} />,
     <Route key="clube-encontro" path="/clube/encontro" element={<ProtectedRoute minPortal="mentorada"><ClubeEncontro /></ProtectedRoute>} />,
     <Route key="clube-acervo" path="/clube/acervo" element={<ProtectedRoute minPortal="mentorada"><ClubeAcervo /></ProtectedRoute>} />,
+    <Route key="clube-forja" path="/clube/forja" element={<ProtectedRoute minPortal="mentorada"><ClubeForja /></ProtectedRoute>} />,
 
     // ═══ REDIRECIONAMENTOS de rotas legadas ═══
     <Route key="cl-redir-old" path="/app/clube" element={<Navigate to="/clube" replace />} />,
