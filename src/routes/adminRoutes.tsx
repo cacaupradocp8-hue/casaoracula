@@ -10,6 +10,8 @@ const AdminAlunaAcompanhamento = React.lazy(() => import('@/pages/admin/AdminAlu
 const AdminOracleCardsPage = React.lazy(() => import('@/pages/admin/AdminOracleCardsPage'));
 const AdminClubeJornadas = React.lazy(() => import('@/pages/admin/clube/AdminClubeJornadas'));
 const AdminPortalCMS = React.lazy(() => import('@/pages/admin/clube/AdminPortalCMS'));
+const AdminOraculoPortais = React.lazy(() => import('@/pages/admin/clube/AdminOraculoPortais'));
+const AdminOraculoPortalEditor = React.lazy(() => import('@/pages/admin/clube/AdminOraculoPortalEditor'));
 
 // Clube de Leitura Oracular — Hub + Sub-páginas
 const AdminClubeHub = React.lazy(() => import('@/pages/admin/clube/AdminClubeHub'));
