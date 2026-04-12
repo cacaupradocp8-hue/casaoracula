@@ -1,12 +1,11 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, AlertTriangle, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -76,7 +75,7 @@ export default function ClubeCiclo() {
     }
   }, [carto]);
 
-  // Reflections
+  // Reflections (Espelho)
   const { data: refl } = useQuery({
     queryKey: ['club-reflection', cycleId],
     enabled: !!cycleId && !!user,
@@ -105,11 +104,13 @@ export default function ClubeCiclo() {
     }
   }, [refl]);
 
-  // Tool (Forja)
+  // Forja
   const [toolTipo, setToolTipo] = useState('pergunta_clinica');
   const [toolContent, setToolContent] = useState('');
+  const [toolContexto, setToolContexto] = useState('');
+  const [toolLimite, setToolLimite] = useState('');
 
-  // User cycle (compromisso)
+  // Compromisso semanal
   const { data: userCycle } = useQuery({
     queryKey: ['club-user-cycle', cycleId],
     enabled: !!cycleId && !!user,
@@ -124,8 +125,13 @@ export default function ClubeCiclo() {
     },
   });
 
-  // No compromisso fields in new schema — use status as placeholder
-  // We'll store compromisso in a simple approach
+  const [compromisso, setCompromisso] = useState('');
+
+  useEffect(() => {
+    if (userCycle) {
+      setCompromisso(userCycle.compromisso || '');
+    }
+  }, [userCycle]);
 
   const saveCarto = useMutation({
     mutationFn: async () => {
@@ -156,62 +162,92 @@ export default function ClubeCiclo() {
   const saveTool = useMutation({
     mutationFn: async () => {
       if (!user || !cycleId) return;
-      await supabase.from('club_tools' as any).insert({ user_id: user.id, cycle_id: cycleId, tipo: toolTipo, conteudo: toolContent });
+      await supabase.from('club_tools' as any).insert({
+        user_id: user.id,
+        cycle_id: cycleId,
+        tipo: toolTipo,
+        conteudo: toolContent,
+        contexto_uso: toolContexto || null,
+        limite_etico: toolLimite || null,
+      });
     },
-    onSuccess: () => { toast.success('Ferramenta salva'); setToolContent(''); },
+    onSuccess: () => {
+      toast.success('Ferramenta salva na Forja');
+      setToolContent('');
+      setToolContexto('');
+      setToolLimite('');
+    },
+  });
+
+  const saveCompromisso = useMutation({
+    mutationFn: async () => {
+      if (!user || !cycleId) return;
+      const payload = { user_id: user.id, cycle_id: cycleId, compromisso };
+      if (userCycle) {
+        await supabase.from('club_user_cycles' as any).update({ compromisso }).eq('id', userCycle.id);
+      } else {
+        await supabase.from('club_user_cycles' as any).insert(payload);
+      }
+    },
+    onSuccess: () => { toast.success('Compromisso salvo'); qc.invalidateQueries({ queryKey: ['club-user-cycle'] }); },
   });
 
   return (
     <AppLayout>
-      <div className="min-h-screen px-4 py-8 max-w-2xl mx-auto space-y-8">
+      <div className="min-h-screen px-4 py-8 max-w-2xl mx-auto space-y-6">
+        {/* Header */}
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => navigate('/clube')}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <div>
+          <div className="flex-1">
             <p className="text-xs text-muted-foreground uppercase tracking-widest">{cycle?.portal || 'Portal'}</p>
             <h1 className="font-display text-2xl text-primary">{book?.title || '—'}</h1>
-            {cycle?.start_date && cycle?.end_date && (
-              <p className="text-xs text-muted-foreground">
-                {new Date(cycle.start_date).toLocaleDateString('pt-BR')} — {new Date(cycle.end_date).toLocaleDateString('pt-BR')}
-              </p>
-            )}
           </div>
         </div>
 
-        <Tabs defaultValue="cartografia" className="space-y-6">
+        {/* Botão Chat */}
+        <Button
+          variant="outline"
+          className="w-full gap-2 border-primary/30 text-primary hover:bg-primary/5"
+          onClick={() => navigate('/clube/chat-livro')}
+        >
+          <MessageCircle className="w-4 h-4" />
+          Converse com o Livro
+        </Button>
+
+        {/* Abas */}
+        <Tabs defaultValue="cartografia" className="space-y-4">
           <TabsList className="w-full grid grid-cols-3 bg-muted/40">
             <TabsTrigger value="cartografia" className="text-xs">Cartografia</TabsTrigger>
             <TabsTrigger value="espelho" className="text-xs">Espelho</TabsTrigger>
             <TabsTrigger value="forja" className="text-xs">Forja</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="cartografia" className="space-y-4">
+          {/* Cartografia */}
+          <TabsContent value="cartografia">
             <Card className="border-border/50 bg-card/60">
               <CardContent className="p-5 space-y-4">
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Torre dominante</Label>
+                <Field label="Torre dominante">
                   <Input value={torre} onChange={e => setTorre(e.target.value)} placeholder="Ex: Torre da Memória" className="bg-input/50" />
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Porta ativa</Label>
+                </Field>
+                <Field label="Porta ativa">
                   <Select value={porta} onValueChange={setPorta}>
                     <SelectTrigger className="bg-input/50"><SelectValue placeholder="Selecione" /></SelectTrigger>
                     <SelectContent>
                       {PORTAS.map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}
                     </SelectContent>
                   </Select>
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Labirinto recorrente</Label>
+                </Field>
+                <Field label="Labirinto recorrente">
                   <Input value={labirinto} onChange={e => setLabirinto(e.target.value)} placeholder="Ex: Labirinto do abandono" className="bg-input/50" />
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Arquétipos</Label>
+                </Field>
+                <Field label="Arquétipos">
                   <div className="flex flex-wrap gap-2">
                     {ARQUETIPOS.map(a => (
                       <button
                         key={a}
+                        type="button"
                         onClick={() => setArqs(prev => prev.includes(a) ? prev.filter(x => x !== a) : [...prev, a])}
                         className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${arqs.includes(a) ? 'bg-primary/20 border-primary text-primary' : 'border-border/50 text-muted-foreground hover:border-primary/40'}`}
                       >
@@ -219,49 +255,46 @@ export default function ClubeCiclo() {
                       </button>
                     ))}
                   </div>
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Notas</Label>
-                  <Textarea value={notas} onChange={e => setNotas(e.target.value)} rows={4} placeholder="Observações livres..." className="bg-input/50" />
-                </div>
+                </Field>
+                <Field label="Notas">
+                  <Textarea value={notas} onChange={e => setNotas(e.target.value)} rows={3} placeholder="Observações livres..." className="bg-input/50" />
+                </Field>
                 <Button onClick={() => saveCarto.mutate()} disabled={saveCarto.isPending} className="w-full bg-primary text-primary-foreground">Salvar</Button>
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="espelho" className="space-y-4">
+          {/* Espelho */}
+          <TabsContent value="espelho">
             <Card className="border-border/50 bg-card/60">
               <CardContent className="p-5 space-y-4">
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Onde vejo isso nas minhas clientes?</Label>
+                <Field label="Onde vejo isso nas minhas clientes?">
                   <Textarea value={campoClientes} onChange={e => setCampoClientes(e.target.value)} rows={3} className="bg-input/50" />
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Qual arquétipo atravessa isso?</Label>
+                </Field>
+                <Field label="Qual arquétipo atravessa isso?">
                   <Textarea value={arquetipo} onChange={e => setArquetipo(e.target.value)} rows={3} className="bg-input/50" />
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Qual postura esse campo pede?</Label>
+                </Field>
+                <Field label="Qual postura esse campo pede?">
                   <Textarea value={postura} onChange={e => setPostura(e.target.value)} rows={3} className="bg-input/50" />
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Proposta de intervenção</Label>
+                </Field>
+                <Field label="Proposta de intervenção">
                   <Textarea value={intervencao} onChange={e => setIntervencao(e.target.value)} rows={3} className="bg-input/50" />
-                </div>
+                </Field>
                 <Button onClick={() => saveRefl.mutate()} disabled={saveRefl.isPending} className="w-full bg-primary text-primary-foreground">Salvar</Button>
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="forja" className="space-y-4">
+          {/* Forja */}
+          <TabsContent value="forja">
             <Card className="border-border/50 bg-card/60">
               <CardContent className="p-5 space-y-4">
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Tipo</Label>
+                <Field label="Tipo">
                   <div className="flex flex-wrap gap-2">
                     {TOOL_TYPES.map(t => (
                       <button
                         key={t.value}
+                        type="button"
                         onClick={() => setToolTipo(t.value)}
                         className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${toolTipo === t.value ? 'bg-primary/20 border-primary text-primary' : 'border-border/50 text-muted-foreground hover:border-primary/40'}`}
                       >
@@ -269,16 +302,44 @@ export default function ClubeCiclo() {
                       </button>
                     ))}
                   </div>
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Conteúdo</Label>
-                  <Textarea value={toolContent} onChange={e => setToolContent(e.target.value)} rows={5} placeholder="Descreva sua ferramenta..." className="bg-input/50" />
-                </div>
+                </Field>
+                <Field label="Conteúdo">
+                  <Textarea value={toolContent} onChange={e => setToolContent(e.target.value)} rows={4} placeholder="Descreva sua ferramenta..." className="bg-input/50" />
+                </Field>
+                <Field label="Contexto de uso">
+                  <Textarea value={toolContexto} onChange={e => setToolContexto(e.target.value)} rows={2} placeholder="Quando e como usar..." className="bg-input/50" />
+                </Field>
+                <Field label="Limite ético">
+                  <Textarea value={toolLimite} onChange={e => setToolLimite(e.target.value)} rows={2} placeholder="O que não fazer..." className="bg-input/50" />
+                </Field>
                 <Button onClick={() => saveTool.mutate()} disabled={saveTool.isPending || !toolContent.trim()} className="w-full bg-primary text-primary-foreground">Salvar ferramenta</Button>
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Compromisso semanal */}
+        <Card className="border-border/50 bg-card/60">
+          <CardContent className="p-5 space-y-3">
+            <Label className="text-xs text-muted-foreground uppercase tracking-wider">Compromisso semanal</Label>
+            <Textarea
+              value={compromisso}
+              onChange={e => setCompromisso(e.target.value)}
+              rows={2}
+              placeholder="O que levo desse ciclo para a semana..."
+              className="bg-input/50"
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => saveCompromisso.mutate()}
+              disabled={saveCompromisso.isPending}
+              className="border-primary/30 text-primary"
+            >
+              Salvar compromisso
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Alerta fixo */}
         <div className="flex items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 p-4">
@@ -287,5 +348,14 @@ export default function ClubeCiclo() {
         </div>
       </div>
     </AppLayout>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-xs text-muted-foreground">{label}</Label>
+      {children}
+    </div>
   );
 }
