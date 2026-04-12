@@ -14826,6 +14826,47 @@ export type Database = {
         }
         Relationships: []
       }
+      oraculo_portal_forjas: {
+        Row: {
+          ajuste_fino: string | null
+          cenario: string | null
+          conto_sugerido: string | null
+          created_at: string
+          id: string
+          portal_ativo: string | null
+          portal_id: string
+          updated_at: string
+        }
+        Insert: {
+          ajuste_fino?: string | null
+          cenario?: string | null
+          conto_sugerido?: string | null
+          created_at?: string
+          id?: string
+          portal_ativo?: string | null
+          portal_id: string
+          updated_at?: string
+        }
+        Update: {
+          ajuste_fino?: string | null
+          cenario?: string | null
+          conto_sugerido?: string | null
+          created_at?: string
+          id?: string
+          portal_ativo?: string | null
+          portal_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_portal_forjas_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: true
+            referencedRelation: "oraculo_portais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       oraculo_portal_jardins: {
         Row: {
           created_at: string
