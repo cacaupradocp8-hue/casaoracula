@@ -47,5 +47,7 @@ export function renderAdminRoutes(ProtectedRoute: PR) {
     <Route key="adm-cl-config" path="/admin/clube-livro/config" element={<ProtectedRoute minPortal="admin"><AdminClubeConfig /></ProtectedRoute>} />,
     <Route key="adm-cl-jornadas" path="/admin/clube-livro/jornadas" element={<ProtectedRoute minPortal="admin"><AdminClubeJornadas /></ProtectedRoute>} />,
     <Route key="adm-cl-portais-cms" path="/admin/clube-livro/portais-cms" element={<ProtectedRoute minPortal="admin"><AdminPortalCMS /></ProtectedRoute>} />,
+    <Route key="adm-cl-oraculo-portais" path="/admin/clube-livro/oraculo-portais" element={<ProtectedRoute minPortal="admin"><AdminOraculoPortais /></ProtectedRoute>} />,
+    <Route key="adm-cl-oraculo-portal-edit" path="/admin/clube-livro/oraculo-portais/:portalId" element={<ProtectedRoute minPortal="admin"><AdminOraculoPortalEditor /></ProtectedRoute>} />,
   ];
 }
