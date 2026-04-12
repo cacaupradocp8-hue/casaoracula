@@ -10,6 +10,8 @@ const AdminAlunaAcompanhamento = React.lazy(() => import('@/pages/admin/AdminAlu
 const AdminOracleCardsPage = React.lazy(() => import('@/pages/admin/AdminOracleCardsPage'));
 const AdminClubeJornadas = React.lazy(() => import('@/pages/admin/clube/AdminClubeJornadas'));
 const AdminPortalCMS = React.lazy(() => import('@/pages/admin/clube/AdminPortalCMS'));
+const AdminOraculoPortais = React.lazy(() => import('@/pages/admin/clube/AdminOraculoPortais'));
+const AdminOraculoPortalEditor = React.lazy(() => import('@/pages/admin/clube/AdminOraculoPortalEditor'));
 
 // Clube de Leitura Oracular — Hub + Sub-páginas
 const AdminClubeHub = React.lazy(() => import('@/pages/admin/clube/AdminClubeHub'));
@@ -45,5 +47,7 @@ export function renderAdminRoutes(ProtectedRoute: PR) {
     <Route key="adm-cl-config" path="/admin/clube-livro/config" element={<ProtectedRoute minPortal="admin"><AdminClubeConfig /></ProtectedRoute>} />,
     <Route key="adm-cl-jornadas" path="/admin/clube-livro/jornadas" element={<ProtectedRoute minPortal="admin"><AdminClubeJornadas /></ProtectedRoute>} />,
     <Route key="adm-cl-portais-cms" path="/admin/clube-livro/portais-cms" element={<ProtectedRoute minPortal="admin"><AdminPortalCMS /></ProtectedRoute>} />,
+    <Route key="adm-cl-oraculo-portais" path="/admin/clube-livro/oraculo-portais" element={<ProtectedRoute minPortal="admin"><AdminOraculoPortais /></ProtectedRoute>} />,
+    <Route key="adm-cl-oraculo-portal-edit" path="/admin/clube-livro/oraculo-portais/:portalId" element={<ProtectedRoute minPortal="admin"><AdminOraculoPortalEditor /></ProtectedRoute>} />,
   ];
 }
