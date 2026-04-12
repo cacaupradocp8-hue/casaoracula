@@ -22,6 +22,22 @@ interface HubCard {
 
 const CARDS: HubCard[] = [
   {
+    key: 'jornadas',
+    title: 'Jornadas',
+    description: 'Criar e gerenciar jornadas formativas (containers de portais).',
+    icon: BookOpen,
+    route: '/admin/clube-livro/jornadas',
+    color: 'text-gold',
+  },
+  {
+    key: 'portais-cms',
+    title: 'Portais (CMS)',
+    description: 'Editor completo: Essência, Áudio, Laboratório, Jardins, Aplicação, Ferramenta, Risco Ético.',
+    icon: DoorOpen,
+    route: '/admin/clube-livro/portais-cms',
+    color: 'text-teal-500',
+  },
+  {
     key: 'ciclos',
     title: 'Ciclos & Fases',
     description: 'Gerenciar ciclos de leitura, semanas, fases e importar calendário anual.',
@@ -71,11 +87,11 @@ const CARDS: HubCard[] = [
   },
   {
     key: 'portais',
-    title: 'Portais & Travessias',
+    title: 'Portais & Travessias (legado)',
     description: 'Portais vinculados a ciclos e jornadas.',
     icon: DoorOpen,
     route: '/admin/clube-livro/portais',
-    color: 'text-teal-500',
+    color: 'text-muted-foreground',
   },
   {
     key: 'config',
@@ -176,17 +192,17 @@ export default function AdminClubeHub() {
               Fluxo de criação recomendado
             </h4>
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-              <span className="bg-muted px-2 py-1 rounded font-medium">1. Ciclos</span>
+              <span className="bg-muted px-2 py-1 rounded font-medium">1. Estações</span>
               <ArrowRight className="w-3 h-3" />
-              <span className="bg-muted px-2 py-1 rounded font-medium">2. Livros</span>
+              <span className="bg-muted px-2 py-1 rounded font-medium">2. Jornadas</span>
               <ArrowRight className="w-3 h-3" />
-              <span className="bg-muted px-2 py-1 rounded font-medium">3. Estações</span>
+              <span className="bg-muted px-2 py-1 rounded font-medium">3. Portais (CMS)</span>
               <ArrowRight className="w-3 h-3" />
-              <span className="bg-muted px-2 py-1 rounded font-medium">4. Escutas</span>
+              <span className="bg-muted px-2 py-1 rounded font-medium">4. Ciclos</span>
               <ArrowRight className="w-3 h-3" />
-              <span className="bg-muted px-2 py-1 rounded font-medium">5. Encontros</span>
+              <span className="bg-muted px-2 py-1 rounded font-medium">5. Escutas</span>
               <ArrowRight className="w-3 h-3" />
-              <span className="bg-muted px-2 py-1 rounded font-medium">6. Gerador</span>
+              <span className="bg-muted px-2 py-1 rounded font-medium">6. Encontros</span>
             </div>
           </CardContent>
         </Card>
