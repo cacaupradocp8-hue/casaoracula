@@ -1,6 +1,6 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Calendar, Compass, Sparkles } from 'lucide-react';
+import { BookOpen, Calendar, Compass, Sparkles, Headphones } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
