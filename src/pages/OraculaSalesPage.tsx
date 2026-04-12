@@ -780,7 +780,7 @@ export default function OraculaSalesPage() {
       <Spacer h="xl" />
 
       {/* ═══════════════════════════════
-         11. OFERTA
+         11. OFERTA — Checkout completo
       ═══════════════════════════════ */}
 
       <section className="py-24 md:py-32 px-6">
@@ -789,27 +789,167 @@ export default function OraculaSalesPage() {
           whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           viewport={{ once: true }}
           transition={{ duration: 1.2 }}
-          className="max-w-sm mx-auto text-center"
+          className="max-w-md mx-auto"
         >
-          <p className="text-[hsl(var(--primary))] text-sm uppercase tracking-[0.35em] mb-8 font-semibold">Investimento</p>
-          <h2 className="font-display text-2xl font-light text-[hsl(var(--foreground))/0.96] mb-2">Formação Oracular</h2>
-          <p className="text-[hsl(var(--foreground))/0.82] text-sm mb-8">Ciclo completo de 1 ano</p>
+          {/* Header */}
+          <div className="text-center mb-10">
+            <p className="text-[hsl(var(--foreground))/0.6] text-xs uppercase tracking-[0.32em] mb-4">🌑</p>
+            <h2 className="font-display text-2xl md:text-3xl font-light text-[hsl(var(--foreground))/0.96] mb-2">
+              Você está entrando na Casa Orácula
+            </h2>
+            <p className="text-[#C6A96B] text-sm md:text-base">Formação em Leitura Oracular da Psique</p>
+          </div>
 
-          <p className="font-display text-4xl md:text-5xl font-light text-[#F3EFE7] mb-2">
-            R$ <span className="text-[#C6A96B]">3.597</span>
-          </p>
-          <p className="text-[hsl(var(--foreground))/0.86] text-sm mb-1">
-            ou até <span className="text-[#C6A96B]/80 font-medium">12x de R$ 372,01</span>
-          </p>
-          <p className="text-[hsl(var(--foreground))/0.76] text-xs mb-12">Turmas fechadas</p>
+          {/* O que está adquirindo */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="border border-[hsl(var(--primary))/0.35] rounded-xl p-6 bg-[hsl(var(--primary))/0.08] mb-8"
+          >
+            <p className="text-[hsl(var(--primary))] text-xs uppercase tracking-[0.32em] font-semibold mb-5">O que você está adquirindo</p>
+            <div className="space-y-3">
+              {[
+                'Acesso completo à Formação Oracular',
+                'Estrutura prática de condução terapêutica',
+                'Método aplicado (não teórico)',
+                'Acesso ao sistema Casa Orácula',
+                'Desenvolvimento da sua leitura simbólica',
+              ].map((t) => (
+                <p key={t} className="text-[hsl(var(--foreground))/0.92] text-sm md:text-base flex items-center gap-3">
+                  <span className="text-[hsl(var(--primary))]">✔</span>
+                  {t}
+                </p>
+              ))}
+            </div>
+          </motion.div>
 
-          <GoldButton label="Entrar na Formação Orácula" onClick={ctaClick} variant="glow" />
+          {/* Investimento */}
+          <div className="text-center mb-8">
+            <p className="text-[hsl(var(--primary))] text-sm uppercase tracking-[0.35em] mb-6 font-semibold">Investimento</p>
 
-          <p className="text-[hsl(var(--foreground))/0.76] text-xs mt-10 italic">
-            A decisão não é sobre valor.
-            <br />
-            É sobre responsabilidade.
-          </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                className="border border-[hsl(var(--primary))/0.35] rounded-xl p-6 bg-[hsl(var(--primary))/0.08]"
+              >
+                <p className="text-[hsl(var(--foreground))/0.7] text-xs uppercase tracking-[0.2em] mb-3">Opção à vista</p>
+                <p className="font-display text-3xl font-light text-[#F3EFE7]">
+                  R$ <span className="text-[#C6A96B]">3.497</span>
+                </p>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.1 }}
+                className="border border-[hsl(var(--border))/0.5] rounded-xl p-6 bg-[hsl(var(--card))/0.12]"
+              >
+                <p className="text-[hsl(var(--foreground))/0.7] text-xs uppercase tracking-[0.2em] mb-3">Ou parcelado</p>
+                <p className="font-display text-3xl font-light text-[#F3EFE7]">
+                  12x <span className="text-[#C6A96B]">R$ 349,70</span>
+                </p>
+              </motion.div>
+            </div>
+
+            <GoldButton label="Entrar na Formação Oracular" onClick={ctaClick} variant="glow" />
+          </div>
+
+          {/* Garantia */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="border border-[hsl(var(--border))/0.4] rounded-xl p-6 text-center mb-6 bg-[hsl(var(--card))/0.08]"
+          >
+            <p className="text-[hsl(var(--foreground))/0.8] text-xs uppercase tracking-[0.32em] font-semibold mb-3">🔒 Garantia</p>
+            <p className="text-[hsl(var(--foreground))/0.88] text-sm leading-relaxed">
+              Você pode entrar, acessar e sentir.
+              <br />
+              Se não fizer sentido para você nos primeiros dias, você pode sair.
+              <br />
+              <span className="text-[hsl(var(--foreground))/0.96] font-medium">Sem justificativa.</span>
+            </p>
+          </motion.div>
+
+          {/* Importante antes de entrar */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="border border-[hsl(var(--primary))/0.25] rounded-xl p-6 bg-[hsl(var(--primary))/0.05] mb-6"
+          >
+            <p className="text-[hsl(var(--primary))] text-xs uppercase tracking-[0.32em] font-semibold mb-4">⚠️ Importante antes de entrar</p>
+            <p className="text-[hsl(var(--foreground))/0.86] text-sm mb-4">Essa formação não é para consumo passivo. Ela exige:</p>
+            <div className="space-y-2">
+              {['Presença', 'Prática', 'Disponibilidade para atravessar processos'].map((t) => (
+                <p key={t} className="text-[hsl(var(--foreground))/0.88] text-sm flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--primary))/0.75]" />
+                  {t}
+                </p>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Para você se / Não entre se */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="border border-[hsl(var(--primary))/0.35] rounded-xl p-5 space-y-3 bg-[hsl(var(--primary))/0.08]"
+            >
+              <p className="text-[hsl(var(--primary))] text-xs uppercase tracking-[0.32em] font-semibold">Para você se</p>
+              {['Você atende ou quer atender pessoas', 'Quer mais clareza na condução', 'Sente que sua escuta pode ir mais fundo'].map((t) => (
+                <p key={t} className="text-[hsl(var(--foreground))/0.92] text-sm flex items-center gap-3">
+                  <span className="text-[hsl(var(--primary))]">✔</span>
+                  {t}
+                </p>
+              ))}
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="border border-[hsl(var(--border))/0.5] rounded-xl p-5 space-y-3 bg-[hsl(var(--card))/0.12]"
+            >
+              <p className="text-[hsl(var(--foreground))/0.8] text-xs uppercase tracking-[0.32em] font-semibold">Não entre se</p>
+              {['Você busca respostas rápidas', 'Quer técnica pronta', 'Não sustenta processo'].map((t) => (
+                <p key={t} className="text-[hsl(var(--foreground))/0.86] text-sm flex items-center gap-3">
+                  <span className="text-[hsl(var(--foreground))/0.5]">✘</span>
+                  {t}
+                </p>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Decisão */}
+          <div className="text-center mb-8">
+            <Phrase className="text-[hsl(var(--foreground))/0.82] text-base mb-4">
+              Você pode continuar como está…
+            </Phrase>
+            <Phrase delay={0.2} className="text-[#C6A96B] text-base font-medium mb-8">
+              ou desenvolver uma forma completamente nova de conduzir.
+            </Phrase>
+            <GoldButton label="Entrar na Formação Oracular" onClick={ctaClick} variant="glow" />
+          </div>
+
+          {/* Ambiente seguro */}
+          <div className="text-center mt-10">
+            <p className="text-[hsl(var(--foreground))/0.5] text-xs flex items-center justify-center gap-2">
+              🔐 Pagamento processado com segurança. Seus dados protegidos.
+            </p>
+          </div>
         </motion.div>
       </section>
 
