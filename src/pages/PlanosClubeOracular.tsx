@@ -98,7 +98,7 @@ export default function PlanosClubeOracular() {
         'Jardim da Psique & Jardim do Ofício',
       ],
       cta: 'Entrar no Clube',
-      url: CHECKOUT_ANUAL_URL !== '#' ? CHECKOUT_ANUAL_URL : 'https://pay.rockty.com/pjo9ceihykihwx1gixhspq?off=2tgmh6vsiki7fg0buxdfxq',
+      url: CHECKOUT_ANUAL_URL !== '#' ? CHECKOUT_ANUAL_URL : 'https://pay.rockty.com/pjo9ceihykihwx1gixhspq?off=mayikrzz0kc58ijeqs9a',
     },
   ];
 
