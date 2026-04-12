@@ -22,6 +22,22 @@ interface HubCard {
 
 const CARDS: HubCard[] = [
   {
+    key: 'jornadas',
+    title: 'Jornadas',
+    description: 'Criar e gerenciar jornadas formativas (containers de portais).',
+    icon: BookOpen,
+    route: '/admin/clube-livro/jornadas',
+    color: 'text-gold',
+  },
+  {
+    key: 'portais-cms',
+    title: 'Portais (CMS)',
+    description: 'Editor completo: Essência, Áudio, Laboratório, Jardins, Aplicação, Ferramenta, Risco Ético.',
+    icon: DoorOpen,
+    route: '/admin/clube-livro/portais-cms',
+    color: 'text-teal-500',
+  },
+  {
     key: 'ciclos',
     title: 'Ciclos & Fases',
     description: 'Gerenciar ciclos de leitura, semanas, fases e importar calendário anual.',
@@ -71,11 +87,11 @@ const CARDS: HubCard[] = [
   },
   {
     key: 'portais',
-    title: 'Portais & Travessias',
+    title: 'Portais & Travessias (legado)',
     description: 'Portais vinculados a ciclos e jornadas.',
     icon: DoorOpen,
     route: '/admin/clube-livro/portais',
-    color: 'text-teal-500',
+    color: 'text-muted-foreground',
   },
   {
     key: 'config',
