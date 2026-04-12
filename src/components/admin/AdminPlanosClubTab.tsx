@@ -22,8 +22,8 @@ const DEFAULTS: Record<string, string> = {
   planos_clube_vsl_url: '',
   planos_clube_checkout_mensal_url: '#',
   planos_clube_checkout_anual_url: '#',
-  planos_clube_preco_mensal: 'R$ 67/mês',
-  planos_clube_preco_anual: 'R$ 497/ano',
+  planos_clube_preco_mensal: 'R$ 97/mês',
+  planos_clube_preco_anual: 'R$ 897/ano',
   planos_clube_portal_atual_route: '/clube-livro',
   planos_clube_assinatura_route: '/minha-conta',
 };
