@@ -23,12 +23,25 @@ export default function ClubeEncontro() {
   const navigate = useNavigate();
   const qc = useQueryClient();
 
+  const { data: cycle } = useQuery({
+    queryKey: ['club-active-cycle'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('club_cycles' as any)
+        .select('*, club_books(*)')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      return data as any;
+    },
+  });
+
   const { data: meeting } = useQuery({
     queryKey: ['club-next-meeting'],
     queryFn: async () => {
       const { data } = await supabase
         .from('club_meetings' as any)
-        .select('*, club_cycles(*, club_books(*))')
+        .select('*')
         .eq('completed', false)
         .order('date', { ascending: true })
         .limit(1)
@@ -50,7 +63,7 @@ export default function ClubeEncontro() {
       if (!meeting) return;
       await supabase.from('club_meetings' as any).update({ roteiro }).eq('id', meeting.id);
     },
-    onSuccess: () => { toast.success('Encontro salvo'); qc.invalidateQueries({ queryKey: ['club-next-meeting'] }); },
+    onSuccess: () => { toast.success('Roteiro salvo'); qc.invalidateQueries({ queryKey: ['club-next-meeting'] }); },
   });
 
   const markDone = useMutation({
@@ -61,7 +74,6 @@ export default function ClubeEncontro() {
     onSuccess: () => { toast.success('Encontro marcado como realizado'); qc.invalidateQueries({ queryKey: ['club-next-meeting'] }); },
   });
 
-  const cycle = meeting?.club_cycles;
   const bookArr = cycle?.club_books;
   const book = Array.isArray(bookArr) ? bookArr[0] : bookArr;
 
@@ -113,7 +125,7 @@ export default function ClubeEncontro() {
                 Salvar
               </Button>
               <Button onClick={() => markDone.mutate()} disabled={markDone.isPending} variant="outline" className="flex-1 border-primary/30 text-primary">
-                <Check className="w-4 h-4 mr-2" /> Marcar como realizado
+                <Check className="w-4 h-4 mr-2" /> Realizado
               </Button>
             </div>
           </>
