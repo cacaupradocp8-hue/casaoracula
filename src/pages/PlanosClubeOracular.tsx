@@ -5,7 +5,7 @@ import { useAccessExpiration } from '@/hooks/useAccessExpiration';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { canAccessFeature } from '@/types/portal';
 import { motion } from 'framer-motion';
-import { Check, Sparkles } from 'lucide-react';
+import { Check, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
