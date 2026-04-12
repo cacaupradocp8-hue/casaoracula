@@ -318,9 +318,9 @@ export default function PlanosClubeOracular() {
           </div>
         </section>
 
-        {/* Assinante — status card */}
+        {/* SEÇÃO 9 — Investimento */}
         {isAssinante ? (
-          <section className="pb-20 px-6">
+          <section id="planos-clube" className="pb-20 px-6">
             <motion.div {...fadeUp} className="max-w-sm mx-auto">
               <Card className="bg-card/60 border-gold/20">
                 <CardContent className="p-8 text-center space-y-5">
