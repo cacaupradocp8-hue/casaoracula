@@ -546,6 +546,41 @@ export default function OraculaSalesPage() {
       </section>
 
       <GoldButton label="Conhecer a Formação" onClick={ctaClick} variant="solid" />
+      <Spacer h="lg" />
+
+      {/* ═══════════════════════════════
+         6B. O QUE VOCÊ RECEBE
+      ═══════════════════════════════ */}
+
+      <section className="py-16 px-6">
+        <div className="max-w-lg mx-auto">
+          <Phrase className="text-[hsl(var(--primary))] text-sm uppercase tracking-[0.35em] text-center mb-8 font-semibold">
+            O que você recebe
+          </Phrase>
+          <div className="space-y-3 max-w-sm mx-auto">
+            {[
+              'Estrutura de condução de sessões',
+              'Perguntas clínicas aplicáveis',
+              'Modelo de leitura simbólica',
+              'Organização clara do processo terapêutico',
+              'Acesso ao app Casa Orácula',
+            ].map((t, i) => (
+              <motion.div
+                key={t}
+                initial={{ opacity: 0, x: -14 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.06 }}
+                className="text-[hsl(var(--foreground))/0.92] text-sm md:text-base flex items-center gap-3"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--primary))/0.75] shrink-0" />
+                {t}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <Spacer h="xl" />
 
       {/* ═══════════════════════════════
@@ -695,6 +730,53 @@ export default function OraculaSalesPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/30 via-transparent to-[#0B0B0F]/90" />
       </div>
 
+      <Spacer h="lg" />
+
+      {/* ═══════════════════════════════
+         10B. POR QUE ISSO FUNCIONA
+      ═══════════════════════════════ */}
+
+      <section className="px-6 max-w-lg mx-auto text-center">
+        <Phrase className="text-[hsl(var(--primary))] text-sm uppercase tracking-[0.35em] mb-6 font-semibold">
+          Por que isso funciona
+        </Phrase>
+        <Phrase className="text-[hsl(var(--foreground))/0.86] text-base mb-8">
+          Porque você não aprende só o que fazer.
+        </Phrase>
+        <div className="space-y-3 max-w-xs mx-auto mb-8">
+          {['Como observar', 'Como estruturar', 'Como sustentar'].map((t, i) => (
+            <Phrase key={t} delay={i * 0.08} className="text-[hsl(var(--foreground))/0.92] text-sm md:text-base flex items-center gap-3 justify-center">
+              <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--primary))/0.75]" />
+              {t}
+            </Phrase>
+          ))}
+        </div>
+        <Phrase className="text-[#C6A96B] text-base font-medium">
+          E isso muda completamente a sua prática.
+        </Phrase>
+      </section>
+
+      <Spacer h="lg" />
+
+      {/* ═══════════════════════════════
+         10C. DEPOIMENTOS (placeholder)
+      ═══════════════════════════════ */}
+
+      <section className="py-16 px-6">
+        <div className="max-w-lg mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="border border-[hsl(var(--border))/0.4] border-dashed rounded-xl p-8 text-center bg-[hsl(var(--card))/0.08]"
+          >
+            <p className="text-[hsl(var(--foreground))/0.5] text-xs uppercase tracking-[0.32em] font-semibold mb-2">Depoimentos</p>
+            <p className="text-[hsl(var(--foreground))/0.4] text-sm italic">Espaço reservado para provas sociais</p>
+          </motion.div>
+        </div>
+      </section>
+
       <Spacer h="xl" />
 
       {/* ═══════════════════════════════
@@ -730,6 +812,33 @@ export default function OraculaSalesPage() {
           </p>
         </motion.div>
       </section>
+
+      {/* ═══════════════════════════════
+         12A. IMPORTANTE — Clube primeiro
+      ═══════════════════════════════ */}
+
+      <section className="px-6 max-w-lg mx-auto text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="border border-[hsl(var(--primary))/0.25] rounded-xl p-6 bg-[hsl(var(--primary))/0.05]"
+        >
+          <p className="text-[hsl(var(--primary))] text-xs uppercase tracking-[0.32em] font-semibold mb-4">⚠️ Importante</p>
+          <p className="text-[hsl(var(--foreground))/0.88] text-sm leading-relaxed mb-2">
+            Se você ainda está no início,
+          </p>
+          <p className="text-[hsl(var(--foreground))/0.92] text-sm font-medium leading-relaxed mb-3">
+            comece pelo Clube de Leitura Oracular.
+          </p>
+          <p className="text-[hsl(var(--foreground))/0.7] text-xs italic">
+            A Formação exige um nível mínimo de maturidade.
+          </p>
+        </motion.div>
+      </section>
+
+      <Spacer h="xl" />
 
       {/* ═══════════════════════════════
          12. FECHAMENTO
