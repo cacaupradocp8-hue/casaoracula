@@ -4889,7 +4889,13 @@ export type Database = {
           essencia_8020: string | null
           estrutura_replicavel: string[] | null
           ferramenta_campos: Json | null
+          ferramenta_descricao: string | null
           ferramenta_nome: string | null
+          forja_ajuste_fino: string | null
+          forja_cenario: string | null
+          forja_conducao: string[] | null
+          forja_erros_comuns: string[] | null
+          forja_portal_ativo: string | null
           habilidade_simbolica: string | null
           icone: string | null
           id: string
@@ -4898,7 +4904,11 @@ export type Database = {
           jornada_id: string
           laboratorio_8020: string | null
           laboratorio_integracao: string | null
+          laboratorio_resultado_esperado: string | null
           leitura_etica: string | null
+          narroterapia_abertura: string | null
+          narroterapia_conto_sugerido: string | null
+          narroterapia_perguntas: string[] | null
           nome: string
           o_que_nao_fazer: string | null
           onde_estamos_jornada: string | null
@@ -4933,7 +4943,13 @@ export type Database = {
           essencia_8020?: string | null
           estrutura_replicavel?: string[] | null
           ferramenta_campos?: Json | null
+          ferramenta_descricao?: string | null
           ferramenta_nome?: string | null
+          forja_ajuste_fino?: string | null
+          forja_cenario?: string | null
+          forja_conducao?: string[] | null
+          forja_erros_comuns?: string[] | null
+          forja_portal_ativo?: string | null
           habilidade_simbolica?: string | null
           icone?: string | null
           id?: string
@@ -4942,7 +4958,11 @@ export type Database = {
           jornada_id: string
           laboratorio_8020?: string | null
           laboratorio_integracao?: string | null
+          laboratorio_resultado_esperado?: string | null
           leitura_etica?: string | null
+          narroterapia_abertura?: string | null
+          narroterapia_conto_sugerido?: string | null
+          narroterapia_perguntas?: string[] | null
           nome: string
           o_que_nao_fazer?: string | null
           onde_estamos_jornada?: string | null
@@ -4977,7 +4997,13 @@ export type Database = {
           essencia_8020?: string | null
           estrutura_replicavel?: string[] | null
           ferramenta_campos?: Json | null
+          ferramenta_descricao?: string | null
           ferramenta_nome?: string | null
+          forja_ajuste_fino?: string | null
+          forja_cenario?: string | null
+          forja_conducao?: string[] | null
+          forja_erros_comuns?: string[] | null
+          forja_portal_ativo?: string | null
           habilidade_simbolica?: string | null
           icone?: string | null
           id?: string
@@ -4986,7 +5012,11 @@ export type Database = {
           jornada_id?: string
           laboratorio_8020?: string | null
           laboratorio_integracao?: string | null
+          laboratorio_resultado_esperado?: string | null
           leitura_etica?: string | null
+          narroterapia_abertura?: string | null
+          narroterapia_conto_sugerido?: string | null
+          narroterapia_perguntas?: string[] | null
           nome?: string
           o_que_nao_fazer?: string | null
           onde_estamos_jornada?: string | null
