@@ -50,7 +50,7 @@ export default function AdminClubeJornadas() {
   const { data: estacoes } = useQuery({
     queryKey: ['admin-estacoes-list'],
     queryFn: async () => {
-      const { data } = await supabase.from('oracular_seasons').select('id, nome').order('created_at', { ascending: false }).limit(5);
+      const { data } = await supabase.from('oracular_seasons').select('id, nome_estacao').order('created_at', { ascending: false }).limit(5);
       return data || [];
     },
   });
