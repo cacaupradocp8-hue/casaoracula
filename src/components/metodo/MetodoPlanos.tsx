@@ -13,7 +13,7 @@ const planos = [
   {
     nome: 'Explorar',
     desc: 'Acesso inicial ao método e ferramentas básicas.',
-    itens: ['Big5 Simbólico', 'Eneagrama', 'Jardim da Psique'],
+    itens: ['Cartografia Psíquica', 'Leitura Simbólica', 'Jardim da Psique'],
     destaque: false,
   },
   {
