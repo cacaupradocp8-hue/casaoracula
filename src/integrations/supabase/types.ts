@@ -14905,6 +14905,53 @@ export type Database = {
           },
         ]
       }
+      oraculo_portal_materiais: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          id: string
+          is_locked: boolean
+          ordem: number
+          portal_id: string
+          tipo: string
+          titulo: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          is_locked?: boolean
+          ordem?: number
+          portal_id: string
+          tipo: string
+          titulo: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          is_locked?: boolean
+          ordem?: number
+          portal_id?: string
+          tipo?: string
+          titulo?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_portal_materiais_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: false
+            referencedRelation: "oraculo_portais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pattern_flags: {
         Row: {
           created_at: string
