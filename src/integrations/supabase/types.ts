@@ -4870,63 +4870,135 @@ export type Database = {
       }
       clube_portais: {
         Row: {
+          acao_pequena: string | null
+          aplicacao_aula: string | null
+          aplicacao_circulo: string | null
           aplicacao_pessoal: string | null
           aplicacao_profissional: string | null
+          aplicacao_sessao: string | null
           ativo: boolean
+          audio_duracao: string | null
+          audio_roteiro: string | null
+          audio_titulo: string | null
+          audio_url: string | null
+          aula_data: string | null
+          aula_link: string | null
+          aula_replay_url: string | null
+          aula_titulo: string | null
           created_at: string
           essencia_8020: string | null
+          estrutura_replicavel: string[] | null
+          ferramenta_campos: Json | null
+          ferramenta_nome: string | null
+          habilidade_simbolica: string | null
           icone: string | null
           id: string
           jardim_heroina: string | null
           jardim_psique: string | null
           jornada_id: string
           laboratorio_8020: string | null
+          laboratorio_integracao: string | null
+          leitura_etica: string | null
           nome: string
+          o_que_nao_fazer: string | null
+          onde_estamos_jornada: string | null
           ordem: number
           raiz_psiquica: string | null
+          regulacao_emocional: string | null
+          riscos_eticos: string[] | null
           slug: string
           subtitulo: string | null
+          tensao_central: string | null
           texto_simbolico: string | null
+          tipo_portal: string | null
           updated_at: string
         }
         Insert: {
+          acao_pequena?: string | null
+          aplicacao_aula?: string | null
+          aplicacao_circulo?: string | null
           aplicacao_pessoal?: string | null
           aplicacao_profissional?: string | null
+          aplicacao_sessao?: string | null
           ativo?: boolean
+          audio_duracao?: string | null
+          audio_roteiro?: string | null
+          audio_titulo?: string | null
+          audio_url?: string | null
+          aula_data?: string | null
+          aula_link?: string | null
+          aula_replay_url?: string | null
+          aula_titulo?: string | null
           created_at?: string
           essencia_8020?: string | null
+          estrutura_replicavel?: string[] | null
+          ferramenta_campos?: Json | null
+          ferramenta_nome?: string | null
+          habilidade_simbolica?: string | null
           icone?: string | null
           id?: string
           jardim_heroina?: string | null
           jardim_psique?: string | null
           jornada_id: string
           laboratorio_8020?: string | null
+          laboratorio_integracao?: string | null
+          leitura_etica?: string | null
           nome: string
+          o_que_nao_fazer?: string | null
+          onde_estamos_jornada?: string | null
           ordem?: number
           raiz_psiquica?: string | null
+          regulacao_emocional?: string | null
+          riscos_eticos?: string[] | null
           slug: string
           subtitulo?: string | null
+          tensao_central?: string | null
           texto_simbolico?: string | null
+          tipo_portal?: string | null
           updated_at?: string
         }
         Update: {
+          acao_pequena?: string | null
+          aplicacao_aula?: string | null
+          aplicacao_circulo?: string | null
           aplicacao_pessoal?: string | null
           aplicacao_profissional?: string | null
+          aplicacao_sessao?: string | null
           ativo?: boolean
+          audio_duracao?: string | null
+          audio_roteiro?: string | null
+          audio_titulo?: string | null
+          audio_url?: string | null
+          aula_data?: string | null
+          aula_link?: string | null
+          aula_replay_url?: string | null
+          aula_titulo?: string | null
           created_at?: string
           essencia_8020?: string | null
+          estrutura_replicavel?: string[] | null
+          ferramenta_campos?: Json | null
+          ferramenta_nome?: string | null
+          habilidade_simbolica?: string | null
           icone?: string | null
           id?: string
           jardim_heroina?: string | null
           jardim_psique?: string | null
           jornada_id?: string
           laboratorio_8020?: string | null
+          laboratorio_integracao?: string | null
+          leitura_etica?: string | null
           nome?: string
+          o_que_nao_fazer?: string | null
+          onde_estamos_jornada?: string | null
           ordem?: number
           raiz_psiquica?: string | null
+          regulacao_emocional?: string | null
+          riscos_eticos?: string[] | null
           slug?: string
           subtitulo?: string | null
+          tensao_central?: string | null
           texto_simbolico?: string | null
+          tipo_portal?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -4935,6 +5007,97 @@ export type Database = {
             columns: ["jornada_id"]
             isOneToOne: false
             referencedRelation: "clube_jornadas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_portal_audios: {
+        Row: {
+          audio_url: string | null
+          created_at: string
+          descricao: string | null
+          id: string
+          ordem: number | null
+          portal_id: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          audio_url?: string | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          ordem?: number | null
+          portal_id: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          audio_url?: string | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          ordem?: number | null
+          portal_id?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_portal_audios_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: false
+            referencedRelation: "clube_portais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_portal_materiais: {
+        Row: {
+          conteudo_texto: string | null
+          created_at: string
+          descricao: string | null
+          file_url: string | null
+          id: string
+          link_externo: string | null
+          ordem: number | null
+          portal_id: string
+          tipo: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          conteudo_texto?: string | null
+          created_at?: string
+          descricao?: string | null
+          file_url?: string | null
+          id?: string
+          link_externo?: string | null
+          ordem?: number | null
+          portal_id: string
+          tipo?: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          conteudo_texto?: string | null
+          created_at?: string
+          descricao?: string | null
+          file_url?: string | null
+          id?: string
+          link_externo?: string | null
+          ordem?: number | null
+          portal_id?: string
+          tipo?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_portal_materiais_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: false
+            referencedRelation: "clube_portais"
             referencedColumns: ["id"]
           },
         ]
