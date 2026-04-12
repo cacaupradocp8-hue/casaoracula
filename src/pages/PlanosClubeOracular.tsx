@@ -139,6 +139,185 @@ export default function PlanosClubeOracular() {
           </div>
         </section>
 
+        {/* SEÇÃO 1 — Abertura */}
+        <section className="py-16 md:py-24 border-t border-border/10">
+          <div className="container mx-auto px-6 max-w-2xl text-center">
+            <motion.div {...fadeUp}>
+              <h2 className="font-display text-2xl md:text-3xl text-foreground tracking-wide mb-5 leading-snug">
+                Você já escuta suas clientes.<br />
+                <span className="text-gold">Mas ainda não consegue ver tudo.</span>
+              </h2>
+              <p className="text-muted-foreground leading-relaxed mb-8">
+                Existe uma diferença entre escutar e perceber o que está por trás da fala.<br />
+                O Clube de Leitura Oracular foi criado para desenvolver essa capacidade.
+              </p>
+              <Button
+                variant="gold"
+                size="lg"
+                className="px-10"
+                onClick={() => {
+                  const el = document.getElementById('planos-clube');
+                  el?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Entrar no Clube
+              </Button>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* SEÇÃO 2 — Problema */}
+        <section className="py-14 md:py-20 border-t border-border/10">
+          <div className="container mx-auto px-6 max-w-2xl text-center">
+            <motion.div {...fadeUp}>
+              <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
+                Você sente padrões, mas não consegue organizar.<br />
+                Percebe movimentos, mas não sabe como aprofundar.
+              </p>
+              <p className="text-foreground/70 mt-6 italic">
+                E acaba voltando para o que já conhece.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* SEÇÃO 3 — O que é o Clube */}
+        <section className="py-16 md:py-24 border-t border-border/10">
+          <div className="container mx-auto px-6 max-w-2xl">
+            <motion.div {...fadeUp} className="text-center mb-10">
+              <h2 className="font-display text-2xl md:text-3xl text-foreground tracking-wide mb-3">
+                O Clube não é um clube de leitura
+              </h2>
+              <div className="w-10 h-px bg-gold/20 mx-auto" />
+            </motion.div>
+            <motion.div {...fadeUp} transition={{ duration: 0.6, delay: 0.1 }} className="space-y-5 text-center">
+              <p className="text-muted-foreground leading-relaxed">
+                Você não entra aqui para consumir livros.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Você entra para aprender a:
+              </p>
+              <ul className="space-y-3 max-w-md mx-auto text-left">
+                {[
+                  'ler narrativas como campo psíquico',
+                  'reconhecer estruturas simbólicas',
+                  'desenvolver escuta clínica real',
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-foreground/80">
+                    <Check className="w-4 h-4 text-gold mt-0.5 flex-shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-foreground/70 italic mt-4">
+                Cada livro é um campo de treino.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* SEÇÃO 4 — Como funciona */}
+        <section className="py-14 md:py-20 border-t border-border/10">
+          <div className="container mx-auto px-6 max-w-2xl">
+            <motion.div {...fadeUp} className="text-center mb-10">
+              <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
+                Todo mês você atravessa um Portal da psique.<br />
+                Com um livro aplicado e uma estrutura de leitura simbólica.
+              </p>
+            </motion.div>
+            <motion.div {...fadeUp} transition={{ duration: 0.6, delay: 0.1 }}>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto">
+                {[
+                  'Ciclo mensal guiado',
+                  'Exercícios de percepção',
+                  'Aplicação simbólica',
+                  'Desenvolvimento progressivo',
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-foreground/80 border-l-2 border-gold/15 pl-4">
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* SEÇÃO 5 — O que você desenvolve */}
+        <section className="py-14 md:py-20 border-t border-border/10">
+          <div className="container mx-auto px-6 max-w-2xl text-center">
+            <motion.div {...fadeUp} className="mb-8">
+              <h2 className="font-display text-xl md:text-2xl text-foreground tracking-wide mb-3">
+                O que você desenvolve
+              </h2>
+              <div className="w-10 h-px bg-gold/20 mx-auto" />
+            </motion.div>
+            <motion.div {...fadeUp} transition={{ duration: 0.6, delay: 0.1 }}>
+              <ul className="space-y-3 max-w-xs mx-auto text-left">
+                {[
+                  'Escuta simbólica',
+                  'Percepção de padrões',
+                  'Leitura narrativa',
+                  'Clareza interna',
+                  'Base para condução',
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-foreground/80">
+                    <Check className="w-4 h-4 text-gold mt-0.5 flex-shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* SEÇÃO 6 — Importante */}
+        <section className="py-14 md:py-20 border-t border-border/10">
+          <div className="container mx-auto px-6 max-w-2xl text-center">
+            <motion.div {...fadeUp}>
+              <p className="text-muted-foreground leading-relaxed text-base md:text-lg mb-4">
+                Aqui você não está sendo treinada para conduzir.
+              </p>
+              <p className="font-display text-xl md:text-2xl text-gold italic">
+                Você está sendo preparada para ver.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* SEÇÃO 7 & 8 — Para quem é / Não é */}
+        <section className="py-14 md:py-20 border-t border-border/10">
+          <div className="container mx-auto px-6 max-w-3xl">
+            <div className="grid md:grid-cols-2 gap-10">
+              <motion.div {...fadeUp}>
+                <h3 className="font-display text-lg text-foreground mb-5 flex items-center gap-2">
+                  <Eye className="w-4 h-4 text-gold/60" /> Para quem é
+                </h3>
+                <ul className="space-y-3">
+                  {['Terapeutas iniciantes', 'Facilitadoras', 'Mulheres em formação'].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-foreground/80">
+                      <Check className="w-4 h-4 text-gold mt-0.5 flex-shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+              <motion.div {...fadeUp} transition={{ duration: 0.6, delay: 0.1 }}>
+                <h3 className="font-display text-lg text-foreground mb-5 flex items-center gap-2">
+                  <EyeOff className="w-4 h-4 text-muted-foreground/40" /> Para quem não é
+                </h3>
+                <ul className="space-y-3">
+                  {['Quem quer técnica pronta', 'Quem busca respostas rápidas', 'Quem não sustenta processo'].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground/60">
+                      <span className="mt-0.5 flex-shrink-0">✕</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
         {/* Assinante — status card */}
         {isAssinante ? (
           <section className="pb-20 px-6">
