@@ -21,7 +21,7 @@ const PARA_QUEM = [
 const O_QUE_ENCONTRA = [
   { icon: GraduationCap, title: 'Formação Orácula', desc: 'Método completo de formação em psicologia simbólica aplicada.' },
   { icon: BookOpen, title: 'Clube do Livro Oracular', desc: 'Travessias semanais com aulas-álbum, práticas e reflexões coletivas.' },
-  { icon: Wrench, title: 'Ferramentas Clínicas', desc: 'Big Five, Eneagrama, Cartografia Psíquica e mais instrumentos prontos.' },
+  { icon: Wrench, title: 'Ferramentas Clínicas', desc: 'Cartografia Psíquica, Leitura Simbólica e instrumentos de escuta profunda.' },
   { icon: Sparkles, title: 'IA Simbólica', desc: 'Agentes inteligentes para apoio em sessão e leitura oracular.' },
 ];
 
