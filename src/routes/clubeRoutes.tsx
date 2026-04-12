@@ -42,6 +42,7 @@ export function renderClubeRoutes(ProtectedRoute: PR) {
     <Route key="clube-encontro" path="/clube/encontro" element={<ProtectedRoute minPortal="mentorada"><ClubeEncontro /></ProtectedRoute>} />,
     <Route key="clube-acervo" path="/clube/acervo" element={<ProtectedRoute minPortal="mentorada"><ClubeAcervo /></ProtectedRoute>} />,
     <Route key="clube-forja" path="/clube/forja" element={<ProtectedRoute minPortal="mentorada"><ClubeForja /></ProtectedRoute>} />,
+    <Route key="clube-treinamento" path="/clube/treinamento" element={<ProtectedRoute minPortal="mentorada"><ClubeTreinamento /></ProtectedRoute>} />,
 
     // ═══ REDIRECIONAMENTOS de rotas legadas ═══
     <Route key="cl-redir-old" path="/app/clube" element={<Navigate to="/clube" replace />} />,
