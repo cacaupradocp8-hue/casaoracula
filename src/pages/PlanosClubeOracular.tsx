@@ -71,7 +71,7 @@ export default function PlanosClubeOracular() {
   const planos = [
     {
       name: 'Mensal',
-      price: 'R$ 37,90',
+      price: 'R$ 97',
       period: '/mês',
       destaque: false,
       benefits: [
@@ -86,7 +86,7 @@ export default function PlanosClubeOracular() {
     },
     {
       name: 'Anual',
-      price: 'R$ 379,00',
+      price: 'R$ 897',
       period: '/ano',
       destaque: true,
       badge: 'Mais escolhido',
