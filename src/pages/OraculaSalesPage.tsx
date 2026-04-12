@@ -248,11 +248,161 @@ export default function OraculaSalesPage() {
       </motion.section>
 
       {/* ═══════════════════════════════
-         2. PROMESSA
+         1B. EMPATIA — Você já escuta
       ═══════════════════════════════ */}
 
       <section className="px-6 max-w-lg mx-auto">
         <Spacer h="xl" />
+        <Phrase className="font-display text-[clamp(1.4rem,6vw,2.6rem)] font-light leading-[1.2] text-center mb-6">
+          Você já escuta suas clientes.
+          <br />
+          <span className="text-[#C6A96B]">Mas sente que tem algo que ainda não consegue ver.</span>
+        </Phrase>
+        <Phrase delay={0.2} className="text-[hsl(var(--foreground))/0.86] text-base md:text-lg text-center mb-10">
+          Você percebe padrões. Você sente quando algo não está sendo dito.
+        </Phrase>
+        <div className="space-y-3 max-w-sm mx-auto mb-10">
+          {['Você não sabe exatamente como nomear', 'Não tem uma estrutura clara para conduzir', 'E muitas vezes volta para o que já conhece'].map((t, i) => (
+            <Phrase key={t} delay={0.3 + i * 0.08} className="text-[hsl(var(--foreground))/0.88] text-sm md:text-base flex items-center gap-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--primary))/0.75] shrink-0" />
+              {t}
+            </Phrase>
+          ))}
+        </div>
+        <Phrase delay={0.5} className="text-center">
+          <span className="text-[hsl(var(--foreground))/0.76] text-sm">Isso não é falta de sensibilidade.</span>
+          <br />
+          <span className="text-[#C6A96B] text-base font-medium">É falta de estrutura.</span>
+        </Phrase>
+      </section>
+
+      <Spacer h="lg" />
+
+      {/* ═══════════════════════════════
+         1C. DIFERENÇA — Escutar vs Conduzir
+      ═══════════════════════════════ */}
+
+      <section className="px-6 max-w-lg mx-auto">
+        <Phrase className="font-display text-[clamp(1.2rem,5vw,2rem)] font-light text-center mb-4">
+          Existe uma diferença entre escutar…
+          <br />
+          <span className="text-[#C6A96B]">e saber conduzir o que aparece na escuta.</span>
+        </Phrase>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="border border-[hsl(var(--border))/0.5] rounded-xl p-6 space-y-3 bg-[hsl(var(--card))/0.12]"
+          >
+            <p className="text-[hsl(var(--foreground))/0.8] text-xs uppercase tracking-[0.32em] font-semibold">A maioria ensina</p>
+            {['Técnicas', 'Abordagens', 'Explicações'].map((t) => (
+              <p key={t} className="text-[hsl(var(--foreground))/0.86] text-sm flex items-center gap-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--foreground))/0.5]" />
+                {t}
+              </p>
+            ))}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="border border-[hsl(var(--primary))/0.35] rounded-xl p-6 space-y-3 bg-[hsl(var(--primary))/0.08]"
+          >
+            <p className="text-[hsl(var(--primary))] text-xs uppercase tracking-[0.32em] font-semibold">Mas não ensina</p>
+            {['Como ler o que está acontecendo', 'Como sustentar um processo', 'Como intervir sem invadir'].map((t) => (
+              <p key={t} className="text-[hsl(var(--foreground))/0.92] text-sm flex items-center gap-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--primary))]" />
+                {t}
+              </p>
+            ))}
+          </motion.div>
+        </div>
+
+        <Phrase delay={0.3} className="text-center mt-8">
+          <span className="text-[#C6A96B] text-base">É exatamente isso que a Casa Orácula resolve.</span>
+        </Phrase>
+      </section>
+
+      <Spacer h="lg" />
+
+      {/* ═══════════════════════════════
+         1D. O QUE É A FORMAÇÃO
+      ═══════════════════════════════ */}
+
+      <section className="px-6 max-w-lg mx-auto">
+        <Phrase className="text-[hsl(var(--primary))] text-sm uppercase tracking-[0.35em] text-center mb-6 font-semibold">
+          O que é a Formação Oracular
+        </Phrase>
+        <Phrase className="text-[hsl(var(--foreground))/0.88] text-base text-center mb-10">
+          Um sistema que ensina você a:
+        </Phrase>
+        <div className="space-y-3 max-w-sm mx-auto">
+          {[
+            'Identificar padrões invisíveis na fala da cliente',
+            'Reconhecer estruturas psíquicas (Torres, Portas e Campos)',
+            'Conduzir sessões com clareza',
+            'Criar intervenções que fazem sentido real',
+          ].map((t, i) => (
+            <Phrase key={t} delay={i * 0.08} className="text-[hsl(var(--foreground))/0.9] text-sm md:text-base flex items-center gap-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--primary))/0.75] shrink-0" />
+              {t}
+            </Phrase>
+          ))}
+        </div>
+        <Phrase delay={0.4} className="text-center mt-10">
+          <span className="text-[hsl(var(--foreground))/0.76] text-sm">Você não aprende o que dizer.</span>
+          <br />
+          <span className="text-[#C6A96B] text-base font-medium">Você aprende como ver o que está acontecendo.</span>
+        </Phrase>
+      </section>
+
+      <Spacer h="lg" />
+
+      {/* ═══════════════════════════════
+         1E. O QUE MUDA NA PRÁTICA
+      ═══════════════════════════════ */}
+
+      <section className="py-16 px-6 bg-[#08080C]">
+        <div className="max-w-lg mx-auto">
+          <Phrase className="text-[hsl(var(--primary))] text-sm uppercase tracking-[0.35em] text-center mb-8 font-semibold">
+            O que muda na sua prática
+          </Phrase>
+          <div className="space-y-4">
+            {[
+              'Entende o que está por trás da fala',
+              'Não depende mais de "intuição solta"',
+              'Sabe quando conduzir e quando não',
+              'Sustenta sessões com mais segurança',
+              'Para de improvisar sem direção',
+            ].map((t, i) => (
+              <motion.div
+                key={t}
+                initial={{ opacity: 0, x: -14 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.06 }}
+                className="text-[hsl(var(--foreground))/0.92] text-sm md:text-base flex items-center gap-3"
+              >
+                <span className="text-[hsl(var(--primary))] text-base">✔</span>
+                {t}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <Spacer h="lg" />
+
+      {/* ═══════════════════════════════
+         2. PROMESSA
+      ═══════════════════════════════ */}
+
+      <section className="px-6 max-w-lg mx-auto">
         <Phrase className="font-display text-[clamp(1.4rem,6vw,2.6rem)] font-light leading-[1.2] text-center py-[14vh]">
           <span className="text-[#C6A96B]">Formar mulheres capazes de sustentar processos simbólicos com ética, clareza e aplicação real</span>
           <br /><br />
