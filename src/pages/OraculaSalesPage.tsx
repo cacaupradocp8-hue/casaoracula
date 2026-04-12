@@ -180,7 +180,7 @@ export default function OraculaSalesPage() {
       <ParticleField density={28} color="216,255,62" />
 
       {/* ═══════════════════════════════
-         1. HERO FULLSCREEN
+         1. HERO — ABERTURA
       ═══════════════════════════════ */}
 
       <motion.section
@@ -201,9 +201,9 @@ export default function OraculaSalesPage() {
             transition={{ duration: 1.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="font-display text-center text-[clamp(1.6rem,7vw,3.2rem)] font-light leading-[1.15] tracking-tight max-w-lg"
           >
-            Você não precisa de mais técnica.
+            A Casa Orácula não começa com conteúdo.
             <br />
-            <span className="text-[#C6A96B]">Precisa parar de conduzir no escuro.</span>
+            <span className="text-[#C6A96B]">Começa com estrutura.</span>
           </motion.h1>
 
           <motion.p
@@ -212,7 +212,7 @@ export default function OraculaSalesPage() {
             transition={{ duration: 1, delay: 1.2 }}
             className="text-[hsl(var(--foreground))/0.9] text-base md:text-lg text-center max-w-md"
           >
-            A formação que ensina a ler o campo antes de intervir.
+            A Formação Oracular nasce de uma arquitetura pensada para sustentar transformação real, prática e profissional.
           </motion.p>
 
           <motion.div
@@ -248,25 +248,15 @@ export default function OraculaSalesPage() {
       </motion.section>
 
       {/* ═══════════════════════════════
-         2. SCROLL NARRATIVO — Dor
+         2. PROMESSA
       ═══════════════════════════════ */}
 
       <section className="px-6 max-w-lg mx-auto">
         <Spacer h="xl" />
-        {['Você já estudou.', 'Já atendeu.', 'Já ajudou.'].map((f, i) => (
-          <Phrase
-            key={i}
-            delay={i * 0.04}
-            className="font-display text-[clamp(1.2rem,5vw,2rem)] font-light leading-[1.3] text-center text-[hsl(var(--foreground))/0.88] py-[12vh]"
-          >
-            {f}
-          </Phrase>
-        ))}
-
         <Phrase className="font-display text-[clamp(1.4rem,6vw,2.6rem)] font-light leading-[1.2] text-center py-[14vh]">
-          <span className="text-[hsl(var(--foreground))/0.82]">E mesmo assim…</span>
-          <br />
-          <span className="text-[#C6A96B]">Algo não sustenta.</span>
+          <span className="text-[#C6A96B]">Formar mulheres capazes de sustentar processos simbólicos com ética, clareza e aplicação real</span>
+          <br /><br />
+          <span className="text-[hsl(var(--foreground))/0.82] text-lg md:text-xl">— sem dependência de técnica ou validação externa.</span>
         </Phrase>
       </section>
 
@@ -284,7 +274,7 @@ export default function OraculaSalesPage() {
 
       <section className="max-w-3xl mx-auto">
         <Phrase className="font-display text-[clamp(1.2rem,5vw,2rem)] font-light text-center text-[hsl(var(--foreground))/0.88] px-6 mb-10">
-          Assista e entenda o que muda quando você <span className="text-[#C6A96B]">aprende a ler</span>.
+          O que você encontra aqui <span className="text-[#C6A96B]">não é um curso</span>.
         </Phrase>
         <VideoPlayer onCtaClick={ctaClick} />
       </section>
@@ -292,56 +282,28 @@ export default function OraculaSalesPage() {
       <Spacer h="xl" />
 
       {/* ═══════════════════════════════
-         4. DIAGNÓSTICO — O que falta
+         4. COMO A CASA FUNCIONA — Três camadas
       ═══════════════════════════════ */}
 
       <section className="px-6 max-w-lg mx-auto">
-        {[
-          { t: 'O mercado ensinou você a conduzir.', dim: true },
-          { t: 'Mas não ensinou a ler.', dim: true },
-          { t: 'Quando você não lê…', dim: true },
-          { t: 'Você interfere no tempo errado.', dim: false },
-        ].map((item, i) => (
-          <Phrase
-            key={i}
-            className={`font-display text-lg md:text-xl font-light text-center py-[10vh] ${
-              item.dim ? 'text-[hsl(var(--foreground))/0.82]' : 'text-[hsl(var(--foreground))/0.96]'
-            }`}
-          >
-            {item.t}
-          </Phrase>
-        ))}
-
-        <Phrase className="font-display text-[clamp(1.3rem,5vw,2.2rem)] font-light text-center py-[12vh]">
-          <span className="text-[hsl(var(--foreground))/0.84]">Toda intervenção fora de tempo…</span>
+        <Phrase className="font-display text-[clamp(1.3rem,5vw,2.2rem)] font-light text-center py-[8vh] text-[hsl(var(--foreground))/0.9]">
+          A Casa não é uma formação isolada.
           <br />
-          <span className="text-[#C6A96B]">vira invasão simbólica.</span>
+          <span className="text-[#C6A96B]">É um sistema.</span>
         </Phrase>
       </section>
-
-      <GoldButton label="Entrar na Formação" onClick={ctaClick} variant="outline" />
-      <Spacer h="xl" />
-
-      {/* ═══════════════════════════════
-         5. MÉTODO — CidaDELA
-      ═══════════════════════════════ */}
-
-      <div className="relative overflow-hidden mx-4 md:mx-auto max-w-3xl rounded-xl">
-        <img src={img03} alt="Método" loading="lazy" className="w-full h-auto object-contain" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/40 via-transparent to-[#0B0B0F]/90" />
-      </div>
 
       <section className="py-16 px-6">
         <div className="max-w-lg mx-auto">
           <Phrase className="text-[hsl(var(--primary))] text-sm md:text-base uppercase tracking-[0.35em] text-center mb-8 font-semibold">
-            Método da CidaDELA
+            Arquitetura da Casa Orácula
           </Phrase>
 
           <div className="space-y-4">
             {[
-              { title: 'Portas', desc: 'Em que limiar a psique está.' },
-              { title: 'Campos', desc: 'O clima simbólico que pede leitura.' },
-              { title: 'Torres', desc: 'O que sustentou essa mulher até aqui.' },
+              { title: 'Clube de Leitura Oracular', desc: 'Base simbólica e percepção. Sem pressão de aplicação.' },
+              { title: 'Formação Oracular', desc: 'Profissionalização e condução. A escuta se torna estruturada.' },
+              { title: 'Casa das Máquinas', desc: 'Prática e aplicação contínua. Só existe quando há capacidade.' },
             ].map((item, i) => (
               <motion.div
                 key={item.title}
@@ -360,27 +322,90 @@ export default function OraculaSalesPage() {
         </div>
       </section>
 
+      {/* ═══════════════════════════════
+         5. O QUE ISSO SIGNIFICA
+      ═══════════════════════════════ */}
+
       <section className="px-6 max-w-lg mx-auto text-center">
         <Phrase className="text-base md:text-lg font-light py-[8vh]">
-          <span className="text-[hsl(var(--foreground))/0.86]">Quando isso é visto,</span>
-          <br />
-          <span className="text-[hsl(var(--foreground))/0.86]">a condução deixa de ser tentativa.</span>
+          <span className="text-[hsl(var(--foreground))/0.86]">A formação não entrega tudo de uma vez.</span>
           <br /><br />
-          <span className="text-[#C6A96B]">E passa a ser precisão.</span>
+          <span className="text-[#C6A96B]">Ela organiza uma progressão real de capacidade e aplicação.</span>
         </Phrase>
       </section>
 
-      <GoldButton label="Começar a ler com precisão" onClick={ctaClick} variant="solid" />
+      <GoldButton label="Entrar na Formação" onClick={ctaClick} variant="outline" />
       <Spacer h="xl" />
 
       {/* ═══════════════════════════════
-         6. SISTEMA — Humano vs Máquina
+         6. ESTRUTURA DA FORMAÇÃO
+      ═══════════════════════════════ */}
+
+      <div className="relative overflow-hidden mx-4 md:mx-auto max-w-3xl rounded-xl">
+        <img src={img03} alt="Estrutura" loading="lazy" className="w-full h-auto object-contain" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/40 via-transparent to-[#0B0B0F]/90" />
+      </div>
+
+      <section className="py-16 px-6">
+        <div className="max-w-lg mx-auto">
+          <Phrase className="text-[hsl(var(--primary))] text-sm md:text-base uppercase tracking-[0.35em] text-center mb-4 font-semibold">
+            Estrutura da Formação
+          </Phrase>
+          <Phrase className="text-[hsl(var(--foreground))/0.82] text-sm text-center mb-10">
+            Organizada por níveis de maturidade prática — não por módulos.
+          </Phrase>
+
+          <div className="space-y-4">
+            {[
+              { title: '1. Leitura de Campo', desc: 'Identificar a Porta ativa, reconhecer estruturas, perceber o Campo sem interpretar.' },
+              { title: '2. Profundidade Psíquica', desc: 'Trabalho com ambivalência, sustentação de sombra, presença diante do não resolvido.' },
+              { title: '3. Narroterapia', desc: 'Conduzir grupos com contos, abrir campos simbólicos, perguntas que deslocam sem invadir.' },
+              { title: '4. Condução', desc: 'Presença profissional, gestão de grupo, limites claros.' },
+              { title: '5. Voz e Posicionamento', desc: 'Sustentar sua fala, conduzir sem performar, ensinar sem simplificar.' },
+              { title: '6. Autoria', desc: 'Construir sua forma de condução, sua prática, seus próprios espaços.' },
+            ].map((item, i) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, x: -14 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: i * 0.06 }}
+                className="border border-[hsl(var(--border))/0.6] bg-[hsl(var(--card))/0.22] rounded-lg p-6 relative overflow-hidden"
+              >
+                <div className="absolute top-0 left-0 w-[3px] h-full bg-[hsl(var(--primary))/0.8] rounded-full" />
+                <h3 className="font-display text-lg text-[hsl(var(--foreground))] font-medium mb-1 pl-3">{item.title}</h3>
+                <p className="text-[hsl(var(--foreground))/0.86] text-sm pl-3 leading-relaxed">{item.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Ética transversal */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="mt-6 border border-[hsl(var(--primary))/0.35] rounded-xl p-6 bg-[hsl(var(--primary))/0.08] text-center"
+          >
+            <p className="text-[hsl(var(--primary))] text-xs uppercase tracking-[0.32em] font-semibold mb-3">Ética — Base transversal</p>
+            <p className="text-[hsl(var(--foreground))/0.88] text-sm leading-relaxed">
+              Discernimento de limites · Quando não conduzir · Quando encaminhar · Como não invadir processos
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      <GoldButton label="Conhecer a Formação" onClick={ctaClick} variant="solid" />
+      <Spacer h="xl" />
+
+      {/* ═══════════════════════════════
+         7. ENTREGÁVEIS — O que você sai com / sem
       ═══════════════════════════════ */}
 
       <section className="py-20 px-6 bg-[#08080C]">
         <div className="max-w-lg mx-auto">
-            <Phrase className="text-[hsl(var(--primary))] text-sm uppercase tracking-[0.35em] text-center mb-10 font-semibold">
-            Não é automação. É leitura viva.
+          <Phrase className="text-[hsl(var(--primary))] text-sm uppercase tracking-[0.35em] text-center mb-10 font-semibold">
+            O que você desenvolve aqui
           </Phrase>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -389,12 +414,12 @@ export default function OraculaSalesPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-              className="border border-[hsl(var(--border))/0.5] rounded-xl p-6 space-y-4 bg-[hsl(var(--card))/0.12]"
+              className="border border-[hsl(var(--primary))/0.35] rounded-xl p-6 space-y-4 bg-[hsl(var(--primary))/0.08]"
             >
-              <p className="text-[hsl(var(--foreground))/0.8] text-xs uppercase tracking-[0.32em] font-semibold">O mercado oferece</p>
-              {['Templates prontos', 'Técnicas desconectadas', 'Resultados rápidos'].map((t) => (
-                <p key={t} className="text-[hsl(var(--foreground))/0.86] text-sm md:text-base flex items-center gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--foreground))/0.75]" />
+              <p className="text-[hsl(var(--primary))] text-xs uppercase tracking-[0.32em] font-semibold">Você sai com</p>
+              {['Condução de grupos', 'Perguntas narrativas', 'Leitura de campo', 'Estrutura de sessão', 'Protocolos éticos', 'Autonomia na condução'].map((t) => (
+                <p key={t} className="text-[hsl(var(--foreground))/0.92] text-sm md:text-base flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--primary))]" />
                   {t}
                 </p>
               ))}
@@ -405,12 +430,12 @@ export default function OraculaSalesPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="border border-[hsl(var(--primary))/0.35] rounded-xl p-6 space-y-4 bg-[hsl(var(--primary))/0.08]"
+              className="border border-[hsl(var(--border))/0.5] rounded-xl p-6 space-y-4 bg-[hsl(var(--card))/0.12]"
             >
-              <p className="text-[hsl(var(--primary))] text-xs uppercase tracking-[0.32em] font-semibold">A Casa Orácula entrega</p>
-              {['Leitura simbólica viva', 'Método com ética e profundidade', 'Formação de identidade clínica'].map((t) => (
-                <p key={t} className="text-[hsl(var(--foreground))/0.92] text-sm md:text-base flex items-center gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--primary))]" />
+              <p className="text-[hsl(var(--foreground))/0.8] text-xs uppercase tracking-[0.32em] font-semibold">Você não sai com</p>
+              {['Scripts fechados', 'Respostas prontas', 'Fórmulas replicáveis', 'Interpretações automáticas'].map((t) => (
+                <p key={t} className="text-[hsl(var(--foreground))/0.86] text-sm md:text-base flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--foreground))/0.75]" />
                   {t}
                 </p>
               ))}
@@ -422,25 +447,25 @@ export default function OraculaSalesPage() {
       <Spacer h="lg" />
 
       {/* ═══════════════════════════════
-         7. APP — extensão da mente
+         8. REGRA DA CASA DAS MÁQUINAS
       ═══════════════════════════════ */}
 
       <section className="py-16 px-6">
         <div className="max-w-lg mx-auto">
           <div className="relative overflow-hidden rounded-xl mb-10">
-            <img src={mentoriaImg} alt="App" loading="lazy" className="w-full h-auto object-contain" />
+            <img src={mentoriaImg} alt="Casa das Máquinas" loading="lazy" className="w-full h-auto object-contain" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/30 to-transparent" />
           </div>
 
           <Phrase className="font-display text-lg font-light text-[hsl(var(--foreground))/0.92] text-center mb-2">
-            O app da Casa Orácula não é bônus.
+            Primeiro você desenvolve capacidade.
           </Phrase>
           <Phrase className="font-display text-lg font-light text-[#C6A96B] text-center mb-8">
-            É extensão da sua mente clínica.
+            Depois você acessa as ferramentas.
           </Phrase>
 
           <div className="space-y-3">
-            {['Mapa vivo da prática', 'Registro de Portas e Campos', 'Acompanhamento de narrativas', 'Supervisão integrada'].map(
+            {['A Casa das Máquinas é exclusiva para alunas formadas', 'Essa ordem não é estética — é estrutural', 'Ferramentas sem capacidade geram dano', 'A prática vem depois da maturidade'].map(
               (item) => (
                 <p key={item} className="text-[hsl(var(--foreground))/0.88] text-sm md:text-base flex items-center gap-3 justify-center">
                   <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--primary))/0.75]" />
@@ -456,24 +481,64 @@ export default function OraculaSalesPage() {
       <Spacer h="xl" />
 
       {/* ═══════════════════════════════
-         8. TRANSFORMAÇÃO — Frases
+         9. DIFERENCIAL
       ═══════════════════════════════ */}
 
       <section className="px-6 max-w-lg mx-auto text-center">
         <Phrase className="font-display text-[clamp(1.3rem,5vw,2.2rem)] font-light py-[10vh] text-[hsl(var(--foreground))/0.9]">
-          Isso não é um curso.
+          A maioria ensina o que fazer.
         </Phrase>
         <Phrase className="font-display text-[clamp(1.3rem,5vw,2.2rem)] font-light py-[10vh] text-[#C6A96B]">
-          É uma formação de identidade.
-        </Phrase>
-        <Phrase className="font-display text-lg font-light py-[10vh] text-[hsl(var(--foreground))/0.86] leading-relaxed">
-          Um ano para atravessar.
-          <br />
-          Integrar.
-          <br />
-          Se posicionar.
+          A Casa Orácula ensina quando não fazer, como sustentar e como conduzir com ética.
         </Phrase>
       </section>
+
+      {/* ═══════════════════════════════
+         10. PARA QUEM É / NÃO É
+      ═══════════════════════════════ */}
+
+      <section className="py-20 px-6 bg-[#08080C]">
+        <div className="max-w-lg mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="border border-[hsl(var(--primary))/0.35] rounded-xl p-6 space-y-4 bg-[hsl(var(--primary))/0.08]"
+            >
+              <p className="text-[hsl(var(--primary))] text-xs uppercase tracking-[0.32em] font-semibold">Para quem é</p>
+              {['Terapeutas', 'Psicólogas', 'Facilitadoras', 'Mentoras'].map((t) => (
+                <p key={t} className="text-[hsl(var(--foreground))/0.92] text-sm md:text-base flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--primary))]" />
+                  {t}
+                </p>
+              ))}
+              <p className="text-[hsl(var(--foreground))/0.76] text-xs pt-2 italic">
+                Mulheres que desejam conduzir processos com profundidade e estrutura.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="border border-[hsl(var(--border))/0.5] rounded-xl p-6 space-y-4 bg-[hsl(var(--card))/0.12]"
+            >
+              <p className="text-[hsl(var(--foreground))/0.8] text-xs uppercase tracking-[0.32em] font-semibold">Para quem não é</p>
+              {['Quem busca técnica pronta', 'Quem quer respostas rápidas', 'Quem precisa de validação constante', 'Quem não sustenta processos'].map((t) => (
+                <p key={t} className="text-[hsl(var(--foreground))/0.86] text-sm md:text-base flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--foreground))/0.75]" />
+                  {t}
+                </p>
+              ))}
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      <Spacer h="lg" />
 
       <div className="relative overflow-hidden mx-4 md:mx-auto max-w-3xl rounded-xl">
         <img src={img04} alt="Formação" loading="lazy" className="w-full h-auto object-contain" />
@@ -483,7 +548,7 @@ export default function OraculaSalesPage() {
       <Spacer h="xl" />
 
       {/* ═══════════════════════════════
-         9. OFERTA
+         11. OFERTA
       ═══════════════════════════════ */}
 
       <section className="py-24 md:py-32 px-6">
@@ -517,7 +582,7 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══════════════════════════════
-         10. CTA FINAL — Fechamento
+         12. FECHAMENTO
       ═══════════════════════════════ */}
 
       <section className="relative py-24 md:py-32 px-6">
@@ -529,19 +594,18 @@ export default function OraculaSalesPage() {
         />
 
         <div className="relative z-10 max-w-lg mx-auto text-center">
-          <Phrase className="font-display text-lg font-light text-[hsl(var(--foreground))/0.88] italic mb-[8vh]">
-            Depois que você aprende a ler…
+          <Phrase className="font-display text-lg font-light text-[hsl(var(--foreground))/0.88] mb-[8vh]">
+            Se você está pronta para sair da explicação
             <br />
-            não consegue mais fingir que não vê.
+            e entrar na prática real,
           </Phrase>
-          <Phrase className="font-display text-base font-light text-[hsl(var(--foreground))/0.82] mb-[8vh]">
-            Se você sente que já não quer apenas conduzir mulheres…
+          <Phrase className="font-display text-xl font-light text-[#C6A96B] mb-[8vh]">
+            a Formação Oracular está aberta.
           </Phrase>
-          <Phrase className="font-display text-lg font-light text-[#C6A96B] mb-[8vh]">
-            Talvez esteja buscando uma casa.
-          </Phrase>
-          <Phrase className="font-display text-xl font-light text-[hsl(var(--foreground))/0.96] mb-12">
-            E a Casa… já existe.
+          <Phrase className="font-display text-base font-light text-[hsl(var(--foreground))/0.82] mb-12">
+            Se ainda não for o momento, permaneça no Clube.
+            <br />
+            <span className="text-[hsl(var(--foreground))/0.96]">A maturidade não se acelera. Ela se constrói.</span>
           </Phrase>
 
           <GoldButton label="Entrar na Formação Orácula" onClick={ctaClick} variant="glow" />
