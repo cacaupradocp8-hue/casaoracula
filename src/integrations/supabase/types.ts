@@ -14777,15 +14777,20 @@ export type Database = {
       }
       oraculo_portais: {
         Row: {
+          ciclo: string | null
           cover_image_url: string | null
           created_at: string
           descricao_curta: string | null
           icon_name: string | null
           id: string
           inspirado_em: string | null
+          is_locked: boolean
+          livro_base: string | null
+          nivel_acesso: string | null
           nome: string
           objetivo_formativo: string | null
           ordem: number
+          portal_categoria: string | null
           slug: string
           status: string
           subtitulo: string | null
@@ -14793,15 +14798,20 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          ciclo?: string | null
           cover_image_url?: string | null
           created_at?: string
           descricao_curta?: string | null
           icon_name?: string | null
           id?: string
           inspirado_em?: string | null
+          is_locked?: boolean
+          livro_base?: string | null
+          nivel_acesso?: string | null
           nome: string
           objetivo_formativo?: string | null
           ordem: number
+          portal_categoria?: string | null
           slug: string
           status?: string
           subtitulo?: string | null
@@ -14809,15 +14819,20 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          ciclo?: string | null
           cover_image_url?: string | null
           created_at?: string
           descricao_curta?: string | null
           icon_name?: string | null
           id?: string
           inspirado_em?: string | null
+          is_locked?: boolean
+          livro_base?: string | null
+          nivel_acesso?: string | null
           nome?: string
           objetivo_formativo?: string | null
           ordem?: number
+          portal_categoria?: string | null
           slug?: string
           status?: string
           subtitulo?: string | null
@@ -14825,6 +14840,336 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      oraculo_portal_aplicacoes: {
+        Row: {
+          created_at: string
+          id: string
+          portal_id: string
+          updated_at: string
+          uso_aula: string | null
+          uso_grupo: string | null
+          uso_sessao: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          portal_id: string
+          updated_at?: string
+          uso_aula?: string | null
+          uso_grupo?: string | null
+          uso_sessao?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          portal_id?: string
+          updated_at?: string
+          uso_aula?: string | null
+          uso_grupo?: string | null
+          uso_sessao?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_portal_aplicacoes_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: true
+            referencedRelation: "oraculo_portais"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "oraculo_portal_aplicacoes_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: true
+            referencedRelation: "vw_oraculo_portais_resumo"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oraculo_portal_audios: {
+        Row: {
+          audio_url: string | null
+          created_at: string
+          duracao: string | null
+          id: string
+          is_locked: boolean
+          is_published: boolean
+          ordem: number
+          portal_id: string
+          roteiro: string | null
+          tipo: string
+          titulo: string
+          transcricao: string | null
+          updated_at: string
+        }
+        Insert: {
+          audio_url?: string | null
+          created_at?: string
+          duracao?: string | null
+          id?: string
+          is_locked?: boolean
+          is_published?: boolean
+          ordem?: number
+          portal_id: string
+          roteiro?: string | null
+          tipo?: string
+          titulo: string
+          transcricao?: string | null
+          updated_at?: string
+        }
+        Update: {
+          audio_url?: string | null
+          created_at?: string
+          duracao?: string | null
+          id?: string
+          is_locked?: boolean
+          is_published?: boolean
+          ordem?: number
+          portal_id?: string
+          roteiro?: string | null
+          tipo?: string
+          titulo?: string
+          transcricao?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_portal_audios_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: false
+            referencedRelation: "oraculo_portais"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "oraculo_portal_audios_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: false
+            referencedRelation: "vw_oraculo_portais_resumo"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oraculo_portal_essencia: {
+        Row: {
+          created_at: string
+          habilidade: string | null
+          id: string
+          leitura_etica: string | null
+          nucleo_80_20: string | null
+          o_que_nao_fazer: string | null
+          onde_estamos: string | null
+          portal_id: string
+          tensao_central: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          habilidade?: string | null
+          id?: string
+          leitura_etica?: string | null
+          nucleo_80_20?: string | null
+          o_que_nao_fazer?: string | null
+          onde_estamos?: string | null
+          portal_id: string
+          tensao_central?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          habilidade?: string | null
+          id?: string
+          leitura_etica?: string | null
+          nucleo_80_20?: string | null
+          o_que_nao_fazer?: string | null
+          onde_estamos?: string | null
+          portal_id?: string
+          tensao_central?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_portal_essencia_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: true
+            referencedRelation: "oraculo_portais"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "oraculo_portal_essencia_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: true
+            referencedRelation: "vw_oraculo_portais_resumo"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oraculo_portal_ferramenta_campos: {
+        Row: {
+          created_at: string
+          ferramenta_id: string
+          field_key: string
+          field_type: string
+          help_text: string | null
+          id: string
+          label: string
+          options: Json
+          ordem: number
+          placeholder: string | null
+          required: boolean
+        }
+        Insert: {
+          created_at?: string
+          ferramenta_id: string
+          field_key: string
+          field_type: string
+          help_text?: string | null
+          id?: string
+          label: string
+          options?: Json
+          ordem: number
+          placeholder?: string | null
+          required?: boolean
+        }
+        Update: {
+          created_at?: string
+          ferramenta_id?: string
+          field_key?: string
+          field_type?: string
+          help_text?: string | null
+          id?: string
+          label?: string
+          options?: Json
+          ordem?: number
+          placeholder?: string | null
+          required?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_portal_ferramenta_campos_ferramenta_id_fkey"
+            columns: ["ferramenta_id"]
+            isOneToOne: false
+            referencedRelation: "oraculo_portal_ferramentas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oraculo_portal_ferramentas: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          id: string
+          instrucoes: string | null
+          nome: string
+          portal_id: string
+          updated_at: string
+          uso_contexto: string | null
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          instrucoes?: string | null
+          nome: string
+          portal_id: string
+          updated_at?: string
+          uso_contexto?: string | null
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          instrucoes?: string | null
+          nome?: string
+          portal_id?: string
+          updated_at?: string
+          uso_contexto?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_portal_ferramentas_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: true
+            referencedRelation: "oraculo_portais"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "oraculo_portal_ferramentas_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: true
+            referencedRelation: "vw_oraculo_portais_resumo"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oraculo_portal_forja_erros: {
+        Row: {
+          created_at: string
+          erro: string
+          forja_id: string
+          id: string
+          impacto: string | null
+          ordem: number
+        }
+        Insert: {
+          created_at?: string
+          erro: string
+          forja_id: string
+          id?: string
+          impacto?: string | null
+          ordem: number
+        }
+        Update: {
+          created_at?: string
+          erro?: string
+          forja_id?: string
+          id?: string
+          impacto?: string | null
+          ordem?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_portal_forja_erros_forja_id_fkey"
+            columns: ["forja_id"]
+            isOneToOne: false
+            referencedRelation: "oraculo_portal_forjas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oraculo_portal_forja_passos: {
+        Row: {
+          created_at: string
+          descricao: string
+          forja_id: string
+          id: string
+          ordem: number
+          titulo: string | null
+        }
+        Insert: {
+          created_at?: string
+          descricao: string
+          forja_id: string
+          id?: string
+          ordem: number
+          titulo?: string | null
+        }
+        Update: {
+          created_at?: string
+          descricao?: string
+          forja_id?: string
+          id?: string
+          ordem?: number
+          titulo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_portal_forja_passos_forja_id_fkey"
+            columns: ["forja_id"]
+            isOneToOne: false
+            referencedRelation: "oraculo_portal_forjas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       oraculo_portal_forjas: {
         Row: {
@@ -14865,6 +15210,13 @@ export type Database = {
             referencedRelation: "oraculo_portais"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "oraculo_portal_forjas_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: true
+            referencedRelation: "vw_oraculo_portais_resumo"
+            referencedColumns: ["id"]
+          },
         ]
       }
       oraculo_portal_jardins: {
@@ -14903,6 +15255,96 @@ export type Database = {
             referencedRelation: "oraculo_portais"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "oraculo_portal_jardins_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: true
+            referencedRelation: "vw_oraculo_portais_resumo"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oraculo_portal_laboratorio_passos: {
+        Row: {
+          created_at: string
+          descricao: string
+          id: string
+          laboratorio_id: string
+          ordem: number
+          titulo: string | null
+        }
+        Insert: {
+          created_at?: string
+          descricao: string
+          id?: string
+          laboratorio_id: string
+          ordem: number
+          titulo?: string | null
+        }
+        Update: {
+          created_at?: string
+          descricao?: string
+          id?: string
+          laboratorio_id?: string
+          ordem?: number
+          titulo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_portal_laboratorio_passos_laboratorio_id_fkey"
+            columns: ["laboratorio_id"]
+            isOneToOne: false
+            referencedRelation: "oraculo_portal_laboratorios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oraculo_portal_laboratorios: {
+        Row: {
+          acao_minima: string | null
+          created_at: string
+          id: string
+          observacoes: string | null
+          portal_id: string
+          regulacao_emocional: string | null
+          resultado_esperado: string | null
+          updated_at: string
+        }
+        Insert: {
+          acao_minima?: string | null
+          created_at?: string
+          id?: string
+          observacoes?: string | null
+          portal_id: string
+          regulacao_emocional?: string | null
+          resultado_esperado?: string | null
+          updated_at?: string
+        }
+        Update: {
+          acao_minima?: string | null
+          created_at?: string
+          id?: string
+          observacoes?: string | null
+          portal_id?: string
+          regulacao_emocional?: string | null
+          resultado_esperado?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_portal_laboratorios_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: true
+            referencedRelation: "oraculo_portais"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "oraculo_portal_laboratorios_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: true
+            referencedRelation: "vw_oraculo_portais_resumo"
+            referencedColumns: ["id"]
+          },
         ]
       }
       oraculo_portal_materiais: {
@@ -14911,8 +15353,10 @@ export type Database = {
           descricao: string | null
           id: string
           is_locked: boolean
+          is_published: boolean
           ordem: number
           portal_id: string
+          thumbnail_url: string | null
           tipo: string
           titulo: string
           updated_at: string
@@ -14923,8 +15367,10 @@ export type Database = {
           descricao?: string | null
           id?: string
           is_locked?: boolean
+          is_published?: boolean
           ordem?: number
           portal_id: string
+          thumbnail_url?: string | null
           tipo: string
           titulo: string
           updated_at?: string
@@ -14935,8 +15381,10 @@ export type Database = {
           descricao?: string | null
           id?: string
           is_locked?: boolean
+          is_published?: boolean
           ordem?: number
           portal_id?: string
+          thumbnail_url?: string | null
           tipo?: string
           titulo?: string
           updated_at?: string
@@ -14948,6 +15396,132 @@ export type Database = {
             columns: ["portal_id"]
             isOneToOne: false
             referencedRelation: "oraculo_portais"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "oraculo_portal_materiais_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: false
+            referencedRelation: "vw_oraculo_portais_resumo"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oraculo_portal_narroterapia: {
+        Row: {
+          conto_sugerido: string | null
+          created_at: string
+          id: string
+          observacao_metodologica: string | null
+          portal_id: string
+          script_abertura: string | null
+          updated_at: string
+        }
+        Insert: {
+          conto_sugerido?: string | null
+          created_at?: string
+          id?: string
+          observacao_metodologica?: string | null
+          portal_id: string
+          script_abertura?: string | null
+          updated_at?: string
+        }
+        Update: {
+          conto_sugerido?: string | null
+          created_at?: string
+          id?: string
+          observacao_metodologica?: string | null
+          portal_id?: string
+          script_abertura?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_portal_narroterapia_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: true
+            referencedRelation: "oraculo_portais"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "oraculo_portal_narroterapia_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: true
+            referencedRelation: "vw_oraculo_portais_resumo"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oraculo_portal_narroterapia_perguntas: {
+        Row: {
+          created_at: string
+          id: string
+          narroterapia_id: string
+          ordem: number
+          pergunta: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          narroterapia_id: string
+          ordem: number
+          pergunta: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          narroterapia_id?: string
+          ordem?: number
+          pergunta?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_portal_narroterapia_perguntas_narroterapia_id_fkey"
+            columns: ["narroterapia_id"]
+            isOneToOne: false
+            referencedRelation: "oraculo_portal_narroterapia"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oraculo_portal_riscos_eticos: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          id: string
+          ordem: number
+          portal_id: string
+          risco: string
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          ordem: number
+          portal_id: string
+          risco: string
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          ordem?: number
+          portal_id?: string
+          risco?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_portal_riscos_eticos_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: false
+            referencedRelation: "oraculo_portais"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "oraculo_portal_riscos_eticos_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: false
+            referencedRelation: "vw_oraculo_portais_resumo"
             referencedColumns: ["id"]
           },
         ]
@@ -20231,6 +20805,66 @@ export type Database = {
         }
         Relationships: []
       }
+      vw_oraculo_portais_resumo: {
+        Row: {
+          descricao_curta: string | null
+          id: string | null
+          nome: string | null
+          ordem: number | null
+          slug: string | null
+          status: string | null
+          tem_aplicacao: boolean | null
+          tem_audio_principal: boolean | null
+          tem_essencia: boolean | null
+          tem_ferramenta: boolean | null
+          tem_forja: boolean | null
+          tem_jardins: boolean | null
+          tem_laboratorio: boolean | null
+          tem_narroterapia: boolean | null
+          tem_risco_etico: boolean | null
+          tempo_estimado: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          descricao_curta?: string | null
+          id?: string | null
+          nome?: string | null
+          ordem?: number | null
+          slug?: string | null
+          status?: string | null
+          tem_aplicacao?: never
+          tem_audio_principal?: never
+          tem_essencia?: never
+          tem_ferramenta?: never
+          tem_forja?: never
+          tem_jardins?: never
+          tem_laboratorio?: never
+          tem_narroterapia?: never
+          tem_risco_etico?: never
+          tempo_estimado?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          descricao_curta?: string | null
+          id?: string | null
+          nome?: string | null
+          ordem?: number | null
+          slug?: string | null
+          status?: string | null
+          tem_aplicacao?: never
+          tem_audio_principal?: never
+          tem_essencia?: never
+          tem_ferramenta?: never
+          tem_forja?: never
+          tem_jardins?: never
+          tem_laboratorio?: never
+          tem_narroterapia?: never
+          tem_risco_etico?: never
+          tempo_estimado?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       accept_client_invitation: { Args: { _token: string }; Returns: Json }
@@ -20380,6 +21014,10 @@ export type Database = {
           source_queue: string
         }
         Returns: number
+      }
+      oraculo_portal_pode_publicar: {
+        Args: { p_portal_id: string }
+        Returns: boolean
       }
       process_webhook_subscription: {
         Args: {
