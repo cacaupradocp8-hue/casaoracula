@@ -14826,6 +14826,44 @@ export type Database = {
         }
         Relationships: []
       }
+      oraculo_portal_jardins: {
+        Row: {
+          created_at: string
+          id: string
+          jardim_oficio: string | null
+          jardim_psique: string | null
+          laboratorio_integracao: string | null
+          portal_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          jardim_oficio?: string | null
+          jardim_psique?: string | null
+          laboratorio_integracao?: string | null
+          portal_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          jardim_oficio?: string | null
+          jardim_psique?: string | null
+          laboratorio_integracao?: string | null
+          portal_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oraculo_portal_jardins_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: true
+            referencedRelation: "oraculo_portais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pattern_flags: {
         Row: {
           created_at: string
