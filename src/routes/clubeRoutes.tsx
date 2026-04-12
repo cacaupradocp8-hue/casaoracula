@@ -1,7 +1,14 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Navigate } from 'react-router-dom';
 
-const ClubeLivroApresentacao = React.lazy(() => import('@/pages/clube-livro/ClubeLivroApresentacao'));
+// ─── Módulo Clube do Livro Oracular (rotas principais) ───
+const ClubeHome = React.lazy(() => import('@/pages/clube/ClubeHome'));
+const ClubeCiclo = React.lazy(() => import('@/pages/clube/ClubeCiclo'));
+const ClubeEncontro = React.lazy(() => import('@/pages/clube/ClubeEncontro'));
+const ClubeChatLivro = React.lazy(() => import('@/pages/clube/ClubeChatLivro'));
+const ClubeAcervo = React.lazy(() => import('@/pages/clube/ClubeAcervo'));
+
+// ─── Rotas legadas (mantidas para compatibilidade) ───
 const ClubeLivroCiclo = React.lazy(() => import('@/pages/clube-livro/ClubeLivroCiclo'));
 const ClubeLivroPorta = React.lazy(() => import('@/pages/clube-livro/ClubeLivroPorta'));
 const ClubeLivroFase = React.lazy(() => import('@/pages/clube-livro/ClubeLivroFase'));
@@ -21,44 +28,42 @@ const ClubeLivroSemana = React.lazy(() => import('@/pages/clube-livro/ClubeLivro
 const COTravessiasList = React.lazy(() => import('@/pages/clube-livro/COTravessiasList'));
 const COTravessiaDetail = React.lazy(() => import('@/pages/clube-livro/COTravessiaDetail'));
 const COTravessiaEncontro = React.lazy(() => import('@/pages/clube-livro/COTravessiaEncontro'));
-const ClubeOracular = React.lazy(() => import('@/pages/ClubeOracular'));
-
-// Novo módulo Clube do Livro Oracular
-const ClubeHome = React.lazy(() => import('@/pages/clube/ClubeHome'));
-const ClubeCiclo = React.lazy(() => import('@/pages/clube/ClubeCiclo'));
-const ClubeEncontro = React.lazy(() => import('@/pages/clube/ClubeEncontro'));
-const ClubeAcervo = React.lazy(() => import('@/pages/clube/ClubeAcervo'));
 
 type PR = React.ComponentType<{ children: React.ReactNode; minPortal?: string }>;
 
 export function renderClubeRoutes(ProtectedRoute: PR) {
   return [
-    <Route key="cl-home" path="/app/clube" element={<ProtectedRoute minPortal="aluna"><ClubeOracular /></ProtectedRoute>} />,
-    <Route key="cl-sem" path="/clube-livro/semana" element={<ProtectedRoute minPortal="aluna"><ClubeLivroSemana /></ProtectedRoute>} />,
-    <Route key="cl-apr" path="/clube-livro" element={<ProtectedRoute minPortal="aluna"><ClubeLivroApresentacao /></ProtectedRoute>} />,
-    <Route key="cl-mj" path="/clube-livro/mapa-jornadas" element={<ProtectedRoute minPortal="aluna"><MapaJornadas /></ProtectedRoute>} />,
-    <Route key="cl-mt" path="/clube-livro/minha-travessia" element={<ProtectedRoute minPortal="aluna"><MinhaTravessia /></ProtectedRoute>} />,
-    <Route key="cl-liv" path="/clube-livro/livro/:id" element={<ProtectedRoute minPortal="aluna"><ClubeLivroLivro /></ProtectedRoute>} />,
-    <Route key="cl-cic" path="/clube-livro/:id" element={<ProtectedRoute minPortal="aluna"><ClubeLivroCiclo /></ProtectedRoute>} />,
-    <Route key="cl-por" path="/clube-livro/:id/porta/:portaId" element={<ProtectedRoute minPortal="aluna"><ClubeLivroPorta /></ProtectedRoute>} />,
-    <Route key="cl-rit" path="/clube-livro/:id/ritual" element={<ProtectedRoute minPortal="aluna"><ClubeLivroRitual /></ProtectedRoute>} />,
-    <Route key="cl-aul" path="/clube-livro/:id/aula/:aulaId" element={<ProtectedRoute minPortal="aluna"><ClubeLivroAula /></ProtectedRoute>} />,
-    <Route key="cl-fas" path="/clube-livro/:id/fase/:faseId" element={<ProtectedRoute minPortal="aluna"><ClubeLivroFase /></ProtectedRoute>} />,
-    <Route key="cl-esc" path="/clube-livro/:id/escutas" element={<ProtectedRoute minPortal="aluna"><ClubeLivroEscutas /></ProtectedRoute>} />,
-    <Route key="cl-enc" path="/clube-livro/:id/encontros" element={<ProtectedRoute minPortal="aluna"><ClubeLivroEncontros /></ProtectedRoute>} />,
-    <Route key="cl-int" path="/clube-livro/:id/integracao" element={<ProtectedRoute minPortal="aluna"><IntegracaoOracular /></ProtectedRoute>} />,
-    <Route key="cl-mc" path="/clube-livro/:id/meu-caminho" element={<ProtectedRoute minPortal="aluna"><MeuCaminhoClube /></ProtectedRoute>} />,
-    <Route key="cl-mc2" path="/clube-livro/meu-caminho" element={<ProtectedRoute minPortal="aluna"><MeuCaminhoClube /></ProtectedRoute>} />,
-    <Route key="cl-8020" path="/clube-livro/:id/integracao-8020" element={<ProtectedRoute minPortal="aluna"><Integracao8020 /></ProtectedRoute>} />,
-    <Route key="cl-lab" path="/clube-livro/:id/lab-8020" element={<ProtectedRoute minPortal="aluna"><Lab8020Season /></ProtectedRoute>} />,
-    <Route key="cl-cert" path="/clube-livro/:id/certificado" element={<ProtectedRoute minPortal="aluna"><CertificadoTravessia /></ProtectedRoute>} />,
-    <Route key="cl-trav" path="/clube-livro/travessias" element={<ProtectedRoute minPortal="aluna"><COTravessiasList /></ProtectedRoute>} />,
-    <Route key="cl-td" path="/clube-livro/travessia/:travessiaId" element={<ProtectedRoute minPortal="aluna"><COTravessiaDetail /></ProtectedRoute>} />,
-    <Route key="cl-te" path="/clube-livro/travessia/:travessiaId/encontro/:encontroId" element={<ProtectedRoute minPortal="aluna"><COTravessiaEncontro /></ProtectedRoute>} />,
-
+    // ═══ ROTAS PRINCIPAIS DO CLUBE ═══
     <Route key="clube-home" path="/clube" element={<ProtectedRoute minPortal="visitante"><ClubeHome /></ProtectedRoute>} />,
     <Route key="clube-ciclo" path="/clube/ciclo" element={<ProtectedRoute minPortal="mentorada"><ClubeCiclo /></ProtectedRoute>} />,
+    <Route key="clube-chat" path="/clube/chat-livro" element={<ProtectedRoute minPortal="mentorada"><ClubeChatLivro /></ProtectedRoute>} />,
     <Route key="clube-encontro" path="/clube/encontro" element={<ProtectedRoute minPortal="mentorada"><ClubeEncontro /></ProtectedRoute>} />,
     <Route key="clube-acervo" path="/clube/acervo" element={<ProtectedRoute minPortal="mentorada"><ClubeAcervo /></ProtectedRoute>} />,
+
+    // ═══ REDIRECIONAMENTOS de rotas legadas ═══
+    <Route key="cl-redir-old" path="/app/clube" element={<Navigate to="/clube" replace />} />,
+    <Route key="cl-redir-apr" path="/clube-livro" element={<Navigate to="/clube" replace />} />,
+
+    // ═══ ROTAS LEGADAS (mantidas para não quebrar links) ═══
+    <Route key="cl-sem" path="/clube-livro/semana" element={<ProtectedRoute minPortal="mentorada"><ClubeLivroSemana /></ProtectedRoute>} />,
+    <Route key="cl-mj" path="/clube-livro/mapa-jornadas" element={<ProtectedRoute minPortal="mentorada"><MapaJornadas /></ProtectedRoute>} />,
+    <Route key="cl-mt" path="/clube-livro/minha-travessia" element={<ProtectedRoute minPortal="mentorada"><MinhaTravessia /></ProtectedRoute>} />,
+    <Route key="cl-liv" path="/clube-livro/livro/:id" element={<ProtectedRoute minPortal="mentorada"><ClubeLivroLivro /></ProtectedRoute>} />,
+    <Route key="cl-cic" path="/clube-livro/:id" element={<ProtectedRoute minPortal="mentorada"><ClubeLivroCiclo /></ProtectedRoute>} />,
+    <Route key="cl-por" path="/clube-livro/:id/porta/:portaId" element={<ProtectedRoute minPortal="mentorada"><ClubeLivroPorta /></ProtectedRoute>} />,
+    <Route key="cl-rit" path="/clube-livro/:id/ritual" element={<ProtectedRoute minPortal="mentorada"><ClubeLivroRitual /></ProtectedRoute>} />,
+    <Route key="cl-aul" path="/clube-livro/:id/aula/:aulaId" element={<ProtectedRoute minPortal="mentorada"><ClubeLivroAula /></ProtectedRoute>} />,
+    <Route key="cl-fas" path="/clube-livro/:id/fase/:faseId" element={<ProtectedRoute minPortal="mentorada"><ClubeLivroFase /></ProtectedRoute>} />,
+    <Route key="cl-esc" path="/clube-livro/:id/escutas" element={<ProtectedRoute minPortal="mentorada"><ClubeLivroEscutas /></ProtectedRoute>} />,
+    <Route key="cl-enc" path="/clube-livro/:id/encontros" element={<ProtectedRoute minPortal="mentorada"><ClubeLivroEncontros /></ProtectedRoute>} />,
+    <Route key="cl-int" path="/clube-livro/:id/integracao" element={<ProtectedRoute minPortal="mentorada"><IntegracaoOracular /></ProtectedRoute>} />,
+    <Route key="cl-mc" path="/clube-livro/:id/meu-caminho" element={<ProtectedRoute minPortal="mentorada"><MeuCaminhoClube /></ProtectedRoute>} />,
+    <Route key="cl-mc2" path="/clube-livro/meu-caminho" element={<ProtectedRoute minPortal="mentorada"><MeuCaminhoClube /></ProtectedRoute>} />,
+    <Route key="cl-8020" path="/clube-livro/:id/integracao-8020" element={<ProtectedRoute minPortal="mentorada"><Integracao8020 /></ProtectedRoute>} />,
+    <Route key="cl-lab" path="/clube-livro/:id/lab-8020" element={<ProtectedRoute minPortal="mentorada"><Lab8020Season /></ProtectedRoute>} />,
+    <Route key="cl-cert" path="/clube-livro/:id/certificado" element={<ProtectedRoute minPortal="mentorada"><CertificadoTravessia /></ProtectedRoute>} />,
+    <Route key="cl-trav" path="/clube-livro/travessias" element={<ProtectedRoute minPortal="mentorada"><COTravessiasList /></ProtectedRoute>} />,
+    <Route key="cl-td" path="/clube-livro/travessia/:travessiaId" element={<ProtectedRoute minPortal="mentorada"><COTravessiaDetail /></ProtectedRoute>} />,
+    <Route key="cl-te" path="/clube-livro/travessia/:travessiaId/encontro/:encontroId" element={<ProtectedRoute minPortal="mentorada"><COTravessiaEncontro /></ProtectedRoute>} />,
   ];
 }
