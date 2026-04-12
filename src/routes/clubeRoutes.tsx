@@ -9,6 +9,7 @@ const ClubeChatLivro = React.lazy(() => import('@/pages/clube/ClubeChatLivro'));
 const ClubeAcervo = React.lazy(() => import('@/pages/clube/ClubeAcervo'));
 const ClubeForja = React.lazy(() => import('@/pages/clube/ClubeForja'));
 const ClubeTreinamento = React.lazy(() => import('@/pages/clube/ClubeTreinamento'));
+const ClubeEscutaImersiva = React.lazy(() => import('@/pages/clube/ClubeEscutaImersiva'));
 
 // ─── Rotas legadas (mantidas para compatibilidade) ───
 const ClubeLivroCiclo = React.lazy(() => import('@/pages/clube-livro/ClubeLivroCiclo'));
