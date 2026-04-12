@@ -3476,25 +3476,31 @@ export type Database = {
       club_tools: {
         Row: {
           conteudo: string | null
+          contexto_uso: string | null
           created_at: string | null
           cycle_id: string | null
           id: string
+          limite_etico: string | null
           tipo: string | null
           user_id: string
         }
         Insert: {
           conteudo?: string | null
+          contexto_uso?: string | null
           created_at?: string | null
           cycle_id?: string | null
           id?: string
+          limite_etico?: string | null
           tipo?: string | null
           user_id: string
         }
         Update: {
           conteudo?: string | null
+          contexto_uso?: string | null
           created_at?: string | null
           cycle_id?: string | null
           id?: string
+          limite_etico?: string | null
           tipo?: string | null
           user_id?: string
         }
