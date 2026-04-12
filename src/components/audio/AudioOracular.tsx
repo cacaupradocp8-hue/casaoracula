@@ -12,6 +12,7 @@ import { SoundWaveVisualizer } from './SoundWaveVisualizer';
 import { formatAudioTime } from '@/lib/audioUtils';
 import { getPublicAudioUrl, isValidAudioUrl } from '@/lib/audioUtils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ImmersiveBreathingScene } from './ImmersiveBreathingScene';
 
 type PlayerPhase = 'ritual' | 'playing' | 'insight';
 
@@ -47,15 +48,6 @@ export function AudioOracular({
   const [insightText, setInsightText] = useState('');
   const [insightSaved, setInsightSaved] = useState(false);
   const [isImmersive, setIsImmersive] = useState(false);
-  const [breathPhase, setBreathPhase] = useState<'inhale' | 'exhale'>('inhale');
-
-  useEffect(() => {
-    if (!isPlaying) return;
-    const interval = setInterval(() => {
-      setBreathPhase(prev => prev === 'inhale' ? 'exhale' : 'inhale');
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [isPlaying]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -141,31 +133,19 @@ export function AudioOracular({
 
   const progressPercent = duration > 0 ? (progress / duration) * 100 : 0;
 
-  // ── Refined Orb ──
-  const OrbBackground = ({ scale = 1 }: { scale?: number }) => (
+  // ── Inline Orb (for non-immersive card) ──
+  const OrbBackground = () => (
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
       <motion.div
         animate={{
-          scale: isPlaying ? (breathPhase === 'inhale' ? 1.15 * scale : 0.95 * scale) : 0.9 * scale,
-          opacity: isPlaying ? (breathPhase === 'inhale' ? 0.4 : 0.2) : 0.1,
+          scale: isPlaying ? [1, 1.08, 1] : [0.95, 1, 0.95],
+          opacity: isPlaying ? [0.15, 0.3, 0.15] : [0.05, 0.08, 0.05],
         }}
-        transition={{ duration: 3, ease: 'easeInOut' }}
-        className="rounded-full blur-3xl"
+        transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+        className="rounded-full blur-3xl w-64 h-64"
         style={{
-          width: `${16 * scale}rem`,
-          height: `${16 * scale}rem`,
           background: 'radial-gradient(circle, hsl(var(--gold) / 0.2) 0%, hsl(var(--mystic) / 0.08) 60%, transparent 100%)',
         }}
-      />
-      {/* Inner ring */}
-      <motion.div
-        animate={{
-          scale: isPlaying ? (breathPhase === 'exhale' ? 1.08 : 0.96) : 0.94,
-          opacity: isPlaying ? 0.3 : 0.08,
-        }}
-        transition={{ duration: 3, ease: 'easeInOut' }}
-        className="absolute rounded-full border border-gold/10"
-        style={{ width: `${8 * scale}rem`, height: `${8 * scale}rem` }}
       />
     </div>
   );
@@ -174,21 +154,21 @@ export function AudioOracular({
   const PlayerControls = ({ immersive = false }: { immersive?: boolean }) => (
     <div className={cn(
       "flex flex-col items-center gap-5",
-      immersive ? "max-w-md mx-auto w-full px-6" : "w-full"
+      immersive ? "max-w-sm mx-auto w-full px-6 mt-32 md:mt-40" : "w-full"
     )}>
       {/* Title */}
       {titulo && (
         <div className="text-center space-y-1">
           <h3 className={cn(
             "font-display text-foreground tracking-wide leading-tight",
-            immersive ? "text-xl md:text-2xl" : "text-base"
+            immersive ? "text-base md:text-lg text-foreground/80 tracking-wider" : "text-base"
           )}>
             {titulo}
           </h3>
           {subtitulo && (
             <p className={cn(
               "text-muted-foreground italic",
-              immersive ? "text-sm" : "text-xs"
+              immersive ? "text-[11px] text-muted-foreground/35" : "text-xs"
             )}>
               {subtitulo}
             </p>
@@ -196,25 +176,10 @@ export function AudioOracular({
         </div>
       )}
 
-      {/* Breathing cue */}
-      <AnimatePresence>
-        {isPlaying && (
-          <motion.span
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 0.5, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="text-[10px] tracking-[0.35em] uppercase text-gold/40 select-none"
-          >
-            {breathPhase === 'inhale' ? '· inspire ·' : '· expire ·'}
-          </motion.span>
-        )}
-      </AnimatePresence>
-
-      {/* Sound wave */}
-      <SoundWaveVisualizer
-        isPlaying={isPlaying}
-        className={cn(immersive ? "h-16 md:h-20" : "h-10")}
-      />
+      {/* Sound wave (only non-immersive) */}
+      {!immersive && (
+        <SoundWaveVisualizer isPlaying={isPlaying} className="h-10" />
+      )}
 
       {/* Progress bar */}
       <div className="w-full space-y-1.5">
@@ -225,7 +190,10 @@ export function AudioOracular({
           onValueChange={handleSeek}
           className="cursor-pointer"
         />
-        <div className="flex justify-between text-[10px] text-muted-foreground/60 font-body tabular-nums px-0.5">
+        <div className={cn(
+          "flex justify-between font-body tabular-nums px-0.5",
+          immersive ? "text-[10px] text-muted-foreground/30" : "text-[10px] text-muted-foreground/60"
+        )}>
           <span>{formatAudioTime(progress)}</span>
           <span>{duration > 0 ? formatAudioTime(duration) : '--:--'}</span>
         </div>
@@ -233,32 +201,37 @@ export function AudioOracular({
 
       {/* Controls row */}
       <div className="flex items-center gap-4">
-        <button
-          onClick={toggleMute}
-          className="p-2 text-muted-foreground/50 hover:text-gold/70 transition-colors"
-          aria-label={isMuted ? 'Ativar som' : 'Silenciar'}
-        >
-          {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-        </button>
+        {!immersive && (
+          <button
+            onClick={toggleMute}
+            className="p-2 text-muted-foreground/50 hover:text-gold/70 transition-colors"
+            aria-label={isMuted ? 'Ativar som' : 'Silenciar'}
+          >
+            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          </button>
+        )}
 
         <button
           onClick={togglePlay}
           disabled={isLoading}
           className={cn(
-            "relative rounded-full flex items-center justify-center transition-all duration-300",
-            "bg-gold/10 border border-gold/20 text-gold hover:bg-gold/20 hover:border-gold/30",
+            "relative rounded-full flex items-center justify-center transition-all duration-500",
+            immersive
+              ? "w-16 h-16 bg-gold/6 border border-gold/12 text-gold/70 hover:bg-gold/10 hover:border-gold/20"
+              : "w-12 h-12 bg-gold/10 border border-gold/20 text-gold hover:bg-gold/20 hover:border-gold/30",
             "active:scale-95",
-            immersive ? "w-16 h-16" : "w-12 h-12",
-            isPlaying && "shadow-[0_0_20px_hsl(var(--gold)/0.15)]"
+            isPlaying && (immersive
+              ? "shadow-[0_0_40px_hsl(var(--gold)/0.08)]"
+              : "shadow-[0_0_20px_hsl(var(--gold)/0.15)]")
           )}
           aria-label={isPlaying ? 'Pausar' : 'Reproduzir'}
         >
           {isLoading ? (
-            <Loader2 className={cn("animate-spin text-gold/60", immersive ? "w-5 h-5" : "w-4 h-4")} />
+            <Loader2 className={cn("animate-spin", immersive ? "w-5 h-5 text-gold/40" : "w-4 h-4 text-gold/60")} />
           ) : isPlaying ? (
-            <Pause className={cn("text-gold", immersive ? "w-5 h-5" : "w-4 h-4")} />
+            <Pause className={cn(immersive ? "w-5 h-5" : "w-4 h-4")} />
           ) : (
-            <Play className={cn("text-gold ml-0.5", immersive ? "w-5 h-5" : "w-4 h-4")} />
+            <Play className={cn("ml-0.5", immersive ? "w-5 h-5" : "w-4 h-4")} />
           )}
         </button>
 
@@ -271,13 +244,7 @@ export function AudioOracular({
             <Maximize2 className="w-4 h-4" />
           </button>
         ) : (
-          <button
-            onClick={exitImmersive}
-            className="p-2 text-muted-foreground/50 hover:text-gold/70 transition-colors"
-            aria-label="Sair do modo imersivo"
-          >
-            <Minimize2 className="w-4 h-4" />
-          </button>
+          <div className="p-2 w-8" /> // spacer
         )}
       </div>
     </div>
@@ -291,18 +258,20 @@ export function AudioOracular({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 1.2 }}
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background"
         >
+          {/* Back button — very discreet */}
           <button
             onClick={exitImmersive}
-            className="absolute top-5 right-5 z-10 p-2 text-muted-foreground/40 hover:text-foreground/60 transition-colors"
+            className="absolute top-5 right-5 z-20 p-2 text-muted-foreground/20 hover:text-foreground/50 transition-colors duration-500"
             aria-label="Fechar"
           >
             <X className="w-5 h-5" />
           </button>
 
-          <OrbBackground scale={1.6} />
+          {/* Breathing scene with mandala */}
+          <ImmersiveBreathingScene isPlaying={isPlaying} />
 
           <div className="relative z-10 w-full flex flex-col items-center justify-center min-h-screen py-16">
             <PlayerControls immersive />
@@ -414,8 +383,8 @@ export function AudioOracular({
               >
                 {/* Minimal breathing circle */}
                 <motion.div
-                  animate={{ scale: [1, 1.06, 1], opacity: [0.5, 0.8, 0.5] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                  animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0.8, 0.5] }}
+                  transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
                   className="w-14 h-14 rounded-full border border-gold/20 flex items-center justify-center"
                 >
                   <div className="w-2.5 h-2.5 rounded-full bg-gold/30" />

@@ -4,14 +4,15 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { ClubeAudioCardImersivo } from '@/components/clube/ClubeAudioCardImersivo';
 import { useClubeCicloDetalhe, type ClubeEscuta } from '@/hooks/useClubeLivro';
 import { useAudioProgress } from '@/hooks/useAudioProgress';
-import { getPublicAudioUrl, isValidAudioUrl, formatAudioTime } from '@/lib/audioUtils';
+import { getPublicAudioUrl, formatAudioTime } from '@/lib/audioUtils';
 import { Slider } from '@/components/ui/slider';
-import { ArrowLeft, Headphones, Play, Pause, Volume2, VolumeX, X, Loader2 } from 'lucide-react';
+import { ArrowLeft, Headphones, Play, Pause, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { ImmersiveBreathingScene } from '@/components/audio/ImmersiveBreathingScene';
 
 export default function ClubeEscutaImersiva() {
   const navigate = useNavigate();
@@ -19,10 +20,8 @@ export default function ClubeEscutaImersiva() {
   const cicloId = searchParams.get('ciclo');
   const [selectedEscuta, setSelectedEscuta] = useState<ClubeEscuta | null>(null);
 
-  // Try to get escutas from ciclo, or fallback to audio_assets
   const { escutas: cicloEscutas, isLoading: loadingCiclo } = useClubeCicloDetalhe(cicloId || undefined);
 
-  // Fallback: audio_assets for clube
   const { data: audioAssets, isLoading: loadingAssets } = useQuery({
     queryKey: ['clube-audio-assets'],
     queryFn: async () => {
@@ -36,7 +35,6 @@ export default function ClubeEscutaImersiva() {
     enabled: !cicloId,
   });
 
-  // Normalize to a common shape
   const escutas: ClubeEscuta[] = cicloId
     ? (cicloEscutas || []).filter(e => e.tipo === 'audio' && e.audio_url)
     : (audioAssets || []).map((a: any) => ({
@@ -67,7 +65,6 @@ export default function ClubeEscutaImersiva() {
   return (
     <AppLayout>
       <div className="min-h-screen px-4 py-10 md:py-16 max-w-2xl mx-auto space-y-8">
-        {/* Header */}
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => navigate('/clube')}>
             <ArrowLeft className="w-5 h-5" />
@@ -82,7 +79,6 @@ export default function ClubeEscutaImersiva() {
           </div>
         </div>
 
-        {/* Audio list */}
         {isLoading ? (
           <div className="flex flex-col items-center gap-4 py-20">
             <motion.div
@@ -125,20 +121,10 @@ function PlayerImersivo({ escuta, onBack }: { escuta: ClubeEscuta; onBack: () =>
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isMuted, setIsMuted] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [breathPhase, setBreathPhase] = useState<'inhale' | 'exhale'>('inhale');
 
   const resolvedUrl = getPublicAudioUrl(escuta.audio_url);
-
-  // Breathing cycle
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBreathPhase(prev => prev === 'inhale' ? 'exhale' : 'inhale');
-    }, 3500);
-    return () => clearInterval(interval);
-  }, []);
 
   // Lock scroll
   useEffect(() => {
@@ -176,13 +162,6 @@ function PlayerImersivo({ escuta, onBack }: { escuta: ClubeEscuta; onBack: () =>
     else { try { await audio.play(); setIsPlaying(true); } catch (e) { console.error(e); } }
   }, [isPlaying]);
 
-  const toggleMute = useCallback(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.muted = !isMuted;
-    setIsMuted(!isMuted);
-  }, [isMuted]);
-
   const handleSeek = useCallback((v: number[]) => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -195,106 +174,47 @@ function PlayerImersivo({ escuta, onBack }: { escuta: ClubeEscuta; onBack: () =>
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.8 }}
-      className="fixed inset-0 z-[9999] bg-background flex flex-col items-center justify-center overflow-hidden"
+      transition={{ duration: 1.2 }}
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden bg-background"
     >
       <audio ref={audioRef} src={resolvedUrl || ''} preload="metadata" />
 
-      {/* Close button */}
+      {/* Immersive breathing background with mandala */}
+      <ImmersiveBreathingScene isPlaying={isPlaying} />
+
+      {/* Back button — very discreet */}
       <button
         onClick={onBack}
-        className="absolute top-5 right-5 z-20 p-2.5 text-muted-foreground/30 hover:text-foreground/60 transition-colors"
+        className="absolute top-5 left-5 z-20 p-2.5 text-muted-foreground/20 hover:text-foreground/50 transition-colors duration-500"
         aria-label="Voltar"
       >
-        <X className="w-5 h-5" />
+        <ArrowLeft className="w-4 h-4" />
       </button>
 
-      {/* Background orb layers */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Outer glow */}
+      {/* Content — minimal, centered below mandala */}
+      <div className="relative z-10 flex flex-col items-center gap-10 w-full max-w-sm px-6 mt-32 md:mt-40">
+        {/* Title — small, understated */}
         <motion.div
-          animate={{
-            scale: breathPhase === 'inhale' ? 1.15 : 0.9,
-            opacity: isPlaying ? (breathPhase === 'inhale' ? 0.25 : 0.1) : 0.06,
-          }}
-          transition={{ duration: 3.5, ease: 'easeInOut' }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[28rem] h-[28rem] md:w-[36rem] md:h-[36rem] rounded-full blur-3xl"
-          style={{
-            background: 'radial-gradient(circle, hsl(var(--gold) / 0.15) 0%, hsl(var(--mystic) / 0.06) 50%, transparent 100%)',
-          }}
-        />
-        {/* Inner ring */}
-        <motion.div
-          animate={{
-            scale: breathPhase === 'exhale' ? 1.1 : 0.94,
-            opacity: isPlaying ? 0.25 : 0.08,
-          }}
-          transition={{ duration: 3.5, ease: 'easeInOut' }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 md:w-56 md:h-56 rounded-full border border-gold/10"
-        />
-        {/* Core dot */}
-        <motion.div
-          animate={{
-            scale: breathPhase === 'inhale' ? 1.2 : 0.85,
-            opacity: isPlaying ? 0.5 : 0.15,
-          }}
-          transition={{ duration: 3.5, ease: 'easeInOut' }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-gold/30"
-        />
-        {/* Second ring */}
-        <motion.div
-          animate={{
-            scale: breathPhase === 'inhale' ? 1.05 : 0.97,
-            opacity: isPlaying ? 0.12 : 0.04,
-          }}
-          transition={{ duration: 4, ease: 'easeInOut' }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 md:w-96 md:h-96 rounded-full border border-gold/5"
-        />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center gap-8 w-full max-w-md px-6">
-        {/* Breathing cue */}
-        <AnimatePresence>
-          {isPlaying && (
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
-              exit={{ opacity: 0 }}
-              className="text-[10px] tracking-[0.4em] uppercase text-gold/35 select-none"
-            >
-              {breathPhase === 'inhale' ? '· inspire ·' : '· expire ·'}
-            </motion.span>
-          )}
-        </AnimatePresence>
-
-        {/* Title */}
-        <div className="text-center space-y-2">
-          <motion.h1
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="font-display text-xl md:text-2xl text-foreground tracking-wide leading-relaxed"
-          >
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 1 }}
+          className="text-center space-y-1.5"
+        >
+          <h1 className="font-display text-base md:text-lg text-foreground/80 tracking-wider leading-relaxed">
             {escuta.titulo}
-          </motion.h1>
+          </h1>
           {escuta.descricao && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
-              className="text-xs text-muted-foreground/50 italic"
-            >
+            <p className="text-[11px] text-muted-foreground/35 italic font-body">
               {escuta.descricao}
-            </motion.p>
+            </p>
           )}
-        </div>
+        </motion.div>
 
-        {/* Progress */}
+        {/* Progress bar */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
+          transition={{ delay: 1, duration: 0.8 }}
           className="w-full space-y-2"
         >
           <Slider
@@ -304,48 +224,37 @@ function PlayerImersivo({ escuta, onBack }: { escuta: ClubeEscuta; onBack: () =>
             onValueChange={handleSeek}
             className="cursor-pointer"
           />
-          <div className="flex justify-between text-[10px] text-muted-foreground/40 font-body tabular-nums">
+          <div className="flex justify-between text-[10px] text-muted-foreground/30 font-body tabular-nums">
             <span>{formatAudioTime(progress)}</span>
             <span>{duration > 0 ? formatAudioTime(duration) : '--:--'}</span>
           </div>
         </motion.div>
 
-        {/* Controls */}
+        {/* Play/Pause — single central button */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.5 }}
-          className="flex items-center gap-6"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 1.2, duration: 0.6 }}
         >
-          <button
-            onClick={toggleMute}
-            className="p-2 text-muted-foreground/40 hover:text-gold/60 transition-colors"
-          >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-          </button>
-
           <button
             onClick={togglePlay}
             disabled={isLoading}
             className={cn(
               "relative w-16 h-16 rounded-full flex items-center justify-center",
-              "bg-gold/8 border border-gold/15 text-gold",
-              "hover:bg-gold/15 hover:border-gold/25",
-              "active:scale-95 transition-all duration-300",
-              isPlaying && "shadow-[0_0_30px_hsl(var(--gold)/0.12)]"
+              "bg-gold/6 border border-gold/12 text-gold/70",
+              "hover:bg-gold/10 hover:border-gold/20",
+              "active:scale-95 transition-all duration-500",
+              isPlaying && "shadow-[0_0_40px_hsl(var(--gold)/0.08)]"
             )}
           >
             {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin text-gold/50" />
+              <Loader2 className="w-5 h-5 animate-spin text-gold/40" />
             ) : isPlaying ? (
               <Pause className="w-5 h-5" />
             ) : (
               <Play className="w-5 h-5 ml-0.5" />
             )}
           </button>
-
-          {/* Spacer for symmetry */}
-          <div className="p-2 w-8" />
         </motion.div>
       </div>
     </motion.div>
