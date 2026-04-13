@@ -146,6 +146,9 @@ export default function HeroinaAppPage() {
         <div className="container mx-auto px-6 pb-24 max-w-xl space-y-8">
           {/* Insight do dia */}
           <InsightDoDia />
+
+          {/* Journey path — quiet dots */}
+          <div className="flex items-center justify-center gap-4">
             {FASES_JORNADA.map((fase, i) => (
               <div key={fase.key} className="flex flex-col items-center gap-1.5">
                 <div className={`w-2 h-2 rounded-full transition-all duration-500 ${
