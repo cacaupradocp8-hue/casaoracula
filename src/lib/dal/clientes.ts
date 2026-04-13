@@ -22,7 +22,7 @@ export async function listClientes(filters: ClienteFilters) {
     .order('created_at', { ascending: false });
 
   if (filters.status) {
-    query = query.eq('status', filters.status);
+    query = query.eq('status', filters.status as any);
   }
   if (filters.limit) {
     query = query.limit(filters.limit);
@@ -49,7 +49,7 @@ export async function getCliente(clienteId: string) {
 export async function createCliente(payload: Record<string, unknown>) {
   const { data, error } = await supabase
     .from('clientes')
-    .insert(payload)
+    .insert(payload as any)
     .select()
     .single();
   if (error) throw error;

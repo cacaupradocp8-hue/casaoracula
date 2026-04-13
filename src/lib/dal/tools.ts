@@ -21,7 +21,8 @@ export async function listTools(filters?: { ambiente?: string; categoria?: strin
 }
 
 export async function getToolResults(tableName: string, filters: { userId?: string; clientId?: string; limit?: number }) {
-  let query = (supabase.from(tableName as any) as any).select('*').order('created_at', { ascending: false });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let query = (supabase as any).from(tableName).select('*').order('created_at', { ascending: false });
 
   if (filters.userId) query = query.eq('user_id', filters.userId);
   if (filters.clientId) query = query.eq('client_id', filters.clientId);
