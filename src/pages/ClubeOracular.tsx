@@ -181,6 +181,24 @@ export default function ClubeOracular() {
             />
           </motion.div>
 
+          {/* ─── JORNADA ANUAL — Timeline ─── */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35, duration: 0.6 }}
+          >
+            <JornadaAnualTimeline
+              mesAtual={currentMonth}
+              onSelectMes={setMesSelecionado}
+            />
+          </motion.div>
+
+          {/* ─── Detalhe do Mês Selecionado ─── */}
+          <CicloMesDetalhe mes={mesData} isAtual={mesData.mes === currentMonth} />
+
+          {/* ─── Voz do Mês ─── */}
+          <VozDoMes mes={mesData} />
+
           {/* Ritual da Semana */}
           {conteudoSemanal && (
             <motion.div
