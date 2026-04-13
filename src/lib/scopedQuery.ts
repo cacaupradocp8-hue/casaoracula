@@ -11,7 +11,7 @@
  * 3. Always pass the authenticated user context; never assume it.
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/dal/dbClient';
 
 /**
  * Returns the current authenticated user id or throws.
