@@ -4068,6 +4068,7 @@ export type Database = {
           data_encontro: string | null
           data_fim: string | null
           data_inicio: string | null
+          foco_clinico: string | null
           id: string
           infografico_url: string | null
           is_multipolar: boolean | null
@@ -4076,6 +4077,7 @@ export type Database = {
           manifesto: string | null
           mensagem_campo_texto: string | null
           mensagem_campo_url: string | null
+          mes_numero: number | null
           ordem: number | null
           orientacao_clinica_contraindicado: string | null
           orientacao_clinica_evitar: string | null
@@ -4093,6 +4095,10 @@ export type Database = {
           tema_simbolico: string | null
           titulo: string
           updated_at: string
+          voz_conducao: string | null
+          voz_descricao: string | null
+          voz_dominante: string | null
+          voz_pergunta_chave: string | null
         }
         Insert: {
           ativo?: boolean | null
@@ -4108,6 +4114,7 @@ export type Database = {
           data_encontro?: string | null
           data_fim?: string | null
           data_inicio?: string | null
+          foco_clinico?: string | null
           id?: string
           infografico_url?: string | null
           is_multipolar?: boolean | null
@@ -4116,6 +4123,7 @@ export type Database = {
           manifesto?: string | null
           mensagem_campo_texto?: string | null
           mensagem_campo_url?: string | null
+          mes_numero?: number | null
           ordem?: number | null
           orientacao_clinica_contraindicado?: string | null
           orientacao_clinica_evitar?: string | null
@@ -4133,6 +4141,10 @@ export type Database = {
           tema_simbolico?: string | null
           titulo: string
           updated_at?: string
+          voz_conducao?: string | null
+          voz_descricao?: string | null
+          voz_dominante?: string | null
+          voz_pergunta_chave?: string | null
         }
         Update: {
           ativo?: boolean | null
@@ -4148,6 +4160,7 @@ export type Database = {
           data_encontro?: string | null
           data_fim?: string | null
           data_inicio?: string | null
+          foco_clinico?: string | null
           id?: string
           infografico_url?: string | null
           is_multipolar?: boolean | null
@@ -4156,6 +4169,7 @@ export type Database = {
           manifesto?: string | null
           mensagem_campo_texto?: string | null
           mensagem_campo_url?: string | null
+          mes_numero?: number | null
           ordem?: number | null
           orientacao_clinica_contraindicado?: string | null
           orientacao_clinica_evitar?: string | null
@@ -4173,6 +4187,10 @@ export type Database = {
           tema_simbolico?: string | null
           titulo?: string
           updated_at?: string
+          voz_conducao?: string | null
+          voz_descricao?: string | null
+          voz_dominante?: string | null
+          voz_pergunta_chave?: string | null
         }
         Relationships: []
       }
