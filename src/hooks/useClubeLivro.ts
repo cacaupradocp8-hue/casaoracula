@@ -36,6 +36,13 @@ export interface ClubeCiclo {
   campo_simbolico?: string;
   mensagem_campo_url?: string;
   mensagem_campo_texto?: string;
+  // Voz & Foco
+  voz_dominante?: string;
+  voz_descricao?: string;
+  voz_conducao?: string;
+  voz_pergunta_chave?: string;
+  foco_clinico?: string;
+  mes_numero?: number;
 }
 
 export interface ClubeFase {
