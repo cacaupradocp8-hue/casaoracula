@@ -23,6 +23,13 @@ export default function ClubeOracular() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { cicloAtual, loadingCiclos } = useClubeLivro();
+
+  // Determine current month (1-12)
+  const currentMonth = new Date().getMonth() + 1;
+  const [mesSelecionado, setMesSelecionado] = useState(currentMonth);
+  const mesData = JORNADA_ANO_1.find(m => m.mes === mesSelecionado) || JORNADA_ANO_1[0];
+
+  const { data: conteudoSemanal } = useClubeConteudoSemanal(cicloAtual?.id);
   const { data: conteudoSemanal } = useClubeConteudoSemanal(cicloAtual?.id);
   const { reflexoes, salvarReflexao } = useClubeReflexoes(cicloAtual?.id);
   const { engajamento } = useClubeEngajamento(cicloAtual?.id);
