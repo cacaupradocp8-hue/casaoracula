@@ -3,6 +3,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Textarea } from '@/components/ui/textarea';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Save, Loader2, Eye } from 'lucide-react';
+import { InsightDoDia } from '@/components/heroina/InsightDoDia';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -142,9 +143,12 @@ export default function HeroinaAppPage() {
           </motion.div>
         </section>
 
-        <div className="container mx-auto px-6 pb-24 max-w-xl">
+        <div className="container mx-auto px-6 pb-24 max-w-xl space-y-8">
+          {/* Insight do dia */}
+          <InsightDoDia />
+
           {/* Journey path — quiet dots */}
-          <div className="flex items-center justify-center gap-4 mb-4">
+          <div className="flex items-center justify-center gap-4">
             {FASES_JORNADA.map((fase, i) => (
               <div key={fase.key} className="flex flex-col items-center gap-1.5">
                 <div className={`w-2 h-2 rounded-full transition-all duration-500 ${

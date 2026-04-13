@@ -10391,6 +10391,30 @@ export type Database = {
           },
         ]
       }
+      heroina_insights: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          id: string
+          texto: string
+          tipo: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          texto: string
+          tipo: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          texto?: string
+          tipo?: string
+        }
+        Relationships: []
+      }
       heroina_jornada: {
         Row: {
           consentimento_terapeuta: boolean | null
