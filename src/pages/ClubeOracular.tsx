@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -9,6 +10,10 @@ import { ClubeBannerCicloAtual } from '@/components/clube-oracular/ClubeBannerCi
 import { ClubeConteudoSemanal } from '@/components/clube-oracular/ClubeConteudoSemanal';
 import { ClubeProximoEncontro } from '@/components/clube-oracular/ClubeProximoEncontro';
 import { ClubeProgressoTravessia } from '@/components/clube-oracular/ClubeProgressoTravessia';
+import { JornadaAnualTimeline } from '@/components/clube-oracular/JornadaAnualTimeline';
+import { VozDoMes } from '@/components/clube-oracular/VozDoMes';
+import { CicloMesDetalhe } from '@/components/clube-oracular/CicloMesDetalhe';
+import { JORNADA_ANO_1 } from '@/constants/jornadaAnual';
 import { BookOpen, Loader2, Sparkles, ArrowRight, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
