@@ -180,6 +180,7 @@ const OsCamposPsiquicos = React.lazy(() => import("./pages/metodo/OsCamposPsiqui
 const AsTorres = React.lazy(() => import("./pages/metodo/AsTorres"));
 const TriadeMetodo = React.lazy(() => import("./pages/metodo/TriadeMetodo"));
 const LabirintoHeroinaPage = React.lazy(() => import("./pages/labirinto-heroina/LabirintoHeroinaPraticoPage"));
+const DesbloqueiePage = React.lazy(() => import("./pages/DesbloqueiePage"));
 
 // ─── Utility components ───────────────────────────────────────
 
@@ -284,6 +285,7 @@ function AppRoutes() {
       <Route path="/tour" element={<Navigate to="/mapa-casa" replace />} />
       <Route path="/explorar-a-casa" element={<ExplorarACasa />} />
       <Route path="/vitrine" element={<Vitrine />} />
+      <Route path="/desbloqueie" element={<DesbloqueiePage />} />
 
       {/* Onboarding & Visitor */}
       <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
