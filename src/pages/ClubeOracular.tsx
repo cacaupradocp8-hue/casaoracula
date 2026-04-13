@@ -1,20 +1,11 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useClubeLivro } from '@/hooks/useClubeLivro';
-import { useClubeConteudoSemanal, useClubeReflexoes, useClubeEngajamento, useClubeProximoEncontro } from '@/hooks/useClubeOracular';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { ClubeBannerCicloAtual } from '@/components/clube-oracular/ClubeBannerCicloAtual';
-import { ClubeConteudoSemanal } from '@/components/clube-oracular/ClubeConteudoSemanal';
-import { ClubeProximoEncontro } from '@/components/clube-oracular/ClubeProximoEncontro';
-import { ClubeProgressoTravessia } from '@/components/clube-oracular/ClubeProgressoTravessia';
-import { JornadaAnualTimeline } from '@/components/clube-oracular/JornadaAnualTimeline';
-import { VozDoMes } from '@/components/clube-oracular/VozDoMes';
-import { CicloMesDetalhe } from '@/components/clube-oracular/CicloMesDetalhe';
-import { JORNADA_ANO_1 } from '@/constants/jornadaAnual';
-import { BookOpen, Loader2, Sparkles, ArrowRight, Map } from 'lucide-react';
+import { BookOpen, Loader2, ArrowRight, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
@@ -23,16 +14,6 @@ export default function ClubeOracular() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { cicloAtual, loadingCiclos } = useClubeLivro();
-
-  // Determine current month (1-12)
-  const currentMonth = new Date().getMonth() + 1;
-  const [mesSelecionado, setMesSelecionado] = useState(currentMonth);
-  const mesData = JORNADA_ANO_1.find(m => m.mes === mesSelecionado) || JORNADA_ANO_1[0];
-
-  const { data: conteudoSemanal } = useClubeConteudoSemanal(cicloAtual?.id);
-  const { reflexoes, salvarReflexao } = useClubeReflexoes(cicloAtual?.id);
-  const { engajamento } = useClubeEngajamento(cicloAtual?.id);
-  const { data: proximoEncontro } = useClubeProximoEncontro(cicloAtual?.id);
 
   // Check if user has completed cartografia
   const { data: hasCartografia, isLoading: loadingCarto } = useQuery({
@@ -127,7 +108,7 @@ export default function ClubeOracular() {
     );
   }
 
-  // ─── STEP 2+: Has cartografia → guided cycle experience ───
+  // ─── STEP 2+: Has cartografia → guided next step ───
   return (
     <AppLayout>
       <div className="min-h-screen">
@@ -154,8 +135,8 @@ export default function ClubeOracular() {
           </motion.div>
         </section>
 
-        {/* ─── CONTENT (single column, focused) ─── */}
-        <div className="container mx-auto px-6 pb-24 max-w-2xl space-y-10">
+        {/* ─── CONTENT: Single focused CTA ─── */}
+        <div className="container mx-auto px-6 pb-24 max-w-2xl space-y-8">
 
           {/* Next step indicator */}
           <motion.div
@@ -178,65 +159,6 @@ export default function ClubeOracular() {
             <ClubeBannerCicloAtual
               ciclo={cicloAtual}
               onAcessar={() => cicloAtual && navigate(`/clube-livro/${cicloAtual.id}`)}
-            />
-          </motion.div>
-
-          {/* ─── JORNADA ANUAL — Timeline ─── */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35, duration: 0.6 }}
-          >
-            <JornadaAnualTimeline
-              mesAtual={currentMonth}
-              onSelectMes={setMesSelecionado}
-            />
-          </motion.div>
-
-          {/* ─── Detalhe do Mês Selecionado ─── */}
-          <CicloMesDetalhe mes={mesData} isAtual={mesData.mes === currentMonth} />
-
-          {/* ─── Voz do Mês ─── */}
-          <VozDoMes mes={mesData} />
-
-          {/* Ritual da Semana */}
-          {conteudoSemanal && (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.45, duration: 0.6 }}
-            >
-              <ClubeConteudoSemanal
-                conteudo={conteudoSemanal}
-                onSalvarReflexao={(texto) =>
-                  salvarReflexao.mutate({ texto, conteudoSemanalId: conteudoSemanal?.id })
-                }
-                salvando={salvarReflexao.isPending}
-              />
-            </motion.div>
-          )}
-
-          {/* Próximo Encontro (inline, not sidebar) */}
-          {proximoEncontro && (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.55, duration: 0.6 }}
-            >
-              <ClubeProximoEncontro encontro={proximoEncontro} />
-            </motion.div>
-          )}
-
-          {/* Progresso — compact */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.65, duration: 0.6 }}
-          >
-            <ClubeProgressoTravessia
-              progresso={engajamento?.progresso ?? 0}
-              totalTerritorios={4}
-              explorados={Math.round((engajamento?.progresso ?? 0) * 4)}
             />
           </motion.div>
         </div>

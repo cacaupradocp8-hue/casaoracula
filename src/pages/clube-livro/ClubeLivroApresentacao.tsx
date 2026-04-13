@@ -1,9 +1,9 @@
 // ============================================
 // CÍRCULO DE LEITURA ORACULAR - Home Simplificada
-// Modelo: Travessia Atual + Régua + Navegação mínima
+// Fluxo linear: apenas o próximo passo
 // ============================================
 
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { useClubeLivro, useRitualAceite } from '@/hooks/useClubeLivro';
@@ -11,13 +11,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature } from '@/types/portal';
 import { useAccessExpiration } from '@/hooks/useAccessExpiration';
 import { LockedForVisitor } from '@/components/shared/LockedForVisitor';
-import { useCirculoProgressao } from '@/hooks/useCirculoProgressao';
-import { ReguaSimbolica } from '@/components/clube-livro/ReguaSimbolica';
-import { BookOpen, ChevronRight, Home, Map, Route } from 'lucide-react';
+import { BookOpen, ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-
 
 export default function ClubeLivroApresentacao() {
   const navigate = useNavigate();
@@ -25,8 +21,7 @@ export default function ClubeLivroApresentacao() {
   const { isExpired } = useAccessExpiration();
   const { cicloAtual, loadingCiclos } = useClubeLivro();
   const { hasAccepted } = useRitualAceite(cicloAtual?.id);
-  
-  const { steps } = useCirculoProgressao(cicloAtual?.id);
+
   const hasAccess = user && canAccessFeature(user.portal, 'aluna') && !isExpired;
 
   if (!hasAccess) {
@@ -56,16 +51,6 @@ export default function ClubeLivroApresentacao() {
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
-            <Home className="w-3 h-3" />
-            Casa
-          </Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-foreground">Círculo de Leitura Oracular</span>
-        </nav>
-
         <SectionHeader
           title="Círculo de Leitura Oracular"
           subtitle="Território de leitura viva e atravessamento simbólico."
@@ -79,13 +64,13 @@ export default function ClubeLivroApresentacao() {
           </div>
         ) : (
           <div className="space-y-8">
-            {/* ── 1. TRAVESSIA EM CURSO ── */}
             {cicloAtual ? (
               <Card className="border-gold/30 bg-gradient-to-br from-gold/5 to-card overflow-hidden">
                 <CardContent className="p-6">
-                  <p className="text-xs uppercase tracking-[0.2em] text-gold font-medium mb-1">
-                    Travessia em Curso
+                  <p className="text-xs uppercase tracking-[0.2em] text-gold/50 font-medium mb-3">
+                    Seu próximo passo agora é:
                   </p>
+
                   <div className="flex flex-col sm:flex-row items-center gap-5">
                     {cicloAtual.capa_url ? (
                       <img
@@ -107,27 +92,14 @@ export default function ClubeLivroApresentacao() {
                           {cicloAtual.autor_livro}
                         </p>
                       )}
-                      {cicloAtual.manifesto && (
-                        <p className="text-sm text-muted-foreground/80 line-clamp-2 max-w-md">
-                          {cicloAtual.manifesto}
-                        </p>
-                      )}
                       <Button
                         onClick={handleEnterCycle}
-                        className="mt-3 bg-gold hover:bg-gold/90 text-primary-foreground"
+                        className="mt-3 bg-gold hover:bg-gold/90 text-primary-foreground gap-2"
                       >
                         Entrar na Travessia
+                        <ArrowRight className="w-4 h-4" />
                       </Button>
                     </div>
-                  </div>
-
-                  {/* ── 2. RÉGUA SIMBÓLICA ── */}
-                  <div className="mt-6 pt-4 border-t border-border/20">
-                    <ReguaSimbolica
-                      steps={steps}
-                      activeTab=""
-                      onTabChange={() => handleEnterCycle()}
-                    />
                   </div>
                 </CardContent>
               </Card>
@@ -141,19 +113,6 @@ export default function ClubeLivroApresentacao() {
                 </CardContent>
               </Card>
             )}
-
-            {/* ── 3. NAVEGAÇÃO ESSENCIAL ── */}
-            <div className="flex items-center justify-center gap-3 pt-2 flex-wrap">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground hover:text-foreground gap-2"
-                onClick={() => navigate('/clube-livro/minha-travessia')}
-              >
-                <Route className="w-4 h-4" />
-                Minha Travessia
-              </Button>
-            </div>
           </div>
         )}
       </div>
