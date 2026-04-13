@@ -6,10 +6,11 @@
 import { supabase } from './dbClient';
 
 export async function listTools(filters?: { ambiente?: string; categoria?: string; ativa?: boolean }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let query = supabase
     .from('tools')
     .select('id, nome, descricao, categoria, rota, ambiente, nivel, ativa, ordem, proximo_passo_id')
-    .order('ordem');
+    .order('ordem') as any;
 
   if (filters?.ativa !== undefined) query = query.eq('ativa', filters.ativa);
   if (filters?.ambiente) query = query.eq('ambiente', filters.ambiente);
