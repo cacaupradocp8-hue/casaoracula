@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -9,6 +10,10 @@ import { ClubeBannerCicloAtual } from '@/components/clube-oracular/ClubeBannerCi
 import { ClubeConteudoSemanal } from '@/components/clube-oracular/ClubeConteudoSemanal';
 import { ClubeProximoEncontro } from '@/components/clube-oracular/ClubeProximoEncontro';
 import { ClubeProgressoTravessia } from '@/components/clube-oracular/ClubeProgressoTravessia';
+import { JornadaAnualTimeline } from '@/components/clube-oracular/JornadaAnualTimeline';
+import { VozDoMes } from '@/components/clube-oracular/VozDoMes';
+import { CicloMesDetalhe } from '@/components/clube-oracular/CicloMesDetalhe';
+import { JORNADA_ANO_1 } from '@/constants/jornadaAnual';
 import { BookOpen, Loader2, Sparkles, ArrowRight, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -18,6 +23,12 @@ export default function ClubeOracular() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { cicloAtual, loadingCiclos } = useClubeLivro();
+
+  // Determine current month (1-12)
+  const currentMonth = new Date().getMonth() + 1;
+  const [mesSelecionado, setMesSelecionado] = useState(currentMonth);
+  const mesData = JORNADA_ANO_1.find(m => m.mes === mesSelecionado) || JORNADA_ANO_1[0];
+
   const { data: conteudoSemanal } = useClubeConteudoSemanal(cicloAtual?.id);
   const { reflexoes, salvarReflexao } = useClubeReflexoes(cicloAtual?.id);
   const { engajamento } = useClubeEngajamento(cicloAtual?.id);
@@ -169,6 +180,24 @@ export default function ClubeOracular() {
               onAcessar={() => cicloAtual && navigate(`/clube-livro/${cicloAtual.id}`)}
             />
           </motion.div>
+
+          {/* ─── JORNADA ANUAL — Timeline ─── */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35, duration: 0.6 }}
+          >
+            <JornadaAnualTimeline
+              mesAtual={currentMonth}
+              onSelectMes={setMesSelecionado}
+            />
+          </motion.div>
+
+          {/* ─── Detalhe do Mês Selecionado ─── */}
+          <CicloMesDetalhe mes={mesData} isAtual={mesData.mes === currentMonth} />
+
+          {/* ─── Voz do Mês ─── */}
+          <VozDoMes mes={mesData} />
 
           {/* Ritual da Semana */}
           {conteudoSemanal && (
