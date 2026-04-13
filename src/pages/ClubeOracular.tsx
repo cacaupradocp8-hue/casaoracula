@@ -30,7 +30,6 @@ export default function ClubeOracular() {
   const mesData = JORNADA_ANO_1.find(m => m.mes === mesSelecionado) || JORNADA_ANO_1[0];
 
   const { data: conteudoSemanal } = useClubeConteudoSemanal(cicloAtual?.id);
-  const { data: conteudoSemanal } = useClubeConteudoSemanal(cicloAtual?.id);
   const { reflexoes, salvarReflexao } = useClubeReflexoes(cicloAtual?.id);
   const { engajamento } = useClubeEngajamento(cicloAtual?.id);
   const { data: proximoEncontro } = useClubeProximoEncontro(cicloAtual?.id);
