@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Loader2, FlaskConical } from 'lucide-react';
+import { Loader2, FlaskConical, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { RespostaAluna, SimuladorStep, STEP_ORDER, STEP_LABELS } from './types';
@@ -21,6 +21,9 @@ import { BlocoFeedback } from './BlocoFeedback';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAvaliacaoIA } from './useAvaliacaoIA';
 import { useStudentTracking } from '@/hooks/useStudentTracking';
+import { useCidadelaEstado } from '@/hooks/useCidadelaEstado';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
 
 export function SimuladorConducao() {
   const { user } = useAuth();
@@ -29,8 +32,10 @@ export function SimuladorConducao() {
   const queryClient = useQueryClient();
   const { avaliacao, isLoading: isLoadingIA, avaliar, reset: resetAvaliacao } = useAvaliacaoIA();
   const { track } = useStudentTracking();
+  const { addCompetencia } = useCidadelaEstado();
   const [casoIndex, setCasoIndex] = useState(0);
   const [active, setActive] = useState(false);
+  const [modoTerapeuta, setModoTerapeuta] = useState(false);
   const [step, setStep] = useState<SimuladorStep>('caso');
   const [resposta, setResposta] = useState<RespostaAluna>({
     leitura_texto: '',
@@ -122,6 +127,16 @@ export function SimuladorConducao() {
       taxa_acerto: score.total >= 7 ? 100 : score.total >= 4 ? 50 : 0,
     }, { onConflict: 'user_id' });
 
+    // Update CidaDELA competencias
+    if (caso.distrito_esperado) {
+      addCompetencia.mutate({
+        distrito: caso.distrito_esperado,
+        tipo: 'individual',
+        nivel: caso.nivel === 'guiado' ? 1 : caso.nivel === 'semi_guiado' ? 2 : 3,
+        acerto: score.total >= 7,
+      });
+    }
+
     queryClient.invalidateQueries({ queryKey: ['training-progress'] });
     queryClient.invalidateQueries({ queryKey: ['training-attempts'] });
     queryClient.invalidateQueries({ queryKey: ['training-dashboard'] });
@@ -174,10 +189,57 @@ export function SimuladorConducao() {
             {STEP_LABELS[step]} — Passo {stepIdx + 1} de {STEP_ORDER.length}
           </p>
         </div>
-        <Button variant="ghost" size="sm" className="text-xs text-muted-foreground" onClick={() => setActive(false)}>
-          Sair
-        </Button>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
+            {modoTerapeuta ? <Eye className="w-3.5 h-3.5 text-primary" /> : <EyeOff className="w-3.5 h-3.5 text-muted-foreground" />}
+            <span className="text-[10px] text-muted-foreground">Mentora</span>
+            <Switch
+              checked={modoTerapeuta}
+              onCheckedChange={setModoTerapeuta}
+              className="scale-75"
+            />
+          </div>
+          <Button variant="ghost" size="sm" className="text-xs text-muted-foreground" onClick={() => setActive(false)}>
+            Sair
+          </Button>
+        </div>
       </div>
+
+      {/* Modo Terapeuta — Leitura da Mentora */}
+      {modoTerapeuta && caso && (
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="p-3 space-y-2">
+            <div className="flex items-center gap-2">
+              <Eye className="w-3.5 h-3.5 text-primary" />
+              <p className="text-[10px] font-medium text-primary uppercase tracking-wider">Visão da Mentora</p>
+            </div>
+            {caso.hipotese_esperada && (
+              <div>
+                <p className="text-[10px] text-muted-foreground">Hipótese esperada</p>
+                <p className="text-xs text-foreground/80">{caso.hipotese_esperada}</p>
+              </div>
+            )}
+            {caso.distrito_esperado && (
+              <div>
+                <p className="text-[10px] text-muted-foreground">Distrito</p>
+                <Badge variant="outline" className="text-[10px]">{caso.distrito_esperado}</Badge>
+              </div>
+            )}
+            {caso.ferramenta_principal && (
+              <div>
+                <p className="text-[10px] text-muted-foreground">Ferramenta sugerida</p>
+                <Badge variant="outline" className="text-[10px]">{caso.ferramenta_principal}</Badge>
+              </div>
+            )}
+            {caso.erro_comum && (
+              <div>
+                <p className="text-[10px] text-muted-foreground">Erro comum</p>
+                <p className="text-xs text-foreground/60 italic">{caso.erro_comum}</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <div className="space-y-1">
         <Progress value={progressPct} className="h-1" />
