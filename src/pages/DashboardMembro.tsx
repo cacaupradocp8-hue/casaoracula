@@ -13,6 +13,7 @@ import {
   AlertaOracular,
 } from "@/components/bussola-home";
 import { BoasVindasBanner } from "@/components/bussola-home/BoasVindasBanner";
+import { ProximoPasso } from "@/components/dashboard/ProximoPasso";
 import { motion, AnimatePresence } from "framer-motion";
 import { Moon } from "lucide-react";
 
@@ -94,7 +95,10 @@ export default function DashboardMembro() {
           distritosRaw={bussola.distritosRaw}
         />
 
-        {/* 4. Jornada de Leitura */}
+        {/* 4. Próximo Passo Sugerido (IA/CidaDELA) */}
+        <ProximoPasso />
+
+        {/* 5. Jornada de Leitura */}
         <JornadaRecomendada leitura={bussola.leitura} />
 
         {/* 5. Práticas filtradas */}
