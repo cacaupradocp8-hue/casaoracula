@@ -1,7 +1,10 @@
+import { useMemo } from 'react';
 import { CORES_SIMBOLICAS, TERRITORIOS, SIMBOLOS } from './constants';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Loader2, Save, Share2 } from 'lucide-react';
+import { Loader2, Save } from 'lucide-react';
+import { LeituraRevelacao } from '@/components/cartografia/LeituraRevelacao';
+import { calcularLeitura, type ContextoLeitura } from '@/lib/cartografia/leituraComportamental';
 
 interface Props {
   cor: string;
@@ -15,16 +18,28 @@ interface Props {
   saving: boolean;
   onSave: () => void;
   onBack: () => void;
+  /** Raw score averages per territory (1-5 scale) for behavioral reading */
+  mediasRaw?: Record<string, number>;
+  /** Context for behavioral reading output */
+  contextoLeitura?: ContextoLeitura;
 }
 
 export function TelaVisualizacao({
   cor, atmosfera, territorios, recursos, conflitos, simbolo,
   pontoPartida, indiceEquilibrio, saving, onSave, onBack,
+  mediasRaw,
+  contextoLeitura = 'casa_das_maquinas',
 }: Props) {
   const corObj = CORES_SIMBOLICAS.find(c => c.nome === cor);
   const simboloObj = SIMBOLOS.find(s => s.nome === simbolo);
   const terrObjs = TERRITORIOS.filter(t => territorios.includes(t.key));
   const pontoObj = TERRITORIOS.find(t => t.key === pontoPartida);
+
+  // Compute behavioral reading from raw scores
+  const leitura = useMemo(() => {
+    if (!mediasRaw || Object.keys(mediasRaw).length === 0) return null;
+    return calcularLeitura(mediasRaw, contextoLeitura);
+  }, [mediasRaw, contextoLeitura]);
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -97,6 +112,17 @@ export function TelaVisualizacao({
           </div>
         </div>
       </Card>
+
+      {/* ═══ BLOCO LEITURA COMPORTAMENTAL ═══ */}
+      {leitura && (
+        <LeituraRevelacao
+          saida={leitura.saida_cliente}
+          onAprofundar={() => {
+            // Future: navigate to formation/guided flow
+            console.log('Aprofundar travessia');
+          }}
+        />
+      )}
 
       {/* Details */}
       <div className="grid grid-cols-2 gap-3">

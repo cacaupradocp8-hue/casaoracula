@@ -13,6 +13,8 @@ import { ArrowLeft, ArrowRight, Map, Sparkles, Save, Loader2, Check, Eye } from 
 import { CamadaLeituraPsiquica } from '@/components/cartografia-unificada/CamadaLeituraPsiquica';
 import { CamadaCidadela } from '@/components/cartografia-unificada/CamadaCidadela';
 import { CamadaDirecaoClinica } from '@/components/cartografia-unificada/CamadaDirecaoClinica';
+import { LeituraRevelacao } from '@/components/cartografia/LeituraRevelacao';
+import { calcularLeitura } from '@/lib/cartografia/leituraComportamental';
 
 /* ─── Constants ─── */
 const CORES = [
@@ -595,6 +597,17 @@ export default function CartografiaPsiquicaPage() {
             <motion.div key="result" variants={slideVariants} initial="enter" animate="center" exit="exit"
               transition={{ duration: 0.5 }} className="w-full max-w-2xl space-y-8">
               
+              {/* Bloco de Leitura Comportamental */}
+              {big5Result?.medias && (() => {
+                const leitura = calcularLeitura(big5Result.medias, 'clube');
+                return (
+                  <LeituraRevelacao
+                    saida={leitura.saida_cliente}
+                    onAprofundar={() => navigate('/cidadela/revelacao')}
+                  />
+                );
+              })()}
+
               {/* Layer tabs */}
               <div className="flex justify-center gap-1">
                 {['Leitura Psíquica', 'CidaDELA', 'Direção Clínica'].map((label, i) => (
