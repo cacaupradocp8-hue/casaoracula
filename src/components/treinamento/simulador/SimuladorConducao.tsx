@@ -203,6 +203,43 @@ export function SimuladorConducao() {
             Sair
           </Button>
         </div>
+      </div>
+
+      {/* Modo Terapeuta — Leitura da Mentora */}
+      {modoTerapeuta && caso && (
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="p-3 space-y-2">
+            <div className="flex items-center gap-2">
+              <Eye className="w-3.5 h-3.5 text-primary" />
+              <p className="text-[10px] font-medium text-primary uppercase tracking-wider">Visão da Mentora</p>
+            </div>
+            {caso.hipotese_esperada && (
+              <div>
+                <p className="text-[10px] text-muted-foreground">Hipótese esperada</p>
+                <p className="text-xs text-foreground/80">{caso.hipotese_esperada}</p>
+              </div>
+            )}
+            {caso.distrito_esperado && (
+              <div>
+                <p className="text-[10px] text-muted-foreground">Distrito</p>
+                <Badge variant="outline" className="text-[10px]">{caso.distrito_esperado}</Badge>
+              </div>
+            )}
+            {caso.ferramenta_principal && (
+              <div>
+                <p className="text-[10px] text-muted-foreground">Ferramenta sugerida</p>
+                <Badge variant="outline" className="text-[10px]">{caso.ferramenta_principal}</Badge>
+              </div>
+            )}
+            {caso.erro_comum && (
+              <div>
+                <p className="text-[10px] text-muted-foreground">Erro comum</p>
+                <p className="text-xs text-foreground/60 italic">{caso.erro_comum}</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <div className="space-y-1">
         <Progress value={progressPct} className="h-1" />
