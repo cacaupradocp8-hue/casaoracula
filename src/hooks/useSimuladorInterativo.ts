@@ -12,6 +12,7 @@ export interface SimCase {
   ordem: number;
   leitura_mentora: string | null;
   ferramenta_sugerida: string | null;
+  distrito: string | null;
 }
 
 export interface SimStep {
