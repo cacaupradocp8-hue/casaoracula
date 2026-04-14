@@ -5318,6 +5318,45 @@ export type Database = {
           },
         ]
       }
+      co_cartografia_profile: {
+        Row: {
+          cartografia_id: string | null
+          contexto: string
+          created_at: string
+          id: string
+          intensidade_oracular: string | null
+          medias_json: Json
+          oracula_inicial: string | null
+          profile_json: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cartografia_id?: string | null
+          contexto?: string
+          created_at?: string
+          id?: string
+          intensidade_oracular?: string | null
+          medias_json?: Json
+          oracula_inicial?: string | null
+          profile_json?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cartografia_id?: string | null
+          contexto?: string
+          created_at?: string
+          id?: string
+          intensidade_oracular?: string | null
+          medias_json?: Json
+          oracula_inicial?: string | null
+          profile_json?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       co_city_history: {
         Row: {
           client_id: string
