@@ -189,10 +189,20 @@ export function SimuladorConducao() {
             {STEP_LABELS[step]} — Passo {stepIdx + 1} de {STEP_ORDER.length}
           </p>
         </div>
-        <Button variant="ghost" size="sm" className="text-xs text-muted-foreground" onClick={() => setActive(false)}>
-          Sair
-        </Button>
-      </div>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
+            {modoTerapeuta ? <Eye className="w-3.5 h-3.5 text-primary" /> : <EyeOff className="w-3.5 h-3.5 text-muted-foreground" />}
+            <span className="text-[10px] text-muted-foreground">Mentora</span>
+            <Switch
+              checked={modoTerapeuta}
+              onCheckedChange={setModoTerapeuta}
+              className="scale-75"
+            />
+          </div>
+          <Button variant="ghost" size="sm" className="text-xs text-muted-foreground" onClick={() => setActive(false)}>
+            Sair
+          </Button>
+        </div>
 
       <div className="space-y-1">
         <Progress value={progressPct} className="h-1" />
