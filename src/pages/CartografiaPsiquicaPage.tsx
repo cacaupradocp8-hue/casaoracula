@@ -597,6 +597,17 @@ export default function CartografiaPsiquicaPage() {
             <motion.div key="result" variants={slideVariants} initial="enter" animate="center" exit="exit"
               transition={{ duration: 0.5 }} className="w-full max-w-2xl space-y-8">
               
+              {/* Bloco de Leitura Comportamental */}
+              {big5Result?.medias && (() => {
+                const leitura = calcularLeitura(big5Result.medias, 'clube');
+                return (
+                  <LeituraRevelacao
+                    saida={leitura.saida_cliente}
+                    onAprofundar={() => navigate('/cidadela/revelacao')}
+                  />
+                );
+              })()}
+
               {/* Layer tabs */}
               <div className="flex justify-center gap-1">
                 {['Leitura Psíquica', 'CidaDELA', 'Direção Clínica'].map((label, i) => (
