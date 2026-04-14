@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { LeituraRevelacao } from '@/components/cartografia/LeituraRevelacao';
+import { calcularLeitura } from '@/lib/cartografia/leituraComportamental';
 
 const TERRITORIOS = [
   { key: 'porta_possivel', nome: 'Porta do Possível', desc: 'Abertura a novas experiências' },
