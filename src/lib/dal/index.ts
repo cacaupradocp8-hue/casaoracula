@@ -24,6 +24,7 @@ import * as tools from './tools';
 import * as progress from './progress';
 import * as subscriptions from './subscriptions';
 import * as certificates from './certificates';
+import * as cartografiaProfile from './cartografiaProfile';
 
 export const dal = {
   auth,
@@ -35,10 +36,11 @@ export const dal = {
   progress,
   subscriptions,
   certificates,
+  cartografiaProfile,
 } as const;
 
 // Re-export individual modules for tree-shaking
-export { auth, users, clientes, sessions, cidadela, tools, progress, subscriptions, certificates };
+export { auth, users, clientes, sessions, cidadela, tools, progress, subscriptions, certificates, cartografiaProfile };
 
 // Re-export the raw client for gradual migration
 export { supabase } from './dbClient';
