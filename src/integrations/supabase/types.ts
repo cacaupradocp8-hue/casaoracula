@@ -18075,10 +18075,12 @@ export type Database = {
       }
       sessions: {
         Row: {
+          cabine_data: Json | null
           checkin_notes: string | null
           checkin_state: string | null
           cidadela_card_id: string | null
           client_id: string
+          completed_at: string | null
           created_at: string
           date: string
           district_id: string | null
@@ -18087,6 +18089,8 @@ export type Database = {
           insight: string | null
           notes: string | null
           oracle_card_id: string | null
+          session_without_profile: boolean
+          sintese_json: Json | null
           task: string | null
           tool_id: string | null
           updated_at: string
@@ -18095,10 +18099,12 @@ export type Database = {
           voz_utilizada: string | null
         }
         Insert: {
+          cabine_data?: Json | null
           checkin_notes?: string | null
           checkin_state?: string | null
           cidadela_card_id?: string | null
           client_id: string
+          completed_at?: string | null
           created_at?: string
           date?: string
           district_id?: string | null
@@ -18107,6 +18113,8 @@ export type Database = {
           insight?: string | null
           notes?: string | null
           oracle_card_id?: string | null
+          session_without_profile?: boolean
+          sintese_json?: Json | null
           task?: string | null
           tool_id?: string | null
           updated_at?: string
@@ -18115,10 +18123,12 @@ export type Database = {
           voz_utilizada?: string | null
         }
         Update: {
+          cabine_data?: Json | null
           checkin_notes?: string | null
           checkin_state?: string | null
           cidadela_card_id?: string | null
           client_id?: string
+          completed_at?: string | null
           created_at?: string
           date?: string
           district_id?: string | null
@@ -18127,6 +18137,8 @@ export type Database = {
           insight?: string | null
           notes?: string | null
           oracle_card_id?: string | null
+          session_without_profile?: boolean
+          sintese_json?: Json | null
           task?: string | null
           tool_id?: string | null
           updated_at?: string
