@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
+import { calcularLeitura } from '@/lib/cartografia/leituraComportamental';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBig5Oracular } from '@/hooks/useBig5Oracular';
 import { useCartografiaGPS } from '@/hooks/useCartografiaGPS';
@@ -14,7 +16,6 @@ import { CamadaLeituraPsiquica } from '@/components/cartografia-unificada/Camada
 import { CamadaCidadela } from '@/components/cartografia-unificada/CamadaCidadela';
 import { CamadaDirecaoClinica } from '@/components/cartografia-unificada/CamadaDirecaoClinica';
 import { LeituraRevelacao } from '@/components/cartografia/LeituraRevelacao';
-import { calcularLeitura } from '@/lib/cartografia/leituraComportamental';
 
 /* ─── Constants ─── */
 const CORES = [
@@ -169,7 +170,7 @@ export default function CartografiaPsiquicaPage() {
         return Math.round((rLen / (rLen + cLen)) * 100);
       })();
 
-      await supabase.from('cartografia_psiquica').insert({
+      const { data: cartoInserted } = await supabase.from('cartografia_psiquica').insert({
         user_id: user.id,
         cor_predominante: cor,
         atmosfera,
@@ -181,7 +182,23 @@ export default function CartografiaPsiquicaPage() {
         ponto_partida: pontoPartida,
         indice_equilibrio: indice,
         metadata_json: { cor_hex: corObj?.hex, cor_significado: corObj?.significado },
-      } as any);
+      } as any).select('id').single();
+
+      // Persist behavioral profile if big5 medias exist
+      if (cartoInserted?.id && big5Result?.medias) {
+        try {
+          const mediasRaw = big5Result.medias as Record<string, number>;
+          const leitura = calcularLeitura(mediasRaw, 'clube');
+          await upsertCartografiaProfile({
+            userId: user.id,
+            cartografiaId: cartoInserted.id,
+            leitura,
+            mediasRaw,
+          });
+        } catch (e) {
+          console.error('Erro ao persistir perfil comportamental:', e);
+        }
+      }
 
       // 2. Generate CidaDELA
       const distritoCentral = pontoPartida || territorios[0] || 'portao_chegada';

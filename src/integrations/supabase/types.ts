@@ -5321,6 +5321,7 @@ export type Database = {
       co_cartografia_profile: {
         Row: {
           cartografia_id: string | null
+          client_user_id: string | null
           contexto: string
           created_at: string
           id: string
@@ -5328,11 +5329,13 @@ export type Database = {
           medias_json: Json
           oracula_inicial: string | null
           profile_json: Json
+          therapist_user_id: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           cartografia_id?: string | null
+          client_user_id?: string | null
           contexto?: string
           created_at?: string
           id?: string
@@ -5340,11 +5343,13 @@ export type Database = {
           medias_json?: Json
           oracula_inicial?: string | null
           profile_json?: Json
+          therapist_user_id?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           cartografia_id?: string | null
+          client_user_id?: string | null
           contexto?: string
           created_at?: string
           id?: string
@@ -5352,6 +5357,7 @@ export type Database = {
           medias_json?: Json
           oracula_inicial?: string | null
           profile_json?: Json
+          therapist_user_id?: string | null
           updated_at?: string
           user_id?: string
         }

@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
 import { useAuth } from '@/contexts/AuthContext';
 import { CasaMaquinasLayout } from '@/components/casa-maquinas/CasaMaquinasLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -60,21 +61,40 @@ export default function CartografiaPage() {
   };
 
   const handleSave = async () => {
-    if (!clientId) { toast.error('Selecione uma cliente'); return; }
+    if (!clientId || !user) { toast.error('Selecione uma cliente'); return; }
     setSaving(true);
 
     const scoresJson = Object.fromEntries(TERRITORIOS.map(t => [t.key, getAverage(t.key)]));
     const classificationJson = Object.fromEntries(TERRITORIOS.map(t => [t.key, classify(getAverage(t.key))]));
 
-    const { error } = await supabase.from('cartographies').insert({
+    const { error, data: inserted } = await supabase.from('cartographies').insert({
       client_id: clientId,
       scores_json: scoresJson,
       classification_json: classificationJson,
-    });
+    }).select('id').single();
 
-    if (error) {
+    if (error || !inserted) {
       toast.error('Erro ao salvar cartografia');
     } else {
+      // Persist behavioral profile (upsert idempotente)
+      try {
+        const mediasRaw: Record<string, number> = {};
+        TERRITORIOS.forEach(t => {
+          const arr = scores[t.key];
+          mediasRaw[t.key] = arr.reduce((a, b) => a + b, 0) / arr.length;
+        });
+        const leitura = calcularLeitura(mediasRaw, 'casa_das_maquinas');
+        await upsertCartografiaProfile({
+          userId: user.id,
+          cartografiaId: inserted.id,
+          leitura,
+          mediasRaw,
+          therapistUserId: user.id,
+        });
+      } catch (e) {
+        console.error('Erro ao persistir perfil comportamental:', e);
+      }
+
       toast.success('Cartografia salva com sucesso');
       navigate(`/casa-das-maquinas/clientes/${clientId}`);
     }
