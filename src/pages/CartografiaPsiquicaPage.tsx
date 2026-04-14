@@ -13,6 +13,8 @@ import { ArrowLeft, ArrowRight, Map, Sparkles, Save, Loader2, Check, Eye } from 
 import { CamadaLeituraPsiquica } from '@/components/cartografia-unificada/CamadaLeituraPsiquica';
 import { CamadaCidadela } from '@/components/cartografia-unificada/CamadaCidadela';
 import { CamadaDirecaoClinica } from '@/components/cartografia-unificada/CamadaDirecaoClinica';
+import { LeituraRevelacao } from '@/components/cartografia/LeituraRevelacao';
+import { calcularLeitura } from '@/lib/cartografia/leituraComportamental';
 
 /* ─── Constants ─── */
 const CORES = [
