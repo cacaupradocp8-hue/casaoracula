@@ -130,7 +130,7 @@ function calcularEstrategiaDefesa(m: MediasFatores): string {
   return 'compensação adaptativa'; // fallback
 }
 
-// AJUSTE 3: prioridade revisada — "controle vs colapso" ANTES de "estrutura vs expressão"
+// AJUSTE 3: prioridade revisada — regras específicas antes do fallback
 function calcularTensaoCentral(m: MediasFatores): string {
   const torre = classificar(m.torre_interna);
   const voz = classificar(m.voz_no_mundo);
@@ -138,13 +138,18 @@ function calcularTensaoCentral(m: MediasFatores): string {
   const abalo = classificar(m.porta_do_abalo);
   const possivel = classificar(m.porta_do_possivel);
 
-  // Abalo+Torre alta = prioridade máxima
+  // 1. Abalo+Torre alta = prioridade máxima
   if (abalo === 'alta' && torre === 'alta') return 'controle vs colapso';
+  // 2. Torre alta + Voz baixa
   if (torre === 'alta' && voz === 'baixa') return 'estrutura vs expressão';
-  if (campo === 'alta' && possivel === 'baixa') return 'pertencimento vs autonomia';
+  // 3. Campo alto + Voz baixa OU Campo alto + Possível baixa
+  if (campo === 'alta' && (voz === 'baixa' || possivel === 'baixa')) return 'pertencimento vs autonomia';
+  // 4. Possível alta + Torre alta
   if (possivel === 'alta' && torre === 'alta') return 'expansão vs segurança';
+  // 5. Voz alta + Campo alta
   if (voz === 'alta' && campo === 'alta') return 'expressão vs aceitação';
-  return 'segurança vs movimento'; // fallback
+  // 6. Fallback
+  return 'segurança vs movimento';
 }
 
 function calcularRitmoIdeal(m: MediasFatores): string {
