@@ -127,6 +127,16 @@ export function SimuladorConducao() {
       taxa_acerto: score.total >= 7 ? 100 : score.total >= 4 ? 50 : 0,
     }, { onConflict: 'user_id' });
 
+    // Update CidaDELA competencias
+    if (caso.distrito_esperado) {
+      addCompetencia.mutate({
+        distrito: caso.distrito_esperado,
+        tipo: 'individual',
+        nivel: caso.nivel === 'guiado' ? 1 : caso.nivel === 'semi_guiado' ? 2 : 3,
+        acerto: score.total >= 7,
+      });
+    }
+
     queryClient.invalidateQueries({ queryKey: ['training-progress'] });
     queryClient.invalidateQueries({ queryKey: ['training-attempts'] });
     queryClient.invalidateQueries({ queryKey: ['training-dashboard'] });
