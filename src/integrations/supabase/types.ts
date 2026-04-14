@@ -6246,6 +6246,7 @@ export type Database = {
           ativo: boolean
           created_at: string
           descricao: string | null
+          distrito: string | null
           ferramenta_sugerida: string | null
           id: string
           leitura_mentora: string | null
@@ -6259,6 +6260,7 @@ export type Database = {
           ativo?: boolean
           created_at?: string
           descricao?: string | null
+          distrito?: string | null
           ferramenta_sugerida?: string | null
           id?: string
           leitura_mentora?: string | null
@@ -6272,6 +6274,7 @@ export type Database = {
           ativo?: boolean
           created_at?: string
           descricao?: string | null
+          distrito?: string | null
           ferramenta_sugerida?: string | null
           id?: string
           leitura_mentora?: string | null
@@ -20479,6 +20482,60 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "conteudo_aulas"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_cidadela_estado: {
+        Row: {
+          competencias: Json | null
+          created_at: string
+          distrito_atual: string | null
+          distritos_ativados: string[] | null
+          historico_travessias: Json | null
+          intensidade_por_distrito: Json | null
+          ultimo_movimento: string | null
+          updated_at: string
+          user_id: string
+          voz: string | null
+        }
+        Insert: {
+          competencias?: Json | null
+          created_at?: string
+          distrito_atual?: string | null
+          distritos_ativados?: string[] | null
+          historico_travessias?: Json | null
+          intensidade_por_distrito?: Json | null
+          ultimo_movimento?: string | null
+          updated_at?: string
+          user_id: string
+          voz?: string | null
+        }
+        Update: {
+          competencias?: Json | null
+          created_at?: string
+          distrito_atual?: string | null
+          distritos_ativados?: string[] | null
+          historico_travessias?: Json | null
+          intensidade_por_distrito?: Json | null
+          ultimo_movimento?: string | null
+          updated_at?: string
+          user_id?: string
+          voz?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_cidadela_estado_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_cidadela_estado_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
           },
         ]
       }
