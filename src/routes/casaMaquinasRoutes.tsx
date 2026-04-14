@@ -67,6 +67,7 @@ type PR = React.ComponentType<{ children: React.ReactNode; minPortal?: string }>
 export function renderCasaMaquinasRoutes(ProtectedRoute: PR) {
   return [
     <Route key="cm-home" path="/casa-das-maquinas" element={<ProtectedRoute minPortal="oracula"><CasaDasMaquinas /></ProtectedRoute>} />,
+    <Route key="cm-cab" path="/casa-das-maquinas/cabine" element={<ProtectedRoute minPortal="oracula"><CabineTerapeutaPage /></ProtectedRoute>} />,
     <Route key="cm-cli" path="/casa-das-maquinas/clientes" element={<ProtectedRoute minPortal="oracula"><ClientesPage /></ProtectedRoute>} />,
     <Route key="cm-cli-d" path="/casa-das-maquinas/clientes/:clienteId" element={<ProtectedRoute minPortal="oracula"><ClienteDetailPage /></ProtectedRoute>} />,
     <Route key="cm-mc" path="/casa-das-maquinas/clientes/:clienteId/mapa-cidadela" element={<ProtectedRoute minPortal="oracula"><MapaCidadelaPage /></ProtectedRoute>} />,
