@@ -32,8 +32,10 @@ export function SimuladorConducao() {
   const queryClient = useQueryClient();
   const { avaliacao, isLoading: isLoadingIA, avaliar, reset: resetAvaliacao } = useAvaliacaoIA();
   const { track } = useStudentTracking();
+  const { addCompetencia } = useCidadelaEstado();
   const [casoIndex, setCasoIndex] = useState(0);
   const [active, setActive] = useState(false);
+  const [modoTerapeuta, setModoTerapeuta] = useState(false);
   const [step, setStep] = useState<SimuladorStep>('caso');
   const [resposta, setResposta] = useState<RespostaAluna>({
     leitura_texto: '',
