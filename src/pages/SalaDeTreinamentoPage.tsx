@@ -1,12 +1,21 @@
+import { useState, useCallback } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SimuladorConducao } from '@/components/treinamento/simulador/SimuladorConducao';
 import { SimuladorInterativo } from '@/components/treinamento/simulador/SimuladorInterativo';
 import { AutoMapeamento } from '@/components/treinamento/AutoMapeamento';
 import { BibliotecaFerramentas } from '@/components/treinamento/BibliotecaFerramentas';
 import { TrainingDashboard } from '@/components/treinamento/simulador/TrainingDashboard';
+import { SuaPraticaHoje } from '@/components/treinamento/SuaPraticaHoje';
 import { FlaskConical, Compass, BookOpen, BarChart3, Gamepad2 } from 'lucide-react';
 
 export default function SalaDeTreinamentoPage() {
+  const [activeTab, setActiveTab] = useState('interativo');
+
+  const handleStartSuggestedCase = useCallback((caseId: string) => {
+    setActiveTab('interativo');
+    // The SimuladorInterativo will pick it up from its own state
+  }, []);
+
   const tabs = [
     { value: 'interativo', label: 'Decisão', icon: Gamepad2 },
     { value: 'simulador', label: 'Leitura', icon: FlaskConical },
@@ -29,7 +38,10 @@ export default function SalaDeTreinamentoPage() {
           </p>
         </div>
 
-        <Tabs defaultValue="interativo" className="space-y-4">
+        {/* Sugestão baseada no distrito */}
+        <SuaPraticaHoje onStartCase={handleStartSuggestedCase} />
+
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
           <TabsList className="grid grid-cols-5 gap-1.5 h-auto bg-transparent p-0">
             {tabs.map(tab => (
               <TabsTrigger
