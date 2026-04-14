@@ -7,6 +7,7 @@
 
 export type NivelIntensidade = 'baixa' | 'media' | 'alta';
 export type ContextoLeitura = 'clube' | 'formacao' | 'casa_das_maquinas';
+export type OraculaTipo = 'dialogo' | 'integracao' | 'espelho' | 'leitura' | 'ciclo';
 
 export interface MediasFatores {
   porta_do_possivel: number;
@@ -49,7 +50,8 @@ export interface LeituraComportamental {
   profile: CartografiaProfile;
   saida_cliente: SaidaCliente;
   saida_terapeuta: SaidaTerapeuta;
-  oracula_inicial: string;
+  oracula_inicial: OraculaTipo;
+  intensidade_oracular: NivelIntensidade;
   contexto: ContextoLeitura;
 }
 
@@ -128,6 +130,7 @@ function calcularEstrategiaDefesa(m: MediasFatores): string {
   return 'compensação adaptativa'; // fallback
 }
 
+// AJUSTE 3: prioridade revisada — "controle vs colapso" ANTES de "estrutura vs expressão"
 function calcularTensaoCentral(m: MediasFatores): string {
   const torre = classificar(m.torre_interna);
   const voz = classificar(m.voz_no_mundo);
@@ -135,9 +138,10 @@ function calcularTensaoCentral(m: MediasFatores): string {
   const abalo = classificar(m.porta_do_abalo);
   const possivel = classificar(m.porta_do_possivel);
 
+  // Abalo+Torre alta = prioridade máxima
+  if (abalo === 'alta' && torre === 'alta') return 'controle vs colapso';
   if (torre === 'alta' && voz === 'baixa') return 'estrutura vs expressão';
   if (campo === 'alta' && possivel === 'baixa') return 'pertencimento vs autonomia';
-  if (abalo === 'alta' && torre === 'alta') return 'controle vs colapso';
   if (possivel === 'alta' && torre === 'alta') return 'expansão vs segurança';
   if (voz === 'alta' && campo === 'alta') return 'expressão vs aceitação';
   return 'segurança vs movimento'; // fallback
@@ -150,7 +154,7 @@ function calcularRitmoIdeal(m: MediasFatores): string {
 
   if (abalo === 'alta') return 'lento';
   if (torre === 'alta' && abalo === 'media') return 'medio';
-  if (possivel === 'alta' && abalo === 'baixa') return 'medio ou rapido';
+  if (possivel === 'alta' && abalo === 'baixa') return 'rapido';
   return 'medio';
 }
 
@@ -183,19 +187,37 @@ function calcularEstiloConducao(m: MediasFatores): string {
   return partes.length > 0 ? partes.join('; ') : 'acolhimento e escuta ativa';
 }
 
-function calcularOraculaInicial(estrategia: string): string {
+// AJUSTE 1: oracula_inicial determinística + intensidade_oracular separada
+function calcularOraculaInicial(estrategia: string): OraculaTipo {
   switch (estrategia) {
-    case 'controle por antecipação': return 'dialogo ou integracao';
+    case 'controle por antecipação': return 'integracao';
     case 'evitação por sobrecarga': return 'integracao';
-    case 'adaptação para pertencimento': return 'espelho com baixa intensidade';
+    case 'adaptação para pertencimento': return 'espelho';
     case 'afirmação rígida': return 'dialogo';
-    case 'exploração com flexibilidade': return 'leitura ou ciclo';
-    case 'compensação adaptativa': return 'leitura ou ciclo';
-    default: return 'leitura ou ciclo';
+    case 'exploração com flexibilidade': return 'leitura';
+    case 'compensação adaptativa': return 'ciclo';
+    default: return 'ciclo';
   }
 }
 
-// --- Textos simbólicos (saída para cliente) ---
+function calcularIntensidadeOracular(m: MediasFatores, estrategia: string): NivelIntensidade {
+  const abalo = classificar(m.porta_do_abalo);
+  // Estratégias de evitação/adaptação → sempre baixa
+  if (estrategia === 'evitação por sobrecarga') return 'baixa';
+  if (estrategia === 'adaptação para pertencimento') return 'baixa';
+  // Abalo alto → baixa independente
+  if (abalo === 'alta') return 'baixa';
+  // Afirmação rígida ou controle → media
+  if (estrategia === 'controle por antecipação') return 'media';
+  if (estrategia === 'afirmação rígida') return 'media';
+  // Flexibilidade com abalo baixo → alta
+  if (estrategia === 'exploração com flexibilidade' && abalo === 'baixa') return 'alta';
+  return 'media';
+}
+
+// --- AJUSTE 2: Textos por contexto ---
+
+// Textos simbólicos (saída para cliente)
 
 const TEXTOS_FORCA: Record<string, string> = {
   alta_torre: 'Você tende a buscar estrutura para não se perder.',
@@ -218,11 +240,92 @@ const TEXTOS_TENSAO: Record<string, string> = {
 const TEXTOS_CONVITE: Record<string, string> = {
   lento: 'Seu próximo passo não é se forçar. É criar espaço seguro para atravessar.',
   medio: 'Você já tem recursos. O convite é usá-los com mais intenção.',
-  'medio ou rapido': 'Há espaço para experimentar. Permita-se explorar sem medo de errar.',
+  rapido: 'Há espaço para experimentar. Permita-se explorar sem medo de errar.',
 };
 
-function gerarSaidaCliente(profile: CartografiaProfile, medias: MediasFatores): SaidaCliente {
-  // Força: usar o fator mais alto
+// Textos técnicos para terapeuta (Casa das Máquinas)
+
+const TEXTOS_FORCA_TECNICO: Record<string, string> = {
+  alta_torre: 'Torre Interna predominante — padrão de organização e controle como recurso primário.',
+  alta_possivel: 'Porta do Possível predominante — abertura a experiências como recurso primário.',
+  alta_campo: 'Campo do Outro predominante — vinculação e empatia como recurso primário.',
+  alta_voz: 'Voz no Mundo predominante — expressão e presença social como recurso primário.',
+  alta_estabilidade: 'Estabilidade emocional elevada — capacidade de sustentação como recurso primário.',
+  fallback: 'Perfil distribuído — nenhum fator predominante identificado.',
+};
+
+const TEXTOS_TENSAO_TECNICO: Record<string, string> = {
+  'estrutura vs expressão': 'Eixo estrutura–expressão: rigidez defensiva pode bloquear autenticidade.',
+  'pertencimento vs autonomia': 'Eixo pertencimento–autonomia: fusão relacional pode inibir individuação.',
+  'controle vs colapso': 'Eixo controle–colapso: hipervigilância compensando fragilidade emocional.',
+  'expansão vs segurança': 'Eixo expansão–segurança: desejo de crescimento tensionado por medo de desestabilização.',
+  'expressão vs aceitação': 'Eixo expressão–aceitação: autenticidade percebida como risco relacional.',
+  'segurança vs movimento': 'Eixo segurança–movimento: estagnação defensiva.',
+};
+
+const TEXTOS_CONVITE_TECNICO: Record<string, string> = {
+  lento: 'Ritmo lento recomendado — contenção antes de aprofundamento.',
+  medio: 'Ritmo médio — equilíbrio entre estrutura e exploração.',
+  rapido: 'Ritmo dinâmico possível — abertura para experimentação ativa.',
+};
+
+// Textos para formação (simbólico + condução)
+
+const TEXTOS_FORCA_FORMACAO: Record<string, string> = {
+  alta_torre: 'Você busca estrutura — isso é recurso, não prisão. Como terapeuta, reconheça isso em suas clientes.',
+  alta_possivel: 'Sua curiosidade é sua força. Na prática clínica, permita-se ser guiada por ela.',
+  alta_campo: 'Sua conexão com o outro é profunda. Atenção ao risco de fusão na prática.',
+  alta_voz: 'Sua expressão é clara e presente. Use-a como ferramenta, não como escudo.',
+  alta_estabilidade: 'Sua estabilidade emocional é um recurso clínico valioso. Não confunda com distanciamento.',
+  fallback: 'Seu perfil ainda está se revelando. Observe-se com curiosidade nas próximas práticas.',
+};
+
+const TEXTOS_TENSAO_FORMACAO: Record<string, string> = {
+  'estrutura vs expressão': 'Conciliar proteção e expressão é um eixo clínico fundamental. Observe como isso aparece em sessão.',
+  'pertencimento vs autonomia': 'O equilíbrio entre vínculo e autonomia é tema central na clínica do feminino.',
+  'controle vs colapso': 'A tensão controle–colapso é uma das mais frequentes. Aprenda a identificá-la antes de intervir.',
+  'expansão vs segurança': 'Crescer sem perder a base: essa tensão é sua e de suas futuras clientes.',
+  'expressão vs aceitação': 'Falar a verdade e ser aceita — esse paradoxo exige maturidade clínica.',
+  'segurança vs movimento': 'Estabilidade e movimento não são opostos. Aprenda a integrá-los na condução.',
+};
+
+const TEXTOS_CONVITE_FORMACAO: Record<string, string> = {
+  lento: 'Seu próximo passo é criar espaço seguro, tanto para você quanto para quem você acompanha.',
+  medio: 'Você já tem recursos. O convite é refiná-los com intenção clínica.',
+  rapido: 'Há espaço para experimentar e errar. A formação é para isso.',
+};
+
+function obterTextosPorContexto(contexto: ContextoLeitura) {
+  switch (contexto) {
+    case 'casa_das_maquinas':
+      return {
+        forca: TEXTOS_FORCA_TECNICO,
+        tensao: TEXTOS_TENSAO_TECNICO,
+        convite: TEXTOS_CONVITE_TECNICO,
+      };
+    case 'formacao':
+      return {
+        forca: TEXTOS_FORCA_FORMACAO,
+        tensao: TEXTOS_TENSAO_FORMACAO,
+        convite: TEXTOS_CONVITE_FORMACAO,
+      };
+    case 'clube':
+    default:
+      return {
+        forca: TEXTOS_FORCA,
+        tensao: TEXTOS_TENSAO,
+        convite: TEXTOS_CONVITE,
+      };
+  }
+}
+
+function gerarSaidaCliente(
+  profile: CartografiaProfile,
+  medias: MediasFatores,
+  contexto: ContextoLeitura
+): SaidaCliente {
+  const textos = obterTextosPorContexto(contexto);
+
   let forcaKey = 'fallback';
   const fatores: [string, number][] = [
     ['alta_torre', medias.torre_interna],
@@ -230,16 +333,15 @@ function gerarSaidaCliente(profile: CartografiaProfile, medias: MediasFatores): 
     ['alta_campo', medias.campo_do_outro],
     ['alta_voz', medias.voz_no_mundo],
   ];
-  // Estabilidade é invertida, então alta estabilidade = baixo abalo
   if (medias.porta_do_abalo <= 2.5) fatores.push(['alta_estabilidade', 5 - medias.porta_do_abalo]);
 
   const maior = fatores.sort((a, b) => b[1] - a[1])[0];
   if (maior[1] >= 3.5) forcaKey = maior[0];
 
   return {
-    forca_principal: TEXTOS_FORCA[forcaKey] || TEXTOS_FORCA.fallback,
-    tensao_central: TEXTOS_TENSAO[profile.tensao_central] || TEXTOS_TENSAO['segurança vs movimento'],
-    convite_inicial: TEXTOS_CONVITE[profile.ritmo_ideal] || TEXTOS_CONVITE.medio,
+    forca_principal: textos.forca[forcaKey] || textos.forca.fallback,
+    tensao_central: textos.tensao[profile.tensao_central] || textos.tensao['segurança vs movimento'],
+    convite_inicial: textos.convite[profile.ritmo_ideal] || textos.convite.medio,
   };
 }
 
@@ -298,9 +400,10 @@ export function calcularLeitura(
 
   return {
     profile,
-    saida_cliente: gerarSaidaCliente(profile, medias),
+    saida_cliente: gerarSaidaCliente(profile, medias, contexto),
     saida_terapeuta: gerarSaidaTerapeuta(profile),
     oracula_inicial: calcularOraculaInicial(profile.estrategia_defesa),
+    intensidade_oracular: calcularIntensidadeOracular(medias, profile.estrategia_defesa),
     contexto,
   };
 }
