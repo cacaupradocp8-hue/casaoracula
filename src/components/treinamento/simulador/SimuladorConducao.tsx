@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Loader2, FlaskConical } from 'lucide-react';
+import { Loader2, FlaskConical, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { RespostaAluna, SimuladorStep, STEP_ORDER, STEP_LABELS } from './types';
@@ -21,6 +21,9 @@ import { BlocoFeedback } from './BlocoFeedback';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAvaliacaoIA } from './useAvaliacaoIA';
 import { useStudentTracking } from '@/hooks/useStudentTracking';
+import { useCidadelaEstado } from '@/hooks/useCidadelaEstado';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
 
 export function SimuladorConducao() {
   const { user } = useAuth();
