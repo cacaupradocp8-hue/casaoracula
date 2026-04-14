@@ -17,13 +17,13 @@ function calcularProximoPasso(estado: any) {
 
   const { distrito_atual, competencias, distritos_ativados } = estado;
   const comp = competencias || {};
-  const totalTentativas = Object.values(comp).reduce(
+  const totalTentativas: number = (Object.values(comp) as any[]).reduce(
     (sum: number, c: any) => sum + (c?.tentativas || 0), 0
   );
-  const totalAcertos = Object.values(comp).reduce(
+  const totalAcertos: number = (Object.values(comp) as any[]).reduce(
     (sum: number, c: any) => sum + (c?.acertos || 0), 0
   );
-  const taxaAcerto = totalTentativas > 0 ? totalAcertos / totalTentativas : 0;
+  const taxaAcerto: number = totalTentativas > 0 ? totalAcertos / totalTentativas : 0;
 
   // Se tem distrito mas poucas competências → treinar
   if (totalTentativas < 3 && distrito_atual) {
