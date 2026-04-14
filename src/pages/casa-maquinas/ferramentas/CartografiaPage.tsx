@@ -153,9 +153,34 @@ export default function CartografiaPage() {
           </Card>
         ))}
 
-        <Button onClick={handleSave} disabled={saving || !clientId} className="w-full bg-[#C9A24A] hover:bg-[#C9A24A]/80 text-[#0B1B2B]">
-          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salvar Cartografia'}
-        </Button>
+        {/* Botão para concluir preenchimento e revelar leitura */}
+        {!concluido && (
+          <Button onClick={() => setConcluido(true)} disabled={!clientId} className="w-full bg-[#C9A24A]/80 hover:bg-[#C9A24A]/60 text-[#0B1B2B]">
+            Concluir preenchimento
+          </Button>
+        )}
+
+        {/* Bloco de Leitura Comportamental — só após conclusão */}
+        {concluido && (() => {
+          const mediasRaw: Record<string, number> = {};
+          TERRITORIOS.forEach(t => {
+            const arr = scores[t.key];
+            mediasRaw[t.key] = arr.reduce((a, b) => a + b, 0) / arr.length;
+          });
+          const leitura = calcularLeitura(mediasRaw, 'casa_das_maquinas');
+          return (
+            <LeituraRevelacao
+              saida={leitura.saida_cliente}
+              delayInicio={200}
+            />
+          );
+        })()}
+
+        {concluido && (
+          <Button onClick={handleSave} disabled={saving || !clientId} className="w-full bg-[#C9A24A] hover:bg-[#C9A24A]/80 text-[#0B1B2B]">
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salvar Cartografia'}
+          </Button>
+        )}
       </div>
     </CasaMaquinasLayout>
   );
