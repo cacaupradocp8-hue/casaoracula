@@ -32,6 +32,7 @@ export default function CartografiaPage() {
   const [clients, setClients] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [concluido, setConcluido] = useState(false);
 
   useState(() => {
     if (user) {
