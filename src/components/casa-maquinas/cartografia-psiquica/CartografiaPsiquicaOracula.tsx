@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
+import { calcularLeitura } from '@/lib/cartografia/leituraComportamental';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCartografiaGPS } from '@/hooks/useCartografiaGPS';
 import { Card, CardContent } from '@/components/ui/card';
@@ -110,10 +112,35 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
       sugestao_proximo_passo: `Explorar o distrito ${TERRITORIOS.find(t => t.key === pontoPartida)?.nome || 'selecionado'}`,
     }).select();
 
-    if (error) {
+    if (error || !insertedData?.[0]) {
       toast.error('Erro ao salvar cartografia');
       setSaving(false);
       return;
+    }
+
+    const cartografiaId = insertedData[0].id;
+
+    // Persist behavioral profile if mediasRaw is available via TelaVisualizacao
+    // The wizard is qualitative, but if territories map to medias, persist
+    try {
+      // Build approximate medias from selected territories (presence = 4, absence = 2)
+      const approxMedias: Record<string, number> = {
+        porta_do_possivel: territorios.includes('porta_do_possivel') ? 4 : 2,
+        torre_interna: territorios.includes('torre_interna') ? 4 : 2,
+        campo_do_outro: territorios.includes('campo_do_outro') ? 4 : 2,
+        voz_no_mundo: territorios.includes('voz_no_mundo') ? 4 : 2,
+        porta_do_abalo: territorios.includes('porta_do_abalo') ? 4 : 2,
+      };
+      const leitura = calcularLeitura(approxMedias, 'casa_das_maquinas');
+      await upsertCartografiaProfile({
+        userId: user.id,
+        cartografiaId,
+        leitura,
+        mediasRaw: approxMedias,
+        therapistUserId: user.id,
+      });
+    } catch (e) {
+      console.error('Erro ao persistir perfil comportamental:', e);
     }
 
     // Update client_city_state
