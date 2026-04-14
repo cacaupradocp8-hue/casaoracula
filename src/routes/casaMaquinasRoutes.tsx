@@ -56,6 +56,7 @@ const JardimOficioPage = React.lazy(() => import('@/pages/jardim-oficio/JardimOf
 const PainelSupervisaoPage = React.lazy(() => import('@/pages/jardim-oficio/PainelSupervisaoPage'));
 const CursoDeusasPage = React.lazy(() => import('@/pages/CursoDeusasPage'));
 const CursoChaveOniricaPage = React.lazy(() => import('@/pages/CursoChaveOniricaPage'));
+const CabineTerapeutaPage = React.lazy(() => import('@/pages/casa-maquinas/CabineTerapeutaPage'));
 
 function OracleRedirectCM({ suffix = '' }: { suffix?: string }) {
   const { oracleSlug } = useParams();
