@@ -9,6 +9,7 @@ import {
 import {
   LayoutDashboard, Users, UsersRound, Wrench, BookOpen, Flame, GraduationCap,
   FlaskConical, Settings, Eye, Crown, Calendar, Map, Sparkles, Compass, ChevronLeft, AudioLines, Layers, Brain,
+  Armchair,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -16,6 +17,7 @@ interface NavItem { label: string; path: string; icon: React.ElementType; minPor
 
 const mainNav: NavItem[] = [
   { label: 'Casa das Máquinas', path: '/casa-das-maquinas', icon: LayoutDashboard },
+  { label: 'Cabine da Terapeuta', path: '/casa-das-maquinas/cabine', icon: Armchair },
   { label: 'Clientes', path: '/casa-das-maquinas/clientes', icon: Users },
   { label: 'Sessões', path: '/casa-das-maquinas/nova-sessao', icon: Calendar },
   { label: 'Grupos', path: '/casa-das-maquinas/grupos', icon: UsersRound },

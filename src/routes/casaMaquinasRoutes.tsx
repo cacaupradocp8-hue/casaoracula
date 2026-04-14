@@ -56,6 +56,7 @@ const JardimOficioPage = React.lazy(() => import('@/pages/jardim-oficio/JardimOf
 const PainelSupervisaoPage = React.lazy(() => import('@/pages/jardim-oficio/PainelSupervisaoPage'));
 const CursoDeusasPage = React.lazy(() => import('@/pages/CursoDeusasPage'));
 const CursoChaveOniricaPage = React.lazy(() => import('@/pages/CursoChaveOniricaPage'));
+const CabineTerapeutaPage = React.lazy(() => import('@/pages/casa-maquinas/CabineTerapeutaPage'));
 
 function OracleRedirectCM({ suffix = '' }: { suffix?: string }) {
   const { oracleSlug } = useParams();
@@ -67,6 +68,7 @@ type PR = React.ComponentType<{ children: React.ReactNode; minPortal?: string }>
 export function renderCasaMaquinasRoutes(ProtectedRoute: PR) {
   return [
     <Route key="cm-home" path="/casa-das-maquinas" element={<ProtectedRoute minPortal="oracula"><CasaDasMaquinas /></ProtectedRoute>} />,
+    <Route key="cm-cab" path="/casa-das-maquinas/cabine" element={<ProtectedRoute minPortal="oracula"><CabineTerapeutaPage /></ProtectedRoute>} />,
     <Route key="cm-cli" path="/casa-das-maquinas/clientes" element={<ProtectedRoute minPortal="oracula"><ClientesPage /></ProtectedRoute>} />,
     <Route key="cm-cli-d" path="/casa-das-maquinas/clientes/:clienteId" element={<ProtectedRoute minPortal="oracula"><ClienteDetailPage /></ProtectedRoute>} />,
     <Route key="cm-mc" path="/casa-das-maquinas/clientes/:clienteId/mapa-cidadela" element={<ProtectedRoute minPortal="oracula"><MapaCidadelaPage /></ProtectedRoute>} />,
