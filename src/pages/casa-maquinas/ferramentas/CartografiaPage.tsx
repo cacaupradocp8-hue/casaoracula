@@ -120,6 +120,22 @@ export default function CartografiaPage() {
           </CardContent>
         </Card>
 
+        {/* Bloco de Leitura Comportamental */}
+        {(() => {
+          const mediasRaw: Record<string, number> = {};
+          TERRITORIOS.forEach(t => {
+            const arr = scores[t.key];
+            mediasRaw[t.key] = arr.reduce((a, b) => a + b, 0) / arr.length;
+          });
+          const leitura = calcularLeitura(mediasRaw, 'casa_das_maquinas');
+          return (
+            <LeituraRevelacao
+              saida={leitura.saida_cliente}
+              delayInicio={200}
+            />
+          );
+        })()}
+
         {/* Questions per territory */}
         {TERRITORIOS.map(t => (
           <Card key={t.key} className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
