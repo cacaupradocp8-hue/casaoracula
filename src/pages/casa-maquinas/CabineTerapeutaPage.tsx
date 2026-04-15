@@ -317,7 +317,7 @@ export default function CabineTerapeutaPage() {
             sessionActive={mode === 'sessao'}
             checkinTexto={sessionData.checkinTexto}
             anotacoes={sessionData.anotacoes}
-            sessionStage={currentStage}
+            sessionStage={currentFluxo ? { stage: currentFluxo.fluxo as any, label: '', orientacao: currentFluxo.orientacao, sintheya_regra: currentFluxo.sintheya_regra, sussurro_ativo: currentFluxo.sussurro_ativo, sussurro_motivo: currentFluxo.sussurro_motivo } : null}
           />
         </div>
       </div>
