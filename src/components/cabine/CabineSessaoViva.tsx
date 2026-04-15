@@ -254,7 +254,23 @@ export function CabineSessaoViva({
         )}
       </AnimatePresence>
 
-      {/* === ORIENTAÇÃO VIVA === */}
+      {/* === MICRO-MENSAGEM — detecção viva (máx 1, auto-desaparece) === */}
+      <AnimatePresence>
+        {microMensagem && !sussurroVisible && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.4 }}
+            className="px-3 py-2 rounded-lg bg-primary/5 border border-primary/10"
+          >
+            <p className="text-[11px] text-primary/60 italic text-center">
+              {microMensagem}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <motion.div
         key={fluxo.fluxo}
         initial={{ opacity: 0 }}
