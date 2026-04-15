@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
@@ -13,11 +13,11 @@ import { LeituraRevelacao } from '@/components/cartografia/LeituraRevelacao';
 import { calcularLeitura } from '@/lib/cartografia/leituraComportamental';
 
 const TERRITORIOS = [
-  { key: 'porta_possivel', nome: 'Porta do Possível', desc: 'Abertura a novas experiências' },
-  { key: 'torre_interna', nome: 'Torre Interna', desc: 'Conscienciosidade e disciplina interna' },
-  { key: 'campo_outro', nome: 'Campo do Outro', desc: 'Relações e empatia' },
-  { key: 'voz_mundo', nome: 'Voz no Mundo', desc: 'Expressão e extroversão' },
-  { key: 'porta_abalo', nome: 'Porta do Abalo', desc: 'Sensibilidade e neuroticismo' },
+  { key: 'torre_interna', nome: 'Torre Interna', desc: 'Conscienciosidade e disciplina interna', microcopy: 'O que sustenta essa cliente quando ninguém vê?' },
+  { key: 'porta_possivel', nome: 'Porta do Possível', desc: 'Abertura a novas experiências', microcopy: 'Para onde a vida está tentando levá-la?' },
+  { key: 'campo_outro', nome: 'Campo do Outro', desc: 'Relações e empatia', microcopy: 'O que nela responde ao mundo?' },
+  { key: 'voz_mundo', nome: 'Voz no Mundo', desc: 'Expressão e extroversão', microcopy: 'Que narrativa externa a atravessa?' },
+  { key: 'porta_abalo', nome: 'Porta do Abalo', desc: 'Sensibilidade e neuroticismo', microcopy: 'O que desorganiza sua estrutura hoje?' },
 ];
 
 const PERGUNTAS_POR_TERRITORIO = 6;
@@ -26,6 +26,7 @@ export default function CartografiaPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const isFromCabine = !!searchParams.get('clienteId');
   const [scores, setScores] = useState<Record<string, number[]>>(
     Object.fromEntries(TERRITORIOS.map(t => [t.key, Array(PERGUNTAS_POR_TERRITORIO).fill(3)]))
   );
@@ -35,12 +36,19 @@ export default function CartografiaPage() {
   const [loaded, setLoaded] = useState(false);
   const [concluido, setConcluido] = useState(false);
 
+  // Ritual states
+  const [ritualStarted, setRitualStarted] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const [showOverlay, setShowOverlay] = useState(false);
+
   useState(() => {
     if (user) {
       supabase.from('clientes').select('id, nome').eq('terapeuta_id', user.id).order('nome')
         .then(({ data }) => { setClients(data || []); setLoaded(true); });
     }
   });
+
+  const clientName = clients.find(c => c.id === clientId)?.nome || '';
 
   const getAverage = (key: string) => {
     const arr = scores[key];
@@ -75,99 +83,134 @@ export default function CartografiaPage() {
 
     if (error || !inserted) {
       toast.error('Erro ao salvar cartografia');
-    } else {
-      // Persist behavioral profile (upsert idempotente)
-      try {
-        const mediasRaw: Record<string, number> = {};
-        TERRITORIOS.forEach(t => {
-          const arr = scores[t.key];
-          mediasRaw[t.key] = arr.reduce((a, b) => a + b, 0) / arr.length;
-        });
-        const leitura = calcularLeitura(mediasRaw, 'casa_das_maquinas');
-        await upsertCartografiaProfile({
-          userId: user.id,
-          cartografiaId: inserted.id,
-          leitura,
-          mediasRaw,
-          therapistUserId: user.id,
-        });
-
-        // Mark has_initial_cartography = true
-        await supabase.from('clientes').update({
-          has_initial_cartography: true,
-        }).eq('id', clientId);
-
-        // Generate initial CidaDELA structure, then mark has_initial_cidadela
-        try {
-          // Create session_case for this client if none exists
-          const { data: existingCase } = await supabase
-            .from('session_cases')
-            .select('id')
-            .eq('client_id', clientId)
-            .eq('therapist_id', user.id)
-            .limit(1)
-            .maybeSingle();
-
-          let caseId = existingCase?.id;
-          if (!caseId) {
-            const { data: clienteData } = await supabase.from('clientes').select('nome').eq('id', clientId).single();
-            const { data: newCase } = await supabase.from('session_cases').insert({
-              therapist_id: user.id,
-              client_id: clientId,
-              title: `Jornada de ${clienteData?.nome || 'Cliente'}`,
-              status: 'active',
-            }).select('id').single();
-            caseId = newCase?.id;
-          }
-
-          // Activate jardim_heroina if exists
-          await supabase.from('jardim_heroina').update({ status: 'active', case_id: caseId }).eq('client_id', clientId).eq('therapist_id', user.id);
-
-          // Create initial cidadela map
-          await supabase.rpc('update_cidadela_from_session' as any, {
-            _client_id: clientId,
-            _therapist_id: user.id,
-            _distrito: null,
-            _torre: null,
-            _porta: null,
-            _arquetipo: null,
-            _labirinto: null,
-            _ferramenta: null,
-            _insight: 'Cartografia inicial concluída — CidaDELA inaugurada',
-          });
-
-          // Mark has_initial_cidadela = true
-          await supabase.from('clientes').update({
-            has_initial_cidadela: true,
-          }).eq('id', clientId);
-        } catch (cidadelaErr) {
-          console.error('Erro ao gerar CidaDELA inicial:', cidadelaErr);
-        }
-      } catch (e) {
-        console.error('Erro ao persistir perfil comportamental:', e);
-      }
-
-      toast.success('Cartografia salva com sucesso');
-      // Redirect back to cabine with this client open
-      navigate(`/casa-das-maquinas/cabine?clienteId=${clientId}`);
+      setSaving(false);
+      return;
     }
+
+    // Persist behavioral profile
+    try {
+      const mediasRaw: Record<string, number> = {};
+      TERRITORIOS.forEach(t => {
+        const arr = scores[t.key];
+        mediasRaw[t.key] = arr.reduce((a, b) => a + b, 0) / arr.length;
+      });
+      const leitura = calcularLeitura(mediasRaw, 'casa_das_maquinas');
+      await upsertCartografiaProfile({
+        userId: user.id,
+        cartografiaId: inserted.id,
+        leitura,
+        mediasRaw,
+        therapistUserId: user.id,
+      });
+
+      await supabase.from('clientes').update({
+        has_initial_cartography: true,
+      }).eq('id', clientId);
+
+      // Generate initial CidaDELA
+      try {
+        const { data: existingCase } = await supabase
+          .from('session_cases')
+          .select('id')
+          .eq('client_id', clientId)
+          .eq('therapist_id', user.id)
+          .limit(1)
+          .maybeSingle();
+
+        let caseId = existingCase?.id;
+        if (!caseId) {
+          const { data: clienteData } = await supabase.from('clientes').select('nome').eq('id', clientId).single();
+          const { data: newCase } = await supabase.from('session_cases').insert({
+            therapist_id: user.id,
+            client_id: clientId,
+            title: `Jornada de ${clienteData?.nome || 'Cliente'}`,
+            status: 'active',
+          }).select('id').single();
+          caseId = newCase?.id;
+        }
+
+        await supabase.from('jardim_heroina').update({ status: 'active', case_id: caseId }).eq('client_id', clientId).eq('therapist_id', user.id);
+
+        await supabase.rpc('update_cidadela_from_session' as any, {
+          _client_id: clientId,
+          _therapist_id: user.id,
+          _distrito: null,
+          _torre: null,
+          _porta: null,
+          _arquetipo: null,
+          _labirinto: null,
+          _ferramenta: null,
+          _insight: 'Cartografia inicial concluída — CidaDELA inaugurada',
+        });
+
+        await supabase.from('clientes').update({
+          has_initial_cidadela: true,
+        }).eq('id', clientId);
+      } catch (cidadelaErr) {
+        console.error('Erro ao gerar CidaDELA inicial:', cidadelaErr);
+      }
+    } catch (e) {
+      console.error('Erro ao persistir perfil comportamental:', e);
+    }
+
     setSaving(false);
+
+    // Show ritual overlay before redirect
+    setShowOverlay(true);
+    setTimeout(() => {
+      navigate(`/casa-das-maquinas/cabine?clienteId=${clientId}&fromCartografia=true`);
+    }, 2000);
   };
 
+  // ─── Overlay de transição ───
+  if (showOverlay) {
+    return (
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background/95 backdrop-blur-sm">
+        <div className="max-w-md text-center space-y-4 animate-fade-in">
+          <p className="text-sm text-muted-foreground/80 italic leading-relaxed">
+            Toda leitura cria um território.
+          </p>
+          <p className="text-sm text-muted-foreground/60 italic leading-relaxed">
+            A CidaDELA está sendo formada.
+          </p>
+          <Loader2 className="w-4 h-4 animate-spin text-primary/40 mx-auto mt-6" />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <CasaMaquinasLayout title="Cartografia Psíquica Orácula" subtitle="Big Five simbólico — 30 perguntas, 5 territórios">
+    <CasaMaquinasLayout
+      title={isFromCabine ? 'Diagnóstico Inicial' : 'Cartografia Psíquica Orácula'}
+      subtitle={isFromCabine ? undefined : 'Big Five simbólico — 30 perguntas, 5 territórios'}
+    >
       <div className="max-w-2xl mx-auto space-y-6">
-        {/* Client selector — locked when clienteId comes from URL */}
-        {searchParams.get('clienteId') ? (
+
+        {/* ─── Header ritual (quando vem da cabine) ─── */}
+        {isFromCabine && clientName && (
+          <div className="border border-border/20 rounded-lg bg-card/40 p-5 space-y-1.5">
+            <p className="text-base font-medium text-foreground">{clientName}</p>
+            <p className="text-xs text-primary/70 tracking-wide">Diagnóstico Inicial em andamento</p>
+            <p className="text-[11px] text-muted-foreground/50 italic">
+              Você está inaugurando a leitura desta cliente
+            </p>
+            <p className="text-[10px] text-muted-foreground/30 mt-2">
+              Retorno à cabine após conclusão
+            </p>
+          </div>
+        )}
+
+        {/* ─── Seletor de cliente (livre) ou bloco travado (cabine) ─── */}
+        {isFromCabine ? (
           <div className="rounded-md border border-primary/20 bg-card/60 px-4 py-3">
             <p className="text-xs text-muted-foreground mb-0.5">Cliente selecionada</p>
             <p className="text-sm font-medium text-foreground">
-              {clients.find(c => c.id === clientId)?.nome || 'Carregando...'}
+              {clientName || 'Carregando...'}
             </p>
           </div>
         ) : (
           <Select value={clientId} onValueChange={setClientId}>
-            <SelectTrigger className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]">
+            <SelectTrigger className="bg-card/60 border-border/20 text-foreground">
               <SelectValue placeholder="Selecione a cliente..." />
             </SelectTrigger>
             <SelectContent>
@@ -176,73 +219,144 @@ export default function CartografiaPage() {
           </Select>
         )}
 
-        {/* Radar preview */}
-        <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
-          <CardHeader><CardTitle className="text-sm text-[#F5F1E8]/80">Resultado</CardTitle></CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-5 gap-2">
-              {TERRITORIOS.map(t => {
-                const avg = getAverage(t.key);
-                const cls = classify(avg);
-                return (
-                  <div key={t.key} className="text-center">
-                    <div className="relative w-12 h-12 mx-auto mb-1">
-                      <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-                        <circle cx="18" cy="18" r="15.91" fill="transparent" stroke="rgba(245,241,232,0.05)" strokeWidth="3" />
-                        <circle cx="18" cy="18" r="15.91" fill="transparent" stroke="#C9A24A" strokeWidth="3"
-                          strokeDasharray={`${avg} ${100 - avg}`} strokeLinecap="round" />
-                      </svg>
-                      <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-[#F5F1E8]">{avg}</span>
-                    </div>
-                    <p className="text-[8px] text-[#F5F1E8]/40 leading-tight">{t.nome}</p>
-                    <span className={`text-[7px] ${cls === 'alto' ? 'text-[#556B57]' : cls === 'baixo' ? 'text-red-400' : 'text-[#C9A24A]'}`}>{cls}</span>
-                  </div>
-                );
-              })}
+        {/* ─── Abertura do Rito ─── */}
+        {!ritualStarted && clientId && (
+          <div className="py-10 text-center space-y-5 animate-fade-in">
+            <div className="space-y-3">
+              <p className="text-sm text-muted-foreground/70 italic leading-relaxed">
+                Toda leitura começa antes das respostas.
+              </p>
+              <p className="text-sm text-muted-foreground/60 italic leading-relaxed">
+                Observe antes de interpretar.
+              </p>
+              <p className="text-sm text-muted-foreground/50 italic leading-relaxed">
+                Registre o que aparece, não o que você quer encontrar.
+              </p>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Questions per territory */}
-        {TERRITORIOS.map(t => (
-          <Card key={t.key} className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
-            <CardHeader>
-              <CardTitle className="text-sm text-[#C9A24A]">{t.nome}</CardTitle>
-              <p className="text-xs text-[#F5F1E8]/40">{t.desc}</p>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {Array.from({ length: PERGUNTAS_POR_TERRITORIO }).map((_, qi) => (
-                <div key={qi} className="flex items-center gap-3">
-                  <span className="text-xs text-[#F5F1E8]/40 w-4">{qi + 1}.</span>
-                  <div className="flex gap-1">
-                    {[1, 2, 3, 4, 5].map(v => (
-                      <button
-                        key={v}
-                        onClick={() => handleScore(t.key, qi, v)}
-                        className={`w-8 h-8 rounded-full text-xs font-medium transition-all ${
-                          scores[t.key][qi] === v
-                            ? 'bg-[#C9A24A] text-[#0B1B2B]'
-                            : 'bg-[#F5F1E8]/5 text-[#F5F1E8]/40 hover:bg-[#F5F1E8]/10'
-                        }`}
-                      >
-                        {v}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        ))}
-
-        {/* Botão para concluir preenchimento e revelar leitura */}
-        {!concluido && (
-          <Button onClick={() => setConcluido(true)} disabled={!clientId} className="w-full bg-[#C9A24A]/80 hover:bg-[#C9A24A]/60 text-[#0B1B2B]">
-            Concluir preenchimento
-          </Button>
+            <Button
+              variant="outline"
+              className="mt-6 border-primary/30 text-primary hover:bg-primary/5"
+              onClick={() => setRitualStarted(true)}
+            >
+              Iniciar leitura
+            </Button>
+          </div>
         )}
 
-        {/* Bloco de Leitura Comportamental — só após conclusão */}
+        {/* ─── Conteúdo das perguntas (step by step) ─── */}
+        {ritualStarted && !concluido && (
+          <>
+            {/* Território ativo */}
+            {(() => {
+              const t = TERRITORIOS[activeStep];
+              if (!t) return null;
+              return (
+                <div key={t.key} className="animate-fade-in space-y-4">
+                  {/* Microcopy de condução */}
+                  <p className="text-xs text-primary/60 italic text-center py-2">
+                    {t.microcopy}
+                  </p>
+
+                  <Card className="border-border/10 bg-card/50">
+                    <CardHeader>
+                      <CardTitle className="text-sm text-primary">{t.nome}</CardTitle>
+                      <p className="text-xs text-muted-foreground/50">{t.desc}</p>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {Array.from({ length: PERGUNTAS_POR_TERRITORIO }).map((_, qi) => (
+                        <div key={qi} className="flex items-center gap-3">
+                          <span className="text-xs text-muted-foreground/40 w-4">{qi + 1}.</span>
+                          <div className="flex gap-1.5">
+                            {[1, 2, 3, 4, 5].map(v => (
+                              <button
+                                key={v}
+                                onClick={() => handleScore(t.key, qi, v)}
+                                className={`w-9 h-9 rounded-full text-xs font-medium transition-all ${
+                                  scores[t.key][qi] === v
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'bg-muted/20 text-muted-foreground/40 hover:bg-muted/40'
+                                }`}
+                              >
+                                {v}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
+
+                  {/* Navegação entre territórios */}
+                  <div className="flex justify-between items-center pt-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setActiveStep(s => s - 1)}
+                      disabled={activeStep === 0}
+                      className="text-muted-foreground/50"
+                    >
+                      Anterior
+                    </Button>
+                    <span className="text-[10px] text-muted-foreground/30">
+                      {activeStep + 1} de {TERRITORIOS.length}
+                    </span>
+                    {activeStep < TERRITORIOS.length - 1 ? (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setActiveStep(s => s + 1)}
+                        className="text-primary/70"
+                      >
+                        Próximo
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setConcluido(true)}
+                        className="text-primary/70"
+                      >
+                        Concluir preenchimento
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Radar preview compacto */}
+            <Card className="border-border/10 bg-card/30">
+              <CardContent className="py-3">
+                <div className="grid grid-cols-5 gap-2">
+                  {TERRITORIOS.map((t, i) => {
+                    const avg = getAverage(t.key);
+                    const cls = classify(avg);
+                    return (
+                      <div
+                        key={t.key}
+                        className={`text-center cursor-pointer rounded-md py-1.5 transition-all ${i === activeStep ? 'bg-primary/10' : ''}`}
+                        onClick={() => setActiveStep(i)}
+                      >
+                        <div className="relative w-10 h-10 mx-auto mb-1">
+                          <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
+                            <circle cx="18" cy="18" r="15.91" fill="transparent" stroke="hsl(var(--muted)/0.1)" strokeWidth="3" />
+                            <circle cx="18" cy="18" r="15.91" fill="transparent" stroke="hsl(var(--primary))" strokeWidth="3"
+                              strokeDasharray={`${avg} ${100 - avg}`} strokeLinecap="round" />
+                          </svg>
+                          <span className="absolute inset-0 flex items-center justify-center text-[9px] font-bold text-foreground/70">{avg}</span>
+                        </div>
+                        <p className="text-[7px] text-muted-foreground/40 leading-tight">{t.nome}</p>
+                        <span className={`text-[7px] ${cls === 'alto' ? 'text-emerald-500/60' : cls === 'baixo' ? 'text-red-400/60' : 'text-primary/60'}`}>{cls}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        )}
+
+        {/* ─── Leitura Revelação (pós preenchimento) ─── */}
         {concluido && (() => {
           const mediasRaw: Record<string, number> = {};
           TERRITORIOS.forEach(t => {
@@ -258,10 +372,21 @@ export default function CartografiaPage() {
           );
         })()}
 
+        {/* ─── Botão final ─── */}
         {concluido && (
-          <Button onClick={handleSave} disabled={saving || !clientId} className="w-full bg-[#C9A24A] hover:bg-[#C9A24A]/80 text-[#0B1B2B]">
-            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salvar Cartografia'}
-          </Button>
+          <div className="text-center space-y-2 py-4">
+            <Button
+              onClick={handleSave}
+              disabled={saving || !clientId}
+              className="w-full bg-primary hover:bg-primary/80 text-primary-foreground"
+            >
+              {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+              Concluir Diagnóstico Inicial
+            </Button>
+            <p className="text-[10px] text-muted-foreground/40 italic">
+              Isso irá inaugurar o mapa da cliente
+            </p>
+          </div>
         )}
       </div>
     </CasaMaquinasLayout>
