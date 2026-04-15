@@ -92,12 +92,6 @@ export default function ClienteDetailPage() {
         <ClienteAtividadeJardim clienteId={clienteId!} />
       </div>
 
-      <PainelConducaoSessao
-        clienteId={clienteId!}
-        clienteNome={cliente.nome}
-        open={sessionWizardOpen}
-        onClose={() => setSessionWizardOpen(false)}
-      />
 
       <Tabs defaultValue="cidadela" className="w-full">
         <TabsList className="bg-card/80 border border-border/30 mb-6 flex-wrap h-auto gap-0.5 p-1">
