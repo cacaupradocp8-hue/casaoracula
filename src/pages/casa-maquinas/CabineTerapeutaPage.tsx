@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useMapaVivoLive } from '@/hooks/useMapaVivoLive';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/lib/dal/dbClient';
 import { useAuth } from '@/contexts/AuthContext';
 import { CasaMaquinasLayout } from '@/components/casa-maquinas/CasaMaquinasLayout';
@@ -64,6 +64,7 @@ const EMPTY_SESSION: SessionData = {
 export default function CabineTerapeutaPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [clientes, setClientes] = useState<ClienteComStatus[]>([]);
   const [selectedClienteId, setSelectedClienteId] = useState<string | null>(null);
@@ -101,7 +102,7 @@ export default function CabineTerapeutaPage() {
     (async () => {
       const { data: rawClientes } = await supabase
         .from('clientes')
-        .select('id, nome, status, client_user_id')
+        .select('id, nome, status, client_user_id, has_initial_cartography, has_initial_cidadela')
         .eq('terapeuta_id', user.id)
         .order('nome');
 
