@@ -7,7 +7,9 @@ import { CabineClientesList } from '@/components/cabine/CabineClientesList';
 import { CabinePreparacao } from '@/components/cabine/CabinePreparacao';
 import { CabineSessao } from '@/components/cabine/CabineSessao';
 import { CabineIntegracao } from '@/components/cabine/CabineIntegracao';
-import { CabinePlaceholders } from '@/components/cabine/CabinePlaceholders';
+import { CabineSintheya } from '@/components/cabine/CabineSintheya';
+import { CabineSussurro } from '@/components/cabine/CabineSussurro';
+import { calcularLeituraCampo, type LeituraCampo } from '@/lib/cabine/motorOracular';
 import { Loader2 } from 'lucide-react';
 
 export type CabineMode = 'preparacao' | 'sessao' | 'integracao';
@@ -76,6 +78,19 @@ export default function CabineTerapeutaPage() {
     [clientes, selectedClienteId]
   );
 
+  // Motor oracular — calcula Estado do Campo
+  const leituraCampo: LeituraCampo | null = useMemo(() => {
+    if (!selectedCliente) return null;
+    return calcularLeituraCampo(
+      profile?.profile_json || null,
+      {
+        lastSessionDate: selectedCliente.lastSessionDate,
+        intensidade_oracular: profile?.intensidade_oracular,
+        oracula_inicial: profile?.oracula_inicial,
+      }
+    );
+  }, [selectedCliente, profile]);
+
   // Load clients + their last session date
   useEffect(() => {
     if (!user) return;
@@ -88,7 +103,6 @@ export default function CabineTerapeutaPage() {
 
       if (!rawClientes) { setLoading(false); return; }
 
-      // Batch-fetch last session per client
       const clientIds = rawClientes.map(c => c.id);
       const { data: sessions } = await supabase
         .from('sessions')
@@ -124,7 +138,6 @@ export default function CabineTerapeutaPage() {
     if (!selectedClienteId || !user) { setProfile(null); return; }
     setProfileLoading(true);
     (async () => {
-      // Priority: casa_das_maquinas context first
       const { data } = await supabase
         .from('co_cartografia_profile')
         .select('id, contexto, profile_json, medias_json, oracula_inicial, intensidade_oracular, updated_at')
@@ -188,6 +201,8 @@ export default function CabineTerapeutaPage() {
           ferramenta_escolhida: sessionData.ferramentaEscolhida,
           checkin_texto: sessionData.checkinTexto,
           started_at: sessionStartedAt?.toISOString(),
+          estado_campo: leituraCampo?.estado || null,
+          direcao_conducao: leituraCampo?.direcao || null,
         },
       } as any)
       .select('id')
@@ -197,7 +212,7 @@ export default function CabineTerapeutaPage() {
       setSavedSessionId(data.id);
       setMode('integracao');
     }
-  }, [user, selectedClienteId, sessionData, sessionWithoutProfile, sessionStartedAt]);
+  }, [user, selectedClienteId, sessionData, sessionWithoutProfile, sessionStartedAt, leituraCampo]);
 
   if (loading) {
     return (
@@ -228,6 +243,7 @@ export default function CabineTerapeutaPage() {
               cliente={selectedCliente!}
               profile={profile}
               profileLoading={profileLoading}
+              leituraCampo={leituraCampo}
               onStartSession={handleStartSession}
             />
           ) : mode === 'sessao' ? (
@@ -252,8 +268,21 @@ export default function CabineTerapeutaPage() {
           )}
         </div>
 
-        {/* Right: Placeholders */}
-        <CabinePlaceholders />
+        {/* Right: SINTHEYA + Sussurro */}
+        <div className="space-y-3 hidden lg:block">
+          <CabineSintheya
+            clienteNome={selectedCliente?.nome || ''}
+            leitura={leituraCampo}
+            sessionData={mode === 'sessao' ? sessionData : undefined}
+            sessionActive={mode === 'sessao'}
+          />
+          <CabineSussurro
+            leitura={leituraCampo}
+            sessionActive={mode === 'sessao'}
+            checkinTexto={sessionData.checkinTexto}
+            anotacoes={sessionData.anotacoes}
+          />
+        </div>
       </div>
     </CasaMaquinasLayout>
   );

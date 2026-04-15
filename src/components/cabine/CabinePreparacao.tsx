@@ -4,16 +4,19 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { User, Shield, Zap, Target, AlertCircle, Compass, Play } from 'lucide-react';
 import type { ClienteComStatus, CartografiaProfile } from '@/pages/casa-maquinas/CabineTerapeutaPage';
+import type { LeituraCampo } from '@/lib/cabine/motorOracular';
+import { CabineEstadoCampo } from './CabineEstadoCampo';
 import { useNavigate } from 'react-router-dom';
 
 interface Props {
   cliente: ClienteComStatus;
   profile: CartografiaProfile | null;
   profileLoading: boolean;
+  leituraCampo: LeituraCampo | null;
   onStartSession: (withoutProfile: boolean) => void;
 }
 
-export function CabinePreparacao({ cliente, profile, profileLoading, onStartSession }: Props) {
+export function CabinePreparacao({ cliente, profile, profileLoading, leituraCampo, onStartSession }: Props) {
   const navigate = useNavigate();
   const pj = profile?.profile_json;
 
@@ -41,7 +44,20 @@ export function CabinePreparacao({ cliente, profile, profileLoading, onStartSess
         </CardContent>
       </Card>
 
-      {/* Bloco 2: Leitura de condução clínica */}
+      {/* Bloco 2: ESTADO DO CAMPO — Elemento central */}
+      {profileLoading ? (
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="p-5 space-y-3">
+            <Skeleton className="h-4 w-1/3" />
+            <Skeleton className="h-8 w-3/4" />
+            <Skeleton className="h-12 w-full" />
+          </CardContent>
+        </Card>
+      ) : leituraCampo ? (
+        <CabineEstadoCampo leitura={leituraCampo} />
+      ) : null}
+
+      {/* Bloco 3: Leitura de condução clínica */}
       <Card className="border-border/20 bg-card/50">
         <CardContent className="p-4 space-y-3">
           <p className="text-[10px] uppercase tracking-widest text-primary/60 font-medium">
@@ -56,7 +72,6 @@ export function CabinePreparacao({ cliente, profile, profileLoading, onStartSess
             </div>
           ) : profile && pj ? (
             <div className="space-y-3">
-              {/* Padrão dominante */}
               {pj.padrao_dominante && (
                 <div className="flex items-start gap-2">
                   <Target className="w-3.5 h-3.5 text-primary/60 mt-0.5 shrink-0" />
@@ -67,7 +82,6 @@ export function CabinePreparacao({ cliente, profile, profileLoading, onStartSess
                 </div>
               )}
 
-              {/* Estratégia de defesa */}
               {pj.estrategia_defesa && (
                 <div className="flex items-start gap-2">
                   <Shield className="w-3.5 h-3.5 text-amber-500/60 mt-0.5 shrink-0" />
@@ -78,7 +92,6 @@ export function CabinePreparacao({ cliente, profile, profileLoading, onStartSess
                 </div>
               )}
 
-              {/* Tensão central */}
               {pj.tensao_central && (
                 <div className="flex items-start gap-2">
                   <Zap className="w-3.5 h-3.5 text-red-400/60 mt-0.5 shrink-0" />
@@ -89,7 +102,6 @@ export function CabinePreparacao({ cliente, profile, profileLoading, onStartSess
                 </div>
               )}
 
-              {/* O que evitar / priorizar */}
               <div className="grid grid-cols-2 gap-3">
                 {pj.o_que_evitar && (
                   <div className="p-2 rounded-md bg-destructive/5 border border-destructive/10">
@@ -105,7 +117,6 @@ export function CabinePreparacao({ cliente, profile, profileLoading, onStartSess
                 )}
               </div>
 
-              {/* Ritmo e direção */}
               {pj.ritmo_ideal && (
                 <div className="flex items-start gap-2">
                   <Compass className="w-3.5 h-3.5 text-primary/50 mt-0.5 shrink-0" />
@@ -154,7 +165,7 @@ export function CabinePreparacao({ cliente, profile, profileLoading, onStartSess
         </CardContent>
       </Card>
 
-      {/* Bloco 3: Botão principal */}
+      {/* Bloco 4: Botão principal */}
       {(profile || profileLoading) && (
         <Button
           onClick={() => onStartSession(!profile)}
