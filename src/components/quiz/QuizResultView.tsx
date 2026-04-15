@@ -105,7 +105,7 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
                   <Button
                     variant="gold"
                     size="lg"
-                    onClick={() => navigate('/ferramentas/cartografia-psiquica-oracula')}
+                    onClick={() => navigate('/ferramenta/cartografia-psiquica-oracula')}
                     className="gap-2 w-full sm:w-auto"
                   >
                     Criar minha Cartografia
