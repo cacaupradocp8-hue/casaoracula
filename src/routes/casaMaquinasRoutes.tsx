@@ -34,7 +34,7 @@ const GestosIntegracaoPage = React.lazy(() => import('@/pages/casa-maquinas/Gest
 const MapaVivoClientePage = React.lazy(() => import('@/pages/casa-maquinas/MapaVivoClientePage'));
 const PainelInstitucionalPage = React.lazy(() => import('@/pages/casa-maquinas/PainelInstitucionalPage'));
 const PainelClinicoPage = React.lazy(() => import('@/pages/casa-maquinas/PainelClinicoPage'));
-const CartografiaPage = React.lazy(() => import('@/pages/casa-maquinas/ferramentas/CartografiaPage'));
+// CartografiaPage removed — all cartografia routes redirect to /ferramenta/cartografia-psiquica-oracula
 const TorreVivaPage = React.lazy(() => import('@/pages/casa-maquinas/ferramentas/TorreVivaPage'));
 const LabirintoPage = React.lazy(() => import('@/pages/casa-maquinas/ferramentas/LabirintoPage'));
 const DecodificacaoOniricaPage = React.lazy(() => import('@/pages/casa-maquinas/ferramentas/DecodificacaoOniricaPage'));
