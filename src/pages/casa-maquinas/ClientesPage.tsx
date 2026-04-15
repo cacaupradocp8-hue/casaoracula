@@ -349,7 +349,7 @@ export default function ClientesPage() {
                       size="sm"
                       variant="ghost"
                       className="h-7 text-xs text-amber-400 hover:text-amber-400 hover:bg-amber-500/10 flex-1"
-                      onClick={(e) => { e.stopPropagation(); navigate(`/casa-das-maquinas/ferramentas/cartografia?clienteId=${c.id}`); }}
+                      onClick={(e) => { e.stopPropagation(); navigate(`/casa-das-maquinas/ferramentas/cartografia?clienteId=${c.id}&fromCabine=true`); }}
                     >
                       Iniciar Diagnóstico Inicial <ChevronRight className="w-3 h-3 ml-1" />
                     </Button>
