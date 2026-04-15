@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, User, Users, CircleDot, ChevronRight, AlertCircle, Sparkles } from 'lucide-react';
+import { Search, User, Users, CircleDot, ChevronRight, AlertCircle, Sparkles, Plus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { ClienteComStatus } from '@/pages/casa-maquinas/CabineTerapeutaPage';
@@ -18,6 +19,9 @@ interface Props {
   onSelectCliente: (id: string) => void;
   onSelectGroup: (id: string) => void;
   onSelectCirculo: (id: string) => void;
+  onCreateCliente: () => void;
+  onCreateGroup: () => void;
+  onCreateCirculo: () => void;
 }
 
 const STATUS_STYLE: Record<string, { label: string; dot: string }> = {
@@ -41,6 +45,9 @@ export function CabinePortalAbertura({
   onSelectCliente,
   onSelectGroup,
   onSelectCirculo,
+  onCreateCliente,
+  onCreateGroup,
+  onCreateCirculo,
 }: Props) {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
@@ -51,6 +58,16 @@ export function CabinePortalAbertura({
       const order = { precisa_atencao: 0, ativo: 1, sem_historico: 2 };
       return (order[a.statusCabine] ?? 3) - (order[b.statusCabine] ?? 3);
     });
+
+  const createLabel = operationMode === 'individual' ? '+ Nova Cliente'
+    : operationMode === 'grupo' ? '+ Novo Grupo'
+    : '+ Novo Círculo';
+
+  const handleCreate = () => {
+    if (operationMode === 'individual') onCreateCliente();
+    else if (operationMode === 'grupo') onCreateGroup();
+    else onCreateCirculo();
+  };
 
   return (
     <div className="min-h-[calc(100vh-8rem)] flex flex-col items-center justify-center px-4">
@@ -88,6 +105,18 @@ export function CabinePortalAbertura({
 
       {/* Content area */}
       <div className="w-full max-w-lg">
+        {/* Create button — always visible */}
+        <div className="mb-4">
+          <Button
+            variant="outline"
+            onClick={handleCreate}
+            className="w-full h-11 border-dashed border-border/30 text-muted-foreground hover:text-primary hover:border-primary/30 gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            {createLabel}
+          </Button>
+        </div>
+
         {/* INDIVIDUAL MODE */}
         {operationMode === 'individual' && (
           <div className="space-y-2">
