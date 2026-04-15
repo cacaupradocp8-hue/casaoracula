@@ -229,7 +229,7 @@ export default function CabineTerapeutaPage() {
           estado_campo: leituraCampo.estado,
           direcao_conducao: leituraCampo.direcao,
           risco: leituraCampo.risco,
-          estagio: currentStage?.stage || null,
+          estagio: currentStage?.stage || undefined,
           tensao_ativa: null,
           ferramenta_utilizada: sessionData.ferramentaEscolhida || null,
           ritmo_travessia: mapaVivoState?.ritmo_atual || null,
@@ -239,7 +239,7 @@ export default function CabineTerapeutaPage() {
             mapaVivoState || null,
             sessionData.resumoSessao
           ),
-        });
+        } as any);
       }
 
       setMode('integracao');

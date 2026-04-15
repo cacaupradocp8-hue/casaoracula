@@ -5,6 +5,7 @@ import { Switch } from '@/components/ui/switch';
 import { Ear, RefreshCw, Pause, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/dal/dbClient';
 import type { LeituraCampo } from '@/lib/cabine/motorOracular';
+import type { SessionStageResult } from '@/lib/cabine/motorSessao';
 
 type SussurroEstado = 'observando' | 'sugestao_ativa' | 'pausa';
 
@@ -13,6 +14,7 @@ interface Props {
   sessionActive: boolean;
   checkinTexto?: string;
   anotacoes?: string;
+  sessionStage?: SessionStageResult | null;
 }
 
 const SUSSURRO_ESTADO_LABELS: Record<SussurroEstado, string> = {
@@ -21,11 +23,14 @@ const SUSSURRO_ESTADO_LABELS: Record<SussurroEstado, string> = {
   pausa: 'Pausado',
 };
 
-export function CabineSussurro({ leitura, sessionActive, checkinTexto, anotacoes }: Props) {
+export function CabineSussurro({ leitura, sessionActive, checkinTexto, anotacoes, sessionStage }: Props) {
   const [ativo, setAtivo] = useState(false);
   const [estado, setEstado] = useState<SussurroEstado>('observando');
   const [mensagem, setMensagem] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Auto-activate on stage transitions or risk
+  const shouldAutoShow = sessionStage?.sussurro_ativo ?? false;
 
   const solicitarSussurro = useCallback(async () => {
     if (!leitura) return;
@@ -41,6 +46,7 @@ export function CabineSussurro({ leitura, sessionActive, checkinTexto, anotacoes
             risco: leitura.risco,
             checkin: checkinTexto || null,
             anotacoes: anotacoes || null,
+            estagio_sessao: sessionStage?.stage || null,
           },
         },
       });
@@ -53,7 +59,7 @@ export function CabineSussurro({ leitura, sessionActive, checkinTexto, anotacoes
     } finally {
       setLoading(false);
     }
-  }, [leitura, checkinTexto, anotacoes]);
+  }, [leitura, checkinTexto, anotacoes, sessionStage]);
 
   const pausar = () => {
     setEstado('pausa');
@@ -75,7 +81,7 @@ export function CabineSussurro({ leitura, sessionActive, checkinTexto, anotacoes
             </div>
           </div>
           <Switch
-            checked={ativo}
+            checked={ativo || shouldAutoShow}
             onCheckedChange={(checked) => {
               setAtivo(checked);
               if (!checked) { setEstado('observando'); setMensagem(null); }
@@ -90,7 +96,25 @@ export function CabineSussurro({ leitura, sessionActive, checkinTexto, anotacoes
           </p>
         )}
 
-        {ativo && sessionActive && (
+        {/* Auto-trigger hint */}
+        {shouldAutoShow && !mensagem && sessionActive && (
+          <div className="p-2 rounded-md bg-amber-500/5 border border-amber-500/10">
+            <p className="text-[9px] text-amber-400/70 italic">
+              {sessionStage?.sussurro_motivo || 'Momento de atenção'}
+            </p>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full text-[10px] h-6 mt-1 text-amber-400/60"
+              onClick={solicitarSussurro}
+              disabled={loading}
+            >
+              Ouvir sussurro
+            </Button>
+          </div>
+        )}
+
+        {(ativo || shouldAutoShow) && sessionActive && (
           <>
             <div className="flex items-center justify-between">
               <span className="text-[9px] text-muted-foreground/40 italic">
@@ -129,7 +153,7 @@ export function CabineSussurro({ leitura, sessionActive, checkinTexto, anotacoes
               </div>
             )}
 
-            {estado === 'observando' && !mensagem && (
+            {estado === 'observando' && !mensagem && !shouldAutoShow && (
               <Button
                 variant="ghost"
                 size="sm"
