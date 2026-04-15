@@ -21,6 +21,8 @@ export interface ClienteComStatus {
   nome: string;
   status: string;
   client_user_id: string | null;
+  has_initial_cartography: boolean;
+  has_initial_cidadela: boolean;
   lastSessionDate: string | null;
   statusCabine: 'ativo' | 'precisa_atencao' | 'sem_historico';
 }
