@@ -4,6 +4,9 @@ import { Users, AlertTriangle, Loader2, Waves, Shield, Lightbulb, Pause } from '
 import { useTherapeuticGroups, type GroupParticipant } from '@/hooks/useTherapeuticGroups';
 import { supabase } from '@/lib/dal/dbClient';
 import { calcularLeituraCampoColetivo, type LeituraCampoColetivo, type RegistroInput } from '@/lib/cabine/motorLeituraColetiva';
+import { avaliarCondutaColetiva, type DecisaoCampoColetivo } from '@/lib/cabine/decisaoCampoColetivo';
+import { useFieldSnapshot } from '@/hooks/useFieldSnapshot';
+import { BlocoDecisaoCampo } from './BlocoDecisaoCampo';
 import type { ClimaMovimento } from '@/types/jardim-grupo';
 import { cn } from '@/lib/utils';
 
@@ -28,9 +31,11 @@ const TENSAO_LABELS: Record<string, string> = {
 
 export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
   const { fetchGroupParticipants } = useTherapeuticGroups();
+  const { salvarSnapshotGrupo } = useFieldSnapshot();
   const [participants, setParticipants] = useState<GroupParticipant[]>([]);
   const [loading, setLoading] = useState(false);
   const [leitura, setLeitura] = useState<LeituraCampoColetivo | null>(null);
+  const [decisao, setDecisao] = useState<DecisaoCampoColetivo | null>(null);
 
   useEffect(() => {
     if (!groupId) return;
@@ -62,7 +67,13 @@ export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
       }));
 
       const resultado = calcularLeituraCampoColetivo(registrosFormatados, p.length);
+      const dec = avaliarCondutaColetiva(resultado);
       setLeitura(resultado);
+      setDecisao(dec);
+
+      // Salvar snapshot automaticamente
+      salvarSnapshotGrupo(groupId, resultado, dec);
+
       setLoading(false);
     });
   }, [groupId]);
@@ -172,6 +183,9 @@ export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
               </div>
             </CardContent>
           </Card>
+
+          {/* Decisão do Campo */}
+          {decisao && <BlocoDecisaoCampo decisao={decisao} />}
 
           {/* Sugestão de Intervenção */}
           <Card className="border-border/20 bg-card/40">

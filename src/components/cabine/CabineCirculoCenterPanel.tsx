@@ -3,6 +3,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { CircleDot, Sparkles, BookOpen, HelpCircle, Hand, Waves, AlertTriangle, Pause, Loader2 } from 'lucide-react';
 import type { CirculoSagrado } from '@/hooks/useCirculosSagrados';
 import { calcularLeituraSimbolica, type LeituraSimbolica, type CirculoEncounterInput } from '@/lib/cabine/motorLeituraSimbolica';
+import { avaliarCondutaCirculo, type DecisaoCampoColetivo } from '@/lib/cabine/decisaoCampoColetivo';
+import { useFieldSnapshot } from '@/hooks/useFieldSnapshot';
+import { BlocoDecisaoCampo } from './BlocoDecisaoCampo';
 import { supabase } from '@/lib/dal/dbClient';
 import { cn } from '@/lib/utils';
 
@@ -36,6 +39,8 @@ export function CabineCirculoCenterPanel({ circulo }: Props) {
       });
   }, [circulo?.id]);
 
+  const { salvarSnapshotCirculo } = useFieldSnapshot();
+
   const leitura = useMemo<LeituraSimbolica | null>(() => {
     if (!circulo) return null;
     return calcularLeituraSimbolica({
@@ -46,6 +51,18 @@ export function CabineCirculoCenterPanel({ circulo }: Props) {
       encontros_recentes: encounters,
     });
   }, [circulo, encounters]);
+
+  const decisao = useMemo<DecisaoCampoColetivo | null>(() => {
+    if (!leitura) return null;
+    return avaliarCondutaCirculo(leitura);
+  }, [leitura]);
+
+  // Salvar snapshot quando leitura muda
+  useEffect(() => {
+    if (circulo?.id && leitura && decisao) {
+      salvarSnapshotCirculo(circulo.id, leitura, decisao);
+    }
+  }, [circulo?.id, leitura, decisao]);
 
   if (!circulo) {
     return (
@@ -177,6 +194,9 @@ export function CabineCirculoCenterPanel({ circulo }: Props) {
               </CardContent>
             </Card>
           )}
+
+          {/* Decisão do Campo */}
+          {decisao && <BlocoDecisaoCampo decisao={decisao} />}
 
           {/* Sugestões de Condução */}
           <Card className="border-border/20 bg-card/40">

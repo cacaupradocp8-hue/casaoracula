@@ -10323,6 +10323,75 @@ export type Database = {
           },
         ]
       }
+      group_field_snapshots: {
+        Row: {
+          circulo_id: string | null
+          created_at: string
+          direcao: string
+          estado_campo: string
+          frase_simbolica: string | null
+          group_id: string | null
+          id: string
+          mode: string
+          nivel_intervencao: string
+          padrao: string | null
+          pode_aprofundar: boolean
+          recomendacao: string | null
+          risco: string
+          tensao: string | null
+          therapist_id: string
+        }
+        Insert: {
+          circulo_id?: string | null
+          created_at?: string
+          direcao: string
+          estado_campo: string
+          frase_simbolica?: string | null
+          group_id?: string | null
+          id?: string
+          mode?: string
+          nivel_intervencao?: string
+          padrao?: string | null
+          pode_aprofundar?: boolean
+          recomendacao?: string | null
+          risco?: string
+          tensao?: string | null
+          therapist_id: string
+        }
+        Update: {
+          circulo_id?: string | null
+          created_at?: string
+          direcao?: string
+          estado_campo?: string
+          frase_simbolica?: string | null
+          group_id?: string | null
+          id?: string
+          mode?: string
+          nivel_intervencao?: string
+          padrao?: string | null
+          pode_aprofundar?: boolean
+          recomendacao?: string | null
+          risco?: string
+          tensao?: string | null
+          therapist_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_field_snapshots_circulo_id_fkey"
+            columns: ["circulo_id"]
+            isOneToOne: false
+            referencedRelation: "circulos_sagrados"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_field_snapshots_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "therapeutic_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       group_members: {
         Row: {
           client_id: string
