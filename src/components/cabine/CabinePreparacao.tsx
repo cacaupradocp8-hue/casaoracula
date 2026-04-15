@@ -67,35 +67,24 @@ export function CabinePreparacao({ cliente, profile, profileLoading, leituraCamp
             <div className="text-center py-6 space-y-3">
               <AlertCircle className="w-8 h-8 text-muted-foreground/30 mx-auto" />
               <p className="text-xs text-muted-foreground/60">Nenhuma leitura de condução disponível para esta cliente.</p>
-              <div className="flex gap-2 justify-center">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-xs"
-                  onClick={() => navigate('/casa-das-maquinas/ferramentas/cartografia')}
-                >
-                  Criar leitura agora
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-xs text-muted-foreground"
-                  onClick={() => onStartSession(true)}
-                >
-                  Iniciar sem leitura
-                </Button>
-              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs"
+                onClick={() => navigate('/casa-das-maquinas/ferramentas/cartografia')}
+              >
+                Criar leitura agora
+              </Button>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* Botão principal */}
-      {(profile || profileLoading) && (
+      {/* Botão principal — só aparece se há leitura */}
+      {leituraCampo && (
         <Button
-          onClick={() => onStartSession(!profile)}
+          onClick={() => onStartSession(false)}
           className="w-full h-12 text-sm font-display font-semibold bg-primary hover:bg-primary/80 text-primary-foreground gap-2"
-          disabled={profileLoading}
         >
           <Play className="w-4 h-4" />
           Iniciar Sessão
