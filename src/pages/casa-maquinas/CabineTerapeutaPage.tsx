@@ -6,12 +6,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { CasaMaquinasLayout } from '@/components/casa-maquinas/CasaMaquinasLayout';
 import { CabineClientesList } from '@/components/cabine/CabineClientesList';
 import { CabinePreparacao } from '@/components/cabine/CabinePreparacao';
-import { CabineSessao } from '@/components/cabine/CabineSessao';
+import { CabineSessaoViva } from '@/components/cabine/CabineSessaoViva';
 import { CabineIntegracao } from '@/components/cabine/CabineIntegracao';
 import { CabineSintheya } from '@/components/cabine/CabineSintheya';
 import { CabineSussurro } from '@/components/cabine/CabineSussurro';
 import { calcularLeituraCampo, type LeituraCampo } from '@/lib/cabine/motorOracular';
-import { gerarMensagemJardim, type SessionStageResult } from '@/lib/cabine/motorSessao';
+import { gerarMensagemJardimVivo, type FluxoClinicoResult } from '@/lib/cabine/motorSessaoVivo';
 import { Loader2 } from 'lucide-react';
 
 export type CabineMode = 'preparacao' | 'sessao' | 'integracao';
