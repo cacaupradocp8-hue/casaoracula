@@ -39,6 +39,8 @@ export function CabineCirculoCenterPanel({ circulo }: Props) {
       });
   }, [circulo?.id]);
 
+  const { salvarSnapshotCirculo } = useFieldSnapshot();
+
   const leitura = useMemo<LeituraSimbolica | null>(() => {
     if (!circulo) return null;
     return calcularLeituraSimbolica({
@@ -49,6 +51,18 @@ export function CabineCirculoCenterPanel({ circulo }: Props) {
       encontros_recentes: encounters,
     });
   }, [circulo, encounters]);
+
+  const decisao = useMemo<DecisaoCampoColetivo | null>(() => {
+    if (!leitura) return null;
+    return avaliarCondutaCirculo(leitura);
+  }, [leitura]);
+
+  // Salvar snapshot quando leitura muda
+  useEffect(() => {
+    if (circulo?.id && leitura && decisao) {
+      salvarSnapshotCirculo(circulo.id, leitura, decisao);
+    }
+  }, [circulo?.id, leitura, decisao]);
 
   if (!circulo) {
     return (
