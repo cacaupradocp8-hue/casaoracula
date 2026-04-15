@@ -14,7 +14,7 @@ export function MapaVivoRitmo({ ritmo }: Props) {
       <CardHeader className="pb-2">
         <CardTitle className="text-sm flex items-center gap-2">
           <Activity className="w-4 h-4 text-muted-foreground" />
-          Ritmo da Travessia
+          Tempo da Travessia
         </CardTitle>
       </CardHeader>
       <CardContent>

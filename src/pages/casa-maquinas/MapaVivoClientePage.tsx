@@ -90,7 +90,7 @@ export default function MapaVivoClientePage() {
 
         <SectionHeader
           title={`Mapa Vivo — ${clienteNome}`}
-          subtitle="Memória longitudinal do processo terapêutico"
+          subtitle="Motor de decisão clínica e memória da travessia"
           icon={<Map className="w-5 h-5" />}
           action={
             <Button
