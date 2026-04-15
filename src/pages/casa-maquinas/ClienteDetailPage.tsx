@@ -23,13 +23,13 @@ import { RitualIntegracao } from '@/components/casa-maquinas/ritual-integracao/R
 import { CartografiaPsiquicaOracula } from '@/components/casa-maquinas/cartografia-psiquica/CartografiaPsiquicaOracula';
 import { RelatorioJornadaPage } from '@/components/casa-maquinas/relatorio-jornada/RelatorioJornadaPage';
 import { BussolaCartografa } from '@/components/casa-maquinas/bussola-cartografa/BussolaCartografa';
-import { PainelConducaoSessao } from '@/components/casa-maquinas/painel-conducao/PainelConducaoSessao';
+
 import { PerfilSimbolicoCliente } from '@/components/casa-maquinas/painel-conducao/PerfilSimbolicoCliente';
 import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
 import { ClienteJardimHeroinaTab } from '@/components/casa-maquinas/ClienteJardimHeroinaTab';
 import { ClienteAtividadeJardim } from '@/components/casa-maquinas/ClienteAtividadeJardim';
 import { Button } from '@/components/ui/button';
-import { Loader2, Play } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 export default function ClienteDetailPage() {
   const { clienteId } = useParams<{ clienteId: string }>();
