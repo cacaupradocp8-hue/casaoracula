@@ -65,8 +65,8 @@ Anotações: ${context.anotacoes || "nenhuma"}.
 Ferramenta: ${context.ferramenta || "nenhuma"}.`;
 
     // Use Lovable AI Gateway
-    const gatewayUrl = Deno.env.get("AI_GATEWAY_URL") || "https://aig.lovable.dev/v1/chat/completions";
-    const gatewayKey = Deno.env.get("AI_GATEWAY_API_KEY") || Deno.env.get("LOVABLE_API_KEY");
+    const gatewayUrl = "https://ai.gateway.lovable.dev/v1/chat/completions";
+    const gatewayKey = Deno.env.get("LOVABLE_API_KEY");
 
     if (!gatewayKey) {
       return new Response(JSON.stringify({ error: "AI Gateway não configurado" }), {
