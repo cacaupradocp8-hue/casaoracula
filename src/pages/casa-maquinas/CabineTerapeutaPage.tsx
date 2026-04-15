@@ -11,13 +11,13 @@ import { CabineGrupoCenterPanel } from '@/components/cabine/CabineGrupoCenterPan
 import { CabineCirculoCenterPanel } from '@/components/cabine/CabineCirculoCenterPanel';
 import { CabineSintheya } from '@/components/cabine/CabineSintheya';
 import { CabineSussurro } from '@/components/cabine/CabineSussurro';
+import { CabineCreateModals } from '@/components/cabine/CabineCreateModals';
 import type { CabineOperationMode } from '@/components/cabine/CabineModeSelector';
 import { useTherapeuticGroups, type TherapeuticGroup } from '@/hooks/useTherapeuticGroups';
 import { useCirculosSagrados, type CirculoSagrado } from '@/hooks/useCirculosSagrados';
 import { calcularLeituraCampo, type LeituraCampo } from '@/lib/cabine/motorOracular';
 import { gerarMensagemJardimVivo, type FluxoClinicoResult } from '@/lib/cabine/motorSessaoVivo';
 import { Loader2, ArrowLeft } from 'lucide-react';
-
 export type CabineMode = 'preparacao' | 'sessao' | 'integracao';
 
 export interface ClienteComStatus {
