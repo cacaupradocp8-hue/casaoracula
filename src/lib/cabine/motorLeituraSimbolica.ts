@@ -1,27 +1,27 @@
 /**
  * MOTOR DE LEITURA SIMBÓLICA — Campo do Círculo de Mulheres
  * 
- * Diferenciação fundamental: Círculo NÃO é grupo terapêutico.
- * Círculo opera por rituais, arquétipos e condução simbólica.
- * 
- * Deriva sugestões de:
- * - Conto para abertura
- * - Pergunta de abertura
- * - Gesto ritual
- * - Estado simbólico do campo
+ * Círculo NÃO é grupo terapêutico.
+ * Opera por rituais, arquétipos e condução simbólica.
  * 
  * Regras puramente determinísticas, sem IA.
  */
 
 // ── Tipos ────────────────────────────────────────────────
 
-export type EstadoSimbolico =
-  | 'campo_aberto'
-  | 'campo_denso'
-  | 'campo_leve'
-  | 'campo_em_gestacao'
-  | 'campo_ritual_ativo'
-  | 'campo_novo';
+export type EstadoCirculo =
+  | 'circulo_em_abertura_ritual'
+  | 'circulo_em_recolhimento'
+  | 'circulo_em_ativacao_simbolica'
+  | 'circulo_em_travessia'
+  | 'circulo_em_integracao';
+
+export type DirecaoCirculo =
+  | 'abrir_narrativa'
+  | 'sustentar_escuta'
+  | 'ativar_simbolo'
+  | 'conter_intensidade'
+  | 'fechar_com_gesto_ritual';
 
 export interface SugestaoConducaoCirculo {
   conto_sugerido: string;
@@ -30,18 +30,31 @@ export interface SugestaoConducaoCirculo {
 }
 
 export interface LeituraSimbolica {
-  estado_simbolico: EstadoSimbolico;
+  estado_circulo: EstadoCirculo;
+  direcao_ritual: DirecaoCirculo;
   mensagem_campo: string;
+  mensagem_direcao: string;
   sugestoes: SugestaoConducaoCirculo;
   distritos_em_jogo: string[];
   frase_ritual: string | null;
+  risco_coletivo: 'baixo' | 'moderado' | 'elevado';
+  permanencia: string | null;
 }
 
-interface CirculoInput {
+export interface CirculoInput {
   nome_circulo: string;
   ritual_base: string;
   distritos_ativados: string[];
   participantes_count: number;
+  // Dados opcionais de encontros recentes
+  encontros_recentes?: CirculoEncounterInput[];
+}
+
+export interface CirculoEncounterInput {
+  theme: string | null;
+  archetype_worked: string | null;
+  notes: string | null;
+  date: string;
 }
 
 // ── Banco de Contos ──────────────────────────────────────
@@ -129,28 +142,54 @@ const GESTOS_GENERICOS = [
   'Respiração coletiva: três inspirações longas e compartilhadas.',
 ];
 
+// ── Mensagens ────────────────────────────────────────────
+
+const MENSAGENS_ESTADO: Record<EstadoCirculo, string> = {
+  circulo_em_abertura_ritual: 'O círculo se abre. O campo pede inauguração com presença e ritual.',
+  circulo_em_recolhimento: 'O círculo recolhe-se. Sustente a escuta sem preencher.',
+  circulo_em_ativacao_simbolica: 'Símbolos emergem no campo. Momento de ativação e nomeação.',
+  circulo_em_travessia: 'O círculo atravessa algo profundo. Acompanhar sem acelerar.',
+  circulo_em_integracao: 'Integração em curso. O gesto de fechamento se aproxima.',
+};
+
+const MENSAGENS_DIRECAO: Record<DirecaoCirculo, string> = {
+  abrir_narrativa: 'Abrir narrativa — usar conto ou pergunta para inaugurar o campo.',
+  sustentar_escuta: 'Sustentar escuta — o círculo precisa de presença, não de interpretação.',
+  ativar_simbolo: 'Ativar símbolo — trazer imagem, gesto ou objeto ao centro.',
+  conter_intensidade: 'Conter intensidade — reduzir o ritmo, respirar antes de avançar.',
+  fechar_com_gesto_ritual: 'Fechar com gesto ritual — o campo pede encerramento simbólico.',
+};
+
 // ── Motor Principal ──────────────────────────────────────
 
 export function calcularLeituraSimbolica(circulo: CirculoInput): LeituraSimbolica {
-  const { ritual_base, distritos_ativados, participantes_count } = circulo;
+  const { ritual_base, distritos_ativados, participantes_count, encontros_recentes } = circulo;
 
   // Estado simbólico
-  const estado = derivarEstadoSimbolico(distritos_ativados, participantes_count);
+  const estado = derivarEstadoCirculo(distritos_ativados, participantes_count, encontros_recentes);
+
+  // Direção
+  const direcao = derivarDirecaoCirculo(estado, distritos_ativados);
+
+  // Risco
+  const risco = derivarRiscoCirculo(estado, distritos_ativados);
+
+  // Permanência
+  const permanencia = derivarPermanenciaCirculo(estado);
 
   // Sugestões
   const conto = escolherConto(distritos_ativados);
   const pergunta = escolherPergunta(distritos_ativados);
   const gesto = escolherGesto(ritual_base);
 
-  // Mensagem
-  const mensagem = gerarMensagemCampo(estado, distritos_ativados);
-
   // Frase ritual
-  const frase = gerarFraseRitual(ritual_base, distritos_ativados);
+  const frase = gerarFraseRitual(distritos_ativados);
 
   return {
-    estado_simbolico: estado,
-    mensagem_campo: mensagem,
+    estado_circulo: estado,
+    direcao_ritual: direcao,
+    mensagem_campo: MENSAGENS_ESTADO[estado],
+    mensagem_direcao: MENSAGENS_DIRECAO[direcao],
     sugestoes: {
       conto_sugerido: conto,
       pergunta_abertura: pergunta,
@@ -158,29 +197,80 @@ export function calcularLeituraSimbolica(circulo: CirculoInput): LeituraSimbolic
     },
     distritos_em_jogo: distritos_ativados,
     frase_ritual: frase,
+    risco_coletivo: risco,
+    permanencia,
   };
 }
 
 // ── Derivações ───────────────────────────────────────────
 
-function derivarEstadoSimbolico(
+function derivarEstadoCirculo(
   distritos: string[],
   participantes: number,
-): EstadoSimbolico {
-  if (distritos.length === 0) return 'campo_novo';
-  if (distritos.includes('Território da Sombra')) return 'campo_denso';
-  if (distritos.includes('Portas do Corpo') && participantes <= 5) return 'campo_em_gestacao';
-  if (distritos.length >= 3) return 'campo_ritual_ativo';
-  if (distritos.includes('Jardim dos Vínculos')) return 'campo_leve';
-  return 'campo_aberto';
+  encontros?: CirculoEncounterInput[],
+): EstadoCirculo {
+  if (!encontros?.length && distritos.length === 0) return 'circulo_em_abertura_ritual';
+
+  // Se temos encontros recentes, analisar notas
+  if (encontros?.length) {
+    const notasRecentes = encontros.slice(0, 3).map(e => e.notes).filter(Boolean).join(' ').toLowerCase();
+    if (['intenso', 'choro', 'colapso', 'pesado', 'transbord'].some(k => notasRecentes.includes(k))) {
+      return 'circulo_em_recolhimento';
+    }
+    if (['integr', 'síntese', 'fechamento', 'encerr'].some(k => notasRecentes.includes(k))) {
+      return 'circulo_em_integracao';
+    }
+  }
+
+  if (distritos.includes('Território da Sombra')) return 'circulo_em_travessia';
+  if (distritos.length >= 3) return 'circulo_em_ativacao_simbolica';
+  if (distritos.includes('Portas do Corpo') && participantes <= 5) return 'circulo_em_recolhimento';
+  if (distritos.length === 0) return 'circulo_em_abertura_ritual';
+
+  return 'circulo_em_ativacao_simbolica';
+}
+
+function derivarDirecaoCirculo(
+  estado: EstadoCirculo,
+  distritos: string[],
+): DirecaoCirculo {
+  const map: Record<EstadoCirculo, DirecaoCirculo> = {
+    circulo_em_abertura_ritual: 'abrir_narrativa',
+    circulo_em_recolhimento: 'sustentar_escuta',
+    circulo_em_ativacao_simbolica: 'ativar_simbolo',
+    circulo_em_travessia: 'sustentar_escuta',
+    circulo_em_integracao: 'fechar_com_gesto_ritual',
+  };
+  // Override: sombra + travessia pode precisar de contenção
+  if (estado === 'circulo_em_travessia' && distritos.includes('Território da Sombra')) {
+    return 'conter_intensidade';
+  }
+  return map[estado];
+}
+
+function derivarRiscoCirculo(
+  estado: EstadoCirculo,
+  distritos: string[],
+): 'baixo' | 'moderado' | 'elevado' {
+  if (estado === 'circulo_em_travessia' && distritos.includes('Território da Sombra')) return 'elevado';
+  if (estado === 'circulo_em_recolhimento') return 'moderado';
+  if (estado === 'circulo_em_travessia') return 'moderado';
+  return 'baixo';
+}
+
+function derivarPermanenciaCirculo(estado: EstadoCirculo): string | null {
+  const map: Partial<Record<EstadoCirculo, string>> = {
+    circulo_em_recolhimento: 'O círculo precisa de acolhimento antes de avançar.',
+    circulo_em_travessia: 'A travessia está em curso. Não interrompa o processo.',
+    circulo_em_integracao: 'A integração precisa de tempo. Não abra novo campo agora.',
+  };
+  return map[estado] ?? null;
 }
 
 function escolherConto(distritos: string[]): string {
   for (const d of distritos) {
     const contos = CONTOS_POR_DISTRITO[d];
-    if (contos?.length) {
-      return contos[Math.floor(Math.random() * contos.length)];
-    }
+    if (contos?.length) return contos[Math.floor(Math.random() * contos.length)];
   }
   return CONTOS_GENERICOS[Math.floor(Math.random() * CONTOS_GENERICOS.length)];
 }
@@ -188,43 +278,23 @@ function escolherConto(distritos: string[]): string {
 function escolherPergunta(distritos: string[]): string {
   for (const d of distritos) {
     const perguntas = PERGUNTAS_POR_DISTRITO[d];
-    if (perguntas?.length) {
-      return perguntas[Math.floor(Math.random() * perguntas.length)];
-    }
+    if (perguntas?.length) return perguntas[Math.floor(Math.random() * perguntas.length)];
   }
   return PERGUNTAS_GENERICAS[Math.floor(Math.random() * PERGUNTAS_GENERICAS.length)];
 }
 
 function escolherGesto(ritual_base: string): string {
   const gestos = GESTOS_POR_RITUAL[ritual_base];
-  if (gestos?.length) {
-    return gestos[Math.floor(Math.random() * gestos.length)];
-  }
+  if (gestos?.length) return gestos[Math.floor(Math.random() * gestos.length)];
   return GESTOS_GENERICOS[Math.floor(Math.random() * GESTOS_GENERICOS.length)];
 }
 
-function gerarMensagemCampo(estado: EstadoSimbolico, distritos: string[]): string {
-  const msgs: Record<EstadoSimbolico, string> = {
-    campo_novo: 'O campo ainda não foi inaugurado. O primeiro encontro definirá o tom.',
-    campo_aberto: 'O campo está aberto e receptivo. Espaço para emergência.',
-    campo_denso: 'O campo carrega densidade. Cuidado com a profundidade — acolher sem forçar.',
-    campo_leve: 'Leveza no campo. Bom momento para escuta e partilha.',
-    campo_em_gestacao: 'Algo está se formando. O campo pede tempo antes de nomear.',
-    campo_ritual_ativo: 'Múltiplos distritos ativados. O ritual ganha complexidade e profundidade.',
-  };
-  return msgs[estado];
-}
-
-function gerarFraseRitual(ritual: string, distritos: string[]): string | null {
-  if (!ritual && distritos.length === 0) return null;
-  if (distritos.includes('Território da Sombra')) {
-    return 'O que está no escuro pede não luz, mas presença.';
-  }
-  if (distritos.includes('Torres da Identidade')) {
-    return 'Nomear-se é o primeiro ritual de quem decide existir.';
-  }
-  if (distritos.includes('Portas do Corpo')) {
-    return 'O corpo lembra o que a mente ainda não formulou.';
-  }
+function gerarFraseRitual(distritos: string[]): string | null {
+  if (distritos.length === 0) return null;
+  if (distritos.includes('Território da Sombra')) return 'O que está no escuro pede não luz, mas presença.';
+  if (distritos.includes('Torres da Identidade')) return 'Nomear-se é o primeiro ritual de quem decide existir.';
+  if (distritos.includes('Portas do Corpo')) return 'O corpo lembra o que a mente ainda não formulou.';
+  if (distritos.includes('Jardim dos Vínculos')) return 'O vínculo cresce quando a verdade pode ser dita.';
+  if (distritos.includes('Labirinto Interior')) return 'No centro do labirinto, a pergunta é mais importante que a resposta.';
   return 'O círculo sustenta o que nenhuma mulher sustentaria sozinha.';
 }

@@ -1,14 +1,41 @@
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { CircleDot, Sparkles, BookOpen, HelpCircle, Hand, Waves } from 'lucide-react';
+import { CircleDot, Sparkles, BookOpen, HelpCircle, Hand, Waves, AlertTriangle, Pause, Loader2 } from 'lucide-react';
 import type { CirculoSagrado } from '@/hooks/useCirculosSagrados';
-import { calcularLeituraSimbolica, type LeituraSimbolica } from '@/lib/cabine/motorLeituraSimbolica';
+import { calcularLeituraSimbolica, type LeituraSimbolica, type CirculoEncounterInput } from '@/lib/cabine/motorLeituraSimbolica';
+import { supabase } from '@/lib/dal/dbClient';
+import { cn } from '@/lib/utils';
 
 interface Props {
   circulo: CirculoSagrado | null;
 }
 
+const RISCO_STYLES: Record<string, { bg: string; text: string; icon: string }> = {
+  baixo: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', icon: '🟢' },
+  moderado: { bg: 'bg-amber-500/10', text: 'text-amber-400', icon: '🟡' },
+  elevado: { bg: 'bg-red-500/10', text: 'text-red-400', icon: '🔴' },
+};
+
 export function CabineCirculoCenterPanel({ circulo }: Props) {
+  const [encounters, setEncounters] = useState<CirculoEncounterInput[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch group_encounters if circulo has an associated group
+  useEffect(() => {
+    if (!circulo) return;
+    // Try to find encounters linked to this circulo via group_encounters
+    setLoading(true);
+    supabase
+      .from('group_encounters')
+      .select('theme, archetype_worked, notes, date')
+      .order('date', { ascending: false })
+      .limit(5)
+      .then(({ data }) => {
+        setEncounters((data || []) as CirculoEncounterInput[]);
+        setLoading(false);
+      });
+  }, [circulo?.id]);
+
   const leitura = useMemo<LeituraSimbolica | null>(() => {
     if (!circulo) return null;
     return calcularLeituraSimbolica({
@@ -16,8 +43,9 @@ export function CabineCirculoCenterPanel({ circulo }: Props) {
       ritual_base: circulo.ritual_base,
       distritos_ativados: circulo.distritos_ativados || [],
       participantes_count: circulo.participantes_ids?.length || 0,
+      encontros_recentes: encounters,
     });
-  }, [circulo]);
+  }, [circulo, encounters]);
 
   if (!circulo) {
     return (
@@ -30,6 +58,16 @@ export function CabineCirculoCenterPanel({ circulo }: Props) {
     );
   }
 
+  if (loading) {
+    return (
+      <div className="flex justify-center py-16">
+        <Loader2 className="w-6 h-6 animate-spin text-primary/40" />
+      </div>
+    );
+  }
+
+  const riscoStyle = leitura ? RISCO_STYLES[leitura.risco_coletivo] : RISCO_STYLES.baixo;
+
   return (
     <div className="space-y-4">
       {/* Header simbólico */}
@@ -41,7 +79,7 @@ export function CabineCirculoCenterPanel({ circulo }: Props) {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-[10px] uppercase tracking-[0.2em] text-primary/70 font-semibold mb-1">
-                Inteligência Simbólica do Círculo
+                Inteligência do Campo Simbólico
               </p>
               <h3 className="text-base font-display font-semibold text-foreground">
                 {circulo.nome_circulo}
@@ -49,7 +87,6 @@ export function CabineCirculoCenterPanel({ circulo }: Props) {
             </div>
           </div>
 
-          {/* Ritual base + distritos */}
           <div className="p-3 rounded-lg bg-background/30 border border-primary/10">
             <div className="flex items-start gap-2">
               <Sparkles className="w-4 h-4 text-primary/60 mt-0.5 shrink-0" />
@@ -78,21 +115,42 @@ export function CabineCirculoCenterPanel({ circulo }: Props) {
       {/* Leitura Simbólica */}
       {leitura && (
         <>
-          {/* Estado do campo */}
+          {/* Estado + Direção + Risco */}
           <Card className="border-border/20 bg-card/40">
             <CardContent className="p-4 space-y-3">
               <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 font-semibold">
                 Leitura do Campo Simbólico
               </p>
 
+              <div className="grid grid-cols-2 gap-2">
+                <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
+                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Estado do círculo</p>
+                  <p className="text-xs text-foreground/80 font-medium capitalize">
+                    {leitura.estado_circulo.replace(/circulo_em_/g, '').replace(/_/g, ' ')}
+                  </p>
+                </div>
+
+                <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
+                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Direção ritual</p>
+                  <p className="text-xs text-foreground/80 font-medium capitalize">
+                    {leitura.direcao_ritual.replace(/_/g, ' ')}
+                  </p>
+                </div>
+
+                <div className={cn('p-2.5 rounded-lg border border-border/10 col-span-2', riscoStyle.bg)}>
+                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Risco</p>
+                  <p className={cn('text-xs font-medium capitalize', riscoStyle.text)}>
+                    {riscoStyle.icon} {leitura.risco_coletivo}
+                  </p>
+                </div>
+              </div>
+
               <div className="p-3 rounded-lg bg-background/30 border border-primary/10">
                 <div className="flex items-start gap-2">
                   <Waves className="w-4 h-4 text-primary/60 mt-0.5 shrink-0" />
-                  <div className="space-y-1">
-                    <p className="text-[9px] text-primary/50 uppercase tracking-wider">
-                      {leitura.estado_simbolico.replace(/_/g, ' ')}
-                    </p>
+                  <div className="space-y-1.5">
                     <p className="text-sm text-foreground/90">{leitura.mensagem_campo}</p>
+                    <p className="text-xs text-muted-foreground/70 italic">{leitura.mensagem_direcao}</p>
                   </div>
                 </div>
               </div>
@@ -105,6 +163,21 @@ export function CabineCirculoCenterPanel({ circulo }: Props) {
             </CardContent>
           </Card>
 
+          {/* Permanência */}
+          {leitura.permanencia && (
+            <Card className="border-primary/15 bg-primary/5">
+              <CardContent className="p-4">
+                <div className="flex items-start gap-2">
+                  <Pause className="w-4 h-4 text-primary/60 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-[9px] text-primary/50 uppercase tracking-wider mb-0.5 font-semibold">Permanência</p>
+                    <p className="text-sm text-foreground/90 italic">{leitura.permanencia}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Sugestões de Condução */}
           <Card className="border-border/20 bg-card/40">
             <CardContent className="p-4 space-y-3">
@@ -113,7 +186,6 @@ export function CabineCirculoCenterPanel({ circulo }: Props) {
               </p>
 
               <div className="space-y-2">
-                {/* Conto */}
                 <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
                   <div className="flex items-start gap-2">
                     <BookOpen className="w-3.5 h-3.5 text-primary/50 mt-0.5" />
@@ -124,7 +196,6 @@ export function CabineCirculoCenterPanel({ circulo }: Props) {
                   </div>
                 </div>
 
-                {/* Pergunta */}
                 <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
                   <div className="flex items-start gap-2">
                     <HelpCircle className="w-3.5 h-3.5 text-primary/50 mt-0.5" />
@@ -135,7 +206,6 @@ export function CabineCirculoCenterPanel({ circulo }: Props) {
                   </div>
                 </div>
 
-                {/* Gesto */}
                 <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
                   <div className="flex items-start gap-2">
                     <Hand className="w-3.5 h-3.5 text-primary/50 mt-0.5" />

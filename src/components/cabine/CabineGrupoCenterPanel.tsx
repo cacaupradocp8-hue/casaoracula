@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Users, Activity, Compass, AlertTriangle, Loader2, Waves } from 'lucide-react';
+import { Users, AlertTriangle, Loader2, Waves, Shield, Lightbulb, Pause } from 'lucide-react';
 import { useTherapeuticGroups, type GroupParticipant } from '@/hooks/useTherapeuticGroups';
 import { supabase } from '@/lib/dal/dbClient';
-import { calcularLeituraCampoColetivo, type LeituraCampoColetivo } from '@/lib/cabine/motorLeituraColetiva';
+import { calcularLeituraCampoColetivo, type LeituraCampoColetivo, type RegistroInput } from '@/lib/cabine/motorLeituraColetiva';
 import type { ClimaMovimento } from '@/types/jardim-grupo';
 import { cn } from '@/lib/utils';
 
@@ -16,6 +16,14 @@ const RISCO_STYLES: Record<string, { bg: string; text: string; icon: string }> =
   baixo: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', icon: '🟢' },
   moderado: { bg: 'bg-amber-500/10', text: 'text-amber-400', icon: '🟡' },
   elevado: { bg: 'bg-red-500/10', text: 'text-red-400', icon: '🔴' },
+};
+
+const TENSAO_LABELS: Record<string, string> = {
+  pertencimento_vs_autonomia: 'Pertencimento × Autonomia',
+  seguranca_vs_profundidade: 'Segurança × Profundidade',
+  expressao_vs_protecao: 'Expressão × Proteção',
+  vinculo_vs_individuacao: 'Vínculo × Individuação',
+  permanencia_vs_mudanca: 'Permanência × Mudança',
 };
 
 export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
@@ -35,12 +43,12 @@ export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
         .select('*')
         .eq('group_id', groupId)
         .order('data_registro', { ascending: false })
-        .limit(10)
+        .limit(5)
         .then(r => r.data || []),
     ]).then(([p, registros]) => {
       setParticipants(p);
 
-      const registrosFormatados = registros.map((r: any) => ({
+      const registrosFormatados: RegistroInput[] = registros.map((r: any) => ({
         clima_movimento: r.clima_movimento as ClimaMovimento | null,
         clima_descricao: r.clima_descricao,
         escuta_campo: r.escuta_campo,
@@ -99,7 +107,6 @@ export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
             </div>
           </div>
 
-          {/* Participantes */}
           <div className="flex flex-wrap gap-1.5">
             {participants.map(p => (
               <span
@@ -116,7 +123,7 @@ export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
       {/* Leitura do Campo Coletivo */}
       {leitura && (
         <>
-          {/* Estado + Direção */}
+          {/* Estado + Padrão + Direção + Risco */}
           <Card className="border-border/20 bg-card/40">
             <CardContent className="p-4 space-y-3">
               <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 font-semibold">
@@ -124,7 +131,6 @@ export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
               </p>
 
               <div className="grid grid-cols-2 gap-2">
-                {/* Estado */}
                 <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
                   <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Estado do campo</p>
                   <p className="text-xs text-foreground/80 font-medium capitalize">
@@ -132,23 +138,20 @@ export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
                   </p>
                 </div>
 
-                {/* Padrão */}
                 <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
                   <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Padrão predominante</p>
                   <p className="text-xs text-foreground/80 font-medium capitalize">
-                    {leitura.padrao_predominante_grupo.replace(/_/g, ' ')}
+                    {leitura.padrao_predominante.replace(/_/g, ' ')}
                   </p>
                 </div>
 
-                {/* Direção */}
                 <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
                   <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Direção de condução</p>
                   <p className="text-xs text-foreground/80 font-medium capitalize">
-                    {leitura.direcao_conducao_grupo.replace(/_/g, ' ')}
+                    {leitura.direcao_conducao.replace(/_/g, ' ')}
                   </p>
                 </div>
 
-                {/* Risco */}
                 <div className={cn('p-2.5 rounded-lg border border-border/10', riscoStyle.bg)}>
                   <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Risco coletivo</p>
                   <p className={cn('text-xs font-medium capitalize', riscoStyle.text)}>
@@ -169,6 +172,34 @@ export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
               </div>
             </CardContent>
           </Card>
+
+          {/* Sugestão de Intervenção */}
+          <Card className="border-border/20 bg-card/40">
+            <CardContent className="p-4">
+              <div className="flex items-start gap-2">
+                <Lightbulb className="w-4 h-4 text-amber-400/70 mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-[9px] text-amber-400/50 uppercase tracking-wider mb-0.5 font-semibold">Sugestão de intervenção</p>
+                  <p className="text-sm text-foreground/90">{leitura.sugestao_intervencao}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Permanência */}
+          {leitura.permanencia && (
+            <Card className="border-primary/15 bg-primary/5">
+              <CardContent className="p-4">
+                <div className="flex items-start gap-2">
+                  <Pause className="w-4 h-4 text-primary/60 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-[9px] text-primary/50 uppercase tracking-wider mb-0.5 font-semibold">Permanência</p>
+                    <p className="text-sm text-foreground/90 italic">{leitura.permanencia}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Alerta de Risco */}
           {leitura.alerta_risco && (
@@ -191,8 +222,13 @@ export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
               <CardContent className="p-4 space-y-3">
                 {leitura.tensao_coletiva && (
                   <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
-                    <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Tensão coletiva</p>
-                    <p className="text-xs text-foreground/80">{leitura.tensao_coletiva}</p>
+                    <div className="flex items-start gap-2">
+                      <Shield className="w-3.5 h-3.5 text-muted-foreground/50 mt-0.5" />
+                      <div>
+                        <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Tensão coletiva</p>
+                        <p className="text-xs text-foreground/80 font-medium">{TENSAO_LABELS[leitura.tensao_coletiva] || leitura.tensao_coletiva}</p>
+                      </div>
+                    </div>
                   </div>
                 )}
                 {leitura.frase_simbolica && (
