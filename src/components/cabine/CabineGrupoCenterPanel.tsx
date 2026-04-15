@@ -1,35 +1,60 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Users, Activity, Compass, Loader2 } from 'lucide-react';
+import { Users, Activity, Compass, AlertTriangle, Loader2, Waves } from 'lucide-react';
 import { useTherapeuticGroups, type GroupParticipant } from '@/hooks/useTherapeuticGroups';
 import { supabase } from '@/lib/dal/dbClient';
+import { calcularLeituraCampoColetivo, type LeituraCampoColetivo } from '@/lib/cabine/motorLeituraColetiva';
+import type { ClimaMovimento } from '@/types/jardim-grupo';
+import { cn } from '@/lib/utils';
 
 interface Props {
   groupId: string | null;
   groupName: string;
 }
 
+const RISCO_STYLES: Record<string, { bg: string; text: string; icon: string }> = {
+  baixo: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', icon: '🟢' },
+  moderado: { bg: 'bg-amber-500/10', text: 'text-amber-400', icon: '🟡' },
+  elevado: { bg: 'bg-red-500/10', text: 'text-red-400', icon: '🔴' },
+};
+
 export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
   const { fetchGroupParticipants } = useTherapeuticGroups();
   const [participants, setParticipants] = useState<GroupParticipant[]>([]);
   const [loading, setLoading] = useState(false);
-  const [lastRegistro, setLastRegistro] = useState<any>(null);
+  const [leitura, setLeitura] = useState<LeituraCampoColetivo | null>(null);
 
   useEffect(() => {
     if (!groupId) return;
     setLoading(true);
+
     Promise.all([
       fetchGroupParticipants(groupId),
       supabase
         .from('jardim_grupo_registros')
         .select('*')
         .eq('group_id', groupId)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .then(r => r.data?.[0] || null),
-    ]).then(([p, reg]) => {
+        .order('data_registro', { ascending: false })
+        .limit(10)
+        .then(r => r.data || []),
+    ]).then(([p, registros]) => {
       setParticipants(p);
-      setLastRegistro(reg);
+
+      const registrosFormatados = registros.map((r: any) => ({
+        clima_movimento: r.clima_movimento as ClimaMovimento | null,
+        clima_descricao: r.clima_descricao,
+        escuta_campo: r.escuta_campo,
+        movimentos_repetidos: r.movimentos_repetidos,
+        resistencias_grupais: r.resistencias_grupais,
+        fase_jornada_grupo: r.fase_jornada_grupo,
+        tema_simbolico: r.tema_simbolico,
+        frase_semente_grupo: r.frase_semente_grupo,
+        campo_fechado: r.campo_fechado ?? false,
+        data_registro: r.data_registro,
+      }));
+
+      const resultado = calcularLeituraCampoColetivo(registrosFormatados, p.length);
+      setLeitura(resultado);
       setLoading(false);
     });
   }, [groupId]);
@@ -53,6 +78,8 @@ export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
     );
   }
 
+  const riscoStyle = leitura ? RISCO_STYLES[leitura.risco_coletivo] : RISCO_STYLES.baixo;
+
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -64,7 +91,7 @@ export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-[10px] uppercase tracking-[0.2em] text-primary/70 font-semibold mb-1">
-                Campo Coletivo
+                Inteligência do Campo Coletivo
               </p>
               <h3 className="text-base font-display font-semibold text-foreground">
                 {groupName}
@@ -86,62 +113,98 @@ export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
         </CardContent>
       </Card>
 
-      {/* Último registro do Jardim do Grupo */}
-      {lastRegistro ? (
-        <Card className="border-border/20 bg-card/40">
-          <CardContent className="p-4 space-y-3">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 font-semibold">
-              Último Registro do Campo
-            </p>
+      {/* Leitura do Campo Coletivo */}
+      {leitura && (
+        <>
+          {/* Estado + Direção */}
+          <Card className="border-border/20 bg-card/40">
+            <CardContent className="p-4 space-y-3">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 font-semibold">
+                Leitura do Campo Coletivo
+              </p>
 
-            <div className="grid grid-cols-2 gap-2">
-              {lastRegistro.clima_movimento && (
+              <div className="grid grid-cols-2 gap-2">
+                {/* Estado */}
                 <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
-                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Clima</p>
-                  <p className="text-xs text-foreground/80 font-medium capitalize">{lastRegistro.clima_movimento}</p>
+                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Estado do campo</p>
+                  <p className="text-xs text-foreground/80 font-medium capitalize">
+                    {leitura.estado_campo_coletivo.replace(/_/g, ' ')}
+                  </p>
                 </div>
-              )}
-              {lastRegistro.tema_simbolico && (
-                <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
-                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Tema simbólico</p>
-                  <p className="text-xs text-foreground/80 font-medium">{lastRegistro.tema_simbolico}</p>
-                </div>
-              )}
-              {lastRegistro.fase_jornada_grupo && (
-                <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
-                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Fase da jornada</p>
-                  <p className="text-xs text-foreground/80 font-medium">{lastRegistro.fase_jornada_grupo}</p>
-                </div>
-              )}
-              {lastRegistro.frase_semente_grupo && (
-                <div className="col-span-2 p-2.5 rounded-lg bg-background/20 border border-border/10">
-                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Frase-semente</p>
-                  <p className="text-xs text-foreground/80 italic">"{lastRegistro.frase_semente_grupo}"</p>
-                </div>
-              )}
-            </div>
 
-            {lastRegistro.escuta_campo && (
+                {/* Padrão */}
+                <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
+                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Padrão predominante</p>
+                  <p className="text-xs text-foreground/80 font-medium capitalize">
+                    {leitura.padrao_predominante_grupo.replace(/_/g, ' ')}
+                  </p>
+                </div>
+
+                {/* Direção */}
+                <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
+                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Direção de condução</p>
+                  <p className="text-xs text-foreground/80 font-medium capitalize">
+                    {leitura.direcao_conducao_grupo.replace(/_/g, ' ')}
+                  </p>
+                </div>
+
+                {/* Risco */}
+                <div className={cn('p-2.5 rounded-lg border border-border/10', riscoStyle.bg)}>
+                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Risco coletivo</p>
+                  <p className={cn('text-xs font-medium capitalize', riscoStyle.text)}>
+                    {riscoStyle.icon} {leitura.risco_coletivo}
+                  </p>
+                </div>
+              </div>
+
+              {/* Mensagens */}
               <div className="p-3 rounded-lg bg-background/30 border border-primary/10">
                 <div className="flex items-start gap-2">
-                  <Activity className="w-4 h-4 text-primary/60 mt-0.5 shrink-0" />
-                  <div>
-                    <p className="text-[9px] text-primary/50 uppercase tracking-wider mb-0.5">Escuta do campo</p>
-                    <p className="text-sm text-foreground/90">{lastRegistro.escuta_campo}</p>
+                  <Waves className="w-4 h-4 text-primary/60 mt-0.5 shrink-0" />
+                  <div className="space-y-1.5">
+                    <p className="text-sm text-foreground/90">{leitura.mensagem_estado}</p>
+                    <p className="text-xs text-muted-foreground/70 italic">{leitura.mensagem_direcao}</p>
                   </div>
                 </div>
               </div>
-            )}
-          </CardContent>
-        </Card>
-      ) : (
-        <Card className="border-border/15 bg-card/30">
-          <CardContent className="p-8 text-center">
-            <Activity className="w-8 h-8 text-muted-foreground/20 mx-auto mb-2" />
-            <p className="text-xs text-muted-foreground/40 italic">Nenhum registro de campo coletivo</p>
-            <p className="text-[10px] text-muted-foreground/30 mt-1">O campo será alimentado após o primeiro encontro</p>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+
+          {/* Alerta de Risco */}
+          {leitura.alerta_risco && (
+            <Card className="border-red-500/20 bg-red-500/5">
+              <CardContent className="p-4">
+                <div className="flex items-start gap-2">
+                  <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-[9px] text-red-400/70 uppercase tracking-wider mb-0.5 font-semibold">Alerta</p>
+                    <p className="text-sm text-red-300/90">{leitura.alerta_risco}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Tensão + Frase simbólica */}
+          {(leitura.tensao_coletiva || leitura.frase_simbolica) && (
+            <Card className="border-border/15 bg-card/30">
+              <CardContent className="p-4 space-y-3">
+                {leitura.tensao_coletiva && (
+                  <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
+                    <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Tensão coletiva</p>
+                    <p className="text-xs text-foreground/80">{leitura.tensao_coletiva}</p>
+                  </div>
+                )}
+                {leitura.frase_simbolica && (
+                  <div className="p-2.5 rounded-lg bg-primary/5 border border-primary/10">
+                    <p className="text-[9px] text-primary/50 uppercase tracking-wider mb-0.5">Frase-semente do grupo</p>
+                    <p className="text-xs text-foreground/80 italic">"{leitura.frase_simbolica}"</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+        </>
       )}
     </div>
   );
