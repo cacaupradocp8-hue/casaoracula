@@ -253,6 +253,7 @@ export default function CabineTerapeutaPage() {
               sessionData={sessionData}
               setSessionData={setSessionData}
               startedAt={sessionStartedAt!}
+              leituraCampo={leituraCampo}
               onEnd={handleEndSession}
             />
           ) : (
