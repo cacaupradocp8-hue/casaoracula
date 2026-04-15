@@ -107,7 +107,7 @@ export function CabineClientePanel({ clientes, selectedId, onSelect }: Props) {
                 variant="outline"
                 size="sm"
                 className="w-full h-7 text-[10px] border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
-                onClick={() => navigate(`/casa-das-maquinas/ferramentas/cartografia?clienteId=${selected.id}&fromCabine=true`)}
+                onClick={() => navigate(`/ferramenta/cartografia-psiquica-oracula?clienteId=${selected.id}&fromCabine=true`)}
               >
                 Iniciar Diagnóstico Inicial
                 <ChevronRight className="w-3 h-3 ml-1" />
