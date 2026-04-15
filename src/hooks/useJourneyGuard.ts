@@ -72,7 +72,7 @@ export function useJourneyGuard(): JourneyState {
         } else if (!hasTravessia) {
           setState({ currentStep: 'travessia', redirectTo: '/travessia/travessia-zero-o-limiar-da-casa', loading: false });
         } else if (!hasCartografia) {
-          setState({ currentStep: 'cartografia', redirectTo: '/ferramentas/cartografia-psiquica-oracula', loading: false });
+          setState({ currentStep: 'cartografia', redirectTo: '/ferramenta/cartografia-psiquica-oracula', loading: false });
         } else if (!hasCidadela) {
           setState({ currentStep: 'cidadela', redirectTo: '/cidadela/revelacao', loading: false });
         } else {

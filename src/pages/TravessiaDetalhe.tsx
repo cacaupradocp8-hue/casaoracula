@@ -703,7 +703,7 @@ export default function TravessiaDetalhe() {
 
                   {hasAlunaAccess ? (
                     <Button
-                      onClick={() => navigate('/ferramentas/cartografia-psiquica-oracula')}
+                      onClick={() => navigate('/ferramenta/cartografia-psiquica-oracula')}
                       className="mt-2 px-8 py-3 rounded-full font-display text-sm tracking-wider bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 hover:border-gold/30 transition-all"
                       variant="ghost"
                     >
