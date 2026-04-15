@@ -193,7 +193,7 @@ export function CabinePreparacao({ cliente, profile, profileLoading, leituraCamp
                 variant="outline"
                 size="sm"
                 className="text-xs border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
-                onClick={() => navigate(`/casa-das-maquinas/ferramentas/cartografia?clienteId=${cliente.id}`)}
+                onClick={() => navigate(`/casa-das-maquinas/ferramentas/cartografia?clienteId=${cliente.id}&fromCabine=true`)}
               >
                 Iniciar Cartografia Inicial
               </Button>
@@ -216,7 +216,7 @@ export function CabinePreparacao({ cliente, profile, profileLoading, leituraCamp
                 variant="outline"
                 size="sm"
                 className="text-xs border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
-                onClick={() => navigate(`/casa-das-maquinas/ferramentas/cartografia?clienteId=${cliente.id}`)}
+                onClick={() => navigate(`/casa-das-maquinas/ferramentas/cartografia?clienteId=${cliente.id}&fromCabine=true`)}
               >
                 Criar leitura agora
               </Button>
