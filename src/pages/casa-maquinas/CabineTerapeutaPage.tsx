@@ -11,6 +11,13 @@ import { CabineSessaoViva } from '@/components/cabine/CabineSessaoViva';
 import { CabineIntegracao } from '@/components/cabine/CabineIntegracao';
 import { CabineSintheya } from '@/components/cabine/CabineSintheya';
 import { CabineSussurro } from '@/components/cabine/CabineSussurro';
+import { CabineModeSelector, type CabineOperationMode } from '@/components/cabine/CabineModeSelector';
+import { CabineGrupoLeftPanel } from '@/components/cabine/CabineGrupoLeftPanel';
+import { CabineGrupoCenterPanel } from '@/components/cabine/CabineGrupoCenterPanel';
+import { CabineCirculoLeftPanel } from '@/components/cabine/CabineCirculoLeftPanel';
+import { CabineCirculoCenterPanel } from '@/components/cabine/CabineCirculoCenterPanel';
+import { useTherapeuticGroups, type TherapeuticGroup } from '@/hooks/useTherapeuticGroups';
+import { useCirculosSagrados, type CirculoSagrado } from '@/hooks/useCirculosSagrados';
 import { calcularLeituraCampo, type LeituraCampo } from '@/lib/cabine/motorOracular';
 import { gerarMensagemJardimVivo, type FluxoClinicoResult } from '@/lib/cabine/motorSessaoVivo';
 import { Loader2 } from 'lucide-react';
@@ -81,12 +88,34 @@ export default function CabineTerapeutaPage() {
   const { state: mapaVivoState, fetchMapaVivo, salvarSnapshot, loading: mapaVivoLoading } = useMapaVivoLive();
   const [currentFluxo, setCurrentFluxo] = useState<FluxoClinicoResult | null>(null);
 
+  // ═══ Operation mode ═══
+  const [operationMode, setOperationMode] = useState<CabineOperationMode>('individual');
+  const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+  const [selectedCirculoId, setSelectedCirculoId] = useState<string | null>(null);
+  const [groups, setGroups] = useState<TherapeuticGroup[]>([]);
+  const [circulos, setCirculos] = useState<CirculoSagrado[]>([]);
+
+  const { fetchGroups } = useTherapeuticGroups();
+  const { fetchCirculos } = useCirculosSagrados();
+
+  const sessionActive = mode === 'sessao' || mode === 'integracao';
+
   const selectedCliente = useMemo(
     () => clientes.find(c => c.id === selectedClienteId) ?? null,
     [clientes, selectedClienteId]
   );
 
-  // Motor oracular — calcula Estado do Campo
+  const selectedGroup = useMemo(
+    () => groups.find(g => g.id === selectedGroupId) ?? null,
+    [groups, selectedGroupId]
+  );
+
+  const selectedCirculo = useMemo(
+    () => circulos.find(c => c.id === selectedCirculoId) ?? null,
+    [circulos, selectedCirculoId]
+  );
+
+  // Motor oracular
   const leituraCampo: LeituraCampo | null = useMemo(() => {
     if (!selectedCliente) return null;
     return calcularLeituraCampo(
@@ -99,7 +128,7 @@ export default function CabineTerapeutaPage() {
     );
   }, [selectedCliente, profile]);
 
-  // Load clients + their last session date
+  // Load clients
   useEffect(() => {
     if (!user) return;
     (async () => {
@@ -139,13 +168,19 @@ export default function CabineTerapeutaPage() {
       setClientes(enriched);
       setLoading(false);
 
-      // Auto-select client from URL param
       const urlClienteId = searchParams.get('clienteId');
       if (urlClienteId && enriched.some(c => c.id === urlClienteId)) {
         setSelectedClienteId(urlClienteId);
         fetchMapaVivo(urlClienteId);
       }
     })();
+  }, [user]);
+
+  // Pre-load groups and circles
+  useEffect(() => {
+    if (!user) return;
+    fetchGroups('active').then(setGroups);
+    fetchCirculos().then(setCirculos);
   }, [user]);
 
   // Load cartografia profile when client changes
@@ -180,6 +215,20 @@ export default function CabineTerapeutaPage() {
     setCurrentFluxo(null);
     fetchMapaVivo(id);
   }, [fetchMapaVivo]);
+
+  const handleChangeOperationMode = useCallback((newMode: CabineOperationMode) => {
+    if (sessionActive) return;
+    setOperationMode(newMode);
+    // Reset selections when switching modes
+    if (newMode !== 'individual') {
+      setSelectedClienteId(null);
+      setProfile(null);
+    }
+    if (newMode !== 'grupo') setSelectedGroupId(null);
+    if (newMode !== 'circulo') setSelectedCirculoId(null);
+    setMode('preparacao');
+    setSessionData(EMPTY_SESSION);
+  }, [sessionActive]);
 
   const handleStartSession = useCallback((withoutProfile: boolean) => {
     if (!leituraCampo) {
@@ -235,7 +284,6 @@ export default function CabineTerapeutaPage() {
     if (!error && data) {
       setSavedSessionId(data.id);
 
-      // SALVAR SNAPSHOT NO MAPA VIVO
       if (cliente?.client_user_id && leituraCampo) {
         await salvarSnapshot(cliente.client_user_id, {
           client_user_id: cliente.client_user_id,
@@ -270,6 +318,15 @@ export default function CabineTerapeutaPage() {
 
   return (
     <CasaMaquinasLayout title="Cabine da Terapeuta" subtitle="Centro clínico de condução">
+      {/* ═══ MODE SELECTOR ═══ */}
+      <div className="mb-4">
+        <CabineModeSelector
+          mode={operationMode}
+          onChange={handleChangeOperationMode}
+          disabled={sessionActive}
+        />
+      </div>
+
       {/* Notice: returned from cartografia */}
       {searchParams.get('fromCartografia') === 'true' && selectedClienteId && (
         <div className="mb-3 rounded-md border border-primary/15 bg-card/40 px-4 py-2.5 animate-fade-in">
@@ -277,90 +334,142 @@ export default function CabineTerapeutaPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr_260px] gap-4 min-h-[calc(100vh-12rem)]">
-        {/* ═══ LEFT: Cliente ═══ */}
-        <CabineClientePanel
-          clientes={clientes}
-          selectedId={selectedClienteId}
-          onSelect={handleSelectCliente}
-        />
+      {/* ═══ INDIVIDUAL MODE ═══ */}
+      {operationMode === 'individual' && (
+        <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr_260px] gap-4 min-h-[calc(100vh-14rem)]">
+          <CabineClientePanel
+            clientes={clientes}
+            selectedId={selectedClienteId}
+            onSelect={handleSelectCliente}
+          />
 
-        {/* ═══ CENTER: Mapa Vivo + Sessão Viva ═══ */}
-        <div className="min-h-0 space-y-4">
-          {!selectedClienteId ? (
-            <div className="flex items-center justify-center h-full">
-              <p className="text-sm text-muted-foreground/50 italic">Selecione uma cliente para começar</p>
+          <div className="min-h-0 space-y-4">
+            {!selectedClienteId ? (
+              <div className="flex items-center justify-center h-full">
+                <p className="text-sm text-muted-foreground/50 italic">Selecione uma cliente para começar</p>
+              </div>
+            ) : mode === 'preparacao' ? (
+              <CabineMapaVivoPanel
+                leituraCampo={leituraCampo}
+                profile={profile}
+                profileLoading={profileLoading}
+                mapaVivoState={mapaVivoState}
+                mapaVivoLoading={mapaVivoLoading}
+                hasCartography={selectedCliente?.has_initial_cartography ?? false}
+              />
+            ) : mode === 'sessao' ? (
+              <CabineSessaoViva
+                cliente={selectedCliente!}
+                profile={profile}
+                sessionData={sessionData}
+                setSessionData={setSessionData}
+                startedAt={sessionStartedAt!}
+                leituraCampo={leituraCampo}
+                mapaVivoState={mapaVivoState}
+                onEnd={handleEndSession}
+                onFluxoChange={setCurrentFluxo}
+              />
+            ) : (
+              <CabineIntegracao
+                cliente={selectedCliente!}
+                sessionId={savedSessionId!}
+                sessionData={sessionData}
+                leituraCampo={leituraCampo}
+                mapaVivoState={mapaVivoState}
+                fluxoFinal={currentFluxo}
+                onDone={() => {
+                  setMode('preparacao');
+                  setSessionData(EMPTY_SESSION);
+                  setSavedSessionId(null);
+                  setCurrentFluxo(null);
+                }}
+              />
+            )}
+          </div>
+
+          <div className="space-y-3">
+            {selectedClienteId && (
+              <CabineSessaoPanel
+                mode={mode}
+                leituraCampo={leituraCampo}
+                mapaVivoState={mapaVivoState}
+                sessionData={sessionData}
+                hasCartography={selectedCliente?.has_initial_cartography ?? false}
+                onStartSession={handleStartSession}
+              />
+            )}
+            <div className="hidden lg:block space-y-3">
+              <CabineSintheya
+                clienteNome={selectedCliente?.nome || ''}
+                leitura={leituraCampo}
+                sessionData={mode === 'sessao' ? sessionData : undefined}
+                sessionActive={mode === 'sessao'}
+                mapaVivoState={mapaVivoState}
+              />
+              <CabineSussurro
+                leitura={leituraCampo}
+                sessionActive={mode === 'sessao'}
+                checkinTexto={sessionData.checkinTexto}
+                anotacoes={sessionData.anotacoes}
+                sessionStage={currentFluxo ? { stage: currentFluxo.fluxo as any, label: '', orientacao: currentFluxo.orientacao, sintheya_regra: currentFluxo.sintheya_regra, sussurro_ativo: currentFluxo.sussurro_ativo, sussurro_motivo: currentFluxo.sussurro_motivo } : null}
+              />
             </div>
-          ) : mode === 'preparacao' ? (
-            <CabineMapaVivoPanel
-              leituraCampo={leituraCampo}
-              profile={profile}
-              profileLoading={profileLoading}
-              mapaVivoState={mapaVivoState}
-              mapaVivoLoading={mapaVivoLoading}
-              hasCartography={selectedCliente?.has_initial_cartography ?? false}
-            />
-          ) : mode === 'sessao' ? (
-            <CabineSessaoViva
-              cliente={selectedCliente!}
-              profile={profile}
-              sessionData={sessionData}
-              setSessionData={setSessionData}
-              startedAt={sessionStartedAt!}
-              leituraCampo={leituraCampo}
-              mapaVivoState={mapaVivoState}
-              onEnd={handleEndSession}
-              onFluxoChange={setCurrentFluxo}
-            />
-          ) : (
-            <CabineIntegracao
-              cliente={selectedCliente!}
-              sessionId={savedSessionId!}
-              sessionData={sessionData}
-              leituraCampo={leituraCampo}
-              mapaVivoState={mapaVivoState}
-              fluxoFinal={currentFluxo}
-              onDone={() => {
-                setMode('preparacao');
-                setSessionData(EMPTY_SESSION);
-                setSavedSessionId(null);
-                setCurrentFluxo(null);
-              }}
-            />
-          )}
-        </div>
-
-        {/* ═══ RIGHT: Sessão + Sintheya + Sussurro ═══ */}
-        <div className="space-y-3">
-          {selectedClienteId && (
-            <CabineSessaoPanel
-              mode={mode}
-              leituraCampo={leituraCampo}
-              mapaVivoState={mapaVivoState}
-              sessionData={sessionData}
-              hasCartography={selectedCliente?.has_initial_cartography ?? false}
-              onStartSession={handleStartSession}
-            />
-          )}
-
-          <div className="hidden lg:block space-y-3">
-            <CabineSintheya
-              clienteNome={selectedCliente?.nome || ''}
-              leitura={leituraCampo}
-              sessionData={mode === 'sessao' ? sessionData : undefined}
-              sessionActive={mode === 'sessao'}
-              mapaVivoState={mapaVivoState}
-            />
-            <CabineSussurro
-              leitura={leituraCampo}
-              sessionActive={mode === 'sessao'}
-              checkinTexto={sessionData.checkinTexto}
-              anotacoes={sessionData.anotacoes}
-              sessionStage={currentFluxo ? { stage: currentFluxo.fluxo as any, label: '', orientacao: currentFluxo.orientacao, sintheya_regra: currentFluxo.sintheya_regra, sussurro_ativo: currentFluxo.sussurro_ativo, sussurro_motivo: currentFluxo.sussurro_motivo } : null}
-            />
           </div>
         </div>
-      </div>
+      )}
+
+      {/* ═══ GROUP MODE ═══ */}
+      {operationMode === 'grupo' && (
+        <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr_260px] gap-4 min-h-[calc(100vh-14rem)]">
+          <CabineGrupoLeftPanel
+            selectedGroupId={selectedGroupId}
+            onSelectGroup={setSelectedGroupId}
+          />
+
+          <CabineGrupoCenterPanel
+            groupId={selectedGroupId}
+            groupName={selectedGroup?.nome || ''}
+          />
+
+          <div className="space-y-3">
+            {selectedGroupId && (
+              <div className="p-4 rounded-xl border border-border/15 bg-card/30">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 font-semibold mb-2">
+                  Observação Coletiva
+                </p>
+                <p className="text-xs text-muted-foreground/40 italic">
+                  Motor de detecção do grupo será ativado durante o encontro
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ CIRCLE MODE ═══ */}
+      {operationMode === 'circulo' && (
+        <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr_260px] gap-4 min-h-[calc(100vh-14rem)]">
+          <CabineCirculoLeftPanel
+            selectedCirculoId={selectedCirculoId}
+            onSelectCirculo={setSelectedCirculoId}
+          />
+
+          <CabineCirculoCenterPanel circulo={selectedCirculo} />
+
+          <div className="space-y-3">
+            {selectedCirculoId && (
+              <div className="p-4 rounded-xl border border-border/15 bg-card/30">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 font-semibold mb-2">
+                  Condução Simbólica
+                </p>
+                <p className="text-xs text-muted-foreground/40 italic">
+                  Sugestões de conto, pergunta e condução serão geradas com base no campo do círculo
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </CasaMaquinasLayout>
   );
 }
