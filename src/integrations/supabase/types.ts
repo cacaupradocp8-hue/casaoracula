@@ -3244,6 +3244,8 @@ export type Database = {
           data_nascimento: string | null
           email: string | null
           estado_civil: string | null
+          has_initial_cartography: boolean
+          has_initial_cidadela: boolean
           id: string
           informacoes_relevantes: string | null
           invitation_sent_at: string | null
@@ -3270,6 +3272,8 @@ export type Database = {
           data_nascimento?: string | null
           email?: string | null
           estado_civil?: string | null
+          has_initial_cartography?: boolean
+          has_initial_cidadela?: boolean
           id?: string
           informacoes_relevantes?: string | null
           invitation_sent_at?: string | null
@@ -3296,6 +3300,8 @@ export type Database = {
           data_nascimento?: string | null
           email?: string | null
           estado_civil?: string | null
+          has_initial_cartography?: boolean
+          has_initial_cidadela?: boolean
           id?: string
           informacoes_relevantes?: string | null
           invitation_sent_at?: string | null
