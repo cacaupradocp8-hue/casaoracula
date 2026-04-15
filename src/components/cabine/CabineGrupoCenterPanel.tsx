@@ -4,6 +4,9 @@ import { Users, AlertTriangle, Loader2, Waves, Shield, Lightbulb, Pause } from '
 import { useTherapeuticGroups, type GroupParticipant } from '@/hooks/useTherapeuticGroups';
 import { supabase } from '@/lib/dal/dbClient';
 import { calcularLeituraCampoColetivo, type LeituraCampoColetivo, type RegistroInput } from '@/lib/cabine/motorLeituraColetiva';
+import { avaliarCondutaColetiva, type DecisaoCampoColetivo } from '@/lib/cabine/decisaoCampoColetivo';
+import { useFieldSnapshot } from '@/hooks/useFieldSnapshot';
+import { BlocoDecisaoCampo } from './BlocoDecisaoCampo';
 import type { ClimaMovimento } from '@/types/jardim-grupo';
 import { cn } from '@/lib/utils';
 
