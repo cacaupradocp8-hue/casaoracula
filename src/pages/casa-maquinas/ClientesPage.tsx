@@ -21,6 +21,8 @@ interface Cliente {
   objetivo_terapeutico: string | null;
   observacao_segura: string | null;
   created_at: string;
+  has_initial_cartography: boolean;
+  has_initial_cidadela: boolean;
   journey?: {
     process_state: string;
     current_district?: { nome: string } | null;
@@ -143,7 +145,7 @@ export default function ClientesPage() {
     }
 
     if (data) {
-      await supabase.from('journeys').insert({ client_id: data.id });
+      // No longer auto-create journeys/maps/cidadela — only the trigger creates a bare jardim container
 
       // Send invitation if email is provided
       if (newEmail.trim()) {
@@ -342,9 +344,25 @@ export default function ClientesPage() {
                   )}
                 </div>
                 <div className="flex items-center gap-2 mt-3">
-                  <Button size="sm" variant="ghost" className="h-7 text-xs text-primary hover:text-primary hover:bg-primary/10 flex-1">
-                    Abrir Cidade <ChevronRight className="w-3 h-3 ml-1" />
-                  </Button>
+                  {!c.has_initial_cartography ? (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-7 text-xs text-amber-400 hover:text-amber-400 hover:bg-amber-500/10 flex-1"
+                      onClick={(e) => { e.stopPropagation(); navigate(`/casa-das-maquinas/ferramentas/cartografia?clienteId=${c.id}`); }}
+                    >
+                      Iniciar Diagnóstico Inicial <ChevronRight className="w-3 h-3 ml-1" />
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-7 text-xs text-primary hover:text-primary hover:bg-primary/10 flex-1"
+                      onClick={(e) => { e.stopPropagation(); navigate(`/casa-das-maquinas/cabine?clienteId=${c.id}`); }}
+                    >
+                      Abrir Cabine <ChevronRight className="w-3 h-3 ml-1" />
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>

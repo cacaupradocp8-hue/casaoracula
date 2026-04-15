@@ -91,12 +91,65 @@ export default function CartografiaPage() {
           mediasRaw,
           therapistUserId: user.id,
         });
+
+        // Mark has_initial_cartography = true
+        await supabase.from('clientes').update({
+          has_initial_cartography: true,
+        }).eq('id', clientId);
+
+        // Generate initial CidaDELA structure, then mark has_initial_cidadela
+        try {
+          // Create session_case for this client if none exists
+          const { data: existingCase } = await supabase
+            .from('session_cases')
+            .select('id')
+            .eq('client_id', clientId)
+            .eq('therapist_id', user.id)
+            .limit(1)
+            .maybeSingle();
+
+          let caseId = existingCase?.id;
+          if (!caseId) {
+            const { data: clienteData } = await supabase.from('clientes').select('nome').eq('id', clientId).single();
+            const { data: newCase } = await supabase.from('session_cases').insert({
+              therapist_id: user.id,
+              client_id: clientId,
+              title: `Jornada de ${clienteData?.nome || 'Cliente'}`,
+              status: 'active',
+            }).select('id').single();
+            caseId = newCase?.id;
+          }
+
+          // Activate jardim_heroina if exists
+          await supabase.from('jardim_heroina').update({ status: 'active', case_id: caseId }).eq('client_id', clientId).eq('therapist_id', user.id);
+
+          // Create initial cidadela map
+          await supabase.rpc('update_cidadela_from_session' as any, {
+            _client_id: clientId,
+            _therapist_id: user.id,
+            _distrito: null,
+            _torre: null,
+            _porta: null,
+            _arquetipo: null,
+            _labirinto: null,
+            _ferramenta: null,
+            _insight: 'Cartografia inicial concluída — CidaDELA inaugurada',
+          });
+
+          // Mark has_initial_cidadela = true
+          await supabase.from('clientes').update({
+            has_initial_cidadela: true,
+          }).eq('id', clientId);
+        } catch (cidadelaErr) {
+          console.error('Erro ao gerar CidaDELA inicial:', cidadelaErr);
+        }
       } catch (e) {
         console.error('Erro ao persistir perfil comportamental:', e);
       }
 
       toast.success('Cartografia salva com sucesso');
-      navigate(`/casa-das-maquinas/clientes/${clientId}`);
+      // Redirect back to cabine with this client open
+      navigate(`/casa-das-maquinas/cabine?clienteId=${clientId}`);
     }
     setSaving(false);
   };
