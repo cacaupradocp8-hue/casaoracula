@@ -136,52 +136,52 @@ export default function CabineTerapeutaPage() {
   }, [selectedCliente, profile]);
 
   // Load clients
-  useEffect(() => {
+  const loadClientes = useCallback(async (autoSelectId?: string) => {
     if (!user) return;
-    (async () => {
-      const { data: rawClientes } = await supabase
-        .from('clientes')
-        .select('id, nome, status, client_user_id, has_initial_cartography, has_initial_cidadela')
-        .eq('terapeuta_id', user.id)
-        .order('nome');
+    const { data: rawClientes } = await supabase
+      .from('clientes')
+      .select('id, nome, status, client_user_id, has_initial_cartography, has_initial_cidadela')
+      .eq('terapeuta_id', user.id)
+      .order('nome');
 
-      if (!rawClientes) { setLoading(false); return; }
+    if (!rawClientes) { setLoading(false); return; }
 
-      const clientIds = rawClientes.map(c => c.id);
-      const { data: sessions } = await supabase
-        .from('sessions')
-        .select('client_id, date')
-        .eq('user_id', user.id)
-        .in('client_id', clientIds)
-        .order('date', { ascending: false });
+    const clientIds = rawClientes.map(c => c.id);
+    const { data: sessions } = await supabase
+      .from('sessions')
+      .select('client_id, date')
+      .eq('user_id', user.id)
+      .in('client_id', clientIds)
+      .order('date', { ascending: false });
 
-      const lastMap = new Map<string, string>();
-      sessions?.forEach(s => {
-        if (!lastMap.has(s.client_id)) lastMap.set(s.client_id, s.date);
-      });
+    const lastMap = new Map<string, string>();
+    sessions?.forEach(s => {
+      if (!lastMap.has(s.client_id)) lastMap.set(s.client_id, s.date);
+    });
 
-      const now = new Date();
-      const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-      const enriched: ClienteComStatus[] = rawClientes.map(c => {
-        const last = lastMap.get(c.id) ?? null;
-        let statusCabine: ClienteComStatus['statusCabine'] = 'sem_historico';
-        if (last) {
-          statusCabine = new Date(last) >= thirtyDaysAgo ? 'ativo' : 'precisa_atencao';
-        }
-        return { ...c, lastSessionDate: last, statusCabine };
-      });
-
-      setClientes(enriched);
-      setLoading(false);
-
-      const urlClienteId = searchParams.get('clienteId');
-      if (urlClienteId && enriched.some(c => c.id === urlClienteId)) {
-        setSelectedClienteId(urlClienteId);
-        fetchMapaVivo(urlClienteId);
+    const enriched: ClienteComStatus[] = rawClientes.map(c => {
+      const last = lastMap.get(c.id) ?? null;
+      let statusCabine: ClienteComStatus['statusCabine'] = 'sem_historico';
+      if (last) {
+        statusCabine = new Date(last) >= thirtyDaysAgo ? 'ativo' : 'precisa_atencao';
       }
-    })();
-  }, [user]);
+      return { ...c, lastSessionDate: last, statusCabine };
+    });
+
+    setClientes(enriched);
+    setLoading(false);
+
+    const selectId = autoSelectId || searchParams.get('clienteId');
+    if (selectId && enriched.some(c => c.id === selectId)) {
+      setSelectedClienteId(selectId);
+      fetchMapaVivo(selectId);
+    }
+  }, [user, searchParams, fetchMapaVivo]);
+
+  useEffect(() => { loadClientes(); }, [loadClientes]);
 
   // Pre-load groups and circles
   useEffect(() => {
