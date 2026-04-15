@@ -171,10 +171,14 @@ export default function CabineTerapeutaPage() {
   }, [fetchMapaVivo]);
 
   const handleStartSession = useCallback((withoutProfile: boolean) => {
+    if (!leituraCampo) {
+      console.warn('Tentativa de iniciar sessão sem leitura de campo — bloqueada.');
+      return;
+    }
     setSessionWithoutProfile(withoutProfile);
     setSessionStartedAt(new Date());
     setMode('sessao');
-  }, []);
+  }, [leituraCampo]);
 
   const handleEndSession = useCallback(async () => {
     if (!user || !selectedClienteId) return;
