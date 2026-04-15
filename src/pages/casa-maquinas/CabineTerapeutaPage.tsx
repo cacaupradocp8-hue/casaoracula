@@ -11,6 +11,7 @@ import { CabineIntegracao } from '@/components/cabine/CabineIntegracao';
 import { CabineSintheya } from '@/components/cabine/CabineSintheya';
 import { CabineSussurro } from '@/components/cabine/CabineSussurro';
 import { calcularLeituraCampo, type LeituraCampo } from '@/lib/cabine/motorOracular';
+import { gerarMensagemJardim, type SessionStageResult } from '@/lib/cabine/motorSessao';
 import { Loader2 } from 'lucide-react';
 
 export type CabineMode = 'preparacao' | 'sessao' | 'integracao';
@@ -73,7 +74,8 @@ export default function CabineTerapeutaPage() {
   const [sessionStartedAt, setSessionStartedAt] = useState<Date | null>(null);
   const [sessionWithoutProfile, setSessionWithoutProfile] = useState(false);
   const [savedSessionId, setSavedSessionId] = useState<string | null>(null);
-  const { state: mapaVivoState, fetchMapaVivo } = useMapaVivoLive();
+  const { state: mapaVivoState, fetchMapaVivo, salvarSnapshot } = useMapaVivoLive();
+  const [currentStage, setCurrentStage] = useState<SessionStageResult | null>(null);
 
   const selectedCliente = useMemo(
     () => clientes.find(c => c.id === selectedClienteId) ?? null,
@@ -164,6 +166,7 @@ export default function CabineTerapeutaPage() {
     setSessionStartedAt(null);
     setSavedSessionId(null);
     setSessionWithoutProfile(false);
+    setCurrentStage(null);
     fetchMapaVivo(id);
   }, [fetchMapaVivo]);
 
@@ -176,6 +179,7 @@ export default function CabineTerapeutaPage() {
   const handleEndSession = useCallback(async () => {
     if (!user || !selectedClienteId) return;
     const now = new Date().toISOString();
+    const cliente = clientes.find(c => c.id === selectedClienteId);
 
     const { data, error } = await supabase
       .from('sessions')
@@ -195,6 +199,7 @@ export default function CabineTerapeutaPage() {
           resumo: sessionData.resumoSessao,
           hipotese_simbolica: sessionData.hipoteseSimbólica,
           proximos_passos: sessionData.proximosPassos,
+          estagio_final: currentStage?.stage || null,
         },
         cabine_data: {
           porta_ativa: sessionData.portaAtiva,
@@ -206,6 +211,7 @@ export default function CabineTerapeutaPage() {
           started_at: sessionStartedAt?.toISOString(),
           estado_campo: leituraCampo?.estado || null,
           direcao_conducao: leituraCampo?.direcao || null,
+          estagio_sessao: currentStage?.stage || null,
         },
       } as any)
       .select('id')
@@ -213,9 +219,32 @@ export default function CabineTerapeutaPage() {
 
     if (!error && data) {
       setSavedSessionId(data.id);
+
+      // SALVAR SNAPSHOT NO MAPA VIVO
+      if (cliente?.client_user_id && leituraCampo) {
+        await salvarSnapshot(cliente.client_user_id, {
+          client_user_id: cliente.client_user_id,
+          therapist_user_id: user.id,
+          session_id: data.id,
+          estado_campo: leituraCampo.estado,
+          direcao_conducao: leituraCampo.direcao,
+          risco: leituraCampo.risco,
+          estagio: currentStage?.stage || null,
+          tensao_ativa: null,
+          ferramenta_utilizada: sessionData.ferramentaEscolhida || null,
+          ritmo_travessia: mapaVivoState?.ritmo_atual || null,
+          tipo_registro: 'sessao',
+          mensagem_simbolica: gerarMensagemJardim(
+            currentStage?.stage || 'sintese',
+            mapaVivoState || null,
+            sessionData.resumoSessao
+          ),
+        });
+      }
+
       setMode('integracao');
     }
-  }, [user, selectedClienteId, sessionData, sessionWithoutProfile, sessionStartedAt, leituraCampo]);
+  }, [user, selectedClienteId, sessionData, sessionWithoutProfile, sessionStartedAt, leituraCampo, clientes, currentStage, mapaVivoState, salvarSnapshot]);
 
   if (loading) {
     return (
@@ -257,7 +286,9 @@ export default function CabineTerapeutaPage() {
               setSessionData={setSessionData}
               startedAt={sessionStartedAt!}
               leituraCampo={leituraCampo}
+              mapaVivoState={mapaVivoState}
               onEnd={handleEndSession}
+              onStageChange={setCurrentStage}
             />
           ) : (
             <CabineIntegracao
@@ -267,6 +298,7 @@ export default function CabineTerapeutaPage() {
                 setMode('preparacao');
                 setSessionData(EMPTY_SESSION);
                 setSavedSessionId(null);
+                setCurrentStage(null);
               }}
             />
           )}
@@ -286,6 +318,7 @@ export default function CabineTerapeutaPage() {
             sessionActive={mode === 'sessao'}
             checkinTexto={sessionData.checkinTexto}
             anotacoes={sessionData.anotacoes}
+            sessionStage={currentStage}
           />
         </div>
       </div>
