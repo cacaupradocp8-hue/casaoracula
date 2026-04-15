@@ -190,7 +190,26 @@ export default function CabineTerapeutaPage() {
     fetchCirculos().then(setCirculos);
   }, [user]);
 
-  // Load cartografia profile when client changes
+  // Creation callbacks — save to DB, refresh list, auto-select
+  const handleClienteCreated = useCallback(async (id: string) => {
+    await loadClientes(id);
+    setOperationMode('individual');
+  }, [loadClientes]);
+
+  const handleGroupCreated = useCallback(async (id: string) => {
+    const refreshed = await fetchGroups('active');
+    setGroups(refreshed);
+    setSelectedGroupId(id);
+    setOperationMode('grupo');
+  }, [fetchGroups]);
+
+  const handleCirculoCreated = useCallback(async (id: string) => {
+    const refreshed = await fetchCirculos();
+    setCirculos(refreshed);
+    setSelectedCirculoId(id);
+    setOperationMode('circulo');
+  }, [fetchCirculos]);
+
   useEffect(() => {
     if (!selectedClienteId || !user) { setProfile(null); return; }
     setProfileLoading(true);
