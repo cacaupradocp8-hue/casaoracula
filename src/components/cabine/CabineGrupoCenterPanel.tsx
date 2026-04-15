@@ -31,9 +31,11 @@ const TENSAO_LABELS: Record<string, string> = {
 
 export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
   const { fetchGroupParticipants } = useTherapeuticGroups();
+  const { salvarSnapshotGrupo } = useFieldSnapshot();
   const [participants, setParticipants] = useState<GroupParticipant[]>([]);
   const [loading, setLoading] = useState(false);
   const [leitura, setLeitura] = useState<LeituraCampoColetivo | null>(null);
+  const [decisao, setDecisao] = useState<DecisaoCampoColetivo | null>(null);
 
   useEffect(() => {
     if (!groupId) return;
@@ -65,7 +67,13 @@ export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
       }));
 
       const resultado = calcularLeituraCampoColetivo(registrosFormatados, p.length);
+      const dec = avaliarCondutaColetiva(resultado);
       setLeitura(resultado);
+      setDecisao(dec);
+
+      // Salvar snapshot automaticamente
+      salvarSnapshotGrupo(groupId, resultado, dec);
+
       setLoading(false);
     });
   }, [groupId]);
