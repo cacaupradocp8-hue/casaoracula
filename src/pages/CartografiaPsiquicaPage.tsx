@@ -1,73 +1,24 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
 import { calcularLeitura } from '@/lib/cartografia/leituraComportamental';
+import { derivarCidadela } from '@/lib/cartografia/derivacaoCidadela';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBig5Oracular } from '@/hooks/useBig5Oracular';
 import { useCartografiaGPS } from '@/hooks/useCartografiaGPS';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Map, Sparkles, Save, Loader2, Check, Eye } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Map, Sparkles, Loader2, Check, Eye } from 'lucide-react';
+import { SaidaSimbolica } from '@/components/cartografia-unificada/SaidaSimbolica';
 import { CamadaLeituraPsiquica } from '@/components/cartografia-unificada/CamadaLeituraPsiquica';
 import { CamadaCidadela } from '@/components/cartografia-unificada/CamadaCidadela';
 import { CamadaDirecaoClinica } from '@/components/cartografia-unificada/CamadaDirecaoClinica';
 import { LeituraRevelacao } from '@/components/cartografia/LeituraRevelacao';
 
-/* ─── Constants ─── */
-const CORES = [
-  { nome: 'Ouro', hex: '#C9A24A', significado: 'esperança, abundância' },
-  { nome: 'Prata', hex: '#A8B2BD', significado: 'reflexão, mistério' },
-  { nome: 'Azul', hex: '#3B6B9E', significado: 'calma, profundidade' },
-  { nome: 'Vermelho', hex: '#B44B4B', significado: 'paixão, energia' },
-  { nome: 'Verde', hex: '#556B57', significado: 'crescimento, renovação' },
-  { nome: 'Roxo', hex: '#7B5EA7', significado: 'transformação, magia' },
-  { nome: 'Cinza', hex: '#8A8A8A', significado: 'neutralidade, transição' },
-  { nome: 'Preto', hex: '#1A1A2E', significado: 'potencial, desconhecido' },
-  { nome: 'Branco', hex: '#E8E4DA', significado: 'clareza, vazio' },
-  { nome: 'Rosa', hex: '#C4848A', significado: 'ternura, vulnerabilidade' },
-  { nome: 'Laranja', hex: '#D4874D', significado: 'criatividade, alegria' },
-  { nome: 'Marrom', hex: '#8B6F47', significado: 'enraizamento, estabilidade' },
-];
-
-const DISTRITOS = [
-  { key: 'portao_chegada', nome: 'Portão da Chegada', desc: 'Chegadas, inícios', icon: '🚪' },
-  { key: 'torres', nome: 'Torres', desc: 'Estruturas, proteção', icon: '🏛️' },
-  { key: 'portas', nome: 'Portas', desc: 'Emoções, acessos', icon: '🔑' },
-  { key: 'jardim_arquetipos', nome: 'Jardim dos Arquétipos', desc: 'Forças profundas', icon: '🌿' },
-  { key: 'praca_abalo', nome: 'Praça do Abalo', desc: 'Emoções intensas', icon: '⚡' },
-  { key: 'casa_sonhos', nome: 'Casa dos Sonhos', desc: 'Inconsciente, imaginação', icon: '🌙' },
-  { key: 'espelho_vinculos', nome: 'Espelho dos Vínculos', desc: 'Relacionamentos', icon: '🪞' },
-  { key: 'forja', nome: 'Forja', desc: 'Transformação', icon: '🔥' },
-  { key: 'conselho_interior', nome: 'Conselho Interior', desc: 'Sabedoria interna', icon: '👁️' },
-  { key: 'labirinto', nome: 'Labirinto', desc: 'Confusão, ciclos', icon: '🌀' },
-  { key: 'praca_integracao', nome: 'Praça da Integração', desc: 'Síntese', icon: '☀️' },
-  { key: 'portal_renascimento', nome: 'Portal de Renascimento', desc: 'Transição', icon: '🦋' },
-];
-
-const ATMOSFERAS = [
-  'Calma', 'Agitada', 'Clara', 'Nebulosa', 'Quente', 'Fria',
-  'Viva', 'Estática', 'Segura', 'Ameaçadora', 'Aberta', 'Fechada',
-  'Organizada', 'Caótica', 'Esperançosa', 'Desesperada',
-];
-
-const SIMBOLOS = [
-  { nome: 'Árvore', icon: '🌳' }, { nome: 'Montanha', icon: '⛰️' },
-  { nome: 'Rio', icon: '🏞️' }, { nome: 'Fogo', icon: '🔥' },
-  { nome: 'Água', icon: '💧' }, { nome: 'Vento', icon: '🌬️' },
-  { nome: 'Luz', icon: '✨' }, { nome: 'Sombra', icon: '🌑' },
-  { nome: 'Ponte', icon: '🌉' }, { nome: 'Porta', icon: '🚪' },
-  { nome: 'Coração', icon: '❤️' }, { nome: 'Coroa', icon: '👑' },
-  { nome: 'Espada', icon: '⚔️' }, { nome: 'Escudo', icon: '🛡️' },
-  { nome: 'Chave', icon: '🗝️' }, { nome: 'Labirinto', icon: '🌀' },
-  { nome: 'Espelho', icon: '🪞' }, { nome: 'Livro', icon: '📖' },
-  { nome: 'Flor', icon: '🌸' }, { nome: 'Estrela', icon: '⭐' },
-];
-
-type Phase = 'intro' | 'big5' | 'cartografia' | 'generating' | 'result';
+type Phase = 'intro' | 'questionnaire' | 'generating' | 'result';
 
 export default function CartografiaPsiquicaPage() {
   const { user } = useAuth();
@@ -81,21 +32,14 @@ export default function CartografiaPsiquicaPage() {
   const [phase, setPhase] = useState<Phase>('intro');
   const [saving, setSaving] = useState(false);
 
-  // Big5 state
+  // Questionnaire state
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [respostas, setRespostas] = useState<Record<string, number>>({});
   const [big5Result, setBig5Result] = useState<ReturnType<typeof calcularMedias> | null>(null);
 
-  // Cartografia state
-  const [cartoStep, setCartoStep] = useState(0);
-  const [cor, setCor] = useState('');
-  const [atmosfera, setAtmosfera] = useState<string[]>([]);
-  const [territorios, setTerritorios] = useState<string[]>([]);
-  const [recursos, setRecursos] = useState('');
-  const [conflitos, setConflitos] = useState('');
-  const [simbolo, setSimbolo] = useState('');
-  const [porqueSimbolo, setPorqueSimbolo] = useState('');
-  const [pontoPartida, setPontoPartida] = useState('');
+  // Derived results
+  const [leituraResult, setLeituraResult] = useState<ReturnType<typeof calcularLeitura> | null>(null);
+  const [cidadelaResult, setCidadelaResult] = useState<ReturnType<typeof derivarCidadela> | null>(null);
 
   // AI result
   const [aiResult, setAiResult] = useState<any>(null);
@@ -108,9 +52,6 @@ export default function CartografiaPsiquicaPage() {
   const totalQ = allQuestions.length;
   const currentQ = allQuestions[currentQIndex];
   const currentFator = currentQ ? fatores.find(f => f.id === currentQ.fator_id) : null;
-  const corObj = CORES.find(c => c.nome === cor);
-  const selectedDistritos = DISTRITOS.filter(d => territorios.includes(d.key));
-  const CARTO_STEPS = 7; // cor, atmosfera, territórios, recursos, conflitos, símbolo, ponto de partida
 
   const opcoes = [
     { value: 1, label: 'Nunca / Quase nunca' },
@@ -120,7 +61,6 @@ export default function CartografiaPsiquicaPage() {
     { value: 5, label: 'Quase sempre' },
   ];
 
-  // Big5 handlers
   const handleAnswer = (value: number) => {
     if (!currentQ) return;
     setRespostas(prev => ({ ...prev, [currentQ.id]: value }));
@@ -129,120 +69,107 @@ export default function CartografiaPsiquicaPage() {
     }
   };
 
-  const handleCompleteBig5 = async () => {
-    const result = calcularMedias(respostas);
-    setBig5Result(result);
-    await saveResult(respostas);
-    setPhase('cartografia');
-  };
-
-  // Cartografia handlers
-  const toggleAtmosfera = (a: string) => {
-    setAtmosfera(prev => prev.includes(a) ? prev.filter(x => x !== a) : prev.length < 4 ? [...prev, a] : prev);
-  };
-  const toggleTerritorio = (key: string) => {
-    setTerritorios(prev => prev.includes(key) ? prev.filter(x => x !== key) : prev.length < 5 ? [...prev, key] : prev);
-  };
-
-  const canAdvanceCarto = () => {
-    switch (cartoStep) {
-      case 0: return !!cor;
-      case 1: return atmosfera.length > 0;
-      case 2: return territorios.length > 0;
-      case 5: return !!simbolo;
-      case 6: return !!pontoPartida;
-      default: return true;
-    }
-  };
-
-  // Generate AI reading + save
   const handleGenerateReading = async () => {
-    if (!user || !big5Result) return;
+    if (!user) return;
     setPhase('generating');
     setSaving(true);
 
     try {
-      // 1. Save cartografia
-      const indice = (() => {
-        const rLen = recursos.trim().length;
-        const cLen = conflitos.trim().length;
-        if (rLen + cLen === 0) return 50;
-        return Math.round((rLen / (rLen + cLen)) * 100);
-      })();
+      // 1. Calculate medias
+      const result = calcularMedias(respostas);
+      setBig5Result(result);
+      await saveResult(respostas);
 
+      const medias = result.medias;
+
+      // 2. Behavioral reading
+      const leitura = calcularLeitura(medias, 'clube');
+      setLeituraResult(leitura);
+
+      // 3. Auto-derive CidaDELA
+      const cidadela = derivarCidadela(medias, leitura.profile.tensao_central);
+      setCidadelaResult(cidadela);
+
+      // 4. Save cartografia (no subjective data)
       const { data: cartoInserted } = await supabase.from('cartografia_psiquica').insert({
         user_id: user.id,
-        cor_predominante: cor,
-        atmosfera,
-        territorios_principais: territorios,
-        recursos_internos: recursos,
-        conflitos_tensoes: conflitos,
-        simbolo_pessoal: simbolo,
-        por_que_simbolo: porqueSimbolo,
-        ponto_partida: pontoPartida,
-        indice_equilibrio: indice,
-        metadata_json: { cor_hex: corObj?.hex, cor_significado: corObj?.significado },
+        cor_predominante: cidadela.cor_derivada,
+        atmosfera: cidadela.atmosfera_derivada,
+        territorios_principais: cidadela.distritos_acesos,
+        recursos_internos: null,
+        conflitos_tensoes: null,
+        simbolo_pessoal: cidadela.simbolo_derivado,
+        ponto_partida: cidadela.porta_inicial,
+        indice_equilibrio: cidadela.indice_equilibrio,
+        metadata_json: { 
+          cor_hex: cidadela.cor_hex,
+          medias_big5: medias,
+          predominante: result.predominante?.chave,
+          fragilizado: result.fragilizado?.chave,
+          derivacao_automatica: true,
+        },
       } as any).select('id').single();
 
-      // Persist behavioral profile if big5 medias exist
-      if (cartoInserted?.id && big5Result?.medias) {
+      // 5. Persist behavioral profile
+      if (cartoInserted?.id) {
         try {
-          const mediasRaw = big5Result.medias as Record<string, number>;
-          const leitura = calcularLeitura(mediasRaw, 'clube');
           await upsertCartografiaProfile({
             userId: user.id,
             cartografiaId: cartoInserted.id,
             leitura,
-            mediasRaw,
+            mediasRaw: medias,
           });
         } catch (e) {
           console.error('Erro ao persistir perfil comportamental:', e);
         }
       }
 
-      // 2. Generate CidaDELA
-      const distritoCentral = pontoPartida || territorios[0] || 'portao_chegada';
+      // 6. Auto_mapeamento with derived districts
+      const DISTRITOS_ALL = [
+        'portao_chegada', 'torres', 'portas', 'jardim_arquetipos', 'praca_abalo',
+        'casa_sonhos', 'espelho_vinculos', 'forja', 'conselho_interior',
+        'labirinto', 'praca_integracao', 'portal_renascimento',
+      ];
       const distritosJson: Record<string, any> = {};
-      DISTRITOS.forEach(d => {
-        distritosJson[d.key] = {
-          nome: d.nome,
-          estado: d.key === distritoCentral ? 'central' : territorios.includes(d.key) ? 'ativo' : 'potencial',
-          icon: d.icon,
+      DISTRITOS_ALL.forEach(d => {
+        distritosJson[d] = {
+          nome: d.replace(/_/g, ' '),
+          estado: d === cidadela.porta_inicial ? 'central' : cidadela.distritos_acesos.includes(d) ? 'ativo' : 'potencial',
         };
       });
 
       await supabase.from('auto_mapeamento').upsert({
         user_id: user.id,
         distritos_json: distritosJson,
-        anotacoes: `Cor: ${cor} | Atmosfera: ${atmosfera.join(', ')} | Símbolo: ${simbolo}`,
+        anotacoes: `Auto-derivado | Cor: ${cidadela.cor_derivada} | Torre: ${cidadela.torre_dominante} | Clima: ${cidadela.clima_cidade}`,
       } as any, { onConflict: 'user_id' });
 
-      // 3. Call AI for deep reading
-      const { data: aiData, error: aiError } = await supabase.functions.invoke(
-        'cartografia-leitura-profunda',
-        {
-          body: {
-            medias_big5: big5Result.medias,
-            predominante: big5Result.predominante?.chave,
-            fragilizado: big5Result.fragilizado?.chave,
-            cor,
-            atmosfera,
-            territorios,
-            recursos,
-            conflitos,
-            simbolo,
-            ponto_partida: pontoPartida,
-          },
-        }
-      );
+      // 7. Call AI for deep reading
+      try {
+        const { data: aiData, error: aiError } = await supabase.functions.invoke(
+          'cartografia-leitura-profunda',
+          {
+            body: {
+              medias_big5: medias,
+              predominante: result.predominante?.chave,
+              fragilizado: result.fragilizado?.chave,
+              cidadela_derivada: cidadela,
+              leitura_comportamental: {
+                tensao_central: leitura.profile.tensao_central,
+                estrategia_defesa: leitura.profile.estrategia_defesa,
+                medo_dominante: leitura.profile.medo_dominante,
+                ritmo_ideal: leitura.profile.ritmo_ideal,
+              },
+            },
+          }
+        );
 
-      if (aiError) {
-        console.error('AI Error:', aiError);
-        setAiResult(null);
-      } else {
-        setAiResult(aiData);
-        // Save to profiles.cartografia_base for therapist identity
-        await saveTherapistCartografia(aiData);
+        if (!aiError && aiData) {
+          setAiResult(aiData);
+          await saveTherapistCartografia(aiData);
+        }
+      } catch (err) {
+        console.error('AI error:', err);
       }
 
       setPhase('result');
@@ -250,16 +177,13 @@ export default function CartografiaPsiquicaPage() {
     } catch (err) {
       console.error(err);
       toast.error('Erro ao gerar leitura');
-      setPhase('cartografia');
+      setPhase('questionnaire');
     } finally {
       setSaving(false);
     }
   };
 
-  // Progress calculation
-  const totalSteps = totalQ + CARTO_STEPS;
-  const currentStep = phase === 'big5' ? currentQIndex : phase === 'cartografia' ? totalQ + cartoStep : totalSteps;
-  const progressPct = totalSteps > 0 ? (currentStep / totalSteps) * 100 : 0;
+  const progressPct = totalQ > 0 ? ((currentQIndex + 1) / totalQ) * 100 : 0;
 
   const slideVariants = {
     enter: { opacity: 0, x: 50 },
@@ -278,7 +202,7 @@ export default function CartografiaPsiquicaPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col overflow-x-hidden">
       {/* Progress bar */}
-      {phase !== 'intro' && phase !== 'result' && phase !== 'generating' && (
+      {phase === 'questionnaire' && (
         <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-muted">
           <div className="h-full bg-primary transition-all duration-500" style={{ width: `${progressPct}%` }} />
         </div>
@@ -302,26 +226,10 @@ export default function CartografiaPsiquicaPage() {
                 </p>
               </div>
               <div className="max-w-md mx-auto space-y-4 text-sm text-muted-foreground/70 leading-relaxed">
-                <p>Esta não é uma ferramenta comum. É uma experiência em 3 camadas:</p>
-                <div className="grid grid-cols-1 gap-2 text-left">
-                  <div className="flex gap-3 items-start p-3 rounded-lg bg-card/40 border border-border/10">
-                    <span className="text-primary text-lg">1</span>
-                    <div><p className="text-foreground text-sm font-medium">Leitura Psíquica</p>
-                    <p className="text-xs text-muted-foreground">Mapeamento profundo dos seus traços e padrões</p></div>
-                  </div>
-                  <div className="flex gap-3 items-start p-3 rounded-lg bg-card/40 border border-border/10">
-                    <span className="text-primary text-lg">2</span>
-                    <div><p className="text-foreground text-sm font-medium">CidaDELA Interior</p>
-                    <p className="text-xs text-muted-foreground">Tradução simbólica em mapa de territórios</p></div>
-                  </div>
-                  <div className="flex gap-3 items-start p-3 rounded-lg bg-card/40 border border-border/10">
-                    <span className="text-primary text-lg">3</span>
-                    <div><p className="text-foreground text-sm font-medium">Direção Clínica</p>
-                    <p className="text-xs text-muted-foreground">Como você atua como guia — forças e atenções</p></div>
-                  </div>
-                </div>
+                <p>Responda às 30 perguntas com honestidade. Não há respostas certas ou erradas.</p>
+                <p className="text-xs">Sua CidaDELA Interior será revelada automaticamente a partir das suas respostas.</p>
               </div>
-              <Button onClick={() => setPhase('big5')} variant="gold" size="lg" className="mt-4">
+              <Button onClick={() => setPhase('questionnaire')} variant="gold" size="lg" className="mt-4">
                 <Sparkles className="w-5 h-5 mr-2" /> Começar leitura profunda
               </Button>
               <p className="text-[10px] text-muted-foreground/30">
@@ -330,13 +238,13 @@ export default function CartografiaPsiquicaPage() {
             </motion.div>
           )}
 
-          {/* ═══ BIG5 QUESTIONNAIRE ═══ */}
-          {phase === 'big5' && currentQ && currentFator && (
-            <motion.div key={`big5-${currentQIndex}`} variants={slideVariants} initial="enter" animate="center" exit="exit"
+          {/* ═══ QUESTIONNAIRE ═══ */}
+          {phase === 'questionnaire' && currentQ && currentFator && (
+            <motion.div key={`q-${currentQIndex}`} variants={slideVariants} initial="enter" animate="center" exit="exit"
               transition={{ duration: 0.25 }} className="w-full max-w-xl space-y-5">
               
               <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>Camada 1 — Leitura Psíquica</span>
+                <span>Leitura de Campo</span>
                 <span>{currentQIndex + 1} / {totalQ}</span>
               </div>
 
@@ -383,202 +291,14 @@ export default function CartografiaPsiquicaPage() {
                   <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
                 </Button>
                 {currentQIndex === totalQ - 1 ? (
-                  <Button size="sm" onClick={handleCompleteBig5}
-                    disabled={Object.keys(respostas).length < totalQ}>
-                    Avançar para CidaDELA <ArrowRight className="w-4 h-4 ml-1" />
+                  <Button size="sm" variant="gold" onClick={handleGenerateReading}
+                    disabled={Object.keys(respostas).length < totalQ || saving}>
+                    <Sparkles className="w-4 h-4 mr-1" /> Revelar minha CidaDELA
                   </Button>
                 ) : (
                   <Button size="sm" onClick={() => setCurrentQIndex(p => p + 1)}
                     disabled={!respostas[currentQ.id]}>
                     Próxima <ArrowRight className="w-4 h-4 ml-1" />
-                  </Button>
-                )}
-              </div>
-            </motion.div>
-          )}
-
-          {/* ═══ CARTOGRAFIA STEPS ═══ */}
-          {phase === 'cartografia' && (
-            <motion.div key={`carto-${cartoStep}`} variants={slideVariants} initial="enter" animate="center" exit="exit"
-              transition={{ duration: 0.3 }} className="w-full max-w-2xl space-y-6">
-              
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>Camada 2 — CidaDELA Interior</span>
-                <span>{cartoStep + 1} / {CARTO_STEPS}</span>
-              </div>
-
-              {/* Step 0: Cor */}
-              {cartoStep === 0 && (
-                <div className="space-y-5">
-                  <div className="text-center space-y-2">
-                    <h2 className="text-xl font-display font-semibold">Se sua cidade interior fosse uma cor, qual seria?</h2>
-                    <p className="text-xs text-muted-foreground">Escolha a cor que ressoa com seu momento</p>
-                  </div>
-                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                    {CORES.map(c => (
-                      <button key={c.nome} onClick={() => setCor(c.nome)}
-                        className={`rounded-xl p-2.5 text-center transition-all border ${
-                          cor === c.nome ? 'border-primary ring-2 ring-primary/30 scale-105' : 'border-border/20 hover:border-border/50'
-                        }`}>
-                        <div className="w-8 h-8 rounded-full mx-auto mb-1.5 shadow-md" style={{ backgroundColor: c.hex }} />
-                        <p className="text-[10px] font-medium text-foreground">{c.nome}</p>
-                        <p className="text-[8px] text-muted-foreground">{c.significado}</p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Step 1: Atmosfera */}
-              {cartoStep === 1 && (
-                <div className="space-y-5">
-                  <div className="text-center space-y-2">
-                    <h2 className="text-xl font-display font-semibold">Como é a atmosfera dessa cidade agora?</h2>
-                    <p className="text-xs text-muted-foreground">Selecione até 4</p>
-                  </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {ATMOSFERAS.map(a => (
-                      <button key={a} onClick={() => toggleAtmosfera(a)}
-                        className={`rounded-lg py-2.5 px-3 text-xs font-medium transition-all border ${
-                          atmosfera.includes(a) ? 'bg-primary/10 border-primary text-primary' : 'border-border/20 text-muted-foreground hover:border-border/50'
-                        }`}>{a}</button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Step 2: Territórios */}
-              {cartoStep === 2 && (
-                <div className="space-y-5">
-                  <div className="text-center space-y-2">
-                    <h2 className="text-xl font-display font-semibold">Quais territórios estão mais presentes em você?</h2>
-                    <p className="text-xs text-muted-foreground">Selecione até 5 distritos</p>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {DISTRITOS.map(d => (
-                      <button key={d.key} onClick={() => toggleTerritorio(d.key)}
-                        className={`flex items-center gap-3 rounded-xl p-2.5 text-left transition-all border ${
-                          territorios.includes(d.key) ? 'bg-primary/10 border-primary' : 'border-border/15 hover:border-border/40'
-                        }`}>
-                        <span className="text-xl">{d.icon}</span>
-                        <div>
-                          <p className="text-xs font-medium text-foreground">{d.nome}</p>
-                          <p className="text-[10px] text-muted-foreground">{d.desc}</p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Step 3: Recursos */}
-              {cartoStep === 3 && (
-                <div className="space-y-5">
-                  <div className="text-center space-y-2">
-                    <h2 className="text-xl font-display font-semibold">Onde você encontra força e segurança?</h2>
-                    <p className="text-xs text-muted-foreground">Descreva seus recursos internos</p>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5 text-[10px] text-muted-foreground/60">
-                    {['Encontro força em...', 'Me sinto segura quando...', 'Sou capaz de...'].map(s => (
-                      <button key={s} onClick={() => setRecursos(prev => prev ? `${prev}\n${s}` : s)}
-                        className="border border-border/15 rounded-full px-2.5 py-0.5 hover:border-primary/30 hover:text-primary transition-colors">{s}</button>
-                    ))}
-                  </div>
-                  <Textarea value={recursos} onChange={e => setRecursos(e.target.value)}
-                    placeholder="Escreva livremente sobre seus recursos internos..."
-                    className="min-h-[140px] bg-card/50 border-border/15 text-foreground placeholder:text-muted-foreground/30"
-                    maxLength={2000} />
-                </div>
-              )}
-
-              {/* Step 4: Conflitos */}
-              {cartoStep === 4 && (
-                <div className="space-y-5">
-                  <div className="text-center space-y-2">
-                    <h2 className="text-xl font-display font-semibold">Quais territórios estão em tensão?</h2>
-                    <p className="text-xs text-muted-foreground">Descreva os conflitos ou áreas de sombra</p>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5 text-[10px] text-muted-foreground/60">
-                    {['Há conflito entre...', 'Sinto tensão quando...', 'Preciso integrar...'].map(s => (
-                      <button key={s} onClick={() => setConflitos(prev => prev ? `${prev}\n${s}` : s)}
-                        className="border border-border/15 rounded-full px-2.5 py-0.5 hover:border-primary/30 hover:text-primary transition-colors">{s}</button>
-                    ))}
-                  </div>
-                  <Textarea value={conflitos} onChange={e => setConflitos(e.target.value)}
-                    placeholder="Escreva livremente sobre tensões e conflitos..."
-                    className="min-h-[140px] bg-card/50 border-border/15 text-foreground placeholder:text-muted-foreground/30"
-                    maxLength={2000} />
-                </div>
-              )}
-
-              {/* Step 5: Símbolo */}
-              {cartoStep === 5 && (
-                <div className="space-y-5">
-                  <div className="text-center space-y-2">
-                    <h2 className="text-xl font-display font-semibold">Há um símbolo que representa sua jornada agora?</h2>
-                    <p className="text-xs text-muted-foreground">Escolha o que mais ressoa</p>
-                  </div>
-                  <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
-                    {SIMBOLOS.map(s => (
-                      <button key={s.nome} onClick={() => setSimbolo(s.nome)}
-                        className={`rounded-xl p-2.5 text-center transition-all border ${
-                          simbolo === s.nome ? 'bg-primary/10 border-primary ring-1 ring-primary/30 scale-105' : 'border-border/15 hover:border-border/40'
-                        }`}>
-                        <span className="text-xl block">{s.icon}</span>
-                        <p className="text-[9px] mt-0.5 text-foreground/60">{s.nome}</p>
-                      </button>
-                    ))}
-                  </div>
-                  {simbolo && (
-                    <Textarea value={porqueSimbolo} onChange={e => setPorqueSimbolo(e.target.value)}
-                      placeholder="O que esse símbolo significa para você neste momento..."
-                      className="min-h-[80px] bg-card/50 border-border/15 text-foreground placeholder:text-muted-foreground/30"
-                      maxLength={1000} />
-                  )}
-                </div>
-              )}
-
-              {/* Step 6: Ponto de partida */}
-              {cartoStep === 6 && (
-                <div className="space-y-5">
-                  <div className="text-center space-y-2">
-                    <h2 className="text-xl font-display font-semibold">Por qual distrito você quer começar?</h2>
-                    <p className="text-xs text-muted-foreground">Escolha entre os territórios selecionados</p>
-                  </div>
-                  <div className="space-y-2">
-                    {selectedDistritos.map(d => (
-                      <button key={d.key} onClick={() => setPontoPartida(d.key)}
-                        className={`w-full flex items-center gap-4 rounded-xl p-3 text-left transition-all border ${
-                          pontoPartida === d.key ? 'bg-primary/10 border-primary' : 'border-border/15 hover:border-border/40'
-                        }`}>
-                        <span className="text-2xl">{d.icon}</span>
-                        <div>
-                          <p className="text-sm font-medium text-foreground">{d.nome}</p>
-                          <p className="text-xs text-muted-foreground">{d.desc}</p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Navigation */}
-              <div className="flex justify-between pt-2">
-                <Button variant="ghost" size="sm" onClick={() => {
-                  if (cartoStep > 0) setCartoStep(s => s - 1);
-                  else setPhase('big5');
-                }}>
-                  <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
-                </Button>
-                {cartoStep === CARTO_STEPS - 1 ? (
-                  <Button size="sm" variant="gold" onClick={handleGenerateReading}
-                    disabled={!canAdvanceCarto() || saving}>
-                    <Sparkles className="w-4 h-4 mr-1" /> Revelar minha CidaDELA
-                  </Button>
-                ) : (
-                  <Button size="sm" onClick={() => setCartoStep(s => s + 1)}
-                    disabled={!canAdvanceCarto()}>
-                    Próximo <ArrowRight className="w-4 h-4 ml-1" />
                   </Button>
                 )}
               </div>
@@ -593,10 +313,10 @@ export default function CartografiaPsiquicaPage() {
                 <Loader2 className="w-10 h-10 text-primary animate-spin" />
               </div>
               <div className="space-y-3">
-                <h2 className="text-xl font-display font-semibold text-foreground">Tecendo sua leitura...</h2>
+                <h2 className="text-xl font-display font-semibold text-foreground">Processando sua leitura...</h2>
                 <p className="text-sm text-muted-foreground/60 leading-relaxed">
-                  A cartógrafa está analisando seus traços, territórios e padrões
-                  para revelar o mapa da sua cidade interior.
+                  A cartógrafa está derivando automaticamente o mapa da sua cidade interior
+                  a partir das suas respostas.
                 </p>
               </div>
               <div className="flex justify-center gap-1.5">
@@ -609,83 +329,69 @@ export default function CartografiaPsiquicaPage() {
             </motion.div>
           )}
 
-          {/* ═══ RESULT — 3 LAYERS ═══ */}
-          {phase === 'result' && (
+          {/* ═══ RESULT ═══ */}
+          {phase === 'result' && leituraResult && cidadelaResult && (
             <motion.div key="result" variants={slideVariants} initial="enter" animate="center" exit="exit"
               transition={{ duration: 0.5 }} className="w-full max-w-2xl space-y-8">
               
-              {/* Bloco de Leitura Comportamental */}
-              {big5Result?.medias && (() => {
-                const leitura = calcularLeitura(big5Result.medias, 'clube');
-                return (
-                  <LeituraRevelacao
-                    saida={leitura.saida_cliente}
-                    onAprofundar={() => navigate('/cidadela/revelacao')}
-                  />
-                );
-              })()}
+              {/* Symbolic output first */}
+              <SaidaSimbolica
+                saida={leituraResult.saida_cliente}
+                cidadela={cidadelaResult}
+                fraseSemente={aiResult?.leitura_psiquica?.frase_espelho}
+              />
 
-              {/* Layer tabs */}
-              <div className="flex justify-center gap-1">
-                {['Leitura Psíquica', 'CidaDELA', 'Direção Clínica'].map((label, i) => (
-                  <button key={label} onClick={() => setActiveLayer(i)}
-                    className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
-                      activeLayer === i
-                        ? 'bg-primary/15 text-primary border border-primary/30'
-                        : 'text-muted-foreground/50 hover:text-muted-foreground border border-transparent'
-                    }`}>
-                    {label}
-                  </button>
-                ))}
-              </div>
+              {/* AI layers if available */}
+              {aiResult && (
+                <>
+                  <div className="border-t border-border/10 pt-6">
+                    <div className="flex justify-center gap-1 flex-wrap">
+                      {['Leitura Profunda', 'CidaDELA', 'Direção Clínica'].map((label, i) => (
+                        <button key={label} onClick={() => setActiveLayer(i)}
+                          className={`px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                            activeLayer === i
+                              ? 'bg-primary/15 text-primary border border-primary/30'
+                              : 'text-muted-foreground/50 hover:text-muted-foreground border border-transparent'
+                          }`}>
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
-              {/* Layer content */}
-              <AnimatePresence mode="wait">
-                {activeLayer === 0 && (
-                  <motion.div key="layer0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    {aiResult?.leitura_psiquica ? (
-                      <CamadaLeituraPsiquica
-                        data={aiResult.leitura_psiquica}
-                        predominante={big5Result?.predominante}
-                        fragilizado={big5Result?.fragilizado}
-                        medias={big5Result?.medias}
-                      />
-                    ) : (
-                      <FallbackLeitura medias={big5Result?.medias} predominante={big5Result?.predominante} fragilizado={big5Result?.fragilizado} />
+                  <AnimatePresence mode="wait">
+                    {activeLayer === 0 && aiResult.leitura_psiquica && (
+                      <motion.div key="l0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <CamadaLeituraPsiquica
+                          data={aiResult.leitura_psiquica}
+                          predominante={big5Result?.predominante}
+                          fragilizado={big5Result?.fragilizado}
+                          medias={big5Result?.medias}
+                        />
+                      </motion.div>
                     )}
-                  </motion.div>
-                )}
-                {activeLayer === 1 && (
-                  <motion.div key="layer1" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    {aiResult?.cidadela ? (
-                      <CamadaCidadela
-                        data={aiResult.cidadela}
-                        cor={cor}
-                        corHex={corObj?.hex || '#C9A24A'}
-                        atmosfera={atmosfera}
-                        simbolo={simbolo}
-                        simboloIcon={SIMBOLOS.find(s => s.nome === simbolo)?.icon || '✨'}
-                        territorios={territorios}
-                        pontoPartida={pontoPartida}
-                      />
-                    ) : (
-                      <FallbackCidadela cor={cor} corHex={corObj?.hex || '#C9A24A'} territorios={territorios} pontoPartida={pontoPartida} />
+                    {activeLayer === 1 && aiResult.cidadela && (
+                      <motion.div key="l1" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <CamadaCidadela
+                          data={aiResult.cidadela}
+                          cor={cidadelaResult.cor_derivada}
+                          corHex={cidadelaResult.cor_hex}
+                          atmosfera={cidadelaResult.atmosfera_derivada}
+                          simbolo={cidadelaResult.simbolo_derivado}
+                          simboloIcon={cidadelaResult.simbolo_icon}
+                          territorios={cidadelaResult.distritos_acesos}
+                          pontoPartida={cidadelaResult.porta_inicial}
+                        />
+                      </motion.div>
                     )}
-                  </motion.div>
-                )}
-                {activeLayer === 2 && (
-                  <motion.div key="layer2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    {aiResult?.direcao_clinica ? (
-                      <CamadaDirecaoClinica data={aiResult.direcao_clinica} />
-                    ) : (
-                      <div className="text-center py-12 space-y-3">
-                        <p className="text-muted-foreground text-sm">A leitura clínica não foi gerada.</p>
-                        <p className="text-xs text-muted-foreground/50">Tente novamente mais tarde.</p>
-                      </div>
+                    {activeLayer === 2 && aiResult.direcao_clinica && (
+                      <motion.div key="l2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <CamadaDirecaoClinica data={aiResult.direcao_clinica} />
+                      </motion.div>
                     )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                  </AnimatePresence>
+                </>
+              )}
 
               {/* Bottom actions */}
               <div className="flex flex-col items-center gap-4 pt-4">
@@ -703,59 +409,6 @@ export default function CartografiaPsiquicaPage() {
           )}
         </AnimatePresence>
       </div>
-    </div>
-  );
-}
-
-/* ─── Fallback components when AI is unavailable ─── */
-function FallbackLeitura({ medias, predominante, fragilizado }: any) {
-  return (
-    <div className="space-y-4 text-center">
-      <h3 className="font-display text-lg text-foreground">Mapa de Forças</h3>
-      {medias && Object.entries(medias)
-        .sort(([, a], [, b]) => (b as number) - (a as number))
-        .map(([chave, media]) => (
-          <div key={chave} className="space-y-1 max-w-sm mx-auto">
-            <div className="flex justify-between text-xs">
-              <span className="text-foreground/70 capitalize">{chave.replace(/_/g, ' ')}</span>
-              <span className="text-muted-foreground">{(media as number).toFixed(1)}</span>
-            </div>
-            <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-              <div className="h-full rounded-full bg-primary" style={{ width: `${((media as number) / 5) * 100}%` }} />
-            </div>
-          </div>
-        ))}
-      {predominante && (
-        <p className="text-sm text-foreground/60 mt-4">
-          Força predominante: <strong>{predominante.nome}</strong>
-        </p>
-      )}
-    </div>
-  );
-}
-
-function FallbackCidadela({ cor, corHex, territorios, pontoPartida }: any) {
-  const DISTRITOS_MAP: Record<string, string> = {
-    portao_chegada: 'Portão da Chegada', torres: 'Torres', portas: 'Portas',
-    jardim_arquetipos: 'Jardim dos Arquétipos', praca_abalo: 'Praça do Abalo',
-    casa_sonhos: 'Casa dos Sonhos', espelho_vinculos: 'Espelho dos Vínculos',
-    forja: 'Forja', conselho_interior: 'Conselho Interior', labirinto: 'Labirinto',
-    praca_integracao: 'Praça da Integração', portal_renascimento: 'Portal de Renascimento',
-  };
-  return (
-    <div className="text-center space-y-4">
-      <div className="w-8 h-8 rounded-full mx-auto shadow" style={{ backgroundColor: corHex }} />
-      <p className="text-sm text-foreground">Cor: {cor}</p>
-      <div className="flex flex-wrap gap-1.5 justify-center">
-        {(territorios || []).map((t: string) => (
-          <span key={t} className="text-xs bg-secondary px-2 py-0.5 rounded-full text-secondary-foreground">
-            {DISTRITOS_MAP[t] || t}
-          </span>
-        ))}
-      </div>
-      {pontoPartida && (
-        <p className="text-xs text-muted-foreground">Ponto de partida: {DISTRITOS_MAP[pontoPartida]}</p>
-      )}
     </div>
   );
 }
