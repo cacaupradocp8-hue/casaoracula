@@ -370,6 +370,7 @@ export default function CartografiaPage() {
             lento: 'Evite condução direta. Primeiro estabilize.',
             medio: 'Sustente o que já existe antes de aprofundar.',
             rapido: 'Há espaço para explorar. Acompanhe o movimento.',
+            'medio ou rapido': 'O campo tem abertura. Sustente e acompanhe.',
           };
 
           // Derive campo state from tensao
@@ -398,7 +399,7 @@ export default function CartografiaPage() {
                 <div className="border border-border/10 rounded-xl bg-card/30 px-5 py-5 space-y-4">
                   <div className="space-y-1">
                     <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40">
-                      Padrão predominante
+                      Força que organiza o campo
                     </p>
                     <p className="text-sm text-foreground/85 leading-relaxed">
                       {leitura.saida_terapeuta.padrao_dominante}
