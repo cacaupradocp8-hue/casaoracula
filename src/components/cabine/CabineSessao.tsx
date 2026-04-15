@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -6,7 +6,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Clock, Pause, Square, Sparkles, MessageCircle, Ban, CheckCircle2, Compass } from 'lucide-react';
 import type { ClienteComStatus, CartografiaProfile, SessionData } from '@/pages/casa-maquinas/CabineTerapeutaPage';
 import type { LeituraCampo } from '@/lib/cabine/motorOracular';
+import type { MapaVivoState } from '@/lib/cabine/motorMapaVivo';
 import { CabineDecisaoClinica } from './CabineDecisaoClinica';
+import { CabineStageIndicator } from './CabineStageIndicator';
+import { deriveSessionStage, type SessionStage, type SessionStageResult } from '@/lib/cabine/motorSessao';
 
 interface Props {
   cliente: ClienteComStatus;
@@ -15,7 +18,9 @@ interface Props {
   setSessionData: React.Dispatch<React.SetStateAction<SessionData>>;
   startedAt: Date;
   leituraCampo: LeituraCampo | null;
+  mapaVivoState?: MapaVivoState | null;
   onEnd: () => void;
+  onStageChange?: (stage: SessionStageResult) => void;
 }
 
 const FERRAMENTAS = [
@@ -46,10 +51,42 @@ function Timer({ startedAt }: { startedAt: Date }) {
   return <span className="tabular-nums">{m.toString().padStart(2, '0')}:{s.toString().padStart(2, '0')}</span>;
 }
 
-export function CabineSessao({ cliente, profile, sessionData, setSessionData, startedAt, leituraCampo, onEnd }: Props) {
+export function CabineSessao({ cliente, profile, sessionData, setSessionData, startedAt, leituraCampo, mapaVivoState, onEnd, onStageChange }: Props) {
   const [step, setStep] = useState(1);
   const [paused, setPaused] = useState(false);
+  const [elapsedMinutes, setElapsedMinutes] = useState(0);
+  const [previousStage, setPreviousStage] = useState<SessionStage | undefined>(undefined);
   const pj = profile?.profile_json;
+
+  // Track elapsed minutes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setElapsedMinutes(Math.floor((Date.now() - startedAt.getTime()) / 60000));
+    }, 30000); // update every 30s
+    return () => clearInterval(interval);
+  }, [startedAt]);
+
+  // Derive session stage
+  const stageResult = useMemo(() => {
+    return deriveSessionStage({
+      elapsedMinutes,
+      checkinPreenchido: !!sessionData.checkinTexto.trim(),
+      ferramentaEscolhida: !!sessionData.ferramentaEscolhida,
+      anotacoesPreenchidas: !!sessionData.anotacoes.trim(),
+      resumoPreenchido: !!sessionData.resumoSessao.trim(),
+      mapaVivo: mapaVivoState || null,
+      leitura: leituraCampo,
+      previousStage,
+    });
+  }, [elapsedMinutes, sessionData, mapaVivoState, leituraCampo, previousStage]);
+
+  // Notify parent of stage changes
+  useEffect(() => {
+    if (previousStage !== stageResult.stage) {
+      setPreviousStage(stageResult.stage);
+      onStageChange?.(stageResult);
+    }
+  }, [stageResult.stage, previousStage, onStageChange]);
 
   const update = (field: keyof SessionData, value: string) => {
     setSessionData(prev => ({ ...prev, [field]: value }));
@@ -84,6 +121,9 @@ export function CabineSessao({ cliente, profile, sessionData, setSessionData, st
         </CardContent>
       </Card>
 
+      {/* COREOGRAFIA: Indicador de estágio */}
+      <CabineStageIndicator stageResult={stageResult} />
+
       {/* CARD FIXO: Decisão Clínica (compacto durante sessão) */}
       {leituraCampo && (
         <CabineDecisaoClinica leitura={leituraCampo} profile={profile} compact />
@@ -102,7 +142,7 @@ export function CabineSessao({ cliente, profile, sessionData, setSessionData, st
         ))}
       </div>
 
-      {/* ETAPA 1 — CHECK-IN (guia, não formulário) */}
+      {/* ETAPA 1 — CHECK-IN */}
       {step === 1 && (
         <Card className="border-border/20 bg-card/50">
           <CardContent className="p-4 space-y-3">
@@ -125,7 +165,7 @@ export function CabineSessao({ cliente, profile, sessionData, setSessionData, st
         </Card>
       )}
 
-      {/* ETAPA 2 — FERRAMENTA (sugestão antes do seletor) */}
+      {/* ETAPA 2 — FERRAMENTA */}
       {step === 2 && (
         <Card className="border-border/20 bg-card/50">
           <CardContent className="p-4 space-y-3">
@@ -151,13 +191,12 @@ export function CabineSessao({ cliente, profile, sessionData, setSessionData, st
         </Card>
       )}
 
-      {/* ETAPA 3 — CONDUÇÃO (com blocos de sustentação/evitação) */}
+      {/* ETAPA 3 — CONDUÇÃO */}
       {step === 3 && (
         <Card className="border-border/20 bg-card/50">
           <CardContent className="p-4 space-y-3">
             <p className="text-[10px] uppercase tracking-widest text-primary/60 font-medium">Etapa 3 — Condução</p>
 
-            {/* Bloco fixo: sustentar / evitar */}
             {(pj?.o_que_priorizar || pj?.o_que_evitar) && (
               <div className="grid grid-cols-2 gap-2">
                 {pj?.o_que_priorizar && (
@@ -200,7 +239,7 @@ export function CabineSessao({ cliente, profile, sessionData, setSessionData, st
         </Card>
       )}
 
-      {/* ETAPA 4 — SÍNTESE (com direção sugerida) */}
+      {/* ETAPA 4 — SÍNTESE */}
       {step === 4 && (
         <Card className="border-border/20 bg-card/50">
           <CardContent className="p-4 space-y-3">
@@ -210,7 +249,6 @@ export function CabineSessao({ cliente, profile, sessionData, setSessionData, st
             <Textarea value={sessionData.hipoteseSimbólica} onChange={e => update('hipoteseSimbólica', e.target.value)}
               placeholder="Hipótese simbólica..." className="bg-background/40 border-border/20 min-h-[60px] text-sm" />
 
-            {/* Direção sugerida para próxima sessão */}
             {leituraCampo && (
               <div className="p-2.5 rounded-lg bg-primary/5 border border-primary/10">
                 <div className="flex items-start gap-2">
