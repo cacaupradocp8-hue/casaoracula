@@ -184,6 +184,9 @@ export function CabineGrupoCenterPanel({ groupId, groupName }: Props) {
             </CardContent>
           </Card>
 
+          {/* Decisão do Campo */}
+          {decisao && <BlocoDecisaoCampo decisao={decisao} />}
+
           {/* Sugestão de Intervenção */}
           <Card className="border-border/20 bg-card/40">
             <CardContent className="p-4">
