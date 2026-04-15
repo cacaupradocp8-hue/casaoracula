@@ -48,8 +48,7 @@ Deno.serve(async (req) => {
       conflitos,
       simbolo,
       ponto_partida,
-      // Client mode: quando chamado da Casa das Máquinas
-      modo = "terapeuta", // "terapeuta" | "cliente"
+      modo = "terapeuta",
       client_context,
     } = body;
 
@@ -68,10 +67,10 @@ Deno.serve(async (req) => {
       client_context,
     });
 
-    const apiKey = Deno.env.get("OPENAI_API_KEY");
-    if (!apiKey) {
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) {
       return new Response(
-        JSON.stringify({ error: "OpenAI API key not configured" }),
+        JSON.stringify({ error: "LOVABLE_API_KEY not configured" }),
         {
           status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -82,35 +81,45 @@ Deno.serve(async (req) => {
     const systemPrompt = modo === "cliente" ? SYSTEM_PROMPT_CLIENT : SYSTEM_PROMPT_THERAPIST;
 
     const aiResponse = await fetch(
-      "https://api.openai.com/v1/chat/completions",
+      "https://ai.gateway.lovable.dev/v1/chat/completions",
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${apiKey}`,
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "gpt-4o",
+          model: "google/gemini-2.5-flash",
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: prompt },
           ],
           temperature: 0.7,
           max_tokens: 4000,
-          response_format: { type: "json_object" },
         }),
       }
     );
 
     if (!aiResponse.ok) {
       const errText = await aiResponse.text();
-      console.error("AI API error:", errText);
+      console.error("AI API error:", aiResponse.status, errText);
+
+      if (aiResponse.status === 429) {
+        return new Response(
+          JSON.stringify({ error: "Rate limit exceeded. Please try again in a moment.", fallback: true }),
+          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      if (aiResponse.status === 402) {
+        return new Response(
+          JSON.stringify({ error: "AI credits exhausted. Please add funds.", fallback: true }),
+          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
       return new Response(
-        JSON.stringify({ error: "AI generation failed" }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
+        JSON.stringify({ error: "AI generation failed", fallback: true }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -119,7 +128,10 @@ Deno.serve(async (req) => {
 
     let parsed;
     try {
-      parsed = JSON.parse(content);
+      // Strip markdown code fences if present
+      let cleaned = content || "";
+      cleaned = cleaned.replace(/^```(?:json)?\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
+      parsed = JSON.parse(cleaned);
     } catch {
       parsed = { raw: content };
     }
@@ -130,9 +142,9 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error("Error:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error.message, fallback: true }),
       {
-        status: 500,
+        status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
@@ -158,7 +170,7 @@ REGRAS ABSOLUTAS:
 - Usar metáforas de cidade interior, arquétipos, portas e torres
 - A Direção Clínica deve ser ACIONÁVEL — sugerir ações concretas
 
-Responda SEMPRE em JSON válido com a estrutura exata solicitada.`;
+Responda SEMPRE em JSON válido com a estrutura exata solicitada. Não use markdown code fences.`;
 
 const SYSTEM_PROMPT_CLIENT = `Você é uma Cartógrafa Psíquica Oracular — especialista em leitura simbólica da psique feminina.
 
@@ -173,7 +185,7 @@ REGRAS ABSOLUTAS:
 - Identificar riscos, pontos de atenção e oportunidades terapêuticas
 - Sugerir ferramentas específicas do método (Torres, Portas, Labirinto, Forja, etc.)
 
-Responda SEMPRE em JSON válido com a estrutura exata solicitada.`;
+Responda SEMPRE em JSON válido com a estrutura exata solicitada. Não use markdown code fences.`;
 
 // ══════════════════════════════════════════════════════════════
 // PROMPT BUILDER
