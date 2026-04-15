@@ -279,6 +279,7 @@ export default function CabineTerapeutaPage() {
             leitura={leituraCampo}
             sessionData={mode === 'sessao' ? sessionData : undefined}
             sessionActive={mode === 'sessao'}
+            mapaVivoState={mapaVivoState}
           />
           <CabineSussurro
             leitura={leituraCampo}
