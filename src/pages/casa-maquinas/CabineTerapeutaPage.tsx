@@ -90,6 +90,7 @@ export default function CabineTerapeutaPage() {
   const [selectedCirculoId, setSelectedCirculoId] = useState<string | null>(null);
   const [groups, setGroups] = useState<TherapeuticGroup[]>([]);
   const [circulos, setCirculos] = useState<CirculoSagrado[]>([]);
+  const [createModal, setCreateModal] = useState<'cliente' | 'grupo' | 'circulo' | null>(null);
 
   const { fetchGroups } = useTherapeuticGroups();
   const { fetchCirculos } = useCirculosSagrados();
