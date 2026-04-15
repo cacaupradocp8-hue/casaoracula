@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Brain, Loader2, RefreshCw } from 'lucide-react';
 import { supabase } from '@/lib/dal/dbClient';
-import type { LeituraCampo } from '@/lib/cabine/motorOracular';
+import { type LeituraCampo, sanitizePayloadText } from '@/lib/cabine/motorOracular';
 import type { SessionData } from '@/pages/casa-maquinas/CabineTerapeutaPage';
 
 interface Props {
