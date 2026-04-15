@@ -158,7 +158,7 @@ export function CabinePortalAbertura({
                 </div>
                 <div className="flex-1 min-w-0 text-left">
                   <p className="text-sm font-medium text-foreground truncate">{g.nome}</p>
-                  <p className="text-[10px] text-muted-foreground/50">{g.participantes_count || 0} participantes</p>
+                  <p className="text-[10px] text-muted-foreground/50">{g.participants_count || 0} participantes</p>
                 </div>
                 <ChevronRight className="w-4 h-4 text-muted-foreground/20 group-hover:text-primary/50 transition-colors" />
               </button>
@@ -184,8 +184,8 @@ export function CabinePortalAbertura({
                   <CircleDot className="w-4 h-4 text-primary/70" />
                 </div>
                 <div className="flex-1 min-w-0 text-left">
-                  <p className="text-sm font-medium text-foreground truncate">{c.nome}</p>
-                  <p className="text-[10px] text-muted-foreground/50">{c.tema_central || 'Círculo sagrado'}</p>
+                  <p className="text-sm font-medium text-foreground truncate">{c.nome_circulo}</p>
+                  <p className="text-[10px] text-muted-foreground/50">{c.ritual_base || 'Círculo sagrado'}</p>
                 </div>
                 <ChevronRight className="w-4 h-4 text-muted-foreground/20 group-hover:text-primary/50 transition-colors" />
               </button>

@@ -232,14 +232,14 @@ export function CabineActiveView({
                 <div className="space-y-3">
                   <div className={cn(
                     'p-3 rounded-xl border',
-                    decisao.decisao === 'aprofundar'
+                    decisao.decisao === 'aprofundar_processo'
                       ? 'bg-emerald-500/8 border-emerald-500/15'
-                      : decisao.decisao === 'conter'
+                      : decisao.decisao === 'conter_processo'
                         ? 'bg-red-500/8 border-red-500/15'
                         : 'bg-amber-500/8 border-amber-500/15'
                   )}>
                     <p className="text-[9px] uppercase tracking-wider text-muted-foreground/50 mb-1">Recomendação</p>
-                    <p className="text-sm font-medium text-foreground/90">{decisao.motivo}</p>
+                    <p className="text-sm font-medium text-foreground/90">{decisao.justificativa}</p>
                   </div>
                 </div>
               )}
