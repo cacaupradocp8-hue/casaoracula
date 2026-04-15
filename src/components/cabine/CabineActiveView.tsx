@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Activity, Compass, ShieldCheck, ShieldAlert, ShieldX, Lock, Play, Pen, VolumeX, ChevronDown, ChevronUp, ArrowLeft, AlertTriangle, Shield, Eye, Map, Clock, ChevronRight } from 'lucide-react';
+import { Activity, Compass, ShieldCheck, ShieldAlert, ShieldX, Lock, Play, Pen, VolumeX, ChevronDown, ChevronUp, ArrowLeft, AlertTriangle, Shield, Eye, Map, Clock, ChevronRight, UserPlus, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -119,6 +119,26 @@ export function CabineActiveView({
                 Último atendimento: {new Date(cliente.lastSessionDate).toLocaleDateString('pt-BR')}
               </p>
             )}
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-7 text-[10px] border-border/20 text-muted-foreground hover:text-foreground gap-1 px-2.5"
+              onClick={() => navigate('/casa-das-maquinas/clientes')}
+            >
+              <UserPlus className="w-3 h-3" />
+              Nova cliente
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-7 text-[10px] border-border/20 text-muted-foreground hover:text-foreground gap-1 px-2.5"
+              onClick={onBack}
+            >
+              <RefreshCw className="w-3 h-3" />
+              Trocar
+            </Button>
           </div>
         </div>
 
