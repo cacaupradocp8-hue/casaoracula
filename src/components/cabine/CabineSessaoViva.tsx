@@ -76,6 +76,45 @@ export function CabineSessaoViva({
   const sussurroTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const pj = profile?.profile_json;
 
+  // === DETECÇÃO VIVA ===
+  const [microMensagem, setMicroMensagem] = useState<string | null>(null);
+  const [liveUpdate, setLiveUpdate] = useState<SessionUpdateResult | null>(null);
+  const microTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+
+  // Debounced detection on text change
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      const currentRisco = leituraCampo?.risco || 'baixo';
+      const result = deriveSessionUpdate(
+        sessionData.checkinTexto,
+        sessionData.anotacoes,
+        currentRisco,
+      );
+      setLiveUpdate(result);
+
+      if (result.micro_mensagem) {
+        setMicroMensagem(result.micro_mensagem);
+        if (microTimerRef.current) clearTimeout(microTimerRef.current);
+        microTimerRef.current = setTimeout(() => setMicroMensagem(null), 6000);
+      }
+    }, 800);
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [sessionData.checkinTexto, sessionData.anotacoes, leituraCampo?.risco]);
+
+  // Computed live estado/direcao/risco (soft override)
+  const liveEstadoMsg = liveUpdate?.estado_campo_override
+    ? undefined // will be shown from liveUpdate
+    : leituraCampo?.mensagem_estado;
+  const liveDirecaoMsg = liveUpdate?.direcao_override
+    ? undefined
+    : leituraCampo?.mensagem_direcao;
+  const liveRisco = liveUpdate?.risco_override || leituraCampo?.risco || 'baixo';
+
   // Track elapsed minutes
   useEffect(() => {
     const interval = setInterval(() => {
