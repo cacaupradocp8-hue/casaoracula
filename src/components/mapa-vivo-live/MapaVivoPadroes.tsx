@@ -22,13 +22,13 @@ export function MapaVivoPadroes({ entries }: Props) {
       <CardHeader className="pb-2">
         <CardTitle className="text-sm flex items-center gap-2">
           <Eye className="w-4 h-4 text-muted-foreground" />
-          Padrões Detectados
+          Campos que Continuam Ativos
         </CardTitle>
       </CardHeader>
       <CardContent>
         {ativos.length === 0 ? (
           <p className="text-xs text-muted-foreground text-center py-4">
-            Nenhum padrão significativo detectado.
+            Nenhum campo significativo ativo no momento.
           </p>
         ) : (
           <div className="space-y-2">
