@@ -195,6 +195,9 @@ export function CabineCirculoCenterPanel({ circulo }: Props) {
             </Card>
           )}
 
+          {/* Decisão do Campo */}
+          {decisao && <BlocoDecisaoCampo decisao={decisao} />}
+
           {/* Sugestões de Condução */}
           <Card className="border-border/20 bg-card/40">
             <CardContent className="p-4 space-y-3">
