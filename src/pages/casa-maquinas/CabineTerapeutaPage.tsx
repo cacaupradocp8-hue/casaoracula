@@ -135,6 +135,13 @@ export default function CabineTerapeutaPage() {
 
       setClientes(enriched);
       setLoading(false);
+
+      // Auto-select client from URL param
+      const urlClienteId = searchParams.get('clienteId');
+      if (urlClienteId && enriched.some(c => c.id === urlClienteId)) {
+        setSelectedClienteId(urlClienteId);
+        fetchMapaVivo(urlClienteId);
+      }
     })();
   }, [user]);
 
