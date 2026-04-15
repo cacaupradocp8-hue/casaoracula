@@ -364,11 +364,72 @@ export default function CartografiaPage() {
             mediasRaw[t.key] = arr.reduce((a, b) => a + b, 0) / arr.length;
           });
           const leitura = calcularLeitura(mediasRaw, 'casa_das_maquinas');
+
+          // Derive readable direction from ritmo
+          const direcaoTexto: Record<string, string> = {
+            lento: 'Evite condução direta. Primeiro estabilize.',
+            medio: 'Sustente o que já existe antes de aprofundar.',
+            rapido: 'Há espaço para explorar. Acompanhe o movimento.',
+          };
+
+          // Derive campo state from tensao
+          const campoTexto: Record<string, string> = {
+            'controle vs colapso': 'O movimento atual não é avançar, é reorganizar.',
+            'estrutura vs expressão': 'O campo pede espaço entre estrutura e autenticidade.',
+            'pertencimento vs autonomia': 'Há oscilação entre vínculo e caminho próprio.',
+            'expansão vs segurança': 'O desejo de crescer tensiona a base construída.',
+            'expressão vs aceitação': 'A expressão está contida pelo medo do julgamento.',
+            'segurança vs movimento': 'O campo está entre estagnação e impulso.',
+          };
+
           return (
-            <LeituraRevelacao
-              saida={leitura.saida_cliente}
-              delayInicio={200}
-            />
+            <>
+              <LeituraRevelacao
+                saida={leitura.saida_cliente}
+                delayInicio={200}
+              />
+
+              {/* ─── Bloco de Revelação ─── */}
+              <div className="animate-fade-in space-y-5 pt-2">
+                <p className="text-xs text-muted-foreground/50 italic text-center">
+                  Toda leitura revela um padrão.
+                </p>
+
+                <div className="border border-border/10 rounded-xl bg-card/30 px-5 py-5 space-y-4">
+                  <div className="space-y-1">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40">
+                      Padrão predominante
+                    </p>
+                    <p className="text-sm text-foreground/85 leading-relaxed">
+                      {leitura.saida_terapeuta.padrao_dominante}
+                    </p>
+                  </div>
+
+                  <div className="space-y-1">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40">
+                      Estado do campo
+                    </p>
+                    <p className="text-sm text-foreground/85 leading-relaxed">
+                      {campoTexto[leitura.profile.tensao_central] || 'O campo está se organizando.'}
+                    </p>
+                  </div>
+
+                  <div className="space-y-1">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40">
+                      Direção sugerida
+                    </p>
+                    <p className="text-sm text-foreground/85 leading-relaxed">
+                      {direcaoTexto[leitura.profile.ritmo_ideal] || direcaoTexto.medio}
+                    </p>
+                  </div>
+                </div>
+
+                <p className="text-[10px] text-muted-foreground/35 italic text-center leading-relaxed">
+                  Essa leitura não é diagnóstico.<br />
+                  É ponto de partida.
+                </p>
+              </div>
+            </>
           );
         })()}
 
