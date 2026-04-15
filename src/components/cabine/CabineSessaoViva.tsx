@@ -170,6 +170,8 @@ export function CabineSessaoViva({
     
     return riscoAlto || desorganizacaoAtiva || divisaoSemReconhecimento;
   }, [liveRisco, liveUpdate?.padrao, sessionData.checkinTexto]);
+
+  return (
     <div className="space-y-3">
       {/* === CARD FIXO TOPO: Estado do Campo + Timer === */}
       <Card className={`border transition-colors duration-1000 ${FLUXO_AMBIENT[fluxo.fluxo]}`}>
