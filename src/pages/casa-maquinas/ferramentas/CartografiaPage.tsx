@@ -157,15 +157,24 @@ export default function CartografiaPage() {
   return (
     <CasaMaquinasLayout title="Cartografia Psíquica Orácula" subtitle="Big Five simbólico — 30 perguntas, 5 territórios">
       <div className="max-w-2xl mx-auto space-y-6">
-        {/* Client selector */}
-        <Select value={clientId} onValueChange={setClientId}>
-          <SelectTrigger className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]">
-            <SelectValue placeholder="Selecione a cliente..." />
-          </SelectTrigger>
-          <SelectContent>
-            {clients.map(c => <SelectItem key={c.id} value={c.id}>{c.nome}</SelectItem>)}
-          </SelectContent>
-        </Select>
+        {/* Client selector — locked when clienteId comes from URL */}
+        {searchParams.get('clienteId') ? (
+          <div className="rounded-md border border-primary/20 bg-card/60 px-4 py-3">
+            <p className="text-xs text-muted-foreground mb-0.5">Cliente selecionada</p>
+            <p className="text-sm font-medium text-foreground">
+              {clients.find(c => c.id === clientId)?.nome || 'Carregando...'}
+            </p>
+          </div>
+        ) : (
+          <Select value={clientId} onValueChange={setClientId}>
+            <SelectTrigger className="bg-[#0B1B2B]/60 border-[#C9A24A]/10 text-[#F5F1E8]">
+              <SelectValue placeholder="Selecione a cliente..." />
+            </SelectTrigger>
+            <SelectContent>
+              {clients.map(c => <SelectItem key={c.id} value={c.id}>{c.nome}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        )}
 
         {/* Radar preview */}
         <Card className="border-[#C9A24A]/10 bg-[#0B1B2B]/60">
