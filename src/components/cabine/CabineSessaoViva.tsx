@@ -6,7 +6,7 @@
  * Tudo responde ao que a terapeuta faz.
  */
 
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -17,6 +17,7 @@ import type { ClienteComStatus, CartografiaProfile, SessionData } from '@/pages/
 import type { LeituraCampo } from '@/lib/cabine/motorOracular';
 import type { MapaVivoState } from '@/lib/cabine/motorMapaVivo';
 import { deriveFluxoClinico, type FluxoClinico, type FluxoClinicoResult, FLUXO_AMBIENT, FLUXO_ACCENT } from '@/lib/cabine/motorSessaoVivo';
+import { deriveSessionUpdate, type SessionUpdateResult } from '@/lib/cabine/motorDeteccaoVivo';
 import { Badge } from '@/components/ui/badge';
 
 const RISCO_BADGE: Record<string, string> = {
