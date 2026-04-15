@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
+import { montarProfileJson } from '@/lib/cartografia/montarProfileJson';
 import { useAuth } from '@/contexts/AuthContext';
 import { CasaMaquinasLayout } from '@/components/casa-maquinas/CasaMaquinasLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -94,11 +95,11 @@ export default function CartografiaPage() {
         const arr = scores[t.key];
         mediasRaw[t.key] = arr.reduce((a, b) => a + b, 0) / arr.length;
       });
-      const leitura = calcularLeitura(mediasRaw, 'casa_das_maquinas');
+      const { profileJson } = montarProfileJson({ rawMedias: mediasRaw, contexto: 'casa_das_maquinas' });
       await upsertCartografiaProfile({
         userId: user.id,
         cartografiaId: inserted.id,
-        leitura,
+        profileJson,
         mediasRaw,
         therapistUserId: user.id,
       });
