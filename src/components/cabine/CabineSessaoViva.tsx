@@ -344,7 +344,7 @@ export function CabineSessaoViva({
         </div>
       )}
 
-      {/* === FERRAMENTA (emerge quando o campo pede) === */}
+      {/* === FERRAMENTA === */}
       <AnimatePresence>
         {fluxo.ferramenta_ativa && (
           <motion.div
@@ -355,20 +355,32 @@ export function CabineSessaoViva({
           >
             <Card className="border-border/10 bg-card/30">
               <CardContent className="p-3 space-y-2">
+                {/* Sugestão do campo — sempre visível quando há sugestão */}
                 {ferramentaSugerida && !sessionData.ferramentaEscolhida && (
                   <div className="p-2 rounded-md bg-primary/5 border border-primary/10">
                     <p className="text-[9px] text-primary/40 uppercase tracking-wider">Sugestão do campo</p>
                     <p className="text-xs text-primary/70 font-medium">→ {ferramentaSugerida}</p>
                   </div>
                 )}
-                <Select value={sessionData.ferramentaEscolhida} onValueChange={v => update('ferramentaEscolhida', v)}>
-                  <SelectTrigger className="bg-background/30 border-border/15 text-sm h-9">
-                    <SelectValue placeholder="Ferramenta..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {FERRAMENTAS.map(f => <SelectItem key={f} value={f}>{f}</SelectItem>)}
-                  </SelectContent>
-                </Select>
+
+                {/* Bloqueio de intervenção */}
+                {intervencaoBloqueada ? (
+                  <div className="p-2.5 rounded-md bg-amber-500/5 border border-amber-500/15">
+                    <p className="text-[11px] text-amber-400/70 italic text-center">
+                      Ainda não é o momento de intervir
+                    </p>
+                  </div>
+                ) : (
+                  /* Dropdown só aparece se intervenção liberada */
+                  <Select value={sessionData.ferramentaEscolhida} onValueChange={v => update('ferramentaEscolhida', v)}>
+                    <SelectTrigger className="bg-background/30 border-border/15 text-sm h-9">
+                      <SelectValue placeholder="Ferramenta..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {FERRAMENTAS.map(f => <SelectItem key={f} value={f}>{f}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                )}
               </CardContent>
             </Card>
           </motion.div>
