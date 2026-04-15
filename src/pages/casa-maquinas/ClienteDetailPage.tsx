@@ -23,6 +23,7 @@ import { RitualIntegracao } from '@/components/casa-maquinas/ritual-integracao/R
 import { CartografiaPsiquicaOracula } from '@/components/casa-maquinas/cartografia-psiquica/CartografiaPsiquicaOracula';
 import { RelatorioJornadaPage } from '@/components/casa-maquinas/relatorio-jornada/RelatorioJornadaPage';
 import { BussolaCartografa } from '@/components/casa-maquinas/bussola-cartografa/BussolaCartografa';
+import { CartografiaClinicaPanel } from '@/components/cabine/CartografiaClinicaPanel';
 
 import { PerfilSimbolicoCliente } from '@/components/casa-maquinas/painel-conducao/PerfilSimbolicoCliente';
 import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
@@ -115,6 +116,7 @@ export default function ClienteDetailPage() {
           <TabsTrigger value="mapa-psiquico" className={tabClass}>Mapa Psíquico</TabsTrigger>
           <TabsTrigger value="relatorio-jornada" className={tabClass}>Relatórios</TabsTrigger>
           <TabsTrigger value="bussola" className={tabClass}>Bússola</TabsTrigger>
+          <TabsTrigger value="leitura-clinica" className={tabClass}>Leitura Clínica</TabsTrigger>
         </TabsList>
 
         <TabsContent value="cidadela"><MapaVivoCidadela clienteId={clienteId!} /></TabsContent>
@@ -137,6 +139,7 @@ export default function ClienteDetailPage() {
         <TabsContent value="mapa-psiquico"><CartografiaPsiquicaOracula clienteId={clienteId!} /></TabsContent>
         <TabsContent value="relatorio-jornada"><RelatorioJornadaPage clienteId={clienteId!} /></TabsContent>
         <TabsContent value="bussola"><BussolaCartografa clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="leitura-clinica"><CartografiaClinicaPanel clienteId={clienteId!} /></TabsContent>
       </Tabs>
     </CasaMaquinasLayout>
   );

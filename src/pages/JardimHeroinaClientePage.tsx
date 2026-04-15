@@ -20,6 +20,7 @@ import { MeuJardimSecao } from '@/components/jardim-cliente/MeuJardimSecao';
 import { DaTerapeutaSecao } from '@/components/jardim-cliente/DaTerapeutaSecao';
 import { PraticasSecao } from '@/components/jardim-cliente/PraticasSecao';
 import { TravessiaSecao } from '@/components/jardim-cliente/TravessiaSecao';
+import { CartografiaSimbolica } from '@/components/jardim-cliente/CartografiaSimbolica';
 
 type Tab = 'inicio' | 'jardim' | 'terapeuta' | 'praticas' | 'travessia';
 
@@ -158,7 +159,12 @@ export default function JardimHeroinaClientePage() {
 
           {tab === 'praticas' && <PraticasSecao praticas={praticas} />}
 
-          {tab === 'travessia' && <TravessiaSecao items={travessia} />}
+          {tab === 'travessia' && (
+            <div className="space-y-6">
+              <CartografiaSimbolica />
+              <TravessiaSecao items={travessia} />
+            </div>
+          )}
         </div>
       </div>
     </AppLayout>
