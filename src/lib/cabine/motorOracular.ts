@@ -30,7 +30,10 @@ export type DirecaoConducao =
   | 'ciclo'
   | 'leitura'
   | 'sustentacao'
-  | 'contencao';
+  | 'contencao'
+  | 'espelho_contencao'
+  | 'dialogo_contencao'
+  | 'integracao_contencao';
 
 export type NivelRisco = 'baixo' | 'moderado' | 'elevado';
 
@@ -38,6 +41,7 @@ export interface LeituraCampo {
   estado: EstadoCampo;
   direcao: DirecaoConducao;
   risco: NivelRisco;
+  estagio: EstagioCampo;
   mensagem_estado: string;
   mensagem_direcao: string;
   mensagem_permanencia: string | null;
@@ -53,6 +57,8 @@ interface ProfileInput {
   o_que_evitar?: string;
   o_que_priorizar?: string;
 }
+
+export type EstagioCampo = 'inicio' | 'meio' | 'fechamento';
 
 interface SessionMetadata {
   lastSessionDate: string | null;
@@ -88,6 +94,9 @@ const DIRECAO_LABELS: Record<DirecaoConducao, string> = {
   leitura: 'Fazer leitura de campo antes de intervir',
   sustentacao: 'Sustentar mais antes de confrontar',
   contencao: 'Priorizar contenção e acolhimento',
+  espelho_contencao: 'Espelhar com contenção — risco elevado',
+  dialogo_contencao: 'Dialogar com contenção — risco elevado',
+  integracao_contencao: 'Integrar com contenção — risco elevado',
 };
 
 // ================================
