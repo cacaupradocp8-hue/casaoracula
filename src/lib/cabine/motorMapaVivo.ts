@@ -243,6 +243,119 @@ export function gerarMensagemSimbolica(state: MapaVivoState): string {
   return mensagens[state.estado_atual] || 'Sua jornada continua sendo tecida.';
 }
 
+// ========================================
+// MOTOR DE DECISÃO CLÍNICA
+// ========================================
+
+export type DecisaoClinica =
+  | 'manter_direcao'
+  | 'ajustar_direcao'
+  | 'mudar_direcao'
+  | 'conter_processo'
+  | 'aprofundar_processo';
+
+export interface DecisaoClinicaResult {
+  decisao: DecisaoClinica;
+  justificativa: string;
+  impacto: string;
+  bloqueio_ferramenta: boolean;
+  aviso_bloqueio?: string;
+}
+
+const DECISAO_LABELS: Record<DecisaoClinica, string> = {
+  manter_direcao: 'Manter direção',
+  ajustar_direcao: 'Ajustar direção',
+  mudar_direcao: 'Mudar direção',
+  conter_processo: 'Conter processo',
+  aprofundar_processo: 'Aprofundar processo',
+};
+
+export { DECISAO_LABELS };
+
+export function deriveClinicalDecision(state: MapaVivoState): DecisaoClinicaResult {
+  const meta = state.metadata_json || {};
+
+  // REGRA 1: Risco elevado → conter
+  if (state.risco_atual === 'elevado') {
+    return {
+      decisao: 'conter_processo',
+      justificativa: 'Campo com risco elevado — priorizar segurança e contenção.',
+      impacto: 'Não aprofundar, não abrir novos temas. Sustentar presença.',
+      bloqueio_ferramenta: true,
+      aviso_bloqueio: 'Este campo não permite avanço neste momento.',
+    };
+  }
+
+  // REGRA 2: Aceleração instável → conter
+  if (meta.aceleracao_instavel) {
+    return {
+      decisao: 'conter_processo',
+      justificativa: 'Mudanças rápidas de estado com instabilidade detectada.',
+      impacto: 'Reduzir ritmo, evitar novas intervenções até estabilização.',
+      bloqueio_ferramenta: true,
+      aviso_bloqueio: 'Este campo não permite avanço neste momento.',
+    };
+  }
+
+  // REGRA 3: Ciclo em fechamento → manter (não iniciar nova intervenção)
+  if (meta.fechamento_sustentado) {
+    return {
+      decisao: 'manter_direcao',
+      justificativa: 'Ciclo em fechamento sustentado — não iniciar nova intervenção.',
+      impacto: 'Acompanhar encerramento natural. Ritualizar quando maduro.',
+      bloqueio_ferramenta: false,
+    };
+  }
+
+  // REGRA 4: Integração em curso → manter
+  if (state.integracao_em_curso) {
+    return {
+      decisao: 'manter_direcao',
+      justificativa: 'Integração em curso — o movimento já está acontecendo.',
+      impacto: 'Sustentar sem pressa. Não mudar de direção.',
+      bloqueio_ferramenta: false,
+    };
+  }
+
+  // REGRA 5: Repetição detectada → ajustar (não mudar)
+  if (state.repeticao_detectada) {
+    return {
+      decisao: 'ajustar_direcao',
+      justificativa: 'Padrão repetitivo detectado — ajustar abordagem sem mudar rumo.',
+      impacto: 'Variar ferramenta ou ângulo mantendo a mesma direção central.',
+      bloqueio_ferramenta: false,
+    };
+  }
+
+  // REGRA 6: Travessia travada → ajustar
+  if (state.travessia_travada) {
+    return {
+      decisao: 'ajustar_direcao',
+      justificativa: 'Travessia travada — mesma direção sem progresso por 3 sessões.',
+      impacto: 'Considerar nova entrada para o mesmo tema.',
+      bloqueio_ferramenta: false,
+    };
+  }
+
+  // REGRA 7: Campo estável + risco baixo → aprofundar
+  if (state.risco_atual === 'baixo' && state.estado_atual === 'campo_estavel') {
+    return {
+      decisao: 'aprofundar_processo',
+      justificativa: 'Campo estável e risco baixo — espaço para aprofundamento.',
+      impacto: 'Pode explorar novos temas ou aprofundar os existentes.',
+      bloqueio_ferramenta: false,
+    };
+  }
+
+  // DEFAULT → manter direção
+  return {
+    decisao: 'manter_direcao',
+    justificativa: 'Campo sem sinais críticos — seguir direção atual.',
+    impacto: 'Continuar condução com atenção ao próximo registro.',
+    bloqueio_ferramenta: false,
+  };
+}
+
 // Direction labels for the therapist view
 export const DIRECAO_CLINICA: Record<string, { sustentar: string; evitar: string; proxima: string }> = {
   dialogo: {
