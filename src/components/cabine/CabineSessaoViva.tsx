@@ -106,13 +106,7 @@ export function CabineSessaoViva({
     };
   }, [sessionData.checkinTexto, sessionData.anotacoes, leituraCampo?.risco]);
 
-  // Computed live estado/direcao/risco (soft override)
-  const liveEstadoMsg = liveUpdate?.estado_campo_override
-    ? undefined // will be shown from liveUpdate
-    : leituraCampo?.mensagem_estado;
-  const liveDirecaoMsg = liveUpdate?.direcao_override
-    ? undefined
-    : leituraCampo?.mensagem_direcao;
+  // Computed live risco (soft override)
   const liveRisco = liveUpdate?.risco_override || leituraCampo?.risco || 'baixo';
 
   // Track elapsed minutes
@@ -204,7 +198,7 @@ export function CabineSessaoViva({
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-display font-semibold text-foreground transition-all duration-500">
                     {liveUpdate?.estado_campo_override
-                      ? `${leituraCampo.mensagem_estado}`
+                      ? liveUpdate.estado_campo_override.replace(/_/g, ' ')
                       : leituraCampo.mensagem_estado}
                   </p>
                   {liveUpdate?.padrao && (
@@ -228,7 +222,9 @@ export function CabineSessaoViva({
               <div className="flex items-start gap-2 pl-11">
                 <Compass className="w-3 h-3 text-primary/40 mt-0.5 shrink-0" />
                 <p className="text-[11px] text-foreground/70 transition-all duration-500">
-                  {leituraCampo.mensagem_direcao}
+                  {liveUpdate?.direcao_override
+                    ? liveUpdate.direcao_override.replace(/_/g, ' ')
+                    : leituraCampo.mensagem_direcao}
                 </p>
               </div>
 

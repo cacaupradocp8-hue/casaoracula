@@ -42,8 +42,9 @@ export function CabinePreparacao({ cliente, profile, profileLoading, leituraCamp
     : null;
 
   const handleFollowDecision = useCallback(() => {
+    if (!leituraCampo) return; // Block session start without field reading
     onStartSession(false);
-  }, [onStartSession]);
+  }, [onStartSession, leituraCampo]);
 
   const handleAdjustManually = useCallback(() => {
     setManualOverride(true);
