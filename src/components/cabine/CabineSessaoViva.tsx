@@ -180,7 +180,7 @@ export function CabineSessaoViva({
             </Button>
           </div>
 
-          {/* Estado do Campo (visual dominante) */}
+          {/* Estado do Campo (visual dominante — com soft updates em tempo real) */}
           {leituraCampo && (
             <div className="space-y-2">
               <div className="flex items-start gap-3">
@@ -188,22 +188,34 @@ export function CabineSessaoViva({
                   <Activity className="w-4 h-4 text-primary" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-display font-semibold text-foreground">
-                    {leituraCampo.mensagem_estado}
+                  <p className="text-sm font-display font-semibold text-foreground transition-all duration-500">
+                    {liveUpdate?.estado_campo_override
+                      ? `${leituraCampo.mensagem_estado}`
+                      : leituraCampo.mensagem_estado}
                   </p>
+                  {liveUpdate?.padrao && (
+                    <p className="text-[10px] text-primary/50 mt-0.5">
+                      {liveUpdate.padrao === 'repeticao' && '↻ repetição detectada'}
+                      {liveUpdate.padrao === 'racionalizacao' && '◇ racionalização ativa'}
+                      {liveUpdate.padrao === 'conflito' && '⇄ conflito interno'}
+                      {liveUpdate.padrao === 'desorganizacao' && '∿ desorganização'}
+                    </p>
+                  )}
                 </div>
                 <Badge
                   variant="outline"
-                  className={`text-[8px] px-1.5 shrink-0 ${RISCO_BADGE[leituraCampo.risco]}`}
+                  className={`text-[8px] px-1.5 shrink-0 transition-colors duration-500 ${RISCO_BADGE[liveRisco]}`}
                 >
-                  {leituraCampo.risco}
+                  {liveRisco}
                 </Badge>
               </div>
 
-              {/* Direção atual */}
+              {/* Direção atual (com soft override) */}
               <div className="flex items-start gap-2 pl-11">
                 <Compass className="w-3 h-3 text-primary/40 mt-0.5 shrink-0" />
-                <p className="text-[11px] text-foreground/70">{leituraCampo.mensagem_direcao}</p>
+                <p className="text-[11px] text-foreground/70 transition-all duration-500">
+                  {leituraCampo.mensagem_direcao}
+                </p>
               </div>
 
               {/* Permanência */}
@@ -217,7 +229,7 @@ export function CabineSessaoViva({
           )}
 
           {/* Risco elevado alerta */}
-          {leituraCampo?.risco === 'elevado' && (
+          {liveRisco === 'elevado' && (
             <div className="flex items-center gap-2 p-2 rounded-md bg-red-500/5 border border-red-500/15">
               <AlertTriangle className="w-3.5 h-3.5 text-red-400/70 shrink-0" />
               <p className="text-[10px] text-red-300/80">Campo em risco elevado — contenha sem aprofundar</p>
