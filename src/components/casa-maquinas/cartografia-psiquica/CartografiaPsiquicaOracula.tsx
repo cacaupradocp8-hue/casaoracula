@@ -93,6 +93,15 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
       const big5Result = calcularMedias(respostas);
       const medias = big5Result.medias;
 
+      // Resolve client_user_id for linking
+      const { data: clienteRow } = await supabase
+        .from('clientes')
+        .select('client_user_id')
+        .eq('id', clienteId)
+        .eq('terapeuta_id', user.id)
+        .maybeSingle();
+      const clientUserId = clienteRow?.client_user_id || null;
+
       // Motor unificado: leitura + cidadela + profile JSON
       const { profileJson, leitura, cidadela } = montarProfileJson({ rawMedias: medias, contexto: 'casa_das_maquinas' });
       setLeituraResult(leitura);
