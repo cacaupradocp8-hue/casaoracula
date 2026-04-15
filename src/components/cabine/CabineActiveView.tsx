@@ -120,6 +120,26 @@ export function CabineActiveView({
               </p>
             )}
           </div>
+          <div className="flex items-center gap-1.5">
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-7 text-[10px] border-border/20 text-muted-foreground hover:text-foreground gap-1 px-2.5"
+              onClick={() => navigate('/casa-das-maquinas/clientes')}
+            >
+              <UserPlus className="w-3 h-3" />
+              Nova cliente
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-7 text-[10px] border-border/20 text-muted-foreground hover:text-foreground gap-1 px-2.5"
+              onClick={onBack}
+            >
+              <RefreshCw className="w-3 h-3" />
+              Trocar
+            </Button>
+          </div>
         </div>
 
         {leituraCampo && (
