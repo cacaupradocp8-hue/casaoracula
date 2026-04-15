@@ -11,12 +11,19 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Clock, Square, CheckCircle2, Ban, Compass, AlertTriangle } from 'lucide-react';
+import { Clock, Square, CheckCircle2, Ban, Compass, AlertTriangle, Activity, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { ClienteComStatus, CartografiaProfile, SessionData } from '@/pages/casa-maquinas/CabineTerapeutaPage';
 import type { LeituraCampo } from '@/lib/cabine/motorOracular';
 import type { MapaVivoState } from '@/lib/cabine/motorMapaVivo';
 import { deriveFluxoClinico, type FluxoClinico, type FluxoClinicoResult, FLUXO_AMBIENT, FLUXO_ACCENT } from '@/lib/cabine/motorSessaoVivo';
+import { Badge } from '@/components/ui/badge';
+
+const RISCO_BADGE: Record<string, string> = {
+  baixo: 'border-emerald-500/20 text-emerald-400',
+  moderado: 'border-amber-500/20 text-amber-400',
+  elevado: 'border-red-500/20 text-red-400',
+};
 
 interface Props {
   cliente: ClienteComStatus;
@@ -112,25 +119,74 @@ export function CabineSessaoViva({
 
   return (
     <div className="space-y-3">
-      {/* === HEADER: Timer + Encerrar === */}
-      <div className={`rounded-lg border p-3 flex items-center justify-between transition-colors duration-1000 ${FLUXO_AMBIENT[fluxo.fluxo]}`}>
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-background/50 flex items-center justify-center">
-            <Clock className={`w-4 h-4 ${FLUXO_ACCENT[fluxo.fluxo]}`} />
+      {/* === CARD FIXO TOPO: Estado do Campo + Timer === */}
+      <Card className={`border transition-colors duration-1000 ${FLUXO_AMBIENT[fluxo.fluxo]}`}>
+        <CardContent className="p-4 space-y-3">
+          {/* Header: nome + timer + encerrar */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-background/50 flex items-center justify-center">
+                <Clock className={`w-4 h-4 ${FLUXO_ACCENT[fluxo.fluxo]}`} />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-foreground">{cliente.nome}</p>
+                <p className={`text-xs font-mono ${FLUXO_ACCENT[fluxo.fluxo]}`}>
+                  <Timer startedAt={startedAt} />
+                </p>
+              </div>
+            </div>
+            <Button variant="destructive" size="sm" className="text-xs h-8 gap-1" onClick={onEnd}>
+              <Square className="w-3 h-3" /> Encerrar
+            </Button>
           </div>
-          <div>
-            <p className="text-sm font-semibold text-foreground">{cliente.nome}</p>
-            <p className={`text-xs font-mono ${FLUXO_ACCENT[fluxo.fluxo]}`}>
-              <Timer startedAt={startedAt} />
-            </p>
-          </div>
-        </div>
-        <Button variant="destructive" size="sm" className="text-xs h-8 gap-1" onClick={onEnd}>
-          <Square className="w-3 h-3" /> Encerrar
-        </Button>
-      </div>
 
-      {/* === SUSSURRO CONTEXTUAL (aparece e desaparece) === */}
+          {/* Estado do Campo (visual dominante) */}
+          {leituraCampo && (
+            <div className="space-y-2">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
+                  <Activity className="w-4 h-4 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-display font-semibold text-foreground">
+                    {leituraCampo.mensagem_estado}
+                  </p>
+                </div>
+                <Badge
+                  variant="outline"
+                  className={`text-[8px] px-1.5 shrink-0 ${RISCO_BADGE[leituraCampo.risco]}`}
+                >
+                  {leituraCampo.risco}
+                </Badge>
+              </div>
+
+              {/* Direção atual */}
+              <div className="flex items-start gap-2 pl-11">
+                <Compass className="w-3 h-3 text-primary/40 mt-0.5 shrink-0" />
+                <p className="text-[11px] text-foreground/70">{leituraCampo.mensagem_direcao}</p>
+              </div>
+
+              {/* Permanência */}
+              {leituraCampo.mensagem_permanencia && (
+                <div className="flex items-start gap-2 pl-11">
+                  <Shield className="w-3 h-3 text-amber-400/50 mt-0.5 shrink-0" />
+                  <p className="text-[10px] text-amber-300/60 italic">{leituraCampo.mensagem_permanencia}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Risco elevado alerta */}
+          {leituraCampo?.risco === 'elevado' && (
+            <div className="flex items-center gap-2 p-2 rounded-md bg-red-500/5 border border-red-500/15">
+              <AlertTriangle className="w-3.5 h-3.5 text-red-400/70 shrink-0" />
+              <p className="text-[10px] text-red-300/80">Campo em risco elevado — contenha sem aprofundar</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* === SUSSURRO CONTEXTUAL === */}
       <AnimatePresence>
         {sussurroVisible && fluxo.sussurro_motivo && (
           <motion.div
@@ -146,7 +202,7 @@ export function CabineSessaoViva({
         )}
       </AnimatePresence>
 
-      {/* === ORIENTAÇÃO VIVA (muda com o fluxo) === */}
+      {/* === ORIENTAÇÃO VIVA === */}
       <motion.div
         key={fluxo.fluxo}
         initial={{ opacity: 0 }}
@@ -159,29 +215,30 @@ export function CabineSessaoViva({
         </p>
       </motion.div>
 
-      {/* === RISCO (sempre visível se elevado) === */}
-      {leituraCampo?.risco === 'elevado' && (
-        <div className="flex items-center gap-2 p-2.5 rounded-lg bg-red-500/5 border border-red-500/15">
-          <AlertTriangle className="w-3.5 h-3.5 text-red-400/70 shrink-0" />
-          <p className="text-[10px] text-red-300/80">Campo em risco elevado — contenha sem aprofundar</p>
-        </div>
-      )}
+      {/* === CHECKIN — sempre visível, campo livre === */}
+      <div className="space-y-1">
+        <Textarea
+          value={sessionData.checkinTexto}
+          onChange={e => update('checkinTexto', e.target.value)}
+          placeholder="O que você observa neste momento..."
+          className="bg-background/30 border-border/15 min-h-[60px] text-sm resize-none transition-all focus:min-h-[80px]"
+        />
+        <p className="text-[10px] text-muted-foreground/40 italic pl-1">
+          Observe se há defesa ou abertura
+        </p>
+      </div>
 
-      {/* === ESTADO DO CAMPO (compacto, sempre visível) === */}
-      {leituraCampo && (
-        <div className="grid grid-cols-2 gap-2">
-          <div className="p-2.5 rounded-lg bg-card/40 border border-border/10">
-            <p className="text-[9px] uppercase tracking-wider text-muted-foreground/40 mb-0.5">Estado</p>
-            <p className="text-[11px] text-foreground/70">{leituraCampo.mensagem_estado}</p>
-          </div>
-          <div className="p-2.5 rounded-lg bg-card/40 border border-border/10">
-            <Compass className="w-3 h-3 text-primary/40 mb-0.5" />
-            <p className="text-[11px] text-foreground/70">{leituraCampo.mensagem_direcao}</p>
-          </div>
-        </div>
-      )}
+      {/* === ANOTAÇÕES — sempre visível === */}
+      <div className="space-y-1">
+        <Textarea
+          value={sessionData.anotacoes}
+          onChange={e => update('anotacoes', e.target.value)}
+          placeholder="Anotações da condução..."
+          className="bg-background/30 border-border/15 min-h-[80px] text-sm resize-none transition-all focus:min-h-[120px]"
+        />
+      </div>
 
-      {/* === PRIORIZAR / EVITAR (sempre visível se existir) === */}
+      {/* === PRIORIZAR / EVITAR === */}
       {(pj?.o_que_priorizar || pj?.o_que_evitar) && (
         <div className="grid grid-cols-2 gap-2">
           {pj?.o_que_priorizar && (
@@ -204,16 +261,6 @@ export function CabineSessaoViva({
           )}
         </div>
       )}
-
-      {/* === CAMPO DE PRESENÇA (sempre aberto — é o check-in vivo) === */}
-      <div className="space-y-1.5">
-        <Textarea
-          value={sessionData.checkinTexto}
-          onChange={e => update('checkinTexto', e.target.value)}
-          placeholder="O que você observa neste momento..."
-          className="bg-background/30 border-border/15 min-h-[60px] text-sm resize-none transition-all focus:min-h-[80px]"
-        />
-      </div>
 
       {/* === FERRAMENTA (emerge quando o campo pede) === */}
       <AnimatePresence>
@@ -246,23 +293,7 @@ export function CabineSessaoViva({
         )}
       </AnimatePresence>
 
-      {/* === ANOTAÇÕES DE CONDUÇÃO (sempre aberto quando campo está ativo) === */}
-      {fluxo.campo_aberto && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          <Textarea
-            value={sessionData.anotacoes}
-            onChange={e => update('anotacoes', e.target.value)}
-            placeholder="Anotações da condução..."
-            className="bg-background/30 border-border/15 min-h-[80px] text-sm resize-none transition-all focus:min-h-[120px]"
-          />
-        </motion.div>
-      )}
-
-      {/* === SÍNTESE (emerge naturalmente na integração/continuidade) === */}
+      {/* === SÍNTESE (emerge na integração/continuidade) === */}
       <AnimatePresence>
         {fluxo.sintese_ativa && (
           <motion.div
