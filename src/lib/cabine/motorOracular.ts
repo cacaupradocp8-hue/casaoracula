@@ -164,11 +164,7 @@ function detectEstado(profile: ProfileInput, meta: SessionMetadata): EstadoCampo
     return ORACULA_ESTADO_MAP[oracula];
   }
 
-  // 1b. intensidade_oracular alta → desorganização ou contenção
-  const intensidade = (meta.intensidade_oracular || '').toLowerCase().trim();
-  if (intensidade === 'alta') {
-    return 'desorganizacao_leve';
-  }
+  // 1b. intensidade_oracular alta → NÃO altera estado, apenas risco (tratado em avaliarRisco)
 
   // 1c. estrategia_defesa → mapeamento estruturado
   const ed = (profile.estrategia_defesa || '').toLowerCase().trim();
