@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Clock, Pause, Square, Shield, Zap, Compass, Sparkles, MessageCircle } from 'lucide-react';
+import { Clock, Pause, Square, Sparkles, MessageCircle, Ban, CheckCircle2, Compass } from 'lucide-react';
 import type { ClienteComStatus, CartografiaProfile, SessionData } from '@/pages/casa-maquinas/CabineTerapeutaPage';
+import type { LeituraCampo } from '@/lib/cabine/motorOracular';
+import { CabineDecisaoClinica } from './CabineDecisaoClinica';
 
 interface Props {
   cliente: ClienteComStatus;
@@ -14,12 +14,24 @@ interface Props {
   sessionData: SessionData;
   setSessionData: React.Dispatch<React.SetStateAction<SessionData>>;
   startedAt: Date;
+  leituraCampo: LeituraCampo | null;
   onEnd: () => void;
 }
 
 const FERRAMENTAS = [
   'Cartografia', 'Torres', 'Portas', 'Arquétipos', 'Sonhos', 'Biblioteca de Intervenções',
 ];
+
+const FERRAMENTA_SUGESTAO: Record<string, string> = {
+  excesso_de_mente: 'Cartografia',
+  repeticao_de_padrao: 'Portas',
+  divisao_interna: 'Arquétipos',
+  desorganizacao_leve: 'Torres',
+  integracao_emergente: 'Cartografia',
+  ciclo_em_fechamento: 'Biblioteca de Intervenções',
+  inicio_de_processo: 'Cartografia',
+  campo_estavel: 'Cartografia',
+};
 
 function Timer({ startedAt }: { startedAt: Date }) {
   const [elapsed, setElapsed] = useState(0);
@@ -34,7 +46,7 @@ function Timer({ startedAt }: { startedAt: Date }) {
   return <span className="tabular-nums">{m.toString().padStart(2, '0')}:{s.toString().padStart(2, '0')}</span>;
 }
 
-export function CabineSessao({ cliente, profile, sessionData, setSessionData, startedAt, onEnd }: Props) {
+export function CabineSessao({ cliente, profile, sessionData, setSessionData, startedAt, leituraCampo, onEnd }: Props) {
   const [step, setStep] = useState(1);
   const [paused, setPaused] = useState(false);
   const pj = profile?.profile_json;
@@ -43,9 +55,11 @@ export function CabineSessao({ cliente, profile, sessionData, setSessionData, st
     setSessionData(prev => ({ ...prev, [field]: value }));
   };
 
+  const ferramentaSugerida = leituraCampo ? FERRAMENTA_SUGESTAO[leituraCampo.estado] || 'Cartografia' : null;
+
   return (
     <div className="space-y-4">
-      {/* Header fixo */}
+      {/* Header fixo com timer */}
       <Card className="border-primary/20 bg-primary/5">
         <CardContent className="p-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -70,30 +84,14 @@ export function CabineSessao({ cliente, profile, sessionData, setSessionData, st
         </CardContent>
       </Card>
 
-      {/* Resumo de condução */}
-      {pj && (
-        <div className="flex gap-2 flex-wrap">
-          {pj.estrategia_defesa && (
-            <Badge variant="outline" className="text-[9px] gap-1 border-amber-500/20 text-amber-400/80">
-              <Shield className="w-2.5 h-2.5" /> {pj.estrategia_defesa}
-            </Badge>
-          )}
-          {pj.tensao_central && (
-            <Badge variant="outline" className="text-[9px] gap-1 border-red-400/20 text-red-400/80">
-              <Zap className="w-2.5 h-2.5" /> {pj.tensao_central}
-            </Badge>
-          )}
-          {pj.ritmo_ideal && (
-            <Badge variant="outline" className="text-[9px] gap-1 border-primary/20 text-primary/80">
-              <Compass className="w-2.5 h-2.5" /> {pj.ritmo_ideal}
-            </Badge>
-          )}
-        </div>
+      {/* CARD FIXO: Decisão Clínica (compacto durante sessão) */}
+      {leituraCampo && (
+        <CabineDecisaoClinica leitura={leituraCampo} profile={profile} compact />
       )}
 
       {/* Step indicator */}
       <div className="flex gap-1">
-        {[1, 2, 3, 4, 5].map(n => (
+        {[1, 2, 3, 4].map(n => (
           <button
             key={n}
             onClick={() => setStep(n)}
@@ -104,47 +102,42 @@ export function CabineSessao({ cliente, profile, sessionData, setSessionData, st
         ))}
       </div>
 
-      {/* Etapa 1: Check-in */}
+      {/* ETAPA 1 — CHECK-IN (guia, não formulário) */}
       {step === 1 && (
         <Card className="border-border/20 bg-card/50">
           <CardContent className="p-4 space-y-3">
             <p className="text-[10px] uppercase tracking-widest text-primary/60 font-medium">Etapa 1 — Check-in</p>
+            <div className="p-2.5 rounded-lg bg-primary/5 border border-primary/10">
+              <p className="text-[11px] text-primary/70 italic">
+                Observe o nível de abertura vs defesa antes de conduzir.
+              </p>
+            </div>
             <Textarea
               value={sessionData.checkinTexto}
               onChange={e => update('checkinTexto', e.target.value)}
-              placeholder="Estado inicial da cliente..."
+              placeholder="Estado inicial observado..."
               className="bg-background/40 border-border/20 min-h-[80px] text-sm"
             />
             <Button onClick={() => setStep(2)} className="w-full" size="sm">
-              Registrar estado inicial
+              Registrar e avançar
             </Button>
           </CardContent>
         </Card>
       )}
 
-      {/* Etapa 2: Leitura de Campo */}
+      {/* ETAPA 2 — FERRAMENTA (sugestão antes do seletor) */}
       {step === 2 && (
         <Card className="border-border/20 bg-card/50">
           <CardContent className="p-4 space-y-3">
-            <p className="text-[10px] uppercase tracking-widest text-primary/60 font-medium">Etapa 2 — Leitura de campo</p>
-            <Input value={sessionData.portaAtiva} onChange={e => update('portaAtiva', e.target.value)}
-              placeholder="Porta ativa" className="bg-background/40 border-border/20 h-9 text-sm" />
-            <Input value={sessionData.campoPredominante} onChange={e => update('campoPredominante', e.target.value)}
-              placeholder="Campo predominante" className="bg-background/40 border-border/20 h-9 text-sm" />
-            <Input value={sessionData.torreEstruturante} onChange={e => update('torreEstruturante', e.target.value)}
-              placeholder="Torre estruturante" className="bg-background/40 border-border/20 h-9 text-sm" />
-            <Textarea value={sessionData.observacaoEtica} onChange={e => update('observacaoEtica', e.target.value)}
-              placeholder="Observação ética..." className="bg-background/40 border-border/20 min-h-[60px] text-sm" />
-            <Button onClick={() => setStep(3)} className="w-full" size="sm">Avançar</Button>
-          </CardContent>
-        </Card>
-      )}
+            <p className="text-[10px] uppercase tracking-widest text-primary/60 font-medium">Etapa 2 — Ferramenta</p>
+            
+            {ferramentaSugerida && (
+              <div className="p-2.5 rounded-lg bg-primary/5 border border-primary/10">
+                <p className="text-[9px] text-primary/50 uppercase tracking-wider mb-0.5">Sugestão baseada na leitura do campo</p>
+                <p className="text-sm text-primary font-medium">→ {ferramentaSugerida}</p>
+              </div>
+            )}
 
-      {/* Etapa 3: Ferramenta */}
-      {step === 3 && (
-        <Card className="border-border/20 bg-card/50">
-          <CardContent className="p-4 space-y-3">
-            <p className="text-[10px] uppercase tracking-widest text-primary/60 font-medium">Etapa 3 — Ferramenta</p>
             <Select value={sessionData.ferramentaEscolhida} onValueChange={v => update('ferramentaEscolhida', v)}>
               <SelectTrigger className="bg-background/40 border-border/20">
                 <SelectValue placeholder="Selecione a ferramenta..." />
@@ -153,20 +146,45 @@ export function CabineSessao({ cliente, profile, sessionData, setSessionData, st
                 {FERRAMENTAS.map(f => <SelectItem key={f} value={f}>{f}</SelectItem>)}
               </SelectContent>
             </Select>
-            <Button onClick={() => setStep(4)} className="w-full" size="sm">Avançar</Button>
+            <Button onClick={() => setStep(3)} className="w-full" size="sm">Avançar</Button>
           </CardContent>
         </Card>
       )}
 
-      {/* Etapa 4: Condução */}
-      {step === 4 && (
+      {/* ETAPA 3 — CONDUÇÃO (com blocos de sustentação/evitação) */}
+      {step === 3 && (
         <Card className="border-border/20 bg-card/50">
           <CardContent className="p-4 space-y-3">
-            <p className="text-[10px] uppercase tracking-widest text-primary/60 font-medium">Etapa 4 — Condução</p>
+            <p className="text-[10px] uppercase tracking-widest text-primary/60 font-medium">Etapa 3 — Condução</p>
+
+            {/* Bloco fixo: sustentar / evitar */}
+            {(pj?.o_que_priorizar || pj?.o_que_evitar) && (
+              <div className="grid grid-cols-2 gap-2">
+                {pj?.o_que_priorizar && (
+                  <div className="p-2 rounded-md bg-primary/5 border border-primary/10">
+                    <div className="flex items-center gap-1 mb-0.5">
+                      <CheckCircle2 className="w-2.5 h-2.5 text-primary/60" />
+                      <p className="text-[9px] text-primary/60 uppercase font-medium">Sustentar</p>
+                    </div>
+                    <p className="text-[10px] text-foreground/70">{pj.o_que_priorizar}</p>
+                  </div>
+                )}
+                {pj?.o_que_evitar && (
+                  <div className="p-2 rounded-md bg-destructive/5 border border-destructive/10">
+                    <div className="flex items-center gap-1 mb-0.5">
+                      <Ban className="w-2.5 h-2.5 text-destructive/60" />
+                      <p className="text-[9px] text-destructive/60 uppercase font-medium">Evitar</p>
+                    </div>
+                    <p className="text-[10px] text-foreground/70">{pj.o_que_evitar}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
             <Textarea
               value={sessionData.anotacoes}
               onChange={e => update('anotacoes', e.target.value)}
-              placeholder="Anotações contínuas da sessão..."
+              placeholder="Anotações da condução..."
               className="bg-background/40 border-border/20 min-h-[120px] text-sm"
             />
             <div className="flex gap-2">
@@ -177,20 +195,34 @@ export function CabineSessao({ cliente, profile, sessionData, setSessionData, st
                 <MessageCircle className="w-3 h-3" /> Ampliação simbólica
               </Button>
             </div>
-            <Button onClick={() => setStep(5)} className="w-full" size="sm">Avançar para síntese</Button>
+            <Button onClick={() => setStep(4)} className="w-full" size="sm">Avançar para síntese</Button>
           </CardContent>
         </Card>
       )}
 
-      {/* Etapa 5: Síntese */}
-      {step === 5 && (
+      {/* ETAPA 4 — SÍNTESE (com direção sugerida) */}
+      {step === 4 && (
         <Card className="border-border/20 bg-card/50">
           <CardContent className="p-4 space-y-3">
-            <p className="text-[10px] uppercase tracking-widest text-primary/60 font-medium">Etapa 5 — Síntese</p>
+            <p className="text-[10px] uppercase tracking-widest text-primary/60 font-medium">Etapa 4 — Síntese</p>
             <Textarea value={sessionData.resumoSessao} onChange={e => update('resumoSessao', e.target.value)}
               placeholder="Resumo da sessão..." className="bg-background/40 border-border/20 min-h-[80px] text-sm" />
             <Textarea value={sessionData.hipoteseSimbólica} onChange={e => update('hipoteseSimbólica', e.target.value)}
               placeholder="Hipótese simbólica..." className="bg-background/40 border-border/20 min-h-[60px] text-sm" />
+
+            {/* Direção sugerida para próxima sessão */}
+            {leituraCampo && (
+              <div className="p-2.5 rounded-lg bg-primary/5 border border-primary/10">
+                <div className="flex items-start gap-2">
+                  <Compass className="w-3.5 h-3.5 text-primary/50 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-[9px] text-primary/50 uppercase tracking-wider mb-0.5">Direção sugerida para a próxima sessão</p>
+                    <p className="text-xs text-foreground/80">{leituraCampo.mensagem_direcao}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <Textarea value={sessionData.proximosPassos} onChange={e => update('proximosPassos', e.target.value)}
               placeholder="Próximos passos..." className="bg-background/40 border-border/20 min-h-[60px] text-sm" />
             <Button onClick={onEnd} className="w-full h-11 font-semibold" variant="gold">
