@@ -56,9 +56,25 @@ const DESORGANIZACAO_MARKERS = [
   'transbordando', 'demais', 'não aguento',
 ];
 
+// Strong markers that alone indicate the pattern (threshold=1)
+const DESORGANIZACAO_STRONG = [
+  'perdida', 'sem chão', 'caos', 'sufocada', 'desorganizada', 'confusa',
+  'transbordando', 'não aguento', 'sem rumo',
+];
+
+const CONFLITO_STRONG = [
+  'dividida', 'em conflito', 'não sabe', 'entre uma coisa e outra',
+  'ambivalente', 'rasgada', 'dois lados',
+];
+
 function countMarkers(text: string, markers: string[]): number {
   const lower = text.toLowerCase();
   return markers.reduce((count, m) => count + (lower.includes(m) ? 1 : 0), 0);
+}
+
+function hasStrongMarker(text: string, strongMarkers: string[]): boolean {
+  const lower = text.toLowerCase();
+  return strongMarkers.some(m => lower.includes(m));
 }
 
 function detectRepeticaoFrases(text: string): boolean {
@@ -79,7 +95,8 @@ export function deriveSessionUpdate(
 ): SessionUpdateResult {
   const combined = `${checkinTexto} ${anotacoes}`;
   
-  if (combined.trim().length < 15) {
+  // Lowered minimum text to catch brief but critical observations
+  if (combined.trim().length < 10) {
     return { padrao: null, estado_campo_override: null, direcao_override: null, risco_override: null, micro_mensagem: null };
   }
 
@@ -91,13 +108,20 @@ export function deriveSessionUpdate(
     desorganizacao: countMarkers(combined, DESORGANIZACAO_MARKERS),
   };
 
-  // Find dominant pattern (threshold = 2)
-  const threshold = 2;
+  // Dynamic thresholds: strong markers lower the bar to 1
+  const thresholds: Record<string, number> = {
+    repeticao: 2, // keep high — needs recurrence
+    racionalizacao: 2,
+    conflito: hasStrongMarker(combined, CONFLITO_STRONG) ? 1 : 2,
+    desorganizacao: hasStrongMarker(combined, DESORGANIZACAO_STRONG) ? 1 : 2,
+  };
+
   let padrao: PadraoDetectado = null;
   let maxScore = 0;
 
   for (const [key, score] of Object.entries(scores)) {
-    if (score >= threshold && score > maxScore) {
+    const th = thresholds[key] ?? 2;
+    if (score >= th && score > maxScore) {
       maxScore = score;
       padrao = key as PadraoDetectado;
     }
