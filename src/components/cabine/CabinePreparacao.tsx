@@ -176,8 +176,32 @@ export function CabinePreparacao({ cliente, profile, profileLoading, leituraCamp
             )}
           </CardContent>
         </Card>
+      ) : !cliente.has_initial_cartography ? (
+        /* SEM CARTOGRAFIA INICIAL → bloqueio obrigatório */
+        <Card className="border-amber-500/20 bg-amber-500/5">
+          <CardContent className="p-5">
+            <div className="text-center py-4 space-y-3">
+              <AlertCircle className="w-8 h-8 text-amber-400/50 mx-auto" />
+              <p className="text-sm text-foreground/70 font-medium">
+                Diagnóstico inicial pendente
+              </p>
+              <p className="text-xs text-muted-foreground/60">
+                Esta cliente ainda não possui leitura inicial estruturada.
+                A sessão clínica só pode começar após a Cartografia Psíquica inicial.
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+                onClick={() => navigate(`/casa-das-maquinas/ferramentas/cartografia?clienteId=${cliente.id}`)}
+              >
+                Iniciar Cartografia Inicial
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       ) : (
-        /* SEM LEITURA → redirecionar para Cartografia (obrigatório) */
+        /* TEM CARTOGRAFIA MAS SEM LEITURA DE CAMPO */
         <Card className="border-amber-500/20 bg-amber-500/5">
           <CardContent className="p-5">
             <div className="text-center py-4 space-y-3">
@@ -194,7 +218,7 @@ export function CabinePreparacao({ cliente, profile, profileLoading, leituraCamp
                 className="text-xs border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
                 onClick={() => navigate(`/casa-das-maquinas/ferramentas/cartografia?clienteId=${cliente.id}`)}
               >
-                Iniciar Cartografia Inicial
+                Criar leitura agora
               </Button>
             </div>
           </CardContent>
