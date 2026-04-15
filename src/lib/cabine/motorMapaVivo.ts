@@ -199,11 +199,11 @@ export const RITMO_LABELS: Record<RitmoTravessia, { label: string; descricao: st
 };
 
 export const PADRAO_LABELS: Record<string, { label: string; descricao: string; icon: string }> = {
-  repeticao: { label: 'Repetição detectada', descricao: 'O mesmo estado do campo apareceu 3 vezes nos últimos 5 registros', icon: '🔄' },
-  travessia_travada: { label: 'Travessia travada', descricao: 'A mesma direção de condução por 3 sessões consecutivas', icon: '⚠️' },
-  integracao_em_curso: { label: 'Integração em curso', descricao: 'Movimento de integração emergente ativo', icon: '🌱' },
-  fechamento_sustentado: { label: 'Ciclo em fechamento', descricao: 'Ciclo em fechamento sustentado por múltiplas sessões', icon: '🌙' },
-  aceleracao_instavel: { label: 'Aceleração instável', descricao: 'Mudanças rápidas de estado com risco elevado', icon: '⚡' },
+  repeticao: { label: 'Campo em repetição', descricao: 'O mesmo estado do campo apareceu 3 vezes nos últimos 5 registros', icon: '🔄' },
+  travessia_travada: { label: 'Travessia sem movimento', descricao: 'A mesma direção de condução por 3 sessões consecutivas', icon: '⚠️' },
+  integracao_em_curso: { label: 'Integração ativa', descricao: 'Movimento de integração emergente em curso', icon: '🌱' },
+  fechamento_sustentado: { label: 'Ciclo em encerramento', descricao: 'Ciclo em fechamento sustentado por múltiplas sessões', icon: '🌙' },
+  aceleracao_instavel: { label: 'Campo instável', descricao: 'Mudanças rápidas de estado com risco elevado', icon: '⚡' },
 };
 
 /**
