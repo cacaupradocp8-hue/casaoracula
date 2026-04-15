@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
+import { montarProfileJson } from '@/lib/cartografia/montarProfileJson';
 import { calcularLeitura } from '@/lib/cartografia/leituraComportamental';
 import { derivarCidadela } from '@/lib/cartografia/derivacaoCidadela';
 import { useAuth } from '@/contexts/AuthContext';
@@ -82,15 +83,12 @@ export default function CartografiaPsiquicaPage() {
 
       const medias = result.medias;
 
-      // 2. Behavioral reading
-      const leitura = calcularLeitura(medias, 'clube');
+      // 2. Motor unificado: leitura + cidadela + profile JSON
+      const { profileJson, leitura, cidadela } = montarProfileJson({ rawMedias: medias, contexto: 'clube' });
       setLeituraResult(leitura);
-
-      // 3. Auto-derive CidaDELA
-      const cidadela = derivarCidadela(medias, leitura.profile.tensao_central);
       setCidadelaResult(cidadela);
 
-      // 4. Save cartografia (no subjective data)
+      // 3. Save cartografia (no subjective data)
       const { data: cartoInserted } = await supabase.from('cartografia_psiquica').insert({
         user_id: user.id,
         cor_predominante: cidadela.cor_derivada,
@@ -102,7 +100,6 @@ export default function CartografiaPsiquicaPage() {
         ponto_partida: cidadela.porta_inicial,
         indice_equilibrio: cidadela.indice_equilibrio,
         metadata_json: { 
-          cor_hex: cidadela.cor_hex,
           medias_big5: medias,
           predominante: result.predominante?.chave,
           fragilizado: result.fragilizado?.chave,
@@ -110,13 +107,13 @@ export default function CartografiaPsiquicaPage() {
         },
       } as any).select('id').single();
 
-      // 5. Persist behavioral profile
+      // 4. Persist structured profile JSON
       if (cartoInserted?.id) {
         try {
           await upsertCartografiaProfile({
             userId: user.id,
             cartografiaId: cartoInserted.id,
-            leitura,
+            profileJson,
             mediasRaw: medias,
           });
         } catch (e) {
