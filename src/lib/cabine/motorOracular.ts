@@ -30,7 +30,10 @@ export type DirecaoConducao =
   | 'ciclo'
   | 'leitura'
   | 'sustentacao'
-  | 'contencao';
+  | 'contencao'
+  | 'espelho_contencao'
+  | 'dialogo_contencao'
+  | 'integracao_contencao';
 
 export type NivelRisco = 'baixo' | 'moderado' | 'elevado';
 
@@ -38,6 +41,7 @@ export interface LeituraCampo {
   estado: EstadoCampo;
   direcao: DirecaoConducao;
   risco: NivelRisco;
+  estagio: EstagioCampo;
   mensagem_estado: string;
   mensagem_direcao: string;
   mensagem_permanencia: string | null;
@@ -53,6 +57,8 @@ interface ProfileInput {
   o_que_evitar?: string;
   o_que_priorizar?: string;
 }
+
+export type EstagioCampo = 'inicio' | 'meio' | 'fechamento';
 
 interface SessionMetadata {
   lastSessionDate: string | null;
@@ -88,6 +94,9 @@ const DIRECAO_LABELS: Record<DirecaoConducao, string> = {
   leitura: 'Fazer leitura de campo antes de intervir',
   sustentacao: 'Sustentar mais antes de confrontar',
   contencao: 'Priorizar contenção e acolhimento',
+  espelho_contencao: 'Espelhar com contenção — risco elevado',
+  dialogo_contencao: 'Dialogar com contenção — risco elevado',
+  integracao_contencao: 'Integrar com contenção — risco elevado',
 };
 
 // ================================
@@ -206,10 +215,24 @@ function detectEstado(profile: ProfileInput, meta: SessionMetadata): EstadoCampo
 }
 
 // ================================
-// DIREÇÃO DE CONDUÇÃO — Mapeamento
+// ESTÁGIO — Detecção
 // ================================
 
-const ESTADO_DIRECAO_MAP: Record<EstadoCampo, DirecaoConducao> = {
+function detectEstagio(estado: EstadoCampo, meta: SessionMetadata): EstagioCampo {
+  if (estado === 'inicio_de_processo') return 'inicio';
+  if (estado === 'ciclo_em_fechamento') return 'fechamento';
+  if (estado === 'integracao_emergente' && meta.temMovimentoAtivo) return 'fechamento';
+  const count = meta.sessionCount || 0;
+  if (count <= 2) return 'inicio';
+  if (count >= 8 || estado === 'integracao_emergente') return 'fechamento';
+  return 'meio';
+}
+
+// ================================
+// DIREÇÃO DE CONDUÇÃO — Matriz estado × risco × estágio
+// ================================
+
+const ESTADO_DIRECAO_BASE: Record<EstadoCampo, DirecaoConducao> = {
   excesso_de_mente: 'dialogo',
   repeticao_de_padrao: 'espelho',
   divisao_interna: 'integracao',
@@ -219,6 +242,40 @@ const ESTADO_DIRECAO_MAP: Record<EstadoCampo, DirecaoConducao> = {
   inicio_de_processo: 'leitura',
   campo_estavel: 'sustentacao',
 };
+
+/** Risco elevado → combina direção base com contenção */
+const RISCO_ELEVADO_OVERRIDE: Partial<Record<DirecaoConducao, DirecaoConducao>> = {
+  espelho: 'espelho_contencao',
+  dialogo: 'dialogo_contencao',
+  integracao: 'integracao_contencao',
+};
+
+/** Risco baixo em início → pode abrir mais */
+const INICIO_RISCO_BAIXO_OVERRIDE: Partial<Record<EstadoCampo, DirecaoConducao>> = {
+  repeticao_de_padrao: 'leitura',    // risco baixo + início → leitura antes de espelhar
+  excesso_de_mente: 'leitura',       // risco baixo + início → leitura antes de dialogar
+};
+
+function resolverDirecao(estado: EstadoCampo, risco: NivelRisco, estagio: EstagioCampo): DirecaoConducao {
+  const base = ESTADO_DIRECAO_BASE[estado];
+
+  // Risco elevado: sempre prioriza contenção
+  if (risco === 'elevado') {
+    return RISCO_ELEVADO_OVERRIDE[base] || 'contencao';
+  }
+
+  // Risco baixo + início: pode abrir mais
+  if (risco === 'baixo' && estagio === 'inicio') {
+    return INICIO_RISCO_BAIXO_OVERRIDE[estado] || base;
+  }
+
+  // Fechamento: prioriza sustentação ou ciclo
+  if (estagio === 'fechamento' && estado !== 'ciclo_em_fechamento') {
+    return 'sustentacao';
+  }
+
+  return base;
+}
 
 // ================================
 // RISCO — Avaliação
@@ -275,13 +332,15 @@ export function calcularLeituraCampo(
 ): LeituraCampo {
   const profile = profileJson || {};
   const estado = detectEstado(profile, meta);
-  const direcao = ESTADO_DIRECAO_MAP[estado];
   const risco = avaliarRisco(profile, meta);
+  const estagio = detectEstagio(estado, meta);
+  const direcao = resolverDirecao(estado, risco, estagio);
 
   return {
     estado,
     direcao,
     risco,
+    estagio,
     mensagem_estado: ESTADO_LABELS[estado],
     mensagem_direcao: DIRECAO_LABELS[direcao],
     mensagem_permanencia: mensagemPermanencia(estado, risco),
