@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
+import { montarProfileJson } from '@/lib/cartografia/montarProfileJson';
 import { calcularLeitura } from '@/lib/cartografia/leituraComportamental';
 import { derivarCidadela } from '@/lib/cartografia/derivacaoCidadela';
 import { useAuth } from '@/contexts/AuthContext';
@@ -92,12 +93,9 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
       const big5Result = calcularMedias(respostas);
       const medias = big5Result.medias;
 
-      // Calculate behavioral reading
-      const leitura = calcularLeitura(medias, 'casa_das_maquinas');
+      // Motor unificado: leitura + cidadela + profile JSON
+      const { profileJson, leitura, cidadela } = montarProfileJson({ rawMedias: medias, contexto: 'casa_das_maquinas' });
       setLeituraResult(leitura);
-
-      // Auto-derive CidaDELA
-      const cidadela = derivarCidadela(medias, leitura.profile.tensao_central);
       setCidadelaResult(cidadela);
 
       // Save cartografia to DB (no subjective data)
@@ -132,12 +130,12 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
 
       const cartografiaId = cartoInserted[0].id;
 
-      // Persist behavioral profile
+      // Persist structured profile JSON
       try {
         await upsertCartografiaProfile({
           userId: user.id,
           cartografiaId,
-          leitura,
+          profileJson,
           mediasRaw: medias,
           therapistUserId: user.id,
         });
