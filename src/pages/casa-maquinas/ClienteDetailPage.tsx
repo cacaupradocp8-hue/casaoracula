@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { CasaMaquinasLayout } from '@/components/casa-maquinas/CasaMaquinasLayout';
@@ -33,10 +33,10 @@ import { Loader2, Play } from 'lucide-react';
 
 export default function ClienteDetailPage() {
   const { clienteId } = useParams<{ clienteId: string }>();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [cliente, setCliente] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [sessionWizardOpen, setSessionWizardOpen] = useState(false);
 
   useEffect(() => {
     if (user && clienteId) loadCliente();
