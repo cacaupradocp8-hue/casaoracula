@@ -273,6 +273,29 @@ export function CabineActiveView({
                 Ação
               </p>
 
+              {/* Diagnóstico pendente — bloco fixo */}
+              {!cliente.has_initial_cartography && (
+                <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 space-y-2.5">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 text-amber-400/60 shrink-0" />
+                    <p className="text-xs text-foreground/70 font-medium">
+                      Diagnóstico inicial pendente
+                    </p>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground/50 leading-relaxed">
+                    Sessão clínica requer Cartografia Psíquica.
+                  </p>
+                  <Button
+                    onClick={() => navigate(`/ferramenta/cartografia-psiquica-oracula?clienteId=${cliente.id}&fromCabine=true`)}
+                    className="w-full h-10 text-xs font-medium bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 rounded-xl gap-1.5"
+                    variant="outline"
+                  >
+                    Iniciar Diagnóstico Inicial
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
+              )}
+
               {/* Primary CTA */}
               <Button
                 onClick={() => onStartSession(false)}
