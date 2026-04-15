@@ -184,7 +184,7 @@ export default function CasaDasMaquinas() {
                         torrePredominante={c.arquetipo_nome || ''}
                         estado={estadoMap[c.status] || 'travessia'}
                         onOpenCity={() => navigate(`/casa-das-maquinas/clientes/${c.id}`)}
-                        onStartSession={() => navigate('/casa-das-maquinas/sessoes')}
+                        onStartSession={() => navigate(`/casa-das-maquinas/cabine?clienteId=${c.id}`)}
                         onViewHistory={() => navigate(`/casa-das-maquinas/clientes/${c.id}`)}
                       />
                     ))}

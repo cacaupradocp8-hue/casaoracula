@@ -413,10 +413,10 @@ export function DistrictPanel({ district, open, onClose, state, sessionCount, to
                 className="w-full mt-3 bg-primary hover:bg-primary/80 text-primary-foreground font-medium"
                 onClick={() => {
                   onClose();
-                  navigate(`/casa-das-maquinas/sessoes?clienteId=${clienteId}&districtId=${district.id}`);
+                  navigate(`/casa-das-maquinas/cabine?clienteId=${clienteId}`);
                 }}
               >
-                Iniciar Sessão neste Distrito
+                Abrir Cabine para Sessão
               </Button>
             </div>
           </ScrollArea>

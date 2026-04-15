@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { CasaMaquinasLayout } from '@/components/casa-maquinas/CasaMaquinasLayout';
@@ -23,20 +23,20 @@ import { RitualIntegracao } from '@/components/casa-maquinas/ritual-integracao/R
 import { CartografiaPsiquicaOracula } from '@/components/casa-maquinas/cartografia-psiquica/CartografiaPsiquicaOracula';
 import { RelatorioJornadaPage } from '@/components/casa-maquinas/relatorio-jornada/RelatorioJornadaPage';
 import { BussolaCartografa } from '@/components/casa-maquinas/bussola-cartografa/BussolaCartografa';
-import { PainelConducaoSessao } from '@/components/casa-maquinas/painel-conducao/PainelConducaoSessao';
+
 import { PerfilSimbolicoCliente } from '@/components/casa-maquinas/painel-conducao/PerfilSimbolicoCliente';
 import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
 import { ClienteJardimHeroinaTab } from '@/components/casa-maquinas/ClienteJardimHeroinaTab';
 import { ClienteAtividadeJardim } from '@/components/casa-maquinas/ClienteAtividadeJardim';
 import { Button } from '@/components/ui/button';
-import { Loader2, Play } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 export default function ClienteDetailPage() {
   const { clienteId } = useParams<{ clienteId: string }>();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [cliente, setCliente] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [sessionWizardOpen, setSessionWizardOpen] = useState(false);
 
   useEffect(() => {
     if (user && clienteId) loadCliente();
@@ -76,11 +76,11 @@ export default function ClienteDetailPage() {
     <CasaMaquinasLayout title={cliente.nome} subtitle="Jornada interior">
       <div className="flex justify-end mb-4">
         <Button
-          variant="gold"
-          onClick={() => setSessionWizardOpen(true)}
-          className="gap-2"
+          variant="outline"
+          onClick={() => navigate(`/casa-das-maquinas/cabine?clienteId=${clienteId}`)}
+          className="gap-2 border-primary/30 text-primary hover:bg-primary/10"
         >
-          <Play className="w-4 h-4" /> Iniciar Sessão
+          Abrir Cabine
         </Button>
       </div>
 
@@ -92,12 +92,6 @@ export default function ClienteDetailPage() {
         <ClienteAtividadeJardim clienteId={clienteId!} />
       </div>
 
-      <PainelConducaoSessao
-        clienteId={clienteId!}
-        clienteNome={cliente.nome}
-        open={sessionWizardOpen}
-        onClose={() => setSessionWizardOpen(false)}
-      />
 
       <Tabs defaultValue="cidadela" className="w-full">
         <TabsList className="bg-card/80 border border-border/30 mb-6 flex-wrap h-auto gap-0.5 p-1">
