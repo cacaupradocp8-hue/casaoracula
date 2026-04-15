@@ -293,6 +293,10 @@ export default function CabineTerapeutaPage() {
             <CabineIntegracao
               cliente={selectedCliente!}
               sessionId={savedSessionId!}
+              sessionData={sessionData}
+              leituraCampo={leituraCampo}
+              mapaVivoState={mapaVivoState}
+              fluxoFinal={currentFluxo}
               onDone={() => {
                 setMode('preparacao');
                 setSessionData(EMPTY_SESSION);
