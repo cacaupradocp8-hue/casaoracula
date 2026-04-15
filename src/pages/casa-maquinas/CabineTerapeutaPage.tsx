@@ -73,6 +73,7 @@ export default function CabineTerapeutaPage() {
   const [sessionStartedAt, setSessionStartedAt] = useState<Date | null>(null);
   const [sessionWithoutProfile, setSessionWithoutProfile] = useState(false);
   const [savedSessionId, setSavedSessionId] = useState<string | null>(null);
+  const { state: mapaVivoState, fetchMapaVivo } = useMapaVivoLive();
 
   const selectedCliente = useMemo(
     () => clientes.find(c => c.id === selectedClienteId) ?? null,
