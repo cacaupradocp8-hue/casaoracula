@@ -106,13 +106,7 @@ export function CabineSessaoViva({
     };
   }, [sessionData.checkinTexto, sessionData.anotacoes, leituraCampo?.risco]);
 
-  // Computed live estado/direcao/risco (soft override)
-  const liveEstadoMsg = liveUpdate?.estado_campo_override
-    ? undefined // will be shown from liveUpdate
-    : leituraCampo?.mensagem_estado;
-  const liveDirecaoMsg = liveUpdate?.direcao_override
-    ? undefined
-    : leituraCampo?.mensagem_direcao;
+  // Computed live risco (soft override)
   const liveRisco = liveUpdate?.risco_override || leituraCampo?.risco || 'baixo';
 
   // Track elapsed minutes
