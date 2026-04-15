@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Activity, Compass, AlertTriangle, Shield, Clock, Eye, EyeOff, Ban, CheckCircle2 } from 'lucide-react';
+import { Activity, Compass, AlertTriangle, Shield, Clock, Eye, EyeOff, Ban, CheckCircle2, Milestone } from 'lucide-react';
 import type { LeituraCampo } from '@/lib/cabine/motorOracular';
 import type { CartografiaProfile } from '@/pages/casa-maquinas/CabineTerapeutaPage';
 
@@ -33,13 +33,18 @@ export function CabineDecisaoClinica({ leitura, profile, compact = false }: Prop
     <Card className="border-primary/25 bg-gradient-to-br from-primary/5 to-primary/10">
       <CardContent className={compact ? 'p-3 space-y-3' : 'p-5 space-y-4'}>
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-1">
           <p className="text-[10px] uppercase tracking-[0.2em] text-primary/70 font-semibold">
             Tomada de Decisão Clínica
           </p>
-          <Badge variant="outline" className={`text-[9px] px-2 ${RISCO_COLORS[leitura.risco]}`}>
-            Risco {leitura.risco}
-          </Badge>
+          <div className="flex items-center gap-1.5">
+            <Badge variant="outline" className="text-[9px] px-2 border-primary/20 text-primary/60">
+              {leitura.estagio === 'inicio' ? 'Início' : leitura.estagio === 'meio' ? 'Meio' : 'Fechamento'}
+            </Badge>
+            <Badge variant="outline" className={`text-[9px] px-2 ${RISCO_COLORS[leitura.risco]}`}>
+              Risco {leitura.risco}
+            </Badge>
+          </div>
         </div>
 
         {/* 🧠 ESTADO DO CAMPO — destaque máximo */}
