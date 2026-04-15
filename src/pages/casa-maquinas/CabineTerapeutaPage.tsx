@@ -165,7 +165,7 @@ export default function CabineTerapeutaPage() {
     setSavedSessionId(null);
     setSessionWithoutProfile(false);
     fetchMapaVivo(id);
-  }, []);
+  }, [fetchMapaVivo]);
 
   const handleStartSession = useCallback((withoutProfile: boolean) => {
     setSessionWithoutProfile(withoutProfile);
