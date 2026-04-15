@@ -1,6 +1,7 @@
 /**
  * Saída Clínica — visão da terapeuta na cabine
  * Exibe leitura diagnóstica técnica derivada automaticamente das 30 respostas.
+ * Sem elementos lúdicos. Profissional e determinística.
  */
 
 import { motion } from 'framer-motion';
@@ -9,10 +10,12 @@ import { Badge } from '@/components/ui/badge';
 import { Stethoscope, AlertTriangle, Target, Gauge, Shield, Compass } from 'lucide-react';
 import type { LeituraComportamental } from '@/lib/cartografia/leituraComportamental';
 import type { CidadelaDerivada } from '@/lib/cartografia/derivacaoCidadela';
+import type { ProfileJsonFinal } from '@/lib/cartografia/montarProfileJson';
 
 interface Props {
   leitura: LeituraComportamental;
   cidadela: CidadelaDerivada;
+  profileJson?: ProfileJsonFinal;
 }
 
 const anim = (delay: number) => ({
@@ -27,8 +30,16 @@ const RITMO_LABEL: Record<string, string> = {
   rapido: 'Dinâmico — abertura para experimentação ativa',
 };
 
-export function SaidaClinica({ leitura, cidadela }: Props) {
+const RISCO_LABEL: Record<string, { text: string; color: string }> = {
+  alto: { text: 'Alto', color: 'text-destructive' },
+  moderado: { text: 'Moderado', color: 'text-amber-500' },
+  baixo: { text: 'Baixo', color: 'text-emerald-500' },
+};
+
+export function SaidaClinica({ leitura, cidadela, profileJson }: Props) {
   const { profile, saida_terapeuta } = leitura;
+  const risco = profileJson?.derivacao.risco_conducao || 'moderado';
+  const riscoInfo = RISCO_LABEL[risco] || RISCO_LABEL.moderado;
 
   return (
     <div className="space-y-5 w-full max-w-2xl mx-auto overflow-hidden">
@@ -65,6 +76,9 @@ export function SaidaClinica({ leitura, cidadela }: Props) {
           </CardHeader>
           <CardContent>
             <p className="text-sm font-medium text-foreground capitalize">{profile.tensao_central}</p>
+            {profileJson && (
+              <p className="text-xs text-muted-foreground mt-1">{profileJson.leitura_clinica.tensao_central_texto}</p>
+            )}
           </CardContent>
         </Card>
       </motion.div>
@@ -88,9 +102,9 @@ export function SaidaClinica({ leitura, cidadela }: Props) {
             <CardContent className="p-3 space-y-1">
               <div className="flex items-center gap-1.5">
                 <AlertTriangle className="w-3.5 h-3.5 text-destructive/60" />
-                <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Medo dominante</p>
+                <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Risco de condução</p>
               </div>
-              <p className="text-xs font-medium text-foreground capitalize">{profile.medo_dominante}</p>
+              <p className={`text-xs font-bold ${riscoInfo.color}`}>{riscoInfo.text}</p>
             </CardContent>
           </Card>
         </motion.div>
@@ -118,12 +132,9 @@ export function SaidaClinica({ leitura, cidadela }: Props) {
           </CardHeader>
           <CardContent className="space-y-3">
             <p className="text-xs text-foreground/80">{profile.estilo_conducao}</p>
-            <div className="flex items-center gap-2 pt-1 border-t border-border/10">
-              <span className="text-lg">{cidadela.simbolo_icon}</span>
-              <div>
-                <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">Porta inicial de trabalho</p>
-                <p className="text-sm font-medium text-primary">{cidadela.porta_inicial_nome}</p>
-              </div>
+            <div className="pt-1 border-t border-border/10">
+              <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">Porta inicial de trabalho</p>
+              <p className="text-sm font-medium text-primary">{cidadela.porta_inicial_nome}</p>
             </div>
           </CardContent>
         </Card>
@@ -134,7 +145,7 @@ export function SaidaClinica({ leitura, cidadela }: Props) {
         <motion.div {...anim(0.4)}>
           <Card className="border-destructive/15 bg-destructive/5 h-full">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-destructive/70">⛔ Risco de condução</CardTitle>
+              <CardTitle className="text-xs text-destructive/70">⛔ Evitar</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-1.5">
@@ -152,7 +163,7 @@ export function SaidaClinica({ leitura, cidadela }: Props) {
         <motion.div {...anim(0.45)}>
           <Card className="border-accent/15 bg-accent/5 h-full">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-accent-foreground/70">✓ O que priorizar</CardTitle>
+              <CardTitle className="text-xs text-accent-foreground/70">✓ Priorizar</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-1.5">
@@ -168,7 +179,7 @@ export function SaidaClinica({ leitura, cidadela }: Props) {
         </motion.div>
       </div>
 
-      {/* CidaDELA derivada */}
+      {/* CidaDELA derivada — sem cor, sem símbolo */}
       <motion.div {...anim(0.5)}>
         <Card className="border-border/15 bg-card/40">
           <CardHeader className="pb-2">
@@ -177,19 +188,16 @@ export function SaidaClinica({ leitura, cidadela }: Props) {
           <CardContent className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
               <div>
+                <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">Porta inicial</p>
+                <p className="text-xs font-medium text-foreground">{cidadela.porta_inicial_nome}</p>
+              </div>
+              <div>
                 <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">Torre dominante</p>
                 <p className="text-xs font-medium text-foreground">{cidadela.torre_dominante}</p>
               </div>
               <div>
                 <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">Clima da cidade</p>
                 <p className="text-xs font-medium text-foreground">{cidadela.clima_cidade}</p>
-              </div>
-              <div>
-                <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">Cor</p>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: cidadela.cor_hex }} />
-                  <p className="text-xs font-medium text-foreground">{cidadela.cor_derivada}</p>
-                </div>
               </div>
               <div>
                 <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">Equilíbrio</p>
@@ -214,9 +222,8 @@ export function SaidaClinica({ leitura, cidadela }: Props) {
           <CardContent className="p-4">
             <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1.5">Observação ética</p>
             <p className="text-xs text-muted-foreground/70 leading-relaxed">
-              Esta leitura é um instrumento de apoio à decisão clínica, não um diagnóstico.
-              A interpretação final e a responsabilidade de condução pertencem à facilitadora.
-              Tolerância ao confronto: <span className="font-medium text-foreground/60">{profile.tolerancia_confronto}</span>.
+              {profileJson?.leitura_clinica.observacao_etica || 
+                'Esta leitura é um instrumento de apoio à decisão clínica, não um diagnóstico. A interpretação final e a responsabilidade de condução pertencem à facilitadora.'}
             </p>
           </CardContent>
         </Card>
