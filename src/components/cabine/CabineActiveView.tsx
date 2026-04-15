@@ -52,6 +52,7 @@ export function CabineActiveView({
   onFluxoChange,
   onBack,
 }: Props) {
+  const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
 
   const decisao: DecisaoClinicaResult | null = mapaVivoState
