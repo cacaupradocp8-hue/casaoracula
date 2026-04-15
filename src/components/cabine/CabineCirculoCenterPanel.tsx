@@ -3,6 +3,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { CircleDot, Sparkles, BookOpen, HelpCircle, Hand, Waves, AlertTriangle, Pause, Loader2 } from 'lucide-react';
 import type { CirculoSagrado } from '@/hooks/useCirculosSagrados';
 import { calcularLeituraSimbolica, type LeituraSimbolica, type CirculoEncounterInput } from '@/lib/cabine/motorLeituraSimbolica';
+import { avaliarCondutaCirculo, type DecisaoCampoColetivo } from '@/lib/cabine/decisaoCampoColetivo';
+import { useFieldSnapshot } from '@/hooks/useFieldSnapshot';
+import { BlocoDecisaoCampo } from './BlocoDecisaoCampo';
 import { supabase } from '@/lib/dal/dbClient';
 import { cn } from '@/lib/utils';
 
