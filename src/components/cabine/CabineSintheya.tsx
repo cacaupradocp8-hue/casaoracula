@@ -37,8 +37,8 @@ export function CabineSintheya({ clienteNome, leitura, sessionData, sessionActiv
         risco: leitura.risco,
         permanencia: leitura.mensagem_permanencia,
         alerta: leitura.alerta_seguranca,
-        checkin: sessionData?.checkinTexto || null,
-        anotacoes: sessionData?.anotacoes || null,
+        checkin: sanitizePayloadText(sessionData?.checkinTexto, 80),
+        anotacoes: sanitizePayloadText(sessionData?.anotacoes, 120),
         ferramenta: sessionData?.ferramentaEscolhida || null,
       };
 
