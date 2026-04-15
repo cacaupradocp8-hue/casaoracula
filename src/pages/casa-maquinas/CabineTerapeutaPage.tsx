@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useMapaVivoLive } from '@/hooks/useMapaVivoLive';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/dal/dbClient';
 import { useAuth } from '@/contexts/AuthContext';
@@ -72,6 +73,7 @@ export default function CabineTerapeutaPage() {
   const [sessionStartedAt, setSessionStartedAt] = useState<Date | null>(null);
   const [sessionWithoutProfile, setSessionWithoutProfile] = useState(false);
   const [savedSessionId, setSavedSessionId] = useState<string | null>(null);
+  const { state: mapaVivoState, fetchMapaVivo } = useMapaVivoLive();
 
   const selectedCliente = useMemo(
     () => clientes.find(c => c.id === selectedClienteId) ?? null,
@@ -162,7 +164,8 @@ export default function CabineTerapeutaPage() {
     setSessionStartedAt(null);
     setSavedSessionId(null);
     setSessionWithoutProfile(false);
-  }, []);
+    fetchMapaVivo(id);
+  }, [fetchMapaVivo]);
 
   const handleStartSession = useCallback((withoutProfile: boolean) => {
     setSessionWithoutProfile(withoutProfile);
@@ -276,6 +279,7 @@ export default function CabineTerapeutaPage() {
             leitura={leituraCampo}
             sessionData={mode === 'sessao' ? sessionData : undefined}
             sessionActive={mode === 'sessao'}
+            mapaVivoState={mapaVivoState}
           />
           <CabineSussurro
             leitura={leituraCampo}

@@ -5,12 +5,14 @@ import { Brain, Loader2, RefreshCw } from 'lucide-react';
 import { supabase } from '@/lib/dal/dbClient';
 import { type LeituraCampo, sanitizePayloadText } from '@/lib/cabine/motorOracular';
 import type { SessionData } from '@/pages/casa-maquinas/CabineTerapeutaPage';
+import type { MapaVivoState } from '@/lib/cabine/motorMapaVivo';
 
 interface Props {
   clienteNome: string;
   leitura: LeituraCampo | null;
   sessionData?: SessionData;
   sessionActive: boolean;
+  mapaVivoState?: MapaVivoState | null;
 }
 
 interface SintheyaResponse {
@@ -20,7 +22,7 @@ interface SintheyaResponse {
   limite?: string;
 }
 
-export function CabineSintheya({ clienteNome, leitura, sessionData, sessionActive }: Props) {
+export function CabineSintheya({ clienteNome, leitura, sessionData, sessionActive, mapaVivoState }: Props) {
   const [response, setResponse] = useState<SintheyaResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,8 +44,18 @@ export function CabineSintheya({ clienteNome, leitura, sessionData, sessionActiv
         ferramenta: sessionData?.ferramentaEscolhida || null,
       };
 
+      const mapa_vivo = mapaVivoState ? {
+        estado_atual: mapaVivoState.estado_atual || null,
+        direcao_atual: mapaVivoState.direcao_atual || null,
+        risco_atual: mapaVivoState.risco_atual || null,
+        ritmo_atual: mapaVivoState.ritmo_atual || null,
+        repeticao_detectada: mapaVivoState.repeticao_detectada ?? false,
+        travessia_travada: mapaVivoState.travessia_travada ?? false,
+        integracao_em_curso: mapaVivoState.integracao_em_curso ?? false,
+      } : null;
+
       const { data, error: fnError } = await supabase.functions.invoke('cabine-sintheya', {
-        body: { context, cliente_nome: clienteNome },
+        body: { context, cliente_nome: clienteNome, mapa_vivo },
       });
 
       if (fnError) throw new Error(fnError.message);
@@ -55,7 +67,7 @@ export function CabineSintheya({ clienteNome, leitura, sessionData, sessionActiv
     } finally {
       setLoading(false);
     }
-  }, [leitura, sessionData, clienteNome]);
+  }, [leitura, sessionData, clienteNome, mapaVivoState]);
 
   return (
     <Card className="border-border/15 bg-card/40 backdrop-blur-sm">
