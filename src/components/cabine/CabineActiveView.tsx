@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Activity, Compass, ShieldCheck, ShieldAlert, ShieldX, Lock, Play, Pen, VolumeX, ChevronDown, ChevronUp, ArrowLeft, AlertTriangle, Shield, Eye, Map, Clock, ChevronRight } from 'lucide-react';
+import { Activity, Compass, ShieldCheck, ShieldAlert, ShieldX, Lock, Play, Pen, VolumeX, ChevronDown, ChevronUp, ArrowLeft, AlertTriangle, Shield, Eye, Map, Clock, ChevronRight, UserPlus, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
