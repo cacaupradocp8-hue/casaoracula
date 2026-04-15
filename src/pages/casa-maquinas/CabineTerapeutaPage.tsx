@@ -393,6 +393,16 @@ export default function CabineTerapeutaPage() {
           onSelectCliente={handleSelectCliente}
           onSelectGroup={(id) => setSelectedGroupId(id)}
           onSelectCirculo={(id) => setSelectedCirculoId(id)}
+          onCreateCliente={() => setCreateModal('cliente')}
+          onCreateGroup={() => setCreateModal('grupo')}
+          onCreateCirculo={() => setCreateModal('circulo')}
+        />
+        <CabineCreateModals
+          open={createModal}
+          onClose={() => setCreateModal(null)}
+          onClienteCreated={handleClienteCreated}
+          onGroupCreated={handleGroupCreated}
+          onCirculoCreated={handleCirculoCreated}
         />
       </CasaMaquinasLayout>
     );
