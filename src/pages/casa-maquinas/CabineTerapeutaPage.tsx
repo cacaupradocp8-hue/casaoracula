@@ -4,8 +4,9 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/lib/dal/dbClient';
 import { useAuth } from '@/contexts/AuthContext';
 import { CasaMaquinasLayout } from '@/components/casa-maquinas/CasaMaquinasLayout';
-import { CabineClientesList } from '@/components/cabine/CabineClientesList';
-import { CabinePreparacao } from '@/components/cabine/CabinePreparacao';
+import { CabineClientePanel } from '@/components/cabine/CabineClientePanel';
+import { CabineMapaVivoPanel } from '@/components/cabine/CabineMapaVivoPanel';
+import { CabineSessaoPanel } from '@/components/cabine/CabineSessaoPanel';
 import { CabineSessaoViva } from '@/components/cabine/CabineSessaoViva';
 import { CabineIntegracao } from '@/components/cabine/CabineIntegracao';
 import { CabineSintheya } from '@/components/cabine/CabineSintheya';
@@ -77,7 +78,7 @@ export default function CabineTerapeutaPage() {
   const [sessionStartedAt, setSessionStartedAt] = useState<Date | null>(null);
   const [sessionWithoutProfile, setSessionWithoutProfile] = useState(false);
   const [savedSessionId, setSavedSessionId] = useState<string | null>(null);
-  const { state: mapaVivoState, fetchMapaVivo, salvarSnapshot } = useMapaVivoLive();
+  const { state: mapaVivoState, fetchMapaVivo, salvarSnapshot, loading: mapaVivoLoading } = useMapaVivoLive();
   const [currentFluxo, setCurrentFluxo] = useState<FluxoClinicoResult | null>(null);
 
   const selectedCliente = useMemo(
@@ -261,41 +262,43 @@ export default function CabineTerapeutaPage() {
 
   if (loading) {
     return (
-      <CasaMaquinasLayout title="Cabine da Terapeuta" subtitle="Seu ambiente de condução clínica">
+      <CasaMaquinasLayout title="Cabine da Terapeuta" subtitle="Centro clínico de condução">
         <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
       </CasaMaquinasLayout>
     );
   }
 
   return (
-    <CasaMaquinasLayout title="Cabine da Terapeuta" subtitle="Seu ambiente de condução clínica">
-      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr_240px] gap-4 min-h-[calc(100vh-12rem)]">
-        {/* Left: Clients */}
-        <CabineClientesList
+    <CasaMaquinasLayout title="Cabine da Terapeuta" subtitle="Centro clínico de condução">
+      {/* Notice: returned from cartografia */}
+      {searchParams.get('fromCartografia') === 'true' && selectedClienteId && (
+        <div className="mb-3 rounded-md border border-primary/15 bg-card/40 px-4 py-2.5 animate-fade-in">
+          <p className="text-xs text-primary/70 italic">Leitura inicial registrada</p>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr_260px] gap-4 min-h-[calc(100vh-12rem)]">
+        {/* ═══ LEFT: Cliente ═══ */}
+        <CabineClientePanel
           clientes={clientes}
           selectedId={selectedClienteId}
           onSelect={handleSelectCliente}
         />
 
-        {/* Center: Main area */}
-        <div className="min-h-0">
-          {/* Notice: returned from cartografia */}
-          {searchParams.get('fromCartografia') === 'true' && selectedClienteId && (
-            <div className="mb-3 rounded-md border border-primary/15 bg-card/40 px-4 py-2.5 animate-fade-in">
-              <p className="text-xs text-primary/70 italic">Leitura inicial registrada</p>
-            </div>
-          )}
+        {/* ═══ CENTER: Mapa Vivo + Sessão Viva ═══ */}
+        <div className="min-h-0 space-y-4">
           {!selectedClienteId ? (
             <div className="flex items-center justify-center h-full">
               <p className="text-sm text-muted-foreground/50 italic">Selecione uma cliente para começar</p>
             </div>
           ) : mode === 'preparacao' ? (
-            <CabinePreparacao
-              cliente={selectedCliente!}
+            <CabineMapaVivoPanel
+              leituraCampo={leituraCampo}
               profile={profile}
               profileLoading={profileLoading}
-              leituraCampo={leituraCampo}
-              onStartSession={handleStartSession}
+              mapaVivoState={mapaVivoState}
+              mapaVivoLoading={mapaVivoLoading}
+              hasCartography={selectedCliente?.has_initial_cartography ?? false}
             />
           ) : mode === 'sessao' ? (
             <CabineSessaoViva
@@ -327,22 +330,35 @@ export default function CabineTerapeutaPage() {
           )}
         </div>
 
-        {/* Right: SINTHEYA + Sussurro */}
-        <div className="space-y-3 hidden lg:block">
-          <CabineSintheya
-            clienteNome={selectedCliente?.nome || ''}
-            leitura={leituraCampo}
-            sessionData={mode === 'sessao' ? sessionData : undefined}
-            sessionActive={mode === 'sessao'}
-            mapaVivoState={mapaVivoState}
-          />
-          <CabineSussurro
-            leitura={leituraCampo}
-            sessionActive={mode === 'sessao'}
-            checkinTexto={sessionData.checkinTexto}
-            anotacoes={sessionData.anotacoes}
-            sessionStage={currentFluxo ? { stage: currentFluxo.fluxo as any, label: '', orientacao: currentFluxo.orientacao, sintheya_regra: currentFluxo.sintheya_regra, sussurro_ativo: currentFluxo.sussurro_ativo, sussurro_motivo: currentFluxo.sussurro_motivo } : null}
-          />
+        {/* ═══ RIGHT: Sessão + Sintheya + Sussurro ═══ */}
+        <div className="space-y-3">
+          {selectedClienteId && (
+            <CabineSessaoPanel
+              mode={mode}
+              leituraCampo={leituraCampo}
+              mapaVivoState={mapaVivoState}
+              sessionData={sessionData}
+              hasCartography={selectedCliente?.has_initial_cartography ?? false}
+              onStartSession={handleStartSession}
+            />
+          )}
+
+          <div className="hidden lg:block space-y-3">
+            <CabineSintheya
+              clienteNome={selectedCliente?.nome || ''}
+              leitura={leituraCampo}
+              sessionData={mode === 'sessao' ? sessionData : undefined}
+              sessionActive={mode === 'sessao'}
+              mapaVivoState={mapaVivoState}
+            />
+            <CabineSussurro
+              leitura={leituraCampo}
+              sessionActive={mode === 'sessao'}
+              checkinTexto={sessionData.checkinTexto}
+              anotacoes={sessionData.anotacoes}
+              sessionStage={currentFluxo ? { stage: currentFluxo.fluxo as any, label: '', orientacao: currentFluxo.orientacao, sintheya_regra: currentFluxo.sintheya_regra, sussurro_ativo: currentFluxo.sussurro_ativo, sussurro_motivo: currentFluxo.sussurro_motivo } : null}
+            />
+          </div>
         </div>
       </div>
     </CasaMaquinasLayout>
