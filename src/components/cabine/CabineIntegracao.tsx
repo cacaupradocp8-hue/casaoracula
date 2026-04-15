@@ -105,23 +105,36 @@ export function CabineIntegracao({ cliente, sessionId, sessionData, leituraCampo
       return;
     }
 
-    // Send symbolic message to garden
+    // Find jardim for this client
+    const { data: jardimData } = await supabase
+      .from('co_jardins')
+      .select('id')
+      .eq('client_user_id', cliente.client_user_id)
+      .eq('therapist_user_id', user.id)
+      .eq('status', 'active')
+      .limit(1)
+      .maybeSingle();
+
+    if (!jardimData) {
+      setSending(false);
+      toast.success('Sessão salva. Jardim ainda não ativo para esta cliente.');
+      setSent(true);
+      return;
+    }
+
+    // Send symbolic message to garden using correct column names
     const { error: jardimError } = await supabase
       .from('co_jardim_entries')
       .insert({
+        jardim_id: jardimData.id,
         client_user_id: cliente.client_user_id,
         therapist_user_id: user.id,
         created_by: user.id,
-        tipo: 'mensagem_sessao',
-        conteudo: sintese.mensagem_simbolica,
-        metadata_json: {
-          session_id: sessionId,
-          direcao_proxima: sintese.direcao_proxima,
-          sustentar: sintese.sustentar,
-        },
+        entry_type: 'mensagem_sessao',
+        content: sintese.mensagem_simbolica,
         visibility_to_client: true,
         shared_with_therapist: true,
-      } as any);
+      });
 
     setSending(false);
 
