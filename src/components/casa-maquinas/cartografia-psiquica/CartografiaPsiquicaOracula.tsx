@@ -93,6 +93,15 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
       const big5Result = calcularMedias(respostas);
       const medias = big5Result.medias;
 
+      // Resolve client_user_id for linking
+      const { data: clienteRow } = await supabase
+        .from('clientes')
+        .select('client_user_id')
+        .eq('id', clienteId)
+        .eq('terapeuta_id', user.id)
+        .maybeSingle();
+      const clientUserId = clienteRow?.client_user_id || null;
+
       // Motor unificado: leitura + cidadela + profile JSON
       const { profileJson, leitura, cidadela } = montarProfileJson({ rawMedias: medias, contexto: 'casa_das_maquinas' });
       setLeituraResult(leitura);
@@ -137,10 +146,53 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
           cartografiaId,
           profileJson,
           mediasRaw: medias,
+          clientUserId,
           therapistUserId: user.id,
         });
       } catch (e) {
         console.error('Erro ao persistir perfil comportamental:', e);
+      }
+
+      // Initialize Mapa Vivo from cartografia data
+      if (clientUserId) {
+        try {
+          // Insert initial entry
+          await supabase.from('client_live_map_entries').insert({
+            client_user_id: clientUserId,
+            therapist_user_id: user.id,
+            estado_campo: 'inicio_de_processo',
+            direcao_conducao: profileJson.derivacao.direcao_clinica || 'leitura',
+            risco: profileJson.derivacao.risco_conducao || 'baixo',
+            estagio: 'abertura',
+            tensao_ativa: profileJson.derivacao.tensao_central,
+            tipo_registro: 'cartografia',
+            mensagem_simbolica: profileJson.leitura_simbolica.frase_semente,
+          });
+
+          // Upsert initial state
+          await supabase.from('client_live_map_state').upsert({
+            client_user_id: clientUserId,
+            therapist_user_id: user.id,
+            estado_atual: 'inicio_de_processo',
+            direcao_atual: profileJson.derivacao.direcao_clinica || 'leitura',
+            risco_atual: profileJson.derivacao.risco_conducao || 'baixo',
+            tensao_principal: profileJson.derivacao.tensao_central,
+            ritmo_atual: profileJson.derivacao.ritmo_recomendado || 'medio',
+            repeticao_detectada: false,
+            travessia_travada: false,
+            integracao_em_curso: false,
+            metadata_json: {
+              origem: 'cartografia',
+              porta_inicial: profileJson.cidadela.porta_inicial,
+              torre_dominante: profileJson.cidadela.torre_dominante,
+              clima_cidade: profileJson.cidadela.clima_cidade,
+              distritos_acesos: profileJson.cidadela.distritos_acesos,
+            },
+            ultimo_update: new Date().toISOString(),
+          }, { onConflict: 'client_user_id' });
+        } catch (e) {
+          console.error('Erro ao inicializar Mapa Vivo:', e);
+        }
       }
 
       // Update client_city_state
