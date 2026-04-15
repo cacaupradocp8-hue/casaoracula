@@ -41,6 +41,12 @@ Deno.serve(async (req) => {
       medias_big5,
       predominante,
       fragilizado,
+      modo = "terapeuta",
+      client_context,
+      // Auto-derived data (new)
+      cidadela_derivada,
+      leitura_comportamental,
+      // Legacy fields (backward compat)
       cor,
       atmosfera,
       territorios,
@@ -48,14 +54,16 @@ Deno.serve(async (req) => {
       conflitos,
       simbolo,
       ponto_partida,
-      modo = "terapeuta",
-      client_context,
     } = body;
 
     const prompt = buildPrompt({
       medias_big5,
       predominante,
       fragilizado,
+      modo,
+      client_context,
+      cidadela_derivada,
+      leitura_comportamental,
       cor,
       atmosfera,
       territorios,
@@ -63,8 +71,6 @@ Deno.serve(async (req) => {
       conflitos,
       simbolo,
       ponto_partida,
-      modo,
-      client_context,
     });
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
@@ -128,7 +134,6 @@ Deno.serve(async (req) => {
 
     let parsed;
     try {
-      // Strip markdown code fences if present
       let cleaned = content || "";
       cleaned = cleaned.replace(/^```(?:json)?\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
       parsed = JSON.parse(cleaned);
@@ -161,6 +166,7 @@ Você NÃO faz diagnósticos. Você NÃO usa linguagem clínica tradicional.
 Você usa linguagem simbólica, arquetípica e de travessia.
 
 Sua função é gerar uma leitura profunda em 3 camadas para uma TERAPEUTA que está mapeando a si mesma.
+TODOS os dados são derivados AUTOMATICAMENTE das 30 respostas ao questionário — não há escolhas subjetivas.
 
 REGRAS ABSOLUTAS:
 - Nunca usar termos como "transtorno", "patologia", "diagnóstico"
@@ -176,6 +182,7 @@ const SYSTEM_PROMPT_CLIENT = `Você é uma Cartógrafa Psíquica Oracular — es
 
 Sua função é gerar uma leitura clínica profunda de uma CLIENTE em processo terapêutico.
 Esta leitura será usada pela TERAPEUTA como GPS de decisão clínica.
+TODOS os dados são derivados AUTOMATICAMENTE das 30 respostas — não há escolhas subjetivas.
 
 REGRAS ABSOLUTAS:
 - Nunca usar termos como "transtorno", "patologia"
@@ -207,27 +214,54 @@ const TERRITORIOS_NOMES: Record<string, string> = {
 };
 
 function buildPrompt(data: any): string {
-  const terrAtivos = (data.territorios || [])
-    .map((t: string) => TERRITORIOS_NOMES[t] || t)
-    .join(", ");
-
-  const baseData = `DADOS DA CARTOGRAFIA:
-
-Big5 Oracular (médias 1-5):
+  const mediasSection = `MÉDIAS DOS 5 EIXOS (escala 1-5):
 ${Object.entries(data.medias_big5 || {})
   .map(([k, v]) => `- ${k}: ${v}`)
   .join("\n")}
 
 Fator Predominante: ${data.predominante || "não identificado"}
-Fator Fragilizado: ${data.fragilizado || "não identificado"}
+Fator Fragilizado: ${data.fragilizado || "não identificado"}`;
 
-Cor da cidade interior: ${data.cor || "não selecionada"}
-Atmosfera: ${(data.atmosfera || []).join(", ")}
-Territórios ativos: ${terrAtivos}
-Recursos internos: ${data.recursos || "não informado"}
-Conflitos/tensões: ${data.conflitos || "não informado"}
-Símbolo pessoal: ${data.simbolo || "não selecionado"}
-Ponto de partida: ${TERRITORIOS_NOMES[data.ponto_partida] || data.ponto_partida || "não definido"}`;
+  // Use auto-derived data if available
+  let cidadelaSection = "";
+  if (data.cidadela_derivada) {
+    const c = data.cidadela_derivada;
+    cidadelaSection = `
+CIDADELA DERIVADA AUTOMATICAMENTE:
+- Porta inicial: ${c.porta_inicial_nome || c.porta_inicial}
+- Torre dominante: ${c.torre_dominante}
+- Clima da cidade: ${c.clima_cidade}
+- Cor derivada: ${c.cor_derivada}
+- Símbolo derivado: ${c.simbolo_derivado}
+- Atmosfera: ${(c.atmosfera_derivada || []).join(", ")}
+- Distritos acesos: ${(c.distritos_acesos || []).map((d: string) => TERRITORIOS_NOMES[d] || d).join(", ")}
+- Índice de equilíbrio: ${c.indice_equilibrio}%`;
+  } else {
+    // Legacy: use manually chosen data
+    const terrAtivos = (data.territorios || [])
+      .map((t: string) => TERRITORIOS_NOMES[t] || t)
+      .join(", ");
+    cidadelaSection = `
+DADOS DA CARTOGRAFIA (escolha manual — legado):
+- Cor: ${data.cor || "não selecionada"}
+- Atmosfera: ${(data.atmosfera || []).join(", ")}
+- Territórios ativos: ${terrAtivos}
+- Recursos internos: ${data.recursos || "não informado"}
+- Conflitos/tensões: ${data.conflitos || "não informado"}
+- Símbolo: ${data.simbolo || "não selecionado"}
+- Ponto de partida: ${TERRITORIOS_NOMES[data.ponto_partida] || data.ponto_partida || "não definido"}`;
+  }
+
+  let leituraSection = "";
+  if (data.leitura_comportamental) {
+    const l = data.leitura_comportamental;
+    leituraSection = `
+LEITURA COMPORTAMENTAL DETERMINÍSTICA:
+- Tensão central: ${l.tensao_central}
+- Estratégia de defesa: ${l.estrategia_defesa}
+- Medo dominante: ${l.medo_dominante}
+- Ritmo ideal: ${l.ritmo_ideal}`;
+  }
 
   const clientContext = data.client_context
     ? `\n\nCONTEXTO DA CLIENTE:\n${data.client_context}`
@@ -237,7 +271,7 @@ Ponto de partida: ${TERRITORIOS_NOMES[data.ponto_partida] || data.ponto_partida 
     ? CLIENT_JSON_STRUCTURE
     : THERAPIST_JSON_STRUCTURE;
 
-  return `${baseData}${clientContext}\n\n---\n\nGere uma leitura profunda com EXATAMENTE esta estrutura JSON:\n\n${structure}`;
+  return `${mediasSection}${cidadelaSection}${leituraSection}${clientContext}\n\n---\n\nGere uma leitura profunda com EXATAMENTE esta estrutura JSON:\n\n${structure}`;
 }
 
 const THERAPIST_JSON_STRUCTURE = `{
