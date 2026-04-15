@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useMapaVivoLive } from '@/hooks/useMapaVivoLive';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/dal/dbClient';
 import { useAuth } from '@/contexts/AuthContext';
