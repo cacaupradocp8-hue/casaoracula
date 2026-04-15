@@ -3013,6 +3013,119 @@ export type Database = {
           },
         ]
       }
+      client_live_map_entries: {
+        Row: {
+          client_user_id: string
+          created_at: string
+          direcao_conducao: string
+          estado_campo: string
+          estagio: string
+          ferramenta_utilizada: string | null
+          id: string
+          mensagem_simbolica: string | null
+          risco: string
+          ritmo_travessia: string | null
+          session_id: string | null
+          tensao_ativa: string | null
+          therapist_user_id: string
+          tipo_registro: string
+        }
+        Insert: {
+          client_user_id: string
+          created_at?: string
+          direcao_conducao: string
+          estado_campo: string
+          estagio?: string
+          ferramenta_utilizada?: string | null
+          id?: string
+          mensagem_simbolica?: string | null
+          risco?: string
+          ritmo_travessia?: string | null
+          session_id?: string | null
+          tensao_ativa?: string | null
+          therapist_user_id: string
+          tipo_registro?: string
+        }
+        Update: {
+          client_user_id?: string
+          created_at?: string
+          direcao_conducao?: string
+          estado_campo?: string
+          estagio?: string
+          ferramenta_utilizada?: string | null
+          id?: string
+          mensagem_simbolica?: string | null
+          risco?: string
+          ritmo_travessia?: string | null
+          session_id?: string | null
+          tensao_ativa?: string | null
+          therapist_user_id?: string
+          tipo_registro?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_live_map_entries_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_live_map_state: {
+        Row: {
+          client_user_id: string
+          created_at: string
+          direcao_atual: string | null
+          estado_atual: string | null
+          id: string
+          integracao_em_curso: boolean
+          mensagem_terapeuta: string | null
+          metadata_json: Json | null
+          repeticao_detectada: boolean
+          risco_atual: string | null
+          ritmo_atual: string | null
+          tensao_principal: string | null
+          therapist_user_id: string
+          travessia_travada: boolean
+          ultimo_update: string
+        }
+        Insert: {
+          client_user_id: string
+          created_at?: string
+          direcao_atual?: string | null
+          estado_atual?: string | null
+          id?: string
+          integracao_em_curso?: boolean
+          mensagem_terapeuta?: string | null
+          metadata_json?: Json | null
+          repeticao_detectada?: boolean
+          risco_atual?: string | null
+          ritmo_atual?: string | null
+          tensao_principal?: string | null
+          therapist_user_id: string
+          travessia_travada?: boolean
+          ultimo_update?: string
+        }
+        Update: {
+          client_user_id?: string
+          created_at?: string
+          direcao_atual?: string | null
+          estado_atual?: string | null
+          id?: string
+          integracao_em_curso?: boolean
+          mensagem_terapeuta?: string | null
+          metadata_json?: Json | null
+          repeticao_detectada?: boolean
+          risco_atual?: string | null
+          ritmo_atual?: string | null
+          tensao_principal?: string | null
+          therapist_user_id?: string
+          travessia_travada?: boolean
+          ultimo_update?: string
+        }
+        Relationships: []
+      }
       client_pattern_stats: {
         Row: {
           client_id: string
