@@ -157,7 +157,19 @@ export function CabineSessaoViva({
 
   const ferramentaSugerida = leituraCampo ? FERRAMENTA_SUGESTAO[leituraCampo.estado] || null : null;
 
-  return (
+  // === BLOQUEIO DE INTERVENÇÃO ===
+  // Risco alto + desorganização ativa + divisão interna sem reconhecimento → bloquear ferramentas e mudança de fase
+  const intervencaoBloqueada = useMemo(() => {
+    const riscoAlto = liveRisco === 'elevado';
+    const desorganizacaoAtiva = liveUpdate?.padrao === 'desorganizacao';
+    const divisaoSemReconhecimento = liveUpdate?.padrao === 'conflito' && 
+      !sessionData.checkinTexto.toLowerCase().includes('perceb') &&
+      !sessionData.checkinTexto.toLowerCase().includes('reconheç') &&
+      !sessionData.checkinTexto.toLowerCase().includes('noto') &&
+      !sessionData.checkinTexto.toLowerCase().includes('vejo que');
+    
+    return riscoAlto || desorganizacaoAtiva || divisaoSemReconhecimento;
+  }, [liveRisco, liveUpdate?.padrao, sessionData.checkinTexto]);
     <div className="space-y-3">
       {/* === CARD FIXO TOPO: Estado do Campo + Timer === */}
       <Card className={`border transition-colors duration-1000 ${FLUXO_AMBIENT[fluxo.fluxo]}`}>
