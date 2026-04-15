@@ -124,22 +124,22 @@ export function CabineMapaVivoPanel({
           {/* Mapa Vivo data (se disponível) */}
           {mapaVivoState && (
             <div className="grid grid-cols-2 gap-2">
-              {mapaVivoState.porta_atual && (
-                <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
-                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Porta atual</p>
-                  <p className="text-xs text-foreground/80 font-medium">{mapaVivoState.porta_atual}</p>
-                </div>
-              )}
-              {mapaVivoState.torre_dominante && (
-                <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
-                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Torre dominante</p>
-                  <p className="text-xs text-foreground/80 font-medium">{mapaVivoState.torre_dominante}</p>
-                </div>
-              )}
-              {mapaVivoState.distrito_atual && (
+              {mapaVivoState.estado_atual && (
                 <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
                   <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Campo atual</p>
-                  <p className="text-xs text-foreground/80 font-medium">{mapaVivoState.distrito_atual}</p>
+                  <p className="text-xs text-foreground/80 font-medium">{mapaVivoState.estado_atual}</p>
+                </div>
+              )}
+              {mapaVivoState.direcao_atual && (
+                <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
+                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Direção clínica</p>
+                  <p className="text-xs text-foreground/80 font-medium">{mapaVivoState.direcao_atual}</p>
+                </div>
+              )}
+              {mapaVivoState.tensao_principal && (
+                <div className="p-2.5 rounded-lg bg-background/20 border border-border/10">
+                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-0.5">Tensão principal</p>
+                  <p className="text-xs text-foreground/80 font-medium">{mapaVivoState.tensao_principal}</p>
                 </div>
               )}
               {mapaVivoState.ritmo_atual && (
