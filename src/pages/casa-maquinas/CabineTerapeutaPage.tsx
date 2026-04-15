@@ -279,6 +279,12 @@ export default function CabineTerapeutaPage() {
 
         {/* Center: Main area */}
         <div className="min-h-0">
+          {/* Notice: returned from cartografia */}
+          {searchParams.get('fromCartografia') === 'true' && selectedClienteId && (
+            <div className="mb-3 rounded-md border border-primary/15 bg-card/40 px-4 py-2.5 animate-fade-in">
+              <p className="text-xs text-primary/70 italic">Leitura inicial registrada</p>
+            </div>
+          )}
           {!selectedClienteId ? (
             <div className="flex items-center justify-center h-full">
               <p className="text-sm text-muted-foreground/50 italic">Selecione uma cliente para começar</p>
