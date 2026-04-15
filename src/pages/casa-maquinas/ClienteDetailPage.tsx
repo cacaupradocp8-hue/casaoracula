@@ -76,11 +76,11 @@ export default function ClienteDetailPage() {
     <CasaMaquinasLayout title={cliente.nome} subtitle="Jornada interior">
       <div className="flex justify-end mb-4">
         <Button
-          variant="gold"
-          onClick={() => setSessionWizardOpen(true)}
-          className="gap-2"
+          variant="outline"
+          onClick={() => navigate(`/casa-das-maquinas/cabine?clienteId=${clienteId}`)}
+          className="gap-2 border-primary/30 text-primary hover:bg-primary/10"
         >
-          <Play className="w-4 h-4" /> Iniciar Sessão
+          Abrir Cabine
         </Button>
       </div>
 

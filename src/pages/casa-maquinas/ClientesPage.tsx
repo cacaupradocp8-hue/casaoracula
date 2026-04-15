@@ -344,25 +344,14 @@ export default function ClientesPage() {
                   )}
                 </div>
                 <div className="flex items-center gap-2 mt-3">
-                  {!c.has_initial_cartography ? (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="h-7 text-xs text-amber-400 hover:text-amber-400 hover:bg-amber-500/10 flex-1"
-                      onClick={(e) => { e.stopPropagation(); navigate(`/casa-das-maquinas/ferramentas/cartografia?clienteId=${c.id}&fromCabine=true`); }}
-                    >
-                      Iniciar Diagnóstico Inicial <ChevronRight className="w-3 h-3 ml-1" />
-                    </Button>
-                  ) : (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="h-7 text-xs text-primary hover:text-primary hover:bg-primary/10 flex-1"
-                      onClick={(e) => { e.stopPropagation(); navigate(`/casa-das-maquinas/cabine?clienteId=${c.id}`); }}
-                    >
-                      Abrir Cabine <ChevronRight className="w-3 h-3 ml-1" />
-                    </Button>
-                  )}
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-7 text-xs text-primary hover:text-primary hover:bg-primary/10 flex-1"
+                    onClick={(e) => { e.stopPropagation(); navigate(`/casa-das-maquinas/cabine?clienteId=${c.id}`); }}
+                  >
+                    Abrir Cabine <ChevronRight className="w-3 h-3 ml-1" />
+                  </Button>
                 </div>
               </CardContent>
             </Card>
