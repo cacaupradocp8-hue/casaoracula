@@ -69,7 +69,7 @@ export function DashboardClientCard({
           onClick={onStartSession}
           className="h-7 text-xs border-border/40 text-foreground/60 hover:text-foreground hover:bg-primary/10"
         >
-          Sessão
+          Cabine
         </Button>
         <Button
           size="sm"

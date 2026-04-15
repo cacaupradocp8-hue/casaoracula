@@ -179,9 +179,8 @@ export default function SessoesPage() {
           icon={<Calendar className="w-5 h-5" />}
           action={
             <div className="flex gap-2">
-              <Button variant="gold" onClick={() => setModeSelectorOpen(true)} className="gap-2">
-                <Plus className="w-4 h-4" />
-                Iniciar Sessão
+              <Button variant="outline" onClick={() => navigate('/casa-das-maquinas/cabine')} className="gap-2 border-primary/30 text-primary">
+                Abrir Cabine para Sessão
               </Button>
               <Button variant="outline" onClick={() => setDialogOpen(true)} className="gap-2">
                 <Plus className="w-4 h-4" />
@@ -198,8 +197,8 @@ export default function SessoesPage() {
               <Calendar className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-50" />
               <h3 className="text-lg font-medium mb-2">Nenhuma sessão registrada</h3>
               <p className="text-muted-foreground text-sm mb-4">Registre sua primeira sessão simbólica.</p>
-              <Button variant="gold" onClick={() => setModeSelectorOpen(true)} className="gap-2">
-                <Plus className="w-4 h-4" /> Iniciar Sessão
+              <Button variant="outline" onClick={() => navigate('/casa-das-maquinas/cabine')} className="gap-2 border-primary/30 text-primary">
+                Abrir Cabine
               </Button>
             </CardContent>
           </Card>
