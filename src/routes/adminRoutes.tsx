@@ -23,6 +23,9 @@ const AdminClubeEncontros = React.lazy(() => import('@/pages/admin/clube/AdminCl
 const AdminClubeGerador = React.lazy(() => import('@/pages/admin/clube/AdminClubeGerador'));
 const AdminClubePortais = React.lazy(() => import('@/pages/admin/clube/AdminClubePortais'));
 const AdminClubeConfig = React.lazy(() => import('@/pages/admin/clube/AdminClubeConfig'));
+// Central de Jornadas (novo fluxo centralizado)
+const AdminCentralJornadas = React.lazy(() => import('@/pages/admin/clube/AdminCentralJornadas'));
+const AdminCentralEstacao = React.lazy(() => import('@/pages/admin/clube/AdminCentralEstacao'));
 
 type PR = React.ComponentType<{ children: React.ReactNode; minPortal?: string }>;
 
