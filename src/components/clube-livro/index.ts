@@ -4,3 +4,5 @@ export { MandalaAnual } from './MandalaAnual';
 export { MandalaAnualDB } from './MandalaAnualDB';
 export { ConverseComLivroChat } from './ConverseComLivroChat';
 export type { BookContext } from './ConverseComLivroChat';
+export { RotaEstrada } from './RotaEstrada';
+export { RotaAplicacao } from './RotaAplicacao';
