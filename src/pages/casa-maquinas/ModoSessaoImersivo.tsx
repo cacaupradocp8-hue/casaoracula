@@ -366,6 +366,14 @@ export default function ModoSessaoImersivo() {
 
               <Separator className="bg-border/20" />
 
+              {/* Leitura Clínica da Cartografia */}
+              {clienteId && (
+                <>
+                  <CartografiaClinicaPanel clienteId={clienteId} />
+                  <Separator className="bg-border/20" />
+                </>
+              )}
+
               {/* Orácula Mode: Next Step Suggestion */}
               {sessionMode.mode === 'oracula' && (
                 <>
