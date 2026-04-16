@@ -39,23 +39,20 @@ export function useCartografiaProfile() {
 
       // 2. Fetch most recent profile, prioritizing contexto = casa_das_maquinas
       // Try with client_user_id first, fallback to therapist_user_id match
-      let query = supabase
+      if (!clientUserId) {
+        // No client_user_id resolved — return null to avoid data leakage
+        setProfile(null);
+        return null;
+      }
+
+      const query = supabase
         .from('co_cartografia_profile')
         .select('*')
+        .eq('client_user_id', clientUserId)
         .eq('therapist_user_id', user.id)
+        .eq('contexto', 'casa_das_maquinas')
         .order('created_at', { ascending: false })
         .limit(1);
-
-      if (clientUserId) {
-        query = supabase
-          .from('co_cartografia_profile')
-          .select('*')
-          .eq('client_user_id', clientUserId)
-          .eq('therapist_user_id', user.id)
-          .eq('contexto', 'casa_das_maquinas')
-          .order('created_at', { ascending: false })
-          .limit(1);
-      }
 
       const { data, error } = await query.maybeSingle();
 
