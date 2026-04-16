@@ -238,7 +238,7 @@ export function SemanasTab({ estacaoId }: Props) {
               disabled={saveMutation.isPending}
               onClick={() => saveMutation.mutate({ ...form, id: editingSemana?.id })}
             >
-              {saveMutation.isPending ? 'Salvando...' : 'Atualizar Semana'}
+              {saveMutation.isPending ? 'Salvando...' : (editingSemana ? 'Atualizar Semana' : 'Criar Semana')}
             </Button>
           </div>
         </DialogContent>
