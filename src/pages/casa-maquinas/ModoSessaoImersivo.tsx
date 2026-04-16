@@ -22,6 +22,7 @@ import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { SessionModeSelector } from '@/components/casa-maquinas/SessionModeSelector';
 import { SessionModeIndicator } from '@/components/casa-maquinas/SessionModeIndicator';
+import { CartografiaClinicaPanel } from '@/components/cabine/CartografiaClinicaPanel';
 
 // ─── Timer Hook ───
 function useSessionTimer() {
@@ -364,6 +365,14 @@ export default function ModoSessaoImersivo() {
               )}
 
               <Separator className="bg-border/20" />
+
+              {/* Leitura Clínica da Cartografia */}
+              {clienteId && (
+                <>
+                  <CartografiaClinicaPanel clienteId={clienteId} />
+                  <Separator className="bg-border/20" />
+                </>
+              )}
 
               {/* Orácula Mode: Next Step Suggestion */}
               {sessionMode.mode === 'oracula' && (

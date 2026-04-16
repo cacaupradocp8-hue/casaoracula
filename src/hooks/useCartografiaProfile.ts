@@ -60,22 +60,7 @@ export function useCartografiaProfile() {
       const { data, error } = await query.maybeSingle();
 
       if (error || !data) {
-        // Fallback: try by user_id (therapist) matching the cartografia_psiquica.client_id
-        const { data: fallback } = await supabase
-          .from('co_cartografia_profile')
-          .select('*')
-          .eq('user_id', user.id)
-          .eq('contexto', 'casa_das_maquinas')
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .maybeSingle();
-
-        if (fallback) {
-          const result = mapToProfileData(fallback);
-          setProfile(result);
-          return result;
-        }
-
+        // No valid profile found for this client — return null (no fallback)
         setProfile(null);
         return null;
       }
