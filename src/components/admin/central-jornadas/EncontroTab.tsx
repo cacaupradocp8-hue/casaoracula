@@ -96,11 +96,25 @@ export function EncontroTab({ estacaoId }: Props) {
   const now = new Date().toISOString();
   const proximo = encontros.find(e => e.data_encontro && e.data_encontro > now && e.ativo);
 
+  const openCreate = () => {
+    setEditing(null);
+    setForm({
+      titulo: '', descricao: '', orientacao_encontro: '',
+      data_encontro: '', link_ao_vivo: '', replay_url: '',
+    });
+    setDialogOpen(true);
+  };
+
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">
-        Encontros ao vivo vinculados a esta estação
-      </p>
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          Encontros ao vivo vinculados a esta estação
+        </p>
+        <Button size="sm" onClick={openCreate}>
+          <Plus className="w-3.5 h-3.5 mr-1" /> Novo encontro
+        </Button>
+      </div>
 
       {proximo && (
         <Card className="border-primary/30 bg-primary/5">
