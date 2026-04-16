@@ -203,6 +203,7 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
             },
             ultimo_update: new Date().toISOString(),
           }, { onConflict: 'client_user_id' });
+          } // end else
         } catch (e) {
           console.error('Erro ao inicializar Mapa Vivo:', e);
         }
