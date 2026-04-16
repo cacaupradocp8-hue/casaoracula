@@ -22,12 +22,20 @@ interface HubCard {
 
 const CARDS: HubCard[] = [
   {
+    key: 'central',
+    title: '🗺️ Central de Jornadas',
+    description: 'Estações, estrada, semanas, aplicação e encontros — tudo centralizado.',
+    icon: BookOpen,
+    route: '/admin/clube-livro/central',
+    color: 'text-gold',
+  },
+  {
     key: 'jornadas',
-    title: 'Jornadas',
+    title: 'Jornadas (legado)',
     description: 'Criar e gerenciar jornadas formativas (containers de portais).',
     icon: BookOpen,
     route: '/admin/clube-livro/jornadas',
-    color: 'text-gold',
+    color: 'text-muted-foreground',
   },
   {
     key: 'portais-cms',
