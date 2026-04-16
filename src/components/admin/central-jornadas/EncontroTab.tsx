@@ -42,6 +42,7 @@ export function EncontroTab({ estacaoId }: Props) {
       const { data } = await (supabase as any)
         .from('clube_livro_encontros')
         .select('*')
+        .eq('estacao_id', estacaoId)
         .order('data_encontro', { ascending: true });
       return (data || []) as Encontro[];
     },
@@ -49,23 +50,28 @@ export function EncontroTab({ estacaoId }: Props) {
 
   const saveMutation = useMutation({
     mutationFn: async (data: typeof form & { id?: string }) => {
-      const payload = {
+      const payload: any = {
+        estacao_id: estacaoId,
         titulo: data.titulo,
         descricao: data.descricao || null,
         orientacao_encontro: data.orientacao_encontro || null,
         data_encontro: data.data_encontro || null,
         link_ao_vivo: data.link_ao_vivo || null,
         replay_url: data.replay_url || null,
+        ativo: true,
       };
       if (data.id) {
         const { error } = await (supabase as any).from('clube_livro_encontros').update(payload).eq('id', data.id);
+        if (error) throw error;
+      } else {
+        const { error } = await (supabase as any).from('clube_livro_encontros').insert(payload);
         if (error) throw error;
       }
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-encontros-estacao', estacaoId] });
       setDialogOpen(false);
-      toast({ title: 'Encontro atualizado' });
+      toast({ title: editing ? 'Encontro atualizado' : 'Encontro criado' });
     },
     onError: (err: Error) => {
       toast({ title: 'Erro', description: err.message, variant: 'destructive' });
