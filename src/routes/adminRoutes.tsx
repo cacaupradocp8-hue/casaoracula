@@ -48,6 +48,9 @@ export function renderAdminRoutes(ProtectedRoute: PR) {
     <Route key="adm-cl-gerador" path="/admin/clube-livro/gerador" element={<ProtectedRoute minPortal="admin"><AdminClubeGerador /></ProtectedRoute>} />,
     <Route key="adm-cl-portais" path="/admin/clube-livro/portais" element={<ProtectedRoute minPortal="admin"><AdminClubePortais /></ProtectedRoute>} />,
     <Route key="adm-cl-config" path="/admin/clube-livro/config" element={<ProtectedRoute minPortal="admin"><AdminClubeConfig /></ProtectedRoute>} />,
+    // Central de Jornadas
+    <Route key="adm-central" path="/admin/clube-livro/central" element={<ProtectedRoute minPortal="admin"><AdminCentralJornadas /></ProtectedRoute>} />,
+    <Route key="adm-central-est" path="/admin/clube-livro/central/:estacaoId" element={<ProtectedRoute minPortal="admin"><AdminCentralEstacao /></ProtectedRoute>} />,
     <Route key="adm-cl-jornadas" path="/admin/clube-livro/jornadas" element={<ProtectedRoute minPortal="admin"><AdminClubeJornadas /></ProtectedRoute>} />,
     <Route key="adm-cl-portais-cms" path="/admin/clube-livro/portais-cms" element={<ProtectedRoute minPortal="admin"><AdminPortalCMS /></ProtectedRoute>} />,
     <Route key="adm-cl-oraculo-portais" path="/admin/clube-livro/oraculo-portais" element={<ProtectedRoute minPortal="admin"><AdminOraculoPortais /></ProtectedRoute>} />,
