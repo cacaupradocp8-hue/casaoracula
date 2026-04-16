@@ -201,7 +201,7 @@ export function SemanasTab({ estacaoId }: Props) {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Editar Semana {form.semana_numero}</DialogTitle>
+            <DialogTitle>{editingSemana ? `Editar Semana ${form.semana_numero}` : `Nova Semana ${form.semana_numero}`}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
