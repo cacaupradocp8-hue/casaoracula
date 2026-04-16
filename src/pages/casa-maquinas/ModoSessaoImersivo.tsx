@@ -22,6 +22,7 @@ import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { SessionModeSelector } from '@/components/casa-maquinas/SessionModeSelector';
 import { SessionModeIndicator } from '@/components/casa-maquinas/SessionModeIndicator';
+import { CartografiaClinicaPanel } from '@/components/cabine/CartografiaClinicaPanel';
 
 // ─── Timer Hook ───
 function useSessionTimer() {
