@@ -51,21 +51,23 @@ export function SemanasTab({ estacaoId }: Props) {
     pergunta_contemplativa: '',
   });
 
-  // We need the ciclo_id linked to this estacao — for now fetch semanas across all ciclos
+  // Filtra exclusivamente por estacao_id (eixo principal da Central de Jornadas)
   const { data: semanas = [], isLoading } = useQuery({
     queryKey: ['admin-semanas-estacao', estacaoId],
     queryFn: async () => {
       const { data } = await (supabase as any)
         .from('clube_conteudo_semanal')
         .select('*')
+        .eq('estacao_id', estacaoId)
         .order('semana_numero', { ascending: true });
       return (data || []) as Semana[];
     },
   });
 
   const saveMutation = useMutation({
-    mutationFn: async (data: typeof form & { id?: string; ciclo_id?: string }) => {
-      const payload = {
+    mutationFn: async (data: typeof form & { id?: string }) => {
+      const payload: any = {
+        estacao_id: estacaoId,
         semana_numero: data.semana_numero,
         data_inicio: data.data_inicio || new Date().toISOString().split('T')[0],
         podcast_titulo: data.podcast_titulo || null,
@@ -74,9 +76,13 @@ export function SemanasTab({ estacaoId }: Props) {
         pratica_titulo: data.pratica_titulo || null,
         pratica_descricao: data.pratica_descricao || null,
         pergunta_contemplativa: data.pergunta_contemplativa || null,
+        ativo: true,
       };
       if (data.id) {
         const { error } = await (supabase as any).from('clube_conteudo_semanal').update(payload).eq('id', data.id);
+        if (error) throw error;
+      } else {
+        const { error } = await (supabase as any).from('clube_conteudo_semanal').insert(payload);
         if (error) throw error;
       }
     },
@@ -109,16 +115,32 @@ export function SemanasTab({ estacaoId }: Props) {
     return <div className="flex justify-center py-12"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>;
   }
 
+  const openCreate = () => {
+    setEditingSemana(null);
+    setForm({
+      semana_numero: (semanas[semanas.length - 1]?.semana_numero || 0) + 1,
+      data_inicio: new Date().toISOString().split('T')[0],
+      podcast_titulo: '', podcast_descricao: '', podcast_audio_url: '',
+      pratica_titulo: '', pratica_descricao: '', pergunta_contemplativa: '',
+    });
+    setDialogOpen(true);
+  };
+
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">
-        Conteúdo semanal — áudio, prática e pergunta contemplativa
-      </p>
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          Conteúdo semanal — áudio, prática e pergunta contemplativa
+        </p>
+        <Button size="sm" onClick={openCreate}>
+          <Plus className="w-3.5 h-3.5 mr-1" /> Nova semana
+        </Button>
+      </div>
 
       {semanas.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="py-12 text-center text-muted-foreground text-sm">
-            Nenhuma semana cadastrada. Use o Gerador Semanal para criar conteúdo.
+            Nenhuma semana cadastrada para esta estação.
           </CardContent>
         </Card>
       ) : (
@@ -179,7 +201,7 @@ export function SemanasTab({ estacaoId }: Props) {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Editar Semana {form.semana_numero}</DialogTitle>
+            <DialogTitle>{editingSemana ? `Editar Semana ${form.semana_numero}` : `Nova Semana ${form.semana_numero}`}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
@@ -216,7 +238,7 @@ export function SemanasTab({ estacaoId }: Props) {
               disabled={saveMutation.isPending}
               onClick={() => saveMutation.mutate({ ...form, id: editingSemana?.id })}
             >
-              {saveMutation.isPending ? 'Salvando...' : 'Atualizar Semana'}
+              {saveMutation.isPending ? 'Salvando...' : (editingSemana ? 'Atualizar Semana' : 'Criar Semana')}
             </Button>
           </div>
         </DialogContent>

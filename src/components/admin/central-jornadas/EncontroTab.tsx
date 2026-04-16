@@ -42,6 +42,7 @@ export function EncontroTab({ estacaoId }: Props) {
       const { data } = await (supabase as any)
         .from('clube_livro_encontros')
         .select('*')
+        .eq('estacao_id', estacaoId)
         .order('data_encontro', { ascending: true });
       return (data || []) as Encontro[];
     },
@@ -49,23 +50,28 @@ export function EncontroTab({ estacaoId }: Props) {
 
   const saveMutation = useMutation({
     mutationFn: async (data: typeof form & { id?: string }) => {
-      const payload = {
+      const payload: any = {
+        estacao_id: estacaoId,
         titulo: data.titulo,
         descricao: data.descricao || null,
         orientacao_encontro: data.orientacao_encontro || null,
         data_encontro: data.data_encontro || null,
         link_ao_vivo: data.link_ao_vivo || null,
         replay_url: data.replay_url || null,
+        ativo: true,
       };
       if (data.id) {
         const { error } = await (supabase as any).from('clube_livro_encontros').update(payload).eq('id', data.id);
+        if (error) throw error;
+      } else {
+        const { error } = await (supabase as any).from('clube_livro_encontros').insert(payload);
         if (error) throw error;
       }
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-encontros-estacao', estacaoId] });
       setDialogOpen(false);
-      toast({ title: 'Encontro atualizado' });
+      toast({ title: editing ? 'Encontro atualizado' : 'Encontro criado' });
     },
     onError: (err: Error) => {
       toast({ title: 'Erro', description: err.message, variant: 'destructive' });
@@ -90,11 +96,25 @@ export function EncontroTab({ estacaoId }: Props) {
   const now = new Date().toISOString();
   const proximo = encontros.find(e => e.data_encontro && e.data_encontro > now && e.ativo);
 
+  const openCreate = () => {
+    setEditing(null);
+    setForm({
+      titulo: '', descricao: '', orientacao_encontro: '',
+      data_encontro: '', link_ao_vivo: '', replay_url: '',
+    });
+    setDialogOpen(true);
+  };
+
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">
-        Encontros ao vivo vinculados a esta estação
-      </p>
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          Encontros ao vivo vinculados a esta estação
+        </p>
+        <Button size="sm" onClick={openCreate}>
+          <Plus className="w-3.5 h-3.5 mr-1" /> Novo encontro
+        </Button>
+      </div>
 
       {proximo && (
         <Card className="border-primary/30 bg-primary/5">
@@ -155,7 +175,7 @@ export function EncontroTab({ estacaoId }: Props) {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Editar Encontro</DialogTitle>
+            <DialogTitle>{editing ? 'Editar Encontro' : 'Novo Encontro'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
@@ -189,7 +209,7 @@ export function EncontroTab({ estacaoId }: Props) {
               disabled={!form.titulo || saveMutation.isPending}
               onClick={() => saveMutation.mutate({ ...form, id: editing?.id })}
             >
-              {saveMutation.isPending ? 'Salvando...' : 'Atualizar Encontro'}
+              {saveMutation.isPending ? 'Salvando...' : (editing ? 'Atualizar Encontro' : 'Criar Encontro')}
             </Button>
           </div>
         </DialogContent>
