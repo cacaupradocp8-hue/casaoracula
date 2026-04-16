@@ -51,21 +51,23 @@ export function SemanasTab({ estacaoId }: Props) {
     pergunta_contemplativa: '',
   });
 
-  // We need the ciclo_id linked to this estacao — for now fetch semanas across all ciclos
+  // Filtra exclusivamente por estacao_id (eixo principal da Central de Jornadas)
   const { data: semanas = [], isLoading } = useQuery({
     queryKey: ['admin-semanas-estacao', estacaoId],
     queryFn: async () => {
       const { data } = await (supabase as any)
         .from('clube_conteudo_semanal')
         .select('*')
+        .eq('estacao_id', estacaoId)
         .order('semana_numero', { ascending: true });
       return (data || []) as Semana[];
     },
   });
 
   const saveMutation = useMutation({
-    mutationFn: async (data: typeof form & { id?: string; ciclo_id?: string }) => {
-      const payload = {
+    mutationFn: async (data: typeof form & { id?: string }) => {
+      const payload: any = {
+        estacao_id: estacaoId,
         semana_numero: data.semana_numero,
         data_inicio: data.data_inicio || new Date().toISOString().split('T')[0],
         podcast_titulo: data.podcast_titulo || null,
@@ -74,9 +76,13 @@ export function SemanasTab({ estacaoId }: Props) {
         pratica_titulo: data.pratica_titulo || null,
         pratica_descricao: data.pratica_descricao || null,
         pergunta_contemplativa: data.pergunta_contemplativa || null,
+        ativo: true,
       };
       if (data.id) {
         const { error } = await (supabase as any).from('clube_conteudo_semanal').update(payload).eq('id', data.id);
+        if (error) throw error;
+      } else {
+        const { error } = await (supabase as any).from('clube_conteudo_semanal').insert(payload);
         if (error) throw error;
       }
     },
