@@ -209,7 +209,7 @@ export function EncontroTab({ estacaoId }: Props) {
               disabled={!form.titulo || saveMutation.isPending}
               onClick={() => saveMutation.mutate({ ...form, id: editing?.id })}
             >
-              {saveMutation.isPending ? 'Salvando...' : 'Atualizar Encontro'}
+              {saveMutation.isPending ? 'Salvando...' : (editing ? 'Atualizar Encontro' : 'Criar Encontro')}
             </Button>
           </div>
         </DialogContent>
