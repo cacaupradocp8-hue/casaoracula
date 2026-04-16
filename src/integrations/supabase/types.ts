@@ -3828,10 +3828,11 @@ export type Database = {
           carta_descricao_simbolica: string | null
           carta_imagem_url: string | null
           carta_nome: string | null
-          ciclo_id: string
+          ciclo_id: string | null
           created_at: string
           data_fim: string | null
           data_inicio: string
+          estacao_id: string | null
           id: string
           pergunta_contemplativa: string | null
           podcast_audio_url: string | null
@@ -3849,10 +3850,11 @@ export type Database = {
           carta_descricao_simbolica?: string | null
           carta_imagem_url?: string | null
           carta_nome?: string | null
-          ciclo_id: string
+          ciclo_id?: string | null
           created_at?: string
           data_fim?: string | null
           data_inicio?: string
+          estacao_id?: string | null
           id?: string
           pergunta_contemplativa?: string | null
           podcast_audio_url?: string | null
@@ -3870,10 +3872,11 @@ export type Database = {
           carta_descricao_simbolica?: string | null
           carta_imagem_url?: string | null
           carta_nome?: string | null
-          ciclo_id?: string
+          ciclo_id?: string | null
           created_at?: string
           data_fim?: string | null
           data_inicio?: string
+          estacao_id?: string | null
           id?: string
           pergunta_contemplativa?: string | null
           podcast_audio_url?: string | null
@@ -3892,6 +3895,13 @@ export type Database = {
             columns: ["ciclo_id"]
             isOneToOne: false
             referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_conteudo_semanal_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
             referencedColumns: ["id"]
           },
         ]
@@ -4350,10 +4360,11 @@ export type Database = {
       clube_livro_encontros: {
         Row: {
           ativo: boolean | null
-          ciclo_id: string
+          ciclo_id: string | null
           created_at: string
           data_encontro: string | null
           descricao: string | null
+          estacao_id: string | null
           id: string
           link_ao_vivo: string | null
           orientacao_encontro: string | null
@@ -4363,10 +4374,11 @@ export type Database = {
         }
         Insert: {
           ativo?: boolean | null
-          ciclo_id: string
+          ciclo_id?: string | null
           created_at?: string
           data_encontro?: string | null
           descricao?: string | null
+          estacao_id?: string | null
           id?: string
           link_ao_vivo?: string | null
           orientacao_encontro?: string | null
@@ -4376,10 +4388,11 @@ export type Database = {
         }
         Update: {
           ativo?: boolean | null
-          ciclo_id?: string
+          ciclo_id?: string | null
           created_at?: string
           data_encontro?: string | null
           descricao?: string | null
+          estacao_id?: string | null
           id?: string
           link_ao_vivo?: string | null
           orientacao_encontro?: string | null
@@ -4393,6 +4406,13 @@ export type Database = {
             columns: ["ciclo_id"]
             isOneToOne: false
             referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_livro_encontros_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
             referencedColumns: ["id"]
           },
         ]
