@@ -175,7 +175,7 @@ export function EncontroTab({ estacaoId }: Props) {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Editar Encontro</DialogTitle>
+            <DialogTitle>{editing ? 'Editar Encontro' : 'Novo Encontro'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
