@@ -3979,6 +3979,14 @@ export type Database = {
         Row: {
           aplicacao_acao: string | null
           aplicacao_reflexao: string | null
+          aplicar_grupo_dinamica: string | null
+          aplicar_grupo_regra: string | null
+          aplicar_grupo_risco: string | null
+          aplicar_mim_exercicio: string | null
+          aplicar_mim_instrucao: string | null
+          aplicar_sessao_intervencao: string | null
+          aplicar_sessao_pergunta: string | null
+          aplicar_sessao_risco: string | null
           ativa: boolean | null
           created_at: string
           essencia_nucleo: string | null
@@ -4002,6 +4010,14 @@ export type Database = {
         Insert: {
           aplicacao_acao?: string | null
           aplicacao_reflexao?: string | null
+          aplicar_grupo_dinamica?: string | null
+          aplicar_grupo_regra?: string | null
+          aplicar_grupo_risco?: string | null
+          aplicar_mim_exercicio?: string | null
+          aplicar_mim_instrucao?: string | null
+          aplicar_sessao_intervencao?: string | null
+          aplicar_sessao_pergunta?: string | null
+          aplicar_sessao_risco?: string | null
           ativa?: boolean | null
           created_at?: string
           essencia_nucleo?: string | null
@@ -4025,6 +4041,14 @@ export type Database = {
         Update: {
           aplicacao_acao?: string | null
           aplicacao_reflexao?: string | null
+          aplicar_grupo_dinamica?: string | null
+          aplicar_grupo_regra?: string | null
+          aplicar_grupo_risco?: string | null
+          aplicar_mim_exercicio?: string | null
+          aplicar_mim_instrucao?: string | null
+          aplicar_sessao_intervencao?: string | null
+          aplicar_sessao_pergunta?: string | null
+          aplicar_sessao_risco?: string | null
           ativa?: boolean | null
           created_at?: string
           essencia_nucleo?: string | null
@@ -4050,6 +4074,7 @@ export type Database = {
       clube_jornadas: {
         Row: {
           ativa: boolean
+          conteudo_semanal_id: string | null
           cor: string | null
           created_at: string
           descricao: string | null
@@ -4065,6 +4090,7 @@ export type Database = {
         }
         Insert: {
           ativa?: boolean
+          conteudo_semanal_id?: string | null
           cor?: string | null
           created_at?: string
           descricao?: string | null
@@ -4080,6 +4106,7 @@ export type Database = {
         }
         Update: {
           ativa?: boolean
+          conteudo_semanal_id?: string | null
           cor?: string | null
           created_at?: string
           descricao?: string | null
@@ -4094,6 +4121,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "clube_jornadas_conteudo_semanal_id_fkey"
+            columns: ["conteudo_semanal_id"]
+            isOneToOne: false
+            referencedRelation: "clube_conteudo_semanal"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "clube_jornadas_estacao_id_fkey"
             columns: ["estacao_id"]
