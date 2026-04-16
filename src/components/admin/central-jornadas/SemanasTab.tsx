@@ -115,16 +115,32 @@ export function SemanasTab({ estacaoId }: Props) {
     return <div className="flex justify-center py-12"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>;
   }
 
+  const openCreate = () => {
+    setEditingSemana(null);
+    setForm({
+      semana_numero: (semanas[semanas.length - 1]?.semana_numero || 0) + 1,
+      data_inicio: new Date().toISOString().split('T')[0],
+      podcast_titulo: '', podcast_descricao: '', podcast_audio_url: '',
+      pratica_titulo: '', pratica_descricao: '', pergunta_contemplativa: '',
+    });
+    setDialogOpen(true);
+  };
+
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">
-        Conteúdo semanal — áudio, prática e pergunta contemplativa
-      </p>
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          Conteúdo semanal — áudio, prática e pergunta contemplativa
+        </p>
+        <Button size="sm" onClick={openCreate}>
+          <Plus className="w-3.5 h-3.5 mr-1" /> Nova semana
+        </Button>
+      </div>
 
       {semanas.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="py-12 text-center text-muted-foreground text-sm">
-            Nenhuma semana cadastrada. Use o Gerador Semanal para criar conteúdo.
+            Nenhuma semana cadastrada para esta estação.
           </CardContent>
         </Card>
       ) : (
