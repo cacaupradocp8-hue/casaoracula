@@ -153,9 +153,22 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
         console.error('Erro ao persistir perfil comportamental:', e);
       }
 
-      // Initialize Mapa Vivo from cartografia data
+      // Initialize Mapa Vivo from cartografia data (only if no prior cartografia entry exists)
       if (clientUserId) {
         try {
+          // Check for existing cartografia entry to avoid duplication
+          const { data: existingEntry } = await supabase
+            .from('client_live_map_entries')
+            .select('id')
+            .eq('client_user_id', clientUserId)
+            .eq('therapist_user_id', user.id)
+            .eq('tipo_registro', 'cartografia')
+            .limit(1)
+            .maybeSingle();
+
+          if (existingEntry) {
+            console.log('Mapa Vivo: cartografia entry already exists, skipping');
+          } else {
           // Insert initial entry
           await supabase.from('client_live_map_entries').insert({
             client_user_id: clientUserId,
