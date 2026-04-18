@@ -12,7 +12,8 @@ import { Plus, Pencil, Calendar, Video, Loader2 } from 'lucide-react';
 
 interface Encontro {
   id: string;
-  ciclo_id: string;
+  estacao_id: string | null;
+  ciclo_id: string | null; // legado — mantido para compatibilidade
   titulo: string;
   descricao: string | null;
   orientacao_encontro: string | null;

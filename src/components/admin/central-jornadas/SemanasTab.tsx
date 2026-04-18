@@ -14,7 +14,8 @@ import { Plus, Pencil, ChevronDown, Headphones, Loader2 } from 'lucide-react';
 
 interface Semana {
   id: string;
-  ciclo_id: string;
+  estacao_id: string | null;
+  ciclo_id: string | null; // legado — mantido para compatibilidade
   semana_numero: number;
   data_inicio: string;
   data_fim: string | null;
