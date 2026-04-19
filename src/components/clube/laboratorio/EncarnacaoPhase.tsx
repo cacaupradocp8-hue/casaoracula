@@ -404,3 +404,15 @@ function BlocoLista({ titulo, itens }: { titulo: string; itens?: string[] }) {
     </div>
   );
 }
+function EixoLinha({ titulo, eixo }: { titulo: string; eixo?: { avaliacao?: string; observacao?: string } }) {
+  if (!eixo) return null;
+  return (
+    <div className="text-xs border border-border/50 rounded p-2">
+      <div className="flex items-center justify-between gap-2 mb-1">
+        <span className="font-medium text-foreground">{titulo}</span>
+        <span className="text-[10px] uppercase tracking-wider text-primary">{eixo.avaliacao}</span>
+      </div>
+      <p className="text-muted-foreground leading-relaxed">{eixo.observacao}</p>
+    </div>
+  );
+}
