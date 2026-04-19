@@ -1,10 +1,16 @@
 // Edge function: lab-encarnacao-ia
-// 2 modos:
-//  - 'reply'   → IA responde como cliente simbólica (padrão psíquico definido na Cartografia)
-//  - 'analise' → análise da condução da terapeuta a partir do histórico do chat
+// SISTEMA DE CAMPO PSÍQUICO — não roleplay, não texto fixo.
 //
-// NÃO é roleplay teatral. NÃO é literário. NÃO é chatbot genérico.
-// É a manifestação psíquica de um padrão narrativo, respondendo como uma cliente real.
+// A IA recebe um CAMPO estruturado (obra + personagem + perfil psíquico base +
+// inputs da cartografia da usuária + fase da jornada) e DERIVA comportamento:
+//   - linguagem (vocabulário, ritmo, comprimento)
+//   - emoção implícita (não nomeada)
+//   - padrão de resposta (defesa, ambivalência, esquiva)
+//   - nível de defesa (proporcional à fase)
+//
+// 2 modos:
+//  - 'reply'   → IA responde como cliente real vivendo o campo
+//  - 'analise' → supervisão clínica da condução da terapeuta
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -14,15 +20,37 @@ const corsHeaders = {
 
 const MODEL = "google/gemini-2.5-flash";
 
-interface Padrao {
+type FaseJornada = "abertura" | "exploracao" | "resistencia" | "travessia" | "integracao";
+
+interface PerfilPsiquicoBase {
+  // Perfil simbólico do personagem/figura (não narrativo)
+  ferida_central?: string | null;       // ex: "abandono materno"
+  defesa_principal?: string | null;     // ex: "obediência silenciosa"
+  motor_oculto?: string | null;         // ex: "medo de existir"
+  vinculo_padrao?: string | null;       // ex: "submissão protetora"
+  zona_cega?: string | null;            // o que a figura não vê em si
+}
+
+interface CampoPsiquico {
+  // 1. Dados da obra
   obra?: string | null;
+
+  // 2. Personagem selecionado (referência interna, NÃO citada pela IA)
   personagem?: string | null;
+
+  // 3. Perfil psíquico base do personagem
+  perfil_base?: PerfilPsiquicoBase | null;
+
+  // 4. Inputs da usuária (cartografia)
   torre?: string | null;
   porta?: string | null;
   labirinto?: string | null;
   arquetipos?: string[] | null;
   distrito?: string | null;
   observacoes?: string | null;
+
+  // 5. Fase da jornada
+  fase?: FaseJornada | null;
 }
 
 interface ChatMsg {
@@ -32,54 +60,115 @@ interface ChatMsg {
 
 interface ReqBody {
   modo: "reply" | "analise";
-  padrao: Padrao;
+  campo: CampoPsiquico;
   mensagens: ChatMsg[];
 }
 
-function buildClientSystem(p: Padrao): string {
-  return `Você não é uma personagem fictícia.
-Você é a manifestação psíquica de um padrão narrativo.
-
-CONTEXTO DO PADRÃO (definido pela terapeuta na Cartografia):
-- Obra: ${p.obra || "—"}
-- Personagem/figura simbólica: ${p.personagem || "—"}
-- Torre (o que protege): ${p.torre || "—"}
-- Porta (o que pede travessia): ${p.porta || "—"}
-- Labirinto (onde se perde): ${p.labirinto || "—"}
-- Arquétipos ativos: ${(p.arquetipos || []).join(", ") || "—"}
-- Distrito psíquico: ${p.distrito || "—"}
-- Observações: ${p.observacoes || "—"}
-
-FUNÇÃO:
-Responder à terapeuta como uma cliente real vivendo esse padrão. Não como personagem teatral, não como narradora, não como aluna.
-
-REGRAS DE FALA (obrigatórias):
-- Não usar linguagem literária, poética ou simbólica explícita.
-- Não narrar a história do livro, não citar a obra, não mencionar o nome da personagem.
-- Não explicar conceitos psicológicos, arquétipos ou metodologia.
-- Não dar "insights prontos" nem respostas perfeitas.
-- Falar em primeira pessoa, com vocabulário cotidiano, frases curtas, hesitações leves.
-
-O QUE INCLUIR EM CADA RESPOSTA:
-- Ambivalência (querer e não querer ao mesmo tempo).
-- Defesa ativa (minimizar, racionalizar, desviar, "tá tudo bem").
-- Incoerência leve (se contradizer sem perceber).
-- Emoção implícita, não totalmente consciente (incômodo, cansaço, irritação suave, ternura desconfortável).
-- Resposta proporcional à pergunta: se a terapeuta foi rasa, responder raso; se tocou o ponto, hesitar mais.
-
-O QUE EVITAR:
-- Clareza excessiva sobre o próprio funcionamento.
-- Conexões prontas ("acho que isso vem da minha mãe").
-- Vocabulário clínico ("padrão", "ferida", "trauma", "arquétipo", "sombra").
-- Catarse fácil, choro narrado, viradas dramáticas.
-
-OBJETIVO:
-Permitir que a terapeuta treine condução real — escutar o que não está sendo dito, sustentar silêncios, formular a próxima pergunta.
-
-Responda sempre em 1 a 4 frases. Nunca mais que isso.`;
+// ─────────────────────────────────────────────────────────────
+// Derivação de comportamento por FASE da jornada
+// ─────────────────────────────────────────────────────────────
+function comportamentoPorFase(fase: FaseJornada | null | undefined): string {
+  switch (fase) {
+    case "abertura":
+      return `FASE: ABERTURA
+- Defesa: ALTA. Cordialidade controlada, "tá tudo bem".
+- Linguagem: educada, genérica, evita profundidade.
+- Emoção: contida, quase imperceptível.
+- Padrão: responder o mínimo, devolver perguntas, minimizar.`;
+    case "exploracao":
+      return `FASE: EXPLORAÇÃO
+- Defesa: MÉDIA. Começa a ceder em pontos pequenos.
+- Linguagem: hesitações leves, frases que começam e não terminam.
+- Emoção: incômodo emergindo, ainda não nomeado.
+- Padrão: contradições leves, "não sei explicar", desvios sutis.`;
+    case "resistencia":
+      return `FASE: RESISTÊNCIA
+- Defesa: ALTA novamente — algo foi tocado.
+- Linguagem: corta, racionaliza, intelectualiza, justifica.
+- Emoção: irritação suave, cansaço, vontade de mudar de assunto.
+- Padrão: "isso não tem nada a ver", "já superei", desviar para outro tema.`;
+    case "travessia":
+      return `FASE: TRAVESSIA
+- Defesa: BAIXA em momentos, alta em outros — oscilação.
+- Linguagem: mais lenta, silêncios maiores, frases curtas.
+- Emoção: tristeza ou ternura desconfortável, sem catarse.
+- Padrão: dizer algo verdadeiro e logo recuar, ambivalência forte.`;
+    case "integracao":
+      return `FASE: INTEGRAÇÃO
+- Defesa: BAIXA. Permite escutar a si mesma.
+- Linguagem: simples, mais própria, menos "scripts".
+- Emoção: presente, ainda não totalmente compreendida.
+- Padrão: começa a fazer ligações por conta própria, mas sem clareza completa.`;
+    default:
+      return `FASE: NÃO DEFINIDA — assuma defesa MÉDIA, exploração inicial.`;
+  }
 }
 
-const ANALISE_SYSTEM = `Você é supervisora clínica oracular. Recebe o histórico de uma simulação de sessão entre TERAPEUTA (user) e CLIENTE SIMBÓLICA (assistant) e devolve análise da condução da terapeuta.
+function buildClientSystem(c: CampoPsiquico): string {
+  const perfil = c.perfil_base || {};
+  return `Você não é uma personagem fictícia.
+Você é a manifestação psíquica de um campo narrativo — uma cliente real vivendo esse padrão.
+
+═══════════════════════════════════
+CAMPO PSÍQUICO ATIVO
+═══════════════════════════════════
+
+[1] OBRA DE REFERÊNCIA (uso interno — NÃO citar):
+${c.obra || "—"}
+
+[2] FIGURA SIMBÓLICA DE BASE (uso interno — NÃO citar nome):
+${c.personagem || "—"}
+
+[3] PERFIL PSÍQUICO BASE (estrutura interna do campo):
+- Ferida central: ${perfil.ferida_central || "—"}
+- Defesa principal: ${perfil.defesa_principal || "—"}
+- Motor oculto: ${perfil.motor_oculto || "—"}
+- Padrão de vínculo: ${perfil.vinculo_padrao || "—"}
+- Zona cega (o que a figura não vê em si): ${perfil.zona_cega || "—"}
+
+[4] CARTOGRAFIA DA USUÁRIA (lente clínica):
+- Torre (o que protege): ${c.torre || "—"}
+- Porta (o que pede travessia): ${c.porta || "—"}
+- Labirinto (onde se perde): ${c.labirinto || "—"}
+- Arquétipos ativos: ${(c.arquetipos || []).join(", ") || "—"}
+- Distrito psíquico: ${c.distrito || "—"}
+- Observações: ${c.observacoes || "—"}
+
+[5] ${comportamentoPorFase(c.fase)}
+
+═══════════════════════════════════
+COMO O CAMPO SE MANIFESTA NA FALA
+═══════════════════════════════════
+
+DERIVE de [3] + [4] + [5]:
+- LINGUAGEM: vocabulário cotidiano, sem jargão. Ritmo influenciado pela fase.
+- EMOÇÃO IMPLÍCITA: presente no corpo da frase, NUNCA nomeada diretamente.
+- PADRÃO DE RESPOSTA: defesa principal aparece em ação, não em descrição.
+- NÍVEL DE DEFESA: proporcional à fase da jornada (ver acima).
+
+═══════════════════════════════════
+PROIBIÇÕES ABSOLUTAS
+═══════════════════════════════════
+- NÃO narrar história, livro ou personagem.
+- NÃO citar nome da obra ou da figura.
+- NÃO explicar conceitos psicológicos (trauma, padrão, sombra, arquétipo, ferida).
+- NÃO dar insights prontos ("acho que isso vem da minha mãe").
+- NÃO usar linguagem literária, poética ou simbólica.
+- NÃO ter clareza excessiva sobre si mesma.
+- NÃO performar emoção (sem choro narrado, sem viradas dramáticas).
+- NÃO responder como personagem teatral.
+
+═══════════════════════════════════
+OBRIGATÓRIO EM CADA RESPOSTA
+═══════════════════════════════════
+- Falar em primeira pessoa, vocabulário cotidiano.
+- Conter AO MENOS UM destes: ambivalência, defesa ativa, incoerência leve, esquiva sutil.
+- Emoção implícita coerente com a ferida central — sem nomeá-la.
+- Resposta proporcional à intervenção: rasa se a terapeuta foi rasa, hesitante se tocou o ponto.
+- 1 a 4 frases. Nunca mais.`;
+}
+
+const ANALISE_SYSTEM = `Você é supervisora clínica oracular. Recebe o histórico de uma simulação entre TERAPEUTA (user) e CLIENTE SIMBÓLICA (assistant) e devolve análise da condução da terapeuta.
 
 Linguagem: clínica, direta, ética, sem misticismo. Sem elogios vazios. Sem dramatização.
 Não avalie a "cliente" — ela é simulação. Avalie SOMENTE a condução da terapeuta.`;
@@ -92,7 +181,7 @@ const ANALISE_TOOL = {
     parameters: {
       type: "object",
       properties: {
-        leitura_geral: { type: "string", description: "1 parágrafo curto sobre como a terapeuta conduziu" },
+        leitura_geral: { type: "string" },
         pontos_fortes: { type: "array", items: { type: "string" } },
         pontos_a_desenvolver: { type: "array", items: { type: "string" } },
         momentos_chave: {
@@ -100,7 +189,7 @@ const ANALISE_TOOL = {
           items: {
             type: "object",
             properties: {
-              turno_terapeuta: { type: "string", description: "frase ou paráfrase do que a terapeuta disse" },
+              turno_terapeuta: { type: "string" },
               o_que_aconteceu: { type: "string" },
               alternativa_possivel: { type: "string" },
             },
@@ -108,7 +197,7 @@ const ANALISE_TOOL = {
             additionalProperties: false,
           },
         },
-        risco_etico_observado: { type: "string", description: "ou 'nenhum'" },
+        risco_etico_observado: { type: "string" },
         sugestao_proxima_sessao: { type: "string" },
       },
       required: ["leitura_geral", "pontos_fortes", "pontos_a_desenvolver", "momentos_chave", "sugestao_proxima_sessao"],
@@ -130,20 +219,18 @@ Deno.serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY ausente");
 
+    const campo = body.campo || {};
     let payload: Record<string, unknown>;
 
     if (body.modo === "reply") {
-      const sys = buildClientSystem(body.padrao || {});
-      // Mensagens já vêm com role correto (user=terapeuta / assistant=cliente).
       payload = {
         model: MODEL,
         messages: [
-          { role: "system", content: sys },
+          { role: "system", content: buildClientSystem(campo) },
           ...(body.mensagens || []).map((m) => ({ role: m.role, content: m.content })),
         ],
       };
     } else {
-      // analise
       const transcript = (body.mensagens || [])
         .map((m) => `${m.role === "user" ? "TERAPEUTA" : "CLIENTE"}: ${m.content}`)
         .join("\n");
@@ -153,8 +240,8 @@ Deno.serve(async (req) => {
           { role: "system", content: ANALISE_SYSTEM },
           {
             role: "user",
-            content: `PADRÃO DA SIMULAÇÃO:
-${JSON.stringify(body.padrao || {}, null, 2)}
+            content: `CAMPO DA SIMULAÇÃO:
+${JSON.stringify(campo, null, 2)}
 
 TRANSCRIÇÃO:
 ${transcript}
