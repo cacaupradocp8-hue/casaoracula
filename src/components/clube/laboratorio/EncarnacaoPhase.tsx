@@ -296,21 +296,41 @@ export function EncarnacaoPhase({ progresso, obra, onBack }: Props) {
             )}
 
             {encerrado && analise && (
-              <div className="mt-4 border-t border-border/50 pt-4 space-y-3">
+              <div className="mt-4 border-t border-border/50 pt-4 space-y-4">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-primary" />
                   <h3 className="font-display text-sm">Análise da condução</h3>
                 </div>
+
                 <Bloco titulo="Leitura geral" texto={analise.leitura_geral} />
+
+                {analise.eixos && (
+                  <div className="space-y-2">
+                    <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Eixos clínicos</p>
+                    <EixoLinha titulo="Escuta vs interpretação" eixo={analise.eixos.escuta_vs_interpretacao} />
+                    <EixoLinha titulo="Aceleração" eixo={analise.eixos.aceleracao} />
+                    <EixoLinha titulo="Respeito ao tempo" eixo={analise.eixos.respeito_ao_tempo} />
+                    <EixoLinha titulo="Reforço de defesa" eixo={analise.eixos.reforco_de_defesa} />
+                  </div>
+                )}
+
                 <BlocoLista titulo="Pontos fortes" itens={analise.pontos_fortes} />
-                <BlocoLista titulo="A desenvolver" itens={analise.pontos_a_desenvolver} />
+                <BlocoLista titulo="Pontos de melhoria" itens={analise.pontos_de_melhoria} />
+
+                {analise.sugestao_conducao_melhor && (
+                  <div className="bg-primary/5 border border-primary/20 rounded p-3">
+                    <p className="text-[11px] uppercase tracking-wider text-primary mb-1">Sugestão de condução melhor</p>
+                    <p className="text-sm text-foreground">{analise.sugestao_conducao_melhor}</p>
+                  </div>
+                )}
+
                 {Array.isArray(analise.momentos_chave) && analise.momentos_chave.length > 0 && (
                   <div className="space-y-2">
                     <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Momentos-chave</p>
                     {analise.momentos_chave.map((mk: any, i: number) => (
                       <div key={i} className="text-xs bg-muted/40 border border-border/50 rounded p-2 space-y-1">
                         <p className="text-foreground italic">"{mk.turno_terapeuta}"</p>
-                        <p className="text-muted-foreground"><strong>O que aconteceu:</strong> {mk.o_que_aconteceu}</p>
+                        <p className="text-muted-foreground"><strong>Observação:</strong> {mk.o_que_aconteceu}</p>
                         <p className="text-muted-foreground"><strong>Alternativa:</strong> {mk.alternativa_possivel}</p>
                       </div>
                     ))}
@@ -319,7 +339,6 @@ export function EncarnacaoPhase({ progresso, obra, onBack }: Props) {
                 {analise.risco_etico_observado && analise.risco_etico_observado !== 'nenhum' && (
                   <Bloco titulo="Risco ético observado" texto={analise.risco_etico_observado} />
                 )}
-                <Bloco titulo="Sugestão para próxima sessão" texto={analise.sugestao_proxima_sessao} />
                 <div className="flex gap-2 pt-2">
                   <Button size="sm" variant="outline" onClick={reiniciar} className="flex-1">
                     Nova simulação
