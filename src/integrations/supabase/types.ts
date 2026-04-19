@@ -5338,6 +5338,7 @@ export type Database = {
           ciclo_id: string | null
           conteudo_semanal_id: string | null
           created_at: string
+          estacao_id: string | null
           id: string
           texto: string
           updated_at: string
@@ -5347,6 +5348,7 @@ export type Database = {
           ciclo_id?: string | null
           conteudo_semanal_id?: string | null
           created_at?: string
+          estacao_id?: string | null
           id?: string
           texto: string
           updated_at?: string
@@ -5356,6 +5358,7 @@ export type Database = {
           ciclo_id?: string | null
           conteudo_semanal_id?: string | null
           created_at?: string
+          estacao_id?: string | null
           id?: string
           texto?: string
           updated_at?: string
@@ -5374,6 +5377,13 @@ export type Database = {
             columns: ["conteudo_semanal_id"]
             isOneToOne: false
             referencedRelation: "clube_conteudo_semanal"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_reflexoes_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
             referencedColumns: ["id"]
           },
         ]
