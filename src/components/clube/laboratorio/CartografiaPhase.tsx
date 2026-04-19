@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Compass, Sparkles, Loader2, ArrowRight, Wand2 } from 'lucide-react';
+import { useCartografiaCatalogos } from '@/hooks/useCartografiaCatalogos';
 
 // Fase 1 — Cartografia
 // Inputs estruturados + observações livres + botão "Gerar análise"
@@ -20,31 +22,39 @@ interface Props {
 }
 
 export function CartografiaPhase({ progresso, config, onSave, onRunIa, iaLoading, onNext }: Props) {
+  const { torres, portas, labirintos, arquetipos: arquetiposCat } = useCartografiaCatalogos();
+
   const [form, setForm] = useState({
     cart_torre: '',
+    cart_torre_obs: '',
     cart_porta: '',
     cart_labirinto: '',
     cart_distrito: '',
-    cart_arquetipos: '',
+    cart_arquetipos: [] as string[],
     cart_observacoes: '',
   });
-  const [modoGuiado, setModoGuiado] = useState(false);
 
   useEffect(() => {
     if (progresso) {
       setForm({
         cart_torre: progresso.cart_torre || '',
+        cart_torre_obs: progresso.cart_torre_obs || '',
         cart_porta: progresso.cart_porta || '',
         cart_labirinto: progresso.cart_labirinto || '',
         cart_distrito: progresso.cart_distrito || '',
-        cart_arquetipos: (progresso.cart_arquetipos || []).join(', '),
+        cart_arquetipos: progresso.cart_arquetipos || [],
         cart_observacoes: progresso.cart_observacoes || '',
       });
     }
   }, [progresso?.id]);
 
-  const upd = (k: string, v: string) => setForm(prev => ({ ...prev, [k]: v }));
-  const arquetipos = form.cart_arquetipos.split(',').map(x => x.trim()).filter(Boolean);
+  const upd = (k: string, v: any) => setForm(prev => ({ ...prev, [k]: v }));
+  const toggleArq = (a: string) => setForm(prev => ({
+    ...prev,
+    cart_arquetipos: prev.cart_arquetipos.includes(a)
+      ? prev.cart_arquetipos.filter(x => x !== a)
+      : [...prev.cart_arquetipos, a],
+  }));
 
   const aplicarSugestoes = () => {
     if (!config) return;
@@ -54,15 +64,20 @@ export function CartografiaPhase({ progresso, config, onSave, onRunIa, iaLoading
       cart_porta: prev.cart_porta || config.cart_porta_sugerida || '',
       cart_labirinto: prev.cart_labirinto || config.cart_labirinto_sugerido || '',
       cart_distrito: prev.cart_distrito || config.cart_distrito_sugerido || '',
-      cart_arquetipos: prev.cart_arquetipos || (config.cart_arquetipos_sugeridos || []).join(', '),
+      cart_arquetipos: prev.cart_arquetipos.length ? prev.cart_arquetipos : (config.cart_arquetipos_sugeridos || []),
     }));
   };
 
-  const handleSave = () => onSave({ ...form, cart_arquetipos: arquetipos });
+  const handleSave = () => onSave(form);
   const handleIa = () => {
     handleSave();
-    onRunIa({ ...form, cart_arquetipos: arquetipos });
+    onRunIa(form);
   };
+
+  // Garante que valor salvo apareça mesmo se não estiver na lista curada
+  const torresOpts = Array.from(new Set([...(form.cart_torre ? [form.cart_torre] : []), ...torres]));
+  const portasOpts = Array.from(new Set([...(form.cart_porta ? [form.cart_porta] : []), ...portas]));
+  const labirintosOpts = Array.from(new Set([...(form.cart_labirinto ? [form.cart_labirinto] : []), ...labirintos]));
 
   return (
     <div className="space-y-4">
@@ -83,29 +98,65 @@ export function CartografiaPhase({ progresso, config, onSave, onRunIa, iaLoading
         </div>
       </Card>
 
-      <Card className="p-4 space-y-3">
+      <Card className="p-4 space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <Field label="Torre predominante (o que protege)">
-            <Input value={form.cart_torre} onChange={e => upd('cart_torre', e.target.value)} placeholder="Ex.: Torre da Performance" />
+          <Field label="Torre predominante">
+            <Select value={form.cart_torre} onValueChange={v => upd('cart_torre', v)}>
+              <SelectTrigger><SelectValue placeholder="Selecione a torre..." /></SelectTrigger>
+              <SelectContent>
+                {torresOpts.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <Input
+              value={form.cart_torre_obs}
+              onChange={e => upd('cart_torre_obs', e.target.value)}
+              placeholder="Nuance opcional..."
+              className="mt-2 h-8 text-xs"
+            />
           </Field>
-          <Field label="Porta ativa (o que pede travessia)">
-            <Input value={form.cart_porta} onChange={e => upd('cart_porta', e.target.value)} placeholder="Ex.: Porta da Vulnerabilidade" />
+          <Field label="Porta ativa">
+            <Select value={form.cart_porta} onValueChange={v => upd('cart_porta', v)}>
+              <SelectTrigger><SelectValue placeholder="Selecione a porta..." /></SelectTrigger>
+              <SelectContent>
+                {portasOpts.map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </Field>
           <Field label="Labirinto recorrente">
-            <Input value={form.cart_labirinto} onChange={e => upd('cart_labirinto', e.target.value)} placeholder="Padrão que se repete" />
+            <Select value={form.cart_labirinto} onValueChange={v => upd('cart_labirinto', v)}>
+              <SelectTrigger><SelectValue placeholder="Padrão que se repete..." /></SelectTrigger>
+              <SelectContent>
+                {labirintosOpts.map(l => <SelectItem key={l} value={l}>{l}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </Field>
           <Field label="Distrito predominante">
             <Input value={form.cart_distrito} onChange={e => upd('cart_distrito', e.target.value)} placeholder="Território psíquico" />
           </Field>
         </div>
-        <Field label="Arquétipos ativos (separe por vírgula)">
-          <Input value={form.cart_arquetipos} onChange={e => upd('cart_arquetipos', e.target.value)} placeholder="Mãe, Heroína, Sombra..." />
-          {arquetipos.length > 0 && (
-            <div className="flex gap-1 flex-wrap mt-2">
-              {arquetipos.map(a => <Badge key={a} variant="outline" className="text-[10px]">{a}</Badge>)}
-            </div>
-          )}
+
+        <Field label={`Arquétipos ativos${form.cart_arquetipos.length ? ` (${form.cart_arquetipos.length})` : ''}`}>
+          <div className="flex gap-1.5 flex-wrap">
+            {arquetiposCat.map(a => {
+              const active = form.cart_arquetipos.includes(a);
+              return (
+                <button
+                  key={a}
+                  type="button"
+                  onClick={() => toggleArq(a)}
+                  className={`px-2.5 py-1 rounded-full text-xs border transition ${
+                    active
+                      ? 'bg-primary/15 border-primary/40 text-primary'
+                      : 'border-border text-muted-foreground hover:border-primary/30'
+                  }`}
+                >
+                  {a}
+                </button>
+              );
+            })}
+          </div>
         </Field>
+
         <Field label="Observações livres">
           <Textarea rows={3} value={form.cart_observacoes} onChange={e => upd('cart_observacoes', e.target.value)} placeholder="O que mais se move no campo desta leitura..." />
         </Field>
