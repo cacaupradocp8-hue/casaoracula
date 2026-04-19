@@ -168,22 +168,82 @@ OBRIGATÓRIO EM CADA RESPOSTA
 - 1 a 4 frases. Nunca mais.`;
 }
 
-const ANALISE_SYSTEM = `Você é supervisora clínica oracular. Recebe o histórico de uma simulação entre TERAPEUTA (user) e CLIENTE SIMBÓLICA (assistant) e devolve análise da condução da terapeuta.
+const ANALISE_SYSTEM = `Você é supervisora clínica oracular. Recebe o histórico de uma simulação entre TERAPEUTA (user) e CLIENTE SIMBÓLICA (assistant) e devolve análise técnica e construtiva da condução.
 
-Linguagem: clínica, direta, ética, sem misticismo. Sem elogios vazios. Sem dramatização.
-Não avalie a "cliente" — ela é simulação. Avalie SOMENTE a condução da terapeuta.`;
+REGRAS DE TOM (não negociáveis):
+- Tom técnico, descritivo, construtivo. NUNCA julgador.
+- Nunca usar: "errou", "falhou", "ruim", "deveria ter", "não soube".
+- Usar: "observa-se", "houve tendência a", "há espaço para", "uma alternativa seria".
+- Sem elogios vazios. Sem dramatização. Sem misticismo.
+- Avaliar SOMENTE a condução da terapeuta — a "cliente" é simulação.
+
+OS 4 EIXOS DE AVALIAÇÃO (obrigatórios, todos preenchidos):
+1. ESCUTA vs INTERPRETAÇÃO — a terapeuta acolheu o que veio, ou já interpretou/nomeou cedo demais?
+2. ACELERAÇÃO INDEVIDA — houve pressa em chegar a insight, conclusão ou solução?
+3. RESPEITO AO TEMPO DA CLIENTE — houve espaço para silêncio, hesitação, ambivalência?
+4. REFORÇO DE DEFESA — alguma intervenção confirmou/protegeu a defesa em vez de tocá-la com cuidado?
+
+Para cada eixo: avaliação curta + evidência (citar trecho ou turno).`;
 
 const ANALISE_TOOL = {
   type: "function",
   function: {
     name: "analise_conducao",
-    description: "Análise da condução clínica da terapeuta na simulação",
+    description: "Análise técnica e construtiva da condução clínica da terapeuta",
     parameters: {
       type: "object",
       properties: {
-        leitura_geral: { type: "string" },
-        pontos_fortes: { type: "array", items: { type: "string" } },
-        pontos_a_desenvolver: { type: "array", items: { type: "string" } },
+        leitura_geral: { type: "string", description: "1-2 frases descritivas, tom técnico" },
+        eixos: {
+          type: "object",
+          description: "Avaliação dos 4 eixos clínicos",
+          properties: {
+            escuta_vs_interpretacao: {
+              type: "object",
+              properties: {
+                avaliacao: { type: "string", description: "predominou escuta | equilíbrio | predominou interpretação" },
+                observacao: { type: "string", description: "descrição construtiva, com evidência do diálogo" },
+              },
+              required: ["avaliacao", "observacao"],
+              additionalProperties: false,
+            },
+            aceleracao: {
+              type: "object",
+              properties: {
+                avaliacao: { type: "string", description: "ritmo respeitado | aceleração leve | aceleração marcada" },
+                observacao: { type: "string" },
+              },
+              required: ["avaliacao", "observacao"],
+              additionalProperties: false,
+            },
+            respeito_ao_tempo: {
+              type: "object",
+              properties: {
+                avaliacao: { type: "string", description: "tempo respeitado | parcialmente | pouco espaço" },
+                observacao: { type: "string" },
+              },
+              required: ["avaliacao", "observacao"],
+              additionalProperties: false,
+            },
+            reforco_de_defesa: {
+              type: "object",
+              properties: {
+                avaliacao: { type: "string", description: "defesa não reforçada | reforço pontual | reforço evidente" },
+                observacao: { type: "string" },
+              },
+              required: ["avaliacao", "observacao"],
+              additionalProperties: false,
+            },
+          },
+          required: ["escuta_vs_interpretacao", "aceleracao", "respeito_ao_tempo", "reforco_de_defesa"],
+          additionalProperties: false,
+        },
+        pontos_fortes: { type: "array", items: { type: "string" }, description: "2-4 itens descritivos, sem floreio" },
+        pontos_de_melhoria: { type: "array", items: { type: "string" }, description: "2-4 itens em tom construtivo" },
+        sugestao_conducao_melhor: {
+          type: "string",
+          description: "Sugestão concreta de condução alternativa — uma direção clínica, não um script. Tom: 'uma direção possível seria...'",
+        },
         momentos_chave: {
           type: "array",
           items: {
@@ -197,10 +257,9 @@ const ANALISE_TOOL = {
             additionalProperties: false,
           },
         },
-        risco_etico_observado: { type: "string" },
-        sugestao_proxima_sessao: { type: "string" },
+        risco_etico_observado: { type: "string", description: "'nenhum' se não houver" },
       },
-      required: ["leitura_geral", "pontos_fortes", "pontos_a_desenvolver", "momentos_chave", "sugestao_proxima_sessao"],
+      required: ["leitura_geral", "eixos", "pontos_fortes", "pontos_de_melhoria", "sugestao_conducao_melhor", "momentos_chave", "risco_etico_observado"],
       additionalProperties: false,
     },
   },
