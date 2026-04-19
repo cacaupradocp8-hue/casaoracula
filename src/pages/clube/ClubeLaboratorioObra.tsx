@@ -5,16 +5,17 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, Compass, Eye, Hammer, Loader2, FlaskConical, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Compass, Eye, Hammer, Loader2, FlaskConical, CheckCircle2, MessagesSquare } from 'lucide-react';
 import { useLabOracularConfig, useLabOracularProgress, useSaveLabOracular, callLabOracularIa, type LabOrigem } from '@/hooks/useLabOracular';
 import { CartografiaPhase } from '@/components/clube/laboratorio/CartografiaPhase';
 import { EspelhoPhase } from '@/components/clube/laboratorio/EspelhoPhase';
 import { ForjaPhase } from '@/components/clube/laboratorio/ForjaPhase';
+import { EncarnacaoPhase } from '@/components/clube/laboratorio/EncarnacaoPhase';
 import { toast } from 'sonner';
 
 // /clube/laboratorio/:tipo/:id  →  tipo: 'season' | 'book'
 
-type Fase = 'cartografia' | 'espelho' | 'forja';
+type Fase = 'cartografia' | 'espelho' | 'forja' | 'encarnacao';
 
 export default function ClubeLaboratorioObra() {
   const { tipo, id } = useParams<{ tipo: 'season' | 'book'; id: string }>();
@@ -66,9 +67,10 @@ export default function ClubeLaboratorioObra() {
   const { data: progresso, isLoading: loadingProg } = useLabOracularProgress(origem);
   const save = useSaveLabOracular(origem);
 
-  const [iaLoading, setIaLoading] = useState<Fase | null>(null);
+  type LabFase = 'cartografia' | 'espelho' | 'forja';
+  const [iaLoading, setIaLoading] = useState<LabFase | null>(null);
 
-  async function rodarIa(modo: Fase, inputs: Record<string, unknown>) {
+  async function rodarIa(modo: LabFase, inputs: Record<string, unknown>) {
     if (!obra) return;
     try {
       setIaLoading(modo);
@@ -78,12 +80,12 @@ export default function ClubeLaboratorioObra() {
         contexto_autoral: config,
         inputs,
       });
-      const fieldMap: Record<Fase, string> = {
+      const fieldMap: Record<LabFase, string> = {
         cartografia: 'cart_analise_ia',
         espelho: 'esp_analise_ia',
         forja: 'forja_plano_ia',
       };
-      const statusMap: Record<Fase, string> = {
+      const statusMap: Record<LabFase, string> = {
         cartografia: 'cart_status',
         espelho: 'esp_status',
         forja: 'forja_status',
@@ -118,6 +120,7 @@ export default function ClubeLaboratorioObra() {
     cartografia: progresso?.cart_status || 'not_started',
     espelho: progresso?.esp_status || 'not_started',
     forja: progresso?.forja_status || 'not_started',
+    encarnacao: 'not_started',
   };
 
   return (
@@ -139,10 +142,11 @@ export default function ClubeLaboratorioObra() {
 
         {/* Stepper */}
         <Card className="p-3 mb-4">
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-4 gap-2">
             <PhaseStep active={fase === 'cartografia'} status={phaseStatus.cartografia} icon={<Compass className="w-4 h-4" />} label="Cartografia" onClick={() => setFase('cartografia')} />
             <PhaseStep active={fase === 'espelho'} status={phaseStatus.espelho} icon={<Eye className="w-4 h-4" />} label="Espelho" onClick={() => setFase('espelho')} />
             <PhaseStep active={fase === 'forja'} status={phaseStatus.forja} icon={<Hammer className="w-4 h-4" />} label="Forja" onClick={() => setFase('forja')} />
+            <PhaseStep active={fase === 'encarnacao'} status={phaseStatus.encarnacao} icon={<MessagesSquare className="w-4 h-4" />} label="Encarnação" onClick={() => setFase('encarnacao')} />
           </div>
         </Card>
 
@@ -177,6 +181,13 @@ export default function ClubeLaboratorioObra() {
             iaLoading={iaLoading === 'forja'}
             onConcluir={() => save.mutate({ concluido: true, concluido_em: new Date().toISOString(), forja_status: 'completed' } as any)}
             onBack={() => setFase('espelho')}
+          />
+        )}
+        {fase === 'encarnacao' && (
+          <EncarnacaoPhase
+            progresso={progresso}
+            obra={{ titulo: obra.livro_titulo, autor: obra.livro_autor }}
+            onBack={() => setFase('forja')}
           />
         )}
       </div>
