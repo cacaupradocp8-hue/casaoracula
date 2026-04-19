@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRotaOracular } from '@/hooks/useRotaOracular';
 import { RotaEstrada } from '@/components/clube-livro/RotaEstrada';
 import { RotaAplicacao } from '@/components/clube-livro/RotaAplicacao';
+import { RotaLaboratorio } from '@/components/clube-livro/RotaLaboratorio';
 import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
 
 /**
@@ -149,7 +150,15 @@ export function ClubeHomePage() {
         )}
 
         {/* ============================================
-            4. APLICAÇÃO
+            4. LABORATÓRIO ORACULAR (cabine de prática)
+            ============================================ */}
+        <RotaLaboratorio
+          estacaoId={estacaoAtual?.id}
+          livroTitulo={estacaoAtual?.livro_titulo}
+        />
+
+        {/* ============================================
+            5. APLICAÇÃO
             ============================================ */}
         <RotaAplicacao />
 
