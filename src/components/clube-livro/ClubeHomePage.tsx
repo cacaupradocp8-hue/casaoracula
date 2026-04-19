@@ -150,7 +150,15 @@ export function ClubeHomePage() {
         )}
 
         {/* ============================================
-            4. APLICAÇÃO
+            4. LABORATÓRIO ORACULAR (cabine de prática)
+            ============================================ */}
+        <RotaLaboratorio
+          estacaoId={estacaoAtual?.id}
+          livroTitulo={estacaoAtual?.livro_titulo}
+        />
+
+        {/* ============================================
+            5. APLICAÇÃO
             ============================================ */}
         <RotaAplicacao />
 
