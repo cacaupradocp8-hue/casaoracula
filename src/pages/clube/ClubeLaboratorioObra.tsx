@@ -67,9 +67,10 @@ export default function ClubeLaboratorioObra() {
   const { data: progresso, isLoading: loadingProg } = useLabOracularProgress(origem);
   const save = useSaveLabOracular(origem);
 
-  const [iaLoading, setIaLoading] = useState<Fase | null>(null);
+  type LabFase = 'cartografia' | 'espelho' | 'forja';
+  const [iaLoading, setIaLoading] = useState<LabFase | null>(null);
 
-  async function rodarIa(modo: Fase, inputs: Record<string, unknown>) {
+  async function rodarIa(modo: LabFase, inputs: Record<string, unknown>) {
     if (!obra) return;
     try {
       setIaLoading(modo);
@@ -79,12 +80,12 @@ export default function ClubeLaboratorioObra() {
         contexto_autoral: config,
         inputs,
       });
-      const fieldMap: Record<Fase, string> = {
+      const fieldMap: Record<LabFase, string> = {
         cartografia: 'cart_analise_ia',
         espelho: 'esp_analise_ia',
         forja: 'forja_plano_ia',
       };
-      const statusMap: Record<Fase, string> = {
+      const statusMap: Record<LabFase, string> = {
         cartografia: 'cart_status',
         espelho: 'esp_status',
         forja: 'forja_status',
