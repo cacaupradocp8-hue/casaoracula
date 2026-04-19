@@ -10,6 +10,8 @@ const ClubeAcervo = React.lazy(() => import('@/pages/clube/ClubeAcervo'));
 const ClubeForja = React.lazy(() => import('@/pages/clube/ClubeForja'));
 const ClubeTreinamento = React.lazy(() => import('@/pages/clube/ClubeTreinamento'));
 const ClubeEscutaImersiva = React.lazy(() => import('@/pages/clube/ClubeEscutaImersiva'));
+const ClubeLaboratorio = React.lazy(() => import('@/pages/clube/ClubeLaboratorio'));
+const ClubeLaboratorioObra = React.lazy(() => import('@/pages/clube/ClubeLaboratorioObra'));
 
 // ─── Rotas legadas (mantidas para compatibilidade) ───
 const ClubeLivroCiclo = React.lazy(() => import('@/pages/clube-livro/ClubeLivroCiclo'));
@@ -45,6 +47,8 @@ export function renderClubeRoutes(ProtectedRoute: PR) {
     <Route key="clube-forja" path="/clube/forja" element={<ProtectedRoute minPortal="mentorada"><ClubeForja /></ProtectedRoute>} />,
     <Route key="clube-treinamento" path="/clube/treinamento" element={<ProtectedRoute minPortal="mentorada"><ClubeTreinamento /></ProtectedRoute>} />,
     <Route key="clube-escuta" path="/clube/escuta" element={<ProtectedRoute minPortal="mentorada"><ClubeEscutaImersiva /></ProtectedRoute>} />,
+    <Route key="clube-lab" path="/clube/laboratorio" element={<ProtectedRoute minPortal="mentorada"><ClubeLaboratorio /></ProtectedRoute>} />,
+    <Route key="clube-lab-obra" path="/clube/laboratorio/:tipo/:id" element={<ProtectedRoute minPortal="mentorada"><ClubeLaboratorioObra /></ProtectedRoute>} />,
 
     // ═══ REDIRECIONAMENTOS de rotas legadas ═══
     <Route key="cl-redir-old" path="/app/clube" element={<Navigate to="/clube" replace />} />,
