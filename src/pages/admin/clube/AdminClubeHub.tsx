@@ -118,8 +118,8 @@ export default function AdminClubeHub() {
       const [ciclos, books, estacoes, semanas, escutas, encontros] = await Promise.all([
         supabase.from('clube_livro_ciclos').select('id', { count: 'exact', head: true }),
         supabase.from('books').select('id', { count: 'exact', head: true }),
-        supabase.from('oracular_seasons').select('id', { count: 'exact', head: true }),
-        supabase.from('clube_livro_semana').select('id', { count: 'exact', head: true }),
+        supabase.from('clube_estacoes').select('id', { count: 'exact', head: true }),
+        (supabase as any).from('clube_conteudo_semanal').select('id', { count: 'exact', head: true }),
         (supabase as any).from('clube_livro_escutas').select('id', { count: 'exact', head: true }),
         (supabase as any).from('clube_livro_encontros').select('id', { count: 'exact', head: true }),
       ]);

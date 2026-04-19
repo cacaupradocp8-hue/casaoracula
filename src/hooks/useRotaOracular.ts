@@ -109,7 +109,7 @@ export function useRotaOracular() {
         .from('clube_engajamento')
         .select('*')
         .eq('user_id', user.id)
-        .or(`ciclo_id.eq.${estacaoAtual.id},estacao_id.eq.${estacaoAtual.id}`)
+        .eq('estacao_id', estacaoAtual.id)
         .maybeSingle();
       return data;
     },
@@ -124,7 +124,7 @@ export function useRotaOracular() {
       const { data } = await supabase
         .from('clube_livro_encontros')
         .select('id, titulo, data_encontro, link_ao_vivo')
-        .eq('ciclo_id', estacaoAtual.id)
+        .eq('estacao_id', estacaoAtual.id)
         .eq('ativo', true)
         .order('data_encontro', { ascending: true })
         .limit(1)

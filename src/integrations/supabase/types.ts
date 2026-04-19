@@ -3911,6 +3911,7 @@ export type Database = {
           acessos: number
           ciclo_id: string | null
           encontros_participados: number
+          estacao_id: string | null
           id: string
           nivel: string
           progresso: number
@@ -3922,6 +3923,7 @@ export type Database = {
           acessos?: number
           ciclo_id?: string | null
           encontros_participados?: number
+          estacao_id?: string | null
           id?: string
           nivel?: string
           progresso?: number
@@ -3933,6 +3935,7 @@ export type Database = {
           acessos?: number
           ciclo_id?: string | null
           encontros_participados?: number
+          estacao_id?: string | null
           id?: string
           nivel?: string
           progresso?: number
@@ -3946,6 +3949,13 @@ export type Database = {
             columns: ["ciclo_id"]
             isOneToOne: false
             referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_engajamento_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
             referencedColumns: ["id"]
           },
         ]

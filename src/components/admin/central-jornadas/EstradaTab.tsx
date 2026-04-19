@@ -58,19 +58,19 @@ export function EstradaTab({ estacaoId }: Props) {
     },
   });
 
-  // Fetch semanas for linking
+  // Fetch semanas for linking — filtered by current estação
   const { data: semanas = [] } = useQuery({
     queryKey: ['admin-estrada-semanas', estacaoId],
     queryFn: async () => {
-      // Get semanas linked to the ciclo that references this estacao
-      // For now, get all active semanas
       const { data } = await (supabase as any)
         .from('clube_conteudo_semanal')
         .select('id, semana_numero, podcast_titulo')
+        .eq('estacao_id', estacaoId)
         .eq('ativo', true)
         .order('semana_numero', { ascending: true });
       return (data || []) as ConteudoSemanal[];
     },
+    enabled: !!estacaoId,
   });
 
   const saveMutation = useMutation({
@@ -188,7 +188,16 @@ export function EstradaTab({ estacaoId }: Props) {
                   <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(j)}>
                     <Pencil className="w-3.5 h-3.5" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => deleteMutation.mutate(j.id)}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={() => {
+                      if (window.confirm(`Remover o ponto "${j.nome}"? Esta ação não pode ser desfeita.`)) {
+                        deleteMutation.mutate(j.id);
+                      }
+                    }}
+                  >
                     <Trash2 className="w-3.5 h-3.5 text-destructive" />
                   </Button>
                 </div>
