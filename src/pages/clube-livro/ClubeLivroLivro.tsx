@@ -123,18 +123,32 @@ export default function ClubeLivroLivro() {
             </p>
           )}
 
-          <Button
-            variant="gold"
-            size="lg"
-            className="gap-2"
-            onClick={() => {
-              const el = document.getElementById('aulas-album');
-              el?.scrollIntoView({ behavior: 'smooth' });
-            }}
-          >
-            <Play className="w-4 h-4" />
-            Iniciar Travessia
-          </Button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Button
+              variant="gold"
+              size="lg"
+              className="gap-2"
+              onClick={() => {
+                const el = document.getElementById('aulas-album');
+                el?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              <Play className="w-4 h-4" />
+              Iniciar Travessia
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="gap-2 border-primary/25 hover:bg-primary/5"
+              onClick={() => navigate(`/clube/laboratorio/livro/${book.id}`)}
+            >
+              <Sparkles className="w-4 h-4" />
+              Levar ao Laboratório
+            </Button>
+          </div>
+          <p className="text-[11px] text-muted-foreground/50 mt-3">
+            Simule a leitura desta obra como cliente simbólica.
+          </p>
         </motion.section>
 
         <Divider />
