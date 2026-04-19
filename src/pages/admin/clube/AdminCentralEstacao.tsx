@@ -93,7 +93,7 @@ export default function AdminCentralEstacao() {
             </TabsTrigger>
             <TabsTrigger value="aplicacao" className="gap-1.5 text-xs">
               <Layers className="w-3.5 h-3.5" />
-              Aplicação
+              Laboratório
             </TabsTrigger>
             <TabsTrigger value="encontro" className="gap-1.5 text-xs">
               <Users className="w-3.5 h-3.5" />
