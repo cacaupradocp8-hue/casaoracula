@@ -12230,16 +12230,42 @@ export type Database = {
           aplicacao_comportamento: string | null
           aplicacao_gesto: string | null
           aplicacao_onde: string | null
+          book_id: string | null
+          cart_analise_ia: Json | null
+          cart_arquetipos: string[] | null
+          cart_distrito: string | null
+          cart_labirinto: string | null
+          cart_observacoes: string | null
+          cart_porta: string | null
+          cart_status: string | null
+          cart_torre: string | null
           concluido: boolean
           concluido_em: string | null
           created_at: string
+          esp_analise_ia: Json | null
+          esp_categorias_selecionadas: string[] | null
+          esp_manifestacao: string | null
+          esp_nao_fazer: string | null
+          esp_onde_ve: string | null
+          esp_risco: string | null
+          esp_status: string | null
+          forja_ajustes_rota: string | null
+          forja_estrategia: string | null
+          forja_fechamento: string | null
+          forja_intervencao: string | null
+          forja_objetivo: string | null
+          forja_perguntas: string | null
+          forja_plano_ia: Json | null
+          forja_respostas_cliente: string | null
+          forja_riscos: string | null
+          forja_status: string | null
           id: string
           insight_livre: string | null
           notas_profissionais: string | null
           registro_reflexivo: string | null
           resposta_1: string | null
           resposta_2: string | null
-          season_id: string
+          season_id: string | null
           updated_at: string
           user_id: string
         }
@@ -12247,16 +12273,42 @@ export type Database = {
           aplicacao_comportamento?: string | null
           aplicacao_gesto?: string | null
           aplicacao_onde?: string | null
+          book_id?: string | null
+          cart_analise_ia?: Json | null
+          cart_arquetipos?: string[] | null
+          cart_distrito?: string | null
+          cart_labirinto?: string | null
+          cart_observacoes?: string | null
+          cart_porta?: string | null
+          cart_status?: string | null
+          cart_torre?: string | null
           concluido?: boolean
           concluido_em?: string | null
           created_at?: string
+          esp_analise_ia?: Json | null
+          esp_categorias_selecionadas?: string[] | null
+          esp_manifestacao?: string | null
+          esp_nao_fazer?: string | null
+          esp_onde_ve?: string | null
+          esp_risco?: string | null
+          esp_status?: string | null
+          forja_ajustes_rota?: string | null
+          forja_estrategia?: string | null
+          forja_fechamento?: string | null
+          forja_intervencao?: string | null
+          forja_objetivo?: string | null
+          forja_perguntas?: string | null
+          forja_plano_ia?: Json | null
+          forja_respostas_cliente?: string | null
+          forja_riscos?: string | null
+          forja_status?: string | null
           id?: string
           insight_livre?: string | null
           notas_profissionais?: string | null
           registro_reflexivo?: string | null
           resposta_1?: string | null
           resposta_2?: string | null
-          season_id: string
+          season_id?: string | null
           updated_at?: string
           user_id: string
         }
@@ -12264,20 +12316,53 @@ export type Database = {
           aplicacao_comportamento?: string | null
           aplicacao_gesto?: string | null
           aplicacao_onde?: string | null
+          book_id?: string | null
+          cart_analise_ia?: Json | null
+          cart_arquetipos?: string[] | null
+          cart_distrito?: string | null
+          cart_labirinto?: string | null
+          cart_observacoes?: string | null
+          cart_porta?: string | null
+          cart_status?: string | null
+          cart_torre?: string | null
           concluido?: boolean
           concluido_em?: string | null
           created_at?: string
+          esp_analise_ia?: Json | null
+          esp_categorias_selecionadas?: string[] | null
+          esp_manifestacao?: string | null
+          esp_nao_fazer?: string | null
+          esp_onde_ve?: string | null
+          esp_risco?: string | null
+          esp_status?: string | null
+          forja_ajustes_rota?: string | null
+          forja_estrategia?: string | null
+          forja_fechamento?: string | null
+          forja_intervencao?: string | null
+          forja_objetivo?: string | null
+          forja_perguntas?: string | null
+          forja_plano_ia?: Json | null
+          forja_respostas_cliente?: string | null
+          forja_riscos?: string | null
+          forja_status?: string | null
           id?: string
           insight_livre?: string | null
           notas_profissionais?: string | null
           registro_reflexivo?: string | null
           resposta_1?: string | null
           resposta_2?: string | null
-          season_id?: string
+          season_id?: string | null
           updated_at?: string
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "lab_8020_progress_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "lab_8020_progress_season_id_fkey"
             columns: ["season_id"]
@@ -17901,9 +17986,24 @@ export type Database = {
           aula_objetivo: string | null
           aula_pergunta_fechamento: string | null
           aula_vivencia: string | null
+          cart_arquetipos_sugeridos: string[] | null
+          cart_distrito_sugerido: string | null
+          cart_labirinto_sugerido: string | null
+          cart_observacoes_obra: string | null
+          cart_porta_sugerida: string | null
+          cart_torre_sugerida: string | null
           ciclo_id: string | null
           created_at: string
+          esp_categorias_padrao: string[] | null
+          esp_contraindicacoes: string | null
+          esp_exemplos_manifestacao: string | null
+          esp_riscos_clinicos: string | null
           essencia_transformadora: string | null
+          forja_fechamento_sugerido: string | null
+          forja_intervencao_modelo: string | null
+          forja_perguntas_chave: string[] | null
+          forja_template_estrategia: string | null
+          forja_template_objetivo: string | null
           grupo_terapeutico: Json | null
           id: string
           imagem_organizadora: string | null
@@ -17931,9 +18031,24 @@ export type Database = {
           aula_objetivo?: string | null
           aula_pergunta_fechamento?: string | null
           aula_vivencia?: string | null
+          cart_arquetipos_sugeridos?: string[] | null
+          cart_distrito_sugerido?: string | null
+          cart_labirinto_sugerido?: string | null
+          cart_observacoes_obra?: string | null
+          cart_porta_sugerida?: string | null
+          cart_torre_sugerida?: string | null
           ciclo_id?: string | null
           created_at?: string
+          esp_categorias_padrao?: string[] | null
+          esp_contraindicacoes?: string | null
+          esp_exemplos_manifestacao?: string | null
+          esp_riscos_clinicos?: string | null
           essencia_transformadora?: string | null
+          forja_fechamento_sugerido?: string | null
+          forja_intervencao_modelo?: string | null
+          forja_perguntas_chave?: string[] | null
+          forja_template_estrategia?: string | null
+          forja_template_objetivo?: string | null
           grupo_terapeutico?: Json | null
           id?: string
           imagem_organizadora?: string | null
@@ -17961,9 +18076,24 @@ export type Database = {
           aula_objetivo?: string | null
           aula_pergunta_fechamento?: string | null
           aula_vivencia?: string | null
+          cart_arquetipos_sugeridos?: string[] | null
+          cart_distrito_sugerido?: string | null
+          cart_labirinto_sugerido?: string | null
+          cart_observacoes_obra?: string | null
+          cart_porta_sugerida?: string | null
+          cart_torre_sugerida?: string | null
           ciclo_id?: string | null
           created_at?: string
+          esp_categorias_padrao?: string[] | null
+          esp_contraindicacoes?: string | null
+          esp_exemplos_manifestacao?: string | null
+          esp_riscos_clinicos?: string | null
           essencia_transformadora?: string | null
+          forja_fechamento_sugerido?: string | null
+          forja_intervencao_modelo?: string | null
+          forja_perguntas_chave?: string[] | null
+          forja_template_estrategia?: string | null
+          forja_template_objetivo?: string | null
           grupo_terapeutico?: Json | null
           id?: string
           imagem_organizadora?: string | null
