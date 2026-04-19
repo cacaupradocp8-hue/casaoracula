@@ -3,9 +3,16 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
+// ================================================
+// useClubeOracular — Hooks do Clube migrados para
+// o eixo `estacao_id` (fonte única de verdade).
+// `ciclo_id` permanece apenas como legado nas tabelas.
+// ================================================
+
 export interface ConteudoSemanal {
   id: string;
-  ciclo_id: string;
+  estacao_id: string | null;
+  ciclo_id: string | null;
   semana_numero: number;
   data_inicio: string;
   data_fim: string | null;
@@ -26,6 +33,7 @@ export interface ConteudoSemanal {
 export interface ClubeReflexao {
   id: string;
   user_id: string;
+  estacao_id: string | null;
   ciclo_id: string | null;
   conteudo_semanal_id: string | null;
   texto: string;
@@ -35,6 +43,7 @@ export interface ClubeReflexao {
 export interface ClubeEngajamento {
   id: string;
   user_id: string;
+  estacao_id: string | null;
   ciclo_id: string | null;
   acessos: number;
   reflexoes_salvas: number;
@@ -43,16 +52,16 @@ export interface ClubeEngajamento {
   progresso: number;
 }
 
-export function useClubeConteudoSemanal(cicloId: string | undefined) {
+export function useClubeConteudoSemanal(estacaoId: string | undefined) {
   return useQuery({
-    queryKey: ['clube-conteudo-semanal', cicloId],
+    queryKey: ['clube-conteudo-semanal', estacaoId],
     queryFn: async () => {
-      if (!cicloId) return null;
+      if (!estacaoId) return null;
       const today = new Date().toISOString().split('T')[0];
       const { data, error } = await (supabase as any)
         .from('clube_conteudo_semanal')
         .select('*')
-        .eq('ciclo_id', cicloId)
+        .eq('estacao_id', estacaoId)
         .eq('ativo', true)
         .lte('data_inicio', today)
         .order('semana_numero', { ascending: false })
@@ -61,41 +70,41 @@ export function useClubeConteudoSemanal(cicloId: string | undefined) {
       if (error) throw error;
       return data as ConteudoSemanal | null;
     },
-    enabled: !!cicloId,
+    enabled: !!estacaoId,
   });
 }
 
-export function useClubeReflexoes(cicloId: string | undefined) {
+export function useClubeReflexoes(estacaoId: string | undefined) {
   const { user } = useAuth();
   const { toast } = useToast();
   const qc = useQueryClient();
 
   const { data: reflexoes, isLoading } = useQuery({
-    queryKey: ['clube-reflexoes', cicloId, user?.id],
+    queryKey: ['clube-reflexoes', estacaoId, user?.id],
     queryFn: async () => {
-      if (!user?.id || !cicloId) return [];
+      if (!user?.id || !estacaoId) return [];
       const { data, error } = await (supabase as any)
         .from('clube_reflexoes')
         .select('*')
         .eq('user_id', user.id)
-        .eq('ciclo_id', cicloId)
+        .eq('estacao_id', estacaoId)
         .order('created_at', { ascending: false });
       if (error) throw error;
       return data as ClubeReflexao[];
     },
-    enabled: !!user?.id && !!cicloId,
+    enabled: !!user?.id && !!estacaoId,
   });
 
   const salvarReflexao = useMutation({
     mutationFn: async ({ texto, conteudoSemanalId }: { texto: string; conteudoSemanalId?: string }) => {
-      if (!user?.id || !cicloId) throw new Error('Missing data');
+      if (!user?.id || !estacaoId) throw new Error('Missing data');
       const { error } = await (supabase as any)
         .from('clube_reflexoes')
-        .insert({ user_id: user.id, ciclo_id: cicloId, conteudo_semanal_id: conteudoSemanalId, texto });
+        .insert({ user_id: user.id, estacao_id: estacaoId, conteudo_semanal_id: conteudoSemanalId, texto });
       if (error) throw error;
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['clube-reflexoes', cicloId] });
+      qc.invalidateQueries({ queryKey: ['clube-reflexoes', estacaoId] });
       toast({ title: 'Reflexão salva', description: 'Sua escrita foi guardada com cuidado.' });
     },
     onError: () => {
@@ -106,38 +115,38 @@ export function useClubeReflexoes(cicloId: string | undefined) {
   return { reflexoes, isLoading, salvarReflexao };
 }
 
-export function useClubeEngajamento(cicloId: string | undefined) {
+export function useClubeEngajamento(estacaoId: string | undefined) {
   const { user } = useAuth();
 
   const { data: engajamento } = useQuery({
-    queryKey: ['clube-engajamento', cicloId, user?.id],
+    queryKey: ['clube-engajamento', estacaoId, user?.id],
     queryFn: async () => {
-      if (!user?.id || !cicloId) return null;
+      if (!user?.id || !estacaoId) return null;
       const { data, error } = await (supabase as any)
         .from('clube_engajamento')
         .select('*')
         .eq('user_id', user.id)
-        .eq('ciclo_id', cicloId)
+        .eq('estacao_id', estacaoId)
         .maybeSingle();
       if (error) throw error;
       return data as ClubeEngajamento | null;
     },
-    enabled: !!user?.id && !!cicloId,
+    enabled: !!user?.id && !!estacaoId,
   });
 
   return { engajamento };
 }
 
-export function useClubeProximoEncontro(cicloId: string | undefined) {
+export function useClubeProximoEncontro(estacaoId: string | undefined) {
   return useQuery({
-    queryKey: ['clube-proximo-encontro', cicloId],
+    queryKey: ['clube-proximo-encontro', estacaoId],
     queryFn: async () => {
-      if (!cicloId) return null;
+      if (!estacaoId) return null;
       const now = new Date().toISOString();
       const { data, error } = await (supabase as any)
         .from('clube_livro_encontros')
         .select('*')
-        .eq('ciclo_id', cicloId)
+        .eq('estacao_id', estacaoId)
         .eq('ativo', true)
         .gte('data_encontro', now)
         .order('data_encontro', { ascending: true })
@@ -146,6 +155,6 @@ export function useClubeProximoEncontro(cicloId: string | undefined) {
       if (error) throw error;
       return data;
     },
-    enabled: !!cicloId,
+    enabled: !!estacaoId,
   });
 }
