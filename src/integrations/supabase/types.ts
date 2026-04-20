@@ -5803,6 +5803,42 @@ export type Database = {
           },
         ]
       }
+      co_detectores_eventos: {
+        Row: {
+          client_user_id: string
+          created_at: string
+          descricao: string | null
+          detector_tipo: string
+          id: string
+          intensidade: string
+          origem: string
+          session_id: string | null
+          therapist_user_id: string
+        }
+        Insert: {
+          client_user_id: string
+          created_at?: string
+          descricao?: string | null
+          detector_tipo: string
+          id?: string
+          intensidade?: string
+          origem?: string
+          session_id?: string | null
+          therapist_user_id: string
+        }
+        Update: {
+          client_user_id?: string
+          created_at?: string
+          descricao?: string | null
+          detector_tipo?: string
+          id?: string
+          intensidade?: string
+          origem?: string
+          session_id?: string | null
+          therapist_user_id?: string
+        }
+        Relationships: []
+      }
       co_escutas: {
         Row: {
           client_user_id: string
@@ -5899,41 +5935,86 @@ export type Database = {
           },
         ]
       }
+      co_intervencoes: {
+        Row: {
+          client_user_id: string
+          created_at: string
+          descricao: string | null
+          houve_deslocamento: boolean
+          id: string
+          session_id: string | null
+          therapist_user_id: string
+          tipo: string
+        }
+        Insert: {
+          client_user_id: string
+          created_at?: string
+          descricao?: string | null
+          houve_deslocamento?: boolean
+          id?: string
+          session_id?: string | null
+          therapist_user_id: string
+          tipo: string
+        }
+        Update: {
+          client_user_id?: string
+          created_at?: string
+          descricao?: string | null
+          houve_deslocamento?: boolean
+          id?: string
+          session_id?: string | null
+          therapist_user_id?: string
+          tipo?: string
+        }
+        Relationships: []
+      }
       co_jardim_entries: {
         Row: {
+          analisado_ia: boolean
           client_user_id: string
           content: string | null
           created_at: string
           created_by: string
+          emocao: string | null
           entry_type: string
           id: string
           jardim_id: string
+          movimento: string | null
+          padrao_detectado: string | null
           shared_with_therapist: boolean
           therapist_user_id: string
           updated_at: string
           visibility_to_client: boolean
         }
         Insert: {
+          analisado_ia?: boolean
           client_user_id: string
           content?: string | null
           created_at?: string
           created_by: string
+          emocao?: string | null
           entry_type?: string
           id?: string
           jardim_id: string
+          movimento?: string | null
+          padrao_detectado?: string | null
           shared_with_therapist?: boolean
           therapist_user_id: string
           updated_at?: string
           visibility_to_client?: boolean
         }
         Update: {
+          analisado_ia?: boolean
           client_user_id?: string
           content?: string | null
           created_at?: string
           created_by?: string
+          emocao?: string | null
           entry_type?: string
           id?: string
           jardim_id?: string
+          movimento?: string | null
+          padrao_detectado?: string | null
           shared_with_therapist?: boolean
           therapist_user_id?: string
           updated_at?: string
@@ -6033,6 +6114,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      co_mapa_vivo: {
+        Row: {
+          client_user_id: string
+          created_at: string
+          eixo_confronto: string
+          eixo_movimento: string
+          id: string
+          presenca_emocional: string
+          regulacao: string
+          updated_at: string
+        }
+        Insert: {
+          client_user_id: string
+          created_at?: string
+          eixo_confronto?: string
+          eixo_movimento?: string
+          id?: string
+          presenca_emocional?: string
+          regulacao?: string
+          updated_at?: string
+        }
+        Update: {
+          client_user_id?: string
+          created_at?: string
+          eixo_confronto?: string
+          eixo_movimento?: string
+          id?: string
+          presenca_emocional?: string
+          regulacao?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       co_mentora_feedback: {
         Row: {
