@@ -1,6 +1,14 @@
 // SYNTHEIA — Detectores Clínicos
 // Detecta padrões: estagnacao, dissociacao, evitacao, fusao
 // Persiste em co_detectores_eventos
+//
+// Hardenings v2:
+//  - origem agora classifica como 'heuristica' | 'ia' | 'hibrido'
+//  - valida vínculo terapeuta ↔ cliente antes de inserir
+//  - dedupe por hash(payload) na janela de 10 min
+//  - dissociacao: thresholds mais conservadores (anti falso-positivo)
+//  - fusao: marcadores sensíveis ('morrer', 'não aguento') só contam
+//    junto de marcadores afetivos explícitos (anti alarme indevido)
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.0";
 
@@ -12,7 +20,7 @@ const corsHeaders = {
 
 type DetectorTipo = "estagnacao" | "dissociacao" | "evitacao" | "fusao";
 type Intensidade = "baixa" | "media" | "alta";
-type Origem = "jardim" | "sessao" | "ia";
+type Origem = "heuristica" | "ia" | "hibrido";
 
 interface Detector {
   tipo: DetectorTipo;
@@ -29,6 +37,24 @@ interface RequestBody {
 }
 
 const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+const DEDUP_WINDOW_MINUTES = 10;
+
+// ---------- Hash determinístico curto (SHA-256, 16 hex chars) ----------
+async function shortHash(input: string): Promise<string> {
+  const buf = new TextEncoder().encode(input);
+  const digest = await crypto.subtle.digest("SHA-256", buf);
+  const hex = Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  return hex.slice(0, 16);
+}
+
+function normalizeForHash(texto: string): string {
+  return texto
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
 // ---------- Mapa Vivo (estado longitudinal derivado) ----------
 async function refreshMapaVivo(supabase: any, clientUserId: string) {
@@ -94,18 +120,10 @@ function analisarHeuristicas(textoRaw: string): Detector[] {
   const total = Math.max(palavras.length, 1);
   const detectores: Detector[] = [];
 
-  // ESTAGNAÇÃO — marcadores de repetição/cristalização
+  // ESTAGNAÇÃO — repetição/cristalização
   const estagMarkers = [
-    "sempre",
-    "nunca",
-    "de novo",
-    "outra vez",
-    "já sei",
-    "ja sei",
-    "como sempre",
-    "a mesma coisa",
-    "mesma coisa",
-    "tudo igual",
+    "sempre", "nunca", "de novo", "outra vez", "já sei", "ja sei",
+    "como sempre", "a mesma coisa", "mesma coisa", "tudo igual",
   ];
   const estagHits = estagMarkers.filter((m) => texto.includes(m));
   if (estagHits.length > 0) {
@@ -119,78 +137,48 @@ function analisarHeuristicas(textoRaw: string): Detector[] {
     });
   }
 
-  // DISSOCIAÇÃO — racionalização sem afeto
+  // Vocabulário afetivo (compartilhado)
   const emocoes = [
-    "sinto",
-    "senti",
-    "medo",
-    "raiva",
-    "tristeza",
-    "alegria",
-    "amor",
-    "vergonha",
-    "culpa",
-    "dor",
-    "angústia",
-    "angustia",
-    "ansiedade",
-    "saudade",
-    "ódio",
-    "odio",
-    "felicidade",
-    "vazio",
-    "doí",
-    "doi",
-    "choro",
-    "chorei",
+    "sinto", "senti", "medo", "raiva", "tristeza", "alegria", "amor",
+    "vergonha", "culpa", "dor", "angústia", "angustia", "ansiedade",
+    "saudade", "ódio", "odio", "felicidade", "vazio", "doí", "doi",
+    "choro", "chorei", "chorar",
   ];
   const racional = [
-    "acho que",
-    "penso que",
-    "logicamente",
-    "racional",
-    "objetivamente",
-    "tecnicamente",
-    "em teoria",
-    "fato é",
-    "fato e",
-    "na verdade",
+    "acho que", "penso que", "logicamente", "racional", "objetivamente",
+    "tecnicamente", "em teoria", "fato é", "fato e", "na verdade",
   ];
   const emoHits = emocoes.filter((m) => texto.includes(m)).length;
   const racHits = racional.filter((m) => texto.includes(m)).length;
-  if (total > 25 && emoHits === 0 && racHits >= 1) {
+
+  // DISSOCIAÇÃO — CONSERVADORA
+  // Só dispara em texto longo o bastante (>=60 palavras), com zero afeto
+  // E múltiplos marcadores de racionalização. Intensidade nunca "alta"
+  // sem confirmação da IA — heurística limita a "media".
+  // Texto curto/médio sem afeto NÃO marca (estilo de escrita ≠ dissociação).
+  if (total >= 60 && emoHits === 0 && racHits >= 3) {
     detectores.push({
       tipo: "dissociacao",
-      intensidade: racHits >= 3 ? "alta" : "media",
-      descricao: "Discurso racional extenso sem marcadores afetivos",
+      intensidade: "media",
+      descricao:
+        "Texto extenso com múltiplos marcadores racionais e ausência de vocabulário afetivo",
       evidencias: racional.filter((m) => texto.includes(m)),
     });
-  } else if (total > 40 && emoHits === 0) {
+  } else if (total >= 100 && emoHits === 0 && racHits >= 1) {
     detectores.push({
       tipo: "dissociacao",
       intensidade: "baixa",
-      descricao: "Texto longo com ausência de vocabulário emocional",
-      evidencias: [],
+      descricao: "Texto longo (>100 palavras) sem marcadores afetivos",
+      evidencias: racional.filter((m) => texto.includes(m)),
     });
   }
 
   // EVITAÇÃO — superficialidade / fuga
   const evitMarkers = [
-    "não quero falar",
-    "nao quero falar",
-    "deixa pra lá",
-    "deixa pra la",
-    "tanto faz",
-    "sei lá",
-    "sei la",
-    "não importa",
-    "nao importa",
-    "não sei",
-    "nao sei",
-    "não interessa",
-    "nao interessa",
-    "outra coisa",
-    "mudando de assunto",
+    "não quero falar", "nao quero falar", "deixa pra lá", "deixa pra la",
+    "tanto faz", "sei lá", "sei la", "não importa", "nao importa",
+    "não sei", "nao sei", "não interessa", "nao interessa",
+    "outra coisa", "mudando de assunto",
   ];
   const evitHits = evitMarkers.filter((m) => texto.includes(m));
   const muitoCurto = total < 12;
@@ -207,36 +195,55 @@ function analisarHeuristicas(textoRaw: string): Detector[] {
     });
   }
 
-  // FUSÃO — alta intensidade emocional repetida
-  const intensidadeMarkers = [
-    "muito",
-    "demais",
-    "insuportável",
-    "insuportavel",
-    "horrível",
-    "horrivel",
-    "desespero",
-    "explodir",
-    "morrer",
-    "não aguento",
-    "nao aguento",
-    "!!",
-    "!!!",
+  // FUSÃO — REVISADA com cuidado para marcadores sensíveis
+  //
+  // Separamos:
+  //   - intensidade GENÉRICA (segura: muito, demais, !!, etc.)
+  //   - intensidade SENSÍVEL (morrer, não aguento, desespero, explodir)
+  //
+  // Marcadores sensíveis SOZINHOS não disparam alerta — exigem
+  // contexto afetivo claro (>=2 marcadores emocionais) E coocorrência
+  // com outro marcador genérico. Isso evita alarme por uso figurado
+  // ("morro de rir", "não aguento de saudade boa", etc.).
+  const intensidadeGenerica = [
+    "muito", "demais", "horrível", "horrivel", "insuportável", "insuportavel",
+    "!!", "!!!",
   ];
-  const fusHits = intensidadeMarkers.filter((m) => texto.includes(m));
-  if (fusHits.length >= 2 && emoHits >= 2) {
+  const intensidadeSensivel = [
+    "morrer", "não aguento", "nao aguento", "desespero", "explodir",
+  ];
+  const genHits = intensidadeGenerica.filter((m) => texto.includes(m));
+  const sensHits = intensidadeSensivel.filter((m) => texto.includes(m));
+  const todasFusHits = [...genHits, ...sensHits];
+
+  // Caso 1 — fusão clara: muitos marcadores genéricos + afeto explícito
+  if (genHits.length >= 2 && emoHits >= 2) {
+    const intensidade: Intensidade =
+      genHits.length + sensHits.length >= 4 ? "alta" : "media";
     detectores.push({
       tipo: "fusao",
-      intensidade: fusHits.length >= 4 ? "alta" : "media",
+      intensidade,
       descricao: "Intensidade emocional elevada com repetição afetiva",
-      evidencias: fusHits,
+      evidencias: todasFusHits,
     });
-  } else if (fusHits.length >= 3) {
+  }
+  // Caso 2 — sensível: só dispara com afeto E confirmação genérica
+  else if (sensHits.length >= 1 && emoHits >= 2 && genHits.length >= 1) {
+    detectores.push({
+      tipo: "fusao",
+      intensidade: "media",
+      descricao:
+        "Marcadores de alta intensidade contextualizados em campo afetivo explícito",
+      evidencias: todasFusHits,
+    });
+  }
+  // Caso 3 — eco linguístico (genéricos repetidos sem afeto): baixa, informativo
+  else if (genHits.length >= 3) {
     detectores.push({
       tipo: "fusao",
       intensidade: "baixa",
       descricao: "Linguagem absoluta repetida (possível fusão emergente)",
-      evidencias: fusHits,
+      evidencias: genHits,
     });
   }
 
@@ -247,14 +254,14 @@ function analisarHeuristicas(textoRaw: string): Detector[] {
 async function refinarComIA(
   texto: string,
   baseline: Detector[],
-): Promise<Detector[]> {
-  if (!LOVABLE_API_KEY) return baseline;
+): Promise<{ detectores: Detector[]; usouIA: boolean }> {
+  if (!LOVABLE_API_KEY) return { detectores: baseline, usouIA: false };
 
   const system = `Você é uma analista clínica simbólica. Analise o texto da cliente e identifique padrões de:
 - estagnacao (repetição cristalizada)
-- dissociacao (ausência de afeto, racionalização)
+- dissociacao (ausência de afeto, racionalização) — SEJA CONSERVADORA, estilo racional ≠ dissociação
 - evitacao (fuga de tema, superficialidade)
-- fusao (intensidade emocional não regulada)
+- fusao (intensidade emocional não regulada) — marcadores como "morrer" podem ser figurados; exija contexto afetivo claro
 
 Retorne APENAS via tool call. Seja conservadora — não invente padrões. Use a baseline heurística como referência mas pode ajustar intensidade ou remover falsos positivos.`;
 
@@ -316,21 +323,64 @@ Retorne APENAS via tool call. Seja conservadora — não invente padrões. Use a
 
     if (!resp.ok) {
       console.warn("IA refinement falhou:", resp.status);
-      return baseline;
+      return { detectores: baseline, usouIA: false };
     }
 
     const data = await resp.json();
     const call = data?.choices?.[0]?.message?.tool_calls?.[0];
-    if (!call?.function?.arguments) return baseline;
+    if (!call?.function?.arguments) return { detectores: baseline, usouIA: false };
     const parsed = JSON.parse(call.function.arguments);
-    if (Array.isArray(parsed.detectores) && parsed.detectores.length > 0) {
-      return parsed.detectores;
+    if (Array.isArray(parsed.detectores)) {
+      return { detectores: parsed.detectores, usouIA: true };
     }
-    return baseline;
+    return { detectores: baseline, usouIA: false };
   } catch (err) {
     console.warn("IA refinement erro:", err);
-    return baseline;
+    return { detectores: baseline, usouIA: false };
   }
+}
+
+// ---------- Validação de vínculo terapeuta ↔ cliente ----------
+async function isLinkedTherapist(
+  supabase: any,
+  therapistUserId: string,
+  clientUserId: string,
+): Promise<boolean> {
+  // Caminho 1: terapeuta atua via tabela `clientes` (terapeuta_id + client_user_id)
+  const { data: cli } = await supabase
+    .from("clientes")
+    .select("id")
+    .eq("terapeuta_id", therapistUserId)
+    .eq("client_user_id", clientUserId)
+    .eq("status", "ativo")
+    .limit(1)
+    .maybeSingle();
+  if (cli) return true;
+
+  // Caminho 2: vínculo direto via co_jardins ativo (cliente é o próprio user)
+  const { data: jardim } = await supabase
+    .from("co_jardins")
+    .select("id")
+    .eq("therapist_user_id", therapistUserId)
+    .eq("client_user_id", clientUserId)
+    .eq("status", "active")
+    .limit(1)
+    .maybeSingle();
+  if (jardim) return true;
+
+  // Caminho 3: o próprio cliente está escrevendo no seu jardim (auto-análise)
+  if (therapistUserId === clientUserId) {
+    const { data: ownJardim } = await supabase
+      .from("co_jardins")
+      .select("id")
+      .eq("client_user_id", clientUserId)
+      .eq("status", "active")
+      .limit(1)
+      .maybeSingle();
+    if (ownJardim) return true;
+  }
+
+  return false;
 }
 
 // ---------- Handler ----------
@@ -362,7 +412,7 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const therapistUserId = claimData.claims.sub as string;
+    const callerUserId = claimData.claims.sub as string;
 
     const body = (await req.json()) as Partial<RequestBody>;
     const { client_user_id, texto, contexto, session_id } = body;
@@ -387,16 +437,83 @@ Deno.serve(async (req) => {
       );
     }
 
+    // ---- Validação de vínculo ----
+    const linked = await isLinkedTherapist(supabase, callerUserId, client_user_id);
+    if (!linked) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "Sem vínculo ativo entre solicitante e cliente. Detector não registrado.",
+        }),
+        {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
+    }
+    // therapist_user_id = quem detém o caso clínico (não o caller, se for o próprio cliente)
+    let therapistUserId = callerUserId;
+    if (callerUserId === client_user_id) {
+      const { data: jardim } = await supabase
+        .from("co_jardins")
+        .select("therapist_user_id")
+        .eq("client_user_id", client_user_id)
+        .eq("status", "active")
+        .limit(1)
+        .maybeSingle();
+      if (jardim?.therapist_user_id) therapistUserId = jardim.therapist_user_id;
+    }
+
+    // ---- Dedup: hash do payload ----
+    const payloadHash = await shortHash(
+      `${contexto}|${session_id ?? ""}|${normalizeForHash(texto)}`,
+    );
+    const sinceIso = new Date(
+      Date.now() - DEDUP_WINDOW_MINUTES * 60 * 1000,
+    ).toISOString();
+    const { data: dup } = await supabase
+      .from("co_detectores_eventos")
+      .select("id, created_at")
+      .eq("client_user_id", client_user_id)
+      .eq("contexto", contexto)
+      .eq("payload_hash", payloadHash)
+      .gte("created_at", sinceIso)
+      .limit(1)
+      .maybeSingle();
+
+    if (dup) {
+      return new Response(
+        JSON.stringify({
+          ok: true,
+          deduped: true,
+          message: `Texto idêntico já analisado nos últimos ${DEDUP_WINDOW_MINUTES} min`,
+          referencia_id: dup.id,
+        }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
+    }
+
     // 1. Heurística
     const baseline = analisarHeuristicas(texto);
 
-    // 2. Refinamento opcional via IA (não bloqueante se falhar)
-    const detectoresFinais = baseline.length > 0
+    // 2. Refinamento opcional via IA
+    const { detectores: detectoresFinais, usouIA } = baseline.length > 0
       ? await refinarComIA(texto, baseline)
-      : baseline;
+      : { detectores: baseline, usouIA: false };
 
-    // 3. Persistir em co_detectores_eventos
-    const origem: Origem = "ia";
+    // 3. Classificação de origem
+    //   - heuristica: só baseline, IA não opinou
+    //   - ia: nada na baseline, mas IA inferiu (raro — baseline.length===0 nem chama IA)
+    //   - hibrido: baseline existia E IA refinou/ajustou
+    const origem: Origem =
+      usouIA && baseline.length > 0 ? "hibrido"
+        : usouIA ? "ia"
+        : "heuristica";
+
+    // 4. Persistir em co_detectores_eventos
     const rowsToInsert = detectoresFinais.map((d) => ({
       client_user_id,
       therapist_user_id: therapistUserId,
@@ -404,6 +521,8 @@ Deno.serve(async (req) => {
       detector_tipo: d.tipo,
       intensidade: d.intensidade,
       origem,
+      contexto,
+      payload_hash: payloadHash,
       descricao: d.descricao +
         (d.evidencias && d.evidencias.length > 0
           ? ` — evidências: ${d.evidencias.join(", ")}`
@@ -433,7 +552,7 @@ Deno.serve(async (req) => {
       inserted = data ?? [];
     }
 
-    // 4. Atualizar co_mapa_vivo (estado longitudinal derivado)
+    // 5. Atualizar co_mapa_vivo
     try {
       await refreshMapaVivo(supabase, client_user_id);
     } catch (mapaErr) {
@@ -444,9 +563,11 @@ Deno.serve(async (req) => {
       JSON.stringify({
         ok: true,
         contexto,
+        origem,
         total: detectoresFinais.length,
         detectores: detectoresFinais,
         registros_salvos: inserted.length,
+        payload_hash: payloadHash,
       }),
       {
         status: 200,
