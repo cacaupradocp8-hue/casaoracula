@@ -5974,6 +5974,45 @@ export type Database = {
         }
         Relationships: []
       }
+      co_intervencoes_aplicadas: {
+        Row: {
+          categoria_alvo: string | null
+          client_user_id: string
+          created_at: string
+          id: string
+          percepcao_terapeuta: string | null
+          resposta_cliente: string | null
+          session_id: string | null
+          therapist_user_id: string
+          tipo_intervencao: string
+          updated_at: string
+        }
+        Insert: {
+          categoria_alvo?: string | null
+          client_user_id: string
+          created_at?: string
+          id?: string
+          percepcao_terapeuta?: string | null
+          resposta_cliente?: string | null
+          session_id?: string | null
+          therapist_user_id: string
+          tipo_intervencao: string
+          updated_at?: string
+        }
+        Update: {
+          categoria_alvo?: string | null
+          client_user_id?: string
+          created_at?: string
+          id?: string
+          percepcao_terapeuta?: string | null
+          resposta_cliente?: string | null
+          session_id?: string | null
+          therapist_user_id?: string
+          tipo_intervencao?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       co_jardim_entries: {
         Row: {
           analisado_ia: boolean
