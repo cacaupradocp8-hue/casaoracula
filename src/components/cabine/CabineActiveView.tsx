@@ -11,6 +11,7 @@ import { deriveClinicalDecision } from '@/lib/cabine/motorMapaVivo';
 import { CabineSessaoViva } from './CabineSessaoViva';
 import { CabineIntegracao } from './CabineIntegracao';
 import { CabineDecisaoClinica } from './CabineDecisaoClinica';
+import { BlocoPrioridadeSessao } from './BlocoPrioridadeSessao';
 import type { FluxoClinicoResult } from '@/lib/cabine/motorSessaoVivo';
 
 interface Props {
@@ -151,6 +152,13 @@ export function CabineActiveView({
           </div>
         )}
       </div>
+
+      {/* 🔴 PRIORIDADE DA SESSÃO — camada de decisão clínica (apoio à terapeuta) */}
+      {cliente.client_user_id && (
+        <div className="mb-6">
+          <BlocoPrioridadeSessao clientUserId={cliente.client_user_id} />
+        </div>
+      )}
 
       {!leituraCampo ? (
         /* No field reading — diagnostic needed */
