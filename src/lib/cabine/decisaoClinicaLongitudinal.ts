@@ -98,13 +98,13 @@ export async function getHistoricoIntervencao(
   clientUserId: string,
   limite = 10
 ): Promise<IntervencaoAplicada[]> {
-  const { data } = await supabase
-    .from('co_intervencoes_aplicadas' as any)
+  const { data } = await (supabase as any)
+    .from('co_intervencoes_aplicadas')
     .select('id, tipo_intervencao, categoria_alvo, resposta_cliente, percepcao_terapeuta, created_at')
     .eq('client_user_id', clientUserId)
     .order('created_at', { ascending: false })
     .limit(limite);
-  return (data || []) as IntervencaoAplicada[];
+  return (data || []) as unknown as IntervencaoAplicada[];
 }
 
 export async function registrarIntervencaoAplicada(input: {
