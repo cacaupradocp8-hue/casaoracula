@@ -116,7 +116,7 @@ export async function registrarIntervencaoAplicada(input: {
   resposta_cliente?: string | null;
   percepcao_terapeuta?: 'eficaz' | 'neutra' | 'sem_efeito' | null;
 }) {
-  return await supabase.from('co_intervencoes_aplicadas' as any).insert(input as any);
+  return await (supabase as any).from('co_intervencoes_aplicadas').insert(input);
 }
 
 // ─────────────────────────────────────────────
