@@ -5806,34 +5806,40 @@ export type Database = {
       co_detectores_eventos: {
         Row: {
           client_user_id: string
+          contexto: string | null
           created_at: string
           descricao: string | null
           detector_tipo: string
           id: string
           intensidade: string
           origem: string
+          payload_hash: string | null
           session_id: string | null
           therapist_user_id: string
         }
         Insert: {
           client_user_id: string
+          contexto?: string | null
           created_at?: string
           descricao?: string | null
           detector_tipo: string
           id?: string
           intensidade?: string
           origem?: string
+          payload_hash?: string | null
           session_id?: string | null
           therapist_user_id: string
         }
         Update: {
           client_user_id?: string
+          contexto?: string | null
           created_at?: string
           descricao?: string | null
           detector_tipo?: string
           id?: string
           intensidade?: string
           origem?: string
+          payload_hash?: string | null
           session_id?: string | null
           therapist_user_id?: string
         }
