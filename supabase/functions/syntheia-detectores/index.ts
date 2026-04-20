@@ -30,6 +30,63 @@ interface RequestBody {
 
 const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
+// ---------- Mapa Vivo (estado longitudinal derivado) ----------
+async function refreshMapaVivo(supabase: any, clientUserId: string) {
+  const [{ data: dets }, { data: ints }] = await Promise.all([
+    supabase
+      .from("co_detectores_eventos")
+      .select("detector_tipo, intensidade, created_at")
+      .eq("client_user_id", clientUserId)
+      .order("created_at", { ascending: false })
+      .limit(20),
+    supabase
+      .from("co_intervencoes")
+      .select("tipo, houve_deslocamento, created_at")
+      .eq("client_user_id", clientUserId)
+      .order("created_at", { ascending: false })
+      .limit(20),
+  ]);
+
+  const dList = (dets ?? []) as Array<{ detector_tipo: string; intensidade: string }>;
+  const iList = (ints ?? []) as Array<{ tipo: string; houve_deslocamento: boolean }>;
+
+  const cnt = (t: string) => dList.filter((d) => d.detector_tipo === t).length;
+  const high = (t: string) =>
+    dList.some((d) => d.detector_tipo === t && d.intensidade === "alta");
+  const desloc = iList.filter((i) => i.houve_deslocamento).length;
+  const totalInts = iList.length;
+
+  let eixo_movimento: "estagnacao" | "oscilacao" | "deslocamento" = "estagnacao";
+  if (desloc >= 2) eixo_movimento = "deslocamento";
+  else if (desloc === 1 || cnt("estagnacao") <= 1) eixo_movimento = "oscilacao";
+  else if (cnt("estagnacao") >= 3 || high("estagnacao")) eixo_movimento = "estagnacao";
+
+  let presenca_emocional: "baixa" | "parcial" | "integrada" = "parcial";
+  if (high("dissociacao") || cnt("dissociacao") >= 3) presenca_emocional = "baixa";
+  else if (desloc >= 2 && cnt("dissociacao") === 0) presenca_emocional = "integrada";
+
+  let eixo_confronto: "evita" | "oscila" | "sustenta" = "oscila";
+  if (high("evitacao") || cnt("evitacao") >= 3) eixo_confronto = "evita";
+  else if (desloc >= 2) eixo_confronto = "sustenta";
+
+  let regulacao: "desorganizada" | "instavel" | "regulada" = "instavel";
+  if (high("fusao") || cnt("fusao") >= 3) regulacao = "desorganizada";
+  else if (totalInts >= 2 && desloc / Math.max(totalInts, 1) >= 0.5) regulacao = "regulada";
+
+  await supabase
+    .from("co_mapa_vivo")
+    .upsert(
+      {
+        client_user_id: clientUserId,
+        eixo_movimento,
+        presenca_emocional,
+        eixo_confronto,
+        regulacao,
+      },
+      { onConflict: "client_user_id" },
+    );
+}
+
 // ---------- Heurísticas determinísticas ----------
 function analisarHeuristicas(textoRaw: string): Detector[] {
   const texto = textoRaw.toLowerCase();
@@ -374,6 +431,13 @@ Deno.serve(async (req) => {
         );
       }
       inserted = data ?? [];
+    }
+
+    // 4. Atualizar co_mapa_vivo (estado longitudinal derivado)
+    try {
+      await refreshMapaVivo(supabase, client_user_id);
+    } catch (mapaErr) {
+      console.error("Falha ao atualizar co_mapa_vivo:", mapaErr);
     }
 
     return new Response(
