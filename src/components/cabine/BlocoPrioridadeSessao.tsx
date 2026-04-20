@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AlertCircle, Target, MessageSquareQuote, Compass } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import {
-  getPrioridadeSessao,
-  type PrioridadeSessao,
-  type NivelRisco,
-  type DetectorTipo,
-} from '@/lib/cabine/decisaoClinica';
+  AlertCircle, Target, MessageSquareQuote, Compass,
+  TrendingUp, TrendingDown, Minus, History, Sparkles,
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import type { NivelRisco, DetectorTipo } from '@/lib/cabine/decisaoClinica';
+import {
+  getDecisaoEvolutiva,
+  type DecisaoEvolutiva,
+  type Direcao,
+  type RecomendacaoAdaptativa,
+} from '@/lib/cabine/decisaoClinicaLongitudinal';
 
 interface Props {
   clientUserId: string | null;
@@ -28,15 +32,35 @@ const CATEGORIA_LABEL: Record<DetectorTipo | 'nenhuma', string> = {
   nenhuma:      'Sem prioridade definida',
 };
 
+const RECOMENDACAO_STYLE: Record<RecomendacaoAdaptativa, { label: string; cls: string }> = {
+  manter: { label: 'manter direção', cls: 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' },
+  ajustar: { label: 'ajustar intensidade', cls: 'bg-amber-500/15 border-amber-500/30 text-amber-300' },
+  mudar: { label: 'mudar estratégia', cls: 'bg-red-500/15 border-red-500/30 text-red-300' },
+};
+
+const TIPO_INT_LABEL: Record<string, string> = {
+  pergunta_ruptura: 'Pergunta de ruptura',
+  confronto_leve: 'Confronto leve',
+  grounding_corpo: 'Grounding e corpo',
+  separacao_simbolica: 'Separação simbólica',
+  sustentar_presenca: 'Sustentar presença',
+};
+
+function DirecaoIcon({ d }: { d: Direcao }) {
+  if (d === 'subindo') return <TrendingUp className="w-3 h-3 text-red-300" />;
+  if (d === 'descendo') return <TrendingDown className="w-3 h-3 text-emerald-300" />;
+  return <Minus className="w-3 h-3 text-foreground/40" />;
+}
+
 export function BlocoPrioridadeSessao({ clientUserId }: Props) {
-  const [data, setData] = useState<PrioridadeSessao | null>(null);
+  const [data, setData] = useState<DecisaoEvolutiva | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!clientUserId) { setData(null); return; }
     let cancelled = false;
     setLoading(true);
-    getPrioridadeSessao(clientUserId)
+    getDecisaoEvolutiva(clientUserId)
       .then((res) => { if (!cancelled) setData(res); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
@@ -58,9 +82,10 @@ export function BlocoPrioridadeSessao({ clientUserId }: Props) {
 
   if (!data) return null;
 
-  const { score, prioridade, sugestao } = data;
+  const { score, prioridade, tendencia, historico, ultima_intervencao, recomendacao, motivo_recomendacao, sugestao_adaptada } = data;
   const risco = RISCO_STYLE[score.nivel_risco];
   const semDados = prioridade.prioridade === 'nenhuma';
+  const recStyle = RECOMENDACAO_STYLE[recomendacao];
 
   return (
     <Card className={cn('border-2', risco.border, risco.bg)}>
@@ -113,29 +138,82 @@ export function BlocoPrioridadeSessao({ clientUserId }: Props) {
           </div>
         )}
 
-        {/* Sugestão de intervenção */}
-        {!semDados && (
-          <div className="p-3 rounded-lg bg-background/40 border border-border/15 space-y-2">
+        {/* Tendência do campo */}
+        <div className="p-3 rounded-lg bg-background/30 border border-border/15 space-y-2">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="w-3.5 h-3.5 text-primary/60" />
+            <p className="text-[9px] uppercase tracking-wider text-primary/60 font-semibold">
+              Tendência do campo · 7d vs 7d
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-1.5 text-[11px]">
+            {(['estagnacao', 'evitacao', 'dissociacao', 'fusao'] as DetectorTipo[]).map((k) => (
+              <div key={k} className="flex items-center justify-between px-2 py-1 rounded bg-background/40">
+                <span className="text-foreground/70">{CATEGORIA_LABEL[k]}</span>
+                <DirecaoIcon d={tendencia[k]} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Histórico de intervenção */}
+        {ultima_intervencao && (
+          <div className="p-3 rounded-lg bg-background/30 border border-border/15 space-y-1.5">
             <div className="flex items-center gap-2">
-              <Compass className="w-3.5 h-3.5 text-primary/60" />
+              <History className="w-3.5 h-3.5 text-primary/60" />
               <p className="text-[9px] uppercase tracking-wider text-primary/60 font-semibold">
-                Sugestão de intervenção
+                Última intervenção aplicada
               </p>
             </div>
-            <p className="text-sm font-medium text-foreground/90">{sugestao.titulo}</p>
-            <div className="flex items-start gap-2 pt-1">
-              <MessageSquareQuote className="w-3.5 h-3.5 text-foreground/40 mt-0.5 shrink-0" />
-              <p className="text-xs text-foreground/80 italic leading-relaxed">{sugestao.exemplo_fala}</p>
-            </div>
-            <p className="text-[10px] text-foreground/50 pt-1 border-t border-border/10">
-              <span className="uppercase tracking-wider mr-1">Objetivo:</span>{sugestao.objetivo}
+            <p className="text-xs text-foreground/85">
+              {TIPO_INT_LABEL[ultima_intervencao.tipo_intervencao] || ultima_intervencao.tipo_intervencao}
             </p>
+            {ultima_intervencao.percepcao_terapeuta && (
+              <p className="text-[10px] text-foreground/55">
+                Percepção: <span className="text-foreground/75">{ultima_intervencao.percepcao_terapeuta.replace('_', ' ')}</span>
+              </p>
+            )}
+            {historico.length > 1 && (
+              <p className="text-[10px] text-foreground/40">{historico.length} registros recentes</p>
+            )}
+          </div>
+        )}
+
+        {/* Recomendação adaptativa */}
+        {!semDados && (
+          <div className="p-3 rounded-lg bg-background/40 border border-border/15 space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5 text-primary/60" />
+                <p className="text-[9px] uppercase tracking-wider text-primary/60 font-semibold">
+                  Recomendação adaptativa
+                </p>
+              </div>
+              <span className={cn('text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border', recStyle.cls)}>
+                {recStyle.label}
+              </span>
+            </div>
+            <p className="text-[11px] text-foreground/65 leading-snug">{motivo_recomendacao}</p>
+
+            <div className="pt-2 border-t border-border/10 space-y-2">
+              <div className="flex items-center gap-2">
+                <Compass className="w-3.5 h-3.5 text-primary/60" />
+                <p className="text-sm font-medium text-foreground/90">{sugestao_adaptada.titulo}</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <MessageSquareQuote className="w-3.5 h-3.5 text-foreground/40 mt-0.5 shrink-0" />
+                <p className="text-xs text-foreground/80 italic leading-relaxed">{sugestao_adaptada.exemplo_fala}</p>
+              </div>
+              <p className="text-[10px] text-foreground/50 pt-1 border-t border-border/10">
+                <span className="uppercase tracking-wider mr-1">Objetivo:</span>{sugestao_adaptada.objetivo}
+              </p>
+            </div>
           </div>
         )}
 
         {/* Disclaimer */}
         <p className="text-[9px] text-foreground/40 italic text-center pt-1">
-          Apoio à decisão clínica — não substitui sua escuta nem oferece diagnóstico.
+          Apoio à decisão clínica — leitura evolutiva, não substitui sua escuta nem oferece diagnóstico.
         </p>
       </CardContent>
     </Card>
