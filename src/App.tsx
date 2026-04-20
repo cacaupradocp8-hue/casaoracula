@@ -47,6 +47,7 @@ const CasaTecelaInterior = React.lazy(() => import("./pages/CasaTecelaInterior")
 const CirculoOracularPage = React.lazy(() => import("./pages/CirculoOracularPage"));
 const HeroinaAppPage = React.lazy(() => import("./pages/HeroinaAppPage"));
 const JardimHeroinaClientePage = React.lazy(() => import("./pages/JardimHeroinaClientePage"));
+const JardimHeroina = React.lazy(() => import("./pages/JardimHeroina"));
 const AceitarConvitePage = React.lazy(() => import("./pages/AceitarConvitePage"));
 const OraculaPage = React.lazy(() => import("./pages/OraculaPage"));
 const PortalOraculaPage = React.lazy(() => import("./pages/PortalOraculaPage"));
@@ -322,6 +323,7 @@ function AppRoutes() {
       <Route path="/circulo-oracular" element={<ProtectedRoute minPortal="assinante"><CirculoOracularPage /></ProtectedRoute>} />
       <Route path="/jardim-heroina-app" element={<Navigate to="/meu-jardim" replace />} />
       <Route path="/meu-jardim" element={<ProtectedRoute><JardimHeroinaClientePage /></ProtectedRoute>} />
+      <Route path="/jardim" element={<ProtectedRoute><JardimHeroina /></ProtectedRoute>} />
       <Route path="/aceitar-convite" element={<Suspense fallback={<BootLoadingScreen />}><AceitarConvitePage /></Suspense>} />
 
       {/* Casa Orácula rooms */}
