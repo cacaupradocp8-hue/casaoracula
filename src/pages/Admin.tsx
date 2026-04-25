@@ -137,9 +137,14 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
 
 export default function Admin() {
   const { isPreviewMode, previewPortal, enablePreviewMode, disablePreviewMode } = useAdminPreview();
-  const [activeTab, setActiveTab] = useState('users');
+  const [activeTab, setActiveTab] = useState('clube-livro');
 
-  const ActiveComponent = TAB_COMPONENTS[activeTab];
+  // Expose setActiveTab globally for child components
+  React.useEffect(() => {
+    (window as any).Admin_SetActiveTab = setActiveTab;
+  }, []);
+
+  const ActiveComponent = TAB_COMPONENTS[activeTab] || TAB_COMPONENTS['users'];
 
   return (
     <AppLayout>
