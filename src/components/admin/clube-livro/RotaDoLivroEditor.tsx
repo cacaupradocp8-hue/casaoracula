@@ -1,32 +1,16 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  Map, Plus, Trash2, GripVertical, Save, 
-  ExternalLink, Eye, EyeOff, Loader2 
+  Map as MapIcon, Plus, Trash2, GripVertical, Eye, EyeOff, Loader2 
 } from 'lucide-react';
-
-interface RotaItem {
-  id: string;
-  estacao_id: string;
-  ordem: number;
-  slug: string;
-  titulo: string;
-  subtitulo?: string;
-  icone?: string;
-  tipo: string;
-  ref_tipo?: string;
-  ref_id?: string;
-  publicado: boolean;
-  obrigatorio: boolean;
-}
+import type { RotaItem } from './types';
 
 export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
   const { toast } = useToast();
