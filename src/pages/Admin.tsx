@@ -56,7 +56,7 @@ const AdminBibliotecaCasosTab = lazy(() => import('@/components/admin/AdminBibli
 const AdminAtlasFemininoTab = lazy(() => import('@/components/admin/AdminAtlasFemininoTab').then(m => ({ default: m.AdminAtlasFemininoTab })));
 const AdminNarroterapiaTab = lazy(() => import('@/components/admin/AdminNarroterapiaTab').then(m => ({ default: m.AdminNarroterapiaTab })));
 const AdminNarroterapiaAutorizacaoTab = lazy(() => import('@/components/admin/AdminNarroterapiaAutorizacaoTab'));
-const AdminClubeLivroTab = lazy(() => import('@/components/admin/AdminClubeLivroTab'));
+const AdminClubeLivroTab = lazy(() => import('@/components/admin/AdminClubeLivroTab').then(m => ({ default: m.AdminClubeLivroTab })));
 const AdminGeradorSemanal = lazy(() => import('@/components/admin/AdminGeradorSemanal'));
 const AdminPlanosClubTab = lazy(() => import('@/components/admin/AdminPlanosClubTab').then(m => ({ default: m.AdminPlanosClubTab })));
 const AdminEstudioOracular = lazy(() => import('@/components/admin/AdminEstudioOracular'));
