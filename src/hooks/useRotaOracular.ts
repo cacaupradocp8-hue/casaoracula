@@ -234,7 +234,7 @@ export function useRotaOracular() {
     pontoAtual,
     progresso,
     encontro,
-    engajamento,
+    progressoRota,
     estacaoIncompleta,
     isLoading: loadingEstacao,
   };
