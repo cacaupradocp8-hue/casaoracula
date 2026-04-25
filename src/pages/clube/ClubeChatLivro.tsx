@@ -163,7 +163,7 @@ export default function ClubeChatLivro() {
   const saveTool = useMutation({
     mutationFn: async (tool: { tipo: string; conteudo: string; contexto_uso: string; limite_etico: string }) => {
       if (!user || !cycle?.id) return;
-      await supabase.from('club_tools' as any).insert({
+      const { error } = await supabase.from('club_tools').insert({
         user_id: user.id,
         cycle_id: cycle.id,
         tipo: tool.tipo,
@@ -171,7 +171,9 @@ export default function ClubeChatLivro() {
         contexto_uso: tool.contexto_uso,
         limite_etico: tool.limite_etico,
       });
+      if (error) throw error;
     },
+
     onSuccess: () => {
       toast.success('Ferramenta salva na Forja');
       qc.invalidateQueries({ queryKey: ['club-tools'] });
