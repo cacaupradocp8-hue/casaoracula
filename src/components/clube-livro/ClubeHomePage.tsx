@@ -19,6 +19,8 @@ import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidad
 export function ClubeHomePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const rotaData = useRotaOracular();
+  
   const {
     estacaoAtual,
     estacoesPrevias,
@@ -28,7 +30,16 @@ export function ClubeHomePage() {
     encontro,
     estacaoIncompleta,
     isLoading,
-  } = useRotaOracular();
+  } = rotaData || {
+    estacaoAtual: null,
+    estacoesPrevias: [],
+    pontos: [],
+    pontoAtual: undefined,
+    progresso: 0,
+    encontro: null,
+    estacaoIncompleta: false,
+    isLoading: false,
+  };
 
   const welcomeName = user?.name?.split(' ')[0] || 'Assinante';
 
