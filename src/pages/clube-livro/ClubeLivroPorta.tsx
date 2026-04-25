@@ -24,16 +24,22 @@ import {
   Sparkles, Briefcase, ChevronDown, ChevronRight,
   SkipBack, SkipForward, Volume2, VolumeX,
   Flower2, Home, Music, Stethoscope, Pen, Download,
-  AlertTriangle,
+  AlertTriangle, Loader2,
 } from 'lucide-react';
 import { ClubeMateriaisTab } from '@/components/clube-livro/ClubeMateriaisTab';
 import { BlocoRenderer, AulaBloco } from '@/components/clube-livro/BlocoRenderer';
 import { Database } from '@/integrations/supabase/types';
 
 type Faixa = Database['public']['Tables']['clube_livro_escutas']['Row'];
-type Fase = Pick<Database['public']['Tables']['clube_livro_fases']['Row'], 
-  'id' | 'titulo' | 'alerta_clinico' | 'observacao_clinica' | 'orientacao_curta' | 'lista_uso_inadequado'
->;
+type Fase = {
+  id: string;
+  titulo: string;
+  alerta_clinico: string | null;
+  observacao_clinica: string | null;
+  orientacao_curta: string | null;
+  lista_uso_inadequado: string[] | null;
+};
+
 
 // ── Resonance CSS animation (pure CSS for GPU perf) ──
 const resonanceKeyframes = `
