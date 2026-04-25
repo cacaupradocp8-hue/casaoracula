@@ -21,30 +21,19 @@ import { formatAudioTime, getPublicAudioUrl } from '@/lib/audioUtils';
 import DOMPurify from 'dompurify';
 import {
   ArrowLeft, BookOpen, Play, Pause, Headphones,
-  Sparkles, Brain, Briefcase, Compass, Sun, FileText,
-  Loader2, AlertTriangle, ChevronDown, ChevronRight,
+  Sparkles, Briefcase, ChevronDown, ChevronRight,
   SkipBack, SkipForward, Volume2, VolumeX,
   Flower2, Home, Music, Stethoscope, Pen, Download,
+  AlertTriangle,
 } from 'lucide-react';
 import { ClubeMateriaisTab } from '@/components/clube-livro/ClubeMateriaisTab';
+import { BlocoRenderer, AulaBloco } from '@/components/clube-livro/BlocoRenderer';
+import { Database } from '@/integrations/supabase/types';
 
-// ── Types ──
-interface AulaBloco {
-  tipo: string;
-  titulo: string;
-  conteudo: string;
-  ordem: number;
-}
-
-const BLOCO_CONFIG: Record<string, { icon: React.ElementType; label: string; accent: string }> = {
-  essencia: { icon: Sparkles, label: 'Essência', accent: 'text-amber-400' },
-  raiz_psiquica: { icon: Brain, label: 'Raiz Psíquica', accent: 'text-violet-400' },
-  traducao_profissional: { icon: Briefcase, label: 'Tradução Profissional', accent: 'text-teal-400' },
-  atravessamento: { icon: Compass, label: 'Atravessamento', accent: 'text-rose-400' },
-  integracao_oracular: { icon: Sun, label: 'Integração Oracular', accent: 'text-gold' },
-  registro: { icon: FileText, label: 'Registro', accent: 'text-sky-400' },
-  texto_livre: { icon: BookOpen, label: 'Texto', accent: 'text-muted-foreground' },
-};
+type Faixa = Database['public']['Tables']['clube_livro_escutas']['Row'];
+type Fase = Pick<Database['public']['Tables']['clube_livro_fases']['Row'], 
+  'id' | 'titulo' | 'alerta_clinico' | 'observacao_clinica' | 'orientacao_curta' | 'lista_uso_inadequado'
+>;
 
 // ── Resonance CSS animation (pure CSS for GPU perf) ──
 const resonanceKeyframes = `
@@ -53,6 +42,7 @@ const resonanceKeyframes = `
   50% { opacity: 0.15; transform: scale(1.05); }
 }
 `;
+
 
 export default function ClubeLivroPorta() {
   const { id: cicloId, portaId } = useParams();
