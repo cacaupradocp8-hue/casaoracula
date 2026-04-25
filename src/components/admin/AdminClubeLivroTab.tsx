@@ -315,8 +315,12 @@ export function AdminClubeLivroTab() {
       </div>
 
       {/* Abas simplificadas para Produção de Conteúdo */}
-      <Tabs defaultValue="conteudo" className="w-full">
+      <Tabs defaultValue="rota" className="w-full">
         <TabsList className="mb-4 flex-wrap h-auto gap-1 bg-muted/30 p-1 border border-primary/5">
+          <TabsTrigger value="rota" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+            <Map className="w-4 h-4" />
+            Rota do Livro
+          </TabsTrigger>
           <TabsTrigger value="conteudo" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
             <Sparkles className="w-4 h-4" />
             Produzir Conteúdo
@@ -328,10 +332,6 @@ export function AdminClubeLivroTab() {
           <TabsTrigger value="portais" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
             <DoorOpen className="w-4 h-4" />
             Portais
-          </TabsTrigger>
-          <TabsTrigger value="config" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
-            <Target className="w-4 h-4" />
-            Regras & Config
           </TabsTrigger>
         </TabsList>
 
