@@ -312,12 +312,16 @@ export function AdminClubeLivroTab() {
         </div>
       </div>
 
-      {/* 3 Abas principais */}
-      <Tabs defaultValue="ciclos">
+      {/* Abas simplificadas para Produção de Conteúdo */}
+      <Tabs defaultValue="conteudo">
         <TabsList className="mb-4 flex-wrap h-auto gap-1">
-          <TabsTrigger value="ciclos" className="gap-2 text-xs">
-            <BookOpen className="w-4 h-4" />
-            Ciclos
+          <TabsTrigger value="conteudo" className="gap-2 text-xs">
+            <Sparkles className="w-4 h-4" />
+            Produzir Conteúdo
+          </TabsTrigger>
+          <TabsTrigger value="calendario" className="gap-2 text-xs">
+            <Calendar className="w-4 h-4" />
+            Calendário & Ciclos
           </TabsTrigger>
           <TabsTrigger value="portais" className="gap-2 text-xs">
             <DoorOpen className="w-4 h-4" />
@@ -325,14 +329,100 @@ export function AdminClubeLivroTab() {
           </TabsTrigger>
           <TabsTrigger value="config" className="gap-2 text-xs">
             <Target className="w-4 h-4" />
-            Configurações
+            Regras & Config
           </TabsTrigger>
         </TabsList>
 
         {/* ============================================ */}
-        {/* ABA — CICLOS                                */}
+        {/* NOVA ABA — PRODUZIR CONTEÚDO (CONSOLIDADA)  */}
         {/* ============================================ */}
-        <TabsContent value="ciclos" className="space-y-4">
+        <TabsContent value="conteudo" className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Card className="md:col-span-1 border-primary/10 bg-muted/20">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm text-gold">Ciclo em Foco</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Select
+                  value={selectedCiclo || ''}
+                  onValueChange={(v) => setSelectedCiclo(v || null)}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Escolha um ciclo..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ciclos?.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.titulo}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                
+                {selectedCiclo && (
+                  <div className="pt-4 space-y-2">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">Ações Rápidas</p>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full justify-start gap-2 text-xs"
+                      onClick={() => {
+                        const c = ciclos?.find(x => x.id === selectedCiclo);
+                        if (c) handleEditCiclo(c);
+                      }}
+                    >
+                      <Pencil className="w-3 h-3" /> Editar Capa/Info
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full justify-start gap-2 text-xs"
+                      onClick={() => {
+                        const c = ciclos?.find(x => x.id === selectedCiclo);
+                        if (c) {
+                          const updated = { ...c, publicado: !c.publicado };
+                          saveCiclo.mutate(updated);
+                        }
+                      }}
+                    >
+                      {ciclos?.find(x => x.id === selectedCiclo)?.publicado ? (
+                        <><EyeOff className="w-3 h-3" /> Despublicar</>
+                      ) : (
+                        <><Sparkles className="w-3 h-3" /> Publicar Ciclo</>
+                      )}
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <div className="md:col-span-3">
+              {selectedCiclo ? (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-medium text-gold">Editor de Conteúdo</h3>
+                    <Badge variant="outline" className="text-[10px] border-gold/30 text-gold">
+                      {ciclos?.find(c => c.id === selectedCiclo)?.titulo}
+                    </Badge>
+                  </div>
+                  <CicloDetailTabs cicloId={selectedCiclo} />
+                </div>
+              ) : (
+                <Card className="bg-muted/30 border-dashed h-[300px] flex items-center justify-center">
+                  <div className="text-center p-6">
+                    <Sparkles className="w-10 h-10 text-gold/30 mx-auto mb-3" />
+                    <p className="text-muted-foreground">Selecione um ciclo à esquerda para começar a criar.</p>
+                  </div>
+                </Card>
+              )}
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* ============================================ */}
+        {/* ABA — CALENDÁRIO & CICLOS (GERENCIAMENTO)   */}
+        {/* ============================================ */}
+        <TabsContent value="calendario" className="space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <p className="text-sm text-muted-foreground">
               {ciclos?.length || 0} ciclo(s) cadastrado(s)
