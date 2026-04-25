@@ -31,7 +31,6 @@ interface RotaItem {
 export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [isSaving, setIsSaving] = useState(false);
 
   const { data: itens, isLoading } = useQuery({
     queryKey: ['admin-rota-itens', estacaoId],
@@ -48,10 +47,11 @@ export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
   });
 
   const saveMutation = useMutation({
-    mutationFn: async (item: Partial<RotaItem>) => {
+    mutationFn: async (item: any) => {
+      const payload = { ...item, estacao_id: estacaoId };
       const { error } = await supabase
         .from('clube_rota_itens')
-        .upsert({ ...item, estacao_id: estacaoId });
+        .upsert(payload);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -106,6 +106,7 @@ export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
                   <Input 
                     value={item.titulo} 
                     onChange={(e) => saveMutation.mutate({ id: item.id, titulo: e.target.value })}
+                    onBlur={(e) => saveMutation.mutate({ id: item.id, titulo: e.target.value })}
                     className="h-8 text-sm"
                   />
                 </div>
