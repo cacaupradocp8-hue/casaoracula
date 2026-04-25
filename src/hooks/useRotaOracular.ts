@@ -106,14 +106,22 @@ export function useRotaOracular() {
   const { data: jornadas } = useQuery({
     queryKey: ['rota-jornadas', estacaoAtual?.id],
     queryFn: async () => {
-      if (!estacaoAtual?.id) return [];
-      const { data } = await supabase
-        .from('clube_jornadas')
-        .select('id, nome, slug, tipo, ordem, ativa')
-        .eq('estacao_id', estacaoAtual.id)
-        .eq('ativa', true)
-        .order('ordem');
-      return data || [];
+      try {
+        if (!estacaoAtual?.id) return [];
+        const { data, error } = await supabase
+          .from('clube_jornadas')
+          .select('id, nome, slug, tipo, ordem, ativa')
+          .eq('estacao_id', estacaoAtual.id)
+          .eq('ativa', true)
+          .order('ordem');
+        if (error) {
+          console.error('[useRotaOracular] Erro jornadas:', error);
+          return [];
+        }
+        return data || [];
+      } catch (err) {
+        return [];
+      }
     },
     enabled: !!estacaoAtual?.id,
   });
@@ -122,14 +130,22 @@ export function useRotaOracular() {
   const { data: itensRota } = useQuery({
     queryKey: ['rota-itens', estacaoAtual?.id],
     queryFn: async () => {
-      if (!estacaoAtual?.id) return [];
-      const { data } = await supabase
-        .from('clube_rota_itens')
-        .select('*')
-        .eq('estacao_id', estacaoAtual.id)
-        .eq('publicado', true)
-        .order('ordem');
-      return data || [];
+      try {
+        if (!estacaoAtual?.id) return [];
+        const { data, error } = await supabase
+          .from('clube_rota_itens')
+          .select('*')
+          .eq('estacao_id', estacaoAtual.id)
+          .eq('publicado', true)
+          .order('ordem');
+        if (error) {
+          console.error('[useRotaOracular] Erro itens rota:', error);
+          return [];
+        }
+        return data || [];
+      } catch (err) {
+        return [];
+      }
     },
     enabled: !!estacaoAtual?.id,
   });
