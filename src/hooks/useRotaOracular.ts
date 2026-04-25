@@ -80,15 +80,25 @@ export function useRotaOracular() {
   const { data: estacaoAtual, isLoading: loadingEstacao } = useQuery({
     queryKey: ['rota-estacao-ativa'],
     queryFn: async () => {
-      const { data } = await supabase
-        .from('clube_estacoes')
-        .select('id, titulo, subtitulo, numero, livro_titulo, livro_autor, livro_capa_url, essencia_nucleo, essencia_tensao, essencia_transformacao, ativa')
-        .eq('publicada', true)
-        .eq('ativa', true)
-        .order('numero', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      return data as Estacao | null;
+      try {
+        const { data, error } = await supabase
+          .from('clube_estacoes')
+          .select('id, titulo, subtitulo, numero, livro_titulo, livro_autor, livro_capa_url, essencia_nucleo, essencia_tensao, essencia_transformacao, ativa')
+          .eq('publicada', true)
+          .eq('ativa', true)
+          .order('numero', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        
+        if (error) {
+          console.error('[useRotaOracular] Erro ao carregar estação ativa:', error);
+          return null;
+        }
+        return data as Estacao | null;
+      } catch (err) {
+        console.error('[useRotaOracular] Falha catastrófica ao carregar estação:', err);
+        return null;
+      }
     },
   });
 
