@@ -371,6 +371,7 @@ export function AdminClubeLivroTab() {
         {/* ============================================ */}
         {/* ABA 1 — PRODUZIR CONTEÚDO (CONSOLIDADA)     */}
         {/* ============================================ */}
+        <TabsContent value="conteudo" className="space-y-4 outline-none">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card className="md:col-span-1 border-primary/10 bg-muted/20">
               <CardHeader className="pb-2">
