@@ -20,6 +20,12 @@ import {
   Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription,
 } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Database } from '@/integrations/supabase/types';
+
+type ClubCycle = Database['public']['Tables']['club_cycles']['Row'] & {
+  club_books?: Database['public']['Tables']['club_books']['Row'][] | Database['public']['Tables']['club_books']['Row'];
+};
+
 
 interface Message {
   id: string;
