@@ -248,35 +248,23 @@ export function useBussolaOracular(): BussolaData {
 
     const load = async () => {
       try {
-        const [profileRes, mapaRes, cartoRes, cicloRes, jardimRes] = await Promise.all([
+        const [profileRes, mapaRes, cartoRes, estacaoRes, jardimRes] = await Promise.all([
           supabase.from('profiles').select('entry_archetype, entry_symbol').eq('id', user.id).single(),
           supabase.from('auto_mapeamento').select('distritos_json').eq('user_id', user.id).maybeSingle() as any,
           supabase.from('cartografia_psiquica').select('cor_predominante, simbolo_pessoal, metadata_json, resumo_narrativo, conflitos_tensoes, sugestao_proximo_passo').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1) as any,
-          supabase.from('cycles').select('id').eq('status', 'active').order('created_at', { ascending: false }).limit(1).maybeSingle() as any,
+          supabase.from('clube_estacoes').select('id, livro_titulo, livro_autor, livro_capa_url').eq('ativa', true).eq('publicada', true).maybeSingle(),
           supabase.from('jardim_psique_registros').select('id').eq('user_id', user.id).limit(1) as any,
         ]);
 
         let book = null;
-        const ciclo = cicloRes?.data || null;
+        const estacao = estacaoRes?.data || null;
 
-        if (ciclo?.id) {
-          const { data: cycleBook } = await supabase
-            .from('cycle_books')
-            .select('book_id')
-            .eq('cycle_id', ciclo.id)
-            .eq('is_core', true)
-            .order('layer_order', { ascending: true })
-            .limit(1)
-            .maybeSingle() as any;
-
-          if (cycleBook?.book_id) {
-            const { data } = await supabase
-              .from('books')
-              .select('title, author, cover_url')
-              .eq('id', cycleBook.book_id)
-              .single();
-            book = data;
-          }
+        if (estacao) {
+          book = {
+            title: estacao.livro_titulo,
+            author: estacao.livro_autor,
+            cover_url: estacao.livro_capa_url
+          };
         }
 
         setRaw({
