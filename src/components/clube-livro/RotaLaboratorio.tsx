@@ -69,32 +69,21 @@ export function RotaLaboratorio({ estacaoId, livroTitulo }: RotaLaboratorioProps
 
           {/* CTAs */}
           <div className="space-y-2 pt-1">
-            {estacaoId ? (
-              <Button
-                variant="gold"
-                size="sm"
-                className="w-full gap-2"
-                onClick={() => navigate(`/clube/laboratorio/season/${estacaoId}`)}
-              >
-                Entrar no laboratório
-                {livroTitulo && (
-                  <span className="text-[10px] opacity-70 truncate max-w-[140px]">
-                    · {livroTitulo}
-                  </span>
-                )}
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Button>
-            ) : (
-              <Button
-                variant="gold"
-                size="sm"
-                className="w-full gap-2"
-                onClick={() => navigate('/clube/laboratorio')}
-              >
-                Abrir laboratório
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Button>
-            )}
+            <Button
+              variant="gold"
+              size="sm"
+              className="w-full gap-2"
+              onClick={() => navigate('/clube/laboratorio')}
+            >
+              Entrar no laboratório
+              {livroTitulo && (
+                <span className="text-[10px] opacity-70 truncate max-w-[140px]">
+                  · {livroTitulo}
+                </span>
+              )}
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Button>
+            
             <Button
               variant="ghost"
               size="sm"
