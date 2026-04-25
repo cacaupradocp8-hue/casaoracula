@@ -21,7 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { 
   BookOpen, Plus, Pencil, Trash2, ChevronDown, ChevronUp,
-  Sparkles, Headphones, Video, FileText, Calendar, Loader2, GraduationCap, DoorOpen, Target
+  Sparkles, Headphones, Video, FileText, Calendar, Loader2, GraduationCap, DoorOpen, Target, EyeOff
 } from 'lucide-react';
 import { FaseEditorExpandido } from './clube-livro';
 import { ClubePlaybookGenerator } from './clube-livro/ClubePlaybookGenerator';
