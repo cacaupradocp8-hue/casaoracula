@@ -408,12 +408,46 @@ export function AdminClubeLivroTab() {
                   <CicloDetailTabs cicloId={selectedCiclo} />
                 </div>
               ) : (
-                <Card className="bg-muted/30 border-dashed h-[300px] flex items-center justify-center">
-                  <div className="text-center p-6">
-                    <Sparkles className="w-10 h-10 text-gold/30 mx-auto mb-3" />
-                    <p className="text-muted-foreground">Selecione um ciclo à esquerda para começar a criar.</p>
+                <div className="space-y-6">
+                  <Card className="bg-muted/30 border-dashed h-[200px] flex items-center justify-center">
+                    <div className="text-center p-6">
+                      <Sparkles className="w-10 h-10 text-gold/30 mx-auto mb-3" />
+                      <p className="text-muted-foreground">Selecione um ciclo à esquerda para começar a criar.</p>
+                    </div>
+                  </Card>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card className="border-primary/10 bg-card/50">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm flex items-center gap-2">
+                          <Users className="w-4 h-4 text-gold" />
+                          Gestão de Alunas
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-2">
+                        <p className="text-xs text-muted-foreground mb-3">Gerencie matrículas e acesso à formação.</p>
+                        <Button variant="outline" size="sm" className="w-full justify-start text-xs" onClick={() => (window as any).Admin_SetActiveTab?.('matriculas')}>
+                          Ver Matrículas
+                        </Button>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-primary/10 bg-card/50">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm flex items-center gap-2">
+                          <CreditCard className="w-4 h-4 text-gold" />
+                          Assinaturas
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-2">
+                        <p className="text-xs text-muted-foreground mb-3">Controle de pagamentos e planos ativos.</p>
+                        <Button variant="outline" size="sm" className="w-full justify-start text-xs" onClick={() => (window as any).Admin_SetActiveTab?.('assinaturas')}>
+                          Ver Assinaturas
+                        </Button>
+                      </CardContent>
+                    </Card>
                   </div>
-                </Card>
+                </div>
               )}
             </div>
           </div>
