@@ -28,6 +28,7 @@ import { FaseEditorExpandido } from './clube-livro';
 import { ClubePlaybookGenerator } from './clube-livro/ClubePlaybookGenerator';
 import { PortasManager } from './clube-livro/PortasManager';
 import { LabConfigManager } from './clube-livro/LabConfigManager';
+import { RotaDoLivroEditor } from './clube-livro/RotaDoLivroEditor';
 import { AulaBlocosEditor, type AulaBloco } from './clube-livro/AulaBlocosEditor';
 import { AudioUpload } from './AudioUpload';
 import { CALENDARIO_ANUAL, SEMANAS_PADRAO } from '@/constants/clubeLivroCalendario';
