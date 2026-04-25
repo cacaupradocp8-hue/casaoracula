@@ -1239,8 +1239,8 @@ function CicloDialog({
   });
 
   // Reset form when dialog opens
-  useState(() => {
-    if (ciclo) {
+  useEffect(() => {
+    if (open && ciclo) {
       setForm({
         titulo: ciclo.titulo || '',
         subtitulo: ciclo.subtitulo || '',
@@ -1262,8 +1262,30 @@ function CicloDialog({
         como_ler_slides_json: JSON.stringify((ciclo as any).como_ler_slides || [], null, 2),
         como_ler_audio_url: (ciclo as any).como_ler_audio_url || '',
       });
+    } else if (open) {
+      setForm({
+        titulo: '',
+        subtitulo: '',
+        autor_livro: '',
+        capa_url: '',
+        infografico_url: '',
+        por_que_este_livro: '',
+        como_ler: '',
+        manifesto: '',
+        publicado: false,
+        is_multipolar: false,
+        campo_simbolico: '',
+        mensagem_campo_url: '',
+        mensagem_campo_texto: '',
+        carga_horaria_base: 20,
+        carga_horaria_ajuste: 0,
+        por_que_slides_json: '[]',
+        por_que_audio_url: '',
+        como_ler_slides_json: '[]',
+        como_ler_audio_url: '',
+      });
     }
-  });
+  }, [open, ciclo]);
 
   const handleSubmit = () => {
     if (!form.titulo.trim()) return;
