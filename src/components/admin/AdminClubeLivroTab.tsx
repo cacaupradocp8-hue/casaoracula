@@ -22,12 +22,13 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   BookOpen, Plus, Pencil, Trash2, ChevronDown, ChevronUp,
   Sparkles, Headphones, Video, FileText, Calendar, Loader2, GraduationCap, DoorOpen, Target, EyeOff,
-  Users, CreditCard
+  Users, CreditCard, Map as MapIcon
 } from 'lucide-react';
 import { FaseEditorExpandido } from './clube-livro';
 import { ClubePlaybookGenerator } from './clube-livro/ClubePlaybookGenerator';
 import { PortasManager } from './clube-livro/PortasManager';
 import { LabConfigManager } from './clube-livro/LabConfigManager';
+import { RotaDoLivroEditor } from './clube-livro/RotaDoLivroEditor';
 import { AulaBlocosEditor, type AulaBloco } from './clube-livro/AulaBlocosEditor';
 import { AudioUpload } from './AudioUpload';
 import { CALENDARIO_ANUAL, SEMANAS_PADRAO } from '@/constants/clubeLivroCalendario';
@@ -314,8 +315,12 @@ export function AdminClubeLivroTab() {
       </div>
 
       {/* Abas simplificadas para Produção de Conteúdo */}
-      <Tabs defaultValue="conteudo" className="w-full">
+      <Tabs defaultValue="rota" className="w-full">
         <TabsList className="mb-4 flex-wrap h-auto gap-1 bg-muted/30 p-1 border border-primary/5">
+          <TabsTrigger value="rota" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+            <MapIcon className="w-4 h-4" />
+            Rota do Livro
+          </TabsTrigger>
           <TabsTrigger value="conteudo" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
             <Sparkles className="w-4 h-4" />
             Produzir Conteúdo
@@ -328,11 +333,40 @@ export function AdminClubeLivroTab() {
             <DoorOpen className="w-4 h-4" />
             Portais
           </TabsTrigger>
-          <TabsTrigger value="config" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
-            <Target className="w-4 h-4" />
-            Regras & Config
-          </TabsTrigger>
         </TabsList>
+
+        {/* ============================================ */}
+        {/* ABA 0 — ROTA DO LIVRO (ORQUESTRADOR)        */}
+        {/* ============================================ */}
+        <TabsContent value="rota" className="space-y-4 outline-none">
+          {selectedCiclo ? (
+            <RotaDoLivroEditor estacaoId={selectedCiclo} />
+          ) : (
+            <Card className="bg-muted/30 border-dashed h-[200px] flex items-center justify-center">
+              <div className="text-center p-6">
+                <MapIcon className="w-10 h-10 text-gold/30 mx-auto mb-3" />
+                <p className="text-muted-foreground">Selecione um ciclo abaixo ou na aba de Calendário para gerenciar sua Rota.</p>
+                <div className="mt-4 max-w-xs mx-auto">
+                   <Select
+                    value={selectedCiclo || ''}
+                    onValueChange={(v) => setSelectedCiclo(v || null)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Escolha um ciclo..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {ciclos?.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.titulo}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </Card>
+          )}
+        </TabsContent>
 
         {/* ============================================ */}
         {/* ABA 1 — PRODUZIR CONTEÚDO (CONSOLIDADA)     */}

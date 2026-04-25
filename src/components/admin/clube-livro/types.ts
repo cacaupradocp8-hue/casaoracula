@@ -100,3 +100,30 @@ export interface AulaAdmin {
   ativo: boolean;
   publicado: boolean;
 }
+
+export interface RotaItem {
+  id: string;
+  estacao_id: string;
+  ordem: number;
+  slug: string;
+  titulo: string;
+  subtitulo?: string;
+  icone?: string;
+  tipo: string;
+  ref_tipo?: 'portal' | 'escuta' | 'aula' | 'encontro' | 'laboratorio' | 'integracao';
+  ref_id?: string;
+  conteudo_inline?: any;
+  rota_custom?: string;
+  publicado: boolean;
+  obrigatorio: boolean;
+}
+
+export interface RotaProgresso {
+  id: string;
+  user_id: string;
+  estacao_id: string;
+  rota_item_id: string;
+  status: 'not_started' | 'in_progress' | 'completed';
+  data_inicio?: string;
+  data_conclusao?: string;
+}
