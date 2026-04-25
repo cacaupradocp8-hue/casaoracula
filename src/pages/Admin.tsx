@@ -9,6 +9,7 @@ import {
 import { PortalType } from '@/types/portal';
 import { Loader2, Settings, Eye, EyeOff, AlertTriangle, Sparkles } from 'lucide-react';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
+import { BootSafeBoundary } from '@/components/shared/BootSafeBoundary';
 
 // Lazy load all admin tabs
 const AdminCursosTab = lazy(() => import('@/components/admin/AdminCursosTab').then(m => ({ default: m.AdminCursosTab })));
