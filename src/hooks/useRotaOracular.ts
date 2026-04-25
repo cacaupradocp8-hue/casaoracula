@@ -80,15 +80,25 @@ export function useRotaOracular() {
   const { data: estacaoAtual, isLoading: loadingEstacao } = useQuery({
     queryKey: ['rota-estacao-ativa'],
     queryFn: async () => {
-      const { data } = await supabase
-        .from('clube_estacoes')
-        .select('id, titulo, subtitulo, numero, livro_titulo, livro_autor, livro_capa_url, essencia_nucleo, essencia_tensao, essencia_transformacao, ativa')
-        .eq('publicada', true)
-        .eq('ativa', true)
-        .order('numero', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      return data as Estacao | null;
+      try {
+        const { data, error } = await supabase
+          .from('clube_estacoes')
+          .select('id, titulo, subtitulo, numero, livro_titulo, livro_autor, livro_capa_url, essencia_nucleo, essencia_tensao, essencia_transformacao, ativa')
+          .eq('publicada', true)
+          .eq('ativa', true)
+          .order('numero', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        
+        if (error) {
+          console.error('[useRotaOracular] Erro ao carregar estação ativa:', error);
+          return null;
+        }
+        return data as Estacao | null;
+      } catch (err) {
+        console.error('[useRotaOracular] Falha catastrófica ao carregar estação:', err);
+        return null;
+      }
     },
   });
 
@@ -96,14 +106,22 @@ export function useRotaOracular() {
   const { data: jornadas } = useQuery({
     queryKey: ['rota-jornadas', estacaoAtual?.id],
     queryFn: async () => {
-      if (!estacaoAtual?.id) return [];
-      const { data } = await supabase
-        .from('clube_jornadas')
-        .select('id, nome, slug, tipo, ordem, ativa')
-        .eq('estacao_id', estacaoAtual.id)
-        .eq('ativa', true)
-        .order('ordem');
-      return data || [];
+      try {
+        if (!estacaoAtual?.id) return [];
+        const { data, error } = await supabase
+          .from('clube_jornadas')
+          .select('id, nome, slug, tipo, ordem, ativa')
+          .eq('estacao_id', estacaoAtual.id)
+          .eq('ativa', true)
+          .order('ordem');
+        if (error) {
+          console.error('[useRotaOracular] Erro jornadas:', error);
+          return [];
+        }
+        return data || [];
+      } catch (err) {
+        return [];
+      }
     },
     enabled: !!estacaoAtual?.id,
   });
@@ -112,14 +130,22 @@ export function useRotaOracular() {
   const { data: itensRota } = useQuery({
     queryKey: ['rota-itens', estacaoAtual?.id],
     queryFn: async () => {
-      if (!estacaoAtual?.id) return [];
-      const { data } = await supabase
-        .from('clube_rota_itens')
-        .select('*')
-        .eq('estacao_id', estacaoAtual.id)
-        .eq('publicado', true)
-        .order('ordem');
-      return data || [];
+      try {
+        if (!estacaoAtual?.id) return [];
+        const { data, error } = await supabase
+          .from('clube_rota_itens')
+          .select('*')
+          .eq('estacao_id', estacaoAtual.id)
+          .eq('publicado', true)
+          .order('ordem');
+        if (error) {
+          console.error('[useRotaOracular] Erro itens rota:', error);
+          return [];
+        }
+        return data || [];
+      } catch (err) {
+        return [];
+      }
     },
     enabled: !!estacaoAtual?.id,
   });
@@ -174,6 +200,8 @@ export function useRotaOracular() {
 
   // Build road points from the new source of truth
   const pontos: PontoRota[] = (itensRota || []).map((item) => {
+    if (!item) return null;
+
     const registroProgresso = (progressoRota || []).find(p => p.rota_item_id === item.id);
     const status = registroProgresso?.status || 'not_started';
     
@@ -184,11 +212,13 @@ export function useRotaOracular() {
       estado = 'in_progress';
     } else {
       // Check if previous item is completed to unlock
-      const index = itensRota!.findIndex(i => i.id === item.id);
+      const currentItems = itensRota || [];
+      const index = currentItems.findIndex(i => i.id === item.id);
+      
       if (index === 0) {
         estado = 'available';
-      } else {
-        const prevItem = itensRota![index - 1];
+      } else if (index > 0) {
+        const prevItem = currentItems[index - 1];
         const prevProgresso = (progressoRota || []).find(p => p.rota_item_id === prevItem.id);
         if (prevProgresso?.status === 'completed') {
           estado = 'available';
@@ -211,30 +241,36 @@ export function useRotaOracular() {
       estado,
       estadoUI: mapEstado(estado),
       rota: resolveRota(item.tipo, item.ref_id, item.rota_custom),
-    };
-  });
+    } as PontoRota;
+  }).filter((p): p is PontoRota => p !== null);
 
   // Calculate percentage progress for legacy UI if needed
-  const totalObrigatorios = (itensRota || []).filter(i => i.obrigatorio).length;
-  const concluidosObrigatorios = (progressoRota || []).filter(p => {
-    const item = (itensRota || []).find(i => i.id === p.rota_item_id);
+  const itemsArray = itensRota || [];
+  const progressoArray = progressoRota || [];
+  
+  const totalObrigatorios = itemsArray.filter(i => i.obrigatorio).length;
+  const concluidosObrigatorios = progressoArray.filter(p => {
+    const item = itemsArray.find(i => i.id === p.rota_item_id);
     return item?.obrigatorio && p.status === 'completed';
   }).length;
+  
   const progresso = totalObrigatorios > 0 ? (concluidosObrigatorios / totalObrigatorios) * 100 : 0;
 
   // Find the current (in_progress) point for the "Continuar jornada" CTA
-  const pontoAtual = pontos.find(p => p.estado === 'in_progress') || pontos.find(p => p.estado === 'available') || pontos[0];
+  const pontoAtual = pontos.find(p => p.estado === 'in_progress') || 
+                     pontos.find(p => p.estado === 'available') || 
+                     (pontos.length > 0 ? pontos[0] : undefined);
 
-  const estacaoIncompleta = (itensRota || []).length < 1;
+  const estacaoIncompleta = itemsArray.length < 1;
 
   return {
-    estacaoAtual,
+    estacaoAtual: estacaoAtual || null,
     estacoesPrevias: estacoesPrevias || [],
     pontos,
     pontoAtual,
     progresso,
-    encontro,
-    progressoRota,
+    encontro: encontro || null,
+    progressoRota: progressoArray,
     estacaoIncompleta,
     isLoading: loadingEstacao,
   };

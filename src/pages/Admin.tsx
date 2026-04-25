@@ -9,6 +9,7 @@ import {
 import { PortalType } from '@/types/portal';
 import { Loader2, Settings, Eye, EyeOff, AlertTriangle, Sparkles } from 'lucide-react';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
+import { BootSafeBoundary } from '@/components/shared/BootSafeBoundary';
 
 // Lazy load all admin tabs
 const AdminCursosTab = lazy(() => import('@/components/admin/AdminCursosTab').then(m => ({ default: m.AdminCursosTab })));
@@ -56,7 +57,7 @@ const AdminBibliotecaCasosTab = lazy(() => import('@/components/admin/AdminBibli
 const AdminAtlasFemininoTab = lazy(() => import('@/components/admin/AdminAtlasFemininoTab').then(m => ({ default: m.AdminAtlasFemininoTab })));
 const AdminNarroterapiaTab = lazy(() => import('@/components/admin/AdminNarroterapiaTab').then(m => ({ default: m.AdminNarroterapiaTab })));
 const AdminNarroterapiaAutorizacaoTab = lazy(() => import('@/components/admin/AdminNarroterapiaAutorizacaoTab'));
-const AdminClubeLivroTab = lazy(() => import('@/components/admin/AdminClubeLivroTab'));
+const AdminClubeLivroTab = lazy(() => import('@/components/admin/AdminClubeLivroTab').then(m => ({ default: m.AdminClubeLivroTab })));
 const AdminGeradorSemanal = lazy(() => import('@/components/admin/AdminGeradorSemanal'));
 const AdminPlanosClubTab = lazy(() => import('@/components/admin/AdminPlanosClubTab').then(m => ({ default: m.AdminPlanosClubTab })));
 const AdminEstudioOracular = lazy(() => import('@/components/admin/AdminEstudioOracular'));
@@ -208,9 +209,11 @@ export default function Admin() {
 
             {/* Active tab content */}
             {ActiveComponent && (
-              <Suspense fallback={<TabLoader />}>
-                <ActiveComponent />
-              </Suspense>
+              <BootSafeBoundary label={`AdminTab: ${activeTab}`}>
+                <Suspense fallback={<TabLoader />}>
+                  <ActiveComponent />
+                </Suspense>
+              </BootSafeBoundary>
             )}
           </div>
         </div>
