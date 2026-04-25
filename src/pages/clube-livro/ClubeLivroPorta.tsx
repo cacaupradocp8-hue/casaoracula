@@ -21,30 +21,25 @@ import { formatAudioTime, getPublicAudioUrl } from '@/lib/audioUtils';
 import DOMPurify from 'dompurify';
 import {
   ArrowLeft, BookOpen, Play, Pause, Headphones,
-  Sparkles, Brain, Briefcase, Compass, Sun, FileText,
-  Loader2, AlertTriangle, ChevronDown, ChevronRight,
+  Sparkles, Briefcase, ChevronDown, ChevronRight,
   SkipBack, SkipForward, Volume2, VolumeX,
   Flower2, Home, Music, Stethoscope, Pen, Download,
+  AlertTriangle, Loader2,
 } from 'lucide-react';
 import { ClubeMateriaisTab } from '@/components/clube-livro/ClubeMateriaisTab';
+import { BlocoRenderer, AulaBloco } from '@/components/clube-livro/BlocoRenderer';
+import { Database } from '@/integrations/supabase/types';
 
-// ── Types ──
-interface AulaBloco {
-  tipo: string;
+type Faixa = Database['public']['Tables']['clube_livro_escutas']['Row'];
+type Fase = {
+  id: string;
   titulo: string;
-  conteudo: string;
-  ordem: number;
-}
-
-const BLOCO_CONFIG: Record<string, { icon: React.ElementType; label: string; accent: string }> = {
-  essencia: { icon: Sparkles, label: 'Essência', accent: 'text-amber-400' },
-  raiz_psiquica: { icon: Brain, label: 'Raiz Psíquica', accent: 'text-violet-400' },
-  traducao_profissional: { icon: Briefcase, label: 'Tradução Profissional', accent: 'text-teal-400' },
-  atravessamento: { icon: Compass, label: 'Atravessamento', accent: 'text-rose-400' },
-  integracao_oracular: { icon: Sun, label: 'Integração Oracular', accent: 'text-gold' },
-  registro: { icon: FileText, label: 'Registro', accent: 'text-sky-400' },
-  texto_livre: { icon: BookOpen, label: 'Texto', accent: 'text-muted-foreground' },
+  alerta_clinico: string | null;
+  observacao_clinica: string | null;
+  orientacao_curta: string | null;
+  lista_uso_inadequado: string[] | null;
 };
+
 
 // ── Resonance CSS animation (pure CSS for GPU perf) ──
 const resonanceKeyframes = `
@@ -53,6 +48,7 @@ const resonanceKeyframes = `
   50% { opacity: 0.15; transform: scale(1.05); }
 }
 `;
+
 
 export default function ClubeLivroPorta() {
   const { id: cicloId, portaId } = useParams();
@@ -502,7 +498,7 @@ function PlayerSection({
   faixas, activeFaixaIndex, isPlaying, currentTime, duration, isMuted, audioRef,
   onTogglePlay, onSkip, onSeek, onSelectFaixa, onToggleMute,
 }: {
-  faixas: any[];
+  faixas: Faixa[];
   activeFaixaIndex: number;
   isPlaying: boolean;
   currentTime: number;
@@ -593,7 +589,8 @@ function PlayerSection({
   );
 }
 
-function AlertaClinicoBlock({ fase }: { fase: any }) {
+function AlertaClinicoBlock({ fase }: { fase: Fase }) {
+  if (!fase.alerta_clinico) return null;
   return (
     <Collapsible>
       <CollapsibleTrigger className="w-full flex items-center gap-2 p-3 rounded-lg border border-amber-500/15 bg-amber-500/5 hover:bg-amber-500/8 transition-colors">
@@ -611,32 +608,6 @@ function AlertaClinicoBlock({ fase }: { fase: any }) {
   );
 }
 
-function BlocoRenderer({ bloco }: { bloco: AulaBloco }) {
-  const [expanded, setExpanded] = useState(true);
-  const config = BLOCO_CONFIG[bloco.tipo] || BLOCO_CONFIG.texto_livre;
-  const Icon = config.icon;
-  return (
-    <Card className="overflow-hidden bg-card/40 border-border/30">
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/10 transition-colors"
-      >
-        <Icon className={cn('w-4 h-4 shrink-0', config.accent)} />
-        <span className="text-sm font-display text-foreground flex-1">{bloco.titulo || config.label}</span>
-        <ChevronDown className={cn("w-4 h-4 text-muted-foreground transition-transform", expanded && "rotate-180")} />
-      </button>
-      {expanded && bloco.conteudo && (
-        <CardContent className="pt-0 pb-4 px-4">
-          <div
-            className="prose prose-sm prose-invert max-w-none text-muted-foreground leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(formatContent(bloco.conteudo)) }}
-          />
-        </CardContent>
-      )}
-    </Card>
-  );
-}
-
 function EmptyBlock({ label }: { label: string }) {
   return (
     <Card className="bg-muted/10 border-dashed">
@@ -648,12 +619,3 @@ function EmptyBlock({ label }: { label: string }) {
   );
 }
 
-function formatContent(text: string): string {
-  if (!text) return '';
-  return text
-    .replace(/\*\*(.*?)\*\*/g, '<strong class="text-foreground">$1</strong>')
-    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-    .replace(/\n\n/g, '</p><p>')
-    .replace(/\n/g, '<br />')
-    .replace(/^(.+)$/, '<p>$1</p>');
-}

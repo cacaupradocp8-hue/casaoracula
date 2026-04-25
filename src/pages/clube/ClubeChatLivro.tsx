@@ -20,6 +20,12 @@ import {
   Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription,
 } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Database } from '@/integrations/supabase/types';
+
+type ClubCycle = Database['public']['Tables']['club_cycles']['Row'] & {
+  club_books?: Database['public']['Tables']['club_books']['Row'][] | Database['public']['Tables']['club_books']['Row'];
+};
+
 
 interface Message {
   id: string;
@@ -77,15 +83,18 @@ export default function ClubeChatLivro() {
   const { data: cycle } = useQuery({
     queryKey: ['club-active-cycle'],
     queryFn: async () => {
-      const { data } = await supabase
-        .from('club_cycles' as any)
+      const { data, error } = await supabase
+        .from('club_cycles')
         .select('*, club_books(*)')
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
-      return data as any;
+      
+      if (error) throw error;
+      return data as ClubCycle | null;
     },
   });
+
 
   const bookArr = cycle?.club_books;
   const book = Array.isArray(bookArr) ? bookArr[0] : bookArr;
@@ -115,8 +124,9 @@ export default function ClubeChatLivro() {
 
     try {
       const bookContext = book
-        ? `Livro atual: ${book.title} de ${book.author || 'autor desconhecido'}. Tema central: ${book.central_theme || ''}. Símbolos-chave: ${(book.key_symbols || []).join(', ')}. Arquétipos: ${(book.key_archetypes || []).join(', ')}.`
+        ? `Livro atual: ${book.title} de ${book.author || 'autor desconhecido'}. Descrição: ${book.description || ''}.`
         : '';
+
 
       const { data, error } = await supabase.functions.invoke('syntheia-chat', {
         body: {
@@ -153,7 +163,7 @@ export default function ClubeChatLivro() {
   const saveTool = useMutation({
     mutationFn: async (tool: { tipo: string; conteudo: string; contexto_uso: string; limite_etico: string }) => {
       if (!user || !cycle?.id) return;
-      await supabase.from('club_tools' as any).insert({
+      const { error } = await supabase.from('club_tools').insert({
         user_id: user.id,
         cycle_id: cycle.id,
         tipo: tool.tipo,
@@ -161,7 +171,9 @@ export default function ClubeChatLivro() {
         contexto_uso: tool.contexto_uso,
         limite_etico: tool.limite_etico,
       });
+      if (error) throw error;
     },
+
     onSuccess: () => {
       toast.success('Ferramenta salva na Forja');
       qc.invalidateQueries({ queryKey: ['club-tools'] });
