@@ -314,30 +314,30 @@ export function AdminClubeLivroTab() {
       </div>
 
       {/* Abas simplificadas para Produção de Conteúdo */}
-      <Tabs defaultValue="conteudo">
-        <TabsList className="mb-4 flex-wrap h-auto gap-1">
-          <TabsTrigger value="conteudo" className="gap-2 text-xs">
+      <Tabs defaultValue="conteudo" className="w-full">
+        <TabsList className="mb-4 flex-wrap h-auto gap-1 bg-muted/30 p-1 border border-primary/5">
+          <TabsTrigger value="conteudo" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
             <Sparkles className="w-4 h-4" />
             Produzir Conteúdo
           </TabsTrigger>
-          <TabsTrigger value="calendario" className="gap-2 text-xs">
+          <TabsTrigger value="calendario" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
             <Calendar className="w-4 h-4" />
             Calendário & Ciclos
           </TabsTrigger>
-          <TabsTrigger value="portais" className="gap-2 text-xs">
+          <TabsTrigger value="portais" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
             <DoorOpen className="w-4 h-4" />
             Portais
           </TabsTrigger>
-          <TabsTrigger value="config" className="gap-2 text-xs">
+          <TabsTrigger value="config" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
             <Target className="w-4 h-4" />
             Regras & Config
           </TabsTrigger>
         </TabsList>
 
         {/* ============================================ */}
-        {/* NOVA ABA — PRODUZIR CONTEÚDO (CONSOLIDADA)  */}
+        {/* ABA 1 — PRODUZIR CONTEÚDO (CONSOLIDADA)     */}
         {/* ============================================ */}
-        <TabsContent value="conteudo" className="space-y-4">
+        <TabsContent value="conteudo" className="space-y-4 outline-none">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card className="md:col-span-1 border-primary/10 bg-muted/20">
               <CardHeader className="pb-2">
@@ -400,10 +400,13 @@ export function AdminClubeLivroTab() {
             <div className="md:col-span-3">
               {selectedCiclo ? (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-medium text-gold">Editor de Conteúdo</h3>
-                    <Badge variant="outline" className="text-[10px] border-gold/30 text-gold">
-                      {ciclos?.find(c => c.id === selectedCiclo)?.titulo}
+                  <div className="flex items-center justify-between bg-gold/5 p-3 rounded-lg border border-gold/10">
+                    <div className="flex items-center gap-2">
+                      <BookOpen className="w-5 h-5 text-gold" />
+                      <h3 className="text-lg font-display text-gold">Editor: {ciclos?.find(c => c.id === selectedCiclo)?.titulo}</h3>
+                    </div>
+                    <Badge variant="outline" className="text-[10px] border-gold/30 text-gold uppercase tracking-widest">
+                      {ciclos?.find(c => c.id === selectedCiclo)?.publicado ? 'Público' : 'Rascunho'}
                     </Badge>
                   </div>
                   <CicloDetailTabs cicloId={selectedCiclo} />
@@ -1292,10 +1295,10 @@ function CicloDialog({
         mensagem_campo_texto: (ciclo as any).mensagem_campo_texto || '',
         carga_horaria_base: (ciclo as any).carga_horaria_base ?? 20,
         carga_horaria_ajuste: (ciclo as any).carga_horaria_ajuste ?? 0,
-        por_que_slides_json: JSON.stringify((ciclo as any).por_que_slides || [], null, 2),
-        por_que_audio_url: (ciclo as any).por_que_audio_url || '',
-        como_ler_slides_json: JSON.stringify((ciclo as any).como_ler_slides || [], null, 2),
-        como_ler_audio_url: (ciclo as any).como_ler_audio_url || '',
+        por_que_slides_json: JSON.stringify(ciclo.por_que_slides || [], null, 2),
+        por_que_audio_url: ciclo.por_que_audio_url || '',
+        como_ler_slides_json: JSON.stringify(ciclo.como_ler_slides || [], null, 2),
+        como_ler_audio_url: ciclo.como_ler_audio_url || '',
       });
     } else if (open) {
       setForm({
