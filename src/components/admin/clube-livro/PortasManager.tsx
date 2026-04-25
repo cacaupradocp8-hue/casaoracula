@@ -444,17 +444,27 @@ function PortaDialog({ open, onOpenChange, porta, cicloId, nextOrdem }: {
     },
   });
 
-  // Sync form when editing
-  if (open && porta && form.titulo !== porta.titulo && form.titulo === '') {
-    setForm({
-      titulo: porta.titulo || '',
-      jornada: porta.jornada || 'heroina',
-      descricao: porta.descricao || '',
-      icone: porta.icone || '',
-      cor: porta.cor || '',
-      ordem: porta.ordem,
-    });
-  }
+  useEffect(() => {
+    if (open && porta) {
+      setForm({
+        titulo: porta.titulo || '',
+        jornada: porta.jornada || 'heroina',
+        descricao: porta.descricao || '',
+        icone: porta.icone || '',
+        cor: porta.cor || '',
+        ordem: porta.ordem,
+      });
+    } else if (open) {
+      setForm({
+        titulo: '',
+        jornada: 'heroina',
+        descricao: '',
+        icone: '',
+        cor: '',
+        ordem: nextOrdem
+      });
+    }
+  }, [open, porta, nextOrdem]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -557,26 +567,40 @@ function PortaAulaDialog({ open, onOpenChange, aula, cicloId, portaId, nextOrdem
     },
   });
 
-  if (open && aula && form.titulo !== aula.titulo && form.titulo === '') {
-    setForm({
-      titulo: aula.titulo || '',
-      subtitulo: aula.subtitulo || '',
-      descricao: aula.descricao || '',
-      duracao: aula.duracao || '',
-      media_url: aula.media_url || '',
-      media_type: aula.media_type || 'video',
-      conteudo: '',
-      ordem: aula.ordem,
-    });
-    // Parse existing blocos
-    try {
-      const raw = (aula as any).conteudo;
-      if (raw) {
-        const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
-        if (Array.isArray(parsed)) setBlocos(parsed);
-      }
-    } catch { setBlocos([]); }
-  }
+  useEffect(() => {
+    if (open && aula) {
+      setForm({
+        titulo: aula.titulo || '',
+        subtitulo: aula.subtitulo || '',
+        descricao: aula.descricao || '',
+        duracao: aula.duracao || '',
+        media_url: aula.media_url || '',
+        media_type: aula.media_type || 'video',
+        conteudo: '',
+        ordem: aula.ordem,
+      });
+      // Parse existing blocos
+      try {
+        const raw = (aula as any).conteudo;
+        if (raw) {
+          const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+          if (Array.isArray(parsed)) setBlocos(parsed);
+        }
+      } catch { setBlocos([]); }
+    } else if (open) {
+      setForm({
+        titulo: '',
+        subtitulo: '',
+        descricao: '',
+        duracao: '',
+        media_url: '',
+        media_type: 'video',
+        conteudo: '',
+        ordem: nextOrdem,
+      });
+      setBlocos([]);
+    }
+  }, [open, aula, nextOrdem]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
