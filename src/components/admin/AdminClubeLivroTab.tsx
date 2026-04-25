@@ -1811,7 +1811,7 @@ function AulaDialog({
   const [blocos, setBlocos] = useState<AulaBloco[]>([]);
 
   // Reset form when dialog opens
-  useState(() => {
+  useEffect(() => {
     if (open && aula) {
       setForm({
         titulo: aula.titulo || '',
@@ -1819,7 +1819,7 @@ function AulaDialog({
         descricao: aula.descricao || '',
         duracao: aula.duracao || '',
         media_url: aula.media_url || '',
-        media_type: aula.media_type || 'texto',
+        media_type: aula.media_type || 'video',
         ordem: aula.ordem,
       });
       // Parse blocos from conteudo
@@ -1841,7 +1841,7 @@ function AulaDialog({
       });
       setBlocos([]);
     }
-  });
+  }, [open, aula, nextOrdem]);
 
   const save = useMutation({
     mutationFn: async () => {
