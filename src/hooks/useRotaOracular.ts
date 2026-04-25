@@ -55,12 +55,15 @@ function mapEstado(estado: PontoEstado): PontoEstadoUI {
  * A ordem e existência dependem dos dados da estação.
  */
 function buildPontosEstruturais(estacaoId: string): Omit<PontoRota, 'estado' | 'estadoUI'>[] {
+  // O ID do ciclo legado que contém as jornadas/portas configuradas
+  const CICLO_LEGADO_ID = '90745cf3-c6e2-4334-9ebf-7a13d617e129';
+  
   return [
-    { id: 'portal', slug: 'portal', nome: 'Portal', icone: '🚪', ordem: 1, rota: `/clube-livro/porta/${estacaoId}` },
+    { id: 'portal', slug: 'portal', nome: 'Portal', icone: '🚪', ordem: 1, rota: `/clube-livro/${CICLO_LEGADO_ID}/porta/2a408a59-177f-4b69-bb7a-32b1351a7909` },
     { id: 'audio', slug: 'audio', nome: 'Áudio', icone: '🎧', ordem: 2, rota: '/clube/escuta' },
     { id: 'chat', slug: 'chat', nome: 'Chat com o Livro', icone: '💬', ordem: 3, rota: '/clube/chat-livro' },
-    { id: 'laboratorio', slug: 'laboratorio', nome: 'Laboratório 80/20', icone: '⚗️', ordem: 4, rota: '/clube/laboratorio-8020' },
-    { id: 'jardim', slug: 'jardim', nome: 'Jardim', icone: '🌿', ordem: 5, rota: '/jardim-da-psique' },
+    { id: 'laboratorio', slug: 'laboratorio', nome: 'Laboratório 80/20', icone: '⚗️', ordem: 4, rota: '/clube/laboratorio' },
+    { id: 'jardim', slug: 'jardim', nome: 'Jardim', icone: '🌿', ordem: 5, rota: '/jardim-psique' },
     { id: 'aplicacao', slug: 'aplicacao', nome: 'Aplicação', icone: '✨', ordem: 6, rota: '#aplicacao' },
   ];
 }
