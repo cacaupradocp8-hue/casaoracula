@@ -18,6 +18,10 @@ export interface PontoRota {
   estado: PontoEstado;
   estadoUI: PontoEstadoUI;
   rota: string;
+  tipo: string;
+  ref_tipo?: string;
+  ref_id?: string;
+  conteudo_inline?: any;
 }
 
 export interface Estacao {
@@ -50,22 +54,23 @@ function mapEstado(estado: PontoEstado): PontoEstadoUI {
 }
 
 /**
- * Pontos fixos estruturais da Rota.
- * Cada ponto mapeia para uma rota real existente.
- * A ordem e existência dependem dos dados da estação.
+ * Resolve a rota com base no tipo e referência
  */
-function buildPontosEstruturais(estacaoId: string): Omit<PontoRota, 'estado' | 'estadoUI'>[] {
-  // O ID do ciclo legado que contém as jornadas/portas configuradas
-  const CICLO_LEGADO_ID = '90745cf3-c6e2-4334-9ebf-7a13d617e129';
-  
-  return [
-    { id: 'portal', slug: 'portal', nome: 'Portal', icone: '🚪', ordem: 1, rota: `/clube-livro/${CICLO_LEGADO_ID}/porta/2a408a59-177f-4b69-bb7a-32b1351a7909` },
-    { id: 'audio', slug: 'audio', nome: 'Áudio', icone: '🎧', ordem: 2, rota: '/clube/escuta' },
-    { id: 'chat', slug: 'chat', nome: 'Chat com o Livro', icone: '💬', ordem: 3, rota: '/clube/chat-livro' },
-    { id: 'laboratorio', slug: 'laboratorio', nome: 'Laboratório 80/20', icone: '⚗️', ordem: 4, rota: '/clube/laboratorio' },
-    { id: 'jardim', slug: 'jardim', nome: 'Jardim', icone: '🌿', ordem: 5, rota: '/jardim-psique' },
-    { id: 'aplicacao', slug: 'aplicacao', nome: 'Aplicação', icone: '✨', ordem: 6, rota: '#aplicacao' },
-  ];
+function resolveRota(tipo: string, refId: string | null, rotaCustom?: string): string {
+  if (rotaCustom) return rotaCustom;
+
+  switch (tipo) {
+    case 'portal':       return `/clube/portal/${refId}`;
+    case 'audio':
+    case 'escuta':        return `/clube/escuta/${refId}`;
+    case 'aula':         return `/clube/aula/${refId}`;
+    case 'chat_livro':   return '/clube/chat-livro';
+    case 'laboratorio':  return '/clube/laboratorio';
+    case 'jardim':       return '/jardim-psique';
+    case 'encontro':     return `/clube/encontro/${refId}`;
+    case 'aplicacao':    return `/clube/aplicacao/${refId}`;
+    default:             return '#';
+  }
 }
 
 export function useRotaOracular() {
@@ -103,18 +108,33 @@ export function useRotaOracular() {
     enabled: !!estacaoAtual?.id,
   });
 
-  // 3. Engajamento da usuária
-  const { data: engajamento } = useQuery({
-    queryKey: ['rota-engajamento', user?.id, estacaoAtual?.id],
+  // 3. Itens da Rota (Nova Fonte de Verdade)
+  const { data: itensRota } = useQuery({
+    queryKey: ['rota-itens', estacaoAtual?.id],
     queryFn: async () => {
-      if (!user?.id || !estacaoAtual?.id) return null;
-      const { data } = await (supabase as any)
-        .from('clube_engajamento')
+      if (!estacaoAtual?.id) return [];
+      const { data } = await supabase
+        .from('clube_rota_itens')
+        .select('*')
+        .eq('estacao_id', estacaoAtual.id)
+        .eq('publicado', true)
+        .order('ordem');
+      return data || [];
+    },
+    enabled: !!estacaoAtual?.id,
+  });
+
+  // 4. Progresso da usuária na rota
+  const { data: progressoRota } = useQuery({
+    queryKey: ['rota-progresso', user?.id, estacaoAtual?.id],
+    queryFn: async () => {
+      if (!user?.id || !estacaoAtual?.id) return [];
+      const { data } = await supabase
+        .from('clube_rota_progresso')
         .select('*')
         .eq('user_id', user.id)
-        .eq('estacao_id', estacaoAtual.id)
-        .maybeSingle();
-      return data;
+        .eq('estacao_id', estacaoAtual.id);
+      return data || [];
     },
     enabled: !!user?.id && !!estacaoAtual?.id,
   });
@@ -152,33 +172,60 @@ export function useRotaOracular() {
     },
   });
 
-  // Build road points
-  const progresso = engajamento?.progresso ?? 0;
-  const pontosBase = estacaoAtual ? buildPontosEstruturais(estacaoAtual.id) : [];
-
-  // Derive states from progress percentage
-  const pontos: PontoRota[] = pontosBase.map((p) => {
-    const threshold = ((p.ordem - 1) / pontosBase.length) * 100;
-    const nextThreshold = (p.ordem / pontosBase.length) * 100;
-
-    let estado: PontoEstado;
-    if (progresso >= nextThreshold) {
+  // Build road points from the new source of truth
+  const pontos: PontoRota[] = (itensRota || []).map((item) => {
+    const registroProgresso = (progressoRota || []).find(p => p.rota_item_id === item.id);
+    const status = registroProgresso?.status || 'not_started';
+    
+    let estado: PontoEstado = 'locked';
+    if (status === 'completed') {
       estado = 'completed';
-    } else if (progresso >= threshold) {
+    } else if (status === 'in_progress') {
       estado = 'in_progress';
-    } else if (progresso > 0 || p.ordem === 1) {
-      estado = 'available';
     } else {
-      estado = 'locked';
+      // Check if previous item is completed to unlock
+      const index = itensRota!.findIndex(i => i.id === item.id);
+      if (index === 0) {
+        estado = 'available';
+      } else {
+        const prevItem = itensRota![index - 1];
+        const prevProgresso = (progressoRota || []).find(p => p.rota_item_id === prevItem.id);
+        if (prevProgresso?.status === 'completed') {
+          estado = 'available';
+        } else {
+          estado = 'locked';
+        }
+      }
     }
 
-    return { ...p, estado, estadoUI: mapEstado(estado) };
+    return {
+      id: item.id,
+      slug: item.slug,
+      nome: item.titulo,
+      icone: item.icone || '📍',
+      ordem: item.ordem,
+      tipo: item.tipo,
+      ref_tipo: item.ref_tipo,
+      ref_id: item.ref_id,
+      conteudo_inline: item.conteudo_inline,
+      estado,
+      estadoUI: mapEstado(estado),
+      rota: resolveRota(item.tipo, item.ref_id, item.rota_custom),
+    };
   });
+
+  // Calculate percentage progress for legacy UI if needed
+  const totalObrigatorios = (itensRota || []).filter(i => i.obrigatorio).length;
+  const concluidosObrigatorios = (progressoRota || []).filter(p => {
+    const item = (itensRota || []).find(i => i.id === p.rota_item_id);
+    return item?.obrigatorio && p.status === 'completed';
+  }).length;
+  const progresso = totalObrigatorios > 0 ? (concluidosObrigatorios / totalObrigatorios) * 100 : 0;
 
   // Find the current (in_progress) point for the "Continuar jornada" CTA
   const pontoAtual = pontos.find(p => p.estado === 'in_progress') || pontos.find(p => p.estado === 'available') || pontos[0];
 
-  const estacaoIncompleta = jornadas !== undefined && jornadas.length < 1;
+  const estacaoIncompleta = (itensRota || []).length < 1;
 
   return {
     estacaoAtual,
