@@ -5388,6 +5388,122 @@ export type Database = {
           },
         ]
       }
+      clube_rota_itens: {
+        Row: {
+          conteudo_inline: Json | null
+          created_at: string | null
+          estacao_id: string
+          icone: string | null
+          id: string
+          obrigatorio: boolean | null
+          ordem: number
+          publicado: boolean | null
+          ref_id: string | null
+          ref_tipo: Database["public"]["Enums"]["clube_rota_ref_tipo"] | null
+          rota_custom: string | null
+          slug: string
+          subtitulo: string | null
+          tipo: string
+          titulo: string
+          updated_at: string | null
+        }
+        Insert: {
+          conteudo_inline?: Json | null
+          created_at?: string | null
+          estacao_id: string
+          icone?: string | null
+          id?: string
+          obrigatorio?: boolean | null
+          ordem: number
+          publicado?: boolean | null
+          ref_id?: string | null
+          ref_tipo?: Database["public"]["Enums"]["clube_rota_ref_tipo"] | null
+          rota_custom?: string | null
+          slug: string
+          subtitulo?: string | null
+          tipo: string
+          titulo: string
+          updated_at?: string | null
+        }
+        Update: {
+          conteudo_inline?: Json | null
+          created_at?: string | null
+          estacao_id?: string
+          icone?: string | null
+          id?: string
+          obrigatorio?: boolean | null
+          ordem?: number
+          publicado?: boolean | null
+          ref_id?: string | null
+          ref_tipo?: Database["public"]["Enums"]["clube_rota_ref_tipo"] | null
+          rota_custom?: string | null
+          slug?: string
+          subtitulo?: string | null
+          tipo?: string
+          titulo?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_rota_itens_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_rota_progresso: {
+        Row: {
+          created_at: string | null
+          data_conclusao: string | null
+          data_inicio: string | null
+          estacao_id: string
+          id: string
+          rota_item_id: string
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          data_conclusao?: string | null
+          data_inicio?: string | null
+          estacao_id: string
+          id?: string
+          rota_item_id: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          data_conclusao?: string | null
+          data_inicio?: string | null
+          estacao_id?: string
+          id?: string
+          rota_item_id?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_rota_progresso_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_rota_progresso_rota_item_id_fkey"
+            columns: ["rota_item_id"]
+            isOneToOne: false
+            referencedRelation: "clube_rota_itens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       co_ai_recommendations: {
         Row: {
           campo_psiquico: string | null
@@ -21817,6 +21933,13 @@ export type Database = {
         | "podcast_seed"
         | "microclass_seed"
       clube_jornada_tipo: "heroina" | "sombra" | "expressao_mundo"
+      clube_rota_ref_tipo:
+        | "portal"
+        | "escuta"
+        | "aula"
+        | "encontro"
+        | "laboratorio"
+        | "integracao"
       co_travessia_nivel: "iniciante" | "intermediario" | "avancado"
       content_block_type:
         | "rich_text"
@@ -22066,6 +22189,14 @@ export const Constants = {
         "microclass_seed",
       ],
       clube_jornada_tipo: ["heroina", "sombra", "expressao_mundo"],
+      clube_rota_ref_tipo: [
+        "portal",
+        "escuta",
+        "aula",
+        "encontro",
+        "laboratorio",
+        "integracao",
+      ],
       co_travessia_nivel: ["iniciante", "intermediario", "avancado"],
       content_block_type: [
         "rich_text",
