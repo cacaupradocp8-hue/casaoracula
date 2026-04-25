@@ -124,8 +124,9 @@ export default function ClubeChatLivro() {
 
     try {
       const bookContext = book
-        ? `Livro atual: ${book.title} de ${book.author || 'autor desconhecido'}. Tema central: ${book.central_theme || ''}. Símbolos-chave: ${(book.key_symbols || []).join(', ')}. Arquétipos: ${(book.key_archetypes || []).join(', ')}.`
+        ? `Livro atual: ${book.title} de ${book.author || 'autor desconhecido'}. Descrição: ${book.description || ''}.`
         : '';
+
 
       const { data, error } = await supabase.functions.invoke('syntheia-chat', {
         body: {
