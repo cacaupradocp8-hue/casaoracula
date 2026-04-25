@@ -208,9 +208,11 @@ export default function Admin() {
 
             {/* Active tab content */}
             {ActiveComponent && (
-              <Suspense fallback={<TabLoader />}>
-                <ActiveComponent />
-              </Suspense>
+              <BootSafeBoundary label={`AdminTab: ${activeTab}`}>
+                <Suspense fallback={<TabLoader />}>
+                  <ActiveComponent />
+                </Suspense>
+              </BootSafeBoundary>
             )}
           </div>
         </div>
