@@ -336,9 +336,41 @@ export function AdminClubeLivroTab() {
         </TabsList>
 
         {/* ============================================ */}
+        {/* ABA 0 — ROTA DO LIVRO (ORQUESTRADOR)        */}
+        {/* ============================================ */}
+        <TabsContent value="rota" className="space-y-4 outline-none">
+          {selectedCiclo ? (
+            <RotaDoLivroEditor estacaoId={selectedCiclo} />
+          ) : (
+            <Card className="bg-muted/30 border-dashed h-[200px] flex items-center justify-center">
+              <div className="text-center p-6">
+                <MapIcon className="w-10 h-10 text-gold/30 mx-auto mb-3" />
+                <p className="text-muted-foreground">Selecione um ciclo abaixo ou na aba de Calendário para gerenciar sua Rota.</p>
+                <div className="mt-4 max-w-xs mx-auto">
+                   <Select
+                    value={selectedCiclo || ''}
+                    onValueChange={(v) => setSelectedCiclo(v || null)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Escolha um ciclo..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {ciclos?.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.titulo}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </Card>
+          )}
+        </TabsContent>
+
+        {/* ============================================ */}
         {/* ABA 1 — PRODUZIR CONTEÚDO (CONSOLIDADA)     */}
         {/* ============================================ */}
-        <TabsContent value="conteudo" className="space-y-4 outline-none">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card className="md:col-span-1 border-primary/10 bg-muted/20">
               <CardHeader className="pb-2">
