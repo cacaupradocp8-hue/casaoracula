@@ -22,7 +22,7 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   BookOpen, Plus, Pencil, Trash2, ChevronDown, ChevronUp,
   Sparkles, Headphones, Video, FileText, Calendar, Loader2, GraduationCap, DoorOpen, Target, EyeOff,
-  Users, CreditCard
+  Users, CreditCard, Map as MapIcon
 } from 'lucide-react';
 import { FaseEditorExpandido } from './clube-livro';
 import { ClubePlaybookGenerator } from './clube-livro/ClubePlaybookGenerator';
