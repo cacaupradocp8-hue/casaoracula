@@ -83,15 +83,18 @@ export default function ClubeChatLivro() {
   const { data: cycle } = useQuery({
     queryKey: ['club-active-cycle'],
     queryFn: async () => {
-      const { data } = await supabase
-        .from('club_cycles' as any)
+      const { data, error } = await supabase
+        .from('club_cycles')
         .select('*, club_books(*)')
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
-      return data as any;
+      
+      if (error) throw error;
+      return data as ClubCycle | null;
     },
   });
+
 
   const bookArr = cycle?.club_books;
   const book = Array.isArray(bookArr) ? bookArr[0] : bookArr;
