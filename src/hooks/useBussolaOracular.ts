@@ -272,7 +272,7 @@ export function useBussolaOracular(): BussolaData {
           symbol: profileRes.data?.entry_symbol || null,
           distritos: mapaRes?.data?.distritos_json || {},
           carto: cartoRes?.data?.[0] || null,
-          ciclo,
+          ciclo: estacao,
           book,
           jardimCount: jardimRes?.data?.length || 0,
         });
