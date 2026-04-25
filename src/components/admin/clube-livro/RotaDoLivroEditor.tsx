@@ -64,7 +64,7 @@ export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-display text-gold flex items-center gap-2">
-          <Map className="w-5 h-5" />
+          <MapIcon className="w-5 h-5" />
           Rota do Livro (Orquestrador)
         </h3>
         <Button size="sm" variant="outline" className="gap-2" onClick={() => saveMutation.mutate({ 
