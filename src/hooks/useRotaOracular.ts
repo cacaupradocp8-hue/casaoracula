@@ -248,6 +248,7 @@ export function useRotaOracular() {
       ref_tipo: item.ref_tipo,
       ref_id: item.ref_id,
       conteudo_inline: item.conteudo_inline,
+      metadata: item.metadata,
       impacto_cidadela: item.impacto_cidadela,
       estado,
       estadoUI: mapEstado(estado),
