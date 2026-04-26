@@ -116,6 +116,12 @@ export interface RotaItem {
   rota_custom?: string;
   publicado: boolean;
   obrigatorio: boolean;
+  impacto_cidadela?: {
+    distrito: string;
+    tipo_impacto: string;
+    intensidade: number;
+    condicao?: string;
+  }[];
 }
 
 export interface RotaProgresso {
