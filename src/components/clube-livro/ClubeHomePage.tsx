@@ -30,6 +30,7 @@ export function ClubeHomePage() {
     pontoAtual,
     progresso,
     encontro,
+    concluirPonto,
     estacaoIncompleta,
     isLoading,
   } = rotaData || {
@@ -39,6 +40,7 @@ export function ClubeHomePage() {
     pontoAtual: undefined,
     progresso: 0,
     encontro: null,
+    concluirPonto: { mutate: () => {} },
     estacaoIncompleta: false,
     isLoading: false,
   };
