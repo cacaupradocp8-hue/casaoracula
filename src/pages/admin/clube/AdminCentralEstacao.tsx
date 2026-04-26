@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,25 +13,13 @@ import { EntradaTab } from '@/components/admin/central-jornadas/EntradaTab';
 import { AplicacaoTab } from '@/components/admin/central-jornadas/AplicacaoTab';
 import { EncontroTab } from '@/components/admin/central-jornadas/EncontroTab';
 
-
 export default function AdminCentralEstacao() {
   const { estacaoId } = useParams<{ estacaoId: string }>();
-  const [activeTab, setActiveTab] = useState('entrada');
-
-  // Auto-switch to Weeks if entry is empty? Or keep manual. Manual is safer.
-  // But let's check search params for tab
-  const [searchParams, setSearchParams] = useState(new URLSearchParams(window.location.search));
-  
-  useEffect(() => {
-    const tab = searchParams.get('tab');
-    if (tab) setActiveTab(tab);
-  }, [searchParams]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'entrada';
 
   const onTabChange = (val: string) => {
-    setActiveTab(val);
-    const newParams = new URLSearchParams(window.location.search);
-    newParams.set('tab', val);
-    window.history.replaceState(null, '', `?${newParams.toString()}`);
+    setSearchParams({ tab: val });
   };
 
   const { data: estacao, isLoading } = useQuery({
