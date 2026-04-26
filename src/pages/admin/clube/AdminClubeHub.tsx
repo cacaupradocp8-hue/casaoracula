@@ -6,8 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import {
-  BookOpen, RefreshCw, Sun, Headphones, Calendar,
-  Sparkles, DoorOpen, Settings, ArrowLeft, ArrowRight, Wrench,
+  BookOpen, RefreshCw, DoorOpen, GraduationCap, MessageSquare, Library,
+  ArrowLeft, ArrowRight, Wrench, Settings, Sparkles
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -20,98 +20,64 @@ interface HubCard {
   color: string;
 }
 
-// 🌟 ENTRADA OFICIAL — único lugar onde o conteúdo do Clube é criado/editado
-const PRIMARY_CARD: HubCard = {
-  key: 'central',
-  title: 'Central de Jornadas',
-  description: 'Único lugar para criar conteúdo do Clube: Estrada, Semanas, Aplicação 80/20 e Encontros. Tudo por estação.',
-  icon: BookOpen,
-  route: '/admin/clube-livro/central',
-  color: 'text-gold',
-};
-
-// 📚 Apoio editorial (insumos para a Central)
-const SUPPORT_CARDS: HubCard[] = [
-  {
-    key: 'acervo',
-    title: 'Acervo de Livros',
-    description: 'Cadastrar livros, capa, sinopse simbólica — base do que será trabalhado nas estações.',
-    icon: BookOpen,
-    route: '/admin/clube-livro/acervo',
-    color: 'text-emerald-500',
-  },
+// ═══ ESTRUTURA OFICIAL ═══
+const OFFICIAL_CARDS: HubCard[] = [
   {
     key: 'ciclos',
-    title: 'Ciclos & Calendário',
-    description: 'Definir ciclos mensais/anuais (containers temporais que envolvem as estações).',
+    title: '1. Ciclos & Estações',
+    description: 'Gestão de jornadas temporais. É aqui que você define qual livro está sendo lido.',
     icon: RefreshCw,
-    route: '/admin/clube-livro/ciclos',
-    color: 'text-amber-500',
-  },
-  {
-    key: 'gerador',
-    title: 'Gerador IA — Alquimista',
-    description: 'Rascunhar carta + podcast + prática via IA. Depois publique pela Central.',
-    icon: Sparkles,
-    route: '/admin/clube-livro/gerador',
-    color: 'text-pink-500',
-  },
-  {
-    key: 'portais-cms',
-    title: 'Portais (CMS completo)',
-    description: 'Editor avançado de portais simbólicos (módulo paralelo).',
-    icon: DoorOpen,
-    route: '/admin/clube-livro/portais-cms',
+    route: '/admin/clube/ciclos',
     color: 'text-gold',
-  },
-];
-
-// ⚙️ Avançado / Legado — manter para retrocompatibilidade, não usar para criar conteúdo novo
-const ADVANCED_CARDS: HubCard[] = [
-  {
-    key: 'estacoes',
-    title: 'Estações (CRUD básico)',
-    description: 'CRUD simples de estações. Use a Central para o trabalho real.',
-    icon: Sun,
-    route: '/admin/clube-livro/estacoes',
-    color: 'text-muted-foreground',
-  },
-  {
-    key: 'jornadas',
-    title: 'Jornadas (legado)',
-    description: 'Antigos containers de portais. Substituído pela Central.',
-    icon: BookOpen,
-    route: '/admin/clube-livro/jornadas',
-    color: 'text-muted-foreground',
-  },
-  {
-    key: 'escutas',
-    title: 'Escutas avulsas',
-    description: 'Aulas-álbum e escutas independentes de estação.',
-    icon: Headphones,
-    route: '/admin/clube-livro/escutas',
-    color: 'text-muted-foreground',
-  },
-  {
-    key: 'encontros',
-    title: 'Encontros avulsos',
-    description: 'Encontros fora do contexto de uma estação.',
-    icon: Calendar,
-    route: '/admin/clube-livro/encontros',
-    color: 'text-muted-foreground',
   },
   {
     key: 'portais',
-    title: 'Portais & Travessias (legado)',
-    description: 'Portais antigos vinculados a ciclos.',
+    title: '2. Portais Simbólicos',
+    description: 'Configuração da cartografia: Porta, Campo, Torre e Labirinto de cada portal.',
     icon: DoorOpen,
-    route: '/admin/clube-livro/portais',
+    route: '/admin/clube/portais',
+    color: 'text-amber-500',
+  },
+  {
+    key: 'conteudos',
+    title: '3. Acervo & Conteúdos',
+    description: 'Gestão de livros, áudios e materiais de apoio do Clube.',
+    icon: Library,
+    route: '/admin/clube/conteudos',
+    color: 'text-emerald-500',
+  },
+  {
+    key: 'treinamento',
+    title: '4. Sala de Treinamento',
+    description: 'Configuração de simulações clínicas e orientações éticas por ciclo.',
+    icon: GraduationCap,
+    route: '/admin/clube/treinamento',
+    color: 'text-blue-500',
+  },
+  {
+    key: 'chat',
+    title: '5. Chat com o Livro',
+    description: 'Perguntas guiadas e base de conhecimento da IA para interação com a obra.',
+    icon: MessageSquare,
+    route: '/admin/clube/chat',
+    color: 'text-pink-500',
+  },
+];
+
+// ⚙️ Ferramentas de Apoio / Legado
+const SUPPORT_CARDS: HubCard[] = [
+  {
+    key: 'gerador',
+    title: 'Gerador IA (Rascunhos)',
+    description: 'Use a IA para rascunhar cartas, podcasts e práticas.',
+    icon: Sparkles,
+    route: '/admin/clube-livro/gerador',
     color: 'text-muted-foreground',
   },
   {
     key: 'config',
-    title: 'Configurações',
-    description: 'Regras de progressão, níveis de acesso e Lab 80/20.',
+    title: 'Configurações Gerais',
+    description: 'Regras de acesso, Lab 80/20 e orquestração.',
     icon: Settings,
     route: '/admin/clube-livro/config',
     color: 'text-muted-foreground',
@@ -120,23 +86,19 @@ const ADVANCED_CARDS: HubCard[] = [
 
 export default function AdminClubeHub() {
   const { data: stats } = useQuery({
-    queryKey: ['admin-clube-hub-stats'],
+    queryKey: ['admin-clube-hub-stats-v2'],
     queryFn: async () => {
-      const [ciclos, books, estacoes, semanas, escutas, encontros] = await Promise.all([
+      const [ciclos, books, estacoes, portais] = await Promise.all([
         supabase.from('clube_livro_ciclos').select('id', { count: 'exact', head: true }),
         supabase.from('books').select('id', { count: 'exact', head: true }),
         supabase.from('clube_estacoes').select('id', { count: 'exact', head: true }),
-        (supabase as any).from('clube_conteudo_semanal').select('id', { count: 'exact', head: true }),
-        (supabase as any).from('clube_livro_escutas').select('id', { count: 'exact', head: true }),
-        (supabase as any).from('clube_livro_encontros').select('id', { count: 'exact', head: true }),
+        supabase.from('clube_portais').select('id', { count: 'exact', head: true }),
       ]);
       return {
         ciclos: ciclos.count || 0,
         books: books.count || 0,
         estacoes: estacoes.count || 0,
-        semanas: semanas.count || 0,
-        escutas: escutas.count || 0,
-        encontros: encontros.count || 0,
+        portais: portais.count || 0,
       };
     },
   });
@@ -144,13 +106,9 @@ export default function AdminClubeHub() {
   const getStatForCard = (key: string): string | null => {
     if (!stats) return null;
     switch (key) {
-      case 'central': return `${stats.estacoes} estação(ões) · ${stats.semanas} semana(s)`;
-      case 'ciclos': return `${stats.ciclos} ciclo(s)`;
-      case 'acervo': return `${stats.books} livro(s)`;
-      case 'estacoes': return `${stats.estacoes} estação(ões)`;
-      case 'gerador': return `${stats.semanas} semana(s)`;
-      case 'escutas': return `${stats.escutas} escuta(s)`;
-      case 'encontros': return `${stats.encontros} encontro(s)`;
+      case 'ciclos': return `${stats.estacoes} estação(ões)`;
+      case 'conteudos': return `${stats.books} livro(s)`;
+      case 'portais': return `${stats.portais} portal(ais)`;
       default: return null;
     }
   };
@@ -159,22 +117,15 @@ export default function AdminClubeHub() {
     const stat = getStatForCard(card.key);
     return (
       <Link key={card.key} to={card.route} className="group">
-        <Card className={`h-full transition-all duration-200 hover:shadow-md group-hover:bg-card/80 ${
-          featured ? 'border-gold/50 bg-gradient-to-br from-gold/5 to-transparent hover:border-gold' : 'hover:border-gold/40'
-        }`}>
-          <CardContent className={featured ? 'p-6' : 'p-5'}>
+        <Card className={`h-full transition-all duration-200 hover:shadow-md group-hover:bg-card/80 border-gold/10 hover:border-gold/40`}>
+          <CardContent className="p-5">
             <div className="flex items-start justify-between mb-3">
-              <div className={`p-2 rounded-lg ${featured ? 'bg-gold/10' : 'bg-muted/50'} ${card.color}`}>
-                <card.icon className={featured ? 'w-6 h-6' : 'w-5 h-5'} />
+              <div className={`p-2 rounded-lg bg-muted/50 ${card.color}`}>
+                <card.icon className="w-5 h-5" />
               </div>
-              {featured && (
-                <Badge className="bg-gold/20 text-gold border-gold/30 text-[10px]">
-                  Entrada oficial
-                </Badge>
-              )}
-              {!featured && <ArrowRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />}
+              <ArrowRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
-            <h3 className={`font-semibold text-foreground mb-1 ${featured ? 'text-lg' : ''}`}>{card.title}</h3>
+            <h3 className="font-semibold text-foreground mb-1">{card.title}</h3>
             <p className="text-xs text-muted-foreground leading-relaxed mb-3">
               {card.description}
             </p>
@@ -200,62 +151,45 @@ export default function AdminClubeHub() {
           </Link>
           <SectionHeader
             title="Clube de Leitura Oracular"
-            subtitle="Sistema de Leitura como Intervenção Psíquica Guiada"
+            subtitle="Admin Central — Fluxo Unificado de Criação"
             icon={<BookOpen className="w-5 h-5" />}
           />
         </div>
 
-        {/* 🌟 Entrada principal */}
-        <div className="mb-8">
-          <h2 className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium">
-            Onde o conteúdo é criado
+        {/* 🌟 Rota Oficial */}
+        <div className="mb-12">
+          <h2 className="text-xs uppercase tracking-wider text-muted-foreground mb-4 font-medium flex items-center gap-2">
+            <Sparkles className="w-3 h-3 text-gold" />
+            Estrutura Oficial de Trabalho
           </h2>
-          <div className="grid gap-4 sm:grid-cols-1">
-            {renderCard(PRIMARY_CARD, true)}
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {OFFICIAL_CARDS.map((c) => renderCard(c))}
           </div>
         </div>
 
-        {/* 📚 Apoio editorial */}
+        {/* ⚙️ Apoio & Legado */}
         <div className="mb-8">
-          <h2 className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium">
-            Apoio editorial
+          <h2 className="text-xs uppercase tracking-wider text-muted-foreground mb-4 font-medium flex items-center gap-2">
+            <Wrench className="w-3 h-3" />
+            Avançado / Apoio
           </h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {SUPPORT_CARDS.map((c) => renderCard(c))}
           </div>
         </div>
 
-        {/* ⚙️ Avançado / Legado */}
-        <div className="mb-8">
-          <h2 className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium flex items-center gap-2">
-            <Wrench className="w-3 h-3" />
-            Avançado / Legado
-          </h2>
-          <p className="text-xs text-muted-foreground/70 mb-3 italic">
-            Telas mantidas para retrocompatibilidade. Não use para criar conteúdo novo — prefira a Central.
-          </p>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {ADVANCED_CARDS.map((c) => renderCard(c))}
-          </div>
-        </div>
-
-        {/* Quick guide */}
-        <Card className="bg-muted/20 border-gold/10">
-          <CardContent className="p-5">
-            <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+        {/* Info Box */}
+        <Card className="bg-gold/5 border-gold/10">
+          <CardContent className="p-5 flex gap-4 items-start">
+            <div className="p-2 bg-gold/10 rounded-full">
               <Sparkles className="w-4 h-4 text-gold" />
-              Fluxo de criação recomendado
-            </h4>
-            <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-              <span className="bg-muted px-2 py-1 rounded font-medium">1. Acervo (cadastrar livro)</span>
-              <ArrowRight className="w-3 h-3" />
-              <span className="bg-muted px-2 py-1 rounded font-medium">2. Ciclo (calendário)</span>
-              <ArrowRight className="w-3 h-3" />
-              <span className="bg-gold/20 text-gold px-2 py-1 rounded font-semibold">3. Central → Estação → Estrada / Semanas / Aplicação / Encontro</span>
             </div>
-            <p className="text-[11px] text-muted-foreground/70 mt-3 italic">
-              Dica: o Gerador IA cria rascunhos, mas a publicação real acontece pela aba <strong>Semanas</strong> da Central.
-            </p>
+            <div>
+              <h4 className="text-sm font-semibold text-foreground mb-1">Dica da Guardiã</h4>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Este novo Hub unifica o acesso ao Clube. As rotas antigas em <code>/admin/clube-livro</code> ainda funcionam para compatibilidade, mas o fluxo oficial agora é centralizado aqui.
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
