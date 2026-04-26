@@ -1,9 +1,7 @@
-import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, GraduationCap, Info } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { LabConfigManager } from '@/components/admin/clube-livro/LabConfigManager';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -26,15 +24,15 @@ export default function AdminClubeTreinamento() {
   });
 
   return (
-    <AppLayout>
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
+    <div className="animate-in fade-in duration-500">
+      <div className="max-w-5xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
           <Button variant="ghost" size="icon" onClick={() => (window as any).Admin_SetActiveTab?.('clube')}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <SectionHeader
-            title="Sala de Treinamento"
-            subtitle="Configuração de simulações e práticas clínicas"
+            title="Laboratório Clínico"
+            subtitle="Configuração de simulações e práticas éticas"
             icon={<GraduationCap className="w-5 h-5" />}
           />
         </div>
@@ -75,6 +73,6 @@ export default function AdminClubeTreinamento() {
           )}
         </div>
       </div>
-    </AppLayout>
+    </div>
   );
 }

@@ -1,20 +1,14 @@
-import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, MessageSquare, Info, Plus, Trash2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
 
 export default function AdminClubeChat() {
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
   const [selectedCiclo, setSelectedCiclo] = useState<string | null>(null);
 
   const { data: ciclos } = useQuery({
@@ -33,7 +27,6 @@ export default function AdminClubeChat() {
     queryKey: ['admin-chat-perguntas', selectedCiclo],
     queryFn: async () => {
       if (!selectedCiclo) return [];
-      // Perguntas are linked to phases, which are linked to ciclos
       const { data: phases } = await supabase
         .from('clube_livro_fases')
         .select('id')
@@ -54,15 +47,15 @@ export default function AdminClubeChat() {
   });
 
   return (
-    <AppLayout>
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
+    <div className="animate-in fade-in duration-500">
+      <div className="max-w-5xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
           <Button variant="ghost" size="icon" onClick={() => (window as any).Admin_SetActiveTab?.('clube')}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <SectionHeader
-            title="Chat com o Livro"
-            subtitle="Configuração de perguntas guiadas e base de conhecimento"
+            title="Configuração do Oráculo IA"
+            subtitle="Perguntas guiadas e base de conhecimento integrada"
             icon={<MessageSquare className="w-5 h-5" />}
           />
         </div>
@@ -155,6 +148,6 @@ export default function AdminClubeChat() {
           )}
         </div>
       </div>
-    </AppLayout>
+    </div>
   );
 }
