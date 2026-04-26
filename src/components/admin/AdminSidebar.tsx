@@ -34,7 +34,7 @@ export const adminNavGroups: AdminNavGroup[] = [
     emoji: '🎓',
     icon: GraduationCap,
     items: [
-      { key: 'clube', label: 'Clube de Leitura', icon: Sparkles, route: '/admin/clube' },
+      { key: 'clube', label: 'Hub Editorial (Clube)', icon: Sparkles, route: '/admin/clube' },
       { key: 'planos-clube', label: 'Planos Clube', icon: CreditCard },
       { key: 'conteudos', label: 'Conteúdo', icon: FolderTree },
       { key: 'cursos', label: 'Cursos', icon: Video },

@@ -169,8 +169,7 @@ export default function Admin() {
     if (path === '/admin/clube/treinamento') return 'clube-treinamento';
     if (path === '/admin/clube/chat') return 'clube-chat';
     if (path.startsWith('/admin/clube/central/')) {
-      const id = path.split('/').pop();
-      return `central-estacao-${id}`;
+      return 'clube-jornadas'; // Central maps to jornadas tab
     }
     
     if (path.startsWith('/admin/clube-livro')) return 'clube';
@@ -185,7 +184,6 @@ export default function Admin() {
     if (tab && TAB_COMPONENTS[tab]) {
       setActiveTab(tab);
     } else {
-      // Also update based on path if it changes (for direct route navigation)
       const newTab = getInitialTab();
       if (newTab !== activeTab) setActiveTab(newTab);
     }
@@ -197,17 +195,18 @@ export default function Admin() {
     (window as any).Admin_ActiveTab = activeTab;
   }, [activeTab]);
 
-  const isCentralEstacaoPath = location.pathname.startsWith('/admin/clube/central/');
-  const centralEstacaoId = isCentralEstacaoPath ? location.pathname.split('/').pop() : null;
-
-  const ActiveComponent = TAB_COMPONENTS[activeTab] || 
-    (activeTab.startsWith('central-estacao-') || isCentralEstacaoPath ? AdminCentralEstacao : null);
-
-  // If we are on a detail route that should be handled by the Admin component
-  // but doesn't have a specific tab component, we check the URL path
   const isDirectClubeRoute = location.pathname.startsWith('/admin/clube');
-  const ActualActiveComponent = ActiveComponent || (isDirectClubeRoute ? AdminClubeHub : null);
+  const isCentralRoute = location.pathname.startsWith('/admin/clube/central/');
 
+  // Determine which component to render
+  let ActiveComponent = TAB_COMPONENTS[activeTab];
+
+  // Override if specific sub-route
+  if (isCentralRoute) {
+    ActiveComponent = AdminCentralEstacao;
+  } else if (!ActiveComponent && isDirectClubeRoute) {
+    ActiveComponent = AdminClubeHub;
+  }
 
   return (
     <AppLayout>
@@ -279,12 +278,21 @@ export default function Admin() {
             )}
 
             {/* Active tab content */}
-            {ActualActiveComponent && (
+            {ActiveComponent ? (
               <BootSafeBoundary label={`AdminTab: ${activeTab}`}>
                 <Suspense fallback={<TabLoader />}>
-                  <ActualActiveComponent />
+                  <ActiveComponent />
                 </Suspense>
               </BootSafeBoundary>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-20 text-center">
+                <AlertTriangle className="w-12 h-12 text-amber-500 mb-4 opacity-20" />
+                <h3 className="text-xl font-serif text-foreground">Aba não encontrada</h3>
+                <p className="text-muted-foreground mt-2">Ocorreu um erro ao carregar o conteúdo solicitado.</p>
+                <Button variant="outline" className="mt-6" onClick={() => setActiveTab('clube')}>
+                  Voltar para o Hub do Clube
+                </Button>
+              </div>
             )}
           </div>
         </div>

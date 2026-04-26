@@ -57,13 +57,12 @@ export default function AdminClubeChat() {
               (window as any).Admin_SetActiveTab('clube');
             }
             navigate('/admin/clube');
-
           }}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1 min-w-0">
-             <h2 className="text-xl font-serif text-foreground">Configuração do Oráculo IA</h2>
-             <p className="text-sm text-muted-foreground">Perguntas guiadas e base de conhecimento integrada</p>
+             <h2 className="text-xl font-serif text-foreground">Converse com o Livro</h2>
+             <p className="text-sm text-muted-foreground">Configuração da inteligência oracular e perguntas guiadas</p>
           </div>
         </div>
 
