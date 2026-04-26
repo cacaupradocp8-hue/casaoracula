@@ -5491,6 +5491,38 @@ export type Database = {
           },
         ]
       }
+      clube_progresso_passos: {
+        Row: {
+          concluido: boolean | null
+          concluido_em: string | null
+          id: string
+          passo_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          concluido?: boolean | null
+          concluido_em?: string | null
+          id?: string
+          passo_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          concluido?: boolean | null
+          concluido_em?: string | null
+          id?: string
+          passo_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_progresso_passos_passo_id_fkey"
+            columns: ["passo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_rota_itens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_reflexoes: {
         Row: {
           ciclo_id: string | null
@@ -5554,6 +5586,7 @@ export type Database = {
           icone: string | null
           id: string
           impacto_cidadela: Json | null
+          metadata: Json | null
           obrigatorio: boolean | null
           ordem: number
           publicado: boolean | null
@@ -5563,6 +5596,7 @@ export type Database = {
           slug: string
           subtitulo: string | null
           tipo: string
+          tipo_passo: Database["public"]["Enums"]["clube_item_type"] | null
           titulo: string
           updated_at: string | null
         }
@@ -5573,6 +5607,7 @@ export type Database = {
           icone?: string | null
           id?: string
           impacto_cidadela?: Json | null
+          metadata?: Json | null
           obrigatorio?: boolean | null
           ordem: number
           publicado?: boolean | null
@@ -5582,6 +5617,7 @@ export type Database = {
           slug: string
           subtitulo?: string | null
           tipo: string
+          tipo_passo?: Database["public"]["Enums"]["clube_item_type"] | null
           titulo: string
           updated_at?: string | null
         }
@@ -5592,6 +5628,7 @@ export type Database = {
           icone?: string | null
           id?: string
           impacto_cidadela?: Json | null
+          metadata?: Json | null
           obrigatorio?: boolean | null
           ordem?: number
           publicado?: boolean | null
@@ -5601,6 +5638,7 @@ export type Database = {
           slug?: string
           subtitulo?: string | null
           tipo?: string
+          tipo_passo?: Database["public"]["Enums"]["clube_item_type"] | null
           titulo?: string
           updated_at?: string | null
         }
@@ -22221,6 +22259,10 @@ export type Database = {
           used_cases: number
         }[]
       }
+      get_clube_proximo_passo: {
+        Args: { p_rota_id: string; p_user_id: string }
+        Returns: string
+      }
       get_content_blocks: {
         Args: {
           _context_id: string
@@ -22390,6 +22432,12 @@ export type Database = {
         | "practice_seed"
         | "podcast_seed"
         | "microclass_seed"
+      clube_item_type:
+        | "portal"
+        | "escuta"
+        | "aplicacao"
+        | "registro"
+        | "integracao"
       clube_jornada_tipo: "heroina" | "sombra" | "expressao_mundo"
       clube_rota_ref_tipo:
         | "portal"
@@ -22645,6 +22693,13 @@ export const Constants = {
         "practice_seed",
         "podcast_seed",
         "microclass_seed",
+      ],
+      clube_item_type: [
+        "portal",
+        "escuta",
+        "aplicacao",
+        "registro",
+        "integracao",
       ],
       clube_jornada_tipo: ["heroina", "sombra", "expressao_mundo"],
       clube_rota_ref_tipo: [
