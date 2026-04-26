@@ -88,23 +88,21 @@ export default function ClubeChatLivro() {
   const [builderContent, setBuilderContent] = useState('');
 
   const { data: cycle } = useQuery({
-    queryKey: ['club-active-cycle'],
+    queryKey: ['club-active-cycle-chat'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('club_cycles')
-        .select('*, club_books(*)')
+        .from('clube_v2_ciclos' as any)
+        .select('*, clube_v2_obras(*)')
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
       
       if (error) throw error;
-      return data as ClubCycle | null;
+      return data;
     },
   });
 
-
-  const bookArr = cycle?.club_books;
-  const book = Array.isArray(bookArr) ? bookArr[0] : bookArr;
+  const book = cycle?.clube_v2_obras?.[0];
 
   useEffect(() => {
     if (book && messages.length === 0) {
@@ -127,7 +125,7 @@ export default function ClubeChatLivro() {
     queryFn: async () => {
       if (!user) return null;
       const { data, error } = await supabase
-        .from('clube_daily_interaction_limits')
+        .from('clube_daily_interaction_limits' as any)
         .select('*')
         .eq('user_id', user.id)
         .eq('date', new Date().toISOString().split('T')[0])
@@ -180,7 +178,7 @@ export default function ClubeChatLivro() {
         cycle_id: cycle?.id,
         message: userMsg.content,
         response: responseContent,
-      });
+      } as any);
 
       // Upsert limit
       const today = new Date().toISOString().split('T')[0];
@@ -190,7 +188,7 @@ export default function ClubeChatLivro() {
         interactions_used: (limitData?.interactions_used || 0) + 1,
         interactions_limit: limitData?.interactions_limit || 10,
         plan_type: user?.portal === 'admin' ? 'admin' : 'basico',
-      }, { onConflict: 'user_id, date' });
+      } as any, { onConflict: 'user_id, date' });
 
       qc.invalidateQueries({ queryKey: ['chat-limit'] });
 
@@ -228,10 +226,9 @@ export default function ClubeChatLivro() {
       };
 
       if (builderTipo === 'registro_jardim') {
-        // Logica para salvar no jardim
         const { error } = await supabase.from('clube_livro_chat_interactions').update({
           saved_to_jardim: true
-        }).eq('user_id', user.id).order('created_at', { ascending: false }).limit(1);
+        } as any).eq('user_id', user.id).order('created_at', { ascending: false }).limit(1);
         if (error) throw error;
       } else if (builderTipo === 'ferramenta_forja') {
         const { error } = await supabase.from('clube_v2_ferramentas').insert({
@@ -239,14 +236,14 @@ export default function ClubeChatLivro() {
           obra_id: book?.id,
           tipo: tool.tipo,
           config: tool
-        });
+        } as any);
         if (error) throw error;
       }
       
       // Atualiza a interação original
       await supabase.from('clube_livro_chat_interactions').update({
         [builderTipo === 'registro_jardim' ? 'saved_to_jardim' : 'sent_to_forja']: true
-      }).match({ user_id: user.id }).order('created_at', { ascending: false }).limit(1);
+      } as any).match({ user_id: user.id }).order('created_at', { ascending: false }).limit(1);
     },
 
     onSuccess: () => {
