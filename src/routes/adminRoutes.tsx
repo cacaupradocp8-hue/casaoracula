@@ -54,8 +54,8 @@ export function renderAdminRoutes(ProtectedRoute: PR) {
     <Route key="adm-cl-treinamento-new" path="/admin/clube/treinamento" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />,
     <Route key="adm-cl-chat-new" path="/admin/clube/chat" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />,
     
-    // Sub-páginas da Central
-    <Route key="adm-central-est" path="/admin/clube/central/:estacaoId" element={<ProtectedRoute minPortal="admin"><AdminCentralEstacao /></ProtectedRoute>} />,
+    // Sub-páginas da Central (Também redirecionadas para o Admin unificado)
+    <Route key="adm-central-est" path="/admin/clube/central/:estacaoId" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />,
     <Route key="adm-cl-oraculo-portais" path="/admin/clube/oraculo-portais" element={<ProtectedRoute minPortal="admin"><AdminOraculoPortais /></ProtectedRoute>} />,
     <Route key="adm-cl-oraculo-portal-edit" path="/admin/clube/oraculo-portais/:portalId" element={<ProtectedRoute minPortal="admin"><AdminOraculoPortalEditor /></ProtectedRoute>} />,
 

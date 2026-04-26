@@ -64,7 +64,10 @@ export default function AdminCentralJornadas() {
       ) : (
         <div className="space-y-3">
           {estacoes.map((e) => (
-            <div key={e.id} onClick={() => (window as any).Admin_SetActiveTab?.(`central-estacao-${e.id}`)} className="group block cursor-pointer">
+            <div key={e.id} onClick={() => {
+              (window as any).Admin_SetActiveTab?.(`central-estacao-${e.id}`);
+              navigate(`/admin/clube/central/${e.id}`);
+            }} className="group block cursor-pointer">
               <Card className="hover:border-gold/40 hover:shadow-md transition-all">
                 <CardContent className="p-4 flex items-center gap-4">
                   {e.livro_capa_url ? (
