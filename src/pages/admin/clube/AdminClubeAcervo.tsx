@@ -12,9 +12,8 @@ export default function AdminClubeAcervo() {
         <Button variant="ghost" size="icon" onClick={() => {
           if ((window as any).Admin_SetActiveTab) {
             (window as any).Admin_SetActiveTab('clube');
-          } else {
-            navigate('/admin/clube');
           }
+          navigate('/admin/clube');
         }}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
