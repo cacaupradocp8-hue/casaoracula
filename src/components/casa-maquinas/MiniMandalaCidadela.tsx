@@ -29,14 +29,25 @@ export function MiniMandalaCidadela({ clienteId }: Props) {
       if (d) states[d] = 'integrado';
     });
 
+    // Add states from the new Mapa Vivo table
+    mapaVivo.forEach(m => {
+      const d = m.distrito.toLowerCase();
+      if (m.status === 'ativo' || m.status === 'evoluido') {
+        states[d] = 'integrado';
+      }
+    });
+
     if (cityState?.distrito_ativo) {
       states[cityState.distrito_ativo.toLowerCase()] = 'ativo';
     }
 
     return states;
-  }, [cityState, history]);
+  }, [cityState, history, mapaVivo]);
 
-  const visitedCount = new Set(history.map(h => h.distrito).filter(Boolean)).size;
+  const visitedCount = new Set([
+    ...history.map(h => h.distrito),
+    ...mapaVivo.map(m => m.distrito)
+  ].filter(Boolean)).size;
 
   return (
     <div className="rounded-xl border border-border/20 bg-card/30 p-4">
