@@ -87,11 +87,11 @@ export default function AdminCentralJornadas() {
                       </p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-                    </CardContent>
-                  </Card>
-                </div>
-              ))}
-            </div>
+                  </CardContent>
+                </Card>
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </AppLayout>
