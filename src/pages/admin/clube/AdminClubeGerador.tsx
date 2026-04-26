@@ -10,12 +10,16 @@ export default function AdminClubeGerador() {
         <Button variant="ghost" size="icon" onClick={() => (window as any).Admin_SetActiveTab?.('clube')}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
-          <SectionHeader
-            title="Gerador Semanal"
-            subtitle="Gerar conteúdo da semana: podcast, carta, prática"
-            icon={<Sparkles className="w-5 h-5" />}
-          />
-        </div>
+        <SectionHeader
+          title="Gerador Semanal"
+          subtitle="Gerar conteúdo da semana: podcast, carta, prática"
+          icon={<Sparkles className="w-5 h-5" />}
+        />
+      </div>
+      <AdminGeradorSemanal />
+    </div>
+  );
+}
         <AdminGeradorSemanal />
       </div>
     </div>

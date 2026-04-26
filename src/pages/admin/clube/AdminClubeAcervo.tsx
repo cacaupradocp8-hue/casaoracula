@@ -1,9 +1,8 @@
-import AdminBooks from '@/components/admin/AdminCursosTab';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Library } from 'lucide-react';
 import { SectionHeader } from '@/components/shared/SectionHeader';
+import { AdminCursosTab } from '@/components/admin/AdminCursosTab';
 
-// Wraps existing AdminBooks page — routed from the Clube hub
 export default function AdminClubeAcervo() {
   return (
     <div className="animate-in fade-in duration-500">
@@ -17,7 +16,7 @@ export default function AdminClubeAcervo() {
           icon={<Library className="w-5 h-5" />}
         />
       </div>
-      <AdminBooks />
+      <AdminCursosTab />
     </div>
   );
 }
