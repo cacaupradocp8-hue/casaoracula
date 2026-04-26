@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Home, BookOpen, Wrench, Flower2, GraduationCap } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -13,6 +13,9 @@ const NAV_ITEMS = [
 ];
 
 export function BottomNavPreview() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -20,6 +23,8 @@ export function BottomNavPreview() {
     (item) => location.pathname === item.path || location.pathname.startsWith(item.path + '/')
   );
   const currentIndex = activeIndex >= 0 ? activeIndex : 0;
+
+  if (!mounted) return null;
 
   return (
     <nav className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-[420px] md:hidden">

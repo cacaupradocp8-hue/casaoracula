@@ -9,27 +9,24 @@ import { toast } from "@/components/ui/sonner";
  * - Mostra toast apenas se auto-update falhar
  */
 export function ServiceWorkerUpdateToast() {
-  const {
-    needRefresh: [needRefresh],
-    updateServiceWorker,
-  } = useRegisterSW({
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
+  const sw = useRegisterSW({
     immediate: true,
-    onRegisteredSW(_swUrl, registration) {
-      // Check for updates every 30 seconds (more aggressive)
-      if (registration) {
-        setInterval(() => {
-          registration.update();
-        }, 30 * 1000);
-      }
-    },
+...
   });
+
+  const needRefresh = sw?.needRefresh ? sw.needRefresh[0] : false;
+  const updateServiceWorker = sw?.updateServiceWorker;
+
 
   const doUpdate = useCallback(() => {
     updateServiceWorker(true);
   }, [updateServiceWorker]);
 
   useEffect(() => {
-    if (!needRefresh) return;
+    if (!mounted || !needRefresh) return;
 
     // Try to auto-update first
     doUpdate();
@@ -49,6 +46,7 @@ export function ServiceWorkerUpdateToast() {
     return () => clearTimeout(timeout);
   }, [needRefresh, doUpdate]);
 
+  if (!mounted) return null;
   return null;
 }
 
