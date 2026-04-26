@@ -229,12 +229,16 @@ export function ClubeHomePage() {
             ============================================ */}
         <RotaImersao estacaoId={estacaoAtual?.id} />
 
-        {/* 6. APLICAÇÕES (Mantendo compatibilidade) */}
-        <RotaAplicacao />
-        <RotaLaboratorio
-          estacaoId={estacaoAtual?.id}
-          livroTitulo={estacaoAtual?.livro_titulo}
-        />
+        {/* 6. APLICAÇÕES (Ocultas se houver pontos na rota para focar no fluxo sequencial) */}
+        {(!pontos || pontos.length === 0) && (
+          <>
+            <RotaAplicacao />
+            <RotaLaboratorio
+              estacaoId={estacaoAtual?.id}
+              livroTitulo={estacaoAtual?.livro_titulo}
+            />
+          </>
+        )}
 
         {/* ============================================
             5. MINI CIDADELA
