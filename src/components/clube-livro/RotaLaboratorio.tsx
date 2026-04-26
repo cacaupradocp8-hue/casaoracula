@@ -30,7 +30,7 @@ export function RotaLaboratorio({ estacaoId, livroTitulo }: RotaLaboratorioProps
       className="space-y-3"
     >
       <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground/60 font-medium text-center">
-        Cabine de prática
+        Sala de Treinamento
       </p>
 
       <Card className="border-primary/15 bg-gradient-to-br from-primary/5 via-card/40 to-card/20 backdrop-blur overflow-hidden">
@@ -42,10 +42,10 @@ export function RotaLaboratorio({ estacaoId, livroTitulo }: RotaLaboratorioProps
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="font-display text-base text-foreground leading-tight">
-                Laboratório Oracular
+                Treino Oracular
               </h3>
               <p className="text-[11px] text-muted-foreground/60 mt-0.5">
-                Simule a leitura como cliente simbólica.
+                Simulações, contos e práticas guiadas.
               </p>
             </div>
           </div>
@@ -75,7 +75,7 @@ export function RotaLaboratorio({ estacaoId, livroTitulo }: RotaLaboratorioProps
               className="w-full gap-2"
               onClick={() => navigate('/clube/laboratorio')}
             >
-              Entrar no laboratório
+              Entrar no Treinamento
               {livroTitulo && (
                 <span className="text-[10px] opacity-70 truncate max-w-[140px]">
                   · {livroTitulo}

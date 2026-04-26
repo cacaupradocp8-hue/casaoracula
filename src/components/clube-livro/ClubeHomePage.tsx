@@ -8,6 +8,8 @@ import { Progress } from '@/components/ui/progress';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRotaOracular } from '@/hooks/useRotaOracular';
 import { RotaEstrada } from '@/components/clube-livro/RotaEstrada';
+import { RotaEntrada } from '@/components/clube-livro/RotaEntrada';
+import { RotaImersao } from '@/components/clube-livro/RotaImersao';
 import { RotaAplicacao } from '@/components/clube-livro/RotaAplicacao';
 import { RotaLaboratorio } from '@/components/clube-livro/RotaLaboratorio';
 import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
@@ -154,14 +156,21 @@ export function ClubeHomePage() {
         )}
 
         {/* ============================================
-            3. ESTRADA ORACULAR
+            3. CAMADA 1: ENTRADA
             ============================================ */}
+        <RotaEntrada />
+
+        {/* ============================================
+            4. CAMADA 2: IMERSÃO (ESTRADA + CONTEÚDO)
+            ============================================ */}
+        <RotaImersao estacaoId={estacaoAtual?.id} />
+        
         {pontos.length > 0 && (
           <RotaEstrada pontos={pontos} pontoAtual={pontoAtual} />
         )}
 
         {/* ============================================
-            4. LABORATÓRIO ORACULAR (cabine de prática)
+            5. CAMADA 3: TREINO (SALA DE TREINAMENTO)
             ============================================ */}
         <RotaLaboratorio
           estacaoId={estacaoAtual?.id}
@@ -169,7 +178,7 @@ export function ClubeHomePage() {
         />
 
         {/* ============================================
-            5. APLICAÇÃO
+            6. CAMADA 4: APLICAÇÃO (CHAT, JARDIM, LAB 80/20)
             ============================================ */}
         <RotaAplicacao />
 

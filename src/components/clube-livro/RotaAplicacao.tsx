@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Heart, Stethoscope, Users } from 'lucide-react';
+import { Heart, MessageSquare, FlaskConical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function RotaAplicacao() {
@@ -8,21 +8,21 @@ export function RotaAplicacao() {
 
   const acoes = [
     {
-      label: 'Aplicar em mim',
-      descricao: 'Reflexão pessoal no seu Jardim',
+      label: 'Conversar com o Livro',
+      descricao: 'Chat inteligente com a obra atual',
+      icon: MessageSquare,
+      rota: '/clube/chat-livro',
+    },
+    {
+      label: 'Meu Jardim',
+      descricao: 'Sua reflexão pessoal e plantio',
       icon: Heart,
       rota: '/jardim-da-psique',
     },
     {
-      label: 'Aplicar em sessão',
-      descricao: 'Levar para a prática clínica',
-      icon: Stethoscope,
-      rota: '/casa-das-maquinas',
-    },
-    {
-      label: 'Aplicar em grupo',
-      descricao: 'Usar no Laboratório 80/20',
-      icon: Users,
+      label: 'Laboratório 80/20',
+      descricao: 'Aplicação prática em grupo',
+      icon: FlaskConical, // Importar FlaskConical se necessário
       rota: '/clube/laboratorio-8020',
     },
   ];
@@ -35,7 +35,7 @@ export function RotaAplicacao() {
       className="space-y-4"
     >
       <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground/60 font-medium text-center">
-        Leve isso para a prática
+        Aplicação Real
       </p>
 
       <div className="grid grid-cols-1 gap-2.5">
