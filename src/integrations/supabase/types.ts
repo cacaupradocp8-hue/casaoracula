@@ -4008,6 +4008,7 @@ export type Database = {
           aplicar_sessao_pergunta: string | null
           aplicar_sessao_risco: string | null
           ativa: boolean | null
+          cartografia_id: string | null
           created_at: string
           essencia_nucleo: string | null
           essencia_tensao: string | null
@@ -4020,6 +4021,7 @@ export type Database = {
           numero: number
           ordem: number
           publicada: boolean | null
+          quiz_id: string | null
           subtitulo: string
           titulo: string
           traducao_aula: string | null
@@ -4039,6 +4041,7 @@ export type Database = {
           aplicar_sessao_pergunta?: string | null
           aplicar_sessao_risco?: string | null
           ativa?: boolean | null
+          cartografia_id?: string | null
           created_at?: string
           essencia_nucleo?: string | null
           essencia_tensao?: string | null
@@ -4051,6 +4054,7 @@ export type Database = {
           numero: number
           ordem?: number
           publicada?: boolean | null
+          quiz_id?: string | null
           subtitulo: string
           titulo: string
           traducao_aula?: string | null
@@ -4070,6 +4074,7 @@ export type Database = {
           aplicar_sessao_pergunta?: string | null
           aplicar_sessao_risco?: string | null
           ativa?: boolean | null
+          cartografia_id?: string | null
           created_at?: string
           essencia_nucleo?: string | null
           essencia_tensao?: string | null
@@ -4082,6 +4087,7 @@ export type Database = {
           numero?: number
           ordem?: number
           publicada?: boolean | null
+          quiz_id?: string | null
           subtitulo?: string
           titulo?: string
           traducao_aula?: string | null
@@ -4089,7 +4095,22 @@ export type Database = {
           traducao_sessao?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "clube_estacoes_cartografia_id_fkey"
+            columns: ["cartografia_id"]
+            isOneToOne: false
+            referencedRelation: "cartographies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_estacoes_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       clube_jornadas: {
         Row: {
