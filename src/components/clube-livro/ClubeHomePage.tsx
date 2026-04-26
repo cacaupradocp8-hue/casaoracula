@@ -13,6 +13,7 @@ import { RotaImersao } from '@/components/clube-livro/RotaImersao';
 import { RotaAplicacao } from '@/components/clube-livro/RotaAplicacao';
 import { RotaLaboratorio } from '@/components/clube-livro/RotaLaboratorio';
 import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
+import { RotaExecutavelMes1 } from '@/components/clube-livro/RotaMês1';
 
 /**
  * ClubeHomePage — Rota Oracular
@@ -175,6 +176,11 @@ export function ClubeHomePage() {
             isConcluindo={concluirPonto.isPending}
           />
         )}
+
+        {/* ============================================
+            NOVA CAMADA: ROTAS EXECUTÁVEIS DO MÊS 1
+            ============================================ */}
+        <RotaExecutavelMes1 />
 
         {/* ============================================
             5. CAMADA 3: TREINO (SALA DE TREINAMENTO)
