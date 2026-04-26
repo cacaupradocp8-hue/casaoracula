@@ -7,8 +7,10 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminClubeTreinamento() {
+  const navigate = useNavigate();
   const [selectedCiclo, setSelectedCiclo] = useState<string | null>(null);
 
   const { data: ciclos } = useQuery({
