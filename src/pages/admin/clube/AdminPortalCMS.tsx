@@ -274,7 +274,10 @@ export default function AdminPortalCMS() {
     <div className="animate-in slide-in-from-bottom-2 duration-500">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center gap-4 mb-6">
-          <Button variant="ghost" size="icon" onClick={() => (window as any).Admin_SetActiveTab?.('clube')}>
+          <Button variant="ghost" size="icon" onClick={() => {
+            (window as any).Admin_SetActiveTab?.('clube');
+            navigate('/admin/clube');
+          }}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <SectionHeader
