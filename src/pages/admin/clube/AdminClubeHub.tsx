@@ -7,7 +7,7 @@ import {
   BookOpen, RefreshCw, DoorOpen, GraduationCap, MessageSquare, Library,
   ArrowRight, Wrench, Settings, Sparkles, Plus, Clock, Layout, LucideIcon
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 
@@ -76,6 +76,7 @@ const PREMIUM_CARDS: HubCard[] = [
 ];
 
 export default function AdminClubeHub() {
+  const navigate = useNavigate();
   const { data: stats } = useQuery({
     queryKey: ['admin-clube-hub-premium-stats'],
     queryFn: async () => {
@@ -112,8 +113,20 @@ export default function AdminClubeHub() {
   };
 
   const handleTabChange = (tab: string) => {
-    if ((window as any).Admin_SetActiveTab) {
-      (window as any).Admin_SetActiveTab(tab);
+    // Navigate via URL to ensure the Admin component's effect picks it up
+    // This is safer than just calling the global function which might be stale
+    switch (tab) {
+      case 'clube-jornadas': navigate('/admin/clube/ciclos'); break;
+      case 'clube-portais': navigate('/admin/clube/portais'); break;
+      case 'clube-acervo': navigate('/admin/clube/conteudos'); break;
+      case 'clube-treinamento': navigate('/admin/clube/treinamento'); break;
+      case 'clube-chat': navigate('/admin/clube/chat'); break;
+      default:
+        if ((window as any).Admin_SetActiveTab) {
+          (window as any).Admin_SetActiveTab(tab);
+        } else {
+          navigate(`/admin?tab=${tab}`);
+        }
     }
   };
 

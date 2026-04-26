@@ -153,14 +153,40 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
 export default function Admin() {
   const { isPreviewMode, previewPortal, enablePreviewMode, disablePreviewMode } = useAdminPreview();
   const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'clube');
+  const location = useLocation();
+  
+  // Logic to determine initial tab from URL path or search param
+  const getInitialTab = () => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && TAB_COMPONENTS[tabParam]) return tabParam;
+    
+    // Map URL paths to tabs
+    const path = location.pathname;
+    if (path === '/admin/clube') return 'clube';
+    if (path === '/admin/clube/ciclos') return 'clube-jornadas';
+    if (path === '/admin/clube/portais') return 'clube-portais';
+    if (path === '/admin/clube/conteudos') return 'clube-acervo';
+    if (path === '/admin/clube/treinamento') return 'clube-treinamento';
+    if (path === '/admin/clube/chat') return 'clube-chat';
+    
+    // Legacy paths
+    if (path.startsWith('/admin/clube-livro')) return 'clube';
+    
+    return 'clube';
+  };
+
+  const [activeTab, setActiveTab] = useState(getInitialTab());
 
   useEffect(() => {
     const tab = searchParams.get('tab');
     if (tab && TAB_COMPONENTS[tab]) {
       setActiveTab(tab);
+    } else {
+      // Also update based on path if it changes (for direct route navigation)
+      const newTab = getInitialTab();
+      if (newTab !== activeTab) setActiveTab(newTab);
     }
-  }, [searchParams]);
+  }, [searchParams, location.pathname]);
 
   // Expose setActiveTab globally for child components
   React.useEffect(() => {
