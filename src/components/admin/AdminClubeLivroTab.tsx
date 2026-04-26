@@ -435,6 +435,8 @@ export function AdminClubeLivroTab() {
           ) : (
             <p className="text-sm text-muted-foreground text-center py-8">Selecione um ciclo para configurar as aplicações.</p>
           )}
+        </TabsContent>
+
         <TabsContent value="rota-geral" className="space-y-4 outline-none">
           {selectedCiclo ? (
              <div className="space-y-6">
