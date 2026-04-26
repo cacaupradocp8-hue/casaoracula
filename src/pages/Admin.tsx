@@ -8,7 +8,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { PortalType } from '@/types/portal';
-import { Loader2, Settings, Eye, EyeOff, AlertTriangle, Sparkles } from 'lucide-react';
+import { Loader2, Settings, Eye, EyeOff, AlertTriangle, Sparkles, Layout } from 'lucide-react';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { BootSafeBoundary } from '@/components/shared/BootSafeBoundary';
 
