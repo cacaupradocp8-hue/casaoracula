@@ -183,6 +183,7 @@ const OsCamposPsiquicos = React.lazy(() => import("./pages/metodo/OsCamposPsiqui
 const AsTorres = React.lazy(() => import("./pages/metodo/AsTorres"));
 const TriadeMetodo = React.lazy(() => import("./pages/metodo/TriadeMetodo"));
 const LabirintoHeroinaPage = React.lazy(() => import("./pages/labirinto-heroina/LabirintoHeroinaPraticoPage"));
+const Admin = React.lazy(() => import("./pages/Admin"));
 const DesbloqueiePage = React.lazy(() => import("./pages/DesbloqueiePage"));
 
 // ─── Utility components ───────────────────────────────────────
@@ -277,6 +278,8 @@ function AppRoutes() {
 
   return (
     <Routes>
+      <Route path="/admin/clube-livro/legacy" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
+      <Route path="/admin/clube-livro/v1" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       {/* Public */}
       <Route path="/" element={<PublicRoute><Auth /></PublicRoute>} />
       <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
