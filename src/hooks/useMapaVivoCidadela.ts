@@ -1,6 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
+export interface CidadelaMapaVivo {
+  id: string;
+  user_id: string;
+  distrito: string;
+  nivel: number;
+  status: string;
+  historico: any[];
+  ultima_atualizacao: string;
+}
+
 export interface CityDistrict {
   id: string;
   nome: string;
