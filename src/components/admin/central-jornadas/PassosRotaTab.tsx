@@ -57,10 +57,19 @@ export function PassosRotaTab({ estacaoId }: Props) {
   const qc = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<PassoRota | null>(null);
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<{
+    titulo: string;
+    subtitulo: string;
+    tipo_passo: 'portal' | 'escuta' | 'aplicacao' | 'registro' | 'integracao';
+    ordem: number;
+    icone: string;
+    impacto_cidadela: string;
+    conteudo_texto: string;
+    proximo_passo_label: string;
+  }>({
     titulo: '',
     subtitulo: '',
-    tipo_passo: 'portal' as const,
+    tipo_passo: 'portal',
     ordem: 0,
     icone: '',
     impacto_cidadela: '[]',
