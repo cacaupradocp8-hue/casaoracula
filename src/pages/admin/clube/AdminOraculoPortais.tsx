@@ -42,7 +42,7 @@ export default function AdminOraculoPortais() {
     <AppLayout>
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         <div className="flex items-center gap-4 mb-6">
-          <Link to="/admin/clube-livro">
+          <Link to="/admin/clube">
             <Button variant="ghost" size="icon"><ArrowLeft className="h-4 w-4" /></Button>
           </Link>
           <SectionHeader
@@ -82,7 +82,7 @@ export default function AdminOraculoPortais() {
                           <span className="text-[10px] text-muted-foreground ml-2">({done}/{total})</span>
                         </div>
                       </div>
-                      <Link to={`/admin/clube-livro/oraculo-portais/${p.id}`}>
+                      <Link to={`/admin/clube/oraculo-portais/${p.id}`}>
                         <Button variant="outline" size="sm">
                           <Pencil className="w-3.5 h-3.5 mr-1" /> Editar
                         </Button>

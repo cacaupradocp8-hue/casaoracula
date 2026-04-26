@@ -10,7 +10,7 @@ export default function AdminClubeGerador() {
     <AppLayout>
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         <div className="flex items-center gap-4 mb-6">
-          <Link to="/admin/clube-livro">
+          <Link to="/admin/clube">
             <Button variant="ghost" size="icon">
               <ArrowLeft className="h-4 w-4" />
             </Button>

@@ -52,7 +52,7 @@ export default function AdminCentralEstacao() {
       <AppLayout>
         <div className="container mx-auto px-4 py-12 text-center">
           <p className="text-muted-foreground">Estação não encontrada.</p>
-          <Link to="/admin/clube-livro/central">
+          <Link to="/admin/clube/central">
             <Button variant="outline" className="mt-4">Voltar</Button>
           </Link>
         </div>
@@ -65,7 +65,7 @@ export default function AdminCentralEstacao() {
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
-          <Link to="/admin/clube-livro/central">
+          <Link to="/admin/clube/central">
             <Button variant="ghost" size="icon">
               <ArrowLeft className="h-4 w-4" />
             </Button>

@@ -71,7 +71,7 @@ const SUPPORT_CARDS: HubCard[] = [
     title: 'Gerador IA (Rascunhos)',
     description: 'Use a IA para rascunhar cartas, podcasts e práticas.',
     icon: Sparkles,
-    route: '/admin/clube-livro/gerador',
+    route: '/admin/clube/gerador',
     color: 'text-muted-foreground',
   },
   {
@@ -79,7 +79,7 @@ const SUPPORT_CARDS: HubCard[] = [
     title: 'Configurações Gerais',
     description: 'Regras de acesso, Lab 80/20 e orquestração.',
     icon: Settings,
-    route: '/admin/clube-livro/config',
+    route: '/admin/clube/config',
     color: 'text-muted-foreground',
   },
 ];
@@ -187,7 +187,7 @@ export default function AdminClubeHub() {
             <div>
               <h4 className="text-sm font-semibold text-foreground mb-1">Dica da Guardiã</h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Este novo Hub unifica o acesso ao Clube. As rotas antigas em <code>/admin/clube-livro</code> ainda funcionam para compatibilidade, mas o fluxo oficial agora é centralizado aqui.
+                Este novo Hub unifica o acesso ao Clube. As rotas antigas em <code>/admin/clube</code> ainda funcionam para compatibilidade, mas o fluxo oficial agora é centralizado aqui.
               </p>
             </div>
           </CardContent>
