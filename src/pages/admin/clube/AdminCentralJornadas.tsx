@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft, ArrowRight, BookOpen, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface Estacao {
   id: string;
@@ -20,6 +21,7 @@ interface Estacao {
 }
 
 export default function AdminCentralJornadas() {
+  const navigate = useNavigate();
   const { data: estacoes = [], isLoading } = useQuery({
     queryKey: ['admin-central-estacoes'],
     queryFn: async () => {
