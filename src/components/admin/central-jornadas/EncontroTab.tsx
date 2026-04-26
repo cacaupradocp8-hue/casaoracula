@@ -97,7 +97,9 @@ export function EncontroTab({ estacaoId }: Props) {
   const now = new Date().toISOString();
   const proximo = encontros.find(e => e.data_encontro && e.data_encontro > now && e.ativo);
 
-  const openCreate = () => {
+  const openCreate = (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
     setEditing(null);
     setForm({
       titulo: '', descricao: '', orientacao_encontro: '',
@@ -112,7 +114,7 @@ export function EncontroTab({ estacaoId }: Props) {
         <p className="text-sm text-muted-foreground">
           Encontros ao vivo vinculados a esta estação
         </p>
-        <Button size="sm" onClick={openCreate}>
+        <Button size="sm" onClick={(e) => openCreate(e)}>
           <Plus className="w-3.5 h-3.5 mr-1" /> Novo encontro
         </Button>
       </div>

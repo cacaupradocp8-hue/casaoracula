@@ -124,7 +124,9 @@ export function EstradaTab({ estacaoId }: Props) {
     },
   });
 
-  const openCreate = () => {
+  const openCreate = (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
     setEditing(null);
     setForm({ nome: '', subtitulo: '', descricao: '', icone: '', cor: '', ordem: jornadas.length, conteudo_semanal_id: '' });
     setDialogOpen(true);
@@ -150,7 +152,7 @@ export function EstradaTab({ estacaoId }: Props) {
         <p className="text-sm text-muted-foreground">
           Pontos da estrada — cada ponto é uma etapa da jornada
         </p>
-        <Button onClick={openCreate} size="sm">
+        <Button onClick={(e) => openCreate(e)} size="sm">
           <Plus className="w-4 h-4 mr-1" /> Novo Ponto
         </Button>
       </div>

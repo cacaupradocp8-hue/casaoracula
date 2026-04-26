@@ -56,6 +56,14 @@ const SUPPORT_CARDS: HubCard[] = [
     route: '/admin/clube-livro/gerador',
     color: 'text-pink-500',
   },
+  {
+    key: 'portais-cms',
+    title: 'Portais (CMS completo)',
+    description: 'Editor avançado de portais simbólicos (módulo paralelo).',
+    icon: DoorOpen,
+    route: '/admin/clube-livro/portais-cms',
+    color: 'text-gold',
+  },
 ];
 
 // ⚙️ Avançado / Legado — manter para retrocompatibilidade, não usar para criar conteúdo novo
@@ -90,14 +98,6 @@ const ADVANCED_CARDS: HubCard[] = [
     description: 'Encontros fora do contexto de uma estação.',
     icon: Calendar,
     route: '/admin/clube-livro/encontros',
-    color: 'text-muted-foreground',
-  },
-  {
-    key: 'portais-cms',
-    title: 'Portais (CMS completo)',
-    description: 'Editor avançado de portais simbólicos (módulo paralelo).',
-    icon: DoorOpen,
-    route: '/admin/clube-livro/portais-cms',
     color: 'text-muted-foreground',
   },
   {
