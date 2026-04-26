@@ -16,6 +16,7 @@ export function MiniMandalaCidadela({ clienteId }: Props) {
   const { data: archState } = useClientArchetypeState(clienteId);
   const { data: archetypes = [] } = useFoundingArchetypes();
   const { data: history = [] } = useCityHistory(clienteId);
+  const { data: mapaVivo = [] } = useCidadelaMapa(clienteId);
 
   const regente = archetypes.find(a => a.id === archState?.arquitipo_regente_id);
   const sombra = archetypes.find(a => a.id === archState?.arquitipo_sombra_id);
