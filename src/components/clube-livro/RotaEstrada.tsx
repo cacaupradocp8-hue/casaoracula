@@ -125,16 +125,54 @@ export function RotaEstrada({ pontos, pontoAtual, concluirPonto, isConcluindo }:
 
                       {/* Label */}
                       <div className="min-w-0 flex-1">
-                        <p className={`text-sm font-semibold truncate ${
-                          isAtual ? 'text-primary' : isConcluido ? 'text-foreground/80' : 'text-muted-foreground/50'
-                        }`}>
-                          {ponto.nome}
-                        </p>
-                        <p className={`text-[9px] uppercase tracking-[0.15em] font-medium ${
-                          isAtual ? 'text-primary/60' : 'text-muted-foreground/30'
-                        }`}>
-                          {ponto.estadoUI}
-                        </p>
+                        <div className="flex items-center gap-1.5">
+                          <p className={`text-sm font-semibold truncate ${
+                            isAtual ? 'text-primary' : isConcluido ? 'text-foreground/80' : 'text-muted-foreground/50'
+                          }`}>
+                            {ponto.nome}
+                          </p>
+                          {ponto.impacto_cidadela && ponto.impacto_cidadela.length > 0 && !isConcluido && (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <Zap className="w-3 h-3 text-gold/60 animate-pulse" />
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-card border-gold/20 text-[10px] p-2">
+                                  <p className="font-bold text-gold uppercase mb-1">Impacto Esperado:</p>
+                                  <ul className="space-y-0.5">
+                                    {ponto.impacto_cidadela.map((imp, idx) => (
+                                      <li key={idx} className="flex items-center gap-1.5">
+                                        <Sparkles className="w-2.5 h-2.5 text-gold" />
+                                        {imp.distrito}: +{imp.intensidade} pts
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between gap-2">
+                          <p className={`text-[9px] uppercase tracking-[0.15em] font-medium ${
+                            isAtual ? 'text-primary/60' : 'text-muted-foreground/30'
+                          }`}>
+                            {ponto.estadoUI}
+                          </p>
+                          {isAtual && concluirPonto && (
+                            <Button 
+                              size="sm" 
+                              variant="ghost" 
+                              disabled={isConcluindo}
+                              className="h-5 px-1.5 py-0 text-[8px] uppercase tracking-widest font-bold text-gold hover:text-gold hover:bg-gold/10"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                concluirPonto(ponto.id);
+                              }}
+                            >
+                              Concluir
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
