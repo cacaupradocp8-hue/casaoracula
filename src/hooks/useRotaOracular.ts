@@ -14,6 +14,7 @@ export interface PontoRota {
   id: string;
   slug: string;
   nome: string;
+  subtitulo?: string;
   icone: string;
   ordem: number;
   estado: PontoEstado;
@@ -23,6 +24,7 @@ export interface PontoRota {
   ref_tipo?: string;
   ref_id?: string;
   conteudo_inline?: any;
+  metadata?: any;
   impacto_cidadela?: {
     distrito: string;
     tipo_impacto: string;
@@ -137,22 +139,15 @@ export function useRotaOracular() {
   const { data: itensRota } = useQuery({
     queryKey: ['rota-itens', estacaoAtual?.id],
     queryFn: async () => {
-      try {
-        if (!estacaoAtual?.id) return [];
-        const { data, error } = await supabase
-          .from('clube_rota_itens')
-          .select('*')
-          .eq('estacao_id', estacaoAtual.id)
-          .eq('publicado', true)
-          .order('ordem');
-        if (error) {
-          console.error('[useRotaOracular] Erro itens rota:', error);
-          return [];
-        }
-        return data || [];
-      } catch (err) {
-        return [];
-      }
+      if (!estacaoAtual?.id) return [];
+      const { data, error } = await supabase
+        .from('clube_rota_itens')
+        .select('*')
+        .eq('estacao_id', estacaoAtual.id)
+        // .eq('publicado', true) // temporário para teste se necessário
+        .order('ordem');
+      if (error) throw error;
+      return data || [];
     },
     enabled: !!estacaoAtual?.id,
   });
@@ -239,12 +234,14 @@ export function useRotaOracular() {
       id: item.id,
       slug: item.slug,
       nome: item.titulo,
+      subtitulo: item.subtitulo,
       icone: item.icone || '📍',
       ordem: item.ordem,
       tipo: item.tipo,
       ref_tipo: item.ref_tipo,
       ref_id: item.ref_id,
       conteudo_inline: item.conteudo_inline,
+      metadata: item.metadata,
       impacto_cidadela: item.impacto_cidadela,
       estado,
       estadoUI: mapEstado(estado),

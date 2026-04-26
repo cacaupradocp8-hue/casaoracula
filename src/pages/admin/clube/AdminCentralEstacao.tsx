@@ -5,7 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, Route, Calendar, Layers, Users, Loader2, Sparkles, Layout } from 'lucide-react';
+import { ArrowLeft, Route, Calendar, Layers, Users, Loader2, Sparkles, Layout, ListOrdered } from 'lucide-react';
+import { PassosRotaTab } from '@/components/admin/central-jornadas/PassosRotaTab';
 import { EstradaTab } from '@/components/admin/central-jornadas/EstradaTab';
 import { SemanasTab } from '@/components/admin/central-jornadas/SemanasTab';
 import { EntradaTab } from '@/components/admin/central-jornadas/EntradaTab';
@@ -18,7 +19,7 @@ export default function AdminCentralEstacao() {
   const activeAdminTab = (window as any).Admin_ActiveTab || '';
   const estacaoId = paramId || (activeAdminTab.startsWith('central-estacao-') ? activeAdminTab.replace('central-estacao-', '') : null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get('tab') || 'entrada';
+  const activeTab = searchParams.get('tab') || 'passos';
 
   const onTabChange = (val: string) => {
     setSearchParams({ tab: val });
@@ -83,28 +84,36 @@ export default function AdminCentralEstacao() {
 
         {/* Tabs - Alinhadas com as 4 Camadas da Aluna */}
         <Tabs value={activeTab} onValueChange={onTabChange}>
-          <TabsList className="grid w-full grid-cols-5 mb-6 bg-muted/30 p-1 border border-primary/5 h-auto">
+          <TabsList className="grid w-full grid-cols-6 mb-6 bg-muted/30 p-1 border border-primary/5 h-auto">
+            <TabsTrigger type="button" value="passos" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+              <ListOrdered className="w-3.5 h-3.5" />
+              Rota (Passos)
+            </TabsTrigger>
             <TabsTrigger type="button" value="entrada" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
               <Sparkles className="w-3.5 h-3.5" />
-              1. Entrada
+              Iniciação
             </TabsTrigger>
-            <TabsTrigger type="button" value="semanas" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+            <TabsTrigger type="button" value="semanas" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold opacity-50">
               <Calendar className="w-3.5 h-3.5" />
-              2. Imersão
+              Legado
             </TabsTrigger>
-            <TabsTrigger type="button" value="estrada" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+            <TabsTrigger type="button" value="estrada" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold opacity-50">
               <Route className="w-3.5 h-3.5" />
-              3. Estrada
+              Estrada (Velha)
             </TabsTrigger>
             <TabsTrigger type="button" value="aplicacao" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
               <Layers className="w-3.5 h-3.5" />
-              4. Treino
+              Lab IA
             </TabsTrigger>
             <TabsTrigger type="button" value="encontro" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
               <Users className="w-3.5 h-3.5" />
               Apoio
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="passos">
+            <PassosRotaTab estacaoId={estacao.id} />
+          </TabsContent>
 
           <TabsContent value="entrada">
             <EntradaTab estacaoId={estacao.id} />
