@@ -281,11 +281,10 @@ export default function AdminPortalCMS() {
           }}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <SectionHeader
-            title="Editor de Portais"
-            subtitle={jornada?.nome || 'Estrutura simbólica do Clube'}
-            icon={<DoorOpen className="w-5 h-5" />}
-          />
+          <div className="flex-1 min-w-0">
+            <h2 className="text-xl font-serif text-foreground">Editor de Portais</h2>
+            <p className="text-sm text-muted-foreground">{jornada?.nome || 'Estrutura simbólica do Clube'}</p>
+          </div>
         </div>
 
         <div className="mb-6">
