@@ -139,22 +139,15 @@ export function useRotaOracular() {
   const { data: itensRota } = useQuery({
     queryKey: ['rota-itens', estacaoAtual?.id],
     queryFn: async () => {
-      try {
-        if (!estacaoAtual?.id) return [];
-        const { data, error } = await supabase
-          .from('clube_rota_itens')
-          .select('*')
-          .eq('estacao_id', estacaoAtual.id)
-          .eq('publicado', true)
-          .order('ordem');
-        if (error) {
-          console.error('[useRotaOracular] Erro itens rota:', error);
-          return [];
-        }
-        return data || [];
-      } catch (err) {
-        return [];
-      }
+      if (!estacaoAtual?.id) return [];
+      const { data, error } = await supabase
+        .from('clube_rota_itens')
+        .select('*')
+        .eq('estacao_id', estacaoAtual.id)
+        // .eq('publicado', true) // temporário para teste se necessário
+        .order('ordem');
+      if (error) throw error;
+      return data || [];
     },
     enabled: !!estacaoAtual?.id,
   });
