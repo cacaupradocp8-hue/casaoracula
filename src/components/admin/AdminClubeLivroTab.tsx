@@ -461,7 +461,75 @@ export function AdminClubeLivroTab() {
         <TabsContent value="calendario" className="space-y-4 outline-none">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card className="md:col-span-1 border-primary/10 bg-muted/20">
-...
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm text-gold">Ciclo em Foco</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Select
+                  value={selectedCiclo || ''}
+                  onValueChange={(v) => setSelectedCiclo(v || null)}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Escolha um ciclo..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ciclos?.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.titulo}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                
+                {selectedCiclo && (
+                  <div className="pt-4 space-y-2">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">Ações Rápidas</p>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full justify-start gap-2 text-xs"
+                      onClick={() => {
+                        const c = ciclos?.find(x => x.id === selectedCiclo);
+                        if (c) handleEditCiclo(c);
+                      }}
+                    >
+                      <Pencil className="w-3 h-3" /> Editar Capa/Info
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <div className="md:col-span-3 space-y-4">
+               <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-medium">Ciclos & Calendário Anual</h3>
+                  <Button size="sm" variant="gold" onClick={handleNewCiclo} className="gap-2">
+                    <Plus className="w-4 h-4" /> Novo Ciclo
+                  </Button>
+               </div>
+               
+               <div className="grid gap-3">
+                  {ciclos?.map(ciclo => (
+                    <Card key={ciclo.id} className={`border-primary/5 hover:border-primary/20 transition-all ${selectedCiclo === ciclo.id ? 'border-primary/30 bg-primary/5' : ''}`}>
+                      <CardContent className="p-3 flex items-center justify-between">
+                        <div className="flex items-center gap-3 cursor-pointer flex-1" onClick={() => setSelectedCiclo(ciclo.id)}>
+                          <div className="w-8 h-10 bg-muted rounded flex items-center justify-center shrink-0">
+                             <BookOpen className="w-4 h-4 text-muted-foreground" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium">{ciclo.titulo}</p>
+                            <p className="text-[10px] text-muted-foreground">{ciclo.autor_livro || 'Sem autor'}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEditCiclo(ciclo)}><Pencil className="w-3.5 h-3.5" /></Button>
+                           <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => { if(confirm('Excluir ciclo?')) deleteCiclo.mutate(ciclo.id); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+               </div>
+            </div>
           </div>
         </TabsContent>
 
