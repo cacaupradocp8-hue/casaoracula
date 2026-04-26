@@ -97,9 +97,9 @@ export function EncontroTab({ estacaoId }: Props) {
   const now = new Date().toISOString();
   const proximo = encontros.find(e => e.data_encontro && e.data_encontro > now && e.ativo);
 
-  const openCreate = (e?: React.MouseEvent) => {
-    e?.preventDefault();
-    e?.stopPropagation();
+  const openCreate = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setEditing(null);
     setForm({
       titulo: '', descricao: '', orientacao_encontro: '',

@@ -116,7 +116,9 @@ export function SemanasTab({ estacaoId }: Props) {
     return <div className="flex justify-center py-12"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>;
   }
 
-  const openCreate = () => {
+  const openCreate = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setEditingSemana(null);
     setForm({
       semana_numero: (semanas[semanas.length - 1]?.semana_numero || 0) + 1,
