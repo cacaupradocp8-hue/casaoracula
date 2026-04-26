@@ -4,7 +4,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar, Video } from 'lucide-react';
-import { CicloSelectorFilter, EncontrosManagerFull } from '@/components/admin/clube';
+import { CicloSelectorFilter, EncontrosManagerFull } from '@/components/admin/clube-livro';
 
 export default function AdminClubeEncontros() {
   const [selectedCiclo, setSelectedCiclo] = useState<string | null>(null);

@@ -4,7 +4,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Headphones, Music } from 'lucide-react';
-import { CicloSelectorFilter, EscutasManagerFull } from '@/components/admin/clube';
+import { CicloSelectorFilter, EscutasManagerFull } from '@/components/admin/clube-livro';
 
 export default function AdminClubeEscutas() {
   const [selectedCiclo, setSelectedCiclo] = useState<string | null>(null);

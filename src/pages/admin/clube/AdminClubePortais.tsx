@@ -4,7 +4,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, DoorOpen } from 'lucide-react';
-import { CicloSelectorFilter, PortasManager } from '@/components/admin/clube';
+import { CicloSelectorFilter, PortasManager } from '@/components/admin/clube-livro';
 
 export default function AdminClubePortais() {
   const [selectedCiclo, setSelectedCiclo] = useState<string | null>(null);

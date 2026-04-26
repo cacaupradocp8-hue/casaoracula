@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, GraduationCap, Info } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { LabConfigManager } from '@/components/admin/clube/LabConfigManager';
+import { LabConfigManager } from '@/components/admin/clube-livro/LabConfigManager';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
