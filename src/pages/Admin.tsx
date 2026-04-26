@@ -168,8 +168,11 @@ export default function Admin() {
     if (path === '/admin/clube/conteudos') return 'clube-acervo';
     if (path === '/admin/clube/treinamento') return 'clube-treinamento';
     if (path === '/admin/clube/chat') return 'clube-chat';
+    if (path.startsWith('/admin/clube/central/')) {
+      const id = path.split('/').pop();
+      return `central-estacao-${id}`;
+    }
     
-    // Legacy paths
     if (path.startsWith('/admin/clube-livro')) return 'clube';
     
     return 'clube';
