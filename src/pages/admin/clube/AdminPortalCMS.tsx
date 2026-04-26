@@ -99,6 +99,7 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function AdminPortalCMS() {
+  const navigate = useNavigate();
   const [params] = useSearchParams();
   const jornadaId = params.get('jornada');
   const { toast } = useToast();
