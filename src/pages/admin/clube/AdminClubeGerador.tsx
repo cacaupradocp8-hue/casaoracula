@@ -20,8 +20,3 @@ export default function AdminClubeGerador() {
     </div>
   );
 }
-        <AdminGeradorSemanal />
-      </div>
-    </div>
-  );
-}
