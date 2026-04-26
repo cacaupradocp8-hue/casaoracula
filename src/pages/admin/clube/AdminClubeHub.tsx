@@ -122,6 +122,8 @@ export default function AdminClubeHub() {
       case 'clube-acervo': navigate('/admin/clube/conteudos'); break;
       case 'clube-treinamento': navigate('/admin/clube/treinamento'); break;
       case 'clube-chat': navigate('/admin/clube/chat'); break;
+      case 'settings': navigate('/admin?tab=settings'); break;
+      case 'gerador-semanal': navigate('/admin?tab=gerador-semanal'); break;
       default:
         if ((window as any).Admin_SetActiveTab) {
           (window as any).Admin_SetActiveTab(tab);
