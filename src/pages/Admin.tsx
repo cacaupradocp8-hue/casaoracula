@@ -212,11 +212,18 @@ export default function Admin() {
           <div className="px-6 py-6 pb-20">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
-              {activeTab !== 'clube' && (
+              {activeTab !== 'clube' && !isDirectClubeRoute && (
                 <SectionHeader
                   title="Painel da Guardiã"
                   subtitle="Gerencie a Casa ORÁCULA com clareza e cuidado"
                   icon={<Settings className="w-5 h-5" />}
+                />
+              )}
+              {isDirectClubeRoute && activeTab !== 'clube' && (
+                <SectionHeader
+                  title="Clube Editorial"
+                  subtitle="Operação Premium"
+                  icon={<Layout className="w-5 h-5 text-gold" />}
                 />
               )}
 
