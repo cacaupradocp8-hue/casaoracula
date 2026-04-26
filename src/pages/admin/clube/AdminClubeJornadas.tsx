@@ -125,7 +125,7 @@ export default function AdminClubeJornadas() {
     <AppLayout>
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         <div className="flex items-center gap-4 mb-6">
-          <Link to="/admin/clube-livro">
+          <Link to="/admin/clube">
             <Button variant="ghost" size="icon"><ArrowLeft className="h-4 w-4" /></Button>
           </Link>
           <SectionHeader
@@ -167,7 +167,7 @@ export default function AdminClubeJornadas() {
                     <Switch checked={j.ativa} onCheckedChange={(v) => toggleMutation.mutate({ id: j.id, ativa: v })} />
                     <Button variant="ghost" size="icon" onClick={() => openEdit(j)}><Pencil className="w-3.5 h-3.5" /></Button>
                     <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(j.id)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>
-                    <Link to={`/admin/clube-livro/portais-cms?jornada=${j.id}`}>
+                    <Link to={`/admin/clube/portais-cms?jornada=${j.id}`}>
                       <Button variant="outline" size="sm" className="text-xs">Portais →</Button>
                     </Link>
                   </div>

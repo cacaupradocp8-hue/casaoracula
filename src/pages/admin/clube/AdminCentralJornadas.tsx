@@ -37,7 +37,7 @@ export default function AdminCentralJornadas() {
     <AppLayout>
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         <div className="flex items-center gap-4 mb-8">
-          <Link to="/admin/clube-livro">
+          <Link to="/admin/clube">
             <Button variant="ghost" size="icon">
               <ArrowLeft className="h-4 w-4" />
             </Button>
@@ -62,7 +62,7 @@ export default function AdminCentralJornadas() {
         ) : (
           <div className="space-y-3">
             {estacoes.map((e) => (
-              <Link key={e.id} to={`/admin/clube-livro/central/${e.id}`} className="group block">
+              <Link key={e.id} to={`/admin/clube/central/${e.id}`} className="group block">
                 <Card className="hover:border-gold/40 hover:shadow-md transition-all">
                   <CardContent className="p-4 flex items-center gap-4">
                     {e.livro_capa_url ? (

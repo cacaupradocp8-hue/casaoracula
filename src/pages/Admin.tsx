@@ -57,6 +57,7 @@ const AdminBibliotecaCasosTab = lazy(() => import('@/components/admin/AdminBibli
 const AdminAtlasFemininoTab = lazy(() => import('@/components/admin/AdminAtlasFemininoTab').then(m => ({ default: m.AdminAtlasFemininoTab })));
 const AdminNarroterapiaTab = lazy(() => import('@/components/admin/AdminNarroterapiaTab').then(m => ({ default: m.AdminNarroterapiaTab })));
 const AdminNarroterapiaAutorizacaoTab = lazy(() => import('@/components/admin/AdminNarroterapiaAutorizacaoTab'));
+const AdminClubeHub = lazy(() => import('@/pages/admin/clube/AdminClubeHub'));
 const AdminClubeLivroTab = lazy(() => import('@/components/admin/AdminClubeLivroTab').then(m => ({ default: m.AdminClubeLivroTab })));
 const AdminGeradorSemanal = lazy(() => import('@/components/admin/AdminGeradorSemanal'));
 const AdminPlanosClubTab = lazy(() => import('@/components/admin/AdminPlanosClubTab').then(m => ({ default: m.AdminPlanosClubTab })));
@@ -124,7 +125,8 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'atlas-feminino': AdminAtlasFemininoTab,
   'narroterapia': AdminNarroterapiaTab,
   'narroterapia-autorizacao': AdminNarroterapiaAutorizacaoTab,
-  'clube-livro': AdminClubeLivroTab,
+  'clube': AdminClubeHub,
+  'clube-livro': AdminClubeHub,
   'gerador-semanal': AdminGeradorSemanal,
   'planos-clube': AdminPlanosClubTab,
   'estudio-oracular': AdminEstudioOracular,
@@ -138,7 +140,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
 
 export default function Admin() {
   const { isPreviewMode, previewPortal, enablePreviewMode, disablePreviewMode } = useAdminPreview();
-  const [activeTab, setActiveTab] = useState('clube-livro');
+  const [activeTab, setActiveTab] = useState('clube');
 
   // Expose setActiveTab globally for child components
   React.useEffect(() => {
