@@ -183,6 +183,7 @@ const OsCamposPsiquicos = React.lazy(() => import("./pages/metodo/OsCamposPsiqui
 const AsTorres = React.lazy(() => import("./pages/metodo/AsTorres"));
 const TriadeMetodo = React.lazy(() => import("./pages/metodo/TriadeMetodo"));
 const LabirintoHeroinaPage = React.lazy(() => import("./pages/labirinto-heroina/LabirintoHeroinaPraticoPage"));
+const Admin = React.lazy(() => import("./pages/Admin"));
 const DesbloqueiePage = React.lazy(() => import("./pages/DesbloqueiePage"));
 
 // ─── Utility components ───────────────────────────────────────
