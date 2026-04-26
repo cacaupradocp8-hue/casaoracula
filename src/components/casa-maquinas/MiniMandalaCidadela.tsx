@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useClientCityState, useClientArchetypeState, useFoundingArchetypes, useCityHistory } from '@/hooks/useMapaVivoCidadela';
+import { useClientCityState, useClientArchetypeState, useFoundingArchetypes, useCityHistory, useCidadelaMapa } from '@/hooks/useMapaVivoCidadela';
 import CidadelaMapSVG, { type DistrictDisplayState } from '@/components/cidadela/CidadelaMapSVG';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,7 @@ export function MiniMandalaCidadela({ clienteId }: Props) {
   const { data: archState } = useClientArchetypeState(clienteId);
   const { data: archetypes = [] } = useFoundingArchetypes();
   const { data: history = [] } = useCityHistory(clienteId);
+  const { data: mapaVivo = [] } = useCidadelaMapa(clienteId);
 
   const regente = archetypes.find(a => a.id === archState?.arquitipo_regente_id);
   const sombra = archetypes.find(a => a.id === archState?.arquitipo_sombra_id);
@@ -28,14 +29,25 @@ export function MiniMandalaCidadela({ clienteId }: Props) {
       if (d) states[d] = 'integrado';
     });
 
+    // Add states from the new Mapa Vivo table
+    mapaVivo.forEach(m => {
+      const d = m.distrito.toLowerCase();
+      if (m.status === 'ativo' || m.status === 'evoluido') {
+        states[d] = 'integrado';
+      }
+    });
+
     if (cityState?.distrito_ativo) {
       states[cityState.distrito_ativo.toLowerCase()] = 'ativo';
     }
 
     return states;
-  }, [cityState, history]);
+  }, [cityState, history, mapaVivo]);
 
-  const visitedCount = new Set(history.map(h => h.distrito).filter(Boolean)).size;
+  const visitedCount = new Set([
+    ...history.map(h => h.distrito),
+    ...mapaVivo.map(m => m.distrito)
+  ].filter(Boolean)).size;
 
   return (
     <div className="rounded-xl border border-border/20 bg-card/30 p-4">

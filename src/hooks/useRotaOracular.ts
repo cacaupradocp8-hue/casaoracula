@@ -1,6 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 // ================================================
 // ROTA ORACULAR — Hook central de estado da estrada
@@ -22,6 +23,12 @@ export interface PontoRota {
   ref_tipo?: string;
   ref_id?: string;
   conteudo_inline?: any;
+  impacto_cidadela?: {
+    distrito: string;
+    tipo_impacto: string;
+    intensidade: number;
+    condicao?: string;
+  }[];
 }
 
 export interface Estacao {
@@ -238,11 +245,43 @@ export function useRotaOracular() {
       ref_tipo: item.ref_tipo,
       ref_id: item.ref_id,
       conteudo_inline: item.conteudo_inline,
+      impacto_cidadela: item.impacto_cidadela,
       estado,
       estadoUI: mapEstado(estado),
       rota: resolveRota(item.tipo, item.ref_id, item.rota_custom),
     } as PontoRota;
   }).filter((p): p is PontoRota => p !== null);
+
+  // 6. Concluir item
+  const queryClient = useQueryClient();
+  const concluirPonto = useMutation({
+    mutationFn: async (itemId: string) => {
+      if (!user?.id || !estacaoAtual?.id) throw new Error('Usuária não autenticada');
+      
+      const { error } = await supabase
+        .from('clube_rota_progresso')
+        .upsert({
+          user_id: user.id,
+          estacao_id: estacaoAtual.id,
+          rota_item_id: itemId,
+          status: 'completed',
+          data_conclusao: new Date().toISOString()
+        }, {
+          onConflict: 'user_id, rota_item_id'
+        });
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['rota-progresso'] });
+      queryClient.invalidateQueries({ queryKey: ['cidadela-mapa'] });
+      toast.success('Progresso registrado na sua jornada!');
+    },
+    onError: (error) => {
+      console.error('Erro ao salvar progresso:', error);
+      toast.error('Não foi possível salvar seu progresso.');
+    }
+  });
 
   // Calculate percentage progress for legacy UI if needed
   const itemsArray = itensRota || [];
@@ -271,6 +310,7 @@ export function useRotaOracular() {
     progresso,
     encontro: encontro || null,
     progressoRota: progressoArray,
+    concluirPonto,
     estacaoIncompleta,
     isLoading: loadingEstacao,
   };

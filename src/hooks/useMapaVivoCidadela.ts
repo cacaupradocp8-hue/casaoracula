@@ -1,6 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
+export interface CidadelaMapaVivo {
+  id: string;
+  user_id: string;
+  distrito: string;
+  nivel: number;
+  status: string;
+  historico: any[];
+  ultima_atualizacao: string;
+}
+
 export interface CityDistrict {
   id: string;
   nome: string;
@@ -164,5 +174,23 @@ export function useToolDistricts() {
       if (error) throw error;
       return data as ToolDistrict[];
     },
+  });
+}
+
+export function useCidadelaMapa(userId: string | undefined) {
+  return useQuery({
+    queryKey: ['cidadela-mapa', userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data, error } = await supabase
+        .from('cidadela_mapa_vivo')
+        .select('*')
+        .eq('user_id', userId)
+        .order('ultima_atualizacao', { ascending: false });
+      
+      if (error) throw error;
+      return (data || []) as CidadelaMapaVivo[];
+    },
+    enabled: !!userId,
   });
 }

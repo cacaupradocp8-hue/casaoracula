@@ -2474,6 +2474,36 @@ export type Database = {
           },
         ]
       }
+      cidadela_mapa_vivo: {
+        Row: {
+          distrito: string
+          historico: Json | null
+          id: string
+          nivel: number | null
+          status: string | null
+          ultima_atualizacao: string | null
+          user_id: string
+        }
+        Insert: {
+          distrito: string
+          historico?: Json | null
+          id?: string
+          nivel?: number | null
+          status?: string | null
+          ultima_atualizacao?: string | null
+          user_id: string
+        }
+        Update: {
+          distrito?: string
+          historico?: Json | null
+          id?: string
+          nivel?: number | null
+          status?: string | null
+          ultima_atualizacao?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       cidadela_oracle_cards: {
         Row: {
           base_question: string | null
@@ -5523,6 +5553,7 @@ export type Database = {
           estacao_id: string
           icone: string | null
           id: string
+          impacto_cidadela: Json | null
           obrigatorio: boolean | null
           ordem: number
           publicado: boolean | null
@@ -5541,6 +5572,7 @@ export type Database = {
           estacao_id: string
           icone?: string | null
           id?: string
+          impacto_cidadela?: Json | null
           obrigatorio?: boolean | null
           ordem: number
           publicado?: boolean | null
@@ -5559,6 +5591,7 @@ export type Database = {
           estacao_id?: string
           icone?: string | null
           id?: string
+          impacto_cidadela?: Json | null
           obrigatorio?: boolean | null
           ordem?: number
           publicado?: boolean | null
