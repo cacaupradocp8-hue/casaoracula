@@ -33,21 +33,17 @@ export default function AdminCentralJornadas() {
     },
   });
 
-  return (
-    <AppLayout>
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
-        <div className="flex items-center gap-4 mb-8">
-          <Link to="/admin/clube">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
-          <SectionHeader
-            title="Central de Jornadas"
-            subtitle="Gerencie estações, estradas, semanas e aplicação"
-            icon={<BookOpen className="w-5 h-5" />}
-          />
-        </div>
+    <div className="animate-in fade-in duration-500">
+      <div className="flex items-center gap-4 mb-8">
+        <Button variant="ghost" size="icon" onClick={() => (window as any).Admin_SetActiveTab?.('clube')}>
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <SectionHeader
+          title="Central de Ciclos"
+          subtitle="Gerencie estações, estradas e livros ativos"
+          icon={<BookOpen className="w-5 h-5" />}
+        />
+      </div>
 
         {isLoading ? (
           <div className="flex justify-center py-12">

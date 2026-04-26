@@ -53,16 +53,15 @@ export default function AdminClubeChat() {
     enabled: !!selectedCiclo,
   });
 
-  return (
-    <AppLayout>
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
+    <div className="animate-in fade-in duration-500">
+      <div className="max-w-5xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
           <Button variant="ghost" size="icon" onClick={() => (window as any).Admin_SetActiveTab?.('clube')}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <SectionHeader
-            title="Chat com o Livro"
-            subtitle="Configuração de perguntas guiadas e base de conhecimento"
+            title="Configuração do Oráculo IA"
+            subtitle="Perguntas guiadas e base de conhecimento integrada"
             icon={<MessageSquare className="w-5 h-5" />}
           />
         </div>
