@@ -226,7 +226,7 @@ export default function AdminClubeHub() {
               </div>
               <div className="mt-auto pt-6 flex items-center justify-between">
                 <span className="text-[10px] uppercase tracking-widest text-gold font-bold">Laboratório 80/20</span>
-                <Button size="sm" variant="ghost" className="text-gold hover:bg-gold/10">Acessar Ferramenta</Button>
+                <Button size="sm" variant="ghost" className="text-gold hover:bg-gold/10" onClick={() => navigate('/admin/atelie-conteudo')}>Acessar Ferramenta</Button>
               </div>
             </CardContent>
           </Card>
