@@ -90,6 +90,6 @@ export default function AdminCentralJornadas() {
           </div>
         )}
       </div>
-    </AppLayout>
+    </div>
   );
 }

@@ -614,6 +614,6 @@ export default function AdminPortalCMS() {
           </DialogContent>
         </Dialog>
       </div>
-    </AppLayout>
+    </div>
   );
 }

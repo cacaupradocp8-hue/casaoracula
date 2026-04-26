@@ -74,6 +74,6 @@ export default function AdminClubeTreinamento() {
           )}
         </div>
       </div>
-    </AppLayout>
+    </div>
   );
 }

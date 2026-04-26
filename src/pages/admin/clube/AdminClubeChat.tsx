@@ -154,6 +154,6 @@ export default function AdminClubeChat() {
           )}
         </div>
       </div>
-    </AppLayout>
+    </div>
   );
 }
