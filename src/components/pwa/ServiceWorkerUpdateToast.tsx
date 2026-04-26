@@ -12,13 +12,19 @@ export function ServiceWorkerUpdateToast() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
-  const sw = useRegisterSW({
+  const {
+    needRefresh: [needRefresh],
+    updateServiceWorker,
+  } = useRegisterSW({
     immediate: true,
-...
+    onRegisteredSW(_swUrl, registration) {
+      if (registration) {
+        setInterval(() => {
+          registration.update();
+        }, 30 * 1000);
+      }
+    },
   });
-
-  const needRefresh = sw?.needRefresh ? sw.needRefresh[0] : false;
-  const updateServiceWorker = sw?.updateServiceWorker;
 
 
   const doUpdate = useCallback(() => {
