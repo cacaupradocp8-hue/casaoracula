@@ -277,6 +277,8 @@ function AppRoutes() {
 
   return (
     <Routes>
+      <Route path="/admin/clube-livro/legacy" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
+      <Route path="/admin/clube-livro/v1" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       {/* Public */}
       <Route path="/" element={<PublicRoute><Auth /></PublicRoute>} />
       <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
