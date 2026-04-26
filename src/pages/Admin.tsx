@@ -194,8 +194,11 @@ export default function Admin() {
     (window as any).Admin_ActiveTab = activeTab;
   }, [activeTab]);
 
+  const isCentralEstacaoPath = location.pathname.startsWith('/admin/clube/central/');
+  const centralEstacaoId = isCentralEstacaoPath ? location.pathname.split('/').pop() : null;
+
   const ActiveComponent = TAB_COMPONENTS[activeTab] || 
-    (activeTab.startsWith('central-estacao-') ? AdminCentralEstacao : null);
+    (activeTab.startsWith('central-estacao-') || isCentralEstacaoPath ? AdminCentralEstacao : null);
 
   // If we are on a detail route that should be handled by the Admin component
   // but doesn't have a specific tab component, we check the URL path
