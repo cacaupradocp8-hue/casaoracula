@@ -347,29 +347,11 @@ export function AdminClubeLivroTab() {
         {/* CAMADA 1: ENTRADA & MAPA                     */}
         {/* ============================================ */}
         <TabsContent value="rota" className="space-y-4 outline-none">
-          <Card className="border-primary/10">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-md flex items-center gap-2">
-                <MapIcon className="w-5 h-5 text-gold" />
-                Camada 1: Entrada (Quiz & Mapa)
-              </CardTitle>
-              <CardDescription>Configure o Quiz da Voz e o Mapa da Cidadela para este ciclo.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {selectedCiclo ? (
-                <div className="space-y-6">
-                   <div className="bg-muted/30 p-4 rounded-lg border border-dashed text-center">
-                    <p className="text-sm text-muted-foreground">O Quiz da Voz e Mapa da Cidadela são configurados globalmente no módulo Narroterapia, mas aqui você define a conexão com o ciclo atual.</p>
-                    <Button variant="outline" size="sm" className="mt-4" onClick={() => (window as any).location.hash = '#narroterapia'}>
-                      Ir para Configurações de Quiz
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground text-center py-8">Selecione um ciclo para configurar.</p>
-              )}
-            </CardContent>
-          </Card>
+          {selectedCiclo ? (
+            <RotaDoLivroEditor estacaoId={selectedCiclo} />
+          ) : (
+            <p className="text-sm text-muted-foreground text-center py-8">Selecione um ciclo para configurar a rota.</p>
+          )}
         </TabsContent>
 
         {/* ============================================ */}
