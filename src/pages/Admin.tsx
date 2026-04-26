@@ -197,6 +197,12 @@ export default function Admin() {
   const ActiveComponent = TAB_COMPONENTS[activeTab] || 
     (activeTab.startsWith('central-estacao-') ? AdminCentralEstacao : null);
 
+  // If we are on a detail route that should be handled by the Admin component
+  // but doesn't have a specific tab component, we check the URL path
+  const isDirectClubeRoute = location.pathname.startsWith('/admin/clube');
+  const ActualActiveComponent = ActiveComponent || (isDirectClubeRoute ? AdminClubeHub : null);
+
+
   return (
     <AppLayout>
       <div className="flex min-h-[calc(100vh-5rem)]">
@@ -260,10 +266,10 @@ export default function Admin() {
             )}
 
             {/* Active tab content */}
-            {ActiveComponent && (
+            {ActualActiveComponent && (
               <BootSafeBoundary label={`AdminTab: ${activeTab}`}>
                 <Suspense fallback={<TabLoader />}>
-                  <ActiveComponent />
+                  <ActualActiveComponent />
                 </Suspense>
               </BootSafeBoundary>
             )}
