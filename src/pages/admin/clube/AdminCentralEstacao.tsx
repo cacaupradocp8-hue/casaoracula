@@ -19,7 +19,7 @@ export default function AdminCentralEstacao() {
   const activeAdminTab = (window as any).Admin_ActiveTab || '';
   const estacaoId = paramId || (activeAdminTab.startsWith('central-estacao-') ? activeAdminTab.replace('central-estacao-', '') : null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get('tab') || 'entrada';
+  const activeTab = searchParams.get('tab') || 'passos';
 
   const onTabChange = (val: string) => {
     setSearchParams({ tab: val });
