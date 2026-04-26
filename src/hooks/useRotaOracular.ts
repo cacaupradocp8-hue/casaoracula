@@ -23,6 +23,12 @@ export interface PontoRota {
   ref_tipo?: string;
   ref_id?: string;
   conteudo_inline?: any;
+  impacto_cidadela?: {
+    distrito: string;
+    tipo_impacto: string;
+    intensidade: number;
+    condicao?: string;
+  }[];
 }
 
 export interface Estacao {
