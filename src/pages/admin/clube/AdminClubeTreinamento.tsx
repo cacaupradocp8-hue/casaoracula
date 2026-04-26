@@ -1,4 +1,4 @@
-import { SectionHeader } from '@/components/shared/SectionHeader';
+// import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, GraduationCap, Info } from 'lucide-react';

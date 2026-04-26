@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Library } from 'lucide-react';
-import { SectionHeader } from '@/components/shared/SectionHeader';
+// import { SectionHeader } from '@/components/shared/SectionHeader';
 import { AdminCursosTab } from '@/components/admin/AdminCursosTab';
 import { useNavigate } from 'react-router-dom';
 
