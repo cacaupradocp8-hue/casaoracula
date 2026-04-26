@@ -14,7 +14,9 @@ import { AplicacaoTab } from '@/components/admin/central-jornadas/AplicacaoTab';
 import { EncontroTab } from '@/components/admin/central-jornadas/EncontroTab';
 
 export default function AdminCentralEstacao() {
-  const { estacaoId } = useParams<{ estacaoId: string }>();
+  const { estacaoId: paramId } = useParams<{ estacaoId: string }>();
+  const activeAdminTab = (window as any).Admin_ActiveTab || '';
+  const estacaoId = paramId || (activeAdminTab.startsWith('central-estacao-') ? activeAdminTab.replace('central-estacao-', '') : null);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'entrada';
 
@@ -52,9 +54,7 @@ export default function AdminCentralEstacao() {
       <AppLayout>
         <div className="container mx-auto px-4 py-12 text-center">
           <p className="text-muted-foreground">Estação não encontrada.</p>
-          <Link to="/admin/clube/central">
-            <Button variant="outline" className="mt-4">Voltar</Button>
-          </Link>
+            <Button variant="outline" className="mt-4" onClick={() => (window as any).Admin_SetActiveTab?.('clube-jornadas')}>Voltar</Button>
         </div>
       </AppLayout>
     );
@@ -65,11 +65,9 @@ export default function AdminCentralEstacao() {
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
-          <Link to="/admin/clube/central">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" onClick={() => (window as any).Admin_SetActiveTab?.('clube-jornadas')}>
               <ArrowLeft className="h-4 w-4" />
             </Button>
-          </Link>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3">
               <h1 className="text-xl font-display text-foreground truncate">

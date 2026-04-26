@@ -1,8 +1,9 @@
-import React, { lazy, Suspense, useState } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
+import { useSearchParams } from 'react-router-dom';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
@@ -58,6 +59,12 @@ const AdminAtlasFemininoTab = lazy(() => import('@/components/admin/AdminAtlasFe
 const AdminNarroterapiaTab = lazy(() => import('@/components/admin/AdminNarroterapiaTab').then(m => ({ default: m.AdminNarroterapiaTab })));
 const AdminNarroterapiaAutorizacaoTab = lazy(() => import('@/components/admin/AdminNarroterapiaAutorizacaoTab'));
 const AdminClubeHub = lazy(() => import('@/pages/admin/clube/AdminClubeHub'));
+const AdminCentralJornadas = lazy(() => import('@/pages/admin/clube/AdminCentralJornadas'));
+const AdminPortalCMS = lazy(() => import('@/pages/admin/clube/AdminPortalCMS'));
+const AdminClubeTreinamento = lazy(() => import('@/pages/admin/clube/AdminClubeTreinamento'));
+const AdminClubeChat = lazy(() => import('@/pages/admin/clube/AdminClubeChat'));
+const AdminClubeAcervo = lazy(() => import('@/pages/admin/clube/AdminClubeAcervo'));
+const AdminCentralEstacao = lazy(() => import('@/pages/admin/clube/AdminCentralEstacao'));
 const AdminClubeLivroTab = lazy(() => import('@/components/admin/AdminClubeLivroTab').then(m => ({ default: m.AdminClubeLivroTab })));
 const AdminGeradorSemanal = lazy(() => import('@/components/admin/AdminGeradorSemanal'));
 const AdminPlanosClubTab = lazy(() => import('@/components/admin/AdminPlanosClubTab').then(m => ({ default: m.AdminPlanosClubTab })));
@@ -113,6 +120,11 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'radiestesia': AdminRadiestesiaTab,
   'ia-config': AdminAISettingsTab,
   'audios': AdminAudiosTab,
+  'clube-jornadas': AdminCentralJornadas,
+  'clube-portais': AdminPortalCMS,
+  'clube-acervo': AdminClubeAcervo,
+  'clube-treinamento': AdminClubeTreinamento,
+  'clube-chat': AdminClubeChat,
   'comunicacao': AdminComunicacaoTab,
   'formacao': AdminFormacaoTab,
   'area-formacao': AdminAreaFormacaoTab,
@@ -140,14 +152,24 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
 
 export default function Admin() {
   const { isPreviewMode, previewPortal, enablePreviewMode, disablePreviewMode } = useAdminPreview();
-  const [activeTab, setActiveTab] = useState('clube');
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'clube');
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab && TAB_COMPONENTS[tab]) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   // Expose setActiveTab globally for child components
   React.useEffect(() => {
     (window as any).Admin_SetActiveTab = setActiveTab;
-  }, []);
+    (window as any).Admin_ActiveTab = activeTab;
+  }, [activeTab]);
 
-  const ActiveComponent = TAB_COMPONENTS[activeTab] || TAB_COMPONENTS['users'];
+  const ActiveComponent = TAB_COMPONENTS[activeTab] || 
+    (activeTab.startsWith('central-estacao-') ? AdminCentralEstacao : TAB_COMPONENTS['users']);
 
   return (
     <AppLayout>

@@ -62,7 +62,7 @@ export default function AdminCentralJornadas() {
         ) : (
           <div className="space-y-3">
             {estacoes.map((e) => (
-              <Link key={e.id} to={`/admin/clube/central/${e.id}`} className="group block">
+              <div key={e.id} onClick={() => (window as any).Admin_SetActiveTab?.(`central-estacao-${e.id}`)} className="group block cursor-pointer">
                 <Card className="hover:border-gold/40 hover:shadow-md transition-all">
                   <CardContent className="p-4 flex items-center gap-4">
                     {e.livro_capa_url ? (
@@ -89,7 +89,7 @@ export default function AdminCentralJornadas() {
                     <ArrowRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                   </CardContent>
                 </Card>
-              </Link>
+              </div>
             ))}
           </div>
         )}
