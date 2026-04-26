@@ -339,7 +339,7 @@ export function AdminClubeLivroTab() {
           </TabsTrigger>
           <TabsTrigger value="rota-geral" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
             <MapIcon className="w-4 h-4" />
-            Orquestrador (Rota)
+            Configuração Geral
           </TabsTrigger>
         </TabsList>
 
