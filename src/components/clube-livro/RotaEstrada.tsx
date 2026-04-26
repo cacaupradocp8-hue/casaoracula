@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Check } from 'lucide-react';
+import { Check, Zap, Sparkles } from 'lucide-react';
 import type { PontoRota } from '@/hooks/useRotaOracular';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface Props {
   pontos: PontoRota[];
