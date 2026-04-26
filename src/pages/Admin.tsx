@@ -59,6 +59,12 @@ const AdminAtlasFemininoTab = lazy(() => import('@/components/admin/AdminAtlasFe
 const AdminNarroterapiaTab = lazy(() => import('@/components/admin/AdminNarroterapiaTab').then(m => ({ default: m.AdminNarroterapiaTab })));
 const AdminNarroterapiaAutorizacaoTab = lazy(() => import('@/components/admin/AdminNarroterapiaAutorizacaoTab'));
 const AdminClubeHub = lazy(() => import('@/pages/admin/clube/AdminClubeHub'));
+const AdminCentralJornadas = lazy(() => import('@/pages/admin/clube/AdminCentralJornadas'));
+const AdminPortalCMS = lazy(() => import('@/pages/admin/clube/AdminPortalCMS'));
+const AdminClubeTreinamento = lazy(() => import('@/pages/admin/clube/AdminClubeTreinamento'));
+const AdminClubeChat = lazy(() => import('@/pages/admin/clube/AdminClubeChat'));
+const AdminClubeAcervo = lazy(() => import('@/pages/admin/clube/AdminClubeAcervo'));
+const AdminCentralEstacao = lazy(() => import('@/pages/admin/clube/AdminCentralEstacao'));
 const AdminClubeLivroTab = lazy(() => import('@/components/admin/AdminClubeLivroTab').then(m => ({ default: m.AdminClubeLivroTab })));
 const AdminGeradorSemanal = lazy(() => import('@/components/admin/AdminGeradorSemanal'));
 const AdminPlanosClubTab = lazy(() => import('@/components/admin/AdminPlanosClubTab').then(m => ({ default: m.AdminPlanosClubTab })));
@@ -114,6 +120,11 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'radiestesia': AdminRadiestesiaTab,
   'ia-config': AdminAISettingsTab,
   'audios': AdminAudiosTab,
+  'clube-jornadas': AdminCentralJornadas,
+  'clube-portais': AdminPortalCMS,
+  'clube-acervo': AdminClubeAcervo,
+  'clube-treinamento': AdminClubeTreinamento,
+  'clube-chat': AdminClubeChat,
   'comunicacao': AdminComunicacaoTab,
   'formacao': AdminFormacaoTab,
   'area-formacao': AdminAreaFormacaoTab,

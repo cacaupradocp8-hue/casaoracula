@@ -14,7 +14,9 @@ import { AplicacaoTab } from '@/components/admin/central-jornadas/AplicacaoTab';
 import { EncontroTab } from '@/components/admin/central-jornadas/EncontroTab';
 
 export default function AdminCentralEstacao() {
-  const { estacaoId } = useParams<{ estacaoId: string }>();
+  const { estacaoId: paramId } = useParams<{ estacaoId: string }>();
+  const activeAdminTab = (window as any).Admin_ActiveTab || '';
+  const estacaoId = paramId || (activeAdminTab.startsWith('central-estacao-') ? activeAdminTab.replace('central-estacao-', '') : null);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'entrada';
 
