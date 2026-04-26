@@ -314,55 +314,168 @@ export function AdminClubeLivroTab() {
         </div>
       </div>
 
-      {/* Abas simplificadas para Produção de Conteúdo */}
+      {/* Abas simplificadas para Produção de Conteúdo — Alinhadas com a experiência da aluna */}
       <Tabs defaultValue="rota" className="w-full">
         <TabsList className="mb-4 flex-wrap h-auto gap-1 bg-muted/30 p-1 border border-primary/5">
           <TabsTrigger value="rota" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
             <MapIcon className="w-4 h-4" />
-            Rota do Livro
+            1. Entrada & Mapa
           </TabsTrigger>
-          <TabsTrigger value="conteudo" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
-            <Sparkles className="w-4 h-4" />
-            Produzir Conteúdo
+          <TabsTrigger value="imersao" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+            <Headphones className="w-4 h-4" />
+            2. Imersão (Aúdio/Aula)
+          </TabsTrigger>
+          <TabsTrigger value="treino" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+            <GraduationCap className="w-4 h-4" />
+            3. Treino (Laboratório)
+          </TabsTrigger>
+          <TabsTrigger value="aplicacao" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+            <Target className="w-4 h-4" />
+            4. Aplicação & Jardim
           </TabsTrigger>
           <TabsTrigger value="calendario" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
             <Calendar className="w-4 h-4" />
-            Calendário & Ciclos
+            Ciclo & Calendário
           </TabsTrigger>
-          <TabsTrigger value="portais" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
-            <DoorOpen className="w-4 h-4" />
-            Portais
+          <TabsTrigger value="rota-geral" className="gap-2 text-xs py-1.5 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+            <MapIcon className="w-4 h-4" />
+            Orquestrador (Rota)
           </TabsTrigger>
         </TabsList>
 
         {/* ============================================ */}
-        {/* ABA 0 — ROTA DO LIVRO (ORQUESTRADOR)        */}
+        {/* CAMADA 1: ENTRADA & MAPA                     */}
         {/* ============================================ */}
         <TabsContent value="rota" className="space-y-4 outline-none">
+          <Card className="border-primary/10">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-md flex items-center gap-2">
+                <MapIcon className="w-5 h-5 text-gold" />
+                Camada 1: Entrada (Quiz & Mapa)
+              </CardTitle>
+              <CardDescription>Configure o Quiz da Voz e o Mapa da Cidadela para este ciclo.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {selectedCiclo ? (
+                <div className="space-y-6">
+                   <div className="bg-muted/30 p-4 rounded-lg border border-dashed text-center">
+                    <p className="text-sm text-muted-foreground">O Quiz da Voz e Mapa da Cidadela são configurados globalmente no módulo Narroterapia, mas aqui você define a conexão com o ciclo atual.</p>
+                    <Button variant="outline" size="sm" className="mt-4" onClick={() => (window as any).location.hash = '#narroterapia'}>
+                      Ir para Configurações de Quiz
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-8">Selecione um ciclo para configurar.</p>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* ============================================ */}
+        {/* CAMADA 2: IMERSÃO (AUDIOS E AULAS)          */}
+        {/* ============================================ */}
+        <TabsContent value="imersao" className="space-y-4 outline-none">
+           {selectedCiclo ? (
+            <div className="space-y-4">
+               <Card className="border-primary/10">
+                <CardHeader>
+                  <CardTitle className="text-md flex items-center gap-2">
+                    <Headphones className="w-5 h-5 text-gold" />
+                    Camada 2: Imersão
+                  </CardTitle>
+                  <CardDescription>Áudios semanais, Aulas ao vivo e Biblioteca 80/20.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                   <CicloDetailTabs cicloId={selectedCiclo} defaultTab="imersao" />
+                </CardContent>
+              </Card>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground text-center py-8">Selecione um ciclo para produzir áudios e aulas.</p>
+          )}
+        </TabsContent>
+
+        {/* ============================================ */}
+        {/* CAMADA 3: TREINO (LABORATÓRIO)             */}
+        {/* ============================================ */}
+        <TabsContent value="treino" className="space-y-4 outline-none">
+          {selectedCiclo ? (
+            <Card className="border-primary/10">
+              <CardHeader>
+                <CardTitle className="text-md flex items-center gap-2">
+                  <GraduationCap className="w-5 h-5 text-gold" />
+                  Camada 3: Treino (Sala de Treinamento)
+                </CardTitle>
+                <CardDescription>Simulações, estudos de contos e práticas guiadas.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <LabConfigManager cicloId={selectedCiclo} />
+              </CardContent>
+            </Card>
+          ) : (
+            <p className="text-sm text-muted-foreground text-center py-8">Selecione um ciclo para configurar o Laboratório.</p>
+          )}
+        </TabsContent>
+
+        {/* ============================================ */}
+        {/* CAMADA 4: APLICAÇÃO                         */}
+        {/* ============================================ */}
+        <TabsContent value="aplicacao" className="space-y-4 outline-none">
+          {selectedCiclo ? (
+            <Card className="border-primary/10">
+              <CardHeader>
+                <CardTitle className="text-md flex items-center gap-2">
+                  <Target className="w-5 h-5 text-gold" />
+                  Camada 4: Aplicação (Jardim & Chat)
+                </CardTitle>
+                <CardDescription>Configurações do Chat com o Livro e Jardim da Psique.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card className="bg-muted/20 border-primary/5">
+                      <CardHeader className="p-4"><CardTitle className="text-xs uppercase tracking-wider">Chat com o Livro</CardTitle></CardHeader>
+                      <CardContent className="p-4 pt-0">
+                         <p className="text-xs text-muted-foreground mb-4">O conhecimento do livro alimentado por IA para suporte direto à aluna.</p>
+                         <Button size="sm" variant="outline" className="w-full text-xs">Configurar Base de Conhecimento</Button>
+                      </CardContent>
+                    </Card>
+                    <Card className="bg-muted/20 border-primary/5">
+                      <CardHeader className="p-4"><CardTitle className="text-xs uppercase tracking-wider">Jardim da Psique</CardTitle></CardHeader>
+                      <CardContent className="p-4 pt-0">
+                         <p className="text-xs text-muted-foreground mb-4">Integração dos símbolos deste livro no jardim individual.</p>
+                         <Button size="sm" variant="outline" className="w-full text-xs">Mapear Símbolos do Livro</Button>
+                      </CardContent>
+                    </Card>
+                 </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <p className="text-sm text-muted-foreground text-center py-8">Selecione um ciclo para configurar as aplicações.</p>
+          )}
+        </TabsContent>
+
+        {/* ============================================ */}
+        {/* ABA: CICLO & CALENDÁRIO                      */}
+        {/* ============================================ */}
+        <TabsContent value="calendario" className="space-y-4 outline-none">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Card className="md:col-span-1 border-primary/10 bg-muted/20">
+...
+          </div>
+        </TabsContent>
+
+        {/* ============================================ */}
+        {/* ABA: ORQUESTRADOR (ROTA DO LIVRO)           */}
+        {/* ============================================ */}
+        <TabsContent value="rota-geral" className="space-y-4 outline-none">
           {selectedCiclo ? (
             <RotaDoLivroEditor estacaoId={selectedCiclo} />
           ) : (
             <Card className="bg-muted/30 border-dashed h-[200px] flex items-center justify-center">
               <div className="text-center p-6">
                 <MapIcon className="w-10 h-10 text-gold/30 mx-auto mb-3" />
-                <p className="text-muted-foreground">Selecione um ciclo abaixo ou na aba de Calendário para gerenciar sua Rota.</p>
-                <div className="mt-4 max-w-xs mx-auto">
-                   <Select
-                    value={selectedCiclo || ''}
-                    onValueChange={(v) => setSelectedCiclo(v || null)}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Escolha um ciclo..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ciclos?.map((c) => (
-                        <SelectItem key={c.id} value={c.id}>
-                          {c.titulo}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                <p className="text-muted-foreground">Selecione um ciclo para gerenciar sua Rota.</p>
               </div>
             </Card>
           )}
