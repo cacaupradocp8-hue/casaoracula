@@ -1,9 +1,7 @@
-import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, GraduationCap, Info } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { LabConfigManager } from '@/components/admin/clube-livro/LabConfigManager';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -25,6 +23,7 @@ export default function AdminClubeTreinamento() {
     },
   });
 
+  return (
     <div className="animate-in fade-in duration-500">
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
