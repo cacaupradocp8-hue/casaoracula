@@ -3824,16 +3824,21 @@ export type Database = {
       }
       clube_conteudo_semanal: {
         Row: {
+          aplicacao_clinica: string | null
           ativo: boolean
+          audio_roteiro: string | null
           carta_descricao_simbolica: string | null
           carta_imagem_url: string | null
           carta_nome: string | null
+          cartografia_detalhes: Json | null
+          chat_perguntas: Json | null
           ciclo_id: string | null
           created_at: string
           data_fim: string | null
           data_inicio: string
           estacao_id: string | null
           id: string
+          jardim_prompt: string | null
           pergunta_contemplativa: string | null
           podcast_audio_url: string | null
           podcast_descricao: string | null
@@ -3843,19 +3848,25 @@ export type Database = {
           pratica_guia_url: string | null
           pratica_titulo: string | null
           semana_numero: number
+          treinamento_simulacao: string | null
           updated_at: string
         }
         Insert: {
+          aplicacao_clinica?: string | null
           ativo?: boolean
+          audio_roteiro?: string | null
           carta_descricao_simbolica?: string | null
           carta_imagem_url?: string | null
           carta_nome?: string | null
+          cartografia_detalhes?: Json | null
+          chat_perguntas?: Json | null
           ciclo_id?: string | null
           created_at?: string
           data_fim?: string | null
           data_inicio?: string
           estacao_id?: string | null
           id?: string
+          jardim_prompt?: string | null
           pergunta_contemplativa?: string | null
           podcast_audio_url?: string | null
           podcast_descricao?: string | null
@@ -3865,19 +3876,25 @@ export type Database = {
           pratica_guia_url?: string | null
           pratica_titulo?: string | null
           semana_numero?: number
+          treinamento_simulacao?: string | null
           updated_at?: string
         }
         Update: {
+          aplicacao_clinica?: string | null
           ativo?: boolean
+          audio_roteiro?: string | null
           carta_descricao_simbolica?: string | null
           carta_imagem_url?: string | null
           carta_nome?: string | null
+          cartografia_detalhes?: Json | null
+          chat_perguntas?: Json | null
           ciclo_id?: string | null
           created_at?: string
           data_fim?: string | null
           data_inicio?: string
           estacao_id?: string | null
           id?: string
+          jardim_prompt?: string | null
           pergunta_contemplativa?: string | null
           podcast_audio_url?: string | null
           podcast_descricao?: string | null
@@ -3887,6 +3904,7 @@ export type Database = {
           pratica_guia_url?: string | null
           pratica_titulo?: string | null
           semana_numero?: number
+          treinamento_simulacao?: string | null
           updated_at?: string
         }
         Relationships: [
