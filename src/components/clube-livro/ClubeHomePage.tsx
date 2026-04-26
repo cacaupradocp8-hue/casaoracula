@@ -168,7 +168,12 @@ export function ClubeHomePage() {
         <RotaImersao estacaoId={estacaoAtual?.id} />
         
         {pontos.length > 0 && (
-          <RotaEstrada pontos={pontos} pontoAtual={pontoAtual} />
+          <RotaEstrada 
+            pontos={pontos} 
+            pontoAtual={pontoAtual} 
+            concluirPonto={(id) => concluirPonto.mutate(id)}
+            isConcluindo={concluirPonto.isPending}
+          />
         )}
 
         {/* ============================================
