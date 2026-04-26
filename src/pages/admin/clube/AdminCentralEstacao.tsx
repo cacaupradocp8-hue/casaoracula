@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -41,28 +40,23 @@ export default function AdminCentralEstacao() {
 
   if (isLoading) {
     return (
-      <AppLayout>
-        <div className="flex justify-center py-24">
-          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-        </div>
-      </AppLayout>
+      <div className="flex justify-center py-24">
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+      </div>
     );
   }
 
   if (!estacao) {
     return (
-      <AppLayout>
-        <div className="container mx-auto px-4 py-12 text-center">
-          <p className="text-muted-foreground">Estação não encontrada.</p>
-            <Button variant="outline" className="mt-4" onClick={() => (window as any).Admin_SetActiveTab?.('clube-jornadas')}>Voltar</Button>
-        </div>
-      </AppLayout>
+      <div className="container mx-auto px-4 py-12 text-center">
+        <p className="text-muted-foreground">Estação não encontrada.</p>
+        <Button variant="outline" className="mt-4" onClick={() => (window as any).Admin_SetActiveTab?.('clube-jornadas')}>Voltar</Button>
+      </div>
     );
   }
 
   return (
-    <AppLayout>
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
+    <div className="container mx-auto px-4 py-8 max-w-5xl">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
             <Button variant="ghost" size="icon" onClick={() => (window as any).Admin_SetActiveTab?.('clube-jornadas')}>
@@ -128,7 +122,6 @@ export default function AdminCentralEstacao() {
             <EncontroTab estacaoId={estacao.id} />
           </TabsContent>
         </Tabs>
-      </div>
-    </AppLayout>
+    </div>
   );
 }

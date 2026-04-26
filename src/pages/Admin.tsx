@@ -169,7 +169,7 @@ export default function Admin() {
   }, [activeTab]);
 
   const ActiveComponent = TAB_COMPONENTS[activeTab] || 
-    (activeTab.startsWith('central-estacao-') ? AdminCentralEstacao : TAB_COMPONENTS['users']);
+    (activeTab.startsWith('central-estacao-') ? AdminCentralEstacao : null);
 
   return (
     <AppLayout>
