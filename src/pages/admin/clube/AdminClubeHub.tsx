@@ -269,7 +269,7 @@ export default function AdminClubeHub() {
                  O admin agora é modular. Cada área acima representa um pilar do Clube.
                  Use o <strong>Ateliê de Conteúdo</strong> para acelerar a criação de materiais semanais.
                </p>
-               <Button variant="link" className="text-gold hover:text-gold/80 uppercase tracking-widest text-[10px] font-bold">
+               <Button variant="link" className="text-gold hover:text-gold/80 uppercase tracking-widest text-[10px] font-bold" onClick={() => navigate('/admin/modulos-formativos')}>
                  Ver Documentação do Sistema
                </Button>
             </CardContent>
