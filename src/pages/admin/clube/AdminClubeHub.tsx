@@ -27,7 +27,7 @@ const OFFICIAL_CARDS: HubCard[] = [
     title: '1. Ciclos & Estações',
     description: 'Gestão de jornadas temporais. É aqui que você define qual livro está sendo lido.',
     icon: RefreshCw,
-    route: '/admin/clube/ciclos',
+    route: '/admin?tab=clube-jornadas',
     color: 'text-gold',
   },
   {
@@ -35,7 +35,7 @@ const OFFICIAL_CARDS: HubCard[] = [
     title: '2. Portais Simbólicos',
     description: 'Configuração da cartografia: Porta, Campo, Torre e Labirinto de cada portal.',
     icon: DoorOpen,
-    route: '/admin/clube/portais',
+    route: '/admin?tab=clube-portais',
     color: 'text-amber-500',
   },
   {
@@ -43,7 +43,7 @@ const OFFICIAL_CARDS: HubCard[] = [
     title: '3. Acervo & Conteúdos',
     description: 'Gestão de livros, áudios e materiais de apoio do Clube.',
     icon: Library,
-    route: '/admin/clube/conteudos',
+    route: '/admin?tab=clube-acervo',
     color: 'text-emerald-500',
   },
   {
@@ -51,7 +51,7 @@ const OFFICIAL_CARDS: HubCard[] = [
     title: '4. Sala de Treinamento',
     description: 'Configuração de simulações clínicas e orientações éticas por ciclo.',
     icon: GraduationCap,
-    route: '/admin/clube/treinamento',
+    route: '/admin?tab=clube-treinamento',
     color: 'text-blue-500',
   },
   {
@@ -59,7 +59,7 @@ const OFFICIAL_CARDS: HubCard[] = [
     title: '5. Chat com o Livro',
     description: 'Perguntas guiadas e base de conhecimento da IA para interação com a obra.',
     icon: MessageSquare,
-    route: '/admin/clube/chat',
+    route: '/admin?tab=clube-chat',
     color: 'text-pink-500',
   },
 ];
@@ -71,7 +71,7 @@ const SUPPORT_CARDS: HubCard[] = [
     title: 'Gerador IA (Rascunhos)',
     description: 'Use a IA para rascunhar cartas, podcasts e práticas.',
     icon: Sparkles,
-    route: '/admin/clube/gerador',
+    route: '/admin?tab=gerador-semanal',
     color: 'text-muted-foreground',
   },
   {
@@ -79,7 +79,7 @@ const SUPPORT_CARDS: HubCard[] = [
     title: 'Configurações Gerais',
     description: 'Regras de acesso, Lab 80/20 e orquestração.',
     icon: Settings,
-    route: '/admin/clube/config',
+    route: '/admin?tab=settings',
     color: 'text-muted-foreground',
   },
 ];
@@ -116,7 +116,7 @@ export default function AdminClubeHub() {
   const renderCard = (card: HubCard, featured = false) => {
     const stat = getStatForCard(card.key);
     return (
-      <Link key={card.key} to={card.route} className="group">
+      <div key={card.key} onClick={() => (window as any).Admin_SetActiveTab?.(card.route.split('tab=')[1])} className="group cursor-pointer">
         <Card className={`h-full transition-all duration-200 hover:shadow-md group-hover:bg-card/80 border-gold/10 hover:border-gold/40`}>
           <CardContent className="p-5">
             <div className="flex items-start justify-between mb-3">
@@ -136,7 +136,7 @@ export default function AdminClubeHub() {
             )}
           </CardContent>
         </Card>
-      </Link>
+      </div>
     );
   };
 

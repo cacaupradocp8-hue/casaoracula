@@ -1,8 +1,9 @@
-import React, { lazy, Suspense, useState } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
+import { useSearchParams } from 'react-router-dom';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
@@ -140,14 +141,24 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
 
 export default function Admin() {
   const { isPreviewMode, previewPortal, enablePreviewMode, disablePreviewMode } = useAdminPreview();
-  const [activeTab, setActiveTab] = useState('clube');
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'clube');
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab && TAB_COMPONENTS[tab]) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   // Expose setActiveTab globally for child components
   React.useEffect(() => {
     (window as any).Admin_SetActiveTab = setActiveTab;
-  }, []);
+    (window as any).Admin_ActiveTab = activeTab;
+  }, [activeTab]);
 
-  const ActiveComponent = TAB_COMPONENTS[activeTab] || TAB_COMPONENTS['users'];
+  const ActiveComponent = TAB_COMPONENTS[activeTab] || 
+    (activeTab.startsWith('central-estacao-') ? AdminCentralEstacao : TAB_COMPONENTS['users']);
 
   return (
     <AppLayout>

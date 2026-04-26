@@ -29,11 +29,9 @@ export default function AdminClubeTreinamento() {
     <AppLayout>
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         <div className="flex items-center gap-4 mb-8">
-          <Link to="/admin/clube">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
+          <Button variant="ghost" size="icon" onClick={() => (window as any).Admin_SetActiveTab?.('clube')}>
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
           <SectionHeader
             title="Sala de Treinamento"
             subtitle="Configuração de simulações e práticas clínicas"
