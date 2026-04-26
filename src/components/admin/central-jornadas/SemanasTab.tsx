@@ -10,7 +10,7 @@ import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Pencil, ChevronDown, Headphones, Loader2 } from 'lucide-react';
+import { Plus, Pencil, ChevronDown, Headphones, Loader2, Trash2 } from 'lucide-react';
 
 interface Semana {
   id: string;
@@ -90,7 +90,21 @@ export function SemanasTab({ estacaoId }: Props) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-semanas-estacao', estacaoId] });
       setDialogOpen(false);
-      toast({ title: 'Semana atualizada' });
+      toast({ title: editingSemana ? 'Semana atualizada' : 'Semana criada' });
+    },
+    onError: (err: Error) => {
+      toast({ title: 'Erro', description: err.message, variant: 'destructive' });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await (supabase as any).from('clube_conteudo_semanal').delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-semanas-estacao', estacaoId] });
+      toast({ title: 'Semana removida' });
     },
     onError: (err: Error) => {
       toast({ title: 'Erro', description: err.message, variant: 'destructive' });
@@ -189,9 +203,23 @@ export function SemanasTab({ estacaoId }: Props) {
                         <p className="text-xs text-foreground mt-0.5 italic">{s.pergunta_contemplativa}</p>
                       </div>
                     )}
-                    <Button variant="outline" size="sm" className="text-xs" onClick={() => openEdit(s)}>
-                      <Pencil className="w-3 h-3 mr-1" /> Editar semana
-                    </Button>
+                    <div className="flex items-center gap-1.5 mt-2">
+                      <Button variant="outline" size="sm" className="h-7 text-[10px]" onClick={() => openEdit(s)}>
+                        <Pencil className="w-3 h-3 mr-1" /> Editar
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-7 text-[10px] text-destructive hover:text-destructive hover:bg-destructive/10" 
+                        onClick={() => {
+                          if (window.confirm('Excluir esta semana permanentemente?')) {
+                            deleteMutation.mutate(s.id);
+                          }
+                        }}
+                      >
+                        <Trash2 className="w-3 h-3 mr-1" /> Excluir
+                      </Button>
+                    </div>
                   </div>
                 </CollapsibleContent>
               </Card>

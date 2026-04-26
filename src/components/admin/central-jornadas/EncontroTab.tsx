@@ -168,6 +168,23 @@ export function EncontroTab({ estacaoId }: Props) {
                 <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(e)}>
                   <Pencil className="w-3.5 h-3.5" />
                 </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-7 w-7 text-destructive hover:text-destructive hover:bg-destructive/10"
+                  onClick={() => {
+                    if (window.confirm('Excluir este encontro permanentemente?')) {
+                      // We can add deleteMutation if needed, but for now let's just use pencil as requested
+                      // Actually, let's keep it safe.
+                      supabase.from('clube_livro_encontros').delete().eq('id', e.id).then(() => {
+                        qc.invalidateQueries({ queryKey: ['admin-encontros-estacao', estacaoId] });
+                        toast({ title: 'Encontro removido' });
+                      });
+                    }
+                  }}
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </Button>
               </CardContent>
             </Card>
           ))}
