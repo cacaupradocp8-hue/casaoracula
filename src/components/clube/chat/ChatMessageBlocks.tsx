@@ -28,18 +28,18 @@ function parseBlocks(raw: string): Block[] {
     const body = nl > -1 ? section.slice(nl + 1).trim() : '';
     const lower = heading.toLowerCase();
 
-    if (lower.includes('síntese') || lower.includes('sintese')) {
-      blocks.push({ type: 'sintese', title: 'Síntese', content: body, icon: Sparkles });
-    } else if (lower.includes('campo simbólico') || lower.includes('campo simbolico')) {
-      blocks.push({ type: 'campo', title: 'Campo Simbólico', content: body, icon: Compass });
-    } else if (lower.includes('aplicação em sessão') || lower.includes('aplicacao em sessao')) {
-      blocks.push({ type: 'sessao', title: 'Aplicação em Sessão', content: body, icon: Stethoscope });
-    } else if (lower.includes('aplicação em grupo') || lower.includes('aplicacao em grupo')) {
-      blocks.push({ type: 'grupo', title: 'Aplicação em Grupo', content: body, icon: Layers });
+    if (lower.includes('síntese simbólica') || lower.includes('sintese simbolica')) {
+      blocks.push({ type: 'sintese', title: 'Síntese Simbólica', content: body, icon: Sparkles });
+    } else if (lower.includes('campo em jogo')) {
+      blocks.push({ type: 'campo', title: 'Campo em Jogo', content: body, icon: Compass });
+    } else if (lower.includes('cartografia')) {
+      blocks.push({ type: 'campo', title: 'Cartografia Possível', content: body, icon: Compass });
+    } else if (lower.includes('aplicação prática') || lower.includes('aplicacao pratica')) {
+      blocks.push({ type: 'sessao', title: 'Aplicação Prática', content: body, icon: Stethoscope });
     } else if (lower.includes('pergunta')) {
-      blocks.push({ type: 'pergunta', title: 'Pergunta Clínica', content: body, icon: MessageSquareQuote });
-    } else if (lower.includes('alerta')) {
-      blocks.push({ type: 'alerta', title: 'Alerta Ético', content: body, icon: AlertTriangle });
+      blocks.push({ type: 'pergunta', title: 'Pergunta Terapêutica', content: body, icon: MessageSquareQuote });
+    } else if (lower.includes('limite ético') || lower.includes('limite etico')) {
+      blocks.push({ type: 'alerta', title: 'Limite Ético', content: body, icon: AlertTriangle });
     } else {
       blocks.push({ type: 'text', title: heading, content: body, icon: Sparkles });
     }
