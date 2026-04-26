@@ -24,6 +24,7 @@ export interface PontoRota {
   ref_tipo?: string;
   ref_id?: string;
   conteudo_inline?: any;
+  metadata?: any;
   impacto_cidadela?: {
     distrito: string;
     tipo_impacto: string;
