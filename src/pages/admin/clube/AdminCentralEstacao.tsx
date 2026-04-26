@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
@@ -9,13 +9,30 @@ import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft, Route, Calendar, Layers, Users, Loader2, Sparkles, Layout } from 'lucide-react';
 import { EstradaTab } from '@/components/admin/central-jornadas/EstradaTab';
 import { SemanasTab } from '@/components/admin/central-jornadas/SemanasTab';
+import { EntradaTab } from '@/components/admin/central-jornadas/EntradaTab';
 import { AplicacaoTab } from '@/components/admin/central-jornadas/AplicacaoTab';
 import { EncontroTab } from '@/components/admin/central-jornadas/EncontroTab';
 
 
 export default function AdminCentralEstacao() {
   const { estacaoId } = useParams<{ estacaoId: string }>();
-  const [activeTab, setActiveTab] = useState('semanas');
+  const [activeTab, setActiveTab] = useState('entrada');
+
+  // Auto-switch to Weeks if entry is empty? Or keep manual. Manual is safer.
+  // But let's check search params for tab
+  const [searchParams, setSearchParams] = useState(new URLSearchParams(window.location.search));
+  
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab) setActiveTab(tab);
+  }, [searchParams]);
+
+  const onTabChange = (val: string) => {
+    setActiveTab(val);
+    const newParams = new URLSearchParams(window.location.search);
+    newParams.set('tab', val);
+    window.history.replaceState(null, '', `?${newParams.toString()}`);
+  };
 
   const { data: estacao, isLoading } = useQuery({
     queryKey: ['admin-estacao-detail', estacaoId],
@@ -81,7 +98,7 @@ export default function AdminCentralEstacao() {
         </div>
 
         {/* Tabs - Alinhadas com as 4 Camadas da Aluna */}
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <Tabs value={activeTab} onValueChange={onTabChange}>
           <TabsList className="grid w-full grid-cols-5 mb-6 bg-muted/30 p-1 border border-primary/5 h-auto">
             <TabsTrigger value="entrada" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
               <Sparkles className="w-3.5 h-3.5" />
@@ -106,20 +123,7 @@ export default function AdminCentralEstacao() {
           </TabsList>
 
           <TabsContent value="entrada">
-            <div className="bg-card/50 border border-primary/10 rounded-lg p-8 text-center space-y-4">
-              <div className="mx-auto w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center">
-                <Layout className="w-6 h-6 text-gold" />
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-foreground">Camada 1: Entrada</h3>
-                <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                  Configuração do Quiz da Voz e Mapa da Cidadela vinculados a esta estação.
-                </p>
-              </div>
-              <Button variant="outline" size="sm" asChild>
-                <Link to="/admin/atelie-conteudo">Ir para Ateliê de Conteúdo</Link>
-              </Button>
-            </div>
+            <EntradaTab estacaoId={estacao.id} />
           </TabsContent>
           
           <TabsContent value="semanas">
