@@ -279,7 +279,7 @@ export function PassosRotaTab({ estacaoId }: Props) {
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold uppercase text-muted-foreground">Tipo de Passo</label>
-                  <Select value={form.tipo_passo} onValueChange={(v: any) => setForm({ ...form, tipo_passo: v })}>
+                  <Select value={form.tipo_passo} onValueChange={(v: 'portal' | 'escuta' | 'aplicacao' | 'registro' | 'integracao') => setForm({ ...form, tipo_passo: v })}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
