@@ -9,9 +9,11 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 interface Props {
   pontos: PontoRota[];
   pontoAtual: PontoRota | undefined;
+  concluirPonto?: (id: string) => void;
+  isConcluindo?: boolean;
 }
 
-export function RotaEstrada({ pontos, pontoAtual }: Props) {
+export function RotaEstrada({ pontos, pontoAtual, concluirPonto, isConcluindo }: Props) {
   const navigate = useNavigate();
 
   if (pontos.length === 0) return null;
