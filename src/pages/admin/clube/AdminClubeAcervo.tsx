@@ -1,4 +1,4 @@
-import AdminBooks from '@/pages/admin/AdminBooks';
+import AdminBooks from '@/components/admin/AdminCursosTab';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Library } from 'lucide-react';
 import { SectionHeader } from '@/components/shared/SectionHeader';
