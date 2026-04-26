@@ -17,11 +17,10 @@ export default function AdminClubeAcervo() {
         }}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
-        <SectionHeader
-          title="Acervo & Obras"
-          subtitle="Biblioteca de livros e áudios do Clube"
-          icon={<Library className="w-5 h-5" />}
-        />
+        <div className="flex-1 min-w-0">
+          <h2 className="text-xl font-serif text-foreground">Acervo & Obras</h2>
+          <p className="text-sm text-muted-foreground">Biblioteca de livros e áudios do Clube</p>
+        </div>
       </div>
       <AdminCursosTab />
     </div>

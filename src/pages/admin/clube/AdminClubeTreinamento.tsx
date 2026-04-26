@@ -38,11 +38,10 @@ export default function AdminClubeTreinamento() {
           }}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <SectionHeader
-            title="Laboratório Clínico"
-            subtitle="Configuração de simulações e práticas éticas"
-            icon={<GraduationCap className="w-5 h-5" />}
-          />
+          <div className="flex-1 min-w-0">
+            <h2 className="text-xl font-serif text-foreground">Laboratório Clínico</h2>
+            <p className="text-sm text-muted-foreground">Configuração de simulações e práticas éticas</p>
+          </div>
         </div>
 
         <div className="grid gap-6">

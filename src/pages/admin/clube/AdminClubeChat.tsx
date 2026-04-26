@@ -61,11 +61,10 @@ export default function AdminClubeChat() {
           }}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <SectionHeader
-            title="Configuração do Oráculo IA"
-            subtitle="Perguntas guiadas e base de conhecimento integrada"
-            icon={<MessageSquare className="w-5 h-5" />}
-          />
+          <div className="flex-1 min-w-0">
+             <h2 className="text-xl font-serif text-foreground">Configuração do Oráculo IA</h2>
+             <p className="text-sm text-muted-foreground">Perguntas guiadas e base de conhecimento integrada</p>
+          </div>
         </div>
 
         <div className="grid gap-6">
