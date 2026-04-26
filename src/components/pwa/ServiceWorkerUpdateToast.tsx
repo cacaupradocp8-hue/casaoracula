@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
 import { toast } from "@/components/ui/sonner";
 
@@ -9,13 +9,15 @@ import { toast } from "@/components/ui/sonner";
  * - Mostra toast apenas se auto-update falhar
  */
 export function ServiceWorkerUpdateToast() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   const {
     needRefresh: [needRefresh],
     updateServiceWorker,
   } = useRegisterSW({
     immediate: true,
     onRegisteredSW(_swUrl, registration) {
-      // Check for updates every 30 seconds (more aggressive)
       if (registration) {
         setInterval(() => {
           registration.update();
@@ -24,12 +26,13 @@ export function ServiceWorkerUpdateToast() {
     },
   });
 
+
   const doUpdate = useCallback(() => {
     updateServiceWorker(true);
   }, [updateServiceWorker]);
 
   useEffect(() => {
-    if (!needRefresh) return;
+    if (!mounted || !needRefresh) return;
 
     // Try to auto-update first
     doUpdate();
@@ -49,6 +52,7 @@ export function ServiceWorkerUpdateToast() {
     return () => clearTimeout(timeout);
   }, [needRefresh, doUpdate]);
 
+  if (!mounted) return null;
   return null;
 }
 
