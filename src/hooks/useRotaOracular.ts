@@ -14,6 +14,7 @@ export interface PontoRota {
   id: string;
   slug: string;
   nome: string;
+  subtitulo?: string;
   icone: string;
   ordem: number;
   estado: PontoEstado;
