@@ -102,7 +102,7 @@ export default function ClubeChatLivro() {
     },
   });
 
-  const book = cycle?.clube_v2_obras?.[0];
+  const book = (cycle as any)?.clube_v2_obras?.[0];
 
   useEffect(() => {
     if (book && messages.length === 0) {
@@ -141,7 +141,7 @@ export default function ClubeChatLivro() {
     if (!input.trim() || isLoading) return;
     
     // Check limit
-    if (limitData && limitData.interactions_used >= limitData.interactions_limit) {
+    if (limitData && (limitData as any).interactions_used >= (limitData as any).interactions_limit) {
       toast.error('Limite diário alcançado. A leitura também precisa de silêncio.');
       return;
     }
@@ -175,7 +175,7 @@ export default function ClubeChatLivro() {
       await supabase.from('clube_livro_chat_interactions').insert({
         user_id: user?.id,
         book_id: book?.id,
-        cycle_id: cycle?.id,
+        cycle_id: (cycle as any)?.id,
         message: userMsg.content,
         response: responseContent,
       } as any);
@@ -185,8 +185,8 @@ export default function ClubeChatLivro() {
       await supabase.from('clube_daily_interaction_limits').upsert({
         user_id: user?.id,
         date: today,
-        interactions_used: (limitData?.interactions_used || 0) + 1,
-        interactions_limit: limitData?.interactions_limit || 10,
+        interactions_used: ((limitData as any)?.interactions_used || 0) + 1,
+        interactions_limit: (limitData as any)?.interactions_limit || 10,
         plan_type: user?.portal === 'admin' ? 'admin' : 'basico',
       } as any, { onConflict: 'user_id, date' });
 
@@ -218,11 +218,11 @@ export default function ClubeChatLivro() {
       const payload = {
         user_id: user.id,
         book_id: book?.id,
-        cycle_id: cycle?.id,
+        cycle_id: (cycle as any)?.id,
         interaction_type: builderTipo,
         message: messages[messages.length - 2]?.content || '',
         response: builderContent,
-        metadata: { ...tool, plan: limitData?.plan_type }
+        metadata: { ...tool, plan: (limitData as any)?.plan_type }
       };
 
       if (builderTipo === 'registro_jardim') {
@@ -306,18 +306,18 @@ export default function ClubeChatLivro() {
             
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] uppercase tracking-widest font-semibold text-muted-foreground bg-[#13101C]/50 px-4 py-2 rounded-full border border-white/5">
               <div className="flex items-center gap-1.5">
-                <span className="text-gold opacity-50">Rota:</span> {cycle?.portal || 'A Mulher Selvagem'}
+                <span className="text-gold opacity-50">Rota:</span> {(cycle as any)?.portal || 'A Mulher Selvagem'}
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="text-gold opacity-50">Ciclo:</span> {cycle?.title || 'Ano 1'}
+                <span className="text-gold opacity-50">Ciclo:</span> {(cycle as any)?.title || 'Ano 1'}
               </div>
               {limitData && (
                 <div className={cn(
                   "flex items-center gap-1.5",
-                  limitData.interactions_used >= limitData.interactions_limit - 3 ? "text-amber-500" : "text-emerald-500"
+                  (limitData as any).interactions_used >= (limitData as any).interactions_limit - 3 ? "text-amber-500" : "text-emerald-500"
                 )}>
                   <Sparkles className="w-3 h-3" />
-                  {limitData.interactions_used}/{limitData.interactions_limit} DIÁRIOS
+                  {(limitData as any).interactions_used}/{(limitData as any).interactions_limit} DIÁRIOS
                 </div>
               )}
             </div>
@@ -463,9 +463,9 @@ export default function ClubeChatLivro() {
                     className="min-h-[56px] max-h-48 pt-4 pb-4 px-5 resize-none bg-[#13101C] border-[#2A2340] text-sm placeholder:text-muted-foreground/40 rounded-2xl focus:ring-gold/20 transition-all shadow-inner"
                     disabled={isLoading}
                   />
-                  {limitData && limitData.interactions_used >= limitData.interactions_limit - 3 && (
+                  {limitData && (limitData as any).interactions_used >= (limitData as any).interactions_limit - 3 && (
                     <div className="absolute top-[-24px] right-2 text-[10px] text-amber-500 font-bold uppercase tracking-tighter animate-pulse">
-                      Atenção: resta(m) {limitData.interactions_limit - limitData.interactions_used} uso(s) hoje
+                      Atenção: resta(m) {(limitData as any).interactions_limit - (limitData as any).interactions_used} uso(s) hoje
                     </div>
                   )}
                 </div>
