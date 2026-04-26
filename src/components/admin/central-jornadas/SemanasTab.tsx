@@ -133,7 +133,7 @@ export function SemanasTab({ estacaoId }: Props) {
         <p className="text-sm text-muted-foreground">
           Conteúdo semanal — áudio, prática e pergunta contemplativa
         </p>
-        <Button size="sm" onClick={openCreate}>
+        <Button size="sm" onClick={(e) => openCreate(e)}>
           <Plus className="w-3.5 h-3.5 mr-1" /> Nova semana
         </Button>
       </div>
