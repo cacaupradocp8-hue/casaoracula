@@ -176,3 +176,21 @@ export function useToolDistricts() {
     },
   });
 }
+
+export function useCidadelaMapa(userId: string | undefined) {
+  return useQuery({
+    queryKey: ['cidadela-mapa', userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data, error } = await supabase
+        .from('cidadela_mapa_vivo')
+        .select('*')
+        .eq('user_id', userId)
+        .order('ultima_atualizacao', { ascending: false });
+      
+      if (error) throw error;
+      return (data || []) as CidadelaMapaVivo[];
+    },
+    enabled: !!userId,
+  });
+}
