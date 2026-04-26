@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   Plus, Pencil, ChevronDown, Headphones, Loader2, Trash2, 
   MessageSquare, Dumbbell, Flower2, Stethoscope, Map as MapIcon,
-  BookOpen, Info
+  BookOpen, Info, Sparkles
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
