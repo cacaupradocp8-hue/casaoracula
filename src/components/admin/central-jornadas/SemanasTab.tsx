@@ -116,7 +116,9 @@ export function SemanasTab({ estacaoId }: Props) {
     return <div className="flex justify-center py-12"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>;
   }
 
-  const openCreate = () => {
+  const openCreate = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setEditingSemana(null);
     setForm({
       semana_numero: (semanas[semanas.length - 1]?.semana_numero || 0) + 1,
@@ -133,7 +135,7 @@ export function SemanasTab({ estacaoId }: Props) {
         <p className="text-sm text-muted-foreground">
           Conteúdo semanal — áudio, prática e pergunta contemplativa
         </p>
-        <Button size="sm" onClick={openCreate}>
+        <Button size="sm" onClick={(e) => openCreate(e)}>
           <Plus className="w-3.5 h-3.5 mr-1" /> Nova semana
         </Button>
       </div>

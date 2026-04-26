@@ -124,9 +124,9 @@ export function EstradaTab({ estacaoId }: Props) {
     },
   });
 
-  const openCreate = (e?: React.MouseEvent) => {
-    e?.preventDefault();
-    e?.stopPropagation();
+  const openCreate = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setEditing(null);
     setForm({ nome: '', subtitulo: '', descricao: '', icone: '', cor: '', ordem: jornadas.length, conteudo_semanal_id: '' });
     setDialogOpen(true);

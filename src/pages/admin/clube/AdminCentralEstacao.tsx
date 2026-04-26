@@ -1,21 +1,21 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, Route, Calendar, Layers, Users, Loader2 } from 'lucide-react';
+import { ArrowLeft, Route, Calendar, Layers, Users, Loader2, Sparkles, Layout } from 'lucide-react';
 import { EstradaTab } from '@/components/admin/central-jornadas/EstradaTab';
 import { SemanasTab } from '@/components/admin/central-jornadas/SemanasTab';
 import { AplicacaoTab } from '@/components/admin/central-jornadas/AplicacaoTab';
 import { EncontroTab } from '@/components/admin/central-jornadas/EncontroTab';
 
+
 export default function AdminCentralEstacao() {
   const { estacaoId } = useParams<{ estacaoId: string }>();
-  const [activeTab, setActiveTab] = useState('estrada');
+  const [activeTab, setActiveTab] = useState('semanas');
 
   const { data: estacao, isLoading } = useQuery({
     queryKey: ['admin-estacao-detail', estacaoId],
@@ -80,36 +80,60 @@ export default function AdminCentralEstacao() {
           </div>
         </div>
 
-        {/* Tabs */}
+        {/* Tabs - Alinhadas com as 4 Camadas da Aluna */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4 mb-6">
-            <TabsTrigger value="estrada" className="gap-1.5 text-xs">
-              <Route className="w-3.5 h-3.5" />
-              Estrada
+          <TabsList className="grid w-full grid-cols-5 mb-6 bg-muted/30 p-1 border border-primary/5 h-auto">
+            <TabsTrigger value="entrada" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+              <Sparkles className="w-3.5 h-3.5" />
+              1. Entrada
             </TabsTrigger>
-            <TabsTrigger value="semanas" className="gap-1.5 text-xs">
+            <TabsTrigger value="semanas" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
               <Calendar className="w-3.5 h-3.5" />
-              Semanas
+              2. Imersão
             </TabsTrigger>
-            <TabsTrigger value="aplicacao" className="gap-1.5 text-xs">
+            <TabsTrigger value="estrada" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+              <Route className="w-3.5 h-3.5" />
+              3. Estrada
+            </TabsTrigger>
+            <TabsTrigger value="aplicacao" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
               <Layers className="w-3.5 h-3.5" />
-              Laboratório
+              4. Treino
             </TabsTrigger>
-            <TabsTrigger value="encontro" className="gap-1.5 text-xs">
+            <TabsTrigger value="encontro" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
               <Users className="w-3.5 h-3.5" />
-              Encontro
+              Apoio
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="estrada">
-            <EstradaTab estacaoId={estacao.id} />
+          <TabsContent value="entrada">
+            <div className="bg-card/50 border border-primary/10 rounded-lg p-8 text-center space-y-4">
+              <div className="mx-auto w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center">
+                <Layout className="w-6 h-6 text-gold" />
+              </div>
+              <div>
+                <h3 className="text-lg font-medium text-foreground">Camada 1: Entrada</h3>
+                <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                  Configuração do Quiz da Voz e Mapa da Cidadela vinculados a esta estação.
+                </p>
+              </div>
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/admin/atelie-conteudo">Ir para Ateliê de Conteúdo</Link>
+              </Button>
+            </div>
           </TabsContent>
+          
           <TabsContent value="semanas">
             <SemanasTab estacaoId={estacao.id} />
           </TabsContent>
+          
+          <TabsContent value="estrada">
+            <EstradaTab estacaoId={estacao.id} />
+          </TabsContent>
+          
           <TabsContent value="aplicacao">
             <AplicacaoTab estacao={estacao} />
           </TabsContent>
+          
           <TabsContent value="encontro">
             <EncontroTab estacaoId={estacao.id} />
           </TabsContent>
