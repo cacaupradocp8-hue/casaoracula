@@ -310,6 +310,7 @@ export function useRotaOracular() {
     progresso,
     encontro: encontro || null,
     progressoRota: progressoArray,
+    concluirPonto,
     estacaoIncompleta,
     isLoading: loadingEstacao,
   };
