@@ -15,17 +15,26 @@ const AdminOraculoPortalEditor = React.lazy(() => import('@/pages/admin/clube/Ad
 
 // Clube de Leitura Oracular — Hub + Sub-páginas
 const AdminClubeHub = React.lazy(() => import('@/pages/admin/clube/AdminClubeHub'));
-const AdminClubeCiclos = React.lazy(() => import('@/pages/admin/clube/AdminClubeCiclos'));
+const AdminCentralJornadas = React.lazy(() => import('@/pages/admin/clube/AdminCentralJornadas'));
 const AdminClubeAcervo = React.lazy(() => import('@/pages/admin/clube/AdminClubeAcervo'));
+const AdminPortalCMS = React.lazy(() => import('@/pages/admin/clube/AdminPortalCMS'));
+const AdminClubeTreinamento = React.lazy(() => import('@/pages/admin/clube/AdminClubeTreinamento'));
+const AdminClubeChat = React.lazy(() => import('@/pages/admin/clube/AdminClubeChat'));
+
+// Sub-páginas detalhadas
+const AdminCentralEstacao = React.lazy(() => import('@/pages/admin/clube/AdminCentralEstacao'));
+const AdminOraculoPortais = React.lazy(() => import('@/pages/admin/clube/AdminOraculoPortais'));
+const AdminOraculoPortalEditor = React.lazy(() => import('@/pages/admin/clube/AdminOraculoPortalEditor'));
+
+// Legado (serão removidas do menu, mas mantidas as rotas)
+const AdminClubeCiclos = React.lazy(() => import('@/pages/admin/clube/AdminClubeCiclos'));
 const AdminClubeEstacoes = React.lazy(() => import('@/pages/admin/clube/AdminClubeEstacoes'));
 const AdminClubeEscutas = React.lazy(() => import('@/pages/admin/clube/AdminClubeEscutas'));
 const AdminClubeEncontros = React.lazy(() => import('@/pages/admin/clube/AdminClubeEncontros'));
 const AdminClubeGerador = React.lazy(() => import('@/pages/admin/clube/AdminClubeGerador'));
 const AdminClubePortais = React.lazy(() => import('@/pages/admin/clube/AdminClubePortais'));
 const AdminClubeConfig = React.lazy(() => import('@/pages/admin/clube/AdminClubeConfig'));
-// Central de Jornadas (novo fluxo centralizado)
-const AdminCentralJornadas = React.lazy(() => import('@/pages/admin/clube/AdminCentralJornadas'));
-const AdminCentralEstacao = React.lazy(() => import('@/pages/admin/clube/AdminCentralEstacao'));
+const AdminClubeJornadas = React.lazy(() => import('@/pages/admin/clube/AdminClubeJornadas'));
 
 type PR = React.ComponentType<{ children: React.ReactNode; minPortal?: string }>;
 
@@ -38,8 +47,22 @@ export function renderAdminRoutes(ProtectedRoute: PR) {
     <Route key="adm-bk" path="/admin/books" element={<ProtectedRoute minPortal="admin"><AdminBooks /></ProtectedRoute>} />,
     <Route key="adm-oc" path="/admin/oracle-cards" element={<ProtectedRoute minPortal="admin"><AdminOracleCardsPage /></ProtectedRoute>} />,
     <Route key="adm-al" path="/admin/alunas-acompanhamento" element={<ProtectedRoute minPortal="admin"><AdminAlunaAcompanhamento /></ProtectedRoute>} />,
-    // Clube de Leitura Oracular
-    <Route key="adm-cl-hub" path="/admin/clube-livro" element={<ProtectedRoute minPortal="admin"><AdminClubeHub /></ProtectedRoute>} />,
+    
+    // ═══ ESTRUTURA OFICIAL CLUBE ═══
+    <Route key="adm-cl-hub" path="/admin/clube" element={<ProtectedRoute minPortal="admin"><AdminClubeHub /></ProtectedRoute>} />,
+    <Route key="adm-cl-ciclos-new" path="/admin/clube/ciclos" element={<ProtectedRoute minPortal="admin"><AdminCentralJornadas /></ProtectedRoute>} />,
+    <Route key="adm-cl-portais-new" path="/admin/clube/portais" element={<ProtectedRoute minPortal="admin"><AdminPortalCMS /></ProtectedRoute>} />,
+    <Route key="adm-cl-conteudos-new" path="/admin/clube/conteudos" element={<ProtectedRoute minPortal="admin"><AdminClubeAcervo /></ProtectedRoute>} />,
+    <Route key="adm-cl-treinamento-new" path="/admin/clube/treinamento" element={<ProtectedRoute minPortal="admin"><AdminClubeTreinamento /></ProtectedRoute>} />,
+    <Route key="adm-cl-chat-new" path="/admin/clube/chat" element={<ProtectedRoute minPortal="admin"><AdminClubeChat /></ProtectedRoute>} />,
+    
+    // Sub-páginas da Central
+    <Route key="adm-central-est" path="/admin/clube/central/:estacaoId" element={<ProtectedRoute minPortal="admin"><AdminCentralEstacao /></ProtectedRoute>} />,
+    <Route key="adm-cl-oraculo-portais" path="/admin/clube/oraculo-portais" element={<ProtectedRoute minPortal="admin"><AdminOraculoPortais /></ProtectedRoute>} />,
+    <Route key="adm-cl-oraculo-portal-edit" path="/admin/clube/oraculo-portais/:portalId" element={<ProtectedRoute minPortal="admin"><AdminOraculoPortalEditor /></ProtectedRoute>} />,
+
+    // ═══ LEGADO (MANTIDO PARA NÃO QUEBRAR) ═══
+    <Route key="adm-cl-hub-old" path="/admin/clube-livro" element={<ProtectedRoute minPortal="admin"><AdminClubeHub /></ProtectedRoute>} />,
     <Route key="adm-cl-ciclos" path="/admin/clube-livro/ciclos" element={<ProtectedRoute minPortal="admin"><AdminClubeCiclos /></ProtectedRoute>} />,
     <Route key="adm-cl-acervo" path="/admin/clube-livro/acervo" element={<ProtectedRoute minPortal="admin"><AdminClubeAcervo /></ProtectedRoute>} />,
     <Route key="adm-cl-estacoes" path="/admin/clube-livro/estacoes" element={<ProtectedRoute minPortal="admin"><AdminClubeEstacoes /></ProtectedRoute>} />,
@@ -48,12 +71,8 @@ export function renderAdminRoutes(ProtectedRoute: PR) {
     <Route key="adm-cl-gerador" path="/admin/clube-livro/gerador" element={<ProtectedRoute minPortal="admin"><AdminClubeGerador /></ProtectedRoute>} />,
     <Route key="adm-cl-portais" path="/admin/clube-livro/portais" element={<ProtectedRoute minPortal="admin"><AdminClubePortais /></ProtectedRoute>} />,
     <Route key="adm-cl-config" path="/admin/clube-livro/config" element={<ProtectedRoute minPortal="admin"><AdminClubeConfig /></ProtectedRoute>} />,
-    // Central de Jornadas
     <Route key="adm-central" path="/admin/clube-livro/central" element={<ProtectedRoute minPortal="admin"><AdminCentralJornadas /></ProtectedRoute>} />,
-    <Route key="adm-central-est" path="/admin/clube-livro/central/:estacaoId" element={<ProtectedRoute minPortal="admin"><AdminCentralEstacao /></ProtectedRoute>} />,
     <Route key="adm-cl-jornadas" path="/admin/clube-livro/jornadas" element={<ProtectedRoute minPortal="admin"><AdminClubeJornadas /></ProtectedRoute>} />,
     <Route key="adm-cl-portais-cms" path="/admin/clube-livro/portais-cms" element={<ProtectedRoute minPortal="admin"><AdminPortalCMS /></ProtectedRoute>} />,
-    <Route key="adm-cl-oraculo-portais" path="/admin/clube-livro/oraculo-portais" element={<ProtectedRoute minPortal="admin"><AdminOraculoPortais /></ProtectedRoute>} />,
-    <Route key="adm-cl-oraculo-portal-edit" path="/admin/clube-livro/oraculo-portais/:portalId" element={<ProtectedRoute minPortal="admin"><AdminOraculoPortalEditor /></ProtectedRoute>} />,
   ];
 }
