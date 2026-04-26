@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, BookOpen, Loader2, MapPin, Calendar, ExternalLink } from 'lucide-react';
+import { ArrowRight, BookOpen, Loader2, MapPin, Calendar, ExternalLink, ListOrdered } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
