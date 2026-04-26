@@ -321,7 +321,7 @@ export function PassosRotaTab({ estacaoId }: Props) {
                     className="font-mono text-[10px]"
                     rows={4}
                   />
-                  <p className="text-[9px] text-muted-foreground italic">Ex: [{"distrito":"instinto", "intensidade":1, "tipo_impacto":"ativação"}]</p>
+                  <p className="text-[9px] text-muted-foreground italic">Ex: {'['}&#123;"distrito":"instinto", "intensidade":1, "tipo_impacto":"ativação"&#125;{']'}</p>
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold uppercase text-muted-foreground">Rótulo Próximo Passo</label>
