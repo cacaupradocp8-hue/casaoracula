@@ -159,41 +159,81 @@ export function ClubeHomePage() {
         )}
 
         {/* ============================================
-            3. CAMADA 1: ENTRADA
+            3. CAMADA 1: INICIAÇÃO (Destaque se no início)
             ============================================ */}
-        <RotaEntrada />
-
-        {/* ============================================
-            4. CAMADA 2: IMERSÃO (ESTRADA + CONTEÚDO)
-            ============================================ */}
-        <RotaImersao estacaoId={estacaoAtual?.id} />
-        
-        {pontos.length > 0 && (
-          <RotaEstrada 
-            pontos={pontos} 
-            pontoAtual={pontoAtual} 
-            concluirPonto={(id) => concluirPonto.mutate(id)}
-            isConcluindo={concluirPonto.isPending}
-          />
+        {(!pontoAtual || pontoAtual.ordem <= 10) && (
+          <RotaEntrada />
         )}
 
         {/* ============================================
-            NOVA CAMADA: ROTAS EXECUTÁVEIS DO MÊS 1
+            4. CAMADA 2: A ESTRADA (FLUXO SEQUENCIAL)
             ============================================ */}
-        <RotaExecutavelMes1 />
+        {pontos.length > 0 && (
+          <div className="space-y-12">
+            <RotaEstrada 
+              pontos={pontos} 
+              pontoAtual={pontoAtual} 
+              concluirPonto={(id) => concluirPonto.mutate(id)}
+              isConcluindo={concluirPonto.isPending}
+            />
+
+            {/* Passo Ativo em Destaque (Estilo Netflix) */}
+            {pontoAtual && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="space-y-4"
+              >
+                <div className="flex items-center justify-between">
+                   <h3 className="text-sm font-display uppercase tracking-widest text-primary">Seu Próximo Passo</h3>
+                   {pontoAtual.ref_tipo && (
+                     <Badge variant="outline" className="text-[8px] opacity-40 uppercase tracking-tighter">Tipo: {pontoAtual.ref_tipo}</Badge>
+                   )}
+                </div>
+                <Card className="border-gold/30 bg-gold/5 shadow-[0_0_30px_rgba(201,169,110,0.05)]">
+                   <CardContent className="p-6 space-y-4">
+                      <div className="flex items-start gap-4">
+                         <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-2xl border border-gold/20">
+                            {pontoAtual.icone}
+                         </div>
+                         <div className="flex-1">
+                            <h4 className="text-xl font-serif text-foreground">{pontoAtual.nome}</h4>
+                            <p className="text-xs text-muted-foreground">{pontoAtual.subtitulo || 'Atividade da jornada'}</p>
+                         </div>
+                      </div>
+
+                      {pontoAtual.conteudo_inline?.texto && (
+                        <div className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line border-l-2 border-primary/20 pl-4 py-1 italic">
+                           {pontoAtual.conteudo_inline.texto}
+                        </div>
+                      )}
+
+                      <Button 
+                        variant="gold" 
+                        className="w-full gap-2 font-bold h-12"
+                        onClick={() => navigate(pontoAtual.rota)}
+                      >
+                         Iniciar Agora
+                         <ArrowRight className="w-4 h-4" />
+                      </Button>
+                   </CardContent>
+                </Card>
+              </motion.div>
+            )}
+          </div>
+        )}
 
         {/* ============================================
-            5. CAMADA 3: TREINO (SALA DE TREINAMENTO)
+            5. APOIO E RECURSOS (Mergulho Semanal)
             ============================================ */}
+        <RotaImersao estacaoId={estacaoAtual?.id} />
+
+        {/* 6. APLICAÇÕES (Mantendo compatibilidade) */}
+        <RotaAplicacao />
         <RotaLaboratorio
           estacaoId={estacaoAtual?.id}
           livroTitulo={estacaoAtual?.livro_titulo}
         />
-
-        {/* ============================================
-            6. CAMADA 4: APLICAÇÃO (CHAT, JARDIM, LAB 80/20)
-            ============================================ */}
-        <RotaAplicacao />
 
         {/* ============================================
             5. MINI CIDADELA
