@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { SectionHeader } from '@/components/shared/SectionHeader';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+// import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -99,6 +99,7 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function AdminPortalCMS() {
+  const navigate = useNavigate();
   const [params] = useSearchParams();
   const jornadaId = params.get('jornada');
   const { toast } = useToast();
@@ -274,14 +275,16 @@ export default function AdminPortalCMS() {
     <div className="animate-in slide-in-from-bottom-2 duration-500">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center gap-4 mb-6">
-          <Button variant="ghost" size="icon" onClick={() => (window as any).Admin_SetActiveTab?.('clube')}>
+          <Button variant="ghost" size="icon" onClick={() => {
+            (window as any).Admin_SetActiveTab?.('clube');
+            navigate('/admin/clube');
+          }}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <SectionHeader
-            title="Editor de Portais"
-            subtitle={jornada?.nome || 'Estrutura simbólica do Clube'}
-            icon={<DoorOpen className="w-5 h-5" />}
-          />
+          <div className="flex-1 min-w-0">
+            <h2 className="text-xl font-serif text-foreground">Editor de Portais</h2>
+            <p className="text-sm text-muted-foreground">{jornada?.nome || 'Estrutura simbólica do Clube'}</p>
+          </div>
         </div>
 
         <div className="mb-6">

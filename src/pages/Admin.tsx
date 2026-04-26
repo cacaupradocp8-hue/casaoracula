@@ -3,12 +3,12 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { useAdminPreview } from '@/contexts/AdminPreviewContext';
 import { Button } from '@/components/ui/button';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { PortalType } from '@/types/portal';
-import { Loader2, Settings, Eye, EyeOff, AlertTriangle, Sparkles } from 'lucide-react';
+import { Loader2, Settings, Eye, EyeOff, AlertTriangle, Sparkles, Layout } from 'lucide-react';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { BootSafeBoundary } from '@/components/shared/BootSafeBoundary';
 
@@ -153,14 +153,43 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
 export default function Admin() {
   const { isPreviewMode, previewPortal, enablePreviewMode, disablePreviewMode } = useAdminPreview();
   const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'clube');
+  const location = useLocation();
+  
+  // Logic to determine initial tab from URL path or search param
+  const getInitialTab = () => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && TAB_COMPONENTS[tabParam]) return tabParam;
+    
+    // Map URL paths to tabs
+    const path = location.pathname;
+    if (path === '/admin/clube') return 'clube';
+    if (path === '/admin/clube/ciclos') return 'clube-jornadas';
+    if (path === '/admin/clube/portais') return 'clube-portais';
+    if (path === '/admin/clube/conteudos') return 'clube-acervo';
+    if (path === '/admin/clube/treinamento') return 'clube-treinamento';
+    if (path === '/admin/clube/chat') return 'clube-chat';
+    if (path.startsWith('/admin/clube/central/')) {
+      const id = path.split('/').pop();
+      return `central-estacao-${id}`;
+    }
+    
+    if (path.startsWith('/admin/clube-livro')) return 'clube';
+    
+    return 'clube';
+  };
+
+  const [activeTab, setActiveTab] = useState(getInitialTab());
 
   useEffect(() => {
     const tab = searchParams.get('tab');
     if (tab && TAB_COMPONENTS[tab]) {
       setActiveTab(tab);
+    } else {
+      // Also update based on path if it changes (for direct route navigation)
+      const newTab = getInitialTab();
+      if (newTab !== activeTab) setActiveTab(newTab);
     }
-  }, [searchParams]);
+  }, [searchParams, location.pathname]);
 
   // Expose setActiveTab globally for child components
   React.useEffect(() => {
@@ -168,8 +197,17 @@ export default function Admin() {
     (window as any).Admin_ActiveTab = activeTab;
   }, [activeTab]);
 
+  const isCentralEstacaoPath = location.pathname.startsWith('/admin/clube/central/');
+  const centralEstacaoId = isCentralEstacaoPath ? location.pathname.split('/').pop() : null;
+
   const ActiveComponent = TAB_COMPONENTS[activeTab] || 
-    (activeTab.startsWith('central-estacao-') ? AdminCentralEstacao : null);
+    (activeTab.startsWith('central-estacao-') || isCentralEstacaoPath ? AdminCentralEstacao : null);
+
+  // If we are on a detail route that should be handled by the Admin component
+  // but doesn't have a specific tab component, we check the URL path
+  const isDirectClubeRoute = location.pathname.startsWith('/admin/clube');
+  const ActualActiveComponent = ActiveComponent || (isDirectClubeRoute ? AdminClubeHub : null);
+
 
   return (
     <AppLayout>
@@ -180,11 +218,18 @@ export default function Admin() {
           <div className="px-6 py-6 pb-20">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
-              {activeTab !== 'clube' && (
+              {activeTab !== 'clube' && !isDirectClubeRoute && (
                 <SectionHeader
                   title="Painel da Guardiã"
                   subtitle="Gerencie a Casa ORÁCULA com clareza e cuidado"
                   icon={<Settings className="w-5 h-5" />}
+                />
+              )}
+              {isDirectClubeRoute && activeTab !== 'clube' && (
+                <SectionHeader
+                  title="Clube Editorial"
+                  subtitle="Operação Premium"
+                  icon={<Layout className="w-5 h-5 text-gold" />}
                 />
               )}
 
@@ -234,10 +279,10 @@ export default function Admin() {
             )}
 
             {/* Active tab content */}
-            {ActiveComponent && (
+            {ActualActiveComponent && (
               <BootSafeBoundary label={`AdminTab: ${activeTab}`}>
                 <Suspense fallback={<TabLoader />}>
-                  <ActiveComponent />
+                  <ActualActiveComponent />
                 </Suspense>
               </BootSafeBoundary>
             )}

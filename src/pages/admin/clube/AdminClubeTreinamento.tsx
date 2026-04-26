@@ -1,4 +1,4 @@
-import { SectionHeader } from '@/components/shared/SectionHeader';
+// import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, GraduationCap, Info } from 'lucide-react';
@@ -32,17 +32,16 @@ export default function AdminClubeTreinamento() {
           <Button variant="ghost" size="icon" onClick={() => {
             if ((window as any).Admin_SetActiveTab) {
               (window as any).Admin_SetActiveTab('clube');
-            } else {
-              navigate('/admin/clube');
             }
+            navigate('/admin/clube');
+
           }}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <SectionHeader
-            title="Laboratório Clínico"
-            subtitle="Configuração de simulações e práticas éticas"
-            icon={<GraduationCap className="w-5 h-5" />}
-          />
+          <div className="flex-1 min-w-0">
+            <h2 className="text-xl font-serif text-foreground">Laboratório Clínico</h2>
+            <p className="text-sm text-muted-foreground">Configuração de simulações e práticas éticas</p>
+          </div>
         </div>
 
         <div className="grid gap-6">

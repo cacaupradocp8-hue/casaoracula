@@ -1,4 +1,4 @@
-import { SectionHeader } from '@/components/shared/SectionHeader';
+// import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, MessageSquare, Info, Plus, Trash2 } from 'lucide-react';
@@ -55,17 +55,16 @@ export default function AdminClubeChat() {
           <Button variant="ghost" size="icon" onClick={() => {
             if ((window as any).Admin_SetActiveTab) {
               (window as any).Admin_SetActiveTab('clube');
-            } else {
-              navigate('/admin/clube');
             }
+            navigate('/admin/clube');
+
           }}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <SectionHeader
-            title="Configuração do Oráculo IA"
-            subtitle="Perguntas guiadas e base de conhecimento integrada"
-            icon={<MessageSquare className="w-5 h-5" />}
-          />
+          <div className="flex-1 min-w-0">
+             <h2 className="text-xl font-serif text-foreground">Configuração do Oráculo IA</h2>
+             <p className="text-sm text-muted-foreground">Perguntas guiadas e base de conhecimento integrada</p>
+          </div>
         </div>
 
         <div className="grid gap-6">

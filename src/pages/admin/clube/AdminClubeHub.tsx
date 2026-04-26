@@ -8,6 +8,7 @@ import {
   ArrowRight, Wrench, Settings, Sparkles, Plus, Clock, Layout, LucideIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 
@@ -76,6 +77,7 @@ const PREMIUM_CARDS: HubCard[] = [
 ];
 
 export default function AdminClubeHub() {
+  const navigate = useNavigate();
   const { data: stats } = useQuery({
     queryKey: ['admin-clube-hub-premium-stats'],
     queryFn: async () => {
@@ -112,8 +114,22 @@ export default function AdminClubeHub() {
   };
 
   const handleTabChange = (tab: string) => {
-    if ((window as any).Admin_SetActiveTab) {
-      (window as any).Admin_SetActiveTab(tab);
+    // Navigate via URL to ensure the Admin component's effect picks it up
+    // This is safer than just calling the global function which might be stale
+    switch (tab) {
+      case 'clube-jornadas': navigate('/admin/clube/ciclos'); break;
+      case 'clube-portais': navigate('/admin/clube/portais'); break;
+      case 'clube-acervo': navigate('/admin/clube/conteudos'); break;
+      case 'clube-treinamento': navigate('/admin/clube/treinamento'); break;
+      case 'clube-chat': navigate('/admin/clube/chat'); break;
+      case 'settings': navigate('/admin?tab=settings'); break;
+      case 'gerador-semanal': navigate('/admin?tab=gerador-semanal'); break;
+      default:
+        if ((window as any).Admin_SetActiveTab) {
+          (window as any).Admin_SetActiveTab(tab);
+        } else {
+          navigate(`/admin?tab=${tab}`);
+        }
     }
   };
 
@@ -210,7 +226,7 @@ export default function AdminClubeHub() {
               </div>
               <div className="mt-auto pt-6 flex items-center justify-between">
                 <span className="text-[10px] uppercase tracking-widest text-gold font-bold">Laboratório 80/20</span>
-                <Button size="sm" variant="ghost" className="text-gold hover:bg-gold/10">Acessar Ferramenta</Button>
+                <Button size="sm" variant="ghost" className="text-gold hover:bg-gold/10" onClick={() => navigate('/admin/atelie-conteudo')}>Acessar Ferramenta</Button>
               </div>
             </CardContent>
           </Card>
@@ -253,7 +269,7 @@ export default function AdminClubeHub() {
                  O admin agora é modular. Cada área acima representa um pilar do Clube.
                  Use o <strong>Ateliê de Conteúdo</strong> para acelerar a criação de materiais semanais.
                </p>
-               <Button variant="link" className="text-gold hover:text-gold/80 uppercase tracking-widest text-[10px] font-bold">
+               <Button variant="link" className="text-gold hover:text-gold/80 uppercase tracking-widest text-[10px] font-bold" onClick={() => navigate('/admin/modulos-formativos')}>
                  Ver Documentação do Sistema
                </Button>
             </CardContent>

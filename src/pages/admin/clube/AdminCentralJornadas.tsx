@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { SectionHeader } from '@/components/shared/SectionHeader';
+// import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -40,17 +40,15 @@ export default function AdminCentralJornadas() {
         <Button variant="ghost" size="icon" onClick={() => {
           if ((window as any).Admin_SetActiveTab) {
             (window as any).Admin_SetActiveTab('clube');
-          } else {
-            navigate('/admin/clube');
           }
+          navigate('/admin/clube');
         }}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
-        <SectionHeader
-          title="Central de Ciclos"
-          subtitle="Gerencie estações, estradas e livros ativos"
-          icon={<BookOpen className="w-5 h-5" />}
-        />
+        <div className="flex-1 min-w-0">
+          <h2 className="text-xl font-serif text-foreground">Central de Ciclos</h2>
+          <p className="text-sm text-muted-foreground">Gerencie estações, estradas e livros ativos</p>
+        </div>
       </div>
 
       {isLoading ? (
@@ -66,7 +64,10 @@ export default function AdminCentralJornadas() {
       ) : (
         <div className="space-y-3">
           {estacoes.map((e) => (
-            <div key={e.id} onClick={() => (window as any).Admin_SetActiveTab?.(`central-estacao-${e.id}`)} className="group block cursor-pointer">
+            <div key={e.id} onClick={() => {
+              (window as any).Admin_SetActiveTab?.(`central-estacao-${e.id}`);
+              navigate(`/admin/clube/central/${e.id}`);
+            }} className="group block cursor-pointer">
               <Card className="hover:border-gold/40 hover:shadow-md transition-all">
                 <CardContent className="p-4 flex items-center gap-4">
                   {e.livro_capa_url ? (

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -13,6 +13,7 @@ import { AplicacaoTab } from '@/components/admin/central-jornadas/AplicacaoTab';
 import { EncontroTab } from '@/components/admin/central-jornadas/EncontroTab';
 
 export default function AdminCentralEstacao() {
+  const navigate = useNavigate();
   const { estacaoId: paramId } = useParams<{ estacaoId: string }>();
   const activeAdminTab = (window as any).Admin_ActiveTab || '';
   const estacaoId = paramId || (activeAdminTab.startsWith('central-estacao-') ? activeAdminTab.replace('central-estacao-', '') : null);
@@ -59,7 +60,10 @@ export default function AdminCentralEstacao() {
     <div className="container mx-auto px-4 py-8 max-w-5xl">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
-            <Button variant="ghost" size="icon" onClick={() => (window as any).Admin_SetActiveTab?.('clube-jornadas')}>
+            <Button variant="ghost" size="icon" onClick={() => {
+              (window as any).Admin_SetActiveTab?.('clube-jornadas');
+              navigate('/admin/clube/ciclos');
+            }}>
               <ArrowLeft className="h-4 w-4" />
             </Button>
           <div className="flex-1 min-w-0">

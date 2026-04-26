@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Library } from 'lucide-react';
-import { SectionHeader } from '@/components/shared/SectionHeader';
+// import { SectionHeader } from '@/components/shared/SectionHeader';
 import { AdminCursosTab } from '@/components/admin/AdminCursosTab';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,17 +12,15 @@ export default function AdminClubeAcervo() {
         <Button variant="ghost" size="icon" onClick={() => {
           if ((window as any).Admin_SetActiveTab) {
             (window as any).Admin_SetActiveTab('clube');
-          } else {
-            navigate('/admin/clube');
           }
+          navigate('/admin/clube');
         }}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
-        <SectionHeader
-          title="Acervo & Obras"
-          subtitle="Biblioteca de livros e áudios do Clube"
-          icon={<Library className="w-5 h-5" />}
-        />
+        <div className="flex-1 min-w-0">
+          <h2 className="text-xl font-serif text-foreground">Acervo & Obras</h2>
+          <p className="text-sm text-muted-foreground">Biblioteca de livros e áudios do Clube</p>
+        </div>
       </div>
       <AdminCursosTab />
     </div>

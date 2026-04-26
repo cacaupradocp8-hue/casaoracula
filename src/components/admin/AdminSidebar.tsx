@@ -213,7 +213,20 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
                       return (
                         <button
                           key={item.key}
-                          onClick={() => item.route ? navigate(item.route) : onTabChange(item.key)}
+                          onClick={() => {
+                            if (item.route) {
+                              navigate(item.route);
+                            } else {
+                              onTabChange(item.key);
+                              // Sync URL for clube sub-tabs to avoid 404/blank screen on direct paths
+                              if (item.key === 'clube') navigate('/admin/clube');
+                              if (item.key === 'clube-jornadas') navigate('/admin/clube/ciclos');
+                              if (item.key === 'clube-portais') navigate('/admin/clube/portais');
+                              if (item.key === 'clube-acervo') navigate('/admin/clube/conteudos');
+                              if (item.key === 'clube-treinamento') navigate('/admin/clube/treinamento');
+                              if (item.key === 'clube-chat') navigate('/admin/clube/chat');
+                            }
+                          }}
                           className={cn(
                             'w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-xs transition-colors',
                             isActive
