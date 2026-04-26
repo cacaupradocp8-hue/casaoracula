@@ -3924,6 +3924,36 @@ export type Database = {
           },
         ]
       }
+      clube_daily_interaction_limits: {
+        Row: {
+          date: string
+          id: string
+          interactions_limit: number | null
+          interactions_used: number | null
+          plan_type: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          date?: string
+          id?: string
+          interactions_limit?: number | null
+          interactions_used?: number | null
+          plan_type?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          date?: string
+          id?: string
+          interactions_limit?: number | null
+          interactions_used?: number | null
+          plan_type?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       clube_engajamento: {
         Row: {
           acessos: number
@@ -4261,6 +4291,65 @@ export type Database = {
             columns: ["porta_id"]
             isOneToOne: false
             referencedRelation: "clube_livro_portas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_livro_chat_interactions: {
+        Row: {
+          book_id: string | null
+          created_at: string | null
+          cycle_id: string | null
+          id: string
+          interaction_type: string | null
+          message: string
+          metadata: Json | null
+          portal_id: string | null
+          response: string
+          rota_id: string | null
+          saved_to_jardim: boolean | null
+          sent_to_forja: boolean | null
+          tokens_estimated: number | null
+          user_id: string
+        }
+        Insert: {
+          book_id?: string | null
+          created_at?: string | null
+          cycle_id?: string | null
+          id?: string
+          interaction_type?: string | null
+          message: string
+          metadata?: Json | null
+          portal_id?: string | null
+          response: string
+          rota_id?: string | null
+          saved_to_jardim?: boolean | null
+          sent_to_forja?: boolean | null
+          tokens_estimated?: number | null
+          user_id: string
+        }
+        Update: {
+          book_id?: string | null
+          created_at?: string | null
+          cycle_id?: string | null
+          id?: string
+          interaction_type?: string | null
+          message?: string
+          metadata?: Json | null
+          portal_id?: string | null
+          response?: string
+          rota_id?: string | null
+          saved_to_jardim?: boolean | null
+          sent_to_forja?: boolean | null
+          tokens_estimated?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_livro_chat_interactions_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
             referencedColumns: ["id"]
           },
         ]
