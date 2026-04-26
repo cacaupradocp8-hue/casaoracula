@@ -34,12 +34,11 @@ export default function AdminClubeTreinamento() {
               (window as any).Admin_SetActiveTab('clube');
             }
             navigate('/admin/clube');
-
           }}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1 min-w-0">
-            <h2 className="text-xl font-serif text-foreground">Laboratório Clínico</h2>
+            <h2 className="text-xl font-serif text-foreground">Treinamento Clínico</h2>
             <p className="text-sm text-muted-foreground">Configuração de simulações e práticas éticas</p>
           </div>
         </div>
