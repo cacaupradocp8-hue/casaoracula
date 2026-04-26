@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Pencil, Calendar, Video, Loader2 } from 'lucide-react';
+import { Plus, Pencil, Calendar, Video, Loader2, Trash2 } from 'lucide-react';
 
 interface Encontro {
   id: string;
