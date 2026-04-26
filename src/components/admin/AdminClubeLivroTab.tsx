@@ -983,35 +983,35 @@ function CicloCard({
 // ============================================
 // CicloDetailTabs - Fases, Escutas, Encontros, Aulas
 // ============================================
-function CicloDetailTabs({ cicloId }: { cicloId: string }) {
+function CicloDetailTabs({ cicloId, defaultTab = "fases" }: { cicloId: string; defaultTab?: string }) {
   return (
-    <Tabs defaultValue="fases" className="w-full">
-      <TabsList className="grid w-full grid-cols-7">
-        <TabsTrigger value="fases" className="gap-1 text-xs">
+    <Tabs defaultValue={defaultTab} className="w-full">
+      <TabsList className="grid w-full grid-cols-7 h-auto py-1">
+        <TabsTrigger value="fases" className="gap-1 text-[10px] px-1">
           <Sparkles className="w-3 h-3" />
           Fases
         </TabsTrigger>
-        <TabsTrigger value="portas" className="gap-1 text-xs">
+        <TabsTrigger value="portas" className="gap-1 text-[10px] px-1">
           <DoorOpen className="w-3 h-3" />
           Portas
         </TabsTrigger>
-        <TabsTrigger value="aulas" className="gap-1 text-xs">
+        <TabsTrigger value="aulas" className="gap-1 text-[10px] px-1">
           <GraduationCap className="w-3 h-3" />
           Aulas
         </TabsTrigger>
-        <TabsTrigger value="escutas" className="gap-1 text-xs">
+        <TabsTrigger value="escutas" className="gap-1 text-[10px] px-1">
           <Headphones className="w-3 h-3" />
           Escutas
         </TabsTrigger>
-        <TabsTrigger value="encontros" className="gap-1 text-xs">
+        <TabsTrigger value="encontros" className="gap-1 text-[10px] px-1">
           <Video className="w-3 h-3" />
           Encontros
         </TabsTrigger>
-        <TabsTrigger value="lab8020" className="gap-1 text-xs">
+        <TabsTrigger value="lab8020" className="gap-1 text-[10px] px-1">
           <Target className="w-3 h-3" />
           Lab 80/20
         </TabsTrigger>
-        <TabsTrigger value="playbook" className="gap-1 text-xs">
+        <TabsTrigger value="playbook" className="gap-1 text-[10px] px-1">
           <FileText className="w-3 h-3" />
           Playbook
         </TabsTrigger>
