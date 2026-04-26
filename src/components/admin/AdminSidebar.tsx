@@ -36,7 +36,7 @@ export const adminNavGroups: AdminNavGroup[] = [
     items: [
       { key: 'clube', label: 'Clube de Leitura', icon: Sparkles, route: '/admin/clube' },
       { key: 'planos-clube', label: 'Planos Clube', icon: CreditCard },
-      { key: 'conteudos', label: 'Conteúdo', icon: GraduationCap },
+      { key: 'conteudos', label: 'Conteúdo', icon: FolderTree },
       { key: 'cursos', label: 'Cursos', icon: Video },
       { key: 'travessias', label: 'Travessias', icon: Compass },
       { key: 'portal-junguiano', label: 'Portal Junguiano', icon: Zap },

@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft, ArrowRight, BookOpen, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface Estacao {
   id: string;
@@ -20,6 +21,7 @@ interface Estacao {
 }
 
 export default function AdminCentralJornadas() {
+  const navigate = useNavigate();
   const { data: estacoes = [], isLoading } = useQuery({
     queryKey: ['admin-central-estacoes'],
     queryFn: async () => {
@@ -35,7 +37,13 @@ export default function AdminCentralJornadas() {
   return (
     <div className="animate-in fade-in duration-500">
       <div className="flex items-center gap-4 mb-8">
-        <Button variant="ghost" size="icon" onClick={() => (window as any).Admin_SetActiveTab?.('clube')}>
+        <Button variant="ghost" size="icon" onClick={() => {
+          if ((window as any).Admin_SetActiveTab) {
+            (window as any).Admin_SetActiveTab('clube');
+          } else {
+            navigate('/admin/clube');
+          }
+        }}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <SectionHeader
