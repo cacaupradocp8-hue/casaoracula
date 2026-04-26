@@ -437,18 +437,6 @@ export function AdminClubeLivroTab() {
           )}
         </TabsContent>
 
-        <TabsContent value="rota-geral" className="space-y-4 outline-none">
-          {selectedCiclo ? (
-             <div className="space-y-6">
-                <div className="bg-muted/30 p-4 rounded-lg border border-dashed text-center">
-                  <p className="text-sm text-muted-foreground">Configurações globais do ciclo.</p>
-                </div>
-             </div>
-          ) : (
-            <p className="text-sm text-muted-foreground text-center py-8">Selecione um ciclo para configurar.</p>
-          )}
-        </TabsContent>
-
         {/* ============================================ */}
         {/* ABA: CICLO & CALENDÁRIO                      */}
         {/* ============================================ */}
