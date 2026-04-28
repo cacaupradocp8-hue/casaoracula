@@ -19,12 +19,12 @@ export default function AdminClubeChat() {
   const [chatKnowledge, setChatKnowledge] = useState('');
 
   const { data: ciclos } = useQuery({
-    queryKey: ['admin-clube-ciclos-chat'],
+    queryKey: ['admin-clube-ciclos-v2-chat'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clube_livro_ciclos')
+        .from('clube_v2_ciclos')
         .select('id, titulo, chat_prompt, chat_knowledge_base')
-        .order('ordem', { ascending: true });
+        .order('created_at', { ascending: false });
       if (error) throw error;
       return data;
     },
@@ -44,7 +44,7 @@ export default function AdminClubeChat() {
     mutationFn: async () => {
       if (!selectedCiclo) return;
       const { error } = await supabase
-        .from('clube_livro_ciclos')
+        .from('clube_v2_ciclos')
         .update({
           chat_prompt: chatPrompt,
           chat_knowledge_base: chatKnowledge,
@@ -53,7 +53,7 @@ export default function AdminClubeChat() {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-clube-ciclos-chat'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-ciclos-v2-chat'] });
       toast({
         title: "Configurações salvas",
         description: "A base de conhecimento e o prompt foram atualizados com sucesso.",
