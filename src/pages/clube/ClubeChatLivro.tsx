@@ -92,7 +92,7 @@ export default function ClubeChatLivro() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clube_v2_ciclos' as any)
-        .select('*, clube_v2_obras(*)')
+        .select('*, chat_prompt, chat_knowledge_base, clube_v2_obras(*)')
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -155,6 +155,10 @@ export default function ClubeChatLivro() {
       const bookContext = book
         ? `Livro atual: ${book.title} de ${book.author || 'autor desconhecido'}. Descrição: ${book.description || ''}.`
         : '';
+      
+      const cycleContext = cycle 
+        ? `Conhecimento específico do ciclo: ${(cycle as any).chat_knowledge_base || ''}`
+        : '';
 
       const { data, error } = await supabase.functions.invoke('syntheia-chat', {
         body: {
@@ -162,7 +166,7 @@ export default function ClubeChatLivro() {
             role: m.role,
             content: m.content,
           })),
-          systemPrompt: SYSTEM_PROMPT + '\n\nContexto do livro: ' + bookContext,
+          systemPrompt: ((cycle as any).chat_prompt || SYSTEM_PROMPT) + '\n\n' + cycleContext + '\n\nContexto do livro: ' + bookContext,
           agentSlug: 'clube-livro',
         },
       });

@@ -1,28 +1,87 @@
 // import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, MessageSquare, Info, Plus, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowLeft, MessageSquare, Info, Plus, Trash2, Save, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AdminClubeChat() {
   const navigate = useNavigate();
-  const [selectedCiclo, setSelectedCiclo] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [selectedCiclo, setSelectedCiclo] = useState<string | null>(searchParams.get('ciclo'));
+  const [chatPrompt, setChatPrompt] = useState('');
+  const [chatKnowledge, setChatKnowledge] = useState('');
 
   const { data: ciclos } = useQuery({
     queryKey: ['admin-clube-ciclos-chat'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clube_livro_ciclos')
-        .select('id, titulo')
+        .select('id, titulo, chat_prompt, chat_knowledge_base')
         .order('ordem', { ascending: true });
       if (error) throw error;
       return data;
     },
+  });
+
+  useEffect(() => {
+    if (selectedCiclo && ciclos) {
+      const ciclo = ciclos.find(c => c.id === selectedCiclo);
+      if (ciclo) {
+        setChatPrompt(ciclo.chat_prompt || '');
+        setChatKnowledge(ciclo.chat_knowledge_base || '');
+      }
+    }
+  }, [selectedCiclo, ciclos]);
+
+  const saveConfigMutation = useMutation({
+    mutationFn: async () => {
+      if (!selectedCiclo || !ciclos) return;
+      const ciclo = ciclos.find(c => c.id === selectedCiclo);
+      if (!ciclo) return;
+
+      // 1. Update old table
+      const { error: err1 } = await supabase
+        .from('clube_livro_ciclos')
+        .update({
+          chat_prompt: chatPrompt,
+          chat_knowledge_base: chatKnowledge,
+        })
+        .eq('id', selectedCiclo);
+      if (err1) throw err1;
+
+      // 2. Update v2 table (by title match to ensure student page sees it)
+      const { error: err2 } = await supabase
+        .from('clube_v2_ciclos')
+        .update({
+          chat_prompt: chatPrompt,
+          chat_knowledge_base: chatKnowledge,
+        })
+        .eq('titulo', ciclo.titulo);
+      // We don't throw if v2 update fails (maybe it doesn't exist yet)
+      if (err2) console.warn('v2 sync failed', err2);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-ciclos-chat'] });
+      toast({
+        title: "Configurações salvas",
+        description: "A base de conhecimento e o prompt foram atualizados com sucesso.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Erro ao salvar",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   });
 
   const { data: perguntas, isLoading } = useQuery({
@@ -73,7 +132,13 @@ export default function AdminClubeChat() {
               <CardDescription>O chat é alimentado por perguntas estruturadas por fase.</CardDescription>
             </CardHeader>
             <CardContent>
-              <Select value={selectedCiclo || ''} onValueChange={setSelectedCiclo}>
+              <Select 
+                value={selectedCiclo || ''} 
+                onValueChange={(v) => {
+                  setSelectedCiclo(v);
+                  setSearchParams({ ciclo: v });
+                }}
+              >
                 <SelectTrigger className="w-full sm:w-[300px]">
                   <SelectValue placeholder="Escolha um ciclo..." />
                 </SelectTrigger>
@@ -136,9 +201,31 @@ export default function AdminClubeChat() {
                       <Textarea 
                         placeholder="Como a IA deve se portar ao falar deste livro..." 
                         className="min-h-[100px]"
+                        value={chatPrompt}
+                        onChange={(e) => setChatPrompt(e.target.value)}
                       />
                     </div>
-                    <Button className="w-full">Salvar Instruções da IA</Button>
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Base de Conhecimento (Contexto)</label>
+                      <Textarea 
+                        placeholder="Informações relevantes do livro que a IA deve conhecer..." 
+                        className="min-h-[150px]"
+                        value={chatKnowledge}
+                        onChange={(e) => setChatKnowledge(e.target.value)}
+                      />
+                    </div>
+                    <Button 
+                      className="w-full gap-2" 
+                      onClick={() => saveConfigMutation.mutate()}
+                      disabled={saveConfigMutation.isPending}
+                    >
+                      {saveConfigMutation.isPending ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Save className="w-4 h-4" />
+                      )}
+                      Salvar Instruções da IA
+                    </Button>
                   </CardContent>
                 </Card>
              </div>

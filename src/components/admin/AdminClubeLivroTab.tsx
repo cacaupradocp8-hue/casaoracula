@@ -437,7 +437,14 @@ export function AdminClubeLivroTab() {
                       <CardHeader className="p-4"><CardTitle className="text-xs uppercase tracking-wider">Chat com o Livro</CardTitle></CardHeader>
                       <CardContent className="p-4 pt-0">
                          <p className="text-xs text-muted-foreground mb-4">O conhecimento do livro alimentado por IA para suporte direto à aluna.</p>
-                         <Button size="sm" variant="outline" className="w-full text-xs">Configurar Base de Conhecimento</Button>
+                         <Button 
+                           size="sm" 
+                           variant="outline" 
+                           className="w-full text-xs"
+                           onClick={() => window.location.href = `/admin/clube/chat?ciclo=${selectedCiclo}`}
+                         >
+                           Configurar Base de Conhecimento
+                         </Button>
                       </CardContent>
                     </Card>
                     <Card className="bg-muted/20 border-primary/5">
