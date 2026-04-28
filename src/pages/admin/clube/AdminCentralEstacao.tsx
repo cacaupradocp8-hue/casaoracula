@@ -5,8 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, Route, Calendar, Layers, Users, Loader2, Sparkles, Layout, ListOrdered, Pencil, Image as ImageIcon } from 'lucide-react';
-import { ImageUpload } from '@/components/admin/ImageUpload';
+import { ArrowLeft, Route, Calendar, Layers, Users, Loader2, Sparkles, Layout, ListOrdered, Pencil, Image as ImageIcon, BookOpen } from 'lucide-react';
 import { PassosRotaTab } from '@/components/admin/central-jornadas/PassosRotaTab';
 import { EstradaTab } from '@/components/admin/central-jornadas/EstradaTab';
 import { SemanasTab } from '@/components/admin/central-jornadas/SemanasTab';
@@ -17,7 +16,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
+import { ImageUpload } from '@/components/admin/ImageUpload';
 
 export default function AdminCentralEstacao() {
   const navigate = useNavigate();
