@@ -1,42 +1,52 @@
-## Problema
+Plano para corrigir a rolagem no Hub Editorial do Clube de Leitura
 
-Na página `/admin/clube/central/...` (e em todo `/admin/*`), ao abrir abas de edição (Rota/Passos, Iniciação, Lab IA, etc.), **o conteúdo não rola** — partes do formulário ficam cortadas e inacessíveis.
+Diagnóstico
+- A página principal do `/admin/clube` já rola.
+- O problema aparece nos editores internos, especialmente nas abas e modais de edição do Clube.
+- Há dois pontos frágeis:
+  1. Modais com `DialogContent` usando `max-h-[90vh] overflow-hidden flex flex-col` + `ScrollArea className="flex-1"`. Em alguns tamanhos de tela, o `flex-1` não recebe altura real suficiente e a área interna não rola corretamente.
+  2. Páginas de edição com abas largas/grades fixas que podem ficar presas ou cortadas em viewport menor, principalmente no admin com menu lateral e barra inferior.
 
-## Causa raiz
+Correção proposta
 
-Em `src/pages/Admin.tsx` (linha 213–216) o layout do admin está montado assim:
+1. Criar um padrão seguro para modais longos do admin
+- Trocar o padrão problemático:
+  - `max-h-[90vh] p-0 overflow-hidden flex flex-col`
+  - `ScrollArea className="flex-1 ..."`
+- Para um padrão com altura explícita e rolagem real:
+  - `max-h-[calc(100dvh-2rem)] overflow-y-auto`
+  - conteúdo com `pb-24` quando houver botão fixo inferior
+- Aplicar nos editores do Clube que usam formulários longos.
 
-```text
-<AppLayout>                      ← já tem scroll natural da página
-  <div class="flex min-h-[calc(100vh-5rem)]">
-    <AdminSidebar />
-    <div class="flex-1 min-w-0 overflow-auto">   ← cria um 2º scroll interno
-      ...conteúdo das abas...
-    </div>
-  </div>
-</AppLayout>
-```
+2. Ajustar os editores do Clube de Leitura
+- Corrigir `PassosRotaTab.tsx`:
+  - modal de “Editar Passo / Novo Passo” deve rolar internamente de forma confiável
+  - botão salvar deve continuar acessível
+- Corrigir `SemanasTab.tsx`:
+  - modal “Configurar Portal / Novo Portal” deve permitir rolar todas as quatro camadas
+  - rodapé com Cancelar/Salvar deve permanecer visível sem esconder campos
+- Revisar abas semelhantes em `AdminCentralEstacao.tsx` para evitar corte em telas menores.
 
-Dois problemas combinados:
+3. Melhorar a rolagem da página de edição
+- Em `AdminCentralEstacao.tsx`, remover dependência de container com largura/altura que possa prender conteúdo.
+- Adicionar respiro inferior (`pb-32`) na página da estação para não ficar atrás da barra inferior.
+- Tornar a lista de abas responsiva:
+  - em telas menores, permitir quebra/overflow horizontal seguro
+  - evitar que os botões das abas comprimam o editor.
 
-1. O wrapper interno tem `overflow-auto` **sem altura fixa**. Como o pai usa `min-h-[calc(100vh-5rem)]` (mínimo, não máximo), o div cresce junto com o conteúdo e o `overflow-auto` nunca dispara — mas o `<main>` do `AppLayout` tem `pb-24` no mobile (bottom nav) que esconde o final.
-2. Em viewports menores (como o atual 939×531) o `min-h-[calc(100vh-5rem)]` força o container a ocupar quase toda a tela, e o conteúdo extra das abas longas (AplicacaoTab, PassosRotaTab, EntradaTab) fica abaixo da bottom nav fixa, sem possibilidade de rolagem porque a página tenta rolar mas o `overflow-auto` interno intercepta.
+4. Ajustar especificamente o editor de Portais Simbólicos
+- Em `AdminPortalCMS.tsx`, garantir que a coluna do formulário tenha margem inferior suficiente.
+- Revisar o botão “Salvar Portal” sticky para não cobrir o último bloco do formulário.
+- Se necessário, transformar o botão final em rodapé seguro com espaçamento inferior.
 
-## Correção
+Arquivos a alterar
+- `src/components/admin/central-jornadas/PassosRotaTab.tsx`
+- `src/components/admin/central-jornadas/SemanasTab.tsx`
+- `src/pages/admin/clube/AdminCentralEstacao.tsx`
+- `src/pages/admin/clube/AdminPortalCMS.tsx`
 
-Editar **apenas** `src/pages/Admin.tsx`:
-
-- Trocar `min-h-[calc(100vh-5rem)]` por algo que **não** force altura mínima (`flex` simples), e **remover** `overflow-auto` do wrapper de conteúdo. Deixar a rolagem natural da página (a do `<body>`/`<main>`) cuidar de tudo.
-- Aumentar o `pb` do container interno para garantir respiro acima da bottom nav mobile (`pb-32`).
-
-Resultado: uma única barra de rolagem (a da página), conteúdo sempre acessível em qualquer altura de tela, sidebar permanece à esquerda.
-
-## Bônus (opcional, mesmo arquivo)
-
-Tornar a `AdminSidebar` `sticky top-20` para que ela acompanhe a rolagem em telas grandes sem precisar de scroll interno.
-
-## Arquivos alterados
-
-- `src/pages/Admin.tsx` — ajuste do wrapper de layout (3–4 linhas)
-
-Nada mais é tocado. As abas (`PassosRotaTab`, `AplicacaoTab`, `EntradaTab`, `EncontroTab`, `EstradaTab`, `SemanasTab`) continuam idênticas.
+Resultado esperado
+- Ao abrir qualquer aba/editor do Hub Editorial do Clube de Leitura, a página ou o modal poderá rolar normalmente.
+- Todos os campos longos ficarão acessíveis.
+- Botões de salvar/cancelar não ficarão escondidos nem cobrirão campos.
+- A correção mantém a estrutura atual do admin e não altera banco de dados, permissões ou conteúdo.

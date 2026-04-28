@@ -266,13 +266,13 @@ export function PassosRotaTab({ estacaoId }: Props) {
 
       {/* Editor Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] p-0 overflow-hidden flex flex-col">
-          <DialogHeader className="p-6 pb-2">
+        <DialogContent className="max-w-2xl w-[calc(100vw-2rem)] max-h-[calc(100dvh-2rem)] overflow-y-auto p-6">
+          <DialogHeader className="pb-2">
             <DialogTitle>{editing ? 'Editar Passo' : 'Novo Passo da Estrada'}</DialogTitle>
             <DialogDescription>Configure o conteúdo e o impacto deste passo na jornada.</DialogDescription>
           </DialogHeader>
 
-          <ScrollArea className="flex-1 p-6 pt-2">
+          <div className="pt-2">
             <div className="space-y-6 pb-8">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
@@ -351,7 +351,7 @@ export function PassosRotaTab({ estacaoId }: Props) {
                 {saveMutation.isPending ? 'Salvando...' : editing ? 'Salvar Alterações' : 'Criar Passo na Rota'}
               </Button>
             </div>
-          </ScrollArea>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
