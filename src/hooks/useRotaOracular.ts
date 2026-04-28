@@ -15,6 +15,7 @@ export interface PontoRota {
   slug: string;
   nome: string;
   subtitulo?: string;
+  descricao?: string;
   icone: string;
   ordem: number;
   estado: PontoEstado;
@@ -23,6 +24,18 @@ export interface PontoRota {
   tipo: string;
   ref_tipo?: string;
   ref_id?: string;
+  
+  // Cartografia unificada
+  porta?: string;
+  campo?: string;
+  torre?: string;
+  labirinto?: string;
+  frase_guia?: string;
+  jardim_prompt?: string;
+  cenario_treinamento?: string;
+  leitura_referencia?: string;
+  image_url?: string;
+  
   conteudo_inline?: any;
   metadata?: any;
   impacto_cidadela?: {
@@ -37,10 +50,13 @@ export interface Estacao {
   id: string;
   titulo: string;
   subtitulo: string;
+  descricao?: string;
+  banner_url?: string;
   numero: number;
   livro_titulo: string;
   livro_autor: string | null;
   livro_capa_url: string | null;
+  livro_imagem_banner_url?: string | null;
   essencia_nucleo: string | null;
   essencia_tensao: string | null;
   essencia_transformacao: string | null;
@@ -92,7 +108,7 @@ export function useRotaOracular() {
       try {
         const { data, error } = await supabase
           .from('clube_estacoes')
-          .select('id, titulo, subtitulo, numero, livro_titulo, livro_autor, livro_capa_url, essencia_nucleo, essencia_tensao, essencia_transformacao, ativa')
+          .select('id, titulo, subtitulo, descricao, banner_url, numero, livro_titulo, livro_autor, livro_capa_url, livro_imagem_banner_url, essencia_nucleo, essencia_tensao, essencia_transformacao, ativa')
           .eq('publicada', true)
           .eq('ativa', true)
           .order('numero', { ascending: false })
@@ -235,11 +251,24 @@ export function useRotaOracular() {
       slug: item.slug,
       nome: item.titulo,
       subtitulo: item.subtitulo,
+      descricao: (item as any).descricao,
       icone: item.icone || '📍',
       ordem: item.ordem,
       tipo: item.tipo,
       ref_tipo: item.ref_tipo,
       ref_id: item.ref_id,
+      
+      // Map unified fields
+      porta: item.porta,
+      campo: item.campo,
+      torre: item.torre,
+      labirinto: item.labirinto,
+      frase_guia: item.frase_guia,
+      jardim_prompt: item.jardim_prompt,
+      cenario_treinamento: item.cenario_treinamento,
+      leitura_referencia: item.leitura_referencia,
+      image_url: item.image_url,
+      
       conteudo_inline: item.conteudo_inline,
       metadata: item.metadata,
       impacto_cidadela: item.impacto_cidadela,
