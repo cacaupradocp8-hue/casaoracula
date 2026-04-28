@@ -251,7 +251,7 @@ export function useRotaOracular() {
       slug: item.slug,
       nome: item.titulo,
       subtitulo: item.subtitulo,
-      descricao: item.descricao,
+      descricao: (item as any).descricao,
       icone: item.icone || '📍',
       ordem: item.ordem,
       tipo: item.tipo,
