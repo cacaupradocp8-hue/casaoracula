@@ -7,14 +7,15 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
 export default function AdminClubeChat() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [selectedCiclo, setSelectedCiclo] = useState<string | null>(null);
+  const [selectedCiclo, setSelectedCiclo] = useState<string | null>(searchParams.get('ciclo'));
   const [chatPrompt, setChatPrompt] = useState('');
   const [chatKnowledge, setChatKnowledge] = useState('');
 
