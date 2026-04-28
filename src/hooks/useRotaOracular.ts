@@ -69,15 +69,15 @@ function resolveRota(tipo: string, refId: string | null, rotaCustom?: string): s
   if (rotaCustom) return rotaCustom;
 
   switch (tipo) {
-    case 'portal':       return `/clube/portal/${refId}`;
+    case 'portal':       return `/clube/rota/${refId}`;
     case 'audio':
-    case 'escuta':        return `/clube/escuta/${refId}`;
-    case 'aula':         return `/clube/aula/${refId}`;
-    case 'chat_livro':   return '/clube/chat-livro';
-    case 'laboratorio':  return '/clube/laboratorio';
-    case 'jardim':       return '/jardim-psique';
-    case 'encontro':     return `/clube/encontro/${refId}`;
-    case 'aplicacao':    return `/clube/aplicacao/${refId}`;
+    case 'escuta':        return `/clube/rota/${refId}`;
+    case 'aula':         return `/clube/rota/${refId}`;
+    case 'chat_livro':   return `/clube/rota/${refId}`;
+    case 'laboratorio':  return `/clube/rota/${refId}`;
+    case 'jardim':       return `/clube/rota/${refId}`;
+    case 'encontro':     return `/clube/rota/${refId}`;
+    case 'aplicacao':    return `/clube/rota/${refId}`;
     default:             return '#';
   }
 }
@@ -245,7 +245,7 @@ export function useRotaOracular() {
       impacto_cidadela: item.impacto_cidadela,
       estado,
       estadoUI: mapEstado(estado),
-      rota: resolveRota(item.tipo, item.ref_id, item.rota_custom),
+      rota: resolveRota(item.tipo, item.slug, item.rota_custom),
     } as PontoRota;
   }).filter((p): p is PontoRota => p !== null);
 
