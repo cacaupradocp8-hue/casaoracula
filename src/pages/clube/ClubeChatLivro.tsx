@@ -70,7 +70,10 @@ Toda resposta deve seguir este formato:
 
 Importante: Não substitua supervisão clínica. Não reproduza trechos longos.`;
 
+import { useRotaOracular } from '@/hooks/useRotaOracular';
+
 export default function ClubeChatLivro() {
+  const { estacaoAtual, pontoAtual } = useRotaOracular();
   const navigate = useNavigate();
   const { user } = useAuth();
   const qc = useQueryClient();
@@ -296,24 +299,30 @@ export default function ClubeChatLivro() {
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div className="flex items-center gap-4">
-                {book?.cover_url && (
-                  <img src={book.cover_url} alt={book.title} className="w-12 h-16 object-cover rounded shadow-lg border border-white/10" />
+                {(estacaoAtual?.livro_capa_url || book?.cover_url) ? (
+                  <img src={estacaoAtual?.livro_capa_url || book?.cover_url} alt={estacaoAtual?.livro_titulo || book?.title} className="w-12 h-16 object-cover rounded shadow-lg border border-white/10" />
+                ) : (
+                  <div className="w-12 h-16 bg-muted/50 rounded flex items-center justify-center border border-white/5">
+                    <BookOpen className="w-6 h-6 text-muted-foreground opacity-20" />
+                  </div>
                 )}
                 <div>
                   <h1 className="text-lg font-serif text-foreground leading-tight flex items-center gap-2">
-                    {book?.title || 'Converse com o Livro'}
+                    {estacaoAtual?.livro_titulo || book?.title || 'Converse com o Livro'}
                   </h1>
-                  <p className="text-xs text-gold font-medium uppercase tracking-wider">{book?.author}</p>
+                  <p className="text-xs text-gold font-medium uppercase tracking-wider">
+                    {estacaoAtual?.livro_autor || book?.author}
+                  </p>
                 </div>
               </div>
             </div>
             
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] uppercase tracking-widest font-semibold text-muted-foreground bg-[#13101C]/50 px-4 py-2 rounded-full border border-white/5">
               <div className="flex items-center gap-1.5">
-                <span className="text-gold opacity-50">Rota:</span> {(cycle as any)?.portal || 'A Mulher Selvagem'}
+                <span className="text-gold opacity-50">Estação:</span> {estacaoAtual?.titulo || '...'}
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="text-gold opacity-50">Ciclo:</span> {(cycle as any)?.title || 'Ano 1'}
+                <span className="text-gold opacity-50">Rota:</span> {pontoAtual?.nome || '...'}
               </div>
               {limitData && (
                 <div className={cn(
@@ -326,6 +335,24 @@ export default function ClubeChatLivro() {
               )}
             </div>
           </div>
+          
+          {/* Cartografia Bar */}
+          {pontoAtual && (
+            <div className="bg-gold/5 border-t border-gold/10 py-1.5">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-center gap-6 overflow-x-auto no-scrollbar">
+                {[
+                  { label: 'Porta', value: pontoAtual.porta || '...' },
+                  { label: 'Campo', value: pontoAtual.campo || '...' },
+                  { label: 'Torre', value: pontoAtual.torre || '...' },
+                ].map(item => (
+                  <div key={item.label} className="flex items-center gap-2 shrink-0">
+                    <span className="text-[8px] font-bold text-gold/40 uppercase tracking-tighter">{item.label}</span>
+                    <span className="text-[10px] text-foreground/80 font-serif italic">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* ── MAIN ── */}
