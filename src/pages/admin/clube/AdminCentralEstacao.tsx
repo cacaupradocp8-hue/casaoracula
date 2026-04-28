@@ -56,6 +56,37 @@ export default function AdminCentralEstacao() {
     enabled: !!estacaoId,
   });
 
+  useEffect(() => {
+    if (estacao) {
+      setStationForm({
+        titulo: estacao.titulo || '',
+        livro_titulo: estacao.livro_titulo || '',
+        livro_autor: estacao.livro_autor || '',
+        livro_capa_url: estacao.livro_capa_url || '',
+        ativa: estacao.ativa || false,
+        publicada: estacao.publicada || false
+      });
+    }
+  }, [estacao]);
+
+  const updateStationMutation = useMutation({
+    mutationFn: async (data: typeof stationForm) => {
+      const { error } = await supabase
+        .from('clube_estacoes')
+        .update(data)
+        .eq('id', estacaoId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-estacao-detail', estacaoId] });
+      setEditStationOpen(false);
+      toast({ title: 'Estação atualizada com sucesso!' });
+    },
+    onError: (err: any) => {
+      toast({ title: 'Erro ao atualizar', description: err.message, variant: 'destructive' });
+    }
+  });
+
   if (isLoading) {
     return (
       <div className="flex justify-center py-24">
