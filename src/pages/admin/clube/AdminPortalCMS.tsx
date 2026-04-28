@@ -272,7 +272,7 @@ export default function AdminPortalCMS() {
   const activePortal = portais.find(p => p.id === selectedPortal);
 
   return (
-    <div className="animate-in slide-in-from-bottom-2 duration-500">
+    <div className="animate-in slide-in-from-bottom-2 duration-500 pb-32">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center gap-4 mb-6">
           <Button variant="ghost" size="icon" onClick={() => {
