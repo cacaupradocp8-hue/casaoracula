@@ -357,7 +357,6 @@ export function PassosRotaTab({ estacaoId }: Props) {
                     className="font-mono text-[10px]"
                     rows={4}
                   />
-                  <p className="text-[9px] text-muted-foreground italic">Ex: {'['}&#123;"distrito":"instinto", "intensidade":1, "tipo_impacto":"ativação"&#125;{']'}</p>
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold uppercase text-muted-foreground">Rótulo Próximo Passo</label>
@@ -366,7 +365,48 @@ export function PassosRotaTab({ estacaoId }: Props) {
                     onChange={(e) => setForm({ ...form, proximo_passo_label: e.target.value })} 
                     placeholder="Ex: A adaptação invisível"
                   />
-                  <p className="text-[9px] text-muted-foreground mt-1">Apenas visual, a sequência real é pela ordem.</p>
+                </div>
+              </div>
+
+              <div className="space-y-1.5 border-t pt-4">
+                <label className="text-xs font-bold uppercase text-gold">Conteúdo Premium (Exclusivo Rota)</label>
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-muted-foreground">Áudios (JSON array de objetos)</label>
+                    <Textarea 
+                      value={form.audios} 
+                      onChange={(e) => setForm({ ...form, audios: e.target.value })} 
+                      placeholder='[{"titulo": "Escuta 1", "url": "...", "duracao": "10:00"}]'
+                      className="font-mono text-[10px]"
+                      rows={3}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-muted-foreground">Prompt do Jardim</label>
+                    <Input 
+                      value={form.jardim_prompt} 
+                      onChange={(e) => setForm({ ...form, jardim_prompt: e.target.value })} 
+                      placeholder="Prompt para o registro no jardim..."
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-muted-foreground">Texto da Simulação</label>
+                    <Textarea 
+                      value={form.simulacao_texto} 
+                      onChange={(e) => setForm({ ...form, simulacao_texto: e.target.value })} 
+                      rows={2}
+                      placeholder="Contexto da câmara de simulação..."
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-muted-foreground">Perguntas Sugeridas (JSON array de strings)</label>
+                    <Input 
+                      value={form.perguntas_sugeridas} 
+                      onChange={(e) => setForm({ ...form, perguntas_sugeridas: e.target.value })} 
+                      placeholder='["Pergunta 1", "Pergunta 2"]'
+                      className="font-mono text-[10px]"
+                    />
+                  </div>
                 </div>
               </div>
 
