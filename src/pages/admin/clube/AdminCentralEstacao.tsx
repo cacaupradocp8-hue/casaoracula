@@ -19,11 +19,23 @@ import { EncontroTab } from '@/components/admin/central-jornadas/EncontroTab';
 
 export default function AdminCentralEstacao() {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const qc = useQueryClient();
   const { estacaoId: paramId } = useParams<{ estacaoId: string }>();
   const activeAdminTab = (window as any).Admin_ActiveTab || '';
   const estacaoId = paramId || (activeAdminTab.startsWith('central-estacao-') ? activeAdminTab.replace('central-estacao-', '') : null);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'passos';
+  
+  const [editStationOpen, setEditStationOpen] = useState(false);
+  const [stationForm, setStationForm] = useState({
+    titulo: '',
+    livro_titulo: '',
+    livro_autor: '',
+    livro_capa_url: '',
+    ativa: false,
+    publicada: false
+  });
 
   const onTabChange = (val: string) => {
     setSearchParams({ tab: val });
