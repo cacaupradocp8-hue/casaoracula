@@ -5,7 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, Route, Calendar, Layers, Users, Loader2, Sparkles, Layout, ListOrdered, Pencil } from 'lucide-react';
+import { ArrowLeft, Route, Calendar, Layers, Users, Loader2, Sparkles, Layout, ListOrdered, Pencil, Image as ImageIcon } from 'lucide-react';
+import { ImageUpload } from '@/components/admin/ImageUpload';
 import { PassosRotaTab } from '@/components/admin/central-jornadas/PassosRotaTab';
 import { EstradaTab } from '@/components/admin/central-jornadas/EstradaTab';
 import { SemanasTab } from '@/components/admin/central-jornadas/SemanasTab';
@@ -31,9 +32,13 @@ export default function AdminCentralEstacao() {
   const [editStationOpen, setEditStationOpen] = useState(false);
   const [stationForm, setStationForm] = useState({
     titulo: '',
+    subtitulo: '',
+    descricao: '',
+    banner_url: '',
     livro_titulo: '',
     livro_autor: '',
     livro_capa_url: '',
+    livro_imagem_banner_url: '',
     ativa: false,
     publicada: false
   });
@@ -61,9 +66,13 @@ export default function AdminCentralEstacao() {
     if (estacao) {
       setStationForm({
         titulo: estacao.titulo || '',
+        subtitulo: estacao.subtitulo || '',
+        descricao: estacao.descricao || '',
+        banner_url: estacao.banner_url || '',
         livro_titulo: estacao.livro_titulo || '',
         livro_autor: estacao.livro_autor || '',
         livro_capa_url: estacao.livro_capa_url || '',
+        livro_imagem_banner_url: estacao.livro_imagem_banner_url || '',
         ativa: estacao.ativa || false,
         publicada: estacao.publicada || false
       });
@@ -138,40 +147,80 @@ export default function AdminCentralEstacao() {
             <DialogHeader>
               <DialogTitle>Editar Detalhes da Estação</DialogTitle>
             </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label>Título da Estação</Label>
-                <Input value={stationForm.titulo} onChange={e => setStationForm({...stationForm, titulo: e.target.value})} />
-              </div>
+            <div className="space-y-4 py-4 max-h-[70vh] overflow-y-auto pr-2">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Livro</Label>
+                  <Label>Título da Estação</Label>
+                  <Input value={stationForm.titulo} onChange={e => setStationForm({...stationForm, titulo: e.target.value})} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Subtítulo</Label>
+                  <Input value={stationForm.subtitulo} onChange={e => setStationForm({...stationForm, subtitulo: e.target.value})} />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label>Descrição da Estação</Label>
+                <Textarea value={stationForm.descricao} onChange={e => setStationForm({...stationForm, descricao: e.target.value})} rows={3} />
+              </div>
+
+              <div className="grid grid-cols-2 gap-6 pt-2">
+                <ImageUpload 
+                  label="Banner da Estação" 
+                  value={stationForm.banner_url} 
+                  onChange={url => setStationForm({...stationForm, banner_url: url})} 
+                  folder="estacoes"
+                  aspectRatio="banner"
+                />
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <Switch checked={stationForm.ativa} onCheckedChange={v => setStationForm({...stationForm, ativa: v})} />
+                      <Label>Ativa</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Switch checked={stationForm.publicada} onCheckedChange={v => setStationForm({...stationForm, publicada: v})} />
+                      <Label>Publicada</Label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Separator className="my-4" />
+              <h3 className="font-semibold text-sm flex items-center gap-2"><BookOpen className="w-4 h-4 text-gold" /> Dados do Livro</h3>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Título do Livro</Label>
                   <Input value={stationForm.livro_titulo} onChange={e => setStationForm({...stationForm, livro_titulo: e.target.value})} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Autor</Label>
+                  <Label>Autora/Autor</Label>
                   <Input value={stationForm.livro_autor} onChange={e => setStationForm({...stationForm, livro_autor: e.target.value})} />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label>URL da Capa do Livro</Label>
-                <Input value={stationForm.livro_capa_url} onChange={e => setStationForm({...stationForm, livro_capa_url: e.target.value})} />
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Switch checked={stationForm.ativa} onCheckedChange={v => setStationForm({...stationForm, ativa: v})} />
-                  <Label>Ativa</Label>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Switch checked={stationForm.publicada} onCheckedChange={v => setStationForm({...stationForm, publicada: v})} />
-                  <Label>Publicada</Label>
-                </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <ImageUpload 
+                  label="Capa do Livro" 
+                  value={stationForm.livro_capa_url} 
+                  onChange={url => setStationForm({...stationForm, livro_capa_url: url})} 
+                  folder="livros"
+                  aspectRatio="square"
+                />
+                <ImageUpload 
+                  label="Banner do Livro" 
+                  value={stationForm.livro_imagem_banner_url} 
+                  onChange={url => setStationForm({...stationForm, livro_imagem_banner_url: url})} 
+                  folder="livros"
+                  aspectRatio="banner"
+                />
               </div>
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setEditStationOpen(false)}>Cancelar</Button>
-              <Button onClick={() => updateStationMutation.mutate(stationForm)} disabled={updateStationMutation.isPending}>
-                Salvar Alterações
+              <Button className="bg-gold hover:bg-gold/90 text-black font-bold" onClick={() => updateStationMutation.mutate(stationForm)} disabled={updateStationMutation.isPending}>
+                {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Alterações'}
               </Button>
             </DialogFooter>
           </DialogContent>
