@@ -245,7 +245,7 @@ export function useRotaOracular() {
       impacto_cidadela: item.impacto_cidadela,
       estado,
       estadoUI: mapEstado(estado),
-      rota: resolveRota(item.tipo, item.ref_id, item.rota_custom),
+      rota: resolveRota(item.tipo, item.slug, item.rota_custom),
     } as PontoRota;
   }).filter((p): p is PontoRota => p !== null);
 
