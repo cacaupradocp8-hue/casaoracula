@@ -13,7 +13,11 @@ import {
   Zap, 
   Flower2, 
   MapPin,
-  ChevronDown
+  ChevronDown,
+  Layout,
+  Layers,
+  Map as MapIcon,
+  ShieldAlert
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
@@ -64,10 +68,10 @@ export default function ClubeRotaPremium() {
     );
   }
 
-  // Dynamic content from database
+  // Dynamic content from unified fields
   const audios = Array.isArray(ponto.metadata?.audios) ? ponto.metadata.audios : [];
-  const jardimPrompt = ponto.metadata?.jardim_prompt || "Escreva hoje sobre as peles que você já trocou mas que ainda insistem em vestir seu corpo atual.";
-  const simulacaoTexto = ponto.metadata?.simulacao_texto || `Você encontrou um arquétipo ferido no campo psíquico. Como você utiliza as ferramentas da ${estacaoAtual?.titulo || 'Estação'} para realizar a primeira escuta sem ser devorada pelo trauma?`;
+  const jardimPrompt = ponto.jardim_prompt || ponto.metadata?.jardim_prompt || "Escreva hoje sobre as peles que você já trocou mas que ainda insistem em vestir seu corpo atual.";
+  const simulacaoTexto = ponto.cenario_treinamento || ponto.metadata?.simulacao_texto || `Você encontrou um arquétipo ferido no campo psíquico. Como você utiliza as ferramentas da ${estacaoAtual?.titulo || 'Estação'} para realizar a primeira escuta sem ser devorada pelo trauma?`;
   const perguntasSugeridas = Array.isArray(ponto.metadata?.perguntas_sugeridas) ? ponto.metadata.perguntas_sugeridas : ['Qual o significado do lobo?', 'Como resgatar minha força?', 'Símbolos de cura'];
 
   return (
@@ -112,8 +116,14 @@ export default function ClubeRotaPremium() {
           </motion.div>
 
           {/* Background Elements */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-full opacity-20 pointer-events-none">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold/10 rounded-full blur-[120px]" />
+          <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none overflow-hidden">
+            {ponto.image_url ? (
+              <img src={ponto.image_url} alt="" className="w-full h-full object-cover blur-[80px] scale-110" />
+            ) : estacaoAtual?.banner_url ? (
+              <img src={estacaoAtual.banner_url} alt="" className="w-full h-full object-cover blur-[80px] scale-110" />
+            ) : (
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold/10 rounded-full blur-[120px]" />
+            )}
           </div>
         </section>
 
@@ -336,9 +346,10 @@ export default function ClubeRotaPremium() {
                     {[
                       { label: 'Estação', value: (estacaoAtual?.numero || '0') + ' - ' + (estacaoAtual?.titulo || '...'), icon: MapPin },
                       { label: 'Rota Atual', value: ponto.nome, icon: Compass, active: true },
-                      { label: 'Porta', value: ponto.subtitulo || 'Iniciação', icon: MessageSquare },
-                      { label: 'Campo', value: 'Vale das Sombras', icon: Flower2 },
-                      { label: 'Torre', value: 'Observatório', icon: Clock },
+                       { label: 'Porta', value: ponto.porta || 'Iniciação', icon: DoorOpen },
+                       { label: 'Campo', value: ponto.campo || 'Clube do Livro', icon: Layers },
+                       { label: 'Torre', value: ponto.torre || 'Observatório', icon: Layout },
+                       { label: 'Labirinto', value: ponto.labirinto || 'Sombra', icon: ShieldAlert },
                     ].map((item, idx) => (
                       <div key={idx} className="flex items-center gap-4 group">
                         <div className={cn(
