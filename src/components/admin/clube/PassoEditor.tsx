@@ -45,11 +45,18 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
     conteudo_texto: '',
     conteudo_audio_url: '',
     impacto_cidadela: [] as ImpactoCidadela[],
+    metadata: {
+      audios: [],
+      jardim_prompt: '',
+      simulacao_texto: '',
+      perguntas_sugeridas: []
+    }
   });
 
   useEffect(() => {
     if (passo) {
       const c = passo.conteudo_inline || {};
+      const m = passo.metadata || {};
       setForm({
         tipo_passo: passo.tipo_passo || passo.tipo || 'portal',
         titulo: passo.titulo || '',
@@ -61,12 +68,19 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
         conteudo_texto: c.texto || '',
         conteudo_audio_url: c.audio_url || '',
         impacto_cidadela: Array.isArray(passo.impacto_cidadela) ? passo.impacto_cidadela : [],
+        metadata: {
+          audios: m.audios || [],
+          jardim_prompt: m.jardim_prompt || '',
+          simulacao_texto: m.simulacao_texto || '',
+          perguntas_sugeridas: m.perguntas_sugeridas || []
+        }
       });
     } else {
       setForm({
         tipo_passo: 'portal', titulo: '', subtitulo: '', icone: '',
         ordem: proximaOrdem, obrigatorio: true, publicado: false,
         conteudo_texto: '', conteudo_audio_url: '', impacto_cidadela: [],
+        metadata: { audios: [], jardim_prompt: '', simulacao_texto: '', perguntas_sugeridas: [] }
       });
     }
   }, [passo, proximaOrdem, open]);
@@ -76,7 +90,7 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
       const payload: any = {
         estacao_id: estacaoId,
         tipo_passo: form.tipo_passo,
-        tipo: form.tipo_passo, // espelha para compat
+        tipo: form.tipo_passo,
         titulo: form.titulo,
         subtitulo: form.subtitulo || null,
         icone: form.icone || null,
@@ -88,6 +102,8 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
           audio_url: form.conteudo_audio_url || null,
         },
         impacto_cidadela: form.impacto_cidadela,
+        metadata: form.metadata,
+        slug: form.titulo.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
       };
       if (passo?.id) {
         const { error } = await supabase.from('clube_rota_itens').update(payload).eq('id', passo.id);
@@ -148,22 +164,49 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
             <Textarea
               value={form.conteudo_texto}
               onChange={e => setForm({ ...form, conteudo_texto: e.target.value })}
-              rows={5}
+              rows={4}
               className="text-sm resize-none"
               placeholder="Texto do portal, roteiro do áudio, instruções da ação..."
             />
           </div>
 
-          {form.tipo_passo === 'escuta' && (
-            <div className="space-y-1">
-              <Label className="text-xs">URL do áudio</Label>
-              <Input
-                value={form.conteudo_audio_url}
-                onChange={e => setForm({ ...form, conteudo_audio_url: e.target.value })}
-                placeholder="https://..."
-              />
-            </div>
-          )}
+          <div className="space-y-3 border-t pt-3">
+             <Label className="text-xs font-bold text-gold">Campos Premium (Metadata)</Label>
+             
+             <div className="space-y-1">
+                <Label className="text-[10px]">Prompt do Jardim</Label>
+                <Input 
+                  value={form.metadata.jardim_prompt} 
+                  onChange={e => setForm({...form, metadata: {...form.metadata, jardim_prompt: e.target.value}})} 
+                  placeholder="Escreva hoje sobre..."
+                />
+             </div>
+             
+             <div className="space-y-1">
+                <Label className="text-[10px]">Texto da Simulação</Label>
+                <Textarea 
+                  value={form.metadata.simulacao_texto} 
+                  onChange={e => setForm({...form, metadata: {...form.metadata, simulacao_texto: e.target.value}})} 
+                  rows={2}
+                  className="text-xs"
+                />
+             </div>
+
+             <div className="space-y-1">
+                <Label className="text-[10px]">Áudios (JSON array)</Label>
+                <Textarea 
+                  value={JSON.stringify(form.metadata.audios, null, 2)} 
+                  onChange={e => {
+                    try {
+                      const val = JSON.parse(e.target.value);
+                      setForm({...form, metadata: {...form.metadata, audios: val}});
+                    } catch(e) {}
+                  }} 
+                  rows={3}
+                  className="text-[10px] font-mono"
+                />
+             </div>
+          </div>
 
           <div className="border-t border-border/50 pt-4">
             <ImpactoCidadelaForm
