@@ -35,7 +35,7 @@ export default function ClubeRotaPremium() {
 
   const proximoPonto = useMemo(() => {
     if (!ponto) return null;
-    return pontos.find(p => p.ordem === ponto.ordem + 1);
+    return pontos.find(p => p.ordem > ponto.ordem);
   }, [pontos, ponto]);
 
   if (isLoading) {
@@ -64,6 +64,12 @@ export default function ClubeRotaPremium() {
     );
   }
 
+  // Dynamic content from database
+  const audios = Array.isArray(ponto.metadata?.audios) ? ponto.metadata.audios : [];
+  const jardimPrompt = ponto.metadata?.jardim_prompt || "Escreva hoje sobre as peles que você já trocou mas que ainda insistem em vestir seu corpo atual.";
+  const simulacaoTexto = ponto.metadata?.simulacao_texto || `Você encontrou um arquétipo ferido no campo psíquico. Como você utiliza as ferramentas da ${estacaoAtual?.titulo || 'Estação'} para realizar a primeira escuta sem ser devorada pelo trauma?`;
+  const perguntasSugeridas = Array.isArray(ponto.metadata?.perguntas_sugeridas) ? ponto.metadata.perguntas_sugeridas : ['Qual o significado do lobo?', 'Como resgatar minha força?', 'Símbolos de cura'];
+
   return (
     <AppLayout>
       <div className="max-w-5xl mx-auto pb-20 px-4 md:px-0">
@@ -89,9 +95,16 @@ export default function ClubeRotaPremium() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <Button size="lg" variant="gold" className="w-full sm:w-auto h-14 px-8 text-base gap-3 shadow-[0_0_20px_rgba(201,169,110,0.2)]">
-                Continuar travessia <ArrowRight className="w-5 h-5" />
-              </Button>
+              {proximoPonto && (
+                <Button 
+                  size="lg" 
+                  variant="gold" 
+                  className="w-full sm:w-auto h-14 px-8 text-base gap-3 shadow-[0_0_20px_rgba(201,169,110,0.2)]"
+                  onClick={() => navigate(`/clube/rota/${proximoPonto.slug}`)}
+                >
+                  Continuar travessia <ArrowRight className="w-5 h-5" />
+                </Button>
+              )}
               <Button size="lg" variant="outline" className="w-full sm:w-auto h-14 px-8 text-base gap-3 border-gold/20 hover:bg-gold/5">
                 <Headphones className="w-5 h-5 text-gold" /> Ouvir Áudio
               </Button>
@@ -117,13 +130,14 @@ export default function ClubeRotaPremium() {
               </div>
               
               <div className="relative pl-8 space-y-12 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[1px] before:bg-gradient-to-b before:from-gold/50 before:via-gold/20 before:to-transparent">
-                {pontos.slice(0, 4).map((item, idx) => (
+                {pontos.map((item, idx) => (
                   <motion.div 
                     key={item.id}
                     initial={{ opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.1 }}
-                    className="relative group"
+                    className="relative group cursor-pointer"
+                    onClick={() => navigate(`/clube/rota/${item.slug}`)}
                   >
                     <div className={cn(
                       "absolute -left-[29px] w-5 h-5 rounded-full border-2 border-gold/50 bg-background z-10 transition-all group-hover:scale-125 group-hover:shadow-[0_0_10px_rgba(201,169,110,0.5)]",
@@ -147,38 +161,39 @@ export default function ClubeRotaPremium() {
             </section>
 
             {/* 4. CARDS DE CONTEÚDOS (Áudios) */}
-            <section className="space-y-8">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Headphones className="w-5 h-5 text-gold" />
-                  <h3 className="font-display text-xl uppercase tracking-widest text-foreground/80">Escutas de Poder</h3>
+            {audios.length > 0 && (
+              <section className="space-y-8">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Headphones className="w-5 h-5 text-gold" />
+                    <h3 className="font-display text-xl uppercase tracking-widest text-foreground/80">Escutas de Poder</h3>
+                  </div>
                 </div>
-                <Button variant="ghost" size="sm" className="text-xs text-gold hover:text-gold/80">Ver tudo</Button>
-              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {[1, 2, 3, 4].map((i) => (
-                  <Card key={i} className="group bg-card/20 border-white/5 hover:border-gold/20 transition-all duration-500 overflow-hidden cursor-pointer">
-                    <CardContent className="p-0">
-                      <div className="flex items-center p-4 gap-4">
-                        <div className="relative w-16 h-16 shrink-0 rounded-lg overflow-hidden bg-gold/10 flex items-center justify-center">
-                          <Play className="w-6 h-6 text-gold group-hover:scale-110 transition-transform" />
-                          <div className="absolute inset-0 bg-gold/5 group-hover:bg-transparent transition-colors" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-[10px] text-gold/60 uppercase mb-1">Áudio de Integração</p>
-                          <h4 className="font-display text-base text-foreground group-hover:text-gold transition-colors truncate">O Mistério da {i}ª Noite</h4>
-                          <div className="flex items-center gap-3 mt-1 opacity-40">
-                            <span className="flex items-center gap-1 text-[10px]"><Clock className="w-3 h-3" /> 12:45</span>
-                            <span className="flex items-center gap-1 text-[10px]"><Badge variant="outline" className="text-[8px] h-4 border-white/10 px-1">HD</Badge></span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {audios.map((audio: any, i: number) => (
+                    <Card key={i} className="group bg-card/20 border-white/5 hover:border-gold/20 transition-all duration-500 overflow-hidden cursor-pointer" onClick={() => window.open(audio.url, '_blank')}>
+                      <CardContent className="p-0">
+                        <div className="flex items-center p-4 gap-4">
+                          <div className="relative w-16 h-16 shrink-0 rounded-lg overflow-hidden bg-gold/10 flex items-center justify-center">
+                            <Play className="w-6 h-6 text-gold group-hover:scale-110 transition-transform" />
+                            <div className="absolute inset-0 bg-gold/5 group-hover:bg-transparent transition-colors" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[10px] text-gold/60 uppercase mb-1">{audio.tipo || 'Áudio de Integração'}</p>
+                            <h4 className="font-display text-base text-foreground group-hover:text-gold transition-colors truncate">{audio.titulo}</h4>
+                            <div className="flex items-center gap-3 mt-1 opacity-40">
+                              <span className="flex items-center gap-1 text-[10px]"><Clock className="w-3 h-3" /> {audio.duracao || '--:--'}</span>
+                              <span className="flex items-center gap-1 text-[10px]"><Badge variant="outline" className="text-[8px] h-4 border-white/10 px-1">HD</Badge></span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </section>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </section>
+            )}
 
             {/* 5. CONVERSE COM O LIVRO (IA) */}
             <section className="space-y-8 pt-8">
@@ -220,13 +235,14 @@ export default function ClubeRotaPremium() {
                             size="icon" 
                             variant="ghost" 
                             className="absolute right-2 top-1/2 -translate-y-1/2 text-gold/40 hover:text-gold hover:bg-gold/10"
+                            onClick={() => navigate('/clube/chat')}
                           >
                             <ArrowRight className="w-5 h-5" />
                           </Button>
                         </div>
                         
                         <div className="flex flex-wrap gap-2">
-                          {['Qual o significado do lobo?', 'Como resgatar minha força?', 'Símbolos de cura'].map(tag => (
+                          {perguntasSugeridas.map(tag => (
                             <button key={tag} className="text-[10px] px-3 py-1.5 rounded-full border border-white/5 bg-white/5 text-muted-foreground hover:border-gold/20 hover:text-gold transition-all">
                               {tag}
                             </button>
@@ -250,13 +266,13 @@ export default function ClubeRotaPremium() {
                 <CardContent className="p-8 space-y-6">
                   <div className="space-y-2">
                     <span className="text-[10px] text-gold/60 uppercase font-medium">Situação de Campo</span>
-                    <h4 className="text-xl font-display">A Encruzilhada do Resgate</h4>
+                    <h4 className="text-xl font-display">Simulação Contextual</h4>
                   </div>
-                  <p className="text-muted-foreground/80 text-sm leading-relaxed">
-                    Você encontrou um arquétipo ferido no campo psíquico. Como você utiliza as ferramentas da {estacaoAtual?.titulo} para realizar a primeira escuta sem ser devorada pelo trauma?
+                  <p className="text-muted-foreground/80 text-sm leading-relaxed whitespace-pre-line">
+                    {simulacaoTexto}
                   </p>
-                  <Button variant="outline" className="w-full h-12 border-gold/20 text-gold hover:bg-gold/5 gap-2 uppercase tracking-widest text-xs font-bold">
-                    Iniciar Simulação Contextual
+                  <Button variant="outline" className="w-full h-12 border-gold/20 text-gold hover:bg-gold/5 gap-2 uppercase tracking-widest text-xs font-bold" onClick={() => navigate('/clube/treinamento')}>
+                    Iniciar Simulação
                   </Button>
                 </CardContent>
               </Card>
@@ -271,11 +287,11 @@ export default function ClubeRotaPremium() {
               
               <div className="bg-gradient-to-r from-card/50 to-transparent p-1 rounded-xl">
                 <div className="bg-background/80 backdrop-blur-sm rounded-lg p-8 space-y-6 border border-white/5">
-                   <p className="font-serif italic text-xl text-center text-foreground/90 px-4">
-                     "Escreva hoje sobre as peles que você já trocou mas que ainda insistem em vestir seu corpo atual."
+                   <p className="font-serif italic text-xl text-center text-foreground/90 px-4 whitespace-pre-line">
+                     "{jardimPrompt}"
                    </p>
                    <div className="flex justify-center">
-                     <Button variant="link" className="text-gold/60 text-xs gap-2">
+                     <Button variant="link" className="text-gold/60 text-xs gap-2" onClick={() => navigate('/clube/jardim')}>
                        <MapPin className="w-3 h-3" /> Registrar no Jardim da Psique
                      </Button>
                    </div>
@@ -318,9 +334,9 @@ export default function ClubeRotaPremium() {
                   
                   <div className="space-y-4">
                     {[
-                      { label: 'Estação', value: estacaoAtual?.numero + ' - ' + estacaoAtual?.titulo, icon: MapPin },
+                      { label: 'Estação', value: (estacaoAtual?.numero || '0') + ' - ' + (estacaoAtual?.titulo || '...'), icon: MapPin },
                       { label: 'Rota Atual', value: ponto.nome, icon: Compass, active: true },
-                      { label: 'Porta', value: 'Iniciação Selvagem', icon: MessageSquare },
+                      { label: 'Porta', value: ponto.subtitulo || 'Iniciação', icon: MessageSquare },
                       { label: 'Campo', value: 'Vale das Sombras', icon: Flower2 },
                       { label: 'Torre', value: 'Observatório', icon: Clock },
                     ].map((item, idx) => (
@@ -341,39 +357,19 @@ export default function ClubeRotaPremium() {
                       </div>
                     ))}
                   </div>
-
-                  <Separator className="bg-white/5" />
-                  
-                  <div className="space-y-4">
-                     <div className="flex justify-between items-center text-[10px] uppercase tracking-widest text-muted-foreground/50">
-                       <span>Expansão de Consciência</span>
-                       <span className="text-gold">42%</span>
-                     </div>
-                     <div className="h-1 bg-white/5 rounded-full overflow-hidden">
-                       <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: '42%' }}
-                        transition={{ duration: 1.5, ease: "easeOut" }}
-                        className="h-full bg-gold shadow-[0_0_10px_rgba(201,169,110,0.5)]" 
-                       />
-                     </div>
-                  </div>
                 </CardContent>
               </Card>
 
-              {/* Recursos Adicionais Sidebar */}
-              <div className="px-2 space-y-6">
-                 <div className="space-y-4">
-                    <h4 className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40 font-bold">Arquivos de Apoio</h4>
-                    <div className="space-y-2">
-                       {['Manual da Loba.pdf', 'Mapa de Sombras.png'].map(file => (
-                         <div key={file} className="flex items-center justify-between text-xs text-muted-foreground/60 hover:text-foreground cursor-pointer transition-colors p-2 rounded hover:bg-white/5 group">
-                           <span>{file}</span>
-                           <ChevronDown className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                         </div>
-                       ))}
-                    </div>
-                 </div>
+              {/* Action Sidebar */}
+              <div className="space-y-3">
+                 <Button variant="outline" className="w-full justify-between group border-white/5 bg-white/5" onClick={() => navigate('/clube/chat')}>
+                    <span className="flex items-center gap-3"><MessageSquare className="w-4 h-4 text-gold" /> Chat do Livro</span>
+                    <ChevronRight className="w-4 h-4 opacity-20 group-hover:opacity-100 transition-opacity" />
+                 </Button>
+                 <Button variant="outline" className="w-full justify-between group border-white/5 bg-white/5" onClick={() => navigate('/clube/acervo')}>
+                    <span className="flex items-center gap-3"><BookOpen className="w-4 h-4 text-gold" /> Acervo Digital</span>
+                    <ChevronRight className="w-4 h-4 opacity-20 group-hover:opacity-100 transition-opacity" />
+                 </Button>
               </div>
 
             </div>

@@ -66,6 +66,10 @@ export function PassosRotaTab({ estacaoId }: Props) {
     impacto_cidadela: string;
     conteudo_texto: string;
     proximo_passo_label: string;
+    audios: string;
+    jardim_prompt: string;
+    simulacao_texto: string;
+    perguntas_sugeridas: string;
   }>({
     titulo: '',
     subtitulo: '',
@@ -75,6 +79,10 @@ export function PassosRotaTab({ estacaoId }: Props) {
     impacto_cidadela: '[]',
     conteudo_texto: '',
     proximo_passo_label: '',
+    audios: '[]',
+    jardim_prompt: '',
+    simulacao_texto: '',
+    perguntas_sugeridas: '[]',
   });
 
   const { data: passos = [], isLoading } = useQuery({
@@ -93,10 +101,15 @@ export function PassosRotaTab({ estacaoId }: Props) {
   const saveMutation = useMutation({
     mutationFn: async (data: typeof form & { id?: string }) => {
       let impactoJson = [];
+      let audiosJson = [];
+      let perguntasJson = [];
+      
       try {
         impactoJson = JSON.parse(data.impacto_cidadela || '[]');
+        audiosJson = JSON.parse(data.audios || '[]');
+        perguntasJson = JSON.parse(data.perguntas_sugeridas || '[]');
       } catch (e) {
-        throw new Error('Impacto Cidadela deve ser um JSON válido (array)');
+        throw new Error('Certifique-se que os campos JSON (Impacto, Áudios, Perguntas) são válidos.');
       }
 
       const payload = {
@@ -104,12 +117,18 @@ export function PassosRotaTab({ estacaoId }: Props) {
         titulo: data.titulo,
         subtitulo: data.subtitulo || null,
         tipo_passo: data.tipo_passo,
-        tipo: data.tipo_passo, // mantém compatibilidade com campo 'tipo'
+        tipo: data.tipo_passo,
         ordem: data.ordem,
         icone: data.icone || null,
         impacto_cidadela: impactoJson,
         conteudo_inline: { texto: data.conteudo_texto },
-        metadata: { proximo_passo: data.proximo_passo_label },
+        metadata: { 
+          proximo_passo: data.proximo_passo_label,
+          audios: audiosJson,
+          jardim_prompt: data.jardim_prompt,
+          simulacao_texto: data.simulacao_texto,
+          perguntas_sugeridas: perguntasJson
+        },
         slug: data.titulo.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
       };
 
@@ -153,6 +172,10 @@ export function PassosRotaTab({ estacaoId }: Props) {
       impacto_cidadela: '[]',
       conteudo_texto: '',
       proximo_passo_label: '',
+      audios: '[]',
+      jardim_prompt: '',
+      simulacao_texto: '',
+      perguntas_sugeridas: '[]',
     });
     setDialogOpen(true);
   };
@@ -168,6 +191,10 @@ export function PassosRotaTab({ estacaoId }: Props) {
       impacto_cidadela: JSON.stringify(p.impacto_cidadela || [], null, 2),
       conteudo_texto: p.conteudo_inline?.texto || '',
       proximo_passo_label: p.metadata?.proximo_passo || '',
+      audios: JSON.stringify(p.metadata?.audios || [], null, 2),
+      jardim_prompt: p.metadata?.jardim_prompt || '',
+      simulacao_texto: p.metadata?.simulacao_texto || '',
+      perguntas_sugeridas: JSON.stringify(p.metadata?.perguntas_sugeridas || [], null, 2),
     });
     setDialogOpen(true);
   };
@@ -330,7 +357,6 @@ export function PassosRotaTab({ estacaoId }: Props) {
                     className="font-mono text-[10px]"
                     rows={4}
                   />
-                  <p className="text-[9px] text-muted-foreground italic">Ex: {'['}&#123;"distrito":"instinto", "intensidade":1, "tipo_impacto":"ativação"&#125;{']'}</p>
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold uppercase text-muted-foreground">Rótulo Próximo Passo</label>
@@ -339,7 +365,48 @@ export function PassosRotaTab({ estacaoId }: Props) {
                     onChange={(e) => setForm({ ...form, proximo_passo_label: e.target.value })} 
                     placeholder="Ex: A adaptação invisível"
                   />
-                  <p className="text-[9px] text-muted-foreground mt-1">Apenas visual, a sequência real é pela ordem.</p>
+                </div>
+              </div>
+
+              <div className="space-y-1.5 border-t pt-4">
+                <label className="text-xs font-bold uppercase text-gold">Conteúdo Premium (Exclusivo Rota)</label>
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-muted-foreground">Áudios (JSON array de objetos)</label>
+                    <Textarea 
+                      value={form.audios} 
+                      onChange={(e) => setForm({ ...form, audios: e.target.value })} 
+                      placeholder='[{"titulo": "Escuta 1", "url": "...", "duracao": "10:00"}]'
+                      className="font-mono text-[10px]"
+                      rows={3}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-muted-foreground">Prompt do Jardim</label>
+                    <Input 
+                      value={form.jardim_prompt} 
+                      onChange={(e) => setForm({ ...form, jardim_prompt: e.target.value })} 
+                      placeholder="Prompt para o registro no jardim..."
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-muted-foreground">Texto da Simulação</label>
+                    <Textarea 
+                      value={form.simulacao_texto} 
+                      onChange={(e) => setForm({ ...form, simulacao_texto: e.target.value })} 
+                      rows={2}
+                      placeholder="Contexto da câmara de simulação..."
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-muted-foreground">Perguntas Sugeridas (JSON array de strings)</label>
+                    <Input 
+                      value={form.perguntas_sugeridas} 
+                      onChange={(e) => setForm({ ...form, perguntas_sugeridas: e.target.value })} 
+                      placeholder='["Pergunta 1", "Pergunta 2"]'
+                      className="font-mono text-[10px]"
+                    />
+                  </div>
                 </div>
               </div>
 

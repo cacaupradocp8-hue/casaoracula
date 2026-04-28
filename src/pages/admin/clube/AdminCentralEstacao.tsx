@@ -3,23 +3,40 @@ import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, Route, Calendar, Layers, Users, Loader2, Sparkles, Layout, ListOrdered } from 'lucide-react';
+import { ArrowLeft, Route, Calendar, Layers, Users, Loader2, Sparkles, Layout, ListOrdered, Pencil } from 'lucide-react';
 import { PassosRotaTab } from '@/components/admin/central-jornadas/PassosRotaTab';
 import { EstradaTab } from '@/components/admin/central-jornadas/EstradaTab';
 import { SemanasTab } from '@/components/admin/central-jornadas/SemanasTab';
 import { EntradaTab } from '@/components/admin/central-jornadas/EntradaTab';
 import { AplicacaoTab } from '@/components/admin/central-jornadas/AplicacaoTab';
 import { EncontroTab } from '@/components/admin/central-jornadas/EncontroTab';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AdminCentralEstacao() {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const qc = useQueryClient();
   const { estacaoId: paramId } = useParams<{ estacaoId: string }>();
   const activeAdminTab = (window as any).Admin_ActiveTab || '';
   const estacaoId = paramId || (activeAdminTab.startsWith('central-estacao-') ? activeAdminTab.replace('central-estacao-', '') : null);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'passos';
+
+  const [editStationOpen, setEditStationOpen] = useState(false);
+  const [stationForm, setStationForm] = useState({
+    titulo: '',
+    livro_titulo: '',
+    livro_autor: '',
+    livro_capa_url: '',
+    ativa: false,
+    publicada: false
+  });
 
   const onTabChange = (val: string) => {
     setSearchParams({ tab: val });
@@ -38,6 +55,37 @@ export default function AdminCentralEstacao() {
       return data;
     },
     enabled: !!estacaoId,
+  });
+
+  useEffect(() => {
+    if (estacao) {
+      setStationForm({
+        titulo: estacao.titulo || '',
+        livro_titulo: estacao.livro_titulo || '',
+        livro_autor: estacao.livro_autor || '',
+        livro_capa_url: estacao.livro_capa_url || '',
+        ativa: estacao.ativa || false,
+        publicada: estacao.publicada || false
+      });
+    }
+  }, [estacao]);
+
+  const updateStationMutation = useMutation({
+    mutationFn: async (data: typeof stationForm) => {
+      const { error } = await supabase
+        .from('clube_estacoes')
+        .update(data)
+        .eq('id', estacaoId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-estacao-detail', estacaoId] });
+      setEditStationOpen(false);
+      toast({ title: 'Estação atualizada com sucesso!' });
+    },
+    onError: (err: any) => {
+      toast({ title: 'Erro ao atualizar', description: err.message, variant: 'destructive' });
+    }
   });
 
   if (isLoading) {
@@ -75,12 +123,59 @@ export default function AdminCentralEstacao() {
               <Badge variant={estacao.ativa ? 'default' : 'secondary'} className="text-[10px]">
                 {estacao.ativa ? 'Ativa' : 'Inativa'}
               </Badge>
+              <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setEditStationOpen(true)}>
+                <Pencil className="h-3 w-3" />
+              </Button>
             </div>
             <p className="text-sm text-muted-foreground mt-0.5">
               {estacao.livro_titulo} {estacao.livro_autor ? `— ${estacao.livro_autor}` : ''}
             </p>
           </div>
         </div>
+
+        <Dialog open={editStationOpen} onOpenChange={setEditStationOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Editar Detalhes da Estação</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Título da Estação</Label>
+                <Input value={stationForm.titulo} onChange={e => setStationForm({...stationForm, titulo: e.target.value})} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Livro</Label>
+                  <Input value={stationForm.livro_titulo} onChange={e => setStationForm({...stationForm, livro_titulo: e.target.value})} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Autor</Label>
+                  <Input value={stationForm.livro_autor} onChange={e => setStationForm({...stationForm, livro_autor: e.target.value})} />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>URL da Capa do Livro</Label>
+                <Input value={stationForm.livro_capa_url} onChange={e => setStationForm({...stationForm, livro_capa_url: e.target.value})} />
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Switch checked={stationForm.ativa} onCheckedChange={v => setStationForm({...stationForm, ativa: v})} />
+                  <Label>Ativa</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Switch checked={stationForm.publicada} onCheckedChange={v => setStationForm({...stationForm, publicada: v})} />
+                  <Label>Publicada</Label>
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setEditStationOpen(false)}>Cancelar</Button>
+              <Button onClick={() => updateStationMutation.mutate(stationForm)} disabled={updateStationMutation.isPending}>
+                Salvar Alterações
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* Tabs - Alinhadas com as 4 Camadas da Aluna */}
         <Tabs value={activeTab} onValueChange={onTabChange}>
