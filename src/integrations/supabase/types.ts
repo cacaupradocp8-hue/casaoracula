@@ -4392,6 +4392,8 @@ export type Database = {
           capa_url: string | null
           carga_horaria_ajuste: number
           carga_horaria_base: number
+          chat_knowledge_base: string | null
+          chat_prompt: string | null
           como_ler: string | null
           como_ler_audio_url: string | null
           como_ler_slides: Json | null
@@ -4438,6 +4440,8 @@ export type Database = {
           capa_url?: string | null
           carga_horaria_ajuste?: number
           carga_horaria_base?: number
+          chat_knowledge_base?: string | null
+          chat_prompt?: string | null
           como_ler?: string | null
           como_ler_audio_url?: string | null
           como_ler_slides?: Json | null
@@ -4484,6 +4488,8 @@ export type Database = {
           capa_url?: string | null
           carga_horaria_ajuste?: number
           carga_horaria_base?: number
+          chat_knowledge_base?: string | null
+          chat_prompt?: string | null
           como_ler?: string | null
           como_ler_audio_url?: string | null
           como_ler_slides?: Json | null
