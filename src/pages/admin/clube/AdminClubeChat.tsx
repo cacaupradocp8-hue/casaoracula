@@ -132,7 +132,13 @@ export default function AdminClubeChat() {
               <CardDescription>O chat é alimentado por perguntas estruturadas por fase.</CardDescription>
             </CardHeader>
             <CardContent>
-              <Select value={selectedCiclo || ''} onValueChange={setSelectedCiclo}>
+              <Select 
+                value={selectedCiclo || ''} 
+                onValueChange={(v) => {
+                  setSelectedCiclo(v);
+                  setSearchParams({ ciclo: v });
+                }}
+              >
                 <SelectTrigger className="w-full sm:w-[300px]">
                   <SelectValue placeholder="Escolha um ciclo..." />
                 </SelectTrigger>
