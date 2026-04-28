@@ -263,8 +263,8 @@ export function SemanasTab({ estacaoId }: Props) {
 
       {/* Full Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] p-0 overflow-hidden flex flex-col">
-          <DialogHeader className="p-6 pb-2">
+        <DialogContent className="max-w-3xl w-[calc(100vw-2rem)] max-h-[calc(100dvh-2rem)] overflow-y-auto p-0 flex flex-col">
+          <DialogHeader className="p-6 pb-2 shrink-0">
             <DialogTitle className="text-xl font-display flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-gold" />
               {editingSemana ? `Configurar Portal ${form.semana_numero}` : `Novo Portal ${form.semana_numero}`}
@@ -274,7 +274,7 @@ export function SemanasTab({ estacaoId }: Props) {
             </DialogDescription>
           </DialogHeader>
           
-          <ScrollArea className="flex-1 p-6 pt-2">
+          <div className="px-6 pb-2 pt-2">
             <div className="space-y-8 pb-8">
               {/* Informações Básicas */}
               <div className="grid grid-cols-2 gap-4">
@@ -388,9 +388,9 @@ export function SemanasTab({ estacaoId }: Props) {
                 </div>
               </section>
             </div>
-          </ScrollArea>
+          </div>
 
-          <div className="p-6 border-t border-border bg-background flex items-center gap-3">
+          <div className="p-6 border-t border-border bg-background flex items-center gap-3 shrink-0">
             <Button variant="outline" className="flex-1" onClick={() => setDialogOpen(false)}>
               Cancelar
             </Button>
