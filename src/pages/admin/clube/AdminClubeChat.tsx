@@ -19,12 +19,12 @@ export default function AdminClubeChat() {
   const [chatKnowledge, setChatKnowledge] = useState('');
 
   const { data: ciclos } = useQuery({
-    queryKey: ['admin-clube-ciclos-v2-chat'],
+    queryKey: ['admin-clube-ciclos-chat'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clube_v2_ciclos')
+        .from('clube_livro_ciclos')
         .select('id, titulo, chat_prompt, chat_knowledge_base')
-        .order('created_at', { ascending: false });
+        .order('ordem', { ascending: true });
       if (error) throw error;
       return data;
     },
@@ -42,18 +42,33 @@ export default function AdminClubeChat() {
 
   const saveConfigMutation = useMutation({
     mutationFn: async () => {
-      if (!selectedCiclo) return;
-      const { error } = await supabase
-        .from('clube_v2_ciclos')
+      if (!selectedCiclo || !ciclos) return;
+      const ciclo = ciclos.find(c => c.id === selectedCiclo);
+      if (!ciclo) return;
+
+      // 1. Update old table
+      const { error: err1 } = await supabase
+        .from('clube_livro_ciclos')
         .update({
           chat_prompt: chatPrompt,
           chat_knowledge_base: chatKnowledge,
         })
         .eq('id', selectedCiclo);
-      if (error) throw error;
+      if (err1) throw err1;
+
+      // 2. Update v2 table (by title match to ensure student page sees it)
+      const { error: err2 } = await supabase
+        .from('clube_v2_ciclos')
+        .update({
+          chat_prompt: chatPrompt,
+          chat_knowledge_base: chatKnowledge,
+        })
+        .eq('titulo', ciclo.titulo);
+      // We don't throw if v2 update fails (maybe it doesn't exist yet)
+      if (err2) console.warn('v2 sync failed', err2);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-clube-ciclos-v2-chat'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-ciclos-chat'] });
       toast({
         title: "Configurações salvas",
         description: "A base de conhecimento e o prompt foram atualizados com sucesso.",
