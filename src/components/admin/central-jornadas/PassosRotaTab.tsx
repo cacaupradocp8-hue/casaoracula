@@ -13,9 +13,11 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   Plus, Pencil, Trash2, GripVertical, Loader2, Sparkles, 
   Headphones, PenTool, ClipboardList, Zap, ArrowRight,
-  Info
+  Info, Image as ImageIcon, Map as MapIcon, BookOpen, Compass
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import { ImageUpload } from '@/components/admin/ImageUpload';
 
 interface PassoRota {
   id: string;
@@ -63,6 +65,12 @@ export function PassosRotaTab({ estacaoId }: Props) {
     tipo_passo: 'portal' | 'escuta' | 'aplicacao' | 'registro' | 'integracao';
     ordem: number;
     icone: string;
+    image_url: string;
+    porta: string;
+    campo: string;
+    torre: string;
+    labirinto: string;
+    frase_guia: string;
     impacto_cidadela: string;
     conteudo_texto: string;
     proximo_passo_label: string;
@@ -76,6 +84,12 @@ export function PassosRotaTab({ estacaoId }: Props) {
     tipo_passo: 'portal',
     ordem: 0,
     icone: '',
+    image_url: '',
+    porta: '',
+    campo: '',
+    torre: '',
+    labirinto: '',
+    frase_guia: '',
     impacto_cidadela: '[]',
     conteudo_texto: '',
     proximo_passo_label: '',
@@ -120,6 +134,14 @@ export function PassosRotaTab({ estacaoId }: Props) {
         tipo: data.tipo_passo,
         ordem: data.ordem,
         icone: data.icone || null,
+        image_url: data.image_url || null,
+        porta: data.porta || null,
+        campo: data.campo || null,
+        torre: data.torre || null,
+        labirinto: data.labirinto || null,
+        frase_guia: data.frase_guia || null,
+        jardim_prompt: data.jardim_prompt || null,
+        cenario_treinamento: data.simulacao_texto || null,
         impacto_cidadela: impactoJson,
         conteudo_inline: { texto: data.conteudo_texto },
         metadata: { 
@@ -169,6 +191,12 @@ export function PassosRotaTab({ estacaoId }: Props) {
       tipo_passo: 'portal',
       ordem: passos.length > 0 ? passos[passos.length - 1].ordem + 10 : 10,
       icone: '',
+      image_url: '',
+      porta: '',
+      campo: '',
+      torre: '',
+      labirinto: '',
+      frase_guia: '',
       impacto_cidadela: '[]',
       conteudo_texto: '',
       proximo_passo_label: '',
@@ -188,12 +216,18 @@ export function PassosRotaTab({ estacaoId }: Props) {
       tipo_passo: p.tipo_passo || 'portal',
       ordem: p.ordem,
       icone: p.icone || '',
+      image_url: (p as any).image_url || '',
+      porta: (p as any).porta || '',
+      campo: (p as any).campo || '',
+      torre: (p as any).torre || '',
+      labirinto: (p as any).labirinto || '',
+      frase_guia: (p as any).frase_guia || '',
       impacto_cidadela: JSON.stringify(p.impacto_cidadela || [], null, 2),
       conteudo_texto: p.conteudo_inline?.texto || '',
       proximo_passo_label: p.metadata?.proximo_passo || '',
       audios: JSON.stringify(p.metadata?.audios || [], null, 2),
-      jardim_prompt: p.metadata?.jardim_prompt || '',
-      simulacao_texto: p.metadata?.simulacao_texto || '',
+      jardim_prompt: (p as any).jardim_prompt || p.metadata?.jardim_prompt || '',
+      simulacao_texto: (p as any).cenario_treinamento || p.metadata?.simulacao_texto || '',
       perguntas_sugeridas: JSON.stringify(p.metadata?.perguntas_sugeridas || [], null, 2),
     });
     setDialogOpen(true);
@@ -368,29 +402,71 @@ export function PassosRotaTab({ estacaoId }: Props) {
                 </div>
               </div>
 
-              <div className="space-y-1.5 border-t pt-4">
-                <label className="text-xs font-bold uppercase text-gold">Conteúdo Premium (Exclusivo Rota)</label>
+              <div className="space-y-4 border-t pt-4">
+                <label className="text-xs font-bold uppercase text-gold flex items-center gap-2">
+                  <MapIcon className="w-4 h-4" /> Cartografia & Conteúdo Premium
+                </label>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <ImageUpload 
+                    label="Imagem/Banner da Rota" 
+                    value={form.image_url} 
+                    onChange={url => setForm({...form, image_url: url})} 
+                    folder="rotas"
+                    aspectRatio="video"
+                  />
+                  <div className="space-y-3">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase text-muted-foreground">Frase-Guia</label>
+                      <Input value={form.frase_guia} onChange={e => setForm({...form, frase_guia: e.target.value})} placeholder="O lobo que uiva na noite..." />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold uppercase text-muted-foreground">Porta</label>
+                        <Input value={form.porta} onChange={e => setForm({...form, porta: e.target.value})} placeholder="Iniciação" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold uppercase text-muted-foreground">Campo</label>
+                        <Input value={form.campo} onChange={e => setForm({...form, campo: e.target.value})} placeholder="Selvagem" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold uppercase text-muted-foreground">Torre</label>
+                        <Input value={form.torre} onChange={e => setForm({...form, torre: e.target.value})} placeholder="Vigilância" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold uppercase text-muted-foreground">Labirinto</label>
+                        <Input value={form.labirinto} onChange={e => setForm({...form, labirinto: e.target.value})} placeholder="Sombras" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <Separator className="my-2" />
+
                 <div className="grid grid-cols-1 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-muted-foreground">Áudios (JSON array de objetos)</label>
+                    <label className="text-xs font-medium text-muted-foreground flex items-center gap-2"><Headphones className="w-3.5 h-3.5" /> Áudios (JSON)</label>
                     <Textarea 
                       value={form.audios} 
                       onChange={(e) => setForm({ ...form, audios: e.target.value })} 
                       placeholder='[{"titulo": "Escuta 1", "url": "...", "duracao": "10:00"}]'
                       className="font-mono text-[10px]"
-                      rows={3}
+                      rows={2}
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-muted-foreground">Prompt do Jardim</label>
-                    <Input 
+                    <label className="text-xs font-medium text-muted-foreground flex items-center gap-2"><Compass className="w-3.5 h-3.5" /> Prompt do Jardim</label>
+                    <Textarea 
                       value={form.jardim_prompt} 
                       onChange={(e) => setForm({ ...form, jardim_prompt: e.target.value })} 
                       placeholder="Prompt para o registro no jardim..."
+                      rows={2}
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-muted-foreground">Texto da Simulação</label>
+                    <label className="text-xs font-medium text-muted-foreground flex items-center gap-2"><Zap className="w-3.5 h-3.5" /> Cenário da Simulação</label>
                     <Textarea 
                       value={form.simulacao_texto} 
                       onChange={(e) => setForm({ ...form, simulacao_texto: e.target.value })} 
@@ -399,7 +475,7 @@ export function PassosRotaTab({ estacaoId }: Props) {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-muted-foreground">Perguntas Sugeridas (JSON array de strings)</label>
+                    <label className="text-xs font-medium text-muted-foreground flex items-center gap-2"><BookOpen className="w-3.5 h-3.5" /> Perguntas Sugeridas (JSON)</label>
                     <Input 
                       value={form.perguntas_sugeridas} 
                       onChange={(e) => setForm({ ...form, perguntas_sugeridas: e.target.value })} 
