@@ -4086,8 +4086,10 @@ export type Database = {
           aplicar_sessao_pergunta: string | null
           aplicar_sessao_risco: string | null
           ativa: boolean | null
+          banner_url: string | null
           cartografia_id: string | null
           created_at: string
+          descricao: string | null
           essencia_nucleo: string | null
           essencia_tensao: string | null
           essencia_transformacao: string | null
@@ -4095,6 +4097,7 @@ export type Database = {
           id: string
           livro_autor: string | null
           livro_capa_url: string | null
+          livro_imagem_banner_url: string | null
           livro_titulo: string
           numero: number
           ordem: number
@@ -4119,8 +4122,10 @@ export type Database = {
           aplicar_sessao_pergunta?: string | null
           aplicar_sessao_risco?: string | null
           ativa?: boolean | null
+          banner_url?: string | null
           cartografia_id?: string | null
           created_at?: string
+          descricao?: string | null
           essencia_nucleo?: string | null
           essencia_tensao?: string | null
           essencia_transformacao?: string | null
@@ -4128,6 +4133,7 @@ export type Database = {
           id?: string
           livro_autor?: string | null
           livro_capa_url?: string | null
+          livro_imagem_banner_url?: string | null
           livro_titulo: string
           numero: number
           ordem?: number
@@ -4152,8 +4158,10 @@ export type Database = {
           aplicar_sessao_pergunta?: string | null
           aplicar_sessao_risco?: string | null
           ativa?: boolean | null
+          banner_url?: string | null
           cartografia_id?: string | null
           created_at?: string
+          descricao?: string | null
           essencia_nucleo?: string | null
           essencia_tensao?: string | null
           essencia_transformacao?: string | null
@@ -4161,6 +4169,7 @@ export type Database = {
           id?: string
           livro_autor?: string | null
           livro_capa_url?: string | null
+          livro_imagem_banner_url?: string | null
           livro_titulo?: string
           numero?: number
           ordem?: number
@@ -5586,66 +5595,96 @@ export type Database = {
       }
       clube_rota_itens: {
         Row: {
+          campo: string | null
+          cenario_treinamento: string | null
           conteudo_inline: Json | null
           created_at: string | null
           estacao_id: string
+          frase_guia: string | null
           icone: string | null
           id: string
+          image_url: string | null
           impacto_cidadela: Json | null
+          jardim_prompt: string | null
+          labirinto: string | null
+          leitura_referencia: string | null
           metadata: Json | null
           obrigatorio: boolean | null
           ordem: number
+          porta: string | null
           publicado: boolean | null
           ref_id: string | null
           ref_tipo: Database["public"]["Enums"]["clube_rota_ref_tipo"] | null
           rota_custom: string | null
           slug: string
+          status: string | null
           subtitulo: string | null
           tipo: string
           tipo_passo: Database["public"]["Enums"]["clube_item_type"] | null
           titulo: string
+          torre: string | null
           updated_at: string | null
         }
         Insert: {
+          campo?: string | null
+          cenario_treinamento?: string | null
           conteudo_inline?: Json | null
           created_at?: string | null
           estacao_id: string
+          frase_guia?: string | null
           icone?: string | null
           id?: string
+          image_url?: string | null
           impacto_cidadela?: Json | null
+          jardim_prompt?: string | null
+          labirinto?: string | null
+          leitura_referencia?: string | null
           metadata?: Json | null
           obrigatorio?: boolean | null
           ordem: number
+          porta?: string | null
           publicado?: boolean | null
           ref_id?: string | null
           ref_tipo?: Database["public"]["Enums"]["clube_rota_ref_tipo"] | null
           rota_custom?: string | null
           slug: string
+          status?: string | null
           subtitulo?: string | null
           tipo: string
           tipo_passo?: Database["public"]["Enums"]["clube_item_type"] | null
           titulo: string
+          torre?: string | null
           updated_at?: string | null
         }
         Update: {
+          campo?: string | null
+          cenario_treinamento?: string | null
           conteudo_inline?: Json | null
           created_at?: string | null
           estacao_id?: string
+          frase_guia?: string | null
           icone?: string | null
           id?: string
+          image_url?: string | null
           impacto_cidadela?: Json | null
+          jardim_prompt?: string | null
+          labirinto?: string | null
+          leitura_referencia?: string | null
           metadata?: Json | null
           obrigatorio?: boolean | null
           ordem?: number
+          porta?: string | null
           publicado?: boolean | null
           ref_id?: string | null
           ref_tipo?: Database["public"]["Enums"]["clube_rota_ref_tipo"] | null
           rota_custom?: string | null
           slug?: string
+          status?: string | null
           subtitulo?: string | null
           tipo?: string
           tipo_passo?: Database["public"]["Enums"]["clube_item_type"] | null
           titulo?: string
+          torre?: string | null
           updated_at?: string | null
         }
         Relationships: [
@@ -5773,10 +5812,12 @@ export type Database = {
           dados_dinamicos: Json | null
           descricao: string | null
           id: string
+          image_url: string | null
           media_type: string | null
           media_url: string | null
           ordem: number | null
           portal_id: string | null
+          status: string | null
           tipo: string
           titulo: string
           updated_at: string
@@ -5788,10 +5829,12 @@ export type Database = {
           dados_dinamicos?: Json | null
           descricao?: string | null
           id?: string
+          image_url?: string | null
           media_type?: string | null
           media_url?: string | null
           ordem?: number | null
           portal_id?: string | null
+          status?: string | null
           tipo: string
           titulo: string
           updated_at?: string
@@ -5803,10 +5846,12 @@ export type Database = {
           dados_dinamicos?: Json | null
           descricao?: string | null
           id?: string
+          image_url?: string | null
           media_type?: string | null
           media_url?: string | null
           ordem?: number | null
           portal_id?: string | null
+          status?: string | null
           tipo?: string
           titulo?: string
           updated_at?: string
@@ -5908,6 +5953,7 @@ export type Database = {
       clube_v2_obras: {
         Row: {
           autor: string | null
+          banner_url: string | null
           capa_url: string | null
           created_at: string
           descricao: string | null
@@ -5918,6 +5964,7 @@ export type Database = {
         }
         Insert: {
           autor?: string | null
+          banner_url?: string | null
           capa_url?: string | null
           created_at?: string
           descricao?: string | null
@@ -5928,6 +5975,7 @@ export type Database = {
         }
         Update: {
           autor?: string | null
+          banner_url?: string | null
           capa_url?: string | null
           created_at?: string
           descricao?: string | null
