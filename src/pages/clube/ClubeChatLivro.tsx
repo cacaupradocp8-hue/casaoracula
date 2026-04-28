@@ -92,7 +92,7 @@ export default function ClubeChatLivro() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clube_v2_ciclos' as any)
-        .select('*, clube_v2_obras(*)')
+        .select('*, chat_prompt, chat_knowledge_base, clube_v2_obras(*)')
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
