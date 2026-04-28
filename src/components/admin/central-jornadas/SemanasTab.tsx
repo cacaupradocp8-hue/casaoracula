@@ -388,9 +388,9 @@ export function SemanasTab({ estacaoId }: Props) {
                 </div>
               </section>
             </div>
-          </ScrollArea>
+          </div>
 
-          <div className="p-6 border-t border-border bg-background flex items-center gap-3">
+          <div className="p-6 border-t border-border bg-background flex items-center gap-3 shrink-0">
             <Button variant="outline" className="flex-1" onClick={() => setDialogOpen(false)}>
               Cancelar
             </Button>
