@@ -101,10 +101,15 @@ export function PassosRotaTab({ estacaoId }: Props) {
   const saveMutation = useMutation({
     mutationFn: async (data: typeof form & { id?: string }) => {
       let impactoJson = [];
+      let audiosJson = [];
+      let perguntasJson = [];
+      
       try {
         impactoJson = JSON.parse(data.impacto_cidadela || '[]');
+        audiosJson = JSON.parse(data.audios || '[]');
+        perguntasJson = JSON.parse(data.perguntas_sugeridas || '[]');
       } catch (e) {
-        throw new Error('Impacto Cidadela deve ser um JSON válido (array)');
+        throw new Error('Certifique-se que os campos JSON (Impacto, Áudios, Perguntas) são válidos.');
       }
 
       const payload = {
@@ -112,12 +117,18 @@ export function PassosRotaTab({ estacaoId }: Props) {
         titulo: data.titulo,
         subtitulo: data.subtitulo || null,
         tipo_passo: data.tipo_passo,
-        tipo: data.tipo_passo, // mantém compatibilidade com campo 'tipo'
+        tipo: data.tipo_passo,
         ordem: data.ordem,
         icone: data.icone || null,
         impacto_cidadela: impactoJson,
         conteudo_inline: { texto: data.conteudo_texto },
-        metadata: { proximo_passo: data.proximo_passo_label },
+        metadata: { 
+          proximo_passo: data.proximo_passo_label,
+          audios: audiosJson,
+          jardim_prompt: data.jardim_prompt,
+          simulacao_texto: data.simulacao_texto,
+          perguntas_sugeridas: perguntasJson
+        },
         slug: data.titulo.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
       };
 
