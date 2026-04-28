@@ -441,7 +441,7 @@ export function AdminClubeLivroTab() {
                            size="sm" 
                            variant="outline" 
                            className="w-full text-xs"
-                           onClick={() => window.location.href = '/admin/clube/chat'}
+                           onClick={() => window.location.href = `/admin/clube/chat?ciclo=${selectedCiclo}`}
                          >
                            Configurar Base de Conhecimento
                          </Button>
