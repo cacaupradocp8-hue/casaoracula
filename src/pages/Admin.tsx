@@ -210,11 +210,11 @@ export default function Admin() {
 
   return (
     <AppLayout>
-      <div className="flex min-h-[calc(100vh-5rem)]">
+      <div className="flex">
         <AdminSidebar activeTab={activeTab} onTabChange={setActiveTab} />
 
-        <div className="flex-1 min-w-0 overflow-auto">
-          <div className="px-6 py-6 pb-20">
+        <div className="flex-1 min-w-0">
+          <div className="px-6 py-6 pb-32">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
               {activeTab !== 'clube' && !isDirectClubeRoute && (
