@@ -172,6 +172,10 @@ export function PassosRotaTab({ estacaoId }: Props) {
       impacto_cidadela: '[]',
       conteudo_texto: '',
       proximo_passo_label: '',
+      audios: '[]',
+      jardim_prompt: '',
+      simulacao_texto: '',
+      perguntas_sugeridas: '[]',
     });
     setDialogOpen(true);
   };
@@ -187,6 +191,10 @@ export function PassosRotaTab({ estacaoId }: Props) {
       impacto_cidadela: JSON.stringify(p.impacto_cidadela || [], null, 2),
       conteudo_texto: p.conteudo_inline?.texto || '',
       proximo_passo_label: p.metadata?.proximo_passo || '',
+      audios: JSON.stringify(p.metadata?.audios || [], null, 2),
+      jardim_prompt: p.metadata?.jardim_prompt || '',
+      simulacao_texto: p.metadata?.simulacao_texto || '',
+      perguntas_sugeridas: JSON.stringify(p.metadata?.perguntas_sugeridas || [], null, 2),
     });
     setDialogOpen(true);
   };
