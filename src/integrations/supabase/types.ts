@@ -5711,6 +5711,8 @@ export type Database = {
       }
       clube_v2_ciclos: {
         Row: {
+          chat_knowledge_base: string | null
+          chat_prompt: string | null
           configuracoes: Json | null
           created_at: string
           data_fim: string | null
@@ -5724,6 +5726,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          chat_knowledge_base?: string | null
+          chat_prompt?: string | null
           configuracoes?: Json | null
           created_at?: string
           data_fim?: string | null
@@ -5737,6 +5741,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          chat_knowledge_base?: string | null
+          chat_prompt?: string | null
           configuracoes?: Json | null
           created_at?: string
           data_fim?: string | null
