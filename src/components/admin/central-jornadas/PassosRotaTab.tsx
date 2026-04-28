@@ -66,6 +66,10 @@ export function PassosRotaTab({ estacaoId }: Props) {
     impacto_cidadela: string;
     conteudo_texto: string;
     proximo_passo_label: string;
+    audios: string;
+    jardim_prompt: string;
+    simulacao_texto: string;
+    perguntas_sugeridas: string;
   }>({
     titulo: '',
     subtitulo: '',
@@ -75,6 +79,10 @@ export function PassosRotaTab({ estacaoId }: Props) {
     impacto_cidadela: '[]',
     conteudo_texto: '',
     proximo_passo_label: '',
+    audios: '[]',
+    jardim_prompt: '',
+    simulacao_texto: '',
+    perguntas_sugeridas: '[]',
   });
 
   const { data: passos = [], isLoading } = useQuery({
