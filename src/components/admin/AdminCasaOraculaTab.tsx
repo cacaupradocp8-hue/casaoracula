@@ -300,6 +300,7 @@ export default function AdminCasaOraculaTab() {
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="human">Atendimento Humano</TabsTrigger>
           <TabsTrigger value="scores">Riscos Detalhados</TabsTrigger>
+          <TabsTrigger value="automation">Automação Baseada em Evidência</TabsTrigger>
           <TabsTrigger value="timeline">Timeline e Uso</TabsTrigger>
           <TabsTrigger value="learning">Aprendizado Operacional</TabsTrigger>
         </TabsList>
