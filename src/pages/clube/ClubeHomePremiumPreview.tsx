@@ -20,17 +20,17 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 // DESIGN SYSTEM CASA ORÁCULA - PREMIUM
-// Primary Color: Chic Elegant Dark Blue (#030711)
+// Primary Color: Deep Navy Blue (#020617)
 // Accent: Refined Gold (#C9A96E)
 // Style: Silent Luxury, High Contrast, European Boutique.
 
 const PremiumCard = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
   <div className={`
     relative overflow-hidden
-    bg-[#080C18]/60 backdrop-blur-3xl 
-    border border-white/[0.05] 
+    bg-[#0A1229] 
+    border border-white/[0.08] 
     rounded-[2.5rem] p-8 
-    shadow-[0_40px_80px_rgba(0,0,0,0.5)]
+    shadow-[0_40px_100px_rgba(0,0,0,0.6)]
     ${className}
   `}>
     {children}
@@ -96,7 +96,7 @@ const ResumeJourney = () => (
           </div>
         </div>
 
-        <Button className="w-full bg-white text-[#050B18] hover:bg-white/90 h-16 rounded-2xl font-bold text-base tracking-tight shadow-[0_20px_40px_rgba(255,255,255,0.1)] transition-all active:scale-[0.98]">
+        <Button className="w-full bg-white text-[#020617] hover:bg-slate-100 h-16 rounded-2xl font-bold text-base tracking-tight shadow-lg transition-all active:scale-[0.98]">
           Retomar Jornada Agora
         </Button>
       </PremiumCard>
@@ -137,10 +137,10 @@ const JourneyRoad = () => {
                 <div className={`
                   relative inline-block text-left p-8 rounded-[2.5rem] border transition-all duration-700
                   ${step.status === 'current' ? 
-                    'bg-[#0F172A]/40 border-gold/40 shadow-[0_25px_60px_rgba(0,0,0,0.6)] ring-1 ring-gold/20' : 
+                    'bg-[#111827] border-gold/40 shadow-[0_25px_60px_rgba(0,0,0,0.6)]' : 
                     step.status === 'completed' ? 
-                    'bg-white/[0.03] border-white/10' : 
-                    'bg-transparent border-white/[0.03] opacity-50'}
+                    'bg-[#0A1229] border-white/10' : 
+                    'bg-transparent border-white/[0.05] opacity-50'}
                 `}>
                   <div className="flex items-center gap-2 mb-3">
                     {step.status === 'completed' && <CheckCircle2 className="w-3.5 h-3.5 text-gold/60" />}
@@ -173,7 +173,7 @@ const JourneyRoad = () => {
 const NextReward = () => (
   <section className="py-24 px-6">
     <div className="max-w-md mx-auto">
-      <PremiumCard className="bg-gradient-to-br from-[#0A1221] to-[#050810] border-gold/10">
+      <PremiumCard className="bg-[#0A1229] border-gold/10 shadow-2xl">
         <div className="flex items-center gap-4 mb-8">
           <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center border border-gold/20">
             <Crown className="w-6 h-6 text-gold" />
@@ -215,7 +215,7 @@ const WeeklyDive = () => (
           { title: 'Ritual Prático', desc: 'Ativação corporal e simbólica.', icon: Sparkles },
           { title: 'Pergunta Oracular', desc: 'O enigma para seu oráculo pessoal.', icon: Quote },
         ].map((item, i) => (
-          <div key={i} className="p-7 bg-[#080C18]/40 border border-white/5 rounded-[2rem] flex justify-between items-center group hover:bg-white/[0.04] transition-all cursor-pointer">
+          <div key={i} className="p-7 bg-[#0A1229] border border-white/[0.08] rounded-[2rem] flex justify-between items-center group hover:bg-[#111827] transition-all cursor-pointer">
             <div className="flex items-center gap-5">
               <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center group-hover:border-gold/30 transition-colors">
                 <item.icon className="w-5 h-5 text-white/20 group-hover:text-gold/60" />
@@ -256,17 +256,16 @@ const EvolutionStats = () => (
 
 export default function ClubeHomePremiumPreview() {
   return (
-    <div className="min-h-screen bg-[#050B18] text-white selection:bg-gold/20 selection:text-white font-sans overflow-x-hidden">
-      {/* Night Atmosphere - Clean & Deep */}
+    <div className="min-h-screen bg-[#020617] text-white selection:bg-gold/20 selection:text-white font-sans overflow-x-hidden">
+      {/* Night Atmosphere - Clean & Deep Navy */}
       <div className="fixed inset-0 pointer-events-none">
-        {/* Elegant Deep Blue Gradient Base */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0A1221] via-[#050B18] to-[#030711]" />
+        {/* Pure Deep Navy Base */}
+        <div className="absolute inset-0 bg-[#020617]" />
         
-        {/* Sophisticated Depth Elements */}
-        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-900/[0.07] blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-gold/[0.03] blur-[120px] rounded-full" />
+        {/* Very Subtle Navy Gradients (Reduced Contrast, No Purple) */}
+        <div className="absolute top-0 left-0 w-full h-[60%] bg-gradient-to-b from-[#0A1229] to-transparent opacity-40" />
         
-        {/* Luxury Linear Glow */}
+        {/* Luxury Linear Details */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       </div>
 
@@ -307,7 +306,7 @@ export default function ClubeHomePremiumPreview() {
 
       {/* Premium Bottom Nav */}
       <nav className="fixed bottom-10 left-6 right-6 z-50">
-        <div className="max-w-md mx-auto bg-[#080C18]/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] h-20 flex items-center justify-around px-6 shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
+        <div className="max-w-md mx-auto bg-[#0A1229] border border-white/10 rounded-[2.5rem] h-20 flex items-center justify-around px-6 shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
           {[
             { icon: LayoutDashboard, active: true, label: 'Início' },
             { icon: BookOpen, label: 'Clube' },
