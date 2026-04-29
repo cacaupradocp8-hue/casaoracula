@@ -1,0 +1,240 @@
+import React, { useRef } from 'react';
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { 
+  CheckCircle2, 
+  Circle, 
+  Lock, 
+  Clock, 
+  ArrowRight, 
+  ChevronRight,
+  Sparkles,
+  Trophy,
+  History
+} from 'lucide-react';
+
+const EstradaMonumental = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+
+  const scaleY = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  const nodes = [
+    {
+      id: 1,
+      title: "O Chamado do Destino",
+      description: "A semente da sua travessia foi plantada.",
+      status: "concluido",
+      time: "15 min",
+      type: "Portal"
+    },
+    {
+      id: 2,
+      title: "Deserto do Silêncio",
+      description: "Onde as vozes externas se calam para o interno falar.",
+      status: "concluido",
+      time: "22 min",
+      type: "Ritual"
+    },
+    {
+      id: 3,
+      title: "A Travessia do Abismo",
+      description: "Enfrentando as sombras que guardam seu próximo portal.",
+      status: "ativo",
+      time: "8 min restantes",
+      type: "Desafio"
+    },
+    {
+      id: 4,
+      title: "O Vale das Máscaras",
+      description: "Despedindo-se de quem você não é mais.",
+      status: "proximo",
+      time: "12 min",
+      type: "Encontro"
+    },
+    {
+      id: 5,
+      title: "O Alvorecer da Essência",
+      description: "A integração final da jornada atual.",
+      status: "proximo",
+      time: "30 min",
+      type: "Celebração"
+    }
+  ];
+
+  return (
+    <div ref={containerRef} className="min-h-screen bg-[#020617] text-white selection:bg-blue-500/30 overflow-x-hidden">
+      {/* Hero Simples */}
+      <section className="relative h-[40vh] flex flex-col items-center justify-center text-center px-6 pt-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          className="space-y-4"
+        >
+          <span className="text-[10px] uppercase tracking-[0.4em] text-blue-400 font-medium">Progresso de Hoje</span>
+          <h1 className="text-4xl md:text-6xl font-light tracking-tight text-white/90 font-serif italic">
+            Sua jornada continua
+          </h1>
+          <div className="h-px w-12 bg-blue-500/30 mx-auto mt-6" />
+        </motion.div>
+      </section>
+
+      {/* Estrada Monumental Container */}
+      <section className="relative max-w-5xl mx-auto px-6 pb-40">
+        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/5 -translate-x-1/2" />
+        
+        {/* Animated Road Path */}
+        <motion.div 
+          style={{ scaleY }}
+          className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-blue-400 to-transparent -translate-x-1/2 origin-top shadow-[0_0_15px_rgba(59,130,246,0.5)] z-0"
+        />
+
+        <div className="relative z-10 space-y-48 md:space-y-64 py-20">
+          {nodes.map((node, index) => (
+            <NodeItem key={node.id} node={node} index={index} />
+          ))}
+        </div>
+
+        {/* Lateral Card - Faltam 8 minutos */}
+        <div className="fixed right-6 bottom-10 md:top-1/2 md:-translate-y-1/2 z-50 pointer-events-none md:pointer-events-auto">
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1, duration: 0.8 }}
+            className="bg-white/[0.03] backdrop-blur-xl border border-white/10 p-6 rounded-2xl w-64 shadow-2xl space-y-4"
+          >
+            <div className="flex items-center gap-3 text-blue-400">
+              <Clock className="w-4 h-4 animate-pulse" />
+              <span className="text-[10px] font-bold uppercase tracking-widest">Etapa Atual</span>
+            </div>
+            <div>
+              <p className="text-xs text-white/50 mb-1">Faltam apenas</p>
+              <h3 className="text-2xl font-light tracking-tight">8 minutos</h3>
+              <p className="text-[10px] text-white/40 mt-1 uppercase tracking-tighter italic">Para concluir a travessia</p>
+            </div>
+            <button className="w-full bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-bold py-3 rounded-lg transition-all duration-300 uppercase tracking-widest flex items-center justify-center gap-2 group pointer-events-auto">
+              Retomar Agora
+              <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Final da Estrada */}
+      <section className="relative h-screen flex flex-col items-center justify-center px-6 border-t border-white/5 bg-gradient-to-b from-transparent to-blue-950/20">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.5 }}
+          className="text-center space-y-12 max-w-2xl"
+        >
+          <div className="space-y-4">
+            <Trophy className="w-12 h-12 text-blue-500/50 mx-auto mb-8 stroke-1" />
+            <h2 className="text-3xl md:text-5xl font-light font-serif">Seu rastro de luz</h2>
+            <p className="text-white/40 text-sm md:text-base leading-relaxed tracking-wide">
+              Cada passo dado é uma marca eterna na Casa Orácula. <br />
+              Seu progresso acumulado revela a mestre que está despertando.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-3 gap-8 md:gap-16">
+            <StatItem label="Portais" value="12" />
+            <StatItem label="Rituais" value="48" />
+            <StatItem label="Nível" value="24" />
+          </div>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-10 py-5 bg-white text-black text-xs font-bold uppercase tracking-[0.3em] rounded-full transition-all hover:bg-blue-50 shadow-[0_0_30px_rgba(255,255,255,0.1)]"
+          >
+            Ver Mapa Completo
+          </motion.button>
+        </motion.div>
+      </section>
+    </div>
+  );
+};
+
+const NodeItem = ({ node, index }: { node: any, index: number }) => {
+  const isLeft = index % 2 === 0;
+  
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+      className={`relative flex items-center gap-8 md:gap-16 ${isLeft ? 'flex-row' : 'flex-row-reverse'} w-full`}
+    >
+      {/* Content */}
+      <div className={`flex-1 ${isLeft ? 'text-right' : 'text-left'} space-y-4`}>
+        <div className="space-y-2">
+          <span className="text-[9px] uppercase tracking-[0.3em] text-blue-400/70 font-bold">
+            {node.type} • {node.time}
+          </span>
+          <h3 className={`text-xl md:text-3xl font-light tracking-tight text-white/90 ${node.status === 'proximo' ? 'opacity-40' : ''}`}>
+            {node.title}
+          </h3>
+          <p className="text-xs md:text-sm text-white/40 max-w-xs inline-block">
+            {node.description}
+          </p>
+        </div>
+        
+        {node.status === 'ativo' && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex items-center gap-2 text-white/80 text-[10px] font-bold uppercase tracking-widest mt-6"
+          >
+            <div className="w-2 h-2 rounded-full bg-blue-500 animate-ping" />
+            Você está aqui
+          </motion.div>
+        )}
+      </div>
+
+      {/* Node Circle */}
+      <div className="relative z-20 flex-shrink-0">
+        <div className={`
+          w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center border transition-all duration-700
+          ${node.status === 'concluido' ? 'bg-blue-600/20 border-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.3)]' : 
+            node.status === 'ativo' ? 'bg-white/10 border-white shadow-[0_0_30px_rgba(255,255,255,0.2)]' : 
+            'bg-black/40 border-white/10'}
+        `}>
+          {node.status === 'concluido' ? (
+            <CheckCircle2 className="w-6 h-6 md:w-8 md:h-8 text-blue-400 stroke-1" />
+          ) : node.status === 'ativo' ? (
+            <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-white stroke-1" />
+          ) : (
+            <Lock className="w-5 h-5 md:w-6 md:h-6 text-white/20 stroke-1" />
+          )}
+        </div>
+        
+        {/* Glow effect for active node */}
+        {node.status === 'ativo' && (
+          <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-2xl animate-pulse -z-10" />
+        )}
+      </div>
+
+      {/* Empty space for balance */}
+      <div className="flex-1 hidden md:block" />
+    </motion.div>
+  );
+};
+
+const StatItem = ({ label, value }: { label: string, value: string }) => (
+  <div className="space-y-1">
+    <div className="text-2xl md:text-4xl font-light text-white font-serif">{value}</div>
+    <div className="text-[9px] uppercase tracking-[0.3em] text-white/30 font-bold">{label}</div>
+  </div>
+);
+
+export default EstradaMonumental;
