@@ -48,6 +48,17 @@ interface StagnationInfoV4 {
   total_cartografias: number;
 }
 
+interface PerformanceMetric {
+  action_type: string;
+  channel: string;
+  total_actions: number;
+  total_returned: number;
+  total_score_reduced: number;
+  total_converted: number;
+  total_retained: number;
+  success_rate: number;
+}
+
 interface UsageMetric {
   day: string;
   interactions: number;
@@ -57,13 +68,14 @@ interface UsageMetric {
 interface UserTimeline {
   id: string;
   created_at: string;
-  type: 'ia' | 'clube' | 'cartografia';
+  type: 'ia' | 'clube' | 'cartografia' | 'admin_action';
   description: string;
 }
 
 export default function AdminCasaOraculaTab() {
   const [stagnantUsers, setStagnantUsers] = useState<StagnationInfoV4[]>([]);
   const [usageMetrics, setUsageMetrics] = useState<UsageMetric[]>([]);
+  const [performanceMetrics, setPerformanceMetrics] = useState<PerformanceMetric[]>([]);
   const [selectedUserTimeline, setSelectedUserTimeline] = useState<UserTimeline[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -102,6 +114,14 @@ export default function AdminCasaOraculaTab() {
         setUsageMetrics(Object.values(grouped).sort((a, b) => b.day.localeCompare(a.day)));
       }
 
+      // 3. Aprendizado Operacional
+      const { data: perfData } = await supabase
+        .from('view_admin_action_performance')
+        .select('*')
+        .order('success_rate', { ascending: false });
+      
+      if (perfData) setPerformanceMetrics(perfData as any[]);
+
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -127,6 +147,38 @@ export default function AdminCasaOraculaTab() {
     setSelectedUserTimeline(timeline.sort((a, b) => 
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     ));
+  };
+
+  const handleMarkActionDone = async (user: StagnationInfoV4) => {
+    try {
+      const { data: { user: adminUser } } = await supabase.auth.getUser();
+      if (!adminUser) return;
+
+      const { error } = await supabase
+        .from('admin_action_history')
+        .insert({
+          user_id: user.user_id,
+          action_type: user.recommended_action,
+          channel: user.suggested_channel,
+          sent_by: adminUser.id,
+          conversion_risk_at_action: user.conversion_risk_score,
+          churn_risk_at_action: user.churn_risk_score,
+          saas_value_risk_at_action: user.saas_value_risk_score,
+          action_reason_at_action: user.action_reason,
+          last_value_timestamp_at_action: user.last_value_timestamp
+        });
+
+      if (error) throw error;
+      
+      // Atualizar localmente
+      setStagnantUsers(prev => prev.map(u => 
+        u.user_id === user.user_id ? { ...u, action_already_sent: true } : u
+      ));
+      
+      fetchDashboardData(); // Recarrega métricas de performance
+    } catch (error) {
+      console.error('Error marking action as done:', error);
+    }
   };
 
   const getRiskColor = (score: number) => {
@@ -201,10 +253,11 @@ export default function AdminCasaOraculaTab() {
       </div>
 
       <Tabs defaultValue="scores" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="human">Atendimento Humano</TabsTrigger>
           <TabsTrigger value="scores">Riscos Detalhados</TabsTrigger>
           <TabsTrigger value="timeline">Timeline e Uso</TabsTrigger>
+          <TabsTrigger value="learning">Aprendizado Operacional</TabsTrigger>
         </TabsList>
 
         <TabsContent value="human" className="space-y-4 pt-4">
@@ -251,8 +304,14 @@ export default function AdminCasaOraculaTab() {
                     </div>
                     
                     <div className="flex flex-wrap gap-2 shrink-0">
-                      <Button size="sm" variant="outline" className="h-8 text-xs gap-1 border-emerald-200 text-emerald-700 hover:bg-emerald-50">
-                        <CheckCircle2 className="w-3 h-3" /> Marcar Feito
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className={`h-8 text-xs gap-1 border-emerald-200 text-emerald-700 hover:bg-emerald-50 ${user.action_already_sent ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        onClick={() => handleMarkActionDone(user)}
+                        disabled={user.action_already_sent}
+                      >
+                        <CheckCircle2 className="w-3 h-3" /> {user.action_already_sent ? 'Feito' : 'Marcar Feito'}
                       </Button>
                       <Button size="sm" variant="outline" className="h-8 text-xs gap-1">
                         <Calendar className="w-3 h-3" /> Reagendar
@@ -416,6 +475,112 @@ export default function AdminCasaOraculaTab() {
               </Table>
             </CardContent>
           </Card>
+        </TabsContent>
+        <TabsContent value="learning" className="space-y-6 pt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-emerald-500" />
+                  Top Ações por Taxa de Sucesso
+                </CardTitle>
+                <CardDescription>Ações que mais geraram retorno ou redução de risco</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Ação</TableHead>
+                      <TableHead>Canal</TableHead>
+                      <TableHead className="text-right">Sucesso (%)</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {performanceMetrics.map((perf, i) => (
+                      <TableRow key={i}>
+                        <TableCell className="text-xs font-medium">{perf.action_type}</TableCell>
+                        <TableCell><Badge variant="outline" className="text-[10px]">{perf.channel}</Badge></TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <span className="font-bold text-emerald-600">{perf.success_rate}%</span>
+                            <Progress value={perf.success_rate} className="h-1.5 w-12" />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {performanceMetrics.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={3} className="text-center py-8 text-muted-foreground">
+                          Nenhum dado de performance coletado ainda.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Activity className="w-5 h-5 text-blue-500" />
+                  Volume de Atendimento Admin
+                </CardTitle>
+                <CardDescription>Total de ações executadas por tipo</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {performanceMetrics.map((perf, i) => (
+                    <div key={i} className="space-y-1">
+                      <div className="flex justify-between text-xs">
+                        <span>{perf.action_type} ({perf.channel})</span>
+                        <span className="font-semibold">{perf.total_actions} ações</span>
+                      </div>
+                      <Progress value={Math.min(100, (perf.total_actions / 10) * 100)} className="h-2" />
+                    </div>
+                  ))}
+                  {performanceMetrics.length === 0 && (
+                    <p className="text-center py-8 text-muted-foreground text-sm">
+                      Aguardando primeiras ações manuais.
+                    </p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="bg-emerald-50 border-emerald-100">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-emerald-700">
+                    {performanceMetrics.reduce((acc, curr) => acc + curr.total_returned, 0)}
+                  </div>
+                  <div className="text-xs text-emerald-600 uppercase font-semibold">Usuárias Recuperadas</div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-blue-50 border-blue-100">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-700">
+                    {performanceMetrics.reduce((acc, curr) => acc + curr.total_score_reduced, 0)}
+                  </div>
+                  <div className="text-xs text-blue-600 uppercase font-semibold">Riscos Mitigados</div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-amber-50 border-amber-100">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-amber-700">
+                    {performanceMetrics.reduce((acc, curr) => acc + curr.total_converted + curr.total_retained, 0)}
+                  </div>
+                  <div className="text-xs text-amber-600 uppercase font-semibold">Conversões/Retenções</div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
