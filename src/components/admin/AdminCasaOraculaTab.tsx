@@ -75,6 +75,7 @@ interface UserTimeline {
 export default function AdminCasaOraculaTab() {
   const [stagnantUsers, setStagnantUsers] = useState<StagnationInfoV4[]>([]);
   const [usageMetrics, setUsageMetrics] = useState<UsageMetric[]>([]);
+  const [performanceMetrics, setPerformanceMetrics] = useState<PerformanceMetric[]>([]);
   const [selectedUserTimeline, setSelectedUserTimeline] = useState<UserTimeline[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
