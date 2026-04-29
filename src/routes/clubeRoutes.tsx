@@ -15,6 +15,7 @@ const ClubeLaboratorioObra = React.lazy(() => import('@/pages/clube/ClubeLaborat
 
 // ─── Novas Telas Premium de Rota ───
 const ClubeRotaPremium = React.lazy(() => import('@/pages/clube/ClubeRotaPremium'));
+const ClubeHomePremiumPreview = React.lazy(() => import('@/pages/clube/ClubeHomePremiumPreview'));
 
 // ─── Rotas legadas (mantidas para compatibilidade) ───
 const ClubeLivroCiclo = React.lazy(() => import('@/pages/clube-livro/ClubeLivroCiclo'));
