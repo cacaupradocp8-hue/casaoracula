@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Navigate } from 'react-router-dom';
 
 const Admin = React.lazy(() => import('@/pages/Admin'));
 const CriarFerramenta = React.lazy(() => import('@/pages/admin/CriarFerramenta'));
