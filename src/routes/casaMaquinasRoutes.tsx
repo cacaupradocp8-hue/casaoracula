@@ -66,7 +66,8 @@ function OracleRedirectCM({ suffix = '' }: { suffix?: string }) {
 type PR = React.ComponentType<{ children: React.ReactNode; minPortal?: string }>;
 
 export function renderCasaMaquinasRoutes(ProtectedRoute: PR) {
-  return [
+  return (
+    <>
     <Route key="cm-home" path="/casa-das-maquinas" element={<ProtectedRoute minPortal="oracula"><CasaDasMaquinas /></ProtectedRoute>} />,
     <Route key="cm-cab" path="/casa-das-maquinas/cabine" element={<ProtectedRoute minPortal="oracula"><CabineTerapeutaPage /></ProtectedRoute>} />,
     <Route key="cm-cli" path="/casa-das-maquinas/clientes" element={<ProtectedRoute minPortal="oracula"><ClientesPage /></ProtectedRoute>} />,
@@ -146,5 +147,6 @@ export function renderCasaMaquinasRoutes(ProtectedRoute: PR) {
     <Route key="cm-sup" path="/casa-das-maquinas/supervisao" element={<ProtectedRoute minPortal="assinante"><PainelSupervisaoPage /></ProtectedRoute>} />,
     <Route key="cm-com" path="/casa-das-maquinas/comunidade" element={<Navigate to="/comunidade" replace />} />,
     <Route key="cm-af" path="/casa-das-maquinas/academia-formacao" element={<Navigate to="/academia" replace />} />,
-  ];
+    </>
+  );
 }
