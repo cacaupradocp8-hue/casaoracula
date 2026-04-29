@@ -30,58 +30,29 @@ const PremiumCard = ({ children, className = "" }: { children: React.ReactNode, 
 );
 
 const ClubHero = ({ name }: { name: string }) => (
-  <section className="relative pt-12 pb-8 px-6 text-center overflow-hidden">
-    {/* Ambient Light */}
-    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[300px] bg-gold/5 blur-[120px] rounded-full pointer-events-none" />
-    
+  <section className="relative pt-16 pb-12 px-6 text-center overflow-hidden">
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      className="space-y-2 relative z-10"
+      transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+      className="space-y-3 relative z-10"
     >
-      <p className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-medium">
-        Clube de Leitura Oracular
-      </p>
-      <h1 className="text-3xl md:text-4xl font-serif text-white tracking-tight">
-        Boa noite, <span className="text-gold italic">{name}</span>.
+      <div className="flex items-center justify-center gap-2 mb-2">
+        <div className="h-[1px] w-4 bg-gold/30" />
+        <p className="text-[10px] uppercase tracking-[0.5em] text-gold/80 font-semibold">
+          Exclusivo Membros
+        </p>
+        <div className="h-[1px] w-4 bg-gold/30" />
+      </div>
+      
+      <h1 className="text-4xl md:text-5xl font-serif text-white tracking-tight leading-tight">
+        Bem-vinda de volta,<br />
+        <span className="text-gold italic font-medium">{name}</span>.
       </h1>
-      <p className="text-sm text-white/40 font-light tracking-wide">
-        Sua jornada continua no silêncio da noite.
+      
+      <p className="text-sm text-white/30 font-light tracking-[0.05em] max-w-xs mx-auto pt-2">
+        A quietude da noite é o portal para sua evolução.
       </p>
-    </motion.div>
-
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: 0.3, duration: 0.8 }}
-      className="mt-8 relative"
-    >
-      <PremiumCard className="max-w-md mx-auto border-gold/20 shadow-[0_0_50px_rgba(201,169,110,0.05)]">
-        <div className="p-1">
-          <div className="aspect-[16/7] w-full rounded-xl overflow-hidden relative">
-            <div className="w-full h-full bg-gradient-to-br from-white/[0.05] to-transparent opacity-40" />
-
-            <div className="absolute inset-0 bg-gradient-to-t from-[#02040a] via-[#02040a]/20 to-transparent" />
-            <div className="absolute bottom-4 left-4 text-left">
-              <Badge className="bg-gold/20 text-gold border-gold/30 text-[8px] uppercase tracking-widest mb-2">
-                Portal 1
-              </Badge>
-              <h3 className="text-xl font-serif text-white">O Chamado Selvagem</h3>
-            </div>
-          </div>
-        </div>
-        <div className="p-6 pt-2 text-left space-y-4">
-          <div className="flex items-center gap-3">
-             <div className="w-1 h-1 rounded-full bg-gold animate-pulse" />
-             <p className="text-xs text-white/60 font-light">Você parou no início da travessia.</p>
-          </div>
-          <Button variant="outline" className="w-full h-12 border-gold/30 bg-gold/5 hover:bg-gold/10 text-gold font-medium tracking-wide gap-2 group">
-            Continuar Jornada
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </Button>
-        </div>
-      </PremiumCard>
     </motion.div>
   </section>
 );
