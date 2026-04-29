@@ -499,13 +499,25 @@ export function PassosRotaTab({ estacaoId }: Props) {
                 </div>
               </div>
 
-              <Button
-                className="w-full bg-gold hover:bg-gold/90 text-black font-bold"
-                disabled={!form.titulo || saveMutation.isPending}
-                onClick={() => saveMutation.mutate({ ...form, id: editing?.id })}
-              >
-                {saveMutation.isPending ? 'Salvando...' : editing ? 'Salvar Alterações' : 'Criar Passo na Rota'}
-              </Button>
+              <div className="flex gap-3 sticky bottom-0 bg-background pt-4 border-t mt-4">
+                {!editing && (
+                  <Button
+                    variant="outline"
+                    className="flex-1 border-gold/30 text-gold hover:bg-gold/5 font-semibold"
+                    disabled={!form.titulo || saveMutation.isPending}
+                    onClick={() => saveMutation.mutate({ ...form, addAnother: true } as any)}
+                  >
+                    Salvar e +1
+                  </Button>
+                )}
+                <Button
+                  className={cn("flex-1 bg-gold hover:bg-gold/90 text-black font-bold", editing ? "w-full" : "")}
+                  disabled={!form.titulo || saveMutation.isPending}
+                  onClick={() => saveMutation.mutate({ ...form, id: editing?.id })}
+                >
+                  {saveMutation.isPending ? 'Salvando...' : editing ? 'Salvar Alterações' : 'Criar Passo'}
+                </Button>
+              </div>
             </div>
           </div>
         </DialogContent>
