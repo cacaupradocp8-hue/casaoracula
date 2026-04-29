@@ -187,6 +187,7 @@ const Admin = React.lazy(() => import("./pages/Admin"));
 const DesbloqueiePage = React.lazy(() => import("./pages/DesbloqueiePage"));
 import PortalLuxo from "./pages/preview/PortalLuxo";
 import EstradaMonumental from "./pages/preview/EstradaMonumental";
+import CasaOraculaExperiencia from "./pages/preview/CasaOraculaExperiencia";
 
 
 // ─── Utility components ───────────────────────────────────────
@@ -511,8 +512,9 @@ function AppRoutes() {
       <Route path="/formacao-metodo/avaliacoes" element={<ProtectedRoute minPortal="mentorada"><FormacaoAvaliacoesPage /></ProtectedRoute>} />
 
       {/* Previews */}
-      <Route path="/preview/portal-luxo" element={<PortalLuxo />} />
-      <Route path="/preview/estrada-monumental" element={<EstradaMonumental />} />
+          <Route path="/preview/portal-luxo" element={<PortalLuxo />} />
+          <Route path="/preview/estrada-monumental" element={<EstradaMonumental />} />
+          <Route path="/preview/casa-oracula" element={<CasaOraculaExperiencia />} />
       <Route path="/test-bottom-nav" element={<BottomNavTestPage />} />
 
       <Route path="/biblioteca-das-travessias" element={<ProtectedRoute><Navigate to="/biblioteca?aba=travessias" replace /></ProtectedRoute>} />
