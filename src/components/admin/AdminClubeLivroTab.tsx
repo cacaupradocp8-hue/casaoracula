@@ -31,6 +31,7 @@ import { LabConfigManager } from './clube-livro/LabConfigManager';
 import { RotaDoLivroEditor } from './clube-livro/RotaDoLivroEditor';
 import { AulaBlocosEditor, type AulaBloco } from './clube-livro/AulaBlocosEditor';
 import { AudioUpload } from './AudioUpload';
+import { ImageUpload } from './ImageUpload';
 import { CALENDARIO_ANUAL, SEMANAS_PADRAO } from '@/constants/clubeLivroCalendario';
 
 
