@@ -307,6 +307,33 @@ export type Database = {
           },
         ]
       }
+      ai_provider_prices: {
+        Row: {
+          id: string
+          input_price_per_1m_tokens: number
+          model_name: string
+          output_price_per_1m_tokens: number
+          provider: string
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          input_price_per_1m_tokens: number
+          model_name: string
+          output_price_per_1m_tokens: number
+          provider: string
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          input_price_per_1m_tokens?: number
+          model_name?: string
+          output_price_per_1m_tokens?: number
+          provider?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       ai_recommendations: {
         Row: {
           client_id: string
@@ -22285,13 +22312,17 @@ export type Database = {
       view_user_stagnation: {
         Row: {
           email: string | null
+          is_aluna: boolean | null
           last_ai_use: string | null
-          last_any_activity: string | null
           last_clube_activity: string | null
           nome: string | null
           plan_id: string | null
+          portal: string | null
+          risk_score: number | null
           stagnation_reason: string | null
           subscription_status: string | null
+          total_cartografias: number | null
+          total_jardim: number | null
           user_id: string | null
         }
         Relationships: []
