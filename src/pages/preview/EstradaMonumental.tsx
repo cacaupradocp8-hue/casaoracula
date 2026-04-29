@@ -208,25 +208,39 @@ const NodeItem = ({ node, index }: { node: any, index: number }) => {
       </div>
 
       {/* Node Circle */}
-      <div className="relative z-20 flex-shrink-0">
-        <div className={`
-          w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center border transition-all duration-700
-          ${node.status === 'concluido' ? 'bg-blue-600/20 border-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.3)]' : 
-            node.status === 'ativo' ? 'bg-white/10 border-white shadow-[0_0_30px_rgba(255,255,255,0.2)]' : 
-            'bg-black/40 border-white/10'}
-        `}>
+      <div className="relative z-20 flex-shrink-0 group">
+        <motion.div 
+          whileHover={{ scale: 1.1 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          className={`
+            w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center border-2 transition-all duration-700
+            ${node.status === 'concluido' ? 'bg-blue-600/10 border-blue-500/50 shadow-[0_0_40px_rgba(59,130,246,0.2)]' : 
+              node.status === 'ativo' ? 'bg-[#020617] border-white shadow-[0_0_50px_rgba(255,255,255,0.3)] scale-110' : 
+              'bg-black/60 border-white/10 opacity-50'}
+          `}
+        >
           {node.status === 'concluido' ? (
-            <CheckCircle2 className="w-6 h-6 md:w-8 md:h-8 text-blue-400 stroke-1" />
+            <CheckCircle2 className="w-8 h-8 md:w-10 md:h-10 text-blue-400 stroke-[1.5]" />
           ) : node.status === 'ativo' ? (
-            <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-white stroke-1" />
+            <div className="relative">
+              <Sparkles className="w-8 h-8 md:w-10 md:h-10 text-white stroke-[1.5] relative z-10" />
+              <motion.div 
+                animate={{ rotate: 360 }}
+                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-[-10px] border border-dashed border-white/30 rounded-full"
+              />
+            </div>
           ) : (
-            <Lock className="w-5 h-5 md:w-6 md:h-6 text-white/20 stroke-1" />
+            <Lock className="w-6 h-6 md:w-8 md:h-8 text-white/20 stroke-1" />
           )}
-        </div>
+        </motion.div>
         
         {/* Glow effect for active node */}
         {node.status === 'ativo' && (
-          <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-2xl animate-pulse -z-10" />
+          <>
+            <div className="absolute inset-0 rounded-full bg-blue-500/30 blur-[40px] animate-pulse -z-10" />
+            <div className="absolute inset-[-40px] rounded-full bg-white/5 blur-[20px] -z-20" />
+          </>
         )}
       </div>
 
