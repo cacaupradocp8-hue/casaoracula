@@ -22115,16 +22115,28 @@ export type Database = {
           churn_risk: number | null
           converted_at: string | null
           created_at: string | null
+          days_to_conversion: number | null
+          declined_count: number | null
           engagement_score: number | null
+          estimated_value: number | null
+          first_touch_channel: string | null
+          historical_segment_rate: number | null
           id: string
+          ignored_count: number | null
           last_action_at: string | null
           last_offered_at: string | null
+          last_touch_channel: string | null
+          paused_until: string | null
+          probability_reason: string | null
+          probability_score: number | null
           reason: string | null
           refusal_count: number | null
           rule_id: string | null
           segment_from: string
           segment_to: string
           status: Database["public"]["Enums"]["upsell_status"] | null
+          timing_factor: number | null
+          touch_count: number | null
           updated_at: string | null
           user_id: string | null
         }
@@ -22133,16 +22145,28 @@ export type Database = {
           churn_risk?: number | null
           converted_at?: string | null
           created_at?: string | null
+          days_to_conversion?: number | null
+          declined_count?: number | null
           engagement_score?: number | null
+          estimated_value?: number | null
+          first_touch_channel?: string | null
+          historical_segment_rate?: number | null
           id?: string
+          ignored_count?: number | null
           last_action_at?: string | null
           last_offered_at?: string | null
+          last_touch_channel?: string | null
+          paused_until?: string | null
+          probability_reason?: string | null
+          probability_score?: number | null
           reason?: string | null
           refusal_count?: number | null
           rule_id?: string | null
           segment_from: string
           segment_to: string
           status?: Database["public"]["Enums"]["upsell_status"] | null
+          timing_factor?: number | null
+          touch_count?: number | null
           updated_at?: string | null
           user_id?: string | null
         }
@@ -22151,16 +22175,28 @@ export type Database = {
           churn_risk?: number | null
           converted_at?: string | null
           created_at?: string | null
+          days_to_conversion?: number | null
+          declined_count?: number | null
           engagement_score?: number | null
+          estimated_value?: number | null
+          first_touch_channel?: string | null
+          historical_segment_rate?: number | null
           id?: string
+          ignored_count?: number | null
           last_action_at?: string | null
           last_offered_at?: string | null
+          last_touch_channel?: string | null
+          paused_until?: string | null
+          probability_reason?: string | null
+          probability_score?: number | null
           reason?: string | null
           refusal_count?: number | null
           rule_id?: string | null
           segment_from?: string
           segment_to?: string
           status?: Database["public"]["Enums"]["upsell_status"] | null
+          timing_factor?: number | null
+          touch_count?: number | null
           updated_at?: string | null
           user_id?: string | null
         }
@@ -22603,9 +22639,11 @@ export type Database = {
       upsell_revenue_intelligence: {
         Row: {
           acceptance_rate: number | null
+          avg_days_to_convert: number | null
           channel_used: string | null
           conversions: number | null
-          estimated_revenue: number | null
+          fatigue_count: number | null
+          revenue_generated: number | null
           segment_from: string | null
           segment_to: string | null
           total_sent: number | null

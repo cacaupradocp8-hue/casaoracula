@@ -82,23 +82,51 @@ export function UpsellMachinePanel() {
 
   const actionMutation = useMutation({
     mutationFn: async ({ id, status, channel }: { id: string, status: 'sent' | 'ignored', channel?: string }) => {
+      // Get current opportunity to calculate attribution
+      const { data: current } = await supabase
+        .from('upsell_opportunities')
+        .select('first_touch_channel, touch_count')
+        .eq('id', id)
+        .single();
+
+      const updateData: any = { 
+        status, 
+        last_action_at: new Date().toISOString() 
+      };
+
+      if (status === 'sent') {
+        updateData.channel_used = channel;
+        updateData.last_offered_at = new Date().toISOString();
+        updateData.last_touch_channel = channel;
+        updateData.touch_count = (current?.touch_count || 0) + 1;
+        
+        if (!current?.first_touch_channel) {
+          updateData.first_touch_channel = channel;
+        }
+      }
+
+      if (status === 'ignored') {
+        // Simple fatigue: pause for 30 days
+        const pauseUntil = new Date();
+        pauseUntil.setDate(pauseUntil.getDate() + 30);
+        updateData.paused_until = pauseUntil.toISOString();
+      }
+
       const { error } = await supabase
         .from('upsell_opportunities')
-        .update({ 
-          status, 
-          channel_used: channel,
-          last_offered_at: status === 'sent' ? new Date().toISOString() : undefined,
-          last_action_at: new Date().toISOString() 
-        })
+        .update(updateData)
         .eq('id', id);
+      
       if (error) throw error;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['upsell-opportunities'] });
       queryClient.invalidateQueries({ queryKey: ['upsell-revenue-intelligence'] });
       toast({ 
-        title: variables.status === 'sent' ? 'Oferta enviada!' : 'Oportunidade ignorada',
-        description: variables.status === 'sent' ? `Através do canal: ${variables.channel}` : 'Removido da lista atual.'
+        title: variables.status === 'sent' ? 'Oferta enviada!' : 'Oportunidade pausada',
+        description: variables.status === 'sent' 
+          ? `Através do canal: ${variables.channel}` 
+          : 'Regra de fadiga aplicada: 30 dias de pausa.'
       });
     }
   });
@@ -194,9 +222,9 @@ export function UpsellMachinePanel() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Usuária</TableHead>
-                    <TableHead>Oferta (Ranking)</TableHead>
-                    <TableHead>Score / Fadiga</TableHead>
-                    <TableHead>Sugestão Canal</TableHead>
+                    <TableHead>Oferta / Audit</TableHead>
+                    <TableHead>Probabilidade / Fadiga</TableHead>
+                    <TableHead>Atribuição / Canal</TableHead>
                     <TableHead className="text-right">Ação</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -221,37 +249,47 @@ export function UpsellMachinePanel() {
                           <div className="text-xs text-muted-foreground">{(opp.profiles as any)?.email}</div>
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-2">
-                            <Badge variant="outline" className="text-[10px]">{opp.segment_from} → {opp.segment_to}</Badge>
-                            {opp.segment_from === 'Clube' && <Badge className="bg-amber-500/10 text-amber-600 border-amber-200">Top 1</Badge>}
-                            {opp.segment_from === 'Formação' && <Badge className="bg-blue-500/10 text-blue-600 border-blue-200">Top 2</Badge>}
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline" className="text-[10px]">{opp.segment_from} → {opp.segment_to}</Badge>
+                              {opp.segment_from === 'Clube' && <Badge className="bg-amber-500/10 text-amber-600 border-amber-200">Top 1</Badge>}
+                            </div>
+                            <div className="text-[10px] text-muted-foreground italic max-w-[150px] leading-tight">
+                              {opp.probability_reason || opp.reason}
+                            </div>
                           </div>
                         </TableCell>
                         <TableCell>
                           <div className="space-y-1">
                             <div className="flex items-center justify-between text-[10px]">
-                              <span>Engajamento</span>
-                              <span>{(opp.engagement_score * 100).toFixed(0)}%</span>
+                              <span>Probabilidade</span>
+                              <span className="font-bold text-primary">{((opp.probability_score || 0) * 100).toFixed(0)}%</span>
                             </div>
                             <div className="w-24 h-1.5 bg-muted rounded-full overflow-hidden">
                               <div 
-                                className="h-full bg-green-500" 
-                                style={{ width: `${opp.engagement_score * 100}%` }}
+                                className="h-full bg-primary" 
+                                style={{ width: `${(opp.probability_score || 0) * 100}%` }}
                               />
                             </div>
-                            {opp.refusal_count > 0 && (
-                              <div className="flex items-center gap-1 text-[10px] text-red-500">
-                                <Ban className="h-3 w-3" />
-                                {opp.refusal_count} recusas anteriores
-                              </div>
-                            )}
+                            <div className="text-[9px] text-muted-foreground flex gap-2">
+                              <span>Timing: x{opp.timing_factor?.toFixed(1) || '1.0'}</span>
+                              <span>Hist: {(opp.historical_segment_rate * 100).toFixed(0)}%</span>
+                            </div>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant="secondary" className="gap-1 font-normal">
-                            {opp.engagement_score > 0.8 ? <Phone className="h-3 w-3" /> : <Mail className="h-3 w-3" />}
-                            {opp.engagement_score > 0.8 ? 'Humano / High Touch' : 'Email / Automatizado'}
-                          </Badge>
+                          <div className="space-y-1">
+                            <Badge variant="secondary" className="gap-1 font-normal text-[10px]">
+                              {opp.engagement_score > 0.8 ? <Phone className="h-3 w-3" /> : <Mail className="h-3 w-3" />}
+                              Sugestão: {opp.engagement_score > 0.8 ? 'Humano' : 'Email'}
+                            </Badge>
+                            {opp.touch_count > 0 && (
+                              <div className="text-[9px] text-muted-foreground flex flex-col">
+                                <span>Toques: {opp.touch_count}</span>
+                                <span>Last: {opp.last_touch_channel || 'N/A'}</span>
+                              </div>
+                            )}
+                          </div>
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
@@ -296,19 +334,23 @@ export function UpsellMachinePanel() {
                   <Phone className="h-5 w-5 text-primary" />
                   Humano
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">+24% conversão vs Email</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Atribuição: {revenueIntelligence?.find(r => r.channel_used === 'Humano')?.acceptance_rate || 0}% aceite
+                </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="py-4">
-                <CardTitle className="text-xs font-medium text-muted-foreground uppercase">Melhor Timing</CardTitle>
+                <CardTitle className="text-xs font-medium text-muted-foreground uppercase">Smart Timing</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-xl font-bold flex items-center gap-2">
                   <Clock className="h-5 w-5 text-primary" />
-                  D+15 Uso
+                  {revenueIntelligence?.reduce((acc, curr) => acc + (curr.avg_days_to_convert || 0), 0) > 0 
+                    ? `D+${Math.round(revenueIntelligence.reduce((acc, curr) => acc + (curr.avg_days_to_convert || 0), 0) / revenueIntelligence.length)} Conversão`
+                    : 'Analisando...'}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Após pico de engajamento</p>
+                <p className="text-xs text-muted-foreground mt-1">Dias médios para aceite</p>
               </CardContent>
             </Card>
             <Card>
@@ -318,44 +360,51 @@ export function UpsellMachinePanel() {
               <CardContent>
                 <div className="text-xl font-bold flex items-center gap-2 text-amber-600">
                   <UserCheck className="h-5 w-5" />
-                  {opportunities?.filter(o => o.refusal_count > 0).length || 0} Usuárias
+                  {revenueIntelligence?.reduce((acc, curr) => acc + (Number(curr.fatigue_count) || 0), 0) || 0} Usuárias
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Em janela de resfriamento</p>
+                <p className="text-xs text-muted-foreground mt-1">Pausadas (Regra 30 dias)</p>
               </CardContent>
             </Card>
             <Card className="bg-primary/5">
               <CardHeader className="py-4">
-                <CardTitle className="text-xs font-medium text-muted-foreground uppercase">Sugestões Enviadas</CardTitle>
+                <CardTitle className="text-xs font-medium text-muted-foreground uppercase">Estimativa LTV ↑</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-xl font-bold">
-                  {revenueIntelligence?.reduce((acc, curr) => acc + curr.total_sent, 0) || 0}
+                <div className="text-xl font-bold text-primary">
+                  R$ {revenueIntelligence?.reduce((acc, curr) => acc + (Number(curr.revenue_generated) || 0), 0).toLocaleString('pt-BR')}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Total ciclo atual</p>
+                <p className="text-xs text-muted-foreground mt-1">Incremento gerado</p>
               </CardContent>
             </Card>
           </div>
 
           <Card>
             <CardHeader>
-              <CardTitle>Performance por Canal e Oferta</CardTitle>
-              <CardDescription>Dados consolidados de conversão e receita estimada</CardDescription>
+              <CardTitle>Revenue Intelligence por Segmento</CardTitle>
+              <CardDescription>Análise de atribuição Last Touch e performance financeira</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Oferta</TableHead>
-                    <TableHead>Canal</TableHead>
-                    <TableHead>Aceite (%)</TableHead>
+                    <TableHead>Oferta (Ranking)</TableHead>
+                    <TableHead>Último Canal</TableHead>
+                    <TableHead>Taxa de Aceite</TableHead>
                     <TableHead>Volume</TableHead>
-                    <TableHead className="text-right">Receita Est.</TableHead>
+                    <TableHead className="text-right">Receita Gerada</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {revenueIntelligence?.map((ri, i) => (
                     <TableRow key={i}>
-                      <TableCell className="font-medium">{ri.segment_from} → {ri.segment_to}</TableCell>
+                      <TableCell className="font-medium">
+                        <div className="flex flex-col">
+                          <span>{ri.segment_from} → {ri.segment_to}</span>
+                          <span className="text-[10px] text-muted-foreground italic">
+                            {ri.segment_from === 'Clube' ? 'Prioridade Máxima' : 'Upsell Tecnológico'}
+                          </span>
+                        </div>
+                      </TableCell>
                       <TableCell>
                         <Badge variant="outline" className="font-normal capitalize">{ri.channel_used || 'N/A'}</Badge>
                       </TableCell>
@@ -367,9 +416,9 @@ export function UpsellMachinePanel() {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>{ri.total_sent} envios</TableCell>
+                      <TableCell>{ri.total_sent} ofertas</TableCell>
                       <TableCell className="text-right font-bold text-green-600">
-                        R$ {Number(ri.estimated_revenue).toLocaleString('pt-BR')}
+                        R$ {Number(ri.revenue_generated || 0).toLocaleString('pt-BR')}
                       </TableCell>
                     </TableRow>
                   ))}
