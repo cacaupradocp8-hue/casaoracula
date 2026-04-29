@@ -146,9 +146,10 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'portal-junguiano': AdminPortalJunguianoTab,
   'certificacao': AdminCertificacaoTab,
   'vitrine': AdminVitrineCards,
+  'upsell-machine': UpsellMachinePanel,
   'settings': AdminSettingsTab,
   'copy': AdminCopyTab,
-  
+
 };
 
 export default function Admin() {
