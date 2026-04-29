@@ -11354,6 +11354,66 @@ export type Database = {
         }
         Relationships: []
       }
+      founder_financial_daily: {
+        Row: {
+          active_mrr: number | null
+          churn_count: number | null
+          cost_ads: number | null
+          cost_ia: number | null
+          cost_infra: number | null
+          cost_stripe: number | null
+          cost_team: number | null
+          created_at: string | null
+          date: string
+          id: string
+          new_sales_count: number | null
+          new_sales_value: number | null
+          refunds_count: number | null
+          refunds_value: number | null
+          renewals_count: number | null
+          renewals_value: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          active_mrr?: number | null
+          churn_count?: number | null
+          cost_ads?: number | null
+          cost_ia?: number | null
+          cost_infra?: number | null
+          cost_stripe?: number | null
+          cost_team?: number | null
+          created_at?: string | null
+          date: string
+          id?: string
+          new_sales_count?: number | null
+          new_sales_value?: number | null
+          refunds_count?: number | null
+          refunds_value?: number | null
+          renewals_count?: number | null
+          renewals_value?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          active_mrr?: number | null
+          churn_count?: number | null
+          cost_ads?: number | null
+          cost_ia?: number | null
+          cost_infra?: number | null
+          cost_stripe?: number | null
+          cost_team?: number | null
+          created_at?: string | null
+          date?: string
+          id?: string
+          new_sales_count?: number | null
+          new_sales_value?: number | null
+          refunds_count?: number | null
+          refunds_value?: number | null
+          renewals_count?: number | null
+          renewals_value?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       founder_financial_metrics: {
         Row: {
           cac: number | null
@@ -22901,6 +22961,24 @@ export type Database = {
         }
         Relationships: []
       }
+      view_founder_real_financial_summary: {
+        Row: {
+          avg_mrr: number | null
+          net_margin_pct: number | null
+          net_profit: number | null
+          period_start: string | null
+          revenue_new: number | null
+          revenue_renewals: number | null
+          total_cost_ads: number | null
+          total_cost_ia: number | null
+          total_cost_infra: number | null
+          total_cost_stripe: number | null
+          total_cost_team: number | null
+          total_costs: number | null
+          total_revenue: number | null
+        }
+        Relationships: []
+      }
       view_user_stagnation: {
         Row: {
           action_already_sent: boolean | null
@@ -23185,6 +23263,10 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
+      }
+      refresh_founder_daily_metrics: {
+        Args: { target_date: string }
+        Returns: undefined
       }
       refresh_student_progress: {
         Args: { _user_id: string }
