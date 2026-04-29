@@ -437,7 +437,7 @@ export default function AdminCasaOraculaTab() {
                       <div className="flex flex-col">
                         <span className="text-sm font-medium">{event.description}</span>
                         <span className="text-[10px] text-muted-foreground">
-                          {format(new Date(event.created_at), 'dd/MM HH:mm')}
+                          {event.created_at ? format(new Date(event.created_at), 'dd/MM HH:mm') : '---'}
                         </span>
                       </div>
                     </div>
@@ -469,7 +469,7 @@ export default function AdminCasaOraculaTab() {
                   {usageMetrics.map((m) => (
                     <TableRow key={m.day}>
                       <TableCell className="font-medium">
-                        {format(new Date(m.day), 'eeee, dd/MM', { locale: ptBR })}
+                        {m.day ? format(new Date(m.day + 'T00:00:00'), 'eeee, dd/MM', { locale: ptBR }) : '---'}
                       </TableCell>
                       <TableCell>{m.interactions}</TableCell>
                       <TableCell>{m.tokens.toLocaleString()}</TableCell>
