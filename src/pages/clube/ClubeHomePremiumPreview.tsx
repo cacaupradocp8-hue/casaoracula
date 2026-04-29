@@ -49,10 +49,10 @@ export default function ClubeHomePremiumPreview() {
           >
             <div className="space-y-4">
               <motion.span 
-                initial={{ opacity: 0, tracking: "0.1em" }}
-                animate={{ opacity: 0.4, tracking: "0.5em" }}
+                initial={{ opacity: 0, letterSpacing: "0.1em" }}
+                animate={{ opacity: 0.4, letterSpacing: "0.5em" }}
                 transition={{ delay: 0.5, duration: 1 }}
-                className="text-[10px] uppercase font-bold tracking-[0.5em] text-gold/80"
+                className="text-[10px] uppercase font-bold text-gold/80"
               >
                 CASA ORÁCULA • MEMBRO EXCLUSIVO
               </motion.span>
