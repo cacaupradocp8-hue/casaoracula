@@ -317,15 +317,39 @@ export default function AdminCasaOraculaTab() {
 
   const toggleAutomationRule = async (ruleId: string, currentStatus: boolean) => {
     try {
+      const rule = automationRules.find(r => r.id === ruleId);
+      if (!rule) return;
+
+      const { data: { user: adminUser } } = await supabase.auth.getUser();
+      if (!adminUser) return;
+
+      const newStatus = !currentStatus;
+      const perf = performanceMetrics.find(p => p.action_type === rule.action_type && p.channel === rule.channel);
+
       const { error } = await supabase
         .from('admin_automation_rules')
-        .update({ is_active: !currentStatus })
+        .update({ 
+          is_active: newStatus,
+          last_success_rate: perf?.success_rate || 0,
+          last_snapshot_at: new Date().toISOString()
+        })
         .eq('id', ruleId);
 
       if (error) throw error;
+
+      // Registrar Auditoria
+      await supabase.from('admin_automation_audit').insert({
+        rule_id: ruleId,
+        admin_id: adminUser.id,
+        action: newStatus ? 'activate' : 'deactivate',
+        reason: newStatus 
+          ? `Ativada com taxa de ${perf?.success_rate || 0}% e meta de ${rule.min_success_rate}%`
+          : 'Desativada manualmente pelo administrador',
+        snapshot_data: { success_rate: perf?.success_rate || 0, timestamp: new Date().toISOString() }
+      });
       
       setAutomationRules(prev => prev.map(r => 
-        r.id === ruleId ? { ...r, is_active: !currentStatus } : r
+        r.id === ruleId ? { ...r, is_active: newStatus } : r
       ));
     } catch (error) {
       console.error('Error toggling automation rule:', error);
