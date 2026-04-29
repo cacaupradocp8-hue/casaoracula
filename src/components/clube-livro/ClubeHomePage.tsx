@@ -85,70 +85,55 @@ export function ClubeHomePage() {
         </motion.div>
 
         {/* ============================================
-            2. HERO — SUA ROTA ATUAL
+            2. HEADER SIMBÓLICO — O CICLO ATUAL
             ============================================ */}
         {estacaoAtual && (
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
+            className="space-y-6"
           >
-            <Card className="border-primary/15 bg-card/40 backdrop-blur overflow-hidden">
-              <CardContent className="p-6 space-y-5">
-                {/* Book info */}
-                <div className="flex items-start gap-4">
-                  <div className="w-16 h-20 rounded bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20 overflow-hidden shadow-lg">
-                    {estacaoAtual.livro_capa_url ? (
-                      <img src={estacaoAtual.livro_capa_url} alt={estacaoAtual.livro_titulo} className="w-full h-full object-cover" />
-                    ) : (
-                      <BookOpen className="w-6 h-6 text-primary/60" />
-                    )}
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="w-24 h-32 rounded-lg bg-card border border-primary/10 shadow-2xl overflow-hidden relative group">
+                {estacaoAtual.livro_capa_url ? (
+                  <img src={estacaoAtual.livro_capa_url} alt={estacaoAtual.livro_titulo} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-primary/5">
+                    <BookOpen className="w-8 h-8 text-primary/30" />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] text-muted-foreground/50 uppercase tracking-widest mb-1">
-                      Estação {estacaoAtual.numero}
-                    </p>
-                    <h2 className="font-serif text-xl text-foreground leading-tight">
-                      {estacaoAtual.livro_titulo}
-                    </h2>
-                    {estacaoAtual.livro_autor && (
-                      <p className="text-xs text-muted-foreground/60 mt-1 font-medium italic">{estacaoAtual.livro_autor}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Symbolic essence */}
-                {estacaoAtual.essencia_nucleo && (
-                  <p className="text-xs text-muted-foreground/70 italic leading-relaxed border-l-2 border-primary/20 pl-3">
-                    {estacaoAtual.essencia_nucleo}
-                  </p>
                 )}
-
-                {/* Progress */}
-                <div className="space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">Progresso</span>
-                    <span className="text-[10px] text-primary/60 font-medium">{Math.round(progresso)}%</span>
-                  </div>
-                  <Progress value={progresso} className="h-1.5 bg-border/10" />
-                </div>
-
-                {/* CTA */}
-                {pontoAtual && (
-                  <Button
-                    variant="gold"
-                    className="w-full gap-2"
-                    onClick={() => {
-                      if (pontoAtual.rota.startsWith('#')) return;
-                      navigate(pontoAtual.rota);
-                    }}
-                  >
-                    Continuar jornada
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
+                <div className="absolute inset-0 ring-1 ring-inset ring-white/10" />
+              </div>
+              
+              <div className="space-y-1">
+                <Badge variant="outline" className="text-[9px] uppercase tracking-[0.2em] border-primary/20 text-primary/60 px-3">
+                  Estação {estacaoAtual.numero}
+                </Badge>
+                <h2 className="font-serif text-2xl text-foreground">
+                  {estacaoAtual.livro_titulo}
+                </h2>
+                {estacaoAtual.livro_autor && (
+                  <p className="text-xs text-muted-foreground/60 italic">{estacaoAtual.livro_autor}</p>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+
+              {/* Barra de progresso minimalista */}
+              <div className="w-full max-w-[200px] space-y-1.5 mx-auto">
+                <div className="flex items-center justify-between px-1">
+                  <span className="text-[8px] text-muted-foreground/40 uppercase tracking-widest font-bold">Progresso</span>
+                  <span className="text-[8px] text-primary/50 font-bold">{Math.round(progresso)}%</span>
+                </div>
+                <Progress value={progresso} className="h-1 bg-primary/10" />
+              </div>
+            </div>
+
+            {/* Symbolic essence */}
+            {estacaoAtual.essencia_nucleo && (
+              <p className="text-xs text-muted-foreground/50 text-center italic leading-relaxed max-w-sm mx-auto px-4">
+                "{estacaoAtual.essencia_nucleo}"
+              </p>
+            )}
           </motion.div>
         )}
 
