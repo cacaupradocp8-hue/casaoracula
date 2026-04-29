@@ -80,7 +80,7 @@ export const adminNavGroups: AdminNavGroup[] = [
     emoji: '🤝',
     icon: Users,
     items: [
-      { key: 'casa-oracula', label: 'Casa das Tecelãs', icon: Flame },
+      { key: 'casa-oracula', label: 'Painel Mestre', icon: Flame },
       { key: 'comunicacao', label: 'Comunicação', icon: MessageSquare },
       { key: 'narroterapia', label: 'Narroterapia', icon: BookOpen },
       { key: 'narroterapia-autorizacao', label: 'Autorizações', icon: Sparkles },

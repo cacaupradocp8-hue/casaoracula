@@ -30,6 +30,7 @@ interface StagnationInfo {
   last_clube_activity: string;
   stagnation_reason: string;
   last_any_activity: string;
+  risk_score: number;
 }
 
 interface UsageMetric {
@@ -215,9 +216,9 @@ export default function AdminCasaOraculaTab() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Usuária</TableHead>
+                    <TableHead>Risco</TableHead>
                     <TableHead>Motivo da Trava</TableHead>
                     <TableHead>Última Atividade</TableHead>
-                    <TableHead>Plano</TableHead>
                     <TableHead className="text-right">Ação</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -236,6 +237,18 @@ export default function AdminCasaOraculaTab() {
                           <div className="text-xs text-muted-foreground">{user.email}</div>
                         </TableCell>
                         <TableCell>
+                          <Badge 
+                            variant="outline" 
+                            className={
+                              user.risk_score > 60 ? "text-red-500 border-red-500/30" : 
+                              user.risk_score > 30 ? "text-amber-500 border-amber-500/30" : 
+                              "text-emerald-500 border-emerald-500/30"
+                            }
+                          >
+                            {user.risk_score}%
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
                           <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 border-amber-500/20">
                             {user.stagnation_reason}
                           </Badge>
@@ -244,9 +257,6 @@ export default function AdminCasaOraculaTab() {
                           {user.last_any_activity 
                             ? format(new Date(user.last_any_activity), 'dd/MM/yyyy HH:mm', { locale: ptBR })
                             : 'Nunca'}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">{user.plan_id || 'Free'}</Badge>
                         </TableCell>
                         <TableCell className="text-right">
                           <Button variant="ghost" size="sm" className="h-8 gap-1">
