@@ -30,6 +30,7 @@ export interface Ciclo {
   por_que_audio_url?: string;
   como_ler_slides?: any[];
   como_ler_audio_url?: string;
+  banner_url?: string; // Estação/Ciclo banner
 }
 
 export interface Fase {
@@ -116,6 +117,18 @@ export interface RotaItem {
   rota_custom?: string;
   publicado: boolean;
   obrigatorio: boolean;
+  
+  // Unified Cartography
+  porta?: string;
+  campo?: string;
+  torre?: string;
+  labirinto?: string;
+  frase_guia?: string;
+  jardim_prompt?: string;
+  cenario_treinamento?: string;
+  leitura_referencia?: string;
+  image_url?: string;
+  
   impacto_cidadela?: {
     distrito: string;
     tipo_impacto: string;
