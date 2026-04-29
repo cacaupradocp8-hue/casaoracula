@@ -237,7 +237,7 @@ export default function AdminCasaOraculaTab() {
         estimatedSuccess: Math.round(matchingUsers.length * ((perf?.success_rate || 0) / 100)),
         spamRisk: (perf?.success_rate || 0) < 10 ? 'Alto' : (perf?.success_rate || 0) < 20 ? 'Médio' : 'Baixo',
         historicalRate: perf?.success_rate || 0,
-        window: rule.measurement_window_days
+        window: currentWindow
       };
 
       setSimulationResult(simulation);
