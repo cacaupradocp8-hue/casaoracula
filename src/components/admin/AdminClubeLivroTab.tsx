@@ -1503,12 +1503,12 @@ function CicloDialog({
     como_ler_audio_url: '',
   });
 
-  // Reset form when dialog opens
   useEffect(() => {
     if (open && ciclo) {
       setForm({
         titulo: ciclo.titulo || '',
         subtitulo: ciclo.subtitulo || '',
+        author: (ciclo as any).author || '',
         autor_livro: ciclo.autor_livro || '',
         capa_url: ciclo.capa_url || '',
         banner_url: (ciclo as any).banner_url || '',
@@ -1517,6 +1517,7 @@ function CicloDialog({
         como_ler: ciclo.como_ler || '',
         manifesto: ciclo.manifesto || '',
         publicado: ciclo.publicado || false,
+        status: (ciclo as any).status || 'draft',
         is_multipolar: (ciclo as any).is_multipolar || false,
         campo_simbolico: (ciclo as any).campo_simbolico || '',
         mensagem_campo_url: (ciclo as any).mensagem_campo_url || '',
@@ -1532,6 +1533,7 @@ function CicloDialog({
       setForm({
         titulo: '',
         subtitulo: '',
+        author: '',
         autor_livro: '',
         capa_url: '',
         banner_url: '',
@@ -1540,6 +1542,7 @@ function CicloDialog({
         como_ler: '',
         manifesto: '',
         publicado: false,
+        status: 'draft',
         is_multipolar: false,
         campo_simbolico: '',
         mensagem_campo_url: '',
