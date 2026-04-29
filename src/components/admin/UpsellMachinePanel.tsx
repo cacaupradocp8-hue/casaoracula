@@ -369,7 +369,7 @@ export function UpsellMachinePanel() {
                       </TableCell>
                       <TableCell>{ri.total_sent} envios</TableCell>
                       <TableCell className="text-right font-bold text-green-600">
-                        R$ {Number(ri.estimated_revenue).toLocaleString('pt-BR')}
+                        R$ {Number(ri.revenue_generated || 0).toLocaleString('pt-BR')}
                       </TableCell>
                     </TableRow>
                   ))}
