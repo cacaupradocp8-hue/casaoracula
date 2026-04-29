@@ -95,25 +95,40 @@ export type Database = {
       }
       admin_action_history: {
         Row: {
+          action_reason_at_action: string | null
           action_type: string
           channel: string
+          churn_risk_at_action: number | null
+          conversion_risk_at_action: number | null
           id: string
+          last_value_timestamp_at_action: string | null
+          saas_value_risk_at_action: number | null
           sent_at: string | null
           sent_by: string | null
           user_id: string | null
         }
         Insert: {
+          action_reason_at_action?: string | null
           action_type: string
           channel: string
+          churn_risk_at_action?: number | null
+          conversion_risk_at_action?: number | null
           id?: string
+          last_value_timestamp_at_action?: string | null
+          saas_value_risk_at_action?: number | null
           sent_at?: string | null
           sent_by?: string | null
           user_id?: string | null
         }
         Update: {
+          action_reason_at_action?: string | null
           action_type?: string
           channel?: string
+          churn_risk_at_action?: number | null
+          conversion_risk_at_action?: number | null
           id?: string
+          last_value_timestamp_at_action?: string | null
+          saas_value_risk_at_action?: number | null
           sent_at?: string | null
           sent_by?: string | null
           user_id?: string | null
@@ -22355,6 +22370,19 @@ export type Database = {
           training_cases_completed: number | null
           updated_at: string | null
           user_id: string | null
+        }
+        Relationships: []
+      }
+      view_admin_action_performance: {
+        Row: {
+          action_type: string | null
+          channel: string | null
+          success_rate: number | null
+          total_actions: number | null
+          total_converted: number | null
+          total_retained: number | null
+          total_returned: number | null
+          total_score_reduced: number | null
         }
         Relationships: []
       }
