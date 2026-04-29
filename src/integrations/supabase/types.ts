@@ -11354,6 +11354,81 @@ export type Database = {
         }
         Relationships: []
       }
+      founder_financial_metrics: {
+        Row: {
+          cac: number | null
+          cancellations: number | null
+          churn_rate: number | null
+          cost_ads: number | null
+          cost_ia: number | null
+          cost_infra: number | null
+          cost_stripe: number | null
+          cost_team: number | null
+          created_at: string | null
+          id: string
+          ltv: number | null
+          new_sales: number | null
+          payback_period: number | null
+          period_end: string
+          period_start: string
+          revenue_clube: number | null
+          revenue_expansion: number | null
+          revenue_formacao: number | null
+          revenue_saas: number | null
+          revenue_upsell: number | null
+          updated_at: string | null
+          upgrades: number | null
+        }
+        Insert: {
+          cac?: number | null
+          cancellations?: number | null
+          churn_rate?: number | null
+          cost_ads?: number | null
+          cost_ia?: number | null
+          cost_infra?: number | null
+          cost_stripe?: number | null
+          cost_team?: number | null
+          created_at?: string | null
+          id?: string
+          ltv?: number | null
+          new_sales?: number | null
+          payback_period?: number | null
+          period_end: string
+          period_start: string
+          revenue_clube?: number | null
+          revenue_expansion?: number | null
+          revenue_formacao?: number | null
+          revenue_saas?: number | null
+          revenue_upsell?: number | null
+          updated_at?: string | null
+          upgrades?: number | null
+        }
+        Update: {
+          cac?: number | null
+          cancellations?: number | null
+          churn_rate?: number | null
+          cost_ads?: number | null
+          cost_ia?: number | null
+          cost_infra?: number | null
+          cost_stripe?: number | null
+          cost_team?: number | null
+          created_at?: string | null
+          id?: string
+          ltv?: number | null
+          new_sales?: number | null
+          payback_period?: number | null
+          period_end?: string
+          period_start?: string
+          revenue_clube?: number | null
+          revenue_expansion?: number | null
+          revenue_formacao?: number | null
+          revenue_saas?: number | null
+          revenue_upsell?: number | null
+          updated_at?: string | null
+          upgrades?: number | null
+        }
+        Relationships: []
+      }
       founding_archetypes: {
         Row: {
           ativo: boolean | null
@@ -22739,6 +22814,90 @@ export type Database = {
           total_retained: number | null
           total_returned: number | null
           total_score_reduced: number | null
+        }
+        Relationships: []
+      }
+      view_founder_financial_summary: {
+        Row: {
+          cac: number | null
+          cancellations: number | null
+          churn_rate: number | null
+          cost_ads: number | null
+          cost_ia: number | null
+          cost_infra: number | null
+          cost_stripe: number | null
+          cost_team: number | null
+          gross_profit: number | null
+          id: string | null
+          ltv: number | null
+          net_margin_pct: number | null
+          net_profit: number | null
+          new_sales: number | null
+          payback_period: number | null
+          period_end: string | null
+          period_start: string | null
+          revenue_clube: number | null
+          revenue_expansion: number | null
+          revenue_formacao: number | null
+          revenue_saas: number | null
+          revenue_upsell: number | null
+          total_costs: number | null
+          total_revenue: number | null
+          upgrades: number | null
+        }
+        Insert: {
+          cac?: number | null
+          cancellations?: number | null
+          churn_rate?: number | null
+          cost_ads?: number | null
+          cost_ia?: number | null
+          cost_infra?: number | null
+          cost_stripe?: number | null
+          cost_team?: number | null
+          gross_profit?: never
+          id?: string | null
+          ltv?: number | null
+          net_margin_pct?: never
+          net_profit?: never
+          new_sales?: number | null
+          payback_period?: number | null
+          period_end?: string | null
+          period_start?: string | null
+          revenue_clube?: number | null
+          revenue_expansion?: number | null
+          revenue_formacao?: number | null
+          revenue_saas?: number | null
+          revenue_upsell?: number | null
+          total_costs?: never
+          total_revenue?: never
+          upgrades?: number | null
+        }
+        Update: {
+          cac?: number | null
+          cancellations?: number | null
+          churn_rate?: number | null
+          cost_ads?: number | null
+          cost_ia?: number | null
+          cost_infra?: number | null
+          cost_stripe?: number | null
+          cost_team?: number | null
+          gross_profit?: never
+          id?: string | null
+          ltv?: number | null
+          net_margin_pct?: never
+          net_profit?: never
+          new_sales?: number | null
+          payback_period?: number | null
+          period_end?: string | null
+          period_start?: string | null
+          revenue_clube?: number | null
+          revenue_expansion?: number | null
+          revenue_formacao?: number | null
+          revenue_saas?: number | null
+          revenue_upsell?: number | null
+          total_costs?: never
+          total_revenue?: never
+          upgrades?: number | null
         }
         Relationships: []
       }
