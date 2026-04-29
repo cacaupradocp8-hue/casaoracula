@@ -1,141 +1,161 @@
 import React from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import { 
-  ChevronRight,
-  ArrowUpRight,
-  Crown,
-  BookOpen,
-  Sparkles,
-  Zap,
-  Flower2,
+  ChevronRight, 
+  ArrowUpRight, 
+  Play, 
+  CheckCircle2, 
+  Lock, 
+  LayoutDashboard, 
+  BookOpen, 
+  Sparkles, 
+  Flower2, 
   Library,
-  LayoutDashboard
+  Trophy,
+  Zap
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function ClubeHomePremiumPreview() {
   const containerRef = React.useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
-
-  const smoothProgress = useSpring(scrollYProgress, {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001
   });
 
-  // Scale and opacity for hero elements on scroll
-  const heroOpacity = useTransform(smoothProgress, [0, 0.2], [1, 0]);
-  const heroScale = useTransform(smoothProgress, [0, 0.2], [1, 0.95]);
+  // ROAD DATA
+  const roadSteps = [
+    { id: 1, title: 'O Despertar da Voz Interior', status: 'completed', duration: '45 min', type: 'Portal' },
+    { id: 2, title: 'A Bússola da Intuição', status: 'current', duration: '1h 20min', type: 'Imersão', description: 'Onde o silêncio se encontra com a inteligência.' },
+    { id: 3, title: 'O Labirinto das Sombras', status: 'locked', duration: '50 min', type: 'Enigma' },
+    { id: 4, title: 'Integração de Luz', status: 'locked', duration: '1h 10min', type: 'Ritual' },
+    { id: 5, title: 'A Grande Obra', status: 'locked', duration: '2h', type: 'Masterclass' },
+  ];
 
   return (
-    <div className="min-h-screen bg-[#02050a] text-white selection:bg-gold/20 font-sans overflow-x-hidden selection:text-white" ref={containerRef}>
-      {/* Cinematic Deep Atmosphere */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_#0A1229_0%,_#02050a_100%)] opacity-40" />
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+    <div className="min-h-screen bg-[#020617] text-white selection:bg-gold/20 font-sans" ref={containerRef}>
+      {/* Premium Background Layer */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0A1229] via-[#020617] to-[#010208]" />
+        <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+        {/* Subtle Ambient Glows */}
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-900/10 blur-[120px]" />
+        <div className="absolute bottom-[10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-gold/5 blur-[100px]" />
       </div>
 
-      <main className="relative z-10">
-        {/* 1. HERO - MINIMALISMO EXTREMO (APPLE KEYNOTE) */}
-        <section className="h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
-          <motion.div
-            style={{ opacity: heroOpacity, scale: heroScale }}
-            className="text-center space-y-8"
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
-              className="space-y-4"
-            >
-              <span className="text-[10px] uppercase tracking-[0.8em] text-gold/60 font-medium block">CASA ORÁCULA</span>
-              <h1 className="text-5xl md:text-7xl lg:text-9xl font-serif leading-none tracking-tight">
-                Sua jornada <br />
-                <span className="italic font-light opacity-80">continua</span>
-              </h1>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
-              transition={{ delay: 1.5, duration: 2 }}
-              className="max-w-xs mx-auto pt-12"
-            >
-              <p className="text-sm font-light leading-relaxed tracking-wide italic">
-                "Quem olha para fora sonha; quem olha para dentro acorda."
-              </p>
-            </motion.div>
-          </motion.div>
+      {/* Header / Progress Bar */}
+      <motion.div 
+        className="fixed top-0 left-0 right-0 h-1 bg-gold/40 origin-left z-50"
+        style={{ scaleX }}
+      />
 
-          {/* Interaction Trigger - Tactile Feel */}
+      <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-12 pb-32 max-w-7xl mx-auto">
+        
+        {/* UPPER SECTION: CARDS & GREETING */}
+        <section className="mb-20">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-12">
+            <div className="space-y-2">
+              <span className="text-[10px] uppercase font-bold tracking-[0.4em] text-gold/80">CASA ORÁCULA • PREMIUM</span>
+              <h1 className="text-4xl md:text-5xl font-serif">Bem-vinda, <span className="italic">Claudia</span></h1>
+            </div>
+            <div className="flex gap-4">
+              <div className="bg-white/5 border border-white/10 rounded-sm px-6 py-3 flex items-center gap-3">
+                <Trophy className="w-4 h-4 text-gold" />
+                <div className="flex flex-col">
+                  <span className="text-[9px] uppercase font-bold text-white/40 tracking-widest">Nível</span>
+                  <span className="text-sm font-bold leading-none">Sacerdotisa Iniciante</span>
+                </div>
+              </div>
+              <div className="bg-white/5 border border-white/10 rounded-sm px-6 py-3 flex items-center gap-3">
+                <Zap className="w-4 h-4 text-blue-400" />
+                <div className="flex flex-col">
+                  <span className="text-[9px] uppercase font-bold text-white/40 tracking-widest">Atividade</span>
+                  <span className="text-sm font-bold leading-none">12 dias seguidos</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* NEXT STEP HIGHLIGHT CARD (Strong CTA) */}
           <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2.5, duration: 1 }}
-            className="absolute bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="group relative overflow-hidden rounded-sm bg-white text-black p-8 md:p-12 shadow-2xl flex flex-col md:flex-row justify-between items-center gap-8"
           >
-            <div className="w-px h-24 bg-gradient-to-b from-transparent via-gold/40 to-transparent" />
-            <span className="text-[8px] uppercase tracking-[1em] text-gold/30 font-bold vertical-text rotate-180">Explorar</span>
+            <div className="absolute top-0 right-0 p-4 opacity-5">
+              <Play className="w-64 h-64" fill="currentColor" />
+            </div>
+            <div className="relative z-10 space-y-4 max-w-xl text-center md:text-left">
+              <span className="text-[10px] uppercase font-bold tracking-widest text-black/40">Continuar de onde parou</span>
+              <h2 className="text-3xl md:text-5xl font-serif leading-tight">A Bússola da Intuição</h2>
+              <p className="text-sm md:text-base text-black/60 font-medium">Você concluiu 72% do Capítulo I. Inicie agora a aula "O Silêncio Revelador".</p>
+            </div>
+            <div className="relative z-10">
+              <Button size="lg" className="h-16 px-12 rounded-sm bg-black text-white hover:bg-black/90 text-sm font-bold uppercase tracking-widest group-hover:scale-105 transition-transform shadow-xl">
+                Retomar agora
+                <ChevronRight className="ml-2 w-5 h-5" />
+              </Button>
+            </div>
           </motion.div>
         </section>
 
-        {/* 2. ESTRADA ESCULTÓRICA CENTRAL (JUNG) */}
-        <section className="relative py-[40vh] px-6">
-          <div className="max-w-4xl mx-auto relative">
-            {/* The Sculptural Path Line */}
-            <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-white/[0.03]">
-              <motion.div 
-                style={{ scaleY: smoothProgress, transformOrigin: "top" }}
-                className="absolute inset-0 bg-gradient-to-b from-gold/60 via-gold/20 to-transparent" 
-              />
+        {/* THE ROAD SECTION (Core Foundation) */}
+        <section className="mb-32 relative">
+          <div className="flex items-center gap-6 mb-16">
+            <h2 className="text-3xl font-serif">Sua Estrada</h2>
+            <div className="h-px flex-1 bg-white/10" />
+            <span className="text-[10px] uppercase font-bold tracking-widest text-white/30">O Caminho da Alma</span>
+          </div>
+
+          <div className="relative">
+            {/* The Vertical Path Line */}
+            <div className="absolute left-[30px] md:left-1/2 top-0 bottom-0 w-px bg-white/10 overflow-hidden">
+               <motion.div 
+                 style={{ scaleY: scrollYProgress, transformOrigin: 'top' }}
+                 className="absolute inset-0 bg-gold"
+               />
             </div>
 
-            <div className="space-y-[80vh] relative">
-              {[
-                { id: 1, step: 'O CHAMADO', title: 'O Despertar da Intuição', desc: 'A primeira voz que ecoa no silêncio da alma.', active: true },
-                { id: 2, step: 'A TRAVESSIA', title: 'A Bússola Interna', desc: 'Navegando entre as sombras e as luzes do inconsciente.', active: false },
-                { id: 3, step: 'O ENCONTRO', title: 'O Labirinto do Self', desc: 'Onde o ego se dissolve para que a essência emerja.', active: false },
-                { id: 4, step: 'A INTEGRAÇÃO', title: 'A Grande Obra', desc: 'A união final das polaridades em um único ser.', active: false },
-              ].map((node, i) => (
-                <div key={node.id} className="flex flex-col items-center text-center">
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: false, margin: "-20%" }}
-                    transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                    className="relative mb-24"
-                  >
-                    {/* Abstract Sculptural Node */}
-                    <div className="w-32 h-32 md:w-48 md:h-48 rounded-full border border-white/[0.05] flex items-center justify-center relative group">
-                      <div className="absolute inset-0 rounded-full border border-gold/10 scale-125 opacity-0 group-hover:opacity-100 transition-all duration-1000" />
-                      <div className="w-2 h-2 rounded-full bg-gold/40 group-hover:bg-gold transition-colors duration-500" />
-                      
-                      {/* Interaction Layer */}
-                      <button className="absolute inset-0 z-10 opacity-0 cursor-pointer">Tocar</button>
+            <div className="space-y-12">
+              {roadSteps.map((step, i) => (
+                <div key={step.id} className={`flex items-start md:items-center ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} relative`}>
+                  
+                  {/* Marker */}
+                  <div className="absolute left-[30px] md:left-1/2 -translate-x-1/2 z-10 mt-1 md:mt-0">
+                    <div className={`w-8 h-8 rounded-full border-4 border-[#020617] flex items-center justify-center transition-all duration-500 shadow-xl
+                      ${step.status === 'completed' ? 'bg-gold' : step.status === 'current' ? 'bg-white ring-8 ring-white/10 scale-125' : 'bg-[#1A1D2D]'}`}
+                    >
+                      {step.status === 'completed' && <CheckCircle2 className="w-4 h-4 text-[#020617]" />}
+                      {step.status === 'current' && <Play className="w-3 h-3 text-[#020617] ml-0.5" fill="currentColor" />}
+                      {step.status === 'locked' && <Lock className="w-3 h-3 text-white/20" />}
                     </div>
-                  </motion.div>
+                  </div>
 
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, margin: "-20%" }}
-                    transition={{ duration: 1.2, delay: 0.3 }}
-                    className="space-y-6 max-w-sm"
+                  {/* Step Card */}
+                  <motion.div 
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    className={`ml-16 md:ml-0 md:w-[45%] bg-white/[0.03] border border-white/5 rounded-sm p-6 md:p-10 transition-all hover:bg-white/[0.05] hover:border-white/10 shadow-lg
+                      ${step.status === 'current' ? 'border-gold/30 bg-white/[0.05]' : 'opacity-60'}
+                    `}
                   >
-                    <span className="text-[10px] uppercase tracking-[0.6em] text-gold/50 font-medium">{node.step}</span>
-                    <h2 className="text-3xl md:text-5xl font-serif leading-tight text-white/90">{node.title}</h2>
-                    <p className="text-xs md:text-sm text-white/30 font-light leading-relaxed tracking-wide italic px-8">
-                      {node.desc}
-                    </p>
-                    
-                    {i === 0 && (
-                      <div className="pt-8">
-                        <button className="group flex items-center gap-8 mx-auto text-[10px] uppercase font-bold tracking-[0.4em] text-white/40 hover:text-white transition-all">
-                          Continuar <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                        </button>
-                      </div>
+                    <div className="flex justify-between items-start mb-4">
+                      <span className={`text-[10px] font-bold uppercase tracking-[0.2em] ${step.status === 'current' ? 'text-gold' : 'text-white/40'}`}>
+                        {step.type} • {step.duration}
+                      </span>
+                      {step.status === 'completed' && <span className="text-[10px] text-gold/60 font-bold uppercase">Concluído</span>}
+                    </div>
+                    <h3 className={`text-xl md:text-2xl font-serif mb-4 ${step.status === 'locked' ? 'text-white/30' : 'text-white'}`}>
+                      {step.title}
+                    </h3>
+                    {step.description && (
+                      <p className="text-sm text-white/40 leading-relaxed font-light mb-6">{step.description}</p>
+                    )}
+                    {step.status === 'current' && (
+                      <Button variant="link" className="p-0 h-auto text-gold text-[10px] font-bold uppercase tracking-[0.2em] hover:text-gold/80 flex items-center gap-2">
+                        Iniciar Atravessia <ArrowUpRight className="w-3 h-3" />
+                      </Button>
                     )}
                   </motion.div>
                 </div>
@@ -144,145 +164,46 @@ export default function ClubeHomePremiumPreview() {
           </div>
         </section>
 
-        {/* 3. FRASE PROFUNDA INTERMEDIÁRIA (IMPACTO SILENCIOSO) */}
-        <section className="h-[60vh] flex items-center justify-center px-6">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 3 }}
-            className="max-w-4xl text-center"
-          >
-            <p className="text-3xl md:text-5xl font-serif italic text-white/40 leading-relaxed tracking-tight">
-              "Sua visão se tornará clara somente quando você puder olhar para o seu próprio coração."
-            </p>
-          </motion.div>
-        </section>
+        {/* LIBRARY / CURATED CONTENT (Functional Grid) */}
+        <section className="mb-20">
+          <div className="flex justify-between items-end mb-12">
+            <h2 className="text-3xl font-serif italic">Biblioteca Viva</h2>
+            <Button variant="ghost" className="text-white/40 text-[10px] font-bold uppercase tracking-widest hover:text-white">Ver Acervo</Button>
+          </div>
 
-        {/* 4. PROGRESSO NOBRE DISCRETO */}
-        <section className="py-64 px-6 border-t border-white/[0.02]">
-          <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-baseline justify-between gap-24">
-            <div className="space-y-12">
-              <h3 className="text-4xl font-serif text-white/90">O Estado da <br /><span className="text-white/30 italic font-light">Transformação</span></h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-                <div className="space-y-4">
-                  <span className="text-5xl md:text-7xl font-serif text-white/80">72%</span>
-                  <div className="h-px w-full bg-white/[0.05] relative overflow-hidden">
-                    <motion.div 
-                      initial={{ scaleX: 0 }}
-                      whileInView={{ scaleX: 0.72 }}
-                      transition={{ duration: 2, ease: "easeOut" }}
-                      className="absolute inset-0 bg-gold/40 origin-left"
-                    />
-                  </div>
-                  <span className="text-[10px] uppercase tracking-[0.4em] text-white/20 font-bold block">Maturação Psíquica</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { title: 'Mulheres que Correm com Lobos', category: 'Clássico', icon: BookOpen },
+              { title: 'Ritual de Proteção Diária', category: 'Prática', icon: Sparkles },
+              { title: 'O Labirinto do Self', category: 'Estudo', icon: Library }
+            ].map((item, i) => (
+              <motion.div 
+                key={i}
+                whileHover={{ y: -5 }}
+                className="bg-white/[0.03] border border-white/5 rounded-sm p-8 flex flex-col justify-between aspect-[4/3] group cursor-pointer hover:border-gold/30 transition-all"
+              >
+                <item.icon className="w-10 h-10 text-white/20 group-hover:text-gold transition-colors" strokeWidth={1} />
+                <div className="space-y-2">
+                  <span className="text-[9px] uppercase font-bold text-gold/60 tracking-widest">{item.category}</span>
+                  <h4 className="text-xl font-serif text-white/80 group-hover:text-white transition-colors">{item.title}</h4>
                 </div>
-                <div className="space-y-4">
-                  <span className="text-5xl md:text-7xl font-serif text-white/80">12</span>
-                  <div className="h-px w-full bg-white/[0.05] relative overflow-hidden">
-                    <motion.div 
-                      initial={{ scaleX: 0 }}
-                      whileInView={{ scaleX: 0.3 }}
-                      transition={{ duration: 2, ease: "easeOut" }}
-                      className="absolute inset-0 bg-gold/40 origin-left"
-                    />
-                  </div>
-                  <span className="text-[10px] uppercase tracking-[0.4em] text-white/20 font-bold block">Símbolos Integrados</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="relative group cursor-pointer">
-              <div className="absolute -inset-12 bg-gold/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-              <div className="relative space-y-4">
-                <Crown className="w-12 h-12 text-gold/20" strokeWidth={1} />
-                <h4 className="text-2xl font-serif text-white/80">Sacerdotisa Iniciante</h4>
-                <p className="text-[9px] uppercase tracking-[0.5em] text-gold/40 font-bold">Patente Atual</p>
-              </div>
-            </div>
+              </motion.div>
+            ))}
           </div>
         </section>
 
-        {/* 5. BIBLIOTECA CINEMATOGRÁFICA (EDITORIAL) */}
-        <section className="py-64 px-6 bg-[#010206]">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-baseline gap-12 mb-32 px-4">
-              <div className="space-y-4">
-                <span className="text-[10px] uppercase tracking-[1em] text-white/20 font-bold block">ACERVO</span>
-                <h2 className="text-6xl md:text-9xl font-serif leading-none italic text-white/90">Biblioteca <span className="not-italic">Viva</span></h2>
-              </div>
-              <button className="text-[11px] uppercase tracking-[0.5em] font-bold text-white/40 border-b border-white/10 pb-2 hover:text-gold hover:border-gold transition-all">
-                Ver Tudo
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-24">
-              <div className="lg:col-span-8 group cursor-pointer overflow-hidden">
-                <div className="relative aspect-[16/10] bg-[#0A1229] border border-white/[0.03] overflow-hidden rounded-sm transition-transform duration-1000 group-hover:scale-[1.02]">
-                   <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-transparent to-transparent z-10" />
-                   <motion.div 
-                     whileHover={{ scale: 1.05 }}
-                     transition={{ duration: 1.5 }}
-                     className="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1518005020250-6759229547b8?auto=format&fit=crop&q=80')] bg-cover bg-center grayscale" 
-                   />
-                   <div className="absolute bottom-16 left-16 z-20 space-y-6">
-                      <div className="flex items-center gap-4">
-                        <Zap className="w-4 h-4 text-gold/60" />
-                        <span className="text-[10px] font-bold tracking-[0.5em] uppercase text-gold/60">ESTUDO CENTRAL</span>
-                      </div>
-                      <h4 className="text-4xl md:text-6xl font-serif max-w-xl leading-tight text-white/90">O Homem e seus Símbolos</h4>
-                   </div>
-                </div>
-              </div>
-
-              <div className="lg:col-span-4 flex flex-col justify-center space-y-24">
-                {[
-                  { title: 'Arquétipos Universais', type: 'Prática', label: '01' },
-                  { title: 'O Livro Vermelho', type: 'Meditação', label: '02' }
-                ].map((item, i) => (
-                  <div key={i} className="flex gap-12 group cursor-pointer items-baseline">
-                    <span className="text-4xl font-serif text-white/10 group-hover:text-gold/20 transition-colors duration-700">{item.label}</span>
-                    <div className="space-y-4">
-                      <span className="text-[10px] font-bold tracking-[0.4em] uppercase text-white/30">{item.type}</span>
-                      <h4 className="text-2xl md:text-3xl font-serif text-white/80 group-hover:text-white transition-colors">{item.title}</h4>
-                      <div className="h-px w-0 group-hover:w-full bg-gold/20 transition-all duration-1000" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 6. FECHAMENTO TRANSFORMADOR (SILÊNCIO) */}
-        <section className="py-[40vh] px-6 text-center relative overflow-hidden">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 3 }}
-            className="max-w-4xl mx-auto space-y-24"
-          >
-            <div className="w-px h-32 bg-gradient-to-b from-gold/40 to-transparent mx-auto" />
-            <h5 className="text-5xl md:text-8xl font-serif italic text-white/50 leading-tight tracking-tight">
-              O mistério <br />
-              não precisa ser <br />
-              <span className="not-italic text-white/80">explicado.</span>
-            </h5>
-            <div className="pt-24 space-y-6">
-              <span className="text-[10px] uppercase font-bold tracking-[1em] text-white/10 block">CASA ORÁCULA</span>
-              <p className="text-[8px] uppercase font-bold tracking-[0.5em] text-gold/40 italic">Inicie sua próxima travessia no silêncio.</p>
-            </div>
-          </motion.div>
+        {/* FOOTER QUOTE */}
+        <section className="py-24 text-center border-t border-white/5">
+           <QuoteIcon className="w-12 h-12 mx-auto mb-10 text-white/10" />
+           <p className="text-2xl md:text-3xl font-serif italic text-white/40 leading-relaxed max-w-2xl mx-auto">
+             "Sua travessia não é sobre chegar, mas sobre tornar-se."
+           </p>
         </section>
       </main>
 
-      {/* MINIMALIST NAVIGATIONAL ARTIFACT */}
-      <nav className="fixed bottom-12 left-1/2 -translate-x-1/2 z-50">
-        <motion.div 
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 2, duration: 1 }}
-          className="bg-black/40 backdrop-blur-3xl border border-white/[0.05] rounded-full px-10 py-5 flex items-center gap-12 md:gap-16 shadow-[0_30px_60px_rgba(0,0,0,0.6)]"
-        >
+      {/* MOBILE BOTTOM NAVIGATION (Modern & Clean) */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 px-6 pb-6 md:pb-10 pointer-events-none">
+        <div className="max-w-md mx-auto bg-black/60 backdrop-blur-2xl border border-white/10 rounded-full px-8 py-4 flex justify-between items-center pointer-events-auto shadow-2xl">
           {[
             { icon: LayoutDashboard, active: true },
             { icon: BookOpen },
@@ -290,18 +211,27 @@ export default function ClubeHomePremiumPreview() {
             { icon: Flower2 },
             { icon: Library },
           ].map((item, i) => (
-            <button key={i} className="relative group p-2">
-              <item.icon className={`w-5 h-5 transition-all duration-700 ${item.active ? 'text-white' : 'text-white/20 group-hover:text-white/60'}`} strokeWidth={1} />
+            <button key={i} className={`relative p-2 group`}>
+              <item.icon className={`w-6 h-6 transition-all duration-300 ${item.active ? 'text-white' : 'text-white/20 group-hover:text-white/60'}`} strokeWidth={1.5} />
               {item.active && (
                 <motion.div 
                   layoutId="activeNavPoint"
-                  className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-gold rounded-full shadow-[0_0_15px_gold]" 
+                  className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-gold rounded-full shadow-[0_0_10px_gold]" 
                 />
               )}
             </button>
           ))}
-        </motion.div>
+        </div>
       </nav>
     </div>
+  );
+}
+
+function QuoteIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
+      <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
+    </svg>
   );
 }
