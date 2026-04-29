@@ -206,18 +206,20 @@ const EvolutionStats = () => (
 );
 
 const PremiumBottomNav = () => (
-  <nav className="fixed bottom-0 left-0 right-0 z-50 px-6 pb-6 pt-2 md:hidden">
-    <div className="max-w-md mx-auto bg-[#02040a]/80 backdrop-blur-2xl border border-white/10 rounded-3xl h-18 flex items-center justify-around px-2 shadow-2xl">
+  <nav className="fixed bottom-6 left-6 right-6 z-50 md:hidden">
+    <div className="max-w-md mx-auto bg-[#050810]/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] h-20 flex items-center justify-around px-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
       {[
         { icon: LayoutDashboard, label: 'Início', active: true },
         { icon: BookOpen, label: 'Clube' },
-        { icon: Sparkles, label: 'Ferramentas' },
+        { icon: Sparkles, label: 'Oráculo' },
         { icon: Flower2, label: 'Jardim' },
-        { icon: GraduationCap, label: 'Formação' },
+        { icon: Library, label: 'Acervo' },
       ].map((item, i) => (
-        <button key={i} className={`flex flex-col items-center gap-1.5 p-2 transition-all ${item.active ? 'text-gold' : 'text-white/30'}`}>
-          <item.icon className={`w-5 h-5 ${item.active ? 'stroke-[2.5px]' : 'stroke-[1.5px]'}`} />
-          <span className="text-[8px] uppercase tracking-widest font-medium">{item.label}</span>
+        <button key={i} className={`flex flex-col items-center gap-1.5 p-2 transition-all duration-300 ${item.active ? 'text-gold scale-110' : 'text-white/20 hover:text-white/40'}`}>
+          <div className={`relative ${item.active ? 'after:absolute after:-bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-gold after:rounded-full' : ''}`}>
+            <item.icon className={`w-6 h-6 ${item.active ? 'stroke-[2px]' : 'stroke-[1.5px]'}`} />
+          </div>
+          <span className="text-[7px] uppercase tracking-[0.2em] font-bold">{item.label}</span>
         </button>
       ))}
     </div>
