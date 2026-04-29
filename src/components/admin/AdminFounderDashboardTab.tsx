@@ -40,10 +40,10 @@ export default function AdminFounderDashboardTab() {
     iaCostIncrease: 15
   });
 
-  const { data: metrics, isLoading } = useQuery({
+  const { data: metrics, isLoading } = useQuery<FounderFinancialMetrics>({
     queryKey: ['founder-financials', period],
     queryFn: async () => {
-      let query = supabase.from('view_founder_real_financial_summary' as any).select('*');
+      let query = supabase.from('view_founder_real_financial_summary').select('*');
       
       const now = new Date();
       if (period === 'current') {
@@ -75,24 +75,24 @@ export default function AdminFounderDashboardTab() {
         total_cost_ads: (acc.total_cost_ads || 0) + (curr.total_cost_ads || 0),
         total_cost_team: (acc.total_cost_team || 0) + (curr.total_cost_team || 0),
         new_sales_count: (acc.new_sales_count || 0) + (curr.new_sales_count || 0),
-      }), {});
+      }), {} as any);
 
-      const totalCosts = aggregated.total_cost_ia + aggregated.total_cost_infra + aggregated.total_cost_stripe + aggregated.total_cost_ads + aggregated.total_cost_team;
-      const netProfit = aggregated.total_revenue - totalCosts;
+      const totalCosts = (aggregated.total_cost_ia || 0) + (aggregated.total_cost_infra || 0) + (aggregated.total_cost_stripe || 0) + (aggregated.total_cost_ads || 0) + (aggregated.total_cost_team || 0);
+      const netProfit = (aggregated.total_revenue || 0) - totalCosts;
 
       return {
         ...aggregated,
-        revenue_clube: aggregated.revenue_new * 0.6,
-        revenue_saas: aggregated.revenue_new * 0.4,
+        revenue_clube: (aggregated.revenue_new || 0) * 0.6,
+        revenue_saas: (aggregated.revenue_new || 0) * 0.4,
         revenue_formacao: 0,
-        revenue_upsell: aggregated.revenue_renewals,
-        cost_ia: aggregated.total_cost_ia,
-        cost_infra: aggregated.total_cost_infra,
-        cost_stripe: aggregated.total_cost_stripe,
-        cost_ads: aggregated.total_cost_ads,
-        cost_team: aggregated.total_cost_team,
+        revenue_upsell: (aggregated.revenue_renewals || 0),
+        cost_ia: (aggregated.total_cost_ia || 0),
+        cost_infra: (aggregated.total_cost_infra || 0),
+        cost_stripe: (aggregated.total_cost_stripe || 0),
+        cost_ads: (aggregated.total_cost_ads || 0),
+        cost_team: (aggregated.total_cost_team || 0),
         total_costs: totalCosts,
-        gross_profit: aggregated.total_revenue - aggregated.total_cost_stripe - aggregated.total_cost_ia,
+        gross_profit: (aggregated.total_revenue || 0) - (aggregated.total_cost_stripe || 0) - (aggregated.total_cost_ia || 0),
         net_profit: netProfit,
         net_margin_pct: aggregated.total_revenue > 0 ? Math.round((netProfit / aggregated.total_revenue) * 100) : 0,
         ia_revenue_pct: aggregated.total_revenue > 0 ? Math.round((aggregated.total_cost_ia / aggregated.total_revenue) * 100) : 0,
@@ -101,10 +101,11 @@ export default function AdminFounderDashboardTab() {
         cac: 45000,
         payback_period: 3.5,
         new_sales: aggregated.new_sales_count || 0,
-        revenue_expansion: aggregated.revenue_renewals
-      };
+        revenue_expansion: aggregated.revenue_renewals || 0
+      } as FounderFinancialMetrics;
     }
   });
+
 
   const getAlerts = () => {
     if (!metrics) return [];
