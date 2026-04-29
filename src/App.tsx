@@ -278,10 +278,7 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/admin/clube-livro" element={<Navigate to="/admin/clube" replace />} />
-      <Route path="/admin/clube-livro/*" element={<Navigate to="/admin/clube" replace />} />
-      <Route path="/admin/clube-livro/legacy" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
-      <Route path="/admin/clube-livro/v1" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
+      {/* Admin routes are handled within renderAdminRoutes */}
       {/* Public */}
       <Route path="/" element={<PublicRoute><Auth /></PublicRoute>} />
       <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
