@@ -137,10 +137,10 @@ const JourneyRoad = () => {
                 <div className={`
                   relative inline-block text-left p-8 rounded-[2.5rem] border transition-all duration-700
                   ${step.status === 'current' ? 
-                    'bg-[#0F172A]/40 border-gold/40 shadow-[0_25px_60px_rgba(0,0,0,0.6)] ring-1 ring-gold/20' : 
+                    'bg-[#111827] border-gold/40 shadow-[0_25px_60px_rgba(0,0,0,0.6)]' : 
                     step.status === 'completed' ? 
-                    'bg-white/[0.03] border-white/10' : 
-                    'bg-transparent border-white/[0.03] opacity-50'}
+                    'bg-[#0A1229] border-white/10' : 
+                    'bg-transparent border-white/[0.05] opacity-50'}
                 `}>
                   <div className="flex items-center gap-2 mb-3">
                     {step.status === 'completed' && <CheckCircle2 className="w-3.5 h-3.5 text-gold/60" />}
