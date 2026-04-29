@@ -1,16 +1,20 @@
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import {
   BookOpen, RefreshCw, DoorOpen, GraduationCap, MessageSquare, Library,
-  ArrowRight, Wrench, Settings, Sparkles, Plus, Clock, Layout, LucideIcon
+  ArrowRight, Wrench, Settings, Sparkles, Plus, Clock, Layout, LucideIcon,
+  Eye, EyeOff, ExternalLink, ImageIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { SectionHeader } from '@/components/shared/SectionHeader';
+import { useToast } from '@/hooks/use-toast';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 interface HubCard {
   key: string;
