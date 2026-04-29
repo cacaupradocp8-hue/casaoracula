@@ -222,9 +222,9 @@ export function UpsellMachinePanel() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Usuária</TableHead>
-                    <TableHead>Oferta (Ranking)</TableHead>
-                    <TableHead>Score / Fadiga</TableHead>
-                    <TableHead>Sugestão Canal</TableHead>
+                    <TableHead>Oferta / Audit</TableHead>
+                    <TableHead>Probabilidade / Fadiga</TableHead>
+                    <TableHead>Atribuição / Canal</TableHead>
                     <TableHead className="text-right">Ação</TableHead>
                   </TableRow>
                 </TableHeader>
