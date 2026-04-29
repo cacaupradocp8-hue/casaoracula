@@ -65,7 +65,7 @@ const AdminClubeTreinamento = lazy(() => import('@/pages/admin/clube/AdminClubeT
 const AdminClubeChat = lazy(() => import('@/pages/admin/clube/AdminClubeChat'));
 const AdminClubeAcervo = lazy(() => import('@/pages/admin/clube/AdminClubeAcervo'));
 const AdminCentralEstacao = lazy(() => import('@/pages/admin/clube/AdminCentralEstacao'));
-const AdminClubeLivroTab = lazy(() => import('@/components/admin/AdminClubeLivroTab').then(m => ({ default: m.AdminClubeLivroTab })));
+// AdminClubeLivroTab removed as it is legacy all-in-one component
 const AdminGeradorSemanal = lazy(() => import('@/components/admin/AdminGeradorSemanal'));
 const AdminPlanosClubTab = lazy(() => import('@/components/admin/AdminPlanosClubTab').then(m => ({ default: m.AdminPlanosClubTab })));
 const AdminEstudioOracular = lazy(() => import('@/components/admin/AdminEstudioOracular'));
