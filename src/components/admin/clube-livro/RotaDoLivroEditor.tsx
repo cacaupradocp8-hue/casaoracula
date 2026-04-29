@@ -108,7 +108,7 @@ export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
               <div className="flex items-center gap-4 mb-4">
                 <GripVertical className="w-4 h-4 text-muted-foreground cursor-grab" />
                 
-                <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                   <div className="space-y-1">
                     <Label className="text-[10px] uppercase font-bold text-muted-foreground">Título</Label>
                     <Input 
