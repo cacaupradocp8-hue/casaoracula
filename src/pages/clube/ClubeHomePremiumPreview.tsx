@@ -16,8 +16,7 @@ import {
   Crown,
   Star,
   Quote,
-  Calendar,
-  Tool
+  Calendar
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
