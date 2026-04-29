@@ -304,8 +304,14 @@ export default function AdminCasaOraculaTab() {
                     </div>
                     
                     <div className="flex flex-wrap gap-2 shrink-0">
-                      <Button size="sm" variant="outline" className="h-8 text-xs gap-1 border-emerald-200 text-emerald-700 hover:bg-emerald-50">
-                        <CheckCircle2 className="w-3 h-3" /> Marcar Feito
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className={`h-8 text-xs gap-1 border-emerald-200 text-emerald-700 hover:bg-emerald-50 ${user.action_already_sent ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        onClick={() => handleMarkActionDone(user)}
+                        disabled={user.action_already_sent}
+                      >
+                        <CheckCircle2 className="w-3 h-3" /> {user.action_already_sent ? 'Feito' : 'Marcar Feito'}
                       </Button>
                       <Button size="sm" variant="outline" className="h-8 text-xs gap-1">
                         <Calendar className="w-3 h-3" /> Reagendar
