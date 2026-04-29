@@ -48,6 +48,17 @@ interface StagnationInfoV4 {
   total_cartografias: number;
 }
 
+interface PerformanceMetric {
+  action_type: string;
+  channel: string;
+  total_actions: number;
+  total_returned: number;
+  total_score_reduced: number;
+  total_converted: number;
+  total_retained: number;
+  success_rate: number;
+}
+
 interface UsageMetric {
   day: string;
   interactions: number;
@@ -57,7 +68,7 @@ interface UsageMetric {
 interface UserTimeline {
   id: string;
   created_at: string;
-  type: 'ia' | 'clube' | 'cartografia';
+  type: 'ia' | 'clube' | 'cartografia' | 'admin_action';
   description: string;
 }
 
