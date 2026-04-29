@@ -4392,6 +4392,7 @@ export type Database = {
           ordem: number
           publicada: boolean | null
           quiz_id: string | null
+          status: Database["public"]["Enums"]["clube_status"] | null
           subtitulo: string
           titulo: string
           traducao_aula: string | null
@@ -4428,6 +4429,7 @@ export type Database = {
           ordem?: number
           publicada?: boolean | null
           quiz_id?: string | null
+          status?: Database["public"]["Enums"]["clube_status"] | null
           subtitulo: string
           titulo: string
           traducao_aula?: string | null
@@ -4464,6 +4466,7 @@ export type Database = {
           ordem?: number
           publicada?: boolean | null
           quiz_id?: string | null
+          status?: Database["public"]["Enums"]["clube_status"] | null
           subtitulo?: string
           titulo?: string
           traducao_aula?: string | null
@@ -23349,6 +23352,7 @@ export type Database = {
         | "encontro"
         | "laboratorio"
         | "integracao"
+      clube_status: "draft" | "published" | "archived"
       co_travessia_nivel: "iniciante" | "intermediario" | "avancado"
       content_block_type:
         | "rich_text"
@@ -23614,6 +23618,7 @@ export const Constants = {
         "laboratorio",
         "integracao",
       ],
+      clube_status: ["draft", "published", "archived"],
       co_travessia_nivel: ["iniciante", "intermediario", "avancado"],
       content_block_type: [
         "rich_text",
