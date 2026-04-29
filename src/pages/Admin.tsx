@@ -151,6 +151,8 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'upsell-machine': UpsellMachinePanel,
   'settings': AdminSettingsTab,
   'copy': AdminCopyTab,
+  'founder': AdminFounderDashboardTab,
+
 
 };
 
