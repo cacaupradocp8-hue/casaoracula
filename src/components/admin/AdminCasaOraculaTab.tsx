@@ -576,9 +576,24 @@ export default function AdminCasaOraculaTab() {
             <div>
               <h3 className="text-lg font-medium flex items-center gap-2">
                 <Settings2 className="w-5 h-5 text-primary" />
-                Ações aprovadas para automação
+                Automação Baseada em Evidência
               </h3>
-              <p className="text-sm text-muted-foreground">Regra: Sucesso {'>'} 20% (Recuperação) ou {'>'} 10% (Conversão)</p>
+              <p className="text-sm text-muted-foreground">Somente ações com alta taxa de sucesso são elegíveis para disparo automático.</p>
+            </div>
+            <div className="flex gap-4">
+               <div className="flex flex-col gap-1">
+                 <Label className="text-[10px] uppercase font-bold text-muted-foreground">Janela de Medição</Label>
+                 <Select defaultValue="7" onValueChange={(v) => console.log('Window changed', v)}>
+                    <SelectTrigger className="h-8 w-32 text-xs">
+                      <SelectValue placeholder="Janela" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="7">7 dias</SelectItem>
+                      <SelectItem value="14">14 dias</SelectItem>
+                      <SelectItem value="30">30 dias</SelectItem>
+                    </SelectContent>
+                 </Select>
+               </div>
             </div>
           </div>
 
@@ -588,11 +603,12 @@ export default function AdminCasaOraculaTab() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Tipo Risco</TableHead>
+                      <TableHead>Alvo / Portal</TableHead>
                       <TableHead>Ação Sugerida</TableHead>
                       <TableHead>Canal</TableHead>
-                      <TableHead className="text-right">Taxa Sucesso</TableHead>
-                      <TableHead className="text-center">Status Automação</TableHead>
+                      <TableHead className="text-right">Performance</TableHead>
+                      <TableHead className="text-center">Decisão e Simulação</TableHead>
+                      <TableHead className="text-right">Automação</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -602,24 +618,133 @@ export default function AdminCasaOraculaTab() {
                       
                       return (
                         <TableRow key={rule.id}>
-                          <TableCell className="capitalize font-medium">{rule.risk_type}</TableCell>
-                          <TableCell>{rule.action_type}</TableCell>
+                          <TableCell>
+                            <div className="capitalize font-medium">{rule.risk_type}</div>
+                            <div className="text-[10px] text-muted-foreground font-mono">{rule.portal || 'GLOBAL'}</div>
+                          </TableCell>
+                          <TableCell className="text-xs">{rule.action_type}</TableCell>
                           <TableCell>
                             <Badge variant="outline" className="text-[10px] uppercase">{rule.channel}</Badge>
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex flex-col items-end">
-                              <span className={`font-bold ${isEligible ? 'text-emerald-600' : 'text-muted-foreground'}`}>
+                              <span className={`font-bold ${isEligible ? 'text-emerald-600' : 'text-amber-600'}`}>
                                 {perf?.success_rate || 0}%
                               </span>
-                              <span className="text-[10px] text-muted-foreground">Meta: {rule.min_success_rate}%</span>
+                              <span className="text-[10px] text-muted-foreground italic">Meta: {rule.min_success_rate}%</span>
                             </div>
                           </TableCell>
-                          <TableCell className="text-center">
-                            <div className="flex items-center justify-center gap-3">
+                          <TableCell>
+                            <div className="flex items-center justify-center gap-2">
+                               <Dialog>
+                                 <DialogTrigger asChild>
+                                   <Button 
+                                     variant="ghost" 
+                                     size="sm" 
+                                     className="h-8 px-2 text-xs gap-1"
+                                     onClick={() => handleSimulate(rule)}
+                                   >
+                                     <Play className="w-3 h-3" /> Simular
+                                   </Button>
+                                 </DialogTrigger>
+                                 <DialogContent>
+                                   <DialogHeader>
+                                     <DialogTitle>Simulação de Impacto</DialogTitle>
+                                     <DialogDescription>
+                                       {rule.action_type} via {rule.channel} ({rule.portal || 'Global'})
+                                     </DialogDescription>
+                                   </DialogHeader>
+                                   {isSimulating ? (
+                                      <div className="py-12 flex justify-center"><RefreshCw className="w-8 h-8 animate-spin text-primary/20" /></div>
+                                   ) : simulationResult && (
+                                     <div className="space-y-6 py-4">
+                                       <div className="grid grid-cols-2 gap-4">
+                                         <div className="bg-secondary/50 p-4 rounded-xl text-center">
+                                           <div className="text-3xl font-bold">{simulationResult.usersCount}</div>
+                                           <div className="text-[10px] uppercase font-bold text-muted-foreground mt-1">Usuárias Atuais</div>
+                                         </div>
+                                         <div className="bg-emerald-500/10 p-4 rounded-xl text-center border border-emerald-500/20">
+                                           <div className="text-3xl font-bold text-emerald-600">~{simulationResult.estimatedSuccess}</div>
+                                           <div className="text-[10px] uppercase font-bold text-emerald-600 mt-1">Retornos Previstos</div>
+                                         </div>
+                                       </div>
+                                       
+                                       <div className="space-y-3 bg-slate-50 p-4 rounded-lg">
+                                         <div className="flex justify-between items-center text-sm">
+                                           <span className="text-muted-foreground">Risco de Spam (Fadiga):</span>
+                                           <Badge variant={simulationResult.spamRisk === 'Baixo' ? 'secondary' : 'destructive'} className={simulationResult.spamRisk === 'Baixo' ? 'bg-emerald-100 text-emerald-700' : ''}>
+                                             {simulationResult.spamRisk}
+                                           </Badge>
+                                         </div>
+                                         <div className="flex justify-between items-center text-sm">
+                                           <span className="text-muted-foreground">Taxa Histórica Medida:</span>
+                                           <span className="font-bold">{simulationResult.historicalRate}%</span>
+                                         </div>
+                                         <div className="flex justify-between items-center text-sm">
+                                           <span className="text-muted-foreground">Janela de Observação:</span>
+                                           <span className="font-bold">{simulationResult.window} dias</span>
+                                         </div>
+                                       </div>
+
+                                       <DialogFooter>
+                                          <Button className="w-full gap-2" disabled={!isEligible} onClick={() => toggleAutomationRule(rule.id, rule.is_active)}>
+                                            <Zap className="w-4 h-4" /> 
+                                            {rule.is_active ? 'Revisar Automação Ativa' : 'Aprovar e Ativar Automação'}
+                                          </Button>
+                                       </DialogFooter>
+                                     </div>
+                                   )}
+                                 </DialogContent>
+                               </Dialog>
+
+                               <Dialog>
+                                 <DialogTrigger asChild>
+                                   <Button 
+                                     variant="ghost" 
+                                     size="sm" 
+                                     className="h-8 px-2 text-xs gap-1"
+                                     onClick={() => fetchAuditLogs(rule.id)}
+                                   >
+                                     <Clock className="w-3 h-3" /> Auditoria
+                                   </Button>
+                                 </DialogTrigger>
+                                 <DialogContent className="max-w-md">
+                                   <DialogHeader>
+                                     <DialogTitle>Janela de Auditoria</DialogTitle>
+                                     <DialogDescription>Rastreabilidade das decisões de ativação</DialogDescription>
+                                   </DialogHeader>
+                                   <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 py-4">
+                                      {auditLogs.length > 0 ? auditLogs.map(log => (
+                                        <div key={log.id} className="border-l-2 border-primary/20 pl-4 py-2 relative">
+                                          <div className="absolute w-2 h-2 rounded-full bg-primary/30 -left-[5px] top-4" />
+                                          <div className="flex justify-between items-center mb-1">
+                                            <Badge variant="outline" className="text-[9px] uppercase font-bold">{log.action}</Badge>
+                                            <span className="text-[10px] text-muted-foreground">
+                                              {format(new Date(log.created_at), 'dd/MM/yy HH:mm')}
+                                            </span>
+                                          </div>
+                                          <p className="text-xs text-foreground font-medium">{log.reason}</p>
+                                          {log.snapshot_data && (
+                                            <div className="mt-2 text-[9px] text-muted-foreground bg-secondary/30 p-2 rounded">
+                                              Snapshot: {log.snapshot_data.usersCount} usuárias | {log.snapshot_data.historicalRate}% sucesso
+                                            </div>
+                                          )}
+                                        </div>
+                                      )) : (
+                                        <div className="text-center py-8 text-muted-foreground text-sm italic">
+                                          Sem histórico registrado.
+                                        </div>
+                                      )}
+                                   </div>
+                                 </DialogContent>
+                               </Dialog>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex items-center justify-end gap-3">
                               {rule.channel === 'whatsapp' ? (
                                 <Badge variant="secondary" className="bg-slate-100 text-slate-500 italic text-[10px]">
-                                  Manual Apenas
+                                  Manual
                                 </Badge>
                               ) : (
                                 <Button
@@ -630,14 +755,11 @@ export default function AdminCasaOraculaTab() {
                                   disabled={!isEligible && !rule.is_active}
                                 >
                                   {rule.is_active ? (
-                                    <><Power className="w-3 h-3" /> Ativo</>
+                                    <><Power className="w-3 h-3" /> ON</>
                                   ) : (
-                                    <><Play className="w-3 h-3" /> Ativar</>
+                                    <><Play className="w-3 h-3" /> OFF</>
                                   )}
                                 </Button>
-                              )}
-                              {!isEligible && !rule.is_active && rule.channel !== 'whatsapp' && (
-                                <span className="text-[9px] text-red-500 font-medium">Evidência insuficiente</span>
                               )}
                             </div>
                           </TableCell>
