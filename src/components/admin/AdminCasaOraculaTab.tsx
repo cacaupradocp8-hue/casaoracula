@@ -608,8 +608,22 @@ export default function AdminCasaOraculaTab() {
             </div>
             <div className="flex gap-4">
                <div className="flex flex-col gap-1">
+                 <Label className="text-[10px] uppercase font-bold text-muted-foreground">Portal</Label>
+                 <Select value={currentPortalFilter} onValueChange={setCurrentPortalFilter}>
+                    <SelectTrigger className="h-8 w-36 text-xs">
+                      <SelectValue placeholder="Portal" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="GLOBAL">Global</SelectItem>
+                      <SelectItem value="Cartografia">Cartografia</SelectItem>
+                      <SelectItem value="Clube">Churn Clube</SelectItem>
+                      <SelectItem value="SaaS">SaaS Value</SelectItem>
+                    </SelectContent>
+                 </Select>
+               </div>
+               <div className="flex flex-col gap-1">
                  <Label className="text-[10px] uppercase font-bold text-muted-foreground">Janela de Medição</Label>
-                 <Select defaultValue="7" onValueChange={(v) => console.log('Window changed', v)}>
+                 <Select value={currentWindow.toString()} onValueChange={(v) => setCurrentWindow(parseInt(v))}>
                     <SelectTrigger className="h-8 w-32 text-xs">
                       <SelectValue placeholder="Janela" />
                     </SelectTrigger>
