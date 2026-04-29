@@ -1603,12 +1603,20 @@ function CicloDialog({
             />
           </div>
 
-          <div className="space-y-2">
-            <Label>URL da Capa do Livro</Label>
-            <Input
-              value={form.capa_url}
-              onChange={(e) => setForm({ ...form, capa_url: e.target.value })}
-              placeholder="https://..."
+          <div className="grid grid-cols-2 gap-4">
+            <ImageUpload 
+              value={form.capa_url} 
+              onChange={(url) => setForm({ ...form, capa_url: url })}
+              label="Capa do Livro"
+              folder="clube-assets"
+              aspectRatio="square"
+            />
+            <ImageUpload 
+              value={form.banner_url} 
+              onChange={(url) => setForm({ ...form, banner_url: url })}
+              label="Banner da Estação"
+              folder="clube-assets"
+              aspectRatio="banner"
             />
           </div>
 
