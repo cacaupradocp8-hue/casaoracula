@@ -84,6 +84,13 @@ export type Database = {
             referencedRelation: "v_formation_progress"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "access_expiration_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "view_user_stagnation"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       agente_conversas: {
@@ -9981,6 +9988,13 @@ export type Database = {
             referencedRelation: "v_formation_progress"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "email_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "view_user_stagnation"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       email_send_log: {
@@ -14829,6 +14843,13 @@ export type Database = {
             referencedRelation: "v_formation_progress"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "mind_maps_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "view_user_stagnation"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       missoes: {
@@ -15059,6 +15080,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "narrative_maps_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "view_user_stagnation"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "narrative_maps_therapist_id_fkey"
             columns: ["therapist_id"]
             isOneToOne: false
@@ -15070,6 +15098,13 @@ export type Database = {
             columns: ["therapist_id"]
             isOneToOne: false
             referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "narrative_maps_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "view_user_stagnation"
             referencedColumns: ["user_id"]
           },
         ]
@@ -17403,6 +17438,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "post_session_closures_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "view_user_stagnation"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "post_session_closures_therapist_id_fkey"
             columns: ["therapist_id"]
             isOneToOne: false
@@ -17414,6 +17456,13 @@ export type Database = {
             columns: ["therapist_id"]
             isOneToOne: false
             referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "post_session_closures_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "view_user_stagnation"
             referencedColumns: ["user_id"]
           },
         ]
@@ -19077,6 +19126,13 @@ export type Database = {
             referencedRelation: "v_formation_progress"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "session_cases_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "view_user_stagnation"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       session_interventions: {
@@ -19184,6 +19240,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "session_oracle_draws_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "view_user_stagnation"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "session_oracle_draws_therapist_id_fkey"
             columns: ["therapist_id"]
             isOneToOne: false
@@ -19195,6 +19258,13 @@ export type Database = {
             columns: ["therapist_id"]
             isOneToOne: false
             referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "session_oracle_draws_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "view_user_stagnation"
             referencedColumns: ["user_id"]
           },
         ]
@@ -19274,6 +19344,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "session_scripts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "view_user_stagnation"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "session_scripts_narrative_map_id_fkey"
             columns: ["narrative_map_id"]
             isOneToOne: false
@@ -19292,6 +19369,13 @@ export type Database = {
             columns: ["therapist_id"]
             isOneToOne: false
             referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "session_scripts_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "view_user_stagnation"
             referencedColumns: ["user_id"]
           },
         ]
@@ -21358,6 +21442,13 @@ export type Database = {
             referencedRelation: "v_formation_progress"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "travessia_comentarios_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "view_user_stagnation"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       travessia_day_unlocks: {
@@ -21817,6 +21908,13 @@ export type Database = {
             referencedRelation: "v_formation_progress"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "user_cidadela_estado_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "view_user_stagnation"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       user_favorites: {
@@ -22180,6 +22278,20 @@ export type Database = {
           suggested_next_step: string | null
           training_cases_completed: number | null
           updated_at: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
+      view_user_stagnation: {
+        Row: {
+          email: string | null
+          last_ai_use: string | null
+          last_any_activity: string | null
+          last_clube_activity: string | null
+          nome: string | null
+          plan_id: string | null
+          stagnation_reason: string | null
+          subscription_status: string | null
           user_id: string | null
         }
         Relationships: []
