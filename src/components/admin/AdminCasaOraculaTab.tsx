@@ -1,11 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { 
   Activity, 
   AlertTriangle, 
@@ -82,7 +100,22 @@ interface AutomationRule {
   channel: string;
   min_success_rate: number;
   is_active: boolean;
+  portal: string | null;
+  measurement_window_days: number;
+  approval_reason: string | null;
+  last_success_rate: number | null;
+  last_volume: number | null;
+  last_snapshot_at: string | null;
   updated_at: string;
+}
+
+interface AuditLog {
+  id: string;
+  rule_id: string;
+  action: string;
+  reason: string;
+  snapshot_data: any;
+  created_at: string;
 }
 
 export default function AdminCasaOraculaTab() {
@@ -93,6 +126,12 @@ export default function AdminCasaOraculaTab() {
   const [automationRules, setAutomationRules] = useState<AutomationRule[]>([]);
   const [selectedUserTimeline, setSelectedUserTimeline] = useState<UserTimeline[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [simulationResult, setSimulationResult] = useState<any>(null);
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
+  const [selectedRuleAudit, setSelectedRuleAudit] = useState<AutomationRule | null>(null);
+  const [currentWindow, setCurrentWindow] = useState<number>(7);
+  const [currentPortalFilter, setCurrentPortalFilter] = useState<string>('GLOBAL');
 
   useEffect(() => {
     fetchDashboardData();
@@ -175,6 +214,76 @@ export default function AdminCasaOraculaTab() {
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     ));
   };
+  
+  const handleSimulate = async (rule: AutomationRule) => {
+    setIsSimulating(true);
+    try {
+      // Simulamos filtrando usuários estagnados que atendem aos critérios da regra
+      const matchingUsers = stagnantUsers.filter(u => {
+        const matchesRisk = 
+          (rule.risk_type === 'conversion' && u.conversion_risk_score > 60) ||
+          (rule.risk_type === 'churn' && u.churn_risk_score > 60) ||
+          (rule.risk_type === 'saas' && u.saas_value_risk_score > 60);
+        
+        const matchesPortal = !rule.portal || rule.portal === 'GLOBAL' || u.portal === rule.portal;
+        
+        return matchesRisk && matchesPortal;
+      });
+
+      const perf = performanceMetrics.find(p => p.action_type === rule.action_type && p.channel === rule.channel);
+      
+      const simulation = {
+        usersCount: matchingUsers.length,
+        estimatedSuccess: Math.round(matchingUsers.length * ((perf?.success_rate || 0) / 100)),
+        spamRisk: (perf?.success_rate || 0) < 10 ? 'Alto' : (perf?.success_rate || 0) < 20 ? 'Médio' : 'Baixo',
+        historicalRate: perf?.success_rate || 0,
+        window: currentWindow
+      };
+
+      setSimulationResult(simulation);
+      
+      const { data: { user: adminUser } } = await supabase.auth.getUser();
+      if (adminUser) {
+        await supabase.rpc('log_automation_simulation', {
+          p_risk_type: rule.risk_type,
+          p_action_type: rule.action_type,
+          p_channel: rule.channel,
+          p_portal: rule.portal || 'GLOBAL',
+          p_admin_id: adminUser.id,
+          p_snapshot: simulation
+        });
+      }
+    } catch (error) {
+      console.error('Error during simulation:', error);
+    } finally {
+      setIsSimulating(false);
+    }
+  };
+
+  const fetchAuditLogs = async (ruleId: string) => {
+    const { data } = await supabase
+      .from('admin_automation_audit')
+      .select('*')
+      .eq('rule_id', ruleId)
+      .order('created_at', { ascending: false });
+    
+    if (data) setAuditLogs(data);
+  };
+
+  const updateRuleConfig = async (ruleId: string, updates: Partial<AutomationRule>) => {
+    try {
+      const { error } = await supabase
+        .from('admin_automation_rules')
+        .update(updates)
+        .eq('id', ruleId);
+      
+      if (error) throw error;
+      
+      setAutomationRules(prev => prev.map(r => r.id === ruleId ? { ...r, ...updates } : r));
+    } catch (error) {
+      console.error('Error updating rule config:', error);
+    }
+  };
 
   const handleMarkActionDone = async (user: StagnationInfoV4) => {
     try {
@@ -210,15 +319,39 @@ export default function AdminCasaOraculaTab() {
 
   const toggleAutomationRule = async (ruleId: string, currentStatus: boolean) => {
     try {
+      const rule = automationRules.find(r => r.id === ruleId);
+      if (!rule) return;
+
+      const { data: { user: adminUser } } = await supabase.auth.getUser();
+      if (!adminUser) return;
+
+      const newStatus = !currentStatus;
+      const perf = performanceMetrics.find(p => p.action_type === rule.action_type && p.channel === rule.channel);
+
       const { error } = await supabase
         .from('admin_automation_rules')
-        .update({ is_active: !currentStatus })
+        .update({ 
+          is_active: newStatus,
+          last_success_rate: perf?.success_rate || 0,
+          last_snapshot_at: new Date().toISOString()
+        })
         .eq('id', ruleId);
 
       if (error) throw error;
+
+      // Registrar Auditoria
+      await supabase.from('admin_automation_audit').insert({
+        rule_id: ruleId,
+        admin_id: adminUser.id,
+        action: newStatus ? 'activate' : 'deactivate',
+        reason: newStatus 
+          ? `Ativada com taxa de ${perf?.success_rate || 0}% e meta de ${rule.min_success_rate}%`
+          : 'Desativada manualmente pelo administrador',
+        snapshot_data: { success_rate: perf?.success_rate || 0, timestamp: new Date().toISOString() }
+      });
       
       setAutomationRules(prev => prev.map(r => 
-        r.id === ruleId ? { ...r, is_active: !currentStatus } : r
+        r.id === ruleId ? { ...r, is_active: newStatus } : r
       ));
     } catch (error) {
       console.error('Error toggling automation rule:', error);
@@ -469,9 +602,38 @@ export default function AdminCasaOraculaTab() {
             <div>
               <h3 className="text-lg font-medium flex items-center gap-2">
                 <Settings2 className="w-5 h-5 text-primary" />
-                Ações aprovadas para automação
+                Automação Baseada em Evidência
               </h3>
-              <p className="text-sm text-muted-foreground">Regra: Sucesso {'>'} 20% (Recuperação) ou {'>'} 10% (Conversão)</p>
+              <p className="text-sm text-muted-foreground">Somente ações com alta taxa de sucesso são elegíveis para disparo automático.</p>
+            </div>
+            <div className="flex gap-4">
+               <div className="flex flex-col gap-1">
+                 <Label className="text-[10px] uppercase font-bold text-muted-foreground">Portal</Label>
+                 <Select value={currentPortalFilter} onValueChange={setCurrentPortalFilter}>
+                    <SelectTrigger className="h-8 w-36 text-xs">
+                      <SelectValue placeholder="Portal" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="GLOBAL">Global</SelectItem>
+                      <SelectItem value="Cartografia">Cartografia</SelectItem>
+                      <SelectItem value="Clube">Churn Clube</SelectItem>
+                      <SelectItem value="SaaS">SaaS Value</SelectItem>
+                    </SelectContent>
+                 </Select>
+               </div>
+               <div className="flex flex-col gap-1">
+                 <Label className="text-[10px] uppercase font-bold text-muted-foreground">Janela de Medição</Label>
+                 <Select value={currentWindow.toString()} onValueChange={(v) => setCurrentWindow(parseInt(v))}>
+                    <SelectTrigger className="h-8 w-32 text-xs">
+                      <SelectValue placeholder="Janela" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="7">7 dias</SelectItem>
+                      <SelectItem value="14">14 dias</SelectItem>
+                      <SelectItem value="30">30 dias</SelectItem>
+                    </SelectContent>
+                 </Select>
+               </div>
             </div>
           </div>
 
@@ -481,38 +643,150 @@ export default function AdminCasaOraculaTab() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Tipo Risco</TableHead>
+                      <TableHead>Alvo / Portal</TableHead>
                       <TableHead>Ação Sugerida</TableHead>
                       <TableHead>Canal</TableHead>
-                      <TableHead className="text-right">Taxa Sucesso</TableHead>
-                      <TableHead className="text-center">Status Automação</TableHead>
+                      <TableHead className="text-right">Performance</TableHead>
+                      <TableHead className="text-center">Decisão e Simulação</TableHead>
+                      <TableHead className="text-right">Automação</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {automationRules.map((rule) => {
+                    {automationRules
+                      .filter(r => (currentPortalFilter === 'GLOBAL' && (!r.portal || r.portal === 'GLOBAL')) || r.portal === currentPortalFilter)
+                      .map((rule) => {
                       const perf = performanceMetrics.find(p => p.action_type === rule.action_type && p.channel === rule.channel);
                       const isEligible = perf && perf.success_rate >= rule.min_success_rate;
                       
                       return (
                         <TableRow key={rule.id}>
-                          <TableCell className="capitalize font-medium">{rule.risk_type}</TableCell>
-                          <TableCell>{rule.action_type}</TableCell>
+                          <TableCell>
+                            <div className="capitalize font-medium">{rule.risk_type}</div>
+                            <div className="text-[10px] text-muted-foreground font-mono">{rule.portal || 'GLOBAL'}</div>
+                          </TableCell>
+                          <TableCell className="text-xs">{rule.action_type}</TableCell>
                           <TableCell>
                             <Badge variant="outline" className="text-[10px] uppercase">{rule.channel}</Badge>
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex flex-col items-end">
-                              <span className={`font-bold ${isEligible ? 'text-emerald-600' : 'text-muted-foreground'}`}>
+                              <span className={`font-bold ${isEligible ? 'text-emerald-600' : 'text-amber-600'}`}>
                                 {perf?.success_rate || 0}%
                               </span>
-                              <span className="text-[10px] text-muted-foreground">Meta: {rule.min_success_rate}%</span>
+                              <span className="text-[10px] text-muted-foreground italic">Meta: {rule.min_success_rate}%</span>
                             </div>
                           </TableCell>
-                          <TableCell className="text-center">
-                            <div className="flex items-center justify-center gap-3">
+                          <TableCell>
+                            <div className="flex items-center justify-center gap-2">
+                               <Dialog>
+                                 <DialogTrigger asChild>
+                                   <Button 
+                                     variant="ghost" 
+                                     size="sm" 
+                                     className="h-8 px-2 text-xs gap-1"
+                                     onClick={() => handleSimulate(rule)}
+                                   >
+                                     <Play className="w-3 h-3" /> Simular
+                                   </Button>
+                                 </DialogTrigger>
+                                 <DialogContent>
+                                   <DialogHeader>
+                                     <DialogTitle>Simulação de Impacto</DialogTitle>
+                                     <DialogDescription>
+                                       {rule.action_type} via {rule.channel} ({rule.portal || 'Global'})
+                                     </DialogDescription>
+                                   </DialogHeader>
+                                   {isSimulating ? (
+                                      <div className="py-12 flex justify-center"><RefreshCw className="w-8 h-8 animate-spin text-primary/20" /></div>
+                                   ) : simulationResult && (
+                                     <div className="space-y-6 py-4">
+                                       <div className="grid grid-cols-2 gap-4">
+                                         <div className="bg-secondary/50 p-4 rounded-xl text-center">
+                                           <div className="text-3xl font-bold">{simulationResult.usersCount}</div>
+                                           <div className="text-[10px] uppercase font-bold text-muted-foreground mt-1">Usuárias Atuais</div>
+                                         </div>
+                                         <div className="bg-emerald-500/10 p-4 rounded-xl text-center border border-emerald-500/20">
+                                           <div className="text-3xl font-bold text-emerald-600">~{simulationResult.estimatedSuccess}</div>
+                                           <div className="text-[10px] uppercase font-bold text-emerald-600 mt-1">Retornos Previstos</div>
+                                         </div>
+                                       </div>
+                                       
+                                       <div className="space-y-3 bg-slate-50 p-4 rounded-lg">
+                                         <div className="flex justify-between items-center text-sm">
+                                           <span className="text-muted-foreground">Risco de Spam (Fadiga):</span>
+                                           <Badge variant={simulationResult.spamRisk === 'Baixo' ? 'secondary' : 'destructive'} className={simulationResult.spamRisk === 'Baixo' ? 'bg-emerald-100 text-emerald-700' : ''}>
+                                             {simulationResult.spamRisk}
+                                           </Badge>
+                                         </div>
+                                         <div className="flex justify-between items-center text-sm">
+                                           <span className="text-muted-foreground">Taxa Histórica Medida:</span>
+                                           <span className="font-bold">{simulationResult.historicalRate}%</span>
+                                         </div>
+                                         <div className="flex justify-between items-center text-sm">
+                                           <span className="text-muted-foreground">Janela de Observação:</span>
+                                           <span className="font-bold">{simulationResult.window} dias</span>
+                                         </div>
+                                       </div>
+
+                                       <DialogFooter>
+                                          <Button className="w-full gap-2" disabled={!isEligible} onClick={() => toggleAutomationRule(rule.id, rule.is_active)}>
+                                            <Zap className="w-4 h-4" /> 
+                                            {rule.is_active ? 'Revisar Automação Ativa' : 'Aprovar e Ativar Automação'}
+                                          </Button>
+                                       </DialogFooter>
+                                     </div>
+                                   )}
+                                 </DialogContent>
+                               </Dialog>
+
+                               <Dialog>
+                                 <DialogTrigger asChild>
+                                   <Button 
+                                     variant="ghost" 
+                                     size="sm" 
+                                     className="h-8 px-2 text-xs gap-1"
+                                     onClick={() => fetchAuditLogs(rule.id)}
+                                   >
+                                     <Clock className="w-3 h-3" /> Auditoria
+                                   </Button>
+                                 </DialogTrigger>
+                                 <DialogContent className="max-w-md">
+                                   <DialogHeader>
+                                     <DialogTitle>Janela de Auditoria</DialogTitle>
+                                     <DialogDescription>Rastreabilidade das decisões de ativação</DialogDescription>
+                                   </DialogHeader>
+                                   <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 py-4">
+                                      {auditLogs.length > 0 ? auditLogs.map(log => (
+                                        <div key={log.id} className="border-l-2 border-primary/20 pl-4 py-2 relative">
+                                          <div className="absolute w-2 h-2 rounded-full bg-primary/30 -left-[5px] top-4" />
+                                          <div className="flex justify-between items-center mb-1">
+                                            <Badge variant="outline" className="text-[9px] uppercase font-bold">{log.action}</Badge>
+                                            <span className="text-[10px] text-muted-foreground">
+                                              {format(new Date(log.created_at), 'dd/MM/yy HH:mm')}
+                                            </span>
+                                          </div>
+                                          <p className="text-xs text-foreground font-medium">{log.reason}</p>
+                                          {log.snapshot_data && (
+                                            <div className="mt-2 text-[9px] text-muted-foreground bg-secondary/30 p-2 rounded">
+                                              Snapshot: {log.snapshot_data.usersCount} usuárias | {log.snapshot_data.historicalRate}% sucesso
+                                            </div>
+                                          )}
+                                        </div>
+                                      )) : (
+                                        <div className="text-center py-8 text-muted-foreground text-sm italic">
+                                          Sem histórico registrado.
+                                        </div>
+                                      )}
+                                   </div>
+                                 </DialogContent>
+                               </Dialog>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex items-center justify-end gap-3">
                               {rule.channel === 'whatsapp' ? (
                                 <Badge variant="secondary" className="bg-slate-100 text-slate-500 italic text-[10px]">
-                                  Manual Apenas
+                                  Manual
                                 </Badge>
                               ) : (
                                 <Button
@@ -523,14 +797,11 @@ export default function AdminCasaOraculaTab() {
                                   disabled={!isEligible && !rule.is_active}
                                 >
                                   {rule.is_active ? (
-                                    <><Power className="w-3 h-3" /> Ativo</>
+                                    <><Power className="w-3 h-3" /> ON</>
                                   ) : (
-                                    <><Play className="w-3 h-3" /> Ativar</>
+                                    <><Play className="w-3 h-3" /> OFF</>
                                   )}
                                 </Button>
-                              )}
-                              {!isEligible && !rule.is_active && rule.channel !== 'whatsapp' && (
-                                <span className="text-[9px] text-red-500 font-medium">Evidência insuficiente</span>
                               )}
                             </div>
                           </TableCell>
@@ -542,21 +813,38 @@ export default function AdminCasaOraculaTab() {
               </CardContent>
             </Card>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card className="bg-blue-50/50 border-blue-100">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm">Automações Leves</CardTitle>
+                  <CardTitle className="text-sm">Meta Cartografia</CardTitle>
                 </CardHeader>
-                <CardContent className="text-xs text-muted-foreground">
-                  E-mails e notificações internas são disparados automaticamente assim que o score ultrapassa o limite de risco, desde que a regra esteja ativa e validada por evidência.
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">Conversão {'>'}</span>
+                    <span className="font-bold text-blue-600">18%</span>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-red-50/50 border-red-100">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm">Meta Churn Clube</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">Recuperação {'>'}</span>
+                    <span className="font-bold text-red-600">22%</span>
+                  </div>
                 </CardContent>
               </Card>
               <Card className="bg-amber-50/50 border-amber-100">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm">Governança Humana</CardTitle>
+                  <CardTitle className="text-sm">Meta SaaS Value</CardTitle>
                 </CardHeader>
-                <CardContent className="text-xs text-muted-foreground">
-                  Ações via WhatsApp permanecem estritamente manuais para garantir o tom de voz e o acolhimento necessário em casos críticos.
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">Ativação {'>'}</span>
+                    <span className="font-bold text-amber-600">15%</span>
+                  </div>
                 </CardContent>
               </Card>
             </div>

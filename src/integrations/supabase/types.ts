@@ -157,34 +157,90 @@ export type Database = {
           },
         ]
       }
+      admin_automation_audit: {
+        Row: {
+          action: string
+          admin_id: string | null
+          created_at: string | null
+          id: string
+          reason: string | null
+          rule_id: string | null
+          snapshot_data: Json | null
+        }
+        Insert: {
+          action: string
+          admin_id?: string | null
+          created_at?: string | null
+          id?: string
+          reason?: string | null
+          rule_id?: string | null
+          snapshot_data?: Json | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string | null
+          created_at?: string | null
+          id?: string
+          reason?: string | null
+          rule_id?: string | null
+          snapshot_data?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_automation_audit_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "admin_automation_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       admin_automation_rules: {
         Row: {
           action_type: string
+          approval_reason: string | null
           channel: string
           created_at: string | null
           id: string
           is_active: boolean | null
+          last_snapshot_at: string | null
+          last_success_rate: number | null
+          last_volume: number | null
+          measurement_window_days: number | null
           min_success_rate: number
+          portal: string | null
           risk_type: string
           updated_at: string | null
         }
         Insert: {
           action_type: string
+          approval_reason?: string | null
           channel: string
           created_at?: string | null
           id?: string
           is_active?: boolean | null
+          last_snapshot_at?: string | null
+          last_success_rate?: number | null
+          last_volume?: number | null
+          measurement_window_days?: number | null
           min_success_rate?: number
+          portal?: string | null
           risk_type: string
           updated_at?: string | null
         }
         Update: {
           action_type?: string
+          approval_reason?: string | null
           channel?: string
           created_at?: string | null
           id?: string
           is_active?: boolean | null
+          last_snapshot_at?: string | null
+          last_success_rate?: number | null
+          last_volume?: number | null
+          measurement_window_days?: number | null
           min_success_rate?: number
+          portal?: string | null
           risk_type?: string
           updated_at?: string | null
         }
@@ -22651,6 +22707,17 @@ export type Database = {
       is_profissional_confirmada: {
         Args: { _user_id: string }
         Returns: boolean
+      }
+      log_automation_simulation: {
+        Args: {
+          p_action_type: string
+          p_admin_id: string
+          p_channel: string
+          p_portal: string
+          p_risk_type: string
+          p_snapshot: Json
+        }
+        Returns: string
       }
       move_to_dlq: {
         Args: {
