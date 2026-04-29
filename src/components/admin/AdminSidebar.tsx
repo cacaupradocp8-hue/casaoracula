@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { ChevronDown, ChevronRight, PanelLeftClose, PanelLeft } from 'lucide-react';
-import {
+import { 
+  ChevronDown, ChevronRight, PanelLeftClose, PanelLeft,
   GraduationCap, BookOpen, Compass, DoorOpen, FolderTree, Castle, Flower2, Moon, Target, Zap,
   Headphones, PenLine, FileText, LayoutGrid, ImageIcon as GalleryIcon,
   Flame, MessageSquare, Users, Sparkles,
-  UserCheck, TrendingUp, Gift,
+  UserCheck, TrendingUp, Gift, RefreshCw, Map as MapIcon,
   Settings, CreditCard, Wrench, ClipboardList, Bot, Brain, Layers, Library, Megaphone, FolderOpen, Video, Cog,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
