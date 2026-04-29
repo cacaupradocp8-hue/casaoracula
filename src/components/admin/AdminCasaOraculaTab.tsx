@@ -652,7 +652,9 @@ export default function AdminCasaOraculaTab() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {automationRules.map((rule) => {
+                    {automationRules
+                      .filter(r => (currentPortalFilter === 'GLOBAL' && (!r.portal || r.portal === 'GLOBAL')) || r.portal === currentPortalFilter)
+                      .map((rule) => {
                       const perf = performanceMetrics.find(p => p.action_type === rule.action_type && p.channel === rule.channel);
                       const isEligible = perf && perf.success_rate >= rule.min_success_rate;
                       
