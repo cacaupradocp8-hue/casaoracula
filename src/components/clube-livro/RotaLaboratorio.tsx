@@ -30,19 +30,19 @@ export function RotaLaboratorio({ estacaoId, livroTitulo }: RotaLaboratorioProps
       className="space-y-3"
     >
       <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground/60 font-medium text-center">
-        Sala de Treinamento
+        Aplicação Prática
       </p>
 
-      <Card className="border-primary/15 bg-gradient-to-br from-primary/5 via-card/40 to-card/20 backdrop-blur overflow-hidden">
+      <Card className="border-gold/15 bg-gradient-to-br from-gold/5 via-card/40 to-card/20 backdrop-blur overflow-hidden">
         <CardContent className="p-5 space-y-4">
           {/* Header */}
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
-              <FlaskConical className="w-4 h-4 text-primary" />
+            <div className="w-10 h-10 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+              <FlaskConical className="w-4 h-4 text-gold" />
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="font-display text-base text-foreground leading-tight">
-                Treino Oracular
+                Laboratório 80/20
               </h3>
               <p className="text-[11px] text-muted-foreground/60 mt-0.5">
                 Simulações, contos e práticas guiadas.
