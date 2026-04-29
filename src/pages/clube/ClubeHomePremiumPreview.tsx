@@ -96,7 +96,7 @@ const ResumeJourney = () => (
           </div>
         </div>
 
-        <Button className="w-full bg-white text-[#050B18] hover:bg-white/90 h-16 rounded-2xl font-bold text-base tracking-tight shadow-[0_20px_40px_rgba(255,255,255,0.1)] transition-all active:scale-[0.98]">
+        <Button className="w-full bg-white text-[#020617] hover:bg-slate-100 h-16 rounded-2xl font-bold text-base tracking-tight shadow-lg transition-all active:scale-[0.98]">
           Retomar Jornada Agora
         </Button>
       </PremiumCard>
