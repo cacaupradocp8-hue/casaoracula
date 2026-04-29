@@ -157,6 +157,39 @@ export type Database = {
           },
         ]
       }
+      admin_automation_rules: {
+        Row: {
+          action_type: string
+          channel: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          min_success_rate: number
+          risk_type: string
+          updated_at: string | null
+        }
+        Insert: {
+          action_type: string
+          channel: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          min_success_rate?: number
+          risk_type: string
+          updated_at?: string | null
+        }
+        Update: {
+          action_type?: string
+          channel?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          min_success_rate?: number
+          risk_type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       agente_conversas: {
         Row: {
           agente_id: string
