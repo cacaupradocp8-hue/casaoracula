@@ -1043,6 +1043,108 @@ export type Database = {
         }
         Relationships: []
       }
+      automation_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string | null
+          id: string
+          is_resolved: boolean | null
+          message: string
+          metadata: Json | null
+          rule_id: string | null
+          severity: string
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string | null
+          id?: string
+          is_resolved?: boolean | null
+          message: string
+          metadata?: Json | null
+          rule_id?: string | null
+          severity: string
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string | null
+          id?: string
+          is_resolved?: boolean | null
+          message?: string
+          metadata?: Json | null
+          rule_id?: string | null
+          severity?: string
+        }
+        Relationships: []
+      }
+      automation_execution_logs: {
+        Row: {
+          channel: string
+          error_message: string | null
+          id: string
+          response_time_ms: number | null
+          rule_id: string
+          status: string
+          triggered_at: string | null
+          user_id: string
+        }
+        Insert: {
+          channel: string
+          error_message?: string | null
+          id?: string
+          response_time_ms?: number | null
+          rule_id: string
+          status: string
+          triggered_at?: string | null
+          user_id: string
+        }
+        Update: {
+          channel?: string
+          error_message?: string | null
+          id?: string
+          response_time_ms?: number | null
+          rule_id?: string
+          status?: string
+          triggered_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      automation_rules: {
+        Row: {
+          action_type: string
+          channel: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          last_performance_check: string | null
+          paused_until: string | null
+          rule_type: string
+          success_threshold: number | null
+        }
+        Insert: {
+          action_type: string
+          channel: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_performance_check?: string | null
+          paused_until?: string | null
+          rule_type: string
+          success_threshold?: number | null
+        }
+        Update: {
+          action_type?: string
+          channel?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_performance_check?: string | null
+          paused_until?: string | null
+          rule_type?: string
+          success_threshold?: number | null
+        }
+        Relationships: []
+      }
       automation_settings: {
         Row: {
           id: string
