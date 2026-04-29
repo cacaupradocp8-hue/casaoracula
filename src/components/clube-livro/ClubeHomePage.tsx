@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, BookOpen, Loader2, MapPin, Calendar, ExternalLink, ListOrdered } from 'lucide-react';
+import { ArrowRight, BookOpen, Loader2, MapPin, Calendar, ExternalLink, ListOrdered, Quote, Zap, Sparkles } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
@@ -97,18 +97,22 @@ export function ClubeHomePage() {
               <CardContent className="p-6 space-y-5">
                 {/* Book info */}
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-16 rounded bg-primary/10 flex items-center justify-center shrink-0">
-                    <BookOpen className="w-5 h-5 text-primary/60" />
+                  <div className="w-16 h-20 rounded bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20 overflow-hidden shadow-lg">
+                    {estacaoAtual.livro_capa_url ? (
+                      <img src={estacaoAtual.livro_capa_url} alt={estacaoAtual.livro_titulo} className="w-full h-full object-cover" />
+                    ) : (
+                      <BookOpen className="w-6 h-6 text-primary/60" />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-muted-foreground/50 uppercase tracking-wider mb-0.5">
+                    <p className="text-[10px] text-muted-foreground/50 uppercase tracking-widest mb-1">
                       Estação {estacaoAtual.numero}
                     </p>
-                    <h2 className="font-display text-lg text-foreground leading-tight truncate">
+                    <h2 className="font-serif text-xl text-foreground leading-tight">
                       {estacaoAtual.livro_titulo}
                     </h2>
                     {estacaoAtual.livro_autor && (
-                      <p className="text-xs text-muted-foreground/40 mt-0.5">{estacaoAtual.livro_autor}</p>
+                      <p className="text-xs text-muted-foreground/60 mt-1 font-medium italic">{estacaoAtual.livro_autor}</p>
                     )}
                   </div>
                 </div>
@@ -178,7 +182,7 @@ export function ClubeHomePage() {
               isConcluindo={concluirPonto.isPending}
             />
 
-            {/* Passo Ativo em Destaque (Estilo Netflix) */}
+            {/* Passo Ativo em Destaque (Sincronizado com Admin) */}
             {pontoAtual && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.98 }}
@@ -191,27 +195,42 @@ export function ClubeHomePage() {
                      <Badge variant="outline" className="text-[8px] opacity-40 uppercase tracking-tighter">Tipo: {pontoAtual.ref_tipo}</Badge>
                    )}
                 </div>
-                <Card className="border-gold/30 bg-gold/5 shadow-[0_0_30px_rgba(201,169,110,0.05)]">
+                <Card className="border-gold/30 bg-gold/5 shadow-[0_0_30px_rgba(201,169,110,0.05)] overflow-hidden">
+                   {pontoAtual.image_url && (
+                     <div className="w-full aspect-video border-b border-gold/10 overflow-hidden">
+                       <img src={pontoAtual.image_url} alt={pontoAtual.nome} className="w-full h-full object-cover" />
+                     </div>
+                   )}
                    <CardContent className="p-6 space-y-4">
                       <div className="flex items-start gap-4">
                          <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-2xl border border-gold/20">
                             {pontoAtual.icone}
                          </div>
                          <div className="flex-1">
-                            <h4 className="text-xl font-serif text-foreground">{pontoAtual.nome}</h4>
-                            <p className="text-xs text-muted-foreground">{pontoAtual.subtitulo || 'Atividade da jornada'}</p>
+                            <h4 className="text-xl font-serif text-foreground leading-tight">{pontoAtual.nome}</h4>
+                            <p className="text-xs text-muted-foreground italic mt-0.5">{pontoAtual.subtitulo || 'Atividade da jornada'}</p>
                          </div>
                       </div>
 
-                      {pontoAtual.conteudo_inline?.texto && (
-                        <div className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line border-l-2 border-primary/20 pl-4 py-1 italic">
-                           {pontoAtual.conteudo_inline.texto}
+                      {pontoAtual.frase_guia && (
+                        <div className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line border-l-2 border-primary/20 pl-4 py-1 italic bg-background/20 rounded-r-lg">
+                           <Quote className="w-3 h-3 text-gold/40 mb-1" />
+                           {pontoAtual.frase_guia}
+                        </div>
+                      )}
+
+                      {/* Cartografia Sync */}
+                      {(pontoAtual.porta || pontoAtual.campo || pontoAtual.torre) && (
+                        <div className="flex flex-wrap gap-2 pt-2">
+                           {pontoAtual.porta && <Badge variant="outline" className="text-[9px] bg-background/40 border-gold/20 text-gold/60">{pontoAtual.porta}</Badge>}
+                           {pontoAtual.campo && <Badge variant="outline" className="text-[9px] bg-background/40 border-primary/20 text-primary/60">{pontoAtual.campo}</Badge>}
+                           {pontoAtual.torre && <Badge variant="outline" className="text-[9px] bg-background/40 border-emerald-500/20 text-emerald-500/60">{pontoAtual.torre}</Badge>}
                         </div>
                       )}
 
                       <Button 
                         variant="gold" 
-                        className="w-full gap-2 font-bold h-12"
+                        className="w-full gap-2 font-bold h-12 mt-2"
                         onClick={() => navigate(pontoAtual.rota)}
                       >
                          Iniciar Agora

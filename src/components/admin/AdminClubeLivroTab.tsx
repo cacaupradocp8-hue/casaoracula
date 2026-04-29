@@ -31,6 +31,7 @@ import { LabConfigManager } from './clube-livro/LabConfigManager';
 import { RotaDoLivroEditor } from './clube-livro/RotaDoLivroEditor';
 import { AulaBlocosEditor, type AulaBloco } from './clube-livro/AulaBlocosEditor';
 import { AudioUpload } from './AudioUpload';
+import { ImageUpload } from './ImageUpload';
 import { CALENDARIO_ANUAL, SEMANAS_PADRAO } from '@/constants/clubeLivroCalendario';
 
 
@@ -152,6 +153,7 @@ export function AdminClubeLivroTab() {
         subtitulo: ciclo.subtitulo,
         autor_livro: ciclo.autor_livro,
         capa_url: ciclo.capa_url,
+        banner_url: (ciclo as any).banner_url || null,
         infografico_url: (ciclo as any).infografico_url || null,
         por_que_este_livro: ciclo.por_que_este_livro,
         como_ler: ciclo.como_ler,
@@ -166,7 +168,7 @@ export function AdminClubeLivroTab() {
         como_ler_slides: (ciclo as any).como_ler_slides || [],
         como_ler_audio_url: (ciclo as any).como_ler_audio_url || null,
       };
-      
+
       if (ciclo.id) {
         const { error } = await supabase
           .from('clube_livro_ciclos')
@@ -1481,6 +1483,7 @@ function CicloDialog({
     subtitulo: '',
     autor_livro: '',
     capa_url: '',
+    banner_url: '',
     infografico_url: '',
     por_que_este_livro: '',
     como_ler: '',
@@ -1506,6 +1509,7 @@ function CicloDialog({
         subtitulo: ciclo.subtitulo || '',
         autor_livro: ciclo.autor_livro || '',
         capa_url: ciclo.capa_url || '',
+        banner_url: (ciclo as any).banner_url || '',
         infografico_url: (ciclo as any).infografico_url || '',
         por_que_este_livro: ciclo.por_que_este_livro || '',
         como_ler: ciclo.como_ler || '',
@@ -1528,6 +1532,7 @@ function CicloDialog({
         subtitulo: '',
         autor_livro: '',
         capa_url: '',
+        banner_url: '',
         infografico_url: '',
         por_que_este_livro: '',
         como_ler: '',
@@ -1602,12 +1607,20 @@ function CicloDialog({
             />
           </div>
 
-          <div className="space-y-2">
-            <Label>URL da Capa do Livro</Label>
-            <Input
-              value={form.capa_url}
-              onChange={(e) => setForm({ ...form, capa_url: e.target.value })}
-              placeholder="https://..."
+          <div className="grid grid-cols-2 gap-4">
+            <ImageUpload 
+              value={form.capa_url} 
+              onChange={(url) => setForm({ ...form, capa_url: url })}
+              label="Capa do Livro"
+              folder="clube-assets"
+              aspectRatio="square"
+            />
+            <ImageUpload 
+              value={form.banner_url} 
+              onChange={(url) => setForm({ ...form, banner_url: url })}
+              label="Banner da Estação"
+              folder="clube-assets"
+              aspectRatio="banner"
             />
           </div>
 

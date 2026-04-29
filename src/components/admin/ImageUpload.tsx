@@ -89,7 +89,8 @@ export function ImageUpload({
     if (path.startsWith('http://') || path.startsWith('https://')) {
       return path;
     }
-    const { data } = supabase.storage.from('content-images').getPublicUrl(path);
+    const bucket = folder === 'clube-assets' ? 'clube-assets' : 'content-images';
+    const { data } = supabase.storage.from(bucket).getPublicUrl(path);
     return data.publicUrl;
   };
 
@@ -114,8 +115,9 @@ export function ImageUpload({
       const fileExt = file.name.split('.').pop();
       const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
+      const bucket = folder === 'clube-assets' ? 'clube-assets' : 'content-images';
       const { data, error } = await supabase.storage
-        .from('content-images')
+        .from(bucket)
         .upload(fileName, file, {
           cacheControl: '3600',
           upsert: false,
@@ -125,7 +127,7 @@ export function ImageUpload({
 
       // Get public URL
       const { data: urlData } = supabase.storage
-        .from('content-images')
+        .from(bucket)
         .getPublicUrl(data.path);
 
       onChange(urlData.publicUrl);

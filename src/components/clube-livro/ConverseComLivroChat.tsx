@@ -18,6 +18,7 @@ import {
   Send, Loader2, BookOpen, Sparkles, X,
   MessageCircle, ChevronDown, ChevronUp, Quote,
 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { useStudentTracking } from '@/hooks/useStudentTracking';
 
 // ============================================
@@ -316,21 +317,39 @@ function ChatContent({
   return (
     <>
       {/* Book Context Header */}
-      <div className="px-4 py-2.5 bg-gold/5 border-b border-gold/10">
-        <div className="flex items-center gap-2">
-          <BookOpen className="w-3.5 h-3.5 text-gold/70 flex-shrink-0" />
-          <div className="min-w-0">
-            <p className="text-xs font-medium text-foreground truncate">{bookContext.bookTitle}</p>
-            <p className="text-[10px] text-muted-foreground truncate">
-              {[bookContext.bookAuthor, bookContext.cycleTheme, bookContext.stationName].filter(Boolean).join(' • ')}
+      <div className="px-4 py-3 bg-gold/5 border-b border-gold/10">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-14 rounded bg-gold/10 border border-gold/20 overflow-hidden shadow-sm flex-shrink-0">
+             {(bookContext as any).capaUrl ? (
+               <img src={(bookContext as any).capaUrl} alt={bookContext.bookTitle} className="w-full h-full object-cover" />
+             ) : (
+               <div className="w-full h-full flex items-center justify-center">
+                 <BookOpen className="w-4 h-4 text-gold/40" />
+               </div>
+             )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-serif text-foreground leading-tight">{bookContext.bookTitle}</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5 truncate italic">
+              {bookContext.bookAuthor || 'Autora desconhecida'}
             </p>
+            <div className="flex items-center gap-1.5 mt-1.5">
+               <Badge variant="outline" className="text-[8px] h-4 py-0 px-1 border-gold/30 bg-gold/5 text-gold/70">
+                 {bookContext.stationName || 'Estação'}
+               </Badge>
+               {bookContext.cycleTheme && (
+                 <Badge variant="outline" className="text-[8px] h-4 py-0 px-1 border-primary/20 bg-primary/5 text-primary/60">
+                   {bookContext.cycleTheme}
+                 </Badge>
+               )}
+            </div>
           </div>
         </div>
         {bookContext.excerptText && (
-          <div className="mt-2 p-2 rounded-lg bg-background/60 border border-border/30">
+          <div className="mt-3 p-2.5 rounded-lg bg-background/60 border border-border/30 shadow-inner">
             <div className="flex items-start gap-1.5">
               <Quote className="w-3 h-3 text-gold/50 flex-shrink-0 mt-0.5" />
-              <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-3 italic">
+              <p className="text-[11px] text-muted-foreground leading-relaxed italic line-clamp-3">
                 {bookContext.excerptText}
               </p>
             </div>
