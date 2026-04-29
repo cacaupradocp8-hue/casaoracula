@@ -104,6 +104,55 @@ export default function AdminFounderDashboardTab() {
     }
   });
 
+  const getAlerts = () => {
+    if (!metrics) return [];
+    const alerts = [];
+
+    // 1. Custo IA / Receita > 15%
+    if (metrics.ia_revenue_pct > 15) {
+      alerts.push({
+        severity: 'high',
+        title: 'Custo de IA Elevado',
+        cause: 'Consumo de modelos premium acima do projetado ou baixa conversão de receita.',
+        action: 'Revisar limites de tokens por usuário ou migrar tasks para modelos mais leves.'
+      });
+    }
+
+    // 2. Churn (Mock logic for now since we have static churn_rate in context)
+    if (metrics.churn_rate > 5) {
+      alerts.push({
+        severity: 'medium',
+        title: 'Alerta de Retenção',
+        cause: 'Aumento na taxa de cancelamento no período selecionado.',
+        action: 'Executar campanha de win-back ou analisar feedbacks de saída.'
+      });
+    }
+
+    // 3. Lucro Líquido caindo (Simplistic comparison for current vs previous logic)
+    if (metrics.net_margin_pct < 20) {
+      alerts.push({
+        severity: 'high',
+        title: 'Margem em Risco',
+        cause: 'Custos operacionais subindo mais rápido que a receita.',
+        action: 'Auditar custos fixos (infra/time) e pausar campanhas de ads com ROI negativo.'
+      });
+    }
+
+    // 4. Renovações
+    if (metrics.revenue_renewals < (metrics.total_revenue * 0.2)) {
+      alerts.push({
+        severity: 'medium',
+        title: 'Queda em Renovações',
+        cause: 'Falhas em gateways de pagamento ou fadiga de produto.',
+        action: 'Verificar logs de erro do Stripe ou disparar régua de recuperação.'
+      });
+    }
+
+    return alerts;
+  };
+
+  const alerts = getAlerts();
+
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -135,6 +184,41 @@ export default function AdminFounderDashboardTab() {
 
   return (
     <div className="space-y-8 pb-20 animate-in fade-in duration-500">
+      {/* Alerts Section */}
+      {alerts.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-in slide-in-from-top duration-500">
+          {alerts.map((alert, i) => (
+            <Card key={i} className={`border-none shadow-sm ${
+              alert.severity === 'high' ? 'bg-red-500/10' : 'bg-amber-500/10'
+            }`}>
+              <CardContent className="p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Activity className={`w-4 h-4 ${
+                      alert.severity === 'high' ? 'text-red-500' : 'text-amber-500'
+                    }`} />
+                    <span className="text-xs font-bold uppercase tracking-wider">{alert.title}</span>
+                  </div>
+                  <Badge variant="outline" className={`${
+                    alert.severity === 'high' ? 'border-red-500/50 text-red-500' : 'border-amber-500/50 text-amber-500'
+                  } bg-transparent`}>
+                    {alert.severity === 'high' ? 'Alta' : 'Média'}
+                  </Badge>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[10px] text-muted-foreground uppercase font-bold">Causa Provável</p>
+                  <p className="text-xs leading-relaxed">{alert.cause}</p>
+                </div>
+                <div className="pt-2 border-t border-current/10">
+                  <p className="text-[10px] text-muted-foreground uppercase font-bold">Ação Sugerida</p>
+                  <p className="text-xs font-medium text-foreground">{alert.action}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">
           <h2 className="text-3xl font-serif text-foreground tracking-tight">Founder Dashboard</h2>
