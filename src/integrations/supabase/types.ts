@@ -22109,6 +22109,101 @@ export type Database = {
           },
         ]
       }
+      upsell_opportunities: {
+        Row: {
+          churn_risk: number | null
+          converted_at: string | null
+          created_at: string | null
+          engagement_score: number | null
+          id: string
+          last_action_at: string | null
+          reason: string | null
+          rule_id: string | null
+          segment_from: string
+          segment_to: string
+          status: Database["public"]["Enums"]["upsell_status"] | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          churn_risk?: number | null
+          converted_at?: string | null
+          created_at?: string | null
+          engagement_score?: number | null
+          id?: string
+          last_action_at?: string | null
+          reason?: string | null
+          rule_id?: string | null
+          segment_from: string
+          segment_to: string
+          status?: Database["public"]["Enums"]["upsell_status"] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          churn_risk?: number | null
+          converted_at?: string | null
+          created_at?: string | null
+          engagement_score?: number | null
+          id?: string
+          last_action_at?: string | null
+          reason?: string | null
+          rule_id?: string | null
+          segment_from?: string
+          segment_to?: string
+          status?: Database["public"]["Enums"]["upsell_status"] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "upsell_opportunities_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "upsell_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      upsell_rules: {
+        Row: {
+          created_at: string | null
+          estimated_value_increase: number | null
+          id: string
+          is_active: boolean | null
+          max_churn_risk: number | null
+          min_engagement_score: number | null
+          min_recurrent_use_days: number | null
+          segment_from: string
+          segment_to: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          estimated_value_increase?: number | null
+          id?: string
+          is_active?: boolean | null
+          max_churn_risk?: number | null
+          min_engagement_score?: number | null
+          min_recurrent_use_days?: number | null
+          segment_from: string
+          segment_to: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          estimated_value_increase?: number | null
+          id?: string
+          is_active?: boolean | null
+          max_churn_risk?: number | null
+          min_engagement_score?: number | null
+          min_recurrent_use_days?: number | null
+          segment_from?: string
+          segment_to?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       user_aula_progress: {
         Row: {
           aula_id: string
@@ -22496,6 +22591,17 @@ export type Database = {
         }
         Relationships: []
       }
+      upsell_stats: {
+        Row: {
+          conversion_rate: number | null
+          conversions: number | null
+          segment_from: string | null
+          segment_to: string | null
+          total_opportunities: number | null
+          total_revenue: number | null
+        }
+        Relationships: []
+      }
       v_canteiro_admin_stats: {
         Row: {
           publicacoes_aprovadas: number | null
@@ -22862,6 +22968,7 @@ export type Database = {
         Args: { _user_id: string }
         Returns: undefined
       }
+      refresh_upsell_opportunities: { Args: never; Returns: undefined }
       update_cidadela_from_session: {
         Args: {
           _arquetipo?: string
@@ -23026,6 +23133,7 @@ export type Database = {
       studio_episode_visibility: "exclusive" | "public" | "public_full"
       tipo_modulo: "jornada" | "curso" | "circulo" | "travessia" | "biblioteca"
       track_type: "audio" | "podcast"
+      upsell_status: "pending" | "sent" | "converted" | "ignored"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -23297,6 +23405,7 @@ export const Constants = {
       studio_episode_visibility: ["exclusive", "public", "public_full"],
       tipo_modulo: ["jornada", "curso", "circulo", "travessia", "biblioteca"],
       track_type: ["audio", "podcast"],
+      upsell_status: ["pending", "sent", "converted", "ignored"],
     },
   },
 } as const
