@@ -334,19 +334,23 @@ export function UpsellMachinePanel() {
                   <Phone className="h-5 w-5 text-primary" />
                   Humano
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">+24% conversão vs Email</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Atribuição: {revenueIntelligence?.find(r => r.channel_used === 'Humano')?.acceptance_rate || 0}% aceite
+                </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="py-4">
-                <CardTitle className="text-xs font-medium text-muted-foreground uppercase">Melhor Timing</CardTitle>
+                <CardTitle className="text-xs font-medium text-muted-foreground uppercase">Smart Timing</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-xl font-bold flex items-center gap-2">
                   <Clock className="h-5 w-5 text-primary" />
-                  D+15 Uso
+                  {revenueIntelligence?.reduce((acc, curr) => acc + (curr.avg_days_to_convert || 0), 0) > 0 
+                    ? `D+${Math.round(revenueIntelligence.reduce((acc, curr) => acc + (curr.avg_days_to_convert || 0), 0) / revenueIntelligence.length)} Conversão`
+                    : 'Analisando...'}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Após pico de engajamento</p>
+                <p className="text-xs text-muted-foreground mt-1">Dias médios para aceite</p>
               </CardContent>
             </Card>
             <Card>
@@ -356,44 +360,51 @@ export function UpsellMachinePanel() {
               <CardContent>
                 <div className="text-xl font-bold flex items-center gap-2 text-amber-600">
                   <UserCheck className="h-5 w-5" />
-                  {opportunities?.filter(o => o.refusal_count > 0).length || 0} Usuárias
+                  {revenueIntelligence?.reduce((acc, curr) => acc + (Number(curr.fatigue_count) || 0), 0) || 0} Usuárias
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Em janela de resfriamento</p>
+                <p className="text-xs text-muted-foreground mt-1">Pausadas (Regra 30 dias)</p>
               </CardContent>
             </Card>
             <Card className="bg-primary/5">
               <CardHeader className="py-4">
-                <CardTitle className="text-xs font-medium text-muted-foreground uppercase">Sugestões Enviadas</CardTitle>
+                <CardTitle className="text-xs font-medium text-muted-foreground uppercase">Estimativa LTV ↑</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-xl font-bold">
-                  {revenueIntelligence?.reduce((acc, curr) => acc + curr.total_sent, 0) || 0}
+                <div className="text-xl font-bold text-primary">
+                  R$ {revenueIntelligence?.reduce((acc, curr) => acc + (Number(curr.revenue_generated) || 0), 0).toLocaleString('pt-BR')}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Total ciclo atual</p>
+                <p className="text-xs text-muted-foreground mt-1">Incremento gerado</p>
               </CardContent>
             </Card>
           </div>
 
           <Card>
             <CardHeader>
-              <CardTitle>Performance por Canal e Oferta</CardTitle>
-              <CardDescription>Dados consolidados de conversão e receita estimada</CardDescription>
+              <CardTitle>Revenue Intelligence por Segmento</CardTitle>
+              <CardDescription>Análise de atribuição Last Touch e performance financeira</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Oferta</TableHead>
-                    <TableHead>Canal</TableHead>
-                    <TableHead>Aceite (%)</TableHead>
+                    <TableHead>Oferta (Ranking)</TableHead>
+                    <TableHead>Último Canal</TableHead>
+                    <TableHead>Taxa de Aceite</TableHead>
                     <TableHead>Volume</TableHead>
-                    <TableHead className="text-right">Receita Est.</TableHead>
+                    <TableHead className="text-right">Receita Gerada</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {revenueIntelligence?.map((ri, i) => (
                     <TableRow key={i}>
-                      <TableCell className="font-medium">{ri.segment_from} → {ri.segment_to}</TableCell>
+                      <TableCell className="font-medium">
+                        <div className="flex flex-col">
+                          <span>{ri.segment_from} → {ri.segment_to}</span>
+                          <span className="text-[10px] text-muted-foreground italic">
+                            {ri.segment_from === 'Clube' ? 'Prioridade Máxima' : 'Upsell Tecnológico'}
+                          </span>
+                        </div>
+                      </TableCell>
                       <TableCell>
                         <Badge variant="outline" className="font-normal capitalize">{ri.channel_used || 'N/A'}</Badge>
                       </TableCell>
@@ -405,7 +416,7 @@ export function UpsellMachinePanel() {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>{ri.total_sent} envios</TableCell>
+                      <TableCell>{ri.total_sent} ofertas</TableCell>
                       <TableCell className="text-right font-bold text-green-600">
                         R$ {Number(ri.revenue_generated || 0).toLocaleString('pt-BR')}
                       </TableCell>
