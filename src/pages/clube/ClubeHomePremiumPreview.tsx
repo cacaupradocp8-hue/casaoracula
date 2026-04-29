@@ -215,7 +215,7 @@ const WeeklyDive = () => (
           { title: 'Ritual Prático', desc: 'Ativação corporal e simbólica.', icon: Sparkles },
           { title: 'Pergunta Oracular', desc: 'O enigma para seu oráculo pessoal.', icon: Quote },
         ].map((item, i) => (
-          <div key={i} className="p-7 bg-[#080C18]/40 border border-white/5 rounded-[2rem] flex justify-between items-center group hover:bg-white/[0.04] transition-all cursor-pointer">
+          <div key={i} className="p-7 bg-[#0A1229] border border-white/[0.08] rounded-[2rem] flex justify-between items-center group hover:bg-[#111827] transition-all cursor-pointer">
             <div className="flex items-center gap-5">
               <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center group-hover:border-gold/30 transition-colors">
                 <item.icon className="w-5 h-5 text-white/20 group-hover:text-gold/60" />
