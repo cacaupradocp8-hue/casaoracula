@@ -81,22 +81,22 @@ const ResumeJourney = () => (
           </div>
         </div>
 
-        <div className="space-y-3 mb-10">
-          <div className="flex justify-between items-center text-[10px] tracking-widest text-white/30 uppercase font-bold">
-            <span>Seu Progresso no Ciclo</span>
-            <span className="text-white/60">65%</span>
+        <div className="space-y-4 mb-10">
+          <div className="flex justify-between items-center text-[11px] tracking-widest text-white/50 uppercase font-bold">
+            <span>Sua Ascensão neste Ciclo</span>
+            <span className="text-white/80">65%</span>
           </div>
-          <div className="h-1.5 w-full bg-white/[0.03] rounded-full overflow-hidden border border-white/[0.05]">
+          <div className="h-2 w-full bg-white/[0.04] rounded-full overflow-hidden border border-white/[0.08]">
             <motion.div 
               initial={{ width: 0 }}
               animate={{ width: '65%' }}
-              transition={{ duration: 1.5, ease: "circOut" }}
-              className="h-full bg-gradient-to-r from-gold/20 via-gold/40 to-gold/20 rounded-full" 
+              transition={{ duration: 1.8, ease: [0.34, 1.56, 0.64, 1] }}
+              className="h-full bg-gradient-to-r from-gold/30 via-gold/60 to-gold/30 rounded-full shadow-[0_0_15px_rgba(201,169,110,0.2)]" 
             />
           </div>
         </div>
 
-        <Button className="w-full bg-white text-black hover:bg-white/90 h-16 rounded-2xl font-bold text-base tracking-tight shadow-2xl transition-all active:scale-[0.98]">
+        <Button className="w-full bg-white text-[#050B18] hover:bg-white/90 h-16 rounded-2xl font-bold text-base tracking-tight shadow-[0_20px_40px_rgba(255,255,255,0.1)] transition-all active:scale-[0.98]">
           Retomar Jornada Agora
         </Button>
       </PremiumCard>
