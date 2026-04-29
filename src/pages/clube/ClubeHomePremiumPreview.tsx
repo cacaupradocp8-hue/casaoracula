@@ -16,6 +16,7 @@ import {
 export default function ClubeHomePremiumPreview() {
   const containerRef = React.useRef(null);
   const { scrollYProgress } = useScroll();
+  const roadY = useTransform(scrollYProgress, [0, 1], [0, -200]);
   
   return (
     <div className="min-h-screen bg-[#010309] text-white selection:bg-gold/20 font-sans overflow-x-hidden selection:text-white" ref={containerRef}>
@@ -37,9 +38,9 @@ export default function ClubeHomePremiumPreview() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 2 }}
-            className="max-w-6xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center"
+            className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center"
           >
-            <div className="lg:col-span-8 space-y-16">
+            <div className="lg:col-span-8 space-y-12 md:space-y-16">
               <div className="space-y-6">
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
@@ -53,7 +54,7 @@ export default function ClubeHomePremiumPreview() {
                   </span>
                 </motion.div>
                 
-                <h1 className="text-7xl md:text-[10rem] font-serif leading-[0.85] tracking-tighter mix-blend-lighten">
+                <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-serif leading-[0.85] tracking-tighter mix-blend-lighten">
                   <motion.span 
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -85,7 +86,7 @@ export default function ClubeHomePremiumPreview() {
                 
                 <div className="group relative inline-block">
                   <div className="absolute -inset-8 bg-gold/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-                  <button className="relative flex items-center gap-10 bg-transparent border-b border-white/20 pb-4 pr-12 text-white font-light tracking-[0.2em] uppercase text-xs transition-all hover:border-gold/50 group">
+                  <button className="relative flex items-center gap-10 bg-transparent border-b border-white/20 pb-4 pr-12 text-white font-light tracking-[0.2em] uppercase text-[10px] md:text-xs transition-all hover:border-gold/50 group">
                     <span className="group-hover:text-gold transition-colors">Continuar Atravessia</span>
                     <ArrowUpRight className="w-4 h-4 absolute right-0 group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform text-gold/60" />
                   </button>
@@ -114,9 +115,9 @@ export default function ClubeHomePremiumPreview() {
           </motion.div>
 
           {/* Elegant Scroll Signifier */}
-          <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6">
-            <div className="h-24 w-px bg-gradient-to-b from-transparent via-gold/30 to-transparent" />
-            <span className="text-[8px] uppercase tracking-[0.8em] text-gold/40 font-bold [writing-mode:vertical-lr]">Explorar</span>
+          <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6 opacity-30">
+            <div className="h-24 w-px bg-gradient-to-b from-transparent via-gold/50 to-transparent" />
+            <span className="text-[8px] uppercase tracking-[1em] text-gold/60 font-bold [writing-mode:vertical-lr] scale-y-[-1]">EXPLORAR</span>
           </div>
         </section>
 
@@ -125,7 +126,7 @@ export default function ClubeHomePremiumPreview() {
           <div className="max-w-7xl mx-auto px-6 relative">
             <div className="mb-64 flex flex-col items-start max-w-2xl">
               <span className="text-[9px] uppercase tracking-[0.6em] text-gold/40 font-bold mb-6">Manifesto Visual</span>
-              <h2 className="text-5xl md:text-7xl font-serif leading-[1.1] text-white/90">
+              <h2 className="text-5xl md:text-8xl font-serif leading-[1.1] text-white/90">
                 A Estrada é uma <br />
                 <span className="italic">obra inacabada.</span>
               </h2>
@@ -136,11 +137,11 @@ export default function ClubeHomePremiumPreview() {
               <div className="absolute left-[5%] md:left-[50%] top-0 bottom-0 w-px bg-white/[0.03]">
                 <motion.div 
                   style={{ scaleY: scrollYProgress, transformOrigin: "top" }}
-                  className="absolute inset-0 bg-gradient-to-b from-gold/40 via-gold/20 to-transparent" 
+                  className="absolute inset-0 bg-gradient-to-b from-gold/40 via-gold/20 to-transparent shadow-[0_0_15px_rgba(201,169,110,0.3)]" 
                 />
               </div>
 
-              <div className="space-y-[60vh] relative z-10">
+              <motion.div style={{ y: roadY }} className="space-y-[60vh] relative z-10">
                 {[
                   { id: 1, type: 'CAPÍTULO I', title: 'O Chamado Selvagem', status: 'completed', align: 'right', desc: 'O despertar da voz interior que clama por profundidade.' },
                   { id: 2, type: 'CAPÍTULO II', title: 'A Bússola Interna', status: 'current', align: 'left', active: true, desc: 'Navegando pelas águas da intuição feminina consciente.' },
@@ -160,12 +161,12 @@ export default function ClubeHomePremiumPreview() {
                           <span className={`text-[10px] font-bold tracking-[0.5em] uppercase transition-colors duration-1000 ${step.status === 'current' ? 'text-gold' : 'text-white/20'}`}>
                             {step.type}
                           </span>
-                          <h3 className={`text-4xl md:text-6xl font-serif tracking-tight leading-none ${step.status === 'locked' ? 'text-white/10' : 'text-white'}`}>
+                          <h3 className={`text-4xl md:text-7xl font-serif tracking-tight leading-none ${step.status === 'locked' ? 'text-white/10' : 'text-white'}`}>
                             {step.title}
                           </h3>
                         </div>
                         
-                        <p className={`text-sm font-light leading-relaxed max-w-xs ${step.status === 'locked' ? 'text-white/5' : 'text-white/30'} ${step.align === 'right' ? '' : 'ml-auto'}`}>
+                        <p className={`text-sm md:text-base font-light leading-relaxed max-w-xs ${step.status === 'locked' ? 'text-white/5' : 'text-white/30'} ${step.align === 'right' ? '' : 'ml-auto'}`}>
                           {step.desc}
                         </p>
                         
@@ -182,11 +183,11 @@ export default function ClubeHomePremiumPreview() {
                     </motion.div>
 
                     {/* Minimalist Marker */}
-                    <div className="absolute left-[5%] md:left-[50%] -translate-x-1/2 mt-4">
+                    <div className="absolute left-[5%] md:left-[50%] -translate-x-1/2 mt-4 md:mt-6">
                       <div className={`
                         relative transition-all duration-1000
                         ${step.status === 'current' ? 
-                          'w-6 h-6 border border-gold/40 flex items-center justify-center rotate-45' : 
+                          'w-6 h-6 md:w-8 md:h-8 border border-gold/40 flex items-center justify-center rotate-45' : 
                           'w-2 h-2 bg-white/10'}
                       `}>
                         {step.status === 'current' && (
@@ -196,7 +197,7 @@ export default function ClubeHomePremiumPreview() {
                     </div>
                   </div>
                 ))}
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -205,22 +206,22 @@ export default function ClubeHomePremiumPreview() {
         <section className="py-64 px-6 border-t border-white/[0.02]">
           <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-32">
             <div className="lg:w-1/2 space-y-24">
-              <div className="space-y-6">
+              <div className="space-y-6 text-center lg:text-left">
                 <span className="text-[9px] uppercase tracking-[0.8em] text-white/20 font-bold">Consistência</span>
-                <h2 className="text-5xl md:text-7xl font-serif leading-[1.1]">Sua mente em <br /><span className="italic text-white/40">expansão.</span></h2>
+                <h2 className="text-6xl md:text-8xl font-serif leading-[1.1]">Sua mente em <br /><span className="italic text-white/40">expansão.</span></h2>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
                 {[
                   { label: "Maturidade", value: "72%", sub: "Capacidade de processamento emocional" },
                   { label: "Domínio", value: "12/40", sub: "Arquétipos integrados na psique" }
                 ].map((stat, i) => (
-                  <div key={i} className="space-y-6 group">
+                  <div key={i} className="space-y-6 group text-center lg:text-left">
                     <div className="flex flex-col gap-1">
-                      <span className="text-5xl font-serif text-white/80 group-hover:text-gold transition-colors duration-700">{stat.value}</span>
+                      <span className="text-6xl md:text-7xl font-serif text-white/80 group-hover:text-gold transition-colors duration-700">{stat.value}</span>
                       <span className="text-[10px] uppercase tracking-[0.4em] text-white/20 font-bold">{stat.label}</span>
                     </div>
-                    <p className="text-xs text-white/30 font-light leading-relaxed max-w-[180px]">{stat.sub}</p>
+                    <p className="text-xs text-white/30 font-light leading-relaxed max-w-[200px] mx-auto lg:mx-0">{stat.sub}</p>
                     <div className="h-px w-full bg-white/[0.05] relative overflow-hidden">
                       <motion.div 
                         initial={{ x: "-100%" }}
@@ -234,9 +235,9 @@ export default function ClubeHomePremiumPreview() {
               </div>
             </div>
 
-            <div className="lg:w-1/2 relative aspect-[4/5] flex items-center justify-center">
+            <div className="lg:w-1/2 relative aspect-[4/5] w-full flex items-center justify-center">
               {/* The "Artifact" - Abstract representation of reward */}
-              <div className="absolute inset-0 bg-[#050a18] border border-white/[0.03] overflow-hidden">
+              <div className="absolute inset-0 bg-[#050a18] border border-white/[0.03] overflow-hidden rounded-sm">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_#0A1229_0%,_transparent_70%)] opacity-50" />
                 <div className="absolute inset-0 opacity-[0.1] mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
               </div>
@@ -244,15 +245,15 @@ export default function ClubeHomePremiumPreview() {
               <motion.div 
                 animate={{ rotate: 360 }}
                 transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-                className="relative z-10 w-64 h-64 border border-gold/10 rounded-full flex items-center justify-center"
+                className="relative z-10 w-48 h-48 md:w-64 md:h-64 border border-gold/10 rounded-full flex items-center justify-center"
               >
                 <div className="absolute inset-0 border border-gold/5 rounded-full scale-125" />
-                <Crown className="w-12 h-12 text-gold/30" strokeWidth={0.5} />
+                <Crown className="w-10 h-10 md:w-12 md:h-12 text-gold/30" strokeWidth={0.5} />
               </motion.div>
               
-              <div className="absolute bottom-16 left-16 right-16 space-y-4">
+              <div className="absolute bottom-12 left-12 md:bottom-16 md:left-16 right-12 md:right-16 space-y-4">
                 <span className="text-[8px] uppercase tracking-[0.6em] text-gold/40 font-bold">Título Honorário</span>
-                <h3 className="text-3xl font-serif text-white/90">Sacerdotisa da Noite</h3>
+                <h3 className="text-3xl md:text-4xl font-serif text-white/90">Sacerdotisa da Noite</h3>
                 <div className="h-px w-12 bg-gold/20" />
               </div>
             </div>
@@ -265,49 +266,49 @@ export default function ClubeHomePremiumPreview() {
             <div className="flex flex-col md:flex-row justify-between items-baseline gap-12 mb-32">
               <div className="space-y-4">
                 <span className="text-[9px] uppercase tracking-[1em] text-white/20 font-bold">ACERVO</span>
-                <h2 className="text-6xl md:text-8xl font-serif leading-none italic">Biblioteca <span className="not-italic">Viva</span></h2>
+                <h2 className="text-6xl md:text-9xl font-serif leading-none italic">Biblioteca <span className="not-italic">Viva</span></h2>
               </div>
               <button className="text-[10px] uppercase tracking-[0.4em] font-bold text-white/40 border-b border-white/10 pb-2 hover:text-gold hover:border-gold transition-all">
                 Explorar Profundezas
               </button>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24">
               {/* Featured Editorial Piece */}
-              <div className="lg:col-span-7 group cursor-pointer">
+              <div className="lg:col-span-7 group cursor-pointer relative">
                 <div className="relative aspect-[16/10] bg-[#050a18] border border-white/[0.03] overflow-hidden mb-8">
-                   <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-transparent to-transparent z-10" />
+                   <div className="absolute inset-0 bg-gradient-to-tr from-black/90 via-transparent to-transparent z-10" />
                    <motion.div 
                      whileHover={{ scale: 1.05 }}
                      transition={{ duration: 1.5 }}
                      className="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1518005020250-6759229547b8?auto=format&fit=crop&q=80')] bg-cover bg-center grayscale" 
                    />
-                   <div className="absolute bottom-12 left-12 z-20 space-y-4">
+                   <div className="absolute bottom-12 left-12 z-20 space-y-4 pr-12">
                       <div className="flex items-center gap-3">
                         <Zap className="w-4 h-4 text-gold/60" />
                         <span className="text-[9px] font-bold tracking-[0.4em] uppercase text-gold/60">Destaque Editorial</span>
                       </div>
-                      <h4 className="text-4xl md:text-5xl font-serif max-w-lg leading-tight">A Alquimia da Solidão Produtiva</h4>
+                      <h4 className="text-4xl md:text-6xl font-serif leading-tight">A Alquimia da Solidão Produtiva</h4>
                    </div>
                 </div>
               </div>
 
               {/* Side Grid - Editorial Blocks */}
-              <div className="lg:col-span-5 grid grid-cols-1 gap-12">
+              <div className="lg:col-span-5 grid grid-cols-1 gap-16 md:gap-20">
                 {[
                   { title: 'Ritual Prático', type: 'Prática', label: '01', desc: 'Protocolos de ativação cognitiva e emocional matutina.' },
                   { title: 'Cartas da Noite', type: 'Oráculo', label: '02', desc: 'Simbologia profunda para interpretação de sonhos e intuição.' }
                 ].map((item, i) => (
                   <div key={i} className="flex gap-10 group cursor-pointer">
-                    <span className="text-3xl font-serif text-white/10 group-hover:text-gold/20 transition-colors">{item.label}</span>
+                    <span className="text-4xl font-serif text-white/10 group-hover:text-gold/20 transition-colors duration-700">{item.label}</span>
                     <div className="space-y-4 flex-1">
                       <div className="flex items-center justify-between">
                         <span className="text-[9px] font-bold tracking-[0.3em] uppercase text-white/30">{item.type}</span>
                         <ChevronRight className="w-4 h-4 text-white/10 group-hover:text-gold transition-all" />
                       </div>
-                      <h4 className="text-2xl font-serif text-white/80 group-hover:text-white transition-colors">{item.title}</h4>
-                      <p className="text-xs text-white/30 font-light leading-relaxed">{item.desc}</p>
-                      <div className="h-px w-full bg-white/[0.03] group-hover:bg-gold/20 transition-all" />
+                      <h4 className="text-2xl md:text-3xl font-serif text-white/80 group-hover:text-white transition-colors">{item.title}</h4>
+                      <p className="text-sm text-white/30 font-light leading-relaxed max-w-sm">{item.desc}</p>
+                      <div className="h-px w-full bg-white/[0.03] group-hover:bg-gold/20 transition-all duration-700" />
                     </div>
                   </div>
                 ))}
@@ -322,17 +323,17 @@ export default function ClubeHomePremiumPreview() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 2 }}
-            className="max-w-3xl mx-auto space-y-20"
+            className="max-w-4xl mx-auto space-y-24"
           >
             <Quote className="w-12 h-12 mx-auto text-gold/10" strokeWidth={0.5} />
-            <p className="text-4xl md:text-6xl font-serif italic text-white/50 leading-[1.2] px-4 tracking-tight">
+            <p className="text-4xl md:text-7xl font-serif italic text-white/50 leading-[1.2] px-4 tracking-tight">
               "A beleza é o esplendor da verdade, e a verdade é o silêncio da inteligência."
             </p>
-            <div className="flex flex-col items-center gap-10">
+            <div className="flex flex-col items-center gap-12">
               <div className="h-24 w-px bg-gradient-to-b from-gold/40 to-transparent" />
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <span className="text-[10px] uppercase font-bold tracking-[1em] text-white/20 block">CASA ORÁCULA</span>
-                <span className="text-[8px] uppercase font-bold tracking-[0.4em] text-gold/40 block italic">Para as raras e profundas</span>
+                <span className="text-[9px] uppercase font-bold tracking-[0.5em] text-gold/40 block italic">Para as raras e profundas</span>
               </div>
             </div>
           </motion.div>
@@ -345,7 +346,7 @@ export default function ClubeHomePremiumPreview() {
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 2, duration: 1 }}
-          className="bg-[#020617]/40 backdrop-blur-3xl border border-white/[0.05] rounded-full px-10 py-5 flex items-center gap-12 md:gap-16 shadow-[0_30px_60px_rgba(0,0,0,0.6)]"
+          className="bg-[#020617]/40 backdrop-blur-3xl border border-white/[0.05] rounded-full px-10 py-5 flex items-center gap-10 md:gap-16 shadow-[0_30px_60px_rgba(0,0,0,0.6)]"
         >
           {[
             { icon: LayoutDashboard, active: true },
