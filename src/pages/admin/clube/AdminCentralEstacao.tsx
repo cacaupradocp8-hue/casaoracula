@@ -181,9 +181,9 @@ export default function AdminCentralEstacao() {
                 <Pencil className="h-3.5 w-3.5" />
                 Editar Geral
               </Button>
-              <Button size="sm" className="bg-gold hover:bg-gold/90 text-black font-bold gap-2" onClick={() => (window as any).open(`https://clube.oracular.com.br/estacao/${estacao.id}`, '_blank')}>
-                <ExternalLink className="h-3.5 w-3.5" />
-                Ver na Aluna
+              <Button size="sm" className="bg-gold hover:bg-gold/90 text-black font-bold gap-2" onClick={() => navigate('/clube')}>
+                <Eye className="h-3.5 w-3.5" />
+                Ver Visão da Aluna
               </Button>
             </div>
           </div>
