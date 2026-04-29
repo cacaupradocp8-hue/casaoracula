@@ -6174,6 +6174,7 @@ export type Database = {
           id: string
           link_gravacao: string | null
           link_reuniao: string | null
+          status: string | null
           titulo: string
           updated_at: string
         }
@@ -6185,6 +6186,7 @@ export type Database = {
           id?: string
           link_gravacao?: string | null
           link_reuniao?: string | null
+          status?: string | null
           titulo: string
           updated_at?: string
         }
@@ -6196,6 +6198,7 @@ export type Database = {
           id?: string
           link_gravacao?: string | null
           link_reuniao?: string | null
+          status?: string | null
           titulo?: string
           updated_at?: string
         }
@@ -6251,6 +6254,7 @@ export type Database = {
           descricao: string | null
           id: string
           metadados: Json | null
+          status: string | null
           titulo: string
           updated_at: string
         }
@@ -6262,6 +6266,7 @@ export type Database = {
           descricao?: string | null
           id?: string
           metadados?: Json | null
+          status?: string | null
           titulo: string
           updated_at?: string
         }
@@ -6273,6 +6278,7 @@ export type Database = {
           descricao?: string | null
           id?: string
           metadados?: Json | null
+          status?: string | null
           titulo?: string
           updated_at?: string
         }
@@ -6286,6 +6292,7 @@ export type Database = {
           descricao: string | null
           id: string
           ordem: number | null
+          status: string | null
           titulo: string
           updated_at: string
         }
@@ -6296,6 +6303,7 @@ export type Database = {
           descricao?: string | null
           id?: string
           ordem?: number | null
+          status?: string | null
           titulo: string
           updated_at?: string
         }
@@ -6306,6 +6314,7 @@ export type Database = {
           descricao?: string | null
           id?: string
           ordem?: number | null
+          status?: string | null
           titulo?: string
           updated_at?: string
         }
