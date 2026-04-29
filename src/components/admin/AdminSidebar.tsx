@@ -81,7 +81,9 @@ export const adminNavGroups: AdminNavGroup[] = [
     icon: Users,
     items: [
       { key: 'casa-oracula', label: 'Painel Mestre', icon: Flame },
+      { key: 'founder', label: 'Founder Dashboard', icon: TrendingUp },
       { key: 'upsell-machine', label: 'Máquina de Upsell', icon: Zap },
+
       { key: 'comunicacao', label: 'Comunicação', icon: MessageSquare },
       { key: 'narroterapia', label: 'Narroterapia', icon: BookOpen },
       { key: 'narroterapia-autorizacao', label: 'Autorizações', icon: Sparkles },
