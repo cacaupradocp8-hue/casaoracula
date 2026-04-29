@@ -29,7 +29,6 @@ interface StagnationInfo {
   last_ai_use: string;
   last_clube_activity: string;
   stagnation_reason: string;
-  last_any_activity: string;
   risk_score: number;
 }
 
@@ -254,8 +253,8 @@ export default function AdminCasaOraculaTab() {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-sm">
-                          {user.last_any_activity 
-                            ? format(new Date(user.last_any_activity), 'dd/MM/yyyy HH:mm', { locale: ptBR })
+                          {user.last_ai_use 
+                            ? format(new Date(user.last_ai_use), 'dd/MM/yyyy HH:mm', { locale: ptBR })
                             : 'Nunca'}
                         </TableCell>
                         <TableCell className="text-right">
