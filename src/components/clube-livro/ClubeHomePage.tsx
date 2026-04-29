@@ -97,18 +97,22 @@ export function ClubeHomePage() {
               <CardContent className="p-6 space-y-5">
                 {/* Book info */}
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-16 rounded bg-primary/10 flex items-center justify-center shrink-0">
-                    <BookOpen className="w-5 h-5 text-primary/60" />
+                  <div className="w-16 h-20 rounded bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20 overflow-hidden shadow-lg">
+                    {estacaoAtual.livro_capa_url ? (
+                      <img src={estacaoAtual.livro_capa_url} alt={estacaoAtual.livro_titulo} className="w-full h-full object-cover" />
+                    ) : (
+                      <BookOpen className="w-6 h-6 text-primary/60" />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-muted-foreground/50 uppercase tracking-wider mb-0.5">
+                    <p className="text-[10px] text-muted-foreground/50 uppercase tracking-widest mb-1">
                       Estação {estacaoAtual.numero}
                     </p>
-                    <h2 className="font-display text-lg text-foreground leading-tight truncate">
+                    <h2 className="font-serif text-xl text-foreground leading-tight">
                       {estacaoAtual.livro_titulo}
                     </h2>
                     {estacaoAtual.livro_autor && (
-                      <p className="text-xs text-muted-foreground/40 mt-0.5">{estacaoAtual.livro_autor}</p>
+                      <p className="text-xs text-muted-foreground/60 mt-1 font-medium italic">{estacaoAtual.livro_autor}</p>
                     )}
                   </div>
                 </div>
