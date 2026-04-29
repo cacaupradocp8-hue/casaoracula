@@ -154,6 +154,7 @@ export default function AdminCentralEstacao() {
                     <Badge variant={estacao.publicada ? 'default' : 'secondary'} className={cn("text-[9px] uppercase tracking-widest", estacao.publicada ? "bg-emerald-500/10 text-emerald-500" : "")}>
                       {estacao.publicada ? 'Publicado' : 'Rascunho'}
                     </Badge>
+                    {estacao.ativa && <Badge variant="outline" className="text-[9px] border-gold text-gold uppercase tracking-widest bg-gold/5">Ativa</Badge>}
                   </div>
                   <p className="text-sm text-muted-foreground mt-1 flex items-center gap-2">
                     <BookOpen className="w-3.5 h-3.5 text-gold" />
