@@ -168,7 +168,11 @@ export default function AdminClubeHub() {
             treinamentos clínicos e orquestração de inteligência narrativa.
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
+           <Button variant="outline" className="border-primary/20 hover:bg-primary/5 text-muted-foreground gap-2" onClick={() => navigate('/clube')}>
+             <Eye className="w-4 h-4" />
+             Visão da Aluna
+           </Button>
            <Button variant="outline" className="border-gold/20 hover:bg-gold/5 text-gold gap-2" onClick={() => handleTabChange('settings')}>
              <Settings className="w-4 h-4" />
              Configurações
