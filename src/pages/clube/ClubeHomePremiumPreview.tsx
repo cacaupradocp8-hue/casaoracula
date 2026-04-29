@@ -173,7 +173,7 @@ const JourneyRoad = () => {
 const NextReward = () => (
   <section className="py-24 px-6">
     <div className="max-w-md mx-auto">
-      <PremiumCard className="bg-gradient-to-br from-[#0A1221] to-[#050810] border-gold/10">
+      <PremiumCard className="bg-[#0A1229] border-gold/10 shadow-2xl">
         <div className="flex items-center gap-4 mb-8">
           <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center border border-gold/20">
             <Crown className="w-6 h-6 text-gold" />
