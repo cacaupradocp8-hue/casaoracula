@@ -29,6 +29,8 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
+import { FounderFinancialMetrics } from '@/types/founder';
+import { useFounderAlerts } from '@/hooks/useFounderAlerts';
 
 export default function AdminFounderDashboardTab() {
   const [period, setPeriod] = useState<'30' | '90' | '365' | 'current' | 'previous'>('current');
