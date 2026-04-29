@@ -59,62 +59,87 @@ const ClubHero = ({ name }: { name: string }) => (
 
 const JourneyRoad = () => {
   const steps = [
-    { id: 1, name: 'Portal 1', status: 'completed', side: 'left' },
-    { id: 2, name: 'Aula da Semana', status: 'current', side: 'right' },
-    { id: 3, name: 'Laboratório 80/20', status: 'locked', side: 'left' },
-    { id: 4, name: 'Converse com o Livro', status: 'locked', side: 'right' },
-    { id: 5, name: 'Encontro ao Vivo', status: 'locked', side: 'left' },
-    { id: 6, name: 'Jardim da Psique', status: 'locked', side: 'right' },
-    { id: 7, name: 'Aplicação Profissional', status: 'locked', side: 'left' },
+    { id: 1, name: 'Portal 1', title: 'O Chamado Selvagem', status: 'completed', side: 'left' },
+    { id: 2, name: 'Aula Semanal', title: 'A Cartografia da Alma', status: 'current', side: 'right' },
+    { id: 3, name: 'Laboratório 80/20', title: 'Prática de Integração', status: 'locked', side: 'left' },
+    { id: 4, name: 'Diálogo Interior', title: 'Converse com o Livro', status: 'locked', side: 'right' },
+    { id: 5, name: 'Círculo ao Vivo', title: 'Encontro de Sexta', status: 'locked', side: 'left' },
+    { id: 6, name: 'Oásis Psíquico', title: 'Jardim da Heroína', status: 'locked', side: 'right' },
+    { id: 7, name: 'Maestria Oracular', title: 'Aplicação na Vida', status: 'locked', side: 'left' },
   ];
 
   return (
-    <section className="py-16 px-6 relative">
-      <h2 className="text-[10px] uppercase tracking-[0.4em] text-white/30 font-medium text-center mb-16">
-        Estrada Oracular
-      </h2>
+    <section className="py-24 px-6 relative">
+      <div className="flex flex-col items-center mb-20 space-y-2">
+        <h2 className="text-[10px] uppercase tracking-[0.6em] text-white/20 font-bold">
+          Jornada em Curso
+        </h2>
+        <div className="h-[2px] w-12 bg-gold/20" />
+      </div>
       
       <div className="relative max-w-lg mx-auto">
-        {/* Central Line */}
-        <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[1px] bg-white/10" />
+        {/* Central Road - High Precision */}
+        <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-white/10 to-transparent" />
         
-        <div className="space-y-12 relative">
+        <div className="space-y-24 relative">
           {steps.map((step, idx) => (
             <div key={step.id} className={`flex items-center w-full ${step.side === 'left' ? 'flex-row' : 'flex-row-reverse'}`}>
               <motion.div 
-                initial={{ opacity: 0, x: step.side === 'left' ? -20 : 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="w-1/2 pr-6 pl-0 sm:pr-10 text-right group"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                className="w-1/2 group"
                 style={{ textAlign: step.side === 'left' ? 'right' : 'left', paddingLeft: step.side === 'right' ? '2.5rem' : '0', paddingRight: step.side === 'left' ? '2.5rem' : '0' }}
               >
                 <div className={`
-                  inline-block p-4 rounded-2xl border transition-all duration-500
-                  ${step.status === 'current' ? 'bg-gold/10 border-gold/40 shadow-[0_0_30px_rgba(201,169,110,0.1)]' : 
-                    step.status === 'completed' ? 'bg-white/5 border-white/10' : 'bg-transparent border-white/5 opacity-40'}
+                  relative inline-block text-left p-5 rounded-[2rem] border transition-all duration-700
+                  ${step.status === 'current' ? 
+                    'bg-[#0a0f1d] border-gold/40 shadow-[0_20px_40px_rgba(0,0,0,0.4),0_0_20px_rgba(201,169,110,0.1)] scale-105 z-10' : 
+                    step.status === 'completed' ? 
+                    'bg-white/[0.02] border-white/5 opacity-80' : 
+                    'bg-transparent border-transparent opacity-20'}
                 `}>
-                  <p className={`text-[10px] uppercase tracking-widest mb-1 ${step.status === 'current' ? 'text-gold' : 'text-white/40'}`}>
+                  {step.status === 'current' && (
+                    <div className="absolute -top-3 left-6">
+                      <Badge className="bg-gold text-black hover:bg-gold border-none text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-tighter">
+                        Agora
+                      </Badge>
+                    </div>
+                  )}
+                  
+                  <p className={`text-[9px] font-bold uppercase tracking-widest mb-1 ${step.status === 'current' ? 'text-gold' : 'text-white/40'}`}>
                     {step.name}
                   </p>
-                  <p className="text-xs text-white/60 font-light">
-                    {step.status === 'current' ? 'Em andamento' : step.status === 'completed' ? 'Atravessado' : 'Aguardando'}
-                  </p>
+                  <h4 className="text-sm font-serif text-white/90 leading-snug mb-2">
+                    {step.title}
+                  </h4>
+                  
+                  <div className="flex items-center gap-2">
+                    <div className={`w-1 h-1 rounded-full ${step.status === 'completed' ? 'bg-gold/40' : step.status === 'current' ? 'bg-gold' : 'bg-white/10'}`} />
+                    <span className="text-[10px] text-white/30 font-medium tracking-wide">
+                      {step.status === 'current' ? 'Seguir trilha' : step.status === 'completed' ? 'Integrado' : 'Aguardando'}
+                    </span>
+                  </div>
                 </div>
               </motion.div>
 
-              {/* Node */}
-              <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 flex items-center justify-center">
+              {/* Node - Minimalist Apple Style */}
+              <div className="absolute left-1/2 -translate-x-1/2 w-8 h-8 flex items-center justify-center">
                 <div className={`
-                  w-2 h-2 rounded-full transition-all duration-700
-                  ${step.status === 'current' ? 'bg-gold scale-150 shadow-[0_0_15px_#C9A96E]' : 
-                    step.status === 'completed' ? 'bg-gold/60' : 'bg-white/20'}
+                  relative z-10 w-2 h-2 rounded-full transition-all duration-1000
+                  ${step.status === 'current' ? 'bg-gold scale-125' : 
+                    step.status === 'completed' ? 'bg-gold/60' : 'bg-white/10'}
                 `} />
+                
                 {step.status === 'current' && (
-                  <motion.div 
-                    animate={{ scale: [1, 2.5, 1], opacity: [0.5, 0, 0.5] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute inset-0 bg-gold/30 rounded-full"
-                  />
+                  <>
+                    <motion.div 
+                      animate={{ scale: [1, 3], opacity: [0.3, 0] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+                      className="absolute w-4 h-4 bg-gold/40 rounded-full"
+                    />
+                    <div className="absolute w-4 h-4 bg-gold/10 blur-md rounded-full" />
+                  </>
                 )}
               </div>
 
