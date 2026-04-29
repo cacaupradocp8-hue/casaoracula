@@ -1,16 +1,20 @@
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import {
   BookOpen, RefreshCw, DoorOpen, GraduationCap, MessageSquare, Library,
-  ArrowRight, Wrench, Settings, Sparkles, Plus, Clock, Layout, LucideIcon
+  ArrowRight, Wrench, Settings, Sparkles, Plus, Clock, Layout, LucideIcon,
+  Eye, EyeOff, ExternalLink, ImageIcon, Users
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { SectionHeader } from '@/components/shared/SectionHeader';
+import { useToast } from '@/hooks/use-toast';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 interface HubCard {
   key: string;
@@ -78,23 +82,38 @@ const PREMIUM_CARDS: HubCard[] = [
 
 export default function AdminClubeHub() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const { data: stats } = useQuery({
     queryKey: ['admin-clube-hub-premium-stats'],
     queryFn: async () => {
-      const [ciclos, books, estacoes, portais, perguntas] = await Promise.all([
+      const [ciclos, books, estacoes, portais, perguntas, activeStation] = await Promise.all([
         supabase.from('clube_livro_ciclos').select('id', { count: 'exact', head: true }),
         supabase.from('books').select('id', { count: 'exact', head: true }),
         supabase.from('clube_estacoes').select('id', { count: 'exact', head: true }),
         supabase.from('clube_portais').select('id', { count: 'exact', head: true }),
         supabase.from('clube_livro_perguntas').select('id', { count: 'exact', head: true }),
+        supabase.from('clube_estacoes').select('*').eq('ativa', true).maybeSingle(),
       ]);
       return {
         ciclos: cycles_count(estacoes.count, ciclos.count),
         books: books.count || 0,
         portais: portais.count || 0,
         chat: perguntas.count || 0,
+        activeStation: activeStation.data
       };
     },
+  });
+
+  const queryClient = useQueryClient();
+  const togglePublishMutation = useMutation({
+    mutationFn: async ({ id, published }: { id: string; published: boolean }) => {
+      const { error } = await supabase.from('clube_estacoes').update({ publicada: published }).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-hub-premium-stats'] });
+      toast({ title: 'Status de publicação atualizado' });
+    }
   });
 
   function cycles_count(est: number | null, cic: number | null) {
@@ -108,7 +127,7 @@ export default function AdminClubeHub() {
       case 'portais': return `${stats.portais} Mapeados`;
       case 'acervo': return `${stats.books} Obras`;
       case 'chat': return `${stats.chat} Prompts`;
-      case 'treinamento': return `Ativo`;
+      case 'treinamento': return `Operacional`;
       default: return '';
     }
   };
@@ -160,6 +179,86 @@ export default function AdminClubeHub() {
            </Button>
         </div>
       </div>
+
+      {/* Atalho Operacional: Estação Ativa */}
+      {stats?.activeStation && (
+        <Card className="bg-primary/5 border-gold/30 shadow-2xl shadow-gold/5 animate-in slide-in-from-top-4 duration-1000">
+          <CardContent className="p-0 overflow-hidden">
+            <div className="flex flex-col md:flex-row">
+              <div className="w-full md:w-48 h-48 md:h-auto relative bg-muted">
+                {stats.activeStation.livro_capa_url ? (
+                  <img 
+                    src={stats.activeStation.livro_capa_url} 
+                    alt="Capa do Livro" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                    <ImageIcon className="w-8 h-8" />
+                  </div>
+                )}
+                <div className="absolute top-2 left-2">
+                  <Badge className="bg-black/60 backdrop-blur-md text-gold border-gold/20">ESTAÇÃO ATIVA</Badge>
+                </div>
+              </div>
+              
+              <div className="flex-1 p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-2xl font-serif text-foreground leading-tight">
+                      {stats.activeStation.titulo}
+                    </h2>
+                    <Badge variant={stats.activeStation.publicada ? "default" : "secondary"} className={cn("text-[9px] uppercase tracking-wider", stats.activeStation.publicada ? "bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20" : "")}>
+                      {stats.activeStation.publicada ? 'Publicado' : 'Rascunho'}
+                    </Badge>
+                  </div>
+                  <p className="text-muted-foreground font-light italic">
+                    {stats.activeStation.livro_titulo} — {stats.activeStation.livro_autor}
+                  </p>
+                  <div className="flex items-center gap-6 text-xs text-muted-foreground pt-2">
+                    <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Atualizado recentemente</span>
+                    <span className="flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> Visível para Alunas</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-4">
+                  <div className="flex items-center space-x-3 px-4 py-2 bg-background/50 rounded-full border border-primary/10">
+                    <Label htmlFor="hub-publish-toggle" className="text-xs font-semibold cursor-pointer">
+                      {stats.activeStation.publicada ? "Visível no Clube" : "Oculto (Rascunho)"}
+                    </Label>
+                    <Switch 
+                      id="hub-publish-toggle"
+                      checked={stats.activeStation.publicada} 
+                      onCheckedChange={(checked) => togglePublishMutation.mutate({ id: stats.activeStation.id, published: checked })}
+                      disabled={togglePublishMutation.isPending}
+                    />
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="gap-2 border-gold/20 text-gold hover:bg-gold/5"
+                      onClick={() => navigate(`/admin/clube/ciclo/${stats.activeStation.id}`)}
+                    >
+                      <Layout className="w-4 h-4" />
+                      Editar Conteúdo
+                    </Button>
+                    <Button 
+                      size="sm"
+                      className="gap-2 bg-gold hover:bg-gold/80 text-black font-bold"
+                      onClick={() => navigate(`/admin/clube/ciclo/${stats.activeStation.id}?tab=passos`)}
+                    >
+                      <Plus className="w-4 h-4" />
+                      Novo Passo
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Grid de Cards Estilo Netflix/Notion */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
