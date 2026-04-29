@@ -164,16 +164,9 @@ export function ClubeHomePage() {
         )}
 
         {/* ============================================
-            3. CAMADA 1: INICIAÇÃO (Destaque se no início)
+            3. A ESTRADA (FLUXO SEQUENCIAL PRINCIPAL)
             ============================================ */}
-        {(!pontoAtual || pontoAtual.ordem <= 10) && (
-          <RotaEntrada />
-        )}
-
-        {/* ============================================
-            4. CAMADA 2: A ESTRADA (FLUXO SEQUENCIAL)
-            ============================================ */}
-        {pontos.length > 0 && (
+        {pontos.length > 0 ? (
           <div className="space-y-12">
             <RotaEstrada 
               pontos={pontos} 
@@ -182,7 +175,7 @@ export function ClubeHomePage() {
               isConcluindo={concluirPonto.isPending}
             />
 
-            {/* Passo Ativo em Destaque (Sincronizado com Admin) */}
+            {/* Passo Ativo em Destaque */}
             {pontoAtual && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.98 }}
@@ -190,7 +183,7 @@ export function ClubeHomePage() {
                 className="space-y-4"
               >
                 <div className="flex items-center justify-between">
-                   <h3 className="text-sm font-display uppercase tracking-widest text-primary">Seu Próximo Passo</h3>
+                   <h3 className="text-[10px] font-display uppercase tracking-widest text-primary">Seu Próximo Passo</h3>
                    {pontoAtual.ref_tipo && (
                      <Badge variant="outline" className="text-[8px] opacity-40 uppercase tracking-tighter">Tipo: {pontoAtual.ref_tipo}</Badge>
                    )}
@@ -219,15 +212,6 @@ export function ClubeHomePage() {
                         </div>
                       )}
 
-                      {/* Cartografia Sync */}
-                      {(pontoAtual.porta || pontoAtual.campo || pontoAtual.torre) && (
-                        <div className="flex flex-wrap gap-2 pt-2">
-                           {pontoAtual.porta && <Badge variant="outline" className="text-[9px] bg-background/40 border-gold/20 text-gold/60">{pontoAtual.porta}</Badge>}
-                           {pontoAtual.campo && <Badge variant="outline" className="text-[9px] bg-background/40 border-primary/20 text-primary/60">{pontoAtual.campo}</Badge>}
-                           {pontoAtual.torre && <Badge variant="outline" className="text-[9px] bg-background/40 border-emerald-500/20 text-emerald-500/60">{pontoAtual.torre}</Badge>}
-                        </div>
-                      )}
-
                       <Button 
                         variant="gold" 
                         className="w-full gap-2 font-bold h-12 mt-2"
@@ -241,23 +225,23 @@ export function ClubeHomePage() {
               </motion.div>
             )}
           </div>
+        ) : (
+          /* Se não houver pontos (Iniciação), mostra Entrada */
+          <RotaEntrada />
         )}
 
         {/* ============================================
-            5. APOIO E RECURSOS (Mergulho Semanal)
+            4. FERRAMENTAS E APOIO
             ============================================ */}
         <RotaImersao estacaoId={estacaoAtual?.id} />
-
-        {/* 6. APLICAÇÕES (Ocultas se houver pontos na rota para focar no fluxo sequencial) */}
-        {(!pontos || pontos.length === 0) && (
-          <>
-            <RotaAplicacao />
-            <RotaLaboratorio
-              estacaoId={estacaoAtual?.id}
-              livroTitulo={estacaoAtual?.livro_titulo}
-            />
-          </>
-        )}
+        
+        <div className="grid grid-cols-1 gap-8">
+          <RotaAplicacao />
+          <RotaLaboratorio
+            estacaoId={estacaoAtual?.id}
+            livroTitulo={estacaoAtual?.livro_titulo}
+          />
+        </div>
 
         {/* ============================================
             5. MINI CIDADELA
