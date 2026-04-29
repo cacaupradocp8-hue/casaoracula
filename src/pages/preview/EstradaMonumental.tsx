@@ -109,25 +109,42 @@ const EstradaMonumental = () => {
         </div>
 
         {/* Lateral Card - Faltam 8 minutos */}
-        <div className="fixed right-6 bottom-10 md:top-1/2 md:-translate-y-1/2 z-50 pointer-events-none md:pointer-events-auto">
+        <div className="fixed right-8 bottom-10 md:top-1/2 md:-translate-y-1/2 z-50 pointer-events-none md:pointer-events-auto">
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 1, duration: 0.8 }}
-            className="bg-white/[0.03] backdrop-blur-xl border border-white/10 p-6 rounded-2xl w-64 shadow-2xl space-y-4"
+            initial={{ opacity: 0, x: 50, scale: 0.95 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ delay: 1, duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            className="bg-[#020617]/80 backdrop-blur-2xl border border-white/10 p-8 rounded-3xl w-72 shadow-[0_20px_50px_rgba(0,0,0,0.5)] space-y-6 relative overflow-hidden group"
           >
+            <div className="absolute top-0 left-0 w-1 h-full bg-blue-600" />
+            
             <div className="flex items-center gap-3 text-blue-400">
-              <Clock className="w-4 h-4 animate-pulse" />
-              <span className="text-[10px] font-bold uppercase tracking-widest">Etapa Atual</span>
+              <div className="relative">
+                <Clock className="w-5 h-5" />
+                <motion.div 
+                  animate={{ opacity: [0, 1, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="absolute inset-0 bg-blue-400/30 blur-sm rounded-full"
+                />
+              </div>
+              <span className="text-[11px] font-bold uppercase tracking-[0.2em]">Agora no Portal</span>
             </div>
-            <div>
-              <p className="text-xs text-white/50 mb-1">Faltam apenas</p>
-              <h3 className="text-2xl font-light tracking-tight">8 minutos</h3>
-              <p className="text-[10px] text-white/40 mt-1 uppercase tracking-tighter italic">Para concluir a travessia</p>
+
+            <div className="space-y-1">
+              <p className="text-[10px] text-white/30 uppercase tracking-widest font-medium">Tempo restante</p>
+              <div className="flex items-baseline gap-1">
+                <h3 className="text-4xl font-light tracking-tighter text-white">08</h3>
+                <span className="text-xl font-light text-white/40">min</span>
+              </div>
             </div>
-            <button className="w-full bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-bold py-3 rounded-lg transition-all duration-300 uppercase tracking-widest flex items-center justify-center gap-2 group pointer-events-auto">
-              Retomar Agora
-              <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+
+            <p className="text-xs text-white/40 leading-relaxed font-light italic">
+              "A travessia do abismo exige coragem, mas a recompensa é a sua própria luz."
+            </p>
+
+            <button className="w-full bg-white text-black text-[10px] font-bold py-4 rounded-xl transition-all duration-500 hover:bg-blue-50 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] uppercase tracking-[0.2em] flex items-center justify-center gap-3 group pointer-events-auto">
+              Retomar Travessia
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </motion.div>
         </div>
