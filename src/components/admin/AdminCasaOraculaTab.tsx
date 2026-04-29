@@ -141,6 +141,14 @@ export default function AdminCasaOraculaTab() {
       
       if (perfData) setPerformanceMetrics(perfData as any[]);
 
+      // 4. Regras de Automação
+      const { data: rulesData } = await supabase
+        .from('admin_automation_rules')
+        .select('*')
+        .order('risk_type');
+      
+      if (rulesData) setAutomationRules(rulesData);
+
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
