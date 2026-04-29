@@ -82,23 +82,51 @@ export function UpsellMachinePanel() {
 
   const actionMutation = useMutation({
     mutationFn: async ({ id, status, channel }: { id: string, status: 'sent' | 'ignored', channel?: string }) => {
+      // Get current opportunity to calculate attribution
+      const { data: current } = await supabase
+        .from('upsell_opportunities')
+        .select('first_touch_channel, touch_count')
+        .eq('id', id)
+        .single();
+
+      const updateData: any = { 
+        status, 
+        last_action_at: new Date().toISOString() 
+      };
+
+      if (status === 'sent') {
+        updateData.channel_used = channel;
+        updateData.last_offered_at = new Date().toISOString();
+        updateData.last_touch_channel = channel;
+        updateData.touch_count = (current?.touch_count || 0) + 1;
+        
+        if (!current?.first_touch_channel) {
+          updateData.first_touch_channel = channel;
+        }
+      }
+
+      if (status === 'ignored') {
+        // Simple fatigue: pause for 30 days
+        const pauseUntil = new Date();
+        pauseUntil.setDate(pauseUntil.getDate() + 30);
+        updateData.paused_until = pauseUntil.toISOString();
+      }
+
       const { error } = await supabase
         .from('upsell_opportunities')
-        .update({ 
-          status, 
-          channel_used: channel,
-          last_offered_at: status === 'sent' ? new Date().toISOString() : undefined,
-          last_action_at: new Date().toISOString() 
-        })
+        .update(updateData)
         .eq('id', id);
+      
       if (error) throw error;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['upsell-opportunities'] });
       queryClient.invalidateQueries({ queryKey: ['upsell-revenue-intelligence'] });
       toast({ 
-        title: variables.status === 'sent' ? 'Oferta enviada!' : 'Oportunidade ignorada',
-        description: variables.status === 'sent' ? `Através do canal: ${variables.channel}` : 'Removido da lista atual.'
+        title: variables.status === 'sent' ? 'Oferta enviada!' : 'Oportunidade pausada',
+        description: variables.status === 'sent' 
+          ? `Através do canal: ${variables.channel}` 
+          : 'Regra de fadiga aplicada: 30 dias de pausa.'
       });
     }
   });
