@@ -196,7 +196,7 @@ const EvolutionStats = () => (
       
       <div className="grid grid-cols-2 gap-4">
         {[
-          { label: 'Portais Atravessados', value: '03', icon: MapPin },
+          { label: 'Portais Atravessados', value: '03', icon: Crown },
           { label: 'Dias de Presença', value: '12', icon: Clock },
           { label: 'Livro Atual', value: 'Clarissa', icon: BookOpen },
           { label: 'Próxima Ativação', value: 'Qui, 20h', icon: Calendar },
