@@ -120,29 +120,47 @@ export default function AdminCentralEstacao() {
   return (
     <div className="container mx-auto px-4 py-8 pb-32 max-w-5xl">
         {/* Header Consolidado e Operacional */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 p-6 bg-card border border-primary/5 rounded-2xl shadow-sm">
-          <div className="flex items-start gap-4 flex-1 min-w-0">
-            <Button variant="ghost" size="icon" className="mt-1" onClick={() => {
-              (window as any).Admin_SetActiveTab?.('clube-jornadas');
-              navigate('/admin/clube/ciclos');
-            }}>
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-2xl font-serif text-foreground truncate">
-                  {estacao.titulo}
-                </h1>
-                <Badge variant={estacao.publicada ? 'default' : 'secondary'} className={cn("text-[9px] uppercase tracking-widest", estacao.publicada ? "bg-emerald-500/10 text-emerald-500" : "")}>
-                  {estacao.publicada ? 'Publicado' : 'Rascunho'}
-                </Badge>
-                {estacao.ativa && <Badge variant="outline" className="text-[9px] border-gold text-gold uppercase tracking-widest bg-gold/5">Estação Ativa</Badge>}
+        <div className="flex flex-col md:flex-row md:items-stretch justify-between gap-6 mb-8 p-0 bg-card border border-primary/5 rounded-2xl shadow-sm overflow-hidden">
+          <div className="flex flex-col md:flex-row flex-1 min-w-0">
+            {/* Book Preview / Quick Upload Zone */}
+            <div className="w-full md:w-32 h-32 md:h-auto bg-muted group relative cursor-pointer overflow-hidden" onClick={() => setEditStationOpen(true)}>
+              {estacao.livro_capa_url ? (
+                <img src={estacao.livro_capa_url} alt="Capa" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+              ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center text-[10px] text-muted-foreground p-2 text-center">
+                  <ImageIcon className="w-6 h-6 mb-1 opacity-20" />
+                  Sem Capa
+                </div>
+              )}
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <Pencil className="w-4 h-4 text-white" />
               </div>
-              <p className="text-sm text-muted-foreground mt-1 flex items-center gap-2">
-                <BookOpen className="w-3.5 h-3.5 text-gold" />
-                {estacao.livro_titulo} {estacao.livro_autor ? `— ${estacao.livro_autor}` : ''}
-              </p>
+            </div>
+
+            <div className="flex-1 p-6 flex flex-col justify-center">
+              <div className="flex items-center gap-4 mb-4">
+                <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={() => {
+                  (window as any).Admin_SetActiveTab?.('clube-jornadas');
+                  navigate('/admin/clube/ciclos');
+                }}>
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+                
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <h1 className="text-2xl font-serif text-foreground truncate">
+                      {estacao.titulo}
+                    </h1>
+                    <Badge variant={estacao.publicada ? 'default' : 'secondary'} className={cn("text-[9px] uppercase tracking-widest", estacao.publicada ? "bg-emerald-500/10 text-emerald-500" : "")}>
+                      {estacao.publicada ? 'Publicado' : 'Rascunho'}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-1 flex items-center gap-2">
+                    <BookOpen className="w-3.5 h-3.5 text-gold" />
+                    {estacao.livro_titulo} {estacao.livro_autor ? `— ${estacao.livro_autor}` : ''}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
