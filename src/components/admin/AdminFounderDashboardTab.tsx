@@ -29,6 +29,8 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
+import { FounderFinancialMetrics } from '@/types/founder';
+import { useFounderAlerts } from '@/hooks/useFounderAlerts';
 
 export default function AdminFounderDashboardTab() {
   const [period, setPeriod] = useState<'30' | '90' | '365' | 'current' | 'previous'>('current');
@@ -38,10 +40,10 @@ export default function AdminFounderDashboardTab() {
     iaCostIncrease: 15
   });
 
-  const { data: metrics, isLoading } = useQuery({
+  const { data: metrics, isLoading } = useQuery<FounderFinancialMetrics>({
     queryKey: ['founder-financials', period],
     queryFn: async () => {
-      let query = supabase.from('view_founder_real_financial_summary' as any).select('*');
+      let query = supabase.from('view_founder_real_financial_summary').select('*');
       
       const now = new Date();
       if (period === 'current') {
@@ -73,24 +75,24 @@ export default function AdminFounderDashboardTab() {
         total_cost_ads: (acc.total_cost_ads || 0) + (curr.total_cost_ads || 0),
         total_cost_team: (acc.total_cost_team || 0) + (curr.total_cost_team || 0),
         new_sales_count: (acc.new_sales_count || 0) + (curr.new_sales_count || 0),
-      }), {});
+      }), {} as any);
 
-      const totalCosts = aggregated.total_cost_ia + aggregated.total_cost_infra + aggregated.total_cost_stripe + aggregated.total_cost_ads + aggregated.total_cost_team;
-      const netProfit = aggregated.total_revenue - totalCosts;
+      const totalCosts = (aggregated.total_cost_ia || 0) + (aggregated.total_cost_infra || 0) + (aggregated.total_cost_stripe || 0) + (aggregated.total_cost_ads || 0) + (aggregated.total_cost_team || 0);
+      const netProfit = (aggregated.total_revenue || 0) - totalCosts;
 
       return {
         ...aggregated,
-        revenue_clube: aggregated.revenue_new * 0.6,
-        revenue_saas: aggregated.revenue_new * 0.4,
+        revenue_clube: (aggregated.revenue_new || 0) * 0.6,
+        revenue_saas: (aggregated.revenue_new || 0) * 0.4,
         revenue_formacao: 0,
-        revenue_upsell: aggregated.revenue_renewals,
-        cost_ia: aggregated.total_cost_ia,
-        cost_infra: aggregated.total_cost_infra,
-        cost_stripe: aggregated.total_cost_stripe,
-        cost_ads: aggregated.total_cost_ads,
-        cost_team: aggregated.total_cost_team,
+        revenue_upsell: (aggregated.revenue_renewals || 0),
+        cost_ia: (aggregated.total_cost_ia || 0),
+        cost_infra: (aggregated.total_cost_infra || 0),
+        cost_stripe: (aggregated.total_cost_stripe || 0),
+        cost_ads: (aggregated.total_cost_ads || 0),
+        cost_team: (aggregated.total_cost_team || 0),
         total_costs: totalCosts,
-        gross_profit: aggregated.total_revenue - aggregated.total_cost_stripe - aggregated.total_cost_ia,
+        gross_profit: (aggregated.total_revenue || 0) - (aggregated.total_cost_stripe || 0) - (aggregated.total_cost_ia || 0),
         net_profit: netProfit,
         net_margin_pct: aggregated.total_revenue > 0 ? Math.round((netProfit / aggregated.total_revenue) * 100) : 0,
         ia_revenue_pct: aggregated.total_revenue > 0 ? Math.round((aggregated.total_cost_ia / aggregated.total_revenue) * 100) : 0,
@@ -99,71 +101,13 @@ export default function AdminFounderDashboardTab() {
         cac: 45000,
         payback_period: 3.5,
         new_sales: aggregated.new_sales_count || 0,
-        revenue_expansion: aggregated.revenue_renewals
-      };
+        revenue_expansion: aggregated.revenue_renewals || 0
+      } as FounderFinancialMetrics;
     }
   });
 
-  const getAlerts = () => {
-    if (!metrics) return [];
-    const alerts = [];
 
-    // IA Efficiency Alert
-    if (metrics.ia_revenue_pct > 15) {
-      alerts.push({
-        severity: 'red',
-        category: 'ia',
-        title: 'Custo de IA Crítico',
-        impact: metrics.total_cost_ia * 0.2, // Estimated 20% waste
-        cause: 'Uso excessivo de modelos premium (GPT-4) em tarefas de baixa complexidade.',
-        action: 'Migrar processamento de rotina para modelos leves e revisar limites de tokens.',
-        resolveAction: 'Revisar Modelos'
-      });
-    }
-
-    // Profitability / Operations Alert
-    if (metrics.net_margin_pct < 25) {
-      alerts.push({
-        severity: 'yellow',
-        category: 'operações',
-        title: 'Compressão de Margem',
-        impact: metrics.total_revenue * 0.05,
-        cause: 'Aumento nos custos fixos de infraestrutura e serviços de terceiros.',
-        action: 'Negociar contratos anuais ou auditar recursos cloud subutilizados.',
-        resolveAction: 'Auditar Custos'
-      });
-    }
-
-    // Retention Alert
-    if (metrics.churn_rate > 4) {
-      alerts.push({
-        severity: 'red',
-        category: 'retenção',
-        title: 'Fadiga de Assinatura',
-        impact: (metrics.ltv / 100) * 10, // Impact on future LTV
-        cause: 'Queda no engajamento pós-30 dias e falhas de pagamento no Stripe.',
-        action: 'Disparar régua de reativação via WhatsApp e checar logs de cobrança.',
-        resolveAction: 'Ver Churn'
-      });
-    }
-
-    // Revenue Opportunity Alert
-    if (metrics.new_sales < 10) {
-      alerts.push({
-        severity: 'yellow',
-        category: 'receita',
-        title: 'Gargalo de Aquisição',
-        impact: 9700 * 20, // Potential lost revenue
-        cause: 'Estagnação no topo do funil ou baixa performance em campanhas de Ads.',
-        action: 'Revisar criativos dos anúncios e otimizar landing page de checkout.',
-        resolveAction: 'Ajustar Funil'
-      });
-    }
-
-    return alerts;
-  };
-
-  const alerts = getAlerts();
+  const alerts = useFounderAlerts(metrics);
 
   const getSeverityStyles = (severity: string) => {
     switch (severity) {
