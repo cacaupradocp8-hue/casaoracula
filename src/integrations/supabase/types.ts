@@ -22311,15 +22311,21 @@ export type Database = {
       }
       view_user_stagnation: {
         Row: {
+          churn_risk_score: number | null
+          conversion_risk_score: number | null
           email: string | null
           is_aluna: boolean | null
+          is_terapeuta: boolean | null
           last_ai_use: string | null
+          last_cartografia: string | null
           last_clube_activity: string | null
+          last_value_timestamp: string | null
           nome: string | null
           plan_id: string | null
           portal: string | null
-          risk_score: number | null
-          stagnation_reason: string | null
+          primary_risk_factor: string | null
+          saas_value_risk_score: number | null
+          signup_date: string | null
           subscription_status: string | null
           total_cartografias: number | null
           total_jardim: number | null
