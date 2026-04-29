@@ -89,7 +89,8 @@ export function ImageUpload({
     if (path.startsWith('http://') || path.startsWith('https://')) {
       return path;
     }
-    const { data } = supabase.storage.from('content-images').getPublicUrl(path);
+    const bucket = folder === 'clube-assets' ? 'clube-assets' : 'content-images';
+    const { data } = supabase.storage.from(bucket).getPublicUrl(path);
     return data.publicUrl;
   };
 
