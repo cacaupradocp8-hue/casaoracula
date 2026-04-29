@@ -260,45 +260,61 @@ export default function ClubeHomePremiumPreview() {
         <ClubHero name={userName} />
         
         {/* 2. Onde parei / Próxima recompensa (Enhanced with high-end UI) */}
-        <section className="px-6 -mt-4 mb-12 relative z-20">
+        <section className="px-6 -mt-8 mb-16 relative z-20">
           <div className="max-w-md mx-auto">
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="p-[1px] rounded-3xl bg-gradient-to-b from-white/10 to-transparent shadow-2xl overflow-hidden group"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
+              className="p-[1px] rounded-[2.5rem] bg-gradient-to-b from-white/20 via-white/5 to-transparent shadow-[0_40px_80px_rgba(0,0,0,0.6)] overflow-hidden group"
             >
-              <div className="bg-[#050810]/90 backdrop-blur-3xl rounded-[23px] p-6 relative overflow-hidden">
-                {/* Subtle highlight effect */}
-                <div className="absolute -top-24 -right-24 w-48 h-48 bg-gold/5 blur-[60px] rounded-full group-hover:bg-gold/10 transition-colors duration-700" />
+              <div className="bg-[#050810]/95 backdrop-blur-3xl rounded-[2.45rem] p-8 relative overflow-hidden">
+                {/* Magnetic Glow Effect */}
+                <div className="absolute -top-32 -right-32 w-64 h-64 bg-gold/10 blur-[80px] rounded-full group-hover:bg-gold/15 transition-colors duration-1000" />
                 
-                <div className="flex justify-between items-start mb-6">
+                <div className="flex justify-between items-start mb-8">
                   <div className="space-y-1">
-                    <span className="text-[10px] font-medium tracking-[0.2em] text-gold uppercase">Próximo Marco</span>
-                    <h3 className="text-lg font-serif text-white/90 leading-tight">A Alquimia dos Símbolos</h3>
+                    <div className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
+                      <span className="text-[10px] font-bold tracking-[0.3em] text-gold/80 uppercase">Retomar Agora</span>
+                    </div>
+                    <h3 className="text-2xl font-serif text-white tracking-tight leading-tight pt-1">Onde você parou...</h3>
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                    <Zap className="w-5 h-5 text-gold" />
+                  <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center shadow-inner">
+                    <BookOpen className="w-6 h-6 text-gold/60" />
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-4 mb-8">
+                   <div className="flex items-center gap-4">
+                      <div className="w-12 h-16 rounded-lg bg-gradient-to-br from-white/10 to-transparent flex-shrink-0 border border-white/10 overflow-hidden relative">
+                         <div className="absolute inset-0 bg-gold/5" />
+                         <div className="absolute bottom-1 left-1 right-1 h-0.5 bg-gold/40 rounded-full" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Capítulo III</p>
+                        <p className="text-sm font-medium text-white/90">A Intuição como Bússola</p>
+                      </div>
+                   </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex justify-between items-end text-[10px] tracking-[0.1em] text-white/30 uppercase font-bold">
+                    <span>Sua evolução</span>
+                    <span className="text-gold">65%</span>
+                  </div>
+                  <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: '65%' }}
-                      transition={{ duration: 1.5, ease: "circOut", delay: 1 }}
-                      className="h-full bg-gradient-to-r from-gold/40 to-gold shadow-[0_0_10px_rgba(201,169,110,0.3)] rounded-full"
+                      transition={{ duration: 1.5, ease: "circOut", delay: 0.8 }}
+                      className="h-full bg-gradient-to-r from-gold/60 to-gold shadow-[0_0_15px_rgba(201,169,110,0.4)] rounded-full"
                     />
-                  </div>
-                  <div className="flex justify-between items-center text-[10px] tracking-wider text-white/40 uppercase font-medium">
-                    <span>Progresso Real</span>
-                    <span className="text-gold">65% concluído</span>
                   </div>
                 </div>
 
-                <Button className="w-full mt-6 bg-white text-black hover:bg-white/90 h-12 rounded-2xl font-semibold tracking-tight transition-all active:scale-[0.98]">
-                  Continuar Agora
+                <Button className="w-full mt-10 bg-white text-black hover:bg-white/90 h-14 rounded-2xl font-bold text-base tracking-tight transition-all active:scale-[0.97] shadow-xl">
+                  Continuar Atravessando
                 </Button>
               </div>
             </motion.div>
