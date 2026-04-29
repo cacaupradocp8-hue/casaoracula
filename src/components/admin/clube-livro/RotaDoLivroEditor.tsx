@@ -5,14 +5,18 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription 
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  Map as MapIcon, Plus, Trash2, GripVertical, Eye, EyeOff, Loader2, Zap, Settings2 
+  Map as MapIcon, Plus, Trash2, GripVertical, Eye, EyeOff, Loader2, Zap, Settings2, Image as ImageIcon,
+  ChevronDown, ChevronUp
 } from 'lucide-react';
+import { ImageUpload } from '../ImageUpload';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import type { RotaItem } from './types';
 
 export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
