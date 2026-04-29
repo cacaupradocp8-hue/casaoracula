@@ -185,6 +185,8 @@ const TriadeMetodo = React.lazy(() => import("./pages/metodo/TriadeMetodo"));
 const LabirintoHeroinaPage = React.lazy(() => import("./pages/labirinto-heroina/LabirintoHeroinaPraticoPage"));
 const Admin = React.lazy(() => import("./pages/Admin"));
 const DesbloqueiePage = React.lazy(() => import("./pages/DesbloqueiePage"));
+const PortalLuxo = React.lazy(() => import("./pages/preview/PortalLuxo"));
+
 
 // ─── Utility components ───────────────────────────────────────
 
@@ -507,9 +509,8 @@ function AppRoutes() {
       <Route path="/formacao-metodo/forum" element={<ProtectedRoute minPortal="mentorada"><FormacaoForumPage /></ProtectedRoute>} />
       <Route path="/formacao-metodo/avaliacoes" element={<ProtectedRoute minPortal="mentorada"><FormacaoAvaliacoesPage /></ProtectedRoute>} />
 
-      {/* Biblioteca Travessias */}
-
-      {/* Test: Bottom Nav Preview */}
+      {/* Previews */}
+      <Route path="/preview/portal-luxo" element={<PortalLuxo />} />
       <Route path="/test-bottom-nav" element={<BottomNavTestPage />} />
 
       <Route path="/biblioteca-das-travessias" element={<ProtectedRoute><Navigate to="/biblioteca?aba=travessias" replace /></ProtectedRoute>} />
