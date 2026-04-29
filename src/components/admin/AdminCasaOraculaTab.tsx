@@ -62,7 +62,8 @@ export default function AdminCasaOraculaTab() {
       const { data: stagnationData } = await supabase
         .from('view_user_stagnation')
         .select('*')
-        .neq('stagnation_reason', 'Ativa')
+        .neq('stagnation_reason', 'Saudável')
+        .order('risk_score', { ascending: false })
         .limit(20);
       
       if (stagnationData) setStagnantUsers(stagnationData as StagnationInfo[]);
@@ -121,8 +122,8 @@ export default function AdminCasaOraculaTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-serif text-foreground">Casa Orácula — Painel Mestre</h2>
-          <p className="text-muted-foreground">Monitoramento de saúde e jornada do ecossistema</p>
+          <h2 className="text-2xl font-serif text-foreground">Painel Mestre — Inteligência Operacional</h2>
+          <p className="text-muted-foreground">Governança, saúde e gestão de custos do ecossistema</p>
         </div>
         <Button variant="outline" size="sm" onClick={fetchDashboardData} disabled={isLoading}>
           <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
