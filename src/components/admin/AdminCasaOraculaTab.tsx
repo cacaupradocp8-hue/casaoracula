@@ -212,6 +212,75 @@ export default function AdminCasaOraculaTab() {
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     ));
   };
+  
+  const handleSimulate = async (rule: AutomationRule) => {
+    setIsSimulating(true);
+    try {
+      // Simulamos filtrando usuários estagnados que atendem aos critérios da regra
+      const matchingUsers = stagnantUsers.filter(u => {
+        const matchesRisk = 
+          (rule.risk_type === 'conversion' && u.conversion_risk_score > 60) ||
+          (rule.risk_type === 'churn' && u.churn_risk_score > 60) ||
+          (rule.risk_type === 'saas' && u.saas_value_risk_score > 60);
+        
+        const matchesPortal = !rule.portal || rule.portal === 'GLOBAL' || u.portal === rule.portal;
+        
+        return matchesRisk && matchesPortal;
+      });
+
+      const perf = performanceMetrics.find(p => p.action_type === rule.action_type && p.channel === rule.channel);
+      
+      const simulation = {
+        usersCount: matchingUsers.length,
+        estimatedSuccess: Math.round(matchingUsers.length * ((perf?.success_rate || 0) / 100)),
+        spamRisk: (perf?.success_rate || 0) < 10 ? 'Alto' : (perf?.success_rate || 0) < 20 ? 'Médio' : 'Baixo',
+        historicalRate: perf?.success_rate || 0,
+        window: rule.measurement_window_days
+      };
+
+      setSimulationResult(simulation);
+      
+      const { data: { user: adminUser } } = await supabase.auth.getUser();
+      if (adminUser) {
+        await supabase.rpc('log_automation_simulation', {
+          p_risk_type: rule.risk_type,
+          p_action_type: rule.action_type,
+          p_channel: rule.channel,
+          p_portal: rule.portal || 'GLOBAL',
+          p_admin_id: adminUser.id,
+          p_snapshot: simulation
+        });
+      }
+    } catch (error) {
+      console.error('Error during simulation:', error);
+    } finally {
+      setIsSimulating(false);
+    }
+  };
+
+  const fetchAuditLogs = async (ruleId: string) => {
+    const { data } = await supabase
+      .from('admin_automation_audit')
+      .select('*')
+      .eq('rule_id', ruleId)
+      .order('created_at', { ascending: false });
+    
+    if (data) setAuditLogs(data);
+  };
+
+  const updateRuleConfig = async (ruleId: string, updates: Partial<AutomationRule>) => {
+    try {
+      const { error } = await supabase
+        .from('admin_automation_rules')
+        .update(updates)
+        .eq('id', ruleId);
+      
+      if (error) throw error;
+      
+      setAutomationRules(prev => prev.map(r => r.id === ruleId ? { ...r, ...updates } : r));
+    } catch (error) {
+      console.error('Error updating rule config:', error);
+    }
 
   const handleMarkActionDone = async (user: StagnationInfoV4) => {
     try {
