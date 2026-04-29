@@ -231,66 +231,118 @@ const PremiumBottomNav = () => (
 // --- Main Preview Component ---
 
 export default function ClubeHomePremiumPreview() {
+  const [userName] = React.useState("Claudia");
+
   return (
     <div className="min-h-screen bg-[#02040a] text-white selection:bg-gold/30 selection:text-white font-sans overflow-x-hidden">
-      {/* Background Atmosphere: Deep Night Blue + Sophisticated Gradient */}
+      {/* 
+        Background Atmosphere: Deep Night Blue + Sophisticated Gradient
+        Apple + Linear + Luxury European Aesthetic
+      */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        {/* Base Gradient for Depth */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(10,20,40,1)_0%,_rgba(2,4,10,1)_100%)]" />
+        {/* Base Layer: Absolute Depth */}
+        <div className="absolute inset-0 bg-[#02040a]" />
         
-        {/* Subtle Central Light */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-[radial-gradient(circle_at_50%_50%,_rgba(201,169,110,0.03)_0%,_transparent_50%)] blur-[80px]" />
+        {/* Sophisticated Night Blue Gradient */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_rgba(10,25,50,0.4)_0%,_transparent_70%)]" />
         
-        {/* Nearly Invisible Mist/Fog */}
-        <motion.div 
-          animate={{ 
-            x: [-10, 10, -10],
-            opacity: [0.03, 0.05, 0.03]
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,_rgba(255,255,255,0.02)_0%,_transparent_60%)] filter blur-[100px]" 
-        />
-        <motion.div 
-          animate={{ 
-            x: [10, -10, 10],
-            opacity: [0.02, 0.04, 0.02]
-          }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,_rgba(255,255,255,0.01)_0%,_transparent_60%)] filter blur-[120px]" 
-        />
-
-        {/* Elegant Discrete Texture (Fine Grain) */}
-        <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+        {/* Subtle Luxury Glow (Linear style) */}
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
         
-        {/* Accent Depth */}
-        <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-[#02040a] to-transparent opacity-80" />
+        {/* Soft Ambient Light (Apple-style subtle glow) */}
+        <div className="absolute top-[10%] left-1/2 -translate-x-1/2 w-full h-[500px] bg-[radial-gradient(circle_at_50%_50%,_rgba(201,169,110,0.02)_0%,_transparent_65%)] blur-[100px]" />
+        
+        {/* Elegant Fine Grain Texture */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+        
+        {/* Bottom Vignette */}
+        <div className="absolute bottom-0 left-0 right-0 h-[40vh] bg-gradient-to-t from-[#02040a] to-transparent" />
       </div>
 
-
       <main className="relative z-10 max-w-7xl mx-auto pb-32">
-        <ClubHero name="Claudia" />
+        {/* 1. Retomar jornada (Hero) */}
+        <ClubHero name={userName} />
         
+        {/* 2. Onde parei / Próxima recompensa (Enhanced with high-end UI) */}
+        <section className="px-6 -mt-4 mb-12 relative z-20">
+          <div className="max-w-md mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="p-[1px] rounded-3xl bg-gradient-to-b from-white/10 to-transparent shadow-2xl overflow-hidden group"
+            >
+              <div className="bg-[#050810]/90 backdrop-blur-3xl rounded-[23px] p-6 relative overflow-hidden">
+                {/* Subtle highlight effect */}
+                <div className="absolute -top-24 -right-24 w-48 h-48 bg-gold/5 blur-[60px] rounded-full group-hover:bg-gold/10 transition-colors duration-700" />
+                
+                <div className="flex justify-between items-start mb-6">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-medium tracking-[0.2em] text-gold uppercase">Próximo Marco</span>
+                    <h3 className="text-lg font-serif text-white/90 leading-tight">A Alquimia dos Símbolos</h3>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                    <Zap className="w-5 h-5 text-gold" />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: '65%' }}
+                      transition={{ duration: 1.5, ease: "circOut", delay: 1 }}
+                      className="h-full bg-gradient-to-r from-gold/40 to-gold shadow-[0_0_10px_rgba(201,169,110,0.3)] rounded-full"
+                    />
+                  </div>
+                  <div className="flex justify-between items-center text-[10px] tracking-wider text-white/40 uppercase font-medium">
+                    <span>Progresso Real</span>
+                    <span className="text-gold">65% concluído</span>
+                  </div>
+                </div>
+
+                <Button className="w-full mt-6 bg-white text-black hover:bg-white/90 h-12 rounded-2xl font-semibold tracking-tight transition-all active:scale-[0.98]">
+                  Continuar Agora
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+        
+        {/* 3. Estrada viva (The core road remains) */}
         <JourneyRoad />
         
+        {/* 6. Biblioteca viva (The "Weekly Dive" rebranded) */}
         <WeeklyDive />
         
+        {/* 4. Progresso real (Stats) */}
         <EvolutionStats />
 
-        <section className="py-20 px-6 text-center">
+        {/* Closing sophisticated quote */}
+        <section className="py-24 px-6 text-center">
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            className="space-y-4"
+            viewport={{ once: true }}
+            className="space-y-6"
           >
-            <Quote className="w-8 h-8 text-gold/20 mx-auto mb-4" />
-            <p className="text-xl font-serif text-white/80 italic leading-relaxed">
-              "Você não está atrasada.<br />Está em travessia."
+            <div className="w-8 h-8 mx-auto relative">
+              <div className="absolute inset-0 bg-gold/20 blur-xl rounded-full" />
+              <Quote className="w-full h-full text-gold/40 relative z-10" />
+            </div>
+            <p className="text-2xl font-serif text-white/70 italic leading-relaxed max-w-lg mx-auto">
+              "A inteligência feminina reside no saber que cada ciclo tem sua própria luz."
             </p>
-            <div className="w-12 h-[1px] bg-gold/30 mx-auto mt-8" />
+            <div className="flex items-center justify-center gap-4">
+              <div className="w-8 h-[1px] bg-white/5" />
+              <span className="text-[10px] uppercase tracking-[0.4em] text-white/20">Casa Orácula</span>
+              <div className="w-8 h-[1px] bg-white/5" />
+            </div>
           </motion.div>
         </section>
       </main>
 
+      {/* 5. Menu Premium (Bottom Nav) */}
       <PremiumBottomNav />
     </div>
   );
