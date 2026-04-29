@@ -9,7 +9,7 @@ import {
   Trophy
 } from 'lucide-react';
 
-const EstradaMonumental = () => {
+export default function EstradaMonumental() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
