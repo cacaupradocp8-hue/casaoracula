@@ -256,17 +256,16 @@ const EvolutionStats = () => (
 
 export default function ClubeHomePremiumPreview() {
   return (
-    <div className="min-h-screen bg-[#050B18] text-white selection:bg-gold/20 selection:text-white font-sans overflow-x-hidden">
-      {/* Night Atmosphere - Clean & Deep */}
+    <div className="min-h-screen bg-[#020617] text-white selection:bg-gold/20 selection:text-white font-sans overflow-x-hidden">
+      {/* Night Atmosphere - Clean & Deep Navy */}
       <div className="fixed inset-0 pointer-events-none">
-        {/* Elegant Deep Blue Gradient Base */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0A1221] via-[#050B18] to-[#030711]" />
+        {/* Pure Deep Navy Base */}
+        <div className="absolute inset-0 bg-[#020617]" />
         
-        {/* Sophisticated Depth Elements */}
-        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-900/[0.07] blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-gold/[0.03] blur-[120px] rounded-full" />
+        {/* Very Subtle Navy Gradients (Reduced Contrast, No Purple) */}
+        <div className="absolute top-0 left-0 w-full h-[60%] bg-gradient-to-b from-[#0A1229] to-transparent opacity-40" />
         
-        {/* Luxury Linear Glow */}
+        {/* Luxury Linear Details */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       </div>
 
