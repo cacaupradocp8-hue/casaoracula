@@ -108,43 +108,55 @@ export default function AdminFounderDashboardTab() {
     if (!metrics) return [];
     const alerts = [];
 
-    // 1. Custo IA / Receita > 15%
+    // IA Efficiency Alert
     if (metrics.ia_revenue_pct > 15) {
       alerts.push({
-        severity: 'high',
-        title: 'Custo de IA Elevado',
-        cause: 'Consumo de modelos premium acima do projetado ou baixa conversão de receita.',
-        action: 'Revisar limites de tokens por usuário ou migrar tasks para modelos mais leves.'
+        severity: 'red',
+        category: 'ia',
+        title: 'Custo de IA Crítico',
+        impact: metrics.total_cost_ia * 0.2, // Estimated 20% waste
+        cause: 'Uso excessivo de modelos premium (GPT-4) em tarefas de baixa complexidade.',
+        action: 'Migrar processamento de rotina para modelos leves e revisar limites de tokens.',
+        resolveAction: 'Revisar Modelos'
       });
     }
 
-    // 2. Churn (Mock logic for now since we have static churn_rate in context)
-    if (metrics.churn_rate > 5) {
+    // Profitability / Operations Alert
+    if (metrics.net_margin_pct < 25) {
       alerts.push({
-        severity: 'medium',
-        title: 'Alerta de Retenção',
-        cause: 'Aumento na taxa de cancelamento no período selecionado.',
-        action: 'Executar campanha de win-back ou analisar feedbacks de saída.'
+        severity: 'yellow',
+        category: 'operações',
+        title: 'Compressão de Margem',
+        impact: metrics.total_revenue * 0.05,
+        cause: 'Aumento nos custos fixos de infraestrutura e serviços de terceiros.',
+        action: 'Negociar contratos anuais ou auditar recursos cloud subutilizados.',
+        resolveAction: 'Auditar Custos'
       });
     }
 
-    // 3. Lucro Líquido caindo (Simplistic comparison for current vs previous logic)
-    if (metrics.net_margin_pct < 20) {
+    // Retention Alert
+    if (metrics.churn_rate > 4) {
       alerts.push({
-        severity: 'high',
-        title: 'Margem em Risco',
-        cause: 'Custos operacionais subindo mais rápido que a receita.',
-        action: 'Auditar custos fixos (infra/time) e pausar campanhas de ads com ROI negativo.'
+        severity: 'red',
+        category: 'retenção',
+        title: 'Fadiga de Assinatura',
+        impact: (metrics.ltv / 100) * 10, // Impact on future LTV
+        cause: 'Queda no engajamento pós-30 dias e falhas de pagamento no Stripe.',
+        action: 'Disparar régua de reativação via WhatsApp e checar logs de cobrança.',
+        resolveAction: 'Ver Churn'
       });
     }
 
-    // 4. Renovações
-    if (metrics.revenue_renewals < (metrics.total_revenue * 0.2)) {
+    // Revenue Opportunity Alert
+    if (metrics.new_sales < 10) {
       alerts.push({
-        severity: 'medium',
-        title: 'Queda em Renovações',
-        cause: 'Falhas em gateways de pagamento ou fadiga de produto.',
-        action: 'Verificar logs de erro do Stripe ou disparar régua de recuperação.'
+        severity: 'yellow',
+        category: 'receita',
+        title: 'Gargalo de Aquisição',
+        impact: 9700 * 20, // Potential lost revenue
+        cause: 'Estagnação no topo do funil ou baixa performance em campanhas de Ads.',
+        action: 'Revisar criativos dos anúncios e otimizar landing page de checkout.',
+        resolveAction: 'Ajustar Funil'
       });
     }
 
@@ -152,6 +164,15 @@ export default function AdminFounderDashboardTab() {
   };
 
   const alerts = getAlerts();
+
+  const getSeverityStyles = (severity: string) => {
+    switch (severity) {
+      case 'red': return 'bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400';
+      case 'yellow': return 'bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400';
+      case 'green': return 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400';
+      default: return 'bg-muted/50 border-muted';
+    }
+  };
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -184,34 +205,41 @@ export default function AdminFounderDashboardTab() {
 
   return (
     <div className="space-y-8 pb-20 animate-in fade-in duration-500">
-      {/* Alerts Section */}
+      {/* Premium Alerts Section */}
       {alerts.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-in slide-in-from-top duration-500">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-in slide-in-from-top duration-700">
           {alerts.map((alert, i) => (
-            <Card key={i} className={`border-none shadow-sm ${
-              alert.severity === 'high' ? 'bg-red-500/10' : 'bg-amber-500/10'
-            }`}>
-              <CardContent className="p-4 space-y-3">
+            <Card key={i} className={`border ${getSeverityStyles(alert.severity)} transition-all hover:scale-[1.01]`}>
+              <CardContent className="p-4 space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Activity className={`w-4 h-4 ${
-                      alert.severity === 'high' ? 'text-red-500' : 'text-amber-500'
-                    }`} />
-                    <span className="text-xs font-bold uppercase tracking-wider">{alert.title}</span>
+                    <Badge variant="outline" className="text-[9px] uppercase tracking-tighter bg-background/50 border-current/20">
+                      {alert.category}
+                    </Badge>
+                    <span className="text-[11px] font-bold uppercase tracking-tight">{alert.title}</span>
                   </div>
-                  <Badge variant="outline" className={`${
-                    alert.severity === 'high' ? 'border-red-500/50 text-red-500' : 'border-amber-500/50 text-amber-500'
-                  } bg-transparent`}>
-                    {alert.severity === 'high' ? 'Alta' : 'Média'}
-                  </Badge>
+                  <div className={`w-2 h-2 rounded-full animate-pulse ${
+                    alert.severity === 'red' ? 'bg-red-500' : 'bg-amber-500'
+                  }`} />
                 </div>
+
                 <div className="space-y-1">
-                  <p className="text-[10px] text-muted-foreground uppercase font-bold">Causa Provável</p>
-                  <p className="text-xs leading-relaxed">{alert.cause}</p>
+                  <p className="text-[10px] opacity-60 uppercase font-bold">Impacto Estimado</p>
+                  <p className="text-sm font-bold">{formatCurrency(alert.impact)}</p>
                 </div>
-                <div className="pt-2 border-t border-current/10">
-                  <p className="text-[10px] text-muted-foreground uppercase font-bold">Ação Sugerida</p>
-                  <p className="text-xs font-medium text-foreground">{alert.action}</p>
+
+                <div className="space-y-3">
+                  <div className="space-y-0.5">
+                    <p className="text-[9px] opacity-60 uppercase font-bold">Causa / Ação</p>
+                    <p className="text-[11px] leading-relaxed line-clamp-2 italic">"{alert.cause}"</p>
+                  </div>
+                  
+                  <div className="flex flex-col gap-2">
+                    <p className="text-[11px] font-medium opacity-90">{alert.action}</p>
+                    <button className="mt-1 w-full py-1.5 px-3 rounded text-[10px] font-bold uppercase tracking-widest bg-current/10 hover:bg-current/20 transition-colors border border-current/20">
+                      {alert.resolveAction}
+                    </button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
