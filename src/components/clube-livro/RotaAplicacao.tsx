@@ -19,12 +19,7 @@ export function RotaAplicacao() {
       icon: Heart,
       rota: '/jardim-da-psique',
     },
-    {
-      label: 'Laboratório 80/20',
-      descricao: 'Aplicação prática em grupo',
-      icon: FlaskConical, // Importar FlaskConical se necessário
-      rota: '/clube/laboratorio-8020',
-    },
+    // Laboratório 80/20 removido pois está duplicado com a seção Treino Oracular
   ];
 
   return (
