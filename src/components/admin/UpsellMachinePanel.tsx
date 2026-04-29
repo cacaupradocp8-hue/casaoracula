@@ -249,37 +249,47 @@ export function UpsellMachinePanel() {
                           <div className="text-xs text-muted-foreground">{(opp.profiles as any)?.email}</div>
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-2">
-                            <Badge variant="outline" className="text-[10px]">{opp.segment_from} → {opp.segment_to}</Badge>
-                            {opp.segment_from === 'Clube' && <Badge className="bg-amber-500/10 text-amber-600 border-amber-200">Top 1</Badge>}
-                            {opp.segment_from === 'Formação' && <Badge className="bg-blue-500/10 text-blue-600 border-blue-200">Top 2</Badge>}
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline" className="text-[10px]">{opp.segment_from} → {opp.segment_to}</Badge>
+                              {opp.segment_from === 'Clube' && <Badge className="bg-amber-500/10 text-amber-600 border-amber-200">Top 1</Badge>}
+                            </div>
+                            <div className="text-[10px] text-muted-foreground italic max-w-[150px] leading-tight">
+                              {opp.probability_reason || opp.reason}
+                            </div>
                           </div>
                         </TableCell>
                         <TableCell>
                           <div className="space-y-1">
                             <div className="flex items-center justify-between text-[10px]">
-                              <span>Engajamento</span>
-                              <span>{(opp.engagement_score * 100).toFixed(0)}%</span>
+                              <span>Probabilidade</span>
+                              <span className="font-bold text-primary">{((opp.probability_score || 0) * 100).toFixed(0)}%</span>
                             </div>
                             <div className="w-24 h-1.5 bg-muted rounded-full overflow-hidden">
                               <div 
-                                className="h-full bg-green-500" 
-                                style={{ width: `${opp.engagement_score * 100}%` }}
+                                className="h-full bg-primary" 
+                                style={{ width: `${(opp.probability_score || 0) * 100}%` }}
                               />
                             </div>
-                            {opp.refusal_count > 0 && (
-                              <div className="flex items-center gap-1 text-[10px] text-red-500">
-                                <Ban className="h-3 w-3" />
-                                {opp.refusal_count} recusas anteriores
-                              </div>
-                            )}
+                            <div className="text-[9px] text-muted-foreground flex gap-2">
+                              <span>Timing: x{opp.timing_factor?.toFixed(1) || '1.0'}</span>
+                              <span>Hist: {(opp.historical_segment_rate * 100).toFixed(0)}%</span>
+                            </div>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant="secondary" className="gap-1 font-normal">
-                            {opp.engagement_score > 0.8 ? <Phone className="h-3 w-3" /> : <Mail className="h-3 w-3" />}
-                            {opp.engagement_score > 0.8 ? 'Humano / High Touch' : 'Email / Automatizado'}
-                          </Badge>
+                          <div className="space-y-1">
+                            <Badge variant="secondary" className="gap-1 font-normal text-[10px]">
+                              {opp.engagement_score > 0.8 ? <Phone className="h-3 w-3" /> : <Mail className="h-3 w-3" />}
+                              Sugestão: {opp.engagement_score > 0.8 ? 'Humano' : 'Email'}
+                            </Badge>
+                            {opp.touch_count > 0 && (
+                              <div className="text-[9px] text-muted-foreground flex flex-col">
+                                <span>Toques: {opp.touch_count}</span>
+                                <span>Last: {opp.last_touch_channel || 'N/A'}</span>
+                              </div>
+                            )}
+                          </div>
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
