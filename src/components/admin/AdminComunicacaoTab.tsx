@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText, Zap, History, Send } from 'lucide-react';
+import { FileText, Zap, History, Send, Activity } from 'lucide-react';
+import { AutomationHealthDashboard } from './communication/AutomationHealthDashboard';
 import { CommunicationTemplates } from './communication/CommunicationTemplates';
 import { CommunicationAutomation } from './communication/CommunicationAutomation';
 import { CommunicationLogs } from './communication/CommunicationLogs';
@@ -19,7 +20,7 @@ export function AdminComunicacaoTab() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="templates" className="gap-2">
             <FileText className="h-4 w-4" />
             Templates
@@ -27,6 +28,10 @@ export function AdminComunicacaoTab() {
           <TabsTrigger value="automation" className="gap-2">
             <Zap className="h-4 w-4" />
             Automação
+          </TabsTrigger>
+          <TabsTrigger value="health" className="gap-2">
+            <Activity className="h-4 w-4" />
+            Saúde
           </TabsTrigger>
           <TabsTrigger value="logs" className="gap-2">
             <History className="h-4 w-4" />
@@ -44,6 +49,10 @@ export function AdminComunicacaoTab() {
 
         <TabsContent value="automation" className="mt-6">
           <CommunicationAutomation />
+        </TabsContent>
+
+        <TabsContent value="health" className="mt-6">
+          <AutomationHealthDashboard />
         </TabsContent>
 
         <TabsContent value="logs" className="mt-6">
