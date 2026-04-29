@@ -75,6 +75,16 @@ interface UserTimeline {
   description: string;
 }
 
+interface AutomationRule {
+  id: string;
+  risk_type: string;
+  action_type: string;
+  channel: string;
+  min_success_rate: number;
+  is_active: boolean;
+  updated_at: string;
+}
+
 export default function AdminCasaOraculaTab() {
   console.log('[AdminCasaOraculaTab] rendering');
   const [stagnantUsers, setStagnantUsers] = useState<StagnationInfoV4[]>([]);
