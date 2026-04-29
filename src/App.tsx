@@ -186,6 +186,7 @@ const LabirintoHeroinaPage = React.lazy(() => import("./pages/labirinto-heroina/
 const Admin = React.lazy(() => import("./pages/Admin"));
 const DesbloqueiePage = React.lazy(() => import("./pages/DesbloqueiePage"));
 const PortalLuxo = React.lazy(() => import("./pages/preview/PortalLuxo"));
+const EstradaMonumental = React.lazy(() => import("./pages/preview/EstradaMonumental"));
 
 
 // ─── Utility components ───────────────────────────────────────
@@ -511,6 +512,7 @@ function AppRoutes() {
 
       {/* Previews */}
       <Route path="/preview/portal-luxo" element={<PortalLuxo />} />
+      <Route path="/preview/estrada-monumental" element={<EstradaMonumental />} />
       <Route path="/test-bottom-nav" element={<BottomNavTestPage />} />
 
       <Route path="/biblioteca-das-travessias" element={<ProtectedRoute><Navigate to="/biblioteca?aba=travessias" replace /></ProtectedRoute>} />
