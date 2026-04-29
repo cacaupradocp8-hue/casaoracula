@@ -106,10 +106,14 @@ export default function AdminCasaOraculaTab() {
       if (directMetrics) {
         const grouped: Record<string, UsageMetric> = {};
         directMetrics.forEach(log => {
-          const date = format(new Date(log.created_at), 'yyyy-MM-dd');
-          if (!grouped[date]) grouped[date] = { day: date, interactions: 0, tokens: 0 };
-          grouped[date].interactions++;
-          grouped[date].tokens += log.tokens_used || 0;
+          try {
+            const date = format(new Date(log.created_at), 'yyyy-MM-dd');
+            if (!grouped[date]) grouped[date] = { day: date, interactions: 0, tokens: 0 };
+            grouped[date].interactions++;
+            grouped[date].tokens += log.tokens_used || 0;
+          } catch (e) {
+            console.error('Error formatting date for log:', log, e);
+          }
         });
         setUsageMetrics(Object.values(grouped).sort((a, b) => b.day.localeCompare(a.day)));
       }
