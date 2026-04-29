@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -221,7 +221,7 @@ export default function AdminCasaOraculaTab() {
               <Badge variant="outline" className="text-blue-500">Conversão</Badge>
             </div>
             <CardTitle className="text-2xl mt-2">
-              {stagnantUsers.filter(u => u.conversion_risk_score > 60).length}
+              {stagnantUsers?.filter(u => (u.conversion_risk_score || 0) > 60).length || 0}
             </CardTitle>
             <CardDescription>Leads em risco de abandono</CardDescription>
           </CardHeader>
@@ -235,21 +235,21 @@ export default function AdminCasaOraculaTab() {
               <Badge variant="outline" className="text-red-500">Churn</Badge>
             </div>
             <CardTitle className="text-2xl mt-2">
-              {stagnantUsers.filter(u => u.churn_risk_score > 60).length}
+              {stagnantUsers?.filter(u => (u.churn_risk_score || 0) > 60).length || 0}
             </CardTitle>
             <CardDescription>Assinantes/Alunas críticas</CardDescription>
           </CardHeader>
         </Card>
 
         {/* Card de SaaS Value */}
-        <Card className="bg-gold/5 border-gold/20">
+        <Card className="bg-amber-500/5 border-amber-500/20">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <Zap className="w-5 h-5 text-gold" />
-              <Badge variant="outline" className="text-gold">SaaS Value</Badge>
+              <Zap className="w-5 h-5 text-amber-500" />
+              <Badge variant="outline" className="text-amber-500">SaaS Value</Badge>
             </div>
             <CardTitle className="text-2xl mt-2">
-              {stagnantUsers.filter(u => u.saas_value_risk_score > 60).length}
+              {stagnantUsers?.filter(u => (u.saas_value_risk_score || 0) > 60).length || 0}
             </CardTitle>
             <CardDescription>Terapeutas subutilizando IA</CardDescription>
           </CardHeader>
@@ -558,7 +558,7 @@ export default function AdminCasaOraculaTab() {
               <CardContent className="pt-6">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-emerald-700">
-                    {performanceMetrics.reduce((acc, curr) => acc + curr.total_returned, 0)}
+                    {performanceMetrics?.reduce((acc, curr) => acc + (curr.total_returned || 0), 0) || 0}
                   </div>
                   <div className="text-xs text-emerald-600 uppercase font-semibold">Usuárias Recuperadas</div>
                 </div>
@@ -568,7 +568,7 @@ export default function AdminCasaOraculaTab() {
               <CardContent className="pt-6">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-blue-700">
-                    {performanceMetrics.reduce((acc, curr) => acc + curr.total_score_reduced, 0)}
+                    {performanceMetrics?.reduce((acc, curr) => acc + (curr.total_score_reduced || 0), 0) || 0}
                   </div>
                   <div className="text-xs text-blue-600 uppercase font-semibold">Riscos Mitigados</div>
                 </div>
@@ -578,7 +578,7 @@ export default function AdminCasaOraculaTab() {
               <CardContent className="pt-6">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-amber-700">
-                    {performanceMetrics.reduce((acc, curr) => acc + curr.total_converted + curr.total_retained, 0)}
+                    {performanceMetrics?.reduce((acc, curr) => acc + (curr.total_converted || 0) + (curr.total_retained || 0), 0) || 0}
                   </div>
                   <div className="text-xs text-amber-600 uppercase font-semibold">Conversões/Retenções</div>
                 </div>
