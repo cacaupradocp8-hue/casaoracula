@@ -14,7 +14,8 @@ import {
   Trophy,
   Zap,
   Crown,
-  Star
+  Star,
+  Quote
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
