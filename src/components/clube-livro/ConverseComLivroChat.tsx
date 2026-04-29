@@ -18,6 +18,7 @@ import {
   Send, Loader2, BookOpen, Sparkles, X,
   MessageCircle, ChevronDown, ChevronUp, Quote,
 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { useStudentTracking } from '@/hooks/useStudentTracking';
 
 // ============================================
