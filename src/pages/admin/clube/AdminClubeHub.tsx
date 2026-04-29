@@ -332,47 +332,11 @@ export default function AdminClubeHub() {
         </div>
       </div>
 
-      {/* Seção de Resumo/Atividade Estilo Notion */}
-      <div className="pt-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
-         <Card className="bg-muted/10 border-primary/5">
-            <CardContent className="p-8">
-               <div className="flex items-center gap-3 mb-6">
-                  <Layout className="w-5 h-5 text-gold" />
-                  <h4 className="font-serif text-xl">Estrutura Operacional</h4>
-               </div>
-               <div className="space-y-4">
-                  {[
-                    { label: 'Fluxo de Criação', desc: 'Criar Ciclo → Definir Portais → Adicionar Acervo' },
-                    { label: 'Treinamento Ativo', desc: 'Simulações baseadas no ciclo vigente' },
-                    { label: 'IA Oracular', desc: 'Base de conhecimento integrada ao livro' }
-                  ].map((item, i) => (
-                    <div key={i} className="flex gap-4 p-4 rounded-xl hover:bg-primary/5 transition-colors border border-transparent hover:border-primary/5">
-                       <div className="w-1.5 h-1.5 rounded-full bg-gold mt-2 shrink-0" />
-                       <div>
-                          <p className="text-sm font-semibold">{item.label}</p>
-                          <p className="text-xs text-muted-foreground">{item.desc}</p>
-                       </div>
-                    </div>
-                  ))}
-               </div>
-            </CardContent>
-         </Card>
-
-         <Card className="bg-gold/5 border-gold/10">
-            <CardContent className="p-8 flex flex-col items-center justify-center text-center space-y-4">
-               <div className="p-4 rounded-full bg-gold/10">
-                  <BookOpen className="w-8 h-8 text-gold" />
-               </div>
-               <h4 className="font-serif text-2xl">Manual da Guardiã</h4>
-               <p className="text-sm text-muted-foreground max-w-sm font-light leading-relaxed">
-                 O admin agora é modular. Cada área acima representa um pilar do Clube.
-                 Use o <strong>Ateliê de Conteúdo</strong> para acelerar a criação de materiais semanais.
-               </p>
-               <Button variant="link" className="text-gold hover:text-gold/80 uppercase tracking-widest text-[10px] font-bold" onClick={() => navigate('/admin/modulos-formativos')}>
-                 Ver Documentação do Sistema
-               </Button>
-            </CardContent>
-         </Card>
+      {/* Rodapé Operacional Minimalista */}
+      <div className="pt-12 border-t border-primary/5">
+        <p className="text-[10px] text-center text-muted-foreground uppercase tracking-[0.3em]">
+          Plataforma Editorial Premium • Sistema de Gestão Oracular
+        </p>
       </div>
     </div>
   );

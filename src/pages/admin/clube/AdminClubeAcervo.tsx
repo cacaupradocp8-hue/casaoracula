@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Library } from 'lucide-react';
-// import { SectionHeader } from '@/components/shared/SectionHeader';
-import { AdminCursosTab } from '@/components/admin/AdminCursosTab';
+import { AdminBibliotecaTab } from '@/components/admin/AdminBibliotecaTab';
 import { useNavigate } from 'react-router-dom';
 
 export default function AdminClubeAcervo() {
@@ -18,11 +17,11 @@ export default function AdminClubeAcervo() {
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div className="flex-1 min-w-0">
-          <h2 className="text-xl font-serif text-foreground">Acervo & Obras</h2>
-          <p className="text-sm text-muted-foreground">Biblioteca de livros e áudios do Clube</p>
+          <h2 className="text-xl font-serif text-foreground">Acervo & Biblioteca</h2>
+          <p className="text-sm text-muted-foreground">Gestão de contos, arquétipos, rituais e materiais de apoio</p>
         </div>
       </div>
-      <AdminCursosTab />
+      <AdminBibliotecaTab />
     </div>
   );
 }
