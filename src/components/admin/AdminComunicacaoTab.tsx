@@ -51,6 +51,10 @@ export function AdminComunicacaoTab() {
           <CommunicationAutomation />
         </TabsContent>
 
+        <TabsContent value="health" className="mt-6">
+          <AutomationHealthDashboard />
+        </TabsContent>
+
         <TabsContent value="logs" className="mt-6">
           <CommunicationLogs />
         </TabsContent>
