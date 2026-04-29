@@ -19,7 +19,7 @@ export function RotaAplicacao() {
       icon: Heart,
       rota: '/jardim-da-psique',
     },
-    // Laboratório 80/20 removido pois está duplicado com a seção Treino Oracular
+    // Laboratório 80/20 unificado com a seção principal de aplicação prática
   ];
 
   return (
