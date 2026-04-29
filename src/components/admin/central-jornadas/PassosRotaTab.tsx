@@ -162,10 +162,23 @@ export function PassosRotaTab({ estacaoId }: Props) {
         if (error) throw error;
       }
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       qc.invalidateQueries({ queryKey: ['admin-rota-passos', estacaoId] });
-      setDialogOpen(false);
       toast({ title: editing ? 'Passo atualizado' : 'Passo criado' });
+      
+      // If requested to stay open for "Add Another"
+      if ((variables as any).addAnother) {
+        setEditing(null);
+        setForm(prev => ({
+          ...prev,
+          titulo: '',
+          subtitulo: '',
+          conteudo_texto: '',
+          ordem: prev.ordem + 10,
+        }));
+      } else {
+        setDialogOpen(false);
+      }
     },
     onError: (err: Error) => {
       toast({ title: 'Erro', description: err.message, variant: 'destructive' });
