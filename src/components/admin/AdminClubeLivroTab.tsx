@@ -152,6 +152,7 @@ export function AdminClubeLivroTab() {
         subtitulo: ciclo.subtitulo,
         autor_livro: ciclo.autor_livro,
         capa_url: ciclo.capa_url,
+        banner_url: (ciclo as any).banner_url || null,
         infografico_url: (ciclo as any).infografico_url || null,
         por_que_este_livro: ciclo.por_que_este_livro,
         como_ler: ciclo.como_ler,
@@ -166,7 +167,7 @@ export function AdminClubeLivroTab() {
         como_ler_slides: (ciclo as any).como_ler_slides || [],
         como_ler_audio_url: (ciclo as any).como_ler_audio_url || null,
       };
-      
+
       if (ciclo.id) {
         const { error } = await supabase
           .from('clube_livro_ciclos')
