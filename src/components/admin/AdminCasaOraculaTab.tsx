@@ -476,6 +476,112 @@ export default function AdminCasaOraculaTab() {
             </CardContent>
           </Card>
         </TabsContent>
+        <TabsContent value="learning" className="space-y-6 pt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-emerald-500" />
+                  Top Ações por Taxa de Sucesso
+                </CardTitle>
+                <CardDescription>Ações que mais geraram retorno ou redução de risco</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Ação</TableHead>
+                      <TableHead>Canal</TableHead>
+                      <TableHead className="text-right">Sucesso (%)</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {performanceMetrics.map((perf, i) => (
+                      <TableRow key={i}>
+                        <TableCell className="text-xs font-medium">{perf.action_type}</TableCell>
+                        <TableCell><Badge variant="outline" className="text-[10px]">{perf.channel}</Badge></TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <span className="font-bold text-emerald-600">{perf.success_rate}%</span>
+                            <Progress value={perf.success_rate} className="h-1.5 w-12" />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {performanceMetrics.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={3} className="text-center py-8 text-muted-foreground">
+                          Nenhum dado de performance coletado ainda.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Activity className="w-5 h-5 text-blue-500" />
+                  Volume de Atendimento Admin
+                </CardTitle>
+                <CardDescription>Total de ações executadas por tipo</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {performanceMetrics.map((perf, i) => (
+                    <div key={i} className="space-y-1">
+                      <div className="flex justify-between text-xs">
+                        <span>{perf.action_type} ({perf.channel})</span>
+                        <span className="font-semibold">{perf.total_actions} ações</span>
+                      </div>
+                      <Progress value={Math.min(100, (perf.total_actions / 10) * 100)} className="h-2" />
+                    </div>
+                  ))}
+                  {performanceMetrics.length === 0 && (
+                    <p className="text-center py-8 text-muted-foreground text-sm">
+                      Aguardando primeiras ações manuais.
+                    </p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="bg-emerald-50 border-emerald-100">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-emerald-700">
+                    {performanceMetrics.reduce((acc, curr) => acc + curr.total_returned, 0)}
+                  </div>
+                  <div className="text-xs text-emerald-600 uppercase font-semibold">Usuárias Recuperadas</div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-blue-50 border-blue-100">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-700">
+                    {performanceMetrics.reduce((acc, curr) => acc + curr.total_score_reduced, 0)}
+                  </div>
+                  <div className="text-xs text-blue-600 uppercase font-semibold">Riscos Mitigados</div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-amber-50 border-amber-100">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-amber-700">
+                    {performanceMetrics.reduce((acc, curr) => acc + curr.total_converted + curr.total_retained, 0)}
+                  </div>
+                  <div className="text-xs text-amber-600 uppercase font-semibold">Conversões/Retenções</div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
       </Tabs>
     </div>
   );
