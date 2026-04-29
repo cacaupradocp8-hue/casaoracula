@@ -82,7 +82,22 @@ interface AutomationRule {
   channel: string;
   min_success_rate: number;
   is_active: boolean;
+  portal: string | null;
+  measurement_window_days: number;
+  approval_reason: string | null;
+  last_success_rate: number | null;
+  last_volume: number | null;
+  last_snapshot_at: string | null;
   updated_at: string;
+}
+
+interface AuditLog {
+  id: string;
+  rule_id: string;
+  action: string;
+  reason: string;
+  snapshot_data: any;
+  created_at: string;
 }
 
 export default function AdminCasaOraculaTab() {
