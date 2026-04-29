@@ -813,21 +813,38 @@ export default function AdminCasaOraculaTab() {
               </CardContent>
             </Card>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card className="bg-blue-50/50 border-blue-100">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm">Automações Leves</CardTitle>
+                  <CardTitle className="text-sm">Meta Cartografia</CardTitle>
                 </CardHeader>
-                <CardContent className="text-xs text-muted-foreground">
-                  E-mails e notificações internas são disparados automaticamente assim que o score ultrapassa o limite de risco, desde que a regra esteja ativa e validada por evidência.
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">Conversão {'>'}</span>
+                    <span className="font-bold text-blue-600">18%</span>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-red-50/50 border-red-100">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm">Meta Churn Clube</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">Recuperação {'>'}</span>
+                    <span className="font-bold text-red-600">22%</span>
+                  </div>
                 </CardContent>
               </Card>
               <Card className="bg-amber-50/50 border-amber-100">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm">Governança Humana</CardTitle>
+                  <CardTitle className="text-sm">Meta SaaS Value</CardTitle>
                 </CardHeader>
-                <CardContent className="text-xs text-muted-foreground">
-                  Ações via WhatsApp permanecem estritamente manuais para garantir o tom de voz e o acolhimento necessário em casos críticos.
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">Ativação {'>'}</span>
+                    <span className="font-bold text-amber-600">15%</span>
+                  </div>
                 </CardContent>
               </Card>
             </div>
