@@ -114,6 +114,14 @@ export default function AdminCasaOraculaTab() {
         setUsageMetrics(Object.values(grouped).sort((a, b) => b.day.localeCompare(a.day)));
       }
 
+      // 3. Aprendizado Operacional
+      const { data: perfData } = await supabase
+        .from('view_admin_action_performance')
+        .select('*')
+        .order('success_rate', { ascending: false });
+      
+      if (perfData) setPerformanceMetrics(perfData as any[]);
+
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
