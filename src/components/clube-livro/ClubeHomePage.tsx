@@ -183,32 +183,46 @@ export function ClubeHomePage() {
                 className="space-y-4"
               >
                 <div className="flex items-center justify-between">
-                   <h3 className="text-[10px] font-display uppercase tracking-widest text-primary">Seu Próximo Passo</h3>
+                   <h3 className="text-[10px] font-display uppercase tracking-widest text-primary/70">Seu Próximo Passo</h3>
                    {pontoAtual.ref_tipo && (
-                     <Badge variant="outline" className="text-[8px] opacity-40 uppercase tracking-tighter">Tipo: {pontoAtual.ref_tipo}</Badge>
+                     <Badge variant="outline" className="text-[8px] opacity-40 uppercase tracking-tighter border-primary/20">Tipo: {pontoAtual.ref_tipo}</Badge>
                    )}
                 </div>
-                <Card className="border-gold/30 bg-gold/5 shadow-[0_0_30px_rgba(201,169,110,0.05)] overflow-hidden">
+                <Card className="border-gold/30 bg-gold/5 shadow-[0_0_40px_rgba(201,169,110,0.08)] overflow-hidden">
                    {pontoAtual.image_url && (
-                     <div className="w-full aspect-video border-b border-gold/10 overflow-hidden">
+                     <div className="w-full aspect-video border-b border-gold/10 overflow-hidden relative">
                        <img src={pontoAtual.image_url} alt={pontoAtual.nome} className="w-full h-full object-cover" />
+                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                       <div className="absolute bottom-3 left-4 flex gap-2">
+                         {pontoAtual.porta && <Badge variant="outline" className="text-[8px] bg-black/40 backdrop-blur-md border-gold/40 text-gold">{pontoAtual.porta}</Badge>}
+                         {pontoAtual.campo && <Badge variant="outline" className="text-[8px] bg-black/40 backdrop-blur-md border-primary/40 text-primary">{pontoAtual.campo}</Badge>}
+                       </div>
                      </div>
                    )}
                    <CardContent className="p-6 space-y-4">
                       <div className="flex items-start gap-4">
-                         <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-2xl border border-gold/20">
+                         <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-2xl border border-gold/20 shadow-inner">
                             {pontoAtual.icone}
                          </div>
                          <div className="flex-1">
-                            <h4 className="text-xl font-serif text-foreground leading-tight">{pontoAtual.nome}</h4>
-                            <p className="text-xs text-muted-foreground italic mt-0.5">{pontoAtual.subtitulo || 'Atividade da jornada'}</p>
+                            <h4 className="text-xl font-serif text-foreground leading-tight tracking-tight">{pontoAtual.nome}</h4>
+                            <p className="text-[11px] text-muted-foreground/60 italic mt-0.5">{pontoAtual.subtitulo || 'Atividade da jornada'}</p>
                          </div>
                       </div>
 
                       {pontoAtual.frase_guia && (
-                        <div className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line border-l-2 border-primary/20 pl-4 py-1 italic bg-background/20 rounded-r-lg">
-                           <Quote className="w-3 h-3 text-gold/40 mb-1" />
+                        <div className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line border-l-2 border-primary/20 pl-4 py-1.5 italic bg-primary/5 rounded-r-lg">
+                           <Quote className="w-3.5 h-3.5 text-gold/30 mb-1" />
                            {pontoAtual.frase_guia}
+                        </div>
+                      )}
+
+                      {/* Cartografia Sync (Icons mode) */}
+                      {!pontoAtual.image_url && (pontoAtual.porta || pontoAtual.campo || pontoAtual.torre) && (
+                        <div className="flex flex-wrap gap-2 pt-1">
+                           {pontoAtual.porta && <Badge variant="outline" className="text-[9px] bg-background/40 border-gold/20 text-gold/60">{pontoAtual.porta}</Badge>}
+                           {pontoAtual.campo && <Badge variant="outline" className="text-[9px] bg-background/40 border-primary/20 text-primary/60">{pontoAtual.campo}</Badge>}
+                           {pontoAtual.torre && <Badge variant="outline" className="text-[9px] bg-background/40 border-emerald-500/20 text-emerald-500/60">{pontoAtual.torre}</Badge>}
                         </div>
                       )}
 
