@@ -1483,6 +1483,7 @@ function CicloDialog({
     subtitulo: '',
     autor_livro: '',
     capa_url: '',
+    banner_url: '',
     infografico_url: '',
     por_que_este_livro: '',
     como_ler: '',
