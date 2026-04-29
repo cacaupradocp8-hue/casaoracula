@@ -1481,6 +1481,7 @@ function CicloDialog({
   const [form, setForm] = useState({
     titulo: '',
     subtitulo: '',
+    author: '',
     autor_livro: '',
     capa_url: '',
     banner_url: '',
@@ -1489,6 +1490,7 @@ function CicloDialog({
     como_ler: '',
     manifesto: '',
     publicado: false,
+    status: 'draft',
     is_multipolar: false,
     campo_simbolico: '',
     mensagem_campo_url: '',
