@@ -20661,6 +20661,36 @@ export type Database = {
         }
         Relationships: []
       }
+      symbolic_rewards: {
+        Row: {
+          created_at: string
+          description: string | null
+          icon_name: string | null
+          id: string
+          name: string
+          rarity: string | null
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          icon_name?: string | null
+          id?: string
+          name: string
+          rarity?: string | null
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          icon_name?: string | null
+          id?: string
+          name?: string
+          rarity?: string | null
+          slug?: string
+        }
+        Relationships: []
+      }
       symbolic_template_sessions: {
         Row: {
           case_id: string | null
@@ -22515,6 +22545,45 @@ export type Database = {
           },
         ]
       }
+      user_journey_stats: {
+        Row: {
+          created_at: string
+          current_portal_name: string | null
+          current_portal_slug: string | null
+          id: string
+          mastery_level: number | null
+          portals_crossed: number | null
+          rituals_completed: number | null
+          total_minutes_invested: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_portal_name?: string | null
+          current_portal_slug?: string | null
+          id?: string
+          mastery_level?: number | null
+          portals_crossed?: number | null
+          rituals_completed?: number | null
+          total_minutes_invested?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_portal_name?: string | null
+          current_portal_slug?: string | null
+          id?: string
+          mastery_level?: number | null
+          portals_crossed?: number | null
+          rituals_completed?: number | null
+          total_minutes_invested?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_progress: {
         Row: {
           completed_at: string
@@ -22544,6 +22613,48 @@ export type Database = {
           },
         ]
       }
+      user_road_nodes: {
+        Row: {
+          created_at: string
+          description: string | null
+          estimated_minutes: number | null
+          id: string
+          metadata: Json | null
+          node_type: string | null
+          position_order: number
+          remaining_minutes: number | null
+          status: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          estimated_minutes?: number | null
+          id?: string
+          metadata?: Json | null
+          node_type?: string | null
+          position_order: number
+          remaining_minutes?: number | null
+          status?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          estimated_minutes?: number | null
+          id?: string
+          metadata?: Json | null
+          node_type?: string | null
+          position_order?: number
+          remaining_minutes?: number | null
+          status?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -22561,6 +22672,35 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_unlocked_rewards: {
+        Row: {
+          id: string
+          reward_id: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          reward_id: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          reward_id?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_unlocked_rewards_reward_id_fkey"
+            columns: ["reward_id"]
+            isOneToOne: false
+            referencedRelation: "symbolic_rewards"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       video_playback_logs: {
         Row: {
