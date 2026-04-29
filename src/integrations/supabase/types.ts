@@ -93,6 +93,55 @@ export type Database = {
           },
         ]
       }
+      admin_action_history: {
+        Row: {
+          action_type: string
+          channel: string
+          id: string
+          sent_at: string | null
+          sent_by: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action_type: string
+          channel: string
+          id?: string
+          sent_at?: string | null
+          sent_by?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action_type?: string
+          channel?: string
+          id?: string
+          sent_at?: string | null
+          sent_by?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_action_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_action_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "admin_action_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "view_user_stagnation"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       agente_conversas: {
         Row: {
           agente_id: string
@@ -22311,6 +22360,8 @@ export type Database = {
       }
       view_user_stagnation: {
         Row: {
+          action_already_sent: boolean | null
+          action_reason: string | null
           churn_risk_score: number | null
           conversion_risk_score: number | null
           email: string | null
@@ -22323,10 +22374,12 @@ export type Database = {
           nome: string | null
           plan_id: string | null
           portal: string | null
-          primary_risk_factor: string | null
+          priority_level: string | null
+          recommended_action: string | null
           saas_value_risk_score: number | null
           signup_date: string | null
           subscription_status: string | null
+          suggested_channel: string | null
           total_cartografias: number | null
           total_jardim: number | null
           user_id: string | null
