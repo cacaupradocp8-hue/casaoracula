@@ -82,6 +82,7 @@ const PREMIUM_CARDS: HubCard[] = [
 
 export default function AdminClubeHub() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const { data: stats } = useQuery({
     queryKey: ['admin-clube-hub-premium-stats'],
     queryFn: async () => {
