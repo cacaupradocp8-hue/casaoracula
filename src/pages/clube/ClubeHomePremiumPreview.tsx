@@ -59,62 +59,87 @@ const ClubHero = ({ name }: { name: string }) => (
 
 const JourneyRoad = () => {
   const steps = [
-    { id: 1, name: 'Portal 1', status: 'completed', side: 'left' },
-    { id: 2, name: 'Aula da Semana', status: 'current', side: 'right' },
-    { id: 3, name: 'Laboratório 80/20', status: 'locked', side: 'left' },
-    { id: 4, name: 'Converse com o Livro', status: 'locked', side: 'right' },
-    { id: 5, name: 'Encontro ao Vivo', status: 'locked', side: 'left' },
-    { id: 6, name: 'Jardim da Psique', status: 'locked', side: 'right' },
-    { id: 7, name: 'Aplicação Profissional', status: 'locked', side: 'left' },
+    { id: 1, name: 'Portal 1', title: 'O Chamado Selvagem', status: 'completed', side: 'left' },
+    { id: 2, name: 'Aula Semanal', title: 'A Cartografia da Alma', status: 'current', side: 'right' },
+    { id: 3, name: 'Laboratório 80/20', title: 'Prática de Integração', status: 'locked', side: 'left' },
+    { id: 4, name: 'Diálogo Interior', title: 'Converse com o Livro', status: 'locked', side: 'right' },
+    { id: 5, name: 'Círculo ao Vivo', title: 'Encontro de Sexta', status: 'locked', side: 'left' },
+    { id: 6, name: 'Oásis Psíquico', title: 'Jardim da Heroína', status: 'locked', side: 'right' },
+    { id: 7, name: 'Maestria Oracular', title: 'Aplicação na Vida', status: 'locked', side: 'left' },
   ];
 
   return (
-    <section className="py-16 px-6 relative">
-      <h2 className="text-[10px] uppercase tracking-[0.4em] text-white/30 font-medium text-center mb-16">
-        Estrada Oracular
-      </h2>
+    <section className="py-24 px-6 relative">
+      <div className="flex flex-col items-center mb-20 space-y-2">
+        <h2 className="text-[10px] uppercase tracking-[0.6em] text-white/20 font-bold">
+          Jornada em Curso
+        </h2>
+        <div className="h-[2px] w-12 bg-gold/20" />
+      </div>
       
       <div className="relative max-w-lg mx-auto">
-        {/* Central Line */}
-        <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[1px] bg-white/10" />
+        {/* Central Road - High Precision */}
+        <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-white/10 to-transparent" />
         
-        <div className="space-y-12 relative">
+        <div className="space-y-24 relative">
           {steps.map((step, idx) => (
             <div key={step.id} className={`flex items-center w-full ${step.side === 'left' ? 'flex-row' : 'flex-row-reverse'}`}>
               <motion.div 
-                initial={{ opacity: 0, x: step.side === 'left' ? -20 : 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="w-1/2 pr-6 pl-0 sm:pr-10 text-right group"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                className="w-1/2 group"
                 style={{ textAlign: step.side === 'left' ? 'right' : 'left', paddingLeft: step.side === 'right' ? '2.5rem' : '0', paddingRight: step.side === 'left' ? '2.5rem' : '0' }}
               >
                 <div className={`
-                  inline-block p-4 rounded-2xl border transition-all duration-500
-                  ${step.status === 'current' ? 'bg-gold/10 border-gold/40 shadow-[0_0_30px_rgba(201,169,110,0.1)]' : 
-                    step.status === 'completed' ? 'bg-white/5 border-white/10' : 'bg-transparent border-white/5 opacity-40'}
+                  relative inline-block text-left p-5 rounded-[2rem] border transition-all duration-700
+                  ${step.status === 'current' ? 
+                    'bg-[#0a0f1d] border-gold/40 shadow-[0_20px_40px_rgba(0,0,0,0.4),0_0_20px_rgba(201,169,110,0.1)] scale-105 z-10' : 
+                    step.status === 'completed' ? 
+                    'bg-white/[0.02] border-white/5 opacity-80' : 
+                    'bg-transparent border-transparent opacity-20'}
                 `}>
-                  <p className={`text-[10px] uppercase tracking-widest mb-1 ${step.status === 'current' ? 'text-gold' : 'text-white/40'}`}>
+                  {step.status === 'current' && (
+                    <div className="absolute -top-3 left-6">
+                      <Badge className="bg-gold text-black hover:bg-gold border-none text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-tighter">
+                        Agora
+                      </Badge>
+                    </div>
+                  )}
+                  
+                  <p className={`text-[9px] font-bold uppercase tracking-widest mb-1 ${step.status === 'current' ? 'text-gold' : 'text-white/40'}`}>
                     {step.name}
                   </p>
-                  <p className="text-xs text-white/60 font-light">
-                    {step.status === 'current' ? 'Em andamento' : step.status === 'completed' ? 'Atravessado' : 'Aguardando'}
-                  </p>
+                  <h4 className="text-sm font-serif text-white/90 leading-snug mb-2">
+                    {step.title}
+                  </h4>
+                  
+                  <div className="flex items-center gap-2">
+                    <div className={`w-1 h-1 rounded-full ${step.status === 'completed' ? 'bg-gold/40' : step.status === 'current' ? 'bg-gold' : 'bg-white/10'}`} />
+                    <span className="text-[10px] text-white/30 font-medium tracking-wide">
+                      {step.status === 'current' ? 'Seguir trilha' : step.status === 'completed' ? 'Integrado' : 'Aguardando'}
+                    </span>
+                  </div>
                 </div>
               </motion.div>
 
-              {/* Node */}
-              <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 flex items-center justify-center">
+              {/* Node - Minimalist Apple Style */}
+              <div className="absolute left-1/2 -translate-x-1/2 w-8 h-8 flex items-center justify-center">
                 <div className={`
-                  w-2 h-2 rounded-full transition-all duration-700
-                  ${step.status === 'current' ? 'bg-gold scale-150 shadow-[0_0_15px_#C9A96E]' : 
-                    step.status === 'completed' ? 'bg-gold/60' : 'bg-white/20'}
+                  relative z-10 w-2 h-2 rounded-full transition-all duration-1000
+                  ${step.status === 'current' ? 'bg-gold scale-125' : 
+                    step.status === 'completed' ? 'bg-gold/60' : 'bg-white/10'}
                 `} />
+                
                 {step.status === 'current' && (
-                  <motion.div 
-                    animate={{ scale: [1, 2.5, 1], opacity: [0.5, 0, 0.5] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute inset-0 bg-gold/30 rounded-full"
-                  />
+                  <>
+                    <motion.div 
+                      animate={{ scale: [1, 3], opacity: [0.3, 0] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+                      className="absolute w-4 h-4 bg-gold/40 rounded-full"
+                    />
+                    <div className="absolute w-4 h-4 bg-gold/10 blur-md rounded-full" />
+                  </>
                 )}
               </div>
 
@@ -181,18 +206,20 @@ const EvolutionStats = () => (
 );
 
 const PremiumBottomNav = () => (
-  <nav className="fixed bottom-0 left-0 right-0 z-50 px-6 pb-6 pt-2 md:hidden">
-    <div className="max-w-md mx-auto bg-[#02040a]/80 backdrop-blur-2xl border border-white/10 rounded-3xl h-18 flex items-center justify-around px-2 shadow-2xl">
+  <nav className="fixed bottom-6 left-6 right-6 z-50 md:hidden">
+    <div className="max-w-md mx-auto bg-[#050810]/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] h-20 flex items-center justify-around px-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
       {[
         { icon: LayoutDashboard, label: 'Início', active: true },
         { icon: BookOpen, label: 'Clube' },
-        { icon: Sparkles, label: 'Ferramentas' },
+        { icon: Sparkles, label: 'Oráculo' },
         { icon: Flower2, label: 'Jardim' },
-        { icon: GraduationCap, label: 'Formação' },
+        { icon: Library, label: 'Acervo' },
       ].map((item, i) => (
-        <button key={i} className={`flex flex-col items-center gap-1.5 p-2 transition-all ${item.active ? 'text-gold' : 'text-white/30'}`}>
-          <item.icon className={`w-5 h-5 ${item.active ? 'stroke-[2.5px]' : 'stroke-[1.5px]'}`} />
-          <span className="text-[8px] uppercase tracking-widest font-medium">{item.label}</span>
+        <button key={i} className={`flex flex-col items-center gap-1.5 p-2 transition-all duration-300 ${item.active ? 'text-gold scale-110' : 'text-white/20 hover:text-white/40'}`}>
+          <div className={`relative ${item.active ? 'after:absolute after:-bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-gold after:rounded-full' : ''}`}>
+            <item.icon className={`w-6 h-6 ${item.active ? 'stroke-[2px]' : 'stroke-[1.5px]'}`} />
+          </div>
+          <span className="text-[7px] uppercase tracking-[0.2em] font-bold">{item.label}</span>
         </button>
       ))}
     </div>
@@ -235,45 +262,61 @@ export default function ClubeHomePremiumPreview() {
         <ClubHero name={userName} />
         
         {/* 2. Onde parei / Próxima recompensa (Enhanced with high-end UI) */}
-        <section className="px-6 -mt-4 mb-12 relative z-20">
+        <section className="px-6 -mt-8 mb-16 relative z-20">
           <div className="max-w-md mx-auto">
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="p-[1px] rounded-3xl bg-gradient-to-b from-white/10 to-transparent shadow-2xl overflow-hidden group"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
+              className="p-[1px] rounded-[2.5rem] bg-gradient-to-b from-white/20 via-white/5 to-transparent shadow-[0_40px_80px_rgba(0,0,0,0.6)] overflow-hidden group"
             >
-              <div className="bg-[#050810]/90 backdrop-blur-3xl rounded-[23px] p-6 relative overflow-hidden">
-                {/* Subtle highlight effect */}
-                <div className="absolute -top-24 -right-24 w-48 h-48 bg-gold/5 blur-[60px] rounded-full group-hover:bg-gold/10 transition-colors duration-700" />
+              <div className="bg-[#050810]/95 backdrop-blur-3xl rounded-[2.45rem] p-8 relative overflow-hidden">
+                {/* Magnetic Glow Effect */}
+                <div className="absolute -top-32 -right-32 w-64 h-64 bg-gold/10 blur-[80px] rounded-full group-hover:bg-gold/15 transition-colors duration-1000" />
                 
-                <div className="flex justify-between items-start mb-6">
+                <div className="flex justify-between items-start mb-8">
                   <div className="space-y-1">
-                    <span className="text-[10px] font-medium tracking-[0.2em] text-gold uppercase">Próximo Marco</span>
-                    <h3 className="text-lg font-serif text-white/90 leading-tight">A Alquimia dos Símbolos</h3>
+                    <div className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
+                      <span className="text-[10px] font-bold tracking-[0.3em] text-gold/80 uppercase">Retomar Agora</span>
+                    </div>
+                    <h3 className="text-2xl font-serif text-white tracking-tight leading-tight pt-1">Onde você parou...</h3>
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                    <Zap className="w-5 h-5 text-gold" />
+                  <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center shadow-inner">
+                    <BookOpen className="w-6 h-6 text-gold/60" />
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-4 mb-8">
+                   <div className="flex items-center gap-4">
+                      <div className="w-12 h-16 rounded-lg bg-gradient-to-br from-white/10 to-transparent flex-shrink-0 border border-white/10 overflow-hidden relative">
+                         <div className="absolute inset-0 bg-gold/5" />
+                         <div className="absolute bottom-1 left-1 right-1 h-0.5 bg-gold/40 rounded-full" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Capítulo III</p>
+                        <p className="text-sm font-medium text-white/90">A Intuição como Bússola</p>
+                      </div>
+                   </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex justify-between items-end text-[10px] tracking-[0.1em] text-white/30 uppercase font-bold">
+                    <span>Sua evolução</span>
+                    <span className="text-gold">65%</span>
+                  </div>
+                  <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: '65%' }}
-                      transition={{ duration: 1.5, ease: "circOut", delay: 1 }}
-                      className="h-full bg-gradient-to-r from-gold/40 to-gold shadow-[0_0_10px_rgba(201,169,110,0.3)] rounded-full"
+                      transition={{ duration: 1.5, ease: "circOut", delay: 0.8 }}
+                      className="h-full bg-gradient-to-r from-gold/60 to-gold shadow-[0_0_15px_rgba(201,169,110,0.4)] rounded-full"
                     />
-                  </div>
-                  <div className="flex justify-between items-center text-[10px] tracking-wider text-white/40 uppercase font-medium">
-                    <span>Progresso Real</span>
-                    <span className="text-gold">65% concluído</span>
                   </div>
                 </div>
 
-                <Button className="w-full mt-6 bg-white text-black hover:bg-white/90 h-12 rounded-2xl font-semibold tracking-tight transition-all active:scale-[0.98]">
-                  Continuar Agora
+                <Button className="w-full mt-10 bg-white text-black hover:bg-white/90 h-14 rounded-2xl font-bold text-base tracking-tight transition-all active:scale-[0.97] shadow-xl">
+                  Continuar Atravessando
                 </Button>
               </div>
             </motion.div>
