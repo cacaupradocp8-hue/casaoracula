@@ -118,29 +118,54 @@ export default function AdminCentralEstacao() {
 
   return (
     <div className="container mx-auto px-4 py-8 pb-32 max-w-5xl">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-6">
-            <Button variant="ghost" size="icon" onClick={() => {
+        {/* Header Consolidado e Operacional */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 p-6 bg-card border border-primary/5 rounded-2xl shadow-sm">
+          <div className="flex items-start gap-4 flex-1 min-w-0">
+            <Button variant="ghost" size="icon" className="mt-1" onClick={() => {
               (window as any).Admin_SetActiveTab?.('clube-jornadas');
               navigate('/admin/clube/ciclos');
             }}>
               <ArrowLeft className="h-4 w-4" />
             </Button>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3">
-              <h1 className="text-xl font-display text-foreground truncate">
-                {estacao.titulo}
-              </h1>
-              <Badge variant={estacao.ativa ? 'default' : 'secondary'} className="text-[10px]">
-                {estacao.ativa ? 'Ativa' : 'Inativa'}
-              </Badge>
-              <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setEditStationOpen(true)}>
-                <Pencil className="h-3 w-3" />
+            
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 flex-wrap">
+                <h1 className="text-2xl font-serif text-foreground truncate">
+                  {estacao.titulo}
+                </h1>
+                <Badge variant={estacao.publicada ? 'default' : 'secondary'} className={cn("text-[9px] uppercase tracking-widest", estacao.publicada ? "bg-emerald-500/10 text-emerald-500" : "")}>
+                  {estacao.publicada ? 'Publicado' : 'Rascunho'}
+                </Badge>
+                {estacao.ativa && <Badge variant="outline" className="text-[9px] border-gold text-gold uppercase tracking-widest bg-gold/5">Estação Ativa</Badge>}
+              </div>
+              <p className="text-sm text-muted-foreground mt-1 flex items-center gap-2">
+                <BookOpen className="w-3.5 h-3.5 text-gold" />
+                {estacao.livro_titulo} {estacao.livro_autor ? `— ${estacao.livro_autor}` : ''}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 pt-4 md:pt-0 border-t md:border-t-0 border-primary/5">
+            <div className="flex items-center gap-3 px-3 py-1.5 bg-muted/30 rounded-full border border-primary/5">
+              <Label htmlFor="station-publish" className="text-[10px] font-bold uppercase tracking-wider cursor-pointer">Visibilidade</Label>
+              <Switch 
+                id="station-publish"
+                checked={estacao.publicada} 
+                onCheckedChange={(v) => updateStationMutation.mutate({...stationForm, publicada: v})}
+                disabled={updateStationMutation.isPending}
+              />
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" className="gap-2 border-primary/10" onClick={() => setEditStationOpen(true)}>
+                <Pencil className="h-3.5 w-3.5" />
+                Editar Geral
+              </Button>
+              <Button size="sm" className="bg-gold hover:bg-gold/90 text-black font-bold gap-2" onClick={() => (window as any).open(`https://clube.oracular.com.br/estacao/${estacao.id}`, '_blank')}>
+                <ExternalLink className="h-3.5 w-3.5" />
+                Ver na Aluna
               </Button>
             </div>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              {estacao.livro_titulo} {estacao.livro_autor ? `— ${estacao.livro_autor}` : ''}
-            </p>
           </div>
         </div>
 
