@@ -126,7 +126,7 @@ export function ImageUpload({
 
       // Get public URL
       const { data: urlData } = supabase.storage
-        .from('content-images')
+        .from(bucket)
         .getPublicUrl(data.path);
 
       onChange(urlData.publicUrl);
