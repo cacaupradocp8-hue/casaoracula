@@ -22968,6 +22968,7 @@ export type Database = {
         Args: { _user_id: string }
         Returns: undefined
       }
+      refresh_upsell_opportunities: { Args: never; Returns: undefined }
       update_cidadela_from_session: {
         Args: {
           _arquetipo?: string
