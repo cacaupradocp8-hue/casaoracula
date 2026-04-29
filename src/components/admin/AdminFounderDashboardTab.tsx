@@ -41,7 +41,7 @@ export default function AdminFounderDashboardTab() {
     queryKey: ['founder-financials'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('view_founder_financial_summary')
+        .from('view_founder_financial_summary' as any)
         .select('*')
         .order('period_start', { ascending: false })
         .limit(1);
