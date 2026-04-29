@@ -130,6 +130,8 @@ export default function AdminCasaOraculaTab() {
   const [simulationResult, setSimulationResult] = useState<any>(null);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [selectedRuleAudit, setSelectedRuleAudit] = useState<AutomationRule | null>(null);
+  const [currentWindow, setCurrentWindow] = useState<number>(7);
+  const [currentPortalFilter, setCurrentPortalFilter] = useState<string>('GLOBAL');
 
   useEffect(() => {
     fetchDashboardData();
