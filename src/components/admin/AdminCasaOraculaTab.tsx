@@ -68,27 +68,22 @@ export default function AdminCasaOraculaTab() {
       if (stagnationData) setStagnantUsers(stagnationData as StagnationInfo[]);
 
       // 2. Métricas de Uso (Visão Geral)
-      const { data: metricsData } = await supabase.rpc('get_ai_usage_metrics', { days_limit: 7 });
-      // Se a RPC não existir ainda, usaremos query direta ou mock para a Fase 1
-      if (!metricsData) {
-        const { data: directMetrics } = await supabase
-          .from('ai_interaction_logs')
-          .select('created_at, tokens_used')
-          .order('created_at', { ascending: false });
-        
-        // Agrupar manualmente se necessário (simplificado para MVP)
-        if (directMetrics) {
-          const grouped: Record<string, UsageMetric> = {};
-          directMetrics.slice(0, 100).forEach(log => {
-            const date = format(new Date(log.created_at), 'yyyy-MM-dd');
-            if (!grouped[date]) grouped[date] = { day: date, interactions: 0, tokens: 0 };
-            grouped[date].interactions++;
-            grouped[date].tokens += log.tokens_used || 0;
-          });
-          setUsageMetrics(Object.values(grouped));
-        }
-      } else {
-        setUsageMetrics(metricsData as UsageMetric[]);
+      // Usamos query direta para a Fase 1
+      const { data: directMetrics } = await supabase
+        .from('ai_interaction_logs')
+        .select('created_at, tokens_used')
+        .order('created_at', { ascending: false })
+        .limit(1000);
+      
+      if (directMetrics) {
+        const grouped: Record<string, UsageMetric> = {};
+        directMetrics.forEach(log => {
+          const date = format(new Date(log.created_at), 'yyyy-MM-dd');
+          if (!grouped[date]) grouped[date] = { day: date, interactions: 0, tokens: 0 };
+          grouped[date].interactions++;
+          grouped[date].tokens += log.tokens_used || 0;
+        });
+        setUsageMetrics(Object.values(grouped).sort((a, b) => b.day.localeCompare(a.day)));
       }
 
       // 3. Vazamentos de Dinheiro (Top Users por Token)
