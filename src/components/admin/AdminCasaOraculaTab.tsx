@@ -23,7 +23,7 @@ import {
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-interface StagnationInfoV3 {
+interface StagnationInfoV4 {
   user_id: string;
   nome: string;
   email: string;
@@ -32,7 +32,11 @@ interface StagnationInfoV3 {
   conversion_risk_score: number;
   churn_risk_score: number;
   saas_value_risk_score: number;
-  primary_risk_factor: string;
+  action_reason: string;
+  recommended_action: string;
+  suggested_channel: string;
+  priority_level: 'Alta' | 'Média' | 'Baixa';
+  action_already_sent: boolean;
   last_value_timestamp: string;
   last_ai_use: string;
   last_clube_activity: string;
@@ -53,7 +57,7 @@ interface UserTimeline {
 }
 
 export default function AdminCasaOraculaTab() {
-  const [stagnantUsers, setStagnantUsers] = useState<StagnationInfoV3[]>([]);
+  const [stagnantUsers, setStagnantUsers] = useState<StagnationInfoV4[]>([]);
   const [usageMetrics, setUsageMetrics] = useState<UsageMetric[]>([]);
   const [selectedUserTimeline, setSelectedUserTimeline] = useState<UserTimeline[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -126,16 +130,24 @@ export default function AdminCasaOraculaTab() {
     return "text-emerald-500";
   };
 
+  const getPriorityBadge = (priority: string) => {
+    switch (priority) {
+      case 'Alta': return "bg-red-100 text-red-700 border-red-200";
+      case 'Média': return "bg-amber-100 text-amber-700 border-amber-200";
+      default: return "bg-emerald-100 text-emerald-700 border-emerald-200";
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-serif text-foreground">Painel Mestre V3 — Governança</h2>
-          <p className="text-muted-foreground">Monitoramento de conversão, churn e valor SaaS</p>
+          <h2 className="text-2xl font-serif text-foreground">Painel Mestre V4 — Decisão Assistida</h2>
+          <p className="text-muted-foreground">Inteligência operacional com recomendações de próxima melhor ação</p>
         </div>
         <Button variant="outline" size="sm" onClick={fetchDashboardData} disabled={isLoading}>
           <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-          Atualizar Inteligência
+          Atualizar Decisões
         </Button>
       </div>
 
@@ -196,11 +208,11 @@ export default function AdminCasaOraculaTab() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Usuária / Perfil</TableHead>
-                    <TableHead>Conversão</TableHead>
-                    <TableHead>Churn</TableHead>
-                    <TableHead>SaaS Value</TableHead>
-                    <TableHead>Fator Crítico</TableHead>
-                    <TableHead className="text-right">Ação</TableHead>
+                    <TableHead>Scores de Risco (%)</TableHead>
+                    <TableHead>Motivo / Diagnóstico</TableHead>
+                    <TableHead>Próxima Melhor Ação</TableHead>
+                    <TableHead>Canal / Pri.</TableHead>
+                    <TableHead className="text-right">Histórico</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -214,42 +226,61 @@ export default function AdminCasaOraculaTab() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <div className="flex flex-col gap-1">
-                          <span className={`text-xs font-bold ${getRiskColor(user.conversion_risk_score)}`}>
-                            {user.conversion_risk_score}%
-                          </span>
-                          <Progress value={user.conversion_risk_score} className="h-1 w-16" />
+                        <div className="flex gap-2">
+                          <div className="flex flex-col items-center">
+                            <span className={`text-[10px] font-bold ${getRiskColor(user.conversion_risk_score)}`}>CV</span>
+                            <Progress value={user.conversion_risk_score} className="h-1 w-8" />
+                          </div>
+                          <div className="flex flex-col items-center">
+                            <span className={`text-[10px] font-bold ${getRiskColor(user.churn_risk_score)}`}>CH</span>
+                            <Progress value={user.churn_risk_score} className="h-1 w-8" />
+                          </div>
+                          <div className="flex flex-col items-center">
+                            <span className={`text-[10px] font-bold ${getRiskColor(user.saas_value_risk_score)}`}>SA</span>
+                            <Progress value={user.saas_value_risk_score} className="h-1 w-8" />
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="max-w-[150px]">
+                          <div className="text-xs font-medium leading-tight">{user.action_reason}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="max-w-[200px]">
+                          <div className="text-xs font-semibold text-primary">{user.recommended_action}</div>
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col gap-1">
-                          <span className={`text-xs font-bold ${getRiskColor(user.churn_risk_score)}`}>
-                            {user.churn_risk_score}%
-                          </span>
-                          <Progress value={user.churn_risk_score} className="h-1 w-16" />
+                          <Badge variant="outline" className="text-[10px] py-0 h-4 w-fit">
+                            {user.suggested_channel}
+                          </Badge>
+                          <Badge className={`text-[9px] py-0 h-4 w-fit border ${getPriorityBadge(user.priority_level)}`}>
+                            {user.priority_level}
+                          </Badge>
                         </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-col gap-1">
-                          <span className={`text-xs font-bold ${getRiskColor(user.saas_value_risk_score)}`}>
-                            {user.saas_value_risk_score}%
-                          </span>
-                          <Progress value={user.saas_value_risk_score} className="h-1 w-16" />
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="border-amber-500/20 text-amber-600 bg-amber-50">
-                          {user.primary_risk_factor}
-                        </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          onClick={() => fetchUserTimeline(user.user_id)}
-                        >
-                          Audit <ArrowUpRight className="ml-1 w-3 h-3" />
-                        </Button>
+                        <div className="flex flex-col items-end gap-1">
+                          {user.action_already_sent ? (
+                            <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 border-emerald-100 text-[9px]">
+                              ENVIADO
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-[9px] opacity-50">
+                              PENDENTE
+                            </Badge>
+                          )}
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-7 px-2 text-[10px]"
+                            onClick={() => fetchUserTimeline(user.user_id)}
+                          >
+                            Timeline <Clock className="ml-1 w-3 h-3" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
