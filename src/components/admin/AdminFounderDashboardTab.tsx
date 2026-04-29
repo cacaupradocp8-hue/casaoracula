@@ -47,7 +47,7 @@ export default function AdminFounderDashboardTab() {
         .limit(1);
       
       if (error) throw error;
-      return data?.[0] || null;
+      return (data as any)?.[0] || null;
     }
   });
 
