@@ -92,13 +92,55 @@ const TabLoader = () => (
 
 // Map tab keys to their lazy components
 const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentType<any>>> = {
+  // CLUBE PREMIUM
+  'clube': AdminClubeHub,
+  'clube-jornadas': AdminCentralJornadas,
+  'clube-portais': AdminPortalCMS,
+  'clube-acervo': AdminClubeAcervo,
+  'clube-treinamento': AdminClubeTreinamento,
+  'clube-chat': AdminClubeChat,
+  
+  // FORMAÇÃO
+  'cursos': AdminCursosTab,
+  'travessias': AdminTravessiasTab,
+  'formacao': AdminFormacaoTab,
+  'certificacao': AdminCertificacaoTab,
+  
+  // FERRAMENTAS
+  'labirinto': AdminLabirintoTab,
+  'labirinto-heroina': AdminLabirintoHeroinaTab,
+  'big5-simbolico': AdminBig5SymbolicTab,
+  'eneagrama-feminino': AdminEneagramaFemininoTab,
+  'jornada-heroina': AdminJornadaHeroinaTab,
+  'torre-viva': AdminTorreVivaTab,
+  'atlas-feminino': AdminAtlasFemininoTab,
+  'radiestesia': AdminRadiestesiaTab,
+  
+  // ESTÚDIO
+  'estudio-oracular': AdminEstudioOracular,
+  'gerador-semanal': AdminGeradorSemanal,
+  'audios': AdminAudiosTab,
+  'galeria': AdminGaleriaTab,
+  'vitrine': AdminVitrineCards,
+  
+  // COMUNIDADE
+  'casa-oracula': AdminCasaOraculaTab,
+  'founder': AdminFounderDashboardTab,
+  'comunicacao': AdminComunicacaoTab,
+  'narroterapia': AdminNarroterapiaTab,
+  'grupos': AdminGruposTab,
+  
+  // SISTEMA
   'users': AdminUsersTab,
+  'assinaturas': AdminAssinaturasTab,
+  'planos-clube': AdminPlanosClubTab,
+  'settings': AdminSettingsTab,
+
+  // OTHER TABS (Used by sub-routes or legacy redirects)
   'matriculas': AdminMatriculasTab,
   'degustacao': AdminDegustacaoTab,
-  'assinaturas': AdminAssinaturasTab,
   'leituras': AdminLeiturasTab,
   'conteudos': AdminConteudosTab,
-  'cursos': AdminCursosTab,
   'biblioteca': AdminBibliotecaTab,
   'mentoria': AdminMentoriaTab,
   'agentes': AdminAgentesTab,
@@ -112,48 +154,17 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'progresso': AdminProgressoTab,
   'oraculos': AdminOraculosTab,
   'blocos': AdminBlocksTab,
-  'travessias': AdminTravessiasTab,
   'travessias-conteudo': AdminBibliotecaTravessiasTab,
   'familias': AdminFamiliasTab,
-  'labirinto': AdminLabirintoTab,
-  'labirinto-heroina': AdminLabirintoHeroinaTab,
-  'big5-simbolico': AdminBig5SymbolicTab,
-  'eneagrama-feminino': AdminEneagramaFemininoTab,
-  'jornada-heroina': AdminJornadaHeroinaTab,
-  'radiestesia': AdminRadiestesiaTab,
   'ia-config': AdminAISettingsTab,
-  'audios': AdminAudiosTab,
-  'clube-jornadas': AdminCentralJornadas,
-  'clube-portais': AdminPortalCMS,
-  'clube-acervo': AdminClubeAcervo,
-  'clube-treinamento': AdminClubeTreinamento,
-  'clube-chat': AdminClubeChat,
-  'comunicacao': AdminComunicacaoTab,
-  'formacao': AdminFormacaoTab,
   'area-formacao': AdminAreaFormacaoTab,
-  'casa-oracula': AdminCasaOraculaTab,
   'sessoes': AdminSessoesTab,
-  'grupos': AdminGruposTab,
-  'galeria': AdminGaleriaTab,
-  'torre-viva': AdminTorreVivaTab,
+  'torre-viva-tab': AdminTorreVivaTab,
   'biblioteca-casos': AdminBibliotecaCasosTab,
-  'atlas-feminino': AdminAtlasFemininoTab,
-  'narroterapia': AdminNarroterapiaTab,
   'narroterapia-autorizacao': AdminNarroterapiaAutorizacaoTab,
-  'clube': AdminClubeHub,
-  'clube-livro': AdminClubeHub,
-  'gerador-semanal': AdminGeradorSemanal,
-  'planos-clube': AdminPlanosClubTab,
-  'estudio-oracular': AdminEstudioOracular,
-  'portal-junguiano': AdminPortalJunguianoTab,
-  'certificacao': AdminCertificacaoTab,
-  'vitrine': AdminVitrineCards,
   'upsell-machine': UpsellMachinePanel,
-  'settings': AdminSettingsTab,
   'copy': AdminCopyTab,
-  'founder': AdminFounderDashboardTab,
-
-
+  'portal-junguiano': AdminPortalJunguianoTab,
 };
 
 export default function Admin() {
