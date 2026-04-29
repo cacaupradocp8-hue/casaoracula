@@ -1708,6 +1708,23 @@ function CicloDialog({
             />
           </div>
 
+          <div className="space-y-2">
+            <Label>Status de Publicação</Label>
+            <Select 
+              value={form.status || 'draft'} 
+              onValueChange={(v) => setForm({ ...form, status: v as any })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="draft">Rascunho (Draft)</SelectItem>
+                <SelectItem value="published">Publicado (Live)</SelectItem>
+                <SelectItem value="archived">Arquivado</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <Separator />
 
           {/* Carga Horária */}
