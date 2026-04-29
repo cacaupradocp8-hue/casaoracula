@@ -114,17 +114,17 @@ const JourneyRoad = () => {
   ];
 
   return (
-    <section className="py-24 px-6 relative">
-      <div className="flex flex-col items-center mb-24 space-y-4">
-        <h2 className="text-[11px] uppercase tracking-[0.6em] text-white/40 font-bold">Estrada de Travessia</h2>
-        <div className="h-px w-16 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+    <section className="py-32 px-6 relative">
+      <div className="flex flex-col items-center mb-28 space-y-4">
+        <h2 className="text-[11px] uppercase tracking-[0.6em] text-white/50 font-bold">Estrada de Travessia</h2>
+        <div className="h-px w-20 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
       </div>
       
       <div className="relative max-w-lg mx-auto">
         {/* Living Road Path */}
-        <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-gold/40 via-white/10 to-transparent" />
+        <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-gold/50 via-white/10 to-transparent shadow-[0_0_15px_rgba(201,169,110,0.1)]" />
         
-        <div className="space-y-24 relative">
+        <div className="space-y-32 relative">
           {steps.map((step) => (
             <div key={step.id} className={`flex items-center w-full ${step.side === 'left' ? 'flex-row' : 'flex-row-reverse'}`}>
               <motion.div 
@@ -132,24 +132,24 @@ const JourneyRoad = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 className="w-1/2"
-                style={{ textAlign: step.side === 'left' ? 'right' : 'left', paddingLeft: step.side === 'right' ? '2rem' : '0', paddingRight: step.side === 'left' ? '2rem' : '0' }}
+                style={{ textAlign: step.side === 'left' ? 'right' : 'left', paddingLeft: step.side === 'right' ? '2.5rem' : '0', paddingRight: step.side === 'left' ? '2.5rem' : '0' }}
               >
                 <div className={`
-                  relative inline-block text-left p-6 rounded-[2rem] border transition-all duration-700
+                  relative inline-block text-left p-8 rounded-[2.5rem] border transition-all duration-700
                   ${step.status === 'current' ? 
-                    'bg-white/[0.04] border-gold/30 shadow-[0_20px_50px_rgba(0,0,0,0.4)] ring-1 ring-gold/10' : 
+                    'bg-[#0F172A]/40 border-gold/40 shadow-[0_25px_60px_rgba(0,0,0,0.6)] ring-1 ring-gold/20' : 
                     step.status === 'completed' ? 
-                    'bg-white/[0.02] border-white/10' : 
-                    'bg-transparent border-white/5 opacity-30'}
+                    'bg-white/[0.03] border-white/10' : 
+                    'bg-transparent border-white/[0.03] opacity-50'}
                 `}>
-                  <div className="flex items-center gap-2 mb-2">
-                    {step.status === 'completed' && <CheckCircle2 className="w-3 h-3 text-gold/60" />}
-                    {step.status === 'locked' && <Lock className="w-3 h-3 text-white/20" />}
-                    <p className={`text-[10px] font-bold uppercase tracking-[0.2em] ${step.status === 'current' ? 'text-gold' : 'text-white/40'}`}>
+                  <div className="flex items-center gap-2 mb-3">
+                    {step.status === 'completed' && <CheckCircle2 className="w-3.5 h-3.5 text-gold/60" />}
+                    {step.status === 'locked' && <Lock className="w-3 h-3 text-white/30" />}
+                    <p className={`text-[10px] font-bold uppercase tracking-[0.25em] ${step.status === 'current' ? 'text-gold' : 'text-white/40'}`}>
                       {step.name}
                     </p>
                   </div>
-                  <h4 className={`text-base font-serif leading-snug ${step.status === 'locked' ? 'text-white/30' : 'text-white/90'}`}>
+                  <h4 className={`text-lg font-serif leading-snug ${step.status === 'locked' ? 'text-white/40' : 'text-white/95'}`}>
                     {step.title}
                   </h4>
                 </div>
@@ -157,9 +157,9 @@ const JourneyRoad = () => {
 
               <div className="absolute left-1/2 -translate-x-1/2 w-8 h-8 flex items-center justify-center">
                 <div className={`
-                  w-2 h-2 rounded-full transition-all duration-1000
-                  ${step.status === 'current' ? 'bg-gold scale-[1.5] shadow-[0_0_20px_rgba(201,169,110,0.5)]' : 
-                    step.status === 'completed' ? 'bg-gold/40' : 'bg-white/20'}
+                  w-2.5 h-2.5 rounded-full transition-all duration-1000
+                  ${step.status === 'current' ? 'bg-gold scale-[1.6] shadow-[0_0_25px_rgba(201,169,110,0.6)]' : 
+                    step.status === 'completed' ? 'bg-gold/50' : 'bg-white/20'}
                 `} />
               </div>
             </div>
