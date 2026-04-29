@@ -22639,9 +22639,11 @@ export type Database = {
       upsell_revenue_intelligence: {
         Row: {
           acceptance_rate: number | null
+          avg_days_to_convert: number | null
           channel_used: string | null
           conversions: number | null
-          estimated_revenue: number | null
+          fatigue_count: number | null
+          revenue_generated: number | null
           segment_from: string | null
           segment_to: string | null
           total_sent: number | null
