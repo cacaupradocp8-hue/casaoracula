@@ -126,6 +126,10 @@ export default function AdminCasaOraculaTab() {
   const [automationRules, setAutomationRules] = useState<AutomationRule[]>([]);
   const [selectedUserTimeline, setSelectedUserTimeline] = useState<UserTimeline[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [simulationResult, setSimulationResult] = useState<any>(null);
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
+  const [selectedRuleAudit, setSelectedRuleAudit] = useState<AutomationRule | null>(null);
 
   useEffect(() => {
     fetchDashboardData();
