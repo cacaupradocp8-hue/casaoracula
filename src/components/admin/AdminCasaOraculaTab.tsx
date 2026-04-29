@@ -464,6 +464,105 @@ export default function AdminCasaOraculaTab() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="automation" className="space-y-6 pt-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-medium flex items-center gap-2">
+                <Settings2 className="w-5 h-5 text-primary" />
+                Ações aprovadas para automação
+              </h3>
+              <p className="text-sm text-muted-foreground">Regra: Sucesso > 20% (Recuperação) ou > 10% (Conversão)</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            <Card>
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Tipo Risco</TableHead>
+                      <TableHead>Ação Sugerida</TableHead>
+                      <TableHead>Canal</TableHead>
+                      <TableHead className="text-right">Taxa Sucesso</TableHead>
+                      <TableHead className="text-center">Status Automação</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {automationRules.map((rule) => {
+                      const perf = performanceMetrics.find(p => p.action_type === rule.action_type && p.channel === rule.channel);
+                      const isEligible = perf && perf.success_rate >= rule.min_success_rate;
+                      
+                      return (
+                        <TableRow key={rule.id}>
+                          <TableCell className="capitalize font-medium">{rule.risk_type}</TableCell>
+                          <TableCell>{rule.action_type}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="text-[10px] uppercase">{rule.channel}</Badge>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex flex-col items-end">
+                              <span className={`font-bold ${isEligible ? 'text-emerald-600' : 'text-muted-foreground'}`}>
+                                {perf?.success_rate || 0}%
+                              </span>
+                              <span className="text-[10px] text-muted-foreground">Meta: {rule.min_success_rate}%</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <div className="flex items-center justify-center gap-3">
+                              {rule.channel === 'whatsapp' ? (
+                                <Badge variant="secondary" className="bg-slate-100 text-slate-500 italic text-[10px]">
+                                  Manual Apenas
+                                </Badge>
+                              ) : (
+                                <Button
+                                  size="sm"
+                                  variant={rule.is_active ? "default" : "outline"}
+                                  className={`h-8 gap-2 ${!isEligible && !rule.is_active ? 'opacity-50' : ''}`}
+                                  onClick={() => toggleAutomationRule(rule.id, rule.is_active)}
+                                  disabled={!isEligible && !rule.is_active}
+                                >
+                                  {rule.is_active ? (
+                                    <><Power className="w-3 h-3" /> Ativo</>
+                                  ) : (
+                                    <><Play className="w-3 h-3" /> Ativar</>
+                                  )}
+                                </Button>
+                              )}
+                              {!isEligible && !rule.is_active && rule.channel !== 'whatsapp' && (
+                                <span className="text-[9px] text-red-500 font-medium">Evidência insuficiente</span>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card className="bg-blue-50/50 border-blue-100">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm">Automações Leves</CardTitle>
+                </CardHeader>
+                <CardContent className="text-xs text-muted-foreground">
+                  E-mails e notificações internas são disparados automaticamente assim que o score ultrapassa o limite de risco, desde que a regra esteja ativa e validada por evidência.
+                </CardContent>
+              </Card>
+              <Card className="bg-amber-50/50 border-amber-100">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm">Governança Humana</CardTitle>
+                </CardHeader>
+                <CardContent className="text-xs text-muted-foreground">
+                  Ações via WhatsApp permanecem estritamente manuais para garantir o tom de voz e o acolhimento necessário em casos críticos.
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
+
         <TabsContent value="timeline" className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
           <Card className="md:col-span-1">
             <CardHeader>
