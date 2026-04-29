@@ -149,6 +149,38 @@ export default function AdminCasaOraculaTab() {
     ));
   };
 
+  const handleMarkActionDone = async (user: StagnationInfoV4) => {
+    try {
+      const { data: { user: adminUser } } = await supabase.auth.getUser();
+      if (!adminUser) return;
+
+      const { error } = await supabase
+        .from('admin_action_history')
+        .insert({
+          user_id: user.user_id,
+          action_type: user.recommended_action,
+          channel: user.suggested_channel,
+          sent_by: adminUser.id,
+          conversion_risk_at_action: user.conversion_risk_score,
+          churn_risk_at_action: user.churn_risk_score,
+          saas_value_risk_at_action: user.saas_value_risk_score,
+          action_reason_at_action: user.action_reason,
+          last_value_timestamp_at_action: user.last_value_timestamp
+        });
+
+      if (error) throw error;
+      
+      // Atualizar localmente
+      setStagnantUsers(prev => prev.map(u => 
+        u.user_id === user.user_id ? { ...u, action_already_sent: true } : u
+      ));
+      
+      fetchDashboardData(); // Recarrega métricas de performance
+    } catch (error) {
+      console.error('Error marking action as done:', error);
+    }
+  };
+
   const getRiskColor = (score: number) => {
     if (score > 60) return "text-red-500";
     if (score > 30) return "text-amber-500";
