@@ -114,8 +114,9 @@ export function ImageUpload({
       const fileExt = file.name.split('.').pop();
       const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
+      const bucket = folder === 'clube-assets' ? 'clube-assets' : 'content-images';
       const { data, error } = await supabase.storage
-        .from('content-images')
+        .from(bucket)
         .upload(fileName, file, {
           cacheControl: '3600',
           upsert: false,
