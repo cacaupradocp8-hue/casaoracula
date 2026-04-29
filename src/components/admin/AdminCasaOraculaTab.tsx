@@ -29,7 +29,7 @@ interface StagnationInfo {
   last_ai_use: string;
   last_clube_activity: string;
   stagnation_reason: string;
-  last_any_activity: string;
+  risk_score: number;
 }
 
 interface UsageMetric {
@@ -62,7 +62,8 @@ export default function AdminCasaOraculaTab() {
       const { data: stagnationData } = await supabase
         .from('view_user_stagnation')
         .select('*')
-        .neq('stagnation_reason', 'Ativa')
+        .neq('stagnation_reason', 'Saudável')
+        .order('risk_score', { ascending: false })
         .limit(20);
       
       if (stagnationData) setStagnantUsers(stagnationData as StagnationInfo[]);
@@ -121,8 +122,8 @@ export default function AdminCasaOraculaTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-serif text-foreground">Casa Orácula — Painel Mestre</h2>
-          <p className="text-muted-foreground">Monitoramento de saúde e jornada do ecossistema</p>
+          <h2 className="text-2xl font-serif text-foreground">Painel Mestre — Inteligência Operacional</h2>
+          <p className="text-muted-foreground">Governança, saúde e gestão de custos do ecossistema</p>
         </div>
         <Button variant="outline" size="sm" onClick={fetchDashboardData} disabled={isLoading}>
           <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
@@ -215,9 +216,9 @@ export default function AdminCasaOraculaTab() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Usuária</TableHead>
+                    <TableHead>Risco</TableHead>
                     <TableHead>Motivo da Trava</TableHead>
                     <TableHead>Última Atividade</TableHead>
-                    <TableHead>Plano</TableHead>
                     <TableHead className="text-right">Ação</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -236,17 +237,26 @@ export default function AdminCasaOraculaTab() {
                           <div className="text-xs text-muted-foreground">{user.email}</div>
                         </TableCell>
                         <TableCell>
+                          <Badge 
+                            variant="outline" 
+                            className={
+                              user.risk_score > 60 ? "text-red-500 border-red-500/30" : 
+                              user.risk_score > 30 ? "text-amber-500 border-amber-500/30" : 
+                              "text-emerald-500 border-emerald-500/30"
+                            }
+                          >
+                            {user.risk_score}%
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
                           <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 border-amber-500/20">
                             {user.stagnation_reason}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-sm">
-                          {user.last_any_activity 
-                            ? format(new Date(user.last_any_activity), 'dd/MM/yyyy HH:mm', { locale: ptBR })
+                          {user.last_ai_use 
+                            ? format(new Date(user.last_ai_use), 'dd/MM/yyyy HH:mm', { locale: ptBR })
                             : 'Nunca'}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">{user.plan_id || 'Free'}</Badge>
                         </TableCell>
                         <TableCell className="text-right">
                           <Button variant="ghost" size="sm" className="h-8 gap-1">
