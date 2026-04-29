@@ -180,6 +180,86 @@ export default function AdminClubeHub() {
         </div>
       </div>
 
+      {/* Atalho Operacional: Estação Ativa */}
+      {stats?.activeStation && (
+        <Card className="bg-primary/5 border-gold/30 shadow-2xl shadow-gold/5 animate-in slide-in-from-top-4 duration-1000">
+          <CardContent className="p-0 overflow-hidden">
+            <div className="flex flex-col md:flex-row">
+              <div className="w-full md:w-48 h-48 md:h-auto relative bg-muted">
+                {stats.activeStation.livro_capa_url ? (
+                  <img 
+                    src={stats.activeStation.livro_capa_url} 
+                    alt="Capa do Livro" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                    <ImageIcon className="w-8 h-8" />
+                  </div>
+                )}
+                <div className="absolute top-2 left-2">
+                  <Badge className="bg-black/60 backdrop-blur-md text-gold border-gold/20">ESTAÇÃO ATIVA</Badge>
+                </div>
+              </div>
+              
+              <div className="flex-1 p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-2xl font-serif text-foreground leading-tight">
+                      {stats.activeStation.titulo}
+                    </h2>
+                    <Badge variant={stats.activeStation.publicada ? "default" : "secondary"} className={cn("text-[9px] uppercase tracking-wider", stats.activeStation.publicada ? "bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20" : "")}>
+                      {stats.activeStation.publicada ? 'Publicado' : 'Rascunho'}
+                    </Badge>
+                  </div>
+                  <p className="text-muted-foreground font-light italic">
+                    {stats.activeStation.livro_titulo} — {stats.activeStation.livro_autor}
+                  </p>
+                  <div className="flex items-center gap-6 text-xs text-muted-foreground pt-2">
+                    <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Atualizado recentemente</span>
+                    <span className="flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> Visível para Alunas</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-4">
+                  <div className="flex items-center space-x-3 px-4 py-2 bg-background/50 rounded-full border border-primary/10">
+                    <Label htmlFor="hub-publish-toggle" className="text-xs font-semibold cursor-pointer">
+                      {stats.activeStation.publicada ? "Visível no Clube" : "Oculto (Rascunho)"}
+                    </Label>
+                    <Switch 
+                      id="hub-publish-toggle"
+                      checked={stats.activeStation.publicada} 
+                      onCheckedChange={(checked) => togglePublishMutation.mutate({ id: stats.activeStation.id, published: checked })}
+                      disabled={togglePublishMutation.isPending}
+                    />
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="gap-2 border-gold/20 text-gold hover:bg-gold/5"
+                      onClick={() => navigate(`/admin/clube/ciclo/${stats.activeStation.id}`)}
+                    >
+                      <Layout className="w-4 h-4" />
+                      Editar Conteúdo
+                    </Button>
+                    <Button 
+                      size="sm"
+                      className="gap-2 bg-gold hover:bg-gold/80 text-black font-bold"
+                      onClick={() => navigate(`/admin/clube/ciclo/${stats.activeStation.id}?tab=passos`)}
+                    >
+                      <Plus className="w-4 h-4" />
+                      Novo Passo
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Grid de Cards Estilo Netflix/Notion */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {PREMIUM_CARDS.map((card, idx) => (
