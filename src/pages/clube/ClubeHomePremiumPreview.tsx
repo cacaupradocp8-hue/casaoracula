@@ -20,17 +20,17 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 // DESIGN SYSTEM CASA ORÁCULA - PREMIUM
-// Primary Color: Chic Elegant Dark Blue (#030711)
+// Primary Color: Deep Navy Blue (#020617)
 // Accent: Refined Gold (#C9A96E)
 // Style: Silent Luxury, High Contrast, European Boutique.
 
 const PremiumCard = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
   <div className={`
     relative overflow-hidden
-    bg-[#080C18]/60 backdrop-blur-3xl 
-    border border-white/[0.05] 
+    bg-[#0A1229] 
+    border border-white/[0.08] 
     rounded-[2.5rem] p-8 
-    shadow-[0_40px_80px_rgba(0,0,0,0.5)]
+    shadow-[0_40px_100px_rgba(0,0,0,0.6)]
     ${className}
   `}>
     {children}
