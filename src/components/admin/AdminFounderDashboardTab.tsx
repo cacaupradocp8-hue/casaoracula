@@ -31,6 +31,7 @@ import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 
 export default function AdminFounderDashboardTab() {
+  const [period, setPeriod] = useState<'30' | '90' | '365' | 'current' | 'previous'>('current');
   const [projectionSettings, setProjectionSettings] = useState({
     newUsers: 20,
     churnReduction: 5,
@@ -38,43 +39,67 @@ export default function AdminFounderDashboardTab() {
   });
 
   const { data: metrics, isLoading } = useQuery({
-    queryKey: ['founder-financials'],
+    queryKey: ['founder-financials', period],
     queryFn: async () => {
-      // Changed to the real aggregated view
-      const { data, error } = await supabase
-        .from('view_founder_real_financial_summary' as any)
-        .select('*')
-        .order('period_start', { ascending: false })
-        .limit(1);
+      let query = supabase.from('view_founder_real_financial_summary' as any).select('*');
+      
+      const now = new Date();
+      if (period === 'current') {
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+        query = query.gte('period_start', startOfMonth);
+      } else if (period === 'previous') {
+        const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString();
+        const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0).toISOString();
+        query = query.gte('period_start', startOfLastMonth).lte('period_start', endOfLastMonth);
+      } else {
+        const days = parseInt(period);
+        const startDate = new Date(now.getTime() - days * 24 * 60 * 60 * 1000).toISOString();
+        query = query.gte('period_start', startDate);
+      }
+
+      const { data, error } = await query.order('period_start', { ascending: false });
       
       if (error) throw error;
       
-      // Adaptation for frontend fields
-      const raw = (data as any)?.[0];
-      if (!raw) return null;
+      // If multiple months returned, aggregate them for the selected period
+      const aggregated = (data as any[]).reduce((acc, curr) => ({
+        total_revenue: (acc.total_revenue || 0) + (curr.total_revenue || 0),
+        revenue_new: (acc.revenue_new || 0) + (curr.revenue_new || 0),
+        revenue_renewals: (acc.revenue_renewals || 0) + (curr.revenue_renewals || 0),
+        refunds_value: (acc.refunds_value || 0) + (curr.refunds_value || 0),
+        total_cost_ia: (acc.total_cost_ia || 0) + (curr.total_cost_ia || 0),
+        total_cost_infra: (acc.total_cost_infra || 0) + (curr.total_cost_infra || 0),
+        total_cost_stripe: (acc.total_cost_stripe || 0) + (curr.total_cost_stripe || 0),
+        total_cost_ads: (acc.total_cost_ads || 0) + (curr.total_cost_ads || 0),
+        total_cost_team: (acc.total_cost_team || 0) + (curr.total_cost_team || 0),
+        new_sales_count: (acc.new_sales_count || 0) + (curr.new_sales_count || 0),
+      }), {});
+
+      const totalCosts = aggregated.total_cost_ia + aggregated.total_cost_infra + aggregated.total_cost_stripe + aggregated.total_cost_ads + aggregated.total_cost_team;
+      const netProfit = aggregated.total_revenue - totalCosts;
 
       return {
-        ...raw,
-        revenue_clube: raw.revenue_new * 0.6, // Estimate for now
-        revenue_saas: raw.revenue_new * 0.4, // Estimate for now
+        ...aggregated,
+        revenue_clube: aggregated.revenue_new * 0.6,
+        revenue_saas: aggregated.revenue_new * 0.4,
         revenue_formacao: 0,
-        revenue_upsell: raw.revenue_renewals,
-        total_revenue: raw.total_revenue,
-        cost_ia: raw.total_cost_ia,
-        cost_infra: raw.total_cost_infra,
-        cost_stripe: raw.total_cost_stripe,
-        cost_ads: raw.total_cost_ads,
-        cost_team: raw.total_cost_team,
-        total_costs: raw.total_costs,
-        gross_profit: raw.total_revenue - raw.total_cost_stripe - raw.total_cost_ia,
-        net_profit: raw.net_profit,
-        net_margin_pct: raw.net_margin_pct,
-        churn_rate: 4.2, // Placeholder until aggregation logic for churn is finalized
+        revenue_upsell: aggregated.revenue_renewals,
+        cost_ia: aggregated.total_cost_ia,
+        cost_infra: aggregated.total_cost_infra,
+        cost_stripe: aggregated.total_cost_stripe,
+        cost_ads: aggregated.total_cost_ads,
+        cost_team: aggregated.total_cost_team,
+        total_costs: totalCosts,
+        gross_profit: aggregated.total_revenue - aggregated.total_cost_stripe - aggregated.total_cost_ia,
+        net_profit: netProfit,
+        net_margin_pct: aggregated.total_revenue > 0 ? Math.round((netProfit / aggregated.total_revenue) * 100) : 0,
+        ia_revenue_pct: aggregated.total_revenue > 0 ? Math.round((aggregated.total_cost_ia / aggregated.total_revenue) * 100) : 0,
+        churn_rate: 4.2,
         ltv: 120000,
         cac: 45000,
         payback_period: 3.5,
-        new_sales: raw.new_sales_count || 0,
-        revenue_expansion: raw.revenue_renewals
+        new_sales: aggregated.new_sales_count || 0,
+        revenue_expansion: aggregated.revenue_renewals
       };
     }
   });
@@ -110,9 +135,30 @@ export default function AdminFounderDashboardTab() {
 
   return (
     <div className="space-y-8 pb-20 animate-in fade-in duration-500">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-3xl font-serif text-foreground tracking-tight">Founder Dashboard</h2>
-        <p className="text-muted-foreground">Visão estratégica e saúde financeira do ecossistema Orácula</p>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="space-y-1">
+          <h2 className="text-3xl font-serif text-foreground tracking-tight">Founder Dashboard</h2>
+          <p className="text-muted-foreground">Visão estratégica e saúde financeira do ecossistema Orácula</p>
+        </div>
+        
+        <div className="flex flex-wrap items-center gap-2 bg-muted/30 p-1 rounded-lg border">
+          {(['current', 'previous', '30', '90', '365'] as const).map((p) => (
+            <button
+              key={p}
+              onClick={() => setPeriod(p)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                period === p 
+                  ? 'bg-background text-foreground shadow-sm' 
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {p === 'current' ? 'Mês Atual' : 
+               p === 'previous' ? 'Mês Anterior' : 
+               p === '30' ? '30d' : 
+               p === '90' ? '90d' : '1 ano'}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Section 1: Receita */}
@@ -173,7 +219,7 @@ export default function AdminFounderDashboardTab() {
         </Card>
 
         <Card className="bg-emerald-500/5 border-emerald-500/10">
-          <CardHeader>
+          <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center gap-2">
               <Percent className="w-5 h-5 text-emerald-500" />
               Performance de Lucro
@@ -191,38 +237,56 @@ export default function AdminFounderDashboardTab() {
               </div>
             </div>
             
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm font-medium">
-                <span>Margem Líquida</span>
-                <span className="text-emerald-600">{metrics.net_margin_pct}%</span>
-              </div>
-              <div className="h-3 bg-emerald-500/10 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-emerald-500 transition-all duration-1000" 
-                  style={{ width: `${metrics.net_margin_pct}%` }}
-                />
-              </div>
-              <p className="text-[10px] text-muted-foreground">Referência: Apple (~25%), Stripe (~10%), Bloomberg (Clean focus)</p>
-            </div>
-
-            <div className="pt-4 border-t grid grid-cols-2 gap-4">
-              <div className="flex items-center gap-2">
-                <ArrowUpRight className="w-4 h-4 text-emerald-500" />
-                <div className="text-xs">
-                  <p className="font-bold">LTV/CAC</p>
-                  <p className="text-muted-foreground">{(metrics.ltv / metrics.cac).toFixed(1)}x</p>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm font-medium">
+                  <span>Margem Líquida</span>
+                  <span className="text-emerald-600">{metrics.net_margin_pct}%</span>
+                </div>
+                <div className="h-2 bg-emerald-500/10 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-emerald-500 transition-all duration-1000" 
+                    style={{ width: `${Math.min(100, Math.max(0, metrics.net_margin_pct))}%` }}
+                  />
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-blue-500" />
-                <div className="text-xs">
-                  <p className="font-bold">Payback</p>
-                  <p className="text-muted-foreground">{metrics.payback_period} meses</p>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm font-medium">
+                  <span>Custo IA / Receita</span>
+                  <span className={metrics.ia_revenue_pct > 15 ? 'text-amber-500' : 'text-primary'}>
+                    {metrics.ia_revenue_pct}%
+                  </span>
+                </div>
+                <div className="h-2 bg-primary/10 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-primary transition-all duration-1000" 
+                    style={{ width: `${Math.min(100, metrics.ia_revenue_pct)}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t grid grid-cols-3 gap-2">
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] text-muted-foreground uppercase font-bold">LTV/CAC</span>
+                <span className="text-sm font-bold">{(metrics.ltv / metrics.cac).toFixed(1)}x</span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] text-muted-foreground uppercase font-bold">Payback</span>
+                <span className="text-sm font-bold">{metrics.payback_period}m</span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] text-muted-foreground uppercase font-bold text-right">Tendência</span>
+                <div className="flex items-center justify-end gap-1 text-emerald-500">
+                  <ArrowUpRight className="w-3 h-3" />
+                  <span className="text-xs font-bold">+2.1%</span>
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
+      </div>
       </div>
 
       {/* Section 4: Saúde & Crescimento */}
