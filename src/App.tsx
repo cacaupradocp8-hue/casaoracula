@@ -1,4 +1,4 @@
-import React from "react"; // rebuild-trigger-v12
+import React from "react"; // rebuild-trigger-v13
 
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -185,8 +185,8 @@ const TriadeMetodo = React.lazy(() => import("./pages/metodo/TriadeMetodo"));
 const LabirintoHeroinaPage = React.lazy(() => import("./pages/labirinto-heroina/LabirintoHeroinaPraticoPage"));
 const Admin = React.lazy(() => import("./pages/Admin"));
 const DesbloqueiePage = React.lazy(() => import("./pages/DesbloqueiePage"));
-const PortalLuxo = React.lazy(() => import("./pages/preview/PortalLuxo"));
-const EstradaMonumental = React.lazy(() => import("./pages/preview/EstradaMonumental"));
+import PortalLuxo from "./pages/preview/PortalLuxo";
+import EstradaMonumental from "./pages/preview/EstradaMonumental";
 
 
 // ─── Utility components ───────────────────────────────────────
@@ -511,8 +511,8 @@ function AppRoutes() {
       <Route path="/formacao-metodo/avaliacoes" element={<ProtectedRoute minPortal="mentorada"><FormacaoAvaliacoesPage /></ProtectedRoute>} />
 
       {/* Previews */}
-      <Route path="/preview/portal-luxo" element={<Suspense fallback={<BootLoadingScreen />}><PortalLuxo /></Suspense>} />
-      <Route path="/preview/estrada-monumental" element={<Suspense fallback={<BootLoadingScreen />}><EstradaMonumental /></Suspense>} />
+      <Route path="/preview/portal-luxo" element={<PortalLuxo />} />
+      <Route path="/preview/estrada-monumental" element={<EstradaMonumental />} />
       <Route path="/test-bottom-nav" element={<BottomNavTestPage />} />
 
       <Route path="/biblioteca-das-travessias" element={<ProtectedRoute><Navigate to="/biblioteca?aba=travessias" replace /></ProtectedRoute>} />
