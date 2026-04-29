@@ -186,6 +186,7 @@ const LabirintoHeroinaPage = React.lazy(() => import("./pages/labirinto-heroina/
 const Admin = React.lazy(() => import("./pages/Admin"));
 const DesbloqueiePage = React.lazy(() => import("./pages/DesbloqueiePage"));
 const PortalLuxo = React.lazy(() => import("./pages/preview/PortalLuxo"));
+const EstradaMonumental = React.lazy(() => import("./pages/preview/EstradaMonumental"));
 
 
 // ─── Utility components ───────────────────────────────────────
