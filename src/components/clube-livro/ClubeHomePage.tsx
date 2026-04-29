@@ -234,12 +234,12 @@ export function ClubeHomePage() {
             ============================================ */}
         <RotaImersao estacaoId={estacaoAtual?.id} />
         
-        <div className="grid grid-cols-1 gap-8">
-          <RotaAplicacao />
+        <div className="grid grid-cols-1 gap-12">
           <RotaLaboratorio
             estacaoId={estacaoAtual?.id}
             livroTitulo={estacaoAtual?.livro_titulo}
           />
+          <RotaAplicacao />
         </div>
 
         {/* ============================================
