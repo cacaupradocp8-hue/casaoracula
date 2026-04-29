@@ -101,6 +101,7 @@ function resolveRota(tipo: string, refId: string | null, rotaCustom?: string): s
 
 export function useRotaOracular() {
   const { user } = useAuth();
+  const isMutating = useIsMutating();
 
   // 1. Estação ativa
   const { data: estacaoAtual, isLoading: loadingEstacao } = useQuery({
