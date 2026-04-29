@@ -81,20 +81,34 @@ export default function AdminClubeHub() {
   const { data: stats } = useQuery({
     queryKey: ['admin-clube-hub-premium-stats'],
     queryFn: async () => {
-      const [ciclos, books, estacoes, portais, perguntas] = await Promise.all([
+      const [ciclos, books, estacoes, portais, perguntas, activeStation] = await Promise.all([
         supabase.from('clube_livro_ciclos').select('id', { count: 'exact', head: true }),
         supabase.from('books').select('id', { count: 'exact', head: true }),
         supabase.from('clube_estacoes').select('id', { count: 'exact', head: true }),
         supabase.from('clube_portais').select('id', { count: 'exact', head: true }),
         supabase.from('clube_livro_perguntas').select('id', { count: 'exact', head: true }),
+        supabase.from('clube_estacoes').select('*').eq('ativa', true).maybeSingle(),
       ]);
       return {
         ciclos: cycles_count(estacoes.count, ciclos.count),
         books: books.count || 0,
         portais: portais.count || 0,
         chat: perguntas.count || 0,
+        activeStation: activeStation.data
       };
     },
+  });
+
+  const queryClient = useQueryClient();
+  const togglePublishMutation = useMutation({
+    mutationFn: async ({ id, published }: { id: string; published: boolean }) => {
+      const { error } = await supabase.from('clube_estacoes').update({ publicada: published }).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-hub-premium-stats'] });
+      toast({ title: 'Status de publicação atualizado' });
+    }
   });
 
   function cycles_count(est: number | null, cic: number | null) {
@@ -108,7 +122,7 @@ export default function AdminClubeHub() {
       case 'portais': return `${stats.portais} Mapeados`;
       case 'acervo': return `${stats.books} Obras`;
       case 'chat': return `${stats.chat} Prompts`;
-      case 'treinamento': return `Ativo`;
+      case 'treinamento': return `Operacional`;
       default: return '';
     }
   };
