@@ -73,6 +73,8 @@ const AdminVitrineCards = lazy(() => import('@/pages/admin/AdminVitrineCards'));
 const AdminPortalJunguianoTab = lazy(() => import('@/components/admin/AdminPortalJunguianoTab').then(m => ({ default: m.AdminPortalJunguianoTab })));
 const AdminCertificacaoTab = lazy(() => import('@/components/admin/AdminCertificacaoTab').then(m => ({ default: m.AdminCertificacaoTab })));
 const UpsellMachinePanel = lazy(() => import('@/components/admin/UpsellMachinePanel').then(m => ({ default: m.UpsellMachinePanel })));
+const AdminFounderDashboardTab = lazy(() => import('@/components/admin/AdminFounderDashboardTab'));
+
 
 
 const PREVIEW_PORTALS: { value: PortalType; label: string }[] = [
@@ -149,6 +151,8 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'upsell-machine': UpsellMachinePanel,
   'settings': AdminSettingsTab,
   'copy': AdminCopyTab,
+  'founder': AdminFounderDashboardTab,
+
 
 };
 
