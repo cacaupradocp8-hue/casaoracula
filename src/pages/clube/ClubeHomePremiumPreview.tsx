@@ -60,11 +60,8 @@ const ClubHero = ({ name }: { name: string }) => (
       <PremiumCard className="max-w-md mx-auto border-gold/20 shadow-[0_0_50px_rgba(201,169,110,0.05)]">
         <div className="p-1">
           <div className="aspect-[16/7] w-full rounded-xl overflow-hidden relative">
-            <img 
-              src="https://images.unsplash.com/photo-1516410529446-2c777cb7366d?auto=format&fit=crop&q=80&w=800" 
-              alt="O Chamado Selvagem"
-              className="w-full h-full object-cover opacity-60"
-            />
+            <div className="w-full h-full bg-gradient-to-br from-white/[0.05] to-transparent opacity-40" />
+
             <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/20 to-transparent" />
             <div className="absolute bottom-4 left-4 text-left">
               <Badge className="bg-gold/20 text-gold border-gold/30 text-[8px] uppercase tracking-widest mb-2">
@@ -235,13 +232,40 @@ const PremiumBottomNav = () => (
 
 export default function ClubeHomePremiumPreview() {
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white selection:bg-gold/30 selection:text-white font-sans overflow-x-hidden">
-      {/* Background Texture & Gradient */}
+    <div className="min-h-screen bg-[#02040a] text-white selection:bg-gold/30 selection:text-white font-sans overflow-x-hidden">
+      {/* Background Atmosphere: Deep Night Blue + Sophisticated Gradient */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-gold/5 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-white/5 blur-[120px] rounded-full" />
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] mix-blend-overlay" />
+        {/* Base Gradient for Depth */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(10,20,40,1)_0%,_rgba(2,4,10,1)_100%)]" />
+        
+        {/* Subtle Central Light */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-[radial-gradient(circle_at_50%_50%,_rgba(201,169,110,0.03)_0%,_transparent_50%)] blur-[80px]" />
+        
+        {/* Nearly Invisible Mist/Fog */}
+        <motion.div 
+          animate={{ 
+            x: [-10, 10, -10],
+            opacity: [0.03, 0.05, 0.03]
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,_rgba(255,255,255,0.02)_0%,_transparent_60%)] filter blur-[100px]" 
+        />
+        <motion.div 
+          animate={{ 
+            x: [10, -10, 10],
+            opacity: [0.02, 0.04, 0.02]
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,_rgba(255,255,255,0.01)_0%,_transparent_60%)] filter blur-[120px]" 
+        />
+
+        {/* Elegant Discrete Texture (Fine Grain) */}
+        <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+        
+        {/* Accent Depth */}
+        <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-[#02040a] to-transparent opacity-80" />
       </div>
+
 
       <main className="relative z-10 max-w-7xl mx-auto pb-32">
         <ClubHero name="Claudia" />
