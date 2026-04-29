@@ -208,6 +208,23 @@ export default function AdminCasaOraculaTab() {
     }
   };
 
+  const toggleAutomationRule = async (ruleId: string, currentStatus: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('admin_automation_rules')
+        .update({ is_active: !currentStatus })
+        .eq('id', ruleId);
+
+      if (error) throw error;
+      
+      setAutomationRules(prev => prev.map(r => 
+        r.id === ruleId ? { ...r, is_active: !currentStatus } : r
+      ));
+    } catch (error) {
+      console.error('Error toggling automation rule:', error);
+    }
+  };
+
   const getRiskColor = (score: number) => {
     if (score > 60) return "text-red-500";
     if (score > 30) return "text-amber-500";
