@@ -61,6 +61,7 @@ export interface Estacao {
   essencia_tensao: string | null;
   essencia_transformacao: string | null;
   ativa: boolean;
+  status: 'draft' | 'published' | 'archived';
 }
 
 export interface EncontroAtivo {
@@ -108,8 +109,8 @@ export function useRotaOracular() {
       try {
         const { data, error } = await supabase
           .from('clube_estacoes')
-          .select('id, titulo, subtitulo, descricao, banner_url, numero, livro_titulo, livro_autor, livro_capa_url, livro_imagem_banner_url, essencia_nucleo, essencia_tensao, essencia_transformacao, ativa')
-          .eq('publicada', true)
+          .select('id, titulo, subtitulo, descricao, banner_url, numero, livro_titulo, livro_autor, livro_capa_url, livro_imagem_banner_url, essencia_nucleo, essencia_tensao, essencia_transformacao, ativa, status')
+          .eq('status', 'published')
           .eq('ativa', true)
           .order('numero', { ascending: false })
           .limit(1)
@@ -207,8 +208,8 @@ export function useRotaOracular() {
     queryFn: async () => {
       const { data } = await supabase
         .from('clube_estacoes')
-        .select('id, titulo, subtitulo, numero, livro_titulo, livro_autor, ativa')
-        .eq('publicada', true)
+        .select('id, titulo, subtitulo, numero, livro_titulo, livro_autor, ativa, status')
+        .eq('status', 'published')
         .eq('ativa', false)
         .order('numero', { ascending: false })
         .limit(5);
