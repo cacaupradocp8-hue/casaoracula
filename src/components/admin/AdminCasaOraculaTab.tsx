@@ -471,7 +471,7 @@ export default function AdminCasaOraculaTab() {
                 <Settings2 className="w-5 h-5 text-primary" />
                 Ações aprovadas para automação
               </h3>
-              <p className="text-sm text-muted-foreground">Regra: Sucesso > 20% (Recuperação) ou > 10% (Conversão)</p>
+              <p className="text-sm text-muted-foreground">Regra: Sucesso {'>'} 20% (Recuperação) ou {'>'} 10% (Conversão)</p>
             </div>
           </div>
 
