@@ -18,7 +18,12 @@ import {
   Zap,
   Target,
   ShieldAlert,
-  Users
+  Users,
+  CheckCircle2,
+  Calendar,
+  EyeOff,
+  UserCircle,
+  MessageSquare
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -196,10 +201,75 @@ export default function AdminCasaOraculaTab() {
       </div>
 
       <Tabs defaultValue="scores" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="scores">Análise de Risco Detalhada</TabsTrigger>
-          <TabsTrigger value="timeline">Timeline e Uso Global</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="human">Atendimento Humano</TabsTrigger>
+          <TabsTrigger value="scores">Riscos Detalhados</TabsTrigger>
+          <TabsTrigger value="timeline">Timeline e Uso</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="human" className="space-y-4 pt-4">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-lg font-medium flex items-center gap-2">
+              <MessageSquare className="w-5 h-5 text-primary" />
+              Hoje preciso agir em quem?
+            </h3>
+            <div className="flex gap-2">
+              <Badge variant="outline" className="cursor-pointer hover:bg-secondary">Leads</Badge>
+              <Badge variant="outline" className="cursor-pointer hover:bg-secondary">Churn</Badge>
+              <Badge variant="outline" className="cursor-pointer hover:bg-secondary">SaaS</Badge>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 gap-4">
+            {stagnantUsers
+              .filter(u => u.priority_level === 'Alta' || u.priority_level === 'Média')
+              .slice(0, 20)
+              .map((user) => (
+              <Card key={user.user_id} className={`border-l-4 ${user.priority_level === 'Alta' ? 'border-l-red-500' : 'border-l-amber-500'}`}>
+                <CardContent className="p-4">
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-bold text-lg">{user.nome}</span>
+                        <Badge variant="outline" className="text-[10px]">{user.portal}</Badge>
+                        <Badge className={`text-[10px] ${getPriorityBadge(user.priority_level)}`}>{user.priority_level}</Badge>
+                      </div>
+                      <div className="text-sm text-muted-foreground mb-2">
+                        <span className="font-semibold text-foreground">Motivo:</span> {user.action_reason}
+                      </div>
+                      <div className="flex items-center gap-4 text-xs">
+                        <div className="flex items-center gap-1 text-primary font-medium">
+                          <Zap className="w-3 h-3" /> {user.recommended_action}
+                        </div>
+                        <div className="text-muted-foreground">
+                          Canal: <span className="text-foreground">{user.suggested_channel}</span>
+                        </div>
+                        <div className="text-muted-foreground italic">
+                          Última ação: {user.action_already_sent ? 'Enviada' : 'Nenhuma'}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-2 shrink-0">
+                      <Button size="sm" variant="outline" className="h-8 text-xs gap-1 border-emerald-200 text-emerald-700 hover:bg-emerald-50">
+                        <CheckCircle2 className="w-3 h-3" /> Marcar Feito
+                      </Button>
+                      <Button size="sm" variant="outline" className="h-8 text-xs gap-1">
+                        <Calendar className="w-3 h-3" /> Reagendar
+                      </Button>
+                      <Button size="sm" variant="outline" className="h-8 text-xs gap-1">
+                        <EyeOff className="w-3 h-3" /> Ignorar 7d
+                      </Button>
+                      <Button size="sm" variant="secondary" className="h-8 text-xs gap-1">
+                        <UserCircle className="w-3 h-3" /> Perfil
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
 
         <TabsContent value="scores" className="space-y-4 pt-4">
           <Card>
