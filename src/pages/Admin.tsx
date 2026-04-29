@@ -92,13 +92,13 @@ const TabLoader = () => (
 
 // Map tab keys to their lazy components
 const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentType<any>>> = {
-  // CLUBE PREMIUM
+  // CLUBE PREMIUM (OFICIAL)
   'clube': AdminClubeHub,
   'clube-jornadas': AdminCentralJornadas,
-  'clube-portais': AdminPortalCMS,
   'clube-acervo': AdminClubeAcervo,
   'clube-treinamento': AdminClubeTreinamento,
   'clube-chat': AdminClubeChat,
+  'clube-portais': AdminPortalCMS,
   
   // FORMAÇÃO
   'cursos': AdminCursosTab,
@@ -135,36 +135,6 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'assinaturas': AdminAssinaturasTab,
   'planos-clube': AdminPlanosClubTab,
   'settings': AdminSettingsTab,
-
-  // OTHER TABS (Used by sub-routes or legacy redirects)
-  'matriculas': AdminMatriculasTab,
-  'degustacao': AdminDegustacaoTab,
-  'leituras': AdminLeiturasTab,
-  'conteudos': AdminConteudosTab,
-  'biblioteca': AdminBibliotecaTab,
-  'mentoria': AdminMentoriaTab,
-  'agentes': AdminAgentesTab,
-  'modelos': AdminModelosTab,
-  'ferramentas': AdminFerramentasTab,
-  'salas': AdminSalasTab,
-  'quiz': AdminQuizTab,
-  'lab': AdminLabCasosTab,
-  'planos': AdminPlanosTab,
-  'ofertas': AdminOfertasTab,
-  'progresso': AdminProgressoTab,
-  'oraculos': AdminOraculosTab,
-  'blocos': AdminBlocksTab,
-  'travessias-conteudo': AdminBibliotecaTravessiasTab,
-  'familias': AdminFamiliasTab,
-  'ia-config': AdminAISettingsTab,
-  'area-formacao': AdminAreaFormacaoTab,
-  'sessoes': AdminSessoesTab,
-  'torre-viva-tab': AdminTorreVivaTab,
-  'biblioteca-casos': AdminBibliotecaCasosTab,
-  'narroterapia-autorizacao': AdminNarroterapiaAutorizacaoTab,
-  'upsell-machine': UpsellMachinePanel,
-  'copy': AdminCopyTab,
-  'portal-junguiano': AdminPortalJunguianoTab,
 };
 
 export default function Admin() {
