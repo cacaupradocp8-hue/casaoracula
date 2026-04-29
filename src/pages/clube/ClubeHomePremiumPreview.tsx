@@ -62,7 +62,7 @@ const ClubHero = ({ name }: { name: string }) => (
           <div className="aspect-[16/7] w-full rounded-xl overflow-hidden relative">
             <div className="w-full h-full bg-gradient-to-br from-white/[0.05] to-transparent opacity-40" />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#02040a] via-[#02040a]/20 to-transparent" />
             <div className="absolute bottom-4 left-4 text-left">
               <Badge className="bg-gold/20 text-gold border-gold/30 text-[8px] uppercase tracking-widest mb-2">
                 Portal 1
@@ -211,7 +211,7 @@ const EvolutionStats = () => (
 
 const PremiumBottomNav = () => (
   <nav className="fixed bottom-0 left-0 right-0 z-50 px-6 pb-6 pt-2 md:hidden">
-    <div className="max-w-md mx-auto bg-[#0A0A0A]/80 backdrop-blur-2xl border border-white/10 rounded-3xl h-18 flex items-center justify-around px-2 shadow-2xl">
+    <div className="max-w-md mx-auto bg-[#02040a]/80 backdrop-blur-2xl border border-white/10 rounded-3xl h-18 flex items-center justify-around px-2 shadow-2xl">
       {[
         { icon: LayoutDashboard, label: 'Início', active: true },
         { icon: BookOpen, label: 'Clube' },
