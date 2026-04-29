@@ -22111,13 +22111,16 @@ export type Database = {
       }
       upsell_opportunities: {
         Row: {
+          channel_used: string | null
           churn_risk: number | null
           converted_at: string | null
           created_at: string | null
           engagement_score: number | null
           id: string
           last_action_at: string | null
+          last_offered_at: string | null
           reason: string | null
+          refusal_count: number | null
           rule_id: string | null
           segment_from: string
           segment_to: string
@@ -22126,13 +22129,16 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          channel_used?: string | null
           churn_risk?: number | null
           converted_at?: string | null
           created_at?: string | null
           engagement_score?: number | null
           id?: string
           last_action_at?: string | null
+          last_offered_at?: string | null
           reason?: string | null
+          refusal_count?: number | null
           rule_id?: string | null
           segment_from: string
           segment_to: string
@@ -22141,13 +22147,16 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          channel_used?: string | null
           churn_risk?: number | null
           converted_at?: string | null
           created_at?: string | null
           engagement_score?: number | null
           id?: string
           last_action_at?: string | null
+          last_offered_at?: string | null
           reason?: string | null
+          refusal_count?: number | null
           rule_id?: string | null
           segment_from?: string
           segment_to?: string
@@ -22591,6 +22600,18 @@ export type Database = {
         }
         Relationships: []
       }
+      upsell_revenue_intelligence: {
+        Row: {
+          acceptance_rate: number | null
+          channel_used: string | null
+          conversions: number | null
+          estimated_revenue: number | null
+          segment_from: string | null
+          segment_to: string | null
+          total_sent: number | null
+        }
+        Relationships: []
+      }
       upsell_stats: {
         Row: {
           conversion_rate: number | null
@@ -22795,6 +22816,10 @@ export type Database = {
           _nivel_minimo: Database["public"]["Enums"]["nivel_sala"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      can_receive_upsell_offer: {
+        Args: { p_segment_to: string; p_user_id: string }
         Returns: boolean
       }
       cancel_subscription: {
