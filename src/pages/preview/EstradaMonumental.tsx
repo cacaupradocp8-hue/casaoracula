@@ -88,12 +88,18 @@ const EstradaMonumental = () => {
 
       {/* Estrada Monumental Container */}
       <section className="relative max-w-5xl mx-auto px-6 pb-40">
-        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/5 -translate-x-1/2" />
+        {/* Background Depth Effects */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-blue-900/10 rounded-full blur-[120px]" />
+          <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[100px]" />
+        </div>
+
+        <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-white/[0.02] -translate-x-1/2" />
         
-        {/* Animated Road Path */}
+        {/* Animated Road Path - More Monumental */}
         <motion.div 
           style={{ scaleY }}
-          className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-blue-400 to-transparent -translate-x-1/2 origin-top shadow-[0_0_15px_rgba(59,130,246,0.5)] z-0"
+          className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-600 via-blue-400 to-transparent -translate-x-1/2 origin-top shadow-[0_0_30px_rgba(59,130,246,0.6)] z-0"
         />
 
         <div className="relative z-10 space-y-48 md:space-y-64 py-20">
