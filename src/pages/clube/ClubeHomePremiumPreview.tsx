@@ -306,7 +306,7 @@ export default function ClubeHomePremiumPreview() {
 
       {/* Premium Bottom Nav */}
       <nav className="fixed bottom-10 left-6 right-6 z-50">
-        <div className="max-w-md mx-auto bg-[#080C18]/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] h-20 flex items-center justify-around px-6 shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
+        <div className="max-w-md mx-auto bg-[#0A1229] border border-white/10 rounded-[2.5rem] h-20 flex items-center justify-around px-6 shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
           {[
             { icon: LayoutDashboard, active: true, label: 'Início' },
             { icon: BookOpen, label: 'Clube' },
