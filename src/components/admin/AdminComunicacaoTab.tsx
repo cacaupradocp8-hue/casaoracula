@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText, Zap, History, Send } from 'lucide-react';
+import { FileText, Zap, History, Send, Activity } from 'lucide-react';
+import { AutomationHealthDashboard } from './communication/AutomationHealthDashboard';
 import { CommunicationTemplates } from './communication/CommunicationTemplates';
 import { CommunicationAutomation } from './communication/CommunicationAutomation';
 import { CommunicationLogs } from './communication/CommunicationLogs';
