@@ -281,6 +281,7 @@ export default function AdminCasaOraculaTab() {
     } catch (error) {
       console.error('Error updating rule config:', error);
     }
+  };
 
   const handleMarkActionDone = async (user: StagnationInfoV4) => {
     try {
