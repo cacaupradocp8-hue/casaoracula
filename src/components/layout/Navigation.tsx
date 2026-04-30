@@ -15,7 +15,7 @@ import {
   Home, Settings, LogOut, Menu, X, User, LogIn, RefreshCw,
   BookOpen, Compass, Wrench, Flower2, GraduationCap, ChevronDown,
   Cog, Users, Calendar, Sparkles, Map, Clock, Eye, Crown, ArrowLeftRight,
-  Headphones,
+  Headphones, FlaskConical,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
