@@ -35,10 +35,11 @@ const visitanteMenuGroups = () => [
 // ── ASSINANTE DO CLUBE ──────────────────────────────────────────────────────
 const assinanteMenuGroups = () => [
   { key: 'inicio', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
-  { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
   { key: 'clube', label: 'Clube', icon: BookOpen, path: '/clube', subitems: [] },
+  { key: 'camara', label: 'Câmara do Sussurro', icon: Headphones, path: '/sala-de-treinamento', subitems: [] },
   { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas', subitems: [] },
   { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+  { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
   { key: 'vitrine', label: 'Vitrine', icon: Sparkles, path: '/vitrine', subitems: [] },
 ];
 
@@ -47,6 +48,16 @@ const alunaMenuGroups = () => [
   { key: 'inicio', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
   { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
   { key: 'clube', label: 'Clube', icon: BookOpen, path: '/clube', subitems: [] },
+  { 
+    key: 'treinamento', 
+    label: 'Treinamento', 
+    icon: FlaskConical, 
+    path: '/sala-de-treinamento',
+    subitems: [
+      { label: 'Câmara do Sussurro', path: '/sala-de-treinamento' },
+      { label: 'Sala de Treinamento', path: '/sala-de-treinamento' },
+    ]
+  },
   { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas', subitems: [] },
   { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
   { key: 'vitrine', label: 'Vitrine', icon: Sparkles, path: '/vitrine', subitems: [] },
