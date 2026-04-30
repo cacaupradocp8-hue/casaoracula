@@ -7,6 +7,7 @@ import { calcularFeedback, FeedbackResult } from './feedbackEngine';
 import { calculateTrainingScore, gerarPerfilSimbolico } from './scoringEngine';
 import { ScoreDisplay } from './ScoreDisplay';
 import { PerfilSimbolicoCard } from './PerfilSimbolicoCard';
+import { ResumoTreino } from './ResumoTreino';
 import { useMemo } from 'react';
 import { AvaliacaoIA } from './useAvaliacaoIA';
 
@@ -18,6 +19,7 @@ interface Props {
   isLast: boolean;
   avaliacaoIA?: AvaliacaoIA | null;
   isLoadingIA?: boolean;
+  proximoCaso?: TrainingCase | null;
 }
 
 const NIVEL_CONFIG = {
@@ -63,7 +65,7 @@ function getNivelFromScore(total: number): 'coerente' | 'ajuste' | 'erro' {
   return 'erro';
 }
 
-export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast, avaliacaoIA, isLoadingIA }: Props) {
+export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast, avaliacaoIA, isLoadingIA, proximoCaso }: Props) {
   const result: FeedbackResult = useMemo(
     () => calcularFeedback(caso, resposta),
     [caso, resposta]
@@ -94,6 +96,15 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast, ava
 
   return (
     <div className="space-y-4">
+      {/* Resumo síntese — topo */}
+      <ResumoTreino
+        caso={caso}
+        resposta={resposta}
+        score={finalScore}
+        result={result}
+        proximoCaso={proximoCaso ?? null}
+      />
+
       <p className="text-xs text-muted-foreground italic">
         Este retorno não indica certo ou errado. Indica coerência de leitura clínica.
       </p>
