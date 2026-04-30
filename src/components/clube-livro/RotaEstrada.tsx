@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Check, Zap, Sparkles } from 'lucide-react';
+import { Check, Zap, Sparkles, Lock } from 'lucide-react';
 import type { PontoRota } from '@/hooks/useRotaOracular';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface Props {
@@ -19,41 +18,27 @@ export function RotaEstrada({ pontos, pontoAtual, concluirPonto, isConcluindo }:
   if (pontos.length === 0) return null;
 
   return (
-    <div className="relative py-8">
-      {/* Title */}
-      <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground/60 font-medium mb-10 text-center">
-        Sua estrada
-      </p>
-
-      {/* Route 66 badge */}
-      <div className="flex justify-center mb-8">
-        <div className="w-14 h-14 rounded-full border-2 border-primary/40 bg-card/60 flex items-center justify-center">
-          <span className="text-[9px] font-bold uppercase tracking-wider text-primary/70 leading-none text-center">
-            Rota<br />Oracular
-          </span>
+    <div className="relative py-20 md:py-32">
+      {/* Title / Legend */}
+      <div className="flex justify-center mb-20 md:mb-32">
+        <div className="relative">
+          <motion.div 
+            animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.2, 0.1] }} 
+            transition={{ duration: 4, repeat: Infinity }}
+            className="absolute inset-0 bg-blue-500 blur-3xl rounded-full"
+          />
+          <div className="relative w-20 h-20 md:w-28 md:h-28 rounded-full border border-white/10 bg-[#000814]/80 backdrop-blur-md flex items-center justify-center text-center z-10 shadow-[0_0_40px_rgba(59,130,246,0.1)]">
+            <span className="text-[10px] md:text-xs font-serif italic font-light tracking-[0.2em] text-blue-400 uppercase leading-relaxed">
+              Rota<br />Oracular
+            </span>
+          </div>
         </div>
       </div>
 
       {/* Road container */}
       <div className="relative flex flex-col items-center">
-        {/* Asphalt road — central vertical line */}
-        <div
-          className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[52px] rounded-full"
-          style={{
-            background: 'linear-gradient(180deg, hsl(var(--muted)/0.25) 0%, hsl(var(--muted)/0.1) 100%)',
-            border: '1px solid hsl(var(--border)/0.15)',
-          }}
-        />
-        {/* Dashed center line */}
-        <div
-          className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[2px]"
-          style={{
-            backgroundImage: 'repeating-linear-gradient(180deg, hsl(var(--primary)/0.3) 0px, hsl(var(--primary)/0.3) 12px, transparent 12px, transparent 28px)',
-          }}
-        />
-
         {/* Signpost items */}
-        <div className="relative w-full flex flex-col gap-10">
+        <div className="relative w-full space-y-40 md:space-y-64">
           {pontos.map((ponto, i) => {
             const isAtual = ponto.id === pontoAtual?.id;
             const isConcluido = ponto.estado === 'completed';
@@ -63,144 +48,93 @@ export function RotaEstrada({ pontos, pontoAtual, concluirPonto, isConcluindo }:
             return (
               <motion.div
                 key={ponto.id}
-                initial={{ opacity: 0, x: isEsquerda ? -20 : 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.1, type: 'spring', stiffness: 120 }}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-10%" }}
+                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
                 className={`
-                  relative flex items-center w-full
+                  relative flex items-center w-full gap-8 md:gap-24
                   ${isEsquerda ? 'flex-row' : 'flex-row-reverse'}
                 `}
               >
-                {/* Signpost plaque */}
-                <motion.button
-                  whileHover={!isLocked ? { scale: 1.03 } : {}}
-                  whileTap={!isLocked ? { scale: 0.97 } : {}}
-                  onClick={() => {
-                    if (ponto.rota.startsWith('#')) return;
-                    if (ponto.estado !== 'locked') navigate(ponto.rota);
-                  }}
-                  className={`
-                    relative flex-1 max-w-[calc(50%-40px)]
-                    ${isLocked ? 'cursor-default' : 'cursor-pointer'}
-                  `}
-                >
-                  <div
+                {/* Content Side */}
+                <div className={`flex-1 ${isEsquerda ? 'text-right' : 'text-left'} space-y-4 md:space-y-6`}>
+                  <div className={`space-y-1 ${isEsquerda ? 'flex flex-col items-end' : ''}`}>
+                    <span className="text-[10px] uppercase tracking-[0.4em] text-blue-400/60 font-bold">
+                      {ponto.ref_tipo || ponto.tipo} • {isConcluido ? 'Atravessado' : isAtual ? 'Ponto Ativo' : 'Aguardando'}
+                    </span>
+                    <h3 className={`text-2xl md:text-4xl lg:text-5xl font-serif font-light tracking-tighter text-white/95 italic transition-opacity duration-700 ${isLocked ? 'opacity-20' : 'opacity-100'}`}>
+                      {ponto.nome}
+                    </h3>
+                  </div>
+                  
+                  <p className="text-sm md:text-base text-white/30 max-w-sm inline-block font-light italic leading-relaxed">
+                    {ponto.subtitulo || ponto.descricao || 'Uma etapa essencial da sua travessia para integrar novos saberes.'}
+                  </p>
+
+                  <div className={`flex items-center gap-4 ${isEsquerda ? 'justify-end' : 'justify-start'}`}>
+                    {ponto.impacto_cidadela && ponto.impacto_cidadela.length > 0 && (
+                      <div className="flex gap-2">
+                        {ponto.impacto_cidadela.map((imp, idx) => (
+                          <Badge key={idx} variant="outline" className="text-[8px] bg-white/[0.02] border-blue-900/40 text-blue-400/60 tracking-widest uppercase">
+                            {imp.distrito}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {!isLocked && (
+                    <div className={`pt-2 flex ${isEsquerda ? 'justify-end' : 'justify-start'}`}>
+                      <Button 
+                        variant="ghost" 
+                        className="h-10 px-0 text-[10px] font-bold uppercase tracking-[0.3em] text-blue-400/80 hover:text-white hover:bg-transparent transition-colors group"
+                        onClick={() => navigate(ponto.rota)}
+                      >
+                        {isConcluido ? 'Revisitar' : 'Iniciar agora'}
+                        <Sparkles className="w-3.5 h-3.5 ml-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Node Side (The Road) */}
+                <div className="relative z-20 flex-shrink-0">
+                  <motion.button
+                    whileHover={!isLocked ? { scale: 1.1 } : {}}
+                    whileTap={!isLocked ? { scale: 0.95 } : {}}
+                    onClick={() => !isLocked && navigate(ponto.rota)}
                     className={`
-                      relative px-4 py-3 rounded-lg border transition-all
-                      ${isAtual
-                        ? 'bg-primary/10 border-primary/40 shadow-[0_0_24px_hsl(var(--primary)/0.15)]'
-                        : isConcluido
-                          ? 'bg-card/40 border-primary/20'
-                          : 'bg-card/20 border-border/15 opacity-50'
+                      relative w-20 h-20 md:w-32 md:h-32 rounded-full flex items-center justify-center border transition-all duration-700
+                      ${isConcluido 
+                        ? 'bg-blue-600/5 border-blue-500/20 shadow-[0_0_30px_rgba(59,130,246,0.05)]' 
+                        : isAtual 
+                          ? 'bg-[#000814] border-white/40 scale-110 shadow-[0_0_50px_rgba(255,255,255,0.1)]' 
+                          : 'bg-black/60 border-white/5 opacity-40'
                       }
                     `}
                   >
-                    {/* Plaque nail / connector to road */}
-                    <div
-                      className={`
-                        absolute top-1/2 -translate-y-1/2 w-6 h-[2px]
-                        ${isEsquerda ? '-right-6' : '-left-6'}
-                        ${isConcluido ? 'bg-primary/30' : isAtual ? 'bg-primary/50' : 'bg-border/20'}
-                      `}
-                    />
+                    {isConcluido ? (
+                      <Check className="w-6 h-6 md:w-8 md:h-8 text-blue-400/60 stroke-[1.5]" />
+                    ) : isAtual ? (
+                      <Sparkles className="w-8 h-8 md:w-10 md:h-10 text-white animate-pulse stroke-[1]" />
+                    ) : (
+                      <Lock className="w-5 h-5 md:w-6 md:h-6 text-white/10 stroke-[1.5]" />
+                    )}
 
-                    {/* Content */}
-                    <div className={`flex items-center gap-2.5 ${isEsquerda ? '' : 'flex-row-reverse text-right'}`}>
-                      {/* Icon */}
-                      <div className={`
-                        w-9 h-9 rounded-md flex items-center justify-center shrink-0 text-base
-                        ${isConcluido
-                          ? 'bg-primary/20'
-                          : isAtual
-                            ? 'bg-primary/15 ring-1 ring-primary/30'
-                            : 'bg-muted/20'
-                        }
-                      `}>
-                        {isConcluido ? (
-                          <Check className="w-4 h-4 text-primary" />
-                        ) : (
-                          <span>{ponto.icone}</span>
-                        )}
-                      </div>
-
-                      {/* Label */}
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-1.5">
-                          <p className={`text-sm font-semibold truncate ${
-                            isAtual ? 'text-primary' : isConcluido ? 'text-foreground/80' : 'text-muted-foreground/50'
-                          }`}>
-                            {ponto.nome}
-                          </p>
-                          {ponto.impacto_cidadela && ponto.impacto_cidadela.length > 0 && !isConcluido && (
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger>
-                                  <Zap className="w-3 h-3 text-gold/60 animate-pulse" />
-                                </TooltipTrigger>
-                                <TooltipContent className="bg-card border-gold/20 text-[10px] p-2">
-                                  <p className="font-bold text-gold uppercase mb-1">Impacto Esperado:</p>
-                                  <ul className="space-y-0.5">
-                                    {ponto.impacto_cidadela.map((imp, idx) => (
-                                      <li key={idx} className="flex items-center gap-1.5">
-                                        <Sparkles className="w-2.5 h-2.5 text-gold" />
-                                        {imp.distrito}: +{imp.intensidade} pts
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          )}
-                        </div>
-                        <div className="flex items-center justify-between gap-2">
-                          <p className={`text-[9px] uppercase tracking-[0.15em] font-medium ${
-                            isAtual ? 'text-primary/60' : 'text-muted-foreground/30'
-                          }`}>
-                            {ponto.estadoUI}
-                          </p>
-                          {isAtual && concluirPonto && (
-                            <Button 
-                              size="sm" 
-                              variant="ghost" 
-                              disabled={isConcluindo}
-                              className="h-5 px-1.5 py-0 text-[8px] uppercase tracking-widest font-bold text-gold hover:text-gold hover:bg-gold/10"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                concluirPonto(ponto.id);
-                              }}
-                            >
-                              Concluir
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.button>
-
-                {/* Road node (center) */}
-                <div className="relative z-10 w-[52px] flex items-center justify-center shrink-0">
-                  <div className={`
-                    w-5 h-5 rounded-full border-2 transition-all
-                    ${isConcluido
-                      ? 'bg-primary/80 border-primary/60'
-                      : isAtual
-                        ? 'bg-primary/40 border-primary/80 shadow-[0_0_16px_hsl(var(--primary)/0.4)]'
-                        : 'bg-card/40 border-border/25'
-                    }
-                  `}>
+                    {/* Animated Pulse for Active Node */}
                     {isAtual && (
                       <motion.div
-                        animate={{ scale: [1, 1.6, 1], opacity: [0.8, 0.2, 0.8] }}
-                        transition={{ repeat: Infinity, duration: 2.5 }}
-                        className="w-full h-full rounded-full bg-primary/50"
+                        animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
+                        transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                        className="absolute inset-0 rounded-full border border-white/20"
                       />
                     )}
-                  </div>
+                  </motion.button>
                 </div>
 
-                {/* Spacer for the other side */}
-                <div className="flex-1 max-w-[calc(50%-40px)]" />
+                {/* Empty Spacer Side */}
+                <div className="flex-1 hidden md:block" />
               </motion.div>
             );
           })}
@@ -209,3 +143,4 @@ export function RotaEstrada({ pontos, pontoAtual, concluirPonto, isConcluindo }:
     </div>
   );
 }
+
