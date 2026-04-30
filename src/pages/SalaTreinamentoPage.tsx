@@ -50,10 +50,10 @@ export default function SalaTreinamentoPage() {
     <CasaMaquinasLayout
       title={
         <div className="flex flex-col gap-1">
-          <span className="text-xs font-normal text-muted-foreground">Bom dia, {user?.nome?.split(' ')[0] || 'Oraculista'}</span>
+          <span className="text-xs font-normal text-muted-foreground">Bom dia, {user?.name?.split(' ')[0] || 'Oraculista'}</span>
           <div className="flex items-center gap-4">
             <span>Câmara do Sussurro</span>
-            <div className="flex items-center gap-3 ml-auto">
+            <div className="flex items-center gap-3 ml-auto pr-8">
               <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/20">
                 <Flame className="w-3 h-3 text-orange-500" />
                 <span className="text-[10px] font-bold text-orange-400">{progress?.streak_days || 0}</span>

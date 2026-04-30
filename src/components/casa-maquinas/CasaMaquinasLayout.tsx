@@ -5,7 +5,7 @@ import { Navigation } from '@/components/layout/Navigation';
 
 interface CasaMaquinasLayoutProps {
   children: ReactNode;
-  title?: string;
+  title?: ReactNode;
   subtitle?: string;
 }
 
