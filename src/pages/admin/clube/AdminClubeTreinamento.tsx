@@ -68,7 +68,26 @@ export default function AdminClubeTreinamento() {
           </Card>
 
           {selectedCiclo ? (
-            <LabConfigManager cicloId={selectedCiclo} />
+            <Tabs defaultValue="pratica" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto mb-6">
+                <TabsTrigger value="teoria" className="gap-2">
+                  <BookOpen className="w-4 h-4" />
+                  Teoria (Lab 80/20)
+                </TabsTrigger>
+                <TabsTrigger value="pratica" className="gap-2">
+                  <FlaskConical className="w-4 h-4" />
+                  Prática (Câmara)
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="teoria" className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <LabConfigManager cicloId={selectedCiclo} />
+              </TabsContent>
+              
+              <TabsContent value="pratica" className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <AdminCamaraSussurro cicloId={selectedCiclo} />
+              </TabsContent>
+            </Tabs>
           ) : (
             <Card className="bg-muted/30 border-dashed">
               <CardContent className="flex flex-col items-center justify-center py-12 text-center">
