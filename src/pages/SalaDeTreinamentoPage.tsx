@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Trophy, Flame, Zap, Play, ChevronRight, 
   BookOpen, Search, AlertCircle, History,
   Star, Clock, CheckCircle2, ArrowRight, Sparkles,
-  ArrowLeft, FlaskConical, GraduationCap
+  ArrowLeft, FlaskConical, GraduationCap, Lock
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
