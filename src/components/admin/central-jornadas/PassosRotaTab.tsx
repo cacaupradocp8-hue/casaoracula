@@ -222,6 +222,8 @@ export function PassosRotaTab({ estacaoId }: Props) {
       jardim_prompt: '',
       simulacao_texto: '',
       perguntas_sugeridas: '[]',
+      cta_label: '',
+      cta_url: '',
     });
     setDialogOpen(true);
   };
