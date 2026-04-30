@@ -9,16 +9,16 @@ export function RotaImersao({ estacaoId }: { estacaoId?: string | null }) {
 
   const itens = [
     {
-      label: 'Escutas da Semana',
-      descricao: 'Áudios e aulas-álbum',
+      label: 'Sala de Treinamento',
+      descricao: 'Simulações e prática clínica',
       icon: PlayCircle,
-      rota: '/clube/escuta',
+      rota: '/clube/treinamento',
     },
     {
-      label: 'Encontro ao Vivo',
-      descricao: 'Mentorias e aulas coletivas',
+      label: 'Escutas & Aulas',
+      descricao: 'Áudios e aulas-álbum',
       icon: Users,
-      rota: '/clube/encontro',
+      rota: '/clube/escuta',
     },
     {
       label: 'Biblioteca 80/20',

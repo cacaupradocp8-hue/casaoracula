@@ -32,10 +32,16 @@ export default function SalaDeTreinamentoPage() {
   const xpProgress = 75;
 
   const handleStartCase = (c: SimCase) => setActiveCase(c);
-  const handleBack = () => setActiveCase(null);
+  const handleBack = () => {
+    if (activeCase) {
+      setActiveCase(null);
+    } else {
+      window.history.back();
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] text-[#EAEAEA] font-sans selection:bg-primary/30">
+    <div className="min-h-screen bg-[#0A0A0B] text-[#EAEAEA] font-sans selection:bg-primary/30 pb-20">
       <AnimatePresence mode="wait">
         {!activeCase ? (
           <motion.div 
@@ -47,12 +53,20 @@ export default function SalaDeTreinamentoPage() {
           >
             {/* Header / Topo */}
             <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-              <div className="space-y-1">
+              <div className="space-y-2">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={handleBack}
+                  className="p-0 h-auto text-primary hover:text-primary/80 hover:bg-transparent -ml-1 mb-2"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
+                </Button>
                 <h1 className="text-3xl font-light tracking-tight text-white/90">
                   Bom dia, <span className="font-semibold text-white">{user?.name || 'Oraculista'}</span>
                 </h1>
                 <p className="text-muted-foreground/60 text-sm tracking-wide uppercase font-medium">
-                  Pronto para refinar sua escuta?
+                  Pronto para refinar sua escuta na Câmara de Simulação?
                 </p>
               </div>
               
