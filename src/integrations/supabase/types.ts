@@ -6484,6 +6484,77 @@ export type Database = {
           },
         ]
       }
+      co_camara_sussurro_casos: {
+        Row: {
+          ativo: boolean
+          ciclo_id: string | null
+          contexto: string | null
+          created_at: string
+          dificuldade: string | null
+          distrito_dominante: string | null
+          erro_comum: string | null
+          fala_inicial: string | null
+          id: string
+          idade: number | null
+          leitura_simbolica: string | null
+          pergunta_ideal: string | null
+          resposta_correta: string | null
+          tema_emocional: string | null
+          tipo_cliente: string | null
+          titulo: string
+          torre_provavel: string | null
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          ciclo_id?: string | null
+          contexto?: string | null
+          created_at?: string
+          dificuldade?: string | null
+          distrito_dominante?: string | null
+          erro_comum?: string | null
+          fala_inicial?: string | null
+          id?: string
+          idade?: number | null
+          leitura_simbolica?: string | null
+          pergunta_ideal?: string | null
+          resposta_correta?: string | null
+          tema_emocional?: string | null
+          tipo_cliente?: string | null
+          titulo: string
+          torre_provavel?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          ciclo_id?: string | null
+          contexto?: string | null
+          created_at?: string
+          dificuldade?: string | null
+          distrito_dominante?: string | null
+          erro_comum?: string | null
+          fala_inicial?: string | null
+          id?: string
+          idade?: number | null
+          leitura_simbolica?: string | null
+          pergunta_ideal?: string | null
+          resposta_correta?: string | null
+          tema_emocional?: string | null
+          tipo_cliente?: string | null
+          titulo?: string
+          torre_provavel?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_camara_sussurro_casos_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       co_cartografia_profile: {
         Row: {
           cartografia_id: string | null
