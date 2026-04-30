@@ -6495,6 +6495,7 @@ export type Database = {
           distrito_dominante: string | null
           distrito_esperado: string | null
           erro_comum: string | null
+          explicacao_simples: string | null
           fala_inicial: string | null
           ferramenta_principal: string | null
           hipotese_esperada: string | null
@@ -6502,6 +6503,8 @@ export type Database = {
           idade: string | null
           leitura_simbolica: string | null
           nivel: string | null
+          nivel_produto: string
+          opcoes_leitura: Json | null
           pergunta_ideal: string | null
           resposta_correta: string | null
           tema_emocional: string | null
@@ -6520,6 +6523,7 @@ export type Database = {
           distrito_dominante?: string | null
           distrito_esperado?: string | null
           erro_comum?: string | null
+          explicacao_simples?: string | null
           fala_inicial?: string | null
           ferramenta_principal?: string | null
           hipotese_esperada?: string | null
@@ -6527,6 +6531,8 @@ export type Database = {
           idade?: string | null
           leitura_simbolica?: string | null
           nivel?: string | null
+          nivel_produto?: string
+          opcoes_leitura?: Json | null
           pergunta_ideal?: string | null
           resposta_correta?: string | null
           tema_emocional?: string | null
@@ -6545,6 +6551,7 @@ export type Database = {
           distrito_dominante?: string | null
           distrito_esperado?: string | null
           erro_comum?: string | null
+          explicacao_simples?: string | null
           fala_inicial?: string | null
           ferramenta_principal?: string | null
           hipotese_esperada?: string | null
@@ -6552,6 +6559,8 @@ export type Database = {
           idade?: string | null
           leitura_simbolica?: string | null
           nivel?: string | null
+          nivel_produto?: string
+          opcoes_leitura?: Json | null
           pergunta_ideal?: string | null
           resposta_correta?: string | null
           tema_emocional?: string | null
