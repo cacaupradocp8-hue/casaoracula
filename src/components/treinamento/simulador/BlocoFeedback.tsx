@@ -96,6 +96,15 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast, ava
 
   return (
     <div className="space-y-4">
+      {/* Resumo síntese — topo */}
+      <ResumoTreino
+        caso={caso}
+        resposta={resposta}
+        score={finalScore}
+        result={result}
+        proximoCaso={proximoCaso ?? null}
+      />
+
       <p className="text-xs text-muted-foreground italic">
         Este retorno não indica certo ou errado. Indica coerência de leitura clínica.
       </p>
