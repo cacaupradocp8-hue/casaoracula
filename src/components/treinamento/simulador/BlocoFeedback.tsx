@@ -10,6 +10,7 @@ import { PerfilSimbolicoCard } from './PerfilSimbolicoCard';
 import { ResumoTreino } from './ResumoTreino';
 import { useMemo } from 'react';
 import { AvaliacaoIA } from './useAvaliacaoIA';
+import { ConversaoCTA } from './ConversaoCTA';
 
 interface Props {
   caso: TrainingCase;
