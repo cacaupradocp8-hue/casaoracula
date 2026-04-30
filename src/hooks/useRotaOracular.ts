@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient, useIsMutating } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -61,7 +61,6 @@ export interface Estacao {
   essencia_tensao: string | null;
   essencia_transformacao: string | null;
   ativa: boolean;
-  status: 'draft' | 'published' | 'archived';
 }
 
 export interface EncontroAtivo {
@@ -101,7 +100,6 @@ function resolveRota(tipo: string, refId: string | null, rotaCustom?: string): s
 
 export function useRotaOracular() {
   const { user } = useAuth();
-  const isMutating = useIsMutating();
 
   // 1. Estação ativa
   const { data: estacaoAtual, isLoading: loadingEstacao } = useQuery({
@@ -110,7 +108,7 @@ export function useRotaOracular() {
       try {
         const { data, error } = await supabase
           .from('clube_estacoes')
-          .select('id, titulo, subtitulo, descricao, banner_url, numero, livro_titulo, livro_autor, livro_capa_url, livro_imagem_banner_url, essencia_nucleo, essencia_tensao, essencia_transformacao, ativa, status, publicada')
+          .select('id, titulo, subtitulo, descricao, banner_url, numero, livro_titulo, livro_autor, livro_capa_url, livro_imagem_banner_url, essencia_nucleo, essencia_tensao, essencia_transformacao, ativa')
           .eq('publicada', true)
           .eq('ativa', true)
           .order('numero', { ascending: false })
@@ -162,7 +160,7 @@ export function useRotaOracular() {
         .from('clube_rota_itens')
         .select('*')
         .eq('estacao_id', estacaoAtual.id)
-        .eq('publicado', true)
+        // .eq('publicado', true) // temporário para teste se necessário
         .order('ordem');
       if (error) throw error;
       return data || [];
@@ -209,7 +207,7 @@ export function useRotaOracular() {
     queryFn: async () => {
       const { data } = await supabase
         .from('clube_estacoes')
-        .select('id, titulo, subtitulo, numero, livro_titulo, livro_autor, ativa, status')
+        .select('id, titulo, subtitulo, numero, livro_titulo, livro_autor, ativa')
         .eq('publicada', true)
         .eq('ativa', false)
         .order('numero', { ascending: false })
