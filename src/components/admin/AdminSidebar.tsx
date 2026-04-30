@@ -208,6 +208,7 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
                               if (item.key === 'clube-portais') navigate('/admin/clube/portais');
                               if (item.key === 'clube-acervo') navigate('/admin/clube/conteudos');
                               if (item.key === 'clube-treinamento') navigate('/admin/clube/treinamento');
+                              if (item.key === 'clube-premium-editor') navigate('/admin/clube?tab=clube-premium-editor');
                               if (item.key === 'clube-chat') navigate('/admin/clube/chat');
                             }
                           }}
