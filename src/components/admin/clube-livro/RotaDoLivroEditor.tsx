@@ -138,16 +138,10 @@ export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-display text-gold flex items-center gap-2">
           <MapIcon className="w-5 h-5" />
-          Rota do Livro (Orquestrador)
+          Sistema de Templates Editoriais
         </h3>
-        <Button size="sm" variant="outline" className="gap-2" onClick={() => saveMutation.mutate({ 
-          titulo: 'Novo Ponto', 
-          ordem: (itens?.length || 0) + 1,
-          slug: `ponto-${Date.now()}`,
-          tipo: 'aula',
-          publicado: false
-        })}>
-          <Plus className="w-4 h-4" /> Adicionar Ponto
+        <Button size="sm" variant="outline" className="gap-2 border-gold/50 text-gold hover:bg-gold/10" onClick={() => setNewStepDialogOpen(true)}>
+          <Plus className="w-4 h-4" /> Novo Passo
         </Button>
       </div>
 
