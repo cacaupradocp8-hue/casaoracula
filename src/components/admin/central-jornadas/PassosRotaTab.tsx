@@ -154,7 +154,9 @@ export function PassosRotaTab({ estacaoId }: Props) {
           audios: audiosJson,
           jardim_prompt: data.jardim_prompt,
           simulacao_texto: data.simulacao_texto,
-          perguntas_sugeridas: perguntasJson
+          perguntas_sugeridas: perguntasJson,
+          cta_label: data.cta_label,
+          cta_url: data.cta_url
         },
         slug: data.titulo.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
       };
