@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -150,79 +151,100 @@ export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
           <Card key={item.id} className="border-primary/10 bg-card/50 hover:border-gold/30 transition-colors">
             <CardContent className="p-4">
               <div className="flex items-center gap-4 mb-4">
-                <GripVertical className="w-4 h-4 text-muted-foreground cursor-grab" />
+                <div className="flex flex-col gap-1">
+                  <Button 
+                    size="icon" 
+                    variant="ghost" 
+                    className="h-6 w-6 text-muted-foreground hover:text-gold"
+                    onClick={() => moveMutation.mutate({ id: item.id, newOrder: item.ordem - 1 })}
+                  >
+                    <ChevronUp className="w-4 h-4" />
+                  </Button>
+                  <Button 
+                    size="icon" 
+                    variant="ghost" 
+                    className="h-6 w-6 text-muted-foreground hover:text-gold"
+                    onClick={() => moveMutation.mutate({ id: item.id, newOrder: item.ordem + 1 })}
+                  >
+                    <ChevronDown className="w-4 h-4" />
+                  </Button>
+                </div>
                 
                 <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                   <div className="space-y-1">
-                    <Label className="text-[10px] uppercase font-bold text-muted-foreground">Título</Label>
+                    <Label className="text-[10px] uppercase font-bold text-muted-foreground">Título do Passo</Label>
                     <Input 
                       value={item.titulo} 
                       onChange={(e) => saveMutation.mutate({ id: item.id, titulo: e.target.value })}
-                      className="h-8 text-sm bg-background/50 border-primary/5"
+                      className="h-8 text-sm bg-background/50 border-primary/5 focus:border-gold/50"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-[10px] uppercase font-bold text-muted-foreground">Tipo</Label>
+                    <Label className="text-[10px] uppercase font-bold text-muted-foreground">Template Editorial</Label>
                     <Select 
                       value={item.tipo} 
                       onValueChange={(v) => saveMutation.mutate({ id: item.id, tipo: v })}
                     >
-                      <SelectTrigger className="h-8 text-sm bg-background/50 border-primary/5">
+                      <SelectTrigger className="h-8 text-sm bg-background/50 border-primary/5 capitalize">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-popover border-gold/20">
                         <SelectItem value="portal">Portal</SelectItem>
-                        <SelectItem value="escuta">Escuta/Áudio</SelectItem>
-                        <SelectItem value="aula">Aula</SelectItem>
+                        <SelectItem value="escuta">Escuta</SelectItem>
+                        <SelectItem value="travessia">Travessia</SelectItem>
                         <SelectItem value="laboratorio">Laboratório</SelectItem>
-                        <SelectItem value="chat_livro">Chat com Livro</SelectItem>
-                        <SelectItem value="jardim">Jardim</SelectItem>
+                        <SelectItem value="registro">Registro</SelectItem>
+                        <SelectItem value="integracao">Integração</SelectItem>
                         <SelectItem value="encontro">Encontro</SelectItem>
-                        <SelectItem value="aplicacao">Aplicação</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-[10px] uppercase font-bold text-muted-foreground">Identificador (Slug)</Label>
-                    <Input 
-                      value={item.slug} 
-                      onChange={(e) => saveMutation.mutate({ id: item.id, slug: e.target.value })}
-                      className="h-8 text-sm bg-background/50 border-primary/5 font-mono"
-                    />
-                  </div>
-
-                  <div className="flex gap-2">
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      className={cn(
-                        "h-8 gap-2 text-[10px] uppercase tracking-wider",
-                        item.impacto_cidadela && item.impacto_cidadela.length > 0 ? "border-gold/50 text-gold bg-gold/5" : "text-muted-foreground"
-                      )}
-                      onClick={() => openImpactoDialog(item)}
-                    >
-                      <Zap className="w-3 h-3" />
-                      Impacto
-                    </Button>
-                    <Button 
-                      size="icon" 
-                      variant="ghost" 
-                      className="h-8 w-8"
-                      onClick={() => saveMutation.mutate({ id: item.id, publicado: !item.publicado })}
-                    >
-                      {item.publicado ? <Eye className="w-4 h-4 text-gold" /> : <EyeOff className="w-4 h-4 text-muted-foreground" />}
-                    </Button>
+                    <Label className="text-[10px] uppercase font-bold text-muted-foreground">Status & Visibilidade</Label>
+                    <div className="flex gap-2">
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className={cn(
+                          "h-8 flex-1 gap-2 text-[10px] uppercase tracking-wider",
+                          item.publicado ? "border-gold/50 text-gold bg-gold/5" : "text-muted-foreground border-primary/5"
+                        )}
+                        onClick={() => saveMutation.mutate({ id: item.id, publicado: !item.publicado })}
+                      >
+                        {item.publicado ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
+                        {item.publicado ? 'Publicado' : 'Rascunho'}
+                      </Button>
+                      <Button 
+                        size="icon" 
+                        variant="outline" 
+                        className="h-8 w-8 border-primary/5 text-muted-foreground hover:text-gold hover:bg-gold/5"
+                        title="Visualizar como Aluna"
+                        onClick={() => window.open(`/clube/jornada/${item.slug}`, '_blank')}
+                      >
+                        <Layout className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
 
                   <div className="flex justify-end gap-2">
                     <Button 
                       size="icon" 
                       variant="ghost" 
+                      className="h-8 w-8 text-muted-foreground hover:text-gold hover:bg-gold/5"
+                      title="Duplicar Passo"
+                      onClick={() => duplicateMutation.mutate(item)}
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                    <Button 
+                      size="icon" 
+                      variant="ghost" 
                       className="h-8 w-8 text-destructive/50 hover:text-destructive hover:bg-destructive/10"
+                      title="Excluir Passo"
                       onClick={() => {
-                        if(confirm('Remover este ponto da rota?')) deleteMutation.mutate(item.id);
+                        if(confirm('Remover este passo definitivamente?')) deleteMutation.mutate(item.id);
                       }}
                     >
                       <Trash2 className="w-4 h-4" />
@@ -235,53 +257,52 @@ export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
                 <CollapsibleTrigger asChild>
                   <Button variant="ghost" size="sm" className="w-full h-6 text-[9px] uppercase tracking-widest gap-1 hover:bg-gold/5">
                     <Settings2 className="w-3 h-3" />
-                    Configurações Avançadas & Cartografia
+                    Conteúdo Editorial & Cartografia
                     <ChevronDown className="w-3 h-3" />
                   </Button>
                 </CollapsibleTrigger>
                 <CollapsibleContent className="space-y-4 pt-4 border-t border-dashed border-primary/10 mt-2">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <div className="space-y-1">
-                        <Label className="text-[10px] uppercase font-bold text-muted-foreground">Subtítulo</Label>
-                        <Input 
-                          value={item.subtitulo || ''} 
-                          onChange={(e) => saveMutation.mutate({ id: item.id, subtitulo: e.target.value })}
-                          className="h-8 text-sm bg-background/50 border-primary/5"
-                        />
+                  <TemplateEditorialEditor 
+                    item={item} 
+                    onUpdate={(data) => saveMutation.mutate({ id: item.id, ...data })}
+                  />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div className="space-y-4 bg-muted/20 p-4 rounded-lg border border-primary/5">
+                      <p className="text-[10px] uppercase font-bold text-gold tracking-widest mb-2 flex items-center gap-2">
+                        <Zap className="w-3 h-3" />
+                        Impacto na CidaDELA
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">Configurações de impacto no mapa simbólico</span>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className={cn(
+                            "h-7 gap-2 text-[9px] uppercase tracking-wider",
+                            item.impacto_cidadela && item.impacto_cidadela.length > 0 ? "border-gold/50 text-gold bg-gold/5" : "text-muted-foreground"
+                          )}
+                          onClick={() => openImpactoDialog(item)}
+                        >
+                          Configurar Impacto
+                        </Button>
                       </div>
-                      <ImageUpload 
-                        value={item.image_url || ''} 
-                        onChange={(url) => saveMutation.mutate({ id: item.id, image_url: url })}
-                        label="Imagem do Passo"
-                        folder="clube-assets"
-                        aspectRatio="video"
-                      />
                     </div>
 
-                    <div className="space-y-4 bg-muted/20 p-3 rounded-lg border border-primary/5">
-                      <p className="text-[10px] uppercase font-bold text-gold tracking-widest mb-2">Sincronização Cartográfica</p>
+                    <div className="space-y-4 bg-muted/20 p-4 rounded-lg border border-primary/5">
+                      <p className="text-[10px] uppercase font-bold text-gold tracking-widest mb-2 flex items-center gap-2">
+                        <MapIcon className="w-3 h-3" />
+                        Sincronização Cartográfica
+                      </p>
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-1">
+                          <Label className="text-[9px] uppercase">Slug/URL</Label>
+                          <Input value={item.slug || ''} onChange={(e) => saveMutation.mutate({ id: item.id, slug: e.target.value })} className="h-7 text-xs bg-background/50" />
+                        </div>
+                        <div className="space-y-1">
                           <Label className="text-[9px] uppercase">Porta</Label>
-                          <Input value={item.porta || ''} onChange={(e) => saveMutation.mutate({ id: item.id, porta: e.target.value })} className="h-7 text-xs" />
+                          <Input value={item.porta || ''} onChange={(e) => saveMutation.mutate({ id: item.id, porta: e.target.value })} className="h-7 text-xs bg-background/50" />
                         </div>
-                        <div className="space-y-1">
-                          <Label className="text-[9px] uppercase">Campo</Label>
-                          <Input value={item.campo || ''} onChange={(e) => saveMutation.mutate({ id: item.id, campo: e.target.value })} className="h-7 text-xs" />
-                        </div>
-                        <div className="space-y-1">
-                          <Label className="text-[9px] uppercase">Torre</Label>
-                          <Input value={item.torre || ''} onChange={(e) => saveMutation.mutate({ id: item.id, torre: e.target.value })} className="h-7 text-xs" />
-                        </div>
-                        <div className="space-y-1">
-                          <Label className="text-[9px] uppercase">Labirinto</Label>
-                          <Input value={item.labirinto || ''} onChange={(e) => saveMutation.mutate({ id: item.id, labirinto: e.target.value })} className="h-7 text-xs" />
-                        </div>
-                      </div>
-                      <div className="space-y-1">
-                        <Label className="text-[9px] uppercase">Frase-Guia</Label>
-                        <Textarea value={item.frase_guia || ''} onChange={(e) => saveMutation.mutate({ id: item.id, frase_guia: e.target.value })} className="min-h-[60px] text-xs" />
                       </div>
                     </div>
                   </div>
@@ -291,6 +312,38 @@ export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
           </Card>
         ))}
       </div>
+
+      <Dialog open={newStepDialogOpen} onOpenChange={setNewStepDialogOpen}>
+        <DialogContent className="sm:max-w-[425px] bg-card border-gold/20">
+          <DialogHeader>
+            <DialogTitle className="text-gold font-display">Novo Passo da Jornada</DialogTitle>
+            <DialogDescription>Selecione o template editorial para o novo passo.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="type" className="text-right text-xs uppercase font-bold">Tipo</Label>
+              <Select value={newStepType} onValueChange={setNewStepType}>
+                <SelectTrigger className="col-span-3">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="portal">Portal</SelectItem>
+                  <SelectItem value="escuta">Escuta</SelectItem>
+                  <SelectItem value="travessia">Travessia</SelectItem>
+                  <SelectItem value="laboratorio">Laboratório</SelectItem>
+                  <SelectItem value="registro">Registro</SelectItem>
+                  <SelectItem value="integracao">Integração</SelectItem>
+                  <SelectItem value="encontro">Encontro</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setNewStepDialogOpen(false)}>Cancelar</Button>
+            <Button className="bg-gold text-black hover:bg-gold/80" onClick={handleCreateStep}>Criar Passo</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <ImpactoDialog 
         isOpen={impactoDialogOpen} 
@@ -304,11 +357,6 @@ export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
 
 function ImpactoDialog({ isOpen, onClose, item, onSave }: any) {
   const [impactos, setImpactos] = useState<any[]>(item?.impacto_cidadela || []);
-
-  // Update local state when item changes
-  useState(() => {
-    if (item?.impacto_cidadela) setImpactos(item.impacto_cidadela);
-  });
 
   const addImpacto = () => {
     setImpactos([...impactos, { distrito: 'Portão das Sombras', tipo_impacto: 'evolucao', intensidade: 1 }]);
@@ -397,5 +445,3 @@ function ImpactoDialog({ isOpen, onClose, item, onSave }: any) {
     </Dialog>
   );
 }
-
-
