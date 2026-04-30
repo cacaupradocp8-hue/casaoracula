@@ -6487,16 +6487,21 @@ export type Database = {
       co_camara_sussurro_casos: {
         Row: {
           ativo: boolean
+          categoria: string | null
           ciclo_id: string | null
           contexto: string | null
           created_at: string
           dificuldade: string | null
           distrito_dominante: string | null
+          distrito_esperado: string | null
           erro_comum: string | null
           fala_inicial: string | null
+          ferramenta_principal: string | null
+          hipotese_esperada: string | null
           id: string
-          idade: number | null
+          idade: string | null
           leitura_simbolica: string | null
+          nivel: string | null
           pergunta_ideal: string | null
           resposta_correta: string | null
           tema_emocional: string | null
@@ -6507,16 +6512,21 @@ export type Database = {
         }
         Insert: {
           ativo?: boolean
+          categoria?: string | null
           ciclo_id?: string | null
           contexto?: string | null
           created_at?: string
           dificuldade?: string | null
           distrito_dominante?: string | null
+          distrito_esperado?: string | null
           erro_comum?: string | null
           fala_inicial?: string | null
+          ferramenta_principal?: string | null
+          hipotese_esperada?: string | null
           id?: string
-          idade?: number | null
+          idade?: string | null
           leitura_simbolica?: string | null
+          nivel?: string | null
           pergunta_ideal?: string | null
           resposta_correta?: string | null
           tema_emocional?: string | null
@@ -6527,16 +6537,21 @@ export type Database = {
         }
         Update: {
           ativo?: boolean
+          categoria?: string | null
           ciclo_id?: string | null
           contexto?: string | null
           created_at?: string
           dificuldade?: string | null
           distrito_dominante?: string | null
+          distrito_esperado?: string | null
           erro_comum?: string | null
           fala_inicial?: string | null
+          ferramenta_principal?: string | null
+          hipotese_esperada?: string | null
           id?: string
-          idade?: number | null
+          idade?: string | null
           leitura_simbolica?: string | null
+          nivel?: string | null
           pergunta_ideal?: string | null
           resposta_correta?: string | null
           tema_emocional?: string | null
@@ -8243,10 +8258,14 @@ export type Database = {
       }
       co_training_progress: {
         Row: {
+          activated_districts: Json | null
           casos_concluidos: number | null
+          certification_potential: number | null
           coerencia_media: number | null
           id: string
+          last_training_at: string | null
           nivel_atual: string | null
+          streak_days: number | null
           taxa_acerto: number | null
           total_casos: number | null
           ultimo_case_id: string | null
@@ -8254,10 +8273,14 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          activated_districts?: Json | null
           casos_concluidos?: number | null
+          certification_potential?: number | null
           coerencia_media?: number | null
           id?: string
+          last_training_at?: string | null
           nivel_atual?: string | null
+          streak_days?: number | null
           taxa_acerto?: number | null
           total_casos?: number | null
           ultimo_case_id?: string | null
@@ -8265,10 +8288,14 @@ export type Database = {
           user_id: string
         }
         Update: {
+          activated_districts?: Json | null
           casos_concluidos?: number | null
+          certification_potential?: number | null
           coerencia_media?: number | null
           id?: string
+          last_training_at?: string | null
           nivel_atual?: string | null
+          streak_days?: number | null
           taxa_acerto?: number | null
           total_casos?: number | null
           ultimo_case_id?: string | null
