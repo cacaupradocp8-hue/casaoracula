@@ -66,7 +66,7 @@ export function TrainingDashboard() {
       
       return {
         streak_days: data?.streak_days || 0,
-        activated_districts: Array.isArray(data?.activated_districts) ? data.activated_districts : [],
+        activated_districts: Array.isArray(data?.activated_districts) ? (data.activated_districts as unknown as string[]) : [],
         certification_potential: data?.certification_potential || 0,
         casos_concluidos: data?.casos_concluidos || 0
       };
