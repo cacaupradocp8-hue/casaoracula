@@ -39,6 +39,7 @@ export const adminNavGroups: AdminNavGroup[] = [
       { key: 'clube-acervo', label: 'Acervo de Conteúdos', icon: Library, route: '/admin/clube/conteudos' },
       { key: 'clube-chat', label: 'Converse com o Livro', icon: MessageSquare, route: '/admin/clube/chat' },
       { key: 'clube-treinamento', label: 'Sala de Treinamento', icon: GraduationCap, route: '/admin/clube/treinamento' },
+      { key: 'clube-premium-editor', label: 'Máquina Editorial Pro', icon: Sparkles },
     ],
   },
   {

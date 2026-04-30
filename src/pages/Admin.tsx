@@ -74,6 +74,7 @@ const AdminPortalJunguianoTab = lazy(() => import('@/components/admin/AdminPorta
 const AdminCertificacaoTab = lazy(() => import('@/components/admin/AdminCertificacaoTab').then(m => ({ default: m.AdminCertificacaoTab })));
 const UpsellMachinePanel = lazy(() => import('@/components/admin/UpsellMachinePanel').then(m => ({ default: m.UpsellMachinePanel })));
 const AdminFounderDashboardTab = lazy(() => import('@/components/admin/AdminFounderDashboardTab'));
+const AdminPremiumEditor = lazy(() => import('@/components/admin/AdminPremiumEditor').then(m => ({ default: m.AdminPremiumEditor })));
 
 
 
@@ -99,6 +100,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'clube-treinamento': AdminClubeTreinamento,
   'clube-chat': AdminClubeChat,
   'clube-portais': AdminPortalCMS,
+  'clube-premium-editor': AdminPremiumEditor,
   
   // FORMAÇÃO
   'cursos': AdminCursosTab,
