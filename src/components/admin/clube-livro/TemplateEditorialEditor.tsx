@@ -182,30 +182,109 @@ export function TemplateEditorialEditor({ item, onUpdate }: TemplateEditorialEdi
     </div>
   );
 
-  const renderRegistroFields = () => (
+  const renderTravessiaFields = () => (
     <div className="space-y-4 pt-4">
       <div className="space-y-1">
-        <Label className="text-xs font-bold uppercase">Pergunta Principal</Label>
+        <Label className="text-xs font-bold uppercase">Objetivo da Travessia</Label>
         <Input 
-          value={metadata.pergunta_principal || ''} 
-          onChange={(e) => updateMetadata('pergunta_principal', e.target.value)}
+          value={metadata.objetivo || ''} 
+          onChange={(e) => updateMetadata('objetivo', e.target.value)}
+          placeholder="Onde a aluna deve chegar?"
         />
       </div>
-      <div className="space-y-1">
-        <Label className="text-xs font-bold uppercase">Pergunta Profunda (Sombra)</Label>
-        <Input 
-          value={metadata.pergunta_profunda || ''} 
-          onChange={(e) => updateMetadata('pergunta_profunda', e.target.value)}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-1">
+          <Label className="text-xs font-bold uppercase">Mapa da Jornada (Markdown)</Label>
+          <Textarea 
+            value={metadata.mapa_jornada || ''} 
+            onChange={(e) => updateMetadata('mapa_jornada', e.target.value)}
+            placeholder="Descreva os marcos da travessia..."
+            className="min-h-[120px]"
+          />
+        </div>
+        <div className="space-y-1">
+          <Label className="text-xs font-bold uppercase">Instruções de Navegação</Label>
+          <Textarea 
+            value={metadata.instrucoes || ''} 
+            onChange={(e) => updateMetadata('instrucoes', e.target.value)}
+            placeholder="Como navegar por este trecho?"
+            className="min-h-[120px]"
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-1">
+          <Label className="text-xs font-bold uppercase">Alerta de Terreno (Aviso)</Label>
+          <Input 
+            value={metadata.alerta || ''} 
+            onChange={(e) => updateMetadata('alerta', e.target.value)}
+            placeholder="Cuidado com..."
+          />
+        </div>
+        <div className="space-y-1">
+          <Label className="text-xs font-bold uppercase">Ponto de Reabastecimento</Label>
+          <Input 
+            value={metadata.reabastecimento || ''} 
+            onChange={(e) => updateMetadata('reabastecimento', e.target.value)}
+            placeholder="Recurso extra de apoio"
+          />
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderEncontroFields = () => (
+    <div className="space-y-4 pt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-1">
+          <Label className="text-xs font-bold uppercase">Data/Hora do Encontro</Label>
+          <Input 
+            type="datetime-local"
+            value={metadata.data_hora || ''} 
+            onChange={(e) => updateMetadata('data_hora', e.target.value)}
+          />
+        </div>
+        <div className="space-y-1">
+          <Label className="text-xs font-bold uppercase">Link da Sala (Zoom/Meet)</Label>
+          <Input 
+            value={metadata.link_sala || ''} 
+            onChange={(e) => updateMetadata('link_sala', e.target.value)}
+            placeholder="https://zoom.us/j/..."
+          />
+        </div>
       </div>
       <div className="space-y-1">
-        <Label className="text-xs font-bold uppercase">Orientação para a Escrita</Label>
+        <Label className="text-xs font-bold uppercase">Pauta do Encontro</Label>
         <Textarea 
-          value={metadata.orientacao_escrita || ''} 
-          onChange={(e) => updateMetadata('orientacao_escrita', e.target.value)}
-          placeholder="Como realizar este registro?"
+          value={metadata.pauta || ''} 
+          onChange={(e) => updateMetadata('pauta', e.target.value)}
+          placeholder="O que será discutido?"
+          className="min-h-[100px]"
         />
       </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-1">
+          <Label className="text-xs font-bold uppercase">Leitura Prévia</Label>
+          <Input 
+            value={metadata.leitura_previa || ''} 
+            onChange={(e) => updateMetadata('leitura_previa', e.target.value)}
+            placeholder="Capítulos ou páginas"
+          />
+        </div>
+        <div className="space-y-1">
+          <Label className="text-xs font-bold uppercase">Material Necessário</Label>
+          <Input 
+            value={metadata.materiais || ''} 
+            onChange={(e) => updateMetadata('materiais', e.target.value)}
+            placeholder="Caderno, velas, etc."
+          />
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderRegistroFields = () => (
+...
       <div className="space-y-1">
         <Label className="text-xs font-bold uppercase">Integração Simbólica</Label>
         <Input 
@@ -304,9 +383,11 @@ export function TemplateEditorialEditor({ item, onUpdate }: TemplateEditorialEdi
             <TabsContent value="conteudo">
               {item.tipo === 'portal' && renderPortalFields()}
               {item.tipo === 'escuta' && renderEscutaFields()}
+              {item.tipo === 'travessia' && renderTravessiaFields()}
               {item.tipo === 'laboratorio' && renderLaboratorioFields()}
               {item.tipo === 'registro' && renderRegistroFields()}
               {item.tipo === 'integracao' && renderIntegracaoFields()}
+              {item.tipo === 'encontro' && renderEncontroFields()}
               {!['portal', 'escuta', 'laboratorio', 'registro', 'integracao'].includes(item.tipo) && renderDefaultFields()}
             </TabsContent>
             
