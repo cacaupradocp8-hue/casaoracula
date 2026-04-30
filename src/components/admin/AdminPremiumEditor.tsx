@@ -64,7 +64,7 @@ export function AdminPremiumEditor() {
         .order('ordem', { ascending: true });
       
       if (error) throw error;
-      return data as RotaItem[];
+      return data as any[];
     },
     enabled: !!estacaoAtual?.id
   });
@@ -84,7 +84,7 @@ export function AdminPremiumEditor() {
 
   // Mutation to save item
   const saveMutation = useMutation({
-    mutationFn: async (item: Partial<RotaItem>) => {
+    mutationFn: async (item: any) => {
       if (item.id) {
         const { error } = await supabase
           .from('clube_rota_itens')
@@ -94,7 +94,7 @@ export function AdminPremiumEditor() {
       } else {
         const { error } = await supabase
           .from('clube_rota_itens')
-          .insert({ ...item, estacao_id: estacaoAtual?.id });
+          .insert([ { ...item, estacao_id: estacaoAtual?.id } ]);
         if (error) throw error;
       }
     },
@@ -102,7 +102,8 @@ export function AdminPremiumEditor() {
       queryClient.invalidateQueries({ queryKey: ['admin-clube-rota-itens'] });
       toast({ title: 'Alterações salvas com sucesso' });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('Error saving item:', error);
       toast({ title: 'Erro ao salvar alterações', variant: 'destructive' });
     }
   });
