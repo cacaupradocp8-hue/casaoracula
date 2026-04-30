@@ -110,6 +110,14 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast, ava
         Este retorno não indica certo ou errado. Indica coerência de leitura clínica.
       </p>
 
+      {finalScore.total >= 7 && (
+        <ConversaoCTA type="desempenho" />
+      )}
+      
+      {finalScore.total < 4 && (
+        <ConversaoCTA type="erros" />
+      )}
+
       {/* Loading IA */}
       {isLoadingIA && (
         <Card className="border-primary/30 bg-primary/5">
