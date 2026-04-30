@@ -200,11 +200,11 @@ function TreinoPrincipalCard({ cases, onStart, isFormacao }: { cases: TrainingCa
       <div className="relative z-20 p-10 md:p-14 flex flex-col md:flex-row md:items-center justify-between gap-8">
         <div className="space-y-6 max-w-xl">
           <div className="flex items-center gap-3">
-            <Badge className="bg-primary/20 text-primary border-none text-[10px] px-3 py-1 font-bold uppercase tracking-widest">
-              Câmara do Sussurro
+            <Badge className={cn("border-none text-[10px] px-3 py-1 font-bold uppercase tracking-widest", isFormacao ? "bg-primary/20 text-primary" : "bg-gold/20 text-gold")}>
+              {isFormacao ? 'Câmara de Treinamento' : 'Câmara do Sussurro'}
             </Badge>
             <Badge variant="outline" className="border-white/10 text-white/40 text-[10px] px-3 py-1 font-bold uppercase tracking-widest">
-              {targetCase.distrito_esperado || 'Geral'}
+              {targetCase.distrito_esperado || (isFormacao ? 'Nível Profissional' : 'Introductory')}
             </Badge>
             <span className="text-white/30 text-xs flex items-center gap-1.5 ml-auto">
               <Clock className="w-3 h-3" /> 8 min
