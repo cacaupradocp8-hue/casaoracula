@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { TrainingCase } from './types';
 
-export interface CamaraCase {
+export interface CamaraCaseRaw {
   id: string;
   titulo: string;
   idade: number | null;
@@ -21,7 +22,7 @@ export interface CamaraCase {
   created_at: string;
 }
 
-async function fetchCamaraCases(cicloId?: string): Promise<CamaraCase[]> {
+async function fetchCamaraCases(cicloId?: string): Promise<TrainingCase[]> {
   let query = supabase
     .from('co_camara_sussurro_casos')
     .select('*')
@@ -35,7 +36,29 @@ async function fetchCamaraCases(cicloId?: string): Promise<CamaraCase[]> {
   const { data, error } = await query;
 
   if (error) throw error;
-  return data || [];
+  if (!data) return [];
+
+  // Normalize to TrainingCase
+  return data.map((c: CamaraCaseRaw) => ({
+    id: c.id,
+    title: c.titulo,
+    nivel: c.dificuldade === 'iniciante' ? 'guiado' : c.dificuldade === 'intermediario' ? 'semi_guiado' : 'livre',
+    tema: c.tema_emocional || c.tipo_cliente,
+    caso_texto: `${c.contexto || ''}\n\nFala do Cliente: "${c.fala_inicial || ''}"`,
+    distrito_esperado: c.distrito_dominante,
+    distritos_alternativos: [],
+    estado_esperado: 'receptiva', // default
+    movimento_esperado: null,
+    hipotese_esperada: c.resposta_correta || c.leitura_simbolica,
+    vetor_esperado: c.pergunta_ideal,
+    ferramenta_principal: null,
+    ferramentas_apoio: [],
+    erro_comum: c.erro_comum,
+    ativo: c.ativo,
+    ordem: 0,
+    // Add raw data for components that can handle it
+    rawCamara: c
+  })) as any as TrainingCase[];
 }
 
 export function useCamaraCases(cicloId?: string) {
