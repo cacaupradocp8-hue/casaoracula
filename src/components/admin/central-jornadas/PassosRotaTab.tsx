@@ -424,6 +424,24 @@ export function PassosRotaTab({ estacaoId }: Props) {
                     placeholder="Ex: A adaptação invisível"
                   />
                 </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase text-gold">Botão CTA (Texto)</label>
+                  <Input 
+                    value={form.cta_label} 
+                    onChange={(e) => setForm({ ...form, cta_label: e.target.value })} 
+                    placeholder="Ex: Começar Formação"
+                    className="border-gold/20"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase text-gold">Link do CTA</label>
+                  <Input 
+                    value={form.cta_url} 
+                    onChange={(e) => setForm({ ...form, cta_url: e.target.value })} 
+                    placeholder="Ex: https://..."
+                    className="border-gold/20"
+                  />
+                </div>
               </div>
 
               <div className="space-y-4 border-t pt-4">
