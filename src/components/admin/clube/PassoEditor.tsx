@@ -206,6 +206,27 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
                   className="text-[10px] font-mono"
                 />
              </div>
+             
+             <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-1">
+                    <Label className="text-[10px]">Texto do Botão CTA</Label>
+                    <Input 
+                      value={form.metadata.cta_label || ''} 
+                      onChange={e => setForm({...form, metadata: {...form.metadata, cta_label: e.target.value}})} 
+                      placeholder="Quero saber mais"
+                      className="h-8 text-xs"
+                    />
+                </div>
+                <div className="space-y-1">
+                    <Label className="text-[10px]">Link do CTA</Label>
+                    <Input 
+                      value={form.metadata.cta_url || ''} 
+                      onChange={e => setForm({...form, metadata: {...form.metadata, cta_url: e.target.value}})} 
+                      placeholder="https://..."
+                      className="h-8 text-xs"
+                    />
+                </div>
+             </div>
           </div>
 
           <div className="border-t border-border/50 pt-4">

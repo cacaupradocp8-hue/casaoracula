@@ -79,6 +79,8 @@ export function PassosRotaTab({ estacaoId }: Props) {
     jardim_prompt: string;
     simulacao_texto: string;
     perguntas_sugeridas: string;
+    cta_label: string;
+    cta_url: string;
   }>({
     titulo: '',
     subtitulo: '',
@@ -98,6 +100,8 @@ export function PassosRotaTab({ estacaoId }: Props) {
     jardim_prompt: '',
     simulacao_texto: '',
     perguntas_sugeridas: '[]',
+    cta_label: '',
+    cta_url: '',
   });
 
   const { data: passos = [], isLoading } = useQuery({
@@ -150,7 +154,9 @@ export function PassosRotaTab({ estacaoId }: Props) {
           audios: audiosJson,
           jardim_prompt: data.jardim_prompt,
           simulacao_texto: data.simulacao_texto,
-          perguntas_sugeridas: perguntasJson
+          perguntas_sugeridas: perguntasJson,
+          cta_label: data.cta_label,
+          cta_url: data.cta_url
         },
         slug: data.titulo.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
       };
@@ -218,6 +224,8 @@ export function PassosRotaTab({ estacaoId }: Props) {
       jardim_prompt: '',
       simulacao_texto: '',
       perguntas_sugeridas: '[]',
+      cta_label: '',
+      cta_url: '',
     });
     setDialogOpen(true);
   };
@@ -243,6 +251,8 @@ export function PassosRotaTab({ estacaoId }: Props) {
       jardim_prompt: (p as any).jardim_prompt || p.metadata?.jardim_prompt || '',
       simulacao_texto: (p as any).cenario_treinamento || p.metadata?.simulacao_texto || '',
       perguntas_sugeridas: JSON.stringify(p.metadata?.perguntas_sugeridas || [], null, 2),
+      cta_label: p.metadata?.cta_label || '',
+      cta_url: p.metadata?.cta_url || '',
     });
     setDialogOpen(true);
   };
@@ -412,6 +422,24 @@ export function PassosRotaTab({ estacaoId }: Props) {
                     value={form.proximo_passo_label} 
                     onChange={(e) => setForm({ ...form, proximo_passo_label: e.target.value })} 
                     placeholder="Ex: A adaptação invisível"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase text-gold">Botão CTA (Texto)</label>
+                  <Input 
+                    value={form.cta_label} 
+                    onChange={(e) => setForm({ ...form, cta_label: e.target.value })} 
+                    placeholder="Ex: Começar Formação"
+                    className="border-gold/20"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase text-gold">Link do CTA</label>
+                  <Input 
+                    value={form.cta_url} 
+                    onChange={(e) => setForm({ ...form, cta_url: e.target.value })} 
+                    placeholder="Ex: https://..."
+                    className="border-gold/20"
                   />
                 </div>
               </div>
