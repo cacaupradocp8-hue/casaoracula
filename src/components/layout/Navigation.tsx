@@ -159,11 +159,16 @@ export function Navigation() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-primary/10 bg-background/80 backdrop-blur-xl">
+      <nav className={cn(
+        "fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-500",
+        location.pathname === '/clube' 
+          ? "bg-[#000814]/80 border-blue-900/20 backdrop-blur-xl" 
+          : "border-primary/10 bg-background/80 backdrop-blur-xl"
+      )}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 md:h-20">
             <Link to={user ? (activeDomain === 'profissional' ? '/casa-das-maquinas' : '/dashboard-membro') : '/'} className="h-full flex items-center py-2">
-              <span className="font-display text-2xl md:text-3xl text-primary tracking-wider font-semibold" style={{ letterSpacing: '0.08em' }}>Casa <span className="uppercase font-bold">Orácula</span></span>
+              <Logo variant="horizontal" className={cn("transition-all", location.pathname === '/clube' ? "brightness-125" : "")} />
             </Link>
 
             {/* Desktop menu */}
