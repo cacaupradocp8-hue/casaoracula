@@ -110,10 +110,11 @@ export interface RotaItem {
   titulo: string;
   subtitulo?: string;
   icone?: string;
-  tipo: string;
-  ref_tipo?: 'portal' | 'escuta' | 'aula' | 'encontro' | 'laboratorio' | 'integracao';
+  tipo: 'portal' | 'escuta' | 'travessia' | 'laboratorio' | 'registro' | 'integracao' | 'encontro';
+  ref_tipo?: string;
   ref_id?: string;
   conteudo_inline?: any;
+  metadata?: any;
   rota_custom?: string;
   publicado: boolean;
   obrigatorio: boolean;
