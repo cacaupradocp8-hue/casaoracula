@@ -7,6 +7,7 @@ import { calcularFeedback, FeedbackResult } from './feedbackEngine';
 import { calculateTrainingScore, gerarPerfilSimbolico } from './scoringEngine';
 import { ScoreDisplay } from './ScoreDisplay';
 import { PerfilSimbolicoCard } from './PerfilSimbolicoCard';
+import { ResumoTreino } from './ResumoTreino';
 import { useMemo } from 'react';
 import { AvaliacaoIA } from './useAvaliacaoIA';
 
@@ -18,6 +19,7 @@ interface Props {
   isLast: boolean;
   avaliacaoIA?: AvaliacaoIA | null;
   isLoadingIA?: boolean;
+  proximoCaso?: TrainingCase | null;
 }
 
 const NIVEL_CONFIG = {
