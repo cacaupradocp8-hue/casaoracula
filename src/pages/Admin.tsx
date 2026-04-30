@@ -183,7 +183,7 @@ export default function Admin() {
   }, [activeTab]);
 
   const isDirectClubeRoute = location.pathname.startsWith('/admin/clube');
-  const isCentralRoute = location.pathname.startsWith('/admin/clube/central/');
+  const isCentralRoute = location.pathname.startsWith('/admin/clube/central/') || location.pathname.startsWith('/admin/clube/rota/');
 
   // Determine which component to render
   let ActiveComponent = TAB_COMPONENTS[activeTab];
