@@ -109,9 +109,9 @@ export default function SalaDeTreinamentoPage() {
             {/* Grid de Modais Extras (Cards Menores) */}
             <section className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <MiniCard icon={Zap} title="Treino Rápido" description="3 min" />
-              <MiniCard icon={BookOpen} title="Caso Clínico" description="Complexo" />
-              <MiniCard icon={Search} title="Leitura de Campo" description="Simbólico" />
-              <MiniCard icon={AlertCircle} title="Erro Oculto" description="Ache a falha" />
+              <MiniCard icon={BookOpen} title="Caso Clínico" description="Complexo" isLocked={!isFormacao} />
+              <MiniCard icon={Search} title="Leitura de Campo" description="Simbólico" isLocked={!isFormacao} />
+              <MiniCard icon={AlertCircle} title="Erro Oculto" description="Ache a falha" isLocked={!isFormacao} />
               <MiniCard icon={History} title="Histórico" description="Seus treinos" />
             </section>
 
