@@ -168,7 +168,7 @@ export function AdminPremiumEditor() {
                   >
                     <div className={cn("w-1.5 h-1.5 rounded-full", item.publicado ? "bg-emerald-500" : "bg-amber-500")} />
                     <span className="truncate flex-1 hidden md:block">{item.titulo}</span>
-                    <Badge variant="ghost" className="text-[8px] p-0 opacity-50 hidden md:block uppercase">{item.tipo}</Badge>
+                    <Badge variant="secondary" className="text-[8px] p-0 opacity-50 hidden md:block uppercase">{item.tipo}</Badge>
                   </button>
                 ))}
               </div>
