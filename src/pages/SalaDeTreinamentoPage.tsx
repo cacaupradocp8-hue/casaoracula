@@ -32,7 +32,13 @@ export default function SalaDeTreinamentoPage() {
   const xpProgress = 75;
 
   const handleStartCase = (c: SimCase) => setActiveCase(c);
-  const handleBack = () => setActiveCase(null);
+  const handleBack = () => {
+    if (activeCase) {
+      setActiveCase(null);
+    } else {
+      window.history.back();
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#0A0A0B] text-[#EAEAEA] font-sans selection:bg-primary/30 pb-20">
