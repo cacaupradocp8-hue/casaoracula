@@ -284,7 +284,29 @@ export function TemplateEditorialEditor({ item, onUpdate }: TemplateEditorialEdi
   );
 
   const renderRegistroFields = () => (
-...
+    <div className="space-y-4 pt-4">
+      <div className="space-y-1">
+        <Label className="text-xs font-bold uppercase">Pergunta Principal</Label>
+        <Input 
+          value={metadata.pergunta_principal || ''} 
+          onChange={(e) => updateMetadata('pergunta_principal', e.target.value)}
+        />
+      </div>
+      <div className="space-y-1">
+        <Label className="text-xs font-bold uppercase">Pergunta Profunda (Sombra)</Label>
+        <Input 
+          value={metadata.pergunta_profunda || ''} 
+          onChange={(e) => updateMetadata('pergunta_profunda', e.target.value)}
+        />
+      </div>
+      <div className="space-y-1">
+        <Label className="text-xs font-bold uppercase">Orientação para a Escrita</Label>
+        <Textarea 
+          value={metadata.orientacao_escrita || ''} 
+          onChange={(e) => updateMetadata('orientacao_escrita', e.target.value)}
+          placeholder="Como realizar este registro?"
+        />
+      </div>
       <div className="space-y-1">
         <Label className="text-xs font-bold uppercase">Integração Simbólica</Label>
         <Input 
@@ -388,7 +410,7 @@ export function TemplateEditorialEditor({ item, onUpdate }: TemplateEditorialEdi
               {item.tipo === 'registro' && renderRegistroFields()}
               {item.tipo === 'integracao' && renderIntegracaoFields()}
               {item.tipo === 'encontro' && renderEncontroFields()}
-              {!['portal', 'escuta', 'laboratorio', 'registro', 'integracao'].includes(item.tipo) && renderDefaultFields()}
+              {!['portal', 'escuta', 'travessia', 'laboratorio', 'registro', 'integracao', 'encontro'].includes(item.tipo) && renderDefaultFields()}
             </TabsContent>
             
             <TabsContent value="midia" className="space-y-6 pt-4">
