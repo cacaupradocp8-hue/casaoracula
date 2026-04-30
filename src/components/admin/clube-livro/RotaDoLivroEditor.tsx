@@ -26,6 +26,8 @@ export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
   const queryClient = useQueryClient();
   const [impactoDialogOpen, setImpactoDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<RotaItem | null>(null);
+  const [newStepDialogOpen, setNewStepDialogOpen] = useState(false);
+  const [newStepType, setNewStepType] = useState<string>('portal');
 
   const { data: itens, isLoading } = useQuery({
     queryKey: ['admin-rota-itens', estacaoId],
@@ -34,7 +36,7 @@ export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
         .from('clube_rota_itens')
         .select('*')
         .eq('estacao_id', estacaoId)
-        .order('ordem');
+        .order('ordem', { ascending: true });
       if (error) throw error;
       return (data as any) as RotaItem[];
     },
