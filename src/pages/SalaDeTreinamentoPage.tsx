@@ -94,7 +94,7 @@ export default function SalaDeTreinamentoPage() {
             {/* Treino de Hoje (Card Principal Estilo Netflix/Apple) */}
             <section className="space-y-4">
               <div className="flex items-center justify-between ml-1">
-                <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-white/30">Câmara de Simulação</h2>
+                <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-white/30">Câmara do Sussurro</h2>
                 <Badge variant="outline" className="text-[9px] border-primary/20 text-primary/60">Treino Recomendado</Badge>
               </div>
               <TreinoPrincipalCard onStart={handleStartCase} />
