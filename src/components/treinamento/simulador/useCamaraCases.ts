@@ -47,26 +47,34 @@ async function fetchCamaraCases(cicloId?: string): Promise<TrainingCase[]> {
   if (!data) return [];
 
   // Normalize to TrainingCase
-  return data.map((c: CamaraCaseRaw) => ({
+  return data.map((c: any) => ({
     id: c.id,
     title: c.titulo,
     nivel: c.dificuldade === 'iniciante' ? 'guiado' : c.dificuldade === 'intermediario' ? 'semi_guiado' : 'livre',
     tema: c.tema_emocional || c.tipo_cliente,
     caso_texto: `${c.contexto || ''}\n\nFala do Cliente: "${c.fala_inicial || ''}"`,
-    distrito_esperado: c.distrito_dominante,
+    distrito_esperado: c.distrito_dominante || c.distrito_esperado,
     distritos_alternativos: [],
-    estado_esperado: 'receptiva', // default
+    estado_esperado: c.estado_esperado || 'receptiva',
     movimento_esperado: null,
-    hipotese_esperada: c.resposta_correta || c.leitura_simbolica,
-    vetor_esperado: c.pergunta_ideal,
-    ferramenta_principal: null,
+    hipotese_esperada: c.resposta_correta || c.leitura_simbolica || c.hipotese_esperada,
+    vetor_esperado: c.pergunta_ideal || c.vetor_esperado,
+    pergunta_ideal: c.pergunta_ideal,
+    ferramenta_principal: c.ferramenta_principal,
     ferramentas_apoio: [],
     erro_comum: c.erro_comum,
     ativo: c.ativo,
-    ordem: 0,
-    // Add raw data for components that can handle it
+    ordem: c.ordem || 0,
+    nivel_produto: c.nivel_produto,
+    opcoes_leitura: c.opcoes_leitura,
+    explicacao_simples: c.explicacao_simples,
+    explicacao_leve: c.explicacao_leve,
+    camadas_leitura: c.camadas_leitura,
+    risco_etico: c.risco_etico,
+    feedback_tecnico: c.feedback_tecnico,
+    proximo_treino_id: c.proximo_treino_id,
     rawCamara: c
-  })) as any as TrainingCase[];
+  })) as TrainingCase[];
 }
 
 export function useCamaraCases(cicloId?: string) {
