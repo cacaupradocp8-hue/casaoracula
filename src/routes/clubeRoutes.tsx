@@ -15,7 +15,6 @@ const ClubeLaboratorioObra = React.lazy(() => import('@/pages/clube/ClubeLaborat
 
 // ─── Novas Telas Premium de Rota ───
 const ClubeRotaPremium = React.lazy(() => import('@/pages/clube/ClubeRotaPremium'));
-const ClubeHomePremiumPreview = React.lazy(() => import('@/pages/clube/ClubeHomePremiumPreview'));
 
 // ─── Rotas legadas (mantidas para compatibilidade) ───
 const ClubeLivroCiclo = React.lazy(() => import('@/pages/clube-livro/ClubeLivroCiclo'));
@@ -46,8 +45,6 @@ export function renderClubeRoutes(ProtectedRoute: PR) {
       {/* ═══ ROTAS PRINCIPAIS DO CLUBE ═══ */}
       <Route key="clube-home" path="/clube" element={<ProtectedRoute minPortal="visitante"><ClubeHome /></ProtectedRoute>} />
       <Route key="clube-rota-premium" path="/clube/rota/:slug" element={<ProtectedRoute minPortal="mentorada"><ClubeRotaPremium /></ProtectedRoute>} />
-      <Route key="clube-preview-premium" path="/preview/clube-home-premium" element={<ClubeHomePremiumPreview />} />
-      <Route key="clube-vip" path="/preview/clube-vip" element={<ClubeHomePremiumPreview />} />
       <Route key="clube-ciclo" path="/clube/ciclo" element={<ProtectedRoute minPortal="mentorada"><ClubeCiclo /></ProtectedRoute>} />
       <Route key="clube-chat" path="/clube/chat-livro" element={<ProtectedRoute minPortal="mentorada"><ClubeChatLivro /></ProtectedRoute>} />
       <Route key="clube-encontro" path="/clube/encontro" element={<ProtectedRoute minPortal="mentorada"><ClubeEncontro /></ProtectedRoute>} />

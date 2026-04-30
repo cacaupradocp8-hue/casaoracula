@@ -1,4 +1,4 @@
-import React from "react"; // rebuild-trigger-v13
+import React from "react"; // rebuild-trigger-v10
 
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -185,11 +185,6 @@ const TriadeMetodo = React.lazy(() => import("./pages/metodo/TriadeMetodo"));
 const LabirintoHeroinaPage = React.lazy(() => import("./pages/labirinto-heroina/LabirintoHeroinaPraticoPage"));
 const Admin = React.lazy(() => import("./pages/Admin"));
 const DesbloqueiePage = React.lazy(() => import("./pages/DesbloqueiePage"));
-import PortalLuxo from "./pages/preview/PortalLuxo";
-import EstradaMonumental from "./pages/preview/EstradaMonumental";
-import CasaOraculaExperiencia from "./pages/preview/CasaOraculaExperiencia";
-import CasaOraculaExperienciaEvoluida from "./pages/preview/CasaOraculaExperienciaEvoluida";
-
 
 // ─── Utility components ───────────────────────────────────────
 
@@ -283,7 +278,10 @@ function AppRoutes() {
 
   return (
     <Routes>
-      {/* Admin routes are handled within renderAdminRoutes */}
+      <Route path="/admin/clube-livro" element={<Navigate to="/admin/clube" replace />} />
+      <Route path="/admin/clube-livro/*" element={<Navigate to="/admin/clube" replace />} />
+      <Route path="/admin/clube-livro/legacy" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
+      <Route path="/admin/clube-livro/v1" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       {/* Public */}
       <Route path="/" element={<PublicRoute><Auth /></PublicRoute>} />
       <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
@@ -512,11 +510,9 @@ function AppRoutes() {
       <Route path="/formacao-metodo/forum" element={<ProtectedRoute minPortal="mentorada"><FormacaoForumPage /></ProtectedRoute>} />
       <Route path="/formacao-metodo/avaliacoes" element={<ProtectedRoute minPortal="mentorada"><FormacaoAvaliacoesPage /></ProtectedRoute>} />
 
-      {/* Previews */}
-          <Route path="/preview/portal-luxo" element={<PortalLuxo />} />
-          <Route path="/preview/estrada-monumental" element={<EstradaMonumental />} />
-          <Route path="/preview/casa-oracula" element={<CasaOraculaExperiencia />} />
-          <Route path="/preview/casa-oracula-v2" element={<CasaOraculaExperienciaEvoluida />} />
+      {/* Biblioteca Travessias */}
+
+      {/* Test: Bottom Nav Preview */}
       <Route path="/test-bottom-nav" element={<BottomNavTestPage />} />
 
       <Route path="/biblioteca-das-travessias" element={<ProtectedRoute><Navigate to="/biblioteca?aba=travessias" replace /></ProtectedRoute>} />
