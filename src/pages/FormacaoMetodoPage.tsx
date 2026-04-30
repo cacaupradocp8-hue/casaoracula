@@ -9,7 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   GraduationCap, BookOpen, Users, Calendar, Target, Award,
-  ChevronRight, Clock, BarChart3, MessageCircle, FileUp
+  ChevronRight, Clock, BarChart3, MessageCircle, FileUp, Zap, Sparkles
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -150,16 +150,18 @@ export default function FormacaoMetodoPage() {
           </motion.div>
 
           {/* Quick Actions */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {[
               { icon: BookOpen, label: 'Módulos', href: '#modules', color: 'text-gold' },
-              { icon: MessageCircle, label: 'Fórum', href: '/formacao-metodo/forum', color: 'text-primary' },
+              { icon: Zap, label: 'Treinamento', href: '/sala-de-treinamento', color: 'text-primary' },
+              { icon: Sparkles, label: 'Simulação', href: '/sala-de-treinamento', color: 'text-purple-400' },
+              { icon: MessageCircle, label: 'Fórum', href: '/formacao-metodo/forum', color: 'text-blue-400' },
               { icon: FileUp, label: 'Avaliações', href: '/formacao-metodo/avaliacoes', color: 'text-emerald-400' },
               { icon: Award, label: 'Certificado', href: '/formacao-metodo/avaliacoes', color: 'text-amber-400' },
             ].map(action => (
               <Link key={action.label} to={action.href}>
-                <Card className="hover:bg-muted/30 transition-colors border-border/30 cursor-pointer">
-                  <CardContent className="p-4 text-center space-y-2">
+                <Card className="hover:bg-muted/30 transition-colors border-border/30 cursor-pointer h-full">
+                  <CardContent className="p-4 text-center space-y-2 flex flex-col justify-center h-full">
                     <action.icon className={`w-6 h-6 mx-auto ${action.color}`} />
                     <p className="text-sm font-medium text-foreground/80">{action.label}</p>
                   </CardContent>
