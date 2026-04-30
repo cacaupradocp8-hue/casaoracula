@@ -11,10 +11,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { 
-  useSimCases, useSimSteps, useSimOptions, useSimProgress, 
-  useSaveSimChoice, type SimCase, type SimOption, type SimStep 
-} from '@/hooks/useSimuladorInterativo';
+import { useCamaraCases } from '@/components/treinamento/simulador/useCamaraCases';
+import { SimuladorPremium } from '@/components/treinamento/simulador/SimuladorPremium';
+import { TrainingCase } from '@/components/treinamento/simulador/types';
 import { useCidadelaEstado } from '@/hooks/useCidadelaEstado';
 import { cn } from '@/lib/utils';
 
