@@ -303,6 +303,7 @@ export function SimuladorConducao() {
           isLast={casoIndex >= cases.length - 1}
           avaliacaoIA={avaliacao}
           isLoadingIA={isLoadingIA}
+          proximoCaso={cases[casoIndex + 1] ?? null}
         />
       )}
     </div>
