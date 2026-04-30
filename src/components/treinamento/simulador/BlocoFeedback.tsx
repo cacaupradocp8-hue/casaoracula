@@ -65,7 +65,7 @@ function getNivelFromScore(total: number): 'coerente' | 'ajuste' | 'erro' {
   return 'erro';
 }
 
-export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast, avaliacaoIA, isLoadingIA }: Props) {
+export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast, avaliacaoIA, isLoadingIA, proximoCaso }: Props) {
   const result: FeedbackResult = useMemo(
     () => calcularFeedback(caso, resposta),
     [caso, resposta]
