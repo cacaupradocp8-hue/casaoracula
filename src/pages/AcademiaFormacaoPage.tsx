@@ -14,7 +14,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import {
   GraduationCap, BookOpen, Search, Play, ArrowLeft, Upload,
-  Loader2, CheckCircle2, Clock, Lock, Award, FileText, Download
+  Loader2, CheckCircle2, Clock, Lock, Award, FileText, Download, Zap, Sparkles
 } from 'lucide-react';
 
 // Types
