@@ -35,7 +35,7 @@ export default function SalaDeTreinamentoPage() {
   const handleBack = () => setActiveCase(null);
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] text-[#EAEAEA] font-sans selection:bg-primary/30">
+    <div className="min-h-screen bg-[#0A0A0B] text-[#EAEAEA] font-sans selection:bg-primary/30 pb-20">
       <AnimatePresence mode="wait">
         {!activeCase ? (
           <motion.div 
