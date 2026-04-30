@@ -53,12 +53,20 @@ export default function SalaDeTreinamentoPage() {
           >
             {/* Header / Topo */}
             <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-              <div className="space-y-1">
+              <div className="space-y-2">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={handleBack}
+                  className="p-0 h-auto text-primary hover:text-primary/80 hover:bg-transparent -ml-1 mb-2"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
+                </Button>
                 <h1 className="text-3xl font-light tracking-tight text-white/90">
                   Bom dia, <span className="font-semibold text-white">{user?.name || 'Oraculista'}</span>
                 </h1>
                 <p className="text-muted-foreground/60 text-sm tracking-wide uppercase font-medium">
-                  Pronto para refinar sua escuta?
+                  Pronto para refinar sua escuta na Câmara de Simulação?
                 </p>
               </div>
               
