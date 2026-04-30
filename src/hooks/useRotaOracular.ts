@@ -210,7 +210,7 @@ export function useRotaOracular() {
       const { data } = await supabase
         .from('clube_estacoes')
         .select('id, titulo, subtitulo, numero, livro_titulo, livro_autor, ativa, status')
-        .eq('status', 'published')
+        .eq('publicada', true)
         .eq('ativa', false)
         .order('numero', { ascending: false })
         .limit(5);
