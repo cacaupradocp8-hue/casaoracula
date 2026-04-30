@@ -75,7 +75,7 @@ export function RotaLaboratorio({ estacaoId, livroTitulo }: RotaLaboratorioProps
               className="w-full gap-2"
               onClick={() => navigate('/clube/treinamento')}
             >
-              Entrar na Sala de Treinamento
+              Entrar na Câmara do Sussurro
               {livroTitulo && (
                 <span className="text-[10px] opacity-70 truncate max-w-[140px]">
                   · {livroTitulo}
