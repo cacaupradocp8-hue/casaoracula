@@ -45,7 +45,7 @@ import {
 interface CamaraCaso {
   id: string;
   titulo: string;
-  idade: number | null;
+  idade: string | null;
   contexto: string | null;
   fala_inicial: string | null;
   distrito_dominante: string | null;
@@ -93,7 +93,7 @@ export function AdminCamaraSussurro({ cicloId }: { cicloId?: string }) {
   // Form state
   const [form, setForm] = useState<Partial<CamaraCaso>>({
     titulo: '',
-    idade: 30,
+    idade: '',
     contexto: '',
     fala_inicial: '',
     distrito_dominante: '',
@@ -137,7 +137,7 @@ export function AdminCamaraSussurro({ cicloId }: { cicloId?: string }) {
   const resetForm = () => {
     setForm({
       titulo: '',
-      idade: 30,
+      idade: '',
       contexto: '',
       fala_inicial: '',
       distrito_dominante: '',
@@ -401,11 +401,11 @@ export function AdminCamaraSussurro({ cicloId }: { cicloId?: string }) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Idade (opcional)</Label>
+                  <Label>Idade / Perfil</Label>
                   <Input 
-                    type="number"
                     value={form.idade || ''} 
-                    onChange={e => setForm({...form, idade: parseInt(e.target.value) || null})} 
+                    onChange={e => setForm({...form, idade: e.target.value})} 
+                    placeholder="Ex: 42 anos, Executiva"
                     className="bg-white/5 border-white/10"
                   />
                 </div>
