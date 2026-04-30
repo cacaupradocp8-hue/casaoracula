@@ -312,11 +312,12 @@ export function AdminPremiumEditor() {
                    </div>
                    
                    <div className="pt-12 border-t border-primary/5">
-                      <Button variant="ghost" className="text-destructive text-xs gap-2" onClick={() => {
-                        if(confirm('Excluir este passo?')) {
-                          // implement delete
-                        }
-                      }}>
+                      <Button 
+                        variant="ghost" 
+                        className="text-destructive text-xs gap-2" 
+                        onClick={handleDelete}
+                        disabled={!selectedItemId}
+                      >
                         <Trash2 className="w-3.5 h-3.5" />
                         Excluir este Passo
                       </Button>
