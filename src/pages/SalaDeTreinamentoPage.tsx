@@ -104,7 +104,7 @@ export default function SalaDeTreinamentoPage() {
                 <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-white/30">Câmara do Sussurro</h2>
                 <Badge variant="outline" className="text-[9px] border-primary/20 text-primary/60">Treino Recomendado</Badge>
               </div>
-              <TreinoPrincipalCard cases={allCases} onStart={handleStartCase} />
+              <TreinoPrincipalCard cases={allCases} onStart={handleStartCase} isFormacao={isFormacao} />
             </section>
 
             {/* Grid de Modais Extras (Cards Menores) */}
