@@ -312,6 +312,58 @@ export default function ClubeRotaPremium() {
               </div>
             </section>
 
+            {/* 7.5. CTA DINÂMICO E CONVERSÃO FORMACAO */}
+            <div className="space-y-12 pt-12">
+              {ponto.metadata?.cta_label && ponto.metadata?.cta_url && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  className="flex justify-center"
+                >
+                  <Button 
+                    size="lg" 
+                    variant="gold" 
+                    className="h-14 px-10 text-base gap-3 rounded-full shadow-[0_0_30px_rgba(201,169,110,0.3)] animate-pulse"
+                    onClick={() => window.open(ponto.metadata.cta_url, '_blank')}
+                  >
+                    <Star className="w-5 h-5 fill-current" />
+                    {ponto.metadata.cta_label}
+                    <ArrowRight className="w-5 h-5" />
+                  </Button>
+                </motion.div>
+              )}
+
+              <Separator className="bg-white/5" />
+
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                className="relative group p-8 rounded-2xl bg-gradient-to-br from-gold/20 via-background to-background border border-gold/10 overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 p-4 opacity-20">
+                  <Sparkles className="w-20 h-20 text-gold" />
+                </div>
+                
+                <div className="relative z-10 space-y-6 max-w-lg">
+                  <Badge className="bg-gold text-black border-none font-bold">PRÓXIMO NÍVEL</Badge>
+                  <div className="space-y-2">
+                    <h3 className="font-display text-3xl text-foreground">Você percebe padrões. <br /><span className="text-gold">Aprenda a conduzir.</span></h3>
+                    <p className="text-muted-foreground italic font-serif">"Seu olhar existe. Falta método."</p>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    A Câmara do Sussurro é apenas a superfície. A Formação Orácula é o oceano onde você domina a arte da escuta clínica e da condução simbólica.
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    className="border-gold/30 text-gold hover:bg-gold hover:text-black gap-2 transition-all duration-500"
+                    onClick={() => window.open('https://casaoracula.com.br/formacao', '_blank')}
+                  >
+                    Conhecer a Formação ORÁCULA <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </motion.div>
+            </div>
+
             {/* 8. PRÓXIMA ROTA */}
             {proximoPonto && (
               <section className="pt-16">
