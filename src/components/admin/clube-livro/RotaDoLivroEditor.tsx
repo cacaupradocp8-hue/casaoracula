@@ -57,6 +57,27 @@ export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
     },
   });
 
+  const duplicateMutation = useMutation({
+    mutationFn: async (item: RotaItem) => {
+      const { id, created_at, updated_at, ...rest } = item as any;
+      const payload = { 
+        ...rest, 
+        titulo: `${item.titulo} (Cópia)`,
+        slug: `${item.slug}-copia-${Date.now()}`,
+        ordem: item.ordem + 1,
+        publicado: false
+      };
+      const { error } = await supabase
+        .from('clube_rota_itens')
+        .insert(payload);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-rota-itens', estacaoId] });
+      toast({ title: 'Item duplicado' });
+    },
+  });
+
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
@@ -70,6 +91,31 @@ export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
       toast({ title: 'Item removido da rota' });
     },
   });
+
+  const moveMutation = useMutation({
+    mutationFn: async ({ id, newOrder }: { id: string, newOrder: number }) => {
+      const { error } = await supabase
+        .from('clube_rota_itens')
+        .update({ ordem: newOrder })
+        .eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-rota-itens', estacaoId] });
+    },
+  });
+
+  const handleCreateStep = () => {
+    saveMutation.mutate({ 
+      titulo: `Novo(a) ${newStepType}`, 
+      ordem: (itens?.length || 0) + 1,
+      slug: `${newStepType}-${Date.now()}`,
+      tipo: newStepType,
+      publicado: false,
+      metadata: {}
+    });
+    setNewStepDialogOpen(false);
+  };
 
   const openImpactoDialog = (item: RotaItem) => {
     setSelectedItem(item);
