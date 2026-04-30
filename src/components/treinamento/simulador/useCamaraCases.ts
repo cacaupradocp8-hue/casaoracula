@@ -20,6 +20,14 @@ export interface CamaraCaseRaw {
   ativo: boolean;
   ciclo_id: string | null;
   created_at: string;
+  nivel_produto?: 'clube' | 'formacao';
+  opcoes_leitura?: any;
+  explicacao_simples?: string;
+  explicacao_leve?: string;
+  camadas_leitura?: string;
+  risco_etico?: string;
+  feedback_tecnico?: string;
+  proximo_treino_id?: string;
 }
 
 async function fetchCamaraCases(cicloId?: string): Promise<TrainingCase[]> {
