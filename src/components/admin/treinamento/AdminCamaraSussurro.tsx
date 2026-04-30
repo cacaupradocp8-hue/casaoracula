@@ -172,15 +172,18 @@ export function AdminCamaraSussurro({ cicloId }: { cicloId?: string }) {
     }
 
     setSaving(true);
+    
+    // Clean up payload
+    const { id, created_at, ...dataToSave } = form;
     const payload = {
-      ...form,
+      ...dataToSave,
       ciclo_id: cicloId || form.ciclo_id || null
     };
 
     if (editingCaso) {
       const { error } = await supabase
         .from('co_camara_sussurro_casos')
-        .update(payload)
+        .update(payload as any)
         .eq('id', editingCaso.id);
 
       if (error) {
@@ -193,7 +196,7 @@ export function AdminCamaraSussurro({ cicloId }: { cicloId?: string }) {
     } else {
       const { error } = await supabase
         .from('co_camara_sussurro_casos')
-        .insert(payload);
+        .insert([payload as any]);
 
       if (error) {
         toast({ title: 'Erro ao criar caso', variant: 'destructive' });
