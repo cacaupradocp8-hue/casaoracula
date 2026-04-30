@@ -220,16 +220,29 @@ function ExperienciaTreinoFull({ activeCase, onExit }: { activeCase: SimCase, on
   const currentStep = steps[stepIndex];
   const { data: options = [] } = useSimOptions(currentStep?.id);
   const saveChoice = useSaveSimChoice();
+  const { addCompetencia } = useCidadelaEstado();
 
   const handleSelect = async (opt: SimOption) => {
     if (showFeedback) return;
     setSelectedOpt(opt);
     setShowFeedback(true);
+    
+    // Track choice
     await saveChoice.mutateAsync({
       caseId: activeCase.id,
       stepId: currentStep.id,
       escolhaId: opt.id
     });
+
+    // Update global competencies if correct
+    if (activeCase.distrito && opt.tipo_resultado === 'correto') {
+      addCompetencia.mutate({
+        distrito: activeCase.distrito,
+        tipo: 'escrita', // assuming default type for simulation
+        nivel: activeCase.nivel,
+        acerto: true
+      });
+    }
   };
 
   const handleNext = () => {
