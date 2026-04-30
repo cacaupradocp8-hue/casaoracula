@@ -85,7 +85,7 @@ export function SimuladorPremium({ caso, onExit, onNextCaso }: Props) {
     });
 
     queryClient.invalidateQueries({ queryKey: ['training-progress'] });
-    track('treinamento', 'completed_premium', 'caso_camara', caso.id);
+    track('treinamento', 'completed', 'caso_treinamento', caso.id);
   };
 
   return (
