@@ -95,7 +95,7 @@ export function SimuladorConducao() {
     setCasoIndex(idx);
     setActive(true);
     resetResposta();
-    const c = cases[idx];
+    const c = filteredCases[idx];
     if (c) {
       track('treinamento', 'opened_case', 'caso_treinamento', c.id, {
         case_id: c.id,
@@ -371,11 +371,11 @@ export function SimuladorConducao() {
           caso={caso}
           resposta={resposta}
           onReset={resetResposta}
-          onNextCaso={() => iniciar(Math.min(casoIndex + 1, cases.length - 1))}
-          isLast={casoIndex >= cases.length - 1}
+          onNextCaso={() => iniciar(Math.min(casoIndex + 1, filteredCases.length - 1))}
+          isLast={casoIndex >= filteredCases.length - 1}
           avaliacaoIA={avaliacao}
           isLoadingIA={isLoadingIA}
-          proximoCaso={cases[casoIndex + 1] ?? null}
+          proximoCaso={filteredCases[casoIndex + 1] ?? null}
         />
       )}
     </div>
