@@ -1,9 +1,11 @@
 // import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, GraduationCap, Info } from 'lucide-react';
+import { ArrowLeft, GraduationCap, Info, BookOpen, FlaskConical } from 'lucide-react';
 import { LabConfigManager } from '@/components/admin/clube-livro/LabConfigManager';
+import { AdminCamaraSussurro } from '@/components/admin/treinamento/AdminCamaraSussurro';
 import { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
