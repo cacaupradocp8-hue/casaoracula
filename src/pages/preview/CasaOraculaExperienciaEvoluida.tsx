@@ -23,62 +23,111 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function CasaOraculaExperienciaEvoluida() {
   const [isOpened, setIsOpened] = useState(false);
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
 
   // 1. Hero contextual inteligente e Stats
-  const { data: stats } = useQuery({
+  const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ['user-journey-stats', user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('user_journey_stats')
-        .select('*')
-        .eq('user_id', user?.id)
-        .single();
-      if (error && error.code !== 'PGRST116') throw error;
-      return data || {
-        current_portal_name: "Barba Azul",
-        mastery_level: 1,
-        rituals_completed: 0,
-        portals_crossed: 0
-      };
+      try {
+        if (!user?.id) return null;
+        const { data, error } = await supabase
+          .from('user_journey_stats')
+          .select('*')
+          .eq('user_id', user?.id)
+          .maybeSingle();
+        
+        if (error) {
+          console.error("Error fetching stats:", error);
+          return null;
+        }
+        return data;
+      } catch (e) {
+        console.error("Stats fetch failed:", e);
+        return null;
+      }
     },
-    enabled: !!user
+    enabled: !!user?.id
   });
+
+  const defaultStats = {
+    current_portal_name: "Barba Azul",
+    mastery_level: 1,
+    rituals_completed: 0,
+    portals_crossed: 0,
+    total_minutes_invested: 0
+  };
+
+  const activeStats = stats || defaultStats;
 
   // 2. Estrada personalizada por usuária
-  const { data: nodes } = useQuery({
+  const { data: nodes, isLoading: nodesLoading } = useQuery({
     queryKey: ['user-road-nodes', user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('user_road_nodes')
-        .select('*')
-        .eq('user_id', user?.id)
-        .order('position_order', { ascending: true });
-      if (error) throw error;
-      return data && data.length > 0 ? data : [
-        { id: '1', title: "O Chamado do Destino", description: "A semente da sua travessia foi plantada.", status: "concluido", node_type: "Portal", estimated_minutes: 15, position_order: 1 },
-        { id: '2', title: "Deserto do Silêncio", description: "Vozes externas se calam para o interno falar.", status: "concluido", node_type: "Ritual", estimated_minutes: 22, position_order: 2 },
-        { id: '3', title: `A Travessia do ${stats?.current_portal_name || 'Barba Azul'}`, description: "Enfrentando as sombras que guardam seu portal.", status: "ativo", node_type: "Desafio", remaining_minutes: 8, position_order: 3 },
-        { id: '4', title: "O Vale das Máscaras", description: "Despedindo-se de quem você não é mais.", status: "proximo", node_type: "Encontro", estimated_minutes: 12, position_order: 4 },
-        { id: '5', title: "O Alvorecer da Essência", description: "A integração final da jornada atual.", status: "proximo", node_type: "Celebração", estimated_minutes: 30, position_order: 5 }
-      ];
+      try {
+        if (!user?.id) return null;
+        const { data, error } = await supabase
+          .from('user_road_nodes')
+          .select('*')
+          .eq('user_id', user?.id)
+          .order('position_order', { ascending: true });
+        
+        if (error) {
+          console.error("Error fetching nodes:", error);
+          return null;
+        }
+        return data;
+      } catch (e) {
+        console.error("Nodes fetch failed:", e);
+        return null;
+      }
     },
-    enabled: !!user
+    enabled: !!user?.id
   });
 
+  const defaultNodes = [
+    { id: '1', title: "O Chamado do Destino", description: "A semente da sua travessia foi plantada.", status: "concluido", node_type: "Portal", estimated_minutes: 15, position_order: 1 },
+    { id: '2', title: "Deserto do Silêncio", description: "Vozes externas se calam para o interno falar.", status: "concluido", node_type: "Ritual", estimated_minutes: 22, position_order: 2 },
+    { id: '3', title: `A Travessia do ${activeStats.current_portal_name}`, description: "Enfrentando as sombras que guardam seu portal.", status: "ativo", node_type: "Desafio", remaining_minutes: 8, position_order: 3 },
+    { id: '4', title: "O Vale das Máscaras", description: "Despedindo-se de quem você não é mais.", status: "proximo", node_type: "Encontro", estimated_minutes: 12, position_order: 4 },
+    { id: '5', title: "O Alvorecer da Essência", description: "A integração final da jornada atual.", status: "proximo", node_type: "Celebração", estimated_minutes: 30, position_order: 5 }
+  ];
+
+  const activeNodes = (nodes && nodes.length > 0) ? nodes : defaultNodes;
+
   // 3. Recompensas simbólicas desbloqueáveis
-  const { data: rewards } = useQuery({
+  const { data: rewards, isLoading: rewardsLoading } = useQuery({
     queryKey: ['user-rewards', user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('user_unlocked_rewards')
-        .select('*, reward:symbolic_rewards(*)')
-        .eq('user_id', user?.id);
-      if (error) throw error;
-      return data || [];
+      try {
+        if (!user?.id) return [];
+        const { data, error } = await supabase
+          .from('user_unlocked_rewards')
+          .select('*, reward:symbolic_rewards(*)')
+          .eq('user_id', user?.id);
+        
+        if (error) {
+          console.error("Error fetching rewards:", error);
+          return [];
+        }
+        return data || [];
+      } catch (e) {
+        console.error("Rewards fetch failed:", e);
+        return [];
+      }
     },
-    enabled: !!user
+    enabled: !!user?.id
   });
+
+  const isLoading = authLoading;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#000814] flex items-center justify-center">
+        <div className="text-white/20 font-serif italic animate-pulse">Iniciando travessia...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#000814] text-white selection:bg-blue-900/30 font-sans overflow-x-hidden">
@@ -86,7 +135,7 @@ export default function CasaOraculaExperienciaEvoluida() {
         {!isOpened ? (
           <Abertura key="abertura" onEnter={() => setIsOpened(true)} />
         ) : (
-          <Home key="home" stats={stats} nodes={nodes} rewards={rewards} />
+          <Home key="home" stats={activeStats} nodes={activeNodes} rewards={rewards || []} />
         )}
       </AnimatePresence>
     </div>
