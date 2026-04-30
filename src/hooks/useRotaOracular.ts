@@ -110,8 +110,8 @@ export function useRotaOracular() {
       try {
         const { data, error } = await supabase
           .from('clube_estacoes')
-          .select('id, titulo, subtitulo, descricao, banner_url, numero, livro_titulo, livro_autor, livro_capa_url, livro_imagem_banner_url, essencia_nucleo, essencia_tensao, essencia_transformacao, ativa, status')
-          .eq('status', 'published')
+          .select('id, titulo, subtitulo, descricao, banner_url, numero, livro_titulo, livro_autor, livro_capa_url, livro_imagem_banner_url, essencia_nucleo, essencia_tensao, essencia_transformacao, ativa, status, publicada')
+          .eq('publicada', true)
           .eq('ativa', true)
           .order('numero', { ascending: false })
           .limit(1)
