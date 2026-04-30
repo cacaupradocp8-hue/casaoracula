@@ -76,7 +76,7 @@ const profissionalMenuGroups = (isAdmin: boolean, isMentorada: boolean) => [
     ],
   },
   { key: 'jardim-oficio', label: 'Jardim do Ofício', icon: Flower2, path: '/casa-das-maquinas/jardim-oficio', subitems: [] },
-  { key: 'evolucao', label: 'Evolução Clínica', icon: GraduationCap, path: '/casa-das-maquinas/treinamento', subitems: [] },
+  { key: 'evolucao', label: 'Sala de Treinamento', icon: FlaskConical, path: '/casa-das-maquinas/treinamento', subitems: [] },
   { key: 'biblioteca', label: 'Biblioteca de Intervenções', icon: BookOpen, path: '/casa-das-maquinas/biblioteca', subitems: [] },
   { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/casa-das-maquinas/ferramentas', subitems: [] },
   { key: '7vozes', label: '7 Vozes', icon: Headphones, path: '/casa-das-maquinas/7-vozes', subitems: [] },
