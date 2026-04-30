@@ -162,7 +162,7 @@ export function useRotaOracular() {
         .from('clube_rota_itens')
         .select('*')
         .eq('estacao_id', estacaoAtual.id)
-        .eq('status', 'published')
+        .eq('publicado', true)
         .order('ordem');
       if (error) throw error;
       return data || [];
