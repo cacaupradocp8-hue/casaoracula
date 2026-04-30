@@ -110,8 +110,8 @@ export function useRotaOracular() {
       try {
         const { data, error } = await supabase
           .from('clube_estacoes')
-          .select('id, titulo, subtitulo, descricao, banner_url, numero, livro_titulo, livro_autor, livro_capa_url, livro_imagem_banner_url, essencia_nucleo, essencia_tensao, essencia_transformacao, ativa, status')
-          .eq('status', 'published')
+          .select('id, titulo, subtitulo, descricao, banner_url, numero, livro_titulo, livro_autor, livro_capa_url, livro_imagem_banner_url, essencia_nucleo, essencia_tensao, essencia_transformacao, ativa, status, publicada')
+          .eq('publicada', true)
           .eq('ativa', true)
           .order('numero', { ascending: false })
           .limit(1)
@@ -162,7 +162,7 @@ export function useRotaOracular() {
         .from('clube_rota_itens')
         .select('*')
         .eq('estacao_id', estacaoAtual.id)
-        .eq('status', 'published')
+        .eq('publicado', true)
         .order('ordem');
       if (error) throw error;
       return data || [];
@@ -210,7 +210,7 @@ export function useRotaOracular() {
       const { data } = await supabase
         .from('clube_estacoes')
         .select('id, titulo, subtitulo, numero, livro_titulo, livro_autor, ativa, status')
-        .eq('status', 'published')
+        .eq('publicada', true)
         .eq('ativa', false)
         .order('numero', { ascending: false })
         .limit(5);
