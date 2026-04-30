@@ -66,7 +66,7 @@ export default function SalaDeTreinamentoPage() {
                   Bom dia, <span className="font-semibold text-white">{user?.name || 'Oraculista'}</span>
                 </h1>
                 <p className="text-muted-foreground/60 text-sm tracking-wide uppercase font-medium">
-                  Pronto para refinar sua escuta na Câmara de Simulação?
+                  Pronto para refinar sua escuta na Câmara do Sussurro?
                 </p>
               </div>
               
