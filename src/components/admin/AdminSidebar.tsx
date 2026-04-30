@@ -39,6 +39,7 @@ export const adminNavGroups: AdminNavGroup[] = [
       { key: 'clube-acervo', label: 'Acervo de Conteúdos', icon: Library, route: '/admin/clube/conteudos' },
       { key: 'clube-chat', label: 'Converse com o Livro', icon: MessageSquare, route: '/admin/clube/chat' },
       { key: 'clube-treinamento', label: 'Sala de Treinamento', icon: GraduationCap, route: '/admin/clube/treinamento' },
+      { key: 'clube-premium-editor', label: 'Máquina Editorial Pro', icon: Sparkles },
     ],
   },
   {
@@ -207,6 +208,7 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
                               if (item.key === 'clube-portais') navigate('/admin/clube/portais');
                               if (item.key === 'clube-acervo') navigate('/admin/clube/conteudos');
                               if (item.key === 'clube-treinamento') navigate('/admin/clube/treinamento');
+                              if (item.key === 'clube-premium-editor') navigate('/admin/clube?tab=clube-premium-editor');
                               if (item.key === 'clube-chat') navigate('/admin/clube/chat');
                             }
                           }}
