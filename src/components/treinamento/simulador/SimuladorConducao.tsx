@@ -28,7 +28,13 @@ import { Badge } from '@/components/ui/badge';
 
 export function SimuladorConducao() {
   const { user } = useAuth();
-  const { data: cases = [], isLoading } = useTrainingCases();
+  const { data: legacyCases = [], isLoading: isLoadingLegacy } = useTrainingCases();
+  const { data: camaraCases = [], isLoading: isLoadingCamara } = useCamaraCases();
+  
+  // Merge cases, prioritizing Camara cases
+  const cases = [...camaraCases, ...legacyCases];
+  const isLoading = isLoadingLegacy || isLoadingCamara;
+  
   const { progress, completedCount, getCaseStatus } = useTrainingProgress();
   const queryClient = useQueryClient();
   const { avaliacao, isLoading: isLoadingIA, avaliar, reset: resetAvaliacao } = useAvaliacaoIA();
