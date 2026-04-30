@@ -26,10 +26,12 @@ export default function SalaDeTreinamentoPage() {
   const [activeCase, setActiveCase] = useState<TrainingCase | null>(null);
   const { data: allCases = [] } = useCamaraCases();
 
+  const isFormacao = user?.isMatriculada || false;
+
   // Mock de streak e nível (depois pode vir do DB)
   const streak = 5;
-  const nivel = "Expert";
-  const xpProgress = 75;
+  const nivel = isFormacao ? "Expert" : "Iniciante";
+  const xpProgress = isFormacao ? 75 : 20;
 
   const handleStartCase = (c: TrainingCase) => {
     setActiveCase(c);
