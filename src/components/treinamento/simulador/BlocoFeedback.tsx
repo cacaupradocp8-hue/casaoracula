@@ -241,10 +241,10 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast, ava
         </CardContent>
       </Card>
 
-      {/* Hipótese de referência */}
-      {caso.hipotese_esperada && (
+      {/* Hipótese de referência e Camadas (Formação) */}
+      {(caso.hipotese_esperada || caso.camadas_leitura || caso.risco_etico) && (
         <Card className="border-primary/20 bg-primary/5">
-          <CardContent className="p-4 space-y-3">
+          <CardContent className="p-4 space-y-4">
             <div className="flex items-center gap-2">
               <Compass className={`w-4 h-4 ${finalScore.hipotese >= 2 ? 'text-primary' : 'text-amber-400'}`} />
               <p className="text-xs font-medium uppercase tracking-wider">
@@ -252,22 +252,45 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast, ava
               </p>
             </div>
             
-            <div className="space-y-3">
-              <p className="text-sm text-foreground/80 leading-relaxed italic border-l-2 border-primary/20 pl-3">
-                "{caso.hipotese_esperada}"
-              </p>
+            <div className="space-y-4">
+              {caso.hipotese_esperada && (
+                <p className="text-sm text-foreground/80 leading-relaxed italic border-l-2 border-primary/20 pl-3">
+                  "{caso.hipotese_esperada}"
+                </p>
+              )}
+
+              {caso.camadas_leitura && (
+                <div className="space-y-1 pt-2 border-t border-white/5">
+                  <p className="text-[10px] text-primary font-bold uppercase tracking-widest">Leitura em Camadas (Técnico)</p>
+                  <p className="text-xs text-foreground/70 whitespace-pre-line leading-relaxed">{caso.camadas_leitura}</p>
+                </div>
+              )}
+
+              {caso.risco_etico && (
+                <div className="space-y-1 bg-red-500/5 p-3 rounded-lg border border-red-500/10">
+                  <p className="text-[10px] text-red-400 font-bold uppercase tracking-widest">Risco Ético / Contratransferência</p>
+                  <p className="text-xs text-foreground/70 italic">"{caso.risco_etico}"</p>
+                </div>
+              )}
               
               {caso.erro_comum && (
                 <div className="space-y-1 bg-amber-500/5 p-3 rounded-lg border border-amber-500/10">
-                  <p className="text-[10px] text-amber-400 font-bold uppercase tracking-widest">Erro Comum a Evitar</p>
+                  <p className="text-[10px] text-amber-400 font-bold uppercase tracking-widest">Erro Comum da Terapeuta</p>
                   <p className="text-xs text-foreground/70 italic">"{caso.erro_comum}"</p>
                 </div>
               )}
 
-              {caso.vetor_esperado && (
+              {(caso.vetor_esperado || caso.pergunta_ideal) && (
                 <div className="space-y-1 bg-emerald-500/5 p-3 rounded-lg border border-emerald-500/10">
-                  <p className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest">Pergunta Ideal / Condução</p>
-                  <p className="text-sm text-foreground/80 font-medium">"{caso.vetor_esperado}"</p>
+                  <p className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest">Melhor Pergunta / Condução</p>
+                  <p className="text-sm text-foreground/80 font-medium">"{caso.vetor_esperado || caso.pergunta_ideal}"</p>
+                </div>
+              )}
+
+              {caso.feedback_tecnico && (
+                <div className="space-y-1 pt-2 border-t border-white/5">
+                  <p className="text-[10px] text-primary font-bold uppercase tracking-widest">Feedback Técnico de Formação</p>
+                  <p className="text-xs text-foreground/80 leading-relaxed">{caso.feedback_tecnico}</p>
                 </div>
               )}
             </div>

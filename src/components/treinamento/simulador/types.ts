@@ -15,8 +15,18 @@ export interface TrainingCase {
   ferramenta_principal: string | null;
   ferramentas_apoio: string[];
   erro_comum: string | null;
+  pergunta_ideal?: string | null;
   ativo: boolean;
   ordem: number;
+  // New fields for versions
+  nivel_produto?: 'clube' | 'formacao';
+  opcoes_leitura?: { id: string; texto: string; correta: boolean; explicacao: string }[];
+  explicacao_simples?: string;
+  explicacao_leve?: string;
+  camadas_leitura?: string;
+  risco_etico?: string;
+  feedback_tecnico?: string;
+  proximo_treino_id?: string;
   // Joined data
   signals?: TrainingCaseSignal[];
   readings?: TrainingCaseReading[];

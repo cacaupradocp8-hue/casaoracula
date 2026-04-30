@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Trophy, Flame, Zap, Play, ChevronRight, 
   BookOpen, Search, AlertCircle, History,
   Star, Clock, CheckCircle2, ArrowRight, Sparkles,
-  ArrowLeft, FlaskConical, GraduationCap
+  ArrowLeft, FlaskConical, GraduationCap, Lock
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,6 +14,8 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { useCamaraCases } from '@/components/treinamento/simulador/useCamaraCases';
 import { SimuladorPremium } from '@/components/treinamento/simulador/SimuladorPremium';
+import { SimuladorClube } from '@/components/treinamento/simulador/SimuladorClube';
+import { SalaBloqueada } from '@/components/treinamento/simulador/SalaBloqueada';
 import { TrainingCase } from '@/components/treinamento/simulador/types';
 import { useCidadelaEstado } from '@/hooks/useCidadelaEstado';
 import { useStudentTracking } from '@/hooks/useStudentTracking';
@@ -24,10 +27,12 @@ export default function SalaDeTreinamentoPage() {
   const [activeCase, setActiveCase] = useState<TrainingCase | null>(null);
   const { data: allCases = [] } = useCamaraCases();
 
+  const isFormacao = user?.isMatriculada || false;
+
   // Mock de streak e nível (depois pode vir do DB)
   const streak = 5;
-  const nivel = "Expert";
-  const xpProgress = 75;
+  const nivel = isFormacao ? "Expert" : "Iniciante";
+  const xpProgress = isFormacao ? 75 : 20;
 
   const handleStartCase = (c: TrainingCase) => {
     setActiveCase(c);
@@ -99,15 +104,15 @@ export default function SalaDeTreinamentoPage() {
                 <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-white/30">Câmara do Sussurro</h2>
                 <Badge variant="outline" className="text-[9px] border-primary/20 text-primary/60">Treino Recomendado</Badge>
               </div>
-              <TreinoPrincipalCard cases={allCases} onStart={handleStartCase} />
+              <TreinoPrincipalCard cases={allCases} onStart={handleStartCase} isFormacao={isFormacao} />
             </section>
 
             {/* Grid de Modais Extras (Cards Menores) */}
             <section className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <MiniCard icon={Zap} title="Treino Rápido" description="3 min" />
-              <MiniCard icon={BookOpen} title="Caso Clínico" description="Complexo" />
-              <MiniCard icon={Search} title="Leitura de Campo" description="Simbólico" />
-              <MiniCard icon={AlertCircle} title="Erro Oculto" description="Ache a falha" />
+              <MiniCard icon={BookOpen} title="Caso Clínico" description="Complexo" isLocked={!isFormacao} />
+              <MiniCard icon={Search} title="Leitura de Campo" description="Simbólico" isLocked={!isFormacao} />
+              <MiniCard icon={AlertCircle} title="Erro Oculto" description="Ache a falha" isLocked={!isFormacao} />
               <MiniCard icon={History} title="Histórico" description="Seus treinos" />
             </section>
 
@@ -144,18 +149,25 @@ export default function SalaDeTreinamentoPage() {
             exit={{ opacity: 0, scale: 1.02 }}
             className="h-screen w-full"
           >
-            <SimuladorPremium 
-              caso={activeCase} 
-              onExit={handleBack} 
-              onNextCaso={() => {
-                const nextIdx = allCases.findIndex(c => c.id === activeCase.id) + 1;
-                if (nextIdx < allCases.length) {
-                  setActiveCase(allCases[nextIdx]);
-                } else {
-                  setActiveCase(null);
-                }
-              }}
-            />
+            {isFormacao ? (
+              <SimuladorPremium 
+                caso={activeCase} 
+                onExit={handleBack} 
+                onNextCaso={() => {
+                  const nextIdx = allCases.findIndex(c => c.id === activeCase.id) + 1;
+                  if (nextIdx < allCases.length) {
+                    setActiveCase(allCases[nextIdx]);
+                  } else {
+                    setActiveCase(null);
+                  }
+                }}
+              />
+            ) : (
+              <SimuladorClube 
+                caso={activeCase} 
+                onExit={handleBack}
+              />
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -163,7 +175,7 @@ export default function SalaDeTreinamentoPage() {
   );
 }
 
-function TreinoPrincipalCard({ cases, onStart }: { cases: TrainingCase[], onStart: (c: TrainingCase) => void }) {
+function TreinoPrincipalCard({ cases, onStart, isFormacao }: { cases: TrainingCase[], onStart: (c: TrainingCase) => void, isFormacao: boolean }) {
   const { estado } = useCidadelaEstado();
   
   const targetCase = useMemo(() => {
@@ -188,11 +200,11 @@ function TreinoPrincipalCard({ cases, onStart }: { cases: TrainingCase[], onStar
       <div className="relative z-20 p-10 md:p-14 flex flex-col md:flex-row md:items-center justify-between gap-8">
         <div className="space-y-6 max-w-xl">
           <div className="flex items-center gap-3">
-            <Badge className="bg-primary/20 text-primary border-none text-[10px] px-3 py-1 font-bold uppercase tracking-widest">
-              Câmara do Sussurro
+            <Badge className={cn("border-none text-[10px] px-3 py-1 font-bold uppercase tracking-widest", isFormacao ? "bg-primary/20 text-primary" : "bg-gold/20 text-gold")}>
+              {isFormacao ? 'Câmara de Treinamento' : 'Câmara do Sussurro'}
             </Badge>
             <Badge variant="outline" className="border-white/10 text-white/40 text-[10px] px-3 py-1 font-bold uppercase tracking-widest">
-              {targetCase.distrito_esperado || 'Geral'}
+              {targetCase.distrito_esperado || (isFormacao ? 'Nível Profissional' : 'Introductory')}
             </Badge>
             <span className="text-white/30 text-xs flex items-center gap-1.5 ml-auto">
               <Clock className="w-3 h-3" /> 8 min
@@ -231,16 +243,29 @@ function TreinoPrincipalCard({ cases, onStart }: { cases: TrainingCase[], onStar
   );
 }
 
-function MiniCard({ icon: Icon, title, description }: { icon: any, title: string, description: string }) {
+function MiniCard({ icon: Icon, title, description, isLocked }: { icon: any, title: string, description: string, isLocked?: boolean }) {
+  const navigate = useNavigate();
+  
   return (
-    <div className="group bg-white/[0.02] border border-white/[0.05] rounded-2xl p-5 space-y-4 hover:bg-white/[0.04] hover:border-white/10 transition-all cursor-pointer">
+    <div 
+      onClick={() => isLocked && navigate('/formacao')}
+      className={cn(
+        "group bg-white/[0.02] border border-white/[0.05] rounded-2xl p-5 space-y-4 hover:bg-white/[0.04] hover:border-white/10 transition-all cursor-pointer relative",
+        isLocked && "opacity-60 grayscale-[0.5]"
+      )}
+    >
       <div className="w-10 h-10 rounded-xl bg-white/[0.05] flex items-center justify-center group-hover:bg-primary/20 group-hover:text-primary transition-colors">
-        <Icon className="w-5 h-5" />
+        {isLocked ? <Lock className="w-5 h-5 text-white/20" /> : <Icon className="w-5 h-5" />}
       </div>
       <div className="space-y-1">
         <h4 className="text-sm font-medium text-white/80 tracking-wide">{title}</h4>
         <p className="text-[10px] text-white/30 uppercase tracking-widest font-bold">{description}</p>
       </div>
+      {isLocked && (
+        <div className="absolute top-2 right-2">
+          <Badge variant="outline" className="text-[8px] border-primary/20 text-primary/60 px-1 py-0">PRO</Badge>
+        </div>
+      )}
     </div>
   );
 }
