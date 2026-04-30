@@ -6487,6 +6487,7 @@ export type Database = {
       co_camara_sussurro_casos: {
         Row: {
           ativo: boolean
+          camadas_leitura: string | null
           categoria: string | null
           ciclo_id: string | null
           contexto: string | null
@@ -6495,8 +6496,10 @@ export type Database = {
           distrito_dominante: string | null
           distrito_esperado: string | null
           erro_comum: string | null
+          explicacao_leve: string | null
           explicacao_simples: string | null
           fala_inicial: string | null
+          feedback_tecnico: string | null
           ferramenta_principal: string | null
           hipotese_esperada: string | null
           id: string
@@ -6506,7 +6509,9 @@ export type Database = {
           nivel_produto: string
           opcoes_leitura: Json | null
           pergunta_ideal: string | null
+          proximo_treino_id: string | null
           resposta_correta: string | null
+          risco_etico: string | null
           tema_emocional: string | null
           tipo_cliente: string | null
           titulo: string
@@ -6515,6 +6520,7 @@ export type Database = {
         }
         Insert: {
           ativo?: boolean
+          camadas_leitura?: string | null
           categoria?: string | null
           ciclo_id?: string | null
           contexto?: string | null
@@ -6523,8 +6529,10 @@ export type Database = {
           distrito_dominante?: string | null
           distrito_esperado?: string | null
           erro_comum?: string | null
+          explicacao_leve?: string | null
           explicacao_simples?: string | null
           fala_inicial?: string | null
+          feedback_tecnico?: string | null
           ferramenta_principal?: string | null
           hipotese_esperada?: string | null
           id?: string
@@ -6534,7 +6542,9 @@ export type Database = {
           nivel_produto?: string
           opcoes_leitura?: Json | null
           pergunta_ideal?: string | null
+          proximo_treino_id?: string | null
           resposta_correta?: string | null
+          risco_etico?: string | null
           tema_emocional?: string | null
           tipo_cliente?: string | null
           titulo: string
@@ -6543,6 +6553,7 @@ export type Database = {
         }
         Update: {
           ativo?: boolean
+          camadas_leitura?: string | null
           categoria?: string | null
           ciclo_id?: string | null
           contexto?: string | null
@@ -6551,8 +6562,10 @@ export type Database = {
           distrito_dominante?: string | null
           distrito_esperado?: string | null
           erro_comum?: string | null
+          explicacao_leve?: string | null
           explicacao_simples?: string | null
           fala_inicial?: string | null
+          feedback_tecnico?: string | null
           ferramenta_principal?: string | null
           hipotese_esperada?: string | null
           id?: string
@@ -6562,7 +6575,9 @@ export type Database = {
           nivel_produto?: string
           opcoes_leitura?: Json | null
           pergunta_ideal?: string | null
+          proximo_treino_id?: string | null
           resposta_correta?: string | null
+          risco_etico?: string | null
           tema_emocional?: string | null
           tipo_cliente?: string | null
           titulo?: string
@@ -6575,6 +6590,13 @@ export type Database = {
             columns: ["ciclo_id"]
             isOneToOne: false
             referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_camara_sussurro_casos_proximo_treino_id_fkey"
+            columns: ["proximo_treino_id"]
+            isOneToOne: false
+            referencedRelation: "co_camara_sussurro_casos"
             referencedColumns: ["id"]
           },
         ]
