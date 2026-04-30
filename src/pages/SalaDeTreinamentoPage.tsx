@@ -13,6 +13,8 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { useCamaraCases } from '@/components/treinamento/simulador/useCamaraCases';
 import { SimuladorPremium } from '@/components/treinamento/simulador/SimuladorPremium';
+import { SimuladorClube } from '@/components/treinamento/simulador/SimuladorClube';
+import { SalaBloqueada } from '@/components/treinamento/simulador/SalaBloqueada';
 import { TrainingCase } from '@/components/treinamento/simulador/types';
 import { useCidadelaEstado } from '@/hooks/useCidadelaEstado';
 import { useStudentTracking } from '@/hooks/useStudentTracking';
