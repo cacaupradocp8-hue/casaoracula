@@ -13,11 +13,13 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { 
   Map as MapIcon, Plus, Trash2, GripVertical, Eye, EyeOff, Loader2, Zap, Settings2, Image as ImageIcon,
-  ChevronDown, ChevronUp
+  ChevronDown, ChevronUp, Copy, MoveUp, MoveDown, Layout
 } from 'lucide-react';
 import { ImageUpload } from '../ImageUpload';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { TemplateEditorialEditor } from './TemplateEditorialEditor';
 import type { RotaItem } from './types';
+import { cn } from '@/lib/utils';
 
 export function RotaDoLivroEditor({ estacaoId }: { estacaoId: string }) {
   const { toast } = useToast();
