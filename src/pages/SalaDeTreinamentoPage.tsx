@@ -242,16 +242,29 @@ function TreinoPrincipalCard({ cases, onStart }: { cases: TrainingCase[], onStar
   );
 }
 
-function MiniCard({ icon: Icon, title, description }: { icon: any, title: string, description: string }) {
+function MiniCard({ icon: Icon, title, description, isLocked }: { icon: any, title: string, description: string, isLocked?: boolean }) {
+  const navigate = useNavigate();
+  
   return (
-    <div className="group bg-white/[0.02] border border-white/[0.05] rounded-2xl p-5 space-y-4 hover:bg-white/[0.04] hover:border-white/10 transition-all cursor-pointer">
+    <div 
+      onClick={() => isLocked && navigate('/formacao')}
+      className={cn(
+        "group bg-white/[0.02] border border-white/[0.05] rounded-2xl p-5 space-y-4 hover:bg-white/[0.04] hover:border-white/10 transition-all cursor-pointer relative",
+        isLocked && "opacity-60 grayscale-[0.5]"
+      )}
+    >
       <div className="w-10 h-10 rounded-xl bg-white/[0.05] flex items-center justify-center group-hover:bg-primary/20 group-hover:text-primary transition-colors">
-        <Icon className="w-5 h-5" />
+        {isLocked ? <Lock className="w-5 h-5 text-white/20" /> : <Icon className="w-5 h-5" />}
       </div>
       <div className="space-y-1">
         <h4 className="text-sm font-medium text-white/80 tracking-wide">{title}</h4>
         <p className="text-[10px] text-white/30 uppercase tracking-widest font-bold">{description}</p>
       </div>
+      {isLocked && (
+        <div className="absolute top-2 right-2">
+          <Badge variant="outline" className="text-[8px] border-primary/20 text-primary/60 px-1 py-0">PRO</Badge>
+        </div>
+      )}
     </div>
   );
 }
