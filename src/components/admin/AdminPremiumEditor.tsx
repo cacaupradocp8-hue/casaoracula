@@ -108,6 +108,22 @@ export function AdminPremiumEditor() {
     }
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('clube_rota_itens')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-rota-itens'] });
+      setSelectedItemId(null);
+      setEditingItem(null);
+      toast({ title: 'Item removido' });
+    }
+  });
+
   const handleCreateItem = () => {
     const newItem: Partial<RotaItem> = {
       titulo: 'Novo Passo',
@@ -123,6 +139,12 @@ export function AdminPremiumEditor() {
   const handleSave = () => {
     if (editingItem) {
       saveMutation.mutate(editingItem);
+    }
+  };
+
+  const handleDelete = () => {
+    if (selectedItemId && confirm('Excluir este passo?')) {
+      deleteMutation.mutate(selectedItemId);
     }
   };
 
