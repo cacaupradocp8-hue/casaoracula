@@ -432,6 +432,22 @@ export function TemplateEditorialEditor({ item, onUpdate }: TemplateEditorialEdi
                     />
                   </div>
                   <div className="space-y-2">
+                    <Label className="text-xs font-bold uppercase">Botão CTA (Texto)</Label>
+                    <Input 
+                      value={metadata.cta_label || ''} 
+                      onChange={(e) => updateMetadata('cta_label', e.target.value)}
+                      placeholder="Ex: Quero saber mais"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs font-bold uppercase">Link do CTA</Label>
+                    <Input 
+                      value={metadata.cta_url || ''} 
+                      onChange={(e) => updateMetadata('cta_url', e.target.value)}
+                      placeholder="Ex: https://formacaooracula.com.br"
+                    />
+                  </div>
+                  <div className="space-y-2">
                     <Label className="text-xs font-bold uppercase">ID do Recurso Externo</Label>
                     <Input 
                       value={item.ref_id || ''} 
