@@ -54,7 +54,7 @@ interface CamaraCaso {
   pergunta_ideal: string | null;
   leitura_simbolica: string | null;
   resposta_correta: string | null;
-  dificuldade: 'iniciante' | 'intermediario' | 'avancado';
+  dificuldade: 'iniciante' | 'intermediario' | 'avancado' | string;
   tipo_cliente: string | null;
   tema_emocional: string | null;
   ativo: boolean;
