@@ -235,17 +235,33 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast, ava
       {/* Hipótese de referência */}
       {caso.hipotese_esperada && (
         <Card className="border-primary/20 bg-primary/5">
-          <CardContent className="p-4 space-y-2">
+          <CardContent className="p-4 space-y-3">
             <div className="flex items-center gap-2">
-              <Compass className="w-4 h-4 text-primary" />
-              <p className="text-xs font-medium text-primary/80 uppercase tracking-wider">Hipótese de referência</p>
-            </div>
-            <p className="text-sm text-foreground/80 leading-relaxed">{caso.hipotese_esperada}</p>
-            {caso.vetor_esperado && (
-              <p className="text-xs text-muted-foreground italic mt-1">
-                Vetor: {caso.vetor_esperado}
+              <Compass className={`w-4 h-4 ${finalScore.hipotese >= 2 ? 'text-primary' : 'text-amber-400'}`} />
+              <p className="text-xs font-medium uppercase tracking-wider">
+                {finalScore.hipotese >= 2 ? 'Leitura da Mentora' : 'Ponto de Refinamento'}
               </p>
-            )}
+            </div>
+            
+            <div className="space-y-3">
+              <p className="text-sm text-foreground/80 leading-relaxed italic border-l-2 border-primary/20 pl-3">
+                "{caso.hipotese_esperada}"
+              </p>
+              
+              {caso.erro_comum && (
+                <div className="space-y-1 bg-amber-500/5 p-3 rounded-lg border border-amber-500/10">
+                  <p className="text-[10px] text-amber-400 font-bold uppercase tracking-widest">Erro Comum a Evitar</p>
+                  <p className="text-xs text-foreground/70 italic">"{caso.erro_comum}"</p>
+                </div>
+              )}
+
+              {caso.vetor_esperado && (
+                <div className="space-y-1 bg-emerald-500/5 p-3 rounded-lg border border-emerald-500/10">
+                  <p className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest">Pergunta Ideal / Condução</p>
+                  <p className="text-sm text-foreground/80 font-medium">"{caso.vetor_esperado}"</p>
+                </div>
+              )}
+            </div>
           </CardContent>
         </Card>
       )}
