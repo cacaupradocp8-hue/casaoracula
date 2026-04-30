@@ -49,7 +49,7 @@ export default function SalaDeTreinamentoPage() {
             <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
               <div className="space-y-1">
                 <h1 className="text-3xl font-light tracking-tight text-white/90">
-                  Bom dia, <span className="font-semibold text-white">{user?.user_metadata?.display_name || 'Oraculista'}</span>
+                  Bom dia, <span className="font-semibold text-white">{user?.name || 'Oraculista'}</span>
                 </h1>
                 <p className="text-muted-foreground/60 text-sm tracking-wide uppercase font-medium">
                   Pronto para refinar sua escuta?
