@@ -15,10 +15,10 @@ export function RotaImersao({ estacaoId }: { estacaoId?: string | null }) {
       rota: '/clube/treinamento',
     },
     {
-      label: 'Encontro ao Vivo',
-      descricao: 'Mentorias e aulas coletivas',
+      label: 'Escutas & Aulas',
+      descricao: 'Áudios e aulas-álbum',
       icon: Users,
-      rota: '/clube/encontro',
+      rota: '/clube/escuta',
     },
     {
       label: 'Biblioteca 80/20',
