@@ -175,7 +175,7 @@ export default function SalaDeTreinamentoPage() {
   );
 }
 
-function TreinoPrincipalCard({ cases, onStart }: { cases: TrainingCase[], onStart: (c: TrainingCase) => void }) {
+function TreinoPrincipalCard({ cases, onStart, isFormacao }: { cases: TrainingCase[], onStart: (c: TrainingCase) => void, isFormacao: boolean }) {
   const { estado } = useCidadelaEstado();
   
   const targetCase = useMemo(() => {
