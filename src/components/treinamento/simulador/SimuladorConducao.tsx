@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Loader2, FlaskConical, Eye, EyeOff } from 'lucide-react';
+import { Loader2, FlaskConical, Eye, EyeOff, Search, Filter } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { RespostaAluna, SimuladorStep, STEP_ORDER, STEP_LABELS } from './types';
@@ -44,6 +46,12 @@ export function SimuladorConducao() {
   const [active, setActive] = useState(false);
   const [modoTerapeuta, setModoTerapeuta] = useState(false);
   const [step, setStep] = useState<SimuladorStep>('caso');
+  
+  // Filters
+  const [filterDistrito, setFilterDistrito] = useState<string>('all');
+  const [filterDificuldade, setFilterDificuldade] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState('');
+
   const [resposta, setResposta] = useState<RespostaAluna>({
     leitura_texto: '',
     distrito_escolhido: '',
@@ -53,7 +61,20 @@ export function SimuladorConducao() {
     ferramenta_escolhida: '',
   });
 
-  const caso = cases[casoIndex];
+  const filteredCases = useMemo(() => {
+    return cases.filter(c => {
+      const matchesDistrito = filterDistrito === 'all' || c.distrito_esperado === filterDistrito;
+      const matchesDificuldade = filterDificuldade === 'all' || 
+        (filterDificuldade === 'iniciante' && c.nivel === 'guiado') ||
+        (filterDificuldade === 'intermediario' && c.nivel === 'semi_guiado') ||
+        (filterDificuldade === 'avancado' && c.nivel === 'livre');
+      const matchesSearch = c.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                            c.tema?.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesDistrito && matchesDificuldade && matchesSearch;
+    });
+  }, [cases, filterDistrito, filterDificuldade, searchTerm]);
+
+  const caso = filteredCases[casoIndex];
   const stepIdx = STEP_ORDER.indexOf(step);
   const progressPct = active ? ((stepIdx + 1) / STEP_ORDER.length) * 100 : 0;
 
@@ -167,17 +188,61 @@ export function SimuladorConducao() {
           nivelAtual={progress?.nivel_atual || null}
         />
 
-        {cases.length === 0 ? (
-          <Card className="border-dashed border-primary/20">
+        {/* Filters */}
+        <div className="flex flex-col md:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input 
+              placeholder="Buscar tema ou tipo de cliente..." 
+              className="pl-10 bg-white/5 border-white/10 text-sm"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="flex gap-2">
+            <Select value={filterDistrito} onValueChange={setFilterDistrito}>
+              <SelectTrigger className="w-[140px] bg-white/5 border-white/10 text-xs">
+                <Filter className="w-3 h-3 mr-2" />
+                <SelectValue placeholder="Distrito" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos Distritos</SelectItem>
+                <SelectItem value="Distrito do Metal">Metal</SelectItem>
+                <SelectItem value="Distrito da Água">Água</SelectItem>
+                <SelectItem value="Distrito da Terra">Terra</SelectItem>
+                <SelectItem value="Distrito do Fogo">Fogo</SelectItem>
+                <SelectItem value="Distrito do Ar">Ar</SelectItem>
+                <SelectItem value="Distrito da Madeira">Madeira</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={filterDificuldade} onValueChange={setFilterDificuldade}>
+              <SelectTrigger className="w-[120px] bg-white/5 border-white/10 text-xs">
+                <SelectValue placeholder="Dificuldade" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas</SelectItem>
+                <SelectItem value="iniciante">Iniciante</SelectItem>
+                <SelectItem value="intermediario">Intermediário</SelectItem>
+                <SelectItem value="avancado">Avançado</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {filteredCases.length === 0 ? (
+          <Card className="border-dashed border-primary/20 bg-transparent">
             <CardContent className="py-12 text-center">
               <FlaskConical className="w-10 h-10 mx-auto text-primary/30 mb-3" />
-              <p className="text-muted-foreground">Nenhum caso disponível ainda.</p>
-              <p className="text-xs text-muted-foreground/50 mt-1">Casos serão adicionados pela equipe pedagógica.</p>
+              <p className="text-muted-foreground">Nenhum caso encontrado com esses filtros.</p>
+              <Button variant="link" size="sm" onClick={() => { setSearchTerm(''); setFilterDistrito('all'); setFilterDificuldade('all'); }}>
+                Limpar filtros
+              </Button>
             </CardContent>
           </Card>
         ) : (
           <CaseList
-            cases={cases}
+            cases={filteredCases}
             getCaseStatus={getCaseStatus}
             onSelectCase={iniciar}
           />
