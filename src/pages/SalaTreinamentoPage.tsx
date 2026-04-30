@@ -5,14 +5,32 @@ import { AutoMapeamento } from '@/components/treinamento/AutoMapeamento';
 import { BibliotecaFerramentas } from '@/components/treinamento/BibliotecaFerramentas';
 import { TrainingDashboard } from '@/components/treinamento/simulador/TrainingDashboard';
 import { useEffectivePortal } from '@/hooks/useEffectivePortal';
-import { FlaskConical, Compass, BookOpen, BarChart3 } from 'lucide-react';
+import { FlaskConical, Compass, BookOpen, BarChart3, Flame, Award } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useStudentTracking } from '@/hooks/useStudentTracking';
+import { useAuth } from '@/contexts/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function SalaTreinamentoPage() {
   const { effectivePortal, isAdmin } = useEffectivePortal();
+  const { user } = useAuth();
   const { track } = useStudentTracking();
   const trackedRef = useRef(false);
+
+  const { data: progress } = useQuery({
+    queryKey: ['training-room-header-progress', user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data } = await supabase
+        .from('co_training_progress')
+        .select('streak_days, nivel_atual')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!user,
+  });
 
   useEffect(() => {
     if (!trackedRef.current) {
@@ -30,8 +48,25 @@ export default function SalaTreinamentoPage() {
 
   return (
     <CasaMaquinasLayout
-      title="Sala de Treinamento"
-      subtitle="Pratique condução terapêutica simbólica com casos fictícios antes de atender clientes reais"
+      title={
+        <div className="flex flex-col gap-1">
+          <span className="text-xs font-normal text-muted-foreground">Bom dia, {user?.name?.split(' ')[0] || 'Oraculista'}</span>
+          <div className="flex items-center gap-4">
+            <span>Câmara do Sussurro</span>
+            <div className="flex items-center gap-3 ml-auto pr-8">
+              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/20">
+                <Flame className="w-3 h-3 text-orange-500" />
+                <span className="text-[10px] font-bold text-orange-400">{progress?.streak_days || 0}</span>
+              </div>
+              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20">
+                <Award className="w-3 h-3 text-primary" />
+                <span className="text-[10px] font-bold text-primary uppercase">{progress?.nivel_atual || 'Iniciante'}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+      subtitle="Refine sua escuta clínica e ative seus distritos através da prática constante."
     >
       <Tabs defaultValue="simulador" className="space-y-6">
         <TabsList className="grid grid-cols-4 gap-2 h-auto bg-transparent p-0">

@@ -5,7 +5,7 @@ import { TrainingCase } from './types';
 export interface CamaraCaseRaw {
   id: string;
   titulo: string;
-  idade: number | null;
+  idade: string | null;
   contexto: string | null;
   fala_inicial: string | null;
   distrito_dominante: string | null;

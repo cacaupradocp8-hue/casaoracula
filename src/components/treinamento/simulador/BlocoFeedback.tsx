@@ -10,6 +10,7 @@ import { PerfilSimbolicoCard } from './PerfilSimbolicoCard';
 import { ResumoTreino } from './ResumoTreino';
 import { useMemo } from 'react';
 import { AvaliacaoIA } from './useAvaliacaoIA';
+import { ConversaoCTA } from './ConversaoCTA';
 
 interface Props {
   caso: TrainingCase;
@@ -108,6 +109,14 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast, ava
       <p className="text-xs text-muted-foreground italic">
         Este retorno não indica certo ou errado. Indica coerência de leitura clínica.
       </p>
+
+      {finalScore.total >= 7 && (
+        <ConversaoCTA type="desempenho" />
+      )}
+      
+      {finalScore.total < 4 && (
+        <ConversaoCTA type="erros" />
+      )}
 
       {/* Loading IA */}
       {isLoadingIA && (
