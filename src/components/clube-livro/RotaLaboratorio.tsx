@@ -73,9 +73,9 @@ export function RotaLaboratorio({ estacaoId, livroTitulo }: RotaLaboratorioProps
               variant="gold"
               size="sm"
               className="w-full gap-2"
-              onClick={() => navigate('/clube/laboratorio')}
+              onClick={() => navigate('/clube/treinamento')}
             >
-              Entrar no Treinamento
+              Entrar na Sala de Treinamento
               {livroTitulo && (
                 <span className="text-[10px] opacity-70 truncate max-w-[140px]">
                   · {livroTitulo}
@@ -90,7 +90,7 @@ export function RotaLaboratorio({ estacaoId, livroTitulo }: RotaLaboratorioProps
               className="w-full text-[11px] text-muted-foreground/70 hover:text-primary"
               onClick={() => navigate('/clube/laboratorio')}
             >
-              Ver acervo de obras
+              Ver acervo de laboratórios
             </Button>
           </div>
         </CardContent>
