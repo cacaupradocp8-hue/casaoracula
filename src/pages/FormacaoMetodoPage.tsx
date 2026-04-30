@@ -9,7 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   GraduationCap, BookOpen, Users, Calendar, Target, Award,
-  ChevronRight, Clock, BarChart3, MessageCircle, FileUp
+  ChevronRight, Clock, BarChart3, MessageCircle, FileUp, Zap, Sparkles
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
