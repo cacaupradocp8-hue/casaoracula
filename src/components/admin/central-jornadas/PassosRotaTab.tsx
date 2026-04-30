@@ -249,6 +249,8 @@ export function PassosRotaTab({ estacaoId }: Props) {
       jardim_prompt: (p as any).jardim_prompt || p.metadata?.jardim_prompt || '',
       simulacao_texto: (p as any).cenario_treinamento || p.metadata?.simulacao_texto || '',
       perguntas_sugeridas: JSON.stringify(p.metadata?.perguntas_sugeridas || [], null, 2),
+      cta_label: p.metadata?.cta_label || '',
+      cta_url: p.metadata?.cta_url || '',
     });
     setDialogOpen(true);
   };
