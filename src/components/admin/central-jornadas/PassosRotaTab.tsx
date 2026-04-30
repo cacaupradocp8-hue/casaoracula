@@ -79,6 +79,8 @@ export function PassosRotaTab({ estacaoId }: Props) {
     jardim_prompt: string;
     simulacao_texto: string;
     perguntas_sugeridas: string;
+    cta_label: string;
+    cta_url: string;
   }>({
     titulo: '',
     subtitulo: '',
