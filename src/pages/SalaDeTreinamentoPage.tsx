@@ -157,9 +157,12 @@ function TreinoPrincipalCard({ onStart }: { onStart: (c: SimCase) => void }) {
         <div className="space-y-6 max-w-xl">
           <div className="flex items-center gap-3">
             <Badge className="bg-primary/20 text-primary border-none text-[10px] px-3 py-1 font-bold uppercase tracking-widest">
+              Câmara de Simulação
+            </Badge>
+            <Badge variant="outline" className="border-white/10 text-white/40 text-[10px] px-3 py-1 font-bold uppercase tracking-widest">
               Distrito: {targetCase.distrito || 'Vínculo'}
             </Badge>
-            <span className="text-white/30 text-xs flex items-center gap-1.5">
+            <span className="text-white/30 text-xs flex items-center gap-1.5 ml-auto">
               <Clock className="w-3 h-3" /> 6 min
             </span>
           </div>
