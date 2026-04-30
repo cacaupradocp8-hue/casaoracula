@@ -9,6 +9,7 @@ import { RespostaAluna, SimuladorStep, STEP_ORDER, STEP_LABELS } from './types';
 import { calcularFeedback } from './feedbackEngine';
 import { calculateTrainingScore, gerarFeedbackJson } from './scoringEngine';
 import { useTrainingCases } from './useTrainingCases';
+import { useCamaraCases } from './useCamaraCases';
 import { useTrainingProgress } from './useTrainingProgress';
 import { ProgressCard } from './ProgressCard';
 import { CaseList } from './CaseList';
