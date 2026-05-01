@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Sparkles, ArrowRight, ShieldCheck, Wrench } from 'lucide-react';
+import { Sparkles, ArrowRight, ShieldCheck, Wrench, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCasaMaquinasAccess } from '@/hooks/useCasaMaquinasAccess';
 
@@ -12,7 +12,7 @@ interface ConversaoCTAProps {
 
 export function ConversaoCTA({ type, customMessage, mode = 'formacao' }: ConversaoCTAProps) {
   const navigate = useNavigate();
-  const { hasAccess } = useCasaMaquinasAccess();
+  const { hasAccess, reason, remainingLabel, isExpiringSoon } = useCasaMaquinasAccess();
 
   const isProfessional = mode === 'casa_maquinas' || type === 'casa_maquinas';
   const targetRoute = hasAccess ? '/casa-das-maquinas/treinamento' : '/planos';
