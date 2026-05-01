@@ -128,10 +128,10 @@ export default function SalaDeTreinamentoPage() {
               <TabsTrigger 
                 key={tab.value}
                 value={tab.value} 
-                className="flex flex-col items-center gap-2 py-5 rounded-2xl border border-border bg-card/40 backdrop-blur-sm data-[state=active]:bg-primary/10 data-[state=active]:border-primary/40 data-[state=active]:text-primary transition-all duration-300"
+                className="flex flex-col items-center gap-1.5 sm:gap-2 py-3 sm:py-5 px-2 rounded-2xl border border-border bg-card/40 backdrop-blur-sm data-[state=active]:bg-primary/10 data-[state=active]:border-primary/40 data-[state=active]:text-primary transition-all duration-300"
               >
-                <tab.icon className="w-5 h-5" />
-                <span className="text-xs font-medium uppercase tracking-widest">{tab.label}</span>
+                <tab.icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="text-[10px] sm:text-xs font-medium uppercase tracking-widest text-center leading-tight">{tab.label}</span>
               </TabsTrigger>
             ))}
           </TabsList>
