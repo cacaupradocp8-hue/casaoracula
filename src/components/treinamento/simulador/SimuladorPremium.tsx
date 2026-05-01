@@ -340,7 +340,10 @@ export function SimuladorPremium({ caso, onExit, onNextCaso }: Props) {
                 </div>
 
                 <Button 
-                  onClick={() => { salvarFinal(); handleNext(); }} 
+                  onClick={async () => { 
+                    await salvarFinal(); 
+                    handleNext(); 
+                  }} 
                   disabled={!resposta.ferramenta_escolhida}
                   className="w-full rounded-2xl py-8 text-lg bg-[#D4AF37] text-black font-bold"
                 >
