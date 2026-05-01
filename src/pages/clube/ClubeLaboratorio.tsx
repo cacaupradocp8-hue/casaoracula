@@ -10,7 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { FlaskConical, Compass, Eye, Hammer, BookOpen, Loader2, Sparkles, Wand2 } from 'lucide-react';
-import { Essencia8020Modal } from '@/components/clube/Essencia8020Modal';
+import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 
 // ─────────────────────────────────────────────────────────────
 // /clube/laboratorio — Hub do Laboratório Oracular
@@ -114,7 +114,7 @@ export default function ClubeLaboratorio() {
                   </Link>
                   {estacaoBook && (
                     <div className="absolute bottom-5 right-5 z-20">
-                      <Essencia8020Modal 
+                      <Laboratorio8020Modal 
                         bookId={estacaoBook.id} 
                         bookTitle={estacaoBook.title} 
                       />
@@ -164,7 +164,7 @@ export default function ClubeLaboratorio() {
                           </Card>
                         </Link>
                         <div className="absolute bottom-4 right-4 z-20 opacity-0 group-hover/essence:opacity-100 transition-opacity">
-                          <Essencia8020Modal 
+                          <Laboratorio8020Modal 
                             bookId={book.id} 
                             bookTitle={book.title} 
                           />

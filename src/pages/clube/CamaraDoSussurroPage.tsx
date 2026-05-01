@@ -13,7 +13,7 @@ import { TrainingCase } from '@/components/treinamento/simulador/types';
 import { cn } from '@/lib/utils';
 import { ConversaoCTA } from '@/components/treinamento/simulador/ConversaoCTA';
 import { useNavigate } from 'react-router-dom';
-import { Essencia8020Modal } from '@/components/clube/Essencia8020Modal';
+import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { useAllBooks } from '@/hooks/useBooks';
 
 export default function CamaraDoSussurroPage() {
@@ -111,7 +111,7 @@ export default function CamaraDoSussurroPage() {
                         
                         {correspondingBook && (
                           <div className="pt-2">
-                            <Essencia8020Modal 
+                            <Laboratorio8020Modal 
                               bookId={correspondingBook.id} 
                               bookTitle={correspondingBook.title} 
                             />
