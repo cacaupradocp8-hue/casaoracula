@@ -61,7 +61,7 @@ export function ConversaoCTA({ type, customMessage, mode = 'formacao' }: Convers
       cta: 'Ir para Casa das Máquinas',
       icon: Wrench,
       message: 'Pronta para a Clínica Real?',
-      route: '/casa-maquinas'
+      route: '/casa-das-maquinas/treinamento'
     }
   };
 
