@@ -4,9 +4,8 @@ import { toast } from "@/components/ui/sonner";
 
 /**
  * Gerencia atualizações do Service Worker (PWA).
- * - Verifica atualizações a cada 30 segundos
- * - Aplica atualizações automaticamente quando disponíveis
- * - Mostra toast apenas se auto-update falhar
+ * Não força recarregamento automático: durante deploys/atualizações isso pode
+ * interromper a navegação e deixar a usuária presa em uma tela branca.
  */
 export function ServiceWorkerUpdateToast() {
   const [mounted, setMounted] = useState(false);
@@ -21,7 +20,7 @@ export function ServiceWorkerUpdateToast() {
       if (registration) {
         setInterval(() => {
           registration.update();
-        }, 30 * 1000);
+        }, 10 * 60 * 1000);
       }
     },
   });
@@ -34,22 +33,14 @@ export function ServiceWorkerUpdateToast() {
   useEffect(() => {
     if (!mounted || !needRefresh) return;
 
-    // Try to auto-update first
-    doUpdate();
-
-    // Show toast as fallback in case auto-update doesn't trigger reload
-    const timeout = setTimeout(() => {
-      toast("Nova versão disponível", {
-        description: "Toque para atualizar agora.",
-        duration: Infinity,
-        action: {
-          label: "Atualizar",
-          onClick: doUpdate,
-        },
-      });
-    }, 2000);
-
-    return () => clearTimeout(timeout);
+    toast("Nova versão disponível", {
+      description: "Atualize quando terminar o que está fazendo.",
+      duration: Infinity,
+      action: {
+        label: "Atualizar",
+        onClick: doUpdate,
+      },
+    });
   }, [needRefresh, doUpdate]);
 
   if (!mounted) return null;
