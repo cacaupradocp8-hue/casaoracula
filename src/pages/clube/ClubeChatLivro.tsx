@@ -3,7 +3,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Send, Bot, User, Loader2, BookOpen,
-  Save, Hammer, MessageSquareQuote, Footprints, GraduationCap, Sparkles
+  Save, Hammer, MessageSquareQuote, Footprints, GraduationCap, Sparkles, FlaskConical
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Database } from '@/integrations/supabase/types';
+import { Essencia8020Modal } from '@/components/clube/Essencia8020Modal';
 
 type ClubCycle = any; // Simplificando para evitar erros de tipos no momento da refatoração de DB
 
