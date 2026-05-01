@@ -133,6 +133,10 @@ export default function CamaraDoSussurroPage() {
               <p className="text-xs text-white/40">Seu progresso no desenvolvimento da escuta clínica.</p>
             </div>
           </div>
+
+          <div className="pt-10">
+            <ConversaoCTA type="concluido" />
+          </div>
         </section>
       </div>
     </div>
