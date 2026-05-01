@@ -466,34 +466,36 @@ export default function AcademiaFormacaoPage() {
         <TabsContent value="catalogo">
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-3">
-              <div className="relative flex-1">
+              <div className="relative flex-1 min-w-0">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input value={search} onChange={e => setSearch(e.target.value)}
                   placeholder="Buscar cursos..." className="pl-9 bg-background border-primary/10" />
               </div>
-              <Select value={filterTipo} onValueChange={setFilterTipo}>
-                <SelectTrigger className="w-[160px] bg-background border-primary/10">
-                  <SelectValue placeholder="Tipo" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os tipos</SelectItem>
-                  <SelectItem value="formacao">Formação</SelectItem>
-                  <SelectItem value="portal">Portal</SelectItem>
-                  <SelectItem value="livre">Curso Livre</SelectItem>
-                  <SelectItem value="travessia">Travessia</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={filterNivel} onValueChange={setFilterNivel}>
-                <SelectTrigger className="w-[160px] bg-background border-primary/10">
-                  <SelectValue placeholder="Nível" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os níveis</SelectItem>
-                  <SelectItem value="basico">Básico</SelectItem>
-                  <SelectItem value="avancado">Avançado</SelectItem>
-                  <SelectItem value="especializacao">Especialização</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex gap-3">
+                <Select value={filterTipo} onValueChange={setFilterTipo}>
+                  <SelectTrigger className="flex-1 sm:w-[160px] sm:flex-none bg-background border-primary/10">
+                    <SelectValue placeholder="Tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os tipos</SelectItem>
+                    <SelectItem value="formacao">Formação</SelectItem>
+                    <SelectItem value="portal">Portal</SelectItem>
+                    <SelectItem value="livre">Curso Livre</SelectItem>
+                    <SelectItem value="travessia">Travessia</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={filterNivel} onValueChange={setFilterNivel}>
+                  <SelectTrigger className="flex-1 sm:w-[160px] sm:flex-none bg-background border-primary/10">
+                    <SelectValue placeholder="Nível" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os níveis</SelectItem>
+                    <SelectItem value="basico">Básico</SelectItem>
+                    <SelectItem value="avancado">Avançado</SelectItem>
+                    <SelectItem value="especializacao">Especialização</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             {catalogFiltered.length === 0 ? (
