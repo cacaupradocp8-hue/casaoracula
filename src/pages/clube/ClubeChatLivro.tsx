@@ -71,6 +71,8 @@ Toda resposta deve seguir este formato:
 Importante: Não substitua supervisão clínica. Não reproduza trechos longos.`;
 
 import { useRotaOracular } from '@/hooks/useRotaOracular';
+import { useEssencia8020 } from '@/hooks/useEssencia8020';
+import { useAllBooks } from '@/hooks/useBooks';
 
 export default function ClubeChatLivro() {
   const { estacaoAtual, pontoAtual } = useRotaOracular();
@@ -79,6 +81,7 @@ export default function ClubeChatLivro() {
   const qc = useQueryClient();
   const isMobile = useIsMobile();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { data: allBooksData = [] } = useAllBooks();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
