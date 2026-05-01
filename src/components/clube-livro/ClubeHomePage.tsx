@@ -187,7 +187,48 @@ export function ClubeHomePage() {
             3. CAMADA 1: INICIAÇÃO (Destaque se no início)
             ============================================ */}
         {(!pontoAtual || pontoAtual.ordem <= 10) && (
-          <RotaEntrada />
+          <div className="space-y-6">
+            {estacaoAtual?.livro_titulo?.includes("Mulheres que correm com os lobos") && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="relative overflow-hidden rounded-[2.5rem] bg-[#0F0D15] border border-primary/20 p-8 text-center space-y-6 shadow-2xl"
+              >
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+                
+                <div className="space-y-4">
+                  <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-primary/60">Manifesto de Abertura</h3>
+                  
+                  <div className="space-y-4 font-serif text-lg md:text-xl text-foreground/90 leading-relaxed italic">
+                    <p>Existe uma parte da mulher que nunca aceitou totalmente a domesticação.</p>
+                    <p>Mesmo silenciosa, ela continua chamando.</p>
+                    <p>Às vezes como cansaço.</p>
+                    <p>Às vezes como tristeza.</p>
+                    <p>Às vezes como desejo de sumir… ou de começar de novo.</p>
+                  </div>
+
+                  <p className="text-sm font-medium text-primary pt-2">
+                    Esta estação é para aprender a escutar esse chamado.
+                  </p>
+                </div>
+
+                <Button 
+                  variant="gold" 
+                  size="lg" 
+                  className="w-full rounded-full py-7 font-bold text-lg shadow-gold group"
+                  onClick={() => {
+                    if (pontoAtual) {
+                      navigate(pontoAtual.rota);
+                    }
+                  }}
+                >
+                  Iniciar Travessia
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </motion.div>
+            )}
+            <RotaEntrada />
+          </div>
         )}
 
         {/* ============================================
