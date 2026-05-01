@@ -80,16 +80,15 @@ export default function SalaDeTreinamentoPage() {
   return (
     <div className="min-h-screen bg-background text-foreground pb-24 pattern-geometric overflow-x-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 sm:space-y-10">
+        <PageBreadcrumb
+          items={[
+            { label: 'Casa das Máquinas', href: '/casa-maquinas' },
+            { label: 'Sala de Treinamento' },
+          ]}
+        />
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-3 sm:space-y-4 min-w-0">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => window.history.back()}
-              className="p-0 h-auto text-primary hover:text-primary-foreground hover:bg-primary/10 transition-colors -ml-1 mb-1 sm:mb-2"
-            >
-              <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
-            </Button>
+            <BackButton />
             <div className="space-y-1">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-display tracking-wide text-foreground leading-tight">
                 Sala de <span className="text-primary italic">Treinamento</span>
