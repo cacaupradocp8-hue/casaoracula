@@ -257,6 +257,13 @@ window.setTimeout(async () => {
   window.location.reload();
 }, 12000);
 
+window.setTimeout(() => {
+  if (appMounted) return;
+  if (rootElement.innerHTML.trim().length > 0) return;
+
+  renderFatalBootFallback("A interface não conseguiu aparecer após a atualização. Recarregue para sincronizar o app.");
+}, 4500);
+
 async function bootstrapApp() {
   try {
     const { default: App } = await import("./App.tsx");
