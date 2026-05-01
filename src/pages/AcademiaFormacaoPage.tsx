@@ -386,49 +386,49 @@ export default function AcademiaFormacaoPage() {
       title="Academia Orácula"
       subtitle="Formação estruturada, Portais de Especialização e Cursos do Método"
     >
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
         <Button 
           variant="outline" 
-          className="h-auto py-6 flex-col gap-2 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all group"
-          onClick={() => window.location.href = '/sala-de-treinamento'}
+          className="h-auto py-4 sm:py-6 px-3 flex-col gap-2 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all group whitespace-normal"
+          onClick={() => navigate('/sala-de-treinamento')}
         >
-          <Zap className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
-          <div className="text-center">
-            <p className="text-sm font-semibold text-foreground">Sala de Treinamento</p>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Prática Clínica</p>
+          <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-primary group-hover:scale-110 transition-transform" />
+          <div className="text-center min-w-0">
+            <p className="text-xs sm:text-sm font-semibold text-foreground leading-tight">Sala de Treinamento</p>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">Prática Clínica</p>
           </div>
         </Button>
         <Button 
           variant="outline" 
-          className="h-auto py-6 flex-col gap-2 border-purple-500/20 bg-purple-500/5 hover:bg-purple-500/10 transition-all group"
-          onClick={() => window.location.href = '/sala-de-treinamento'}
+          className="h-auto py-4 sm:py-6 px-3 flex-col gap-2 border-purple-500/20 bg-purple-500/5 hover:bg-purple-500/10 transition-all group whitespace-normal"
+          onClick={() => navigate('/sala-de-treinamento')}
         >
-          <Sparkles className="w-6 h-6 text-purple-400 group-hover:scale-110 transition-transform" />
-          <div className="text-center">
-            <p className="text-sm font-semibold text-foreground">Câmara de Simulação</p>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Estudos de Caso</p>
+          <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400 group-hover:scale-110 transition-transform" />
+          <div className="text-center min-w-0">
+            <p className="text-xs sm:text-sm font-semibold text-foreground leading-tight">Câmara de Simulação</p>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">Estudos de Caso</p>
           </div>
         </Button>
         <Button 
           variant="outline" 
-          className="h-auto py-6 flex-col gap-2 border-blue-500/20 bg-blue-500/5 hover:bg-blue-500/10 transition-all group"
-          onClick={() => window.location.href = '/formacao-metodo/forum'}
+          className="h-auto py-4 sm:py-6 px-3 flex-col gap-2 border-blue-500/20 bg-blue-500/5 hover:bg-blue-500/10 transition-all group whitespace-normal"
+          onClick={() => navigate('/formacao-metodo/forum')}
         >
-          <BookOpen className="w-6 h-6 text-blue-400 group-hover:scale-110 transition-transform" />
-          <div className="text-center">
-            <p className="text-sm font-semibold text-foreground">Fórum da Comunidade</p>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Trocas e Dúvidas</p>
+          <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 group-hover:scale-110 transition-transform" />
+          <div className="text-center min-w-0">
+            <p className="text-xs sm:text-sm font-semibold text-foreground leading-tight">Fórum da Comunidade</p>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">Trocas e Dúvidas</p>
           </div>
         </Button>
         <Button 
           variant="outline" 
-          className="h-auto py-6 flex-col gap-2 border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-all group"
-          onClick={() => window.location.href = '/formacao-metodo/avaliacoes'}
+          className="h-auto py-4 sm:py-6 px-3 flex-col gap-2 border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-all group whitespace-normal"
+          onClick={() => navigate('/formacao-metodo/avaliacoes')}
         >
-          <Award className="w-6 h-6 text-amber-400 group-hover:scale-110 transition-transform" />
-          <div className="text-center">
-            <p className="text-sm font-semibold text-foreground">Certificações</p>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Nível de Mestria</p>
+          <Award className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400 group-hover:scale-110 transition-transform" />
+          <div className="text-center min-w-0">
+            <p className="text-xs sm:text-sm font-semibold text-foreground leading-tight">Certificações</p>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">Nível de Mestria</p>
           </div>
         </Button>
       </div>
