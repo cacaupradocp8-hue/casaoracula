@@ -13,8 +13,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
+import { BackButton } from '@/components/navigation/BackButton';
+import { ContinueCTA } from '@/components/navigation/ContinueCTA';
 import {
-  GraduationCap, BookOpen, Search, Play, ArrowLeft, Upload,
+  GraduationCap, BookOpen, Search, Play, Upload,
   Loader2, CheckCircle2, Clock, Lock, Award, FileText, Download, Zap, Sparkles
 } from 'lucide-react';
 
