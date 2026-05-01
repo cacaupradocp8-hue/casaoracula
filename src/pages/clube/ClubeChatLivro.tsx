@@ -170,12 +170,14 @@ export default function ClubeChatLivro() {
         : '';
 
       const essenciaContext = essencia ? `
-Essência 80/20 da Obra:
-- Núcleo Vivo: ${essencia.nucleo_vivo}
-- Tensão Central: ${essencia.tensao_central}
-- Imagem Organizadora: ${essencia.imagem_organizadora}
-- Aplicação Terapêutica: ${essencia.aplicacao_terapeutica}
-- Distorção Comum: ${essencia.distorcao_comum}
+Laboratório 80/20 da Obra:
+- 1. Núcleo Vivo: ${essencia.nucleo_vivo}
+- 2. Tensão Central: ${essencia.tensao_central}
+- 3. Imagem Organizadora: ${essencia.imagem_organizadora}
+- 4. Aplicação Terapêutica: ${essencia.aplicacao_terapeutica}
+- 5. Distorção Comum: ${essencia.distorcao_comum}
+- 6. Perguntas Clínicas: ${essencia.perguntas_clinicas?.join(', ')}
+- 7. Exercício Integrativo: ${essencia.exercicio}
 - Resumo Premium: ${essencia.resumo_premium}
 ` : '';
 

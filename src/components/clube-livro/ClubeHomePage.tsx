@@ -14,6 +14,9 @@ import { RotaImersao } from '@/components/clube-livro/RotaImersao';
 import { RotaAplicacao } from '@/components/clube-livro/RotaAplicacao';
 import { RotaLaboratorio } from '@/components/clube-livro/RotaLaboratorio';
 import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
+import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
+import { useAllBooks } from '@/hooks/useBooks';
+import { FlaskConical } from 'lucide-react';
 import { RotaExecutavelMes1 } from '@/components/clube-livro/RotaMês1';
 
 /**
@@ -24,6 +27,7 @@ export function ClubeHomePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const rotaData = useRotaOracular();
+  const { data: allBooks = [] } = useAllBooks();
   
   const {
     estacaoAtual,
@@ -58,6 +62,8 @@ export function ClubeHomePage() {
       </AppLayout>
     );
   }
+
+  const matchedBook = allBooks.find(b => b.title === estacaoAtual?.livro_titulo);
 
   return (
     <AppLayout>
@@ -109,6 +115,24 @@ export function ClubeHomePage() {
                     </h2>
                     {estacaoAtual.livro_autor && (
                       <p className="text-xs text-muted-foreground/40 mt-0.5">{estacaoAtual.livro_autor}</p>
+                    )}
+                    {matchedBook && (
+                      <div className="mt-2">
+                        <Laboratorio8020Modal 
+                          bookId={matchedBook.id} 
+                          bookTitle={matchedBook.title}
+                          trigger={
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="h-7 px-2 text-[10px] gap-1 border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 transition-all font-bold"
+                            >
+                              <FlaskConical className="w-3 h-3" />
+                              Ver Laboratório 80/20
+                            </Button>
+                          }
+                        />
+                      </div>
                     )}
                   </div>
                 </div>
