@@ -13,8 +13,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
+import { BackButton } from '@/components/navigation/BackButton';
+import { ContinueCTA } from '@/components/navigation/ContinueCTA';
 import {
-  GraduationCap, BookOpen, Search, Play, ArrowLeft, Upload,
+  GraduationCap, BookOpen, Search, Play, Upload,
   Loader2, CheckCircle2, Clock, Lock, Award, FileText, Download, Zap, Sparkles
 } from 'lucide-react';
 
@@ -220,9 +223,13 @@ export default function AcademiaFormacaoPage() {
 
     return (
       <CasaMaquinasLayout title={selectedCourse.titulo} subtitle={selectedCourse.subtitulo || ''}>
-        <Button variant="ghost" size="sm" onClick={() => setSelectedCourse(null)} className="text-muted-foreground mb-4">
-          <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
-        </Button>
+        <PageBreadcrumb
+          items={[
+            { label: 'Academia', href: '/academia-formacao' },
+            { label: selectedCourse.titulo },
+          ]}
+        />
+        <BackButton onClick={() => setSelectedCourse(null)} label="Voltar à Academia" />
 
         {loadingDetail ? (
           <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
@@ -381,11 +388,26 @@ export default function AcademiaFormacaoPage() {
   }
 
   // Main View with tabs
+  const cursoEmAndamento = meusCursos[0];
+
   return (
     <CasaMaquinasLayout
       title="Academia Orácula"
       subtitle="Formação estruturada, Portais de Especialização e Cursos do Método"
     >
+      <PageBreadcrumb items={[{ label: 'Academia Orácula' }]} />
+
+      {cursoEmAndamento && (
+        <div className="mb-6">
+          <ContinueCTA
+            title={cursoEmAndamento.titulo}
+            description={cursoEmAndamento.subtitulo || cursoEmAndamento.descricao_publica || undefined}
+            onClick={() => openCourse(cursoEmAndamento)}
+            ctaLabel="Continuar"
+          />
+        </div>
+      )}
+
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
         <Button 
           variant="outline" 

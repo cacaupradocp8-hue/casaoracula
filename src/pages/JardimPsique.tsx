@@ -27,6 +27,7 @@ import { useJardimPsique, JardimRegistro, TipoRegistroJardim } from '@/hooks/use
 import { NovaEntradaJardimModal } from '@/components/shared/NovaEntradaJardimModal';
 import { CompartilharCanteiroBtn } from '@/components/jardim-psique/CompartilharCanteiroBtn';
 import { MinhasPublicacoesCanteiro } from '@/components/jardim-psique/MinhasPublicacoesCanteiro';
+import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
@@ -167,6 +168,7 @@ export default function JardimPsique() {
   return (
     <AppLayout>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pb-24 max-w-4xl overflow-x-hidden">
+        <PageBreadcrumb items={[{ label: 'Jardim da Psique' }]} />
         {/* ─── Hero Header ─── */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
