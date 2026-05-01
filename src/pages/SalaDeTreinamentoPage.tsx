@@ -57,25 +57,18 @@ export default function SalaDeTreinamentoPage() {
           exit={{ opacity: 0, scale: 1.02 }}
           className="h-screen w-full"
         >
-          {isFormacao ? (
-            <SimuladorPremium 
-              caso={activeCase} 
-              onExit={handleBack} 
-              onNextCaso={() => {
-                const nextIdx = allCases.findIndex(c => c.id === activeCase.id) + 1;
-                if (nextIdx < allCases.length) {
-                  setActiveCase(allCases[nextIdx]);
-                } else {
-                  setActiveCase(null);
-                }
-              }}
-            />
-          ) : (
-            <SimuladorClube 
-              caso={activeCase} 
-              onExit={handleBack}
-            />
-          )}
+          <SimuladorPremium 
+            caso={activeCase} 
+            onExit={handleBack} 
+            onNextCaso={() => {
+              const nextIdx = formacaoCases.findIndex(c => c.id === activeCase.id) + 1;
+              if (nextIdx < formacaoCases.length) {
+                setActiveCase(formacaoCases[nextIdx]);
+              } else {
+                setActiveCase(null);
+              }
+            }}
+          />
         </motion.div>
       </div>
     );
