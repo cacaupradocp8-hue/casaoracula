@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart3, TrendingUp, Target, Brain, ArrowUpRight, Zap } from 'lucide-react';
+import { BarChart3, TrendingUp, Target, Brain, ArrowUpRight, Zap, Star, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 
 export const Laboratorio8020 = () => {
