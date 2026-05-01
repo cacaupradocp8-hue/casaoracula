@@ -4,7 +4,7 @@ import { Sparkles, ArrowRight, ShieldCheck, Wrench } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface ConversaoCTAProps {
-  type: 'streak' | 'desempenho' | 'erros' | 'concluido';
+  type: 'streak' | 'desempenho' | 'erros' | 'concluido' | 'casa_maquinas';
   customMessage?: string;
 }
 
