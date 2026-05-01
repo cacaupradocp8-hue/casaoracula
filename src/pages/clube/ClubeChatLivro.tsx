@@ -325,13 +325,31 @@ Essência 80/20 da Obra:
                   <h1 className="text-lg font-serif text-foreground leading-tight flex items-center gap-2">
                     {estacaoAtual?.livro_titulo || book?.title || 'Converse com o Livro'}
                   </h1>
-                  <p className="text-xs text-gold font-medium uppercase tracking-wider">
-                    {estacaoAtual?.livro_autor || book?.author}
-                  </p>
+                  <div className="flex items-center gap-3">
+                    <p className="text-xs text-gold font-medium uppercase tracking-wider">
+                      {estacaoAtual?.livro_autor || book?.author}
+                    </p>
+                    {matchedBook && (
+                      <Essencia8020Modal 
+                        bookId={matchedBook.id} 
+                        bookTitle={matchedBook.title}
+                        trigger={
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-7 px-2 text-[10px] gap-1 bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 rounded-full"
+                          >
+                            <FlaskConical className="w-3 h-3" />
+                            80/20
+                          </Button>
+                        }
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-            
+
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] uppercase tracking-widest font-semibold text-muted-foreground bg-[#13101C]/50 px-4 py-2 rounded-full border border-white/5">
               <div className="flex items-center gap-1.5">
                 <span className="text-gold opacity-50">Estação:</span> {estacaoAtual?.titulo || '...'}
