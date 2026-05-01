@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, Compass, Eye, Hammer, Loader2, FlaskConical, CheckCircle2, MessagesSquare } from 'lucide-react';
+import { ArrowLeft, Compass, Eye, Hammer, Loader2, FlaskConical, CheckCircle2, MessagesSquare, Sparkles } from 'lucide-react';
+import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { useLabOracularConfig, useLabOracularProgress, useSaveLabOracular, callLabOracularIa, type LabOrigem } from '@/hooks/useLabOracular';
 import { CartografiaPhase } from '@/components/clube/laboratorio/CartografiaPhase';
 import { EspelhoPhase } from '@/components/clube/laboratorio/EspelhoPhase';
@@ -133,10 +134,22 @@ export default function ClubeLaboratorioObra() {
           </Button>
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <FlaskConical className="w-4 h-4 text-primary flex-shrink-0" />
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Laboratório Oracular</p>
               <h1 className="font-display text-base text-foreground truncate">{obra.livro_titulo}</h1>
             </div>
+            {origem?.kind === 'book' && (
+              <Laboratorio8020Modal 
+                bookId={origem.bookId} 
+                bookTitle={obra.livro_titulo} 
+                trigger={
+                  <Button variant="outline" size="sm" className="h-8 gap-2 border-gold/30 hover:border-gold/60 bg-gold/5 text-gold hover:bg-gold/10 transition-all font-medium">
+                    <Sparkles className="w-3 h-3" />
+                    80/20
+                  </Button>
+                }
+              />
+            )}
           </div>
         </div>
 
