@@ -24,6 +24,7 @@ import { Suspense } from "react";
 import { renderCasaMaquinasRoutes } from "@/routes/casaMaquinasRoutes";
 import { renderClubeRoutes } from "@/routes/clubeRoutes";
 import { renderAdminRoutes } from "@/routes/adminRoutes";
+import { CasaMaquinasGuard } from "@/components/routing/CasaMaquinasGuard";
 
 // Only Auth and NotFound are eagerly loaded (critical path)
 import Auth from "./pages/Auth";
@@ -471,7 +472,13 @@ function AppRoutes() {
       <Route path="/cliente/:clienteId" element={<ProtectedRoute minPortal="mentorada"><ClientePerfil /></ProtectedRoute>} />
 
       {/* ═══ Casa das Máquinas (extracted) ═══ */}
-      {renderCasaMaquinasRoutes(ProtectedRoute)}
+      {renderCasaMaquinasRoutes(({ children, ...props }: any) => (
+        <ProtectedRoute {...props}>
+          <CasaMaquinasGuard>
+            {children}
+          </CasaMaquinasGuard>
+        </ProtectedRoute>
+      ))}
 
       {/* Treinamento redirects */}
       <Route path="/treinamento" element={<Navigate to="/sala-de-treinamento" replace />} />

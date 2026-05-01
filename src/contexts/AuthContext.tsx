@@ -13,6 +13,7 @@ interface User {
   createdAt: Date;
   avatarUrl?: string;
   isMatriculada?: boolean;
+  matriculadaAt?: Date;
 }
 
 interface AuthContextType {
@@ -70,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               .maybeSingle(),
             supabase
               .from('matriculas')
-              .select('id')
+              .select('id, data_inicio')
               .eq('user_id', userId)
               .eq('curso_id', 'formacao_oracula')
               .eq('ativa', true)
@@ -110,6 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           createdAt: parseDateSafe(profile.created_at, 'auth-context.profile.created_at') ?? new Date(),
           avatarUrl: profile.avatar_url || undefined,
           isMatriculada: !!matricula,
+          matriculadaAt: matricula?.data_inicio ? parseDateSafe(matricula.data_inicio, 'auth-context.matricula.data_inicio') : undefined,
         });
 
         setAuthError(null);
