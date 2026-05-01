@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Plus, Pencil, ChevronDown, Headphones, Loader2, Trash2, 
@@ -100,6 +101,7 @@ export function SemanasTab({ estacaoId }: Props) {
           torre: data.cartografia_torre,
           labirinto: data.cartografia_labirinto,
         },
+        podcast_status: (data as any).podcast_status || 'pendente',
         ativo: true,
       };
       
@@ -152,7 +154,8 @@ export function SemanasTab({ estacaoId }: Props) {
       cartografia_campo: cart.campo || '',
       cartografia_torre: cart.torre || '',
       cartografia_labirinto: cart.labirinto || '',
-    });
+      podcast_status: (s as any).podcast_status || 'pendente',
+    } as any);
     setDialogOpen(true);
   };
 
@@ -165,7 +168,8 @@ export function SemanasTab({ estacaoId }: Props) {
       audio_roteiro: '', treinamento_simulacao: '', jardim_prompt: '', aplicacao_clinica: '',
       pratica_titulo: '', pratica_descricao: '', pergunta_contemplativa: '',
       cartografia_porta: '', cartografia_campo: '', cartografia_torre: '', cartografia_labirinto: '',
-    });
+      podcast_status: 'pendente',
+    } as any);
     setDialogOpen(true);
   };
 
@@ -295,9 +299,28 @@ export function SemanasTab({ estacaoId }: Props) {
                   <h3 className="text-sm font-bold uppercase tracking-tight">1. Imersão (Áudio Semanal)</h3>
                 </div>
                 <div className="space-y-3">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-medium">Título do Episódio</label>
-                    <Input value={form.podcast_titulo} onChange={(e) => setForm({ ...form, podcast_titulo: e.target.value })} placeholder="Ex: O Chamado da Floresta" />
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium">Título do Episódio</label>
+                      <Input value={form.podcast_titulo} onChange={(e) => setForm({ ...form, podcast_titulo: e.target.value })} placeholder="Ex: O Chamado da Floresta" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium">Status do Áudio</label>
+                      <Select 
+                        value={(form as any).podcast_status || 'pendente'} 
+                        onValueChange={(v) => setForm({ ...form, podcast_status: v } as any)}
+                      >
+                        <SelectTrigger className="h-9 text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="pendente">⏳ Pendente</SelectItem>
+                          <SelectItem value="roteiro_pronto">📝 Roteiro Pronto</SelectItem>
+                          <SelectItem value="audio_enviado">🎤 Áudio Enviado</SelectItem>
+                          <SelectItem value="publicado">✅ Publicado</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium">Sinopse Simbólica (Curta)</label>
@@ -337,6 +360,33 @@ export function SemanasTab({ estacaoId }: Props) {
                     <label className="text-xs font-medium">O Labirinto (Desafio)</label>
                     <Input value={form.cartografia_labirinto} onChange={(e) => setForm({ ...form, cartografia_labirinto: e.target.value })} placeholder="Onde se perde/acha..." />
                   </div>
+                </div>
+              </section>
+
+              {/* GESTÃO DE ÁUDIOS EXTRAS */}
+              <section className="space-y-4 p-4 rounded-xl border border-blue-500/10 bg-blue-500/5">
+                <div className="flex items-center justify-between border-b border-blue-500/10 pb-2">
+                  <div className="flex items-center gap-2">
+                    <Headphones className="w-4 h-4 text-blue-500" />
+                    <h3 className="text-sm font-bold uppercase tracking-tight">Áudios Extras da Rota</h3>
+                  </div>
+                  {editingSemana && (
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="h-7 text-[10px] bg-blue-500/10 border-blue-500/20 text-blue-600"
+                      onClick={() => window.open(`/admin/clube/portais/${editingSemana.id}`, '_blank')}
+                    >
+                      Gerenciar Slots de Áudio
+                    </Button>
+                  )}
+                </div>
+                <div className="bg-amber-500/10 p-3 rounded-lg border border-amber-500/20 flex gap-2">
+                  <Info className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                  <p className="text-[10px] text-amber-700 leading-tight">
+                    Os áudios abaixo são os slots configurados para esta rota. 
+                    No momento, o upload deve ser feito através do gerenciador de portais.
+                  </p>
                 </div>
               </section>
 
