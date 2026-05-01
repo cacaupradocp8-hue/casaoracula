@@ -11,6 +11,8 @@ import { useCamaraCases } from '@/components/treinamento/simulador/useCamaraCase
 import { SimuladorClube } from '@/components/treinamento/simulador/SimuladorClube';
 import { TrainingCase } from '@/components/treinamento/simulador/types';
 import { cn } from '@/lib/utils';
+import { ConversaoCTA } from '@/components/treinamento/simulador/ConversaoCTA';
+import { useNavigate } from 'react-router-dom';
 
 export default function CamaraDoSussurroPage() {
   const [activeCase, setActiveCase] = useState<TrainingCase | null>(null);
