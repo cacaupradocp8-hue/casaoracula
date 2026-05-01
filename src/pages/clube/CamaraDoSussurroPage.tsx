@@ -11,6 +11,8 @@ import { useCamaraCases } from '@/components/treinamento/simulador/useCamaraCase
 import { SimuladorClube } from '@/components/treinamento/simulador/SimuladorClube';
 import { TrainingCase } from '@/components/treinamento/simulador/types';
 import { cn } from '@/lib/utils';
+import { ConversaoCTA } from '@/components/treinamento/simulador/ConversaoCTA';
+import { useNavigate } from 'react-router-dom';
 
 export default function CamaraDoSussurroPage() {
   const [activeCase, setActiveCase] = useState<TrainingCase | null>(null);
@@ -130,6 +132,10 @@ export default function CamaraDoSussurroPage() {
               <h4 className="font-medium text-white/80">Maestria da Escuta</h4>
               <p className="text-xs text-white/40">Seu progresso no desenvolvimento da escuta clínica.</p>
             </div>
+          </div>
+
+          <div className="pt-10">
+            <ConversaoCTA type="concluido" />
           </div>
         </section>
       </div>

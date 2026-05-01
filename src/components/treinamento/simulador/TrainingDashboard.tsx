@@ -36,7 +36,7 @@ interface TrainingProgress {
   casos_concluidos: number;
 }
 
-export function TrainingDashboard() {
+export function TrainingDashboard({ mode = 'formacao' }: { mode?: 'formacao' | 'casa_maquinas' }) {
   const { user } = useAuth();
 
   const { data: attempts = [], isLoading: isLoadingAttempts } = useQuery({
@@ -176,11 +176,11 @@ export function TrainingDashboard() {
 
       {/* Conversion CTA (Dynamic) */}
       {progress?.certification_potential && progress.certification_potential > 60 ? (
-        <ConversaoCTA type="desempenho" />
+        <ConversaoCTA type="desempenho" mode={mode} />
       ) : progress?.streak_days && progress.streak_days >= 7 ? (
-        <ConversaoCTA type="streak" />
+        <ConversaoCTA type="streak" mode={mode} />
       ) : topErros.length > 0 ? (
-        <ConversaoCTA type="erros" />
+        <ConversaoCTA type="erros" mode={mode} />
       ) : null}
 
       {/* Activated Districts Chips */}

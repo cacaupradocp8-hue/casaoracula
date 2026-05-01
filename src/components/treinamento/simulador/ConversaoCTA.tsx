@@ -1,48 +1,71 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Sparkles, ArrowRight, ShieldCheck, Wrench } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface ConversaoCTAProps {
-  type: 'streak' | 'desempenho' | 'erros' | 'concluido';
+  type: 'streak' | 'desempenho' | 'erros' | 'concluido' | 'casa_maquinas';
   customMessage?: string;
+  mode?: 'formacao' | 'casa_maquinas';
 }
 
-export function ConversaoCTA({ type, customMessage }: ConversaoCTAProps) {
+export function ConversaoCTA({ type, customMessage, mode = 'formacao' }: ConversaoCTAProps) {
   const navigate = useNavigate();
+
+  const isProfessional = mode === 'casa_maquinas' || type === 'casa_maquinas';
 
   const configs = {
     streak: {
-      title: 'Hábito de Mestre',
-      description: 'Sua constância revela um compromisso raro. Você está pronta para o próximo nível.',
-      cta: 'Ver Formação ORÁCULA',
-      icon: Sparkles,
-      message: 'Seu olhar existe. Falta método.'
+      title: isProfessional ? 'Consistência Profissional' : 'Hábito de Mestre',
+      description: isProfessional 
+        ? 'Sua constância no treino técnico permite que você assuma casos reais com segurança.' 
+        : 'Sua constância revela um compromisso raro. Você está pronta para o próximo nível.',
+      cta: isProfessional ? 'Acessar Laboratório Clínico' : 'Ver Formação ORÁCULA',
+      icon: isProfessional ? Wrench : Sparkles,
+      message: isProfessional ? 'Maestria em Construção' : 'Seu olhar existe. Falta método.',
+      route: isProfessional ? '/casa-das-maquinas/treinamento' : '/formacao'
     },
     desempenho: {
-      title: 'Potencial de Elite',
-      description: 'Seus acertos mostram uma intuição refinada. Transforme isso em uma profissão certificada.',
-      cta: 'Acessar Certificação',
-      icon: ShieldCheck,
-      message: 'Você percebe padrões. Aprenda a conduzir.'
+      title: isProfessional ? 'Pronto para a Clínica' : 'Potencial de Elite',
+      description: isProfessional
+        ? 'Seu desempenho técnico atingiu o nível de excelência exigido para o Laboratório Clínico.'
+        : 'Seus acertos mostram uma intuição refinada. Transforme isso em uma profissão certificada.',
+      cta: isProfessional ? 'Ir para Casa das Máquinas' : 'Acessar Certificação',
+      icon: isProfessional ? Wrench : ShieldCheck,
+      message: isProfessional ? 'Excelência Técnica' : 'Você percebe padrões. Aprenda a conduzir.',
+      route: isProfessional ? '/casa-das-maquinas/treinamento' : '/formacao'
     },
     erros: {
-      title: 'O Ponto de Virada',
-      description: 'Erros repetidos são apenas lacunas de método. A Formação preenche esses vazios.',
-      cta: 'Conhecer o Método',
-      icon: ArrowRight,
-      message: 'Próximo nível disponível: Formação ORÁCULA'
+      title: isProfessional ? 'Ajuste de Rota' : 'O Ponto de Virada',
+      description: isProfessional
+        ? 'As falhas no treino são os melhores momentos para supervisão na Casa das Máquinas.'
+        : 'Erros repetidos são apenas lacunas de método. A Formação preenche esses vazios.',
+      cta: isProfessional ? 'Supervisão na Casa das Máquinas' : 'Conhecer o Método',
+      icon: isProfessional ? Wrench : ArrowRight,
+      message: isProfessional ? 'Supervisão Necessária' : 'Próximo nível disponível: Formação ORÁCULA',
+      route: isProfessional ? '/casa-das-maquinas/treinamento' : '/formacao'
     },
     concluido: {
-      title: 'Treino Finalizado',
-      description: 'Mais um passo na sua jornada. A maestria clínica exige profundidade.',
-      cta: 'Explorar Formação',
-      icon: Sparkles,
-      message: 'Você percebe padrões. Aprenda a conduzir.'
+      title: isProfessional ? 'Treino Avançado' : 'Treino Finalizado',
+      description: isProfessional
+        ? 'Mais um passo na sua jornada. A Casa das Máquinas aguarda suas novas habilidades.'
+        : 'Mais um passo na sua jornada. A maestria clínica exige profundidade.',
+      cta: isProfessional ? 'Ver Laboratório de Casos' : 'Explorar Formação',
+      icon: isProfessional ? Wrench : Sparkles,
+      message: isProfessional ? 'Evolução Clínica' : 'Você percebe padrões. Aprenda a conduzir.',
+      route: isProfessional ? '/casa-das-maquinas/treinamento' : '/formacao'
+    },
+    casa_maquinas: {
+      title: 'Espaço Profissional',
+      description: 'Sua prática amadureceu. É hora de gerir seus próprios casos no Laboratório Clínico.',
+      cta: 'Ir para Casa das Máquinas',
+      icon: Wrench,
+      message: 'Pronta para a Clínica Real?',
+      route: '/casa-das-maquinas/treinamento'
     }
   };
 
-  const config = configs[type];
+  const config = (configs as any)[type];
   const Icon = config.icon;
 
   return (
@@ -67,7 +90,7 @@ export function ConversaoCTA({ type, customMessage }: ConversaoCTAProps) {
         </div>
 
         <Button 
-          onClick={() => navigate('/formacao')}
+          onClick={() => navigate(config.route)}
           className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium group"
         >
           {config.cta}
