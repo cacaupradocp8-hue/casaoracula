@@ -4162,6 +4162,9 @@ export type Database = {
           podcast_audio_url: string | null
           podcast_descricao: string | null
           podcast_externo_url: string | null
+          podcast_status:
+            | Database["public"]["Enums"]["clube_audio_status"]
+            | null
           podcast_titulo: string | null
           pratica_descricao: string | null
           pratica_guia_url: string | null
@@ -4190,6 +4193,9 @@ export type Database = {
           podcast_audio_url?: string | null
           podcast_descricao?: string | null
           podcast_externo_url?: string | null
+          podcast_status?:
+            | Database["public"]["Enums"]["clube_audio_status"]
+            | null
           podcast_titulo?: string | null
           pratica_descricao?: string | null
           pratica_guia_url?: string | null
@@ -4218,6 +4224,9 @@ export type Database = {
           podcast_audio_url?: string | null
           podcast_descricao?: string | null
           podcast_externo_url?: string | null
+          podcast_status?:
+            | Database["public"]["Enums"]["clube_audio_status"]
+            | null
           podcast_titulo?: string | null
           pratica_descricao?: string | null
           pratica_guia_url?: string | null
@@ -5768,9 +5777,12 @@ export type Database = {
           audio_url: string | null
           created_at: string
           descricao: string | null
+          duracao_estimada: string | null
           id: string
           ordem: number | null
           portal_id: string
+          roteiro: string | null
+          status: Database["public"]["Enums"]["clube_audio_status"] | null
           titulo: string
           updated_at: string
         }
@@ -5778,9 +5790,12 @@ export type Database = {
           audio_url?: string | null
           created_at?: string
           descricao?: string | null
+          duracao_estimada?: string | null
           id?: string
           ordem?: number | null
           portal_id: string
+          roteiro?: string | null
+          status?: Database["public"]["Enums"]["clube_audio_status"] | null
           titulo: string
           updated_at?: string
         }
@@ -5788,9 +5803,12 @@ export type Database = {
           audio_url?: string | null
           created_at?: string
           descricao?: string | null
+          duracao_estimada?: string | null
           id?: string
           ordem?: number | null
           portal_id?: string
+          roteiro?: string | null
+          status?: Database["public"]["Enums"]["clube_audio_status"] | null
           titulo?: string
           updated_at?: string
         }
@@ -23732,6 +23750,11 @@ export type Database = {
         | "practice_seed"
         | "podcast_seed"
         | "microclass_seed"
+      clube_audio_status:
+        | "pendente"
+        | "roteiro_pronto"
+        | "audio_enviado"
+        | "publicado"
       clube_item_type:
         | "portal"
         | "escuta"
@@ -23995,6 +24018,12 @@ export const Constants = {
         "practice_seed",
         "podcast_seed",
         "microclass_seed",
+      ],
+      clube_audio_status: [
+        "pendente",
+        "roteiro_pronto",
+        "audio_enviado",
+        "publicado",
       ],
       clube_item_type: [
         "portal",
