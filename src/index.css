@@ -145,10 +145,14 @@
 
   html, body {
     overflow-x: hidden;
+    position: relative;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
   }
 
   html {
     scroll-behavior: smooth;
+    height: -webkit-fill-available;
   }
 
   body {
