@@ -24,6 +24,7 @@ import { Suspense } from "react";
 import { renderCasaMaquinasRoutes } from "@/routes/casaMaquinasRoutes";
 import { renderClubeRoutes } from "@/routes/clubeRoutes";
 import { renderAdminRoutes } from "@/routes/adminRoutes";
+import { CasaMaquinasGuard } from "@/components/routing/CasaMaquinasGuard";
 
 // Only Auth and NotFound are eagerly loaded (critical path)
 import Auth from "./pages/Auth";
