@@ -214,15 +214,14 @@ function NovoCasoForm({ onCancel, onCreated }: { onCancel: () => void; onCreated
 
   // Buscar clientes para modo vinculado
   const { data: clientes = [] } = useQuery({
-    queryKey: ['terapeuta-clientes', user?.id],
+    queryKey: ['terapeuta-clientes-lab', user?.id],
     queryFn: async () => {
       if (!user) return [];
       const { data } = await supabase
-        .from('terapeuta_clientes')
-        .select('cliente_id, cliente_nome, cliente_email')
-        .eq('terapeuta_id', user.id)
-        .eq('status', 'ativo');
-      return data || [];
+        .from('clientes')
+        .select('id, nome, email')
+        .eq('terapeuta_id', user.id);
+      return (data || []) as Array<{ id: string; nome: string; email: string | null }>;
     },
     enabled: !!user && modo === 'cliente_vinculado',
   });
