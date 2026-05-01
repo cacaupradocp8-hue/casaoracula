@@ -171,7 +171,7 @@ export default function SalaDeTreinamentoPage() {
           </TabsContent>
 
           <TabsContent value="progresso" className="animate-in fade-in duration-500">
-            <TrainingDashboard />
+            <TrainingDashboard mode="casa_maquinas" />
           </TabsContent>
 
           <TabsContent value="automapa" className="animate-in fade-in duration-500">
