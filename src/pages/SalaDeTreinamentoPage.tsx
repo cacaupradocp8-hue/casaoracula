@@ -25,6 +25,8 @@ import { ConversaoCTA } from '@/components/treinamento/simulador/ConversaoCTA';
 import { TrainingCase } from '@/components/treinamento/simulador/types';
 import { useCidadelaEstado } from '@/hooks/useCidadelaEstado';
 import { useStudentTracking } from '@/hooks/useStudentTracking';
+import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
+import { BackButton } from '@/components/navigation/BackButton';
 import { cn } from '@/lib/utils';
 
 export default function SalaDeTreinamentoPage() {
