@@ -10,6 +10,7 @@ import { ModuleForumSection } from '@/components/courses/ModuleForumSection';
 import { useCourseAccess } from '@/hooks/useCourseAccess';
 import { useCourseDetail } from '@/hooks/useCourseDetail';
 import { PedagogicalModuleData } from '@/types/pedagogical-module';
+import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
 
 export default function CursoModulo() {
   const { courseId, moduleId } = useParams<{ courseId: string; moduleId: string }>();
