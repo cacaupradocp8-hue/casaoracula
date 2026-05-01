@@ -77,7 +77,7 @@ export default function CamaraDoSussurroPage() {
               </div>
             ) : (
               <div className="grid gap-6">
-                {allCases.filter(c => !c.is_premium).map((caso) => (
+                {allCases.filter(c => c.nivel_produto === 'clube').map((caso) => (
                    <div 
                     key={caso.id}
                     className="group relative overflow-hidden rounded-[2.5rem] border border-white/[0.08] bg-card/40 transition-all duration-500 hover:border-primary/30 p-8 flex flex-col md:flex-row items-center justify-between gap-6"
