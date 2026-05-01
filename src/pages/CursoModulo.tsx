@@ -120,7 +120,14 @@ export default function CursoModulo() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <PageBreadcrumb
+          items={[
+            { label: "Cursos", href: "/cursos" },
+            { label: course.titulo, href: `/cursos/${courseId}` },
+            { label: module.titulo },
+          ]}
+        />
         <PedagogicalModuleView
           module={module}
           courseId={courseId!}
