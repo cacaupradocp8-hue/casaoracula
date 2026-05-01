@@ -13,6 +13,7 @@ interface User {
   createdAt: Date;
   avatarUrl?: string;
   isMatriculada?: boolean;
+  matriculadaAt?: Date;
 }
 
 interface AuthContextType {
