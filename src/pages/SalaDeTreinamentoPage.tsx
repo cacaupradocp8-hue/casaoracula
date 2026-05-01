@@ -32,8 +32,7 @@ export default function SalaDeTreinamentoPage() {
   const [activeCase, setActiveCase] = useState<TrainingCase | null>(null);
   const [activeTab, setActiveTab] = useState('simulador');
   const { data: allCases = [] } = useCamaraCases();
-
-  const isFormacao = user?.isMatriculada || false;
+  const formacaoCases = useMemo(() => allCases.filter(c => c.nivel_produto === 'formacao'), [allCases]);
 
   const handleStartCase = (c: TrainingCase) => {
     setActiveCase(c);
