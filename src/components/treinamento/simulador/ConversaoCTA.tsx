@@ -17,32 +17,44 @@ export function ConversaoCTA({ type, customMessage }: ConversaoCTAProps) {
       description: 'Sua constância revela um compromisso raro. Você está pronta para o próximo nível.',
       cta: 'Ver Formação ORÁCULA',
       icon: Sparkles,
-      message: 'Seu olhar existe. Falta método.'
+      message: 'Seu olhar existe. Falta método.',
+      route: '/formacao'
     },
     desempenho: {
       title: 'Potencial de Elite',
       description: 'Seus acertos mostram uma intuição refinada. Transforme isso em uma profissão certificada.',
       cta: 'Acessar Certificação',
       icon: ShieldCheck,
-      message: 'Você percebe padrões. Aprenda a conduzir.'
+      message: 'Você percebe padrões. Aprenda a conduzir.',
+      route: '/formacao'
     },
     erros: {
       title: 'O Ponto de Virada',
       description: 'Erros repetidos são apenas lacunas de método. A Formação preenche esses vazios.',
       cta: 'Conhecer o Método',
       icon: ArrowRight,
-      message: 'Próximo nível disponível: Formação ORÁCULA'
+      message: 'Próximo nível disponível: Formação ORÁCULA',
+      route: '/formacao'
     },
     concluido: {
       title: 'Treino Finalizado',
       description: 'Mais um passo na sua jornada. A maestria clínica exige profundidade.',
       cta: 'Explorar Formação',
       icon: Sparkles,
-      message: 'Você percebe padrões. Aprenda a conduzir.'
+      message: 'Você percebe padrões. Aprenda a conduzir.',
+      route: '/formacao'
+    },
+    casa_maquinas: {
+      title: 'Espaço Profissional',
+      description: 'Sua prática amadureceu. É hora de gerir seus próprios casos no Laboratório Clínico.',
+      cta: 'Ir para Casa das Máquinas',
+      icon: Wrench,
+      message: 'Pronta para a Clínica Real?',
+      route: '/casa-maquinas'
     }
   };
 
-  const config = configs[type];
+  const config = (configs as any)[type];
   const Icon = config.icon;
 
   return (
@@ -67,7 +79,7 @@ export function ConversaoCTA({ type, customMessage }: ConversaoCTAProps) {
         </div>
 
         <Button 
-          onClick={() => navigate('/formacao')}
+          onClick={() => navigate(config.route)}
           className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium group"
         >
           {config.cta}
