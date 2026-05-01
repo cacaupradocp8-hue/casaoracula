@@ -14,6 +14,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { SimuladorConducao } from '@/components/treinamento/simulador/SimuladorConducao';
+import { TrainingDashboard } from '@/components/treinamento/simulador/TrainingDashboard';
+import { AutoMapeamento } from '@/components/treinamento/AutoMapeamento';
+import { BibliotecaFerramentas } from '@/components/treinamento/BibliotecaFerramentas';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -44,6 +48,7 @@ export default function LaboratorioClinicoPage() {
   const queryClient = useQueryClient();
   const [activeCaseId, setActiveCaseId] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [activeMainTab, setActiveMainTab] = useState('laboratorio');
 
   const { data: casos = [], isLoading } = useQuery({
     queryKey: ['laboratorio-casos', user?.id],
@@ -94,68 +99,108 @@ export default function LaboratorioClinicoPage() {
 
   return (
     <CasaMaquinasLayout 
-      title="Laboratório Clínico"
-      subtitle="Traga seus casos reais. A Mentora IA oferece supervisão simbólica."
+      title="Sala de Treinamento"
+      subtitle="Onde a teoria se encontra com a prática e a supervisão clínica."
     >
-      <div className="space-y-6">
-        {/* Header de boas-vindas */}
-        <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-          <CardContent className="p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                <FlaskConical className="w-6 h-6 text-primary" />
-              </div>
-              <div className="space-y-1">
-                <h2 className="text-base font-semibold text-foreground">Supervisão simbólica de casos reais</h2>
-                <p className="text-sm text-muted-foreground leading-relaxed max-w-xl">
-                  Diferente da Câmara do Sussurro (Clube) e da Sala de Treinamento (Formação), 
-                  aqui você traz <span className="text-primary">seus próprios casos clínicos</span> e 
-                  recebe leitura simbólica, perguntas, riscos éticos e simulação de campo.
-                </p>
-              </div>
-            </div>
-            <Button 
-              onClick={() => setIsCreating(true)} 
-              className="gap-2 shrink-0"
-            >
-              <Plus className="w-4 h-4" /> Novo Caso
-            </Button>
-          </CardContent>
-        </Card>
+      <Tabs value={activeMainTab} onValueChange={setActiveMainTab} className="space-y-6">
+        <TabsList className="grid grid-cols-5 gap-2 h-auto bg-transparent p-0">
+          <TabsTrigger value="laboratorio" className="flex flex-col items-center gap-1.5 px-2 py-3 rounded-lg border border-primary/20 data-[state=active]:bg-primary/15 data-[state=active]:border-primary/50 data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-all">
+            <FlaskConical className="w-4 h-4" />
+            <span className="text-[10px]">Laboratório</span>
+          </TabsTrigger>
+          <TabsTrigger value="simulador" className="flex flex-col items-center gap-1.5 px-2 py-3 rounded-lg border border-primary/20 data-[state=active]:bg-primary/15 data-[state=active]:border-primary/50 data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-all">
+            <Compass className="w-4 h-4" />
+            <span className="text-[10px]">Simulador</span>
+          </TabsTrigger>
+          <TabsTrigger value="progresso" className="flex flex-col items-center gap-1.5 px-2 py-3 rounded-lg border border-primary/20 data-[state=active]:bg-primary/15 data-[state=active]:border-primary/50 data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-all">
+            <Sparkles className="w-4 h-4" />
+            <span className="text-[10px]">Progresso</span>
+          </TabsTrigger>
+          <TabsTrigger value="automapa" className="flex flex-col items-center gap-1.5 px-2 py-3 rounded-lg border border-primary/20 data-[state=active]:bg-primary/15 data-[state=active]:border-primary/50 data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-all">
+            <Users className="w-4 h-4" />
+            <span className="text-[10px]">Auto-Mapa</span>
+          </TabsTrigger>
+          <TabsTrigger value="ferramentas" className="flex flex-col items-center gap-1.5 px-2 py-3 rounded-lg border border-primary/20 data-[state=active]:bg-primary/15 data-[state=active]:border-primary/50 data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-all">
+            <Wrench className="w-4 h-4" />
+            <span className="text-[10px]">Biblioteca</span>
+          </TabsTrigger>
+        </TabsList>
 
-        {/* Lista de casos */}
-        <div className="space-y-3">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground/60">Seus Casos</h3>
-          
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-            </div>
-          ) : casos.length === 0 ? (
-            <Card className="border-dashed border-border/40">
-              <CardContent className="p-12 text-center space-y-3">
-                <FlaskConical className="w-10 h-10 mx-auto text-muted-foreground/30" />
-                <p className="text-sm text-muted-foreground">
-                  Você ainda não trouxe nenhum caso ao Laboratório.
-                </p>
-                <Button variant="outline" size="sm" onClick={() => setIsCreating(true)}>
-                  Trazer primeiro caso
-                </Button>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="grid gap-3 md:grid-cols-2">
-              {casos.map(caso => (
-                <CasoCard 
-                  key={caso.id} 
-                  caso={caso} 
-                  onClick={() => setActiveCaseId(caso.id)} 
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+        <TabsContent value="laboratorio" className="space-y-6 mt-0">
+          {/* Header de boas-vindas */}
+          <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+            <CardContent className="p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <FlaskConical className="w-6 h-6 text-primary" />
+                </div>
+                <div className="space-y-1">
+                  <h2 className="text-base font-semibold text-foreground">Laboratório Clínico (Casos Reais)</h2>
+                  <p className="text-sm text-muted-foreground leading-relaxed max-w-xl">
+                    Aqui você traz <span className="text-primary">seus próprios casos reais</span> para supervisão simbólica com a Mentora IA.
+                  </p>
+                </div>
+              </div>
+              <Button 
+                onClick={() => setIsCreating(true)} 
+                className="gap-2 shrink-0"
+              >
+                <Plus className="w-4 h-4" /> Novo Caso Real
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Lista de casos */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground/60">Seus Casos no Laboratório</h3>
+            
+            {isLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+              </div>
+            ) : casos.length === 0 ? (
+              <Card className="border-dashed border-border/40">
+                <CardContent className="p-12 text-center space-y-3">
+                  <FlaskConical className="w-10 h-10 mx-auto text-muted-foreground/30" />
+                  <p className="text-sm text-muted-foreground">
+                    Você ainda não trouxe nenhum caso ao Laboratório.
+                  </p>
+                  <Button variant="outline" size="sm" onClick={() => setIsCreating(true)}>
+                    Trazer primeiro caso
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid gap-3 md:grid-cols-2">
+                {casos.map(caso => (
+                  <CasoCard 
+                    key={caso.id} 
+                    caso={caso} 
+                    onClick={() => setActiveCaseId(caso.id)} 
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="simulador" className="mt-0">
+          <SimuladorConducao />
+        </TabsContent>
+
+        <TabsContent value="progresso" className="mt-0">
+          <TrainingDashboard />
+        </TabsContent>
+
+        <TabsContent value="automapa" className="mt-0">
+          <AutoMapeamento />
+        </TabsContent>
+
+        <TabsContent value="ferramentas" className="mt-0">
+          <BibliotecaFerramentas />
+        </TabsContent>
+      </Tabs>
+    </CasaMaquinasLayout>
     </CasaMaquinasLayout>
   );
 }
