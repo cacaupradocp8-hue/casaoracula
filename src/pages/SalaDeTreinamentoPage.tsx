@@ -76,35 +76,35 @@ export default function SalaDeTreinamentoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-20 pattern-geometric">
-      <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
+    <div className="min-h-screen bg-background text-foreground pb-24 pattern-geometric overflow-x-hidden">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 sm:space-y-10">
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4 min-w-0">
             <Button 
               variant="ghost" 
               size="sm" 
               onClick={() => window.history.back()}
-              className="p-0 h-auto text-primary hover:text-primary-foreground hover:bg-primary/10 transition-colors -ml-1 mb-2"
+              className="p-0 h-auto text-primary hover:text-primary-foreground hover:bg-primary/10 transition-colors -ml-1 mb-1 sm:mb-2"
             >
               <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
             </Button>
             <div className="space-y-1">
-              <h1 className="text-4xl md:text-5xl font-display tracking-wide text-foreground">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-display tracking-wide text-foreground leading-tight">
                 Sala de <span className="text-primary italic">Treinamento</span>
               </h1>
-              <p className="text-muted-foreground text-sm tracking-widest uppercase font-medium">
+              <p className="text-muted-foreground text-xs sm:text-sm tracking-widest uppercase font-medium">
                 Laboratório de maestria clínica para alunas da formação.
               </p>
             </div>
           </div>
           
-          <div className="flex items-center gap-6 bg-card border border-border rounded-2xl px-6 py-4 shadow-soft">
+          <div className="flex items-center gap-4 sm:gap-6 bg-card border border-border rounded-2xl px-4 sm:px-6 py-3 sm:py-4 shadow-soft self-start md:self-auto">
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2 text-primary">
                 <Trophy className="w-4 h-4" />
-                <span className="text-xs font-bold tracking-[0.2em] uppercase">FORMAÇÃO</span>
+                <span className="text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase">FORMAÇÃO</span>
               </div>
-              <Progress value={75} className="w-24 h-1.5 bg-muted" />
+              <Progress value={75} className="w-20 sm:w-24 h-1.5 bg-muted" />
             </div>
             <div className="w-px h-8 bg-border" />
             <div className="flex flex-col items-center gap-1">
@@ -117,8 +117,8 @@ export default function SalaDeTreinamentoPage() {
           </div>
         </header>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-          <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-transparent h-auto p-0">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 sm:space-y-8">
+          <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 bg-transparent h-auto p-0">
             {[
               { value: 'simulador', label: 'Simulador', icon: Compass },
               { value: 'progresso', label: 'Progresso', icon: BarChart3 },
