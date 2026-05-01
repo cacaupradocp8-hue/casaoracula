@@ -472,7 +472,13 @@ function AppRoutes() {
       <Route path="/cliente/:clienteId" element={<ProtectedRoute minPortal="mentorada"><ClientePerfil /></ProtectedRoute>} />
 
       {/* ═══ Casa das Máquinas (extracted) ═══ */}
-      {renderCasaMaquinasRoutes(ProtectedRoute)}
+      {renderCasaMaquinasRoutes(({ children, ...props }: any) => (
+        <ProtectedRoute {...props}>
+          <CasaMaquinasGuard>
+            {children}
+          </CasaMaquinasGuard>
+        </ProtectedRoute>
+      ))}
 
       {/* Treinamento redirects */}
       <Route path="/treinamento" element={<Navigate to="/sala-de-treinamento" replace />} />
