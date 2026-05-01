@@ -388,11 +388,26 @@ export default function AcademiaFormacaoPage() {
   }
 
   // Main View with tabs
+  const cursoEmAndamento = meusCursos[0];
+
   return (
     <CasaMaquinasLayout
       title="Academia Orácula"
       subtitle="Formação estruturada, Portais de Especialização e Cursos do Método"
     >
+      <PageBreadcrumb items={[{ label: 'Academia Orácula' }]} />
+
+      {cursoEmAndamento && (
+        <div className="mb-6">
+          <ContinueCTA
+            title={cursoEmAndamento.titulo}
+            description={cursoEmAndamento.subtitulo || cursoEmAndamento.descricao_publica || undefined}
+            onClick={() => openCourse(cursoEmAndamento)}
+            ctaLabel="Continuar"
+          />
+        </div>
+      )}
+
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
         <Button 
           variant="outline" 
