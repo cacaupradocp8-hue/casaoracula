@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, Route, Calendar, Layers, Users, Loader2, Sparkles, Layout, ListOrdered, Pencil, Image as ImageIcon, BookOpen, ExternalLink, Eye } from 'lucide-react';
+import { ArrowLeft, Route, Calendar, Layers, Users, Loader2, Sparkles, Layout, ListOrdered, Pencil, Image as ImageIcon, BookOpen, ExternalLink, Eye, Headphones } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PassosRotaTab } from '@/components/admin/central-jornadas/PassosRotaTab';
 import { EstradaTab } from '@/components/admin/central-jornadas/EstradaTab';
@@ -279,6 +279,10 @@ export default function AdminCentralEstacao() {
             <TabsTrigger type="button" value="passos" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
               <ListOrdered className="w-3.5 h-3.5" />
               Rota (Passos)
+            </TabsTrigger>
+            <TabsTrigger type="button" value="semanas" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+              <Headphones className="w-3.5 h-3.5" />
+              Conteúdo (Áudios)
             </TabsTrigger>
             <TabsTrigger type="button" value="entrada" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
               <Sparkles className="w-3.5 h-3.5" />
