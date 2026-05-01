@@ -3,7 +3,8 @@ import { useAllBooks, type Book } from '@/hooks/useBooks';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { BookOpen, ArrowLeft, Search } from 'lucide-react';
+import { BookOpen, ArrowLeft, Search, FlaskConical } from 'lucide-react';
+import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
 import { useState, useMemo } from 'react';
@@ -119,7 +120,7 @@ function BookCard({ book, index }: { book: Book; index: number }) {
     >
       <Card
         className="border-border/40 bg-card/60 hover:bg-card/80 transition-colors cursor-pointer group"
-        onClick={() => navigate(`/clube-livro/livro/${book.id}`)}
+        onClick={() => navigate(`/clube/laboratorio/book/${book.id}`)}
       >
         <CardContent className="p-5 flex gap-5">
           {/* Cover */}
@@ -137,9 +138,22 @@ function BookCard({ book, index }: { book: Book; index: number }) {
               <h3 className="font-display text-base text-foreground group-hover:text-primary transition-colors leading-tight">
                 {book.title}
               </h3>
-              <Badge variant="outline" className={`text-[10px] flex-shrink-0 ${catInfo.color}`}>
-                {catInfo.label}
-              </Badge>
+              <div className="flex flex-col items-end gap-2">
+                <Badge variant="outline" className={`text-[10px] flex-shrink-0 ${catInfo.color}`}>
+                  {catInfo.label}
+                </Badge>
+                <div onClick={(e) => e.stopPropagation()}>
+                  <Laboratorio8020Modal 
+                    bookId={book.id} 
+                    bookTitle={book.title}
+                    trigger={
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-primary hover:bg-primary/10">
+                        <FlaskConical className="w-4 h-4" />
+                      </Button>
+                    }
+                  />
+                </div>
+              </div>
             </div>
             {book.author && (
               <p className="text-xs text-muted-foreground">{book.author}</p>
