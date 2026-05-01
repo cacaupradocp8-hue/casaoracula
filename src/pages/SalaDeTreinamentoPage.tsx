@@ -164,6 +164,10 @@ export default function SalaDeTreinamentoPage() {
             </section>
             
             <SimuladorConducao />
+
+            <div className="pt-6">
+              <ConversaoCTA type="casa_maquinas" />
+            </div>
           </TabsContent>
 
           <TabsContent value="progresso" className="animate-in fade-in duration-500">
