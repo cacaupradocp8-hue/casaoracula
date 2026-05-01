@@ -11,15 +11,16 @@ export function useCasaMaquinasAccess() {
     return { hasAccess: true, reason: 'permanent_access' };
   }
 
-  // Alunas have 3 months of access from their account creation
+  // Alunas have 3 months of access from their matricula date (or creation as fallback)
   if (user.portal === 'aluna' || user.portal === 'aluna_formacao' || user.portal === 'oracula') {
-    const monthsSinceCreation = differenceInMonths(new Date(), user.createdAt);
+    const startDate = user.matriculadaAt || user.createdAt;
+    const monthsSinceStart = differenceInMonths(new Date(), startDate);
     
-    if (monthsSinceCreation < 3) {
+    if (monthsSinceStart < 3) {
       return { 
         hasAccess: true, 
         reason: 'trial_period',
-        monthsRemaining: 3 - monthsSinceCreation 
+        monthsRemaining: 3 - monthsSinceStart 
       };
     }
     
