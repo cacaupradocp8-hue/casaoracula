@@ -80,9 +80,23 @@ export function ConversaoCTA({ type, customMessage, mode = 'formacao' }: Convers
       </div>
       
       <CardContent className="p-6 space-y-4 relative z-10">
-        <div className="flex items-center gap-2 text-primary">
-          <Icon className="w-5 h-5" />
-          <span className="text-xs font-bold uppercase tracking-widest">{config.title}</span>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 text-primary">
+            <Icon className="w-5 h-5" />
+            <span className="text-xs font-bold uppercase tracking-widest">{config.title}</span>
+          </div>
+          {isProfessional && reason === 'trial_period' && remainingLabel && (
+            <div
+              className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider ${
+                isExpiringSoon
+                  ? 'border-destructive/40 bg-destructive/10 text-destructive'
+                  : 'border-primary/30 bg-primary/10 text-primary'
+              }`}
+            >
+              <Clock className="w-3 h-3" />
+              <span>{remainingLabel}</span>
+            </div>
+          )}
         </div>
         
         <div className="space-y-2">
