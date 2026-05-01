@@ -111,11 +111,11 @@ export function BlocoFeedback({ caso, resposta, onReset, onNextCaso, isLast, ava
       </p>
 
       {finalScore.total >= 7 && (
-        <ConversaoCTA type="desempenho" />
+        <ConversaoCTA type={caso.nivel_produto === 'formacao' ? 'casa_maquinas' : 'desempenho'} />
       )}
       
       {finalScore.total < 4 && (
-        <ConversaoCTA type="erros" />
+        <ConversaoCTA type={caso.nivel_produto === 'formacao' ? 'casa_maquinas' : 'erros'} />
       )}
 
       {/* Loading IA */}
