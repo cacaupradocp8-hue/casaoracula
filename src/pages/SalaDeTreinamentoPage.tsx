@@ -210,32 +210,32 @@ function TreinoPrincipalCard({ cases, onStart }: { cases: TrainingCase[], onStar
       <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
       <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 blur-[120px] -z-0 group-hover:bg-primary/10 transition-colors" />
       
-      <div className="relative z-20 p-10 md:p-14 flex flex-col md:flex-row md:items-center justify-between gap-8 font-body">
-        <div className="space-y-6 max-w-xl">
-          <div className="flex items-center gap-3">
+      <div className="relative z-20 p-6 sm:p-10 md:p-14 flex flex-col md:flex-row md:items-center justify-between gap-6 sm:gap-8 font-body">
+        <div className="space-y-5 sm:space-y-6 max-w-xl min-w-0">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] px-3 py-1 font-bold uppercase tracking-widest">
               Laboratório de Treino
             </Badge>
             <Badge variant="outline" className="border-border text-muted-foreground text-[9px] px-3 py-1 font-bold uppercase tracking-widest">
               {targetCase.distrito_esperado || 'Nível Profissional'}
             </Badge>
-            <span className="text-muted-foreground text-xs flex items-center gap-1.5 ml-auto">
+            <span className="text-muted-foreground text-xs flex items-center gap-1.5 sm:ml-auto">
               <Clock className="w-3.5 h-3.5" /> 8 min
             </span>
           </div>
           
-          <h3 className="text-4xl md:text-5xl font-display text-foreground leading-tight group-hover:text-primary transition-colors duration-500">
+          <h3 className="text-3xl sm:text-4xl md:text-5xl font-display text-foreground leading-tight group-hover:text-primary transition-colors duration-500 break-words">
             {targetCase.title}
           </h3>
           
-          <p className="text-lg text-muted-foreground leading-relaxed font-light line-clamp-2 max-w-lg">
+          <p className="text-base sm:text-lg text-muted-foreground leading-relaxed font-light line-clamp-3 sm:line-clamp-2 max-w-lg">
             {targetCase.tema || 'Pratique a contenção e o manejo de campo em uma situação de alta tensão simbólica.'}
           </p>
           
           <Button 
             size="lg" 
             onClick={() => onStart(targetCase)}
-            className="rounded-full px-12 py-8 text-lg bg-primary hover:bg-primary/90 text-primary-foreground font-bold gap-3 shadow-gold transition-all hover:scale-105 active:scale-95"
+            className="rounded-full px-8 sm:px-12 py-6 sm:py-8 text-base sm:text-lg bg-primary hover:bg-primary/90 text-primary-foreground font-bold gap-3 shadow-gold transition-all hover:scale-105 active:scale-95 w-full sm:w-auto"
           >
             <Play className="w-5 h-5 fill-current" /> Iniciar Prática
           </Button>
