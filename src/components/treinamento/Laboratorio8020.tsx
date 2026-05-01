@@ -73,6 +73,36 @@ export const Laboratorio8020 = () => {
           </button>
         </Card>
       </div>
+
+      <Card className="bg-white/[0.01] border-white/10">
+        <CardHeader>
+          <CardTitle className="text-sm font-medium flex items-center gap-2">
+            <Star className="w-4 h-4 text-primary" /> Padrões de Alto Impacto (Top 20%)
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex items-start gap-4 p-4 rounded-xl bg-white/[0.03] border border-white/5">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-sm font-medium text-white">Identificação Arquetípica Precoce</h4>
+                <p className="text-xs text-muted-foreground">Quando você identifica o arquétipo na primeira sessão, a taxa de adesão do cliente sobe 80%.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4 p-4 rounded-xl bg-white/[0.03] border border-white/5">
+              <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-4 h-4 text-amber-400" />
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-sm font-medium text-white">Resistência Silenciosa</h4>
+                <p className="text-xs text-muted-foreground">O padrão de "concordância passiva" é o maior ladrão de profundidade nos seus atendimentos atuais.</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
