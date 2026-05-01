@@ -109,6 +109,8 @@ export default function ClubeChatLivro() {
   });
 
   const book = (cycle as any)?.clube_v2_obras?.[0];
+  const matchedBook = allBooksData.find(b => b.title === book?.titulo);
+  const { data: essencia } = useEssencia8020(matchedBook?.id);
 
   useEffect(() => {
     if (book && messages.length === 0) {
