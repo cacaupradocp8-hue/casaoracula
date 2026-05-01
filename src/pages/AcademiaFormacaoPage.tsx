@@ -54,6 +54,7 @@ interface Projeto {
 // Main Page
 export default function AcademiaFormacaoPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [courses, setCourses] = useState<Course[]>([]);
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [loading, setLoading] = useState(true);
