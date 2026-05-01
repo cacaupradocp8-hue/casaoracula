@@ -71,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               .maybeSingle(),
             supabase
               .from('matriculas')
-              .select('id')
+              .select('id, data_inicio')
               .eq('user_id', userId)
               .eq('curso_id', 'formacao_oracula')
               .eq('ativa', true)
