@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Database } from '@/integrations/supabase/types';
-import { Essencia8020Modal } from '@/components/clube/Essencia8020Modal';
+import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 
 type ClubCycle = any; // Simplificando para evitar erros de tipos no momento da refatoração de DB
 
@@ -331,7 +331,7 @@ Essência 80/20 da Obra:
                       {estacaoAtual?.livro_autor || book?.author}
                     </p>
                     {matchedBook && (
-                      <Essencia8020Modal 
+                      <Laboratorio8020Modal 
                         bookId={matchedBook.id} 
                         bookTitle={matchedBook.title}
                         trigger={
@@ -341,7 +341,7 @@ Essência 80/20 da Obra:
                             className="h-7 px-2 text-[10px] gap-1 bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 rounded-full"
                           >
                             <FlaskConical className="w-3 h-3" />
-                            80/20
+                            Laboratório 80/20
                           </Button>
                         }
                       />
