@@ -8,7 +8,7 @@ const ClubeEncontro = React.lazy(() => import('@/pages/clube/ClubeEncontro'));
 const ClubeChatLivro = React.lazy(() => import('@/pages/clube/ClubeChatLivro'));
 const ClubeAcervo = React.lazy(() => import('@/pages/clube/ClubeAcervo'));
 const ClubeForja = React.lazy(() => import('@/pages/clube/ClubeForja'));
-const ClubeTreinamento = React.lazy(() => import('@/pages/SalaDeTreinamentoPage'));
+const ClubeTreinamento = React.lazy(() => import('@/pages/clube/CamaraDoSussurroPage'));
 const ClubeEscutaImersiva = React.lazy(() => import('@/pages/clube/ClubeEscutaImersiva'));
 const ClubeLaboratorio = React.lazy(() => import('@/pages/clube/ClubeLaboratorio'));
 const ClubeLaboratorioObra = React.lazy(() => import('@/pages/clube/ClubeLaboratorioObra'));
