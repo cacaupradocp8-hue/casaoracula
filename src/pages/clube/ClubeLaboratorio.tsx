@@ -9,7 +9,8 @@ import { useAllBooks } from '@/hooks/useBooks';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { FlaskConical, Compass, Eye, Hammer, BookOpen, Loader2, Sparkles } from 'lucide-react';
+import { FlaskConical, Compass, Eye, Hammer, BookOpen, Loader2, Sparkles, Wand2 } from 'lucide-react';
+import { Essencia8020Modal } from '@/components/clube/Essencia8020Modal';
 
 // ─────────────────────────────────────────────────────────────
 // /clube/laboratorio — Hub do Laboratório Oracular
@@ -48,6 +49,9 @@ export default function ClubeLaboratorio() {
 
   const isLoading = loadingEstacao || loadingBooks;
 
+  // Encontrar o ID do livro correspondente à estação atual (se houver)
+  const estacaoBook = books.find(b => b.title === estacao?.livro_titulo);
+
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8 max-w-5xl">
@@ -82,31 +86,41 @@ export default function ClubeLaboratorio() {
                 <h2 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
                   Travessia do ciclo
                 </h2>
-                <Link to={`/clube/laboratorio/season/${estacao.id}`}>
-                  <Card className="p-5 border-primary/30 bg-card hover:border-primary/60 transition group cursor-pointer">
-                    <div className="flex gap-4">
-                      {estacao.livro_capa_url ? (
-                        <img src={estacao.livro_capa_url} alt={estacao.livro_titulo} className="w-20 h-28 object-cover rounded flex-shrink-0" loading="lazy" />
-                      ) : (
-                        <div className="w-20 h-28 rounded bg-muted flex items-center justify-center flex-shrink-0">
-                          <BookOpen className="w-6 h-6 text-muted-foreground" />
-                        </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <Badge className="mb-2 text-[10px]" variant="default">Estação ativa</Badge>
-                        <h3 className="font-display text-lg text-foreground group-hover:text-primary transition truncate">
-                          {estacao.titulo}
-                        </h3>
-                        <p className="text-sm text-muted-foreground mt-0.5 truncate">
-                          {estacao.livro_titulo}{estacao.livro_autor ? ` — ${estacao.livro_autor}` : ''}
-                        </p>
-                        <div className="mt-3">
-                          <StatusBadge status={statusFor('season', estacao.id)} />
+                <div className="relative">
+                  <Link to={`/clube/laboratorio/season/${estacao.id}`}>
+                    <Card className="p-5 border-primary/30 bg-card hover:border-primary/60 transition group cursor-pointer">
+                      <div className="flex gap-4">
+                        {estacao.livro_capa_url ? (
+                          <img src={estacao.livro_capa_url} alt={estacao.livro_titulo} className="w-20 h-28 object-cover rounded flex-shrink-0" loading="lazy" />
+                        ) : (
+                          <div className="w-20 h-28 rounded bg-muted flex items-center justify-center flex-shrink-0">
+                            <BookOpen className="w-6 h-6 text-muted-foreground" />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <Badge className="mb-2 text-[10px]" variant="default">Estação ativa</Badge>
+                          <h3 className="font-display text-lg text-foreground group-hover:text-primary transition truncate">
+                            {estacao.titulo}
+                          </h3>
+                          <p className="text-sm text-muted-foreground mt-0.5 truncate">
+                            {estacao.livro_titulo}{estacao.livro_autor ? ` — ${estacao.livro_autor}` : ''}
+                          </p>
+                          <div className="mt-3 flex items-center gap-3">
+                            <StatusBadge status={statusFor('season', estacao.id)} />
+                          </div>
                         </div>
                       </div>
+                    </Card>
+                  </Link>
+                  {estacaoBook && (
+                    <div className="absolute bottom-5 right-5 z-20">
+                      <Essencia8020Modal 
+                        bookId={estacaoBook.id} 
+                        bookTitle={estacaoBook.title} 
+                      />
                     </div>
-                  </Card>
-                </Link>
+                  )}
+                </div>
               </div>
             )}
 
@@ -124,30 +138,38 @@ export default function ClubeLaboratorio() {
                   {books
                     .filter(b => !estacao || b.title !== estacao.livro_titulo)
                     .map(book => (
-                      <Link key={book.id} to={`/clube/laboratorio/book/${book.id}`}>
-                        <Card className="p-4 hover:border-primary/40 transition group cursor-pointer h-full">
-                          <div className="flex gap-3">
-                            {book.cover_url ? (
-                              <img src={book.cover_url} alt={book.title} className="w-14 h-20 object-cover rounded flex-shrink-0" loading="lazy" />
-                            ) : (
-                              <div className="w-14 h-20 rounded bg-muted flex items-center justify-center flex-shrink-0">
-                                <BookOpen className="w-5 h-5 text-muted-foreground" />
-                              </div>
-                            )}
-                            <div className="flex-1 min-w-0">
-                              <h3 className="font-medium text-sm text-foreground group-hover:text-primary transition line-clamp-2">
-                                {book.title}
-                              </h3>
-                              {book.author && (
-                                <p className="text-xs text-muted-foreground mt-0.5 truncate">{book.author}</p>
+                      <div key={book.id} className="relative group/essence">
+                        <Link to={`/clube/laboratorio/book/${book.id}`}>
+                          <Card className="p-4 hover:border-primary/40 transition group cursor-pointer h-full">
+                            <div className="flex gap-3">
+                              {book.cover_url ? (
+                                <img src={book.cover_url} alt={book.title} className="w-14 h-20 object-cover rounded flex-shrink-0" loading="lazy" />
+                              ) : (
+                                <div className="w-14 h-20 rounded bg-muted flex items-center justify-center flex-shrink-0">
+                                  <BookOpen className="w-5 h-5 text-muted-foreground" />
+                                </div>
                               )}
-                              <div className="mt-2">
-                                <StatusBadge status={statusFor('book', book.id)} small />
+                              <div className="flex-1 min-w-0">
+                                <h3 className="font-medium text-sm text-foreground group-hover:text-primary transition line-clamp-2">
+                                  {book.title}
+                                </h3>
+                                {book.author && (
+                                  <p className="text-xs text-muted-foreground mt-0.5 truncate">{book.author}</p>
+                                )}
+                                <div className="mt-2">
+                                  <StatusBadge status={statusFor('book', book.id)} small />
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </Card>
-                      </Link>
+                          </Card>
+                        </Link>
+                        <div className="absolute bottom-4 right-4 z-20 opacity-0 group-hover/essence:opacity-100 transition-opacity">
+                          <Essencia8020Modal 
+                            bookId={book.id} 
+                            bookTitle={book.title} 
+                          />
+                        </div>
+                      </div>
                     ))}
                 </div>
               )}

@@ -3,7 +3,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Send, Bot, User, Loader2, BookOpen,
-  Save, Hammer, MessageSquareQuote, Footprints, GraduationCap, Sparkles
+  Save, Hammer, MessageSquareQuote, Footprints, GraduationCap, Sparkles, FlaskConical
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Database } from '@/integrations/supabase/types';
+import { Essencia8020Modal } from '@/components/clube/Essencia8020Modal';
 
 type ClubCycle = any; // Simplificando para evitar erros de tipos no momento da refatoração de DB
 
@@ -71,6 +72,8 @@ Toda resposta deve seguir este formato:
 Importante: Não substitua supervisão clínica. Não reproduza trechos longos.`;
 
 import { useRotaOracular } from '@/hooks/useRotaOracular';
+import { useEssencia8020 } from '@/hooks/useEssencia8020';
+import { useAllBooks } from '@/hooks/useBooks';
 
 export default function ClubeChatLivro() {
   const { estacaoAtual, pontoAtual } = useRotaOracular();
@@ -79,6 +82,7 @@ export default function ClubeChatLivro() {
   const qc = useQueryClient();
   const isMobile = useIsMobile();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { data: allBooksData = [] } = useAllBooks();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -106,6 +110,8 @@ export default function ClubeChatLivro() {
   });
 
   const book = (cycle as any)?.clube_v2_obras?.[0];
+  const matchedBook = allBooksData.find(b => b.title === book?.titulo);
+  const { data: essencia } = useEssencia8020(matchedBook?.id);
 
   useEffect(() => {
     if (book && messages.length === 0) {
@@ -163,13 +169,23 @@ export default function ClubeChatLivro() {
         ? `Conhecimento específico do ciclo: ${(cycle as any).chat_knowledge_base || ''}`
         : '';
 
+      const essenciaContext = essencia ? `
+Essência 80/20 da Obra:
+- Núcleo Vivo: ${essencia.nucleo_vivo}
+- Tensão Central: ${essencia.tensao_central}
+- Imagem Organizadora: ${essencia.imagem_organizadora}
+- Aplicação Terapêutica: ${essencia.aplicacao_terapeutica}
+- Distorção Comum: ${essencia.distorcao_comum}
+- Resumo Premium: ${essencia.resumo_premium}
+` : '';
+
       const { data, error } = await supabase.functions.invoke('syntheia-chat', {
         body: {
           messages: [...messages.filter(m => m.id !== 'welcome'), userMsg].map(m => ({
             role: m.role,
             content: m.content,
           })),
-          systemPrompt: ((cycle as any).chat_prompt || SYSTEM_PROMPT) + '\n\n' + cycleContext + '\n\nContexto do livro: ' + bookContext,
+          systemPrompt: ((cycle as any).chat_prompt || SYSTEM_PROMPT) + '\n\n' + cycleContext + '\n\n' + essenciaContext + '\n\nContexto do livro: ' + bookContext,
           agentSlug: 'clube-livro',
         },
       });
@@ -310,13 +326,31 @@ export default function ClubeChatLivro() {
                   <h1 className="text-lg font-serif text-foreground leading-tight flex items-center gap-2">
                     {estacaoAtual?.livro_titulo || book?.title || 'Converse com o Livro'}
                   </h1>
-                  <p className="text-xs text-gold font-medium uppercase tracking-wider">
-                    {estacaoAtual?.livro_autor || book?.author}
-                  </p>
+                  <div className="flex items-center gap-3">
+                    <p className="text-xs text-gold font-medium uppercase tracking-wider">
+                      {estacaoAtual?.livro_autor || book?.author}
+                    </p>
+                    {matchedBook && (
+                      <Essencia8020Modal 
+                        bookId={matchedBook.id} 
+                        bookTitle={matchedBook.title}
+                        trigger={
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-7 px-2 text-[10px] gap-1 bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 rounded-full"
+                          >
+                            <FlaskConical className="w-3 h-3" />
+                            80/20
+                          </Button>
+                        }
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-            
+
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] uppercase tracking-widest font-semibold text-muted-foreground bg-[#13101C]/50 px-4 py-2 rounded-full border border-white/5">
               <div className="flex items-center gap-1.5">
                 <span className="text-gold opacity-50">Estação:</span> {estacaoAtual?.titulo || '...'}
