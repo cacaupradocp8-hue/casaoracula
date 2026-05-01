@@ -23,48 +23,50 @@ export function ConversaoCTA({ type, customMessage, mode = 'formacao' }: Convers
       description: isProfessional 
         ? 'Sua constância no treino técnico permite que você assuma casos reais com segurança.' 
         : 'Sua constância revela um compromisso raro. Você está pronta para o próximo nível.',
-      cta: isProfessional ? 'Acessar Laboratório Clínico' : 'Ver Formação ORÁCULA',
+      cta: isProfessional ? (hasAccess ? 'Acessar Laboratório Clínico' : 'Assinar Casa das Máquinas') : 'Ver Formação ORÁCULA',
       icon: isProfessional ? Wrench : Sparkles,
       message: isProfessional ? 'Maestria em Construção' : 'Seu olhar existe. Falta método.',
-      route: isProfessional ? '/casa-das-maquinas/treinamento' : '/formacao'
+      route: isProfessional ? targetRoute : '/formacao'
     },
     desempenho: {
       title: isProfessional ? 'Pronto para a Clínica' : 'Potencial de Elite',
       description: isProfessional
         ? 'Seu desempenho técnico atingiu o nível de excelência exigido para o Laboratório Clínico.'
         : 'Seus acertos mostram uma intuição refinada. Transforme isso em uma profissão certificada.',
-      cta: isProfessional ? 'Ir para Casa das Máquinas' : 'Acessar Certificação',
+      cta: isProfessional ? (hasAccess ? 'Ir para Casa das Máquinas' : 'Conhecer Planos Profissionais') : 'Acessar Certificação',
       icon: isProfessional ? Wrench : ShieldCheck,
       message: isProfessional ? 'Excelência Técnica' : 'Você percebe padrões. Aprenda a conduzir.',
-      route: isProfessional ? '/casa-das-maquinas/treinamento' : '/formacao'
+      route: isProfessional ? targetRoute : '/formacao'
     },
     erros: {
       title: isProfessional ? 'Ajuste de Rota' : 'O Ponto de Virada',
       description: isProfessional
         ? 'As falhas no treino são os melhores momentos para supervisão na Casa das Máquinas.'
         : 'Erros repetidos são apenas lacunas de método. A Formação preenche esses vazios.',
-      cta: isProfessional ? 'Supervisão na Casa das Máquinas' : 'Conhecer o Método',
+      cta: isProfessional ? (hasAccess ? 'Supervisão na Casa das Máquinas' : 'Upgrade Profissional') : 'Conhecer o Método',
       icon: isProfessional ? Wrench : ArrowRight,
       message: isProfessional ? 'Supervisão Necessária' : 'Próximo nível disponível: Formação ORÁCULA',
-      route: isProfessional ? '/casa-das-maquinas/treinamento' : '/formacao'
+      route: isProfessional ? targetRoute : '/formacao'
     },
     concluido: {
       title: isProfessional ? 'Treino Avançado' : 'Treino Finalizado',
       description: isProfessional
         ? 'Mais um passo na sua jornada. A Casa das Máquinas aguarda suas novas habilidades.'
         : 'Mais um passo na sua jornada. A maestria clínica exige profundidade.',
-      cta: isProfessional ? 'Ver Laboratório de Casos' : 'Explorar Formação',
+      cta: isProfessional ? (hasAccess ? 'Ver Laboratório de Casos' : 'Aderir ao Plano Profissional') : 'Explorar Formação',
       icon: isProfessional ? Wrench : Sparkles,
       message: isProfessional ? 'Evolução Clínica' : 'Você percebe padrões. Aprenda a conduzir.',
-      route: isProfessional ? '/casa-das-maquinas/treinamento' : '/formacao'
+      route: isProfessional ? targetRoute : '/formacao'
     },
     casa_maquinas: {
       title: 'Espaço Profissional',
-      description: 'Sua prática amadureceu. É hora de gerir seus próprios casos no Laboratório Clínico.',
-      cta: 'Ir para Casa das Máquinas',
+      description: hasAccess 
+        ? 'Sua prática amadureceu. É hora de gerir seus próprios casos no Laboratório Clínico.'
+        : 'Seu período de degustação técnica terminou. Assine o plano para continuar gerindo seus casos.',
+      cta: hasAccess ? 'Ir para Casa das Máquinas' : 'Ver Planos de Assinatura',
       icon: Wrench,
-      message: 'Pronta para a Clínica Real?',
-      route: '/casa-das-maquinas/treinamento'
+      message: hasAccess ? 'Pronta para a Clínica Real?' : 'Mantenha sua Evolução Clínica',
+      route: targetRoute
     }
   };
 
