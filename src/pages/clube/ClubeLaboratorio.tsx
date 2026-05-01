@@ -9,7 +9,8 @@ import { useAllBooks } from '@/hooks/useBooks';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { FlaskConical, Compass, Eye, Hammer, BookOpen, Loader2, Sparkles } from 'lucide-react';
+import { FlaskConical, Compass, Eye, Hammer, BookOpen, Loader2, Sparkles, Wand2 } from 'lucide-react';
+import { Essencia8020Modal } from '@/components/clube/Essencia8020Modal';
 
 // ─────────────────────────────────────────────────────────────
 // /clube/laboratorio — Hub do Laboratório Oracular
