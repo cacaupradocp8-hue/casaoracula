@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   ArrowLeft, Play, Clock, Trophy, Flame, 
-  Sparkles, Compass, MessageCircle, BookOpen
+  Sparkles, Compass, MessageCircle, BookOpen, FlaskConical
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,10 +13,13 @@ import { TrainingCase } from '@/components/treinamento/simulador/types';
 import { cn } from '@/lib/utils';
 import { ConversaoCTA } from '@/components/treinamento/simulador/ConversaoCTA';
 import { useNavigate } from 'react-router-dom';
+import { Essencia8020Modal } from '@/components/clube/Essencia8020Modal';
+import { useAllBooks } from '@/hooks/useBooks';
 
 export default function CamaraDoSussurroPage() {
   const [activeCase, setActiveCase] = useState<TrainingCase | null>(null);
   const { data: allCases = [] } = useCamaraCases();
+  const { data: books = [] } = useAllBooks();
 
   const handleBack = () => {
     if (activeCase) {
@@ -81,35 +84,49 @@ export default function CamaraDoSussurroPage() {
               </div>
             ) : (
               <div className="grid gap-6">
-                {allCases.filter(c => c.nivel_produto === 'clube').map((caso) => (
-                   <div 
-                    key={caso.id}
-                    className="group relative overflow-hidden rounded-[2.5rem] border border-border bg-card/60 backdrop-blur-sm transition-all duration-700 hover:border-primary/40 hover:shadow-glow p-8 flex flex-col md:flex-row items-center justify-between gap-6"
-                   >
-                     <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 blur-[80px] -z-10 group-hover:bg-primary/10 transition-colors" />
-                     
-                     <div className="space-y-4 flex-1">
-                       <div className="flex items-center gap-3">
-                         <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] font-bold tracking-widest uppercase">OBRA DO CLUBE</Badge>
-                         <span className="text-muted-foreground text-xs flex items-center gap-1.5 font-body">
-                           <Clock className="w-3.5 h-3.5" /> 5-10 min
-                         </span>
-                       </div>
-                       <h3 className="text-3xl font-display text-foreground group-hover:text-primary transition-colors duration-500">
-                         {caso.title}
-                       </h3>
-                       <p className="text-muted-foreground text-sm line-clamp-2 font-body leading-relaxed max-w-2xl">
-                         {caso.tema || 'Prática de escuta ativa baseada nos conceitos da obra atual.'}
-                       </p>
-                     </div>
-                     <Button 
-                       onClick={() => setActiveCase(caso)}
-                       className="rounded-full px-10 py-7 bg-primary hover:bg-primary/90 text-primary-foreground font-bold gap-3 shadow-gold transition-all hover:scale-105 active:scale-95"
-                     >
-                       <Play className="w-4 h-4 fill-current" /> Iniciar Escuta
-                     </Button>
-                   </div>
-                ))}
+                {allCases.filter(c => c.nivel_produto === 'clube').map((caso) => {
+                  // Tentar encontrar o livro correspondente pelo título
+                  const correspondingBook = books.find(b => b.title.toLowerCase().includes(caso.title.toLowerCase()) || caso.title.toLowerCase().includes(b.title.toLowerCase()));
+                  
+                  return (
+                    <div 
+                      key={caso.id}
+                      className="group relative overflow-hidden rounded-[2.5rem] border border-border bg-card/60 backdrop-blur-sm transition-all duration-700 hover:border-primary/40 hover:shadow-glow p-8 flex flex-col md:flex-row items-center justify-between gap-6"
+                    >
+                      <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 blur-[80px] -z-10 group-hover:bg-primary/10 transition-colors" />
+                      
+                      <div className="space-y-4 flex-1">
+                        <div className="flex items-center gap-3">
+                          <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] font-bold tracking-widest uppercase">OBRA DO CLUBE</Badge>
+                          <span className="text-muted-foreground text-xs flex items-center gap-1.5 font-body">
+                            <Clock className="w-3.5 h-3.5" /> 5-10 min
+                          </span>
+                        </div>
+                        <h3 className="text-3xl font-display text-foreground group-hover:text-primary transition-colors duration-500">
+                          {caso.title}
+                        </h3>
+                        <p className="text-muted-foreground text-sm line-clamp-2 font-body leading-relaxed max-w-2xl">
+                          {caso.tema || 'Prática de escuta ativa baseada nos conceitos da obra atual.'}
+                        </p>
+                        
+                        {correspondingBook && (
+                          <div className="pt-2">
+                            <Essencia8020Modal 
+                              bookId={correspondingBook.id} 
+                              bookTitle={correspondingBook.title} 
+                            />
+                          </div>
+                        )}
+                      </div>
+                      <Button 
+                        onClick={() => setActiveCase(caso)}
+                        className="rounded-full px-10 py-7 bg-primary hover:bg-primary/90 text-primary-foreground font-bold gap-3 shadow-gold transition-all hover:scale-105 active:scale-95"
+                      >
+                        <Play className="w-4 h-4 fill-current" /> Iniciar Escuta
+                      </Button>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
