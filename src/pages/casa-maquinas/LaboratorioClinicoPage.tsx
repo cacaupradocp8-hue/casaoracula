@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   FlaskConical, Plus, FileText, ClipboardList, Users, 
   Sparkles, ArrowLeft, Loader2, AlertTriangle, Compass,
-  MessageCircle, Wrench, Eye, Trash2, Save
+  MessageCircle, Wrench, Eye, Trash2, Save, BarChart3, Zap
 } from 'lucide-react';
 import { CasaMaquinasLayout } from '@/components/casa-maquinas/CasaMaquinasLayout';
 import { Card, CardContent } from '@/components/ui/card';
@@ -14,10 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { SimuladorConducao } from '@/components/treinamento/simulador/SimuladorConducao';
-import { TrainingDashboard } from '@/components/treinamento/simulador/TrainingDashboard';
-import { AutoMapeamento } from '@/components/treinamento/AutoMapeamento';
-import { BibliotecaFerramentas } from '@/components/treinamento/BibliotecaFerramentas';
+import { Laboratorio8020 } from '@/components/treinamento/Laboratorio8020';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -99,30 +96,18 @@ export default function LaboratorioClinicoPage() {
 
   return (
     <CasaMaquinasLayout 
-      title="Sala de Treinamento"
-      subtitle="Onde a teoria se encontra com a prática e a supervisão clínica."
+      title="Evolução Clínica"
+      subtitle="Supervisão de casos reais e análise de maestria terapêutica."
     >
       <Tabs value={activeMainTab} onValueChange={setActiveMainTab} className="space-y-6">
-        <TabsList className="grid grid-cols-5 gap-2 h-auto bg-transparent p-0">
-          <TabsTrigger value="laboratorio" className="flex flex-col items-center gap-1.5 px-2 py-3 rounded-lg border border-primary/20 data-[state=active]:bg-primary/15 data-[state=active]:border-primary/50 data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-all">
+        <TabsList className="grid grid-cols-2 gap-2 h-auto bg-transparent p-0">
+          <TabsTrigger value="laboratorio" className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-lg border border-primary/20 data-[state=active]:bg-primary/15 data-[state=active]:border-primary/50 data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-all">
             <FlaskConical className="w-4 h-4" />
-            <span className="text-[10px]">Laboratório</span>
+            <span className="text-[11px] font-medium uppercase tracking-wider">Laboratório de Casos</span>
           </TabsTrigger>
-          <TabsTrigger value="simulador" className="flex flex-col items-center gap-1.5 px-2 py-3 rounded-lg border border-primary/20 data-[state=active]:bg-primary/15 data-[state=active]:border-primary/50 data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-all">
-            <Compass className="w-4 h-4" />
-            <span className="text-[10px]">Simulador</span>
-          </TabsTrigger>
-          <TabsTrigger value="progresso" className="flex flex-col items-center gap-1.5 px-2 py-3 rounded-lg border border-primary/20 data-[state=active]:bg-primary/15 data-[state=active]:border-primary/50 data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-all">
-            <Sparkles className="w-4 h-4" />
-            <span className="text-[10px]">Progresso</span>
-          </TabsTrigger>
-          <TabsTrigger value="automapa" className="flex flex-col items-center gap-1.5 px-2 py-3 rounded-lg border border-primary/20 data-[state=active]:bg-primary/15 data-[state=active]:border-primary/50 data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-all">
-            <Users className="w-4 h-4" />
-            <span className="text-[10px]">Auto-Mapa</span>
-          </TabsTrigger>
-          <TabsTrigger value="ferramentas" className="flex flex-col items-center gap-1.5 px-2 py-3 rounded-lg border border-primary/20 data-[state=active]:bg-primary/15 data-[state=active]:border-primary/50 data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-all">
-            <Wrench className="w-4 h-4" />
-            <span className="text-[10px]">Biblioteca</span>
+          <TabsTrigger value="8020" className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-lg border border-primary/20 data-[state=active]:bg-primary/15 data-[state=active]:border-primary/50 data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-all">
+            <Zap className="w-4 h-4" />
+            <span className="text-[11px] font-medium uppercase tracking-wider">Laboratório 80/20</span>
           </TabsTrigger>
         </TabsList>
 
@@ -184,20 +169,8 @@ export default function LaboratorioClinicoPage() {
           </div>
         </TabsContent>
 
-        <TabsContent value="simulador" className="mt-0">
-          <SimuladorConducao />
-        </TabsContent>
-
-        <TabsContent value="progresso" className="mt-0">
-          <TrainingDashboard />
-        </TabsContent>
-
-        <TabsContent value="automapa" className="mt-0">
-          <AutoMapeamento />
-        </TabsContent>
-
-        <TabsContent value="ferramentas" className="mt-0">
-          <BibliotecaFerramentas />
+        <TabsContent value="8020" className="mt-0">
+          <Laboratorio8020 />
         </TabsContent>
       </Tabs>
     </CasaMaquinasLayout>
