@@ -223,9 +223,13 @@ export default function AcademiaFormacaoPage() {
 
     return (
       <CasaMaquinasLayout title={selectedCourse.titulo} subtitle={selectedCourse.subtitulo || ''}>
-        <Button variant="ghost" size="sm" onClick={() => setSelectedCourse(null)} className="text-muted-foreground mb-4">
-          <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
-        </Button>
+        <PageBreadcrumb
+          items={[
+            { label: 'Academia', href: '/academia-formacao' },
+            { label: selectedCourse.titulo },
+          ]}
+        />
+        <BackButton onClick={() => setSelectedCourse(null)} label="Voltar à Academia" />
 
         {loadingDetail ? (
           <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
