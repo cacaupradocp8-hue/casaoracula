@@ -168,13 +168,23 @@ export default function ClubeChatLivro() {
         ? `Conhecimento específico do ciclo: ${(cycle as any).chat_knowledge_base || ''}`
         : '';
 
+      const essenciaContext = essencia ? `
+Essência 80/20 da Obra:
+- Núcleo Vivo: ${essencia.nucleo_vivo}
+- Tensão Central: ${essencia.tensao_central}
+- Imagem Organizadora: ${essencia.imagem_organizadora}
+- Aplicação Terapêutica: ${essencia.aplicacao_terapeutica}
+- Distorção Comum: ${essencia.distorcao_comum}
+- Resumo Premium: ${essencia.resumo_premium}
+` : '';
+
       const { data, error } = await supabase.functions.invoke('syntheia-chat', {
         body: {
           messages: [...messages.filter(m => m.id !== 'welcome'), userMsg].map(m => ({
             role: m.role,
             content: m.content,
           })),
-          systemPrompt: ((cycle as any).chat_prompt || SYSTEM_PROMPT) + '\n\n' + cycleContext + '\n\nContexto do livro: ' + bookContext,
+          systemPrompt: ((cycle as any).chat_prompt || SYSTEM_PROMPT) + '\n\n' + cycleContext + '\n\n' + essenciaContext + '\n\nContexto do livro: ' + bookContext,
           agentSlug: 'clube-livro',
         },
       });
