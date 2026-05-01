@@ -353,19 +353,19 @@ function NovoCasoForm({ onCancel, onCreated }: { onCancel: () => void; onCreated
                 </Card>
               ) : (
                 <div className="grid gap-2 max-h-64 overflow-y-auto">
-                  {clientes.map((c: any) => (
+                  {clientes.map((c) => (
                     <button
-                      key={c.cliente_id}
-                      onClick={() => setClienteId(c.cliente_id)}
+                      key={c.id}
+                      onClick={() => setClienteId(c.id)}
                       className={cn(
                         "p-3 rounded-lg border text-left transition-all",
-                        clienteId === c.cliente_id
+                        clienteId === c.id
                           ? "border-primary bg-primary/10"
                           : "border-border/40 hover:border-primary/30"
                       )}
                     >
-                      <div className="font-medium text-sm">{c.cliente_nome}</div>
-                      <div className="text-xs text-muted-foreground">{c.cliente_email}</div>
+                      <div className="font-medium text-sm">{c.nome}</div>
+                      {c.email && <div className="text-xs text-muted-foreground">{c.email}</div>}
                     </button>
                   ))}
                 </div>
