@@ -5534,6 +5534,62 @@ export type Database = {
           },
         ]
       }
+      clube_obras_essencia_8020: {
+        Row: {
+          aplicacao_terapeutica: string | null
+          book_id: string
+          created_at: string
+          distorcao_comum: string | null
+          exercicio: string | null
+          id: string
+          imagem_organizadora: string | null
+          nucleo_vivo: string | null
+          perguntas_clinicas: string[] | null
+          resumo_premium: string | null
+          riscos_eticos: string | null
+          tensao_central: string | null
+          updated_at: string
+        }
+        Insert: {
+          aplicacao_terapeutica?: string | null
+          book_id: string
+          created_at?: string
+          distorcao_comum?: string | null
+          exercicio?: string | null
+          id?: string
+          imagem_organizadora?: string | null
+          nucleo_vivo?: string | null
+          perguntas_clinicas?: string[] | null
+          resumo_premium?: string | null
+          riscos_eticos?: string | null
+          tensao_central?: string | null
+          updated_at?: string
+        }
+        Update: {
+          aplicacao_terapeutica?: string | null
+          book_id?: string
+          created_at?: string
+          distorcao_comum?: string | null
+          exercicio?: string | null
+          id?: string
+          imagem_organizadora?: string | null
+          nucleo_vivo?: string | null
+          perguntas_clinicas?: string[] | null
+          resumo_premium?: string | null
+          riscos_eticos?: string | null
+          tensao_central?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_obras_essencia_8020_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_portais: {
         Row: {
           acao_pequena: string | null
