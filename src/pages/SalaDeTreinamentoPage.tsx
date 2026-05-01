@@ -21,6 +21,7 @@ import { SimuladorConducao } from '@/components/treinamento/simulador/SimuladorC
 import { TrainingDashboard } from '@/components/treinamento/simulador/TrainingDashboard';
 import { AutoMapeamento } from '@/components/treinamento/AutoMapeamento';
 import { BibliotecaFerramentas } from '@/components/treinamento/BibliotecaFerramentas';
+import { ConversaoCTA } from '@/components/treinamento/simulador/ConversaoCTA';
 import { TrainingCase } from '@/components/treinamento/simulador/types';
 import { useCidadelaEstado } from '@/hooks/useCidadelaEstado';
 import { useStudentTracking } from '@/hooks/useStudentTracking';
