@@ -27,6 +27,7 @@ import { useJardimPsique, JardimRegistro, TipoRegistroJardim } from '@/hooks/use
 import { NovaEntradaJardimModal } from '@/components/shared/NovaEntradaJardimModal';
 import { CompartilharCanteiroBtn } from '@/components/jardim-psique/CompartilharCanteiroBtn';
 import { MinhasPublicacoesCanteiro } from '@/components/jardim-psique/MinhasPublicacoesCanteiro';
+import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
