@@ -36,7 +36,7 @@ interface TrainingProgress {
   casos_concluidos: number;
 }
 
-export function TrainingDashboard() {
+export function TrainingDashboard({ mode = 'formacao' }: { mode?: 'formacao' | 'casa_maquinas' }) {
   const { user } = useAuth();
 
   const { data: attempts = [], isLoading: isLoadingAttempts } = useQuery({
