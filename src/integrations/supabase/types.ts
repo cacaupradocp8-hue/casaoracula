@@ -7250,6 +7250,66 @@ export type Database = {
           },
         ]
       }
+      co_laboratorio_casos: {
+        Row: {
+          analise_simbolica: string | null
+          caso_texto: string | null
+          cliente_id: string | null
+          created_at: string
+          duvida_terapeuta: string | null
+          fala_cliente: string | null
+          ferramenta_sugerida: string | null
+          id: string
+          ja_tentou: string | null
+          modo_entrada: string
+          perguntas_sugeridas: Json | null
+          riscos_eticos: string | null
+          simulacao_cliente: string | null
+          status: string
+          titulo: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          analise_simbolica?: string | null
+          caso_texto?: string | null
+          cliente_id?: string | null
+          created_at?: string
+          duvida_terapeuta?: string | null
+          fala_cliente?: string | null
+          ferramenta_sugerida?: string | null
+          id?: string
+          ja_tentou?: string | null
+          modo_entrada?: string
+          perguntas_sugeridas?: Json | null
+          riscos_eticos?: string | null
+          simulacao_cliente?: string | null
+          status?: string
+          titulo: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          analise_simbolica?: string | null
+          caso_texto?: string | null
+          cliente_id?: string | null
+          created_at?: string
+          duvida_terapeuta?: string | null
+          fala_cliente?: string | null
+          ferramenta_sugerida?: string | null
+          id?: string
+          ja_tentou?: string | null
+          modo_entrada?: string
+          perguntas_sugeridas?: Json | null
+          riscos_eticos?: string | null
+          simulacao_cliente?: string | null
+          status?: string
+          titulo?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       co_mapa_vivo: {
         Row: {
           client_user_id: string
