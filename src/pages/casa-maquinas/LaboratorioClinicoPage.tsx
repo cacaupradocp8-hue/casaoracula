@@ -201,7 +201,6 @@ export default function LaboratorioClinicoPage() {
         </TabsContent>
       </Tabs>
     </CasaMaquinasLayout>
-    </CasaMaquinasLayout>
   );
 }
 
