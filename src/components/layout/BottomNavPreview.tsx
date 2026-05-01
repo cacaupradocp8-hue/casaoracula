@@ -27,9 +27,9 @@ export function BottomNavPreview() {
   if (!mounted) return null;
 
   return (
-    <nav className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-[420px] md:hidden">
+    <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-[420px] md:hidden select-none">
       <div className={cn(
-        "relative h-[70px] backdrop-blur-xl rounded-2xl border shadow-[0_10px_30px_rgba(0,0,0,0.3)]",
+        "relative h-[64px] backdrop-blur-2xl rounded-2xl border shadow-[0_8px_32px_rgba(0,0,0,0.4)]",
         location.pathname === '/clube' 
           ? "bg-blue-950/40 border-blue-400/20" 
           : "bg-card/95 border-border/40"

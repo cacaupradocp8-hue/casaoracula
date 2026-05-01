@@ -171,10 +171,10 @@ export function Navigation() {
   return (
     <>
       <nav className={cn(
-        "fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-500",
+        "fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300",
         location.pathname === '/clube' 
-          ? "bg-[#000814]/80 border-blue-900/20 backdrop-blur-xl" 
-          : "border-primary/10 bg-background/80 backdrop-blur-xl"
+          ? "bg-[#000814]/85 border-blue-900/30 backdrop-blur-2xl" 
+          : "border-primary/15 bg-background/85 backdrop-blur-2xl"
       )}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 md:h-20">
