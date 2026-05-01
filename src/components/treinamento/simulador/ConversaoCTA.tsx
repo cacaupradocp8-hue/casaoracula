@@ -6,43 +6,54 @@ import { useNavigate } from 'react-router-dom';
 interface ConversaoCTAProps {
   type: 'streak' | 'desempenho' | 'erros' | 'concluido' | 'casa_maquinas';
   customMessage?: string;
+  mode?: 'formacao' | 'casa_maquinas';
 }
 
-export function ConversaoCTA({ type, customMessage }: ConversaoCTAProps) {
+export function ConversaoCTA({ type, customMessage, mode = 'formacao' }: ConversaoCTAProps) {
   const navigate = useNavigate();
+
+  const isProfessional = mode === 'casa_maquinas' || type === 'casa_maquinas';
 
   const configs = {
     streak: {
-      title: 'Hábito de Mestre',
-      description: 'Sua constância revela um compromisso raro. Você está pronta para o próximo nível.',
-      cta: 'Ver Formação ORÁCULA',
-      icon: Sparkles,
-      message: 'Seu olhar existe. Falta método.',
-      route: '/formacao'
+      title: isProfessional ? 'Consistência Profissional' : 'Hábito de Mestre',
+      description: isProfessional 
+        ? 'Sua constância no treino técnico permite que você assuma casos reais com segurança.' 
+        : 'Sua constância revela um compromisso raro. Você está pronta para o próximo nível.',
+      cta: isProfessional ? 'Acessar Laboratório Clínico' : 'Ver Formação ORÁCULA',
+      icon: isProfessional ? Wrench : Sparkles,
+      message: isProfessional ? 'Maestria em Construção' : 'Seu olhar existe. Falta método.',
+      route: isProfessional ? '/casa-maquinas' : '/formacao'
     },
     desempenho: {
-      title: 'Potencial de Elite',
-      description: 'Seus acertos mostram uma intuição refinada. Transforme isso em uma profissão certificada.',
-      cta: 'Acessar Certificação',
-      icon: ShieldCheck,
-      message: 'Você percebe padrões. Aprenda a conduzir.',
-      route: '/formacao'
+      title: isProfessional ? 'Pronto para a Clínica' : 'Potencial de Elite',
+      description: isProfessional
+        ? 'Seu desempenho técnico atingiu o nível de excelência exigido para o Laboratório Clínico.'
+        : 'Seus acertos mostram uma intuição refinada. Transforme isso em uma profissão certificada.',
+      cta: isProfessional ? 'Ir para Casa das Máquinas' : 'Acessar Certificação',
+      icon: isProfessional ? Wrench : ShieldCheck,
+      message: isProfessional ? 'Excelência Técnica' : 'Você percebe padrões. Aprenda a conduzir.',
+      route: isProfessional ? '/casa-maquinas' : '/formacao'
     },
     erros: {
-      title: 'O Ponto de Virada',
-      description: 'Erros repetidos são apenas lacunas de método. A Formação preenche esses vazios.',
-      cta: 'Conhecer o Método',
-      icon: ArrowRight,
-      message: 'Próximo nível disponível: Formação ORÁCULA',
-      route: '/formacao'
+      title: isProfessional ? 'Ajuste de Rota' : 'O Ponto de Virada',
+      description: isProfessional
+        ? 'As falhas no treino são os melhores momentos para supervisão na Casa das Máquinas.'
+        : 'Erros repetidos são apenas lacunas de método. A Formação preenche esses vazios.',
+      cta: isProfessional ? 'Supervisão na Casa das Máquinas' : 'Conhecer o Método',
+      icon: isProfessional ? Wrench : ArrowRight,
+      message: isProfessional ? 'Supervisão Necessária' : 'Próximo nível disponível: Formação ORÁCULA',
+      route: isProfessional ? '/casa-maquinas' : '/formacao'
     },
     concluido: {
-      title: 'Treino Finalizado',
-      description: 'Mais um passo na sua jornada. A maestria clínica exige profundidade.',
-      cta: 'Explorar Formação',
-      icon: Sparkles,
-      message: 'Você percebe padrões. Aprenda a conduzir.',
-      route: '/formacao'
+      title: isProfessional ? 'Treino Avançado' : 'Treino Finalizado',
+      description: isProfessional
+        ? 'Mais um passo na sua jornada. A Casa das Máquinas aguarda suas novas habilidades.'
+        : 'Mais um passo na sua jornada. A maestria clínica exige profundidade.',
+      cta: isProfessional ? 'Ver Laboratório de Casos' : 'Explorar Formação',
+      icon: isProfessional ? Wrench : Sparkles,
+      message: isProfessional ? 'Evolução Clínica' : 'Você percebe padrões. Aprenda a conduzir.',
+      route: isProfessional ? '/casa-maquinas' : '/formacao'
     },
     casa_maquinas: {
       title: 'Espaço Profissional',
