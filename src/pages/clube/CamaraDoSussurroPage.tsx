@@ -28,7 +28,7 @@ export default function CamaraDoSussurroPage() {
 
   if (activeCase) {
     return (
-      <div className="min-h-screen bg-[#0A0A0B]">
+      <div className="min-h-screen bg-background">
         <SimuladorClube 
           caso={activeCase} 
           onExit={handleBack}
@@ -38,69 +38,73 @@ export default function CamaraDoSussurroPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] text-[#EAEAEA] pb-20">
+    <div className="min-h-screen bg-background text-foreground pb-20 pattern-geometric">
       <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="space-y-2">
+          <div className="space-y-4">
             <Button 
               variant="ghost" 
               size="sm" 
               onClick={() => window.history.back()}
-              className="p-0 h-auto text-primary hover:text-primary/80 hover:bg-transparent -ml-1 mb-2"
+              className="p-0 h-auto text-primary hover:text-primary-foreground hover:bg-primary/10 transition-colors -ml-1 mb-2"
             >
               <ArrowLeft className="w-4 h-4 mr-1" /> Voltar ao Clube
             </Button>
-            <h1 className="text-3xl font-light tracking-tight text-white/90">
-              Câmara do <span className="font-semibold text-white">Sussurro</span>
-            </h1>
-            <p className="text-muted-foreground/60 text-sm tracking-wide uppercase font-medium">
-              Pratique a escuta imersiva com as obras do Clube do Livro.
-            </p>
+            <div className="space-y-1">
+              <h1 className="text-4xl md:text-5xl font-display tracking-wide text-foreground">
+                Câmara do <span className="text-primary italic">Sussurro</span>
+              </h1>
+              <p className="text-muted-foreground text-sm tracking-widest uppercase font-medium">
+                Pratique a escuta imersiva com as obras do Clube do Livro.
+              </p>
+            </div>
           </div>
           
-          <div className="flex items-center gap-6 bg-white/[0.03] border border-white/[0.05] rounded-2xl px-6 py-4 backdrop-blur-sm">
-            <div className="flex flex-col items-center gap-1">
+          <div className="flex items-center gap-6 bg-card border border-border rounded-2xl px-6 py-4 shadow-soft">
+            <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2 text-primary">
                 <Trophy className="w-4 h-4" />
-                <span className="text-sm font-bold tracking-widest">CLUBE</span>
+                <span className="text-xs font-bold tracking-[0.2em] uppercase font-body">CLUBE</span>
               </div>
-              <Progress value={20} className="w-24 h-1 bg-white/10" />
+              <Progress value={20} className="w-24 h-1.5 bg-muted" />
             </div>
           </div>
         </header>
 
-        <section className="space-y-8">
+        <section className="space-y-8 animate-fade-in">
           <div className="grid gap-6">
-            <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-white/30">Obras em Estudo</h2>
+            <h2 className="text-xs font-bold uppercase tracking-[0.4em] text-primary/40 mb-2">Obras em Estudo</h2>
             
             {allCases.length === 0 ? (
-              <div className="h-64 rounded-[2.5rem] bg-white/[0.02] border border-dashed border-white/10 flex items-center justify-center">
-                <p className="text-sm text-white/20">Aguardando novos sussurros das obras...</p>
+              <div className="h-64 rounded-[2.5rem] bg-card/40 border border-dashed border-border flex items-center justify-center">
+                <p className="text-sm text-muted-foreground italic font-body">Aguardando novos sussurros das obras...</p>
               </div>
             ) : (
               <div className="grid gap-6">
                 {allCases.filter(c => c.nivel_produto === 'clube').map((caso) => (
                    <div 
                     key={caso.id}
-                    className="group relative overflow-hidden rounded-[2.5rem] border border-white/[0.08] bg-card/40 transition-all duration-500 hover:border-primary/30 p-8 flex flex-col md:flex-row items-center justify-between gap-6"
+                    className="group relative overflow-hidden rounded-[2.5rem] border border-border bg-card/60 backdrop-blur-sm transition-all duration-700 hover:border-primary/40 hover:shadow-glow p-8 flex flex-col md:flex-row items-center justify-between gap-6"
                    >
+                     <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 blur-[80px] -z-10 group-hover:bg-primary/10 transition-colors" />
+                     
                      <div className="space-y-4 flex-1">
                        <div className="flex items-center gap-3">
-                         <Badge className="bg-primary/20 text-primary border-none text-[10px]">OBRA DO CLUBE</Badge>
-                         <span className="text-white/30 text-xs flex items-center gap-1.5">
-                           <Clock className="w-3 h-3" /> 5-10 min
+                         <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] font-bold tracking-widest uppercase">OBRA DO CLUBE</Badge>
+                         <span className="text-muted-foreground text-xs flex items-center gap-1.5 font-body">
+                           <Clock className="w-3.5 h-3.5" /> 5-10 min
                          </span>
                        </div>
-                       <h3 className="text-2xl font-semibold text-white group-hover:text-primary transition-colors">
+                       <h3 className="text-3xl font-display text-foreground group-hover:text-primary transition-colors duration-500">
                          {caso.title}
                        </h3>
-                       <p className="text-white/50 text-sm line-clamp-2">
+                       <p className="text-muted-foreground text-sm line-clamp-2 font-body leading-relaxed max-w-2xl">
                          {caso.tema || 'Prática de escuta ativa baseada nos conceitos da obra atual.'}
                        </p>
                      </div>
                      <Button 
                        onClick={() => setActiveCase(caso)}
-                       className="rounded-full px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground font-bold gap-2"
+                       className="rounded-full px-10 py-7 bg-primary hover:bg-primary/90 text-primary-foreground font-bold gap-3 shadow-gold transition-all hover:scale-105 active:scale-95"
                      >
                        <Play className="w-4 h-4 fill-current" /> Iniciar Escuta
                      </Button>
@@ -111,26 +115,32 @@ export default function CamaraDoSussurroPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <div className="bg-card/50 border border-border rounded-2xl p-8 space-y-4 hover:border-primary/20 transition-colors group">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
                 <MessageCircle className="w-5 h-5" />
               </div>
-              <h4 className="font-medium text-white/80">Reflexões do Círculo</h4>
-              <p className="text-xs text-white/40">Discussões recentes sobre os sussurros das obras.</p>
+              <div className="space-y-2">
+                <h4 className="font-display text-lg text-foreground">Reflexões do Círculo</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed font-body">Discussões recentes sobre os sussurros das obras.</p>
+              </div>
             </div>
-            <div className="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <div className="bg-card/50 border border-border rounded-2xl p-8 space-y-4 hover:border-primary/20 transition-colors group">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
                 <BookOpen className="w-5 h-5" />
               </div>
-              <h4 className="font-medium text-white/80">Biblioteca de Apoio</h4>
-              <p className="text-xs text-white/40">Materiais complementares para aprofundar a escuta.</p>
+              <div className="space-y-2">
+                <h4 className="font-display text-lg text-foreground">Biblioteca de Apoio</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed font-body">Materiais complementares para aprofundar a escuta.</p>
+              </div>
             </div>
-            <div className="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <div className="bg-card/50 border border-border rounded-2xl p-8 space-y-4 hover:border-primary/20 transition-colors group">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
                 <Sparkles className="w-5 h-5" />
               </div>
-              <h4 className="font-medium text-white/80">Maestria da Escuta</h4>
-              <p className="text-xs text-white/40">Seu progresso no desenvolvimento da escuta clínica.</p>
+              <div className="space-y-2">
+                <h4 className="font-display text-lg text-foreground">Maestria da Escuta</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed font-body">Seu progresso no desenvolvimento da escuta clínica.</p>
+              </div>
             </div>
           </div>
 
