@@ -36,7 +36,7 @@ const visitanteMenuGroups = () => [
 const assinanteMenuGroups = () => [
   { key: 'inicio', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
   { key: 'clube', label: 'Clube', icon: BookOpen, path: '/clube', subitems: [] },
-  { key: 'camara', label: 'Câmara do Sussurro', icon: Headphones, path: '/sala-de-treinamento', subitems: [] },
+  { key: 'camara', label: 'Câmara do Sussurro', icon: Headphones, path: '/clube/treinamento', subitems: [] },
   { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas', subitems: [] },
   { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
   { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
@@ -54,8 +54,8 @@ const alunaMenuGroups = () => [
     icon: FlaskConical, 
     path: '/sala-de-treinamento',
     subitems: [
-      { label: 'Câmara do Sussurro', path: '/sala-de-treinamento' },
       { label: 'Sala de Treinamento', path: '/sala-de-treinamento' },
+      { label: 'Câmara do Sussurro', path: '/clube/treinamento' },
     ]
   },
   { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas', subitems: [] },
