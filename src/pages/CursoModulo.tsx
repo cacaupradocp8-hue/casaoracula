@@ -10,6 +10,7 @@ import { ModuleForumSection } from '@/components/courses/ModuleForumSection';
 import { useCourseAccess } from '@/hooks/useCourseAccess';
 import { useCourseDetail } from '@/hooks/useCourseDetail';
 import { PedagogicalModuleData } from '@/types/pedagogical-module';
+import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
 
 export default function CursoModulo() {
   const { courseId, moduleId } = useParams<{ courseId: string; moduleId: string }>();
@@ -120,7 +121,14 @@ export default function CursoModulo() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <PageBreadcrumb
+          items={[
+            { label: "Cursos", href: "/cursos" },
+            { label: course.titulo, href: `/cursos/${courseId}` },
+            { label: module.titulo },
+          ]}
+        />
         <PedagogicalModuleView
           module={module}
           courseId={courseId!}
