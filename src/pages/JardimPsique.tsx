@@ -166,7 +166,7 @@ export default function JardimPsique() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20 max-w-4xl">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pb-24 max-w-4xl overflow-x-hidden">
         {/* ─── Hero Header ─── */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -200,18 +200,20 @@ export default function JardimPsique() {
 
         {/* ─── Tabs by type ─── */}
         <Tabs value={tipoFiltro} onValueChange={setTipoFiltro} className="mb-6">
-          <TabsList className="flex-wrap h-auto gap-1 bg-card/50 backdrop-blur-sm border border-border/20 p-1.5">
-            <TabsTrigger value="todos" className="gap-2 data-[state=active]:bg-emerald-500/15 data-[state=active]:text-emerald-400">
-              <Leaf className="w-4 h-4" />
-              Todos
-            </TabsTrigger>
-            {Object.entries(TIPO_CONFIG).map(([key, config]) => (
-              <TabsTrigger key={key} value={key} className="gap-2 data-[state=active]:bg-emerald-500/15">
-                <config.icon className="w-4 h-4" />
-                <span className="hidden sm:inline">{config.label}</span>
+          <div className="-mx-4 sm:mx-0 px-4 sm:px-0 overflow-x-auto scrollbar-none">
+            <TabsList className="inline-flex w-max sm:flex sm:flex-wrap h-auto gap-1 bg-card/50 backdrop-blur-sm border border-border/20 p-1.5">
+              <TabsTrigger value="todos" className="gap-2 data-[state=active]:bg-emerald-500/15 data-[state=active]:text-emerald-400 whitespace-nowrap">
+                <Leaf className="w-4 h-4" />
+                Todos
               </TabsTrigger>
-            ))}
-          </TabsList>
+              {Object.entries(TIPO_CONFIG).map(([key, config]) => (
+                <TabsTrigger key={key} value={key} className="gap-2 data-[state=active]:bg-emerald-500/15 whitespace-nowrap">
+                  <config.icon className="w-4 h-4" />
+                  <span className="hidden sm:inline">{config.label}</span>
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
         </Tabs>
 
         {/* ─── Filters bar ─── */}

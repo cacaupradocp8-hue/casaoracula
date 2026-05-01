@@ -76,35 +76,35 @@ export default function SalaDeTreinamentoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-20 pattern-geometric">
-      <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
+    <div className="min-h-screen bg-background text-foreground pb-24 pattern-geometric overflow-x-hidden">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 sm:space-y-10">
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4 min-w-0">
             <Button 
               variant="ghost" 
               size="sm" 
               onClick={() => window.history.back()}
-              className="p-0 h-auto text-primary hover:text-primary-foreground hover:bg-primary/10 transition-colors -ml-1 mb-2"
+              className="p-0 h-auto text-primary hover:text-primary-foreground hover:bg-primary/10 transition-colors -ml-1 mb-1 sm:mb-2"
             >
               <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
             </Button>
             <div className="space-y-1">
-              <h1 className="text-4xl md:text-5xl font-display tracking-wide text-foreground">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-display tracking-wide text-foreground leading-tight">
                 Sala de <span className="text-primary italic">Treinamento</span>
               </h1>
-              <p className="text-muted-foreground text-sm tracking-widest uppercase font-medium">
+              <p className="text-muted-foreground text-xs sm:text-sm tracking-widest uppercase font-medium">
                 Laboratório de maestria clínica para alunas da formação.
               </p>
             </div>
           </div>
           
-          <div className="flex items-center gap-6 bg-card border border-border rounded-2xl px-6 py-4 shadow-soft">
+          <div className="flex items-center gap-4 sm:gap-6 bg-card border border-border rounded-2xl px-4 sm:px-6 py-3 sm:py-4 shadow-soft self-start md:self-auto">
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2 text-primary">
                 <Trophy className="w-4 h-4" />
-                <span className="text-xs font-bold tracking-[0.2em] uppercase">FORMAÇÃO</span>
+                <span className="text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase">FORMAÇÃO</span>
               </div>
-              <Progress value={75} className="w-24 h-1.5 bg-muted" />
+              <Progress value={75} className="w-20 sm:w-24 h-1.5 bg-muted" />
             </div>
             <div className="w-px h-8 bg-border" />
             <div className="flex flex-col items-center gap-1">
@@ -117,8 +117,8 @@ export default function SalaDeTreinamentoPage() {
           </div>
         </header>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-          <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-transparent h-auto p-0">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 sm:space-y-8">
+          <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 bg-transparent h-auto p-0">
             {[
               { value: 'simulador', label: 'Simulador', icon: Compass },
               { value: 'progresso', label: 'Progresso', icon: BarChart3 },
@@ -128,10 +128,10 @@ export default function SalaDeTreinamentoPage() {
               <TabsTrigger 
                 key={tab.value}
                 value={tab.value} 
-                className="flex flex-col items-center gap-2 py-5 rounded-2xl border border-border bg-card/40 backdrop-blur-sm data-[state=active]:bg-primary/10 data-[state=active]:border-primary/40 data-[state=active]:text-primary transition-all duration-300"
+                className="flex flex-col items-center gap-1.5 sm:gap-2 py-3 sm:py-5 px-2 rounded-2xl border border-border bg-card/40 backdrop-blur-sm data-[state=active]:bg-primary/10 data-[state=active]:border-primary/40 data-[state=active]:text-primary transition-all duration-300"
               >
-                <tab.icon className="w-5 h-5" />
-                <span className="text-xs font-medium uppercase tracking-widest">{tab.label}</span>
+                <tab.icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="text-[10px] sm:text-xs font-medium uppercase tracking-widest text-center leading-tight">{tab.label}</span>
               </TabsTrigger>
             ))}
           </TabsList>
@@ -210,32 +210,32 @@ function TreinoPrincipalCard({ cases, onStart }: { cases: TrainingCase[], onStar
       <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
       <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 blur-[120px] -z-0 group-hover:bg-primary/10 transition-colors" />
       
-      <div className="relative z-20 p-10 md:p-14 flex flex-col md:flex-row md:items-center justify-between gap-8 font-body">
-        <div className="space-y-6 max-w-xl">
-          <div className="flex items-center gap-3">
+      <div className="relative z-20 p-6 sm:p-10 md:p-14 flex flex-col md:flex-row md:items-center justify-between gap-6 sm:gap-8 font-body">
+        <div className="space-y-5 sm:space-y-6 max-w-xl min-w-0">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] px-3 py-1 font-bold uppercase tracking-widest">
               Laboratório de Treino
             </Badge>
             <Badge variant="outline" className="border-border text-muted-foreground text-[9px] px-3 py-1 font-bold uppercase tracking-widest">
               {targetCase.distrito_esperado || 'Nível Profissional'}
             </Badge>
-            <span className="text-muted-foreground text-xs flex items-center gap-1.5 ml-auto">
+            <span className="text-muted-foreground text-xs flex items-center gap-1.5 sm:ml-auto">
               <Clock className="w-3.5 h-3.5" /> 8 min
             </span>
           </div>
           
-          <h3 className="text-4xl md:text-5xl font-display text-foreground leading-tight group-hover:text-primary transition-colors duration-500">
+          <h3 className="text-3xl sm:text-4xl md:text-5xl font-display text-foreground leading-tight group-hover:text-primary transition-colors duration-500 break-words">
             {targetCase.title}
           </h3>
           
-          <p className="text-lg text-muted-foreground leading-relaxed font-light line-clamp-2 max-w-lg">
+          <p className="text-base sm:text-lg text-muted-foreground leading-relaxed font-light line-clamp-3 sm:line-clamp-2 max-w-lg">
             {targetCase.tema || 'Pratique a contenção e o manejo de campo em uma situação de alta tensão simbólica.'}
           </p>
           
           <Button 
             size="lg" 
             onClick={() => onStart(targetCase)}
-            className="rounded-full px-12 py-8 text-lg bg-primary hover:bg-primary/90 text-primary-foreground font-bold gap-3 shadow-gold transition-all hover:scale-105 active:scale-95"
+            className="rounded-full px-8 sm:px-12 py-6 sm:py-8 text-base sm:text-lg bg-primary hover:bg-primary/90 text-primary-foreground font-bold gap-3 shadow-gold transition-all hover:scale-105 active:scale-95 w-full sm:w-auto"
           >
             <Play className="w-5 h-5 fill-current" /> Iniciar Prática
           </Button>

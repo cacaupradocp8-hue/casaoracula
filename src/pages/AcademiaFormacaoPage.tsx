@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CasaMaquinasLayout } from '@/components/casa-maquinas/CasaMaquinasLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -53,6 +54,7 @@ interface Projeto {
 // Main Page
 export default function AcademiaFormacaoPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [courses, setCourses] = useState<Course[]>([]);
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -384,49 +386,49 @@ export default function AcademiaFormacaoPage() {
       title="Academia Orácula"
       subtitle="Formação estruturada, Portais de Especialização e Cursos do Método"
     >
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
         <Button 
           variant="outline" 
-          className="h-auto py-6 flex-col gap-2 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all group"
-          onClick={() => window.location.href = '/sala-de-treinamento'}
+          className="h-auto py-4 sm:py-6 px-3 flex-col gap-2 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all group whitespace-normal"
+          onClick={() => navigate('/sala-de-treinamento')}
         >
-          <Zap className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
-          <div className="text-center">
-            <p className="text-sm font-semibold text-foreground">Sala de Treinamento</p>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Prática Clínica</p>
+          <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-primary group-hover:scale-110 transition-transform" />
+          <div className="text-center min-w-0">
+            <p className="text-xs sm:text-sm font-semibold text-foreground leading-tight">Sala de Treinamento</p>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">Prática Clínica</p>
           </div>
         </Button>
         <Button 
           variant="outline" 
-          className="h-auto py-6 flex-col gap-2 border-purple-500/20 bg-purple-500/5 hover:bg-purple-500/10 transition-all group"
-          onClick={() => window.location.href = '/sala-de-treinamento'}
+          className="h-auto py-4 sm:py-6 px-3 flex-col gap-2 border-purple-500/20 bg-purple-500/5 hover:bg-purple-500/10 transition-all group whitespace-normal"
+          onClick={() => navigate('/sala-de-treinamento')}
         >
-          <Sparkles className="w-6 h-6 text-purple-400 group-hover:scale-110 transition-transform" />
-          <div className="text-center">
-            <p className="text-sm font-semibold text-foreground">Câmara de Simulação</p>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Estudos de Caso</p>
+          <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400 group-hover:scale-110 transition-transform" />
+          <div className="text-center min-w-0">
+            <p className="text-xs sm:text-sm font-semibold text-foreground leading-tight">Câmara de Simulação</p>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">Estudos de Caso</p>
           </div>
         </Button>
         <Button 
           variant="outline" 
-          className="h-auto py-6 flex-col gap-2 border-blue-500/20 bg-blue-500/5 hover:bg-blue-500/10 transition-all group"
-          onClick={() => window.location.href = '/formacao-metodo/forum'}
+          className="h-auto py-4 sm:py-6 px-3 flex-col gap-2 border-blue-500/20 bg-blue-500/5 hover:bg-blue-500/10 transition-all group whitespace-normal"
+          onClick={() => navigate('/formacao-metodo/forum')}
         >
-          <BookOpen className="w-6 h-6 text-blue-400 group-hover:scale-110 transition-transform" />
-          <div className="text-center">
-            <p className="text-sm font-semibold text-foreground">Fórum da Comunidade</p>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Trocas e Dúvidas</p>
+          <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 group-hover:scale-110 transition-transform" />
+          <div className="text-center min-w-0">
+            <p className="text-xs sm:text-sm font-semibold text-foreground leading-tight">Fórum da Comunidade</p>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">Trocas e Dúvidas</p>
           </div>
         </Button>
         <Button 
           variant="outline" 
-          className="h-auto py-6 flex-col gap-2 border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-all group"
-          onClick={() => window.location.href = '/formacao-metodo/avaliacoes'}
+          className="h-auto py-4 sm:py-6 px-3 flex-col gap-2 border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-all group whitespace-normal"
+          onClick={() => navigate('/formacao-metodo/avaliacoes')}
         >
-          <Award className="w-6 h-6 text-amber-400 group-hover:scale-110 transition-transform" />
-          <div className="text-center">
-            <p className="text-sm font-semibold text-foreground">Certificações</p>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Nível de Mestria</p>
+          <Award className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400 group-hover:scale-110 transition-transform" />
+          <div className="text-center min-w-0">
+            <p className="text-xs sm:text-sm font-semibold text-foreground leading-tight">Certificações</p>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">Nível de Mestria</p>
           </div>
         </Button>
       </div>
@@ -464,34 +466,36 @@ export default function AcademiaFormacaoPage() {
         <TabsContent value="catalogo">
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-3">
-              <div className="relative flex-1">
+              <div className="relative flex-1 min-w-0">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input value={search} onChange={e => setSearch(e.target.value)}
                   placeholder="Buscar cursos..." className="pl-9 bg-background border-primary/10" />
               </div>
-              <Select value={filterTipo} onValueChange={setFilterTipo}>
-                <SelectTrigger className="w-[160px] bg-background border-primary/10">
-                  <SelectValue placeholder="Tipo" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os tipos</SelectItem>
-                  <SelectItem value="formacao">Formação</SelectItem>
-                  <SelectItem value="portal">Portal</SelectItem>
-                  <SelectItem value="livre">Curso Livre</SelectItem>
-                  <SelectItem value="travessia">Travessia</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={filterNivel} onValueChange={setFilterNivel}>
-                <SelectTrigger className="w-[160px] bg-background border-primary/10">
-                  <SelectValue placeholder="Nível" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os níveis</SelectItem>
-                  <SelectItem value="basico">Básico</SelectItem>
-                  <SelectItem value="avancado">Avançado</SelectItem>
-                  <SelectItem value="especializacao">Especialização</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex gap-3">
+                <Select value={filterTipo} onValueChange={setFilterTipo}>
+                  <SelectTrigger className="flex-1 sm:w-[160px] sm:flex-none bg-background border-primary/10">
+                    <SelectValue placeholder="Tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os tipos</SelectItem>
+                    <SelectItem value="formacao">Formação</SelectItem>
+                    <SelectItem value="portal">Portal</SelectItem>
+                    <SelectItem value="livre">Curso Livre</SelectItem>
+                    <SelectItem value="travessia">Travessia</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={filterNivel} onValueChange={setFilterNivel}>
+                  <SelectTrigger className="flex-1 sm:w-[160px] sm:flex-none bg-background border-primary/10">
+                    <SelectValue placeholder="Nível" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os níveis</SelectItem>
+                    <SelectItem value="basico">Básico</SelectItem>
+                    <SelectItem value="avancado">Avançado</SelectItem>
+                    <SelectItem value="especializacao">Especialização</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             {catalogFiltered.length === 0 ? (
