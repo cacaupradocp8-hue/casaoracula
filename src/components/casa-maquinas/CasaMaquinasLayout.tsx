@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { CasaMaquinasSidebar } from './CasaMaquinasSidebar';
+import { CasaMaquinasTrialBanner } from './CasaMaquinasTrialBanner';
 import { Navigation } from '@/components/layout/Navigation';
 
 interface CasaMaquinasLayoutProps {
@@ -29,7 +30,8 @@ export function CasaMaquinasLayout({ children, title, subtitle }: CasaMaquinasLa
                 </div>
               )}
             </div>
-            <div className="p-6 min-h-[calc(100vh-8rem)]">
+            <div className="p-6 min-h-[calc(100vh-8rem)] space-y-6">
+              <CasaMaquinasTrialBanner />
               {children}
             </div>
           </SidebarInset>
