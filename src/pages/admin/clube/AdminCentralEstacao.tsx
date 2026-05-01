@@ -280,6 +280,10 @@ export default function AdminCentralEstacao() {
               <ListOrdered className="w-3.5 h-3.5" />
               Rota (Passos)
             </TabsTrigger>
+            <TabsTrigger type="button" value="semanas" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+              <Headphones className="w-3.5 h-3.5" />
+              Conteúdo (Áudios)
+            </TabsTrigger>
             <TabsTrigger type="button" value="entrada" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
               <Sparkles className="w-3.5 h-3.5" />
               Iniciação
