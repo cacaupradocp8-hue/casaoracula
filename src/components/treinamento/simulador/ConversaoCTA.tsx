@@ -23,7 +23,7 @@ export function ConversaoCTA({ type, customMessage, mode = 'formacao' }: Convers
       cta: isProfessional ? 'Acessar Laboratório Clínico' : 'Ver Formação ORÁCULA',
       icon: isProfessional ? Wrench : Sparkles,
       message: isProfessional ? 'Maestria em Construção' : 'Seu olhar existe. Falta método.',
-      route: isProfessional ? '/casa-maquinas' : '/formacao'
+      route: isProfessional ? '/casa-das-maquinas/treinamento' : '/formacao'
     },
     desempenho: {
       title: isProfessional ? 'Pronto para a Clínica' : 'Potencial de Elite',
@@ -33,7 +33,7 @@ export function ConversaoCTA({ type, customMessage, mode = 'formacao' }: Convers
       cta: isProfessional ? 'Ir para Casa das Máquinas' : 'Acessar Certificação',
       icon: isProfessional ? Wrench : ShieldCheck,
       message: isProfessional ? 'Excelência Técnica' : 'Você percebe padrões. Aprenda a conduzir.',
-      route: isProfessional ? '/casa-maquinas' : '/formacao'
+      route: isProfessional ? '/casa-das-maquinas/treinamento' : '/formacao'
     },
     erros: {
       title: isProfessional ? 'Ajuste de Rota' : 'O Ponto de Virada',
@@ -43,7 +43,7 @@ export function ConversaoCTA({ type, customMessage, mode = 'formacao' }: Convers
       cta: isProfessional ? 'Supervisão na Casa das Máquinas' : 'Conhecer o Método',
       icon: isProfessional ? Wrench : ArrowRight,
       message: isProfessional ? 'Supervisão Necessária' : 'Próximo nível disponível: Formação ORÁCULA',
-      route: isProfessional ? '/casa-maquinas' : '/formacao'
+      route: isProfessional ? '/casa-das-maquinas/treinamento' : '/formacao'
     },
     concluido: {
       title: isProfessional ? 'Treino Avançado' : 'Treino Finalizado',
@@ -53,7 +53,7 @@ export function ConversaoCTA({ type, customMessage, mode = 'formacao' }: Convers
       cta: isProfessional ? 'Ver Laboratório de Casos' : 'Explorar Formação',
       icon: isProfessional ? Wrench : Sparkles,
       message: isProfessional ? 'Evolução Clínica' : 'Você percebe padrões. Aprenda a conduzir.',
-      route: isProfessional ? '/casa-maquinas' : '/formacao'
+      route: isProfessional ? '/casa-das-maquinas/treinamento' : '/formacao'
     },
     casa_maquinas: {
       title: 'Espaço Profissional',
