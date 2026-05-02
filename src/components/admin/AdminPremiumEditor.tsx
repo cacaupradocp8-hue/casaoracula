@@ -283,37 +283,38 @@ export function AdminPremiumEditor() {
       <main className="flex-1 overflow-y-auto bg-background relative scrollbar-none">
         <div className="sticky top-0 z-20 bg-background/90 backdrop-blur-md border-b border-primary/10 p-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-14 bg-muted rounded-md overflow-hidden border border-primary/10 hidden sm:block">
-              {estacaoAtual.livro_capa_url && (
-                <img src={estacaoAtual.livro_capa_url} alt="Capa" className="w-full h-full object-cover" />
-              )}
-            </div>
-            <div>
-              <h2 className="font-serif text-sm leading-tight">{estacaoAtual.livro_titulo || 'Estação sem Livro'}</h2>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{estacaoAtual.titulo}</p>
-            </div>
+             <div className="w-10 h-14 bg-muted rounded border border-primary/10 overflow-hidden shadow-sm hidden sm:block">
+               {estacaoAtual.livro_capa_url && <img src={estacaoAtual.livro_capa_url} alt="Livro" className="w-full h-full object-cover" />}
+             </div>
+             <div className="flex flex-col">
+               <h2 className="font-serif text-base leading-tight">{estacaoAtual.livro_titulo || 'Sem Livro'}</h2>
+               <div className="flex items-center gap-2">
+                 <Badge variant="outline" className="text-[9px] uppercase tracking-widest text-gold border-gold/30 h-4">{estacaoAtual.titulo}</Badge>
+                 <Badge variant="outline" className="text-[9px] uppercase tracking-widest opacity-50 h-4">Premium Editor</Badge>
+               </div>
+             </div>
           </div>
           <div className="flex items-center gap-2">
              <Button 
                variant="outline" 
                size="sm" 
-               className="h-8 text-xs gap-2 border-primary/10"
+               className="h-8 text-xs gap-2 border-primary/10 hover:bg-muted"
                onClick={handleSave}
                disabled={saveMutation.isPending}
              >
-               {saveMutation.isPending ? <Clock className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-               Salvar Rascunho
+               {saveMutation.isPending ? <Clock className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5 text-muted-foreground" />}
+               <span className="hidden sm:inline">Salvar Rascunho</span>
              </Button>
              <Button 
                size="sm" 
-               className="h-8 text-xs gap-2 bg-gold text-black font-bold"
+               className="h-8 text-xs gap-2 bg-gold hover:bg-gold/90 text-black font-bold shadow-lg shadow-gold/20"
                onClick={() => {
                  updateItem({ publicado: true });
                  handleSave();
                }}
              >
                <CheckCircle2 className="w-3.5 h-3.5" />
-               Publicar Rota
+               <span className="hidden sm:inline">Publicar na Rota</span>
              </Button>
           </div>
         </div>
