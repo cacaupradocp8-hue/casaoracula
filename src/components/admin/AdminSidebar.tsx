@@ -35,11 +35,11 @@ export const adminNavGroups: AdminNavGroup[] = [
     icon: Sparkles,
     items: [
       { key: 'clube', label: 'Hub do Clube', icon: Sparkles, route: '/admin/clube' },
+      { key: 'clube-premium-editor', label: 'Máquina Editorial Pro', icon: Zap },
       { key: 'clube-jornadas', label: 'Estações & Rotas', icon: RefreshCw, route: '/admin/clube/ciclos' },
-      { key: 'clube-acervo', label: 'Acervo de Conteúdos', icon: Library, route: '/admin/clube/conteudos' },
+      { key: 'clube-acervo', label: 'Acervo Oracular', icon: Library, route: '/admin/clube/conteudos' },
       { key: 'clube-chat', label: 'Converse com o Livro', icon: MessageSquare, route: '/admin/clube/chat' },
       { key: 'clube-treinamento', label: 'Sala de Treinamento', icon: GraduationCap, route: '/admin/clube/treinamento' },
-      { key: 'clube-premium-editor', label: 'Máquina Editorial Pro', icon: Sparkles },
     ],
   },
   {
