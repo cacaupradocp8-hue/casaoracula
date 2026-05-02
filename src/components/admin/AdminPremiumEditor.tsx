@@ -261,8 +261,18 @@ export function AdminPremiumEditor() {
           ))}
         </div>
 
-        <div className="p-4 border-t border-primary/5 space-y-2">
-          <Button variant="ghost" size="sm" className="w-full justify-start gap-2 text-xs" onClick={() => setShowPreview(!showPreview)}>
+        <div className="p-4 border-t border-primary/5 space-y-3 bg-muted/5">
+          <div className="space-y-1">
+             <span className="text-[10px] uppercase font-bold text-muted-foreground/50 tracking-widest hidden md:block">Obra de Referência</span>
+             <div className="flex items-center gap-2 p-2 rounded-lg bg-background/50 border border-primary/5">
+                <BookOpen className="w-3.5 h-3.5 text-gold shrink-0" />
+                <span className="text-[10px] text-foreground truncate hidden md:block">{estacaoAtual.livro_titulo || 'Sem Livro'}</span>
+                <Button variant="ghost" size="icon" className="h-5 w-5 ml-auto" onClick={() => navigate(`/admin/clube/central/${estacaoAtual.id}`)}>
+                  <Settings className="w-3 h-3" />
+                </Button>
+             </div>
+          </div>
+          <Button variant="ghost" size="sm" className="w-full justify-start gap-2 text-[10px] uppercase font-bold tracking-tight" onClick={() => setShowPreview(!showPreview)}>
             <PanelRight className="w-4 h-4" />
             <span className="hidden md:block">{showPreview ? 'Esconder Preview' : 'Mostrar Preview'}</span>
           </Button>
