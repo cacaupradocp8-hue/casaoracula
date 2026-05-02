@@ -13,9 +13,10 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   Plus, Pencil, ChevronDown, Headphones, Loader2, Trash2, 
   MessageSquare, Dumbbell, Flower2, Stethoscope, Map as MapIcon,
-  BookOpen, Info, Sparkles
+  BookOpen, Info, Sparkles, Upload
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { AudioUpload } from '../AudioUpload';
 
 interface Semana {
   id: string;
