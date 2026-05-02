@@ -138,16 +138,16 @@ export default function AdminClubeAcervo() {
             </Card>
           ))}
         </div>
-      ) : (
-        <div className="text-center py-20 bg-muted/20 rounded-2xl border-2 border-dashed border-primary/5">
-          <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
-          <h3 className="text-lg font-serif">Nenhuma obra encontrada</h3>
-          <p className="text-sm text-muted-foreground mt-2">As obras aparecem aqui assim que você cria uma estação.</p>
-          <Button className="mt-6 bg-gold text-black hover:bg-gold/80" onClick={() => navigate('/admin/clube')}>
-            Ir para o Hub
-          </Button>
-        </div>
-      )}
+      </div>
+    </div>
+  ) : (
+    <div className="text-center py-20 bg-muted/20 rounded-2xl border-2 border-dashed border-primary/5">
+      <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
+      <h3 className="text-lg font-serif">Nenhuma obra encontrada</h3>
+      <p className="text-sm text-muted-foreground mt-2">As obras aparecem aqui assim que você cria uma estação.</p>
+      <Button className="mt-6 bg-gold text-black hover:bg-gold/80" onClick={() => navigate('/admin/clube')}>
+        Ir para o Hub
+      </Button>
     </div>
   );
 }
