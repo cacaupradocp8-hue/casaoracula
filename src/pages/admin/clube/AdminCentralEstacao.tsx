@@ -275,7 +275,7 @@ export default function AdminCentralEstacao() {
 
         {/* Tabs - Alinhadas com as 4 Camadas da Aluna */}
         <Tabs value={activeTab} onValueChange={onTabChange}>
-          <TabsList className="grid w-full grid-cols-4 mb-6 bg-muted/30 p-1 border border-primary/5 h-auto">
+          <TabsList className="grid w-full grid-cols-5 mb-6 bg-muted/30 p-1 border border-primary/5 h-auto">
             <TabsTrigger type="button" value="passos" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
               <ListOrdered className="w-3.5 h-3.5" />
               Rota (Passos)
