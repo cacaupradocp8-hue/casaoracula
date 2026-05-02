@@ -324,42 +324,48 @@ export function AdminPremiumEditor() {
             <TabsContent value="editor" className="mt-0 space-y-12">
                {editingItem ? (
                  <>
-                   <div className="space-y-4">
-                     <div className="flex items-center gap-4 mb-2">
-                        <Select 
-                          value={editingItem.tipo || 'portal'} 
-                          onValueChange={(v: any) => updateItem({ tipo: v })}
-                        >
-                          <SelectTrigger className="w-32 h-7 text-[10px] uppercase font-bold border-gold/30 bg-gold/5 text-gold">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="portal">Portal</SelectItem>
-                            <SelectItem value="escuta">Escuta</SelectItem>
-                            <SelectItem value="travessia">Travessia</SelectItem>
-                            <SelectItem value="laboratorio">Laboratório</SelectItem>
-                            <SelectItem value="registro">Registro</SelectItem>
-                            <SelectItem value="integracao">Integração</SelectItem>
-                            <SelectItem value="encontro">Encontro</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <Badge variant="outline" className="text-[8px] opacity-50 uppercase">
-                          Ordem: {editingItem.ordem}
-                        </Badge>
-                     </div>
-                     <Input 
-                       className="text-4xl font-serif bg-transparent border-none p-0 focus-visible:ring-0 placeholder:opacity-20 h-auto" 
-                       placeholder="Título da Rota..."
-                       value={editingItem.titulo || ''}
-                       onChange={(e) => updateItem({ titulo: e.target.value })}
-                     />
-                     <Textarea 
-                       className="text-lg font-serif bg-transparent border-none p-0 focus-visible:ring-0 placeholder:opacity-20 resize-none min-h-[100px]" 
-                       placeholder="Subtítulo ou essência da jornada..."
-                       value={editingItem.subtitulo || ''}
-                       onChange={(e) => updateItem({ subtitulo: e.target.value })}
-                     />
-                   </div>
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-4 mb-2">
+                         <div className="flex items-center gap-2 px-3 py-1 bg-gold/10 rounded-full border border-gold/20">
+                            <Zap className="w-3 h-3 text-gold" />
+                            <span className="text-[10px] uppercase font-bold text-gold tracking-widest">Tipo de Experiência</span>
+                         </div>
+                         <Select 
+                           value={editingItem.tipo || 'portal'} 
+                           onValueChange={(v: any) => updateItem({ tipo: v })}
+                         >
+                           <SelectTrigger className="w-32 h-7 text-[10px] uppercase font-bold border-primary/10 bg-muted/50">
+                             <SelectValue />
+                           </SelectTrigger>
+                           <SelectContent>
+                             <SelectItem value="portal">Portal</SelectItem>
+                             <SelectItem value="escuta">Escuta</SelectItem>
+                             <SelectItem value="travessia">Travessia</SelectItem>
+                             <SelectItem value="laboratorio">Laboratório</SelectItem>
+                             <SelectItem value="registro">Registro</SelectItem>
+                             <SelectItem value="integracao">Integração</SelectItem>
+                             <SelectItem value="encontro">Encontro</SelectItem>
+                           </SelectContent>
+                         </Select>
+                         <Badge variant="outline" className="text-[8px] opacity-30 uppercase">
+                           Sequência: {editingItem.ordem}
+                         </Badge>
+                      </div>
+                      <div className="space-y-2">
+                        <Input 
+                          className="text-4xl md:text-5xl font-serif bg-transparent border-none p-0 focus-visible:ring-0 placeholder:opacity-10 h-auto font-bold tracking-tight text-foreground" 
+                          placeholder="Título do Passo..."
+                          value={editingItem.titulo || ''}
+                          onChange={(e) => updateItem({ titulo: e.target.value })}
+                        />
+                        <Textarea 
+                          className="text-xl font-serif bg-transparent border-none p-0 focus-visible:ring-0 placeholder:opacity-10 resize-none min-h-[60px] text-muted-foreground leading-relaxed" 
+                          placeholder="A essência ou subtítulo desta jornada..."
+                          value={editingItem.subtitulo || ''}
+                          onChange={(e) => updateItem({ subtitulo: e.target.value })}
+                        />
+                      </div>
+                    </div>
 
                    <div className="space-y-6">
                      <div className="flex items-center gap-2 text-gold/60">
