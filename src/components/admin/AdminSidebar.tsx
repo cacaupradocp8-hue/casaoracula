@@ -203,13 +203,13 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
                             } else {
                               onTabChange(item.key);
                               // Sync URL for clube sub-tabs to avoid 404/blank screen on direct paths
-                              if (item.key === 'clube') navigate('/admin/clube');
-                              if (item.key === 'clube-jornadas') navigate('/admin/clube/ciclos');
-                              if (item.key === 'clube-portais') navigate('/admin/clube/portais');
-                              if (item.key === 'clube-acervo') navigate('/admin/clube/conteudos');
-                              if (item.key === 'clube-treinamento') navigate('/admin/clube/treinamento');
-                              if (item.key === 'clube-premium-editor') navigate('/admin/clube?tab=clube-premium-editor');
-                              if (item.key === 'clube-chat') navigate('/admin/clube/chat');
+                              if (item.key === 'clube') navigate('/admin/clube', { replace: true });
+                              if (item.key === 'clube-jornadas') navigate('/admin/clube/ciclos', { replace: true });
+                              if (item.key === 'clube-portais') navigate('/admin/clube/portais', { replace: true });
+                              if (item.key === 'clube-acervo') navigate('/admin/clube/conteudos', { replace: true });
+                              if (item.key === 'clube-treinamento') navigate('/admin/clube/treinamento', { replace: true });
+                              if (item.key === 'clube-premium-editor') navigate('/admin/clube?tab=clube-premium-editor', { replace: true });
+                              if (item.key === 'clube-chat') navigate('/admin/clube/chat', { replace: true });
                             }
                           }}
                           className={cn(

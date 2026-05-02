@@ -136,13 +136,13 @@ export default function AdminClubeHub() {
     // Navigate via URL to ensure the Admin component's effect picks it up
     // This is safer than just calling the global function which might be stale
     switch (tab) {
-      case 'clube-jornadas': navigate('/admin/clube/ciclos'); break;
-      case 'clube-portais': navigate('/admin/clube/portais'); break;
-      case 'clube-acervo': navigate('/admin/clube/conteudos'); break;
-      case 'clube-treinamento': navigate('/admin/clube/treinamento'); break;
-      case 'clube-chat': navigate('/admin/clube/chat'); break;
-      case 'settings': navigate('/admin?tab=settings'); break;
-      case 'gerador-semanal': navigate('/admin?tab=gerador-semanal'); break;
+      case 'clube-jornadas': navigate('/admin/clube/ciclos', { replace: true }); break;
+      case 'clube-portais': navigate('/admin/clube/portais', { replace: true }); break;
+      case 'clube-acervo': navigate('/admin/clube/conteudos', { replace: true }); break;
+      case 'clube-treinamento': navigate('/admin/clube/treinamento', { replace: true }); break;
+      case 'clube-chat': navigate('/admin/clube/chat', { replace: true }); break;
+      case 'settings': navigate('/admin?tab=settings', { replace: true }); break;
+      case 'gerador-semanal': navigate('/admin?tab=gerador-semanal', { replace: true }); break;
       default:
         if ((window as any).Admin_SetActiveTab) {
           (window as any).Admin_SetActiveTab(tab);
@@ -246,7 +246,7 @@ export default function AdminClubeHub() {
                       onClick={() => {
                         // Navigate to Premium Editor for this station
                         const id = stats.activeStation?.id;
-                        navigate(`/admin/clube?tab=clube-premium-editor${id ? `&estacaoId=${id}` : ''}`);
+                        navigate(`/admin/clube?tab=clube-premium-editor${id ? `&estacaoId=${id}` : ''}`, { replace: true });
                       }}
                     >
                       <Zap className="w-4 h-4" />

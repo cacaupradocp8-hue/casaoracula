@@ -158,7 +158,7 @@ export default function Admin() {
     if (path === '/admin/clube/treinamento') return 'clube-treinamento';
     if (path === '/admin/clube/chat') return 'clube-chat';
     if (path.startsWith('/admin/clube/central/') || path.startsWith('/admin/clube/rota/')) {
-      return 'clube-jornadas'; // Central maps to jornadas tab
+      return 'clube-jornadas'; 
     }
     
     if (path.startsWith('/admin/clube-livro')) return 'clube';
