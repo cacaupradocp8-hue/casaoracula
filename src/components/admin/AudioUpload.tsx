@@ -50,17 +50,26 @@ export function AudioUpload({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadLibrary = async () => {
-    setLoadingLibrary(true);
-    const { data, error } = await supabase
-      .from('audio_assets')
-      .select('id, titulo, file_path, categoria, duracao_segundos')
-      .eq('publicado', true)
-      .order('created_at', { ascending: false });
+    try {
+      setLoadingLibrary(true);
+      console.log('Carregando biblioteca de áudios...');
+      const { data, error } = await supabase
+        .from('audio_assets')
+        .select('id, titulo, file_path, categoria, duracao_segundos')
+        .eq('publicado', true)
+        .order('created_at', { ascending: false });
 
-    if (!error && data) {
-      setLibraryAudios(data);
+      if (error) {
+        console.error('Erro ao carregar biblioteca de áudios:', error);
+        toast.error('Não foi possível carregar a biblioteca de áudios');
+      } else if (data) {
+        setLibraryAudios(data);
+      }
+    } catch (err) {
+      console.error('Falha crítica na biblioteca:', err);
+    } finally {
+      setLoadingLibrary(false);
     }
-    setLoadingLibrary(false);
   };
 
   useEffect(() => {
