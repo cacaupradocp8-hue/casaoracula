@@ -329,8 +329,12 @@ export function SemanasTab({ estacaoId }: Props) {
                     <Textarea value={form.podcast_descricao} onChange={(e) => setForm({ ...form, podcast_descricao: e.target.value })} placeholder="Breve resumo para a aluna..." rows={2} />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium">URL do Áudio (MP3/HLS)</label>
-                    <Input value={form.podcast_audio_url} onChange={(e) => setForm({ ...form, podcast_audio_url: e.target.value })} placeholder="https://..." />
+                    <AudioUpload 
+                      value={form.podcast_audio_url} 
+                      onChange={(url) => setForm({ ...form, podcast_audio_url: url })} 
+                      folder="clube-livro/podcasts"
+                      label="Arquivo do Áudio Semanal"
+                    />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium">Roteiro Completo (Opcional)</label>
