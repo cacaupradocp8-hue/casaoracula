@@ -42,16 +42,20 @@ export function AdminPremiumEditor() {
     { id: 'curadora', name: 'Curadora', icon: Search, color: 'text-amber-400' },
   ];
 
-  // Fetch active station
-  const { data: estacaoAtual } = useQuery({
-    queryKey: ['admin-estacao-ativa-premium'],
+  // Fetch target station
+  const { data: estacaoAtual, isLoading: isLoadingEstacao } = useQuery({
+    queryKey: ['admin-estacao-premium', estacaoIdParam],
     queryFn: async () => {
-      const { data } = await supabase
-        .from('clube_estacoes')
-        .select('*')
-        .eq('ativa', true)
-        .limit(1)
-        .maybeSingle();
+      let query = supabase.from('clube_estacoes').select('*');
+      
+      if (estacaoIdParam) {
+        query = query.eq('id', estacaoIdParam);
+      } else {
+        query = query.eq('ativa', true);
+      }
+
+      const { data, error } = await query.maybeSingle();
+      if (error) throw error;
       return data;
     }
   });
