@@ -152,6 +152,21 @@ export function AdminPremiumEditor() {
     setEditingItem(prev => prev ? ({ ...prev, ...updates }) : updates);
   };
 
+  if (!estacaoAtual) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center bg-card border border-primary/10 rounded-2xl h-[calc(100vh-10rem)]">
+        <Sparkles className="w-12 h-12 text-gold/20 mb-4" />
+        <h3 className="text-xl font-serif">Nenhuma Estação Ativa</h3>
+        <p className="text-muted-foreground mt-2 max-w-md">
+          Para usar a Máquina Editorial Pro, você precisa ter uma estação marcada como "Ativa" no Hub do Clube.
+        </p>
+        <Button className="mt-6 bg-gold text-black" onClick={() => (window as any).Admin_SetActiveTab?.('clube')}>
+          Ir para o Hub
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-[calc(100vh-10rem)] bg-background border border-primary/10 rounded-2xl overflow-hidden shadow-2xl">
       {/* 1. Sidebar Premium (Notion Style) */}
