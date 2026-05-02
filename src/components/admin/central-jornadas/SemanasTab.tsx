@@ -66,6 +66,7 @@ export function SemanasTab({ estacaoId }: Props) {
     cartografia_campo: '',
     cartografia_torre: '',
     cartografia_labirinto: '',
+    podcast_status: 'pendente',
   });
 
   const { data: semanas = [], isLoading } = useQuery({
