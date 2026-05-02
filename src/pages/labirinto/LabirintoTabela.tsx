@@ -1,13 +1,14 @@
 import { AppLayout } from "@/components/layout/AppLayout";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, TableIcon, Loader2, Shield, Circle, Droplets, Flame, Sparkles, Home, ChevronRight, RotateCcw } from "lucide-react";
-import { useNavigate, Link, Navigate } from "react-router-dom";
+import { TableIcon, Loader2, Shield, Circle, Droplets, Flame, Sparkles, RotateCcw } from "lucide-react";
+import { Navigate } from "react-router-dom";
 import { useLabirintoPortas } from "@/hooks/useLabirinto";
 import { useAuth } from "@/contexts/AuthContext";
 import { canAccessFeature } from "@/types/portal";
 import { cn } from "@/lib/utils";
+import { BackButton } from "@/components/navigation/BackButton";
+import { PageBreadcrumb } from "@/components/navigation/PageBreadcrumb";
 
 const TIPO_CAMPO_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   limiar: { label: "Limiar", icon: Sparkles, color: "text-purple-400" },
