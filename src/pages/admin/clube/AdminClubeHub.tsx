@@ -256,7 +256,7 @@ export default function AdminClubeHub() {
                       size="sm"
                       variant="ghost"
                       className="gap-2 text-muted-foreground hover:text-foreground"
-                      onClick={() => navigate(`/admin/clube/central/${stats.activeStation.id}`)}
+                      onClick={() => stats?.activeStation?.id && navigate(`/admin/clube/central/${stats.activeStation.id}`)}
                     >
                       <Settings className="w-4 h-4" />
                       Central da Estação
