@@ -37,8 +37,8 @@ export default function AdminClubeAcervo() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1 min-w-0">
-            <h2 className="text-2xl font-serif text-foreground">Acervo Oracular</h2>
-            <p className="text-sm text-muted-foreground">Obras associadas às estações e jornadas do clube</p>
+            <h2 className="text-2xl font-serif text-foreground">Acervo de Jornadas</h2>
+            <p className="text-sm text-muted-foreground">Obras vinculadas às estações e rotas do Clube</p>
           </div>
         </div>
         
