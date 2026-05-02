@@ -116,8 +116,8 @@ export default function AdminClubeHub() {
     }
   });
 
-  function cycles_count(est: number | null, cic: number | null) {
-    return (est || 0) + (cic || 0);
+  function cycles_count(est: number | null | undefined, cic: number | null | undefined) {
+    return (Number(est) || 0) + (Number(cic) || 0);
   }
 
   const getStatText = (type?: string) => {
@@ -185,7 +185,7 @@ export default function AdminClubeHub() {
       </div>
 
       {/* Atalho Operacional: Estação Ativa */}
-      {stats?.activeStation && (
+      {stats?.activeStation ? (
         <Card className="bg-primary/5 border-gold/30 shadow-2xl shadow-gold/5 animate-in slide-in-from-top-4 duration-1000">
           <CardContent className="p-0 overflow-hidden">
             <div className="flex flex-col md:flex-row">
@@ -245,7 +245,8 @@ export default function AdminClubeHub() {
                       className="gap-2 border-gold/20 text-gold hover:bg-gold/5"
                       onClick={() => {
                         // Navigate to Premium Editor for this station
-                        navigate(`/admin/clube?tab=clube-premium-editor&estacaoId=${stats.activeStation.id}`);
+                        const id = stats.activeStation?.id;
+                        navigate(`/admin/clube?tab=clube-premium-editor${id ? `&estacaoId=${id}` : ''}`);
                       }}
                     >
                       <Zap className="w-4 h-4" />
@@ -255,7 +256,7 @@ export default function AdminClubeHub() {
                       size="sm"
                       variant="ghost"
                       className="gap-2 text-muted-foreground hover:text-foreground"
-                      onClick={() => navigate(`/admin/clube/central/${stats.activeStation.id}`)}
+                      onClick={() => stats?.activeStation?.id && navigate(`/admin/clube/central/${stats.activeStation.id}`)}
                     >
                       <Settings className="w-4 h-4" />
                       Central da Estação
@@ -264,6 +265,19 @@ export default function AdminClubeHub() {
                 </div>
               </div>
             </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="bg-muted/10 border-dashed border-primary/10">
+          <CardContent className="p-8 text-center space-y-4">
+            <Sparkles className="w-10 h-10 text-muted-foreground/20 mx-auto" />
+            <h3 className="text-lg font-serif">Nenhuma Estação Ativa</h3>
+            <p className="text-sm text-muted-foreground max-w-xs mx-auto">
+              Marque uma estação como "Ativa" na Central de Ciclos para gerenciar seus conteúdos aqui.
+            </p>
+            <Button variant="outline" size="sm" onClick={() => handleTabChange('clube-jornadas')}>
+              Ver Todas as Estações
+            </Button>
           </CardContent>
         </Card>
       )}

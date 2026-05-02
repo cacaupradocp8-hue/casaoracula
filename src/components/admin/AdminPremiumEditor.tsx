@@ -42,21 +42,31 @@ export function AdminPremiumEditor() {
     { id: 'curadora', name: 'Curadora', icon: Search, color: 'text-amber-400' },
   ];
 
+  // Fetch all stations for the selector
+  const { data: todasEstacoes } = useQuery({
+    queryKey: ['admin-todas-estacoes-premium'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('clube_estacoes').select('id, titulo, livro_titulo').order('ordem');
+      if (error) throw error;
+      return data;
+    }
+  });
+
   // Fetch target station
   const { data: estacaoAtual, isLoading: isLoadingEstacao } = useQuery({
     queryKey: ['admin-estacao-premium', estacaoIdParam],
     queryFn: async () => {
       let query = supabase.from('clube_estacoes').select('*');
       
-      if (estacaoIdParam) {
+      if (estacaoIdParam && estacaoIdParam !== 'undefined' && estacaoIdParam !== 'null') {
         query = query.eq('id', estacaoIdParam);
       } else {
         query = query.eq('ativa', true);
       }
 
-      const { data, error } = await query.maybeSingle();
+      const { data, error } = await query;
       if (error) throw error;
-      return data;
+      return data && data.length > 0 ? data[0] : null;
     }
   });
 
@@ -165,6 +175,9 @@ export function AdminPremiumEditor() {
       <div className="flex flex-col items-center justify-center py-20 text-center bg-card border border-primary/10 rounded-2xl h-[calc(100vh-10rem)]">
         <Loader2 className="w-8 h-8 text-gold animate-spin mb-4" />
         <p className="text-muted-foreground">Localizando essência da estação...</p>
+        <Button variant="ghost" size="sm" className="mt-4 text-[10px] uppercase" onClick={() => queryClient.invalidateQueries({ queryKey: ['admin-estacao-premium'] })}>
+          Forçar Recarregamento
+        </Button>
       </div>
     );
   }
@@ -175,11 +188,26 @@ export function AdminPremiumEditor() {
         <Sparkles className="w-12 h-12 text-gold/20 mb-4" />
         <h3 className="text-xl font-serif">Nenhuma Estação Selecionada</h3>
         <p className="text-muted-foreground mt-2 max-w-md">
-          Para usar a Máquina Editorial Pro, selecione uma estação no Hub ou marque uma como "Ativa".
+          Para usar a Máquina Editorial Pro, selecione uma estação abaixo ou marque uma como "Ativa" no Hub.
         </p>
-        <Button className="mt-6 bg-gold text-black" onClick={() => navigate('/admin/clube')}>
-          Ir para o Hub
-        </Button>
+        
+        <div className="mt-8 w-full max-w-xs space-y-4">
+          <Select onValueChange={(id) => navigate(`/admin/clube?tab=clube-premium-editor&estacaoId=${id}`)}>
+            <SelectTrigger className="bg-background border-primary/20">
+              <SelectValue placeholder="Escolher estação..." />
+            </SelectTrigger>
+            <SelectContent>
+              {todasEstacoes?.map(e => (
+                <SelectItem key={e.id} value={e.id}>{e.titulo} ({e.livro_titulo})</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
+          <Button variant="ghost" className="w-full text-muted-foreground" onClick={() => navigate('/admin/clube')}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Voltar ao Hub
+          </Button>
+        </div>
       </div>
     );
   }
