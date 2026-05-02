@@ -95,8 +95,21 @@ export default function SessionRoomCase() {
   if (!caseData) {
     return (
       <AppLayout>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-muted-foreground">Caso não encontrado</div>
+        <div className="min-h-screen flex items-center justify-center px-4">
+          <div className="max-w-md w-full text-center space-y-4">
+            <h1 className="font-display text-2xl text-foreground">Caso não encontrado</h1>
+            <p className="text-sm text-muted-foreground">
+              Este caso pode ter sido arquivado, removido ou você não tem acesso a ele.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-2 justify-center pt-2">
+              <Button onClick={() => navigate('/session-room')}>
+                Voltar à Session Room
+              </Button>
+              <Button variant="outline" onClick={() => navigate('/ferramentas')}>
+                Ver Ferramentas
+              </Button>
+            </div>
+          </div>
         </div>
       </AppLayout>
     );
