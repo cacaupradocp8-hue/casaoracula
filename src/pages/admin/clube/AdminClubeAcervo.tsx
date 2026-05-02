@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, BookOpen, ImageIcon, ExternalLink, Library } from 'lucide-react';
+import { ArrowLeft, BookOpen, ImageIcon, ExternalLink, Library, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function AdminClubeAcervo() {
