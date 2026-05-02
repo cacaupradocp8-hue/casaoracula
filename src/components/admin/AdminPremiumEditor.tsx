@@ -187,14 +187,19 @@ export function AdminPremiumEditor() {
   return (
     <div className="flex h-[calc(100vh-10rem)] bg-background border border-primary/10 rounded-2xl overflow-hidden shadow-2xl">
       {/* 1. Sidebar Premium (Notion Style) */}
-      <aside className="w-16 md:w-64 border-r border-primary/5 bg-muted/20 flex flex-col shrink-0">
+      <aside className="w-16 md:w-64 border-r border-primary/5 bg-muted/10 flex flex-col shrink-0">
         <div className="p-4 border-b border-primary/5 flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center">
-            <Sparkles className="w-4 h-4 text-gold" />
-          </div>
-          <div className="flex flex-col hidden md:block">
-            <span className="font-display text-sm font-bold tracking-tight">Casa Orácula <span className="text-gold">Pro</span></span>
-            <span className="text-[9px] text-muted-foreground truncate max-w-[150px]">{estacaoAtual?.titulo || 'Carregando...'}</span>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-8 w-8 text-muted-foreground hover:text-gold"
+            onClick={() => navigate('/admin/clube')}
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <div className="flex flex-col hidden md:block overflow-hidden">
+            <span className="font-display text-[10px] font-bold tracking-tight uppercase text-gold">Máquina Editorial</span>
+            <span className="text-[11px] font-serif truncate text-foreground">{estacaoAtual?.titulo || 'Carregando...'}</span>
           </div>
         </div>
         
