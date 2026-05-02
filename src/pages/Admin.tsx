@@ -213,10 +213,10 @@ export default function Admin() {
                   icon={<Settings className="w-5 h-5" />}
                 />
               )}
-              {isDirectClubeRoute && activeTab !== 'clube' && (
+              {isDirectClubeRoute && (
                 <SectionHeader
-                  title="Clube Editorial"
-                  subtitle="Operação Premium"
+                  title="Clube Editorial Oracular"
+                  subtitle="Operação Premium & Gestão de Conteúdo"
                   icon={<Layout className="w-5 h-5 text-gold" />}
                 />
               )}
