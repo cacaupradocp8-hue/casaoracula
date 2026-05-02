@@ -185,11 +185,26 @@ export function AdminPremiumEditor() {
         <Sparkles className="w-12 h-12 text-gold/20 mb-4" />
         <h3 className="text-xl font-serif">Nenhuma Estação Selecionada</h3>
         <p className="text-muted-foreground mt-2 max-w-md">
-          Para usar a Máquina Editorial Pro, selecione uma estação no Hub ou marque uma como "Ativa".
+          Para usar a Máquina Editorial Pro, selecione uma estação abaixo ou marque uma como "Ativa" no Hub.
         </p>
-        <Button className="mt-6 bg-gold text-black" onClick={() => navigate('/admin/clube')}>
-          Ir para o Hub
-        </Button>
+        
+        <div className="mt-8 w-full max-w-xs space-y-4">
+          <Select onValueChange={(id) => navigate(`/admin/clube?tab=clube-premium-editor&estacaoId=${id}`)}>
+            <SelectTrigger className="bg-background border-primary/20">
+              <SelectValue placeholder="Escolher estação..." />
+            </SelectTrigger>
+            <SelectContent>
+              {todasEstacoes?.map(e => (
+                <SelectItem key={e.id} value={e.id}>{e.titulo} ({e.livro_titulo})</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
+          <Button variant="ghost" className="w-full text-muted-foreground" onClick={() => navigate('/admin/clube')}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Voltar ao Hub
+          </Button>
+        </div>
       </div>
     );
   }
