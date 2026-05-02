@@ -293,7 +293,7 @@ export function AdminPremiumEditor() {
                  <Badge variant="outline" className="text-[9px] uppercase tracking-widest opacity-50 h-4">Premium Editor</Badge>
                </div>
              </div>
-          </div>
+          <div className="flex items-center gap-2">
              <Button 
                variant="ghost" 
                size="icon" 
