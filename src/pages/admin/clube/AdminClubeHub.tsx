@@ -116,8 +116,8 @@ export default function AdminClubeHub() {
     }
   });
 
-  function cycles_count(est: number | null, cic: number | null) {
-    return (est || 0) + (cic || 0);
+  function cycles_count(est: number | null | undefined, cic: number | null | undefined) {
+    return (Number(est) || 0) + (Number(cic) || 0);
   }
 
   const getStatText = (type?: string) => {
