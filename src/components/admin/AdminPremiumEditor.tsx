@@ -410,25 +410,53 @@ export function AdminPremiumEditor() {
                <LabConfigManager cicloId={estacaoAtual?.id || ''} />
             </TabsContent>
 
-            <TabsContent value="ia" className="mt-0 space-y-8">
-               <Card className="bg-gold/5 border-gold/10">
-                 <CardHeader>
-                    <CardTitle className="text-gold flex items-center gap-2">
-                       <Bot className="w-5 h-5" /> Hub de Agentes
-                    </CardTitle>
-                    <CardDescription>Peça para a IA gerar conteúdo baseado na essência da estação.</CardDescription>
-                 </CardHeader>
-                 <CardContent className="space-y-4">
-                    <div className="p-4 rounded-xl bg-background/50 border border-primary/5 min-h-[200px] flex items-center justify-center text-muted-foreground italic text-sm">
-                       Selecione um agente na lateral e peça uma tarefa específica.
-                    </div>
-                    <div className="flex gap-2">
-                       <Input placeholder={`Comando para a ${selectedAgent}...`} />
-                       <Button className="bg-gold text-black"><Sparkles className="w-4 h-4 mr-2" /> Gerar</Button>
-                    </div>
-                 </CardContent>
-               </Card>
-            </TabsContent>
+             <TabsContent value="ia" className="mt-0 space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <Card className="bg-gold/5 border-gold/10">
+                     <CardHeader>
+                        <CardTitle className="text-gold flex items-center gap-2">
+                           <Bot className="w-5 h-5" /> Ateliê de Criação IA
+                        </CardTitle>
+                        <CardDescription>Peça para a {agents.find(a => a.id === selectedAgent)?.name} gerar conteúdo para este passo.</CardDescription>
+                     </CardHeader>
+                     <CardContent className="space-y-4">
+                        <div className="p-4 rounded-xl bg-background/50 border border-primary/5 min-h-[150px] text-xs leading-relaxed">
+                           {editingItem ? (
+                             <>
+                               <p className="font-bold text-gold mb-2 uppercase tracking-widest text-[9px]">Contexto Atual:</p>
+                               <p className="text-muted-foreground italic mb-4">"Estamos no passo '{editingItem.titulo}', que é do tipo {editingItem.tipo}. O livro base é '{estacaoAtual.livro_titulo}'."</p>
+                               <p>Selecione uma tarefa abaixo para começar:</p>
+                             </>
+                           ) : (
+                             <p className="text-muted-foreground italic text-center">Selecione um passo na lateral para contextalizar a IA.</p>
+                           )}
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                           <Button variant="outline" size="sm" className="text-[10px] h-auto py-2 text-left justify-start px-3 border-primary/10">Sugerir Título & Subtítulo</Button>
+                           <Button variant="outline" size="sm" className="text-[10px] h-auto py-2 text-left justify-start px-3 border-primary/10">Gerar Texto de Abertura</Button>
+                           <Button variant="outline" size="sm" className="text-[10px] h-auto py-2 text-left justify-start px-3 border-primary/10">Sugerir Exercício Lab</Button>
+                           <Button variant="outline" size="sm" className="text-[10px] h-auto py-2 text-left justify-start px-3 border-primary/10">Criar Perguntas Guia</Button>
+                        </div>
+                        <div className="flex gap-2 pt-4">
+                           <Input placeholder={`Comando personalizado para a ${selectedAgent}...`} className="text-xs" />
+                           <Button className="bg-gold text-black h-9"><Sparkles className="w-4 h-4" /></Button>
+                        </div>
+                     </CardContent>
+                   </Card>
+
+                   <Card className="bg-muted/30 border-primary/5">
+                      <CardHeader>
+                        <CardTitle className="text-sm">Sugestões Geradas</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                         <div className="h-64 flex flex-col items-center justify-center text-center text-muted-foreground italic text-xs p-8">
+                            <Sparkles className="w-8 h-8 opacity-10 mb-2" />
+                            Ainda não há sugestões. Escolha uma tarefa à esquerda.
+                         </div>
+                      </CardContent>
+                   </Card>
+                </div>
+             </TabsContent>
           </Tabs>
         </div>
       </main>
