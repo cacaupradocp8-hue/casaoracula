@@ -62,7 +62,7 @@ export default function SessionRoomCase() {
       setNarrativeMap(map);
     } catch (error) {
       console.error('Error loading case:', error);
-      navigate('/session-room');
+      setCaseData(null);
     } finally {
       setLoading(false);
     }
