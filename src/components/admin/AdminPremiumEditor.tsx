@@ -10,7 +10,7 @@ import {
   Sparkles, Bot, Brain, Layout, Eye, Zap, 
   MessageSquare, BookOpen, PenTool, Search, 
   Settings, ChevronRight, PanelRight, Play, Plus, Trash2, Save,
-  CheckCircle2, Clock
+  CheckCircle2, Clock, ChevronLeft, ArrowLeft
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -20,9 +20,13 @@ import { LabConfigManager } from './clube-livro/LabConfigManager';
 import { useToast } from '@/hooks/use-toast';
 import { RotaItem } from './clube-livro/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 export function AdminPremiumEditor() {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const estacaoIdParam = searchParams.get('estacaoId');
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('editor');
   const [showPreview, setShowPreview] = useState(true);
