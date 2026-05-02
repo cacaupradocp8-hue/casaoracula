@@ -185,7 +185,7 @@ export default function AdminClubeHub() {
       </div>
 
       {/* Atalho Operacional: Estação Ativa */}
-      {stats?.activeStation && (
+      {stats?.activeStation ? (
         <Card className="bg-primary/5 border-gold/30 shadow-2xl shadow-gold/5 animate-in slide-in-from-top-4 duration-1000">
           <CardContent className="p-0 overflow-hidden">
             <div className="flex flex-col md:flex-row">
