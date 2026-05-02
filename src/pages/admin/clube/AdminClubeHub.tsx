@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import {
   BookOpen, RefreshCw, DoorOpen, GraduationCap, MessageSquare, Library,
   ArrowRight, Wrench, Settings, Sparkles, Plus, Clock, Layout, LucideIcon,
-  Eye, EyeOff, ExternalLink, ImageIcon, Users
+  Eye, EyeOff, ExternalLink, ImageIcon, Users, Zap
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
