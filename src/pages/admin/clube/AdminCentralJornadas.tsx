@@ -35,20 +35,24 @@ export default function AdminCentralJornadas() {
   });
 
   return (
-    <div className="animate-in fade-in duration-500">
-      <div className="flex items-center gap-4 mb-8">
-        <Button variant="ghost" size="icon" onClick={() => {
-          if ((window as any).Admin_SetActiveTab) {
-            (window as any).Admin_SetActiveTab('clube');
-          }
-          navigate('/admin/clube');
-        }}>
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <div className="flex-1 min-w-0">
-          <h2 className="text-xl font-serif text-foreground">Central de Ciclos</h2>
-          <p className="text-sm text-muted-foreground">Gerencie estações, estradas e livros ativos</p>
+    <div className="animate-in fade-in duration-500 space-y-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-primary/10">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => {
+              (window as any).Admin_SetActiveTab?.('clube');
+              navigate('/admin/clube');
+            }}>
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <h2 className="text-2xl font-serif text-foreground">Central de Ciclos & Estações</h2>
+          </div>
+          <p className="text-sm text-muted-foreground ml-10">Gerencie a sequência temporal e as obras ativas do Clube</p>
         </div>
+        <Button className="bg-gold hover:bg-gold/80 text-black font-semibold gap-2" onClick={() => navigate('/admin/clube?tab=clube-premium-editor')}>
+          <Plus className="w-4 h-4" />
+          Nova Estação
+        </Button>
       </div>
 
       {isLoading ? (
