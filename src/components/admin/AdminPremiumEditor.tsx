@@ -160,15 +160,24 @@ export function AdminPremiumEditor() {
     setEditingItem(prev => prev ? ({ ...prev, ...updates }) : updates);
   };
 
+  if (isLoadingEstacao) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center bg-card border border-primary/10 rounded-2xl h-[calc(100vh-10rem)]">
+        <Loader2 className="w-8 h-8 text-gold animate-spin mb-4" />
+        <p className="text-muted-foreground">Localizando essência da estação...</p>
+      </div>
+    );
+  }
+
   if (!estacaoAtual) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center bg-card border border-primary/10 rounded-2xl h-[calc(100vh-10rem)]">
         <Sparkles className="w-12 h-12 text-gold/20 mb-4" />
-        <h3 className="text-xl font-serif">Nenhuma Estação Ativa</h3>
+        <h3 className="text-xl font-serif">Nenhuma Estação Selecionada</h3>
         <p className="text-muted-foreground mt-2 max-w-md">
-          Para usar a Máquina Editorial Pro, você precisa ter uma estação marcada como "Ativa" no Hub do Clube.
+          Para usar a Máquina Editorial Pro, selecione uma estação no Hub ou marque uma como "Ativa".
         </p>
-        <Button className="mt-6 bg-gold text-black" onClick={() => (window as any).Admin_SetActiveTab?.('clube')}>
+        <Button className="mt-6 bg-gold text-black" onClick={() => navigate('/admin/clube')}>
           Ir para o Hub
         </Button>
       </div>
