@@ -243,7 +243,7 @@ export default function AdminClubeHub() {
                       variant="outline" 
                       size="sm"
                       className="gap-2 border-gold/20 text-gold hover:bg-gold/5"
-                      onClick={() => navigate(`/admin/clube/ciclo/${stats.activeStation.id}`)}
+                      onClick={() => navigate(`/admin/clube/central/${stats.activeStation.id}`)}
                     >
                       <Layout className="w-4 h-4" />
                       Editar Conteúdo
