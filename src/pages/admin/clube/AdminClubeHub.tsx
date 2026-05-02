@@ -245,7 +245,8 @@ export default function AdminClubeHub() {
                       className="gap-2 border-gold/20 text-gold hover:bg-gold/5"
                       onClick={() => {
                         // Navigate to Premium Editor for this station
-                        navigate(`/admin/clube?tab=clube-premium-editor&estacaoId=${stats.activeStation.id}`);
+                        const id = stats.activeStation?.id;
+                        navigate(`/admin/clube?tab=clube-premium-editor${id ? `&estacaoId=${id}` : ''}`);
                       }}
                     >
                       <Zap className="w-4 h-4" />
