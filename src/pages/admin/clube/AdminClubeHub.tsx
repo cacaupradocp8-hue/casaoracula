@@ -267,6 +267,19 @@ export default function AdminClubeHub() {
             </div>
           </CardContent>
         </Card>
+      ) : (
+        <Card className="bg-muted/10 border-dashed border-primary/10">
+          <CardContent className="p-8 text-center space-y-4">
+            <Sparkles className="w-10 h-10 text-muted-foreground/20 mx-auto" />
+            <h3 className="text-lg font-serif">Nenhuma Estação Ativa</h3>
+            <p className="text-sm text-muted-foreground max-w-xs mx-auto">
+              Marque uma estação como "Ativa" na Central de Ciclos para gerenciar seus conteúdos aqui.
+            </p>
+            <Button variant="outline" size="sm" onClick={() => handleTabChange('clube-jornadas')}>
+              Ver Todas as Estações
+            </Button>
+          </CardContent>
+        </Card>
       )}
 
       {/* Grid de Cards Estilo Netflix/Notion */}
