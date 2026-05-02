@@ -243,18 +243,22 @@ export default function AdminClubeHub() {
                       variant="outline" 
                       size="sm"
                       className="gap-2 border-gold/20 text-gold hover:bg-gold/5"
-                      onClick={() => navigate(`/admin/clube/central/${stats.activeStation.id}`)}
+                      onClick={() => {
+                        // Navigate to Premium Editor for this station
+                        navigate(`/admin/clube?tab=clube-premium-editor&estacaoId=${stats.activeStation.id}`);
+                      }}
                     >
-                      <Layout className="w-4 h-4" />
-                      Editar Conteúdo
+                      <Zap className="w-4 h-4" />
+                      Máquina Editorial
                     </Button>
                     <Button 
                       size="sm"
-                      className="gap-2 bg-gold hover:bg-gold/80 text-black font-bold"
-                      onClick={() => navigate(`/admin/clube/central/${stats.activeStation.id}?tab=passos`)}
+                      variant="ghost"
+                      className="gap-2 text-muted-foreground hover:text-foreground"
+                      onClick={() => navigate(`/admin/clube/central/${stats.activeStation.id}`)}
                     >
-                      <Plus className="w-4 h-4" />
-                      Novo Passo
+                      <Settings className="w-4 h-4" />
+                      Central da Estação
                     </Button>
                   </div>
                 </div>
