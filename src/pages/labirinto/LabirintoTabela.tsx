@@ -1,13 +1,14 @@
 import { AppLayout } from "@/components/layout/AppLayout";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, TableIcon, Loader2, Shield, Circle, Droplets, Flame, Sparkles, Home, ChevronRight, RotateCcw } from "lucide-react";
-import { useNavigate, Link, Navigate } from "react-router-dom";
+import { TableIcon, Loader2, Shield, Circle, Droplets, Flame, Sparkles, RotateCcw } from "lucide-react";
+import { Navigate } from "react-router-dom";
 import { useLabirintoPortas } from "@/hooks/useLabirinto";
 import { useAuth } from "@/contexts/AuthContext";
 import { canAccessFeature } from "@/types/portal";
 import { cn } from "@/lib/utils";
+import { BackButton } from "@/components/navigation/BackButton";
+import { PageBreadcrumb } from "@/components/navigation/PageBreadcrumb";
 
 const TIPO_CAMPO_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   limiar: { label: "Limiar", icon: Sparkles, color: "text-purple-400" },
@@ -17,6 +18,8 @@ const TIPO_CAMPO_CONFIG: Record<string, { label: string; icon: React.ElementType
   emergencia: { label: "Emergência", icon: Flame, color: "text-green-400" },
   reintegracao: { label: "Reintegração", icon: RotateCcw, color: "text-gold" },
 };
+
+import { useNavigate } from "react-router-dom";
 
 export default function LabirintoTabela() {
   const navigate = useNavigate();
@@ -33,34 +36,16 @@ export default function LabirintoTabela() {
 
   return (
     <AppLayout>
-      <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
-        {/* Back button */}
-        <Button
-          variant="ghost"
-          onClick={() => navigate("/labirinto")}
-          className="gap-2 text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Voltar ao Labirinto
-        </Button>
+      <div className="max-w-6xl mx-auto px-4 py-6 sm:py-8 space-y-6 sm:space-y-8 min-w-0">
+        <BackButton to="/labirinto" label="Voltar ao Labirinto" />
 
-        {/* Breadcrumb Navigation */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
-            <Home className="w-3 h-3" />
-            Casa
-          </Link>
-          <ChevronRight className="w-3 h-3" />
-          <Link to="/ferramentas-metodo" className="hover:text-foreground transition-colors">
-            Ferramentas
-          </Link>
-          <ChevronRight className="w-3 h-3" />
-          <Link to="/labirinto" className="hover:text-foreground transition-colors">
-            Labirinto
-          </Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-foreground">Tabela de Referência</span>
-        </nav>
+        <PageBreadcrumb
+          items={[
+            { label: "Ferramentas", href: "/ferramentas-metodo" },
+            { label: "Labirinto", href: "/labirinto" },
+            { label: "Tabela de Referência" },
+          ]}
+        />
 
         {/* Header */}
         <div className="text-center space-y-4">
@@ -92,7 +77,7 @@ export default function LabirintoTabela() {
           <Card>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
-                <Table>
+                <Table className="min-w-[720px]">
                   <TableHeader>
                     <TableRow>
                       <TableHead className="w-[200px]">Porta</TableHead>
