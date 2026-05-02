@@ -24,6 +24,9 @@ export default function AdminClubeAcervo() {
     },
   });
 
+  const activeBook = books?.find(b => b.ativa);
+  const otherBooks = books?.filter(b => !b.ativa) || [];
+
   return (
     <div className="animate-in fade-in duration-500 space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -57,97 +60,97 @@ export default function AdminClubeAcervo() {
       ) : books && books.length > 0 ? (
         <div className="space-y-12">
           {/* Destaque: Obra Ativa */}
-          {books.find(b => b.ativa) && (
+          {activeBook && (
             <div className="space-y-4">
               <Badge className="bg-gold text-black">Obra em Estudo (Ativa)</Badge>
-              <div className="grid grid-cols-1 gap-6">
-                {books.filter(b => b.ativa).map(book => (
-                  <Card key={book.id} className="overflow-hidden bg-gold/5 border-gold/20 hover:border-gold/40 transition-all flex flex-col md:flex-row h-auto md:h-64 shadow-xl shadow-gold/5">
-                     <div className="w-full md:w-48 shrink-0 bg-muted">
-                        {book.livro_capa_url ? (
-                          <img src={book.livro_capa_url} alt="Capa" className="w-full h-full object-cover" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-muted-foreground"><ImageIcon className="w-10 h-10 opacity-20" /></div>
-                        )}
-                     </div>
-                     <div className="flex-1 p-8 flex flex-col justify-between">
-                        <div>
-                           <h3 className="text-3xl font-serif text-foreground mb-2">{book.livro_titulo}</h3>
-                           <p className="text-lg text-muted-foreground italic mb-4">{book.livro_autor}</p>
-                           <p className="text-sm text-muted-foreground max-w-xl">Esta obra está sendo explorada na estação <strong>{book.titulo}</strong>. Todo o conteúdo editorial e as rotas estão sendo geradas em torno deste livro.</p>
+              <Card className="overflow-hidden bg-gold/5 border-gold/20 hover:border-gold/40 transition-all flex flex-col md:flex-row h-auto md:h-64 shadow-xl shadow-gold/5">
+                 <div className="w-full md:w-48 shrink-0 bg-muted">
+                    {activeBook.livro_capa_url ? (
+                      <img src={activeBook.livro_capa_url} alt="Capa" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground"><ImageIcon className="w-10 h-10 opacity-20" /></div>
+                    )}
+                 </div>
+                 <div className="flex-1 p-8 flex flex-col justify-between">
+                    <div>
+                       <h3 className="text-3xl font-serif text-foreground mb-2">{activeBook.livro_titulo}</h3>
+                       <p className="text-lg text-muted-foreground italic mb-4">{activeBook.livro_autor}</p>
+                       <p className="text-sm text-muted-foreground max-w-xl">Esta obra está sendo explorada na estação <strong>{activeBook.titulo}</strong>.</p>
+                    </div>
+                    <div className="flex gap-3 pt-6">
+                       <Button className="bg-gold text-black hover:bg-gold/80 font-bold gap-2" onClick={() => navigate(`/admin/clube?tab=clube-premium-editor&estacaoId=${activeBook.id}`)}>
+                         <Zap className="w-4 h-4" />
+                         Máquina Editorial
+                       </Button>
+                       <Button variant="outline" className="border-gold/20 text-gold hover:bg-gold/10" onClick={() => navigate(`/admin/clube/central/${activeBook.id}`)}>
+                         Central da Estação
+                       </Button>
+                    </div>
+                 </div>
+              </Card>
+            </div>
+          )}
+
+          {otherBooks.length > 0 && (
+            <div className="space-y-4">
+              <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground/50">Arquivo de Obras</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {otherBooks.map((book) => (
+                  <Card key={book.id} className="overflow-hidden bg-card/50 hover:border-gold/30 transition-all group">
+                    <div className="aspect-[3/4] relative bg-muted">
+                      {book.livro_capa_url ? (
+                        <img 
+                          src={book.livro_capa_url} 
+                          alt={book.livro_titulo || 'Capa'} 
+                          className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                          <ImageIcon className="w-10 h-10 opacity-20" />
                         </div>
-                        <div className="flex gap-3 pt-6">
-                           <Button className="bg-gold text-black hover:bg-gold/80 font-bold gap-2" onClick={() => navigate(`/admin/clube?tab=clube-premium-editor&estacaoId=${book.id}`)}>
-                             <Zap className="w-4 h-4" />
-                             Abrir Máquina Editorial
-                           </Button>
-                           <Button variant="outline" className="border-gold/20 text-gold hover:bg-gold/10" onClick={() => navigate(`/admin/clube/central/${book.id}`)}>
-                             Central da Estação
-                           </Button>
-                        </div>
-                     </div>
+                      )}
+                      <div className="absolute top-2 right-2 flex flex-col gap-2">
+                        {book.ativa && <Badge className="bg-gold text-black border-none">Ativa</Badge>}
+                        {book.publicada && <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">Publicada</Badge>}
+                      </div>
+                    </div>
+                    <CardContent className="p-4 space-y-2">
+                      <h3 className="font-serif text-lg leading-tight truncate">
+                        {book.livro_titulo || 'Sem título'}
+                      </h3>
+                      <p className="text-sm text-muted-foreground italic truncate">
+                        {book.livro_autor || 'Autoria não informada'}
+                      </p>
+                      <div className="pt-2 flex items-center justify-between border-t border-primary/5">
+                        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                          {book.titulo}
+                        </span>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8 hover:text-gold"
+                          onClick={() => navigate(`/admin/clube/central/${book.id}`)}
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
                   </Card>
                 ))}
               </div>
             </div>
           )}
-
-          <div className="space-y-4">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground/50">Arquivo de Obras</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {books.map((book) => (
-            <Card key={book.id} className="overflow-hidden bg-card/50 hover:border-gold/30 transition-all group">
-              <div className="aspect-[3/4] relative bg-muted">
-                {book.livro_capa_url ? (
-                  <img 
-                    src={book.livro_capa_url} 
-                    alt={book.livro_titulo || 'Capa'} 
-                    className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                    <ImageIcon className="w-10 h-10 opacity-20" />
-                  </div>
-                )}
-                <div className="absolute top-2 right-2 flex flex-col gap-2">
-                  {book.ativa && <Badge className="bg-gold text-black border-none">Ativa</Badge>}
-                  {book.publicada && <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">Publicada</Badge>}
-                </div>
-              </div>
-              <CardContent className="p-4 space-y-2">
-                <h3 className="font-serif text-lg leading-tight truncate">
-                  {book.livro_titulo || 'Sem título'}
-                </h3>
-                <p className="text-sm text-muted-foreground italic truncate">
-                  {book.livro_autor || 'Autoria não informada'}
-                </p>
-                <div className="pt-2 flex items-center justify-between border-t border-primary/5">
-                  <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                    Estação: {book.titulo}
-                  </span>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-8 w-8 hover:text-gold"
-                    onClick={() => navigate(`/admin/clube/central/${book.id}`)}
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
         </div>
-      </div>
-    </div>
-  ) : (
-    <div className="text-center py-20 bg-muted/20 rounded-2xl border-2 border-dashed border-primary/5">
-      <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
-      <h3 className="text-lg font-serif">Nenhuma obra encontrada</h3>
-      <p className="text-sm text-muted-foreground mt-2">As obras aparecem aqui assim que você cria uma estação.</p>
-      <Button className="mt-6 bg-gold text-black hover:bg-gold/80" onClick={() => navigate('/admin/clube')}>
-        Ir para o Hub
-      </Button>
+      ) : (
+        <div className="text-center py-20 bg-muted/20 rounded-2xl border-2 border-dashed border-primary/5">
+          <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
+          <h3 className="text-lg font-serif">Nenhuma obra encontrada</h3>
+          <p className="text-sm text-muted-foreground mt-2">As obras aparecem aqui assim que você cria uma estação.</p>
+          <Button className="mt-6 bg-gold text-black hover:bg-gold/80" onClick={() => navigate('/admin/clube')}>
+            Ir para o Hub
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
