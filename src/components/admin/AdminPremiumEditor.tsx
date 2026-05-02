@@ -10,7 +10,7 @@ import {
   Sparkles, Bot, Brain, Layout, Eye, Zap, 
   MessageSquare, BookOpen, PenTool, Search, 
   Settings, ChevronRight, PanelRight, Play, Plus, Trash2, Save,
-  CheckCircle2, Clock, ChevronLeft, ArrowLeft, Loader2
+  CheckCircle2, Clock, ChevronLeft, ArrowLeft, Loader2, RefreshCw
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
