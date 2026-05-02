@@ -42,13 +42,23 @@ export function AdminPremiumEditor() {
     { id: 'curadora', name: 'Curadora', icon: Search, color: 'text-amber-400' },
   ];
 
+  // Fetch all stations for the selector
+  const { data: todasEstacoes } = useQuery({
+    queryKey: ['admin-todas-estacoes-premium'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('clube_estacoes').select('id, titulo, livro_titulo').order('ordem');
+      if (error) throw error;
+      return data;
+    }
+  });
+
   // Fetch target station
   const { data: estacaoAtual, isLoading: isLoadingEstacao } = useQuery({
     queryKey: ['admin-estacao-premium', estacaoIdParam],
     queryFn: async () => {
       let query = supabase.from('clube_estacoes').select('*');
       
-      if (estacaoIdParam) {
+      if (estacaoIdParam && estacaoIdParam !== 'undefined' && estacaoIdParam !== 'null') {
         query = query.eq('id', estacaoIdParam);
       } else {
         query = query.eq('ativa', true);
