@@ -19,7 +19,10 @@ const TIPO_CAMPO_CONFIG: Record<string, { label: string; icon: React.ElementType
   reintegracao: { label: "Reintegração", icon: RotateCcw, color: "text-gold" },
 };
 
+import { useNavigate } from "react-router-dom";
+
 export default function LabirintoTabela() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { data: portas, isLoading } = useLabirintoPortas();
 
