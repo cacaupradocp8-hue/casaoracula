@@ -175,6 +175,9 @@ export function AdminPremiumEditor() {
       <div className="flex flex-col items-center justify-center py-20 text-center bg-card border border-primary/10 rounded-2xl h-[calc(100vh-10rem)]">
         <Loader2 className="w-8 h-8 text-gold animate-spin mb-4" />
         <p className="text-muted-foreground">Localizando essência da estação...</p>
+        <Button variant="ghost" size="sm" className="mt-4 text-[10px] uppercase" onClick={() => queryClient.invalidateQueries({ queryKey: ['admin-estacao-premium'] })}>
+          Forçar Recarregamento
+        </Button>
       </div>
     );
   }
