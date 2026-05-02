@@ -294,7 +294,14 @@ export function AdminPremiumEditor() {
                </div>
              </div>
           </div>
-          <div className="flex items-center gap-2">
+             <Button 
+               variant="ghost" 
+               size="icon" 
+               className="h-8 w-8 text-muted-foreground hover:text-gold"
+               onClick={() => queryClient.invalidateQueries({ queryKey: ['admin-estacao-premium'] })}
+             >
+               <RefreshCw className="w-3.5 h-3.5" />
+             </Button>
              <Button 
                variant="outline" 
                size="sm" 
