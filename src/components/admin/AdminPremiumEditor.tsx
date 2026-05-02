@@ -64,9 +64,9 @@ export function AdminPremiumEditor() {
         query = query.eq('ativa', true);
       }
 
-      const { data, error } = await query.maybeSingle();
+      const { data, error } = await query;
       if (error) throw error;
-      return data;
+      return data && data.length > 0 ? data[0] : null;
     }
   });
 
