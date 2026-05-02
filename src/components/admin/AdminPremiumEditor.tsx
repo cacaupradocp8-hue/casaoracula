@@ -264,11 +264,18 @@ export function AdminPremiumEditor() {
       </aside>
 
       {/* 2. Editor Central (Apple/Notion Style) */}
-      <main className="flex-1 overflow-y-auto bg-background/50 relative scrollbar-none">
-        <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-sm border-b border-primary/5 p-4 flex items-center justify-between">
+      <main className="flex-1 overflow-y-auto bg-background relative scrollbar-none">
+        <div className="sticky top-0 z-20 bg-background/90 backdrop-blur-md border-b border-primary/10 p-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h2 className="font-serif text-lg">Editor Editorial</h2>
-            <Badge variant="outline" className="text-[9px] uppercase tracking-widest text-gold border-gold/30">Versão Premium</Badge>
+            <div className="w-10 h-14 bg-muted rounded-md overflow-hidden border border-primary/10 hidden sm:block">
+              {estacaoAtual.livro_capa_url && (
+                <img src={estacaoAtual.livro_capa_url} alt="Capa" className="w-full h-full object-cover" />
+              )}
+            </div>
+            <div>
+              <h2 className="font-serif text-sm leading-tight">{estacaoAtual.livro_titulo || 'Estação sem Livro'}</h2>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{estacaoAtual.titulo}</p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
              <Button 
