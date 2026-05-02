@@ -55,7 +55,46 @@ export default function AdminClubeAcervo() {
           ))}
         </div>
       ) : books && books.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="space-y-12">
+          {/* Destaque: Obra Ativa */}
+          {books.find(b => b.ativa) && (
+            <div className="space-y-4">
+              <Badge className="bg-gold text-black">Obra em Estudo (Ativa)</Badge>
+              <div className="grid grid-cols-1 gap-6">
+                {books.filter(b => b.ativa).map(book => (
+                  <Card key={book.id} className="overflow-hidden bg-gold/5 border-gold/20 hover:border-gold/40 transition-all flex flex-col md:flex-row h-auto md:h-64 shadow-xl shadow-gold/5">
+                     <div className="w-full md:w-48 shrink-0 bg-muted">
+                        {book.livro_capa_url ? (
+                          <img src={book.livro_capa_url} alt="Capa" className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-muted-foreground"><ImageIcon className="w-10 h-10 opacity-20" /></div>
+                        )}
+                     </div>
+                     <div className="flex-1 p-8 flex flex-col justify-between">
+                        <div>
+                           <h3 className="text-3xl font-serif text-foreground mb-2">{book.livro_titulo}</h3>
+                           <p className="text-lg text-muted-foreground italic mb-4">{book.livro_autor}</p>
+                           <p className="text-sm text-muted-foreground max-w-xl">Esta obra está sendo explorada na estação <strong>{book.titulo}</strong>. Todo o conteúdo editorial e as rotas estão sendo geradas em torno deste livro.</p>
+                        </div>
+                        <div className="flex gap-3 pt-6">
+                           <Button className="bg-gold text-black hover:bg-gold/80 font-bold gap-2" onClick={() => navigate(`/admin/clube?tab=clube-premium-editor&estacaoId=${book.id}`)}>
+                             <Zap className="w-4 h-4" />
+                             Abrir Máquina Editorial
+                           </Button>
+                           <Button variant="outline" className="border-gold/20 text-gold hover:bg-gold/10" onClick={() => navigate(`/admin/clube/central/${book.id}`)}>
+                             Central da Estação
+                           </Button>
+                        </div>
+                     </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="space-y-4">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground/50">Arquivo de Obras</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {books.map((book) => (
             <Card key={book.id} className="overflow-hidden bg-card/50 hover:border-gold/30 transition-all group">
               <div className="aspect-[3/4] relative bg-muted">
