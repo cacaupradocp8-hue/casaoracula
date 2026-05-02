@@ -20,7 +20,6 @@ const TIPO_CAMPO_CONFIG: Record<string, { label: string; icon: React.ElementType
 };
 
 export default function LabirintoTabela() {
-  const navigate = useNavigate();
   const { user } = useAuth();
   const { data: portas, isLoading } = useLabirintoPortas();
 
@@ -34,34 +33,16 @@ export default function LabirintoTabela() {
 
   return (
     <AppLayout>
-      <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
-        {/* Back button */}
-        <Button
-          variant="ghost"
-          onClick={() => navigate("/labirinto")}
-          className="gap-2 text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Voltar ao Labirinto
-        </Button>
+      <div className="max-w-6xl mx-auto px-4 py-6 sm:py-8 space-y-6 sm:space-y-8 min-w-0">
+        <BackButton to="/labirinto" label="Voltar ao Labirinto" />
 
-        {/* Breadcrumb Navigation */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
-            <Home className="w-3 h-3" />
-            Casa
-          </Link>
-          <ChevronRight className="w-3 h-3" />
-          <Link to="/ferramentas-metodo" className="hover:text-foreground transition-colors">
-            Ferramentas
-          </Link>
-          <ChevronRight className="w-3 h-3" />
-          <Link to="/labirinto" className="hover:text-foreground transition-colors">
-            Labirinto
-          </Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-foreground">Tabela de Referência</span>
-        </nav>
+        <PageBreadcrumb
+          items={[
+            { label: "Ferramentas", href: "/ferramentas-metodo" },
+            { label: "Labirinto", href: "/labirinto" },
+            { label: "Tabela de Referência" },
+          ]}
+        />
 
         {/* Header */}
         <div className="text-center space-y-4">
