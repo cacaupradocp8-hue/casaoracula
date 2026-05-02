@@ -51,7 +51,6 @@ export const adminNavGroups: AdminNavGroup[] = [
       { key: 'cursos', label: 'Cursos & Aulas', icon: Video },
       { key: 'travessias', label: 'Travessias', icon: Compass },
       { key: 'formacao', label: 'Páginas de Vendas', icon: Megaphone },
-      { key: 'clube-treinamento', label: 'Sala de Treinamento', icon: GraduationCap, route: '/admin/clube/treinamento' },
       { key: 'certificacao', label: 'Certificações', icon: UserCheck },
     ],
   },
