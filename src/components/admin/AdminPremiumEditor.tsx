@@ -203,39 +203,45 @@ export function AdminPremiumEditor() {
           </div>
         </div>
         
-        <div className="flex-1 p-2 space-y-1 overflow-y-auto scrollbar-none">
-          <NavItem active={activeTab === 'editor'} onClick={() => setActiveTab('editor')} icon={Layout} label="Máquina de Rotas" />
+        <div className="flex-1 p-2 space-y-1 overflow-y-auto scrollbar-none bg-background/50">
+          <NavItem active={activeTab === 'editor'} onClick={() => setActiveTab('editor')} icon={Layout} label="Caminho da Rota" />
           
           {/* Steps List */}
           {activeTab === 'editor' && (
             <div className="mt-4 mb-2">
               <div className="px-3 py-2 flex items-center justify-between">
-                <span className="text-[10px] uppercase font-bold text-muted-foreground/50 tracking-widest hidden md:block">Passos da Jornada</span>
+                <span className="text-[10px] uppercase font-bold text-muted-foreground/50 tracking-widest hidden md:block">Sequência da Jornada</span>
                 <Button variant="ghost" size="icon" className="h-6 w-6 text-gold" onClick={handleCreateItem}>
                   <Plus className="w-3.5 h-3.5" />
                 </Button>
               </div>
-              <div className="space-y-0.5">
-                {items?.map(item => (
-                  <button
-                    key={item.id}
-                    onClick={() => setSelectedItemId(item.id)}
-                    className={cn(
-                      "w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-all text-left",
-                      selectedItemId === item.id ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                    )}
-                  >
-                    <div className={cn("w-1.5 h-1.5 rounded-full", item.publicado ? "bg-emerald-500" : "bg-amber-500")} />
-                    <span className="truncate flex-1 hidden md:block">{item.titulo}</span>
-                    <Badge variant="secondary" className="text-[8px] p-0 opacity-50 hidden md:block uppercase">{item.tipo}</Badge>
-                  </button>
-                ))}
+              <div className="space-y-0.5 max-h-[40vh] overflow-y-auto pr-1">
+                {isLoadingItems ? (
+                  <div className="p-4 flex justify-center"><Loader2 className="w-4 h-4 animate-spin text-muted-foreground" /></div>
+                ) : items?.length === 0 ? (
+                  <p className="text-[10px] text-muted-foreground px-3 italic">Nenhum passo criado.</p>
+                ) : (
+                  items?.map(item => (
+                    <button
+                      key={item.id}
+                      onClick={() => setSelectedItemId(item.id)}
+                      className={cn(
+                        "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-all text-left group",
+                        selectedItemId === item.id ? "bg-gold/15 text-gold font-bold border-l-2 border-gold" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                      )}
+                    >
+                      <span className="opacity-30 group-hover:opacity-100 transition-opacity font-mono text-[9px] w-3">{item.ordem}</span>
+                      <span className="truncate flex-1 hidden md:block">{item.titulo}</span>
+                      <div className={cn("w-1.5 h-1.5 rounded-full shrink-0", item.publicado ? "bg-emerald-500 shadow-sm shadow-emerald-500/50" : "bg-amber-500")} />
+                    </button>
+                  ))
+                )}
               </div>
             </div>
           )}
 
-          <NavItem active={activeTab === 'treinamento'} onClick={() => setActiveTab('treinamento')} icon={Zap} label="Sala de Treinamento" />
-          <NavItem active={activeTab === 'ia'} onClick={() => setActiveTab('ia')} icon={Bot} label="Agentes de Campo" />
+          <NavItem active={activeTab === 'treinamento'} onClick={() => setActiveTab('treinamento')} icon={Zap} label="Simulador de Caso" />
+          <NavItem active={activeTab === 'ia'} onClick={() => setActiveTab('ia')} icon={Bot} label="Gerador IA (80/20)" />
           
           <div className="pt-4 pb-2 px-3">
              <span className="text-[10px] uppercase font-bold text-muted-foreground/50 tracking-widest hidden md:block">Ajudantes IA</span>
