@@ -251,7 +251,7 @@ export default function AdminClubeHub() {
                     <Button 
                       size="sm"
                       className="gap-2 bg-gold hover:bg-gold/80 text-black font-bold"
-                      onClick={() => navigate(`/admin/clube/ciclo/${stats.activeStation.id}?tab=passos`)}
+                      onClick={() => navigate(`/admin/clube/central/${stats.activeStation.id}?tab=passos`)}
                     >
                       <Plus className="w-4 h-4" />
                       Novo Passo
