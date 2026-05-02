@@ -77,7 +77,7 @@ export default function LabirintoTabela() {
           <Card>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
-                <Table>
+                <Table className="min-w-[720px]">
                   <TableHeader>
                     <TableRow>
                       <TableHead className="w-[200px]">Porta</TableHead>
