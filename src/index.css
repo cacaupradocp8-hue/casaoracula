@@ -147,34 +147,50 @@
     overflow-x: hidden;
     position: relative;
     width: 100%;
+    max-width: 100vw;
     -webkit-tap-highlight-color: transparent;
   }
 
   html {
     scroll-behavior: smooth;
     height: -webkit-fill-available;
+    /* Fluid base font: 15px on small phones → 16px on tablets+ */
+    font-size: clamp(15px, 0.93rem + 0.15vw, 17px);
   }
 
   body {
     @apply bg-background text-foreground font-body antialiased;
     background-image: var(--gradient-midnight);
     min-height: 100vh;
-    font-size: 16px;
-    line-height: 1.7;
+    line-height: 1.65;
     letter-spacing: 0.01em;
     word-break: break-word;
     overflow-wrap: break-word;
   }
 
+  /* Touch targets — min 44x44 on mobile per WCAG */
+  @media (max-width: 767px) {
+    button, a[role="button"], [data-slot="button"] {
+      min-height: 40px;
+    }
+  }
+
   h1, h2, h3, h4, h5, h6 {
     @apply font-display;
     font-weight: 600;
-    line-height: 1.3;
+    line-height: 1.25;
     letter-spacing: -0.01em;
+    text-wrap: balance;
   }
 
   p, li, span, label, td {
     line-height: 1.7;
+  }
+
+  /* Prevent images/media from breaking responsive layout */
+  img, video, canvas, svg {
+    max-width: 100%;
+    height: auto;
   }
 }
 
