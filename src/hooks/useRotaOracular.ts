@@ -360,6 +360,7 @@ export function useRotaOracular() {
     encontro: encontro || null,
     progressoRota: progressoArray,
     concluirPonto,
+    marcarEmAndamento,
     estacaoIncompleta,
     isLoading: loadingEstacao,
   };
