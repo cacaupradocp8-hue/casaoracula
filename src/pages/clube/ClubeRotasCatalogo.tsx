@@ -99,7 +99,8 @@ export default function ClubeRotasCatalogo() {
       </ResponsiveContainer>
 
       {/* Grid */}
-      <ResponsiveContainer size="wide" className="py-10 md:py-14" as="section">
+      <section className="py-10 md:py-14">
+        <ResponsiveContainer size="wide">
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
@@ -129,6 +130,7 @@ export default function ClubeRotasCatalogo() {
             ))}
           </div>
         )}
+        </ResponsiveContainer>
       </section>
 
       {/* Modal estação bloqueada */}
