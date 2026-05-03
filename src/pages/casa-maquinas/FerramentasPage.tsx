@@ -116,7 +116,7 @@ export default function FerramentasPage() {
   return (
     <CasaMaquinasLayout title="Ferramentas Clínicas" subtitle="Instrumentos clínicos do Método Orácula">
       {/* Category filter */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="flex gap-2 mb-6 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-thin md:flex-wrap md:overflow-visible">
         {CATEGORIES.map(cat => {
           const Icon = cat.icon;
           return (
@@ -124,13 +124,13 @@ export default function FerramentasPage() {
               key={cat.key}
               onClick={() => setActiveCategory(cat.key)}
               className={cn(
-                'px-3 py-1.5 rounded-full text-xs font-medium border transition-all flex items-center gap-1.5',
+                'shrink-0 px-3 py-2 min-h-[40px] rounded-full text-xs font-medium border transition-all flex items-center gap-1.5 whitespace-nowrap',
                 activeCategory === cat.key
                   ? 'bg-primary/10 border-primary/30 text-primary'
                   : 'bg-card/50 border-border/30 text-muted-foreground hover:border-primary/20 hover:text-foreground'
               )}
             >
-              <Icon className="w-3 h-3" />
+              <Icon className="w-3.5 h-3.5" />
               {cat.label}
             </button>
           );
@@ -138,7 +138,7 @@ export default function FerramentasPage() {
       </div>
 
       {/* Tools grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
         {filtered.map(t => {
           const accessible = hasAccess(t.portalMinimo);
           const catMeta = CATEGORIES.find(c => c.key === t.categoria);
