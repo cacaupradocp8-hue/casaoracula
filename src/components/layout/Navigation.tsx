@@ -250,7 +250,7 @@ export function Navigation() {
                   size="sm"
                   onClick={handleToggleDomain}
                   className={cn(
-                    'hidden md:flex gap-1.5 text-xs transition-all rounded-lg',
+                    'hidden xl:flex gap-1.5 text-xs transition-all rounded-lg',
                     activeDomain === 'profissional'
                       ? 'border-primary/40 text-primary bg-primary/5 hover:bg-primary/10'
                       : 'border-border/50 text-muted-foreground hover:border-primary/30'
@@ -333,7 +333,7 @@ export function Navigation() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="md:hidden"
+                className="lg:hidden"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -344,7 +344,7 @@ export function Navigation() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden absolute top-16 left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-primary/10 animate-slide-up">
+          <div className="lg:hidden absolute top-16 left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-primary/10 animate-slide-up">
             <div className="container mx-auto px-4 py-4">
               <div className="flex flex-col gap-1">
                 {user && isHybrid && (
