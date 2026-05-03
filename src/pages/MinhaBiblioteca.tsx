@@ -11,6 +11,7 @@ import {
   FileDown,
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -59,7 +60,7 @@ export default function MinhaBiblioteca() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 max-w-3xl">
+      <ResponsiveContainer size="narrow" className="py-8">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
           <Link
@@ -166,7 +167,7 @@ export default function MinhaBiblioteca() {
             <span>Tudo aqui é 100% privado. Nenhum admin vê seus registros.</span>
           </div>
         </motion.div>
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }

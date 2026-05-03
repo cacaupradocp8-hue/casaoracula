@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { Lock, ArrowRight, GraduationCap, BookOpen, Wrench, Sparkles, Compass, Brain, Castle, Key, Flower2, Cog } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 
 interface VitrineItem {
   id: string;
@@ -247,8 +248,8 @@ export default function Vitrine() {
     <AppLayout>
       <div className="min-h-screen">
         {/* Header */}
-        <section className="py-12 md:py-20 px-5">
-          <div className="max-w-4xl mx-auto text-center">
+        <section className="py-12 md:py-20">
+          <ResponsiveContainer size="default" className="text-center">
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -264,23 +265,23 @@ export default function Vitrine() {
             >
               Todo o ecossistema em um só lugar. Explore, descubra e escolha seu caminho.
             </motion.p>
-          </div>
+          </ResponsiveContainer>
         </section>
 
         {/* Destaque: Clube do Livro */}
-        <section className="px-5 pb-10">
-          <div className="max-w-5xl mx-auto">
+        <section className="pb-10">
+          <ResponsiveContainer size="default">
             <DestaqueCard
               item={DESTAQUE_VISITANTE}
               canAccess={clubeAccess}
               onAction={() => handleAction(DESTAQUE_VISITANTE, clubeAccess)}
             />
-          </div>
+          </ResponsiveContainer>
         </section>
 
         {/* Grid */}
-        <section className="px-5 pb-24">
-          <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section className="pb-24">
+          <ResponsiveContainer size="wide" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
             {VITRINE_ITEMS.map((item) => {
               const canAccess = checkAccess(item.minPortal);
               return (
@@ -292,7 +293,7 @@ export default function Vitrine() {
                 />
               );
             })}
-          </div>
+          </ResponsiveContainer>
         </section>
       </div>
     </AppLayout>
