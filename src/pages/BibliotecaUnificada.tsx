@@ -82,7 +82,7 @@ export default function BibliotecaUnificada() {
             <BibliotecaTravessiasTab />
           </TabsContent>
         </Tabs>
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }
