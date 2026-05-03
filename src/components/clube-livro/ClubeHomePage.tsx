@@ -70,106 +70,34 @@ export function ClubeHomePage() {
       <div className="container mx-auto px-4 py-8 max-w-lg space-y-10">
 
         {/* ============================================
-            1. TOPO — VOCÊ ESTÁ AQUI
+            HERO PREMIUM — ROTA ATUAL (Netflix + Apple + Jung)
             ============================================ */}
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center space-y-1.5"
-        >
-          <p className="text-[10px] uppercase tracking-[0.3em] text-primary/50 font-medium">
-            Você está aqui
-          </p>
-          <h1 className="font-display text-2xl md:text-3xl text-foreground">
-            Olá, <span className="text-primary">{welcomeName}</span>
-          </h1>
-          {estacaoAtual && (
-            <p className="text-xs text-muted-foreground/60">
-              {estacaoAtual.titulo} · {estacaoAtual.livro_titulo}
-            </p>
-          )}
-        </motion.div>
+        <RotaAtualHero
+          estacao={estacaoAtual}
+          pontos={pontos}
+          pontoAtual={pontoAtual}
+          progresso={progresso}
+          welcomeName={welcomeName}
+        />
 
-        {/* ============================================
-            2. HERO — SUA ROTA ATUAL
-            ============================================ */}
-        {estacaoAtual && (
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
-          >
-            <Card className="border-primary/15 bg-card/40 backdrop-blur overflow-hidden">
-              <CardContent className="p-6 space-y-5">
-                {/* Book info */}
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-16 rounded bg-primary/10 flex items-center justify-center shrink-0">
-                    <BookOpen className="w-5 h-5 text-primary/60" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs text-muted-foreground/50 uppercase tracking-wider mb-0.5">
-                      Estação {estacaoAtual.numero}
-                    </p>
-                    <h2 className="font-display text-lg text-foreground leading-tight truncate">
-                      {estacaoAtual.livro_titulo}
-                    </h2>
-                    {estacaoAtual.livro_autor && (
-                      <p className="text-xs text-muted-foreground/40 mt-0.5">{estacaoAtual.livro_autor}</p>
-                    )}
-                    {matchedBook && (
-                      <div className="mt-2">
-                        <Laboratorio8020Modal 
-                          bookId={matchedBook.id} 
-                          bookTitle={matchedBook.title}
-                          trigger={
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              className="h-7 px-2 text-[10px] gap-1 border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 transition-all font-bold"
-                            >
-                              <FlaskConical className="w-3 h-3" />
-                              Ver Laboratório 80/20
-                            </Button>
-                          }
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Symbolic essence */}
-                {estacaoAtual.essencia_nucleo && (
-                  <p className="text-xs text-muted-foreground/70 italic leading-relaxed border-l-2 border-primary/20 pl-3">
-                    {estacaoAtual.essencia_nucleo}
-                  </p>
-                )}
-
-                {/* Progress */}
-                <div className="space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">Progresso</span>
-                    <span className="text-[10px] text-primary/60 font-medium">{Math.round(progresso)}%</span>
-                  </div>
-                  <Progress value={progresso} className="h-1.5 bg-border/10" />
-                </div>
-
-                {/* CTA */}
-                {pontoAtual && (
-                  <Button
-                    variant="gold"
-                    className="w-full gap-2"
-                    onClick={() => {
-                      if (pontoAtual.rota.startsWith('#')) return;
-                      navigate(pontoAtual.rota);
-                    }}
-                  >
-                    Continuar jornada
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
+        {/* Atalho Laboratório 80/20 (mantido como utilidade) */}
+        {matchedBook && (
+          <div className="flex justify-center -mt-4">
+            <Laboratorio8020Modal
+              bookId={matchedBook.id}
+              bookTitle={matchedBook.title}
+              trigger={
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 px-3 text-[10px] gap-1.5 border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 transition-all font-bold"
+                >
+                  <FlaskConical className="w-3 h-3" />
+                  Ver Laboratório 80/20
+                </Button>
+              }
+            />
+          </div>
         )}
 
         {/* Station incomplete notice */}
