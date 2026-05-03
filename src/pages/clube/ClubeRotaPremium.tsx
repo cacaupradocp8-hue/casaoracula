@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import {
@@ -38,7 +38,7 @@ import { cn } from '@/lib/utils';
 export default function ClubeRotaPremium() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { pontos, estacaoAtual, isLoading } = useRotaOracular();
+  const { pontos, estacaoAtual, isLoading, marcarEmAndamento } = useRotaOracular();
   const { scrollY } = useScroll();
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
   const heroScale = useTransform(scrollY, [0, 400], [1, 1.08]);
@@ -49,12 +49,16 @@ export default function ClubeRotaPremium() {
     () => (ponto ? pontos.find(p => p.ordem > ponto.ordem) : null),
     [pontos, ponto]
   );
-  const indiceAtual = useMemo(
-    () => (ponto ? pontos.findIndex(p => p.id === ponto.id) : -1),
-    [pontos, ponto]
-  );
 
   const [pergunta, setPergunta] = useState('');
+
+  // Marca o ponto como em_andamento ao entrar (se ainda não tem registro)
+  useEffect(() => {
+    if (ponto && ponto.estado === 'available') {
+      marcarEmAndamento.mutate(ponto.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ponto?.id]);
 
   if (isLoading) {
     return (
@@ -82,28 +86,31 @@ export default function ClubeRotaPremium() {
     );
   }
 
-  const audios = Array.isArray(ponto.metadata?.audios) ? ponto.metadata.audios : [];
-  const jardimPrompt =
-    ponto.jardim_prompt ||
-    ponto.metadata?.jardim_prompt ||
-    'Escreva hoje sobre as peles que você já trocou mas que ainda insistem em vestir seu corpo atual.';
-  const simulacaoTexto =
-    ponto.cenario_treinamento ||
-    ponto.metadata?.simulacao_texto ||
-    `Você encontrou um arquétipo ferido no campo psíquico. Como você utiliza as ferramentas da ${
-      estacaoAtual?.titulo || 'Estação'
-    } para realizar a primeira escuta sem ser devorada pelo trauma?`;
-  const perguntasSugeridas = Array.isArray(ponto.metadata?.perguntas_sugeridas)
-    ? ponto.metadata.perguntas_sugeridas
-    : ['Qual o significado do lobo?', 'Como resgatar minha força?', 'Símbolos de cura'];
+  // ─── Conteúdo 100% DB-driven (sem fallbacks mock) ───
+  const audios: Array<{ titulo?: string; url?: string; tipo?: string; duracao?: string }> =
+    Array.isArray(ponto.metadata?.audios) ? ponto.metadata.audios : [];
 
+  const jardimPrompt: string | null =
+    ponto.jardim_prompt || ponto.metadata?.jardim_prompt || null;
+
+  const simulacaoTexto: string | null =
+    ponto.cenario_treinamento || ponto.metadata?.simulacao_texto || null;
+
+  const perguntasSugeridas: string[] = Array.isArray(ponto.metadata?.perguntas_sugeridas)
+    ? ponto.metadata.perguntas_sugeridas.filter((p: any) => typeof p === 'string' && p.trim())
+    : [];
+
+  const temChatLivro = ponto.tipo === 'chat_livro' || perguntasSugeridas.length > 0;
+
+  // Cartografia: só mostra cards que têm valor real
   const cartografia = [
-    { label: 'Estação', value: estacaoAtual?.titulo || '—', icon: MapPin },
-    { label: 'Porta', value: ponto.porta || 'Iniciação', icon: DoorOpen },
-    { label: 'Campo', value: ponto.campo || 'Clube do Livro', icon: Layers },
-    { label: 'Torre', value: ponto.torre || 'Observatório', icon: Layout },
-    { label: 'Labirinto', value: ponto.labirinto || 'Sombra', icon: ShieldAlert },
-  ];
+    { label: 'Estação', value: estacaoAtual?.titulo, icon: MapPin },
+    { label: 'Porta', value: ponto.porta, icon: DoorOpen },
+    { label: 'Campo', value: ponto.campo, icon: Layers },
+    { label: 'Torre', value: ponto.torre, icon: Layout },
+    { label: 'Labirinto', value: ponto.labirinto, icon: ShieldAlert },
+  ].filter(c => c.value && c.value.trim());
+
 
   return (
     <AppLayout>
@@ -221,32 +228,34 @@ export default function ClubeRotaPremium() {
 
           {/* ═══════════ 2. MAPA VIVO ═══════════ */}
           <Section id="mapa-vivo" icon={Compass} kicker="Cartografia da alma" titulo="Mapa vivo">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {cartografia.map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-50px' }}
-                  transition={{ delay: i * 0.06, duration: 0.6 }}
-                  className="group relative overflow-hidden rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] backdrop-blur p-5 transition-all hover:border-gold/20 hover:bg-foreground/[0.04]"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-full border border-gold/20 bg-gold/5 flex items-center justify-center shrink-0">
-                      <item.icon className="w-4 h-4 text-gold" />
+            {cartografia.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {cartografia.map((item, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-50px' }}
+                    transition={{ delay: i * 0.06, duration: 0.6 }}
+                    className="group relative overflow-hidden rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] backdrop-blur p-5 transition-all hover:border-gold/20 hover:bg-foreground/[0.04]"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full border border-gold/20 bg-gold/5 flex items-center justify-center shrink-0">
+                        <item.icon className="w-4 h-4 text-gold" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[9px] tracking-[0.3em] uppercase text-foreground/40 mb-1">
+                          {item.label}
+                        </p>
+                        <p className="font-display text-base text-foreground/90 leading-snug truncate">
+                          {item.value}
+                        </p>
+                      </div>
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[9px] tracking-[0.3em] uppercase text-foreground/40 mb-1">
-                        {item.label}
-                      </p>
-                      <p className="font-display text-base text-foreground/90 leading-snug truncate">
-                        {item.value}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
 
             {/* Timeline da rota */}
             <div className="relative mt-10 pl-6 md:pl-8">
@@ -362,138 +371,145 @@ export default function ClubeRotaPremium() {
           )}
 
           {/* ═══════════ 4. CONVERSE COM O LIVRO ═══════════ */}
-          <Section icon={MessageSquare} kicker="Sussurros da obra" titulo="Converse com o livro">
-            <Card className="bg-gradient-to-br from-gold/[0.08] via-foreground/[0.02] to-transparent border-foreground/[0.06] overflow-hidden">
-              <CardContent className="p-6 md:p-8">
-                <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
-                  <motion.div
-                    whileHover={{ scale: 1.03, rotate: -1 }}
-                    transition={{ duration: 0.6 }}
-                    className="relative w-32 md:w-40 shrink-0"
-                  >
-                    <img
-                      src={
-                        estacaoAtual?.livro_capa_url ||
-                        'https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=800'
-                      }
-                      alt={estacaoAtual?.livro_titulo || ''}
-                      className="w-full aspect-[2/3] object-cover rounded shadow-[0_30px_60px_-15px_rgba(0,0,0,0.7)]"
-                    />
-                    <div className="absolute inset-0 ring-1 ring-inset ring-foreground/15 rounded" />
-                  </motion.div>
-
-                  <div className="flex-1 w-full space-y-5">
-                    <div className="space-y-2 text-center md:text-left">
-                      <h4 className="font-display text-xl md:text-2xl text-foreground">
-                        Diálogo com o inconsciente
-                      </h4>
-                      <p className="text-sm text-foreground/55 italic font-serif leading-relaxed">
-                        Pergunte ao livro sobre as tensões deste capítulo ou peça uma orientação simbólica.
-                      </p>
-                    </div>
-
-                    <div className="space-y-3">
-                      <div className="relative">
-                        <Input
-                          value={pergunta}
-                          onChange={e => setPergunta(e.target.value)}
-                          onKeyDown={e => {
-                            if (e.key === 'Enter' && pergunta.trim()) {
-                              navigate(`/clube/chat-livro?q=${encodeURIComponent(pergunta)}`);
-                            }
-                          }}
-                          placeholder="Escreva sua inquietação..."
-                          className="bg-midnight/60 border-foreground/10 h-13 pl-5 pr-14 rounded-full focus-visible:border-gold/40 focus-visible:ring-gold/10 transition-all"
+          {temChatLivro && (
+            <Section icon={MessageSquare} kicker="Sussurros da obra" titulo="Converse com o livro">
+              <Card className="bg-gradient-to-br from-gold/[0.08] via-foreground/[0.02] to-transparent border-foreground/[0.06] overflow-hidden">
+                <CardContent className="p-6 md:p-8">
+                  <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
+                    {estacaoAtual?.livro_capa_url && (
+                      <motion.div
+                        whileHover={{ scale: 1.03, rotate: -1 }}
+                        transition={{ duration: 0.6 }}
+                        className="relative w-32 md:w-40 shrink-0"
+                      >
+                        <img
+                          src={estacaoAtual.livro_capa_url}
+                          alt={estacaoAtual?.livro_titulo || ''}
+                          className="w-full aspect-[2/3] object-cover rounded shadow-[0_30px_60px_-15px_rgba(0,0,0,0.7)]"
                         />
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full text-gold/70 hover:text-gold hover:bg-gold/10 h-10 w-10"
-                          onClick={() =>
-                            navigate(
-                              pergunta.trim()
-                                ? `/clube/chat-livro?q=${encodeURIComponent(pergunta)}`
-                                : '/clube/chat-livro'
-                            )
-                          }
-                        >
-                          <ArrowRight className="w-4 h-4" />
-                        </Button>
+                        <div className="absolute inset-0 ring-1 ring-inset ring-foreground/15 rounded" />
+                      </motion.div>
+                    )}
+
+                    <div className="flex-1 w-full space-y-5">
+                      <div className="space-y-2 text-center md:text-left">
+                        <h4 className="font-display text-xl md:text-2xl text-foreground">
+                          Diálogo com o inconsciente
+                        </h4>
+                        <p className="text-sm text-foreground/55 italic font-serif leading-relaxed">
+                          Pergunte ao livro sobre as tensões deste capítulo ou peça uma orientação simbólica.
+                        </p>
                       </div>
 
-                      <div className="flex flex-wrap gap-2">
-                        {perguntasSugeridas.map((tag: string) => (
-                          <button
-                            key={tag}
-                            onClick={() => setPergunta(tag)}
-                            className="text-[11px] px-3 py-1.5 rounded-full border border-foreground/10 bg-foreground/[0.03] text-foreground/55 hover:border-gold/30 hover:text-gold hover:bg-gold/5 transition-all"
+                      <div className="space-y-3">
+                        <div className="relative">
+                          <Input
+                            value={pergunta}
+                            onChange={e => setPergunta(e.target.value)}
+                            onKeyDown={e => {
+                              if (e.key === 'Enter' && pergunta.trim()) {
+                                navigate(`/clube/chat-livro?q=${encodeURIComponent(pergunta)}`);
+                              }
+                            }}
+                            placeholder="Escreva sua inquietação..."
+                            className="bg-midnight/60 border-foreground/10 h-13 pl-5 pr-14 rounded-full focus-visible:border-gold/40 focus-visible:ring-gold/10 transition-all"
+                          />
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full text-gold/70 hover:text-gold hover:bg-gold/10 h-10 w-10"
+                            onClick={() =>
+                              navigate(
+                                pergunta.trim()
+                                  ? `/clube/chat-livro?q=${encodeURIComponent(pergunta)}`
+                                  : '/clube/chat-livro'
+                              )
+                            }
                           >
-                            {tag}
-                          </button>
-                        ))}
+                            <ArrowRight className="w-4 h-4" />
+                          </Button>
+                        </div>
+
+                        {perguntasSugeridas.length > 0 && (
+                          <div className="flex flex-wrap gap-2">
+                            {perguntasSugeridas.map((tag: string) => (
+                              <button
+                                key={tag}
+                                onClick={() => setPergunta(tag)}
+                                className="text-[11px] px-3 py-1.5 rounded-full border border-foreground/10 bg-foreground/[0.03] text-foreground/55 hover:border-gold/30 hover:text-gold hover:bg-gold/5 transition-all"
+                              >
+                                {tag}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Section>
+                </CardContent>
+              </Card>
+            </Section>
+          )}
 
           {/* ═══════════ 5. TREINAMENTO ═══════════ */}
-          <Section icon={Zap} kicker="Câmara de simulação" titulo="Treinamento">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="relative overflow-hidden rounded-2xl border border-foreground/[0.06] bg-gradient-to-br from-foreground/[0.04] to-transparent p-6 md:p-8"
-            >
-              <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-gold/0 via-gold/60 to-gold/0" />
-              <div className="space-y-5">
-                <div>
-                  <p className="text-[9px] tracking-[0.3em] uppercase text-gold/60 mb-1">
-                    Situação de campo
+          {simulacaoTexto && (
+            <Section icon={Zap} kicker="Câmara de simulação" titulo="Treinamento">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="relative overflow-hidden rounded-2xl border border-foreground/[0.06] bg-gradient-to-br from-foreground/[0.04] to-transparent p-6 md:p-8"
+              >
+                <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-gold/0 via-gold/60 to-gold/0" />
+                <div className="space-y-5">
+                  <div>
+                    <p className="text-[9px] tracking-[0.3em] uppercase text-gold/60 mb-1">
+                      Situação de campo
+                    </p>
+                    <h4 className="font-display text-xl md:text-2xl">Simulação contextual</h4>
+                  </div>
+                  <p className="text-foreground/65 text-[15px] leading-relaxed font-serif italic">
+                    {simulacaoTexto}
                   </p>
-                  <h4 className="font-display text-xl md:text-2xl">Simulação contextual</h4>
+                  <Button
+                    variant="outline"
+                    className="w-full sm:w-auto h-12 rounded-full border-gold/30 text-gold hover:bg-gold hover:text-midnight gap-2 uppercase tracking-[0.25em] text-[11px] font-semibold transition-all duration-500"
+                    onClick={() => navigate('/clube/treinamento')}
+                  >
+                    Iniciar simulação <ArrowRight className="w-4 h-4" />
+                  </Button>
                 </div>
-                <p className="text-foreground/65 text-[15px] leading-relaxed font-serif italic">
-                  {simulacaoTexto}
-                </p>
-                <Button
-                  variant="outline"
-                  className="w-full sm:w-auto h-12 rounded-full border-gold/30 text-gold hover:bg-gold hover:text-midnight gap-2 uppercase tracking-[0.25em] text-[11px] font-semibold transition-all duration-500"
-                  onClick={() => navigate('/clube/treinamento')}
-                >
-                  Iniciar simulação <ArrowRight className="w-4 h-4" />
-                </Button>
-              </div>
-            </motion.div>
-          </Section>
+              </motion.div>
+            </Section>
+          )}
 
           {/* ═══════════ 6. JARDIM ═══════════ */}
-          <Section icon={Flower2} kicker="Sementeira interna" titulo="Jardim da psique">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.97 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gold/[0.06] via-midnight to-midnight border border-foreground/[0.06] p-8 md:p-12"
-            >
-              <div className="absolute -top-20 -right-20 w-60 h-60 bg-gold/10 rounded-full blur-3xl pointer-events-none" />
-              <div className="relative space-y-8 text-center">
-                <Flower2 className="w-7 h-7 text-gold/60 mx-auto" />
-                <p className="font-serif italic text-lg md:text-2xl text-foreground/85 leading-relaxed max-w-xl mx-auto">
-                  "{jardimPrompt}"
-                </p>
-                <Button
-                  variant="ghost"
-                  className="text-gold hover:text-gold hover:bg-gold/10 gap-2 rounded-full"
-                  onClick={() => navigate('/jardim-heroina')}
-                >
-                  <MapPin className="w-4 h-4" /> Registrar no Jardim
-                </Button>
-              </div>
-            </motion.div>
-          </Section>
+          {jardimPrompt && (
+            <Section icon={Flower2} kicker="Sementeira interna" titulo="Jardim da psique">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.97 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gold/[0.06] via-midnight to-midnight border border-foreground/[0.06] p-8 md:p-12"
+              >
+                <div className="absolute -top-20 -right-20 w-60 h-60 bg-gold/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="relative space-y-8 text-center">
+                  <Flower2 className="w-7 h-7 text-gold/60 mx-auto" />
+                  <p className="font-serif italic text-lg md:text-2xl text-foreground/85 leading-relaxed max-w-xl mx-auto">
+                    "{jardimPrompt}"
+                  </p>
+                  <Button
+                    variant="ghost"
+                    className="text-gold hover:text-gold hover:bg-gold/10 gap-2 rounded-full"
+                    onClick={() => navigate('/jardim-heroina')}
+                  >
+                    <MapPin className="w-4 h-4" /> Registrar no Jardim
+                  </Button>
+                </div>
+              </motion.div>
+            </Section>
+          )}
 
           {/* ═══════════ 7. CTA FORMAÇÃO ═══════════ */}
           <Section>

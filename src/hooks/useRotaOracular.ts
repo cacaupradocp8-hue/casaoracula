@@ -280,6 +280,29 @@ export function useRotaOracular() {
 
   // 6. Concluir item
   const queryClient = useQueryClient();
+
+  // Marcar item como "em andamento" (idempotente — só cria se não existir registro)
+  const marcarEmAndamento = useMutation({
+    mutationFn: async (itemId: string) => {
+      if (!user?.id || !estacaoAtual?.id) return;
+      const existente = (progressoRota || []).find(p => p.rota_item_id === itemId);
+      if (existente) return; // já tem registro (in_progress ou completed) — não sobrescreve
+      const { error } = await supabase
+        .from('clube_rota_progresso')
+        .upsert({
+          user_id: user.id,
+          estacao_id: estacaoAtual.id,
+          rota_item_id: itemId,
+          status: 'in_progress',
+          data_inicio: new Date().toISOString(),
+        }, { onConflict: 'user_id, rota_item_id' });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['rota-progresso'] });
+    },
+  });
+
   const concluirPonto = useMutation({
     mutationFn: async (itemId: string) => {
       if (!user?.id || !estacaoAtual?.id) throw new Error('Usuária não autenticada');
@@ -337,6 +360,7 @@ export function useRotaOracular() {
     encontro: encontro || null,
     progressoRota: progressoArray,
     concluirPonto,
+    marcarEmAndamento,
     estacaoIncompleta,
     isLoading: loadingEstacao,
   };
