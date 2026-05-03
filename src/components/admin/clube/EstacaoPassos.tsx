@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   ArrowLeft, Plus, Pencil, Trash2, ArrowUp, ArrowDown,
-  Loader2, Eye, EyeOff, Sparkles,
+  Loader2, Eye, EyeOff, Sparkles, ExternalLink, AlertCircle,
 } from 'lucide-react';
 import { PassoEditor } from './PassoEditor';
 import { toast } from 'sonner';
