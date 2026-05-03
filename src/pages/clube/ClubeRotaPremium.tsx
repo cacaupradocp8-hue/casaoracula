@@ -228,32 +228,34 @@ export default function ClubeRotaPremium() {
 
           {/* ═══════════ 2. MAPA VIVO ═══════════ */}
           <Section id="mapa-vivo" icon={Compass} kicker="Cartografia da alma" titulo="Mapa vivo">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {cartografia.map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-50px' }}
-                  transition={{ delay: i * 0.06, duration: 0.6 }}
-                  className="group relative overflow-hidden rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] backdrop-blur p-5 transition-all hover:border-gold/20 hover:bg-foreground/[0.04]"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-full border border-gold/20 bg-gold/5 flex items-center justify-center shrink-0">
-                      <item.icon className="w-4 h-4 text-gold" />
+            {cartografia.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {cartografia.map((item, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-50px' }}
+                    transition={{ delay: i * 0.06, duration: 0.6 }}
+                    className="group relative overflow-hidden rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] backdrop-blur p-5 transition-all hover:border-gold/20 hover:bg-foreground/[0.04]"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full border border-gold/20 bg-gold/5 flex items-center justify-center shrink-0">
+                        <item.icon className="w-4 h-4 text-gold" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[9px] tracking-[0.3em] uppercase text-foreground/40 mb-1">
+                          {item.label}
+                        </p>
+                        <p className="font-display text-base text-foreground/90 leading-snug truncate">
+                          {item.value}
+                        </p>
+                      </div>
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[9px] tracking-[0.3em] uppercase text-foreground/40 mb-1">
-                        {item.label}
-                      </p>
-                      <p className="font-display text-base text-foreground/90 leading-snug truncate">
-                        {item.value}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
 
             {/* Timeline da rota */}
             <div className="relative mt-10 pl-6 md:pl-8">
