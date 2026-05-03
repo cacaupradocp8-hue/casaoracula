@@ -170,6 +170,16 @@ export function RotaAtualHero({
             </div>
           </button>
         )}
+
+        {/* Link para catálogo completo */}
+        <button
+          onClick={() => navigate('/clube/rotas')}
+          className="group w-full flex items-center justify-center gap-2 pt-2 text-[10px] tracking-[0.35em] uppercase text-foreground/40 hover:text-gold/80 transition-colors"
+        >
+          <span className="h-px w-6 bg-foreground/15 group-hover:bg-gold/40 transition-colors" />
+          Ver todas as rotas
+          <span className="h-px w-6 bg-foreground/15 group-hover:bg-gold/40 transition-colors" />
+        </button>
       </div>
     </motion.section>
   );
