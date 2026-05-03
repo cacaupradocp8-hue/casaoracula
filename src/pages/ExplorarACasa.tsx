@@ -4,6 +4,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { Compass, Users, BookOpen, Sparkles, ArrowRight, GraduationCap, Wrench } from 'lucide-react';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 
 const fadeIn = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
@@ -39,8 +40,8 @@ export default function ExplorarACasa() {
     <AppLayout>
       <div className="min-h-screen">
         {/* HERO */}
-        <section className="relative py-20 md:py-32 px-5">
-          <div className="max-w-3xl mx-auto text-center">
+        <section className="relative py-20 md:py-32">
+          <ResponsiveContainer size="narrow" className="text-center">
             <motion.h1 {...fadeIn(0)} className="font-display text-3xl md:text-5xl font-light text-foreground leading-tight mb-6">
               Uma plataforma para terapeutas conduzirem transformação com método simbólico
             </motion.h1>
@@ -58,12 +59,12 @@ export default function ExplorarACasa() {
                 <ArrowRight className="w-5 h-5" />
               </Button>
             </motion.div>
-          </div>
+          </ResponsiveContainer>
         </section>
 
         {/* PARA QUEM É */}
-        <section className="py-16 px-5 border-t border-border/30">
-          <div className="max-w-3xl mx-auto">
+        <section className="py-16 border-t border-border/30">
+          <ResponsiveContainer size="narrow">
             <motion.h2 {...fadeIn()} className="font-display text-2xl md:text-3xl text-foreground mb-8 text-center">
               Para quem é
             </motion.h2>
@@ -75,12 +76,12 @@ export default function ExplorarACasa() {
                 </motion.div>
               ))}
             </div>
-          </div>
+          </ResponsiveContainer>
         </section>
 
         {/* O QUE VOCÊ ENCONTRA */}
-        <section className="py-16 px-5 border-t border-border/30">
-          <div className="max-w-4xl mx-auto">
+        <section className="py-16 border-t border-border/30">
+          <ResponsiveContainer size="default">
             <motion.h2 {...fadeIn()} className="font-display text-2xl md:text-3xl text-foreground mb-10 text-center">
               O que você encontra
             </motion.h2>
@@ -93,12 +94,12 @@ export default function ExplorarACasa() {
                 </motion.div>
               ))}
             </div>
-          </div>
+          </ResponsiveContainer>
         </section>
 
         {/* COMO FUNCIONA */}
-        <section className="py-16 px-5 border-t border-border/30">
-          <div className="max-w-3xl mx-auto">
+        <section className="py-16 border-t border-border/30">
+          <ResponsiveContainer size="narrow">
             <motion.h2 {...fadeIn()} className="font-display text-2xl md:text-3xl text-foreground mb-10 text-center">
               Como funciona
             </motion.h2>
@@ -125,7 +126,7 @@ export default function ExplorarACasa() {
                 <ArrowRight className="w-5 h-5" />
               </Button>
             </motion.div>
-          </div>
+          </ResponsiveContainer>
         </section>
       </div>
     </AppLayout>
