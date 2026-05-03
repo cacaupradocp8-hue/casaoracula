@@ -18,6 +18,7 @@ import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { useAllBooks } from '@/hooks/useBooks';
 import { FlaskConical } from 'lucide-react';
 import { RotaExecutavelMes1 } from '@/components/clube-livro/RotaMês1';
+import { RotaAtualHero } from '@/components/clube-livro/RotaAtualHero';
 
 /**
  * ClubeHomePage — Rota Oracular
