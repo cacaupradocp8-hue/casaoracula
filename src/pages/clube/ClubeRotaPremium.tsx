@@ -547,36 +547,69 @@ export default function ClubeRotaPremium() {
           </Section>
 
           {/* ═══════════ 8. PRÓXIMA ROTA ═══════════ */}
-          {proximoPonto && (
-            <Section>
-              <motion.button
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                onClick={() => navigate(`/clube/rota/${proximoPonto.slug}`)}
-                className="group w-full text-left relative overflow-hidden rounded-3xl border border-foreground/[0.06] hover:border-gold/30 bg-foreground/[0.02] hover:bg-foreground/[0.04] p-8 md:p-12 transition-all duration-700"
-              >
-                <p className="text-[10px] tracking-[0.4em] uppercase text-foreground/40 mb-4">
-                  Próxima travessia
-                </p>
-                <div className="flex items-center justify-between gap-6">
-                  <div className="min-w-0 flex-1">
-                    <h2 className="font-display text-3xl md:text-5xl text-foreground/70 group-hover:text-foreground transition-colors duration-700 leading-[1.1]">
-                      {proximoPonto.nome}
-                    </h2>
-                    {proximoPonto.subtitulo && (
-                      <p className="font-serif italic text-foreground/40 mt-3 text-sm md:text-base">
-                        {proximoPonto.subtitulo}
-                      </p>
-                    )}
+          {proximoPonto && (() => {
+            const proxLocked = proximoPonto.estado === 'locked';
+            return (
+              <Section>
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  disabled={proxLocked}
+                  onClick={() => !proxLocked && navigate(`/clube/rota/${proximoPonto.slug}`)}
+                  className={cn(
+                    'group w-full text-left relative overflow-hidden rounded-3xl border p-8 md:p-12 transition-all duration-700',
+                    proxLocked
+                      ? 'border-foreground/[0.06] bg-foreground/[0.02] cursor-not-allowed'
+                      : 'border-foreground/[0.06] hover:border-gold/30 bg-foreground/[0.02] hover:bg-foreground/[0.04]'
+                  )}
+                >
+                  <p className="text-[10px] tracking-[0.4em] uppercase text-foreground/40 mb-4 flex items-center gap-2">
+                    {proxLocked ? 'Em breve' : 'Próxima travessia'}
+                    {proxLocked && <Lock className="w-3 h-3" />}
+                  </p>
+                  <div className="flex items-center justify-between gap-6">
+                    <div className="min-w-0 flex-1">
+                      <h2
+                        className={cn(
+                          'font-display text-3xl md:text-5xl transition-colors duration-700 leading-[1.1]',
+                          proxLocked
+                            ? 'text-foreground/35'
+                            : 'text-foreground/70 group-hover:text-foreground'
+                        )}
+                      >
+                        {proximoPonto.nome}
+                      </h2>
+                      {proximoPonto.subtitulo && !proxLocked && (
+                        <p className="font-serif italic text-foreground/40 mt-3 text-sm md:text-base">
+                          {proximoPonto.subtitulo}
+                        </p>
+                      )}
+                      {proxLocked && (
+                        <p className="text-foreground/35 mt-3 text-sm">
+                          Conclua esta rota para revelar a próxima travessia.
+                        </p>
+                      )}
+                    </div>
+                    <div
+                      className={cn(
+                        'w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full border flex items-center justify-center transition-all duration-700',
+                        proxLocked
+                          ? 'border-foreground/10 bg-foreground/[0.02]'
+                          : 'border-foreground/15 group-hover:border-gold group-hover:bg-gold'
+                      )}
+                    >
+                      {proxLocked ? (
+                        <Lock className="w-5 h-5 text-foreground/30" />
+                      ) : (
+                        <ChevronRight className="w-6 h-6 text-foreground/40 group-hover:text-midnight transition-colors duration-700" />
+                      )}
+                    </div>
                   </div>
-                  <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full border border-foreground/15 group-hover:border-gold group-hover:bg-gold flex items-center justify-center transition-all duration-700">
-                    <ChevronRight className="w-6 h-6 text-foreground/40 group-hover:text-midnight transition-colors duration-700" />
-                  </div>
-                </div>
-              </motion.button>
-            </Section>
-          )}
+                </motion.button>
+              </Section>
+            );
+          })()}
         </div>
       </div>
     </AppLayout>
