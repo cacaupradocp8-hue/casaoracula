@@ -27,7 +27,7 @@ export function BottomNavPreview() {
   if (!mounted) return null;
 
   return (
-    <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-[420px] md:hidden select-none">
+    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-[460px] lg:hidden pb-[env(safe-area-inset-bottom)] select-none">
       <div className={cn(
         "relative h-[64px] backdrop-blur-2xl rounded-2xl border shadow-[0_8px_32px_rgba(0,0,0,0.4)]",
         location.pathname === '/clube' 
