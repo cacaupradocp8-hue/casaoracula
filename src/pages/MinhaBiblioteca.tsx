@@ -167,7 +167,7 @@ export default function MinhaBiblioteca() {
             <span>Tudo aqui é 100% privado. Nenhum admin vê seus registros.</span>
           </div>
         </motion.div>
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }
