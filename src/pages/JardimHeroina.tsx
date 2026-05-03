@@ -153,7 +153,7 @@ export default function JardimHeroina() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-2xl mx-auto px-6 py-12 md:py-16">
+      <div className="w-full max-w-3xl xl:max-w-4xl mx-auto px-6 sm:px-8 py-12 md:py-16">
         <header className="mb-12 text-center">
           <Leaf className="h-8 w-8 mx-auto text-primary mb-4 opacity-70" />
           <h1 className="font-serif text-3xl md:text-4xl text-foreground mb-3">
