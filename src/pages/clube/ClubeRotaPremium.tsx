@@ -19,6 +19,8 @@ import {
   Sparkles,
   Star,
   ArrowDown,
+  Lock,
+  Check,
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
@@ -251,7 +253,9 @@ export default function ClubeRotaPremium() {
               <div className="absolute left-[7px] md:left-[11px] top-1 bottom-1 w-px bg-gradient-to-b from-gold/40 via-gold/15 to-transparent" />
               {pontos.map((item, idx) => {
                 const isCurrent = item.id === ponto.id;
-                const isPast = idx < indiceAtual;
+                const isCompleted = item.estado === 'completed';
+                const isLocked = item.estado === 'locked';
+                const isInteractive = !isLocked && !isCurrent;
                 return (
                   <motion.button
                     key={item.id}
@@ -259,36 +263,58 @@ export default function ClubeRotaPremium() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.05 }}
-                    onClick={() => navigate(`/clube/rota/${item.slug}`)}
-                    className="relative block w-full text-left group py-3"
+                    disabled={isLocked}
+                    onClick={() => !isLocked && navigate(`/clube/rota/${item.slug}`)}
+                    className={cn(
+                      'relative block w-full text-left group py-3',
+                      isLocked && 'cursor-not-allowed'
+                    )}
                   >
                     <div
                       className={cn(
-                        'absolute -left-[22px] md:-left-[26px] top-4 w-3.5 h-3.5 md:w-4 md:h-4 rounded-full border-2 transition-all',
-                        isCurrent
-                          ? 'bg-gold border-gold shadow-[0_0_16px_hsl(43_47%_56%/0.6)] scale-110'
-                          : isPast
-                          ? 'bg-gold/30 border-gold/40'
-                          : 'bg-midnight border-foreground/15 group-hover:border-gold/40'
+                        'absolute -left-[22px] md:-left-[26px] top-4 w-3.5 h-3.5 md:w-4 md:h-4 rounded-full border-2 transition-all flex items-center justify-center',
+                        isCurrent &&
+                          'bg-gold border-gold shadow-[0_0_16px_hsl(43_47%_56%/0.6)] scale-110',
+                        !isCurrent && isCompleted && 'bg-gold/40 border-gold/60',
+                        !isCurrent && !isCompleted && !isLocked &&
+                          'bg-midnight border-gold/40 group-hover:border-gold',
+                        !isCurrent && isLocked && 'bg-midnight border-foreground/10'
                       )}
-                    />
+                    >
+                      {isCompleted && !isCurrent && (
+                        <Check className="w-2 h-2 md:w-2.5 md:h-2.5 text-gold" strokeWidth={3} />
+                      )}
+                    </div>
                     <div className="flex items-center justify-between gap-4">
                       <div className="min-w-0">
-                        <p className="text-[9px] tracking-[0.3em] uppercase text-foreground/35 mb-0.5">
+                        <p
+                          className={cn(
+                            'text-[9px] tracking-[0.3em] uppercase mb-0.5 flex items-center gap-1.5',
+                            isLocked ? 'text-foreground/25' : 'text-foreground/40'
+                          )}
+                        >
                           Fase 0{idx + 1}
+                          {isCurrent && <span className="text-gold/80">· Você está aqui</span>}
+                          {isCompleted && !isCurrent && <span className="text-gold/60">· Concluído</span>}
                         </p>
                         <p
                           className={cn(
                             'font-display text-base md:text-lg transition-colors truncate',
-                            isCurrent ? 'text-foreground' : 'text-foreground/55 group-hover:text-foreground/80'
+                            isCurrent && 'text-foreground',
+                            !isCurrent && isCompleted && 'text-foreground/75',
+                            !isCurrent && !isCompleted && !isLocked &&
+                              'text-foreground/55 group-hover:text-foreground/85',
+                            isLocked && 'text-foreground/30'
                           )}
                         >
                           {item.nome}
                         </p>
                       </div>
-                      {!isCurrent && (
+                      {isLocked ? (
+                        <Lock className="w-3.5 h-3.5 text-foreground/25 shrink-0" />
+                      ) : isInteractive ? (
                         <ChevronRight className="w-4 h-4 text-foreground/20 group-hover:text-gold transition-colors shrink-0" />
-                      )}
+                      ) : null}
                     </div>
                   </motion.button>
                 );
@@ -521,36 +547,69 @@ export default function ClubeRotaPremium() {
           </Section>
 
           {/* ═══════════ 8. PRÓXIMA ROTA ═══════════ */}
-          {proximoPonto && (
-            <Section>
-              <motion.button
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                onClick={() => navigate(`/clube/rota/${proximoPonto.slug}`)}
-                className="group w-full text-left relative overflow-hidden rounded-3xl border border-foreground/[0.06] hover:border-gold/30 bg-foreground/[0.02] hover:bg-foreground/[0.04] p-8 md:p-12 transition-all duration-700"
-              >
-                <p className="text-[10px] tracking-[0.4em] uppercase text-foreground/40 mb-4">
-                  Próxima travessia
-                </p>
-                <div className="flex items-center justify-between gap-6">
-                  <div className="min-w-0 flex-1">
-                    <h2 className="font-display text-3xl md:text-5xl text-foreground/70 group-hover:text-foreground transition-colors duration-700 leading-[1.1]">
-                      {proximoPonto.nome}
-                    </h2>
-                    {proximoPonto.subtitulo && (
-                      <p className="font-serif italic text-foreground/40 mt-3 text-sm md:text-base">
-                        {proximoPonto.subtitulo}
-                      </p>
-                    )}
+          {proximoPonto && (() => {
+            const proxLocked = proximoPonto.estado === 'locked';
+            return (
+              <Section>
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  disabled={proxLocked}
+                  onClick={() => !proxLocked && navigate(`/clube/rota/${proximoPonto.slug}`)}
+                  className={cn(
+                    'group w-full text-left relative overflow-hidden rounded-3xl border p-8 md:p-12 transition-all duration-700',
+                    proxLocked
+                      ? 'border-foreground/[0.06] bg-foreground/[0.02] cursor-not-allowed'
+                      : 'border-foreground/[0.06] hover:border-gold/30 bg-foreground/[0.02] hover:bg-foreground/[0.04]'
+                  )}
+                >
+                  <p className="text-[10px] tracking-[0.4em] uppercase text-foreground/40 mb-4 flex items-center gap-2">
+                    {proxLocked ? 'Em breve' : 'Próxima travessia'}
+                    {proxLocked && <Lock className="w-3 h-3" />}
+                  </p>
+                  <div className="flex items-center justify-between gap-6">
+                    <div className="min-w-0 flex-1">
+                      <h2
+                        className={cn(
+                          'font-display text-3xl md:text-5xl transition-colors duration-700 leading-[1.1]',
+                          proxLocked
+                            ? 'text-foreground/35'
+                            : 'text-foreground/70 group-hover:text-foreground'
+                        )}
+                      >
+                        {proximoPonto.nome}
+                      </h2>
+                      {proximoPonto.subtitulo && !proxLocked && (
+                        <p className="font-serif italic text-foreground/40 mt-3 text-sm md:text-base">
+                          {proximoPonto.subtitulo}
+                        </p>
+                      )}
+                      {proxLocked && (
+                        <p className="text-foreground/35 mt-3 text-sm">
+                          Conclua esta rota para revelar a próxima travessia.
+                        </p>
+                      )}
+                    </div>
+                    <div
+                      className={cn(
+                        'w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full border flex items-center justify-center transition-all duration-700',
+                        proxLocked
+                          ? 'border-foreground/10 bg-foreground/[0.02]'
+                          : 'border-foreground/15 group-hover:border-gold group-hover:bg-gold'
+                      )}
+                    >
+                      {proxLocked ? (
+                        <Lock className="w-5 h-5 text-foreground/30" />
+                      ) : (
+                        <ChevronRight className="w-6 h-6 text-foreground/40 group-hover:text-midnight transition-colors duration-700" />
+                      )}
+                    </div>
                   </div>
-                  <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full border border-foreground/15 group-hover:border-gold group-hover:bg-gold flex items-center justify-center transition-all duration-700">
-                    <ChevronRight className="w-6 h-6 text-foreground/40 group-hover:text-midnight transition-colors duration-700" />
-                  </div>
-                </div>
-              </motion.button>
-            </Section>
-          )}
+                </motion.button>
+              </Section>
+            );
+          })()}
         </div>
       </div>
     </AppLayout>
