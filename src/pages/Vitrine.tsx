@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { Lock, ArrowRight, GraduationCap, BookOpen, Wrench, Sparkles, Compass, Brain, Castle, Key, Flower2, Cog } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 
 interface VitrineItem {
   id: string;
