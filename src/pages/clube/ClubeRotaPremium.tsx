@@ -38,7 +38,7 @@ import { cn } from '@/lib/utils';
 export default function ClubeRotaPremium() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { pontos, estacaoAtual, isLoading } = useRotaOracular();
+  const { pontos, estacaoAtual, isLoading, marcarEmAndamento } = useRotaOracular();
   const { scrollY } = useScroll();
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
   const heroScale = useTransform(scrollY, [0, 400], [1, 1.08]);
@@ -49,12 +49,16 @@ export default function ClubeRotaPremium() {
     () => (ponto ? pontos.find(p => p.ordem > ponto.ordem) : null),
     [pontos, ponto]
   );
-  const indiceAtual = useMemo(
-    () => (ponto ? pontos.findIndex(p => p.id === ponto.id) : -1),
-    [pontos, ponto]
-  );
 
   const [pergunta, setPergunta] = useState('');
+
+  // Marca o ponto como em_andamento ao entrar (se ainda não tem registro)
+  useEffect(() => {
+    if (ponto && ponto.estado === 'available') {
+      marcarEmAndamento.mutate(ponto.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ponto?.id]);
 
   if (isLoading) {
     return (
@@ -82,28 +86,31 @@ export default function ClubeRotaPremium() {
     );
   }
 
-  const audios = Array.isArray(ponto.metadata?.audios) ? ponto.metadata.audios : [];
-  const jardimPrompt =
-    ponto.jardim_prompt ||
-    ponto.metadata?.jardim_prompt ||
-    'Escreva hoje sobre as peles que você já trocou mas que ainda insistem em vestir seu corpo atual.';
-  const simulacaoTexto =
-    ponto.cenario_treinamento ||
-    ponto.metadata?.simulacao_texto ||
-    `Você encontrou um arquétipo ferido no campo psíquico. Como você utiliza as ferramentas da ${
-      estacaoAtual?.titulo || 'Estação'
-    } para realizar a primeira escuta sem ser devorada pelo trauma?`;
-  const perguntasSugeridas = Array.isArray(ponto.metadata?.perguntas_sugeridas)
-    ? ponto.metadata.perguntas_sugeridas
-    : ['Qual o significado do lobo?', 'Como resgatar minha força?', 'Símbolos de cura'];
+  // ─── Conteúdo 100% DB-driven (sem fallbacks mock) ───
+  const audios: Array<{ titulo?: string; url?: string; tipo?: string; duracao?: string }> =
+    Array.isArray(ponto.metadata?.audios) ? ponto.metadata.audios : [];
 
+  const jardimPrompt: string | null =
+    ponto.jardim_prompt || ponto.metadata?.jardim_prompt || null;
+
+  const simulacaoTexto: string | null =
+    ponto.cenario_treinamento || ponto.metadata?.simulacao_texto || null;
+
+  const perguntasSugeridas: string[] = Array.isArray(ponto.metadata?.perguntas_sugeridas)
+    ? ponto.metadata.perguntas_sugeridas.filter((p: any) => typeof p === 'string' && p.trim())
+    : [];
+
+  const temChatLivro = ponto.tipo === 'chat_livro' || perguntasSugeridas.length > 0;
+
+  // Cartografia: só mostra cards que têm valor real
   const cartografia = [
-    { label: 'Estação', value: estacaoAtual?.titulo || '—', icon: MapPin },
-    { label: 'Porta', value: ponto.porta || 'Iniciação', icon: DoorOpen },
-    { label: 'Campo', value: ponto.campo || 'Clube do Livro', icon: Layers },
-    { label: 'Torre', value: ponto.torre || 'Observatório', icon: Layout },
-    { label: 'Labirinto', value: ponto.labirinto || 'Sombra', icon: ShieldAlert },
-  ];
+    { label: 'Estação', value: estacaoAtual?.titulo, icon: MapPin },
+    { label: 'Porta', value: ponto.porta, icon: DoorOpen },
+    { label: 'Campo', value: ponto.campo, icon: Layers },
+    { label: 'Torre', value: ponto.torre, icon: Layout },
+    { label: 'Labirinto', value: ponto.labirinto, icon: ShieldAlert },
+  ].filter(c => c.value && c.value.trim());
+
 
   return (
     <AppLayout>
