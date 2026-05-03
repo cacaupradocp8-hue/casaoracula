@@ -57,7 +57,7 @@ export default function DashboardMembro() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-5 md:px-6 py-8 pb-24 max-w-2xl">
+      <div className="mx-auto w-full max-w-2xl xl:max-w-6xl 2xl:max-w-[1240px] px-4 sm:px-6 lg:px-8 xl:px-10 py-6 md:py-8 pb-24">
         {/* Banner de boas-vindas (pós-compra) */}
         <AnimatePresence>
           {showBanner && (
@@ -69,7 +69,7 @@ export default function DashboardMembro() {
           )}
         </AnimatePresence>
 
-        {/* 1. Bússola — Momento atual */}
+        {/* 1. Bússola — full width */}
         <BussolaAtual
           leituraMomento={bussola.leituraMomento}
           distritoDominante={bussola.distritoDominante}
@@ -79,36 +79,30 @@ export default function DashboardMembro() {
           welcomeName={bussola.welcomeName}
         />
 
-        {/* 2. Próxima Ação — CTA principal */}
-        <ProximaAcao
-          principal={bussola.acaoPrincipal}
-          secundarias={bussola.acoesSecundarias}
-        />
-
-        {/* 3. Mini Mapa CidaDELA — Mandala real */}
-        <MiniMapaCidadela
-          temCartografia={bussola.temCartografia}
-          distritoDominante={bussola.distritoDominante}
-          distritosAtivos={bussola.distritosAtivos}
-          distritoTensao={bussola.distritoTensao}
-          corHex={bussola.corHex}
-          distritosRaw={bussola.distritosRaw}
-        />
-
-        {/* 4. Próximo Passo Sugerido (IA/CidaDELA) */}
-        <ProximoPasso />
-
-        {/* 5. Jornada de Leitura */}
-        <JornadaRecomendada leitura={bussola.leitura} />
-
-        {/* 5. Práticas filtradas */}
-        <PraticasRelevantes praticas={bussola.praticasSugeridas} />
-
-        {/* 6. Sua Voz (resumida) */}
-        <SuaVozResumo voz={bussola.voz} welcomeName={bussola.welcomeName} />
-
-        {/* 7. Alertas clínicos (só quando necessário) */}
-        <AlertaOracular alertas={bussola.alertas} />
+        {/* Layout adaptativo: stack em mobile, 2 colunas em xl+ */}
+        <div className="grid grid-cols-1 xl:grid-cols-[1.15fr_1fr] gap-6 xl:gap-8 mt-6">
+          <div className="space-y-6 min-w-0">
+            <ProximaAcao
+              principal={bussola.acaoPrincipal}
+              secundarias={bussola.acoesSecundarias}
+            />
+            <ProximoPasso />
+            <JornadaRecomendada leitura={bussola.leitura} />
+            <PraticasRelevantes praticas={bussola.praticasSugeridas} />
+          </div>
+          <div className="space-y-6 min-w-0">
+            <MiniMapaCidadela
+              temCartografia={bussola.temCartografia}
+              distritoDominante={bussola.distritoDominante}
+              distritosAtivos={bussola.distritosAtivos}
+              distritoTensao={bussola.distritoTensao}
+              corHex={bussola.corHex}
+              distritosRaw={bussola.distritosRaw}
+            />
+            <SuaVozResumo voz={bussola.voz} welcomeName={bussola.welcomeName} />
+            <AlertaOracular alertas={bussola.alertas} />
+          </div>
+        </div>
       </div>
     </AppLayout>
   );

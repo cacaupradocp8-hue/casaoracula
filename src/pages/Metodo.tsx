@@ -48,7 +48,7 @@ export default function Metodo() {
         {/* 1. Hero — único lugar com breathing orb */}
         <MetodoHero />
 
-        <div className="container mx-auto px-6 max-w-4xl">
+        <div className="mx-auto w-full max-w-4xl xl:max-w-5xl 2xl:max-w-6xl px-4 sm:px-6 lg:px-8 xl:px-10">
           <RitualDivider />
 
           {/* 2. O que é + Para quem é */}
@@ -90,7 +90,7 @@ export default function Metodo() {
         {/* 4. Método ORÁCULA (Mapa, Espelho, Travessia) */}
         <MetodoOraculaSection />
 
-        <div className="container mx-auto px-6 max-w-4xl">
+        <div className="mx-auto w-full max-w-4xl xl:max-w-5xl 2xl:max-w-6xl px-4 sm:px-6 lg:px-8 xl:px-10">
           <RitualDivider />
 
           {/* 5. Pilares */}

@@ -115,7 +115,7 @@ export default function ClubeRotaPremium() {
   return (
     <AppLayout>
       {/* Wrapper de fundo cinematográfico */}
-      <div className="relative -mx-4 md:-mx-0 bg-midnight text-foreground overflow-hidden">
+      <div className="relative bg-midnight text-foreground overflow-hidden">
         {/* Gradiente atmosférico fixo de fundo */}
         <div className="pointer-events-none fixed inset-0 z-0">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(206_60%_18%/0.6),transparent_60%)]" />
@@ -164,7 +164,10 @@ export default function ClubeRotaPremium() {
               <span className="h-px w-10 bg-gold/40" />
             </motion.div>
 
-            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[1.05] tracking-tight">
+            <h1
+              className="font-display leading-[1.05] tracking-tight"
+              style={{ fontSize: 'clamp(2.5rem, 8vw, 6rem)' }}
+            >
               <span className="bg-gradient-to-b from-foreground via-foreground to-foreground/60 bg-clip-text text-transparent">
                 {ponto.nome}
               </span>
@@ -224,7 +227,7 @@ export default function ClubeRotaPremium() {
         </section>
 
         {/* Conteúdo principal */}
-        <div className="relative z-10 max-w-3xl mx-auto px-5 md:px-6 space-y-28 md:space-y-36 pb-32 pt-12 md:pt-20">
+        <div className="relative z-10 mx-auto w-full max-w-3xl xl:max-w-4xl 2xl:max-w-5xl px-4 sm:px-6 lg:px-8 xl:px-10 space-y-24 md:space-y-32 pb-32 pt-12 md:pt-20">
 
           {/* ═══════════ 2. MAPA VIVO ═══════════ */}
           <Section id="mapa-vivo" icon={Compass} kicker="Cartografia da alma" titulo="Mapa vivo">
