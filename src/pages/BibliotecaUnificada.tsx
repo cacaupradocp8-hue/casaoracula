@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BookOpen, Library, Shield, Compass, Lock } from 'lucide-react';
 
@@ -32,7 +33,7 @@ export default function BibliotecaUnificada() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
+      <ResponsiveContainer size="default" className="py-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -16 }}
