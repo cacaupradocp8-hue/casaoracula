@@ -44,13 +44,15 @@ export function SalaLayout({
   quizzes, 
   cursos 
 }: SalaLayoutProps) {
+  const defaultOpen = typeof window !== 'undefined' ? window.innerWidth >= 1280 : false;
+
   return (
     <div className="min-h-screen bg-background">
       {/* Top Navigation */}
       <Navigation />
       
       {/* Sidebar + Content */}
-      <SidebarProvider defaultOpen={true}>
+      <SidebarProvider defaultOpen={defaultOpen}>
         <div className="flex min-h-[calc(100vh-4rem)] w-full pt-16">
           <SalaSidebar
             salaNome={salaNome}
@@ -59,8 +61,8 @@ export function SalaLayout({
             quizzes={quizzes}
             cursos={cursos}
           />
-          <SidebarInset className="flex-1">
-            <div className="h-full">
+          <SidebarInset className="flex-1 min-w-0">
+            <div className="h-full max-w-[1440px] mx-auto w-full">
               {children}
             </div>
           </SidebarInset>
