@@ -7,6 +7,7 @@ import { useEffectivePortal } from '@/hooks/useEffectivePortal';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import {
   Dialog,
   DialogContent,
@@ -53,7 +54,7 @@ export default function ClubeRotasCatalogo() {
           <div className="absolute -top-40 -right-20 w-[520px] h-[520px] bg-gold/[0.06] rounded-full blur-[140px]" />
           <div className="absolute -bottom-40 -left-20 w-[460px] h-[460px] bg-[hsl(206_70%_30%/0.18)] rounded-full blur-[140px]" />
         </div>
-        <div className="relative max-w-6xl mx-auto px-6 md:px-10 py-14 md:py-20">
+        <ResponsiveContainer size="wide" className="relative py-14 md:py-20">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -74,11 +75,11 @@ export default function ClubeRotasCatalogo() {
               já está esperando.
             </p>
           </motion.div>
-        </div>
+        </ResponsiveContainer>
       </section>
 
       {/* Filtros */}
-      <div className="max-w-6xl mx-auto px-6 md:px-10 pt-8">
+      <ResponsiveContainer size="wide" className="pt-8">
         <div className="flex items-center gap-2 overflow-x-auto pb-2">
           {filtros.map((f) => (
             <button
