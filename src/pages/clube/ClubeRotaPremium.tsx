@@ -371,138 +371,145 @@ export default function ClubeRotaPremium() {
           )}
 
           {/* ═══════════ 4. CONVERSE COM O LIVRO ═══════════ */}
-          <Section icon={MessageSquare} kicker="Sussurros da obra" titulo="Converse com o livro">
-            <Card className="bg-gradient-to-br from-gold/[0.08] via-foreground/[0.02] to-transparent border-foreground/[0.06] overflow-hidden">
-              <CardContent className="p-6 md:p-8">
-                <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
-                  <motion.div
-                    whileHover={{ scale: 1.03, rotate: -1 }}
-                    transition={{ duration: 0.6 }}
-                    className="relative w-32 md:w-40 shrink-0"
-                  >
-                    <img
-                      src={
-                        estacaoAtual?.livro_capa_url ||
-                        'https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=800'
-                      }
-                      alt={estacaoAtual?.livro_titulo || ''}
-                      className="w-full aspect-[2/3] object-cover rounded shadow-[0_30px_60px_-15px_rgba(0,0,0,0.7)]"
-                    />
-                    <div className="absolute inset-0 ring-1 ring-inset ring-foreground/15 rounded" />
-                  </motion.div>
-
-                  <div className="flex-1 w-full space-y-5">
-                    <div className="space-y-2 text-center md:text-left">
-                      <h4 className="font-display text-xl md:text-2xl text-foreground">
-                        Diálogo com o inconsciente
-                      </h4>
-                      <p className="text-sm text-foreground/55 italic font-serif leading-relaxed">
-                        Pergunte ao livro sobre as tensões deste capítulo ou peça uma orientação simbólica.
-                      </p>
-                    </div>
-
-                    <div className="space-y-3">
-                      <div className="relative">
-                        <Input
-                          value={pergunta}
-                          onChange={e => setPergunta(e.target.value)}
-                          onKeyDown={e => {
-                            if (e.key === 'Enter' && pergunta.trim()) {
-                              navigate(`/clube/chat-livro?q=${encodeURIComponent(pergunta)}`);
-                            }
-                          }}
-                          placeholder="Escreva sua inquietação..."
-                          className="bg-midnight/60 border-foreground/10 h-13 pl-5 pr-14 rounded-full focus-visible:border-gold/40 focus-visible:ring-gold/10 transition-all"
+          {temChatLivro && (
+            <Section icon={MessageSquare} kicker="Sussurros da obra" titulo="Converse com o livro">
+              <Card className="bg-gradient-to-br from-gold/[0.08] via-foreground/[0.02] to-transparent border-foreground/[0.06] overflow-hidden">
+                <CardContent className="p-6 md:p-8">
+                  <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
+                    {estacaoAtual?.livro_capa_url && (
+                      <motion.div
+                        whileHover={{ scale: 1.03, rotate: -1 }}
+                        transition={{ duration: 0.6 }}
+                        className="relative w-32 md:w-40 shrink-0"
+                      >
+                        <img
+                          src={estacaoAtual.livro_capa_url}
+                          alt={estacaoAtual?.livro_titulo || ''}
+                          className="w-full aspect-[2/3] object-cover rounded shadow-[0_30px_60px_-15px_rgba(0,0,0,0.7)]"
                         />
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full text-gold/70 hover:text-gold hover:bg-gold/10 h-10 w-10"
-                          onClick={() =>
-                            navigate(
-                              pergunta.trim()
-                                ? `/clube/chat-livro?q=${encodeURIComponent(pergunta)}`
-                                : '/clube/chat-livro'
-                            )
-                          }
-                        >
-                          <ArrowRight className="w-4 h-4" />
-                        </Button>
+                        <div className="absolute inset-0 ring-1 ring-inset ring-foreground/15 rounded" />
+                      </motion.div>
+                    )}
+
+                    <div className="flex-1 w-full space-y-5">
+                      <div className="space-y-2 text-center md:text-left">
+                        <h4 className="font-display text-xl md:text-2xl text-foreground">
+                          Diálogo com o inconsciente
+                        </h4>
+                        <p className="text-sm text-foreground/55 italic font-serif leading-relaxed">
+                          Pergunte ao livro sobre as tensões deste capítulo ou peça uma orientação simbólica.
+                        </p>
                       </div>
 
-                      <div className="flex flex-wrap gap-2">
-                        {perguntasSugeridas.map((tag: string) => (
-                          <button
-                            key={tag}
-                            onClick={() => setPergunta(tag)}
-                            className="text-[11px] px-3 py-1.5 rounded-full border border-foreground/10 bg-foreground/[0.03] text-foreground/55 hover:border-gold/30 hover:text-gold hover:bg-gold/5 transition-all"
+                      <div className="space-y-3">
+                        <div className="relative">
+                          <Input
+                            value={pergunta}
+                            onChange={e => setPergunta(e.target.value)}
+                            onKeyDown={e => {
+                              if (e.key === 'Enter' && pergunta.trim()) {
+                                navigate(`/clube/chat-livro?q=${encodeURIComponent(pergunta)}`);
+                              }
+                            }}
+                            placeholder="Escreva sua inquietação..."
+                            className="bg-midnight/60 border-foreground/10 h-13 pl-5 pr-14 rounded-full focus-visible:border-gold/40 focus-visible:ring-gold/10 transition-all"
+                          />
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full text-gold/70 hover:text-gold hover:bg-gold/10 h-10 w-10"
+                            onClick={() =>
+                              navigate(
+                                pergunta.trim()
+                                  ? `/clube/chat-livro?q=${encodeURIComponent(pergunta)}`
+                                  : '/clube/chat-livro'
+                              )
+                            }
                           >
-                            {tag}
-                          </button>
-                        ))}
+                            <ArrowRight className="w-4 h-4" />
+                          </Button>
+                        </div>
+
+                        {perguntasSugeridas.length > 0 && (
+                          <div className="flex flex-wrap gap-2">
+                            {perguntasSugeridas.map((tag: string) => (
+                              <button
+                                key={tag}
+                                onClick={() => setPergunta(tag)}
+                                className="text-[11px] px-3 py-1.5 rounded-full border border-foreground/10 bg-foreground/[0.03] text-foreground/55 hover:border-gold/30 hover:text-gold hover:bg-gold/5 transition-all"
+                              >
+                                {tag}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Section>
+                </CardContent>
+              </Card>
+            </Section>
+          )}
 
           {/* ═══════════ 5. TREINAMENTO ═══════════ */}
-          <Section icon={Zap} kicker="Câmara de simulação" titulo="Treinamento">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="relative overflow-hidden rounded-2xl border border-foreground/[0.06] bg-gradient-to-br from-foreground/[0.04] to-transparent p-6 md:p-8"
-            >
-              <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-gold/0 via-gold/60 to-gold/0" />
-              <div className="space-y-5">
-                <div>
-                  <p className="text-[9px] tracking-[0.3em] uppercase text-gold/60 mb-1">
-                    Situação de campo
+          {simulacaoTexto && (
+            <Section icon={Zap} kicker="Câmara de simulação" titulo="Treinamento">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="relative overflow-hidden rounded-2xl border border-foreground/[0.06] bg-gradient-to-br from-foreground/[0.04] to-transparent p-6 md:p-8"
+              >
+                <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-gold/0 via-gold/60 to-gold/0" />
+                <div className="space-y-5">
+                  <div>
+                    <p className="text-[9px] tracking-[0.3em] uppercase text-gold/60 mb-1">
+                      Situação de campo
+                    </p>
+                    <h4 className="font-display text-xl md:text-2xl">Simulação contextual</h4>
+                  </div>
+                  <p className="text-foreground/65 text-[15px] leading-relaxed font-serif italic">
+                    {simulacaoTexto}
                   </p>
-                  <h4 className="font-display text-xl md:text-2xl">Simulação contextual</h4>
+                  <Button
+                    variant="outline"
+                    className="w-full sm:w-auto h-12 rounded-full border-gold/30 text-gold hover:bg-gold hover:text-midnight gap-2 uppercase tracking-[0.25em] text-[11px] font-semibold transition-all duration-500"
+                    onClick={() => navigate('/clube/treinamento')}
+                  >
+                    Iniciar simulação <ArrowRight className="w-4 h-4" />
+                  </Button>
                 </div>
-                <p className="text-foreground/65 text-[15px] leading-relaxed font-serif italic">
-                  {simulacaoTexto}
-                </p>
-                <Button
-                  variant="outline"
-                  className="w-full sm:w-auto h-12 rounded-full border-gold/30 text-gold hover:bg-gold hover:text-midnight gap-2 uppercase tracking-[0.25em] text-[11px] font-semibold transition-all duration-500"
-                  onClick={() => navigate('/clube/treinamento')}
-                >
-                  Iniciar simulação <ArrowRight className="w-4 h-4" />
-                </Button>
-              </div>
-            </motion.div>
-          </Section>
+              </motion.div>
+            </Section>
+          )}
 
           {/* ═══════════ 6. JARDIM ═══════════ */}
-          <Section icon={Flower2} kicker="Sementeira interna" titulo="Jardim da psique">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.97 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gold/[0.06] via-midnight to-midnight border border-foreground/[0.06] p-8 md:p-12"
-            >
-              <div className="absolute -top-20 -right-20 w-60 h-60 bg-gold/10 rounded-full blur-3xl pointer-events-none" />
-              <div className="relative space-y-8 text-center">
-                <Flower2 className="w-7 h-7 text-gold/60 mx-auto" />
-                <p className="font-serif italic text-lg md:text-2xl text-foreground/85 leading-relaxed max-w-xl mx-auto">
-                  "{jardimPrompt}"
-                </p>
-                <Button
-                  variant="ghost"
-                  className="text-gold hover:text-gold hover:bg-gold/10 gap-2 rounded-full"
-                  onClick={() => navigate('/jardim-heroina')}
-                >
-                  <MapPin className="w-4 h-4" /> Registrar no Jardim
-                </Button>
-              </div>
-            </motion.div>
-          </Section>
+          {jardimPrompt && (
+            <Section icon={Flower2} kicker="Sementeira interna" titulo="Jardim da psique">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.97 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gold/[0.06] via-midnight to-midnight border border-foreground/[0.06] p-8 md:p-12"
+              >
+                <div className="absolute -top-20 -right-20 w-60 h-60 bg-gold/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="relative space-y-8 text-center">
+                  <Flower2 className="w-7 h-7 text-gold/60 mx-auto" />
+                  <p className="font-serif italic text-lg md:text-2xl text-foreground/85 leading-relaxed max-w-xl mx-auto">
+                    "{jardimPrompt}"
+                  </p>
+                  <Button
+                    variant="ghost"
+                    className="text-gold hover:text-gold hover:bg-gold/10 gap-2 rounded-full"
+                    onClick={() => navigate('/jardim-heroina')}
+                  >
+                    <MapPin className="w-4 h-4" /> Registrar no Jardim
+                  </Button>
+                </div>
+              </motion.div>
+            </Section>
+          )}
 
           {/* ═══════════ 7. CTA FORMAÇÃO ═══════════ */}
           <Section>
