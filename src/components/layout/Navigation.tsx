@@ -176,14 +176,14 @@ export function Navigation() {
           ? "bg-[#000814]/85 border-blue-900/30 backdrop-blur-2xl" 
           : "border-primary/15 bg-background/85 backdrop-blur-2xl"
       )}>
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            <Link to={user ? (activeDomain === 'profissional' ? '/casa-das-maquinas' : '/dashboard-membro') : '/'} className="h-full flex items-center py-2">
+        <div className="container mx-auto">
+          <div className="flex items-center justify-between gap-2 h-16 lg:h-18 xl:h-20">
+            <Link to={user ? (activeDomain === 'profissional' ? '/casa-das-maquinas' : '/dashboard-membro') : '/'} className="h-full flex items-center py-2 shrink-0">
               <Logo variant="horizontal" className={cn("transition-all", location.pathname === '/clube' ? "brightness-125" : "")} />
             </Link>
 
-            {/* Desktop menu */}
-            <div className="hidden md:flex items-center gap-0.5">
+            {/* Desktop menu — icon-only at lg, full at xl */}
+            <div className="hidden lg:flex items-center gap-0.5 flex-1 justify-center min-w-0 overflow-x-auto no-scrollbar">
               {menuGroups.map(group => {
                 const Icon = group.icon;
                 const active = isActive(group.subitems.length ? group.subitems.map(s => s.path) : [group.path]);
@@ -194,13 +194,14 @@ export function Navigation() {
                       <Button
                         variant="ghost"
                         size="sm"
+                        title={group.label}
                         className={cn(
-                          'gap-1.5 transition-all rounded-lg text-foreground/70 hover:text-foreground hover:bg-primary/5',
+                          'gap-1.5 transition-all rounded-lg text-foreground/70 hover:text-foreground hover:bg-primary/5 px-2 xl:px-3',
                           active && 'bg-primary/10 text-primary border border-primary/15'
                         )}
                       >
-                        <Icon className="w-4 h-4" />
-                        <span className="text-sm">{group.label}</span>
+                        <Icon className="w-4 h-4 shrink-0" />
+                        <span className="hidden xl:inline text-sm whitespace-nowrap">{group.label}</span>
                       </Button>
                     </Link>
                   );
@@ -212,14 +213,15 @@ export function Navigation() {
                       <Button
                         variant="ghost"
                         size="sm"
+                        title={group.label}
                         className={cn(
-                          'gap-1.5 transition-all rounded-lg text-foreground/70 hover:text-foreground hover:bg-primary/5',
+                          'gap-1.5 transition-all rounded-lg text-foreground/70 hover:text-foreground hover:bg-primary/5 px-2 xl:px-3',
                           active && 'bg-primary/10 text-primary border border-primary/15'
                         )}
                       >
-                        <Icon className="w-4 h-4" />
-                        <span className="text-sm">{group.label}</span>
-                        <ChevronDown className="w-3 h-3 opacity-50" />
+                        <Icon className="w-4 h-4 shrink-0" />
+                        <span className="hidden xl:inline text-sm whitespace-nowrap">{group.label}</span>
+                        <ChevronDown className="hidden xl:inline w-3 h-3 opacity-50" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="w-56 bg-card/95 backdrop-blur-xl border-primary/10">
