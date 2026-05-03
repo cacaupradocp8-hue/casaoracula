@@ -96,10 +96,10 @@ export default function ClubeRotasCatalogo() {
             </button>
           ))}
         </div>
-      </div>
+      </ResponsiveContainer>
 
       {/* Grid */}
-      <section className="max-w-6xl mx-auto px-6 md:px-10 py-10 md:py-14">
+      <ResponsiveContainer size="wide" className="py-10 md:py-14" as="section">
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
