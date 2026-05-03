@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   ArrowLeft, Plus, Pencil, Trash2, ArrowUp, ArrowDown,
-  Loader2, Eye, EyeOff, Sparkles,
+  Loader2, Eye, EyeOff, Sparkles, ExternalLink, AlertCircle,
 } from 'lucide-react';
 import { PassoEditor } from './PassoEditor';
 import { toast } from 'sonner';
@@ -101,10 +101,29 @@ export function EstacaoPassos({ estacao, onBack }: Props) {
             <p className="text-sm text-muted-foreground truncate">{estacao.subtitulo}</p>
           )}
         </div>
+        {passos?.[0]?.slug && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => window.open(`/clube/rota/${passos[0].slug}`, '_blank')}
+            className="gap-1.5"
+          >
+            <ExternalLink className="w-3.5 h-3.5" /> Ver como aluna
+          </Button>
+        )}
         <Button size="sm" onClick={() => { setEditing(null); setEditorOpen(true); }} className="gap-1.5">
           <Plus className="w-4 h-4" /> Novo Passo
         </Button>
       </div>
+
+      {!isLoading && passos && passos.length > 0 && !passos.some((p: any) => p.publicado) && (
+        <div className="flex items-start gap-2 p-3 rounded-md bg-amber-500/5 border border-amber-500/20">
+          <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+          <p className="text-xs text-amber-700 dark:text-amber-400">
+            Esta estação não tem nenhum passo publicado — a aluna não verá conteúdo.
+          </p>
+        </div>
+      )}
 
       {/* Lista de passos */}
       {isLoading ? (
