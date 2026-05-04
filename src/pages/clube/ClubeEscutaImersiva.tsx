@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ClubeAudioCardImersivo } from '@/components/clube/ClubeAudioCardImersivo';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { useClubeCicloDetalhe, type ClubeEscuta } from '@/hooks/useClubeLivro';
 import { useAudioProgress } from '@/hooks/useAudioProgress';
 import { getPublicAudioUrl, formatAudioTime } from '@/lib/audioUtils';
@@ -64,39 +65,45 @@ export default function ClubeEscutaImersiva() {
 
   return (
     <AppLayout>
-      <div className="min-h-screen px-4 py-10 md:py-16 max-w-2xl mx-auto space-y-8">
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/clube')}>
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <div>
-            <h1 className="font-display text-2xl md:text-3xl text-foreground tracking-wide">
-              Escuta Contemplativa
-            </h1>
-            <p className="text-muted-foreground/60 text-sm tracking-wide">
-              {escutas.length} áudio{escutas.length !== 1 ? 's' : ''} disponíve{escutas.length !== 1 ? 'is' : 'l'}
-            </p>
+      <ResponsiveContainer size="default" className="py-10 md:py-16 space-y-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <Button variant="outline" size="icon" className="rounded-full border-border/40" onClick={() => navigate('/clube')}>
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="h-px w-6 bg-gold/40" />
+                <span className="text-[10px] tracking-[0.4em] uppercase text-gold/70 font-bold">Templo do Som</span>
+              </div>
+              <h1 className="font-display text-3xl md:text-5xl text-foreground tracking-tight leading-none">
+                Escuta Contemplativa
+              </h1>
+              <p className="text-muted-foreground/70 text-sm font-serif italic mt-2">
+                {escutas.length} áudio{escutas.length !== 1 ? 's' : ''} para o seu mergulho interior
+              </p>
+            </div>
           </div>
         </div>
 
         {isLoading ? (
-          <div className="flex flex-col items-center gap-4 py-20">
+          <div className="flex flex-col items-center gap-6 py-32">
             <motion.div
-              animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }}
-              transition={{ duration: 3, repeat: Infinity }}
-              className="w-12 h-12 rounded-full border border-gold/20 flex items-center justify-center"
+              animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.7, 0.3] }}
+              transition={{ duration: 4, repeat: Infinity }}
+              className="w-16 h-16 rounded-full border border-gold/20 flex items-center justify-center bg-gold/5"
             >
-              <Headphones className="w-5 h-5 text-gold/40" />
+              <Headphones className="w-6 h-6 text-gold/60" />
             </motion.div>
-            <p className="text-muted-foreground/75 text-sm">Carregando áudios…</p>
+            <p className="text-gold/40 text-xs uppercase tracking-[0.3em] font-bold">Afinando a frequência…</p>
           </div>
         ) : escutas.length === 0 ? (
-          <div className="text-center py-20 space-y-3">
-            <Headphones className="w-10 h-10 text-muted-foreground/70 mx-auto" />
-            <p className="text-muted-foreground/50 text-sm">Nenhum áudio disponível.</p>
+          <div className="text-center py-32 space-y-4">
+            <Headphones className="w-12 h-12 text-muted-foreground/20 mx-auto" />
+            <p className="text-muted-foreground/60 font-serif italic">Nenhum sussurro captado nesta estação.</p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {escutas.map((escuta, i) => (
               <ClubeAudioCardImersivo
                 key={escuta.id}
@@ -111,7 +118,7 @@ export default function ClubeEscutaImersiva() {
             ))}
           </div>
         )}
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }
