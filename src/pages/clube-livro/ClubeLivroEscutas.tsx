@@ -4,6 +4,7 @@
 
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -35,7 +36,7 @@ export default function ClubeLivroEscutas() {
   if (isLoading) {
     return (
       <AppLayout>
-        <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
+        <ResponsiveContainer size="narrow" className="py-8 pb-20">
           <div className="animate-pulse space-y-4">
             <div className="h-8 bg-muted rounded w-1/2" />
             <div className="h-32 bg-muted rounded" />
