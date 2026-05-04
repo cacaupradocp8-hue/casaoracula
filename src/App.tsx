@@ -130,7 +130,7 @@ const AcademiaFormacaoPage = React.lazy(() => import("./pages/AcademiaFormacaoPa
 const FormacaoMetodoPage = React.lazy(() => import("./pages/FormacaoMetodoPage"));
 const FormacaoForumPage = React.lazy(() => import("./pages/FormacaoForumPage"));
 const FormacaoAvaliacoesPage = React.lazy(() => import("./pages/FormacaoAvaliacoesPage"));
-const BottomNavTestPage = React.lazy(() => import("./pages/BottomNavTestPage"));
+
 const SessionRoomHome = React.lazy(() => import("./pages/SessionRoomHome"));
 const SessionRoomCase = React.lazy(() => import("./pages/SessionRoomCase"));
 const SessionRoomGroup = React.lazy(() => import("./pages/SessionRoomGroup"));
@@ -519,8 +519,6 @@ function AppRoutes() {
 
       {/* Biblioteca Travessias */}
 
-      {/* Test: Bottom Nav Preview */}
-      <Route path="/test-bottom-nav" element={<BottomNavTestPage />} />
 
       <Route path="/biblioteca-das-travessias" element={<ProtectedRoute><Navigate to="/biblioteca?aba=travessias" replace /></ProtectedRoute>} />
       <Route path="/biblioteca-das-travessias/:slug" element={<ProtectedRoute><BibliotecaTravessiaDetalhe /></ProtectedRoute>} />
