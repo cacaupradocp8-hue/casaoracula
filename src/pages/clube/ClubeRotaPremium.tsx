@@ -32,6 +32,7 @@ import { useRotaOracular } from '@/hooks/useRotaOracular';
 import { cn } from '@/lib/utils';
 import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { useAllBooks } from '@/hooks/useBooks';
+import { PortalEntradaRota } from '@/components/clube-livro/PortalEntradaRota';
 
 /**
  * ClubeRotaPremium — Página de Rota nível Netflix + Apple + Jung
