@@ -597,6 +597,17 @@ export default function QuizPage() {
             className="flex flex-col items-center gap-8 py-16 border-t border-border/10 mt-20"
           >
             <div className="flex flex-wrap gap-4 justify-center">
+              <Button
+                variant="gold"
+                size="lg"
+                onClick={() => setShowSyntheiaChat(true)}
+                className="gap-2 shadow-lg shadow-gold/20 rounded-full px-8"
+                data-syntheia-trigger="true"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Explorar com Syntheia
+              </Button>
+
               {(() => {
                 const vozId = mapQuizResultToVozId(prevResult.titulo_simbolico);
                 return vozId ? (
@@ -620,16 +631,6 @@ export default function QuizPage() {
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Voltar
-              </Button>
-              
-              <Button 
-                variant="ghost" 
-                size="lg"
-                onClick={handleRestart}
-                className="rounded-full px-8 text-gold/60 hover:text-gold hover:bg-gold/5"
-              >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Refazer Quiz
               </Button>
             </div>
           </motion.div>
