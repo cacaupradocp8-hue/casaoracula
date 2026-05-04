@@ -95,20 +95,22 @@ export default function AdminClubeHub() {
   const { data: stats } = useQuery({
     queryKey: ['admin-clube-hub-premium-stats'],
     queryFn: async () => {
-      const [ciclos, books, estacoes, portais, perguntas, activeStation] = await Promise.all([
+      const [ciclos, books, estacoes, portais, perguntas, activeStation, essencias] = await Promise.all([
         supabase.from('clube_livro_ciclos').select('id', { count: 'exact', head: true }),
         supabase.from('books').select('id', { count: 'exact', head: true }),
         supabase.from('clube_estacoes').select('id', { count: 'exact', head: true }),
         supabase.from('clube_portais').select('id', { count: 'exact', head: true }),
         supabase.from('clube_livro_perguntas').select('id', { count: 'exact', head: true }),
         supabase.from('clube_estacoes').select('*').eq('ativa', true).maybeSingle(),
+        supabase.from('clube_obras_essencia_8020').select('id', { count: 'exact', head: true }),
       ]);
       return {
         ciclos: cycles_count(estacoes.count, ciclos.count),
         books: books.count || 0,
         portais: portais.count || 0,
         chat: perguntas.count || 0,
-        activeStation: activeStation.data
+        activeStation: activeStation.data,
+        essencias: essencias.count || 0,
       };
     },
   });
