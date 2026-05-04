@@ -69,8 +69,8 @@ export function ClubeHomePage() {
 
   return (
     <AppLayout>
-      <ResponsiveContainer size="wide" className="py-8 md:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-12">
+      <ResponsiveContainer size="full" className="py-8 md:py-12 px-4 sm:px-6 lg:px-10 xl:px-16 2xl:px-24 max-w-[1680px]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-10">
           
           {/* ============================================
               COLUNA PRINCIPAL (ESQUERDA) — 8/12
