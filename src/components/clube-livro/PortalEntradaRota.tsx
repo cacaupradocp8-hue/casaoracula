@@ -224,8 +224,8 @@ export function PortalEntradaRota({
         </div>
 
         {/* 3D Carousel Stage */}
-        <div className="flex-1 relative perspective-[2000px] flex items-center justify-center">
-          <div className="relative w-full h-full max-h-[500px] flex items-center justify-center">
+        <div className="flex-1 relative perspective-[1500px] flex items-center justify-center">
+          <div className="relative w-full h-full max-h-[450px] flex items-center justify-center">
             <AnimatePresence mode="popLayout">
               {slides.map((slide, i) => {
                 const diff = i - current;
@@ -238,25 +238,25 @@ export function PortalEntradaRota({
                     key={i}
                     drag={isActive ? 'x' : false}
                     dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={0.15}
+                    dragElastic={0.1}
                     onDragEnd={handleDragEnd}
-                    initial={{ opacity: 0, scale: 0.8, x: diff * 400, rotateY: diff * 60 }}
+                    initial={{ opacity: 0, scale: 0.8, x: diff * 300, rotateY: diff * 45 }}
                     animate={{
-                      x: diff * (window.innerWidth < 768 ? 240 : 380),
-                      z: isActive ? 0 : -absDiff * 300,
-                      rotateY: diff * -35,
+                      x: diff * (window.innerWidth < 768 ? 200 : 320),
+                      z: isActive ? 0 : -absDiff * 250,
+                      rotateY: diff * -30,
                       scale: isActive ? 1 : 0.85,
                       opacity: isActive ? 1 : 0.4 - (absDiff * 0.1),
                       filter: isActive ? 'blur(0px)' : 'blur(2px)',
                     }}
                     transition={{
                       type: 'spring',
-                      stiffness: 180,
-                      damping: 25,
-                      mass: 0.8
+                      stiffness: 200,
+                      damping: 30,
+                      mass: 1
                     }}
                     className={cn(
-                      'absolute w-[280px] md:w-[380px] aspect-[10/14] preserve-3d',
+                      'absolute w-[260px] md:w-[340px] aspect-[10/14] preserve-3d',
                       !isActive && 'cursor-pointer pointer-events-none'
                     )}
                     onClick={() => !isActive && goTo(i)}
