@@ -22,7 +22,7 @@ import { CourseWithProgress } from '@/types/course';
 
 export default function Cursos() {
   const { user } = useAuth();
-  const { courses, isLoading } = useCourses();
+  const { data: courses = [], isLoading } = useCourses();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('todos');
 

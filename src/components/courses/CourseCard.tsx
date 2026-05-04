@@ -7,6 +7,7 @@ import { Lock, Play, Clock, BarChart3, Star } from 'lucide-react';
 import { CourseWithProgress } from '@/types/course';
 import { useCourseAccess } from '@/hooks/useCourseAccess';
 import { motion } from 'framer-motion';
+import { OptimizedImage } from '@/components/shared/OptimizedImage';
 
 interface CourseCardProps {
   course: CourseWithProgress;
@@ -43,9 +44,10 @@ export function CourseCard({ course, showProgress = true }: CourseCardProps) {
       {/* Cover Image */}
       <div className="relative aspect-[16/10] overflow-hidden">
         {course.capa_url ? (
-          <img 
+          <OptimizedImage 
             src={course.capa_url} 
             alt={course.titulo}
+            containerClassName="w-full h-full"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         ) : (
