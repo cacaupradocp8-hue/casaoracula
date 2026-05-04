@@ -41,7 +41,7 @@ export default function ClubeLivroEscutas() {
             <div className="h-8 bg-muted rounded w-1/2" />
             <div className="h-32 bg-muted rounded" />
           </div>
-        </div>
+        </ResponsiveContainer>
       </AppLayout>
     );
   }
@@ -49,20 +49,20 @@ export default function ClubeLivroEscutas() {
   if (!ciclo) {
     return (
       <AppLayout>
-        <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl text-center">
+        <ResponsiveContainer size="narrow" className="py-8 pb-20 text-center">
           <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <h2 className="text-xl font-display mb-2">Livro não encontrado</h2>
           <Button variant="outline" onClick={() => navigate('/clube-livro')}>
             Voltar ao Clube
           </Button>
-        </div>
+        </ResponsiveContainer>
       </AppLayout>
     );
   }
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
+      <ResponsiveContainer size="narrow" className="py-8 pb-20">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6 flex-wrap">
           <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
@@ -184,7 +184,7 @@ export default function ClubeLivroEscutas() {
             Voltar ao Livro
           </Button>
         </div>
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }
