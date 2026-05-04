@@ -77,7 +77,7 @@ export default function ClubeLivroRitual() {
     <AppLayout>
       <div className="min-h-screen bg-background">
         {/* Dark ritual container */}
-        <div className="container mx-auto px-4 py-12 max-w-2xl">
+        <ResponsiveContainer size="narrow" className="py-12">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-12">
             <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
@@ -146,7 +146,7 @@ export default function ClubeLivroRitual() {
               {isSubmitting ? 'Entrando...' : 'Entrar no Ciclo'}
             </Button>
           </div>
-        </div>
+        </ResponsiveContainer>
       </div>
     </AppLayout>
   );
