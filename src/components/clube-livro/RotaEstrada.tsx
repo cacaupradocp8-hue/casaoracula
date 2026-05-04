@@ -90,8 +90,8 @@ export function RotaEstrada({ pontos, pontoAtual, concluirPonto, isConcluindo }:
                       ${isAtual
                         ? 'bg-primary/10 border-primary/40 shadow-[0_0_24px_hsl(var(--primary)/0.15)]'
                         : isConcluido
-                          ? 'bg-card/40 border-primary/20'
-                          : 'bg-card/20 border-border/15 opacity-50'
+                          ? 'bg-card/70 border-primary/20'
+                          : 'bg-card/60 border-border/30 opacity-50'
                       }
                     `}
                   >
@@ -154,7 +154,7 @@ export function RotaEstrada({ pontos, pontoAtual, concluirPonto, isConcluindo }:
                         </div>
                         <div className="flex items-center justify-between gap-2">
                           <p className={`text-[9px] uppercase tracking-[0.15em] font-medium ${
-                            isAtual ? 'text-primary/60' : 'text-muted-foreground/30'
+                            isAtual ? 'text-primary/60' : 'text-muted-foreground/70'
                           }`}>
                             {ponto.estadoUI}
                           </p>
@@ -186,7 +186,7 @@ export function RotaEstrada({ pontos, pontoAtual, concluirPonto, isConcluindo }:
                       ? 'bg-primary/80 border-primary/60'
                       : isAtual
                         ? 'bg-primary/40 border-primary/80 shadow-[0_0_16px_hsl(var(--primary)/0.4)]'
-                        : 'bg-card/40 border-border/25'
+                        : 'bg-card/70 border-border/25'
                     }
                   `}>
                     {isAtual && (

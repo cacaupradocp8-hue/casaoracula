@@ -128,7 +128,7 @@ function BookCard({ book, index }: { book: Book; index: number }) {
             {book.cover_url ? (
               <img src={book.cover_url} alt={book.title} className="w-full h-full object-cover rounded-md" />
             ) : (
-              <BookOpen className="w-6 h-6 text-muted-foreground/40" />
+              <BookOpen className="w-6 h-6 text-muted-foreground/75" />
             )}
           </div>
 

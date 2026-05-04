@@ -80,7 +80,7 @@ export function ClubeMateriaisTab({ cicloId, livroTitulo }: Props) {
   if (!materiais?.length) {
     return (
       <div className="text-center py-8">
-        <FileText className="w-8 h-8 text-muted-foreground/30 mx-auto mb-3" />
+        <FileText className="w-8 h-8 text-muted-foreground/70 mx-auto mb-3" />
         <p className="text-sm text-muted-foreground">Nenhum material disponível ainda.</p>
       </div>
     );

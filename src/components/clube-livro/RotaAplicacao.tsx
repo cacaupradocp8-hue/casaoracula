@@ -38,7 +38,7 @@ export function RotaAplicacao() {
           <Button
             key={acao.rota}
             variant="outline"
-            className="h-auto py-3.5 px-4 justify-start gap-3 border-border/15 bg-card/20 hover:bg-card/40 hover:border-primary/20 transition-all"
+            className="h-auto py-3.5 px-4 justify-start gap-3 border-border/30 bg-card/60 hover:bg-card/70 hover:border-primary/20 transition-all"
             onClick={() => navigate(acao.rota)}
           >
             <acao.icon className="w-4 h-4 text-primary/70 shrink-0" />

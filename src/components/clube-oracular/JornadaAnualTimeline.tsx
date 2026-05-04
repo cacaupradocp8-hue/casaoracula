@@ -35,8 +35,8 @@ export function JornadaAnualTimeline({ mesAtual, onSelectMes }: Props) {
                 isAtual
                   ? 'border-gold/40 bg-gold/10 shadow-[0_0_12px_-4px_hsl(var(--gold)/0.3)]'
                   : isPast
-                    ? 'border-border/20 bg-card/30 opacity-70'
-                    : 'border-border/10 bg-card/10 opacity-50 hover:opacity-80'
+                    ? 'border-border/20 bg-card/60 opacity-70'
+                    : 'border-border/30 bg-card/60 opacity-50 hover:opacity-80'
               )}
             >
               {isAtual && (

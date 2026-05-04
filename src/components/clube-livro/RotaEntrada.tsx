@@ -19,7 +19,7 @@ export function RotaEntrada() {
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <Card className="border-primary/15 bg-card/40 backdrop-blur hover:bg-card/60 transition-colors cursor-pointer" onClick={() => navigate('/clube/quiz-voz')}>
+        <Card className="border-primary/30 bg-card/70 backdrop-blur hover:bg-card/60 transition-colors cursor-pointer" onClick={() => navigate('/clube/quiz-voz')}>
           <CardContent className="p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
               <Mic className="w-5 h-5 text-primary" />
@@ -31,7 +31,7 @@ export function RotaEntrada() {
           </CardContent>
         </Card>
 
-        <Card className="border-primary/15 bg-card/40 backdrop-blur hover:bg-card/60 transition-colors cursor-pointer" onClick={() => navigate('/clube/mapa-cidadela')}>
+        <Card className="border-primary/30 bg-card/70 backdrop-blur hover:bg-card/60 transition-colors cursor-pointer" onClick={() => navigate('/clube/mapa-cidadela')}>
           <CardContent className="p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
               <MessageCircle className="w-5 h-5 text-primary" />

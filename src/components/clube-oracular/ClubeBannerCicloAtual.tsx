@@ -11,18 +11,18 @@ interface Props {
 export function ClubeBannerCicloAtual({ ciclo, onAcessar }: Props) {
   if (!ciclo) {
     return (
-      <Card className="border-dashed border-border/20 bg-card/30 backdrop-blur-sm">
+      <Card className="border-dashed border-border/20 bg-card/60 backdrop-blur-sm">
         <CardContent className="py-16 text-center">
           <BookOpen className="w-10 h-10 text-muted-foreground/25 mx-auto mb-4" />
           <p className="text-muted-foreground text-sm">Nenhuma travessia em curso neste momento.</p>
-          <p className="text-muted-foreground/40 text-xs mt-1.5">O próximo ciclo será anunciado em breve.</p>
+          <p className="text-muted-foreground/75 text-xs mt-1.5">O próximo ciclo será anunciado em breve.</p>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="overflow-hidden border-gold/15 bg-card/40 backdrop-blur-sm hover:-translate-y-1.5 hover:shadow-[0_12px_40px_-10px_hsl(var(--gold)/0.1)] transition-all duration-500">
+    <Card className="overflow-hidden border-gold/15 bg-card/70 backdrop-blur-sm hover:-translate-y-1.5 hover:shadow-[0_12px_40px_-10px_hsl(var(--gold)/0.1)] transition-all duration-500">
       <CardContent className="p-0">
         <div className="flex flex-col sm:flex-row">
           {/* Book cover */}

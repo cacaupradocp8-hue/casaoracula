@@ -45,11 +45,11 @@ export function ReguaSimbolica({ steps, activeTab, onTabChange }: ReguaSimbolica
                   isActive && 'ring-2 ring-gold/30 scale-110 bg-gradient-to-br from-gold/15 to-mystic/10 border-gold/30 shadow-sm shadow-gold/10',
                   isDone && !isActive && 'bg-primary/10 border-primary/25',
                   !isDone && !isActive && !isLocked && 'bg-card border-border/30 hover:border-primary/20',
-                  isLocked && 'bg-muted/10 border-border/15',
+                  isLocked && 'bg-muted/10 border-border/30',
                 )}
               >
                 {isLocked ? (
-                  <Lock className="w-3 h-3 text-muted-foreground/40" />
+                  <Lock className="w-3 h-3 text-muted-foreground/75" />
                 ) : (
                   <span className={cn(isActive && 'scale-110 transition-transform')}>{step.emoji}</span>
                 )}
@@ -62,7 +62,7 @@ export function ReguaSimbolica({ steps, activeTab, onTabChange }: ReguaSimbolica
                   isActive && 'text-gold',
                   isDone && !isActive && 'text-primary/70',
                   !isDone && !isActive && !isLocked && 'text-muted-foreground',
-                  isLocked && 'text-muted-foreground/30',
+                  isLocked && 'text-muted-foreground/70',
                 )}
               >
                 {step.label}

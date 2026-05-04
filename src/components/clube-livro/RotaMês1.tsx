@@ -161,7 +161,7 @@ export function RotaExecutavelMes1() {
 
       <div className="space-y-6">
         {rotasMes1.map((rota, idx) => (
-          <Card key={rota.id} className="border-primary/10 bg-card/40 backdrop-blur-sm overflow-hidden group">
+          <Card key={rota.id} className="border-primary/30 bg-card/70 backdrop-blur-sm overflow-hidden group">
             <CardContent className="p-0">
               <div className="p-5 space-y-4">
                 <div className="flex items-start justify-between">
@@ -173,7 +173,7 @@ export function RotaExecutavelMes1() {
                       {rota.tema}
                     </h3>
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
+                  <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center border border-primary/30">
                     <span className="text-sm font-bold text-primary/40">{rota.id}</span>
                   </div>
                 </div>
@@ -227,7 +227,7 @@ export function RotaExecutavelMes1() {
 
                 <div className="pt-4 flex items-center justify-between border-t border-primary/5">
                   <div className="space-y-0.5">
-                    <p className="text-[9px] uppercase tracking-widest text-muted-foreground/40 font-bold">Frase-Semente</p>
+                    <p className="text-[9px] uppercase tracking-widest text-muted-foreground/75 font-bold">Frase-Semente</p>
                     <p className="text-xs font-medium text-primary/80">"{rota.integracao.fraseSemente}"</p>
                   </div>
                   <Button size="sm" variant="ghost" className="h-8 gap-2 text-[10px] uppercase tracking-widest font-bold text-primary group-hover:bg-primary/5">

@@ -57,7 +57,7 @@ export function AulasEncontrosBlock({
       {!hasContent ? (
         <Card className="bg-muted/20 border-dashed">
           <CardContent className="py-8 text-center">
-            <GraduationCap className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
+            <GraduationCap className="w-8 h-8 text-muted-foreground/75 mx-auto mb-2" />
             <p className="text-sm text-muted-foreground italic">Em breve</p>
             <p className="text-xs text-muted-foreground/60 mt-1">
               As aulas deste ciclo serão disponibilizadas em breve.

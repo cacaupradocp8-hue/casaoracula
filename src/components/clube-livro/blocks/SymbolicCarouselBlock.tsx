@@ -76,7 +76,7 @@ export function SymbolicCarouselBlock({
   return (
     <div className={cn(
       'relative rounded-2xl overflow-hidden',
-      'border border-border/10',
+      'border border-border/30',
       className
     )}>
       {/* Full-bleed slide area */}
@@ -170,7 +170,7 @@ export function SymbolicCarouselBlock({
       </div>
 
       {/* Bottom bar — indicators + audio */}
-      <div className="bg-card/80 backdrop-blur-sm border-t border-border/10 px-6 py-4">
+      <div className="bg-card/80 backdrop-blur-sm border-t border-border/30 px-6 py-4">
         <div className="flex items-center justify-between gap-4">
           {/* Dot indicators */}
           <div className="flex items-center gap-2">
@@ -196,7 +196,7 @@ export function SymbolicCarouselBlock({
 
         {/* Audio player */}
         {audioUrl && (
-          <div className="mt-4 pt-4 border-t border-border/10">
+          <div className="mt-4 pt-4 border-t border-border/30">
             <AudioOracular audioUrl={audioUrl} titulo={title} compact />
           </div>
         )}

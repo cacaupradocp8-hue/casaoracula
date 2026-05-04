@@ -89,7 +89,7 @@ export default function ClubeRotasCatalogo() {
                 'shrink-0 px-4 py-1.5 rounded-full text-xs tracking-wide border transition-all',
                 filtro === f.id
                   ? 'border-gold/60 bg-gold/10 text-gold'
-                  : 'border-foreground/10 text-foreground/50 hover:border-foreground/25 hover:text-foreground/80',
+                  : 'border-foreground/10 text-foreground/75 hover:border-foreground/25 hover:text-foreground/80',
               )}
             >
               {f.label}
@@ -108,7 +108,7 @@ export default function ClubeRotasCatalogo() {
             ))}
           </div>
         ) : filtradas.length === 0 ? (
-          <p className="text-center text-foreground/40 py-20 font-serif italic">
+          <p className="text-center text-foreground/70 py-20 font-serif italic">
             Nenhuma estação por aqui ainda.
           </p>
         ) : (
@@ -215,7 +215,7 @@ function RotaCard({ estacao, index, onOpen, onClickLocked }: RotaCardProps) {
 
       {/* Status badge */}
       <div className="relative p-5 flex items-start justify-between">
-        <span className="text-[9px] tracking-[0.35em] uppercase text-foreground/50">
+        <span className="text-[9px] tracking-[0.35em] uppercase text-foreground/75">
           Estação {estacao.numero}
         </span>
         <StatusBadge status={estacao.status} />
@@ -230,13 +230,13 @@ function RotaCard({ estacao, index, onOpen, onClickLocked }: RotaCardProps) {
           <h3
             className={cn(
               'font-display text-xl leading-tight',
-              locked ? 'text-foreground/40' : 'text-foreground',
+              locked ? 'text-foreground/70' : 'text-foreground',
             )}
           >
             {estacao.livro_titulo}
           </h3>
           {estacao.livro_autor && !locked && (
-            <p className="font-serif italic text-xs text-foreground/45">
+            <p className="font-serif italic text-xs text-foreground/70">
               {estacao.livro_autor}
             </p>
           )}
@@ -251,7 +251,7 @@ function RotaCard({ estacao, index, onOpen, onClickLocked }: RotaCardProps) {
         {/* Progress */}
         {!locked && estacao.total_itens > 0 && (
           <div className="space-y-1.5 pt-1">
-            <div className="flex items-center justify-between text-[10px] tracking-wide text-foreground/45">
+            <div className="flex items-center justify-between text-[10px] tracking-wide text-foreground/70">
               <span>
                 {estacao.itens_concluidos}/{estacao.total_itens} fases
               </span>
@@ -304,7 +304,7 @@ function StatusBadge({ status }: { status: EstacaoStatusUI }) {
   }
   if (status === 'locked') {
     return (
-      <span className="flex items-center gap-1 text-[9px] tracking-[0.3em] uppercase text-foreground/40">
+      <span className="flex items-center gap-1 text-[9px] tracking-[0.3em] uppercase text-foreground/70">
         <Lock className="w-3 h-3" /> Bloqueada
       </span>
     );

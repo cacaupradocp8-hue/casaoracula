@@ -528,7 +528,7 @@ Laboratório 80/20 da Obra:
                     onChange={e => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder={placeholder}
-                    className="min-h-[56px] max-h-48 pt-4 pb-4 px-5 resize-none bg-[#13101C] border-[#2A2340] text-sm placeholder:text-muted-foreground/40 rounded-2xl focus:ring-gold/20 transition-all shadow-inner"
+                    className="min-h-[56px] max-h-48 pt-4 pb-4 px-5 resize-none bg-[#13101C] border-[#2A2340] text-sm placeholder:text-muted-foreground/75 rounded-2xl focus:ring-gold/20 transition-all shadow-inner"
                     disabled={isLoading}
                   />
                   {limitData && (limitData as any).interactions_used >= (limitData as any).interactions_limit - 3 && (
