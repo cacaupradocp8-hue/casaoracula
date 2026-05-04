@@ -17,26 +17,8 @@ const ClubeLaboratorioObra = React.lazy(() => import('@/pages/clube/ClubeLaborat
 const ClubeRotaPremium = React.lazy(() => import('@/pages/clube/ClubeRotaPremium'));
 const ClubeRotasCatalogo = React.lazy(() => import('@/pages/clube/ClubeRotasCatalogo'));
 
-// ─── Rotas legadas (mantidas para compatibilidade) ───
-const ClubeLivroCiclo = React.lazy(() => import('@/pages/clube-livro/ClubeLivroCiclo'));
-const ClubeLivroPorta = React.lazy(() => import('@/pages/clube-livro/ClubeLivroPorta'));
-const ClubeLivroFase = React.lazy(() => import('@/pages/clube-livro/ClubeLivroFase'));
-const ClubeLivroEscutas = React.lazy(() => import('@/pages/clube-livro/ClubeLivroEscutas'));
-const ClubeLivroEncontros = React.lazy(() => import('@/pages/clube-livro/ClubeLivroEncontros'));
-const ClubeLivroRitual = React.lazy(() => import('@/pages/clube-livro/ClubeLivroRitual'));
-const ClubeLivroAula = React.lazy(() => import('@/pages/clube-livro/ClubeLivroAula'));
-const IntegracaoOracular = React.lazy(() => import('@/pages/clube-livro/IntegracaoOracular'));
-const MeuCaminhoClube = React.lazy(() => import('@/pages/clube-livro/MeuCaminhoClube'));
-const Integracao8020 = React.lazy(() => import('@/pages/clube-livro/Integracao8020'));
-const ClubeLivroLivro = React.lazy(() => import('@/pages/clube-livro/ClubeLivroLivro'));
-const MapaJornadas = React.lazy(() => import('@/pages/clube-livro/MapaJornadas'));
-const MinhaTravessia = React.lazy(() => import('@/pages/clube-livro/MinhaTravessia'));
-const CertificadoTravessia = React.lazy(() => import('@/pages/clube-livro/CertificadoTravessia'));
-const Lab8020Season = React.lazy(() => import('@/pages/clube-livro/Lab8020Season'));
-const ClubeLivroSemana = React.lazy(() => import('@/pages/clube-livro/ClubeLivroSemana'));
-const COTravessiasList = React.lazy(() => import('@/pages/clube-livro/COTravessiasList'));
-const COTravessiaDetail = React.lazy(() => import('@/pages/clube-livro/COTravessiaDetail'));
-const COTravessiaEncontro = React.lazy(() => import('@/pages/clube-livro/COTravessiaEncontro'));
+// ─── Rotas legadas (redirecionamentos mantidos para compatibilidade) ───
+
 
 type PR = React.ComponentType<{ children: React.ReactNode; minPortal?: string }>;
 
