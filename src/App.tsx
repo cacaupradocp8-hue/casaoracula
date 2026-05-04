@@ -28,7 +28,7 @@ import { CasaMaquinasGuard } from "@/components/routing/CasaMaquinasGuard";
 
 // Only Auth and NotFound are eagerly loaded (critical path)
 import Auth from "./pages/Auth";
-// Dashboard and DashboardMembro kept as files but not directly routed — DashboardReorganizado is the active dashboard
+// Dashboard and DashboardMembro are the active member landing pages
 import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import SalaDaVisitante from "./pages/SalaDaVisitante";

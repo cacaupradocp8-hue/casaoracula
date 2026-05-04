@@ -131,7 +131,8 @@ function OracleCardItem({ oracle, hasAccess, onNavigate, index }: OracleCardItem
           <img 
             src={oracle.cover_image_url} 
             alt={oracle.name}
-            className="w-full h-full object-cover transition-transform duration-[1.2s] group-hover:scale-110"
+            className="w-full h-full object-cover transition-transform group-hover:scale-110"
+            style={{ transitionDuration: '1200ms' }}
           />
         ) : (
           <div 
