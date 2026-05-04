@@ -20,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import {
   Dialog,
   DialogContent,
@@ -201,7 +202,7 @@ export default function AdminAlunaAcompanhamento() {
   }
 
   return (
-    <div className="container mx-auto py-8 space-y-6 max-w-7xl">
+    <ResponsiveContainer className="py-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
@@ -464,6 +465,6 @@ function MetricCard({ icon: Icon, label, value }: { icon: React.ComponentType<{ 
         <span className="text-xs text-muted-foreground">{label}</span>
       </div>
       <p className="text-xl font-bold">{value}</p>
-    </div>
+    </ResponsiveContainer>
   );
 }

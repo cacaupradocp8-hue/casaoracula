@@ -14,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import { FormationMapTrigger } from '@/components/formation-map';
 import { cn } from '@/lib/utils';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 
 interface FormacaoPortal {
   id: string;
@@ -66,14 +67,14 @@ export default function PortalOraculaPage() {
       <AppLayout>
         <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-[50vh]">
           <div className="animate-pulse text-gold/60">Carregando...</div>
-        </div>
-      </AppLayout>
+      </ResponsiveContainer>
+    </AppLayout>
     );
   }
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-12 pb-24 max-w-4xl">
+      <ResponsiveContainer size="narrow" className="py-12 pb-24">
         {/* Hero — Grand header */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
