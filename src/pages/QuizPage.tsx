@@ -268,7 +268,7 @@ export default function QuizPage() {
 
              {/* Modular Blocks */}
              <div className="mt-20">
-               <ModularPageRenderer contextType="quiz_result" contextId={activeResult.id} blockSpacing="lg" showLoading={false} />
+               <ModularPageRenderer contextType="quiz_result" contextId={activeResult?.id || ''} blockSpacing="lg" showLoading={false} />
              </div>
 
              {/* Actions */}
