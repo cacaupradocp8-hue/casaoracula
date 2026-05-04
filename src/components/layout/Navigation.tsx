@@ -171,10 +171,10 @@ export function Navigation() {
   return (
     <>
       <nav className={cn(
-        "fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 border-b transition-all duration-500 ease-in-out",
         location.pathname === '/clube' 
-          ? "bg-[#000814]/85 border-blue-900/30 backdrop-blur-2xl" 
-          : "border-primary/15 bg-background/85 backdrop-blur-2xl"
+          ? "bg-[#000814]/80 border-blue-900/20 backdrop-blur-3xl" 
+          : "border-white/5 bg-background/60 backdrop-blur-2xl shadow-[0_2px_20px_-10px_rgba(0,0,0,0.5)]"
       )}>
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex items-center justify-between gap-2 h-16 lg:h-20">
@@ -196,12 +196,18 @@ export function Navigation() {
                         size="sm"
                         title={group.label}
                         className={cn(
-                          'gap-1.5 transition-all rounded-lg text-foreground/70 hover:text-foreground hover:bg-primary/5 px-2 xl:px-3',
-                          active && 'bg-primary/10 text-primary border border-primary/15'
+                          'relative gap-2 transition-all rounded-xl text-foreground/60 hover:text-white hover:bg-white/5 px-4 h-10 font-medium group',
+                          active && 'text-gold bg-gold/5'
                         )}
                       >
-                        <Icon className="w-4 h-4 shrink-0" />
-                        <span className="hidden xl:inline text-sm whitespace-nowrap">{group.label}</span>
+                        <Icon className={cn("w-4 h-4 shrink-0 transition-transform group-hover:scale-110", active && "text-gold")} />
+                        <span className="hidden xl:inline text-xs uppercase tracking-widest">{group.label}</span>
+                        {active && (
+                          <motion.div 
+                            layoutId="nav-active"
+                            className="absolute bottom-1 left-4 right-4 h-px bg-gold/50"
+                          />
+                        )}
                       </Button>
                     </Link>
                   );
