@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { PortalType, canAccessFeature, getCaseLimit } from '@/types/portal';
+import { PortalType, canAccessFeature, getCaseLimit, normalizePortalType } from '@/types/portal';
 import { parseDateSafe } from '@/lib/date-safe';
 import { withTimeout } from '@/lib/withTimeout';
 
@@ -107,7 +107,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           id: userId,
           email: profile.email || '',
           name: profile.nome || '',
-          portal: (role?.portal as PortalType) || 'visitante',
+          portal: normalizePortalType((role?.portal as PortalType) || 'visitante'),
           createdAt: parseDateSafe(profile.created_at, 'auth-context.profile.created_at') ?? new Date(),
           avatarUrl: profile.avatar_url || undefined,
           isMatriculada: !!matricula,

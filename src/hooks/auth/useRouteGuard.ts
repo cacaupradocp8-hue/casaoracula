@@ -39,7 +39,7 @@ export function useRouteGuard(minPortal: PortalType = 'visitante'): RouteGuardRe
 
   const isAdmin = user?.portal === 'admin';
   const isVisitor = user?.portal === 'visitante';
-  const shouldSkipOnboarding = isAdmin || isVisitorJourneyRoute;
+  const shouldSkipOnboarding = isAdmin || isVisitor || isVisitorJourneyRoute;
 
   const { onboardingCompleted, isLoading: onboardingLoading, error: onboardingError } = useOnboarding({
     enabled: !shouldSkipOnboarding,
@@ -75,7 +75,7 @@ export function useRouteGuard(minPortal: PortalType = 'visitante'): RouteGuardRe
   }
 
   // Redirect to onboarding if not completed
-  if (!onboardingCompleted && !onboardingError && !isOnboardingRoute && !isAdmin && !isVisitorJourneyRoute) {
+  if (!onboardingCompleted && !onboardingError && !isOnboardingRoute && !isAdmin && !isVisitor && !isVisitorJourneyRoute) {
     logRouteStep('definição da rota pós-login: /onboarding', {
       from: location.pathname, userId: user?.id ?? null, onboardingCompleted,
     }, 'warn');
