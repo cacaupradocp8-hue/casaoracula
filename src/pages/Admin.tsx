@@ -159,6 +159,7 @@ export default function Admin() {
     if (path === '/admin/clube/conteudos') return 'clube-acervo';
     if (path === '/admin/clube/treinamento') return 'clube-treinamento';
     if (path === '/admin/clube/chat') return 'clube-chat';
+    if (path === '/admin/clube/laboratorio-8020') return 'clube-laboratorio-8020';
     if (path.startsWith('/admin/clube/central/') || path.startsWith('/admin/clube/rota/')) {
       return 'clube-jornadas'; 
     }
