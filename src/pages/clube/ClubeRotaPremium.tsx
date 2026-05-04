@@ -131,6 +131,17 @@ export default function ClubeRotaPremium() {
 
   return (
     <AppLayout>
+      <AnimatePresence>
+        {showPortal && (
+          <PortalEntradaRota
+            slug={slug!}
+            portalNumero={ponto.ordem}
+            portalTitulo={ponto.titulo}
+            storageKey={portalKey}
+            onComplete={() => setShowPortal(false)}
+          />
+        )}
+      </AnimatePresence>
       {/* Wrapper de fundo cinematográfico */}
       <div className="relative bg-midnight text-foreground overflow-hidden">
         {/* Gradiente atmosférico fixo de fundo */}
