@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import {
   BookOpen, RefreshCw, DoorOpen, GraduationCap, MessageSquare, Library,
   ArrowRight, Wrench, Settings, Sparkles, Plus, Clock, Layout, LucideIcon,
-  Eye, EyeOff, ExternalLink, ImageIcon, Users, Zap
+  Eye, EyeOff, ExternalLink, ImageIcon, Users, Zap, FlaskConical
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -78,6 +78,15 @@ const PREMIUM_CARDS: HubCard[] = [
     bg: 'bg-pink-500/10',
     statType: 'chat',
   },
+  {
+    key: 'laboratorio-8020',
+    title: 'Laboratório 80/20',
+    description: 'Edite o núcleo simbólico e aplicável de cada obra.',
+    icon: FlaskConical,
+    tab: 'clube-laboratorio-8020',
+    color: 'text-primary',
+    bg: 'bg-primary/10',
+  },
 ];
 
 export default function AdminClubeHub() {
@@ -141,6 +150,7 @@ export default function AdminClubeHub() {
       case 'clube-acervo': navigate('/admin/clube/conteudos', { replace: true }); break;
       case 'clube-treinamento': navigate('/admin/clube/treinamento', { replace: true }); break;
       case 'clube-chat': navigate('/admin/clube/chat', { replace: true }); break;
+      case 'clube-laboratorio-8020': navigate('/admin/clube/laboratorio-8020', { replace: true }); break;
       case 'settings': navigate('/admin?tab=settings', { replace: true }); break;
       case 'gerador-semanal': navigate('/admin?tab=gerador-semanal', { replace: true }); break;
       default:
