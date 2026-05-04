@@ -35,6 +35,11 @@ export default {
         display: ['Cormorant Garamond', 'serif'],
         body: ['Inter', 'sans-serif'],
       },
+      boxShadow: {
+        'premium': '0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
+        'premium-glow': '0 0 40px -10px hsl(var(--gold) / 0.2)',
+        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

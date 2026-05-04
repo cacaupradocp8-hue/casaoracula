@@ -46,36 +46,42 @@ export function BussolaAtual({ leituraMomento, distritoDominante, distritoTensao
       className="mb-10"
     >
       <div className="flex items-center justify-between mb-4">
-        <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-muted-foreground/40 font-medium">
+        <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.4em] text-gold/40 font-semibold ml-1">
           Seu momento na jornada
         </p>
-        <span className={cn("text-[10px] px-2.5 py-1 rounded-full border font-semibold tracking-wide", badge.style)}>
+        <span className={cn("text-[10px] px-3 py-1 rounded-full border border-gold/20 font-bold tracking-widest uppercase bg-gold/5", badge.style)}>
           {badge.label}
         </span>
       </div>
 
-      <div className="rounded-2xl border border-border/15 bg-card/30 p-6 sm:p-8 space-y-6 shadow-soft backdrop-blur-sm">
+      <div className="premium-card relative overflow-hidden p-6 sm:p-10 space-y-8 group">
+        {/* Background glow effect */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gold/5 rounded-full blur-[100px] -mr-32 -mt-32 transition-all group-hover:bg-gold/10" />
+        
         {/* Distrito + Estado */}
-        <div className="flex items-center gap-4 sm:gap-6">
+        <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-6">
           {distritoDominante && (
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center shrink-0 shadow-glow">
-              <span className="text-2xl sm:text-3xl">{distritoDominante.icon}</span>
-            </div>
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="w-20 h-20 sm:w-24 sm:h-24 rounded-[2rem] bg-gradient-to-br from-gold/10 to-transparent border border-gold/20 flex items-center justify-center shrink-0 shadow-premium group-hover:shadow-premium-glow transition-all"
+            >
+              <span className="text-4xl sm:text-5xl drop-shadow-lg">{distritoDominante.icon}</span>
+            </motion.div>
           )}
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0 flex-1 pt-1">
             {distritoDominante && (
-              <h2 className="text-lg sm:text-xl font-display text-foreground leading-tight mb-1">
-                {distritoDominante.nome}
+              <h2 className="text-2xl sm:text-3xl font-display text-white leading-tight mb-2 tracking-wide">
+                Território: <span className="text-gold">{distritoDominante.nome}</span>
               </h2>
             )}
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <span className="text-xs text-muted-foreground/60 capitalize flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary/40" />
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <span className="px-3 py-1 rounded-md bg-white/5 border border-white/10 text-[11px] text-muted-foreground uppercase tracking-widest font-semibold flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
                 {distritoDominante?.estado === 'central' ? 'ativo' : distritoDominante?.estado}
               </span>
               {distritoTensao && (
-                <span className="text-xs text-destructive/60 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-destructive/40" />
+                <span className="px-3 py-1 rounded-md bg-destructive/5 border border-destructive/10 text-[11px] text-destructive/70 uppercase tracking-widest font-semibold flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-destructive" />
                   Tensão: {distritoTensao.nome}
                 </span>
               )}
@@ -85,9 +91,9 @@ export function BussolaAtual({ leituraMomento, distritoDominante, distritoTensao
 
         {/* Leitura clínica direta */}
         {leituraMomento && (
-          <div className="relative">
-            <div className="absolute -left-6 top-0 bottom-0 w-1 bg-primary/20 rounded-full hidden sm:block" />
-            <p className="text-base sm:text-lg text-foreground/80 leading-relaxed font-serif italic">
+          <div className="relative pt-2">
+            <div className="absolute left-0 top-0 w-8 h-px bg-gradient-to-r from-gold/50 to-transparent" />
+            <p className="text-lg sm:text-xl text-foreground/90 leading-relaxed font-display italic tracking-wide pl-2 border-l-2 border-gold/20">
               "{leituraMomento}"
             </p>
           </div>

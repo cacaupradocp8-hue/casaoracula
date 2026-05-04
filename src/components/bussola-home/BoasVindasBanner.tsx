@@ -14,39 +14,68 @@ export function BoasVindasBanner({ nome, temCartografia, onDismiss }: BoasVindas
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.6 }}
-      className="relative border border-gold/20 bg-gradient-to-br from-card to-gold/[0.03] rounded-2xl p-6 md:p-8 mb-8"
+      initial={{ opacity: 0, scale: 0.98, y: -20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.98, y: -20 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      className="relative overflow-hidden premium-card p-8 md:p-12 mb-10 text-center"
     >
+      {/* Decorative background elements */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+      <div className="absolute -top-24 -left-24 w-64 h-64 bg-gold/5 rounded-full blur-[100px]" />
+      <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-accent/5 rounded-full blur-[100px]" />
+      
       <button
         onClick={onDismiss}
-        className="absolute top-3 right-3 text-muted-foreground/40 hover:text-muted-foreground transition-colors"
+        className="absolute top-4 right-4 p-2 text-white/20 hover:text-white transition-colors"
       >
-        <X className="w-4 h-4" />
+        <X className="w-5 h-5" />
       </button>
 
-      <div className="text-center space-y-4">
-        <span className="text-gold/50 text-2xl block">🜂</span>
-        <h2 className="font-display text-2xl text-foreground">
-          Bem-vinda à Casa, {nome}.
-        </h2>
-        <p className="text-foreground/70 leading-relaxed max-w-md mx-auto">
-          Agora você habita a Casa Orácula. Seu primeiro passo é revelar
-          o mapa do seu território interno — a CidaDELA Interior.
-        </p>
+      <div className="relative z-10 space-y-6">
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="w-12 h-12 rounded-full border border-gold/30 flex items-center justify-center mx-auto bg-gold/5 mb-2"
+        >
+          <span className="text-gold text-xl">✨</span>
+        </motion.div>
+        
+        <motion.h2 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="font-display text-3xl md:text-5xl text-white tracking-wide"
+        >
+          Bem-vinda à Casa, <span className="text-gold">{nome}</span>.
+        </motion.h2>
+        
+        <motion.p 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="text-lg text-white/60 leading-relaxed max-w-xl mx-auto font-display italic"
+        >
+          A Casa ORÁCULA agora é seu refúgio. Seu primeiro passo essencial é revelar o mapa do seu território interno — a CidaDELA Interior.
+        </motion.p>
 
         {!temCartografia && (
-          <Button
-            variant="gold"
-            size="lg"
-            onClick={() => navigate('/ferramenta/cartografia-psiquica-oracula')}
-            className="gap-2 px-8 mt-2"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
           >
-            Revelar meu mapa
-            <ArrowRight className="w-4 h-4" />
-          </Button>
+            <Button
+              variant="gold"
+              size="xl"
+              onClick={() => navigate('/ferramenta/cartografia-psiquica-oracula')}
+              className="gap-3 px-12 mt-4 shadow-premium-glow hover:scale-[1.03] transition-transform rounded-2xl group"
+            >
+              Revelar meu mapa agora
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </motion.div>
         )}
       </div>
     </motion.div>
