@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
@@ -405,7 +406,6 @@ export default function QuizPage() {
   };
 
   // Direct Media Renderer (like AulaPage) - renders media from quiz_resultados fields
-  // Now excludes image since it's rendered as a separate banner
   const DirectMediaContent = ({ result }: { result: Resultado }) => {
     const embedUrl = getEmbedUrl(result.video_url);
     
@@ -413,35 +413,51 @@ export default function QuizPage() {
     if (!hasMedia) return null;
     
     return (
-      <div className="space-y-8">
+      <motion.div 
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 0.6 }}
+        className="space-y-12 max-w-5xl mx-auto my-20"
+      >
+        <div className="flex items-center gap-4 mb-8">
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent to-border" />
+          <h3 className="text-[10px] uppercase tracking-[0.4em] text-muted-foreground font-medium">Conteúdo de Imersão</h3>
+          <div className="h-px flex-1 bg-gradient-to-l from-transparent to-border" />
+        </div>
+
         {/* 1. VIDEO */}
         {embedUrl && (
-          <Card className="overflow-hidden">
-            <div className="aspect-video relative">
-              <iframe
-                src={embedUrl}
-                title={result.titulo_simbolico}
-                className="absolute inset-0 w-full h-full"
-                frameBorder="0"
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                referrerPolicy="strict-origin-when-cross-origin"
-              />
-            </div>
-          </Card>
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-gold/20 to-primary/20 rounded-[2rem] blur-2xl opacity-20 group-hover:opacity-40 transition-opacity" />
+            <Card className="overflow-hidden border-border/10 bg-black/40 backdrop-blur-sm rounded-[1.5rem] shadow-2xl relative">
+              <div className="aspect-video relative">
+                <iframe
+                  src={embedUrl}
+                  title={result.titulo_simbolico}
+                  className="absolute inset-0 w-full h-full"
+                  frameBorder="0"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
+                />
+              </div>
+            </Card>
+          </div>
         )}
 
         {/* 2. AUDIO */}
         {result.audio_url && (
-          <UnifiedAudioPlayer
-            audioUrl={result.audio_url}
-            title="🎧 Mensagem em Áudio"
-            size="lg"
-            className="mt-4"
-          />
+          <div className="max-w-2xl mx-auto">
+            <UnifiedAudioPlayer
+              audioUrl={result.audio_url}
+              title="Mensagem de Orientação"
+              size="lg"
+              className="bg-card/30 backdrop-blur-md border-gold/20 shadow-xl rounded-2xl p-6"
+            />
+          </div>
         )}
-      </div>
+      </motion.div>
     );
   };
 
@@ -452,40 +468,15 @@ export default function QuizPage() {
     if (!result.imagem_url) return null;
     
     return (
-      <div className="rounded-xl overflow-hidden -mx-4 sm:mx-0 mb-8">
-        <img 
-          src={result.imagem_url} 
-          alt={result.titulo_simbolico}
-          className="w-full h-auto max-h-[400px] object-cover"
-        />
+      <div className="rounded-xl overflow-hidden -mx-4 sm:mx-0 mb-8 opacity-0 pointer-events-none absolute h-0">
+        {/* Deprecated in favor of QuizResultView Hero */}
       </div>
     );
   };
 
   // CTA Button Component (separate for clarity)
   const ResultCTA = ({ result }: { result: Resultado }) => {
-    if (!result.cta_texto || !result.cta_rota) return null;
-    
-    return (
-      <div className="flex justify-center pt-4">
-        <Button 
-          variant="gold" 
-          size="lg"
-          onClick={() => {
-            if (result.cta_rota?.startsWith('http')) {
-              window.open(result.cta_rota, '_blank');
-            } else {
-              navigate(result.cta_rota || '/');
-            }
-          }}
-        >
-          {result.cta_texto}
-          {result.cta_rota?.startsWith('http') && (
-            <ExternalLink className="w-4 h-4 ml-2" />
-          )}
-        </Button>
-      </div>
-    );
+    return null; // Deprecated in favor of QuizResultView Bento Grid
   };
 
   // Debug Panel Component (Admin Only)
@@ -569,9 +560,9 @@ export default function QuizPage() {
           ]}
           badge="Seu Resultado Simbólico"
           badgeIcon={<Sparkles className="w-4 h-4 text-gold" />}
-          title={prevResult.titulo_simbolico}
-          subtitle={prevResult.categoria || undefined}
-          maxWidth="4xl"
+          title=""
+          subtitle=""
+          maxWidth="6xl"
           showNavigation={false}
         >
           <QuizResultView
@@ -585,46 +576,64 @@ export default function QuizPage() {
           <DirectMediaContent result={prevResult} />
 
           {/* Blocos modulares EXTRAS do Admin */}
-          <ModularPageRenderer
-            contextType="quiz_result"
-            contextId={prevResult.id}
-            contextData={{
-              arquetipo: prevResult.titulo_simbolico,
-              categoria: prevResult.categoria,
-            }}
-            blockSpacing="lg"
-            showLoading={false}
-          />
-
-          {/* Ver minha Voz button */}
-          {(() => {
-            const vozId = mapQuizResultToVozId(prevResult.titulo_simbolico);
-            return vozId ? (
-              <div className="flex justify-center pt-4">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={() => navigate(`/casa-das-maquinas/7-vozes/${vozId}`)}
-                  className="gap-2 border-primary/30 text-primary hover:bg-primary/10"
-                >
-                  <AudioLines className="w-5 h-5" />
-                  Ver minha Voz no sistema
-                </Button>
-              </div>
-            ) : null;
-          })()}
-
-          {/* Action buttons */}
-          <div className="flex gap-4 justify-center pt-4">
-            <Button variant="outline" onClick={() => navigate(-1)}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar
-            </Button>
-            <Button variant="gold" onClick={handleRestart}>
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Refazer Quiz
-            </Button>
+          <div className="mt-20">
+            <ModularPageRenderer
+              contextType="quiz_result"
+              contextId={prevResult.id}
+              contextData={{
+                arquetipo: prevResult.titulo_simbolico,
+                categoria: prevResult.categoria,
+              }}
+              blockSpacing="lg"
+              showLoading={false}
+            />
           </div>
+
+          {/* Action Hub - Botões de navegação secundária */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="flex flex-col items-center gap-8 py-16 border-t border-border/10 mt-20"
+          >
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Button
+                variant="gold"
+                size="lg"
+                onClick={() => setShowSyntheiaChat(true)}
+                className="gap-2 shadow-lg shadow-gold/20 rounded-full px-8"
+                data-syntheia-trigger="true"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Explorar com Syntheia
+              </Button>
+
+              {(() => {
+                const vozId = mapQuizResultToVozId(prevResult.titulo_simbolico);
+                return vozId ? (
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={() => navigate(`/casa-das-maquinas/7-vozes/${vozId}`)}
+                    className="gap-2 border-primary/20 text-primary/70 hover:bg-primary/5 hover:text-primary transition-all rounded-full px-8"
+                  >
+                    <AudioLines className="w-5 h-5" />
+                    Aprofundar na Voz
+                  </Button>
+                ) : null;
+              })()}
+              
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={() => navigate(-1)}
+                className="rounded-full px-8 border-border/20 text-muted-foreground hover:text-foreground"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Voltar
+              </Button>
+            </div>
+          </motion.div>
         </ContentPageLayout>
 
         <DebugPanel resultId={prevResult.id} />
@@ -644,9 +653,9 @@ export default function QuizPage() {
           ]}
           badge="Seu Resultado Simbólico"
           badgeIcon={<Sparkles className="w-4 h-4 text-gold" />}
-          title={finalResult.titulo_simbolico}
-          subtitle={finalResult.categoria || undefined}
-          maxWidth="4xl"
+          title=""
+          subtitle=""
+          maxWidth="6xl"
           showNavigation={false}
         >
           <QuizResultView
@@ -660,69 +669,79 @@ export default function QuizPage() {
           <DirectMediaContent result={finalResult} />
 
           {/* Blocos modulares EXTRAS do Admin */}
-          <ModularPageRenderer
-            contextType="quiz_result"
-            contextId={finalResult.id}
-            contextData={{
-              arquetipo: finalResult.titulo_simbolico,
-              categoria: finalResult.categoria,
-            }}
-            blockSpacing="lg"
-            showLoading={false}
-          />
+          <div className="mt-20">
+            <ModularPageRenderer
+              contextType="quiz_result"
+              contextId={finalResult.id}
+              contextData={{
+                arquetipo: finalResult.titulo_simbolico,
+                categoria: finalResult.categoria,
+              }}
+              blockSpacing="lg"
+              showLoading={false}
+            />
+          </div>
 
           {saving && (
-            <div className="flex items-center justify-center gap-2 text-muted-foreground">
+            <div className="flex items-center justify-center gap-2 text-muted-foreground my-8">
               <Loader2 className="w-4 h-4 animate-spin" />
               <span>Salvando resultado...</span>
             </div>
           )}
 
-         {/* Syntheia Chat Button */}
-         <div className="flex justify-center">
-           <Button
-             variant="gold"
-             size="lg"
-             onClick={() => setShowSyntheiaChat(true)}
-             className="gap-2"
-           >
-             <MessageCircle className="w-5 h-5" />
-             Explorar com Syntheia
-           </Button>
-         </div>
-
-         {/* Ver minha Voz button */}
-          {(() => {
-            const vozId = mapQuizResultToVozId(finalResult.titulo_simbolico);
-            return vozId ? (
-              <div className="flex justify-center pt-2">
+          {/* Action Hub - Final State */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="flex flex-col items-center gap-12 py-16 border-t border-border/10 mt-20"
+          >
+            <div className="space-y-4 text-center">
+              <h3 className="text-xl font-display text-foreground/80">O que você deseja fazer agora?</h3>
+              <div className="flex flex-wrap gap-4 justify-center">
                 <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={() => navigate(`/casa-das-maquinas/7-vozes/${vozId}`)}
-                  className="gap-2 border-primary/30 text-primary hover:bg-primary/10"
+                  variant="gold"
+                  size="xl"
+                  onClick={() => setShowSyntheiaChat(true)}
+                  className="gap-2 shadow-lg shadow-gold/20 rounded-full px-10"
+                  data-syntheia-trigger="true"
                 >
-                  <AudioLines className="w-5 h-5" />
-                  Ver minha Voz no sistema
+                  <MessageCircle className="w-6 h-6" />
+                  Explorar com Syntheia
                 </Button>
-              </div>
-            ) : null;
-          })()}
 
-         {/* Action buttons */}
-          <div className="flex gap-4 justify-center pt-4">
-            <Button variant="outline" onClick={() => navigate(-1)}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar
-            </Button>
-            <Button variant="gold" onClick={handleRestart}>
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Refazer
-            </Button>
-          </div>
+                {(() => {
+                  const vozId = mapQuizResultToVozId(finalResult.titulo_simbolico);
+                  return vozId ? (
+                    <Button
+                      variant="outline"
+                      size="xl"
+                      onClick={() => navigate(`/casa-das-maquinas/7-vozes/${vozId}`)}
+                      className="gap-2 border-primary/20 text-primary/70 hover:bg-primary/5 hover:text-primary rounded-full px-10"
+                    >
+                      <AudioLines className="w-6 h-6" />
+                      Aprofundar na Voz
+                    </Button>
+                  ) : null;
+                })()}
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="text-muted-foreground">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Voltar
+              </Button>
+              <Button variant="ghost" size="sm" onClick={handleRestart} className="text-gold/50">
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Refazer
+              </Button>
+            </div>
+          </motion.div>
         </ContentPageLayout>
 
         <DebugPanel resultId={finalResult.id} />
+
 
        {/* Syntheia Chat Modal */}
        <SyntheiaChatModal
