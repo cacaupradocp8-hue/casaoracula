@@ -281,7 +281,7 @@ export default function PortalOraculaPage() {
             </div>
           </motion.div>
         </div>
-      </div>
+      </ResponsiveContainer>
       
       <FormationMapTrigger />
     </AppLayout>

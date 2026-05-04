@@ -467,5 +467,5 @@ function MetricCard({ icon: Icon, label, value }: { icon: React.ComponentType<{ 
       <p className="text-xl font-bold">{value}</p>
     </div>
   );
-  );
+}
 }
