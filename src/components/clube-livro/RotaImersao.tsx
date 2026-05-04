@@ -43,7 +43,7 @@ export function RotaImersao({ estacaoId }: { estacaoId?: string | null }) {
         {itens.map((item) => (
           <Card 
             key={item.label}
-            className="border-primary/10 bg-card/20 hover:bg-card/30 transition-all cursor-pointer overflow-hidden group"
+            className="border-primary/30 bg-card/60 hover:bg-card/60 transition-all cursor-pointer overflow-hidden group"
             onClick={() => navigate(item.rota)}
           >
             <CardContent className="p-3 flex items-center justify-between">
@@ -56,7 +56,7 @@ export function RotaImersao({ estacaoId }: { estacaoId?: string | null }) {
                   <p className="text-[10px] text-muted-foreground/50">{item.descricao}</p>
                 </div>
               </div>
-              <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-primary/50 transition-colors" />
+              <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/70 group-hover:text-primary/50 transition-colors" />
             </CardContent>
           </Card>
         ))}

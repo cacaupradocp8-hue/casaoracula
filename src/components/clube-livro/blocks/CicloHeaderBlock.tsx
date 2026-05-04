@@ -20,7 +20,7 @@ export function CicloHeaderBlock({ ciclo }: CicloHeaderBlockProps) {
         </div>
       ) : (
         <div className="w-36 md:w-44 h-52 md:h-60 shrink-0 bg-gradient-to-br from-primary/10 to-mystic/10 rounded-xl flex items-center justify-center border border-border/20 shadow-lg">
-          <BookMarked className="w-14 h-14 text-muted-foreground/30" />
+          <BookMarked className="w-14 h-14 text-muted-foreground/70" />
         </div>
       )}
 

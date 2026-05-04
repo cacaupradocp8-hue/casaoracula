@@ -41,7 +41,7 @@ export const BlocoRenderer = memo(({ bloco }: BlocoRendererProps) => {
   const Icon = config.icon;
 
   return (
-    <Card className="overflow-hidden border-border/30 bg-card/40 backdrop-blur-sm">
+    <Card className="overflow-hidden border-border/30 bg-card/70 backdrop-blur-sm">
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/10 transition-colors"

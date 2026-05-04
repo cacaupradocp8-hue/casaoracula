@@ -218,7 +218,7 @@ export default function ClubeRotaPremium() {
             <motion.div
               animate={{ y: [0, 8, 0] }}
               transition={{ repeat: Infinity, duration: 2.4, ease: 'easeInOut' }}
-              className="flex flex-col items-center gap-2 text-foreground/40"
+              className="flex flex-col items-center gap-2 text-foreground/70"
             >
               <span className="text-[9px] tracking-[0.4em] uppercase">Descer</span>
               <ArrowDown className="w-3 h-3" />
@@ -247,7 +247,7 @@ export default function ClubeRotaPremium() {
                         <item.icon className="w-4 h-4 text-gold" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-[9px] tracking-[0.3em] uppercase text-foreground/40 mb-1">
+                        <p className="text-[9px] tracking-[0.3em] uppercase text-foreground/70 mb-1">
                           {item.label}
                         </p>
                         <p className="font-display text-base text-foreground/90 leading-snug truncate">
@@ -302,7 +302,7 @@ export default function ClubeRotaPremium() {
                         <p
                           className={cn(
                             'text-[9px] tracking-[0.3em] uppercase mb-0.5 flex items-center gap-1.5',
-                            isLocked ? 'text-foreground/25' : 'text-foreground/40'
+                            isLocked ? 'text-foreground/25' : 'text-foreground/70'
                           )}
                         >
                           Fase 0{idx + 1}
@@ -361,7 +361,7 @@ export default function ClubeRotaPremium() {
                         <h4 className="font-display text-base md:text-lg text-foreground/90 group-hover:text-foreground transition-colors truncate">
                           {audio.titulo}
                         </h4>
-                        <span className="flex items-center gap-1.5 text-[10px] text-foreground/40 mt-1">
+                        <span className="flex items-center gap-1.5 text-[10px] text-foreground/70 mt-1">
                           <Clock className="w-3 h-3" /> {audio.duracao || '—'}
                         </span>
                       </div>
@@ -583,7 +583,7 @@ export default function ClubeRotaPremium() {
                       : 'border-foreground/[0.06] hover:border-gold/30 bg-foreground/[0.02] hover:bg-foreground/[0.04]'
                   )}
                 >
-                  <p className="text-[10px] tracking-[0.4em] uppercase text-foreground/40 mb-4 flex items-center gap-2">
+                  <p className="text-[10px] tracking-[0.4em] uppercase text-foreground/70 mb-4 flex items-center gap-2">
                     {proxLocked ? 'Em breve' : 'Próxima travessia'}
                     {proxLocked && <Lock className="w-3 h-3" />}
                   </p>
@@ -600,7 +600,7 @@ export default function ClubeRotaPremium() {
                         {proximoPonto.nome}
                       </h2>
                       {proximoPonto.subtitulo && !proxLocked && (
-                        <p className="font-serif italic text-foreground/40 mt-3 text-sm md:text-base">
+                        <p className="font-serif italic text-foreground/70 mt-3 text-sm md:text-base">
                           {proximoPonto.subtitulo}
                         </p>
                       )}
@@ -621,7 +621,7 @@ export default function ClubeRotaPremium() {
                       {proxLocked ? (
                         <Lock className="w-5 h-5 text-foreground/30" />
                       ) : (
-                        <ChevronRight className="w-6 h-6 text-foreground/40 group-hover:text-midnight transition-colors duration-700" />
+                        <ChevronRight className="w-6 h-6 text-foreground/70 group-hover:text-midnight transition-colors duration-700" />
                       )}
                     </div>
                   </div>

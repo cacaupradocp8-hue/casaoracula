@@ -12,7 +12,7 @@ export function ClubeProgressoTravessia({ progresso, totalTerritorios, explorado
   const percent = Math.round(progresso * 100);
 
   return (
-    <Card className="border-border/12 bg-card/40 backdrop-blur-sm hover:-translate-y-1.5 hover:shadow-[0_10px_30px_-8px_hsl(var(--primary)/0.08)] transition-all duration-500">
+    <Card className="border-border/12 bg-card/70 backdrop-blur-sm hover:-translate-y-1.5 hover:shadow-[0_10px_30px_-8px_hsl(var(--primary)/0.08)] transition-all duration-500">
       <CardContent className="p-7">
         <div className="flex items-center gap-2.5 mb-5">
           <div className="w-9 h-9 rounded-full bg-primary/10 border border-primary/12 flex items-center justify-center">

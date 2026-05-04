@@ -38,7 +38,7 @@ export function ClubeAudioCardImersivo({
         onClick={onClick}
         className={cn(
           "group relative w-full text-left rounded-2xl overflow-hidden",
-          "bg-card/40 backdrop-blur-sm border border-border/30",
+          "bg-card/70 backdrop-blur-sm border border-border/30",
           "hover:border-gold/30 hover:bg-card/60",
           "transition-all duration-500 ease-out",
           "focus:outline-none focus:ring-1 focus:ring-gold/20"

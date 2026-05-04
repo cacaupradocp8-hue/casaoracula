@@ -102,7 +102,7 @@ export default function ClubeForja() {
             </div>
           ) : filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <Hammer className="w-10 h-10 text-muted-foreground/30 mb-4" />
+              <Hammer className="w-10 h-10 text-muted-foreground/70 mb-4" />
               <p className="text-sm text-muted-foreground">Nenhuma ferramenta ainda.</p>
               <p className="text-xs text-muted-foreground/60 mt-1">Use o chat para criar suas primeiras ferramentas.</p>
               <Button

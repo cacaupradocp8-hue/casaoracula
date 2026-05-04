@@ -44,7 +44,7 @@ export function Laboratorio8020Modal({ bookId, bookTitle, trigger }: Laboratorio
       <DialogContent className="max-w-4xl max-h-[90vh] p-0 overflow-hidden bg-[#0A0714] border-primary/20 shadow-glow">
         <div className="flex flex-col h-full">
           {/* Header Premium */}
-          <div className="relative h-44 flex-shrink-0 bg-gradient-to-r from-[#1A1625] to-[#0F0D15] p-8 border-b border-primary/10">
+          <div className="relative h-44 flex-shrink-0 bg-gradient-to-r from-[#1A1625] to-[#0F0D15] p-8 border-b border-primary/30">
             <div className="absolute top-0 right-0 p-8 opacity-10">
               <FlaskConical className="w-32 h-32 text-primary" />
             </div>
@@ -104,7 +104,7 @@ export function Laboratorio8020Modal({ bookId, bookTitle, trigger }: Laboratorio
               </div>
 
               {/* Seção 2: Resumo Premium */}
-              <div className="bg-[#13101C]/50 border border-primary/10 rounded-3xl p-6 md:p-8 space-y-4">
+              <div className="bg-[#13101C]/50 border border-primary/30 rounded-3xl p-6 md:p-8 space-y-4">
                 <h4 className="flex items-center gap-2 text-gold font-display text-lg">
                   <BookOpen className="w-5 h-5" />
                   Resumo Premium
@@ -160,7 +160,7 @@ export function Laboratorio8020Modal({ bookId, bookTitle, trigger }: Laboratorio
           </ScrollArea>
 
           {/* Footer CTA */}
-          <div className="p-6 bg-[#0A0714] border-t border-primary/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="p-6 bg-[#0A0714] border-t border-primary/30 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-muted-foreground text-[11px] uppercase tracking-wider font-medium">
               <FlaskConical className="w-4 h-4" />
               Laboratório 80/20 do Clube

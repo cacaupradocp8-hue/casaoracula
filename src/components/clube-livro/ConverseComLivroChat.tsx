@@ -395,7 +395,7 @@ function ChatContent({
                 <button
                   key={action.label}
                   onClick={() => handleQuickAction(action.prompt)}
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-border/50 bg-card/40 hover:bg-card/80 hover:border-gold/30 transition-all text-xs text-muted-foreground hover:text-foreground text-left group"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-border/50 bg-card/70 hover:bg-card/80 hover:border-gold/30 transition-all text-xs text-muted-foreground hover:text-foreground text-left group"
                 >
                   <Icon className="w-3.5 h-3.5 text-gold/60 group-hover:text-gold flex-shrink-0 transition-colors" />
                   <span>{action.label}</span>

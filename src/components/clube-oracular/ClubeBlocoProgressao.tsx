@@ -53,7 +53,7 @@ export function ClubeBlocoProgressao({ portal, engajamento }: Props) {
   const Icon = cenario.icon;
 
   return (
-    <Card className="border-gold/12 bg-card/40 backdrop-blur-sm hover:-translate-y-1.5 hover:shadow-[0_10px_30px_-8px_hsl(var(--gold)/0.1)] transition-all duration-500">
+    <Card className="border-gold/12 bg-card/70 backdrop-blur-sm hover:-translate-y-1.5 hover:shadow-[0_10px_30px_-8px_hsl(var(--gold)/0.1)] transition-all duration-500">
       <CardContent className="p-7">
         <div className="flex items-center gap-2.5 mb-5">
           <div className="w-9 h-9 rounded-full bg-gold/10 border border-gold/12 flex items-center justify-center">
@@ -81,7 +81,7 @@ export function ClubeBlocoProgressao({ portal, engajamento }: Props) {
         </Button>
 
         {engajamento === 'baixo' && (
-          <p className="text-[10px] text-muted-foreground/40 text-center mt-4 italic">
+          <p className="text-[10px] text-muted-foreground/75 text-center mt-4 italic">
             Participe mais do Clube para desbloquear convites personalizados.
           </p>
         )}

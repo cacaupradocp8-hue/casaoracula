@@ -16,7 +16,7 @@ export function CicloMesDetalhe({ mes, isAtual }: Props) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="border-border/15 bg-card/30 backdrop-blur-sm">
+      <Card className="border-border/30 bg-card/60 backdrop-blur-sm">
         <CardContent className="p-6 space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <h2 className="font-display text-xl text-foreground">{mes.nome}</h2>

@@ -61,7 +61,7 @@ const accentStyles: Record<string, { bg: string; border: string; text: string; b
     bg: 'bg-primary/8',
     border: 'border-primary/12',
     text: 'text-primary',
-    btn: 'border-primary/15 hover:bg-primary/5 hover:border-primary/25',
+    btn: 'border-primary/30 hover:bg-primary/5 hover:border-primary/25',
   },
 };
 
@@ -97,7 +97,7 @@ export function ClubeJardinsIntegracao() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
             >
-              <Card className="border-border/10 bg-card/40 backdrop-blur-sm hover:-translate-y-1 hover:shadow-[0_8px_25px_-8px_hsl(var(--foreground)/0.06)] transition-all duration-500 h-full">
+              <Card className="border-border/30 bg-card/70 backdrop-blur-sm hover:-translate-y-1 hover:shadow-[0_8px_25px_-8px_hsl(var(--foreground)/0.06)] transition-all duration-500 h-full">
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-center gap-3 mb-3">
                     <div className={`w-9 h-9 rounded-full ${styles.bg} ${styles.border} border flex items-center justify-center shrink-0`}>

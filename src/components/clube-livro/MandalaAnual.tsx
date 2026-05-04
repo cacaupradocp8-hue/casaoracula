@@ -238,7 +238,7 @@ export function MandalaAnual({ ciclos, cicloAtualId }: MandalaAnualProps) {
                     ) : ciclo ? (
                       <BookOpen className={cn('opacity-60', cat.cor)} style={{ width: ns * 0.5, height: ns * 0.5 }} />
                     ) : (
-                      <Lock className="text-muted-foreground/40" style={{ width: ns * 0.4, height: ns * 0.4 }} />
+                      <Lock className="text-muted-foreground/75" style={{ width: ns * 0.4, height: ns * 0.4 }} />
                     )}
                   </div>
                 </foreignObject>

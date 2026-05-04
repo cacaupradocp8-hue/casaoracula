@@ -226,7 +226,7 @@ export function CalendarioJornadas({ ciclos, cicloAtualId, filtroJornada }: Cale
                             <span className="text-[10px] font-mono text-muted-foreground">
                               Mês {mes.toString().padStart(2, '0')}
                             </span>
-                            <span className="text-muted-foreground/40 text-[10px]">·</span>
+                            <span className="text-muted-foreground/75 text-[10px]">·</span>
                             <span className={cn('text-[10px] font-medium uppercase tracking-wider', jornada.corLabel)}>
                               {jornada.nome.replace('Jornada da ', '').replace('Jornada do ', '')}
                             </span>

@@ -9,7 +9,7 @@ interface Props {
 export function ClubeProximoEncontro({ encontro }: Props) {
   if (!encontro) {
     return (
-      <Card className="border-border/15 bg-card/30 backdrop-blur-sm">
+      <Card className="border-border/30 bg-card/60 backdrop-blur-sm">
         <CardContent className="p-7 text-center">
           <CalendarDays className="w-6 h-6 text-muted-foreground/25 mx-auto mb-2.5" />
           <p className="text-xs text-muted-foreground/60">Nenhum encontro agendado.</p>
@@ -28,7 +28,7 @@ export function ClubeProximoEncontro({ encontro }: Props) {
   });
 
   return (
-    <Card className="border-mystic/12 bg-card/40 backdrop-blur-sm hover:-translate-y-1.5 hover:shadow-[0_10px_30px_-8px_hsl(var(--mystic)/0.1)] transition-all duration-500">
+    <Card className="border-mystic/12 bg-card/70 backdrop-blur-sm hover:-translate-y-1.5 hover:shadow-[0_10px_30px_-8px_hsl(var(--mystic)/0.1)] transition-all duration-500">
       <CardContent className="p-7">
         <div className="flex items-center gap-2.5 mb-5">
           <div className="w-9 h-9 rounded-full bg-mystic/10 border border-mystic/15 flex items-center justify-center">

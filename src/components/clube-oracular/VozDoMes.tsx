@@ -26,7 +26,7 @@ export function VozDoMes({ mes }: Props) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
-      <Card className="border-gold/15 bg-card/40 backdrop-blur-sm overflow-hidden">
+      <Card className="border-gold/15 bg-card/70 backdrop-blur-sm overflow-hidden">
         <CardContent className="p-6 sm:p-8 space-y-6">
           {/* Header */}
           <div className="flex items-start gap-4">

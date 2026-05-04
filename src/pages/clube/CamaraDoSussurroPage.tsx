@@ -79,7 +79,7 @@ export default function CamaraDoSussurroPage() {
             <h2 className="text-xs font-bold uppercase tracking-[0.4em] text-primary/40 mb-2">Obras em Estudo</h2>
             
             {allCases.length === 0 ? (
-              <div className="h-64 rounded-[2.5rem] bg-card/40 border border-dashed border-border flex items-center justify-center">
+              <div className="h-64 rounded-[2.5rem] bg-card/70 border border-dashed border-border flex items-center justify-center">
                 <p className="text-sm text-muted-foreground italic font-body">Aguardando novos sussurros das obras...</p>
               </div>
             ) : (

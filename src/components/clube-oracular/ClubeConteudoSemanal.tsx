@@ -16,15 +16,15 @@ export function ClubeConteudoSemanal({ conteudo, onSalvarReflexao, salvando }: P
 
   if (!conteudo) {
     return (
-      <Card className="border-dashed border-border/15 bg-card/30 backdrop-blur-sm">
+      <Card className="border-dashed border-border/30 bg-card/60 backdrop-blur-sm">
         <CardContent className="py-16 text-center">
           <div className="w-11 h-11 rounded-full bg-muted/30 flex items-center justify-center mx-auto mb-4">
-            <Sparkles className="w-5 h-5 text-muted-foreground/30" />
+            <Sparkles className="w-5 h-5 text-muted-foreground/70" />
           </div>
           <p className="text-muted-foreground text-sm">
             O conteúdo semanal será publicado em breve.
           </p>
-          <p className="text-muted-foreground/40 text-xs mt-1.5">
+          <p className="text-muted-foreground/75 text-xs mt-1.5">
             A cada semana, um novo território se abre.
           </p>
         </CardContent>
@@ -38,7 +38,7 @@ export function ClubeConteudoSemanal({ conteudo, onSalvarReflexao, salvando }: P
     setReflexaoTexto('');
   };
 
-  const cardBase = "border-border/10 bg-card/40 backdrop-blur-sm hover:-translate-y-1 hover:shadow-[0_8px_25px_-8px_hsl(var(--foreground)/0.06)] transition-all duration-500";
+  const cardBase = "border-border/30 bg-card/70 backdrop-blur-sm hover:-translate-y-1 hover:shadow-[0_8px_25px_-8px_hsl(var(--foreground)/0.06)] transition-all duration-500";
 
   return (
     <div className="space-y-10">
@@ -55,7 +55,7 @@ export function ClubeConteudoSemanal({ conteudo, onSalvarReflexao, salvando }: P
         <Card className={cardBase}>
           <CardContent className="p-7">
             <div className="flex items-start gap-4">
-              <div className="w-11 h-11 rounded-full bg-primary/8 border border-primary/10 flex items-center justify-center shrink-0">
+              <div className="w-11 h-11 rounded-full bg-primary/8 border border-primary/30 flex items-center justify-center shrink-0">
                 <Headphones className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1">
@@ -119,7 +119,7 @@ export function ClubeConteudoSemanal({ conteudo, onSalvarReflexao, salvando }: P
 
       {/* Pergunta Contemplativa */}
       {conteudo.pergunta_contemplativa && (
-        <Card className="border-mystic/10 bg-card/40 backdrop-blur-sm">
+        <Card className="border-mystic/10 bg-card/70 backdrop-blur-sm">
           <CardContent className="p-7">
             <div className="flex items-start gap-4">
               <div className="w-11 h-11 rounded-full bg-mystic/8 border border-mystic/10 flex items-center justify-center shrink-0">
@@ -158,7 +158,7 @@ export function ClubeConteudoSemanal({ conteudo, onSalvarReflexao, salvando }: P
         <Card className={cardBase}>
           <CardContent className="p-7">
             <div className="flex items-start gap-4">
-              <div className="w-11 h-11 rounded-full bg-primary/8 border border-primary/10 flex items-center justify-center shrink-0">
+              <div className="w-11 h-11 rounded-full bg-primary/8 border border-primary/30 flex items-center justify-center shrink-0">
                 <Leaf className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1">

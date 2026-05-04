@@ -88,11 +88,11 @@ export default function ClubeEscutaImersiva() {
             >
               <Headphones className="w-5 h-5 text-gold/40" />
             </motion.div>
-            <p className="text-muted-foreground/40 text-sm">Carregando áudios…</p>
+            <p className="text-muted-foreground/75 text-sm">Carregando áudios…</p>
           </div>
         ) : escutas.length === 0 ? (
           <div className="text-center py-20 space-y-3">
-            <Headphones className="w-10 h-10 text-muted-foreground/30 mx-auto" />
+            <Headphones className="w-10 h-10 text-muted-foreground/70 mx-auto" />
             <p className="text-muted-foreground/50 text-sm">Nenhum áudio disponível.</p>
           </div>
         ) : (
@@ -185,7 +185,7 @@ function PlayerImersivo({ escuta, onBack }: { escuta: ClubeEscuta; onBack: () =>
       {/* Back button — very discreet */}
       <button
         onClick={onBack}
-        className="absolute top-5 left-5 z-20 p-2.5 text-muted-foreground/20 hover:text-foreground/50 transition-colors duration-500"
+        className="absolute top-5 left-5 z-20 p-2.5 text-muted-foreground/20 hover:text-foreground/75 transition-colors duration-500"
         aria-label="Voltar"
       >
         <ArrowLeft className="w-4 h-4" />
@@ -224,7 +224,7 @@ function PlayerImersivo({ escuta, onBack }: { escuta: ClubeEscuta; onBack: () =>
             onValueChange={handleSeek}
             className="cursor-pointer"
           />
-          <div className="flex justify-between text-[10px] text-muted-foreground/30 font-body tabular-nums">
+          <div className="flex justify-between text-[10px] text-muted-foreground/70 font-body tabular-nums">
             <span>{formatAudioTime(progress)}</span>
             <span>{duration > 0 ? formatAudioTime(duration) : '--:--'}</span>
           </div>
