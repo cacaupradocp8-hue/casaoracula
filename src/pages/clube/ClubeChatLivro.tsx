@@ -22,6 +22,7 @@ import {
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Database } from '@/integrations/supabase/types';
 import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 
 type ClubCycle = any; // Simplificando para evitar erros de tipos no momento da refatoração de DB
 
@@ -311,7 +312,7 @@ Laboratório 80/20 da Obra:
       <div className="min-h-screen flex flex-col bg-background">
         {/* ── HEADER ── */}
         <div className="sticky top-0 z-20 border-b border-[#2A2340] bg-background/95 backdrop-blur-sm">
-          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <ResponsiveContainer size="wide" className="py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="icon" onClick={() => navigate('/clube/ciclo')} className="h-10 w-10 shrink-0">
                 <ArrowLeft className="w-5 h-5" />
@@ -370,12 +371,12 @@ Laboratório 80/20 da Obra:
                 </div>
               )}
             </div>
-          </div>
+          </ResponsiveContainer>
           
           {/* Cartografia Bar */}
           {pontoAtual && (
             <div className="bg-gold/5 border-t border-gold/10 py-1.5">
-              <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center gap-6 overflow-x-auto no-scrollbar">
+              <ResponsiveContainer size="wide" className="flex items-center justify-center gap-6 overflow-x-auto no-scrollbar">
                 {[
                   { label: 'Porta', value: pontoAtual.porta || '...' },
                   { label: 'Campo', value: pontoAtual.campo || '...' },
@@ -386,13 +387,13 @@ Laboratório 80/20 da Obra:
                     <span className="text-[10px] text-foreground/80 font-serif italic">{item.value}</span>
                   </div>
                 ))}
-              </div>
+              </ResponsiveContainer>
             </div>
           )}
         </div>
 
         {/* ── MAIN ── */}
-        <div className="flex-1 flex max-w-[1440px] mx-auto w-full overflow-hidden">
+        <ResponsiveContainer size="wide" className="flex-1 flex w-full overflow-hidden px-0 sm:px-0 lg:px-0 xl:px-0">
           {/* ── SUGGESTIONS COLUMN (desktop) ── */}
           {!isMobile && (
             <div className="w-64 border-r border-[#2A2340] p-6 space-y-8 overflow-y-auto hidden lg:block">
@@ -577,7 +578,7 @@ Laboratório 80/20 da Obra:
               </DrawerContent>
             </Drawer>
           )}
-        </div>
+        </ResponsiveContainer>
       </div>
     </AppLayout>
   );
