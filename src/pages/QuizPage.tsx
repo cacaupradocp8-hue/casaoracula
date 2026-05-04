@@ -585,8 +585,8 @@ export default function QuizPage() {
           ]}
           badge="Seu Resultado Simbólico"
           badgeIcon={<Sparkles className="w-4 h-4 text-gold" />}
-          title={prevResult.titulo_simbolico}
-          subtitle={prevResult.categoria || undefined}
+          title=""
+          subtitle=""
           maxWidth="6xl"
           showNavigation={false}
         >
