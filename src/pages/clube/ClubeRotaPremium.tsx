@@ -136,8 +136,8 @@ export default function ClubeRotaPremium() {
           <PortalEntradaRota
             slug={slug!}
             bookId={matchedBook?.id}
-            portalNumero={ponto.ordem}
-            portalTitulo={ponto.nome}
+            portalNumero={ponto?.ordem}
+            portalTitulo={ponto?.nome}
             storageKey={portalKey}
             onComplete={() => setShowPortal(false)}
           />
@@ -312,7 +312,7 @@ export default function ClubeRotaPremium() {
             <div className="relative mt-10 pl-6 md:pl-8">
               <div className="absolute left-[7px] md:left-[11px] top-1 bottom-1 w-px bg-gradient-to-b from-gold/40 via-gold/15 to-transparent" />
               {pontos.map((item, idx) => {
-                const isCurrent = item.id === ponto.id;
+                const isCurrent = item.id === ponto?.id;
                 const isCompleted = item.estado === 'completed';
                 const isLocked = item.estado === 'locked';
                 const isInteractive = !isLocked && !isCurrent;

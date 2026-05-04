@@ -95,7 +95,7 @@ export function QuizResultView({ primaryResult }: QuizResultViewProps) {
             </motion.div>
             
             <h1 className="font-display text-7xl md:text-9xl lg:text-[10rem] text-white font-black leading-[0.8] tracking-tighter">
-              {primaryResult.titulo_simbolico.split(' ').map((word, i) => (
+              {(primaryResult.titulo_simbolico || '').split(' ').map((word, i) => (
                 <span key={i} className={cn("block", i % 2 !== 0 ? "text-gold translate-x-4 md:translate-x-8" : "opacity-90")}>
                   {word}
                 </span>
