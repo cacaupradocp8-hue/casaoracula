@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 import type { DistritoResumo } from '@/hooks/useBussolaOracular';
 
 interface Props {
