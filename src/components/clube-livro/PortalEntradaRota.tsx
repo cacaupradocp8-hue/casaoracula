@@ -88,37 +88,37 @@ export function PortalEntradaRota({
       { 
         icon: <BookOpen className="w-12 h-12" />, 
         title: 'Núcleo Vivo', 
-        subtitle: essencia.nucleo_vivo || DEFAULT_SLIDES[0].subtitle 
+        subtitle: essencia?.nucleo_vivo || DEFAULT_SLIDES[0].subtitle 
       },
       { 
         icon: <Eye className="w-12 h-12" />, 
         title: 'Imagem Organizadora', 
-        subtitle: essencia.imagem_organizadora || DEFAULT_SLIDES[1].subtitle 
+        subtitle: essencia?.imagem_organizadora || DEFAULT_SLIDES[1].subtitle 
       },
       { 
         icon: <Flame className="w-12 h-12" />, 
         title: 'Tensão Central', 
-        subtitle: essencia.tensao_central || DEFAULT_SLIDES[2].subtitle 
+        subtitle: essencia?.tensao_central || DEFAULT_SLIDES[2].subtitle 
       },
       { 
         icon: <Target className="w-12 h-12" />, 
         title: 'Habilidade Central', 
-        subtitle: essencia.aplicacao_terapeutica || DEFAULT_SLIDES[3].subtitle 
+        subtitle: essencia?.aplicacao_terapeutica || DEFAULT_SLIDES[3].subtitle 
       },
       { 
         icon: <ShieldAlert className="w-12 h-12" />, 
         title: 'Distorção Comum', 
-        subtitle: essencia.distorcao_comum || DEFAULT_SLIDES[4].subtitle 
+        subtitle: essencia?.distorcao_comum || DEFAULT_SLIDES[4].subtitle 
       },
       { 
         icon: <FlaskConical className="w-12 h-12" />, 
         title: 'Exercício Integrativo', 
-        subtitle: essencia.exercicio || DEFAULT_SLIDES[5].subtitle 
+        subtitle: essencia?.exercicio || DEFAULT_SLIDES[5].subtitle 
       },
       { 
         icon: <GraduationCap className="w-12 h-12" />, 
         title: 'Riscos Éticos', 
-        subtitle: essencia.riscos_eticos || DEFAULT_SLIDES[6].subtitle 
+        subtitle: essencia?.riscos_eticos || DEFAULT_SLIDES[6].subtitle 
       },
     ];
   }, [propSlides, essencia]);
@@ -212,11 +212,11 @@ export function PortalEntradaRota({
             transition={{ delay: 0.5, duration: 1, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-col md:flex-row md:items-end gap-2 md:gap-6"
           >
-            <h1 className="font-display text-5xl md:text-8xl text-white font-black leading-[0.8] tracking-tighter">
+            <h1 className="font-display text-4xl md:text-7xl text-white font-black leading-[0.8] tracking-tighter">
               {portalTitulo ?? 'O Chamado'}
             </h1>
             {portalNumero && (
-              <span className="font-serif italic text-2xl md:text-4xl text-gold/30 mb-1 md:mb-2">
+              <span className="font-serif italic text-xl md:text-3xl text-gold/30 mb-1 md:mb-2">
                 Fase {String(portalNumero).padStart(2, '0')}
               </span>
             )}
@@ -242,12 +242,12 @@ export function PortalEntradaRota({
                     onDragEnd={handleDragEnd}
                     initial={{ opacity: 0, scale: 0.8, x: diff * 400, rotateY: diff * 60 }}
                     animate={{
-                      x: diff * (window.innerWidth < 768 ? 280 : 420),
-                      z: isActive ? 0 : -absDiff * 400,
-                      rotateY: diff * -45,
-                      scale: isActive ? 1 : 0.8,
-                      opacity: isActive ? 1 : 0.35 - (absDiff * 0.1),
-                      filter: isActive ? 'blur(0px)' : 'blur(4px)',
+                      x: diff * (window.innerWidth < 768 ? 240 : 380),
+                      z: isActive ? 0 : -absDiff * 300,
+                      rotateY: diff * -35,
+                      scale: isActive ? 1 : 0.85,
+                      opacity: isActive ? 1 : 0.4 - (absDiff * 0.1),
+                      filter: isActive ? 'blur(0px)' : 'blur(2px)',
                     }}
                     transition={{
                       type: 'spring',
