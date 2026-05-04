@@ -1,6 +1,8 @@
 import React from 'react';
 import { Route, Navigate } from 'react-router-dom';
 
+import { PortalType } from '@/types/portal';
+
 // ─── Módulo Clube do Livro Oracular (rotas principais) ───
 const ClubeHome = React.lazy(() => import('@/pages/clube/ClubeHome'));
 const ClubeCiclo = React.lazy(() => import('@/pages/clube/ClubeCiclo'));
@@ -20,7 +22,7 @@ const ClubeRotasCatalogo = React.lazy(() => import('@/pages/clube/ClubeRotasCata
 // ─── Rotas legadas (redirecionamentos mantidos para compatibilidade) ───
 
 
-type PR = React.ComponentType<{ children: React.ReactNode; minPortal?: string }>;
+type PR = React.ComponentType<{ children: React.ReactNode; minPortal?: PortalType }>;
 
 export function renderClubeRoutes(ProtectedRoute: PR) {
   return (
