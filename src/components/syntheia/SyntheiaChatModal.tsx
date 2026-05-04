@@ -116,38 +116,42 @@ import { SyntheiaChatMode, RoutingContext } from '@/services/syntheiaChat';
          {/* Messages area */}
          <ScrollArea className="flex-1 p-4" ref={scrollRef}>
            <div className="space-y-4">
-             {messages.map((message) => (
-               <div
-                 key={message.id}
-                 className={cn(
-                   "flex gap-3",
-                   message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
-                 )}
-               >
-                 <div className={cn(
-                   "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
-                   message.role === 'user' 
-                     ? 'bg-primary/20 text-primary' 
-                     : 'bg-gold/20 text-gold'
-                 )}>
-                   {message.role === 'user' ? (
-                     <User className="w-4 h-4" />
-                   ) : (
-                     <Bot className="w-4 h-4" />
-                   )}
-                 </div>
-                 <div className={cn(
-                   "max-w-[80%] rounded-2xl px-4 py-3",
-                   message.role === 'user'
-                     ? 'bg-primary/10 text-foreground'
-                     : 'bg-muted text-foreground'
-                 )}>
-                   <p className="text-sm whitespace-pre-wrap leading-relaxed">
-                     {message.content}
-                   </p>
-                 </div>
-               </div>
-             ))}
+              {messages.filter(m => {
+                // Filtro de segurança para não expor prompts
+                const promptKeywords = ['VOZ ATIVA', '## Personalidade', '## Instruções', 'IDENTIDADE DO SISTEMA'];
+                return !(m.role === 'assistant' && promptKeywords.some(k => m.content.includes(k)) && m.content.length > 300);
+              }).map((message) => (
+                <div
+                  key={message.id}
+                  className={cn(
+                    "flex gap-3",
+                    message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
+                  )}
+                >
+                  <div className={cn(
+                    "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
+                    message.role === 'user' 
+                      ? 'bg-primary/20 text-primary' 
+                      : 'bg-gold/20 text-gold'
+                  )}>
+                    {message.role === 'user' ? (
+                      <User className="w-4 h-4" />
+                    ) : (
+                      <Bot className="w-4 h-4" />
+                    )}
+                  </div>
+                  <div className={cn(
+                    "max-w-[80%] rounded-2xl px-4 py-3",
+                    message.role === 'user'
+                      ? 'bg-primary/10 text-foreground'
+                      : 'bg-muted text-foreground'
+                  )}>
+                    <p className="text-sm whitespace-pre-wrap leading-relaxed">
+                      {message.content}
+                    </p>
+                  </div>
+                </div>
+              ))}
              
              {isLoading && (
                <div className="flex gap-3">

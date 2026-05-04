@@ -11,6 +11,24 @@ interface Props {
 }
 
 export function TherabotMessage({ message }: Props) {
+  // Filto de segurança para não expor prompts de sistema caso a IA os repita
+  const isPromptExposure = (content: string) => {
+    const promptKeywords = [
+      'VOZ ATIVA',
+      '## Personalidade',
+      '## Instruções',
+      'IDENTIDADE DO SISTEMA',
+      'PRINCÍPIOS FUNDAMENTAIS',
+      'MODO ARCANO',
+      'MODO FERRAMENTEIRA'
+    ];
+    return promptKeywords.some(keyword => content.includes(keyword)) && content.length > 300;
+  };
+
+  if (isPromptExposure(message.content)) {
+    return null;
+  }
+
   return (
     <div className={cn("flex gap-2.5", message.role === 'user' ? 'flex-row-reverse' : 'flex-row')}>
       <div className={cn(
