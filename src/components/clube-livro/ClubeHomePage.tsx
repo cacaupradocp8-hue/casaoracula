@@ -202,6 +202,24 @@ export function ClubeHomePage() {
               </div>
             )}
 
+            {/* LABORATÓRIO 80/20 — MÓDULO OFICIAL (PROEMINENTE) */}
+            {matchedBook && (
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <div className="flex items-center gap-3 mb-6 px-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
+                  <h3 className="text-[10px] font-display uppercase tracking-[0.4em] text-gold/60">Módulo Oficial do Clube</h3>
+                </div>
+                <Laboratorio8020Card
+                  bookId={matchedBook.id}
+                  bookTitle={matchedBook.title}
+                />
+              </motion.div>
+            )}
+
             {/* RECURSOS ADICIONAIS (Mergulho Semanal) */}
             <div className="pt-8">
               <RotaImersao estacaoId={estacaoAtual?.id} />
