@@ -5593,7 +5593,7 @@ export type Database = {
           {
             foreignKeyName: "clube_obras_essencia_8020_book_id_fkey"
             columns: ["book_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "books"
             referencedColumns: ["id"]
           },
