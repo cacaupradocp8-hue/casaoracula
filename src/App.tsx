@@ -290,6 +290,8 @@ function AppRoutes() {
       <Route path="/admin/clube-livro/*" element={<Navigate to="/admin/clube" replace />} />
       <Route path="/admin/clube-livro/legacy" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       <Route path="/sala-de-visita" element={<Navigate to="/sala-da-visitante" replace />} />
+      <Route path="/index" element={<Navigate to="/" replace />} />
+      <Route path="/index.html" element={<Navigate to="/" replace />} />
       <Route path="/admin/clube-livro/v1" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       {/* Public */}
       <Route path="/" element={<PublicRoute><Auth /></PublicRoute>} />
