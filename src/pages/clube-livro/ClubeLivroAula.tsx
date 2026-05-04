@@ -539,7 +539,7 @@ export default function ClubeLivroAula() {
           </PopoverContent>
         </Popover>
       </div>
-    </div>
+    </ResponsiveContainer>
   );
 }
 
