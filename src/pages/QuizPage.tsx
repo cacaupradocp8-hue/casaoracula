@@ -405,7 +405,6 @@ export default function QuizPage() {
   };
 
   // Direct Media Renderer (like AulaPage) - renders media from quiz_resultados fields
-  // Now excludes image since it's rendered as a separate banner
   const DirectMediaContent = ({ result }: { result: Resultado }) => {
     const embedUrl = getEmbedUrl(result.video_url);
     
@@ -413,35 +412,51 @@ export default function QuizPage() {
     if (!hasMedia) return null;
     
     return (
-      <div className="space-y-8">
+      <motion.div 
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 0.6 }}
+        className="space-y-12 max-w-5xl mx-auto my-20"
+      >
+        <div className="flex items-center gap-4 mb-8">
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent to-border" />
+          <h3 className="text-[10px] uppercase tracking-[0.4em] text-muted-foreground font-medium">Conteúdo de Imersão</h3>
+          <div className="h-px flex-1 bg-gradient-to-l from-transparent to-border" />
+        </div>
+
         {/* 1. VIDEO */}
         {embedUrl && (
-          <Card className="overflow-hidden">
-            <div className="aspect-video relative">
-              <iframe
-                src={embedUrl}
-                title={result.titulo_simbolico}
-                className="absolute inset-0 w-full h-full"
-                frameBorder="0"
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                referrerPolicy="strict-origin-when-cross-origin"
-              />
-            </div>
-          </Card>
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-gold/20 to-primary/20 rounded-[2rem] blur-2xl opacity-20 group-hover:opacity-40 transition-opacity" />
+            <Card className="overflow-hidden border-border/10 bg-black/40 backdrop-blur-sm rounded-[1.5rem] shadow-2xl relative">
+              <div className="aspect-video relative">
+                <iframe
+                  src={embedUrl}
+                  title={result.titulo_simbolico}
+                  className="absolute inset-0 w-full h-full"
+                  frameBorder="0"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
+                />
+              </div>
+            </Card>
+          </div>
         )}
 
         {/* 2. AUDIO */}
         {result.audio_url && (
-          <UnifiedAudioPlayer
-            audioUrl={result.audio_url}
-            title="🎧 Mensagem em Áudio"
-            size="lg"
-            className="mt-4"
-          />
+          <div className="max-w-2xl mx-auto">
+            <UnifiedAudioPlayer
+              audioUrl={result.audio_url}
+              title="Mensagem de Orientação"
+              size="lg"
+              className="bg-card/30 backdrop-blur-md border-gold/20 shadow-xl rounded-2xl p-6"
+            />
+          </div>
         )}
-      </div>
+      </motion.div>
     );
   };
 
