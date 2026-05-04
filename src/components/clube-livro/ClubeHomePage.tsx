@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, BookOpen, Loader2, MapPin, Calendar, ExternalLink, ListOrdered } from 'lucide-react';
+import { ArrowRight, BookOpen, Loader2, MapPin, Calendar, ExternalLink, ListOrdered, Sparkles } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
@@ -16,6 +16,7 @@ import { RotaAplicacao } from '@/components/clube-livro/RotaAplicacao';
 import { RotaLaboratorio } from '@/components/clube-livro/RotaLaboratorio';
 import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
 import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
+import { Laboratorio8020Card } from '@/components/clube/Laboratorio8020Card';
 import { useAllBooks } from '@/hooks/useBooks';
 import { FlaskConical } from 'lucide-react';
 import { RotaExecutavelMes1 } from '@/components/clube-livro/RotaMês1';
