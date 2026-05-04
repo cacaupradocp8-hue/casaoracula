@@ -24,7 +24,7 @@ interface HubCard {
   tab: string;
   color: string;
   bg: string;
-  statType?: 'ciclos' | 'portais' | 'acervo' | 'treinamento' | 'chat';
+  statType?: 'ciclos' | 'portais' | 'acervo' | 'treinamento' | 'chat' | 'laboratorio';
 }
 
 const PREMIUM_CARDS: HubCard[] = [
