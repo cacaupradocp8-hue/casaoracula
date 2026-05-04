@@ -42,6 +42,7 @@ export default function ClubeRotaPremium() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { pontos, estacaoAtual, isLoading, marcarEmAndamento } = useRotaOracular();
+  const { data: allBooks = [] } = useAllBooks();
   const { scrollY } = useScroll();
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
   const heroScale = useTransform(scrollY, [0, 400], [1, 1.08]);
@@ -52,6 +53,11 @@ export default function ClubeRotaPremium() {
     () => (ponto ? pontos.find(p => p.ordem > ponto.ordem) : null),
     [pontos, ponto]
   );
+
+  const matchedBook = useMemo(() => {
+    if (!estacaoAtual?.livro_titulo) return null;
+    return allBooks.find(b => b.title.toLowerCase().includes(estacaoAtual.livro_titulo.toLowerCase()));
+  }, [allBooks, estacaoAtual?.livro_titulo]);
 
   const [pergunta, setPergunta] = useState('');
 
