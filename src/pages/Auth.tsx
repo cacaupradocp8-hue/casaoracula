@@ -29,10 +29,18 @@ const ImmersiveBg = () => (
 /* ─── Glass form container (OUTSIDE component to avoid re-creation) ─── */
 const GlassContainer = ({ children }: { children: React.ReactNode }) => (
   <div className="relative">
-    <div className="absolute -inset-px rounded-3xl bg-gradient-to-b from-gold/20 via-gold/5 to-transparent" />
-    <div className="relative rounded-3xl bg-card/70 backdrop-blur-2xl border border-border/30 p-8 md:p-10 shadow-[0_24px_80px_-16px_hsl(var(--gold)/0.15)]">
-      <div className="absolute top-0 left-6 w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
-      <div className="absolute bottom-0 right-6 w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="absolute -inset-px rounded-[2rem] bg-gradient-to-b from-gold/30 via-gold/5 to-transparent blur-[0.5px]" 
+    />
+    <div className="relative rounded-[2rem] bg-card/40 backdrop-blur-3xl border border-white/5 p-8 md:p-12 shadow-premium overflow-hidden">
+      {/* Decorative light rays */}
+      <div className="absolute -top-24 -left-24 w-48 h-48 bg-gold/10 rounded-full blur-[80px]" />
+      <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-accent/10 rounded-full blur-[80px]" />
+      
+      <div className="absolute top-0 left-12 w-24 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+      <div className="absolute bottom-0 right-12 w-24 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
       {children}
     </div>
   </div>
