@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import {
-  Compass, Flame, Gem, AlertTriangle, Building2, Leaf, Circle, X,
+  Compass, Flame, Gem, AlertTriangle, Building2, Leaf, Circle, X, BookOpen, Quote, Eye, ShieldAlert, FlaskConical, Target, GraduationCap
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useEssencia8020 } from '@/hooks/useEssencia8020';
 
 export interface PortalSlide {
   icon: React.ReactNode;
@@ -14,6 +15,7 @@ export interface PortalSlide {
 
 interface PortalEntradaRotaProps {
   slug: string;
+  bookId?: string;
   portalNumero?: number | string;
   portalTitulo?: string;
   slides?: PortalSlide[];
@@ -66,9 +68,10 @@ function gradientForIndex(i: number, total: number) {
 
 export function PortalEntradaRota({
   slug,
+  bookId,
   portalNumero,
   portalTitulo,
-  slides = DEFAULT_SLIDES,
+  slides: propSlides,
   microcopiesCalmas = DEFAULT_CALMAS,
   microcopiesProfundas = DEFAULT_PROFUNDAS,
   ethicalChips = DEFAULT_CHIPS,
@@ -80,8 +83,54 @@ export function PortalEntradaRota({
   const [current, setCurrent] = useState(0);
   const [swipes, setSwipes] = useState(0);
   const [microIdx, setMicroIdx] = useState(0);
-  const total = slides.length;
+  
+  const { data: essencia } = useEssencia8020(bookId);
 
+  const slides = useMemo(() => {
+    if (propSlides) return propSlides;
+    if (!essencia) return DEFAULT_SLIDES;
+
+    // Gera slides baseados na Essência 80/20 do livro
+    return [
+      { 
+        icon: <BookOpen className="w-12 h-12" />, 
+        title: 'Núcleo Vivo', 
+        subtitle: essencia.nucleo_vivo || DEFAULT_SLIDES[0].subtitle 
+      },
+      { 
+        icon: <Eye className="w-12 h-12" />, 
+        title: 'Imagem Organizadora', 
+        subtitle: essencia.imagem_organizadora || DEFAULT_SLIDES[1].subtitle 
+      },
+      { 
+        icon: <Flame className="w-12 h-12" />, 
+        title: 'Tensão Central', 
+        subtitle: essencia.tensao_central || DEFAULT_SLIDES[2].subtitle 
+      },
+      { 
+        icon: <Target className="w-12 h-12" />, 
+        title: 'Habilidade Central', 
+        subtitle: essencia.aplicacao_terapeutica || DEFAULT_SLIDES[3].subtitle 
+      },
+      { 
+        icon: <ShieldAlert className="w-12 h-12" />, 
+        title: 'Distorção Comum', 
+        subtitle: essencia.distorcao_comum || DEFAULT_SLIDES[4].subtitle 
+      },
+      { 
+        icon: <FlaskConical className="w-12 h-12" />, 
+        title: 'Exercício Integrativo', 
+        subtitle: essencia.exercicio || DEFAULT_SLIDES[5].subtitle 
+      },
+      { 
+        icon: <GraduationCap className="w-12 h-12" />, 
+        title: 'Riscos Éticos', 
+        subtitle: essencia.riscos_eticos || DEFAULT_SLIDES[6].subtitle 
+      },
+    ];
+  }, [propSlides, essencia]);
+
+  const total = slides.length;
   const microList = swipes >= 3 ? microcopiesProfundas : microcopiesCalmas;
 
   useEffect(() => {
@@ -228,12 +277,6 @@ export function PortalEntradaRota({
             className="w-full h-14 rounded-2xl bg-gold text-midnight hover:bg-gold/90 font-black tracking-[0.15em] text-sm shadow-[0_12px_40px_-8px_hsl(var(--gold)/0.6)]"
           >
             {current >= total - 1 ? ctaLabel : 'CONTINUAR'}
-            {current < total - 1 && (
-              <button
-                onClick={(e) => { e.stopPropagation(); goTo(current + 1); }}
-                className="sr-only"
-              >next</button>
-            )}
           </Button>
           {current < total - 1 && (
             <button
@@ -268,7 +311,7 @@ function SlideCard({ slide, isActive, chips }: { slide: PortalSlide; isActive: b
       <h3 className="font-display font-black text-white text-xl md:text-2xl uppercase leading-tight tracking-wide">
         {slide.title}
       </h3>
-      <p className="mt-4 text-white/75 text-sm md:text-base leading-relaxed font-medium max-w-md">
+      <p className="mt-4 text-white/75 text-sm md:text-base leading-relaxed font-medium max-w-md line-clamp-4">
         {slide.subtitle}
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-2">
