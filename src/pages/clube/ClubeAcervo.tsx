@@ -136,48 +136,70 @@ function BookCard({ book, index }: { book: Book; index: number }) {
       transition={{ delay: index * 0.04, duration: 0.4 }}
     >
       <Card
-        className="border-border/40 bg-card/60 hover:bg-card/80 transition-colors cursor-pointer group"
+        className="group relative h-full border-border/30 bg-card/40 hover:bg-card/60 transition-all duration-500 cursor-pointer overflow-hidden rounded-2xl flex flex-col hover:border-gold/30 hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)]"
         onClick={() => navigate(`/clube/laboratorio/book/${book.id}`)}
       >
-        <CardContent className="p-5 flex gap-5">
-          {/* Cover */}
-          <div className="w-16 h-22 flex-shrink-0 rounded-md bg-muted/30 border border-border/30 flex items-center justify-center overflow-hidden">
+        <CardContent className="p-0 flex flex-col h-full">
+          {/* Top/Cover Area */}
+          <div className="relative aspect-[3/4] overflow-hidden bg-muted/20">
             {book.cover_url ? (
-              <img src={book.cover_url} alt={book.title} className="w-full h-full object-cover rounded-md" />
+              <img 
+                src={book.cover_url} 
+                alt={book.title} 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+              />
             ) : (
-              <BookOpen className="w-6 h-6 text-muted-foreground/75" />
+              <div className="w-full h-full flex flex-col items-center justify-center gap-3 p-4 text-center">
+                <BookOpen className="w-10 h-10 text-muted-foreground/30" />
+                <span className="text-[10px] uppercase tracking-widest text-muted-foreground/40 font-bold">Sem Capa</span>
+              </div>
             )}
+            
+            {/* Category Overlay */}
+            <div className="absolute top-3 right-3">
+              <Badge variant="outline" className={`text-[9px] uppercase tracking-tighter backdrop-blur-md font-bold ${catInfo.color}`}>
+                {catInfo.label}
+              </Badge>
+            </div>
+            
+            {/* Hover Action Overlay */}
+            <div className="absolute inset-0 bg-midnight/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+               <Button variant="gold" size="sm" className="rounded-full font-bold shadow-lg">Explorar Obra</Button>
+            </div>
           </div>
 
-          {/* Info */}
-          <div className="flex-1 min-w-0 space-y-1.5">
-            <div className="flex items-start justify-between gap-2">
-              <h3 className="font-display text-base text-foreground group-hover:text-primary transition-colors leading-tight">
+          {/* Info Area */}
+          <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
+            <div className="space-y-1">
+              <h3 className="font-display text-lg text-foreground group-hover:text-gold transition-colors leading-tight line-clamp-2">
                 {book.title}
               </h3>
-              <div className="flex flex-col items-end gap-2">
-                <Badge variant="outline" className={`text-[10px] flex-shrink-0 ${catInfo.color}`}>
-                  {catInfo.label}
-                </Badge>
-                <div onClick={(e) => e.stopPropagation()}>
+              {book.author && (
+                <p className="text-xs font-serif italic text-muted-foreground/80">{book.author}</p>
+              )}
+            </div>
+            
+            {book.description_short && (
+              <p className="text-[11px] text-muted-foreground/60 line-clamp-2 leading-relaxed">
+                {book.description_short}
+              </p>
+            )}
+
+            <div className="pt-2 flex items-center justify-between border-t border-border/10">
+               <div onClick={(e) => e.stopPropagation()}>
                   <Laboratorio8020Modal 
                     bookId={book.id} 
                     bookTitle={book.title}
                     trigger={
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-primary hover:bg-primary/10">
-                        <FlaskConical className="w-4 h-4" />
+                      <Button variant="ghost" size="sm" className="h-8 gap-2 text-[10px] uppercase tracking-widest font-bold text-gold/60 hover:text-gold hover:bg-gold/10 px-2">
+                        <FlaskConical className="w-3.5 h-3.5" />
+                        80/20
                       </Button>
                     }
                   />
-                </div>
-              </div>
+               </div>
+               <ArrowRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-gold group-hover:translate-x-1 transition-all" />
             </div>
-            {book.author && (
-              <p className="text-xs text-muted-foreground">{book.author}</p>
-            )}
-            {book.description_short && (
-              <p className="text-xs text-muted-foreground/70 line-clamp-2">{book.description_short}</p>
-            )}
           </div>
         </CardContent>
       </Card>
