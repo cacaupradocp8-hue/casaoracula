@@ -111,9 +111,9 @@ export default function AdminLaboratorio8020() {
   return (
     <div className="space-y-6">
       <SectionHeader
-        icon={FlaskConical}
+        icon={<FlaskConical className="w-5 h-5" />}
         title="Laboratório 80/20"
-        description="Edite o núcleo simbólico e aplicável de cada obra do Clube."
+        subtitle="Edite o núcleo simbólico e aplicável de cada obra do Clube."
       />
 
       <Card className="bg-card/40 border-border/50">
