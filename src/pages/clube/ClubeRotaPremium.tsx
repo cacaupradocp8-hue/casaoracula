@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import {
   Play,
   ArrowRight,
@@ -21,6 +21,7 @@ import {
   ArrowDown,
   Lock,
   Check,
+  FlaskConical,
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
@@ -29,6 +30,8 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { useRotaOracular } from '@/hooks/useRotaOracular';
 import { cn } from '@/lib/utils';
+import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
+import { useAllBooks } from '@/hooks/useBooks';
 
 /**
  * ClubeRotaPremium — Página de Rota nível Netflix + Apple + Jung
