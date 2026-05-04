@@ -72,21 +72,29 @@ export default function AdminLaboratorio8020() {
 
   const saveMut = useMutation({
     mutationFn: async (payload: Essencia) => {
+      const { id, ...rest } = payload;
       const cleaned = {
-        ...payload,
+        ...rest,
         perguntas_clinicas: (payload.perguntas_clinicas || []).map(p => p.trim()).filter(Boolean),
       };
-      if (cleaned.id) {
-        const { error } = await supabase.from('clube_obras_essencia_8020')
-          .update(cleaned).eq('id', cleaned.id);
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.from('clube_obras_essencia_8020').insert(cleaned);
-        if (error) throw error;
-      }
+      
+      const { data, error } = await supabase
+        .from('clube_obras_essencia_8020')
+        .upsert({ 
+          ...(id ? { id } : {}),
+          ...cleaned 
+        }, { onConflict: 'book_id' })
+        .select()
+        .maybeSingle();
+        
+      if (error) throw error;
+      return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast({ title: 'Laboratório 80/20 salvo', description: 'Conteúdo atualizado com sucesso.' });
+      if (data) {
+        setForm(data as Essencia);
+      }
       qc.invalidateQueries({ queryKey: ['admin-essencia-8020', selectedBookId] });
       qc.invalidateQueries({ queryKey: ['essencia-8020', selectedBookId] });
     },
