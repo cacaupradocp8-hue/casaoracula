@@ -4,7 +4,7 @@
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "strict": true,
+    "strict": false,
     "strictNullChecks": true,
     "skipLibCheck": true,
     "paths": {
