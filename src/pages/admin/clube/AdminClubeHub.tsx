@@ -78,6 +78,15 @@ const PREMIUM_CARDS: HubCard[] = [
     bg: 'bg-pink-500/10',
     statType: 'chat',
   },
+  {
+    key: 'laboratorio-8020',
+    title: 'Laboratório 80/20',
+    description: 'Edite o núcleo simbólico e aplicável de cada obra.',
+    icon: FlaskConical,
+    tab: 'clube-laboratorio-8020',
+    color: 'text-primary',
+    bg: 'bg-primary/10',
+  },
 ];
 
 export default function AdminClubeHub() {
