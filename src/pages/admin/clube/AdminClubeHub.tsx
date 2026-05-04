@@ -150,6 +150,7 @@ export default function AdminClubeHub() {
       case 'clube-acervo': navigate('/admin/clube/conteudos', { replace: true }); break;
       case 'clube-treinamento': navigate('/admin/clube/treinamento', { replace: true }); break;
       case 'clube-chat': navigate('/admin/clube/chat', { replace: true }); break;
+      case 'clube-laboratorio-8020': navigate('/admin/clube/laboratorio-8020', { replace: true }); break;
       case 'settings': navigate('/admin?tab=settings', { replace: true }); break;
       case 'gerador-semanal': navigate('/admin?tab=gerador-semanal', { replace: true }); break;
       default:
