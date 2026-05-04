@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { useBook, useBookLessons, useBookLinksForBook } from '@/hooks/useBooks';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -82,7 +83,7 @@ export default function ClubeLivroLivro() {
 
   return (
     <AppLayout>
-      <div className="max-w-2xl mx-auto px-4 pb-24">
+      <ResponsiveContainer size="narrow" className="pb-24">
 
         {/* ═══════════════════════════════════════
             1️⃣ TOPO — CAPA + TÍTULO + BADGES
@@ -424,7 +425,7 @@ export default function ClubeLivroLivro() {
             <ArrowRight className="w-4 h-4" />
           </Button>
         </motion.section>
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }
