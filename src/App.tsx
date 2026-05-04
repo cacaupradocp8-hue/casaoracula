@@ -285,8 +285,7 @@ function AppRoutes() {
   }, [location.pathname]);
 
   return (
-    <Suspense fallback={<AuthLoading />}>
-      <Routes>
+    <Routes>
       <Route path="/admin/clube-livro" element={<Navigate to="/admin/clube" replace />} />
       <Route path="/admin/clube-livro/*" element={<Navigate to="/admin/clube" replace />} />
       <Route path="/admin/clube-livro/legacy" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
