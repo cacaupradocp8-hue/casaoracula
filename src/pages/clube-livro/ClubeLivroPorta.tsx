@@ -232,13 +232,13 @@ export default function ClubeLivroPorta() {
   if (!porta) {
     return (
       <AppLayout>
-        <div className="max-w-2xl mx-auto px-4 py-12 text-center">
+        <ResponsiveContainer size="narrow" className="py-12 text-center">
           <BookOpen className="w-10 h-10 text-muted-foreground mx-auto mb-4" />
           <p className="text-muted-foreground">Porta não encontrada.</p>
           <Button variant="ghost" className="mt-4" onClick={() => navigate(`/clube-livro/${cicloId}`)}>
             <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
           </Button>
-        </div>
+        </ResponsiveContainer>
       </AppLayout>
     );
   }
