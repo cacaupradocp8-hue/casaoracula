@@ -1,19 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { Course, CourseWithProgress, CourseEnrollment, CourseLessonProgress } from '@/types/course';
-import { useToast } from '@/hooks/use-toast';
+import { CourseWithProgress } from '@/types/course';
 
 export function useCourses() {
   const { user } = useAuth();
-  const { toast } = useToast();
-  const [courses, setCourses] = useState<CourseWithProgress[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  const fetchCourses = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      // Fetch published courses
+  return useQuery({
+    queryKey: ['courses', user?.id],
+    queryFn: async (): Promise<CourseWithProgress[]> => {
+      // 1. Fetch courses with ordering
       const { data: coursesData, error: coursesError } = await supabase
         .from('courses')
         .select('*')
@@ -21,76 +17,53 @@ export function useCourses() {
         .order('ordem', { ascending: true });
 
       if (coursesError) throw coursesError;
+      if (!coursesData) return [];
 
-      if (!coursesData) {
-        setCourses([]);
-        return;
-      }
-
-      // If user is logged in, fetch enrollments and progress
-      let enrollments: CourseEnrollment[] = [];
-      let progress: CourseLessonProgress[] = [];
+      // 2. Fetch enrollment and progress in parallel if user exists
+      let enrollments: any[] = [];
+      let progress: any[] = [];
+      let modules: any[] = [];
+      let lessons: any[] = [];
 
       if (user) {
-        const [enrollmentsResult, progressResult] = await Promise.all([
-          supabase
-            .from('course_enrollments')
-            .select('*')
-            .eq('user_id', user.id),
-          supabase
-            .from('course_lesson_progress')
-            .select('*')
-            .eq('user_id', user.id)
+        const [
+          enrollmentsResult,
+          progressResult,
+          modulesResult,
+          lessonsResult
+        ] = await Promise.all([
+          supabase.from('course_enrollments').select('*').eq('user_id', user.id),
+          supabase.from('course_lesson_progress').select('*').eq('user_id', user.id).eq('completed', true),
+          supabase.from('course_modules').select('id, course_id').in('course_id', coursesData.map(c => c.id)),
+          // We fetch all lessons for these modules to calculate totals
+          supabase.from('course_lessons').select('id, module_id')
         ]);
 
-        if (enrollmentsResult.data) {
-          enrollments = enrollmentsResult.data as CourseEnrollment[];
-        }
-        if (progressResult.data) {
-          progress = progressResult.data as CourseLessonProgress[];
-        }
+        enrollments = enrollmentsResult.data || [];
+        progress = progressResult.data || [];
+        modules = modulesResult.data || [];
+        lessons = lessonsResult.data || [];
       }
 
-      // Fetch lesson counts per course
-      const courseIds = coursesData.map(c => c.id);
-      const { data: lessonCounts } = await supabase
-        .from('course_lessons')
-        .select('module_id, id')
-        .in('module_id', 
-          (await supabase
-            .from('course_modules')
-            .select('id, course_id')
-            .in('course_id', courseIds)
-          ).data?.map(m => m.id) || []
-        );
-
-      // Get module to course mapping
-      const { data: modules } = await supabase
-        .from('course_modules')
-        .select('id, course_id')
-        .in('course_id', courseIds);
-
-      const moduleToCourse = new Map(modules?.map(m => [m.id, m.course_id]) || []);
-
-      // Calculate totals per course
-      const courseLessonCounts = new Map<string, string[]>();
-      lessonCounts?.forEach(lesson => {
-        const courseId = moduleToCourse.get(lesson.module_id);
+      // 3. Optimized mapping logic
+      const moduleToCourseMap = new Map(modules.map(m => [m.id, m.course_id]));
+      const lessonsByCourseMap = new Map<string, string[]>();
+      
+      lessons.forEach(lesson => {
+        const courseId = moduleToCourseMap.get(lesson.module_id);
         if (courseId) {
-          const existing = courseLessonCounts.get(courseId) || [];
-          existing.push(lesson.id);
-          courseLessonCounts.set(courseId, existing);
+          const current = lessonsByCourseMap.get(courseId) || [];
+          current.push(lesson.id);
+          lessonsByCourseMap.set(courseId, current);
         }
       });
 
-      // Map courses with progress
-      const coursesWithProgress: CourseWithProgress[] = coursesData.map(course => {
+      return coursesData.map(course => {
         const enrollment = enrollments.find(e => e.course_id === course.id) || null;
-        const courseLessons = courseLessonCounts.get(course.id) || [];
-        const completedLessons = progress.filter(
-          p => p.completed && courseLessons.includes(p.lesson_id)
-        ).length;
-        const totalLessons = courseLessons.length;
+        const courseLessonIds = lessonsByCourseMap.get(course.id) || [];
+        const totalLessons = courseLessonIds.length;
+        const completedLessons = progress.filter(p => courseLessonIds.includes(p.lesson_id)).length;
+        
         const progressPercent = totalLessons > 0 
           ? Math.round((completedLessons / totalLessons) * 100) 
           : 0;
@@ -101,29 +74,10 @@ export function useCourses() {
           totalLessons,
           completedLessons,
           progressPercent
-        } as CourseWithProgress;
-      });
-
-      setCourses(coursesWithProgress);
-    } catch (error) {
-      console.error('Error fetching courses:', error);
-      toast({
-        title: 'Erro',
-        description: 'Não foi possível carregar os cursos.',
-        variant: 'destructive'
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }, [user, toast]);
-
-  useEffect(() => {
-    fetchCourses();
-  }, [fetchCourses]);
-
-  return {
-    courses,
-    isLoading,
-    refetch: fetchCourses
-  };
+        };
+      }) as CourseWithProgress[];
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    enabled: true,
+  });
 }
