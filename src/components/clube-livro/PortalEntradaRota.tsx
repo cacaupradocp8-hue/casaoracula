@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { motion, AnimatePresence, PanInfo, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import {
-  Compass, Flame, Gem, AlertTriangle, Building2, Leaf, Circle, X, BookOpen, Quote, Eye, ShieldAlert, FlaskConical, Target, GraduationCap, Sparkles
+  Compass, Flame, Gem, AlertTriangle, Building2, Leaf, Circle, X, BookOpen, Eye, ShieldAlert, FlaskConical, Target, GraduationCap, Sparkles, ArrowRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -55,9 +55,9 @@ const DEFAULT_PROFUNDAS = [
 const DEFAULT_CHIPS = ['Nada é demolido', 'Tudo é reconhecido', 'Tempo psíquico'];
 
 const GRADIENTS = [
-  'radial-gradient(circle at center, hsl(270 60% 8%), hsl(280 70% 5%))',
-  'radial-gradient(circle at center, hsl(250 50% 6%), hsl(260 55% 4%))',
-  'radial-gradient(circle at center, hsl(240 50% 5%), hsl(220 60% 3%))',
+  'radial-gradient(circle at 20% 20%, hsl(270 60% 12%), hsl(280 70% 5%))',
+  'radial-gradient(circle at 80% 80%, hsl(250 50% 10%), hsl(260 55% 4%))',
+  'radial-gradient(circle at 50% 50%, hsl(240 50% 8%), hsl(220 60% 3%))',
 ];
 
 export function PortalEntradaRota({
@@ -77,7 +77,6 @@ export function PortalEntradaRota({
   const [current, setCurrent] = useState(0);
   const [swipes, setSwipes] = useState(0);
   const [microIdx, setMicroIdx] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
   
   const { data: essencia } = useEssencia8020(bookId);
 
@@ -326,7 +325,6 @@ export function PortalEntradaRota({
         </div>
       </div>
     </motion.div>
-
   );
 }
 
@@ -334,51 +332,47 @@ function SlideCard({ slide, isActive }: { slide: PortalSlide; isActive: boolean 
   return (
     <div
       className={cn(
-        'relative w-full h-full rounded-[2.5rem] overflow-hidden transition-all duration-700',
-        'border border-white/10 bg-white/[0.03] backdrop-blur-2xl',
-        'shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)]',
+        'relative w-full h-full rounded-[2rem] overflow-hidden transition-all duration-700',
+        'border border-white/10 bg-white/[0.02] backdrop-blur-3xl',
+        'shadow-[0_60px_120px_-30px_rgba(0,0,0,0.9)]',
         isActive ? 'ring-1 ring-gold/20' : ''
       )}
     >
-      {/* Card Gloss Effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent pointer-events-none" />
       
-      <div className="relative h-full flex flex-col items-center justify-center p-8 md:p-12 text-center">
-        {/* Animated Icon Container */}
+      <div className="relative h-full flex flex-col items-center justify-center p-10 md:p-14 text-center">
+        {/* Decorative mask */}
+        <div className="absolute top-0 left-0 w-24 h-24 bg-gold/5 blur-3xl rounded-full -translate-x-12 -translate-y-12" />
+        
         <motion.div
           animate={{ 
-            y: isActive ? [0, -10, 0] : 0,
-            scale: isActive ? 1.1 : 0.9,
+            y: isActive ? [0, -12, 0] : 0,
+            scale: isActive ? 1.15 : 0.9,
           }}
-          transition={{ 
-            duration: 4, 
-            repeat: Infinity, 
-            ease: 'easeInOut' 
-          }}
-          className="relative mb-10"
+          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+          className="relative mb-12"
         >
-          <div className="absolute inset-0 bg-gold/20 blur-3xl rounded-full" />
-          <div className="relative text-gold drop-shadow-[0_0_15px_rgba(234,179,8,0.5)]">
+          <div className="absolute inset-0 bg-gold/30 blur-3xl rounded-full" />
+          <div className="relative text-gold drop-shadow-[0_0_20px_rgba(234,179,8,0.6)]">
             {slide.icon}
           </div>
         </motion.div>
 
         <motion.h3 
-          animate={{ opacity: isActive ? 1 : 0.5 }}
-          className="font-display font-black text-white text-2xl md:text-3xl uppercase tracking-wider mb-6 leading-tight"
+          className="font-display font-black text-white text-3xl md:text-4xl uppercase tracking-[0.1em] mb-8 leading-[0.9]"
         >
           {slide.title}
         </motion.h3>
 
-        <div className="w-12 h-[1px] bg-gold/30 mb-6" />
+        <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-gold/40 to-transparent mb-8" />
 
-        <p className="text-white/60 text-sm md:text-base leading-relaxed font-body tracking-wide line-clamp-6">
+        <p className="text-white/50 text-base md:text-lg leading-relaxed font-body tracking-wide line-clamp-6">
           {slide.subtitle}
         </p>
 
         {/* Decorative corner element */}
-        <div className="absolute bottom-6 right-6 opacity-20">
-          <Sparkles className="w-4 h-4 text-gold" />
+        <div className="absolute bottom-8 right-8 opacity-30">
+          <Sparkles className="w-5 h-5 text-gold" />
         </div>
       </div>
     </div>
@@ -387,12 +381,12 @@ function SlideCard({ slide, isActive }: { slide: PortalSlide; isActive: boolean 
 
 function FloatingParticles() {
   const particles = useRef(
-    Array.from({ length: 30 }, (_, i) => ({
+    Array.from({ length: 40 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: 1 + Math.random() * 3,
-      duration: 20 + Math.random() * 20,
+      size: 0.5 + Math.random() * 2,
+      duration: 15 + Math.random() * 25,
       opacity: 0.1 + Math.random() * 0.4,
     }))
   );
@@ -402,18 +396,18 @@ function FloatingParticles() {
       {particles.current.map((p) => (
         <motion.div
           key={p.id}
-          className="absolute rounded-full bg-gold/40"
+          className="absolute rounded-full bg-gold/30"
           style={{
             left: `${p.x}%`,
             top: `${p.y}%`,
             width: p.size,
             height: p.size,
             opacity: p.opacity,
-            boxShadow: `0 0 ${p.size * 5}px hsl(var(--gold) / 0.5)`,
+            boxShadow: `0 0 ${p.size * 6}px hsl(var(--gold) / 0.4)`,
           }}
           animate={{ 
-            y: [0, -100, 0], 
-            x: [0, Math.random() * 20 - 10, 0],
+            y: [0, -150, 0], 
+            x: [0, Math.random() * 30 - 15, 0],
             opacity: [p.opacity, p.opacity * 2, p.opacity]
           }}
           transition={{ 
