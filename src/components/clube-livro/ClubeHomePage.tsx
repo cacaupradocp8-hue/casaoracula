@@ -91,7 +91,7 @@ export function ClubeHomePage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-8 px-3 text-[10px] gap-1.5 border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 transition-all font-bold"
+                  className="h-8 px-3 text-[10px] gap-1.5 border-primary/40 bg-primary/5 text-primary hover:bg-primary/10 transition-all font-bold"
                 >
                   <FlaskConical className="w-3 h-3" />
                   Ver Laboratório 80/20
@@ -106,7 +106,7 @@ export function ClubeHomePage() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center text-xs text-muted-foreground/40 italic"
+            className="text-center text-xs text-muted-foreground/75 italic"
           >
             Esta estação está sendo preparada. Em breve sua rota estará completa.
           </motion.p>
@@ -121,14 +121,14 @@ export function ClubeHomePage() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="relative overflow-hidden rounded-[2.5rem] bg-[#0F0D15] border border-primary/20 p-8 text-center space-y-6 shadow-2xl"
+                className="relative overflow-hidden rounded-[2.5rem] bg-[#0F0D15] border border-primary/40 p-8 text-center space-y-6 shadow-2xl"
               >
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
                 
                 <div className="space-y-4">
                   <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-primary/60">Manifesto de Abertura</h3>
                   
-                  <div className="space-y-4 font-serif text-lg md:text-xl text-foreground/90 leading-relaxed italic">
+                  <div className="space-y-4 font-serif text-lg md:text-xl text-foreground leading-relaxed italic">
                     <p>Existe uma parte da mulher que nunca aceitou totalmente a domesticação.</p>
                     <p>Mesmo silenciosa, ela continua chamando.</p>
                     <p>Às vezes como cansaço.</p>
@@ -198,7 +198,7 @@ export function ClubeHomePage() {
                       </div>
 
                       {pontoAtual.conteudo_inline?.texto && (
-                        <div className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line border-l-2 border-primary/20 pl-4 py-1 italic">
+                        <div className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line border-l-2 border-primary/40 pl-4 py-1 italic">
                            {pontoAtual.conteudo_inline.texto}
                         </div>
                       )}
@@ -244,7 +244,7 @@ export function ClubeHomePage() {
             transition={{ delay: 0.6 }}
             className="space-y-3"
           >
-            <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground/60 font-medium text-center">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground/80 font-medium text-center">
               Seu mapa agora
             </p>
             <MiniMandalaCidadela clienteId={user.id} />
@@ -260,17 +260,17 @@ export function ClubeHomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <Card className="border-primary/10 bg-card/30">
+            <Card className="border-primary/30 bg-card/60">
               <CardContent className="p-5 space-y-3">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-primary/60" />
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60 font-medium">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80 font-medium">
                     Encontro ao vivo
                   </p>
                 </div>
                 <h3 className="text-sm font-medium text-foreground">{encontro.titulo}</h3>
                 {encontro.data_encontro && (
-                  <p className="text-xs text-muted-foreground/60">
+                  <p className="text-xs text-muted-foreground/80">
                     {new Date(encontro.data_encontro).toLocaleDateString('pt-BR', {
                       weekday: 'long',
                       day: 'numeric',
@@ -287,7 +287,7 @@ export function ClubeHomePage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="gap-2 border-primary/20 text-primary hover:bg-primary/10"
+                    className="gap-2 border-primary/40 text-primary hover:bg-primary/10"
                     onClick={() => window.open(encontro.link_ao_vivo!, '_blank')}
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -309,7 +309,7 @@ export function ClubeHomePage() {
             transition={{ delay: 0.8 }}
             className="space-y-3 pt-4"
           >
-            <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground/40 font-medium text-center">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground/75 font-medium text-center">
               Portais anteriores
             </p>
             <div className="space-y-1.5">
@@ -317,15 +317,15 @@ export function ClubeHomePage() {
                 <button
                   key={est.id}
                   onClick={() => navigate(`/clube-livro/porta/${est.id}`)}
-                  className="w-full flex items-center justify-between p-3 rounded-lg border border-border/10 hover:border-primary/15 bg-card/10 hover:bg-card/20 transition-all text-left"
+                  className="w-full flex items-center justify-between p-3 rounded-lg border border-border/30 hover:border-primary/30 bg-card/60 hover:bg-card/60 transition-all text-left"
                 >
                   <div className="min-w-0">
                     <p className="text-xs font-medium text-foreground/70 truncate">
                       Estação {est.numero} — {est.titulo}
                     </p>
-                    <p className="text-[10px] text-muted-foreground/40 truncate">{est.livro_titulo}</p>
+                    <p className="text-[10px] text-muted-foreground/75 truncate">{est.livro_titulo}</p>
                   </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/30 shrink-0" />
+                  <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/70 shrink-0" />
                 </button>
               ))}
             </div>

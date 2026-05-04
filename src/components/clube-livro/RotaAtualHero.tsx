@@ -56,11 +56,11 @@ export function RotaAtualHero({
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
             <span className="h-px w-6 bg-gold/40" />
-            <span className="text-[9px] tracking-[0.4em] uppercase text-gold/70">
+            <span className="text-[9px] tracking-[0.4em] uppercase text-gold/90">
               Sua rota atual
             </span>
           </div>
-          <h2 className="font-display text-xl md:text-2xl text-foreground/90">
+          <h2 className="font-display text-xl md:text-2xl text-foreground">
             Olá, <span className="text-gold">{welcomeName}</span>
           </h2>
         </div>
@@ -77,24 +77,24 @@ export function RotaAtualHero({
             />
           ) : (
             <div className="w-[88px] md:w-[112px] aspect-[2/3] rounded bg-gold/10 border border-gold/20 flex items-center justify-center">
-              <Compass className="w-7 h-7 text-gold/60" />
+              <Compass className="w-7 h-7 text-gold/85" />
             </div>
           )}
 
           <div className="flex-1 min-w-0 space-y-2 pt-1">
-            <p className="text-[9px] tracking-[0.3em] uppercase text-foreground/40">
+            <p className="text-[9px] tracking-[0.3em] uppercase text-foreground/70">
               Estação {estacao.numero}
             </p>
             <h3 className="font-display text-2xl md:text-3xl text-foreground leading-[1.1]">
               {estacao.livro_titulo}
             </h3>
             {estacao.livro_autor && (
-              <p className="font-serif italic text-sm text-foreground/50">
+              <p className="font-serif italic text-sm text-foreground/75">
                 {estacao.livro_autor}
               </p>
             )}
             {estacao.essencia_nucleo && (
-              <p className="text-sm text-foreground/60 leading-relaxed line-clamp-2 pt-1">
+              <p className="text-sm text-foreground/80 leading-relaxed line-clamp-2 pt-1">
                 {estacao.essencia_nucleo}
               </p>
             )}
@@ -105,10 +105,10 @@ export function RotaAtualHero({
         {total > 0 && (
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <span className="text-[9px] tracking-[0.3em] uppercase text-foreground/40">
+              <span className="text-[9px] tracking-[0.3em] uppercase text-foreground/70">
                 Progresso
               </span>
-              <span className="text-[10px] text-gold/80 font-medium tracking-wide">
+              <span className="text-[10px] text-gold font-medium tracking-wide">
                 {concluidos}/{total} · {Math.round(progresso)}%
               </span>
             </div>
@@ -138,7 +138,7 @@ export function RotaAtualHero({
         {ponto && (
           <button
             onClick={() => navigate(`/clube/rota/${ponto.slug}`)}
-            className="group block w-full text-left rounded-2xl border border-foreground/[0.08] bg-foreground/[0.03] hover:bg-foreground/[0.06] hover:border-gold/25 backdrop-blur p-5 transition-all duration-500"
+            className="group block w-full text-left rounded-2xl border border-foreground/20 bg-foreground/[0.10] hover:bg-foreground/[0.10] hover:border-gold/25 backdrop-blur p-5 transition-all duration-500"
           >
             <div className="flex items-center gap-4">
               <div className="w-11 h-11 shrink-0 rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center group-hover:bg-gold group-hover:scale-105 transition-all">
@@ -151,7 +151,7 @@ export function RotaAtualHero({
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[9px] tracking-[0.3em] uppercase text-gold/70 mb-0.5">
+                <p className="text-[9px] tracking-[0.3em] uppercase text-gold/90 mb-0.5">
                   {ponto.estado === 'completed'
                     ? 'Continuar travessia'
                     : ponto.estado === 'locked'
@@ -162,7 +162,7 @@ export function RotaAtualHero({
                   {ponto.nome}
                 </p>
                 {ponto.subtitulo && (
-                  <p className="font-serif italic text-xs text-foreground/45 truncate mt-0.5">
+                  <p className="font-serif italic text-xs text-foreground/70 truncate mt-0.5">
                     {ponto.subtitulo}
                   </p>
                 )}
@@ -174,7 +174,7 @@ export function RotaAtualHero({
         {/* Link para catálogo completo */}
         <button
           onClick={() => navigate('/clube/rotas')}
-          className="group w-full flex items-center justify-center gap-2 pt-2 text-[10px] tracking-[0.35em] uppercase text-foreground/40 hover:text-gold/80 transition-colors"
+          className="group w-full flex items-center justify-center gap-2 pt-2 text-[10px] tracking-[0.35em] uppercase text-foreground/70 hover:text-gold transition-colors"
         >
           <span className="h-px w-6 bg-foreground/15 group-hover:bg-gold/40 transition-colors" />
           Ver todas as rotas
