@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ClubeAudioCardImersivo } from '@/components/clube/ClubeAudioCardImersivo';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { useClubeCicloDetalhe, type ClubeEscuta } from '@/hooks/useClubeLivro';
 import { useAudioProgress } from '@/hooks/useAudioProgress';
 import { getPublicAudioUrl, formatAudioTime } from '@/lib/audioUtils';
