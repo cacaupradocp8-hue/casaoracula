@@ -81,8 +81,8 @@ export default function DashboardMembro() {
         />
 
         {/* Layout adaptativo: stack em mobile, 2 colunas em xl+ */}
-        <div className="grid grid-cols-1 xl:grid-cols-[1.15fr_1fr] gap-6 xl:gap-8 mt-6">
-          <div className="space-y-6 min-w-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-[1.2fr_1fr] gap-6 xl:gap-12 mt-6">
+          <div className="space-y-6 lg:space-y-8 min-w-0">
             <ProximaAcao
               principal={bussola.acaoPrincipal}
               secundarias={bussola.acoesSecundarias}

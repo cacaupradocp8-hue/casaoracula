@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 import type { DistritoResumo } from '@/hooks/useBussolaOracular';
 
 interface Props {
@@ -25,11 +26,11 @@ export function BussolaAtual({ leituraMomento, distritoDominante, distritoTensao
         transition={{ duration: 0.5 }}
         className="mb-8"
       >
-        <p className="font-display text-xl text-foreground mb-1">
+        <h1 className="font-display text-2xl sm:text-3xl text-foreground mb-2">
           Bem-vinda, <span className="text-primary">{welcomeName}</span>
-        </p>
-        <p className="text-sm text-muted-foreground/60">
-          Sua jornada começa pela revelação do seu mapa interior.
+        </h1>
+        <p className="text-sm sm:text-base text-muted-foreground/60 max-w-lg">
+          Sua jornada começa pela revelação do seu mapa interior. Explore a Casa e descubra os territórios da sua alma.
         </p>
       </motion.section>
     );
@@ -42,42 +43,41 @@ export function BussolaAtual({ leituraMomento, distritoDominante, distritoTensao
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="mb-6"
+      className="mb-10"
     >
-      <div className="flex items-center justify-between mb-3">
-        <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40">
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-muted-foreground/40 font-medium">
           Seu momento na jornada
         </p>
-        <span className={`text-[9px] px-2 py-0.5 rounded-full border ${badge.style}`}>
+        <span className={cn("text-[10px] px-2.5 py-1 rounded-full border font-semibold tracking-wide", badge.style)}>
           {badge.label}
         </span>
       </div>
 
-      <div className="rounded-2xl border border-border/15 bg-card/30 p-5 space-y-3">
+      <div className="rounded-2xl border border-border/15 bg-card/30 p-6 sm:p-8 space-y-6 shadow-soft backdrop-blur-sm">
         {/* Distrito + Estado */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4 sm:gap-6">
           {distritoDominante && (
-            <div className="w-11 h-11 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center shrink-0">
-              <span className="text-xl">{distritoDominante.icon}</span>
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center shrink-0 shadow-glow">
+              <span className="text-2xl sm:text-3xl">{distritoDominante.icon}</span>
             </div>
           )}
           <div className="min-w-0 flex-1">
             {distritoDominante && (
-              <p className="text-sm font-medium text-foreground">
+              <h2 className="text-lg sm:text-xl font-display text-foreground leading-tight mb-1">
                 {distritoDominante.nome}
-              </p>
+              </h2>
             )}
-            <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-[10px] text-muted-foreground/60 capitalize">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span className="text-xs text-muted-foreground/60 capitalize flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary/40" />
                 {distritoDominante?.estado === 'central' ? 'ativo' : distritoDominante?.estado}
               </span>
               {distritoTensao && (
-                <>
-                  <span className="w-1 h-1 rounded-full bg-destructive/40" />
-                  <span className="text-[10px] text-destructive/60">
-                    Tensão: {distritoTensao.nome}
-                  </span>
-                </>
+                <span className="text-xs text-destructive/60 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-destructive/40" />
+                  Tensão: {distritoTensao.nome}
+                </span>
               )}
             </div>
           </div>
@@ -85,9 +85,12 @@ export function BussolaAtual({ leituraMomento, distritoDominante, distritoTensao
 
         {/* Leitura clínica direta */}
         {leituraMomento && (
-          <p className="text-[13px] text-foreground/70 leading-relaxed">
-            {leituraMomento}
-          </p>
+          <div className="relative">
+            <div className="absolute -left-6 top-0 bottom-0 w-1 bg-primary/20 rounded-full hidden sm:block" />
+            <p className="text-base sm:text-lg text-foreground/80 leading-relaxed font-serif italic">
+              "{leituraMomento}"
+            </p>
+          </div>
         )}
       </div>
     </motion.section>

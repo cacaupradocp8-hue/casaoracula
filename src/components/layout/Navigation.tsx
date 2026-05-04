@@ -176,14 +176,14 @@ export function Navigation() {
           ? "bg-[#000814]/85 border-blue-900/30 backdrop-blur-2xl" 
           : "border-primary/15 bg-background/85 backdrop-blur-2xl"
       )}>
-        <div className="container mx-auto">
-          <div className="flex items-center justify-between gap-2 h-16 lg:h-18 xl:h-20">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="flex items-center justify-between gap-2 h-16 lg:h-20">
             <Link to={user ? (activeDomain === 'profissional' ? '/casa-das-maquinas' : '/dashboard-membro') : '/'} className="h-full flex items-center py-2 shrink-0">
-              <Logo variant="horizontal" className={cn("transition-all", location.pathname === '/clube' ? "brightness-125" : "")} />
+              <Logo variant="horizontal" className={cn("transition-all h-8 lg:h-10", location.pathname === '/clube' ? "brightness-125" : "")} />
             </Link>
 
             {/* Desktop menu — icon-only at lg, full at xl */}
-            <div className="hidden lg:flex items-center gap-0.5 flex-1 justify-center min-w-0 overflow-x-auto no-scrollbar">
+            <div className="hidden lg:flex items-center gap-1 xl:gap-2 flex-1 justify-center min-w-0 overflow-x-auto no-scrollbar">
               {menuGroups.map(group => {
                 const Icon = group.icon;
                 const active = isActive(group.subitems.length ? group.subitems.map(s => s.path) : [group.path]);
