@@ -16,11 +16,24 @@ interface Block {
 
 function parseBlocks(raw: string): Block[] {
   const blocks: Block[] = [];
-  const sections = raw.split(/^## /gm).filter(Boolean);
-
-  if (sections.length <= 1) {
+  
+  // Find the first heading position
+  const firstHeadingIdx = raw.search(/^## /m);
+  
+  // If there's text before the first heading, add it as a text block
+  if (firstHeadingIdx > 0) {
+    const introText = raw.slice(0, firstHeadingIdx).trim();
+    if (introText) {
+      blocks.push({ type: 'text', title: '', content: introText, icon: Sparkles });
+    }
+  } else if (firstHeadingIdx === -1) {
+    // No headings at all
     return [{ type: 'text', title: '', content: raw, icon: Sparkles }];
   }
+
+  // Split by headings, starting from the first heading
+  const contentFromFirstHeading = raw.slice(Math.max(0, firstHeadingIdx));
+  const sections = contentFromFirstHeading.split(/^## /gm).filter(Boolean);
 
   for (const section of sections) {
     const nl = section.indexOf('\n');
